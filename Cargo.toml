@@ -11,6 +11,7 @@ default-members = [
     "export",
     "tests",
     "tools/cli",
+    "tools/inspector",
     "tools/update-copyright",
     "tools/update-md-banner",
 ]
@@ -24,6 +25,7 @@ members = [
     "import",
     "export",
     "tools/cli",
+    "tools/inspector",
     "tools/update-copyright",
     "tools/update-md-banner",
     "tools/viewer",
