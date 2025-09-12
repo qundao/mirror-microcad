@@ -1,4 +1,4 @@
-import { ListView, VerticalBox } from "std-widgets.slint";
+import { ListView, VerticalBox, Button, HorizontalBox } from "std-widgets.slint";
 
 
 
@@ -59,25 +59,37 @@ component ListItem inherits Rectangle {
     }
 }
 
-export component MainWindow inherits Window {
-    default-font-family: "Jetbrains Mono";
-    width: 1024px;
-    height: 1024px;
+export component View3DControlPanel {
+    callback button-launch-3d-view-clicked <=> button-launch-3d-view.clicked;
 
+    VerticalLayout {
+        button-launch-3d-view := Button {
+            text: @tr("Launch 3D View");
+        }
+    }
+}
+
+export component MainWindow inherits Window {
+    callback button-launch-3d-view-clicked <=> control-panel.button-launch-3d-view-clicked;
     in property <[VM_Item]> view-model;
 
     default-font-family: "Jetbrains Mono";
     preferred-width: 1024px;
     preferred-height: 1024px;
 
-    list-view := ListView {
+    HorizontalBox {
         width: parent.width;
         height: parent.height;
-        mouse-drag-pan-enabled: true;
-        for item[index] in root.view-model: ListItem {
-            width: list-view.viewport-width;
-            item: item;
-            index: index;
+
+        list-view := ListView {
+            mouse-drag-pan-enabled: true;
+            for item[index] in root.view-model: ListItem {
+                width: list-view.viewport-width;
+                item: item;
+                index: index;
+            }
         }
+
+        control-panel := View3DControlPanel { }
     }
 }

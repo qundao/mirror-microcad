@@ -11,8 +11,9 @@ use microcad_lang::eval::Context;
 use microcad_lang::resolve::FullyQualify;
 use microcad_lang::syntax::*;
 
+use std::path::PathBuf;
 use std::rc::Rc;
-use std::sync::mpsc;
+use std::sync::{Arc, Mutex, mpsc};
 mod watcher;
 
 use microcad_lang::model::Model;
@@ -96,7 +97,9 @@ impl Inspector {
         let main_window = MainWindow::new()?;
 
         let weak = main_window.as_weak();
+        let input = self.args.input.clone();
 
+        // Run file watcher thread.
         std::thread::spawn(move || -> anyhow::Result<()> {
             loop {
                 let (tx, rx): (mpsc::Sender<Vec<VM_Item>>, _) = mpsc::channel();
@@ -136,6 +139,43 @@ impl Inspector {
 
                 self.watcher.wait()?;
             }
+        });
+
+        let weak = main_window.as_weak();
+        main_window.on_button_launch_3d_view_clicked(move || {
+            // let main_window = weak.unwrap();
+
+            // Run process thread
+            // Shared handle to the child's stdin so we can send messages
+            let child_stdin: Arc<Mutex<Option<std::process::ChildStdin>>> =
+                Arc::new(Mutex::new(None));
+
+            let stdin_clone = Arc::clone(&child_stdin);
+            let mut input = input.clone();
+
+            // Spawn the thread to launch and manage the child process
+            std::thread::spawn(move || -> anyhow::Result<()> {
+                input.set_extension("stl");
+                let input = std::env::current_dir().expect("Current dir").join(input);
+
+                log::info!("Input {}", input.display());
+
+                let mut child = std::process::Command::new(
+                    "/home/micha/Work/mcad/bevy_stdin/target/debug/bevy_stdin",
+                ) // Replace with your long-lived process
+                .arg(input)
+                .stdin(std::process::Stdio::piped())
+                .spawn()
+                .expect("Failed to spawn child process");
+
+                // Share the child's stdin with the main thread
+                *stdin_clone.lock().unwrap() = child.stdin.take();
+
+                // Wait for the process to exit (this will block)
+                let status = child.wait()?;
+                println!("Child exited with: {status}");
+                Ok(())
+            });
         });
 
         main_window.run()?;
