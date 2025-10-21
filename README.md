@@ -94,7 +94,7 @@ The resulting STL model looks like this:
 
 ## Documentation
 
-- [Description of language features](lang/README.md)
+- [Description of language features](lang/doc/README.md)
 - [Language reference](lang/doc/REFERENCE.md)
 - [Basic concepts](lang/doc/CONCEPTS.md)
 - Code documentation:
