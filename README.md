@@ -6,7 +6,7 @@
 [![Codecov](https://codecov.io/github/Rustfahrtagentur/mcad/coverage.svg?branch=main)](https://codecov.io/gh/Rustfahrtagentur/microcad)
 [![Dependency status](https://deps.rs/repo/github/Rustfahrtagentur/mcad/status.svg)](https://deps.rs/repo/github/Rustfahrtagentur/microcad)
 
-![µcad Logo](doc/images/logo.png)
+![µcad Logo](lang/doc/images/logo.png)
 
 µcad (pronounced *microcad*) is a description language for modeling parameterizable geometric objects.
 Simple basic shapes can be composed to create complex geometries which then can be rendered into STL or SVG files for 3D printing or CNC milling.
@@ -94,20 +94,20 @@ The resulting STL model looks like this:
 
 ## Documentation
 
-- [Description of language features](doc/README.md)
-- [Language reference](doc/REFERENCE.md)
-- [Basic concepts](doc/CONCEPTS.md)
+- [Description of language features](lang/README.md)
+- [Language reference](lang/doc/REFERENCE.md)
+- [Basic concepts](lang/doc/CONCEPTS.md)
 - Code documentation:
   - [`microcad-lang` module](https://docs.rs/microcad-lang)
   - [`microcad-core` module](https://docs.rs/microcad-core)
   - [`microcad-export` module](https://docs.rs/microcad-export)
-- [Markdown Tests](doc/test_list.md)
-- [Glossary](doc/GLOSSARY.md)
+- [Markdown Tests](lang/doc/test_list.md)
+- [Glossary](lang/doc/GLOSSARY.md)
 - [Contribute Documentation](CONTRIBUTE.md#contribute-documentation)
 
 ## Test List
 
-There is a [list of all tests](doc/test_list.md) included in this documentation.
+There is a [list of all tests](lang/doc/test_list.md) included in this documentation.
 
 ## 💚 Funded by
 
