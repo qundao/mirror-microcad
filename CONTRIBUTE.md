@@ -13,7 +13,7 @@ Having this tool, we can make tested code examples which produce:
 - Proper test result [with banners](#test-results-and-marks) near the documentation
 - SVG/STL Output (2D) which my be shown within documentation
 - Clear log for every test (e.g. [first_example.log](.test/first_example.log))
-- A list of all [tests](doc/test_list.md)
+- A list of all [tests](lang/doc/test_list.md)
 
 Those test can be run with `cargo test`.
 The produced output will be saved in folders called `.test` which is beside the source file of the test.
