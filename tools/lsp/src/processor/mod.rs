@@ -31,10 +31,9 @@ pub enum ProcessorRequest {
     GetDocumentDiagnostics(Url),
 }
 
-/// An interpreter output.
-///
-/// Contains the geometry to rendered.
+/// A processor response.
 pub enum ProcessorResponse {
+    /// Error messages and warnings for a specific document received.
     DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
 }
 
