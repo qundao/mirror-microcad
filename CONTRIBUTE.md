@@ -76,7 +76,7 @@ One may insert *µcad* code into the *markdown* files, which then will get teste
 ````
 
 The *markdown* will be searched for any *µcad* code and appropriate *rust* tests will be
-[generated](https://github.com/Rustfahrtagentur/microcad/tree/master/tests/microcad_markdown_test).
+[generated](https://codeberg.org/microcad/microcad/src/branch/master/tests/microcad_markdown_test).
 
 #### Test modes
 
@@ -87,7 +87,7 @@ beside the name you may add a test mode (see table below):
 ````
 
 The tests will create `.test` folders beside the *markdown* files.
-The tests will then copy an [image file (`*.svg`)](https://github.com/Rustfahrtagentur/microcad/tree/master/tests/images)
+The tests will then copy an [image file (`*.svg`)](https://codeberg.org/microcad/microcad/src/branch/master/tests/images)
 for every test which signals the test result into the `.test` folder.
 They can be included in the *markdown*, if you use this code:
 
@@ -107,7 +107,7 @@ You may also give the reader access to the logs by clicking on the banner with:
 
 #### Automatically update test banners
 
-There is a [script](https://github.com/Rustfahrtagentur/microcad/tree/master/update_md_banner.sh) which updates all
+There is a [script](https://codeberg.org/microcad/microcad/src/branch/master/update_md_banner.sh) which updates all
 banners automatically.
 
 #### Test results and marks
