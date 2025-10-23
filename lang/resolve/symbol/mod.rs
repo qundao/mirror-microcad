@@ -87,6 +87,17 @@ impl Symbol {
             f,
         })
     }
+
+    /// Replace inner of a symbol with the inner of another.
+    pub fn replace(&mut self, replacement: Symbol) {
+        replacement
+            .inner
+            .borrow()
+            .children
+            .iter()
+            .for_each(|(_, child)| child.inner.borrow_mut().parent = Some(self.clone()));
+        self.inner.replace(replacement.inner.take());
+    }
 }
 
 // tree structure
@@ -138,6 +149,7 @@ impl Symbol {
         self.inner.borrow().children.iter().try_for_each(f)
     }
 
+    #[allow(dead_code)]
     pub(crate) fn with_children(&self, f: impl FnMut((&Identifier, &Symbol))) {
         self.inner.borrow().children.iter().for_each(f)
     }
@@ -177,19 +189,58 @@ impl Symbol {
         self.inner.borrow_mut().parent = Some(parent);
     }
 
-    pub(super) fn delete_by_hash(&self, hash: u64) {
-        log::trace!("{} {} == {}", self.full_name(), self.source_hash(), hash);
-        if self.source_hash() == hash {
-            self.delete()
+    pub(crate) fn recursive_collect<F>(&self, f: &F, result: &mut Vec<Symbol>)
+    where
+        F: Fn(&Symbol) -> bool,
+    {
+        if f(self) {
+            result.push(self.clone());
         }
-        self.with_children(|(_, child)| child.delete_by_hash(hash));
+        self.inner
+            .borrow()
+            .children
+            .values()
+            .for_each(|symbol| symbol.recursive_collect(f, result));
+    }
+
+    #[allow(dead_code)]
+    pub(crate) fn recursive_for_each<F>(&self, id: &Identifier, f: &F)
+    where
+        F: Fn(&Identifier, &Symbol),
+    {
+        f(id, self);
+        self.inner
+            .borrow()
+            .children
+            .iter()
+            .for_each(|(id, symbol)| symbol.recursive_for_each(id, f));
+    }
+
+    pub(crate) fn recursive_for_each_mut<F>(&mut self, id: &Identifier, f: &F)
+    where
+        F: Fn(&Identifier, &mut Symbol),
+    {
+        f(id, self);
+        self.inner
+            .borrow_mut()
+            .children
+            .iter_mut()
+            .for_each(|(id, symbol)| symbol.recursive_for_each_mut(id, f));
+    }
+
+    pub(super) fn find_file(&self, hash: u64) -> Option<Symbol> {
+        if self.source_hash() == hash && self.is_source() {
+            Some(self.clone())
+        } else {
+            self.inner.borrow().children.find_file(hash)
+        }
     }
 }
 
 // visibility
 impl Symbol {
     /// Return `true` if symbol's visibility is private
-    fn visibility(&self) -> Visibility {
+    pub(super) fn visibility(&self) -> Visibility {
         self.visibility.get()
     }
 
@@ -216,6 +267,10 @@ impl Symbol {
         let cloned = self.clone();
         cloned.visibility.set(visibility);
         cloned
+    }
+
+    pub(crate) fn reset_visibility(&self) {
+        self.visibility.set(self.with_def(|def| def.visibility()));
     }
 }
 
@@ -247,6 +302,10 @@ impl Symbol {
     /// check if a property may be declared within this symbol
     pub(super) fn can_prop(&self) -> bool {
         matches!(self.inner.borrow().def, SymbolDefinition::Workbench(..))
+    }
+
+    pub(crate) fn is_source(&self) -> bool {
+        matches!(self.inner.borrow().def, SymbolDefinition::SourceFile(..))
     }
 
     pub(crate) fn is_module(&self) -> bool {
@@ -307,6 +366,15 @@ impl Symbol {
         matches!(self.inner.borrow().def, SymbolDefinition::Alias(..))
     }
 
+    pub(super) fn get_link(&self) -> Option<QualifiedName> {
+        self.with_def(|def| match def {
+            SymbolDefinition::UseAll(_, name) | SymbolDefinition::Alias(.., name) => {
+                Some(name.clone())
+            }
+            _ => None,
+        })
+    }
+
     pub(super) fn has_links(&self) -> bool {
         if self.is_link() {
             true
@@ -338,19 +406,8 @@ impl Symbol {
         let _ = self.inner.borrow().checked.set(());
     }
 
-    fn is_checked(&self) -> bool {
+    pub(super) fn is_checked(&self) -> bool {
         self.inner.borrow().checked.get().is_some()
-    }
-
-    pub(super) fn unchecked(&self, unchecked: &mut Symbols) {
-        let inner = self.inner.borrow();
-        if inner.checked.get().is_none() {
-            unchecked.push(self.clone())
-        }
-        inner
-            .children
-            .iter()
-            .for_each(|(_, child)| child.unchecked(unchecked));
     }
 
     /// check names in symbol definition
@@ -443,21 +500,13 @@ impl Symbol {
 }
 
 impl Symbol {
+    pub(super) fn is_used(&self) -> bool {
+        self.inner.borrow().used.get().is_some()
+    }
+
     /// Mark this symbol as *used*.
     pub(crate) fn set_used(&self) {
         let _ = self.inner.borrow().used.set(());
-    }
-
-    pub(super) fn unused(&self, unused: &mut Symbols) {
-        let inner = self.inner.borrow();
-        if inner.used.get().is_none() {
-            unused.push(self.clone())
-        }
-
-        inner
-            .children
-            .iter()
-            .for_each(|(_, child)| child.unused(unused));
     }
 
     /// Resolve aliases and use statements in this symbol.
@@ -516,13 +565,6 @@ impl Symbol {
                 .any(|param| param.ty() == Type::Target),
             _ => false,
         })
-    }
-
-    pub(super) fn search_target_mode_ids(&self, ids: &mut IdentifierSet) -> ResolveResult<()> {
-        if self.is_target_mode() {
-            ids.insert(self.id());
-        }
-        self.try_children(|(_, child)| child.search_target_mode_ids(ids))
     }
 
     /// Search down the symbol tree for a qualified name.

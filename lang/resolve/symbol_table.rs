@@ -31,28 +31,52 @@ impl SymbolTable {
 
     /// Return a list of symbols which could not or have not been checked.
     pub fn unchecked(&self) -> Symbols {
-        let mut unchecked = Symbols::default();
-        self.values()
-            .for_each(|symbol| symbol.unchecked(&mut unchecked));
-        unchecked
+        self.recursive_collect(|symbol| symbol.is_checked())
     }
 
     /// Return a list of unused symbols
     ///
     /// Use this after eval for any useful result.
     pub fn unused(&self) -> Symbols {
-        let mut unchecked = Symbols::default();
-        self.values()
-            .for_each(|symbol| symbol.unused(&mut unchecked));
-        unchecked
+        self.recursive_collect(|symbol| symbol.is_used())
     }
 
     /// Search all ids which require target mode (e.g. `assert_valid`)
-    pub(super) fn search_target_mode_ids(&self) -> ResolveResult<IdentifierSet> {
-        let mut ids = IdentifierSet::default();
-        self.values()
-            .try_for_each(|symbol| symbol.search_target_mode_ids(&mut ids))?;
-        Ok(ids)
+    pub(super) fn search_target_mode_ids(&self) -> IdentifierSet {
+        self.recursive_collect(|symbol| symbol.is_target_mode())
+            .iter()
+            .map(|symbol| symbol.id())
+            .collect()
+    }
+
+    pub(super) fn recursive_collect<F>(&self, f: F) -> Symbols
+    where
+        F: Fn(&Symbol) -> bool,
+    {
+        let mut result = vec![];
+        self.values().for_each(|symbol| {
+            symbol.recursive_collect(&f, &mut result);
+        });
+        result.into()
+    }
+
+    #[allow(dead_code)]
+    pub(super) fn recursive_for_each<F>(&self, f: F)
+    where
+        F: Fn(&Identifier, &Symbol),
+    {
+        self.iter().for_each(|(id, symbol)| {
+            symbol.recursive_for_each(id, &f);
+        });
+    }
+
+    pub(super) fn recursive_for_each_mut<F>(&mut self, f: F)
+    where
+        F: Fn(&Identifier, &mut Symbol),
+    {
+        self.iter_mut().for_each(|(id, symbol)| {
+            symbol.recursive_for_each_mut(id, &f);
+        });
     }
 }
 

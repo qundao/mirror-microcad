@@ -92,11 +92,29 @@ impl Sources {
 
     /// Insert a file to the sources.
     pub fn insert(&mut self, source_file: Rc<SourceFile>) {
-        let index = self.source_files.len();
-        self.source_files.push(source_file.clone());
-        self.by_hash.insert(source_file.hash, index);
-        self.by_path.insert(source_file.filename(), index);
-        self.by_name.insert(source_file.name.clone(), index);
+        let hash = source_file.hash;
+        let path = source_file.filename();
+        let name = source_file.name.clone();
+
+        // maybe overwrite existing
+        let index = if let Some(index) = self.by_path.get(&source_file.filename()).copied() {
+            self.by_hash.remove(&hash);
+            self.by_name.remove(&name);
+            self.by_path.remove(&path);
+            if self.root.filename() == path {
+                self.root = source_file.clone();
+            }
+            self.source_files[index] = source_file;
+
+            index
+        } else {
+            self.source_files.push(source_file.clone());
+            self.source_files.len() - 1
+        };
+
+        self.by_hash.insert(hash, index);
+        self.by_path.insert(path, index);
+        self.by_name.insert(name, index);
     }
 
     /// Return the qualified name of a file by it's path
@@ -226,7 +244,7 @@ impl Sources {
         parent_path: impl AsRef<std::path::Path>,
         id: &Identifier,
     ) -> ResolveResult<Rc<SourceFile>> {
-        log::trace!("load_file: {:?} {id}", parent_path.as_ref());
+        log::trace!("loading file: {:?} {id}", parent_path.as_ref());
         let file_path = find_mod_file_by_id(parent_path, id)?;
         let name = self.generate_name_from_path(&file_path)?;
         let source_file = SourceFile::load_with_name(&file_path, name)?;
@@ -235,18 +253,18 @@ impl Sources {
     }
 
     /// Reload an existing file
-    pub fn update_file(
+    pub(super) fn update_file(
         &mut self,
         path: impl AsRef<std::path::Path>,
     ) -> ResolveResult<ReplacedSourceFile> {
         let path = path.as_ref().canonicalize()?.to_path_buf();
-        if let Some(index) = self.by_path.get(&path) {
-            let old = self.source_files[*index].clone();
+        log::trace!("update_file: {path:?}");
+        if let Some(index) = self.by_path.get(&path).copied() {
+            let old = self.source_files[index].clone();
             let name = old.name.clone();
             let new = SourceFile::load_with_name(path, name)?;
-            self.by_hash.remove(&old.hash);
-            self.by_hash.insert(new.hash, *index);
-            self.source_files[*index] = new.clone();
+            self.insert(new.clone());
+            log::trace!("new sources:\n{self:?}");
             Ok(ReplacedSourceFile { new, old })
         } else {
             Err(ResolveError::FileNotFound(path))

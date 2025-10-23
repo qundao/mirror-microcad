@@ -212,7 +212,7 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
             UseDeclaration::Use(name) => {
                 let identifier = name.last().expect("Identifier");
                 Ok(Some((
-                    identifier.clone(),
+                    Identifier::unique(),
                     Symbol::new(
                         SymbolDefinition::Alias(self.visibility, identifier.clone(), name.clone()),
                         Some(parent.clone()),
@@ -227,7 +227,7 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
                 ),
             ))),
             UseDeclaration::UseAlias(name, alias) => Ok(Some((
-                alias.clone(),
+                Identifier::unique(),
                 Symbol::new(
                     SymbolDefinition::Alias(self.visibility, alias.clone(), name.clone()),
                     Some(parent.clone()),

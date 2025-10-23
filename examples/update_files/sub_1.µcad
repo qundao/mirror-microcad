@@ -1,3 +1,8 @@
-mod Y {
-    fn f() { std::print("f1") }
+pub mod Y {
+    pub fn f() {}
+    pub mod Z {
+        pub fn g() {}
+        pub fn k() {}
+    }
+    pub fn i() {}
 }

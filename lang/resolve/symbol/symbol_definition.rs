@@ -95,6 +95,8 @@ impl SymbolDefinition {
             SymbolDefinition::Workbench(wd) => wd.src_ref.source_hash(),
             SymbolDefinition::Function(fd) => fd.src_ref.source_hash(),
             SymbolDefinition::ConstExpression(_, id, _) => id.src_ref().source_hash(),
+            SymbolDefinition::Alias(_, id, _) => id.src_ref().source_hash(),
+            SymbolDefinition::UseAll(_, name) => name.src_ref().source_hash(),
             _ => unreachable!(),
         }
     }

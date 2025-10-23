@@ -1,3 +1,0 @@
-mod sub;
-
-sub::Y::f();

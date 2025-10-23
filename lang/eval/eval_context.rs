@@ -530,6 +530,9 @@ impl std::fmt::Debug for EvalContext {
         writeln!(f, "\nCall Stack:")?;
         self.stack.pretty_print_call_trace(f, &self.sources)?;
 
+        writeln!(f, "\nSources:\n")?;
+        write!(f, "{:?}", &self.sources)?;
+
         write!(f, "\nSymbol Table:\n{:?}", self.symbol_table)?;
         match self.error_count() {
             0 => write!(f, "No errors")?,

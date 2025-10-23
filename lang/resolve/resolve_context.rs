@@ -203,7 +203,7 @@ impl ResolveContext {
         log::trace!("Checking symbol table");
         self.mode = ResolveMode::Failed;
 
-        let exclude_ids = self.symbol_table.search_target_mode_ids()?;
+        let exclude_ids = self.symbol_table.search_target_mode_ids();
         log::trace!("Excluding target mode ids: {exclude_ids}");
 
         if let Err(err) = self
@@ -251,29 +251,63 @@ impl ResolveContext {
         self.mode >= ResolveMode::Checked
     }
 
-    pub fn update_files(&mut self, files: &[impl AsRef<std::path::Path>]) -> ResolveResult<()> {
-        // find affected source files
+    /// Reload one or more existing files and re-resolve the symbol table.
+    pub fn reload_files(&mut self, files: &[impl AsRef<std::path::Path>]) -> ResolveResult<()> {
+        // prepare for any error
+        self.mode = ResolveMode::Failed;
+
+        // reload existing source files in source cache
         let replaced = files
             .iter()
             .map(|path| self.sources.update_file(path.as_ref()))
             .collect::<ResolveResult<Vec<_>>>()?;
 
-        // mark former symbols as deleted
-        replaced
-            .iter()
-            .map(|rep| rep.old.hash)
-            .for_each(|hash| self.symbol_table.delete_by_hash(hash));
+        // replace the source file within the symbol table
+        replaced.iter().try_for_each(|rep| {
+            self.symbol_table
+                .find_file(rep.old.hash)
+                .map(|mut symbol| -> ResolveResult<()> {
+                    symbol.replace(rep.new.symbolize(Visibility::Public, self)?);
+                    Ok(())
+                })
+                .expect("symbol of file could not be found")
+        })?;
 
-        //todo!("update symbols")
-        Ok(())
+        // search for aliases and symbols from the replaced file
+        replaced.iter().for_each(|rep| {
+            self.symbol_table.recursive_for_each_mut(|_, symbol| {
+                // check for alias or use-all (from use statements)
+                if let Some(link) = symbol.get_link() {
+                    // check if it points into the old source file
+                    if link.starts_with(&rep.old.name) {
+                        // then reset visibility so that it will get re-resolved.
+                        symbol.reset_visibility();
+                    }
+                } else if symbol.source_hash() == rep.old.hash {
+                    // delete any non-link symbol which is related to the old source file
+                    symbol.delete();
+                }
+            });
+        });
+
+        // re-resolve
+        self.mode = ResolveMode::Symbolized;
+        self.resolve()
     }
 }
 
 #[test]
-fn test_update_files() {
+fn test_update_sub_mod() {
+    use crate::eval::*;
+
     std::fs::copy(
         "../examples/update_files/sub_0.µcad",
         "../examples/update_files/sub.µcad",
+    )
+    .expect("test error");
+    std::fs::copy(
+        "../examples/update_files/top_0.µcad",
+        "../examples/update_files/top.µcad",
     )
     .expect("test error");
 
@@ -289,10 +323,61 @@ fn test_update_files() {
     .expect("test error");
 
     context
-        .update_files(&["../examples/update_files/sub.µcad"])
+        .reload_files(&["../examples/update_files/sub.µcad"])
         .expect("test error");
 
     eprintln!("{context:?}");
+
+    let mut context = EvalContext::new(
+        context,
+        Stdout::new(),
+        Default::default(),
+        Default::default(),
+    );
+    context.eval().expect("test error");
+    assert!(!context.has_errors());
+}
+
+#[test]
+fn test_update_top_mod() {
+    use crate::eval::*;
+
+    std::fs::copy(
+        "../examples/update_files/sub_0.µcad",
+        "../examples/update_files/sub.µcad",
+    )
+    .expect("test error");
+    std::fs::copy(
+        "../examples/update_files/top_0.µcad",
+        "../examples/update_files/top.µcad",
+    )
+    .expect("test error");
+
+    let root = SourceFile::load("../examples/update_files/top.µcad").expect("test error");
+    let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
+
+    eprintln!("{context:?}");
+
+    std::fs::copy(
+        "../examples/update_files/top_1.µcad",
+        "../examples/update_files/top.µcad",
+    )
+    .expect("test error");
+
+    context
+        .reload_files(&["../examples/update_files/top.µcad"])
+        .expect("test error");
+
+    eprintln!("{context:?}");
+
+    let mut context = EvalContext::new(
+        context,
+        Stdout::new(),
+        Default::default(),
+        Default::default(),
+    );
+    context.eval().expect("test error");
+    assert!(!context.has_errors());
 }
 
 impl WriteToFile for ResolveContext {}
