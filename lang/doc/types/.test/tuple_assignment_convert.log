@@ -1,0 +1,23 @@
+-- Test --
+  tuple_assignment_convert
+  ../lang/doc/types/tuples.md:75
+
+-- Code --
+
+ 1: array = [1,2]m;
+ 2: (width, height) = array;
+ 3: tuple = (width, height);
+ 4: 
+ 5: assert_eq([tuple,(1m,2m)]);
+ 6: assert_eq([tuple.width,1m]);
+ 7: assert_eq([tuple.height,2m]);
+
+-- Parse Error --
+Parser error:  --> 2:17
+  |
+2 | (width, height) = array;
+  |                 ^---
+  |
+  = expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+FAIL (TODO)

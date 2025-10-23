@@ -1,0 +1,18 @@
+-- Test --
+  source_init
+  ../lang/doc/tests/statement_usage.md:36
+
+-- Code --
+
+ 1: init() {} // error
+
+-- Output --
+-- Errors --
+error: Statement is not available within file
+  ---> <FROM STR>:1:1
+     |
+   1 | init() {} // error
+     | ^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

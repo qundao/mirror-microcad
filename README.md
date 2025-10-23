@@ -6,7 +6,7 @@
 [![Codecov](https://codecov.io/github/Rustfahrtagentur/mcad/coverage.svg?branch=main)](https://codecov.io/gh/Rustfahrtagentur/microcad)
 [![Dependency status](https://deps.rs/repo/github/Rustfahrtagentur/mcad/status.svg)](https://deps.rs/repo/github/Rustfahrtagentur/microcad)
 
-![µcad Logo](doc/images/logo.png)
+![µcad Logo](lang/doc/images/logo.png)
 
 µcad (pronounced *microcad*) is a description language for modeling parameterizable geometric objects.
 Simple basic shapes can be composed to create complex geometries which then can be rendered into STL or SVG files for 3D printing or CNC milling.
@@ -94,27 +94,25 @@ The resulting STL model looks like this:
 
 ## Documentation
 
-- [Description of language features](doc/README.md)
-- [Language reference](doc/REFERENCE.md)
-- [Basic concepts](doc/CONCEPTS.md)
+- [Description of language features](lang/doc/README.md)
+- [Language reference](lang/doc/REFERENCE.md)
+- [Basic concepts](lang/doc/CONCEPTS.md)
 - Code documentation:
   - [`microcad-lang` module](https://docs.rs/microcad-lang)
   - [`microcad-core` module](https://docs.rs/microcad-core)
   - [`microcad-export` module](https://docs.rs/microcad-export)
-- [Markdown Tests](doc/test_list.md)
-- [Glossary](doc/GLOSSARY.md)
+- [Markdown Tests](lang/doc/test_list.md)
+- [Glossary](lang/doc/GLOSSARY.md)
 - [Contribute Documentation](CONTRIBUTE.md#contribute-documentation)
 
 ## Test List
 
-There is a [list of all tests](doc/test_list.md) included in this documentation.
+There is a [list of all tests](lang/doc/test_list.md) included in this documentation.
 
 ## 💚 Funded by
 
 Thanks to the [Prototype Fund](https://www.prototypefund.de/) and the [Federal Ministry of Research, Technology and Space](https://www.bmbf.de/EN/) for funding this project in 2025.
 
-<a href="https://prototypefund.de/en/"><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Prototype_Fund_Logo_2025.svg" alt="Logo of the Prototype Fund" style="height: 70px;"></a>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://okfn.de/en/"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Open_Knowledge_Foundation_Deutschland_Logo.svg" alt="Logo of the Open Knowledge Foundation Germany" style="height: 100px;"></a>
-&nbsp;&nbsp;
-<a href="https://www.bmbf.de/EN/"><img src="https://upload.wikimedia.org/wikipedia/commons/d/df/BMFTR_Logo.svg" alt="Logo of the German Federal Ministry of Research, Technology and Space" style="height: 110px;"></a>
+![https://prototypefund.de/en/](images/Prototype_Fund_Logo_2025.svg)
+![https://okfn.de/en/](images/Open_Knowledge_Foundation_Deutschland_Logo.svg)
+![https://www.bmbf.de/EN/](https://upload.wikimedia.org/wikipedia/commons/d/df/BMFTR_Logo.svg)

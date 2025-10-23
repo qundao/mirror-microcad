@@ -1,0 +1,19 @@
+-- Test --
+  workbench_use
+  ../lang/doc/tests/statement_usage.md:448
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   use std;
+ 3: } K();
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) workbench_use::K() ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK

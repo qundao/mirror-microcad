@@ -1,0 +1,26 @@
+-- Test --
+  function_assignment_prop
+  ../lang/doc/tests/statement_usage.md:724
+
+-- Code --
+
+ 1: fn f() {
+ 2:   prop a = 1; // error
+ 3: } f();
+
+-- Output --
+-- Errors --
+error: Assignment statement is not available within function
+  ---> <FROM STR>:2:3
+     |
+   2 |   prop a = 1; // error
+     |   ^^^^^^^^^^^
+     |
+error: Declaration of a not allowed within function_assignment_prop::f
+  ---> <FROM STR>:2:3
+     |
+   2 |   prop a = 1; // error
+     |   ^^^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

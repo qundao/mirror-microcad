@@ -1,0 +1,20 @@
+-- Test --
+  module_assignment_var
+  ../lang/doc/tests/statement_usage.md:170
+
+-- Code --
+
+ 1: mod k {
+ 2:   a = 1; // error
+ 3: }
+
+-- Output --
+-- Errors --
+error: Declaration of a not allowed within module_assignment_var::k
+  ---> <FROM STR>:2:3
+     |
+   2 |   a = 1; // error
+     |   ^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

@@ -1,0 +1,30 @@
+-- Test --
+  verify_todo
+  ../lang/doc/debug/README.md:39
+
+-- Code --
+
+ 1: a = 0;
+ 2: 
+ 3: if a == 0 {
+ 4:     std::log::info("a is zero");
+ 5: } else {
+ 6:     std::log::todo("print proper message");
+ 7: }
+
+-- Output --
+-- Errors --
+info: a is zero
+  ---> <FROM STR>:4:20
+     |
+   4 |     std::log::info("a is zero");
+     |                    ^^^^^^^^^^^
+     |
+-- Model --
+  Group (root) ->
+    Group ->
+
+Could not determine output type.
+Nothing will be exported.
+-- Test Result --
+OK

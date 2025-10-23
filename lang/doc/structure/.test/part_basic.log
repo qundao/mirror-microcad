@@ -1,0 +1,13 @@
+-- Test --
+  part_basic
+  ../lang/doc/structure/part.md:8
+
+-- Code --
+
+ 1: part MyPart() {}
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

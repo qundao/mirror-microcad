@@ -1,0 +1,15 @@
+-- Test --
+  module_module
+  ../lang/doc/tests/statement_usage.md:106
+
+-- Code --
+
+ 1: mod k {
+ 2:   mod m {}
+ 3: }
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

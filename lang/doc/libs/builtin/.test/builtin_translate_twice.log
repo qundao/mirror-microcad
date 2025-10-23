@@ -1,0 +1,25 @@
+-- Test --
+  builtin_translate_twice
+  ../lang/doc/libs/builtin/ops.md:92
+
+-- Code --
+
+ 1: use __builtin::*;
+ 2: 
+ 3: #[svg = (style = "fill:red")]
+ 4: geo2d::Rect(x = 0.0, y = 0.0, width = 10.0, height = 10.0)
+ 5:     .ops::translate(x = 0.0, y = 15.0, z = 0.0)
+ 6:     .ops::translate(x = 15.0, y = 0.0, z = 0.0);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Transform __builtin::ops::translate(x=15, y=0, z=0) ->
+      #[svg = svg = (fill=, style=fill:red)]
+      Transform __builtin::ops::translate(x=0, y=15, z=0) ->
+        Primitive2D __builtin::geo2d::Rect(height=10, width=10, x=0, y=0) ->
+
+Export successful.
+-- Test Result --
+OK

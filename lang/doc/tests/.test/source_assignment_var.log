@@ -1,0 +1,13 @@
+-- Test --
+  source_assignment_var
+  ../lang/doc/tests/statement_usage.md:72
+
+-- Code --
+
+ 1: a = 1;
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

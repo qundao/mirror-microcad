@@ -1,0 +1,20 @@
+-- Test --
+  module_expression
+  ../lang/doc/tests/statement_usage.md:186
+
+-- Code --
+
+ 1: mod k {
+ 2:   1 + 2; // error
+ 3: }
+
+-- Output --
+-- Errors --
+error: Expression statement not available here
+  ---> <FROM STR>:2:3
+     |
+   2 |   1 + 2; // error
+     |   ^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

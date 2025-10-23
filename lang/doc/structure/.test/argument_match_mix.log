@@ -1,0 +1,15 @@
+-- Test --
+  argument_match_mix
+  ../lang/doc/structure/arguments.md:49
+
+-- Code --
+
+ 1: fn f( a: Scalar, b: Length, c: Length ) {}
+ 2: // `a` is the only Scalar and `b` is named, so `c` does not need a name.
+ 3: f(1.0, b=2cm, 3cm);
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,20 @@
+-- Test --
+  body_module
+  ../lang/doc/tests/statement_usage.md:538
+
+-- Code --
+
+ 1: {
+ 2:   mod m {} // error
+ 3: }
+
+-- Output --
+-- Errors --
+error: Module statement not available here
+  ---> <FROM STR>:2:3
+     |
+   2 |   mod m {} // error
+     |   ^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

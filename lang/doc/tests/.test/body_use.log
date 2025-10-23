@@ -1,0 +1,20 @@
+-- Test --
+  body_use
+  ../lang/doc/tests/statement_usage.md:562
+
+-- Code --
+
+ 1: {
+ 2:   use std;
+ 3: }
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Group ->
+
+Could not determine output type.
+Nothing will be exported.
+-- Test Result --
+OK

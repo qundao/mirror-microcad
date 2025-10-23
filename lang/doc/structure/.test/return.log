@@ -1,0 +1,19 @@
+-- Test --
+  return
+  ../lang/doc/structure/functions.md:35
+
+-- Code --
+
+ 1: fn pow( x: Scalar, n: Integer ) {
+ 2:     if n == 1 {
+ 3:         x   // return x
+ 4:     } else {
+ 5:         x * pow(n-1) // return recursive product
+ 6:     }
+ 7: }
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

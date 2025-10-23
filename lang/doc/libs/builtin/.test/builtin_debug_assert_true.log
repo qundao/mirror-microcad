@@ -1,0 +1,13 @@
+-- Test --
+  builtin_debug_assert_true
+  ../lang/doc/libs/builtin/debug.md:17
+
+-- Code --
+
+ 1: __builtin::debug::assert(true);
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

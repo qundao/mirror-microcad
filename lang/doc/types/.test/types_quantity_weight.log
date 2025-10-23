@@ -1,0 +1,17 @@
+-- Test --
+  types_quantity_weight
+  ../lang/doc/types/quantity.md:158
+
+-- Code --
+
+ 1: gram = 1000.0g;
+ 2: kilogram = 1.0kg;
+ 3: pound = 2.204623lb;
+ 4: 
+ 5: std::debug::assert([gram, kilogram].all_equal());
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

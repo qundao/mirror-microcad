@@ -1,0 +1,20 @@
+-- Test --
+  body_return
+  ../lang/doc/tests/statement_usage.md:578
+
+-- Code --
+
+ 1: {
+ 2:   return 1; // error
+ 3: }
+
+-- Output --
+-- Errors --
+error: Return statement not available here
+  ---> <FROM STR>:2:3
+     |
+   2 |   return 1; // error
+     |   ^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

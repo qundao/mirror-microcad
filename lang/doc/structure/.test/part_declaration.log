@@ -1,0 +1,55 @@
+-- Test --
+  part_declaration
+  ../lang/doc/structure/workbench.md:43
+
+-- Code --
+
+ 1: // sketch with a `radius` as building plan
+ 2: sketch Wheel(radius: Length) {
+ 3: 
+ 4:     // init code
+ 5:     const FACTOR = 2;
+ 6: 
+ 7:     // initializer
+ 8:     init(diameter: Length) {
+ 9:         // set `radius`
+10:         radius = diameter / FACTOR;
+11:     }
+12: 
+13:     // function (sub routine)
+14:     fn into_diameter(radius: Length) {
+15:         return radius * FACTOR;
+16:     }
+17: 
+18:     // building code begins
+19: 
+20:     // set a property which can be seen from outside
+21:     prop diameter = into_diameter(radius);
+22:     // local variable
+23:     i = 1;
+24:     
+25:     // create circle
+26:     std::geo2d::Circle(radius);
+27: }
+28: 
+29: use std::debug::assert;
+30: 
+31: // call sketch with diameter
+32: d = Wheel(diameter = 2cm)
+33: // check radius
+34: assert_eq([d.radius, 1cm]);
+35: 
+36: // call sketch with radius
+37: r = Wheel(radius = 1cm)
+38: // check diameter
+39: assert([r.diameter, 2cm]);
+
+-- Parse Error --
+Parser error:   --> 34:1
+   |
+34 | assert_eq([d.radius, 1cm]);
+   | ^---
+   |
+   = expected single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+FAIL (TODO)

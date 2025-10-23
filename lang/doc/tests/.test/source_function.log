@@ -1,0 +1,13 @@
+-- Test --
+  source_function
+  ../lang/doc/tests/statement_usage.md:30
+
+-- Code --
+
+ 1: fn f() {} f();
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,31 @@
+-- Test --
+  use_statement_pub
+  ../lang/doc/structure/use.md:102
+
+-- Code --
+
+ 1: mod my {
+ 2:     pub use std::geo2d::*;
+ 3: }
+ 4: 
+ 5: my::Circle(r = 4mm);
+ 6: my::Rect(size = 40mm);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+      - center = (x=0mm, y=0mm)
+      - radius = 4mm
+      Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=4) ->
+    Workpiece(sketch) std::geo2d::Rect(size=40mm) ->
+      - height = 40mm
+      - width = 40mm
+      - x = -20mm
+      - y = -20mm
+      Primitive2D __builtin::geo2d::Rect(height=40, width=40, x=-20, y=-20) ->
+
+Export successful.
+-- Test Result --
+OK

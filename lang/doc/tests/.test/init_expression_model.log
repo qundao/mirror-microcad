@@ -1,0 +1,20 @@
+-- Test --
+  init_expression_model
+  ../lang/doc/tests/statement_usage.md:406
+
+-- Code --
+
+ 1: sketch K() { init(l:Length) {
+ 2:   __builtin::geo2d::Circle(radius=1); // error
+ 3: } } K(1cm);
+
+-- Output --
+-- Errors --
+error: Expression statement not available here
+  ---> <FROM STR>:2:3
+     |
+   2 |   __builtin::geo2d::Circle(radius=1); // error
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

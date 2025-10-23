@@ -1,0 +1,21 @@
+-- Test --
+  initial_source_file_2D
+  ../lang/doc/structure/source_files.md:23
+
+-- Code --
+
+ 1: // simply draw a circle
+ 2: std::geo2d::Circle(radius = 1cm);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+      - center = (x=0mm, y=0mm)
+      - radius = 10mm
+      Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=10) ->
+
+Export successful.
+-- Test Result --
+OK

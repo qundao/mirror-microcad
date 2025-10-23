@@ -1,0 +1,13 @@
+-- Test --
+  source_if
+  ../lang/doc/tests/statement_usage.md:60
+
+-- Code --
+
+ 1: if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,20 @@
+-- Test --
+  workbench_pub_use
+  ../lang/doc/tests/statement_usage.md:456
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   pub use std; // error
+ 3: } K();
+
+-- Output --
+-- Errors --
+error: Use statement is not available within sketch
+  ---> <FROM STR>:2:3
+     |
+   2 |   pub use std; // error
+     |   ^^^^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

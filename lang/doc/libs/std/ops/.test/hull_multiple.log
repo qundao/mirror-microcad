@@ -1,0 +1,59 @@
+-- Test --
+  hull_multiple
+  ../lang/doc/libs/std/ops/hull.md:19
+
+-- Code --
+
+ 1: use std::geo2d::*;
+ 2: use std::ops::*;
+ 3: 
+ 4: Circle(r = 4mm)
+ 5:     .translate(x = [-10, 10]mm, y = [-10, 10]mm)
+ 6:     .hull();
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Operation __builtin::ops::hull() ->
+      Multiplicity ->
+        Workpiece(op) std::ops::translate(x=-10mm, y=-10mm, z=0mm) ->
+          - x = -10mm
+          - y = -10mm
+          - z = 0mm
+          Transform __builtin::ops::translate(x=-10, y=-10, z=0) ->
+            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+              - center = (x=0mm, y=0mm)
+              - radius = 4mm
+              Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=4) ->
+        Workpiece(op) std::ops::translate(x=10mm, y=-10mm, z=0mm) ->
+          - x = 10mm
+          - y = -10mm
+          - z = 0mm
+          Transform __builtin::ops::translate(x=10, y=-10, z=0) ->
+            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+              - center = (x=0mm, y=0mm)
+              - radius = 4mm
+              Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=4) ->
+        Workpiece(op) std::ops::translate(x=-10mm, y=10mm, z=0mm) ->
+          - x = -10mm
+          - y = 10mm
+          - z = 0mm
+          Transform __builtin::ops::translate(x=-10, y=10, z=0) ->
+            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+              - center = (x=0mm, y=0mm)
+              - radius = 4mm
+              Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=4) ->
+        Workpiece(op) std::ops::translate(x=10mm, y=10mm, z=0mm) ->
+          - x = 10mm
+          - y = 10mm
+          - z = 0mm
+          Transform __builtin::ops::translate(x=10, y=10, z=0) ->
+            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+              - center = (x=0mm, y=0mm)
+              - radius = 4mm
+              Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=4) ->
+
+Export successful.
+-- Test Result --
+OK

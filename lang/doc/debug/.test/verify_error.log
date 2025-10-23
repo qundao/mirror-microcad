@@ -1,0 +1,18 @@
+-- Test --
+  verify_error
+  ../lang/doc/debug/README.md:29
+
+-- Code --
+
+ 1: std::log::error("this should not have happened"); // error
+
+-- Output --
+-- Errors --
+error: Builtin error: this should not have happened
+  ---> <FROM STR>:1:17
+     |
+   1 | std::log::error("this should not have happened"); // error
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

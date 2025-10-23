@@ -1,0 +1,19 @@
+-- Test --
+  workbench_init
+  ../lang/doc/tests/statement_usage.md:440
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   init() {}
+ 3: } K();
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) workbench_init::K() ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK

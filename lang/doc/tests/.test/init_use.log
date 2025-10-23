@@ -1,0 +1,19 @@
+-- Test --
+  init_use
+  ../lang/doc/tests/statement_usage.md:342
+
+-- Code --
+
+ 1: sketch K() { init(l:Length) {
+ 2:   use std;
+ 3: } } K(1cm);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) init_use::K(l=10mm) ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK

@@ -1,0 +1,13 @@
+-- Test --
+  source_expression
+  ../lang/doc/tests/statement_usage.md:84
+
+-- Code --
+
+ 1: 1 + 2;
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

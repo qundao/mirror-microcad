@@ -1,0 +1,39 @@
+-- Test --
+  if_models
+  ../lang/doc/structure/conditionals.md:9
+
+-- Code --
+
+ 1: sketch MySketch(a: Integer) {
+ 2:     if a == 1 {
+ 3:         std::geo2d::Circle(radius = 1mm)
+ 4:     } else {
+ 5:         std::geo2d::Circle(radius = 4mm)
+ 6:     }
+ 7: }
+ 8: 
+ 9: MySketch(1);
+10: MySketch(2);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) if_models::MySketch(a=1) ->
+      - a = 1
+      Group ->
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
+          - center = (x=0mm, y=0mm)
+          - radius = 1mm
+          Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=1) ->
+    Workpiece(sketch) if_models::MySketch(a=2) ->
+      - a = 2
+      Group ->
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
+          - center = (x=0mm, y=0mm)
+          - radius = 4mm
+          Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=4) ->
+
+Export successful.
+-- Test Result --
+OK

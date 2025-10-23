@@ -1,0 +1,27 @@
+-- Test --
+  translate_2d
+  ../lang/doc/libs/std/ops/translate.md:7
+
+-- Code --
+
+ 1: std::geo2d::Rect(30mm).std::ops::translate(x = 10mm, y = 20mm);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::translate(x=10mm, y=20mm, z=0mm) ->
+      - x = 10mm
+      - y = 20mm
+      - z = 0mm
+      Transform __builtin::ops::translate(x=10, y=20, z=0) ->
+        Workpiece(sketch) std::geo2d::Rect(size=30mm) (root) ->
+          - height = 30mm
+          - width = 30mm
+          - x = -15mm
+          - y = -15mm
+          Primitive2D __builtin::geo2d::Rect(height=30, width=30, x=-15, y=-15) ->
+
+Export successful.
+-- Test Result --
+OK
