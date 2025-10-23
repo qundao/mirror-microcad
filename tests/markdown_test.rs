@@ -233,7 +233,7 @@ fn create_context(source: &Rc<SourceFile>) -> EvalContext {
     EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
-        &["../lib", "../doc/assets"],
+        &["../lib", "../lang/doc/assets"],
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),
