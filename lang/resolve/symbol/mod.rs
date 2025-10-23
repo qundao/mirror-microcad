@@ -131,11 +131,15 @@ impl Symbol {
         self.inner.borrow_mut().children = new_children;
     }
 
-    pub(crate) fn with_children<E: std::error::Error>(
+    pub(crate) fn try_children<E: std::error::Error>(
         &self,
         f: impl FnMut((&Identifier, &Symbol)) -> Result<(), E>,
     ) -> Result<(), E> {
         self.inner.borrow().children.iter().try_for_each(f)
+    }
+
+    pub(crate) fn with_children(&self, f: impl FnMut((&Identifier, &Symbol))) {
+        self.inner.borrow().children.iter().for_each(f)
     }
 
     /// Create a vector of cloned children.
@@ -172,6 +176,14 @@ impl Symbol {
     pub(super) fn set_parent(&mut self, parent: Symbol) {
         self.inner.borrow_mut().parent = Some(parent);
     }
+
+    pub(super) fn delete_by_hash(&self, hash: u64) {
+        log::trace!("{} {} == {}", self.full_name(), self.source_hash(), hash);
+        if self.source_hash() == hash {
+            self.delete()
+        }
+        self.with_children(|(_, child)| child.delete_by_hash(hash));
+    }
 }
 
 // visibility
@@ -193,6 +205,10 @@ impl Symbol {
 
     pub(super) fn is_deleted(&self) -> bool {
         self.visibility.get() == Visibility::Deleted
+    }
+
+    pub(super) fn delete(&self) {
+        self.visibility.set(Visibility::Deleted)
     }
 
     /// Clone this symbol but give the clone another visibility.
@@ -420,6 +436,10 @@ impl Symbol {
     pub(crate) fn kind(&self) -> String {
         self.inner.borrow().def.kind()
     }
+
+    pub(super) fn source_hash(&self) -> u64 {
+        self.inner.borrow().def.source_hash()
+    }
 }
 
 impl Symbol {
@@ -502,7 +522,7 @@ impl Symbol {
         if self.is_target_mode() {
             ids.insert(self.id());
         }
-        self.with_children(|(_, child)| child.search_target_mode_ids(ids))
+        self.try_children(|(_, child)| child.search_target_mode_ids(ids))
     }
 
     /// Search down the symbol tree for a qualified name.
@@ -566,11 +586,12 @@ impl Symbol {
         let def = &self.inner.borrow().def;
         let full_name = self.full_name();
         let visibility = self.visibility();
+        let hash = self.source_hash();
         if debug && cfg!(feature = "ansi-color") && self.inner.borrow().used.get().is_none() {
             let checked = if self.is_checked() { " ✓" } else { "" };
             color_print::cwrite!(
                 f,
-                "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}]</>{checked}",
+                "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>{checked}",
                 "",
             )?;
         } else {
@@ -580,7 +601,7 @@ impl Symbol {
             writeln!(f)?;
             let indent = 4;
 
-            self.with_children(|(id, child)| {
+            self.try_children(|(id, child)| {
                 child.print_symbol(f, Some(id), depth + indent, debug, true)
             })?;
         }

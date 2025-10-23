@@ -251,13 +251,48 @@ impl ResolveContext {
         self.mode >= ResolveMode::Checked
     }
 
-    pub fn update_files(&mut self, files: &[&impl AsRef<std::path::Path>]) -> ResolveContext<()> {
-        files.iter().for_each(|path| {
-            self.sources.update_file(path.as_ref());
-        });
+    pub fn update_files(&mut self, files: &[impl AsRef<std::path::Path>]) -> ResolveResult<()> {
+        // find affected source files
+        let replaced = files
+            .iter()
+            .map(|path| self.sources.update_file(path.as_ref()))
+            .collect::<ResolveResult<Vec<_>>>()?;
 
-        todo!("update symbols")
+        // mark former symbols as deleted
+        replaced
+            .iter()
+            .map(|rep| rep.old.hash)
+            .for_each(|hash| self.symbol_table.delete_by_hash(hash));
+
+        //todo!("update symbols")
+        Ok(())
     }
+}
+
+#[test]
+fn test_update_files() {
+    std::fs::copy(
+        "../examples/update_files/sub_0.µcad",
+        "../examples/update_files/sub.µcad",
+    )
+    .expect("test error");
+
+    let root = SourceFile::load("../examples/update_files/top.µcad").expect("test error");
+    let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
+
+    eprintln!("{context:?}");
+
+    std::fs::copy(
+        "../examples/update_files/sub_1.µcad",
+        "../examples/update_files/sub.µcad",
+    )
+    .expect("test error");
+
+    context
+        .update_files(&["../examples/update_files/sub.µcad"])
+        .expect("test error");
+
+    eprintln!("{context:?}");
 }
 
 impl WriteToFile for ResolveContext {}

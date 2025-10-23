@@ -78,6 +78,11 @@ impl SymbolMap {
             .for_each(|map| from_children.extend(map.iter().map(|(k, v)| (k.clone(), v.clone()))));
         Ok(from_children)
     }
+
+    pub(crate) fn delete_by_hash(&self, hash: u64) {
+        self.iter()
+            .for_each(|(_, symbol)| symbol.delete_by_hash(hash))
+    }
 }
 
 impl std::fmt::Display for SymbolMap {

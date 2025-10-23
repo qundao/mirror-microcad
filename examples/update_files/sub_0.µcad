@@ -1,0 +1,3 @@
+mod Y {
+    fn f() { std::print("f0") }
+}

@@ -238,20 +238,25 @@ impl Sources {
     pub fn update_file(
         &mut self,
         path: impl AsRef<std::path::Path>,
-    ) -> ResolveResult<Rc<SourceFile>> {
-        let path = path.as_ref().to_path_buf();
+    ) -> ResolveResult<ReplacedSourceFile> {
+        let path = path.as_ref().canonicalize()?.to_path_buf();
         if let Some(index) = self.by_path.get(&path) {
-            let old_source_file = self.source_files[*index].clone();
-            let name = old_source_file.name.clone();
-            let new_source_file = SourceFile::load_with_name(path, name)?;
-            self.by_hash.remove(&old_source_file.hash);
-            self.by_hash.insert(new_source_file.hash, *index);
-            self.source_files[*index] = new_source_file;
-            Ok(old_source_file)
+            let old = self.source_files[*index].clone();
+            let name = old.name.clone();
+            let new = SourceFile::load_with_name(path, name)?;
+            self.by_hash.remove(&old.hash);
+            self.by_hash.insert(new.hash, *index);
+            self.source_files[*index] = new.clone();
+            Ok(ReplacedSourceFile { new, old })
         } else {
             Err(ResolveError::FileNotFound(path))
         }
     }
+}
+
+pub(super) struct ReplacedSourceFile {
+    pub(super) old: Rc<SourceFile>,
+    pub(super) new: Rc<SourceFile>,
 }
 
 /// Trait that can fetch for a file by it's hash value.

@@ -85,6 +85,10 @@ pub enum ResolveError {
     /// Symbol is private
     #[error("Symbol {0} is private")]
     SymbolIsPrivate(QualifiedName),
+
+    /// ScanDir Error
+    #[error("{0}")]
+    IoError(#[from] std::io::Error),
 }
 
 /// Result type of any resolve.

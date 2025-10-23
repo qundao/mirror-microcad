@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{builtin::*, rc::*, syntax::*, value::*};
+use crate::{builtin::*, rc::*, src_ref::*, syntax::*, value::*};
 
 /// Symbol definition
 #[derive(Clone)]
@@ -85,6 +85,17 @@ impl SymbolDefinition {
             Self::UseAll(..) => "use all".to_string(),
             #[cfg(test)]
             Self::Tester(..) => "tester".to_string(),
+        }
+    }
+
+    pub(crate) fn source_hash(&self) -> u64 {
+        match self {
+            SymbolDefinition::SourceFile(sf) => sf.hash,
+            SymbolDefinition::Module(md) => md.src_ref.source_hash(),
+            SymbolDefinition::Workbench(wd) => wd.src_ref.source_hash(),
+            SymbolDefinition::Function(fd) => fd.src_ref.source_hash(),
+            SymbolDefinition::ConstExpression(_, id, _) => id.src_ref().source_hash(),
+            _ => unreachable!(),
         }
     }
 }

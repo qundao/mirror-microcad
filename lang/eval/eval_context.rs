@@ -290,7 +290,7 @@ impl UseSymbol for EvalContext {
             Err(EvalError::NoSymbolsToUse(symbol.full_name()))
         } else {
             if self.is_module() {
-                symbol.with_children(|(id, symbol)| {
+                symbol.try_children(|(id, symbol)| {
                     let symbol = symbol.clone_with_visibility(visibility);
                     if within.is_empty() {
                         self.symbol_table.insert_symbol(id.clone(), symbol)?;
@@ -305,7 +305,7 @@ impl UseSymbol for EvalContext {
             }
 
             if self.is_code() {
-                symbol.with_children(|(id, symbol)| {
+                symbol.try_children(|(id, symbol)| {
                     self.stack.put_local(Some(id.clone()), symbol.clone())
                 })?;
                 log::trace!("Local Stack:\n{:?}", self.stack);
