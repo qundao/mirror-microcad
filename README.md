@@ -124,6 +124,6 @@ There is a [list of all tests](lang/doc/test_list.md) included in this documenta
 
 Thanks to the [Prototype Fund](https://www.prototypefund.de/) and the [Federal Ministry of Research, Technology and Space](https://www.bmbf.de/EN/) for funding this project in 2025.
 
-![https://prototypefund.de/en/](images/Prototype_Fund_Logo_2025.svg)
-![https://okfn.de/en/](images/Open_Knowledge_Foundation_Deutschland_Logo.svg)
+![https://prototypefund.de/en/](https://codeberg.org/microcad/microcad/raw/branch/master/images/Prototype_Fund_Logo_2025.svg)
+![https://okfn.de/en/](https://codeberg.org/microcad/microcad/raw/branch/master/images/Open_Knowledge_Foundation_Deutschland_Logo.svg)
 ![https://www.bmbf.de/EN/](https://upload.wikimedia.org/wikipedia/commons/d/df/BMFTR_Logo.svg)
