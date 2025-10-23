@@ -1,6 +1,8 @@
 # microcad
 
-This crate provides the command line interpreter of [µcad](http://microcad.xyz).
+This crate provides the command line interpreter of µcad.
+
+**Note**: This project is in an early stage of development and is not yet feature complete!
 
 ## Installation
 

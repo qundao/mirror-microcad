@@ -1,10 +1,8 @@
 # µcad
 
-[![Status](https://github.com/Rustfahrtagentur/microcad/actions/workflows/rust.yml/badge.svg)](https://github.com/Rustfahrtagentur/microcad/actions)
 [![Crates.io](https://img.shields.io/crates/v/microcad.svg)](https://crates.io/crates/microcad)
 [![Documentation](https://docs.rs/microcad/badge.svg)](https://docs.rs/microcad/)
-[![Codecov](https://codecov.io/github/Rustfahrtagentur/mcad/coverage.svg?branch=main)](https://codecov.io/gh/Rustfahrtagentur/microcad)
-[![Dependency status](https://deps.rs/repo/github/Rustfahrtagentur/mcad/status.svg)](https://deps.rs/repo/github/Rustfahrtagentur/microcad)
+[![dependency status](https://deps.rs/crate/microcad/0.2.6/status.svg)](https://deps.rs/crate/microcad/0.2.6)
 
 ![µcad Logo](lang/doc/images/logo.png)
 
@@ -78,7 +76,7 @@ sudo apt install ninja-build
 To install the latest release of *µcad* via *cargo*, type:
 
 ```sh
-cargo install microcad-cli
+cargo install microcad
 ```
 
 ## Command line usage
