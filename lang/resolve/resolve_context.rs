@@ -301,29 +301,24 @@ fn test_update_sub_mod() {
     use crate::eval::*;
 
     std::fs::copy(
-        "../examples/update_files/sub_0.µcad",
-        "../examples/update_files/sub.µcad",
-    )
-    .expect("test error");
-    std::fs::copy(
-        "../examples/update_files/top_0.µcad",
-        "../examples/update_files/top.µcad",
+        "../examples/update_files/sub/sub_0.µcad",
+        "../examples/update_files/sub/sub.µcad",
     )
     .expect("test error");
 
-    let root = SourceFile::load("../examples/update_files/top.µcad").expect("test error");
+    let root = SourceFile::load("../examples/update_files/sub/top.µcad").expect("test error");
     let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
 
     eprintln!("{context:?}");
 
     std::fs::copy(
-        "../examples/update_files/sub_1.µcad",
-        "../examples/update_files/sub.µcad",
+        "../examples/update_files/sub/sub_1.µcad",
+        "../examples/update_files/sub/sub.µcad",
     )
     .expect("test error");
 
     context
-        .reload_files(&["../examples/update_files/sub.µcad"])
+        .reload_files(&["../examples/update_files/sub/sub.µcad"])
         .expect("test error");
 
     eprintln!("{context:?}");
@@ -343,29 +338,24 @@ fn test_update_top_mod() {
     use crate::eval::*;
 
     std::fs::copy(
-        "../examples/update_files/sub_0.µcad",
-        "../examples/update_files/sub.µcad",
-    )
-    .expect("test error");
-    std::fs::copy(
-        "../examples/update_files/top_0.µcad",
-        "../examples/update_files/top.µcad",
+        "../examples/update_files/top/top_0.µcad",
+        "../examples/update_files/top/top.µcad",
     )
     .expect("test error");
 
-    let root = SourceFile::load("../examples/update_files/top.µcad").expect("test error");
+    let root = SourceFile::load("../examples/update_files/top/top.µcad").expect("test error");
     let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
 
     eprintln!("{context:?}");
 
     std::fs::copy(
-        "../examples/update_files/top_1.µcad",
-        "../examples/update_files/top.µcad",
+        "../examples/update_files/top/top_1.µcad",
+        "../examples/update_files/top/top.µcad",
     )
     .expect("test error");
 
     context
-        .reload_files(&["../examples/update_files/top.µcad"])
+        .reload_files(&["../examples/update_files/top/top.µcad"])
         .expect("test error");
 
     eprintln!("{context:?}");
