@@ -1,6 +1,6 @@
 -- Test --
   builtin_translate_twice
-  ../doc/libs/builtin/ops.md:92
+  ../lang/doc/libs/builtin/ops.md:92
 
 -- Code --
 

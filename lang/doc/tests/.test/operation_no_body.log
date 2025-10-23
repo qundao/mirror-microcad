@@ -1,6 +1,6 @@
 -- Test --
   operation_no_body
-  ../doc/tests/semicolon.md:16
+  ../lang/doc/tests/semicolon.md:16
 
 -- Code --
 

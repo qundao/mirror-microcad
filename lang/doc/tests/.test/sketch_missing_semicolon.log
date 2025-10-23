@@ -1,6 +1,6 @@
 -- Test --
   sketch_missing_semicolon
-  ../doc/tests/semicolon.md:27
+  ../lang/doc/tests/semicolon.md:27
 
 -- Code --
 

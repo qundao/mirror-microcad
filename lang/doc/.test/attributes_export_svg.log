@@ -1,6 +1,6 @@
 -- Test --
   attributes_export_svg
-  ../doc/attributes.md:80
+  ../lang/doc/attributes.md:80
 
 -- Code --
 

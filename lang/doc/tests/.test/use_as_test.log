@@ -1,6 +1,6 @@
 -- Test --
   use_as_test
-  ../doc/tests/use.md:46
+  ../lang/doc/tests/use.md:46
 
 -- Code --
 

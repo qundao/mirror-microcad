@@ -1,6 +1,6 @@
 -- Test --
   workbench_assignment_var
-  ../doc/tests/statement_usage.md:496
+  ../lang/doc/tests/statement_usage.md:496
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   builtin_print
-  ../doc/libs/builtin/debug.md:7
+  ../lang/doc/libs/builtin/debug.md:7
 
 -- Code --
 

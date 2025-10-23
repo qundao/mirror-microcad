@@ -1,6 +1,6 @@
 -- Test --
   hull_multiple
-  ../doc/libs/std/ops/hull.md:19
+  ../lang/doc/libs/std/ops/hull.md:19
 
 -- Code --
 

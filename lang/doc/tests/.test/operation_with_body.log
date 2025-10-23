@@ -1,6 +1,6 @@
 -- Test --
   operation_with_body
-  ../doc/tests/semicolon.md:5
+  ../lang/doc/tests/semicolon.md:5
 
 -- Code --
 

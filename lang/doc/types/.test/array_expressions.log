@@ -1,6 +1,6 @@
 -- Test --
   array_expressions
-  ../doc/types/arrays.md:23
+  ../lang/doc/types/arrays.md:23
 
 -- Code --
 

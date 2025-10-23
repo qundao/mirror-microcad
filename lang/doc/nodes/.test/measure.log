@@ -1,6 +1,6 @@
 -- Test --
   measure
-  ../doc/nodes/measures.md:9
+  ../lang/doc/nodes/measures.md:9
 
 -- Code --
 

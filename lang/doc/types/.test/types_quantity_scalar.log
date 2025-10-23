@@ -1,6 +1,6 @@
 -- Test --
   types_quantity_scalar
-  ../doc/types/quantity.md:47
+  ../lang/doc/types/quantity.md:47
 
 -- Code --
 

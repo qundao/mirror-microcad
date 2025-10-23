@@ -1,6 +1,6 @@
 -- Test --
   pre_init_return
-  ../doc/tests/statement_usage.md:252
+  ../lang/doc/tests/statement_usage.md:252
 
 -- Code --
 

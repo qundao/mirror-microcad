@@ -1,6 +1,6 @@
 -- Test --
   pre_init_expression_model
-  ../doc/tests/statement_usage.md:300
+  ../lang/doc/tests/statement_usage.md:300
 
 -- Code --
 

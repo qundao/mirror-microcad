@@ -1,6 +1,6 @@
 -- Test --
   tuple_neg
-  ../doc/types/tuples.md:146
+  ../lang/doc/types/tuples.md:146
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   export_attributes
-  ../doc/export.md:42
+  ../lang/doc/export.md:42
 
 -- Code --
 

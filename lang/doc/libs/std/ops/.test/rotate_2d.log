@@ -1,6 +1,6 @@
 -- Test --
   rotate_2d
-  ../doc/libs/std/ops/rotate.md:7
+  ../lang/doc/libs/std/ops/rotate.md:7
 
 -- Code --
 

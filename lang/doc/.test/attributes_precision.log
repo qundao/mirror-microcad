@@ -1,6 +1,6 @@
 -- Test --
   attributes_precision
-  ../doc/attributes.md:56
+  ../lang/doc/attributes.md:56
 
 -- Code --
 

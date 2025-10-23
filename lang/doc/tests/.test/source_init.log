@@ -1,6 +1,6 @@
 -- Test --
   source_init
-  ../doc/tests/statement_usage.md:36
+  ../lang/doc/tests/statement_usage.md:36
 
 -- Code --
 

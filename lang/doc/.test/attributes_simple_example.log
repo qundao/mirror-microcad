@@ -1,6 +1,6 @@
 -- Test --
   attributes_simple_example
-  ../doc/attributes.md:16
+  ../lang/doc/attributes.md:16
 
 -- Code --
 

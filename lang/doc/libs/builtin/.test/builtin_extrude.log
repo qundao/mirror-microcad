@@ -1,6 +1,6 @@
 -- Test --
   builtin_extrude
-  ../doc/libs/builtin/ops.md:40
+  ../lang/doc/libs/builtin/ops.md:40
 
 -- Code --
 

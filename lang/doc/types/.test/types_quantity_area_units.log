@@ -1,6 +1,6 @@
 -- Test --
   types_quantity_area_units
-  ../doc/types/quantity.md:102
+  ../lang/doc/types/quantity.md:102
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   builtin_modules
-  ../doc/tests/modules.md:5
+  ../lang/doc/tests/modules.md:5
 
 -- Code --
 

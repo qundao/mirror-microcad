@@ -1,6 +1,6 @@
 -- Test --
   builtin_subtract_2d
-  ../doc/libs/builtin/ops.md:9
+  ../lang/doc/libs/builtin/ops.md:9
 
 -- Code --
 

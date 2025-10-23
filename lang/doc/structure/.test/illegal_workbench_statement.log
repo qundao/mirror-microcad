@@ -1,6 +1,6 @@
 -- Test --
   illegal_workbench_statement
-  ../doc/structure/workbench.md:252
+  ../lang/doc/structure/workbench.md:252
 
 -- Code --
 

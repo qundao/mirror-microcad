@@ -1,6 +1,6 @@
 -- Test --
   named_tuple_access
-  ../doc/types/tuples.md:10
+  ../lang/doc/types/tuples.md:10
 
 -- Code --
 

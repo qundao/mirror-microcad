@@ -1,6 +1,6 @@
 -- Test --
   tuple_match_variants
-  ../doc/structure/arguments.md:81
+  ../lang/doc/structure/arguments.md:81
 
 -- Code --
 

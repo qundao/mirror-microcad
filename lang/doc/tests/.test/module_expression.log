@@ -1,6 +1,6 @@
 -- Test --
   module_expression
-  ../doc/tests/statement_usage.md:186
+  ../lang/doc/tests/statement_usage.md:186
 
 -- Code --
 

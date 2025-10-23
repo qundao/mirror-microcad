@@ -1,6 +1,6 @@
 -- Test --
   tuple_mul_scale
-  ../doc/types/tuples.md:126
+  ../lang/doc/types/tuples.md:126
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   call_workbench
-  ../doc/structure/calls.md:28
+  ../lang/doc/structure/calls.md:28
 
 -- Code --
 

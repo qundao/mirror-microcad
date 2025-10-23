@@ -1,6 +1,6 @@
 -- Test --
   types_named_tuple_color
-  ../doc/types/named_tuple.md:30
+  ../lang/doc/types/named_tuple.md:30
 
 -- Code --
 

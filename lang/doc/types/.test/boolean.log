@@ -1,6 +1,6 @@
 -- Test --
   boolean
-  ../doc/types/primitive_types.md:17
+  ../lang/doc/types/primitive_types.md:17
 
 -- Code --
 

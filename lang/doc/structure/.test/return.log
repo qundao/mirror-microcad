@@ -1,6 +1,6 @@
 -- Test --
   return
-  ../doc/structure/functions.md:35
+  ../lang/doc/structure/functions.md:35
 
 -- Code --
 

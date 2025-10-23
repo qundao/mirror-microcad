@@ -1,6 +1,6 @@
 -- Test --
   tuple_div
-  ../doc/types/tuples.md:137
+  ../lang/doc/types/tuples.md:137
 
 -- Code --
 

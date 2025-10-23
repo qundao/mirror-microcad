@@ -1,6 +1,6 @@
 -- Test --
   call_function
-  ../doc/structure/calls.md:10
+  ../lang/doc/structure/calls.md:10
 
 -- Code --
 

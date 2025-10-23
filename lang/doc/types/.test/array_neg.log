@@ -1,6 +1,6 @@
 -- Test --
   array_neg
-  ../doc/types/arrays.md:104
+  ../lang/doc/types/arrays.md:104
 
 -- Code --
 

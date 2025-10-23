@@ -1,6 +1,6 @@
 -- Test --
   function_assignment_var
-  ../doc/tests/statement_usage.md:716
+  ../lang/doc/tests/statement_usage.md:716
 
 -- Code --
 

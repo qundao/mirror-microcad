@@ -1,6 +1,6 @@
 -- Test --
   types_quantity_length
-  ../doc/types/quantity.md:59
+  ../lang/doc/types/quantity.md:59
 
 -- Code --
 

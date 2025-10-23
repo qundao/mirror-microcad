@@ -1,6 +1,6 @@
 -- Test --
   union_alt_operator
-  ../doc/libs/std/ops/union.md:17
+  ../lang/doc/libs/std/ops/union.md:17
 
 -- Code --
 

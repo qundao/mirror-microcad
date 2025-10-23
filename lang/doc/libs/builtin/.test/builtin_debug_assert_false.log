@@ -1,6 +1,6 @@
 -- Test --
   builtin_debug_assert_false
-  ../doc/libs/builtin/debug.md:23
+  ../lang/doc/libs/builtin/debug.md:23
 
 -- Code --
 

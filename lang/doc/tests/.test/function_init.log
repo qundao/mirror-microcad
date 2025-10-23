@@ -1,6 +1,6 @@
 -- Test --
   function_init
-  ../doc/tests/statement_usage.md:668
+  ../lang/doc/tests/statement_usage.md:668
 
 -- Code --
 

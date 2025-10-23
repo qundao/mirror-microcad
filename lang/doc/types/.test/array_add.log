@@ -1,6 +1,6 @@
 -- Test --
   array_add
-  ../doc/types/arrays.md:62
+  ../lang/doc/types/arrays.md:62
 
 -- Code --
 

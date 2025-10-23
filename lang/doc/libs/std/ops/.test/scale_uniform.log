@@ -1,6 +1,6 @@
 -- Test --
   scale_uniform
-  ../doc/libs/std/ops/scale.md:7
+  ../lang/doc/libs/std/ops/scale.md:7
 
 -- Code --
 

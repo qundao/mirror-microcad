@@ -1,6 +1,6 @@
 -- Test --
   types_quantity_arithmetic
-  ../doc/types/quantity.md:172
+  ../lang/doc/types/quantity.md:172
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   empty_op
-  ../doc/tests/semicolon.md:52
+  ../lang/doc/tests/semicolon.md:52
 
 -- Code --
 

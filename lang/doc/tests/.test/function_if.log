@@ -1,6 +1,6 @@
 -- Test --
   function_if
-  ../doc/tests/statement_usage.md:700
+  ../lang/doc/tests/statement_usage.md:700
 
 -- Code --
 

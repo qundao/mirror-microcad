@@ -1,6 +1,6 @@
 -- Test --
   builtin_revolve
-  ../doc/libs/builtin/ops.md:54
+  ../lang/doc/libs/builtin/ops.md:54
 
 -- Code --
 

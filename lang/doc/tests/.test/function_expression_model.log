@@ -1,6 +1,6 @@
 -- Test --
   function_expression_model
-  ../doc/tests/statement_usage.md:740
+  ../lang/doc/tests/statement_usage.md:740
 
 -- Code --
 

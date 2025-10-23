@@ -1,6 +1,6 @@
 -- Test --
   difference_operator
-  ../doc/libs/std/ops/subtract.md:9
+  ../lang/doc/libs/std/ops/subtract.md:9
 
 -- Code --
 

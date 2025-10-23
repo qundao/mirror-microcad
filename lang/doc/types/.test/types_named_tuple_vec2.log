@@ -1,6 +1,6 @@
 -- Test --
   types_named_tuple_vec2
-  ../doc/types/named_tuple.md:43
+  ../lang/doc/types/named_tuple.md:43
 
 -- Code --
 

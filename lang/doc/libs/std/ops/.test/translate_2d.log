@@ -1,6 +1,6 @@
 -- Test --
   translate_2d
-  ../doc/libs/std/ops/translate.md:7
+  ../lang/doc/libs/std/ops/translate.md:7
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   hull_single
-  ../doc/libs/std/ops/hull.md:7
+  ../lang/doc/libs/std/ops/hull.md:7
 
 -- Code --
 

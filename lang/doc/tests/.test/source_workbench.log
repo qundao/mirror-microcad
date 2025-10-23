@@ -1,6 +1,6 @@
 -- Test --
   source_workbench
-  ../doc/tests/statement_usage.md:18
+  ../lang/doc/tests/statement_usage.md:18
 
 -- Code --
 

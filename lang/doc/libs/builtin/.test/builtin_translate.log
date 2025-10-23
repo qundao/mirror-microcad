@@ -1,6 +1,6 @@
 -- Test --
   builtin_translate
-  ../doc/libs/builtin/ops.md:70
+  ../lang/doc/libs/builtin/ops.md:70
 
 -- Code --
 

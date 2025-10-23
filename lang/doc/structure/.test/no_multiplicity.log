@@ -1,6 +1,6 @@
 -- Test --
   no_multiplicity
-  ../doc/structure/arguments.md:145
+  ../lang/doc/structure/arguments.md:145
 
 -- Code --
 

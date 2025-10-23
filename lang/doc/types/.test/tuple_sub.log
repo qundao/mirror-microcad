@@ -1,6 +1,6 @@
 -- Test --
   tuple_sub
-  ../doc/types/tuples.md:114
+  ../lang/doc/types/tuples.md:114
 
 -- Code --
 

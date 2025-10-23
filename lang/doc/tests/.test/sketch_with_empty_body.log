@@ -1,6 +1,6 @@
 -- Test --
   sketch_with_empty_body
-  ../doc/tests/semicolon.md:38
+  ../lang/doc/tests/semicolon.md:38
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   verify_assert_fail
-  ../doc/debug/README.md:21
+  ../lang/doc/debug/README.md:21
 
 -- Code --
 

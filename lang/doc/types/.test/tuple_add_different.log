@@ -1,6 +1,6 @@
 -- Test --
   tuple_add_different
-  ../doc/types/tuples.md:101
+  ../lang/doc/types/tuples.md:101
 
 -- Code --
 

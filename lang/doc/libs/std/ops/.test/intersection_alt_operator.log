@@ -1,6 +1,6 @@
 -- Test --
   intersection_alt_operator
-  ../doc/libs/std/ops/intersect.md:17
+  ../lang/doc/libs/std/ops/intersect.md:17
 
 -- Code --
 

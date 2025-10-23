@@ -1,6 +1,6 @@
 -- Test --
   tuple_assignment
-  ../doc/types/tuples.md:52
+  ../lang/doc/types/tuples.md:52
 
 -- Code --
 

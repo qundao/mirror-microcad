@@ -1,6 +1,6 @@
 -- Test --
   tuple_match_warnings
-  ../doc/structure/arguments.md:120
+  ../lang/doc/structure/arguments.md:120
 
 -- Code --
 

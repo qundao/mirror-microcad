@@ -1,6 +1,6 @@
 -- Test --
   tuple_assignment_convert
-  ../doc/types/tuples.md:75
+  ../lang/doc/types/tuples.md:75
 
 -- Code --
 

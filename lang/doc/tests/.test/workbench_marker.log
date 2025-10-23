@@ -1,6 +1,6 @@
 -- Test --
   workbench_marker
-  ../doc/tests/statement_usage.md:480
+  ../lang/doc/tests/statement_usage.md:480
 
 -- Code --
 

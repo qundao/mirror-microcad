@@ -1,6 +1,6 @@
 -- Test --
   init_expression_model
-  ../doc/tests/statement_usage.md:406
+  ../lang/doc/tests/statement_usage.md:406
 
 -- Code --
 

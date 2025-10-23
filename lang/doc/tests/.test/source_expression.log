@@ -1,6 +1,6 @@
 -- Test --
   source_expression
-  ../doc/tests/statement_usage.md:84
+  ../lang/doc/tests/statement_usage.md:84
 
 -- Code --
 

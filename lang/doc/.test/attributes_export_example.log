@@ -1,6 +1,6 @@
 -- Test --
   attributes_export_example
-  ../doc/attributes.md:122
+  ../lang/doc/attributes.md:122
 
 -- Code --
 

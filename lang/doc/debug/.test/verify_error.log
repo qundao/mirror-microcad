@@ -1,6 +1,6 @@
 -- Test --
   verify_error
-  ../doc/debug/README.md:29
+  ../lang/doc/debug/README.md:29
 
 -- Code --
 

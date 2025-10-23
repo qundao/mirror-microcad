@@ -1,6 +1,6 @@
 -- Test --
   range_expressions
-  ../doc/types/arrays.md:33
+  ../lang/doc/types/arrays.md:33
 
 -- Code --
 

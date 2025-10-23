@@ -1,6 +1,6 @@
 -- Test --
   module_workbench
-  ../doc/tests/statement_usage.md:98
+  ../lang/doc/tests/statement_usage.md:98
 
 -- Code --
 

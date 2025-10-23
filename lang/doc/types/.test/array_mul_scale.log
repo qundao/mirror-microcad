@@ -1,6 +1,6 @@
 -- Test --
   array_mul_scale
-  ../doc/types/arrays.md:84
+  ../lang/doc/types/arrays.md:84
 
 -- Code --
 

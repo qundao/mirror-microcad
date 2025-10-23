@@ -1,6 +1,6 @@
 -- Test --
   if_models
-  ../doc/structure/conditionals.md:9
+  ../lang/doc/structure/conditionals.md:9
 
 -- Code --
 

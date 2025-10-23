@@ -1,6 +1,6 @@
 -- Test --
   toml_import
-  ../doc/import.md:26
+  ../lang/doc/import.md:26
 
 -- Code --
 

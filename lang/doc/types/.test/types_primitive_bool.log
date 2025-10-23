@@ -1,6 +1,6 @@
 -- Test --
   types_primitive_bool
-  ../doc/types/primitive_types.md:9
+  ../lang/doc/types/primitive_types.md:9
 
 -- Code --
 
