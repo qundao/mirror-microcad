@@ -1,11 +1,12 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_builtin_proc_macros::Primitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
 /// Pie geometry with offset.
-#[derive(Debug, Clone)]
+#[derive(Primitive2D, Debug, Clone)]
 pub struct Pie {
     /// Radius of the circle.
     pub radius: Scalar,
@@ -18,22 +19,6 @@ pub struct Pie {
 }
 
 impl Pie {
-    /// Create a new pie.
-    pub fn new(radius: Scalar, start_angle: Angle, end_angle: Angle) -> Self {
-        use cgmath::Angle;
-        let mut start_angle = start_angle.normalize();
-        let mut end_angle = end_angle.normalize();
-        if start_angle > end_angle {
-            std::mem::swap(&mut start_angle, &mut end_angle);
-        }
-
-        Self {
-            radius,
-            start_angle,
-            end_angle,
-        }
-    }
-
     /// A pie is a circle when `offset_angle >= 360°`.
     pub fn is_circle(&self) -> bool {
         self.offset_angle() >= cgmath::Deg(360.0).into()
@@ -81,35 +66,5 @@ impl Render<Geometry2D> for Pie {
 impl RenderWithContext<Geometry2DOutput> for Pie {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, _| Ok(self.render(&context.current_resolution())))
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Pie {
-    fn id() -> &'static str {
-        "Pie"
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Primitive2D
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|args| {
-            Ok(BuiltinWorkpieceOutput::Primitive2D(Box::new(Pie::new(
-                args.get("radius"),
-                args.get("start_angle"),
-                args.get("end_angle"),
-            ))))
-        }
-    }
-
-    fn parameters() -> ParameterValueList {
-        [
-            parameter!(radius: Scalar),
-            parameter!(start_angle: Angle = 0.0),
-            parameter!(end_angle: Angle = 90.0),
-        ]
-        .into_iter()
-        .collect()
     }
 }
