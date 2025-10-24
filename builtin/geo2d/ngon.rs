@@ -8,7 +8,7 @@ use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
 /// Ngon primitive with radius.
-#[derive(Primitive2D, Debug, Clone)]
+#[derive(Primitive2D)]
 pub struct Ngon {
     /// Number of sides.
     n: Integer,
