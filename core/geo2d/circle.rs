@@ -40,12 +40,10 @@ impl FetchPoints2D for Circle {
 
 impl Render<Polygon> for Circle {
     fn render(&self, resolution: &RenderResolution) -> Polygon {
-        use std::f64::consts::PI;
         let n = resolution.circular_segments(self.radius);
-        let points = (0..n)
-            .map(|i| {
-                let angle = 2.0 * PI * (i as f64) / (n as f64);
-                geo::coord!(x: self.offset.x + self.radius * angle.cos(), y: self.offset.y + self.radius * angle.sin())
+        let points = NgonIterator::new(n)
+            .map(|p| {
+                geo::coord!(x: self.radius * p.x + self.offset.x, y: self.radius * p.y + self.offset.y)
             })
             .collect();
 
