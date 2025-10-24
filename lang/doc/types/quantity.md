@@ -77,7 +77,7 @@ radian = 1rad * pi;
 degree = 180°;
 degree_ = 180deg;
 grad = 200grad;
-turn = 0.5turn;
+turn = 0.5turns;
 
 std::debug::assert( [degree, degree_, grad, turn, radian].all_equal() );
 ```

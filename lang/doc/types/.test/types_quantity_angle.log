@@ -9,7 +9,7 @@
  3: degree = 180°;
  4: degree_ = 180deg;
  5: grad = 200grad;
- 6: turn = 0.5turn;
+ 6: turn = 0.5turns;
  7: 
  8: std::debug::assert( [degree, degree_, grad, turn, radian].all_equal() );
 
