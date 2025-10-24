@@ -2,8 +2,7 @@
 
 [![CI](https://ci.codeberg.org/api/badges/15446/status.svg)](https://ci.codeberg.org/repos/15446)
 [![Crates.io](https://img.shields.io/crates/v/microcad.svg)](https://crates.io/crates/microcad)
-[![Documentation](https://docs.rs/microcad/badge.svg)](https://docs.rs/microcad/)
-[![dependency status](https://deps.rs/crate/microcad/0.2.6/status.svg)](https://deps.rs/crate/microcad/0.2.6)
+[![Dependency status](https://deps.rs/repo/codeberg/microcad/microcad/status.svg)](https://deps.rs/repo/codeberg/microcad/microcad)
 
 ![µcad Logo](lang/doc/images/logo.png)
 
