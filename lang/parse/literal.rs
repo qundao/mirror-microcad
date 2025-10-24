@@ -104,7 +104,7 @@ impl std::str::FromStr for Unit {
             "deg" => Ok(Self::Deg),
             "°" => Ok(Self::DegS),
             "grad" => Ok(Self::Grad),
-            "turn" => Ok(Self::Turn),
+            "turns" => Ok(Self::Turns),
             "rad" => Ok(Self::Rad),
 
             // Weights

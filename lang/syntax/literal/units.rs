@@ -39,7 +39,7 @@ pub enum Unit {
     /// Gradient
     Grad,
     /// Turns
-    Turn,
+    Turns,
     /// Radians
     Rad,
 
@@ -119,7 +119,7 @@ impl std::fmt::Display for Unit {
             Self::Deg => write!(f, "deg"),
             Self::DegS => write!(f, "°"),
             Self::Grad => write!(f, "grad"),
-            Self::Turn => write!(f, "turn"),
+            Self::Turns => write!(f, "turns"),
             Self::Rad => write!(f, "rad"),
 
             // Weights
@@ -170,7 +170,7 @@ impl Unit {
             | Self::Inch
             | Self::Foot
             | Self::Yard => Type::Quantity(QuantityType::Length),
-            Self::Deg | Self::DegS | Self::Grad | Self::Turn | Self::Rad => {
+            Self::Deg | Self::DegS | Self::Grad | Self::Turns | Self::Rad => {
                 Type::Quantity(QuantityType::Angle)
             }
             Self::Gram | Self::Kilogram | Self::Pound | Self::Ounce => {
@@ -217,7 +217,7 @@ impl Unit {
             // Angles
             Self::Deg | Self::DegS => x / 180. * std::f64::consts::PI,
             Self::Grad => x / 200. * std::f64::consts::PI,
-            Self::Turn => x * 2.0 * std::f64::consts::PI,
+            Self::Turns => x * 2.0 * std::f64::consts::PI,
             Self::Rad => x,
 
             // Weights
