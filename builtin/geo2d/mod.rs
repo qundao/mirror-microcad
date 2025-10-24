@@ -3,12 +3,14 @@
 
 mod circle;
 mod line;
+mod ngon;
 mod pie;
 mod rect;
 mod text;
 
 pub use circle::*;
 pub use line::*;
+pub use ngon::*;
 pub use pie::*;
 pub use rect::*;
 pub use text::*;
@@ -20,6 +22,7 @@ pub fn geo2d() -> Symbol {
     crate::ModuleBuilder::new("geo2d".try_into().expect("valid id"))
         .symbol(Circle::symbol())
         .symbol(Line::symbol())
+        .symbol(Ngon::symbol())
         .symbol(Pie::symbol())
         .symbol(Rect::symbol())
         .symbol(Text::symbol())
