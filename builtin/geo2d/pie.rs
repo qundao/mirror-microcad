@@ -69,7 +69,7 @@ impl Render<Geometry2D> for Pie {
             (0..n)
                 .map(|i| {
                     let angle = 2.0 * PI * (i as f64) / (n as f64);
-                    geo::coord!(x: self.radius * angle.cos(), y: self.radius * angle.sin())
+                    geo::coord!(x: angle.cos(), y: angle.sin()) * self.radius
                 })
                 .collect()
         };
@@ -81,23 +81,6 @@ impl Render<Geometry2D> for Pie {
 impl RenderWithContext<Geometry2DOutput> for Pie {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, _| Ok(self.render(&context.current_resolution())))
-    }
-}
-
-impl CalcBounds2D for Pie {
-    fn calc_bounds_2d(&self) -> Bounds2D {
-        use geo::Coord;
-
-        if self.radius > 0.0 {
-            let r = Vec2::new(self.radius, self.radius);
-            let min: (Scalar, Scalar) = (-r).into();
-            let max: (Scalar, Scalar) = r.into();
-
-            Some(Rect::new(Coord::from(min), Coord::from(max)))
-        } else {
-            None
-        }
-        .into()
     }
 }
 
