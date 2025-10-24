@@ -2,7 +2,32 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{DeriveInput, parse_macro_input};
+use syn::{DeriveInput, Field, parse_macro_input, punctuated::Punctuated, token::Comma};
+
+/// Build parameter list entries: for each field, generate `parameter!(<field_name>: <Type>)`
+fn generate_parameters(
+    fields: &Punctuated<Field, Comma>,
+) -> impl Iterator<Item = proc_macro2::TokenStream> + '_ {
+    fields.iter().map(|field| {
+        let ident = field.ident.as_ref().unwrap();
+        let ty = &field.ty;
+        quote! {
+            microcad_lang::builtin::parameter!( #ident : #ty )
+        }
+    })
+}
+
+/// Build argument list entries: for each field, generate `<field_name>: args.get("<field_name>")`
+fn generate_arguments(
+    fields: &Punctuated<Field, Comma>,
+) -> impl Iterator<Item = proc_macro2::TokenStream> + '_ {
+    fields.iter().map(|field| {
+        let ident = field.ident.as_ref().unwrap();
+        quote! {
+            #ident: args.get(stringify!(#ident))
+        }
+    })
+}
 
 #[proc_macro_derive(Primitive2D)]
 pub fn derive_primitive2d(input: TokenStream) -> TokenStream {
@@ -33,22 +58,8 @@ pub fn derive_primitive2d(input: TokenStream) -> TokenStream {
         }
     };
 
-    // Build parameter list entries: for each field, generate `parameter!(<field_name>: <Type>)`
-    let parameters = fields.iter().map(|field| {
-        let ident = field.ident.as_ref().unwrap();
-        let ty = &field.ty;
-        quote! {
-            parameter!( #ident : #ty )
-        }
-    });
-
-    // Build argument list entries: for each field, generate `<field_name>: args.get("<field_name>")`
-    let arguments = fields.iter().map(|field| {
-        let ident = field.ident.as_ref().unwrap();
-        quote! {
-            #ident: args.get(stringify!(#ident))
-        }
-    });
+    let parameters = generate_parameters(fields);
+    let arguments = generate_arguments(fields);
 
     let expanded = quote! {
         impl microcad_lang::builtin::BuiltinWorkbenchDefinition for #name {
