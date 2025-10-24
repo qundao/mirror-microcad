@@ -3,12 +3,12 @@
 
 //! Built-in Ngon primitive.
 
-use microcad_builtin_proc_macros::Primitive2D;
+use microcad_builtin_proc_macros::BuiltinPrimitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
 /// Ngon primitive with radius.
-#[derive(Primitive2D)]
+#[derive(BuiltinPrimitive2D)]
 pub struct Ngon {
     /// Number of sides.
     n: Integer,

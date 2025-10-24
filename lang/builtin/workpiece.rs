@@ -132,6 +132,11 @@ pub trait BuiltinWorkbenchDefinition {
     /// The kind of the built-in workbench.
     fn kind() -> BuiltinWorkbenchKind;
 
+    /// A help string as markdown.
+    fn help() -> String {
+        String::new()
+    }
+
     /// The expected output type.
     fn output_type() -> OutputType {
         OutputType::NotDetermined

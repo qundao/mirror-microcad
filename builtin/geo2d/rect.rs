@@ -1,11 +1,11 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_builtin_proc_macros::Primitive2D;
+use microcad_builtin_proc_macros::BuiltinPrimitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
-#[derive(Primitive2D)]
+#[derive(BuiltinPrimitive2D)]
 pub struct Rect {
     x: Scalar,
     y: Scalar,

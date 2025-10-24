@@ -1,11 +1,11 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_builtin_proc_macros::BuiltinOperation3D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, model::*, render::*};
 
-#[derive(Debug)]
-#[allow(dead_code)]
+#[derive(BuiltinOperation3D)]
 pub struct Extrude {
     height: Scalar,
     n_divisions: Integer,
@@ -28,43 +28,5 @@ impl Operation for Extrude {
             let mesh = geometries.linear_extrude(self.height);
             Ok(WithBounds3D::new(mesh.inner.into(), mesh.bounds))
         })
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Extrude {
-    fn id() -> &'static str {
-        "extrude"
-    }
-
-    fn output_type() -> OutputType {
-        OutputType::Geometry3D
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Operation
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|args| {
-            Ok(BuiltinWorkpieceOutput::Operation(Box::new(Extrude {
-                height: args.get("height"),
-                n_divisions: args.get("n_divisions"),
-                twist_degrees: args.get("twist_degrees"),
-                scale_top_x: args.get("scale_top_x"),
-                scale_top_y: args.get("scale_top_y"),
-            })))
-        }
-    }
-
-    fn parameters() -> ParameterValueList {
-        [
-            parameter!(height: Scalar),
-            parameter!(n_divisions: Integer),
-            parameter!(twist_degrees: Scalar),
-            parameter!(scale_top_x: Scalar),
-            parameter!(scale_top_y: Scalar),
-        ]
-        .into_iter()
-        .collect()
     }
 }

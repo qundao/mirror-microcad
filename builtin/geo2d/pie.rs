@@ -1,12 +1,12 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_builtin_proc_macros::Primitive2D;
+use microcad_builtin_proc_macros::BuiltinPrimitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
 /// Pie geometry with offset.
-#[derive(Primitive2D, Debug, Clone)]
+#[derive(BuiltinPrimitive2D)]
 pub struct Pie {
     /// Radius of the circle.
     pub radius: Scalar,

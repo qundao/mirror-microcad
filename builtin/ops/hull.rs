@@ -3,9 +3,10 @@
 
 //! Builtin hull operation.
 
+use microcad_builtin_proc_macros::BuiltinOperation;
 use microcad_lang::{builtin::*, render::*};
 
-#[derive(Debug)]
+#[derive(BuiltinOperation)]
 pub struct Hull;
 
 impl Operation for Hull {
@@ -25,19 +26,5 @@ impl Operation for Hull {
 
             Ok(geometry.inner.hull())
         })
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Hull {
-    fn id() -> &'static str {
-        "hull"
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Operation
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|_| Ok(BuiltinWorkpieceOutput::Operation(Box::new(Hull)))
     }
 }

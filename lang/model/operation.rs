@@ -7,7 +7,7 @@ use crate::{model::*, render::*};
 use microcad_core::*;
 
 /// Operation trait.
-pub trait Operation: std::fmt::Debug {
+pub trait Operation {
     /// The output type of this operation.
     ///
     /// By default, the output type is undetermined.
