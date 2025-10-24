@@ -11,5 +11,6 @@ steps:
     commands:
       - apt-get update && apt-get install -y ninja-build cmake
       - rustup default $RUST
+      - rustup component add rustfmt
       - cargo check -j 4
       - cargo test -j 4
