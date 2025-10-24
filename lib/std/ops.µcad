@@ -5,18 +5,32 @@ pub use __builtin::ops::hull;
 pub use __builtin::ops::align;
 
 
-pub op revolve(angle = 360°) {
-    @input.__builtin::ops::revolve(
-        revolve_degrees = angle / 1°
-    );
-}
-
 pub op extrude(height: Length) {
 	init(z: Length) {
 		height = z;
 	}
 
     @input.__builtin::ops::extrude(height = height / 1mm, n_divisions = 0, twist_degrees = 0.0, scale_top_x = 1.0, scale_top_y = 1.0);
+}
+
+pub op revolve(angle = 360°) {
+    @input.__builtin::ops::revolve(
+        revolve_degrees = angle / 1°
+    );
+}
+
+pub op spiralize(
+	inner_radius: Length, 
+	outer_radius: Length,
+	angle: Angle,
+	height = 0mm
+) {
+    @input.__builtin::ops::spiralize(
+        height = height / 1mm,
+		inner_radius = inner_radius / 1mm,
+		outer_radius = outer_radius / 1mm,
+		turns = angle / 1turns
+    );
 }
 
 pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
