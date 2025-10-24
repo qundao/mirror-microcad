@@ -3,11 +3,12 @@
 
 //! Built-in Ngon primitive.
 
+use microcad_builtin_proc_macros::Primitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
-/// Ngeo primitive with radius.
-#[derive(Debug, Clone)]
+/// Ngon primitive with radius.
+#[derive(Primitive2D, Debug, Clone)]
 pub struct Ngon {
     /// Number of sides.
     n: Integer,
@@ -31,30 +32,5 @@ impl Render<Geometry2D> for Ngon {
 impl RenderWithContext<Geometry2DOutput> for Ngon {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, _| Ok(self.render(&context.current_resolution())))
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Ngon {
-    fn id() -> &'static str {
-        "Ngon"
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Primitive2D
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|args| {
-            Ok(BuiltinWorkpieceOutput::Primitive2D(Box::new(Ngon {
-                n: args.get("n"),
-                radius: args.get("radius"),
-            })))
-        }
-    }
-
-    fn parameters() -> ParameterValueList {
-        [parameter!(n: Integer), parameter!(radius: Scalar)]
-            .into_iter()
-            .collect()
     }
 }
