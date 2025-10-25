@@ -10,6 +10,16 @@ Constructs a point at origin with a radius and a start and end angle.
 std::geo2d::Pie(radius = 20mm, start_angle = 45°, end_angle = 135°);
 ```
 
+## `RoundedRect`
+
+This constructs a rounded rectangle with a corner radius.
+
+[![test](.test/std_geo2d_rounded_rect.svg)](.test/std_geo2d_rounded_rect.log)
+
+```µcad,std_geo2d_rounded_rect
+std::geo2d::RoundedRect(20mm, radius = 5mm);
+```
+
 ## `Text`
 
 We can construct a text element with `std::geo2d::Text`.

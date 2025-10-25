@@ -49,8 +49,8 @@ pub sketch Pie(radius: Length, start_angle: Angle, end_angle: Angle) {
 
 /// Rectangle definition.
 ///
-/// Examples:
-/// * Centered rect with width `w` and height `h`: `Rect(width = 10.0mm, height = 5.0mm);`
+/// # Examples
+/// * Centered rect with width and height: `Rect(width = 10.0mm, height = 5.0mm);`
 pub sketch Rect(width: Length, height: Length, x: Length, y: Length) {
     init(width: Length, height: Length) {
         x = -width / 2.0; // center x
@@ -116,28 +116,51 @@ pub sketch Ring(outer_r: Length, inner_r: Length ) {
      Circle(radius = outer_r) - Circle(radius = inner_r) 
 }
 
-/*// A rounded rectangle.
+/// A rounded rectangle.
+///
+/// # Examples
+/// * Centered rect with width and height: `RoundedRect(width = 10.0mm, height = 5.0mm);`
 pub sketch RoundedRect(
     width: Length,
     height: Length,
     x: Length, 
     y: Length,
-    bottom_left_radius: Length,
-    bottom_right_radius: Length,
-    top_left_radius: Length,
-    top_right_radius: Length
+    radius_bottom_left: Length,
+    radius_bottom_right: Length,
+    radius_top_left: Length,
+    radius_top_right: Length
 ) {
     init(width: Length, height: Length, radius: Length) {
         x = -width / 2.0; // center x
         y = -height / 2.0; // center y
-        bottom_left_radius = radius;
-        bottom_right_radius = radius;
-        top_left_radius = radius;
-        top_right_radius = radius;
+        radius_bottom_left = radius;
+        radius_bottom_right = radius;
+        radius_top_left = radius;
+        radius_top_right = radius;
     }
-}
 
-*/
+    init(size: Length, radius: Length) {
+        width = size;
+        height = size;
+        x = -size / 2.0; // center x
+        y = -size / 2.0; // center y
+        radius_bottom_left = radius;
+        radius_bottom_right = radius;
+        radius_top_left = radius;
+        radius_top_right = radius;
+    }
+
+    __builtin::geo2d::RoundedRect(
+        width = width / 1mm,
+        height = height / 1mm,
+        x = x / 1mm,
+        y = y / 1mm,
+        radius_bottom_left = radius_bottom_left / 1mm,
+        radius_bottom_right = radius_bottom_right / 1mm,
+        radius_top_left = radius_top_left / 1mm,
+        radius_top_right = radius_top_right / 1mm,
+    )
+}
 
 /// Text definition.
 pub sketch Text(height: Length, text: String, font_file = "") {

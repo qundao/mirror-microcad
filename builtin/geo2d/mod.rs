@@ -6,6 +6,7 @@ mod line;
 mod ngon;
 mod pie;
 mod rect;
+mod rounded_rect;
 mod text;
 
 pub use circle::*;
@@ -13,6 +14,7 @@ pub use line::*;
 pub use ngon::*;
 pub use pie::*;
 pub use rect::*;
+pub use rounded_rect::*;
 pub use text::*;
 
 use microcad_lang::builtin::*;
@@ -25,6 +27,7 @@ pub fn geo2d() -> Symbol {
         .builtin::<Ngon>()
         .builtin::<Pie>()
         .builtin::<Rect>()
+        .builtin::<RoundedRect>()
         .builtin::<Text>()
         .build()
 }
