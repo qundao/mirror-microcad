@@ -1,29 +1,37 @@
 # Preface
 
-In the 2010s there was a time where 3D printing became available for almost everyone in Makerspaces and at home.
-People were building DIY printers and started to program controllers to control them.
-Those programmers once needed a platform to create 3D objects they can print.
-In this time [someone](https://github.com/kintel) just invented a programming language for those people who are
-working with their keyboards instead of using a mouse or a graphic tablet.
+In the 2010s, 3D printing suddenly became accessible to almost everyone —
+whether in maker spaces or even at home.
+People began building their own DIY printers and writing software to control
+them. Naturally, these developers needed a platform to design 3D models that
+could be printed.
 
-This language was called [OpenSCAD](https://github.com/openscad/openscad) and it was widely used since then
-and a great success.
+Around that time, [someone](https://github.com/kintel) came up with an idea: a
+programming language made specifically for people who prefer working with a
+keyboard rather than a mouse or graphics tablet.
+That language is called [OpenSCAD](https://github.com/openscad/openscad).
+It turned out to be a great success, inspiring countless impressive projects.
 
-We (the founders of microcad) loved it too and did a lot of "thingies" with it.
-But as experienced software engineers we also had some criticism.
-OpenSCAD's language is easy to learn and looks a little like common C programs.
+We loved it too and created many “thingies” with it.
+However, as experienced software engineers, we also had a few points of
+critique.
+While OpenSCAD is easy to learn and has a syntax reminiscent of C, we felt the
+language could be improved in several ways:
 
-But we felt, like the language itself could:
+- more specialization for creating graphics,  
+- better support for modular programming,  
+- strict typing and unit handling,  
+- a syntax closer to *Rust* than to *C*,  
+- a solid library system,  
+- plugin support for other programming languages,  
+- and a more powerful visualization concept.
 
-- generally be more specialized in creating graphics,
-- ease it to modularize programs,
-- use strict types and units,
-- be more like *rust* rather like *C*,
-- have a proper library concept,
-- have plugins which are written in other languages,
-- come up with a more helpful visualization.
+Over the past few years, as we became more familiar with *Rust*, we started
+*microcad* as a fun side project.
+In 2025, we were fortunate to receive funding to develop a visualization
+plugin.
 
-So after getting close to rust in the last years we started microcad as a fun project and then
-got selected for a funding for the visualization plugin in 2025.
-
-After more than a year of work we have developed some concepts and have realized them.
+After more than a year of work, we’ve developed and partially implemented
+several concepts.
+There’s still plenty to do and many more ideas to explore — but we believe
+we’ve now reached a point where it’s time to share our work with others.

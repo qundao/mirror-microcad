@@ -1,0 +1,26 @@
+-- Test --
+  operator_examples
+  ../books/microcad_language/src/structure/expressions/operators.md:27
+
+-- Code --
+
+ 1: -5;             // Negation
+ 2: 5 + 6;          // Addition (result: 11)
+ 3: 5 - 6;          // Subtraction (result: -1)
+ 4: 5 * 6;          // Multiplication (result: 30)
+ 5: 5 / 6;          // Division (result: 0.833333333)
+ 6: 5 ^ 6;          // Power (result: 15625)
+ 7: true & false;   // Logical AND (result: false)
+ 8: true | false;   // Logical OR (result: true)
+ 9: 5 > 6;          // Greater than (result: false)
+10: 5 >= 6;         // Greater or equal (result: false)
+11: 5 < 6;          // Less than (result: true)
+12: 5 <= 6;         // Less or equal (result: true)
+13: 5 == 6;         // Equal (result: false)
+14: 5 != 6          // Not equal (result: true)
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

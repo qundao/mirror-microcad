@@ -1,0 +1,13 @@
+-- Test --
+  string_literal
+  ../books/microcad_language/src/structure/expressions/literals.md:54
+
+-- Code --
+
+ 1: "Hello, World!"
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

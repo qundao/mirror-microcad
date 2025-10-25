@@ -6,8 +6,7 @@
 
  1: op scale() {}
  2: sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
- 3: 
- 4: Sketch(4.0);
+ 3: Sketch(4.0);
 
 -- Output --
 -- Errors --
@@ -22,6 +21,6 @@
         - y = -80mm
         Primitive2D __builtin::geo2d::Rect(height=160, width=160, x=-80, y=-80) ->
 
-Export successful.
+Export of "../lang/doc/tests/.test/method_call-out.svg" successful.
 -- Test Result --
 OK

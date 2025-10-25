@@ -1,0 +1,13 @@
+-- Test --
+  expression_multiply
+  ../books/microcad_language/src/structure/expressions/README.md:20
+
+-- Code --
+
+ 1: 5 * 4.0mm;
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

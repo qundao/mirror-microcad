@@ -1,12 +1,15 @@
 # Program Structure
 
-The microcad language is about parametrization of more or less complex 2D and 3D models.
+Microcad is a programming language designed for generating 2D and 3D models.
+It deliberately avoids common programming constructs such as loops or mutable variables,
+but instead offers an alternative concept we call [Multiplicity](../concepts/multiplicity.md).
 
-It does not know any looping instead it uses [Multiplicity](../concepts/multiplicity.md) to get the
-effect of getting many items from one.
-There also are no mutable variables so you cannot count a number or even store a state.
+A microcad program consists of the following core elements:
 
-So some things maybe different compared to other programming languages you might know.
-Everything in microcad is more parameterization and less programming.
+- [Source Files](source_file.md)  
+- [Modules](modules/README.md)  
+- [Workbenches](workbenches/README.md)  
+- [Functions](functions.md)
 
-So let's dive into the structure of a microcad program.
+Each of these elements can contain various statements.
+Both the elements themselves and their statements are explained in the following section.

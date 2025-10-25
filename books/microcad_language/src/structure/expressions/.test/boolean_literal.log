@@ -1,0 +1,14 @@
+-- Test --
+  boolean_literal
+  ../books/microcad_language/src/structure/expressions/literals.md:43
+
+-- Code --
+
+ 1: true;
+ 2: false
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

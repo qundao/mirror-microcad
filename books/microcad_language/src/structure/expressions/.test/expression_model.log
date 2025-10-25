@@ -1,0 +1,22 @@
+-- Test --
+  expression_model
+  ../books/microcad_language/src/structure/expressions/README.md:33
+
+-- Code --
+
+ 1: std::geo2d::Rect(1cm);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
+      - height = 10mm
+      - width = 10mm
+      - x = -5mm
+      - y = -5mm
+      Primitive2D __builtin::geo2d::Rect(height=10, width=10, x=-5, y=-5) ->
+
+Export of "../books/microcad_language/src/structure/expressions/.test/expression_model-out.svg" successful.
+-- Test Result --
+OK
