@@ -40,7 +40,7 @@ use __builtin::*;
 ```µcad,builtin_extrude
 use __builtin::*;
 
-a = geo2d::Circle(radius = 9.0) - geo2d::Circle(radius = 2.0, cx = [-3.0, 3.0], cy = [-3.0, 3.0]);
+a = geo2d::Circle(radius = 9.0) - geo2d::Circle(radius = 2.0).ops::translate(x = [-3.0, 3.0], y = [-3.0, 3.0], z = 0.0);
 
 a.ops::extrude(height = 4.0);
 ```
