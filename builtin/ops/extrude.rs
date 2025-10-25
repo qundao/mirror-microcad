@@ -31,5 +31,5 @@ impl Operation for Extrude {
 
 #[test]
 fn test_doc_string() {
-    panic!("{}", Extrude::help());
+    assert!(Extrude::help().starts_with("Linear extrude"));
 }
