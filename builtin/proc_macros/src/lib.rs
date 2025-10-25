@@ -2,7 +2,7 @@ extern crate proc_macro;
 use proc_macro::TokenStream;
 
 use quote::quote;
-use syn::{DeriveInput, Field, parse_macro_input, punctuated::Punctuated, token::Comma};
+use syn::{parse_macro_input, punctuated::Punctuated, token::Comma, DeriveInput, Field, Fields, FieldsNamed};
 
 /// Build parameter list entries: for each field, generate `parameter!(<field_name>: <Type>)`
 fn generate_parameters(
@@ -29,13 +29,40 @@ fn generate_arguments(
     })
 }
 
+fn get_doc_comment(attrs: &[syn::Attribute]) -> String {
+    use syn::*;
+    attrs.iter().filter_map(|attr| 
+        // Parse the meta of the attribute
+        if attr.path().is_ident("doc") 
+            && let Meta::NameValue(nv) = &attr.meta
+            && let Expr::Lit(ExprLit{ lit: Lit::Str(lit_str), ..}) = &nv.value {
+            // Return the string value, e.g., "Doc test"
+            Some(String::from(lit_str.value().trim()))
+        } else {
+            None
+        }
+    ).collect::<Vec<_>>().join("\n")
+}
+
+fn get_named_fields(input :&DeriveInput) -> Option<FieldsNamed> {
+    None
+}
+
+
+fn generate_help(input: &DeriveInput) -> String {
+    let mut help = get_doc_comment(&input.attrs);
+
+    
+    help
+}
+
 fn derive_workbench_definition(
     input: TokenStream,
     kind: &'static str,
     output_type: &'static str,
 ) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
-    let name = input.ident;
+    let name = input.ident.clone();
 
     // Operations are lower case.
     let id = if kind == "Operation" {
@@ -49,10 +76,12 @@ fn derive_workbench_definition(
 
     let kind = syn::Ident::new(kind, proc_macro2::Span::call_site());
     let output_type = syn::Ident::new(output_type, proc_macro2::Span::call_site());
+    let help = generate_help(&input);
+    let help = help.as_str();
 
     // parse fields, validate etc
     // Only support structs with named fields
-    let expanded = match &input.data {
+    match &input.data {
         syn::Data::Struct(ds) => match &ds.fields {
             // Generate BuiltinWorkbenchDefinition for a struct with fields `struct Foo { bar: Integer, baz: Scalar };`.
             syn::Fields::Named(named) => {
@@ -64,6 +93,10 @@ fn derive_workbench_definition(
                     impl microcad_lang::builtin::BuiltinWorkbenchDefinition for #name {
                         fn id() -> &'static str {
                             stringify!(#id)
+                        }
+
+                        fn help() -> String {
+                            #help.to_string()
                         }
 
                         fn output_type() -> microcad_lang::model::OutputType {
@@ -94,24 +127,28 @@ fn derive_workbench_definition(
             // Generate BuiltinWorkbenchDefinition for a unit struct `struct Foo;`.
             syn::Fields::Unit => {
                 quote! {
-                        impl microcad_lang::builtin::BuiltinWorkbenchDefinition for #name {
-                            fn id() -> &'static str {
-                                stringify!(#id)
+                    impl microcad_lang::builtin::BuiltinWorkbenchDefinition for #name {
+                        fn id() -> &'static str {
+                            stringify!(#id)
+                        }
+
+                        fn help() -> String {
+                            #help.to_string()
+                        }
+
+
+                        fn output_type() -> microcad_lang::model::OutputType {
+                            microcad_lang::model::OutputType::#output_type
+                        }
+
+                        fn kind() -> microcad_lang::builtin::BuiltinWorkbenchKind {
+                            microcad_lang::builtin::BuiltinWorkbenchKind::#kind
+                        }
+
+                        fn workpiece_function() -> &'static microcad_lang::builtin::BuiltinWorkpieceFn {
+                            &|_| {
+                                Ok(microcad_lang::builtin::BuiltinWorkpieceOutput::#kind(Box::new(#name)))
                             }
-
-                            fn output_type() -> microcad_lang::model::OutputType {
-                                microcad_lang::model::OutputType::#output_type
-                            }
-
-                            fn kind() -> microcad_lang::builtin::BuiltinWorkbenchKind {
-                                microcad_lang::builtin::BuiltinWorkbenchKind::#kind
-                            }
-
-                            fn workpiece_function() -> &'static microcad_lang::builtin::BuiltinWorkpieceFn {
-                                &|_| {
-                                    Ok(microcad_lang::builtin::BuiltinWorkpieceOutput::#kind(Box::new(#name)))
-                                }
-
                         }
                     }
                 }
@@ -134,9 +171,7 @@ fn derive_workbench_definition(
             .to_compile_error()
             .into();
         }
-    };
-
-    TokenStream::from(expanded)
+    }.into()
 }
 
 #[proc_macro_derive(BuiltinPrimitive2D)]
