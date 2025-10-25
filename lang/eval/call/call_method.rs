@@ -79,10 +79,7 @@ impl CallMethod<Option<Model>> for Model {
                             Ok::<_, EvalError>(Some(model.replace_input_placeholders(self)))
                         }
                         SymbolDefinition::Builtin(builtin) => match builtin.call(args, context)? {
-                            Value::Model(model) => {
-                                model.append(self.make_deep_copy());
-                                Ok(Some(model.clone()))
-                            }
+                            Value::Model(model) => Ok(Some(model.replace_input_placeholders(self))),
                             value => panic!("Builtin call returned {value} but no models."),
                         },
                         _ => {

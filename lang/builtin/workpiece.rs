@@ -59,7 +59,7 @@ impl CallTrait for Builtin {
 }
 
 /// The kind of the built-in workbench determines its output.
-#[derive(Debug, Clone, Display)]
+#[derive(Debug, Clone, Display, PartialEq)]
 pub enum BuiltinWorkbenchKind {
     /// A parametric 2D primitive.
     Primitive2D,
@@ -155,13 +155,19 @@ pub trait BuiltinWorkbenchDefinition {
         }
     }
 
-    /// Create model from argument map
+    /// Create model from workpiece and creator.
     fn model(creator: Creator) -> Model {
-        ModelBuilder::new(
-            Element::BuiltinWorkpiece(Self::workpiece(creator)),
-            SrcRef(None),
-        )
-        .build()
+        let workpiece = Self::workpiece(creator);
+        let model = ModelBuilder::new(Element::BuiltinWorkpiece(workpiece), SrcRef(None)).build();
+
+        // Add a @input placeholder if we have a built-in operation or transform.
+        // This assures that multiplicity for built-ins is working correctly.
+        if Self::kind() == BuiltinWorkbenchKind::Operation
+            || Self::kind() == BuiltinWorkbenchKind::Transform
+        {
+            model.append(ModelBuilder::new(Element::InputPlaceholder, SrcRef(None)).build());
+        }
+        model
     }
 
     /// Workbench function
