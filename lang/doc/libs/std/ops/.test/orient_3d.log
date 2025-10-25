@@ -18,7 +18,7 @@
       Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
         - v = (x=1, y=0, z=0)
         Transform __builtin::ops::orient(x=1, y=0, z=0) ->
-          Workpiece(part) std::geo3d::Cylinder(d=35mm, h=50mm) (root) ->
+          Workpiece(part) std::geo3d::Cylinder(d=35mm, h=50mm) ->
             - height = 50mm
             - offset = -25mm
             - radius_bottom = 17.5mm
@@ -28,7 +28,7 @@
       Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) ->
         - v = (x=0, y=1, z=0)
         Transform __builtin::ops::orient(x=0, y=1, z=0) ->
-          Workpiece(part) std::geo3d::Cylinder(d=35mm, h=50mm) (root) ->
+          Workpiece(part) std::geo3d::Cylinder(d=35mm, h=50mm) ->
             - height = 50mm
             - offset = -25mm
             - radius_bottom = 17.5mm
@@ -38,7 +38,7 @@
       Workpiece(op) std::ops::orient(v=(x=0, y=0, z=1)) ->
         - v = (x=0, y=0, z=1)
         Transform __builtin::ops::orient(x=0, y=0, z=1) ->
-          Workpiece(part) std::geo3d::Cylinder(d=35mm, h=50mm) (root) ->
+          Workpiece(part) std::geo3d::Cylinder(d=35mm, h=50mm) ->
             - height = 50mm
             - offset = -25mm
             - radius_bottom = 17.5mm

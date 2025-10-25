@@ -13,7 +13,7 @@
     Workpiece(op) std::ops::scale(x=2, y=1, z=1) ->
       - v = (x=2, y=1, z=1)
       Transform __builtin::ops::scale(x=2, y=1, z=1) ->
-        Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) (root) ->
+        Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
           - height = 50mm
           - offset = -25mm
           - radius_bottom = 10mm

@@ -20,7 +20,7 @@
     Workpiece(op) std::ops::extrude(height=1mm) ->
       - height = 1mm
       Operation __builtin::ops::extrude(height=1) ->
-        Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) (root) ->
+        Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) ->
           - height = 31.8mm
           - width = 15.8mm
           - x = -7.9mm

@@ -26,7 +26,7 @@
         - y = 30mm
         - z = 30mm
         Transform __builtin::ops::translate(x=30, y=30, z=30) ->
-          Operation subtract() (root) ->
+          Operation subtract() ->
             Group ->
               Workpiece(part) std::geo3d::Cube(size=50mm) ->
                 - size_x = 50mm
@@ -39,7 +39,7 @@
                 - y = 12.5mm
                 - z = 12.5mm
                 Transform __builtin::ops::translate(x=12.5, y=12.5, z=12.5) ->
-                  Workpiece(part) std::geo3d::Cube(size=25mm) (root) ->
+                  Workpiece(part) std::geo3d::Cube(size=25mm) ->
                     - size_x = 25mm
                     - size_y = 25mm
                     - size_z = 25mm
