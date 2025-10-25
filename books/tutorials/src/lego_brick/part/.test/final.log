@@ -71,7 +71,7 @@
             Group ->
               Workpiece(op) std::ops::extrude(height=8.6mm) ->
                 - height = 8.6mm
-                Operation __builtin::ops::extrude(height=8.6, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
+                Operation __builtin::ops::extrude(height=8.6) ->
                   Workpiece(sketch) final::Base(columns=4, height=15.8mm, rows=2, width=31.8mm) (root) ->
                     - columns = 4
                     - height = 15.8mm
@@ -163,7 +163,7 @@
                 Transform __builtin::ops::translate(x=0, y=0, z=8.6) ->
                   Workpiece(op) std::ops::extrude(height=1mm) (root) ->
                     - height = 1mm
-                    Operation __builtin::ops::extrude(height=1, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
+                    Operation __builtin::ops::extrude(height=1) ->
                       Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) (root) ->
                         - height = 15.8mm
                         - width = 31.8mm
@@ -177,7 +177,7 @@
             Transform __builtin::ops::translate(x=0, y=0, z=9.6) ->
               Workpiece(op) std::ops::extrude(height=1.7mm) (root) ->
                 - height = 1.7mm
-                Operation __builtin::ops::extrude(height=1.7, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
+                Operation __builtin::ops::extrude(height=1.7) ->
                   Workpiece(sketch) final::Knobs(columns=4, rows=2) (root) ->
                     - columns = 4
                     - rows = 2

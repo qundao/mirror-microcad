@@ -60,7 +60,7 @@
             Group ->
               Workpiece(op) std::ops::extrude(height=9.6mm) ->
                 - height = 9.6mm
-                Operation __builtin::ops::extrude(height=9.6, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
+                Operation __builtin::ops::extrude(height=9.6) ->
                   Workpiece(sketch) first_version::Base(height=31.8mm, width=15.8mm) (root) ->
                     - height = 31.8mm
                     - width = 15.8mm
@@ -147,7 +147,7 @@
                 Transform __builtin::ops::translate(x=0, y=0, z=8.6) ->
                   Workpiece(op) std::ops::extrude(height=1mm) (root) ->
                     - height = 1mm
-                    Operation __builtin::ops::extrude(height=1, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
+                    Operation __builtin::ops::extrude(height=1) ->
                       Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) (root) ->
                         - height = 31.8mm
                         - width = 15.8mm
@@ -161,7 +161,7 @@
             Transform __builtin::ops::translate(x=0, y=0, z=9.6) ->
               Workpiece(op) std::ops::extrude(height=1.7mm) (root) ->
                 - height = 1.7mm
-                Operation __builtin::ops::extrude(height=1.7, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
+                Operation __builtin::ops::extrude(height=1.7) ->
                   Workpiece(sketch) first_version::Knobs() (root) ->
                     Operation __builtin::ops::align() ->
                       Workpiece(sketch) std::geo2d::Circle(center=(x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm]), diameter=4.8mm) ->
