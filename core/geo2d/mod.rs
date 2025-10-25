@@ -8,6 +8,7 @@ mod circle;
 mod collection;
 mod geometry;
 mod line;
+mod mirror;
 mod primitives;
 mod size;
 
@@ -19,6 +20,7 @@ pub use collection::*;
 use geo::AffineTransform;
 pub use geometry::*;
 pub use line::*;
+pub use mirror::*;
 pub use primitives::*;
 pub use size::*;
 

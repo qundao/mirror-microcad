@@ -7,6 +7,7 @@ mod align;
 mod buffer;
 mod extrude;
 mod hull;
+mod mirror;
 mod orient;
 mod revolve;
 mod rotate;
@@ -24,6 +25,7 @@ pub fn ops() -> Symbol {
         .builtin::<buffer::Buffer>()
         .builtin::<hull::Hull>()
         .builtin::<extrude::Extrude>()
+        .builtin::<mirror::Mirror>()
         .builtin::<orient::Orient>()
         .builtin::<revolve::Revolve>()
         .builtin::<rotate::Rotate>()
