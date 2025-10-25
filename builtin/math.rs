@@ -233,7 +233,7 @@ fn rotate_zyx() -> Symbol {
 }
 
 pub fn math() -> Symbol {
-    crate::ModuleBuilder::new("math".try_into().expect("unexpected name error"))
+    crate::ModuleBuilder::new("math")
         .symbol(Symbol::new(
             SymbolDefinition::Constant(
                 Visibility::Public,

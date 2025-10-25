@@ -19,12 +19,12 @@ use microcad_lang::builtin::*;
 
 /// Module for built-in 2D geometries.
 pub fn geo2d() -> Symbol {
-    crate::ModuleBuilder::new("geo2d".try_into().expect("valid id"))
-        .symbol(Circle::symbol())
-        .symbol(Line::symbol())
-        .symbol(Ngon::symbol())
-        .symbol(Pie::symbol())
-        .symbol(Rect::symbol())
-        .symbol(Text::symbol())
+    crate::ModuleBuilder::new("geo2d")
+        .builtin::<Circle>()
+        .builtin::<Line>()
+        .builtin::<Ngon>()
+        .builtin::<Pie>()
+        .builtin::<Rect>()
+        .builtin::<Text>()
         .build()
 }

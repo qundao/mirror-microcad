@@ -5,7 +5,7 @@ use microcad_lang::{diag::*, eval::*, resolve::*, syntax::*, value::*};
 
 /// Module for built-logging.
 pub fn log() -> Symbol {
-    crate::ModuleBuilder::new("log".try_into().expect("valid id"))
+    crate::ModuleBuilder::new("log")
         .symbol(todo())
         .symbol(error())
         .symbol(warning())

@@ -53,7 +53,7 @@ fn count() -> Symbol {
 
 /// Build the standard module
 pub fn builtin_module() -> Symbol {
-    ModuleBuilder::new("__builtin".try_into().expect("unexpected name error"))
+    ModuleBuilder::new("__builtin")
         .symbol(debug::debug())
         .symbol(log::log())
         .symbol(count())

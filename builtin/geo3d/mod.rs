@@ -13,9 +13,9 @@ use microcad_lang::builtin::*;
 
 /// geo3d Builtin module
 pub fn geo3d() -> Symbol {
-    crate::ModuleBuilder::new("geo3d".try_into().expect("valid id"))
-        .symbol(Sphere::symbol())
-        .symbol(Cube::symbol())
-        .symbol(Cylinder::symbol())
+    crate::ModuleBuilder::new("geo3d")
+        .builtin::<Sphere>()
+        .builtin::<Cube>()
+        .builtin::<Cylinder>()
         .build()
 }
