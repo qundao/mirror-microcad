@@ -5,6 +5,10 @@ pub use __builtin::ops::hull;
 pub use __builtin::ops::align;
 
 
+pub op buffer(distance: Length) {
+	@input.__builtin::ops::buffer(distance = distance / 1mm);
+}
+
 pub op extrude(height: Length) {
 	init(z: Length) {
 		height = z;

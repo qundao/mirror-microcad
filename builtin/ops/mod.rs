@@ -4,6 +4,7 @@
 use microcad_lang::builtin::*;
 
 mod align;
+mod buffer;
 mod extrude;
 mod hull;
 mod orient;
@@ -20,6 +21,7 @@ pub fn ops() -> Symbol {
         .builtin::<operation::Subtract>()
         .builtin::<operation::Intersect>()
         .builtin::<align::Align>()
+        .builtin::<buffer::Buffer>()
         .builtin::<hull::Hull>()
         .builtin::<extrude::Extrude>()
         .builtin::<orient::Orient>()

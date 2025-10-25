@@ -103,6 +103,22 @@ impl Geometries2D {
     }
 }
 
+impl geo::Buffer for Geometries2D {
+    type Scalar = Scalar;
+
+    fn buffer_with_style(
+        &self,
+        style: geo::buffer::BufferStyle<Self::Scalar>,
+    ) -> MultiPolygon<Self::Scalar> {
+        let mut polygons = Vec::new();
+        self.iter().for_each(|geo| {
+            polygons.append(&mut (**geo).clone().buffer_with_style(style.clone()).0);
+        });
+
+        MultiPolygon::new(polygons)
+    }
+}
+
 impl FromIterator<Rc<Geometry2D>> for Geometries2D {
     fn from_iter<T: IntoIterator<Item = Rc<Geometry2D>>>(iter: T) -> Self {
         Geometries2D(iter.into_iter().collect())
