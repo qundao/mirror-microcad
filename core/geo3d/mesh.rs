@@ -296,10 +296,7 @@ impl From<Geometry3D> for TriangleMesh {
 
 impl From<&Geometries3D> for TriangleMesh {
     fn from(geo: &Geometries3D) -> Self {
-        let mut mesh = TriangleMesh::default();
-        geo.iter()
-            .for_each(|geo| mesh.append(&geo.as_ref().clone().into()));
-        mesh
+        geo.boolean_op(&BooleanOp::Union).to_mesh().into()
     }
 }
 
