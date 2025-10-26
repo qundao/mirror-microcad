@@ -23,7 +23,7 @@ use __builtin::*;
 
 {
     geo3d::Sphere(radius = 3.0);
-    geo3d::Cube(size_x = 3.0, size_y = 3.0, size_z = 3.0);
+    geo3d::Sphere(radius = 2.0).__builtin::ops::translate(x = 3.0);    
 }.ops::subtract();
 ```
 

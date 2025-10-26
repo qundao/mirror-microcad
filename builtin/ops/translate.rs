@@ -33,9 +33,9 @@ impl BuiltinWorkbenchDefinition for Translate {
 
     fn parameters() -> ParameterValueList {
         [
-            parameter!(x: Scalar),
-            parameter!(y: Scalar),
-            parameter!(z: Scalar),
+            parameter!(x: Scalar = 0.0),
+            parameter!(y: Scalar = 0.0),
+            parameter!(z: Scalar = 0.0),
         ]
         .into_iter()
         .collect()

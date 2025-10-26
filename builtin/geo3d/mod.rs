@@ -1,10 +1,8 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-mod cube;
 mod sphere;
 
-pub use cube::*;
 pub use sphere::*;
 
 use microcad_lang::builtin::*;
@@ -13,6 +11,5 @@ use microcad_lang::builtin::*;
 pub fn geo3d() -> Symbol {
     crate::ModuleBuilder::new("geo3d")
         .builtin::<Sphere>()
-        .builtin::<Cube>()
         .build()
 }
