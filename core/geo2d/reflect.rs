@@ -1,7 +1,9 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Mirror 2D geometries.
+//! Reflect and mirror 2D geometries.
+//!
+//! `Mirror` duplicates and keep the original geometry, where is `Reflect` only transform the original geometry.
 
 use super::*;
 use cgmath::InnerSpace;
@@ -13,10 +15,10 @@ pub trait Reflect2D<T = Self> {
 }
 
 /// Mirrors a 2D geometry, keeping the original (in contrast to `reflect`).
-pub trait Mirror2D<T = Self>: Reflect2D<T> + Clone + Into<Geometry2D> {
+pub trait Mirror2D<T = Self>: Reflect2D<T> + Into<Geometry2D> {
     /// Mirror operation.
-    fn mirror_2d(&self, l: &Line) -> Geometries2D {
-        let orig: Geometry2D = self.clone().into();
+    fn mirror_2d(self, l: &Line) -> Geometries2D {
+        let orig: Geometry2D = self.into();
         let refl: Geometry2D = orig.reflect_2d(l);
         Geometries2D::new(vec![orig, refl])
     }
@@ -96,28 +98,6 @@ impl Reflect2D for Line {
 
 impl Mirror2D for Line {}
 
-impl Reflect2D for Geometry2D {
-    fn reflect_2d(&self, l: &Line) -> Self {
-        match &self {
-            Geometry2D::LineString(line_string) => {
-                Geometry2D::LineString(line_string.reflect_2d(l))
-            }
-            Geometry2D::MultiLineString(multi_line_string) => {
-                Geometry2D::MultiLineString(multi_line_string.reflect_2d(l))
-            }
-            Geometry2D::Polygon(polygon) => Geometry2D::Polygon(polygon.reflect_2d(l)),
-            Geometry2D::MultiPolygon(multi_polygon) => {
-                Geometry2D::MultiPolygon(multi_polygon.reflect_2d(l))
-            }
-            Geometry2D::Rect(rect) => Geometry2D::Polygon(rect.reflect_2d(l)),
-            Geometry2D::Line(line) => Geometry2D::Line(line.reflect_2d(l)),
-            Geometry2D::Collection(collection) => Geometry2D::Collection(collection.reflect_2d(l)),
-        }
-    }
-}
-
-impl Mirror2D for Geometry2D {}
-
 impl Reflect2D for Geometries2D {
     fn reflect_2d(&self, l: &Line) -> Self {
         Self::from_iter(
@@ -128,3 +108,21 @@ impl Reflect2D for Geometries2D {
 }
 
 impl Mirror2D for Geometries2D {}
+
+impl Reflect2D for Geometry2D {
+    fn reflect_2d(&self, l: &Line) -> Self {
+        match &self {
+            Geometry2D::LineString(line_string) => line_string.reflect_2d(l).into(),
+            Geometry2D::MultiLineString(multi_line_string) => {
+                multi_line_string.reflect_2d(l).into()
+            }
+            Geometry2D::Polygon(polygon) => polygon.reflect_2d(l).into(),
+            Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.reflect_2d(l).into(),
+            Geometry2D::Rect(rect) => rect.reflect_2d(l).into(),
+            Geometry2D::Line(line) => line.reflect_2d(l).into(),
+            Geometry2D::Collection(collection) => collection.reflect_2d(l).into(),
+        }
+    }
+}
+
+impl Mirror2D for Geometry2D {}

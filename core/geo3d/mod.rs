@@ -8,6 +8,8 @@ mod collection;
 mod extrude;
 mod geometry;
 mod mesh;
+mod plane;
+mod reflect;
 mod triangle;
 mod vertex;
 
@@ -17,6 +19,8 @@ pub use extrude::*;
 pub use geometry::*;
 pub use manifold_rs::Manifold;
 pub use mesh::TriangleMesh;
+pub use plane::Plane;
+pub use reflect::*;
 pub use vertex::Vertex;
 
 use crate::BooleanOp;

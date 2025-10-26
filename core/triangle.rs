@@ -13,4 +13,9 @@ impl Triangle<u32> {
     pub fn is_degenerated(&self) -> bool {
         self.0 == self.1 || self.1 == self.2 || self.2 == self.0
     }
+
+    /// Returns a flipped version of this triangle, by swapping first and third index.
+    pub fn flipped(self) -> Triangle<u32> {
+        Triangle(self.2, self.1, self.0)
+    }
 }

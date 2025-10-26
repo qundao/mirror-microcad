@@ -3,13 +3,14 @@
 
 use crate::*;
 
+use derive_more::From;
 use std::rc::Rc;
 use strum::IntoStaticStr;
 
 use crate::geo3d::*;
 
 /// 3D Geometry
-#[derive(IntoStaticStr, Clone)]
+#[derive(IntoStaticStr, From, Clone)]
 pub enum Geometry3D {
     /// Triangle mesh.
     Mesh(TriangleMesh),
@@ -79,21 +80,9 @@ impl Transformed3D for Geometry3D {
     }
 }
 
-impl From<TriangleMesh> for Geometry3D {
-    fn from(mesh: TriangleMesh) -> Self {
-        Geometry3D::Mesh(mesh)
-    }
-}
-
 impl From<Manifold> for Geometry3D {
     fn from(manifold: Manifold) -> Self {
         Geometry3D::Manifold(Rc::new(manifold))
-    }
-}
-
-impl From<Rc<Manifold>> for Geometry3D {
-    fn from(manifold: Rc<Manifold>) -> Self {
-        Geometry3D::Manifold(manifold)
     }
 }
 
