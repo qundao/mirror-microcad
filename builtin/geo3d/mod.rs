@@ -2,11 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 mod cube;
-mod cylinder;
 mod sphere;
 
 pub use cube::*;
-pub use cylinder::*;
 pub use sphere::*;
 
 use microcad_lang::builtin::*;
@@ -16,6 +14,5 @@ pub fn geo3d() -> Symbol {
     crate::ModuleBuilder::new("geo3d")
         .builtin::<Sphere>()
         .builtin::<Cube>()
-        .builtin::<Cylinder>()
         .build()
 }
