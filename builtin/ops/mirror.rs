@@ -32,7 +32,16 @@ impl Operation for Mirror {
         })
     }
 
-    fn process_3d(&self, _context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        todo!()
+    fn process_3d(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
+        context.update_3d(|context, model| {
+            let model_ = model.borrow();
+            let geometries: Geometries3D = model_.children.render_with_context(context)?;
+            Ok(Geometry3D::Collection(geometries.mirror_3d(
+                &microcad_core::geo3d::Plane {
+                    p: Vec3::new(self.x, self.y, self.z),
+                    n: Vec3::new(self.nx, self.ny, self.nz),
+                },
+            )))
+        })
     }
 }
