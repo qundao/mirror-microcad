@@ -35,4 +35,4 @@ error: Symbol math::pow not found.
      | ^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED BUT IS TODO
+FAILED AS EXPECTED

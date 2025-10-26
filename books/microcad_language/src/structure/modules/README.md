@@ -14,7 +14,7 @@ items public available).
 
 ## Example
 
-The following example shows two nested modules carrying a public constant and
+The following example shows two nested *internal modules* carrying a public constant and
 a public function which then are used from outside the modules:
 
 [![test](.test/mod_example.svg)](.test/mod_example.log)

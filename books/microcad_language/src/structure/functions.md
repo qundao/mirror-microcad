@@ -19,7 +19,7 @@ print_error("second");
 ```
 
 Functions may be declared within [source files](source_file.md),
-[modules](modules/README.md) or [workbenches](workbenches/README.md).
+[modules](modules/README.md) or [workbenches](../workbenches).
 
 ## Declaration
 
@@ -61,7 +61,7 @@ available for use outside the module.
 
 [![test](.test/mod.svg)](.test/mod.log)
 
-```µcad,mod#todo_fail
+```µcad,mod#fail
 // module math
 mod math {
     // pow cannot be called from outside math
@@ -87,7 +87,7 @@ math::pow(2.0, 5);  // error: pow is private
 
 ## Workbench Functions
 
-A [workbench](workbenches/README.md) can contain functions that are accessible
+A [workbench](../workbenches/) can contain functions that are accessible
 within the module only.
 
 Here is an example which generates a punched disk of a given radius using a

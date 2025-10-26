@@ -1,0 +1,15 @@
+-- Test --
+  external_modules_main
+  ../books/microcad_language/src/structure/modules/external_modules.md:12
+
+-- Code --
+
+ 1: // file: main.µcad
+ 2: mod second;
+ 3: second::f();
+
+-- Output --
+-- Errors --
+error: error reading directory "": No such file or directory (os error 2)
+Evaluation aborted because of prior resolve errors!-- Test Result --
+FAIL
