@@ -29,7 +29,7 @@ impl Mirror2D for geo::Coord {
 
 impl Mirror2D for LineString {
     fn mirror_2d(&self, l: &Line) -> Self {
-        Self::new(self.0.iter().map(|c| c.mirror_2d(l)).collect())
+        Self::new(self.0.iter().map(|c| c.mirror_2d(l)).rev().collect())
     }
 }
 
