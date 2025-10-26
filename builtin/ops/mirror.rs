@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Builtin align operation.
+//! Builtin mirror operation.
 
 use microcad_builtin_proc_macros::BuiltinOperation;
 use microcad_core::*;
@@ -35,9 +35,5 @@ impl Operation for Mirror {
 
     fn process_3d(&self, _context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
         todo!()
-        /*context.update_3d(|context, model, resolution| {
-            let geometry: Geometry3DOutput = model.render(context)?;
-            geometry.map(|geometry| geometry.center(&resolution))
-        })*/
     }
 }
