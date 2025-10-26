@@ -12,10 +12,10 @@ pub struct Pie {
     pub radius: Scalar,
 
     /// Start angle.
-    pub start_angle: Angle,
+    pub start: Angle,
 
     /// End angle.
-    pub end_angle: Angle,
+    pub end: Angle,
 }
 
 impl Pie {
@@ -26,21 +26,20 @@ impl Pie {
 
     /// Calculate offset angle.
     pub fn offset_angle(&self) -> Angle {
-        self.end_angle - self.start_angle
+        self.end - self.start
     }
 }
 
 impl Render<Geometry2D> for Pie {
     fn render(&self, resolution: &RenderResolution) -> Geometry2D {
         use std::f64::consts::PI;
-        let offset_angle = self.offset_angle();
-        let n =
-            (resolution.circular_segments(self.radius) as f64 * (offset_angle.0 / PI / 2.0)) as u32;
+        let offset = self.offset_angle();
+        let n = (resolution.circular_segments(self.radius) as f64 * (offset.0 / PI / 2.0)) as u32;
 
         let points = if !self.is_circle() && n > 0 {
             (0..=n)
                 .map(|i| {
-                    let angle = self.start_angle + offset_angle * (i as f64) / (n as f64);
+                    let angle = self.start + offset * (i as f64) / (n as f64);
                     geo::coord!(x: angle.0.cos(), y: angle.0.sin()) * self.radius
                 })
                 .chain(
@@ -59,7 +58,7 @@ impl Render<Geometry2D> for Pie {
                 .collect()
         };
 
-        Geometry2D::Polygon(Polygon::new(LineString::new(points), vec![]))
+        Polygon::new(LineString::new(points), vec![]).into()
     }
 }
 
