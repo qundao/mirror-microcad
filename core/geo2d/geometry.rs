@@ -3,15 +3,15 @@
 
 use std::rc::Rc;
 
-use crate::traits::Align;
-
 use super::*;
+use crate::traits::Align;
+use derive_more::From;
 
 use geo::{ConvexHull, MultiPolygon};
 use strum::IntoStaticStr;
 
 /// A 2D Geometry which is independent from resolution.
-#[derive(IntoStaticStr, Clone, Debug)]
+#[derive(IntoStaticStr, From, Clone, Debug)]
 pub enum Geometry2D {
     /// Line string.
     LineString(LineString),

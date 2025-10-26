@@ -22,9 +22,9 @@ impl Operation for Mirror {
     fn process_2d(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, model| {
             let model_ = model.borrow();
-            use microcad_core::geo2d::Mirror2D;
+            use microcad_core::geo2d::Reflect2D;
             let geometries: Geometries2D = model_.children.render_with_context(context)?;
-            Ok(Geometry2D::Collection(geometries.mirror_2d(
+            Ok(Geometry2D::Collection(geometries.reflect_2d(
                 &microcad_core::geo2d::Line(
                     Point::new(self.x, self.y),
                     Point::new(self.x - self.ny, self.y + self.nx),

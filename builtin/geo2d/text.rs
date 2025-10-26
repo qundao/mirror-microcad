@@ -43,7 +43,7 @@ impl Render<Geometry2D> for Text {
             .simplify(resolution.linear * 0.5);
 
         if let Some(center) = polygons.centroid() {
-            let polygons = polygons.mirror_2d(&Line(center, center + Point::new(1.0, 0.0)));
+            let polygons = polygons.reflect_2d(&Line(center, center + Point::new(1.0, 0.0)));
             Geometry2D::MultiPolygon(polygons)
         } else {
             Geometry2D::Collection(Geometries2D::default())

@@ -8,8 +8,8 @@ mod circle;
 mod collection;
 mod geometry;
 mod line;
-mod mirror;
 mod primitives;
+mod reflect;
 mod size;
 
 use crate::*;
@@ -20,8 +20,8 @@ pub use collection::*;
 use geo::AffineTransform;
 pub use geometry::*;
 pub use line::*;
-pub use mirror::*;
 pub use primitives::*;
+pub use reflect::*;
 pub use size::*;
 
 /// Trait to return all points of 2D geometry.
