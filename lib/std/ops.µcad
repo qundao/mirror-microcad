@@ -9,12 +9,15 @@ pub op buffer(distance: Length) {
 	@input.__builtin::ops::buffer(distance = distance / 1mm);
 }
 
-pub op extrude(height: Length) {
+pub op extrude(
+		height: Length,
+		scale_x = 100%,
+		scale_y = 100%) {
 	init(z: Length) {
 		height = z;
 	}
 
-    @input.__builtin::ops::extrude(height = height / 1mm);
+    @input.__builtin::ops::extrude(height = height / 1mm, scale_x, scale_y);
 }
 
 pub op revolve(angle = 360°) {
