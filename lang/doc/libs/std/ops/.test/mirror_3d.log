@@ -32,8 +32,22 @@
                 - size_x = 50mm
                 - size_y = 50mm
                 - size_z = 50mm
-                Transform __builtin::ops::translate(x=-25, y=-25, z=-25) ->
-                  Primitive3D __builtin::geo3d::Cube(size_x=50, size_y=50, size_z=50) ->
+                Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                  - x = 0mm
+                  - y = 0mm
+                  - z = -25mm
+                  Transform __builtin::ops::translate(x=0, y=0, z=-25) ->
+                    Workpiece(op) std::ops::extrude(z=50mm) ->
+                      - height = 50mm
+                      - scale_x = 1
+                      - scale_y = 1
+                      Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1) ->
+                        Workpiece(sketch) std::geo2d::Rect(height=50mm, width=50mm) ->
+                          - height = 50mm
+                          - width = 50mm
+                          - x = -25mm
+                          - y = -25mm
+                          Primitive2D __builtin::geo2d::Rect(height=50, width=50, x=-25, y=-25) ->
               Workpiece(op) std::ops::translate(x=12.5mm, y=12.5mm, z=12.5mm) ->
                 - x = 12.5mm
                 - y = 12.5mm
@@ -43,8 +57,22 @@
                     - size_x = 25mm
                     - size_y = 25mm
                     - size_z = 25mm
-                    Transform __builtin::ops::translate(x=-12.5, y=-12.5, z=-12.5) ->
-                      Primitive3D __builtin::geo3d::Cube(size_x=25, size_y=25, size_z=25) ->
+                    Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-12.5mm) ->
+                      - x = 0mm
+                      - y = 0mm
+                      - z = -12.5mm
+                      Transform __builtin::ops::translate(x=0, y=0, z=-12.5) ->
+                        Workpiece(op) std::ops::extrude(z=25mm) ->
+                          - height = 25mm
+                          - scale_x = 1
+                          - scale_y = 1
+                          Operation __builtin::ops::extrude(height=25, scale_x=1, scale_y=1) ->
+                            Workpiece(sketch) std::geo2d::Rect(height=25mm, width=25mm) ->
+                              - height = 25mm
+                              - width = 25mm
+                              - x = -12.5mm
+                              - y = -12.5mm
+                              Primitive2D __builtin::geo2d::Rect(height=25, width=25, x=-12.5, y=-12.5) ->
 
 Export successful.
 -- Test Result --
