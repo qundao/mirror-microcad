@@ -1,13 +1,9 @@
-# **Functions**
+# Functions
 
-- [Declaration](#declaration)
-- [Module Functions](#module-functions)
-- [Workbench Functions](#workbench-functions)
-  - [Restrictions](#restrictions)
-
-*Functions* provide a way to encapsulate frequently used code into sub-routines.
-These sub-routines can then be [called](calls.md) to execute their code with a
-specific set of [parameters](parameters.md).
+Functions provide a way to encapsulate frequently used code into sub-routines.
+These sub-routines can then be [called](../flow/calls/function_calls.md) to
+execute their code with a specific set of
+[parameters](../flow/calls/parameters.md).
 
 [![test](.test/example.svg)](.test/example.log)
 
@@ -22,12 +18,13 @@ print_error("first");
 print_error("second");
 ```
 
-Functions may be declared within [source files](source_files.md), [modules](modules.md) or [workbenches](workbench.md).
+Functions may be declared within [source files](source_file.md),
+[modules](modules/README.md) or [workbenches](workbenches/README.md).
 
 ## Declaration
 
-A *function declaration* starts with the keyword `fn`, followed by an *identifier*,
-a *parameter list*, and a *function body*.
+A *function declaration* starts with the keyword `fn`, followed by an
+*identifier*, a *parameter list*, and a *function body*.
 Functions can also return a value as *result*:
 
 [![test](.test/return.svg)](.test/return.log)
@@ -57,9 +54,10 @@ fn pow( x: Scalar, n: Integer ) {
 
 ## Module Functions
 
-A [module](modules.md) can contain functions that are accessible within the module.
-By declaring a function as *public* using the keyword `pub`, it becomes available for
-use outside the module.
+A [module](modules/README.md) can contain functions that are accessible within
+the module.
+By declaring a function as *public* using the keyword `pub`, it becomes
+available for use outside the module.
 
 [![test](.test/mod.svg)](.test/mod.log)
 
@@ -89,9 +87,11 @@ math::pow(2.0, 5);  // error: pow is private
 
 ## Workbench Functions
 
-A [workbench](workbench.md) can contain functions that are accessible within the module only.
+A [workbench](workbenches/README.md) can contain functions that are accessible
+within the module only.
 
-Here is an example which generates a punched disk of a given radius using a function `inner()`:
+Here is an example which generates a punched disk of a given radius using a
+function `inner()`:
 
 [![test](.test/workbench_example.svg)](.test/workbench_example.log)
 

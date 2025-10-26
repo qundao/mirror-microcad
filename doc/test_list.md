@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**306** tests from markdown.
+**308** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -20,9 +20,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/types/.test/array_unit_bundling.svg)](../lang/doc/types/.test/array_unit_bundling.log) | [array_unit_bundling](../lang/doc/types/arrays.md) |
 | [![test](../lang/doc/types/.test/arrays_and_comments.svg)](../lang/doc/types/.test/arrays_and_comments.log) | [arrays_and_comments](../lang/doc/types/arrays.md) |
 | [![test](../books/tutorials/src/lego_brick/base/frame/.test/assignment.svg)](../books/tutorials/src/lego_brick/base/frame/.test/assignment.log) | [assignment](../books/tutorials/src/lego_brick/base/frame/naming.md) |
-| [![test](../books/microcad_language/src/structure/.test/assignment.svg)](../books/microcad_language/src/structure/.test/assignment.log) | [assignment](../books/microcad_language/src/structure/assignments.md) |
+| [![test](../books/microcad_language/src/assignments/.test/assignment.svg)](../books/microcad_language/src/assignments/.test/assignment.log) | [assignment](../books/microcad_language/src/assignments/values.md) |
 | [![test](../lang/doc/structure/.test/assignment.svg)](../lang/doc/structure/.test/assignment.log) | [assignment](../lang/doc/structure/assignments.md) |
-| [![test](../books/microcad_language/src/structure/.test/assignment_immutable.svg)](../books/microcad_language/src/structure/.test/assignment_immutable.log) | [assignment_immutable](../books/microcad_language/src/structure/assignments.md) |
+| [![test](../books/microcad_language/src/assignments/.test/assignment_immutable.svg)](../books/microcad_language/src/assignments/.test/assignment_immutable.log) | [assignment_immutable](../books/microcad_language/src/assignments/values.md) |
 | [![test](../lang/doc/structure/.test/assignment_immutable.svg)](../lang/doc/structure/.test/assignment_immutable.log) | [assignment_immutable](../lang/doc/structure/assignments.md) |
 | [![test](../lang/doc/.test/attributes_color.svg)](../lang/doc/.test/attributes_color.log) | [attributes_color](../lang/doc/attributes.md) |
 | [![test](../lang/doc/.test/attributes_export.svg)](../lang/doc/.test/attributes_export.log) | [attributes_export](../lang/doc/attributes.md) |
@@ -48,7 +48,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/tests/.test/body_use.svg)](../lang/doc/tests/.test/body_use.log) | [body_use](../lang/doc/tests/statement_usage.md) |
 | [![test](../lang/doc/tests/.test/body_workbench.svg)](../lang/doc/tests/.test/body_workbench.log) | [body_workbench](../lang/doc/tests/statement_usage.md) |
 | [![test](../lang/doc/types/.test/boolean.svg)](../lang/doc/types/.test/boolean.log) | [boolean](../lang/doc/types/primitive_types.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/boolean_literal.svg)](../books/microcad_language/src/structure/expressions/.test/boolean_literal.log) | [boolean_literal](../books/microcad_language/src/structure/expressions/literals.md) |
+| [![test](../books/microcad_language/src/expressions/.test/boolean_literal.svg)](../books/microcad_language/src/expressions/.test/boolean_literal.log) | [boolean_literal](../books/microcad_language/src/expressions/literals.md) |
 | [![test](../lang/doc/structure/.test/building_plan.svg)](../lang/doc/structure/.test/building_plan.log) | [building_plan](../lang/doc/structure/workbench.md) |
 | [![test](../lang/doc/libs/builtin/.test/builtin_debug_assert_false.svg)](../lang/doc/libs/builtin/.test/builtin_debug_assert_false.log) | [builtin_debug_assert_false](../lang/doc/libs/builtin/debug.md) |
 | [![test](../lang/doc/libs/builtin/.test/builtin_debug_assert_true.svg)](../lang/doc/libs/builtin/.test/builtin_debug_assert_true.log) | [builtin_debug_assert_true](../lang/doc/libs/builtin/debug.md) |
@@ -74,9 +74,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../books/microcad_language/src/structure/.test/example.svg)](../books/microcad_language/src/structure/.test/example.log) | [example](../books/microcad_language/src/structure/functions.md) |
 | [![test](../lang/doc/structure/.test/example.svg)](../lang/doc/structure/.test/example.log) | [example](../lang/doc/structure/functions.md) |
 | [![test](../lang/doc/.test/export_attributes.svg)](../lang/doc/.test/export_attributes.log) | [export_attributes](../lang/doc/export.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/expression_literals.svg)](../books/microcad_language/src/structure/expressions/.test/expression_literals.log) | [expression_literals](../books/microcad_language/src/structure/expressions/README.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/expression_model.svg)](../books/microcad_language/src/structure/expressions/.test/expression_model.log) | [expression_model](../books/microcad_language/src/structure/expressions/README.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/expression_multiply.svg)](../books/microcad_language/src/structure/expressions/.test/expression_multiply.log) | [expression_multiply](../books/microcad_language/src/structure/expressions/README.md) |
+| [![test](../books/microcad_language/src/expressions/.test/expression_literals.svg)](../books/microcad_language/src/expressions/.test/expression_literals.log) | [expression_literals](../books/microcad_language/src/expressions/README.md) |
+| [![test](../books/microcad_language/src/expressions/.test/expression_model.svg)](../books/microcad_language/src/expressions/.test/expression_model.log) | [expression_model](../books/microcad_language/src/expressions/README.md) |
+| [![test](../books/microcad_language/src/expressions/.test/expression_multiply.svg)](../books/microcad_language/src/expressions/.test/expression_multiply.log) | [expression_multiply](../books/microcad_language/src/expressions/README.md) |
 | [![test](../lang/doc/libs/std/ops/.test/extrude.svg)](../lang/doc/libs/std/ops/.test/extrude.log) | [extrude](../lang/doc/libs/std/ops/extrude.md) |
 | [![test](../books/tutorials/src/lego_brick/part/.test/extrude_cap.svg)](../books/tutorials/src/lego_brick/part/.test/extrude_cap.log) | [extrude_cap](../books/tutorials/src/lego_brick/part/extrude.md) |
 | [![test](../books/tutorials/src/lego_brick/part/.test/final.svg)](../books/tutorials/src/lego_brick/part/.test/final.log) | [final](../books/tutorials/src/lego_brick/part/final.md) |
@@ -127,7 +127,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../books/tutorials/src/lego_brick/base/frame/.test/inner.svg)](../books/tutorials/src/lego_brick/base/frame/.test/inner.log) | [inner](../books/tutorials/src/lego_brick/base/frame/another_rect.md) |
 | [![test](../books/tutorials/src/lego_brick/base/frame/.test/inner_outer.svg)](../books/tutorials/src/lego_brick/base/frame/.test/inner_outer.log) | [inner_outer](../books/tutorials/src/lego_brick/base/frame/another_rect.md) |
 | [![test](../lang/doc/structure/.test/input.svg)](../lang/doc/structure/.test/input.log) | [input](../lang/doc/structure/op.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/integer_literal.svg)](../books/microcad_language/src/structure/expressions/.test/integer_literal.log) | [integer_literal](../books/microcad_language/src/structure/expressions/literals.md) |
+| [![test](../books/microcad_language/src/expressions/.test/integer_literal.svg)](../books/microcad_language/src/expressions/.test/integer_literal.log) | [integer_literal](../books/microcad_language/src/expressions/literals.md) |
+| [![test](../books/microcad_language/src/structure/modules/.test/internal_mod.svg)](../books/microcad_language/src/structure/modules/.test/internal_mod.log) | [internal_mod](../books/microcad_language/src/structure/modules/internal_modules.md) |
 | [![test](../lang/doc/libs/std/ops/.test/intersection_alt_operator.svg)](../lang/doc/libs/std/ops/.test/intersection_alt_operator.log) | [intersection_alt_operator](../lang/doc/libs/std/ops/intersect.md) |
 | [![test](../lang/doc/libs/std/ops/.test/intersection_operator.svg)](../lang/doc/libs/std/ops/.test/intersection_operator.log) | [intersection_operator](../lang/doc/libs/std/ops/intersect.md) |
 | [![test](../books/tutorials/src/lego_brick/.test/knobs.svg)](../books/tutorials/src/lego_brick/.test/knobs.log) | [knobs](../books/tutorials/src/lego_brick/caps_knobs.md) |
@@ -142,6 +143,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/structure/.test/missed_property.svg)](../lang/doc/structure/.test/missed_property.log) | [missed_property](../lang/doc/structure/workbench.md) |
 | [![test](../books/microcad_language/src/structure/.test/mod.svg)](../books/microcad_language/src/structure/.test/mod.log) | [mod](../books/microcad_language/src/structure/functions.md) |
 | [![test](../lang/doc/structure/.test/mod.svg)](../lang/doc/structure/.test/mod.log) | [mod](../lang/doc/structure/functions.md) |
+| [![test](../books/microcad_language/src/structure/modules/.test/mod_example.svg)](../books/microcad_language/src/structure/modules/.test/mod_example.log) | [mod_example](../books/microcad_language/src/structure/modules/README.md) |
 | [![test](../lang/doc/structure/.test/mod_example.svg)](../lang/doc/structure/.test/mod_example.log) | [mod_example](../lang/doc/structure/modules.md) |
 | [![test](../lang/doc/tests/.test/mod_external.svg)](../lang/doc/tests/.test/mod_external.log) | [mod_external](../lang/doc/tests/mod_external.md) |
 | [![test](../lang/doc/tests/.test/mod_external_root.svg)](../lang/doc/tests/.test/mod_external_root.log) | [mod_external_root](../lang/doc/tests/mod_external.md) |
@@ -170,8 +172,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/tests/.test/operation_with_body.svg)](../lang/doc/tests/.test/operation_with_body.log) | [operation_with_body](../lang/doc/tests/semicolon.md) |
 | [![test](../books/tutorials/src/lego_brick/base/.test/operations.svg)](../books/tutorials/src/lego_brick/base/.test/operations.log) | [operations](../books/tutorials/src/lego_brick/base/union.md) |
 | [![test](../books/tutorials/src/lego_brick/base/frame/.test/operator.svg)](../books/tutorials/src/lego_brick/base/frame/.test/operator.log) | [operator](../books/tutorials/src/lego_brick/base/frame/naming.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/operator_array.svg)](../books/microcad_language/src/structure/expressions/.test/operator_array.log) | [operator_array](../books/microcad_language/src/structure/expressions/operators.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/operator_examples.svg)](../books/microcad_language/src/structure/expressions/.test/operator_examples.log) | [operator_examples](../books/microcad_language/src/structure/expressions/operators.md) |
+| [![test](../books/microcad_language/src/expressions/.test/operator_array.svg)](../books/microcad_language/src/expressions/.test/operator_array.log) | [operator_array](../books/microcad_language/src/expressions/operators.md) |
+| [![test](../books/microcad_language/src/expressions/.test/operator_examples.svg)](../books/microcad_language/src/expressions/.test/operator_examples.log) | [operator_examples](../books/microcad_language/src/expressions/operators.md) |
 | [![test](../lang/doc/libs/std/ops/.test/orient_3d.svg)](../lang/doc/libs/std/ops/.test/orient_3d.log) | [orient_3d](../lang/doc/libs/std/ops/orient.md) |
 | [![test](../books/tutorials/src/lego_brick/base/frame/.test/output.svg)](../books/tutorials/src/lego_brick/base/frame/.test/output.log) | [output](../books/tutorials/src/lego_brick/base/frame/naming.md) |
 | [![test](../books/tutorials/src/lego_brick/.test/overview.svg)](../books/tutorials/src/lego_brick/.test/overview.log) | [overview](../books/tutorials/src/lego_brick/overview.md) |
@@ -195,7 +197,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/tests/.test/pre_init_workbench.svg)](../lang/doc/tests/.test/pre_init_workbench.log) | [pre_init_workbench](../lang/doc/tests/statement_usage.md) |
 | [![test](../lang/doc/structure/.test/property.svg)](../lang/doc/structure/.test/property.log) | [property](../lang/doc/structure/workbench.md) |
 | [![test](../lang/doc/structure/.test/property_wrong.svg)](../lang/doc/structure/.test/property_wrong.log) | [property_wrong](../lang/doc/structure/workbench.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/quantity_literal.svg)](../books/microcad_language/src/structure/expressions/.test/quantity_literal.log) | [quantity_literal](../books/microcad_language/src/structure/expressions/literals.md) |
+| [![test](../books/microcad_language/src/expressions/.test/quantity_literal.svg)](../books/microcad_language/src/expressions/.test/quantity_literal.log) | [quantity_literal](../books/microcad_language/src/expressions/literals.md) |
 | [![test](../lang/doc/types/.test/quantity_types_number_literals.svg)](../lang/doc/types/.test/quantity_types_number_literals.log) | [quantity_types_number_literals](../lang/doc/types/quantity.md) |
 | [![test](../lang/doc/types/.test/range_expressions.svg)](../lang/doc/types/.test/range_expressions.log) | [range_expressions](../lang/doc/types/arrays.md) |
 | [![test](../books/tutorials/src/lego_brick/base/struts/.test/ranges.svg)](../books/tutorials/src/lego_brick/base/struts/.test/ranges.log) | [ranges](../books/tutorials/src/lego_brick/base/struts/range.md) |
@@ -208,7 +210,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../books/tutorials/src/lego_brick/base/struts/.test/ring.svg)](../books/tutorials/src/lego_brick/base/struts/.test/ring.log) | [ring](../books/tutorials/src/lego_brick/base/struts/finish.md) |
 | [![test](../lang/doc/libs/std/ops/.test/rotate_2d.svg)](../lang/doc/libs/std/ops/.test/rotate_2d.log) | [rotate_2d](../lang/doc/libs/std/ops/rotate.md) |
 | [![test](../lang/doc/libs/std/ops/.test/rotate_3d.svg)](../lang/doc/libs/std/ops/.test/rotate_3d.log) | [rotate_3d](../lang/doc/libs/std/ops/rotate.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/scalar_literal.svg)](../books/microcad_language/src/structure/expressions/.test/scalar_literal.log) | [scalar_literal](../books/microcad_language/src/structure/expressions/literals.md) |
+| [![test](../books/microcad_language/src/expressions/.test/scalar_literal.svg)](../books/microcad_language/src/expressions/.test/scalar_literal.log) | [scalar_literal](../books/microcad_language/src/expressions/literals.md) |
 | [![test](../lang/doc/libs/std/ops/.test/scale_3d.svg)](../lang/doc/libs/std/ops/.test/scale_3d.log) | [scale_3d](../lang/doc/libs/std/ops/scale.md) |
 | [![test](../lang/doc/libs/std/ops/.test/scale_uniform.svg)](../lang/doc/libs/std/ops/.test/scale_uniform.log) | [scale_uniform](../lang/doc/libs/std/ops/scale.md) |
 | [![test](../lang/doc/tests/.test/scopes.svg)](../lang/doc/tests/.test/scopes.log) | [scopes](../lang/doc/tests/scopes.md) |
@@ -236,7 +238,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/libs/std/geo2d/.test/std_geo2d_pie.svg)](../lang/doc/libs/std/geo2d/.test/std_geo2d_pie.log) | [std_geo2d_pie](../lang/doc/libs/std/geo2d/README.md) |
 | [![test](../lang/doc/libs/std/geo2d/.test/std_geo2d_rounded_rect.svg)](../lang/doc/libs/std/geo2d/.test/std_geo2d_rounded_rect.log) | [std_geo2d_rounded_rect](../lang/doc/libs/std/geo2d/README.md) |
 | [![test](../lang/doc/libs/std/geo2d/.test/std_geo2d_text.svg)](../lang/doc/libs/std/geo2d/.test/std_geo2d_text.log) | [std_geo2d_text](../lang/doc/libs/std/geo2d/README.md) |
-| [![test](../books/microcad_language/src/structure/expressions/.test/string_literal.svg)](../books/microcad_language/src/structure/expressions/.test/string_literal.log) | [string_literal](../books/microcad_language/src/structure/expressions/literals.md) |
+| [![test](../books/microcad_language/src/expressions/.test/string_literal.svg)](../books/microcad_language/src/expressions/.test/string_literal.log) | [string_literal](../books/microcad_language/src/expressions/literals.md) |
 | [![test](../books/tutorials/src/lego_brick/base/frame/.test/subtract.svg)](../books/tutorials/src/lego_brick/base/frame/.test/subtract.log) | [subtract](../books/tutorials/src/lego_brick/base/frame/subtract.md) |
 | [![test](../lang/doc/libs/builtin/.test/text.svg)](../lang/doc/libs/builtin/.test/text.log) | [text](../lang/doc/libs/builtin/geo2d.md) |
 | [![test](../lang/doc/.test/toml_import.svg)](../lang/doc/.test/toml_import.log) | [toml_import](../lang/doc/import.md) |

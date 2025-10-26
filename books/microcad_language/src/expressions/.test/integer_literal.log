@@ -1,6 +1,6 @@
 -- Test --
   integer_literal
-  ../books/microcad_language/src/structure/expressions/literals.md:13
+  ../books/microcad_language/src/expressions/literals.md:13
 
 -- Code --
 

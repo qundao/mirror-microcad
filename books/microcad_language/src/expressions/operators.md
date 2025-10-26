@@ -25,20 +25,22 @@ Here are some examples of each operator:
 [![test](.test/operator_examples.svg)](.test/operator_examples.log)
 
 ```µcad,operator_examples
--5;             // Negation
-5 + 6;          // Addition (result: 11)
-5 - 6;          // Subtraction (result: -1)
-5 * 6;          // Multiplication (result: 30)
-5 / 6;          // Division (result: 0.833333333)
-5 ^ 6;          // Power (result: 15625)
-true & false;   // Logical AND (result: false)
-true | false;   // Logical OR (result: true)
-5 > 6;          // Greater than (result: false)
-5 >= 6;         // Greater or equal (result: false)
-5 < 6;          // Less than (result: true)
-5 <= 6;         // Less or equal (result: true)
-5 == 6;         // Equal (result: false)
-5 != 6          // Not equal (result: true)
+use std::debug::assert_eq;
+
+-5;                                                   // Negation
+assert_eq([  5 + 6          , 11 ]);                  // Addition
+assert_eq([  5 - 6          , -1 ]);                  // Subtraction
+assert_eq([  5 * 6          , 30 ]);                  // Multiplication
+assert_eq([  5 / 6          , 0.83333333333333333 ]); // Division
+assert_eq([  5 ^ 6          , 15625 ]);               // Power
+assert_eq([  true & false   , false ]);               // Logical AND
+assert_eq([  true | false   , true ]);                // Logical OR
+assert_eq([  5 > 6          , false ]);               // Greater than
+assert_eq([  5 >= 6         , false ]);               // Greater or equal
+assert_eq([  5 < 6          , true ]);                // Less than
+assert_eq([  5 <= 6         , true ]);                // Less or equal
+assert_eq([  5 == 6         , false ]);               // Equal
+assert_eq([  5 != 6         , true ]);                // Not equal
 ```
 
 ## Operators & Arrays
@@ -50,9 +52,11 @@ and the second operand.
 [![test](.test/operator_array.svg)](.test/operator_array.log)
 
 ```µcad,operator_array
--[1, 2, 3, 4];      // Negation (result: [-1, -2, -3, -4])
-[1, 2, 3, 4] + 5;   // Addition (result: [6, 7, 8, 9])
-[1, 2, 3, 4] - 5;   // Subtraction (result: [-4, -3, -2, -1])
-[1, 2, 3, 4] * 5;   // Multiplication (result: [5, 10, 15, 20])
-[1, 2, 3, 4] / 5;   // Division (result: [0.2, 0.4, 0.6, 0.8])
+use std::debug::assert_eq;
+
+assert_eq([  -[1, 2, 3, 4]              , [-1, -2, -3, -4] ]);     // Negation
+assert_eq([  [1, 2, 3, 4] + 5           , [6, 7, 8, 9] ]);         // Addition
+assert_eq([  [1, 2, 3, 4] - 5           , [-4, -3, -2, -1] ]);     // Subtraction
+assert_eq([  [1, 2, 3, 4] * 5           , [5, 10, 15, 20] ]);      // Multiplication
+assert_eq([  [1.0, 2.0, 3.0, 4.0] / 5   , [0.2, 0.4, 0.6, 0.8] ]); // Division
 ```

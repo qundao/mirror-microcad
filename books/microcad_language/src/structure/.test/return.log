@@ -1,6 +1,6 @@
 -- Test --
   return
-  ../books/microcad_language/src/structure/functions.md:35
+  ../books/microcad_language/src/structure/functions.md:32
 
 -- Code --
 

@@ -1,6 +1,6 @@
 -- Test --
   expression_model
-  ../books/microcad_language/src/structure/expressions/README.md:33
+  ../books/microcad_language/src/expressions/README.md:33
 
 -- Code --
 
@@ -17,6 +17,6 @@
       - y = -5mm
       Primitive2D __builtin::geo2d::Rect(height=10, width=10, x=-5, y=-5) ->
 
-Export of "../books/microcad_language/src/structure/expressions/.test/expression_model-out.svg" successful.
+Export of "../books/microcad_language/src/expressions/.test/expression_model-out.svg" successful.
 -- Test Result --
 OK

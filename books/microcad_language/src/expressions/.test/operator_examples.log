@@ -1,0 +1,28 @@
+-- Test --
+  operator_examples
+  ../books/microcad_language/src/expressions/operators.md:27
+
+-- Code --
+
+ 1: use std::debug::assert_eq;
+ 2: 
+ 3: -5;                                                   // Negation
+ 4: assert_eq([  5 + 6          , 11 ]);                  // Addition
+ 5: assert_eq([  5 - 6          , -1 ]);                  // Subtraction
+ 6: assert_eq([  5 * 6          , 30 ]);                  // Multiplication
+ 7: assert_eq([  5 / 6          , 0.83333333333333333 ]); // Division
+ 8: assert_eq([  5 ^ 6          , 15625 ]);               // Power
+ 9: assert_eq([  true & false   , false ]);               // Logical AND
+10: assert_eq([  true | false   , true ]);                // Logical OR
+11: assert_eq([  5 > 6          , false ]);               // Greater than
+12: assert_eq([  5 >= 6         , false ]);               // Greater or equal
+13: assert_eq([  5 < 6          , true ]);                // Less than
+14: assert_eq([  5 <= 6         , true ]);                // Less or equal
+15: assert_eq([  5 == 6         , false ]);               // Equal
+16: assert_eq([  5 != 6         , true ]);                // Not equal
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK
