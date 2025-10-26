@@ -25,10 +25,10 @@ impl Operation for Revolve {
             let radius = bounds.max_extent();
             use microcad_core::Extrude;
 
-            let WithBounds3D { inner, bounds } = geometries.revolve_extrude(
-                cgmath::Deg(self.revolve_degrees).into(),
-                context.current_resolution().circular_segments(radius) as usize,
-            );
+            let WithBounds3D { inner, bounds } = geometries.extrude(Extrusion::Revolve {
+                angle: cgmath::Deg(self.revolve_degrees).into(),
+                segments: context.current_resolution().circular_segments(radius) as usize,
+            });
 
             Ok(WithBounds3D::new(inner.into(), bounds))
         })

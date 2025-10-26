@@ -10,6 +10,10 @@ use microcad_lang::{builtin::*, model::*, render::*};
 pub struct Extrude {
     /// Extrusion height in mm (in Z direction).
     height: Scalar,
+    /// Scale in X direction.
+    scale_x: Scalar,
+    /// Scale in Y direction.
+    scale_y: Scalar,
 }
 
 impl Operation for Extrude {
@@ -23,7 +27,11 @@ impl Operation for Extrude {
             let geometries: Geometries2D = model_.children.render_with_context(context)?;
 
             use microcad_core::Extrude;
-            let mesh = geometries.linear_extrude(self.height);
+            let mesh = geometries.extrude(Extrusion::Linear {
+                height: self.height,
+                scale_x: self.scale_x,
+                scale_y: self.scale_y,
+            });
             Ok(WithBounds3D::new(mesh.inner.into(), mesh.bounds))
         })
     }
