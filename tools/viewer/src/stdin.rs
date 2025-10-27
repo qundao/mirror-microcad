@@ -20,8 +20,11 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct SourceLocation {
+    #[allow(unused)]
     line: u64,
+    #[allow(unused)]
     col: u64,
+    #[allow(unused)]
     source_hash: u64,
 }
 

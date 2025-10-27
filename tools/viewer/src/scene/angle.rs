@@ -52,6 +52,7 @@ impl Material for AngleMaterial {
     }
 }
 
+#[allow(unused)]
 pub fn spawn_angle_plane(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,

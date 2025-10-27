@@ -38,6 +38,7 @@ impl Material for RulerMaterial {
     }
 }
 
+#[allow(unused)]
 pub fn spawn_ruler_plane(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
