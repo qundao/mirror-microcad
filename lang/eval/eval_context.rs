@@ -177,7 +177,7 @@ impl EvalContext {
                             found = crate::mark!(FOUND_INTERIM)
                         );
                         return Ok(Symbol::new(
-                            SymbolDefinition::Constant(Visibility::Public, id.clone(), value),
+                            SymbolDef::Constant(Visibility::Public, id.clone(), value),
                             None,
                         ));
                     }

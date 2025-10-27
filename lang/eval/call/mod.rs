@@ -113,8 +113,8 @@ impl Eval for Call {
             },
             |context| {
                 symbol.with_def(|def| match def {
-                    SymbolDefinition::Builtin(f) => f.call(&args, context),
-                    SymbolDefinition::Workbench(w) => {
+                    SymbolDef::Builtin(f) => f.call(&args, context),
+                    SymbolDef::Workbench(w) => {
                         if matches!(*w.kind, WorkbenchKind::Operation) {
                             context.error(self, EvalError::CannotCallOperationWithoutWorkpiece)?;
                             Ok(Value::None)
@@ -127,7 +127,7 @@ impl Eval for Call {
                             )?))
                         }
                     }
-                    SymbolDefinition::Function(f) => f.call(&args, context),
+                    SymbolDef::Function(f) => f.call(&args, context),
                     _ => {
                         context.error(self, EvalError::SymbolCannotBeCalled(symbol.full_name()))?;
                         Ok(Value::None)

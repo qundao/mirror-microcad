@@ -221,7 +221,7 @@ fn rotate_zyx() -> Symbol {
 pub fn math() -> Symbol {
     crate::ModuleBuilder::new("math")
         .symbol(Symbol::new(
-            SymbolDefinition::Constant(
+            SymbolDef::Constant(
                 Visibility::Public,
                 Identifier::no_ref("PI"),
                 Value::Quantity(Quantity::new(std::f64::consts::PI, QuantityType::Scalar)),
@@ -229,7 +229,7 @@ pub fn math() -> Symbol {
             None,
         ))
         .symbol(Symbol::new(
-            SymbolDefinition::Constant(
+            SymbolDef::Constant(
                 Visibility::Public,
                 Identifier::no_ref("X"),
                 Value::Tuple(Box::new(Vec3::unit_x().into())),
@@ -237,7 +237,7 @@ pub fn math() -> Symbol {
             None,
         ))
         .symbol(Symbol::new(
-            SymbolDefinition::Constant(
+            SymbolDef::Constant(
                 Visibility::Public,
                 Identifier::no_ref("Y"),
                 Value::Tuple(Box::new(Vec3::unit_y().into())),
@@ -245,7 +245,7 @@ pub fn math() -> Symbol {
             None,
         ))
         .symbol(Symbol::new(
-            SymbolDefinition::Constant(
+            SymbolDef::Constant(
                 Visibility::Public,
                 Identifier::no_ref("Z"),
                 Value::Tuple(Box::new(Vec3::unit_z().into())),

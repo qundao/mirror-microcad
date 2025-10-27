@@ -26,7 +26,7 @@ impl FromIterator<(Identifier, Value)> for SymbolMap {
             .map(|(id, value)| {
                 (
                     id.clone(),
-                    Symbol::new(SymbolDefinition::Argument(id.clone(), value.clone()), None),
+                    Symbol::new(SymbolDef::Argument(id.clone(), value.clone()), None),
                 )
             })
             .collect()

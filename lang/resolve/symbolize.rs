@@ -21,7 +21,7 @@ impl SourceFile {
     ) -> ResolveResult<Symbol> {
         let symbol = Symbol::new_with_visibility(
             visibility,
-            SymbolDefinition::SourceFile(self.clone().into()),
+            SymbolDef::SourceFile(self.clone().into()),
             None,
         );
         symbol.set_children(
@@ -36,10 +36,7 @@ impl SourceFile {
 impl Symbolize<Symbol> for ModuleDefinition {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
         let symbol = if let Some(body) = &self.body {
-            let symbol = Symbol::new(
-                SymbolDefinition::Module(self.clone().into()),
-                Some(parent.clone()),
-            );
+            let symbol = Symbol::new(SymbolDef::Module(self.clone().into()), Some(parent.clone()));
             symbol.set_children(body.grant(&symbol, context)?.symbolize(&symbol, context)?);
             symbol
         } else if let Some(parent_path) = parent.source_path() {
@@ -108,7 +105,7 @@ impl Symbolize<Option<(Identifier, Symbol)>> for Statement {
 impl Symbolize<Symbol> for WorkbenchDefinition {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
         let symbol = Symbol::new(
-            SymbolDefinition::Workbench(self.clone().into()),
+            SymbolDef::Workbench(self.clone().into()),
             Some(parent.clone()),
         );
         symbol.set_children(
@@ -123,7 +120,7 @@ impl Symbolize<Symbol> for WorkbenchDefinition {
 impl Symbolize<Symbol> for FunctionDefinition {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
         let symbol = Symbol::new(
-            SymbolDefinition::Function((*self).clone().into()),
+            SymbolDef::Function((*self).clone().into()),
             Some(parent.clone()),
         );
         symbol.set_children(
@@ -158,7 +155,7 @@ impl Symbolize for AssignmentStatement {
                 } else {
                     log::trace!("Declaring private const expression: {}", self.assignment.id);
                     Some(Some(Symbol::new(
-                        SymbolDefinition::ConstExpression(
+                        SymbolDef::ConstExpression(
                             self.assignment.visibility,
                             self.assignment.id.clone(),
                             self.assignment.expression.clone(),
@@ -214,7 +211,7 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
                 Ok(Some((
                     Identifier::unique(),
                     Symbol::new(
-                        SymbolDefinition::Alias(self.visibility, identifier.clone(), name.clone()),
+                        SymbolDef::Alias(self.visibility, identifier.clone(), name.clone()),
                         Some(parent.clone()),
                     ),
                 )))
@@ -222,14 +219,14 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
             UseDeclaration::UseAll(name) => Ok(Some((
                 Identifier::unique(),
                 Symbol::new(
-                    SymbolDefinition::UseAll(self.visibility, name.clone()),
+                    SymbolDef::UseAll(self.visibility, name.clone()),
                     Some(parent.clone()),
                 ),
             ))),
             UseDeclaration::UseAlias(name, alias) => Ok(Some((
                 Identifier::unique(),
                 Symbol::new(
-                    SymbolDefinition::Alias(self.visibility, alias.clone(), name.clone()),
+                    SymbolDef::Alias(self.visibility, alias.clone(), name.clone()),
                     Some(parent.clone()),
                 ),
             ))),

@@ -34,7 +34,7 @@ impl Symbol {
     /// - `visibility`: Visibility of the symbol
     /// - `def`: Symbol definition
     /// - `parent`: Symbol's parent symbol or none for root
-    pub fn new(def: SymbolDefinition, parent: Option<Symbol>) -> Self {
+    pub fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
         Symbol {
             visibility: std::cell::Cell::new(def.visibility()),
             inner: RcMut::new(SymbolInner {
@@ -52,7 +52,7 @@ impl Symbol {
     /// - `parent`: Symbol's parent symbol or none for root
     pub(super) fn new_with_visibility(
         visibility: Visibility,
-        def: SymbolDefinition,
+        def: SymbolDef,
         parent: Option<Symbol>,
     ) -> Self {
         Symbol {
@@ -71,7 +71,7 @@ impl Symbol {
     /// - `parameters`: Optional parameter list
     /// - `f`: The builtin function
     pub fn new_builtin(builtin: Builtin) -> Symbol {
-        Symbol::new(SymbolDefinition::Builtin(Rc::new(builtin)), None)
+        Symbol::new(SymbolDef::Builtin(Rc::new(builtin)), None)
     }
 
     /// New builtin function as symbol.
@@ -285,7 +285,7 @@ impl Symbol {
     pub(super) fn can_const(&self) -> bool {
         matches!(
             self.inner.borrow().def,
-            SymbolDefinition::Module(..) | SymbolDefinition::SourceFile(..)
+            SymbolDef::Module(..) | SymbolDef::SourceFile(..)
         )
     }
 
@@ -293,36 +293,34 @@ impl Symbol {
     pub(super) fn can_value(&self) -> bool {
         matches!(
             self.inner.borrow().def,
-            SymbolDefinition::Function(..)
-                | SymbolDefinition::Workbench(..)
-                | SymbolDefinition::SourceFile(..)
+            SymbolDef::Function(..) | SymbolDef::Workbench(..) | SymbolDef::SourceFile(..)
         )
     }
 
     /// check if a property may be declared within this symbol
     pub(super) fn can_prop(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDefinition::Workbench(..))
+        matches!(self.inner.borrow().def, SymbolDef::Workbench(..))
     }
 
     pub(crate) fn is_source(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDefinition::SourceFile(..))
+        matches!(self.inner.borrow().def, SymbolDef::SourceFile(..))
     }
 
     pub(crate) fn is_module(&self) -> bool {
         matches!(
             self.inner.borrow().def,
-            SymbolDefinition::SourceFile(..) | SymbolDefinition::Module(..)
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..)
         )
     }
 
     pub(crate) fn is_workbench(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDefinition::Workbench(..))
+        matches!(self.inner.borrow().def, SymbolDef::Workbench(..))
     }
 
     /// Overwrite any value in this symbol
     pub(crate) fn set_value(&self, new_value: Value) -> ResolveResult<()> {
         let is_a_value = match &mut self.inner.borrow_mut().def {
-            SymbolDefinition::Constant(.., value) => {
+            SymbolDef::Constant(.., value) => {
                 *value = new_value;
                 true
             }
@@ -336,7 +334,7 @@ impl Symbol {
 
     /// Return file path of top level parent source file.
     pub(super) fn source_path(&self) -> Option<std::path::PathBuf> {
-        if let SymbolDefinition::SourceFile(source_file) = &self.inner.borrow().def {
+        if let SymbolDef::SourceFile(source_file) = &self.inner.borrow().def {
             return source_file
                 .filename()
                 .parent()
@@ -348,29 +346,27 @@ impl Symbol {
     pub(super) fn is_resolvable(&self) -> bool {
         matches!(
             self.inner.borrow().def,
-            SymbolDefinition::SourceFile(..)
-                | SymbolDefinition::Module(..)
-                | SymbolDefinition::UseAll(..)
-                | SymbolDefinition::Alias(..)
+            SymbolDef::SourceFile(..)
+                | SymbolDef::Module(..)
+                | SymbolDef::UseAll(..)
+                | SymbolDef::Alias(..)
         ) && !self.is_deleted()
     }
 
     pub(super) fn is_link(&self) -> bool {
         matches!(
             self.inner.borrow().def,
-            SymbolDefinition::UseAll(..) | SymbolDefinition::Alias(..)
+            SymbolDef::UseAll(..) | SymbolDef::Alias(..)
         )
     }
 
     pub(super) fn is_alias(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDefinition::Alias(..))
+        matches!(self.inner.borrow().def, SymbolDef::Alias(..))
     }
 
     pub(super) fn get_link(&self) -> Option<QualifiedName> {
         self.with_def(|def| match def {
-            SymbolDefinition::UseAll(_, name) | SymbolDefinition::Alias(.., name) => {
-                Some(name.clone())
-            }
+            SymbolDef::UseAll(_, name) | SymbolDef::Alias(.., name) => Some(name.clone()),
             _ => None,
         })
     }
@@ -389,12 +385,12 @@ impl Symbol {
     }
 
     /// Work with the symbol definition.
-    pub(crate) fn with_def<T>(&self, mut f: impl FnMut(&SymbolDefinition) -> T) -> T {
+    pub(crate) fn with_def<T>(&self, mut f: impl FnMut(&SymbolDef) -> T) -> T {
         f(&self.inner.borrow().def)
     }
 
     /// Work with the mutable symbol definition.
-    pub(crate) fn with_def_mut<T>(&self, mut f: impl FnMut(&mut SymbolDefinition) -> T) -> T {
+    pub(crate) fn with_def_mut<T>(&self, mut f: impl FnMut(&mut SymbolDef) -> T) -> T {
         f(&mut self.inner.borrow_mut().def)
     }
 }
@@ -419,12 +415,12 @@ impl Symbol {
         if !matches!(self.visibility.get(), Visibility::Deleted) {
             // get names of symbol definitions
             let names = match &self.inner.borrow().def {
-                SymbolDefinition::SourceFile(sf) => sf.names(),
-                SymbolDefinition::Module(m) => m.names(),
-                SymbolDefinition::Workbench(wb) => wb.names(),
-                SymbolDefinition::Function(f) => f.names(),
-                SymbolDefinition::ConstExpression(.., ce) => ce.names(),
-                SymbolDefinition::Alias(..) | SymbolDefinition::UseAll(..) => {
+                SymbolDef::SourceFile(sf) => sf.names(),
+                SymbolDef::Module(m) => m.names(),
+                SymbolDef::Workbench(wb) => wb.names(),
+                SymbolDef::Function(f) => f.names(),
+                SymbolDef::ConstExpression(.., ce) => ce.names(),
+                SymbolDef::Alias(..) | SymbolDef::UseAll(..) => {
                     log::error!("Resolve Context:\n{context:?}");
                     return Err(ResolveError::ResolveCheckFailed);
                 }
@@ -517,7 +513,7 @@ impl Symbol {
         let mut from_self = {
             let inner = self.inner.borrow();
             match &inner.def {
-                SymbolDefinition::Alias(visibility, id, name) => {
+                SymbolDef::Alias(visibility, id, name) => {
                     log::trace!("resolving use (as): {self} => {visibility}{id} ({name})");
                     let symbol = context
                         .symbol_table
@@ -526,7 +522,7 @@ impl Symbol {
                     self.visibility.set(Visibility::Deleted);
                     [(id.clone(), symbol)].into_iter().collect()
                 }
-                SymbolDefinition::UseAll(visibility, name) => {
+                SymbolDef::UseAll(visibility, name) => {
                     log::trace!("resolving use all: {self} => {visibility}{name}");
                     let symbols = context
                         .symbol_table
@@ -559,7 +555,7 @@ impl Symbol {
     /// (for assert_valid() and assert_invalid())
     pub(crate) fn is_target_mode(&self) -> bool {
         self.with_def(|def| match def {
-            SymbolDefinition::Builtin(builtin) => builtin
+            SymbolDef::Builtin(builtin) => builtin
                 .parameters
                 .values()
                 .any(|param| param.ty() == Type::Target),

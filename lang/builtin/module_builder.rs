@@ -16,7 +16,7 @@ impl ModuleBuilder {
     pub fn new(id: impl Into<Identifier>) -> Self {
         Self {
             module: Symbol::new(
-                SymbolDefinition::Module(ModuleDefinition::new(Visibility::Public, id.into())),
+                SymbolDef::Module(ModuleDefinition::new(Visibility::Public, id.into())),
                 None,
             ),
         }

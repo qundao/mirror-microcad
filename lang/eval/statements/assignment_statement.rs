@@ -61,7 +61,7 @@ impl Eval<()> for AssignmentStatement {
         // lookup if we find any existing symbol
         if let Ok(symbol) = context.lookup(&QualifiedName::from_id(assignment.id.clone())) {
             let err = symbol.with_def_mut(|def| match def {
-                SymbolDefinition::Constant(_, id, value) => {
+                SymbolDef::Constant(_, id, value) => {
                     if value.is_invalid() {
                         *value = new_value.clone();
                         None
@@ -76,7 +76,7 @@ impl Eval<()> for AssignmentStatement {
                         ))
                     }
                 }
-                SymbolDefinition::ConstExpression(..) => {
+                SymbolDef::ConstExpression(..) => {
                     abort = true;
                     None
                 }

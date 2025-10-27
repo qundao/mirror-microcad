@@ -23,7 +23,7 @@ pub(super) trait Grant {
 impl Grant for ModuleDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..) | SymbolDefinition::Module(..) => Ok(()),
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported(
@@ -39,10 +39,10 @@ impl Grant for ModuleDefinition {
 impl Grant for StatementList {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..)
-            | SymbolDefinition::Module(..)
-            | SymbolDefinition::Workbench(..)
-            | SymbolDefinition::Function(..) => Ok(()),
+            SymbolDef::SourceFile(..)
+            | SymbolDef::Module(..)
+            | SymbolDef::Workbench(..)
+            | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported("Statement list".to_string(), parent.kind()),
@@ -56,7 +56,7 @@ impl Grant for Statement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match (def, &self) {
             (
-                SymbolDefinition::SourceFile(..),
+                SymbolDef::SourceFile(..),
                 Statement::Assignment(..)
                 | Statement::Expression(..)
                 | Statement::Function(..)
@@ -66,7 +66,7 @@ impl Grant for Statement {
                 | Statement::Workbench(..),
             )
             | (
-                SymbolDefinition::Module(..),
+                SymbolDef::Module(..),
                 Statement::Assignment(..)
                 | Statement::Expression(..)
                 | Statement::Function(..)
@@ -75,7 +75,7 @@ impl Grant for Statement {
                 | Statement::Workbench(..),
             )
             | (
-                SymbolDefinition::Workbench(..),
+                SymbolDef::Workbench(..),
                 Statement::Assignment(..)
                 | Statement::Expression(..)
                 | Statement::Function(..)
@@ -84,7 +84,7 @@ impl Grant for Statement {
                 | Statement::Use(..),
             )
             | (
-                SymbolDefinition::Function(..),
+                SymbolDef::Function(..),
                 Statement::Assignment(..)
                 | Statement::If(..)
                 | Statement::Return(..)
@@ -103,7 +103,7 @@ impl Grant for Statement {
 impl Grant for WorkbenchDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..) | SymbolDefinition::Module(..) => Ok(()),
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported(self.kind.to_string(), parent.kind()),
@@ -116,9 +116,7 @@ impl Grant for WorkbenchDefinition {
 impl Grant for FunctionDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..)
-            | SymbolDefinition::Module(..)
-            | SymbolDefinition::Workbench(..) => Ok(()),
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..) | SymbolDef::Workbench(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported(
@@ -134,7 +132,7 @@ impl Grant for FunctionDefinition {
 impl Grant for InitDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::Workbench(..) => Ok(()),
+            SymbolDef::Workbench(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported("Init definition".to_string(), parent.kind()),
@@ -147,7 +145,7 @@ impl Grant for InitDefinition {
 impl Grant for ReturnStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::Function(..) => Ok(()),
+            SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported("Return statement".to_string(), parent.kind()),
@@ -160,10 +158,10 @@ impl Grant for ReturnStatement {
 impl Grant for IfStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..)
-            | SymbolDefinition::Module(..)
-            | SymbolDefinition::Workbench(..)
-            | SymbolDefinition::Function(..) => Ok(()),
+            SymbolDef::SourceFile(..)
+            | SymbolDef::Module(..)
+            | SymbolDef::Workbench(..)
+            | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported("If statement".to_string(), parent.kind()),
@@ -176,20 +174,20 @@ impl Grant for IfStatement {
 impl Grant for AssignmentStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         let grant = parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..) | SymbolDefinition::Module(..) => {
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => {
                 match self.assignment.qualifier() {
                     Qualifier::Value => matches!(self.assignment.visibility, Visibility::Private),
                     Qualifier::Const => true,
                     Qualifier::Prop => false,
                 }
             }
-            SymbolDefinition::Workbench(..) => match self.assignment.qualifier() {
+            SymbolDef::Workbench(..) => match self.assignment.qualifier() {
                 Qualifier::Value | Qualifier::Prop => {
                     matches!(self.assignment.visibility, Visibility::Private)
                 }
                 Qualifier::Const => false,
             },
-            SymbolDefinition::Function(..) => match self.assignment.qualifier() {
+            SymbolDef::Function(..) => match self.assignment.qualifier() {
                 Qualifier::Value => {
                     matches!(self.assignment.visibility, Visibility::Private)
                 }
@@ -214,10 +212,10 @@ impl Grant for AssignmentStatement {
 impl Grant for Body {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..)
-            | SymbolDefinition::Module(..)
-            | SymbolDefinition::Workbench(..)
-            | SymbolDefinition::Function(..) => Ok(()),
+            SymbolDef::SourceFile(..)
+            | SymbolDef::Module(..)
+            | SymbolDef::Workbench(..)
+            | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported("Code body".to_string(), parent.kind()),
@@ -229,14 +227,12 @@ impl Grant for Body {
 impl Grant for UseStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         let grant = parent.with_def(|def| match def {
-            SymbolDefinition::SourceFile(..) | SymbolDefinition::Module(..) => true,
-            SymbolDefinition::Workbench(..) | SymbolDefinition::Function(..) => {
-                match self.visibility {
-                    Visibility::Private => true,
-                    Visibility::Public => false,
-                    Visibility::Deleted => unreachable!(),
-                }
-            }
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => true,
+            SymbolDef::Workbench(..) | SymbolDef::Function(..) => match self.visibility {
+                Visibility::Private => true,
+                Visibility::Public => false,
+                Visibility::Deleted => unreachable!(),
+            },
             _ => false,
         });
 

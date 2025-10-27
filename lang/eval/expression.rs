@@ -108,43 +108,41 @@ impl Eval<Option<Symbol>> for QualifiedName {
 impl Eval for QualifiedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         context.lookup(self)?.with_def(|def| match def {
-            SymbolDefinition::Constant(.., value) | SymbolDefinition::Argument(_, value) => {
-                Ok(value.clone())
-            }
-            SymbolDefinition::ConstExpression(.., expr) => expr.eval(context),
-            SymbolDefinition::SourceFile(_) => Ok(Value::None),
+            SymbolDef::Constant(.., value) | SymbolDef::Argument(_, value) => Ok(value.clone()),
+            SymbolDef::ConstExpression(.., expr) => expr.eval(context),
+            SymbolDef::SourceFile(_) => Ok(Value::None),
 
-            SymbolDefinition::Module(ns) => {
+            SymbolDef::Module(ns) => {
                 context.error(self, EvalError::UnexpectedNested("mod", ns.id.clone()))?;
                 Ok(Value::None)
             }
-            SymbolDefinition::Workbench(w) => {
+            SymbolDef::Workbench(w) => {
                 context.error(
                     self,
                     EvalError::UnexpectedNested(w.kind.as_str(), w.id.clone()),
                 )?;
                 Ok(Value::None)
             }
-            SymbolDefinition::Function(f) => {
+            SymbolDef::Function(f) => {
                 context.error(self, EvalError::UnexpectedNested("function", f.id.clone()))?;
                 Ok(Value::None)
             }
-            SymbolDefinition::Builtin(bm) => {
+            SymbolDef::Builtin(bm) => {
                 context.error(self, EvalError::UnexpectedNested("builtin", bm.id.clone()))?;
                 Ok(Value::None)
             }
-            SymbolDefinition::Alias(_, id, _) => {
+            SymbolDef::Alias(_, id, _) => {
                 // Alias should have been resolved within previous lookup()
                 unreachable!(
                     "Unexpected alias {id} in value expression at {}",
                     self.src_ref()
                 )
             }
-            SymbolDefinition::UseAll(_, name) => {
+            SymbolDef::UseAll(_, name) => {
                 unreachable!("Unexpected use {name} in value expression")
             }
             #[cfg(test)]
-            SymbolDefinition::Tester(..) => {
+            SymbolDef::Tester(..) => {
                 unreachable!()
             }
         })

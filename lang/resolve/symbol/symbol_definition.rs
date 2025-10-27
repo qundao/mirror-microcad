@@ -5,7 +5,7 @@ use crate::{builtin::*, rc::*, src_ref::*, syntax::*, value::*};
 
 /// Symbol definition
 #[derive(Clone)]
-pub enum SymbolDefinition {
+pub enum SymbolDef {
     /// Source file symbol.
     SourceFile(Rc<SourceFile>),
     /// Module symbol.
@@ -31,7 +31,7 @@ pub enum SymbolDefinition {
     Tester(Identifier),
 }
 
-impl SymbolDefinition {
+impl SymbolDef {
     /// Returns ID of this definition.
     pub fn id(&self) -> Identifier {
         match &self {
@@ -53,21 +53,21 @@ impl SymbolDefinition {
     /// Return visibility of this symbol.
     pub fn visibility(&self) -> Visibility {
         match &self {
-            SymbolDefinition::SourceFile(..) | SymbolDefinition::Builtin(..) => Visibility::Public,
+            Self::SourceFile(..) | Self::Builtin(..) => Visibility::Public,
 
-            SymbolDefinition::Argument(..) => Visibility::Private,
+            Self::Argument(..) => Visibility::Private,
 
-            SymbolDefinition::Constant(visibility, ..) => *visibility,
-            SymbolDefinition::Module(md) => md.visibility,
-            SymbolDefinition::Workbench(wd) => wd.visibility,
-            SymbolDefinition::Function(fd) => fd.visibility,
+            Self::Constant(visibility, ..) => *visibility,
+            Self::Module(md) => md.visibility,
+            Self::Workbench(wd) => wd.visibility,
+            Self::Function(fd) => fd.visibility,
 
-            SymbolDefinition::ConstExpression(visibility, ..)
-            | SymbolDefinition::Alias(visibility, ..)
-            | SymbolDefinition::UseAll(visibility, ..) => *visibility,
+            Self::ConstExpression(visibility, ..)
+            | Self::Alias(visibility, ..)
+            | Self::UseAll(visibility, ..) => *visibility,
 
             #[cfg(test)]
-            SymbolDefinition::Tester(..) => Visibility::Public,
+            Self::Tester(..) => Visibility::Public,
         }
     }
 
@@ -106,7 +106,7 @@ impl SymbolDefinition {
     }
 }
 
-impl std::fmt::Display for SymbolDefinition {
+impl std::fmt::Display for SymbolDef {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let kind = self.kind();
         match self {
@@ -126,7 +126,7 @@ impl std::fmt::Display for SymbolDefinition {
     }
 }
 
-impl std::fmt::Debug for SymbolDefinition {
+impl std::fmt::Debug for SymbolDef {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let kind = self.kind();
         match self {
