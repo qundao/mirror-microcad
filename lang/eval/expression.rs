@@ -95,7 +95,7 @@ impl Eval for ArrayExpression {
 
 impl Eval<Option<Symbol>> for QualifiedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Symbol>> {
-        match context.lookup(self, LookupTarget::Any) {
+        match context.lookup(self, LookupTarget::AnyButMethod) {
             Ok(symbol) => Ok(Some(symbol.clone())),
             Err(error) => {
                 context.error(self, error)?;
@@ -108,7 +108,7 @@ impl Eval<Option<Symbol>> for QualifiedName {
 impl Eval for QualifiedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         context
-            .lookup(self, LookupTarget::Any)?
+            .lookup(self, LookupTarget::AnyButMethod)?
             .with_def(|def| match def {
                 SymbolDef::Constant(.., value) | SymbolDef::Argument(_, value) => Ok(value.clone()),
                 SymbolDef::ConstExpression(.., expr) => expr.eval(context),

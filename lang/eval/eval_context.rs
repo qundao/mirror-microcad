@@ -375,7 +375,7 @@ impl Default for EvalContext {
 
 impl Lookup<EvalError> for EvalContext {
     fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> EvalResult<Symbol> {
-        log::debug!("Lookup symbol '{name:?}' (at line {:?}):", name.src_ref());
+        log::debug!("Lookup {target} '{name:?}' (at line {:?}):", name.src_ref());
 
         log::trace!("- lookups -------------------------------------------------------");
         // collect all symbols that can be found and remember origin
@@ -450,6 +450,11 @@ impl Lookup<EvalError> for EvalContext {
             return Err(ambiguities.remove(0).1);
         }
 
+        let found: Vec<_> = found
+            .iter()
+            .filter(|(_, symbol)| target.matches(symbol))
+            .collect();
+
         // check for ambiguity in what's left
         match found.first() {
             Some((origin, symbol)) => {
@@ -476,7 +481,6 @@ impl Lookup<EvalError> for EvalContext {
                     "{not_found} Symbol '{name:?}'",
                     not_found = crate::mark!(NOT_FOUND)
                 );
-
                 Err(EvalError::SymbolNotFound(name.clone()))
             }
         }

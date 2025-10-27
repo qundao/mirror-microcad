@@ -9,6 +9,9 @@ pub enum LookupTarget {
     /// Lookup for any symbol
     Any,
 
+    /// Lookup for everything but a method
+    AnyButMethod,
+
     /// Lookup for methods only
     Method,
     /// Lookup for functions only
@@ -22,29 +25,29 @@ pub enum LookupTarget {
 }
 
 impl LookupTarget {
-    pub(super) fn matches(&self, symbol: &Symbol) -> bool {
+    pub(crate) fn matches(&self, symbol: &Symbol) -> bool {
         symbol.with_def(|def| -> bool {
             match &def {
                 SymbolDef::SourceFile(..) | SymbolDef::Module(..) => {
-                    matches!(self, Self::Any | Self::Module)
+                    matches!(self, Self::Any | Self::AnyButMethod | Self::Module)
                 }
                 SymbolDef::Workbench(wd) => match *wd.kind {
                     WorkbenchKind::Part | WorkbenchKind::Sketch => {
-                        matches!(self, Self::Any | Self::Function)
+                        matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
                     }
                     WorkbenchKind::Operation => matches!(self, Self::Any | Self::Method),
                 },
                 SymbolDef::Function(..) => {
-                    matches!(self, Self::Any | Self::Function)
+                    matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
                 }
                 SymbolDef::Builtin(b) => match &b.kind {
                     crate::builtin::BuiltinKind::Function => {
-                        matches!(self, Self::Any | Self::Function)
+                        matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
                     }
                     crate::builtin::BuiltinKind::Workbench(bwk) => match bwk {
                         crate::builtin::BuiltinWorkbenchKind::Primitive2D
                         | crate::builtin::BuiltinWorkbenchKind::Primitive3D => {
-                            matches!(self, Self::Any | Self::Function)
+                            matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
                         }
                         crate::builtin::BuiltinWorkbenchKind::Transform
                         | crate::builtin::BuiltinWorkbenchKind::Operation => {
@@ -55,15 +58,29 @@ impl LookupTarget {
                 SymbolDef::Constant(..)
                 | SymbolDef::ConstExpression(..)
                 | SymbolDef::Argument(..) => {
-                    matches!(self, Self::Any | Self::Value)
+                    matches!(self, Self::Any | Self::AnyButMethod | Self::Value)
                 }
                 SymbolDef::Alias(..) | SymbolDef::UseAll(..) => {
-                    matches!(self, Self::Any | Self::Link)
+                    matches!(self, Self::Any | Self::AnyButMethod | Self::Link)
                 }
                 #[cfg(test)]
                 SymbolDef::Tester(..) => todo!(),
             }
         })
+    }
+}
+
+impl std::fmt::Display for LookupTarget {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            LookupTarget::Any => write!(f, "any symbol"),
+            LookupTarget::AnyButMethod => write!(f, "any symbol but a method"),
+            LookupTarget::Method => write!(f, "method"),
+            LookupTarget::Function => write!(f, "function"),
+            LookupTarget::Module => write!(f, "module"),
+            LookupTarget::Value => write!(f, "value"),
+            LookupTarget::Link => write!(f, "link"),
+        }
     }
 }
 

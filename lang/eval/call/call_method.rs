@@ -59,8 +59,8 @@ impl CallMethod<Option<Model>> for Model {
         args: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Option<Model>> {
-        if let Some(symbol) = name.eval(context)? {
-            context.scope(
+        match context.lookup(name, LookupTarget::Method) {
+            Ok(symbol) => context.scope(
                 StackFrame::Call {
                     symbol: symbol.clone(),
                     args: args.clone(),
@@ -88,9 +88,11 @@ impl CallMethod<Option<Model>> for Model {
                         }
                     })
                 },
-            )
-        } else {
-            Ok(None)
+            ),
+            Err(err) => {
+                context.error(name, err)?;
+                Ok(None)
+            }
         }
     }
 }
