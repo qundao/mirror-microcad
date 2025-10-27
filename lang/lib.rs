@@ -33,13 +33,6 @@ pub mod value;
 /// Id type (base of all identifiers)
 pub type Id = compact_str::CompactString;
 
-/// Global test initialization.
-#[cfg(test)]
-#[ctor::ctor]
-fn init() {
-    env_logger::init();
-}
-
 const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
 /// Parse a rule from given string into a syntax element.
@@ -73,11 +66,7 @@ pub fn shorten(what: &str, max_chars: usize) -> String {
             if p == max_chars {
                 Some('…')
             } else if p < max_chars {
-                if ch == '\n' {
-                    Some('⏎')
-                } else {
-                    Some(ch)
-                }
+                if ch == '\n' { Some('⏎') } else { Some(ch) }
             } else {
                 None
             }

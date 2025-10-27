@@ -12,15 +12,6 @@ mod math;
 mod ops;
 mod print;
 
-/// Global test initialization.
-///
-/// TODO: To be removed?
-#[cfg(test)]
-#[ctor::ctor]
-fn init() {
-    env_logger::init();
-}
-
 pub use microcad_lang::builtin::*;
 use microcad_lang::{diag::*, eval::*, ty::Ty, value::*};
 
