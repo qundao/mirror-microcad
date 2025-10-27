@@ -10,13 +10,13 @@
 
 -- Output --
 -- Errors --
-error: Statement is not available within function
+error: Statement is not available within Function
   ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   sketch S() {} // error
      |   ^^^^^^^^^^^^^
      |
-error: sketch is not available within function
+error: Sketch is not available within Function
   ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   sketch S() {} // error

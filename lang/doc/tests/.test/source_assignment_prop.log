@@ -8,7 +8,7 @@
 
 -- Output --
 -- Errors --
-error: Assignment statement is not available within file
+error: Assignment statement is not available within SourceFile
   ---> ../lang/doc/tests/statement_usage.md:1:1
      |
    1 | prop a = 1;  // error
