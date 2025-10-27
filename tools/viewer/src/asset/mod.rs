@@ -1,4 +1,4 @@
-use bevy_render::mesh::Mesh;
+use bevy::render::mesh::Mesh;
 
 use crate::asset::{mesh::load_stl, polygon::load_wkt};
 

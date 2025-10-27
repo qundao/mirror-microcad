@@ -3,12 +3,12 @@
 
 //! microcad Viewer geometry output.
 
-use bevy::{
-    asset::RenderAssetUsages, math::Vec3, pbr::StandardMaterial, platform::collections::HashMap,
-};
-use bevy_render::{
+use bevy::render::{
     alpha::AlphaMode,
     mesh::{Indices, Mesh},
+};
+use bevy::{
+    asset::RenderAssetUsages, math::Vec3, pbr::StandardMaterial, platform::collections::HashMap,
 };
 use cgmath::InnerSpace;
 use microcad_core::*;
@@ -130,7 +130,7 @@ pub fn from_geometry2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
     }
 
     let mut mesh = Mesh::new(
-        bevy_render::mesh::PrimitiveTopology::TriangleList,
+        bevy::render::mesh::PrimitiveTopology::TriangleList,
         RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
     );
 

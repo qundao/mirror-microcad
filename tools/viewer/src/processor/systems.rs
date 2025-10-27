@@ -3,6 +3,7 @@
 
 //! microcad Viewer bevy systems
 
+use bevy::render::mesh::{Mesh, Mesh3d};
 use bevy::{
     asset::Assets,
     color::Color,
@@ -13,7 +14,6 @@ use bevy::{
     pbr::{MeshMaterial3d, StandardMaterial},
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
-use bevy_render::mesh::{Mesh, Mesh3d};
 use microcad_core::RenderResolution;
 
 use crate::{

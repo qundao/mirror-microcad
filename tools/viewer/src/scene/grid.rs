@@ -1,3 +1,9 @@
+use bevy::render::{
+    alpha::AlphaMode,
+    camera::{Camera, Projection},
+    mesh::{Mesh, Mesh3d},
+    render_resource::{AsBindGroup, ShaderRef},
+};
 use bevy::{
     asset::{Asset, Assets},
     ecs::{
@@ -7,12 +13,6 @@ use bevy::{
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::{Material, MeshMaterial3d},
     reflect::TypePath,
-};
-use bevy_render::{
-    alpha::AlphaMode,
-    camera::{Camera, Projection},
-    mesh::{Mesh, Mesh3d},
-    render_resource::{AsBindGroup, ShaderRef},
 };
 
 use crate::{scene::get_current_zoom_level, state::State};

@@ -1,14 +1,14 @@
+use bevy::render::{
+    alpha::AlphaMode,
+    mesh::{Mesh, Mesh3d},
+    render_resource::{AsBindGroup, ShaderRef},
+};
 use bevy::{
     asset::{Asset, Assets},
     ecs::system::{Commands, ResMut},
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::{Material, MeshMaterial3d},
     reflect::TypePath,
-};
-use bevy_render::{
-    alpha::AlphaMode,
-    mesh::{Mesh, Mesh3d},
-    render_resource::{AsBindGroup, ShaderRef},
 };
 
 #[derive(Asset, AsBindGroup, Debug, Clone, Default, TypePath)]

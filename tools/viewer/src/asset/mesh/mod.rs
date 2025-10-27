@@ -1,4 +1,4 @@
-use bevy_render::mesh::Mesh;
+use bevy::render::mesh::Mesh;
 
 use crate::processor::triangle_mesh_to_bevy_with_smoothness;
 

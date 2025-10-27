@@ -3,7 +3,7 @@
 
 //! microcad Viewer Load WKT.
 
-use bevy_render::mesh::Mesh;
+use bevy::render::mesh::Mesh;
 use wkt::TryFromWkt;
 
 use microcad_core::Geometry2D;

@@ -11,8 +11,20 @@ version.workspace = true
 
 [dependencies]
 anyhow = "1.0.100"
-bevy = "0.16"
-bevy_render = "0.16.1"
+bevy = { version = "0.16.1", default-features = false, features = [
+    "bevy_asset",
+    "bevy_color",
+    "bevy_gizmos",
+    "bevy_mesh_picking_backend",
+    "bevy_picking",
+    "bevy_pbr",
+    "bevy_render",
+    "bevy_window",
+    "bevy_winit",
+    "tonemapping_luts",
+    "x11",
+] }
+
 bevy_mod_outline = "0.10.3"
 clap = { version = "4.5.48", features = ["derive"] }
 cgmath = { version = "0.18", features = ["serde"] }

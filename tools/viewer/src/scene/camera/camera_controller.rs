@@ -182,7 +182,7 @@ fn run_camera_controller(
     match projection.as_mut() {
         Projection::Orthographic(ortho) => {
             // Change the projection parameters
-            use bevy_render::camera::CameraProjection;
+            use bevy::render::camera::CameraProjection;
 
             ortho.scale *= 1.0 + scroll / 100.0;
 
