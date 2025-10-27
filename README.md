@@ -1,23 +1,23 @@
 # µcad
 
-[![Status](https://github.com/Rustfahrtagentur/microcad/actions/workflows/rust.yml/badge.svg)](https://github.com/Rustfahrtagentur/microcad/actions)
+[![CI](https://ci.codeberg.org/api/badges/15446/status.svg)](https://ci.codeberg.org/repos/15446)
 [![Crates.io](https://img.shields.io/crates/v/microcad.svg)](https://crates.io/crates/microcad)
-[![Documentation](https://docs.rs/microcad/badge.svg)](https://docs.rs/microcad/)
-[![Codecov](https://codecov.io/github/Rustfahrtagentur/mcad/coverage.svg?branch=main)](https://codecov.io/gh/Rustfahrtagentur/microcad)
-[![Dependency status](https://deps.rs/repo/github/Rustfahrtagentur/mcad/status.svg)](https://deps.rs/repo/github/Rustfahrtagentur/microcad)
+[![Dependency status](https://deps.rs/repo/codeberg/microcad/microcad/status.svg)](https://deps.rs/repo/codeberg/microcad/microcad)
 
 ![µcad Logo](lang/doc/images/logo.png)
 
 µcad (pronounced *microcad*) is a description language for modeling parameterizable geometric objects.
-Simple basic shapes can be composed to create complex geometries which then can be rendered into STL or SVG files for 3D printing or CNC milling.
+Simple basic shapes can be composed to create complex geometries which then can be rendered into STL
+or SVG files for 3D printing or CNC milling.
 
-**Note**: This project is in an early stage of development and is not yet feature complete. Feel free to [contribute](CONTRIBUTE.md) by opening issues or pull requests.
+**Note**: This project is in an early stage of development and is not yet feature complete.
+Feel free to [contribute](CONTRIBUTE.md) by opening issues or pull requests.
 
 ## Content
 
 - [Content](#content)
 - [Quick Start](#quick-start)
-- [Hello World example](#hello-world-example)
+- [First Example](#first-example)
 - [Installation](#installation)
 - [Command line usage](#command-line-usage)
 - [Documentation](#documentation)
@@ -26,15 +26,24 @@ Simple basic shapes can be composed to create complex geometries which then can 
 
 ## Quick Start
 
-*µcad* is programmed in [Rust](https://www.rust-lang.org/) which easily can be [installed](https://www.rust-lang.org/tools/install) on several operating systems.
-You can try it out with an example by using the command line tool `microcad-cli`
-which can be installed from [crates.io](https://crates.io) by using `cargo`.
+*µcad* is programmed in [Rust](https://www.rust-lang.org/) which easily can be
+[installed](https://www.rust-lang.org/tools/install) on several operating systems.
+You can try it out with an example by using the command line tool `microcad`
+which can be installed from [crates.io](https://crates.io/crates/microcad) by using
+the following command line:
 
-**Note**: Currently µcad has no binary install packages so the only ways to install it are with [`cargo install`](#installation) or from the source code (see section [Contribute](#contribute)).
+```sh
+cargo install microcad
+```
 
-## Hello World example
+**Note**: Currently µcad has no binary install packages so the only ways to install
+it are with [`cargo install`](#installation) or from the source code (see section
+[Contribute](#contribute)).
 
-The following µcad source code defines a *part* called `csg_cube`, which has a body of a cube with rounded corners and three cylinders as holes:
+## First Example
+
+The following µcad source code defines a *part* called `csg_cube`, which has a body of a cube with
+rounded corners and three cylinders as holes:
 
 ![csg_cube](examples/csg_cube.png)
 
@@ -56,7 +65,8 @@ CsgCube(50mm);
 
 ## Installation
 
-First, install [Ninja Build](https://github.com/ninja-build/ninja) which is needed to compile the [manifold geometry library](https://github.com/elalish/manifold).
+First, install [Ninja Build](https://github.com/ninja-build/ninja) which is needed to compile
+the [manifold geometry library](https://github.com/elalish/manifold).
 For example, *Debian* based *Linux* distributions use the following line:
 
 ```sh
@@ -66,7 +76,7 @@ sudo apt install ninja-build
 To install the latest release of *µcad* via *cargo*, type:
 
 ```sh
-cargo install microcad-cli
+cargo install microcad
 ```
 
 ## Command line usage
@@ -86,7 +96,8 @@ To generate an STL model file use the `export` command with an additional output
 microcad export ./examples/lego_brick.µcad
 ```
 
-The file [`lego_brick.µcad`](examples/lego_brick.µcad) generate a file called`lego_brick.stl` which can be displayed e.g. with [MeshLab](https://www.meshlab.net/).
+The file [`lego_brick.µcad`](examples/lego_brick.µcad) generate a file called`lego_brick.stl`
+which can be displayed e.g. with [MeshLab](https://www.meshlab.net/).
 
 The resulting STL model looks like this:
 
@@ -113,6 +124,6 @@ There is a [list of all tests](lang/doc/test_list.md) included in this documenta
 
 Thanks to the [Prototype Fund](https://www.prototypefund.de/) and the [Federal Ministry of Research, Technology and Space](https://www.bmbf.de/EN/) for funding this project in 2025.
 
-![https://prototypefund.de/en/](images/Prototype_Fund_Logo_2025.svg)
-![https://okfn.de/en/](images/Open_Knowledge_Foundation_Deutschland_Logo.svg)
+![https://prototypefund.de/en/](https://codeberg.org/microcad/microcad/raw/branch/master/images/Prototype_Fund_Logo_2025.svg)
+![https://okfn.de/en/](https://codeberg.org/microcad/microcad/raw/branch/master/images/Open_Knowledge_Foundation_Deutschland_Logo.svg)
 ![https://www.bmbf.de/EN/](https://upload.wikimedia.org/wikipedia/commons/d/df/BMFTR_Logo.svg)

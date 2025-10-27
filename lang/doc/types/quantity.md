@@ -15,7 +15,7 @@ The following quantity types are supported:
 | `Density` | `g/mm³`                                     | -                              |
 | `Weight`  | `g`, `kg`                                   | `lb`, `oz`                     |
 
-**Note**: More units [may be implemented](https://github.com/Rustfahrtagentur/microcad/issues/76).
+**Note**: More units [may be implemented](https://codeberg.org/microcad/microcad/issues/76).
 
 ## Literals
 

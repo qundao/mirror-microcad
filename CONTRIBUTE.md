@@ -5,7 +5,8 @@ Thank you for your interest in contributing to µcad!
 Starting as a team of two we had to chose a way to bring code and documentation into sync.
 Especially when writing a programming language!
 
-So our so-called [MD-Tests](tests/markdown_test.rs) are [generated automatically](tests/microcad_markdown_test/lib.rs) out of the code from
+So our so-called [MD-Tests](tests/markdown_test.rs) are
+[generated automatically](tests/microcad_markdown_test/lib.rs) out of the code from
 within the documentation to check if it is correct.
 
 Having this tool, we can make tested code examples which produce:
@@ -18,7 +19,8 @@ Having this tool, we can make tested code examples which produce:
 Those test can be run with `cargo test`.
 The produced output will be saved in folders called `.test` which is beside the source file of the test.
 
-Outdated or removed tests will be cleaned up automatically but when in doubt use `cargo clean` and maybe some `find -name .test | xargs rm -r`.
+Outdated or removed tests will be cleaned up automatically but when in doubt use `cargo clean`
+and maybe some `find -name .test | xargs rm -r`.
 
 We also commit the results to the repository to monitor any changes in our IDEs.
 
@@ -57,20 +59,24 @@ cargo install --path tools/cli
 
 ### Contributing to User Manual
 
-The user manual consists of several *markdown* files stored in the `/doc` folder, starting with the inside [`README.md`](doc/README.md).
+The user manual consists of several *markdown* files stored in the `/doc` folder, starting with the inside
+[`README.md`](doc/README.md).
 
 The user manual is the *point of truth* about what µcad is capable to do and what not.
-This *document driven* approach guarantees to test each proper marked (see below) code example and show the test result in a banner above the test.
+This *document driven* approach guarantees to test each proper marked (see below) code example and show the
+test result in a banner above the test.
 
 #### Documentation driven tests
 
-One may insert *µcad* code into the *markdown* files, which then will get tested automatically if you run `cargo test` and name them like:
+One may insert *µcad* code into the *markdown* files, which then will get tested automatically if you run
+`cargo test` and name them like:
 
 ````md
 ```µcad,my_test
 ````
 
-The *markdown* will be searched for any *µcad* code and appropriate *rust* tests will be  [generated](https://github.com/Rustfahrtagentur/microcad/tree/master/tests/microcad_markdown_test).
+The *markdown* will be searched for any *µcad* code and appropriate *rust* tests will be
+[generated](https://codeberg.org/microcad/microcad/src/branch/master/tests/microcad_markdown_test).
 
 #### Test modes
 
@@ -81,7 +87,8 @@ beside the name you may add a test mode (see table below):
 ````
 
 The tests will create `.test` folders beside the *markdown* files.
-The tests will then copy an [image file (`*.svg`)](https://github.com/Rustfahrtagentur/microcad/tree/master/tests/images) for every test which signals the test result into the `.test` folder.
+The tests will then copy an [image file (`*.svg`)](https://codeberg.org/microcad/microcad/src/branch/master/tests/images)
+for every test which signals the test result into the `.test` folder.
 They can be included in the *markdown*, if you use this code:
 
 ````md
@@ -100,7 +107,8 @@ You may also give the reader access to the logs by clicking on the banner with:
 
 #### Automatically update test banners
 
-There is a [script](https://github.com/Rustfahrtagentur/microcad/tree/master/update_md_banner.sh) which updates all banners automatically.
+There is a [script](https://codeberg.org/microcad/microcad/src/branch/master/update_md_banner.sh) which updates all
+banners automatically.
 
 #### Test results and marks
 

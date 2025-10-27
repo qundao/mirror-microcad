@@ -1,6 +1,8 @@
 # microcad
 
-This crate provides the command line interpreter of [µcad](http://microcad.xyz).
+This crate provides the command line interpreter of µcad.
+
+**Note**: This project is in an early stage of development and is not yet feature complete!
 
 ## Installation
 
@@ -32,14 +34,15 @@ Commands:
   export   Parse and evaluate and export a µcad file
   create   Create a new source file with µcad extension
   watch    Watch a µcad file
+  install  Install µcad standard library
   help     Print this message or the help of the given subcommand(s)
 
 Options:
-  -T, --time                        Display processing time
-  -P, --search-path <SEARCH_PATHS>  Paths to search for files [default: ./lib]
-  -C, --config <CONFIG>             Load config from file
-  -h, --help                        Print help
-  -V, --version                     Print version
+  -T, --time             Display processing time
+  -C, --config <CONFIG>  Load config from file
+  -v...                  Verbosity level (use -v, -vv, or -vvv)
+  -h, --help             Print help
+  -V, --version          Print version
 ```
 
 ## Install standard library
