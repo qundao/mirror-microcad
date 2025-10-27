@@ -13,21 +13,20 @@ mod ops;
 mod print;
 
 /// Global test initialization.
+///
+/// TODO: To be removed?
 #[cfg(test)]
 #[ctor::ctor]
 fn init() {
     env_logger::init();
 }
 
-use std::str::FromStr;
-
 pub use microcad_lang::builtin::*;
 use microcad_lang::{diag::*, eval::*, ty::Ty, value::*};
 
 /// Return type of argument.
 fn type_of() -> Symbol {
-    let id = Identifier::from_str("type_of").expect("valid id");
-    Symbol::new_builtin(id, None, &|_, args, _| {
+    Symbol::new_builtin_fn("type_of", [].into_iter(), &|_, args, _| {
         if let Ok(arg) = args.get_single() {
             let ty = arg.1.ty();
             return Ok(Value::String(ty.to_string()));
@@ -38,7 +37,7 @@ fn type_of() -> Symbol {
 
 /// Return the count of elements in an array or string.
 fn count() -> Symbol {
-    Symbol::new_builtin(Identifier::no_ref("count"), None, &|_params, args, ctx| {
+    Symbol::new_builtin_fn("count", [].into_iter(), &|_params, args, ctx| {
         let arg = args.get_single()?;
         Ok(match &arg.1.value {
             Value::String(s) => Value::Integer(s.chars().count() as i64),

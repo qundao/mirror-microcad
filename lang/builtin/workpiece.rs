@@ -20,7 +20,7 @@ use crate::{
 
 /// Builtin function type
 pub type BuiltinFn =
-    dyn Fn(Option<&ParameterValueList>, &ArgumentValueList, &mut EvalContext) -> EvalResult<Value>;
+    dyn Fn(&ParameterValueList, &ArgumentValueList, &mut EvalContext) -> EvalResult<Value>;
 
 /// Builtin function struct
 #[derive(Clone)]
@@ -29,10 +29,22 @@ pub struct Builtin {
     pub id: Identifier,
 
     /// Optional parameter value list to check the builtin signature.
-    pub parameters: Option<ParameterValueList>,
+    pub parameters: ParameterValueList,
+
+    /// Built-in kind.
+    pub kind: BuiltinKind,
 
     /// Functor to evaluate this function
     pub f: &'static BuiltinFn,
+}
+
+/// Kind of the built-in.
+#[derive(Clone)]
+pub enum BuiltinKind {
+    /// A built-in function: `fn ()`.
+    Function,
+    /// A built-in workpiece: operation, transform, sketch, part.
+    Workbench(BuiltinWorkbenchKind),
 }
 
 impl std::fmt::Debug for Builtin {
@@ -42,19 +54,20 @@ impl std::fmt::Debug for Builtin {
 }
 
 impl Builtin {
-    /// Return identifier
+    /// Return identifier.
     pub fn id(&self) -> Identifier {
         self.id.clone()
     }
 }
 
 impl CallTrait for Builtin {
-    /// Call builtin function with given parameter
+    /// Call builtin function with given parameter.
+    ///
     /// # Arguments
-    /// - `args`: Function arguments
-    /// - `context`: Execution context
+    /// - `args`: Function arguments.
+    /// - `context`: Execution context.
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
-        (self.f)(self.parameters.as_ref(), args, context)
+        (self.f)(&self.parameters, args, context)
     }
 }
 
@@ -179,14 +192,11 @@ pub trait BuiltinWorkbenchDefinition {
                 id = Self::id()
             );
             Ok(Value::Model(
-                ArgumentMatch::find_multi_match(
-                    args,
-                    params.expect("A built-in part must have a parameter list"),
-                )?
-                .iter()
-                .map(|tuple| Self::model(Creator::new(context.current_symbol(), tuple.clone())))
-                .collect::<Models>()
-                .to_multiplicity(SrcRef(None)),
+                ArgumentMatch::find_multi_match(args, params)?
+                    .iter()
+                    .map(|tuple| Self::model(Creator::new(context.current_symbol(), tuple.clone())))
+                    .collect::<Models>()
+                    .to_multiplicity(SrcRef(None)),
             ))
         }
     }
@@ -198,10 +208,11 @@ pub trait BuiltinWorkbenchDefinition {
 
     /// Create builtin symbol
     fn symbol() -> Symbol {
-        Symbol::new_builtin(
-            Identifier::no_ref(Self::id()),
-            Some(Self::parameters()),
-            Self::function(),
-        )
+        Symbol::new_builtin(Builtin {
+            id: Identifier::no_ref(Self::id()),
+            parameters: Self::parameters(),
+            kind: BuiltinKind::Workbench(Self::kind()),
+            f: Self::function(),
+        })
     }
 }
