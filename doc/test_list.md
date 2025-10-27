@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**278** tests from markdown.
+**280** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -210,7 +210,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/tests/.test/source_return.svg)](../lang/doc/tests/.test/source_return.log) | [source_return](../lang/doc/tests/statement_usage.md) |
 | [![test](../lang/doc/tests/.test/source_use.svg)](../lang/doc/tests/.test/source_use.log) | [source_use](../lang/doc/tests/statement_usage.md) |
 | [![test](../lang/doc/tests/.test/source_workbench.svg)](../lang/doc/tests/.test/source_workbench.log) | [source_workbench](../lang/doc/tests/statement_usage.md) |
+| [![test](../lang/doc/libs/std/ops/.test/std_geo2d_buffer.svg)](../lang/doc/libs/std/ops/.test/std_geo2d_buffer.log) | [std_geo2d_buffer](../lang/doc/libs/std/ops/buffer.md) |
 | [![test](../lang/doc/libs/std/geo2d/.test/std_geo2d_pie.svg)](../lang/doc/libs/std/geo2d/.test/std_geo2d_pie.log) | [std_geo2d_pie](../lang/doc/libs/std/geo2d/README.md) |
+| [![test](../lang/doc/libs/std/geo2d/.test/std_geo2d_rounded_rect.svg)](../lang/doc/libs/std/geo2d/.test/std_geo2d_rounded_rect.log) | [std_geo2d_rounded_rect](../lang/doc/libs/std/geo2d/README.md) |
 | [![test](../lang/doc/libs/std/geo2d/.test/std_geo2d_text.svg)](../lang/doc/libs/std/geo2d/.test/std_geo2d_text.log) | [std_geo2d_text](../lang/doc/libs/std/geo2d/README.md) |
 | [![test](../books/tutorials/src/lego_brick/base/frame/.test/subtract.svg)](../books/tutorials/src/lego_brick/base/frame/.test/subtract.log) | [subtract](../books/tutorials/src/lego_brick/base/frame/subtract.md) |
 | [![test](../lang/doc/libs/builtin/.test/text.svg)](../lang/doc/libs/builtin/.test/text.log) | [text](../lang/doc/libs/builtin/geo2d.md) |

@@ -15,5 +15,7 @@ p = 5mm;
     (Cube(s * 2) - Cube(s).translate(x = s/2, y = s/2, z = s/2))
         .translate(x = s + p, y = s + p, z = s + p)
 }
-//.mirror([X,Y,Z]);
+.mirror(X)
+.mirror(Y)
+.mirror(Z)
 ```

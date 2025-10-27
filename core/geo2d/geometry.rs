@@ -3,15 +3,15 @@
 
 use std::rc::Rc;
 
-use crate::traits::Align;
-
 use super::*;
+use crate::traits::Align;
+use derive_more::From;
 
 use geo::{ConvexHull, MultiPolygon};
 use strum::IntoStaticStr;
 
 /// A 2D Geometry which is independent from resolution.
-#[derive(IntoStaticStr, Clone, Debug)]
+#[derive(IntoStaticStr, From, Clone, Debug)]
 pub enum Geometry2D {
     /// Line string.
     LineString(LineString),
@@ -150,6 +150,29 @@ impl Align for Geometry2D {
             self.transformed_2d(&Mat3::from_translation(-d))
         } else {
             self.clone()
+        }
+    }
+}
+
+impl geo::Buffer for Geometry2D {
+    type Scalar = Scalar;
+
+    fn buffer_with_style(
+        &self,
+        style: geo::buffer::BufferStyle<Self::Scalar>,
+    ) -> MultiPolygon<Self::Scalar> {
+        match &self {
+            Geometry2D::LineString(line_string) => line_string.buffer_with_style(style),
+            Geometry2D::MultiLineString(multi_line_string) => {
+                multi_line_string.buffer_with_style(style)
+            }
+            Geometry2D::Polygon(polygon) => polygon.buffer_with_style(style),
+            Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.buffer_with_style(style),
+            Geometry2D::Rect(rect) => rect.buffer_with_style(style),
+            Geometry2D::Line(line) => {
+                LineString::new(vec![line.0.into(), line.1.into()]).buffer_with_style(style)
+            }
+            Geometry2D::Collection(collection) => collection.buffer_with_style(style),
         }
     }
 }

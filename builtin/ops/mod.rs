@@ -4,27 +4,33 @@
 use microcad_lang::builtin::*;
 
 mod align;
+mod buffer;
 mod extrude;
 mod hull;
+mod mirror;
 mod orient;
 mod revolve;
 mod rotate;
 mod scale;
+mod spiralize;
 mod translate;
 
 /// Creates the builtin `operation` module
 pub fn ops() -> Symbol {
-    crate::ModuleBuilder::new("ops".try_into().expect("valid id"))
-        .symbol(operation::Union::symbol())
-        .symbol(operation::Subtract::symbol())
-        .symbol(operation::Intersect::symbol())
-        .symbol(align::Align::symbol())
-        .symbol(hull::Hull::symbol())
-        .symbol(extrude::Extrude::symbol())
-        .symbol(orient::Orient::symbol())
-        .symbol(revolve::Revolve::symbol())
-        .symbol(rotate::Rotate::symbol())
-        .symbol(scale::Scale::symbol())
-        .symbol(translate::Translate::symbol())
+    crate::ModuleBuilder::new("ops")
+        .builtin::<operation::Union>()
+        .builtin::<operation::Subtract>()
+        .builtin::<operation::Intersect>()
+        .builtin::<align::Align>()
+        .builtin::<buffer::Buffer>()
+        .builtin::<hull::Hull>()
+        .builtin::<extrude::Extrude>()
+        .builtin::<mirror::Mirror>()
+        .builtin::<orient::Orient>()
+        .builtin::<revolve::Revolve>()
+        .builtin::<rotate::Rotate>()
+        .builtin::<scale::Scale>()
+        .builtin::<spiralize::Spiralize>()
+        .builtin::<translate::Translate>()
         .build()
 }

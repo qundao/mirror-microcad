@@ -1,21 +1,18 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang::{diag::*, eval::*, parameter, resolve::*, syntax::*, value::*};
+use microcad_lang::{diag::*, eval::*, parameter, resolve::*, value::*};
 
 pub fn assert() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("assert"),
-        Some(
-            [
-                parameter!(v : Bool),                        // Parameter with any type
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter()
-            .collect(),
-        ),
+    Symbol::new_builtin_fn(
+        "assert",
+        [
+            parameter!(v : Bool),                        // Parameter with any type
+            parameter!(message: String = String::new()), // Optional message
+        ]
+        .into_iter(),
         &|params, args, context| {
-            match ArgumentMatch::find_multi_match(args, params.expect("parameter list")) {
+            match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
                     for a in multi_args {
                         let v: bool = a.get("v");
@@ -52,18 +49,15 @@ fn all_equal<T: PartialEq + std::fmt::Debug>(mut iter: impl Iterator<Item = T>) 
 }
 
 pub fn assert_eq() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("assert_eq"),
-        Some(
-            [
-                parameter!(array),                           // Parameter with any type
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter()
-            .collect(),
-        ),
+    Symbol::new_builtin_fn(
+        "assert_eq",
+        [
+            parameter!(array),                           // Parameter with any type
+            parameter!(message: String = String::new()), // Optional message
+        ]
+        .into_iter(),
         &|params, args, context| {
-            match ArgumentMatch::find_multi_match(args, params.expect("ParameterList")) {
+            match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
                     for array in multi_args {
                         let array_value = &array.get_value("array").expect("missing parameter");
@@ -105,18 +99,15 @@ pub fn assert_eq() -> Symbol {
 }
 
 pub fn assert_valid() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("assert_valid"),
-        Some(
-            [
-                parameter!(target: Target),                  // Parameter name
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter()
-            .collect(),
-        ),
+    Symbol::new_builtin_fn(
+        "assert_valid",
+        [
+            parameter!(target: Target),                  // Parameter name
+            parameter!(message: String = String::new()), // Optional message
+        ]
+        .into_iter(),
         &|params, args, context| {
-            match ArgumentMatch::find_multi_match(args, params.expect("ParameterList")) {
+            match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
                     for arg in multi_args {
                         let target = arg.get::<Target>("target");
@@ -143,18 +134,15 @@ pub fn assert_valid() -> Symbol {
 }
 
 pub fn assert_invalid() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("assert_invalid"),
-        Some(
-            [
-                parameter!(target: Target),                  // Parameter name
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter()
-            .collect(),
-        ),
+    Symbol::new_builtin_fn(
+        "assert_invalid",
+        [
+            parameter!(target: Target),                  // Parameter name
+            parameter!(message: String = String::new()), // Optional message
+        ]
+        .into_iter(),
         &|params, args, context| {
-            match ArgumentMatch::find_multi_match(args, params.expect("ParameterList")) {
+            match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
                     for arg in multi_args {
                         let target = arg.get::<Target>("target");

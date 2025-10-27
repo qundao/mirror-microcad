@@ -17,10 +17,12 @@
 -- Errors --
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::extrude(height=1mm) ->
+    Workpiece(op) std::ops::extrude(height=1mm, scale_x=1, scale_y=1) ->
       - height = 1mm
-      Operation __builtin::ops::extrude(height=1, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
-        Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) (root) ->
+      - scale_x = 1
+      - scale_y = 1
+      Operation __builtin::ops::extrude(height=1, scale_x=1, scale_y=1) ->
+        Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) ->
           - height = 31.8mm
           - width = 15.8mm
           - x = -7.9mm

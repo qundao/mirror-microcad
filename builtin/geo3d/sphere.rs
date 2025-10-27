@@ -1,11 +1,12 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_builtin_proc_macros::BuiltinPrimitive3D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
 /// The builtin sphere primitive, defined by its radius.
-#[derive(Debug, Clone)]
+#[derive(BuiltinPrimitive3D)]
 pub struct Sphere {
     /// Radius of the sphere in millimeters.
     pub radius: Scalar,
@@ -20,27 +21,5 @@ impl Render<Geometry3D> for Sphere {
 impl RenderWithContext<Geometry3DOutput> for Sphere {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
         context.update_3d(|context, _| Ok(self.render(&context.current_resolution())))
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Sphere {
-    fn id() -> &'static str {
-        "Sphere"
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Primitive3D
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|args| {
-            Ok(BuiltinWorkpieceOutput::Primitive3D(Box::new(Sphere {
-                radius: args.get("radius"),
-            })))
-        }
-    }
-
-    fn parameters() -> ParameterValueList {
-        [parameter!(radius: Scalar)].into_iter().collect()
     }
 }

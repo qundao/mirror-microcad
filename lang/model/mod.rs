@@ -146,9 +146,9 @@ impl Model {
         self.descendants().for_each(|model| {
             let mut model_ = model.borrow_mut();
             if model_.id.is_none() && matches!(model_.element.value, Element::InputPlaceholder) {
-                let mut input_model_ = input_model.borrow_mut();
-                input_model_.parent = Some(self.clone());
+                let input_model_ = input_model.borrow_mut();
                 *model_ = input_model_.clone_content();
+                model_.parent = Some(self.clone());
                 model_.children = input_model_.children.clone();
             }
         });

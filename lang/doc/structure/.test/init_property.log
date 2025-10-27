@@ -36,11 +36,13 @@
           Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=50mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 50mm
-            Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=50) ->
+            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=50) ->
           Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=40mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 40mm
-            Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=40) ->
+            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=40) ->
     Workpiece(sketch) init_property::Wheel(diameter=100mm, thickness=10mm) ->
       - radius = 50mm
       - thickness = 10mm
@@ -49,11 +51,13 @@
           Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=50mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 50mm
-            Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=50) ->
+            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=50) ->
           Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=40mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 40mm
-            Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=40) ->
+            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=40) ->
 
 Export successful.
 -- Test Result --

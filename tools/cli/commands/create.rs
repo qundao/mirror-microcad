@@ -24,18 +24,7 @@ impl RunCommand for Create {
         } else {
             // create demo program
             let mut f = std::fs::File::create(path.clone())?;
-            f.write_all(
-                r#"// µcad generated file
-
-sketch YourSketch( /* your building plan */ ) {
-    // your code
-}
-
-// create YourSketch
-YourSketch();
-"#
-                .as_bytes(),
-            )?;
+            f.write_all(include_bytes!("../hello.µcad"))?;
             eprintln!("File {path:?} generated.")
         }
 

@@ -11,7 +11,7 @@
 [![test](.test/pie.svg)](.test/pie.log)
 
 ```µcad,pie
-__builtin::geo2d::Pie(radius = 20mm / 1mm, start_angle = 45°, end_angle = 135°);
+__builtin::geo2d::Pie(radius = 20mm / 1mm, start = 45°, end = 135°);
 ```
 
 ### `Rect`

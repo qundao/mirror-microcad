@@ -70,15 +70,22 @@ impl Symbol {
     /// - `id`: Name of the symbol
     /// - `parameters`: Optional parameter list
     /// - `f`: The builtin function
-    pub fn new_builtin(
-        id: Identifier,
-        parameters: Option<ParameterValueList>,
+    pub fn new_builtin(builtin: Builtin) -> Symbol {
+        Symbol::new(SymbolDefinition::Builtin(Rc::new(builtin)), None)
+    }
+
+    /// New builtin function as symbol.
+    pub fn new_builtin_fn(
+        name: &'static str,
+        parameters: impl Iterator<Item = (Identifier, ParameterValue)>,
         f: &'static BuiltinFn,
     ) -> Symbol {
-        Symbol::new(
-            SymbolDefinition::Builtin(Rc::new(Builtin { id, parameters, f })),
-            None,
-        )
+        Self::new_builtin(Builtin {
+            id: Identifier::no_ref(name),
+            parameters: parameters.collect(),
+            kind: BuiltinKind::Function,
+            f,
+        })
     }
 }
 
@@ -483,13 +490,10 @@ impl Symbol {
     /// (for assert_valid() and assert_invalid())
     pub(crate) fn is_target_mode(&self) -> bool {
         self.with_def(|def| match def {
-            SymbolDefinition::Builtin(builtin) => {
-                if let Some(parameters) = &builtin.parameters {
-                    parameters.values().any(|param| param.ty() == Type::Target)
-                } else {
-                    false
-                }
-            }
+            SymbolDefinition::Builtin(builtin) => builtin
+                .parameters
+                .values()
+                .any(|param| param.ty() == Type::Target),
             _ => false,
         })
     }

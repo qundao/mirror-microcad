@@ -18,7 +18,7 @@ path = "lib.rs"
 
 [dependencies]
 cgmath = { version = "0.18", features = ["serde"] }
-derive_more = { version = "2", features = ["deref", "deref_mut"] }
+derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
 geo = { version = "0.31", features = ["use-serde"] }
 log = "0.4"
 manifold-rs = { version = "0.6.2", optional = true }

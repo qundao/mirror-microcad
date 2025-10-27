@@ -1,11 +1,11 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_builtin_proc_macros::BuiltinOperation3D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, model::*, render::*};
 
-#[derive(Debug)]
-#[allow(dead_code)]
+#[derive(BuiltinOperation3D)]
 pub struct Revolve {
     revolve_degrees: Scalar,
 }
@@ -25,38 +25,12 @@ impl Operation for Revolve {
             let radius = bounds.max_extent();
             use microcad_core::Extrude;
 
-            let WithBounds3D { inner, bounds } = geometries.revolve_extrude(
-                cgmath::Deg(self.revolve_degrees).into(),
-                context.current_resolution().circular_segments(radius) as usize,
-            );
+            let WithBounds3D { inner, bounds } = geometries.extrude(Extrusion::Revolve {
+                angle: cgmath::Deg(self.revolve_degrees).into(),
+                segments: context.current_resolution().circular_segments(radius) as usize,
+            });
 
             Ok(WithBounds3D::new(inner.into(), bounds))
         })
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Revolve {
-    fn id() -> &'static str {
-        "revolve"
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Operation
-    }
-
-    fn output_type() -> OutputType {
-        OutputType::Geometry3D
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|args| {
-            Ok(BuiltinWorkpieceOutput::Operation(Box::new(Revolve {
-                revolve_degrees: args.get("revolve_degrees"),
-            })))
-        }
-    }
-
-    fn parameters() -> ParameterValueList {
-        [parameter!(revolve_degrees: Scalar)].into_iter().collect()
     }
 }

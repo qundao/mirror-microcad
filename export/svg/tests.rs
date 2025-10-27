@@ -8,7 +8,7 @@ use std::str::FromStr as _;
 use crate::svg::attributes::SvgTagAttribute;
 
 use super::*;
-use geo::coord;
+use geo::{Translate, coord};
 use microcad_core::{theme::Theme, *};
 
 #[test]
@@ -225,7 +225,10 @@ fn svg_sample_sketch() -> std::io::Result<()> {
 
     // Draw intersection.
     let intersection = Geometry2D::Rect(rect).boolean_op(
-        Geometry2D::Polygon(circle.render(&RenderResolution::default())),
+        Geometry2D::Polygon(
+            Circle::circle_polygon(circle.radius, &RenderResolution::default())
+                .translate(circle.offset.x, circle.offset.y),
+        ),
         &BooleanOp::Intersect,
     );
 

@@ -1,17 +1,19 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_builtin_proc_macros::BuiltinOperation3D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, model::*, render::*};
 
-#[derive(Debug)]
-#[allow(dead_code)]
+/// Linear extrude operation.
+#[derive(BuiltinOperation3D)]
 pub struct Extrude {
+    /// Extrusion height in mm (in Z direction).
     height: Scalar,
-    n_divisions: Integer,
-    twist_degrees: Scalar,
-    scale_top_x: Scalar,
-    scale_top_y: Scalar,
+    /// Scale in X direction.
+    scale_x: Scalar,
+    /// Scale in Y direction.
+    scale_y: Scalar,
 }
 
 impl Operation for Extrude {
@@ -25,46 +27,17 @@ impl Operation for Extrude {
             let geometries: Geometries2D = model_.children.render_with_context(context)?;
 
             use microcad_core::Extrude;
-            let mesh = geometries.linear_extrude(self.height);
+            let mesh = geometries.extrude(Extrusion::Linear {
+                height: self.height,
+                scale_x: self.scale_x,
+                scale_y: self.scale_y,
+            });
             Ok(WithBounds3D::new(mesh.inner.into(), mesh.bounds))
         })
     }
 }
 
-impl BuiltinWorkbenchDefinition for Extrude {
-    fn id() -> &'static str {
-        "extrude"
-    }
-
-    fn output_type() -> OutputType {
-        OutputType::Geometry3D
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Operation
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|args| {
-            Ok(BuiltinWorkpieceOutput::Operation(Box::new(Extrude {
-                height: args.get("height"),
-                n_divisions: args.get("n_divisions"),
-                twist_degrees: args.get("twist_degrees"),
-                scale_top_x: args.get("scale_top_x"),
-                scale_top_y: args.get("scale_top_y"),
-            })))
-        }
-    }
-
-    fn parameters() -> ParameterValueList {
-        [
-            parameter!(height: Scalar),
-            parameter!(n_divisions: Integer),
-            parameter!(twist_degrees: Scalar),
-            parameter!(scale_top_x: Scalar),
-            parameter!(scale_top_y: Scalar),
-        ]
-        .into_iter()
-        .collect()
-    }
+#[test]
+fn test_doc_string() {
+    assert!(Extrude::help().starts_with("Linear extrude"));
 }

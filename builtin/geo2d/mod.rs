@@ -3,25 +3,34 @@
 
 mod circle;
 mod line;
+mod ngon;
 mod pie;
 mod rect;
+mod rounded_rect;
 mod text;
+mod thread_profile;
 
 pub use circle::*;
 pub use line::*;
+pub use ngon::*;
 pub use pie::*;
 pub use rect::*;
+pub use rounded_rect::*;
 pub use text::*;
+pub use thread_profile::*;
 
 use microcad_lang::builtin::*;
 
 /// Module for built-in 2D geometries.
 pub fn geo2d() -> Symbol {
-    crate::ModuleBuilder::new("geo2d".try_into().expect("valid id"))
-        .symbol(Circle::symbol())
-        .symbol(Line::symbol())
-        .symbol(Pie::symbol())
-        .symbol(Rect::symbol())
-        .symbol(Text::symbol())
+    crate::ModuleBuilder::new("geo2d")
+        .builtin::<Circle>()
+        .builtin::<Line>()
+        .builtin::<Ngon>()
+        .builtin::<Pie>()
+        .builtin::<Rect>()
+        .builtin::<RoundedRect>()
+        .builtin::<Text>()
+        .builtin::<ThreadProfile>()
         .build()
 }

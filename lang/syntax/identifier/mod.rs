@@ -167,19 +167,9 @@ impl From<&std::ffi::OsStr> for Identifier {
     }
 }
 
-#[cfg(test)]
 impl From<&str> for Identifier {
     fn from(value: &str) -> Self {
-        Self(Refer::none(value.into()))
-    }
-}
-
-#[cfg(not(test))]
-impl TryFrom<&str> for Identifier {
-    type Error = ParseError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        Parser::parse_rule(crate::parser::Rule::identifier, value, 0)
+        Parser::parse_rule(crate::parser::Rule::identifier, value, 0).expect("A valid identifier")
     }
 }
 

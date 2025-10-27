@@ -23,7 +23,7 @@ use __builtin::*;
 
 {
     geo3d::Sphere(radius = 3.0);
-    geo3d::Cube(size_x = 3.0, size_y = 3.0, size_z = 3.0);
+    geo3d::Sphere(radius = 2.0).__builtin::ops::translate(x = 3.0);    
 }.ops::subtract();
 ```
 
@@ -40,9 +40,9 @@ use __builtin::*;
 ```µcad,builtin_extrude
 use __builtin::*;
 
-a = geo2d::Circle(radius = 9.0) - geo2d::Circle(radius = 2.0, cx = [-3.0, 3.0], cy = [-3.0, 3.0]);
+a = geo2d::Circle(radius = 9.0) - geo2d::Circle(radius = 2.0).ops::translate(x = [-3.0, 3.0], y = [-3.0, 3.0], z = 0.0);
 
-a.ops::extrude(height = 4.0, n_divisions = 0, twist_degrees = 0.0, scale_top_x = 1.0, scale_top_y = 1.0);
+a.ops::extrude(height = 4.0, scale_x = 100%, scale_y = 100%);
 ```
 
 ### `orient`

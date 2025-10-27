@@ -1,11 +1,11 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang::{diag::*, eval::*, resolve::*, syntax::*, value::*};
+use microcad_lang::{diag::*, eval::*, parameter, resolve::*, value::*};
 
 /// Module for built-logging.
 pub fn log() -> Symbol {
-    crate::ModuleBuilder::new("log".try_into().expect("valid id"))
+    crate::ModuleBuilder::new("log")
         .symbol(todo())
         .symbol(error())
         .symbol(warning())
@@ -14,27 +14,23 @@ pub fn log() -> Symbol {
 }
 
 pub fn error() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("error"),
-        None,
-        &|_params, args, context| {
-            args.iter()
-                .try_for_each(|(_, arg)| -> Result<(), DiagError> {
-                    context.error(
-                        args,
-                        EvalError::BuiltinError(format!("{value}", value = arg.value)),
-                    )
-                })?;
-            Ok(Value::None)
-        },
-    )
+    Symbol::new_builtin_fn("error", [parameter!(x)].into_iter(), &|_, args, context| {
+        args.iter()
+            .try_for_each(|(_, arg)| -> Result<(), DiagError> {
+                context.error(
+                    args,
+                    EvalError::BuiltinError(format!("{value}", value = arg.value)),
+                )
+            })?;
+        Ok(Value::None)
+    })
 }
 
 pub fn warning() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("warning"),
-        None,
-        &|_params, args, context| {
+    Symbol::new_builtin_fn(
+        "warning",
+        [parameter!(x)].into_iter(),
+        &|_, args, context| {
             args.iter()
                 .try_for_each(|(_, arg)| -> Result<(), DiagError> {
                     context.warning(
@@ -48,30 +44,22 @@ pub fn warning() -> Symbol {
 }
 
 pub fn info() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("info"),
-        None,
-        &|_params, args, context| {
-            args.iter()
-                .try_for_each(|(_, arg)| -> Result<(), EvalError> {
-                    context.info(args, format!("{value}", value = arg.value));
-                    Ok(())
-                })?;
-            Ok(Value::None)
-        },
-    )
+    Symbol::new_builtin_fn("info", [parameter!(x)].into_iter(), &|_, args, context| {
+        args.iter()
+            .try_for_each(|(_, arg)| -> Result<(), EvalError> {
+                context.info(args, format!("{value}", value = arg.value));
+                Ok(())
+            })?;
+        Ok(Value::None)
+    })
 }
 
 pub fn todo() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("todo"),
-        None,
-        &|_params, args, context| {
-            args.iter()
-                .try_for_each(|(_, arg)| -> Result<(), DiagError> {
-                    context.error(args, EvalError::Todo(format!("{value}", value = arg.value)))
-                })?;
-            Ok(Value::None)
-        },
-    )
+    Symbol::new_builtin_fn("todo", [parameter!(x)].into_iter(), &|_, args, context| {
+        args.iter()
+            .try_for_each(|(_, arg)| -> Result<(), DiagError> {
+                context.error(args, EvalError::Todo(format!("{value}", value = arg.value)))
+            })?;
+        Ok(Value::None)
+    })
 }

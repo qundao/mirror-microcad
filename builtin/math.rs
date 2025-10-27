@@ -7,7 +7,7 @@ use microcad_lang::{diag::*, eval::*, parameter, resolve::*, syntax::*, ty::*, v
 
 /// Absolute value abs(x)
 fn abs() -> Symbol {
-    Symbol::new_builtin(Identifier::no_ref("abs"), None, &|_params, args, ctx| {
+    Symbol::new_builtin_fn("abs", [parameter!(x)].into_iter(), &|_params, args, ctx| {
         let (_, arg) = args.get_single()?;
         Ok(match &arg.value {
             Value::Integer(i) => Value::Integer(i.abs()),
@@ -27,22 +27,26 @@ fn abs() -> Symbol {
 
 /// Square root sqrt(x).
 fn sqrt() -> Symbol {
-    Symbol::new_builtin(Identifier::no_ref("sqrt"), None, &|_params, args, ctx| {
-        let (_, arg) = args.get_single()?;
-        Ok(match &arg.value {
-            Value::Integer(i) => (*i as Scalar).sqrt().into(),
-            Value::Quantity(q) => {
-                Value::Quantity(Quantity::new(q.value.sqrt(), q.quantity_type.clone()))
-            }
-            value => {
-                ctx.error(
-                    arg,
-                    EvalError::BuiltinError(format!("Cannot calculate sqrt({value})")),
-                )?;
-                Value::None
-            }
-        })
-    })
+    Symbol::new_builtin_fn(
+        "sqrt",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::Integer(i) => (*i as Scalar).sqrt().into(),
+                Value::Quantity(q) => {
+                    Value::Quantity(Quantity::new(q.value.sqrt(), q.quantity_type.clone()))
+                }
+                value => {
+                    ctx.error(
+                        arg,
+                        EvalError::BuiltinError(format!("Cannot calculate sqrt({value})")),
+                    )?;
+                    Value::None
+                }
+            })
+        },
+    )
 }
 
 /// Implementation for a builtin trigonometric function.
@@ -75,21 +79,21 @@ fn trigonometric(
 
 /// Calculate cos(x).
 fn cos() -> Symbol {
-    Symbol::new_builtin(Identifier::no_ref("cos"), None, &|_params, args, ctx| {
+    Symbol::new_builtin_fn("cos", [parameter!(x)].into_iter(), &|_params, args, ctx| {
         trigonometric("cos", args, ctx, |v| v.cos())
     })
 }
 
 /// Calculate sin(x).
 fn sin() -> Symbol {
-    Symbol::new_builtin(Identifier::no_ref("sin"), None, &|_params, args, ctx| {
+    Symbol::new_builtin_fn("sin", [parameter!(x)].into_iter(), &|_params, args, ctx| {
         trigonometric("sin", args, ctx, |v| v.sin())
     })
 }
 
 /// Calculate tan(x).
 fn tan() -> Symbol {
-    Symbol::new_builtin(Identifier::no_ref("tan"), None, &|_params, args, ctx| {
+    Symbol::new_builtin_fn("tan", [parameter!(x)].into_iter(), &|_params, args, ctx| {
         trigonometric("tan", args, ctx, |v| v.tan())
     })
 }
@@ -139,22 +143,16 @@ pub fn orient_z_to(target: Vec3) -> Mat3 {
 
 /// Rotate a vector around an axis.
 fn rotate_around_axis() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("rotate_around_axis"),
-        Some(
-            [
-                parameter!(angle: Angle),
-                parameter!(x: Scalar),
-                parameter!(y: Scalar),
-                parameter!(z: Scalar),
-            ]
-            .into_iter()
-            .collect(),
-        ),
-        &|_params, args, ctx| match ArgumentMatch::find_match(
-            args,
-            _params.expect("ParameterValueList"),
-        ) {
+    Symbol::new_builtin_fn(
+        "rotate_around_axis",
+        [
+            parameter!(angle: Angle),
+            parameter!(x: Scalar),
+            parameter!(y: Scalar),
+            parameter!(z: Scalar),
+        ]
+        .into_iter(),
+        &|params, args, ctx| match ArgumentMatch::find_match(args, params) {
             Ok(ref args) => {
                 let angle = get_angle(args, "angle");
                 let axis = Vec3::new(args.get("x"), args.get("y"), args.get("z"));
@@ -172,21 +170,15 @@ fn rotate_around_axis() -> Symbol {
 
 /// Rotate around X, Y, Z (in that order).
 fn rotate_xyz() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("rotate_xyz"),
-        Some(
-            [
-                parameter!(x: Angle),
-                parameter!(y: Angle),
-                parameter!(z: Angle),
-            ]
-            .into_iter()
-            .collect(),
-        ),
-        &|_params, args, ctx| match ArgumentMatch::find_match(
-            args,
-            _params.expect("ParameterValueList"),
-        ) {
+    Symbol::new_builtin_fn(
+        "rotate_xyz",
+        [
+            parameter!(x: Angle),
+            parameter!(y: Angle),
+            parameter!(z: Angle),
+        ]
+        .into_iter(),
+        &|params, args, ctx| match ArgumentMatch::find_match(args, params) {
             Ok(args) => {
                 let (x_matrix, y_matrix, z_matrix) = rotation_matrices_xyz(&args);
                 Ok(Value::Matrix(Box::new(Matrix::Matrix3(
@@ -203,21 +195,15 @@ fn rotate_xyz() -> Symbol {
 
 /// Rotate around Z, Y, X (in that order).
 fn rotate_zyx() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("rotate_zyx"),
-        Some(
-            [
-                parameter!(x: Angle),
-                parameter!(y: Angle),
-                parameter!(z: Angle),
-            ]
-            .into_iter()
-            .collect(),
-        ),
-        &|_params, args, ctx| match ArgumentMatch::find_match(
-            args,
-            _params.expect("ParameterValueList"),
-        ) {
+    Symbol::new_builtin_fn(
+        "rotate_zyx",
+        [
+            parameter!(x: Angle),
+            parameter!(y: Angle),
+            parameter!(z: Angle),
+        ]
+        .into_iter(),
+        &|params, args, ctx| match ArgumentMatch::find_match(args, params) {
             Ok(args) => {
                 let (x_matrix, y_matrix, z_matrix) = rotation_matrices_xyz(&args);
                 Ok(Value::Matrix(Box::new(Matrix::Matrix3(
@@ -233,7 +219,7 @@ fn rotate_zyx() -> Symbol {
 }
 
 pub fn math() -> Symbol {
-    crate::ModuleBuilder::new("math".try_into().expect("unexpected name error"))
+    crate::ModuleBuilder::new("math")
         .symbol(Symbol::new(
             SymbolDefinition::Constant(
                 Visibility::Public,

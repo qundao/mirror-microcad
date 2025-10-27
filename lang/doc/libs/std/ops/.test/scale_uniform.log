@@ -13,7 +13,7 @@
     Workpiece(op) std::ops::scale(s=2) ->
       - v = (x=2, y=2, z=2)
       Transform __builtin::ops::scale(x=2, y=2, z=2) ->
-        Workpiece(sketch) std::geo2d::Rect(size=30mm) (root) ->
+        Workpiece(sketch) std::geo2d::Rect(size=30mm) ->
           - height = 30mm
           - width = 30mm
           - x = -15mm

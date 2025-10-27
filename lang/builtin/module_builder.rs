@@ -3,7 +3,7 @@
 
 //! Builder pattern to build built-in modules.
 
-use crate::{resolve::*, syntax::*};
+use crate::{builtin::BuiltinWorkbenchDefinition, resolve::*, syntax::*};
 
 /// Builder pattern to build built-in modules.
 pub struct ModuleBuilder {
@@ -13,10 +13,10 @@ pub struct ModuleBuilder {
 
 impl ModuleBuilder {
     /// Create new module symbol with a name.
-    pub fn new(id: Identifier) -> Self {
+    pub fn new(id: impl Into<Identifier>) -> Self {
         Self {
             module: Symbol::new(
-                SymbolDefinition::Module(ModuleDefinition::new(Visibility::Public, id)),
+                SymbolDefinition::Module(ModuleDefinition::new(Visibility::Public, id.into())),
                 None,
             ),
         }
@@ -26,6 +26,11 @@ impl ModuleBuilder {
     pub fn symbol(self, symbol: Symbol) -> Self {
         Symbol::add_child(&self.module, symbol);
         self
+    }
+
+    /// Add the symbol from a built-in workbench definition.
+    pub fn builtin<T: BuiltinWorkbenchDefinition>(self) -> Self {
+        self.symbol(T::symbol())
     }
 
     /// Return our module symbol.

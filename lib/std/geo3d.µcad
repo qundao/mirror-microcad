@@ -22,23 +22,18 @@ pub part Cube(size_x: Length, size_y: Length, size_z: Length) {
         size_z = size;
     }
 
-    __builtin::geo3d::Cube(
-        size_x = size_x / 1mm,
-        size_y = size_y / 1mm,
-        size_z = size_z / 1mm
-    )
-        .__builtin::ops::translate(
-            x = -size_x / 2.0 / 1mm,
-            y = -size_y / 2.0 / 1mm,
-            z = -size_z / 2.0 / 1mm
-        );
+    std::geo2d::Rect(width = size_x, height = size_y)
+        .std::ops::extrude(z = size_z)
+        .std::ops::translate(z = -size_z / 2.0)
 }
 
-/// Cylinder definition
+/// Cylinder definition.
 ///
 /// Examples:
 /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm);`
 pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
+    scale = radius_top / radius_bottom;
+
     /// Initialize by `radius` and `height`. Cylinder will be centered.
     init(radius: Length, height: Length) {
         radius_bottom = radius;
@@ -77,10 +72,7 @@ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, off
         height = h;
     }
 
-    __builtin::geo3d::Cylinder(
-            radius_bottom = radius_bottom / 1mm,
-            radius_top = radius_top / 1mm,
-            height = height / 1mm
-    )
-        .__builtin::ops::translate(x = 0.0, y = 0.0, z = offset / 1mm);
+    std::geo2d::Circle(radius = radius_bottom)
+        .std::ops::extrude(height)
+        .std::ops::translate(z = offset)
 }

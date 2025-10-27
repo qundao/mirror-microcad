@@ -11,13 +11,16 @@
 -- Errors --
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::extrude(height=20mm) ->
+    Workpiece(op) std::ops::extrude(height=20mm, scale_x=1, scale_y=1) ->
       - height = 20mm
-      Operation __builtin::ops::extrude(height=20, n_divisions=0, scale_top_x=1, scale_top_y=1, twist_degrees=0) ->
-        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) (root) ->
+      - scale_x = 1
+      - scale_y = 1
+      Operation __builtin::ops::extrude(height=20, scale_x=1, scale_y=1) ->
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
           - center = (x=0mm, y=0mm)
           - radius = 20mm
-          Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=20) ->
+          Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+            Primitive2D __builtin::geo2d::Circle(radius=20) ->
 
 Export successful.
 -- Test Result --

@@ -1,6 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use geo::Centroid;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
@@ -36,10 +37,17 @@ impl Render<Geometry2D> for Text {
             .expect("Failed to load font into rusttype");
 
         let options = geo_rusttype::TextOptions::new(self.height as f32, font, None, None);
-        let polygons = geo_rusttype::text_to_multi_polygon(&self.text, options);
 
         use geo::Simplify;
-        Geometry2D::MultiPolygon(polygons.simplify(resolution.linear))
+        let polygons = geo_rusttype::text_to_multi_polygon(&self.text, options)
+            .simplify(resolution.linear * 0.5);
+
+        if let Some(center) = polygons.centroid() {
+            let polygons = polygons.reflect_2d(&Line(center, center + Point::new(1.0, 0.0)));
+            Geometry2D::MultiPolygon(polygons)
+        } else {
+            Geometry2D::Collection(Geometries2D::default())
+        }
     }
 }
 

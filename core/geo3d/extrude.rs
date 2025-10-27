@@ -11,8 +11,40 @@ use geo::TriangulateEarcut;
 
 use crate::*;
 
+/// A type of an extrusion with certain parameters.
+pub enum Extrusion {
+    /// A linear extrusion.
+    Linear {
+        /// Extrusion height.
+        height: Scalar,
+        /// Scale in X direction (default is 1.0).
+        scale_x: Scalar,
+        /// Scale in Y direction (default is 1.0).
+        scale_y: Scalar,
+    },
+    /// Revolve extrusion.
+    Revolve {
+        /// Angle in radians.
+        angle: Angle,
+        /// Number of segments.
+        segments: usize,
+    },
+}
+
 /// Extrude.
 pub trait Extrude {
+    /// Perform an extrusion.
+    fn extrude(&self, extrusion: Extrusion) -> WithBounds3D<TriangleMesh> {
+        match extrusion {
+            Extrusion::Linear {
+                height,
+                scale_x,
+                scale_y,
+            } => self.linear_extrude(height, scale_x, scale_y),
+            Extrusion::Revolve { angle, segments } => self.revolve_extrude(angle, segments),
+        }
+    }
+
     /// Extrude a single slice of the geometry with top and bottom plane.
     fn extrude_slice(&self, m_a: &Mat4, m_b: &Mat4) -> TriangleMesh;
 
@@ -22,9 +54,15 @@ pub trait Extrude {
     }
 
     /// Perform a linear extrusion with a certain height.
-    fn linear_extrude(&self, height: Scalar) -> WithBounds3D<TriangleMesh> {
+    fn linear_extrude(
+        &self,
+        height: Scalar,
+        scale_x: Scalar,
+        scale_y: Scalar,
+    ) -> WithBounds3D<TriangleMesh> {
         let m_a = Mat4::identity();
-        let m_b = Mat4::from_translation(Vec3::new(0.0, 0.0, height));
+        let m_b = Mat4::from_translation(Vec3::new(0.0, 0.0, height))
+            * Mat4::from_nonuniform_scale(scale_x, scale_y, 1.0);
         let mut mesh = self.extrude_slice(&m_a, &m_b);
         mesh.append(&self.cap(&m_a, true));
         mesh.append(&self.cap(&m_b, false));
@@ -34,13 +72,13 @@ pub trait Extrude {
     }
 
     /// Perform a revolve extrusion with a certain angle.
-    fn revolve_extrude(&self, angle_rad: Angle, segments: usize) -> WithBounds3D<TriangleMesh> {
+    fn revolve_extrude(&self, angle: Angle, segments: usize) -> WithBounds3D<TriangleMesh> {
         let mut mesh = TriangleMesh::default();
         if segments < 2 {
             return WithBounds3D::default();
         }
 
-        let delta = angle_rad / segments as Scalar;
+        let delta = angle / segments as Scalar;
 
         // Generate all rotation matrices
         let transforms: Vec<_> = (0..=segments)
@@ -61,7 +99,87 @@ pub trait Extrude {
         }
 
         // Optionally add caps at start and end
-        if angle_rad.0 < PI * 2.0 {
+        if angle.0 < PI * 2.0 {
+            let m_start = &transforms[0];
+            let m_end = transforms.last().expect("Transform");
+            mesh.append(&self.cap(m_start, true));
+            mesh.append(&self.cap(m_end, false));
+        }
+
+        let bounds = mesh.calc_bounds_3d();
+        mesh.repair(&bounds);
+        WithBounds3D::new(mesh, bounds)
+    }
+
+    /// Perform a helix/spiral‐extrusion: rotate profile while translating upward,
+    /// with varying radius from inner_radius to outer_radius and a given number of full turns.
+    /// `height` = total vertical height of the helix.
+    /// `inner_radius` = radius at the start (bottom) of the helix.
+    /// `outer_radius` = radius at the end (top) of the helix.
+    /// `turns` = number of full revolutions (2π each) over the height.
+    /// `segments_per_turn` = subdivisions per turn.
+    fn spiralize(
+        &self,
+        height: Scalar,
+        inner_radius: Scalar,
+        outer_radius: Scalar,
+        turns: Scalar,
+        segments_per_turn: usize,
+    ) -> WithBounds3D<TriangleMesh> {
+        let mut mesh = TriangleMesh::default();
+
+        if segments_per_turn < 2 || turns <= 0.0 {
+            return WithBounds3D::default();
+        }
+
+        // total number of segments
+        let total_segments = (turns * segments_per_turn as Scalar).round() as usize;
+        if total_segments < 1 {
+            return WithBounds3D::default();
+        }
+
+        // rotation angle per segment
+        let total_angle = turns * 2.0 * std::f64::consts::PI;
+        let delta_angle = total_angle / (total_segments as Scalar);
+
+        // height translation per segment
+        let delta_height = height / (total_segments as Scalar);
+
+        // radius interpolation per segment
+        let delta_radius = (outer_radius - inner_radius) / (total_segments as Scalar);
+
+        // Generate transforms (rotation + radius scale + translation along axis, e.g. Y axis)
+        let transforms: Vec<Mat4> = (0..=total_segments)
+            .map(|i| {
+                let angle_i = delta_angle * (i as Scalar);
+                let height_i = delta_height * (i as Scalar);
+                let radius_i = inner_radius + delta_radius * (i as Scalar);
+
+                // Rotate around Y by angle_i
+                let mut mat = Mat4::from_angle_y(cgmath::Rad(angle_i));
+                // You had a row‐swap to align to Z‐plane. Keep if needed.
+                mat.swap_rows(2, 1);
+
+                // Scale the profile to the appropriate radius
+                mat = mat * Mat4::from_scale(radius_i);
+
+                // Then translate upward (Y axis) by height_i
+                mat = mat * Mat4::from_translation(Vec3::new(0.0, height_i, 0.0));
+
+                mat
+            })
+            .collect();
+
+        // For each segment, extrude between slice i and i+1
+        for i in 0..total_segments {
+            let m_a = &transforms[i];
+            let m_b = &transforms[i + 1];
+            let slice = self.extrude_slice(m_a, m_b);
+            mesh.append(&slice);
+        }
+
+        // Optionally cap start and end
+        {
             let m_start = &transforms[0];
             let m_end = transforms.last().expect("Transform");
             mesh.append(&self.cap(m_start, true));

@@ -4,6 +4,7 @@
 [workspace]
 default-members = [
     "builtin",
+    "builtin/proc_macros",
     "core",
     "lang",
     "import",
@@ -16,6 +17,7 @@ default-members = [
 
 members = [
     "builtin",
+    "builtin/proc_macros",
     "core",
     "lang",
     "tests",
@@ -51,3 +53,4 @@ microcad-import = { path = "import", version = "0.2.6" }
 microcad-export = { path = "export", version = "0.2.6" }
 microcad-lang = { path = "lang", version = "0.2.6" }
 microcad-builtin = { path = "builtin", version = "0.2.6" }
+microcad-builtin-proc-macros = { path = "builtin/proc_macros", version = "0.2.6" }

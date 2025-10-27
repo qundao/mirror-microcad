@@ -9,7 +9,7 @@ use microcad_lang::resolve::*;
 
 /// Module for built-in debugging.
 pub fn debug() -> Symbol {
-    crate::ModuleBuilder::new("debug".try_into().expect("valid id"))
+    crate::ModuleBuilder::new("debug")
         .symbol(assert())
         .symbol(assert_eq())
         .symbol(assert_valid())

@@ -21,11 +21,13 @@
       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
         - center = (x=0mm, y=0mm)
         - radius = 1mm
-        Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=1) ->
+        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+          Primitive2D __builtin::geo2d::Circle(radius=1) ->
       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2mm) ->
         - center = (x=0mm, y=0mm)
         - radius = 2mm
-        Primitive2D __builtin::geo2d::Circle(cx=0, cy=0, radius=2) ->
+        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+          Primitive2D __builtin::geo2d::Circle(radius=2) ->
 
 Export successful.
 -- Test Result --

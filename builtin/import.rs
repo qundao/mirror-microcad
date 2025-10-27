@@ -9,20 +9,16 @@ use crate::Symbol;
 
 /// `__builtin::import` function.
 pub fn import() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("import"),
-        Some(
-            [
-                parameter!(filename: String),
-                parameter!(id: String = String::new()),
-            ]
-            .into_iter()
-            .collect(),
-        ),
-        // TODO: use find_multi_match?
+    Symbol::new_builtin_fn(
+        "import",
+        [
+            parameter!(filename: String),
+            parameter!(id: String = String::new()),
+        ]
+        .into_iter(),
         &|parameter_values, argument_values, context| match ArgumentMatch::find_match(
             argument_values,
-            parameter_values.expect("Parameter values"),
+            parameter_values,
         ) {
             Ok(arg_map) => {
                 let search_paths = context.search_paths().clone();

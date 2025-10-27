@@ -3,10 +3,11 @@
 
 //! Builtin align operation.
 
+use microcad_builtin_proc_macros::BuiltinOperation;
 use microcad_core::{Geometries2D, Geometry2D};
 use microcad_lang::{builtin::*, render::*};
 
-#[derive(Debug)]
+#[derive(BuiltinOperation)]
 pub struct Align;
 
 impl Operation for Align {
@@ -25,19 +26,5 @@ impl Operation for Align {
             let geometry: Geometry3DOutput = model.render(context)?;
             geometry.map(|geometry| geometry.center(&resolution))
         })*/
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Align {
-    fn id() -> &'static str {
-        "align"
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Operation
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|_| Ok(BuiltinWorkpieceOutput::Operation(Box::new(Align)))
     }
 }

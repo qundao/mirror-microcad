@@ -3,12 +3,12 @@
 
 //! Builtin print method
 
-use microcad_lang::{eval::*, resolve::*, syntax::*, value::*};
+use microcad_lang::{eval::*, parameter, resolve::*, value::*};
 
 pub fn print() -> Symbol {
-    Symbol::new_builtin(
-        Identifier::no_ref("print"),
-        None,
+    Symbol::new_builtin_fn(
+        "print",
+        [parameter!(x)].into_iter(),
         &|_params, args, context| {
             args.iter()
                 .try_for_each(|(_, arg)| -> Result<(), EvalError> {

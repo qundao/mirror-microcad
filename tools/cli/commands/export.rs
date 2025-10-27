@@ -61,7 +61,11 @@ impl RunCommand<Vec<(Model, ExportCommand)>> for Export {
                 if self.dry_run {
                     eprintln!("Did not export {} file(s) (dry-run!).", target_models.len());
                 } else {
-                    eprintln!("Exported {} file(s) successfully!", target_models.len());
+                    eprintln!("Exported {} file(s) successfully:", target_models.len());
+                    target_models.iter().for_each(|(_, export)| {
+                        let filename = export.filename.display();
+                        eprintln!("\t{filename}");
+                    })
                 }
             }
             Ok(target_models)
