@@ -74,68 +74,74 @@ impl SymbolDefinition {
     pub(crate) fn kind(&self) -> String {
         match self {
             Self::Workbench(w) => format!("{}", w.kind),
-            Self::Module(..) => "module".to_string(),
-            Self::Function(..) => "function".to_string(),
-            Self::SourceFile(..) => "file".to_string(),
-            Self::Builtin(..) => "builtin".to_string(),
-            Self::Constant(..) => "constant".to_string(),
-            Self::ConstExpression(..) => "const expression".to_string(),
-            Self::Argument(..) => "call argument".to_string(),
-            Self::Alias(..) => "alias".to_string(),
-            Self::UseAll(..) => "use all".to_string(),
+            Self::Module(..) => "Module".to_string(),
+            Self::Function(..) => "Function".to_string(),
+            Self::SourceFile(..) => "SourceFile".to_string(),
+            Self::Builtin(b) => format!("{}", b.kind),
+            Self::Constant(..) => "Constant".to_string(),
+            Self::ConstExpression(..) => "ConstExpression".to_string(),
+            Self::Argument(..) => "Argument".to_string(),
+            Self::Alias(..) => "Alias".to_string(),
+            Self::UseAll(..) => "UseAll".to_string(),
             #[cfg(test)]
-            Self::Tester(..) => "tester".to_string(),
+            Self::Tester(..) => "Tester".to_string(),
         }
     }
 
     pub(crate) fn source_hash(&self) -> u64 {
         match self {
-            SymbolDefinition::SourceFile(sf) => sf.hash,
-            SymbolDefinition::Module(md) => md.src_ref.source_hash(),
-            SymbolDefinition::Workbench(wd) => wd.src_ref.source_hash(),
-            SymbolDefinition::Function(fd) => fd.src_ref.source_hash(),
-            SymbolDefinition::ConstExpression(_, id, _) => id.src_ref().source_hash(),
-            SymbolDefinition::Alias(_, id, _) => id.src_ref().source_hash(),
-            SymbolDefinition::UseAll(_, name) => name.src_ref().source_hash(),
-            _ => 0,
+            Self::SourceFile(sf) => sf.hash,
+            Self::Module(md) => md.src_ref.source_hash(),
+            Self::Workbench(wd) => wd.src_ref.source_hash(),
+            Self::Function(fd) => fd.src_ref.source_hash(),
+            Self::Builtin(_) => 0,
+            Self::Constant(_, id, _)
+            | Self::ConstExpression(_, id, _)
+            | Self::Argument(id, _)
+            | Self::Alias(_, id, _) => id.src_ref().source_hash(),
+            Self::UseAll(_, name) => name.src_ref().source_hash(),
+            #[cfg(test)]
+            Self::Tester(..) => 0,
         }
     }
 }
 
 impl std::fmt::Display for SymbolDefinition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let kind = self.kind();
         match self {
-            Self::Workbench(w) => write!(f, "({})", w.kind),
-            Self::Module(..) => write!(f, "(module)"),
-            Self::Function(..) => write!(f, "(function)"),
-            Self::SourceFile(..) => write!(f, "(file)"),
-            Self::Builtin(..) => write!(f, "(builtin)"),
-            Self::Constant(.., value) => write!(f, "(constant) = {value}"),
-            Self::ConstExpression(.., value) => write!(f, "(const expression) = {value}"),
-            Self::Argument(.., value) => write!(f, "(call argument) = {value}"),
-            Self::Alias(.., name) => write!(f, "(alias) => {name}"),
-            Self::UseAll(.., name) => write!(f, "(use all) => {name}"),
+            Self::Workbench(..)
+            | Self::Module(..)
+            | Self::Function(..)
+            | Self::SourceFile(..)
+            | Self::Builtin(..) => write!(f, "({kind})"),
+            Self::Constant(.., value) => write!(f, "({kind}) = {value}"),
+            Self::ConstExpression(.., value) => write!(f, "({kind}) = {value}"),
+            Self::Argument(.., value) => write!(f, "({kind}) = {value}"),
+            Self::Alias(.., name) => write!(f, "({kind}) => {name}"),
+            Self::UseAll(.., name) => write!(f, "({kind}) => {name}"),
             #[cfg(test)]
-            Self::Tester(id) => write!(f, "(tester) => {id}"),
+            Self::Tester(id) => write!(f, "(Tester) => {id}"),
         }
     }
 }
 
 impl std::fmt::Debug for SymbolDefinition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let kind = self.kind();
         match self {
-            Self::Workbench(w) => write!(f, "({})", w.kind),
-            Self::Module(..) => write!(f, "(module)"),
-            Self::Function(..) => write!(f, "(function)"),
-            Self::SourceFile(..) => write!(f, "(file)"),
-            Self::Builtin(..) => write!(f, "(builtin)"),
-            Self::Constant(.., value) => write!(f, "(constant) = {value}"),
-            Self::ConstExpression(.., expr) => write!(f, "(const expression) = {expr:?}"),
-            Self::Argument(.., value) => write!(f, "(call argument) = {value}"),
-            Self::Alias(.., name) => write!(f, "(alias) => {name:?}"),
-            Self::UseAll(.., name) => write!(f, "(use all) => {name:?}"),
+            Self::Workbench(..)
+            | Self::Module(..)
+            | Self::Function(..)
+            | Self::SourceFile(..)
+            | Self::Builtin(..) => write!(f, "({kind})"),
+            Self::Constant(.., value) => write!(f, "({kind}) = {value}"),
+            Self::ConstExpression(.., expr) => write!(f, "({kind}) = {expr:?}"),
+            Self::Argument(.., value) => write!(f, "({kind}) = {value}"),
+            Self::Alias(.., name) => write!(f, "({kind}) => {name:?}"),
+            Self::UseAll(.., name) => write!(f, "({kind}) => {name:?}"),
             #[cfg(test)]
-            Self::Tester(id) => write!(f, "(tester) => {id:?}"),
+            Self::Tester(id) => write!(f, "({kind}) => {id:?}"),
         }
     }
 }

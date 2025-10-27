@@ -5,9 +5,10 @@
 
 use crate::{src_ref::*, syntax::*};
 use custom_debug::Debug;
+use strum::Display;
 
 /// Kind of a [`WorkbenchDefinition`].
-#[derive(Clone, Debug, Copy, PartialEq)]
+#[derive(Clone, Display, Debug, Copy, PartialEq)]
 pub enum WorkbenchKind {
     /// 3D part
     Part,
@@ -25,12 +26,6 @@ impl WorkbenchKind {
             WorkbenchKind::Sketch => "sketch",
             WorkbenchKind::Operation => "op",
         }
-    }
-}
-
-impl std::fmt::Display for WorkbenchKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.as_str())
     }
 }
 

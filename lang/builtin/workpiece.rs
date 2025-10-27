@@ -47,6 +47,15 @@ pub enum BuiltinKind {
     Workbench(BuiltinWorkbenchKind),
 }
 
+impl std::fmt::Display for BuiltinKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BuiltinKind::Function => write!(f, "Function"),
+            BuiltinKind::Workbench(kind) => write!(f, "{kind}"),
+        }
+    }
+}
+
 impl std::fmt::Debug for Builtin {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "__builtin::{}", &self.id)
