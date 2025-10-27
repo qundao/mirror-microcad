@@ -213,7 +213,7 @@ impl std::fmt::Display for QualifiedName {
                 f,
                 "{}",
                 self.iter()
-                    .map(|id| format!("{id:?}"))
+                    .map(|id| format!("{id}"))
                     .collect::<Vec<_>>()
                     .join("::")
             )

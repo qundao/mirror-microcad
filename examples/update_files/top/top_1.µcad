@@ -1,0 +1,9 @@
+// load sub module
+mod sub;
+// use statement
+use sub::Y::Z::g;
+// use as statement
+use sub::Y::Z::k as l;
+
+g();
+l();

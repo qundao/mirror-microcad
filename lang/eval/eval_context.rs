@@ -290,7 +290,7 @@ impl UseSymbol for EvalContext {
             Err(EvalError::NoSymbolsToUse(symbol.full_name()))
         } else {
             if self.is_module() {
-                symbol.with_children(|(id, symbol)| {
+                symbol.try_children(|(id, symbol)| {
                     let symbol = symbol.clone_with_visibility(visibility);
                     if within.is_empty() {
                         self.symbol_table.insert_symbol(id.clone(), symbol)?;
@@ -305,7 +305,7 @@ impl UseSymbol for EvalContext {
             }
 
             if self.is_code() {
-                symbol.with_children(|(id, symbol)| {
+                symbol.try_children(|(id, symbol)| {
                     self.stack.put_local(Some(id.clone()), symbol.clone())
                 })?;
                 log::trace!("Local Stack:\n{:?}", self.stack);
@@ -529,6 +529,9 @@ impl std::fmt::Debug for EvalContext {
         write!(f, "\nLocals Stack:\n{:?}", self.stack)?;
         writeln!(f, "\nCall Stack:")?;
         self.stack.pretty_print_call_trace(f, &self.sources)?;
+
+        writeln!(f, "\nSources:\n")?;
+        write!(f, "{:?}", &self.sources)?;
 
         write!(f, "\nSymbol Table:\n{:?}", self.symbol_table)?;
         match self.error_count() {

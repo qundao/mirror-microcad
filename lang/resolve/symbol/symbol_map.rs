@@ -7,7 +7,7 @@ use indexmap::IndexMap;
 
 /// Map Id to SymbolNode reference
 #[derive(Default, Clone, Deref, DerefMut)]
-pub struct SymbolMap(IndexMap<Identifier, Symbol>);
+pub struct SymbolMap(pub IndexMap<Identifier, Symbol>);
 
 impl From<Tuple> for SymbolMap {
     fn from(tuple: Tuple) -> Self {
@@ -77,6 +77,10 @@ impl SymbolMap {
             .flat_map(|child| child.resolve(context))
             .for_each(|map| from_children.extend(map.iter().map(|(k, v)| (k.clone(), v.clone()))));
         Ok(from_children)
+    }
+
+    pub(crate) fn find_file(&self, hash: u64) -> Option<Symbol> {
+        self.iter().find_map(|(_, symbol)| symbol.find_file(hash))
     }
 }
 

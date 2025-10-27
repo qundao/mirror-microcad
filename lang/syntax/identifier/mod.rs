@@ -10,7 +10,7 @@ use derive_more::{Deref, DerefMut};
 pub use identifier_list::*;
 pub use qualified_name::*;
 
-use crate::{Id, parse::*, parser::Parser, src_ref::*, syntax::*};
+use crate::{parse::*, parser::Parser, src_ref::*, syntax::*, Id};
 
 /// µcad identifier
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord)]
