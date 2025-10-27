@@ -1,6 +1,6 @@
 -- Test --
   std_geo2d_buffer
-  ../doc/libs/std/ops/buffer.md:8
+  ../lang/doc/libs/std/ops/buffer.md:8
 
 -- Code --
 
