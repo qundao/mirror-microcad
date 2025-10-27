@@ -43,8 +43,8 @@ pub sketch Hexagon(radius: Length) {
 }
 
 /// Pie definition.
-pub sketch Pie(radius: Length, start_angle: Angle, end_angle: Angle) {
-    __builtin::geo2d::Pie(radius = radius / 1mm, start_angle, end_angle);
+pub sketch Pie(radius: Length, start: Angle, end: Angle) {
+    __builtin::geo2d::Pie(radius = radius / 1mm, start, end);
 }
 
 /// Rectangle definition.
