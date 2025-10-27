@@ -3,16 +3,13 @@
 
 //! µcad inspector
 
-extern crate microcad_lang;
+#![allow(missing_docs)]
 
 use clap::Parser;
 
-use microcad_lang::eval::Context;
 use microcad_lang::resolve::FullyQualify;
 use microcad_lang::syntax::*;
 
-use std::path::PathBuf;
-use std::rc::Rc;
 use std::sync::{Arc, Mutex, mpsc};
 mod watcher;
 
@@ -21,6 +18,7 @@ use microcad_lang::model::Model;
 use slint::VecModel;
 
 use crate::watcher::Watcher;
+
 slint::include_modules!();
 
 #[derive(Parser)]
@@ -78,20 +76,6 @@ impl Inspector {
         })
     }
 
-    fn load(&self) -> anyhow::Result<Rc<SourceFile>> {
-        let source = SourceFile::load(self.args.input.clone())?;
-        log::info!("Resolved successfully!");
-        Ok(source)
-    }
-
-    /// Make a new context from an input file.
-    fn make_context(&self) -> anyhow::Result<Context> {
-        Ok(microcad_builtin::builtin_context(
-            self.load()?,
-            &self.args.search_paths,
-        )?)
-    }
-
     pub fn run(mut self) -> anyhow::Result<()> {
         // Create the Slint UI component
         let main_window = MainWindow::new()?;
@@ -106,42 +90,43 @@ impl Inspector {
                 // Watch all dependencies of the most recent compilation.
                 self.watcher.update(vec![self.args.input.clone()])?;
 
-                // Create a vector of model items
-                let items = match self.make_context() {
-                    Ok(mut context) => {
-                        // Re-evaluate context.
-                        match context.eval() {
-                            Ok(model) => {
-                                // Model
-                                // println!("{}", FormatTree(&model));
-                                VM_Item::from_model(&model)
-                            }
-                            Err(err) => {
-                                log::error!("{err}");
-                                vec![]
-                            }
-                        }
-                    }
-                    Err(err) => {
-                        log::error!("{err}");
-                        vec![]
-                    }
-                };
+                let source_file = SourceFile::load(&self.args.input)?;
 
-                // Wait until anything relevant happens.
-                tx.send(items)?;
+                // resolve the file
+                let resolve_context = microcad_lang::resolve::ResolveContext::create(
+                    source_file,
+                    &self.args.search_paths,
+                    Some(microcad_builtin::builtin_module()),
+                    microcad_lang::diag::DiagHandler::default(),
+                )?;
 
-                weak.upgrade_in_event_loop(move |main_window| {
-                    let items = rx.recv().expect("No error");
-                    let view_model = VecModel::from(items);
-                    main_window.set_view_model(slint::ModelRc::new(view_model))
-                })?;
+                let mut eval_context = microcad_lang::eval::EvalContext::new(
+                    resolve_context,
+                    microcad_lang::eval::Stdout::new(),
+                    microcad_builtin::builtin_exporters(),
+                    microcad_builtin::builtin_importers(),
+                );
+
+                if let Some(model) = eval_context
+                    .eval()
+                    .map_err(|err| anyhow::anyhow!("Eval error: {err}"))?
+                {
+                    let items = VM_Item::from_model(&model);
+
+                    // Wait until anything relevant happens.
+                    tx.send(items)?;
+
+                    weak.upgrade_in_event_loop(move |main_window| {
+                        let items = rx.recv().expect("No error");
+                        let view_model = VecModel::from(items);
+                        main_window.set_view_model(slint::ModelRc::new(view_model))
+                    })?;
+                }
 
                 self.watcher.wait()?;
             }
         });
 
-        let weak = main_window.as_weak();
         main_window.on_button_launch_3d_view_clicked(move || {
             // let main_window = weak.unwrap();
 

@@ -1,4 +1,9 @@
-import { ListView, VerticalBox, Button, HorizontalBox } from "std-widgets.slint";
+import {
+    ListView,
+    VerticalBox,
+    Button,
+    HorizontalBox,
+} from "std-widgets.slint";
 
 
 
@@ -47,7 +52,6 @@ component ListItem inherits Rectangle {
             text: item.element;
             vertical-alignment: center;
             horizontal-alignment: left;
-            padding-left: 10px;
             font-size: 16px;
             font-weight: 600;
         }
@@ -59,7 +63,7 @@ component ListItem inherits Rectangle {
     }
 }
 
-export component View3DControlPanel {
+component View3DControlPanel {
     callback button-launch-3d-view-clicked <=> button-launch-3d-view.clicked;
 
     VerticalLayout {
@@ -73,6 +77,7 @@ export component MainWindow inherits Window {
     callback button-launch-3d-view-clicked <=> control-panel.button-launch-3d-view-clicked;
     in property <[VM_Item]> view-model;
 
+    title: "µcad Inspector";
     default-font-family: "Jetbrains Mono";
     preferred-width: 1024px;
     preferred-height: 1024px;
