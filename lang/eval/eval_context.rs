@@ -450,6 +450,7 @@ impl Lookup<EvalError> for EvalContext {
             return Err(ambiguities.remove(0).1);
         }
 
+        // filter by lookup target
         let found: Vec<_> = found
             .iter()
             .filter(|(_, symbol)| target.matches(symbol))
