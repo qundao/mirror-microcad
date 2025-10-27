@@ -499,34 +499,6 @@ impl Symbol {
     pub(super) fn source_hash(&self) -> u64 {
         self.inner.borrow().def.source_hash()
     }
-
-    pub(crate) fn lookup_kind(&self) -> LookupTarget {
-        self.with_def(|def| match def {
-            SymbolDef::Workbench(w) => match *w.kind {
-                WorkbenchKind::Sketch | WorkbenchKind::Part => LookupTarget::Function,
-                WorkbenchKind::Operation => LookupTarget::Method,
-            },
-            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => LookupTarget::Module,
-            SymbolDef::Function(..) => LookupTarget::Function,
-            SymbolDef::Builtin(b) => match &b.kind {
-                BuiltinKind::Function => LookupTarget::Function,
-                BuiltinKind::Workbench(bwk) => match bwk {
-                    BuiltinWorkbenchKind::Primitive2D | BuiltinWorkbenchKind::Primitive3D => {
-                        LookupTarget::Function
-                    }
-                    BuiltinWorkbenchKind::Transform | BuiltinWorkbenchKind::Operation => {
-                        LookupTarget::Method
-                    }
-                },
-            },
-            SymbolDef::Constant(..) | SymbolDef::ConstExpression(..) | SymbolDef::Argument(..) => {
-                LookupTarget::Value
-            }
-            SymbolDef::Alias(..) | SymbolDef::UseAll(..) => LookupTarget::Link,
-            #[cfg(test)]
-            SymbolDef::Tester(..) => unreachable!(),
-        })
-    }
 }
 
 impl Symbol {
