@@ -95,7 +95,7 @@ impl Eval for ArrayExpression {
 
 impl Eval<Option<Symbol>> for QualifiedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Symbol>> {
-        match context.lookup(self) {
+        match context.lookup(self, LookupTarget::Any) {
             Ok(symbol) => Ok(Some(symbol.clone())),
             Err(error) => {
                 context.error(self, error)?;
@@ -107,45 +107,47 @@ impl Eval<Option<Symbol>> for QualifiedName {
 
 impl Eval for QualifiedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        context.lookup(self)?.with_def(|def| match def {
-            SymbolDef::Constant(.., value) | SymbolDef::Argument(_, value) => Ok(value.clone()),
-            SymbolDef::ConstExpression(.., expr) => expr.eval(context),
-            SymbolDef::SourceFile(_) => Ok(Value::None),
+        context
+            .lookup(self, LookupTarget::Any)?
+            .with_def(|def| match def {
+                SymbolDef::Constant(.., value) | SymbolDef::Argument(_, value) => Ok(value.clone()),
+                SymbolDef::ConstExpression(.., expr) => expr.eval(context),
+                SymbolDef::SourceFile(_) => Ok(Value::None),
 
-            SymbolDef::Module(ns) => {
-                context.error(self, EvalError::UnexpectedNested("mod", ns.id.clone()))?;
-                Ok(Value::None)
-            }
-            SymbolDef::Workbench(w) => {
-                context.error(
-                    self,
-                    EvalError::UnexpectedNested(w.kind.as_str(), w.id.clone()),
-                )?;
-                Ok(Value::None)
-            }
-            SymbolDef::Function(f) => {
-                context.error(self, EvalError::UnexpectedNested("function", f.id.clone()))?;
-                Ok(Value::None)
-            }
-            SymbolDef::Builtin(bm) => {
-                context.error(self, EvalError::UnexpectedNested("builtin", bm.id.clone()))?;
-                Ok(Value::None)
-            }
-            SymbolDef::Alias(_, id, _) => {
-                // Alias should have been resolved within previous lookup()
-                unreachable!(
-                    "Unexpected alias {id} in value expression at {}",
-                    self.src_ref()
-                )
-            }
-            SymbolDef::UseAll(_, name) => {
-                unreachable!("Unexpected use {name} in value expression")
-            }
-            #[cfg(test)]
-            SymbolDef::Tester(..) => {
-                unreachable!()
-            }
-        })
+                SymbolDef::Module(ns) => {
+                    context.error(self, EvalError::UnexpectedNested("mod", ns.id.clone()))?;
+                    Ok(Value::None)
+                }
+                SymbolDef::Workbench(w) => {
+                    context.error(
+                        self,
+                        EvalError::UnexpectedNested(w.kind.as_str(), w.id.clone()),
+                    )?;
+                    Ok(Value::None)
+                }
+                SymbolDef::Function(f) => {
+                    context.error(self, EvalError::UnexpectedNested("function", f.id.clone()))?;
+                    Ok(Value::None)
+                }
+                SymbolDef::Builtin(bm) => {
+                    context.error(self, EvalError::UnexpectedNested("builtin", bm.id.clone()))?;
+                    Ok(Value::None)
+                }
+                SymbolDef::Alias(_, id, _) => {
+                    // Alias should have been resolved within previous lookup()
+                    unreachable!(
+                        "Unexpected alias {id} in value expression at {}",
+                        self.src_ref()
+                    )
+                }
+                SymbolDef::UseAll(_, name) => {
+                    unreachable!("Unexpected use {name} in value expression")
+                }
+                #[cfg(test)]
+                SymbolDef::Tester(..) => {
+                    unreachable!()
+                }
+            })
     }
 }
 

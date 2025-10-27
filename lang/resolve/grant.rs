@@ -28,7 +28,7 @@ impl Grant for ModuleDefinition {
                 self,
                 ResolveError::StatementNotSupported(
                     "Module definition".into(),
-                    capitalize_first(def.kind()),
+                    capitalize_first(def.kind_str()),
                 ),
             ),
         })?;
@@ -45,7 +45,10 @@ impl Grant for StatementList {
             | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("Statement list".to_string(), parent.kind()),
+                ResolveError::StatementNotSupported(
+                    "Statement list".to_string(),
+                    parent.kind_str(),
+                ),
             ),
         })?;
         Ok(self)
@@ -93,7 +96,7 @@ impl Grant for Statement {
             ) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("Statement".to_string(), parent.kind()),
+                ResolveError::StatementNotSupported("Statement".to_string(), parent.kind_str()),
             ),
         })?;
         Ok(self)
@@ -106,7 +109,7 @@ impl Grant for WorkbenchDefinition {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported(self.kind.to_string(), parent.kind()),
+                ResolveError::StatementNotSupported(self.kind.to_string(), parent.kind_str()),
             ),
         })?;
         Ok(self)
@@ -121,7 +124,7 @@ impl Grant for FunctionDefinition {
                 self,
                 ResolveError::StatementNotSupported(
                     "Function definition".to_string(),
-                    parent.kind(),
+                    parent.kind_str(),
                 ),
             ),
         })?;
@@ -135,7 +138,10 @@ impl Grant for InitDefinition {
             SymbolDef::Workbench(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("Init definition".to_string(), parent.kind()),
+                ResolveError::StatementNotSupported(
+                    "Init definition".to_string(),
+                    parent.kind_str(),
+                ),
             ),
         })?;
         Ok(self)
@@ -148,7 +154,10 @@ impl Grant for ReturnStatement {
             SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("Return statement".to_string(), parent.kind()),
+                ResolveError::StatementNotSupported(
+                    "Return statement".to_string(),
+                    parent.kind_str(),
+                ),
             ),
         })?;
         Ok(self)
@@ -164,7 +173,7 @@ impl Grant for IfStatement {
             | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("If statement".to_string(), parent.kind()),
+                ResolveError::StatementNotSupported("If statement".to_string(), parent.kind_str()),
             ),
         })?;
         Ok(self)
@@ -201,7 +210,7 @@ impl Grant for AssignmentStatement {
                 self,
                 ResolveError::StatementNotSupported(
                     "Assignment statement".to_string(),
-                    parent.kind(),
+                    parent.kind_str(),
                 ),
             )?;
         }
@@ -218,7 +227,7 @@ impl Grant for Body {
             | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("Code body".to_string(), parent.kind()),
+                ResolveError::StatementNotSupported("Code body".to_string(), parent.kind_str()),
             ),
         })?;
         Ok(self)
@@ -239,7 +248,7 @@ impl Grant for UseStatement {
         if !grant {
             context.error(
                 self,
-                ResolveError::StatementNotSupported("Use statement".to_string(), parent.kind()),
+                ResolveError::StatementNotSupported("Use statement".to_string(), parent.kind_str()),
             )?;
         }
         Ok(self)

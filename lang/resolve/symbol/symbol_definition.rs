@@ -71,7 +71,7 @@ impl SymbolDef {
         }
     }
 
-    pub(crate) fn kind(&self) -> String {
+    pub(crate) fn kind_str(&self) -> String {
         match self {
             Self::Workbench(w) => format!("{}", w.kind),
             Self::Module(..) => "Module".to_string(),
@@ -108,7 +108,7 @@ impl SymbolDef {
 
 impl std::fmt::Display for SymbolDef {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let kind = self.kind();
+        let kind = self.kind_str();
         match self {
             Self::Workbench(..)
             | Self::Module(..)
@@ -128,7 +128,7 @@ impl std::fmt::Display for SymbolDef {
 
 impl std::fmt::Debug for SymbolDef {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let kind = self.kind();
+        let kind = self.kind_str();
         match self {
             Self::Workbench(..)
             | Self::Module(..)

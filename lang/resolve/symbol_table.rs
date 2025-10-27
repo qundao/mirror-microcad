@@ -84,7 +84,7 @@ impl WriteToFile for SymbolTable {}
 
 impl Lookup for SymbolTable {
     /// Lookup a symbol from global symbols.
-    fn lookup(&self, name: &QualifiedName) -> ResolveResult<Symbol> {
+    fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
         log::trace!(
             "{lookup} for global symbol '{name:?}'",
             lookup = crate::mark!(LOOKUP)
@@ -92,7 +92,17 @@ impl Lookup for SymbolTable {
         self.deny_super(name)?;
 
         let symbol = match self.search(name, true) {
-            Ok(symbol) => symbol,
+            Ok(symbol) => {
+                if target.matches(&symbol) {
+                    symbol
+                } else {
+                    log::trace!(
+                        "{not_found} global symbol: {name:?}",
+                        not_found = crate::mark!(NOT_FOUND_INTERIM),
+                    );
+                    return Err(ResolveError::WrongTarget);
+                }
+            }
             Err(err) => {
                 log::trace!(
                     "{not_found} global symbol: {name:?}",

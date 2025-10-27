@@ -229,7 +229,7 @@ impl Stack {
 }
 
 impl Lookup<EvalError> for Stack {
-    fn lookup(&self, name: &QualifiedName) -> EvalResult<Symbol> {
+    fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> EvalResult<Symbol> {
         log::trace!(
             "{lookup} for local symbol '{name:?}'",
             lookup = crate::mark!(LOOKUP)

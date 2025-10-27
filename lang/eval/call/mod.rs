@@ -57,7 +57,7 @@ impl Eval<ArgumentValueListRaw> for ArgumentList {
                         Ok(ArgumentValue::new(
                             Value::Target(Target::new(
                                 name.un_super(),
-                                match context.lookup(name) {
+                                match context.lookup(name, LookupTarget::Any) {
                                     Ok(symbol) => Some(symbol.full_name()),
                                     Err(_) => None,
                                 },
@@ -83,7 +83,7 @@ impl Eval<ArgumentValueListRaw> for ArgumentList {
 impl Eval for Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         // find self in symbol table by own name
-        let symbol = match context.lookup(&self.name) {
+        let symbol = match context.lookup(&self.name, LookupTarget::Function) {
             Ok(symbol) => symbol,
             Err(err) => {
                 context.error(self, err)?;

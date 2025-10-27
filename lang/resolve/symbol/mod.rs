@@ -436,23 +436,29 @@ impl Symbol {
                         exclude_ids.contains(name.last().expect("symbol with empty name"))
                     })
                     // search in symbol table
-                    .try_for_each(|name| match context.symbol_table.lookup(name) {
-                        Ok(_) => Ok::<_, ResolveError>(()),
-                        Err(err) => {
-                            // get name of current module
-                            let module =
-                                match context.symbol_table.search(&self.module_name(), false) {
-                                    Ok(module) => module,
-                                    Err(err) => {
-                                        context.error(&self.id(), err)?;
-                                        return Ok(());
-                                    }
-                                };
-                            // search within current module
-                            if context.symbol_table.lookup_within(name, &module).is_err() {
-                                context.error(name, err)?;
+                    .try_for_each(|name| {
+                        match context.symbol_table.lookup(name, LookupTarget::Any) {
+                            Ok(_) => Ok::<_, ResolveError>(()),
+                            Err(err) => {
+                                // get name of current module
+                                let module =
+                                    match context.symbol_table.search(&self.module_name(), false) {
+                                        Ok(module) => module,
+                                        Err(err) => {
+                                            context.error(&self.id(), err)?;
+                                            return Ok(());
+                                        }
+                                    };
+                                // search within current module
+                                if context
+                                    .symbol_table
+                                    .lookup_within(name, &module, LookupTarget::Module)
+                                    .is_err()
+                                {
+                                    context.error(name, err)?;
+                                }
+                                Ok(())
                             }
-                            Ok(())
                         }
                     })?;
             }
@@ -486,12 +492,40 @@ impl Symbol {
         }
     }
 
-    pub(crate) fn kind(&self) -> String {
-        self.inner.borrow().def.kind()
+    pub(crate) fn kind_str(&self) -> String {
+        self.inner.borrow().def.kind_str()
     }
 
     pub(super) fn source_hash(&self) -> u64 {
         self.inner.borrow().def.source_hash()
+    }
+
+    pub(crate) fn lookup_kind(&self) -> LookupTarget {
+        self.with_def(|def| match def {
+            SymbolDef::Workbench(w) => match *w.kind {
+                WorkbenchKind::Sketch | WorkbenchKind::Part => LookupTarget::Function,
+                WorkbenchKind::Operation => LookupTarget::Method,
+            },
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => LookupTarget::Module,
+            SymbolDef::Function(..) => LookupTarget::Function,
+            SymbolDef::Builtin(b) => match &b.kind {
+                BuiltinKind::Function => LookupTarget::Function,
+                BuiltinKind::Workbench(bwk) => match bwk {
+                    BuiltinWorkbenchKind::Primitive2D | BuiltinWorkbenchKind::Primitive3D => {
+                        LookupTarget::Function
+                    }
+                    BuiltinWorkbenchKind::Transform | BuiltinWorkbenchKind::Operation => {
+                        LookupTarget::Method
+                    }
+                },
+            },
+            SymbolDef::Constant(..) | SymbolDef::ConstExpression(..) | SymbolDef::Argument(..) => {
+                LookupTarget::Value
+            }
+            SymbolDef::Alias(..) | SymbolDef::UseAll(..) => LookupTarget::Link,
+            #[cfg(test)]
+            SymbolDef::Tester(..) => unreachable!(),
+        })
     }
 }
 
@@ -517,7 +551,7 @@ impl Symbol {
                     log::trace!("resolving use (as): {self} => {visibility}{id} ({name})");
                     let symbol = context
                         .symbol_table
-                        .lookup_within_opt(name, &inner.parent)?
+                        .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
                         .clone_with_visibility(*visibility);
                     self.visibility.set(Visibility::Deleted);
                     [(id.clone(), symbol)].into_iter().collect()
@@ -526,7 +560,7 @@ impl Symbol {
                     log::trace!("resolving use all: {self} => {visibility}{name}");
                     let symbols = context
                         .symbol_table
-                        .lookup_within_opt(name, &inner.parent)?
+                        .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
                         .public_children(*visibility);
                     if !symbols.is_empty() {
                         self.visibility.set(Visibility::Deleted);
