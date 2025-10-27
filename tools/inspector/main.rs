@@ -7,13 +7,11 @@
 
 use clap::Parser;
 
-use microcad_lang::resolve::FullyQualify;
+use microcad_lang::resolve::{FullyQualify, Symbol};
 use microcad_lang::syntax::*;
 
 use std::sync::{Arc, Mutex, mpsc};
 mod watcher;
-
-use microcad_lang::model::Model;
 
 use slint::VecModel;
 
@@ -37,19 +35,38 @@ struct Inspector {
     pub watcher: Watcher,
 }
 
-impl VM_Item {
-    fn _from_model(model: &Model, items: &mut Vec<Self>, depth: usize) {
-        let model_ = model.borrow();
+trait ItemsFromTree<T, D = usize>: Sized
+where
+    D: Default,
+{
+    fn _from_tree(tree: &T, items: &mut Vec<Self>, depth: D);
 
+    /// Create all items from model, including children
+    fn items_from_tree(tree: &T) -> Vec<Self> {
+        let mut items = Vec::new();
+        Self::_from_tree(tree, &mut items, D::default());
+        items
+    }
+}
+
+/// Create ModelRc from items.
+fn model_rc_from_items<T: Sized + Clone + 'static>(items: Vec<T>) -> slint::ModelRc<T> {
+    slint::ModelRc::new(VecModel::from(items))
+}
+
+use microcad_lang::model::Model;
+
+impl ItemsFromTree<Model> for ModelTreeModelItem {
+    fn _from_tree(model: &Model, items: &mut Vec<Self>, depth: usize) {
+        let model_ = model.borrow();
         let creator = match model_.element.creator() {
             Some(creator) => VM_Creator {
                 symbol_name: creator.symbol.full_name().to_string().into(),
-                //   arguments: slint::ModelRc::new(VecModel::from(vec![])),
             },
             None => VM_Creator::default(),
         };
 
-        items.push(VM_Item {
+        items.push(Self {
             depth: depth as i32,
             element: model_.element.value.to_string().into(),
             src_ref: model_.element.src_ref.to_string().into(),
@@ -57,14 +74,20 @@ impl VM_Item {
         });
         model_
             .children()
-            .for_each(|model| Self::_from_model(model, items, depth + 1))
+            .for_each(|model| Self::_from_tree(model, items, depth + 1))
     }
+}
 
-    /// Create ViewModelItems from model, including children
-    pub fn from_model(model: &Model) -> Vec<Self> {
-        let mut items = Vec::new();
-        Self::_from_model(model, &mut items, 0);
-        items
+impl ItemsFromTree<Symbol> for SymbolTreeModelItem {
+    fn _from_tree(symbol: &Symbol, items: &mut Vec<Self>, depth: usize) {
+        items.push(Self {
+            depth: depth as i32,
+            name: symbol.full_name().to_string().into(),
+        });
+
+        symbol.with_children(|(_, symbol)| {
+            Self::_from_tree(symbol, items, depth + 1);
+        })
     }
 }
 
@@ -86,7 +109,7 @@ impl Inspector {
         // Run file watcher thread.
         std::thread::spawn(move || -> anyhow::Result<()> {
             loop {
-                let (tx, rx): (mpsc::Sender<Vec<VM_Item>>, _) = mpsc::channel();
+                let (tx, rx): (mpsc::Sender<Vec<ModelTreeModelItem>>, _) = mpsc::channel();
                 // Watch all dependencies of the most recent compilation.
                 self.watcher.update(vec![self.args.input.clone()])?;
 
@@ -111,15 +134,14 @@ impl Inspector {
                     .eval()
                     .map_err(|err| anyhow::anyhow!("Eval error: {err}"))?
                 {
-                    let items = VM_Item::from_model(&model);
+                    let items = ModelTreeModelItem::items_from_tree(&model);
 
                     // Wait until anything relevant happens.
                     tx.send(items)?;
 
                     weak.upgrade_in_event_loop(move |main_window| {
                         let items = rx.recv().expect("No error");
-                        let view_model = VecModel::from(items);
-                        main_window.set_view_model(slint::ModelRc::new(view_model))
+                        main_window.set_model_tree(model_rc_from_items(items))
                     })?;
                 }
 

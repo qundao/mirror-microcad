@@ -142,15 +142,16 @@ impl Symbol {
         self.inner.borrow_mut().children = new_children;
     }
 
-    pub(crate) fn try_children<E: std::error::Error>(
+    /// Try to apply a FnMut for each child.
+    pub fn try_children<E: std::error::Error>(
         &self,
         f: impl FnMut((&Identifier, &Symbol)) -> Result<(), E>,
     ) -> Result<(), E> {
         self.inner.borrow().children.iter().try_for_each(f)
     }
 
-    #[allow(dead_code)]
-    pub(crate) fn with_children(&self, f: impl FnMut((&Identifier, &Symbol))) {
+    /// Apply a FnMut for each child.
+    pub fn with_children(&self, f: impl FnMut((&Identifier, &Symbol))) {
         self.inner.borrow().children.iter().for_each(f)
     }
 

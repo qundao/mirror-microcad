@@ -3,6 +3,7 @@ import {
     VerticalBox,
     Button,
     HorizontalBox,
+    TextEdit,
 } from "std-widgets.slint";
 
 
@@ -17,7 +18,13 @@ export struct VM_Creator {
     symbol_name: string,
 }
 
-export struct VM_Item {
+
+export struct SymbolTreeModelItem {
+    depth: int,
+    name: string,
+}
+
+export struct ModelTreeModelItem {
     depth: int,
     element: string,
     src_ref: string,
@@ -25,9 +32,7 @@ export struct VM_Item {
 }
 
 
-
-component ListItem inherits Rectangle {
-    in property <VM_Item> item;
+component TreeViewItem inherits Rectangle {
     in property <int> index: 0;
 
     height: 40px;
@@ -43,23 +48,44 @@ component ListItem inherits Rectangle {
     HorizontalLayout {
         width: root.width;
         height: root.height;
-
-        Rectangle {
-            width: item.depth * 32px;
-        }
-
-        Text {
-            text: item.element;
-            vertical-alignment: center;
-            horizontal-alignment: left;
-            font-size: 16px;
-            font-weight: 600;
-        }
+        @children
     }
 
     touch-area := TouchArea {
         width: root.width;
         height: root.height;
+    }
+}
+
+component ModelTreeViewItem inherits TreeViewItem {
+    in property <ModelTreeModelItem> item;
+
+    Rectangle {
+        width: item.depth * 32px;
+    }
+
+    Text {
+        text: item.element;
+        vertical-alignment: center;
+        horizontal-alignment: left;
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+component SymbolTreeViewItem inherits TreeViewItem {
+    in property <SymbolTreeModelItem> item;
+
+    Rectangle {
+        width: item.depth * 32px;
+    }
+
+    Text {
+        text: item.name;
+        vertical-alignment: center;
+        horizontal-alignment: left;
+        font-size: 16px;
+        font-weight: 600;
     }
 }
 
@@ -75,23 +101,40 @@ component View3DControlPanel {
 
 export component MainWindow inherits Window {
     callback button-launch-3d-view-clicked <=> control-panel.button-launch-3d-view-clicked;
-    in property <[VM_Item]> view-model;
+    in property source-code <=> source-code-view.text;
+    in property <[ModelTreeModelItem]> model-tree;
+    in property <[SymbolTreeModelItem]> symbol-tree;
 
     title: "µcad Inspector";
     default-font-family: "Jetbrains Mono";
     preferred-width: 1024px;
     preferred-height: 1024px;
 
-    HorizontalBox {
+    VerticalBox {
         width: parent.width;
         height: parent.height;
 
-        list-view := ListView {
-            mouse-drag-pan-enabled: true;
-            for item[index] in root.view-model: ListItem {
-                width: list-view.viewport-width;
-                item: item;
-                index: index;
+        HorizontalBox {
+            height: parent.height * 80%;
+
+            source-code-view := TextEdit { }
+
+            symbol-tree-view := ListView {
+                mouse-drag-pan-enabled: true;
+                for item[index] in root.symbol-tree: SymbolTreeViewItem {
+                    width: symbol-tree-view.viewport-width;
+                    item: item;
+                    index: index;
+                }
+            }
+
+            model-tree-view := ListView {
+                mouse-drag-pan-enabled: true;
+                for item[index] in root.model-tree: ModelTreeViewItem {
+                    width: model-tree-view.viewport-width;
+                    item: item;
+                    index: index;
+                }
             }
         }
 
