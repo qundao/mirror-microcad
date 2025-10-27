@@ -154,7 +154,7 @@ impl Inspector {
                 .expect("Failed to spawn child process");
 
                 // Share the child's stdin with the main thread
-                *stdin_clone.lock().unwrap() = child.stdin.take();
+                *stdin_clone.lock().expect("Successful lock") = child.stdin.take();
 
                 // Wait for the process to exit (this will block)
                 let status = child.wait()?;
