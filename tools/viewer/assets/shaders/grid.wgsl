@@ -71,7 +71,7 @@ fn fragment(
 ) -> @location(0) vec4<f32> {
     let p = mesh.world_position.xy;
 
-    let grid = grid_opacity(p, 1.0 / zoom_level);
+    let grid = grid_opacity(p, 8.0 / zoom_level);
     let fade = min(2.0 - length(p) / radius, 1.0);
     
     return vec4(grid * fade);

@@ -185,9 +185,7 @@ fn run_camera_controller(
             // Change the projection parameters
             use bevy::render::camera::CameraProjection;
 
-            ortho.scale *= 1.0 + scroll / 100.0;
-
-            //            ortho.area = ortho.area.inflate(scroll);
+            ortho.scale *= 1.0 + scroll / 50.0;
 
             let window = windows.iter().next().unwrap();
             ortho.update(window.width(), window.height());

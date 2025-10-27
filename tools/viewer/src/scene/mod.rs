@@ -53,7 +53,7 @@ impl Scene {
 impl Default for Scene {
     fn default() -> Self {
         Self {
-            radius: Self::MINIMUM_RADIUS,
+            radius: 100.0,
             grid_entity: Default::default(),
             light_entities: Default::default(),
             model_entities: Default::default(),
@@ -82,6 +82,7 @@ impl Plugin for ScenePlugin {
             .add_systems(Startup, camera::setup_camera)
             .add_systems(Update, camera::update_camera_on_scene_change)
             .add_systems(Update, draw_mesh_intersections)
-            .add_systems(Update, grid::update_grid);
+            .add_systems(Update, grid::update_grid)
+            .add_systems(Update, grid::update_grid_on_scene_change);
     }
 }

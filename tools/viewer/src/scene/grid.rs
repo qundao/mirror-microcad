@@ -1,9 +1,3 @@
-use bevy::render::{
-    alpha::AlphaMode,
-    camera::{Camera, Projection},
-    mesh::{Mesh, Mesh3d},
-    render_resource::{AsBindGroup, ShaderRef},
-};
 use bevy::{
     asset::{Asset, Assets},
     ecs::{
@@ -13,6 +7,15 @@ use bevy::{
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::{Material, MeshMaterial3d},
     reflect::TypePath,
+};
+use bevy::{
+    ecs::event::EventReader,
+    render::{
+        alpha::AlphaMode,
+        camera::{Camera, Projection},
+        mesh::{Mesh, Mesh3d},
+        render_resource::{AsBindGroup, ShaderRef},
+    },
 };
 
 use crate::{scene::get_current_zoom_level, state::State};
@@ -72,7 +75,7 @@ pub fn spawn_grid_plane(
     );
 }
 
-/// Update grid material according to some level.
+/// Update grid material according to zoom level.
 pub fn update_grid(
     mut materials: ResMut<Assets<GridMaterial>>,
     state: Res<State>,
@@ -88,6 +91,24 @@ pub fn update_grid(
         {
             material.radius = radius;
             material.zoom_level = 1.0 / get_current_zoom_level(projection);
+        }
+    }
+}
+
+/// Update grid material when scene radius has changed.
+pub fn update_grid_on_scene_change(
+    mut events: EventReader<super::SceneRadiusChangeEvent>,
+    mut materials: ResMut<Assets<GridMaterial>>,
+    state: Res<State>,
+    mat_query: Query<&mut MeshMaterial3d<GridMaterial>>,
+) {
+    for event in events.read() {
+        if let Some(grid) = state.scene.grid_entity
+            && let Ok(material) = mat_query.get(grid)
+            && let Some(material) = materials.get_mut(material)
+        {
+            log::info!("Scene radius {}", event.new_radius);
+            material.radius = event.new_radius;
         }
     }
 }
