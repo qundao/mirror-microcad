@@ -25,36 +25,25 @@ impl Render<Geometry2D> for ThreadProfile {
         let flat_top = self.p / 8.0;
         let flat_bottom = self.p / 4.0;
 
-        // Build the polyline (one period of the external thread)
-        let mut pts = Vec::with_capacity(4);
-
-        // Start at bottom left (root)
-        pts.push(Coord { x: 0.0, y: 0.0 });
-
         // Left flank up to the crest
         let dx_flank = self.p / 2.0 - flat_bottom / 2.0;
-        let dy_flank = h1;
-        pts.push(Coord {
-            x: dx_flank,
-            y: dy_flank,
-        });
 
-        // Flat crest
-        let x_top_left = dx_flank;
-        let x_top_right = x_top_left + flat_top;
-        pts.push(Coord {
-            x: x_top_right,
-            y: dy_flank,
-        });
-
-        // Right flank down
-        let dx_flank2 = dx_flank;
-        pts.push(Coord {
-            x: x_top_right + dx_flank2,
-            y: 0.0,
-        });
-
-        Polygon::new(LineString::new(pts), vec![]).into()
+        Polygon::new(
+            LineString::new(vec![
+                Coord { x: 0.0, y: 0.0 },
+                Coord {
+                    x: 2.0 * dx_flank + flat_top,
+                    y: 0.0,
+                },
+                Coord {
+                    x: dx_flank + flat_top,
+                    y: h1,
+                },
+                Coord { x: dx_flank, y: h1 },
+            ]),
+            vec![],
+        )
+        .into()
     }
 }
 
