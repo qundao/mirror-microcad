@@ -384,13 +384,11 @@ impl Lookup<EvalError> for EvalContext {
         log::trace!("- lookup results ------------------------------------------------");
         let results = results.inspect(|(from, result)| log::trace!("{from}: {:?}", result));
 
-        let mut errors = Vec::new();
-
         // collect ok-results and ambiguity errors
-        let (found, mut ambiguities) = results.fold(
-            (vec![], vec![]),
-            |(mut oks, mut ambiguities), (origin, r)| {
-                match r {
+        let (found, mut ambiguities, mut errors) = results.fold(
+            (vec![], vec![], vec![]),
+            |(mut oks, mut ambiguities, mut errors), (origin, result)| {
+                match result {
                     Ok(symbol) => oks.push((origin, symbol)),
                     Err(EvalError::AmbiguousSymbol( ambiguous, others)) => {
                         ambiguities.push((origin, EvalError::AmbiguousSymbol ( ambiguous, others )))
@@ -412,7 +410,7 @@ impl Lookup<EvalError> for EvalContext {
                     ) => (),
                     Err(err) => errors.push((origin, err)),
                 }
-                (oks, ambiguities)
+                (oks, ambiguities, errors)
             },
         );
 
@@ -444,7 +442,14 @@ impl Lookup<EvalError> for EvalContext {
         match found.first() {
             Some((origin, symbol)) => {
                 // check if all findings point to the same symbol
-                if !found.iter().all(|(_, x)| x == symbol) {
+                if found.iter().all(|(_, x)| x == symbol) {
+                    log::debug!(
+                        "{found} symbol '{name:?}' in {origin}",
+                        found = crate::mark!(FOUND)
+                    );
+                    symbol.set_used();
+                    Ok(symbol.clone())
+                } else {
                     let others: QualifiedNames =
                         found.iter().map(|(_, symbol)| symbol.full_name()).collect();
                     log::debug!(
@@ -452,13 +457,6 @@ impl Lookup<EvalError> for EvalContext {
                         ambiguous = crate::mark!(AMBIGUOUS),
                     );
                     Err(EvalError::AmbiguousSymbol(name.clone(), others))
-                } else {
-                    log::debug!(
-                        "{found} symbol '{name:?}' in {origin}",
-                        found = crate::mark!(FOUND)
-                    );
-                    symbol.set_used();
-                    Ok(symbol.clone())
                 }
             }
             None => {
