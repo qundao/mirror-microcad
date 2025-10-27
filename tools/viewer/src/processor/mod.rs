@@ -122,14 +122,21 @@ impl Processor {
                     .eval()
                     .map_err(|err| anyhow::anyhow!("Eval error: {err}"))?
                 {
+                    use microcad_lang::render::RenderWithContext;
+
                     let mut render_context = RenderContext::init(
                         &model,
                         resolution.clone(),
                         Some(self.render_cache.clone()),
                     )?;
-                    use microcad_lang::render::RenderWithContext;
 
                     let model: Model = model.render_with_context(&mut render_context)?;
+
+                    // Remove unused cache items.
+                    {
+                        let mut cache = self.render_cache.borrow_mut();
+                        cache.garbage_collection();
+                    }
 
                     let mut mesh_geometry = Vec::new();
                     Self::generate_mesh_geometry_from_model(&model, &mut mesh_geometry);
