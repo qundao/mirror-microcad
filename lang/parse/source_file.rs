@@ -7,14 +7,7 @@ use std::io::Read;
 impl SourceFile {
     /// Load µcad source file from given `path`
     pub fn load(path: impl AsRef<std::path::Path> + std::fmt::Debug) -> ParseResult<Rc<Self>> {
-        let name = QualifiedName::from_id(Identifier::no_ref(
-            &path
-                .as_ref()
-                .file_stem()
-                .expect("illegal file name")
-                .to_string_lossy(),
-        ));
-        Self::load_with_name(path, name)
+        Self::load_with_name(&path, Self::name_from_path(&path))
     }
 
     /// Load µcad source file from given `path`
@@ -63,11 +56,56 @@ impl SourceFile {
         Ok(Rc::new(source_file))
     }
 
+    /// Create a virtual [`SourceFile`] from a code string, with a path.
+    ///
+    /// Loads a virtual source file, a source file that has a filename but is not related to an actual file
+    /// in the file system.
+    pub fn load_virtual(
+        path: impl AsRef<std::path::Path>,
+        name: Option<QualifiedName>,
+        code: String,
+    ) -> ParseResult<Rc<Self>> {
+        let name = match name {
+            Some(name) => name,
+            None => Self::name_from_path(&path),
+        };
+
+        log::trace!(
+            "{load} virtual file {path}{name}",
+            load = crate::mark!(LOAD),
+            path = path.as_ref().display()
+        );
+
+        let mut source_file: Self = Parser::parse_rule(crate::parser::Rule::source_file, &code, 0)?;
+        assert_ne!(source_file.hash, 0);
+        source_file.set_filename(path.as_ref());
+        source_file.name = name;
+        log::debug!(
+            "Successfully loaded virtual file {} to {}",
+            path.as_ref().to_string_lossy(),
+            source_file.name
+        );
+        log::trace!("Syntax tree:\n{}", FormatTree(&source_file));
+
+        Ok(Rc::new(source_file))
+    }
+
     fn calculate_hash(value: &str) -> u64 {
         use std::hash::{Hash, Hasher};
         let mut hasher = rustc_hash::FxHasher::default();
         value.hash(&mut hasher);
         hasher.finish()
+    }
+
+    /// Get the source file name from path.
+    fn name_from_path(path: impl AsRef<std::path::Path>) -> QualifiedName {
+        QualifiedName::from_id(Identifier::no_ref(
+            &path
+                .as_ref()
+                .file_stem()
+                .expect("illegal file name")
+                .to_string_lossy(),
+        ))
     }
 }
 
