@@ -31,6 +31,16 @@ impl RenderResolution {
         Self { linear: 1.0 }
     }
 
+    /// Medium render resolution of 0.25mm.
+    pub fn medium() -> Self {
+        Self { linear: 0.25 }
+    }
+
+    /// High render resolution of 0.25mm.
+    pub fn high() -> Self {
+        Self { linear: 0.1 }
+    }
+
     /// Get the number segments for a circle as power of 2.
     ///
     /// The minimal number of segments is 4, the maximum number of segments is 1024.
