@@ -8,7 +8,7 @@ use std::{
     rc::Rc,
 };
 
-use microcad_core::{Geometry2D, Geometry3D, Mat3, Mat4, RenderResolution};
+use microcad_core::*;
 
 use crate::{model::*, render::*};
 
@@ -188,19 +188,6 @@ impl RenderOutput {
             RenderOutput::Geometry3D { world_matrix, .. } => world_matrix.expect("World matrix"),
         }
     }
-}
-
-fn mat4_to_mat3(m: &Mat4) -> Mat3 {
-    Mat3::from_cols(m.x.truncate_n(2), m.y.truncate_n(2), m.w.truncate_n(2))
-}
-
-fn mat3_to_mat4(m: &Mat3) -> Mat4 {
-    Mat4::new(
-        m.x.x, m.x.y, 0.0, m.x.z, // First column: X basis + X translation
-        m.y.x, m.y.y, 0.0, m.y.z, // Second column: Y basis + Y translation
-        0.0, 0.0, 1.0, 0.0, // Z axis: identity (no change)
-        0.0, 0.0, 0.0, 1.0, // Homogeneous row
-    )
 }
 
 impl std::fmt::Display for RenderOutput {

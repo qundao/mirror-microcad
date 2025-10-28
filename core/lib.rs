@@ -43,3 +43,18 @@ pub use geo2d::*;
 pub use geo3d::*;
 pub use render::*;
 pub use triangle::*;
+
+/// Convert a Matrix4 to Matrix3.
+pub fn mat4_to_mat3(m: &Mat4) -> Mat3 {
+    Mat3::from_cols(m.x.truncate_n(2), m.y.truncate_n(2), m.w.truncate_n(2))
+}
+
+/// Convert a Matrix3 to Matrix4.
+pub fn mat3_to_mat4(m: &Mat3) -> Mat4 {
+    Mat4::new(
+        m.x.x, m.x.y, 0.0, m.x.z, // First column: X basis + X translation
+        m.y.x, m.y.y, 0.0, m.y.z, // Second column: Y basis + Y translation
+        0.0, 0.0, 1.0, 0.0, // Z axis: identity (no change)
+        0.0, 0.0, 0.0, 1.0, // Homogeneous row
+    )
+}

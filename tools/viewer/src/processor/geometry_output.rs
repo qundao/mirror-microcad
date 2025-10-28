@@ -3,14 +3,16 @@
 
 //! microcad Viewer geometry output.
 
-use bevy::render::{
-    alpha::AlphaMode,
-    mesh::{Indices, Mesh},
-};
 use bevy::{
     asset::RenderAssetUsages, math::Vec3, pbr::StandardMaterial, platform::collections::HashMap,
 };
-use cgmath::InnerSpace;
+use bevy::{
+    render::{
+        alpha::AlphaMode,
+        mesh::{Indices, Mesh},
+    },
+    transform::components::Transform,
+};
 use microcad_core::*;
 use microcad_lang::{
     model::{Model, OutputType},
@@ -140,6 +142,169 @@ pub fn from_geometry2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
     mesh
 }
 
+pub struct Bundle<MATERIAL = StandardMaterial> {
+    pub mesh: Mesh,
+    pub material: MATERIAL,
+    pub transform: Transform,
+}
+
+fn cg_mat4_to_bevy_mat4(m: cgmath::Matrix4<f64>) -> bevy::prelude::Mat4 {
+    use cgmath::Matrix;
+
+    // cgmath stores as column-major, same as glam/Bevy
+    let m = m.transpose(); // optional if you’re unsure about order
+    bevy::prelude::Mat4::from_cols_array(&[
+        m.x.x as f32,
+        m.x.y as f32,
+        m.x.z as f32,
+        m.x.w as f32,
+        m.y.x as f32,
+        m.y.y as f32,
+        m.y.z as f32,
+        m.y.w as f32,
+        m.z.x as f32,
+        m.z.y as f32,
+        m.z.z as f32,
+        m.z.w as f32,
+        m.w.x as f32,
+        m.w.y as f32,
+        m.w.z as f32,
+        m.w.w as f32,
+    ])
+}
+
+fn color_to_bevy_color(color: microcad_core::Color) -> bevy::prelude::Color {
+    bevy::prelude::Color::srgba(color.r, color.g, color.b, color.a)
+}
+
+fn color_to_bevy_material(color: Color) -> StandardMaterial {
+    StandardMaterial {
+        base_color: color_to_bevy_color(color),
+        alpha_mode: AlphaMode::Opaque,
+        unlit: true,
+        ..Default::default()
+    }
+}
+
+fn mat4_to_bevy_transform(mat: Mat4) -> Transform {
+    Transform::from_matrix(cg_mat4_to_bevy_mat4(mat))
+}
+
+fn bounds_2d_to_mesh(bounds: Bounds2D) -> Mesh {
+    let mut mesh = Mesh::new(
+        bevy::render::mesh::PrimitiveTopology::LineStrip,
+        RenderAssetUsages::default(),
+    );
+    use bevy::prelude::{Vec2, Vec3};
+    let min = Vec2::new(bounds.min.x as f32, bounds.min.y as f32);
+    let max = Vec2::new(bounds.max.x as f32, bounds.max.y as f32);
+    let z = 0.0_f32;
+    mesh.insert_attribute(
+        Mesh::ATTRIBUTE_POSITION,
+        [
+            Vec3::new(min.x, min.y, z),
+            Vec3::new(max.x, min.y, z),
+            Vec3::new(max.x, min.y, z),
+            Vec3::new(min.x, min.y, z),
+            Vec3::new(min.x, min.y, z),
+        ]
+        .iter()
+        .map(|p| [p.x, p.y, p.z])
+        .collect::<Vec<_>>(),
+    );
+    mesh
+}
+
+fn bounds_3d_to_mesh(bounds: Bounds3D) -> Mesh {
+    let mut mesh = Mesh::new(
+        bevy::render::mesh::PrimitiveTopology::LineStrip,
+        RenderAssetUsages::default(),
+    );
+    use bevy::prelude::Vec3;
+    let min = Vec3::new(
+        bounds.min.x as f32,
+        bounds.min.y as f32,
+        bounds.min.z as f32,
+    );
+    let max = Vec3::new(
+        bounds.max.x as f32,
+        bounds.max.y as f32,
+        bounds.max.z as f32,
+    );
+
+    mesh.insert_attribute(
+        Mesh::ATTRIBUTE_POSITION,
+        [
+            // Bottom face
+            Vec3::new(min.x, min.y, min.z),
+            Vec3::new(max.x, min.y, min.z),
+            Vec3::new(max.x, min.y, max.z),
+            Vec3::new(min.x, min.y, max.z),
+            Vec3::new(min.x, min.y, min.z), // close bottom loop
+            // Connect to top face
+            Vec3::new(min.x, max.y, min.z),
+            // Top face
+            Vec3::new(max.x, max.y, min.z),
+            Vec3::new(max.x, max.y, max.z),
+            Vec3::new(min.x, max.y, max.z),
+            Vec3::new(min.x, max.y, min.z), // close top loop
+            // Back down to start
+            Vec3::new(max.x, max.y, min.z),
+            Vec3::new(max.x, min.y, min.z),
+            Vec3::new(max.x, min.y, max.z),
+            Vec3::new(max.x, max.y, max.z),
+            Vec3::new(min.x, max.y, max.z),
+            Vec3::new(min.x, min.y, max.z),
+        ]
+        .iter()
+        .map(|p| [p.x, p.y, p.z])
+        .collect::<Vec<_>>(),
+    );
+    mesh
+}
+
+impl Bundle {
+    /// Create a new bevy bundle from µcad 2D geometry.
+    pub fn new_2d(geometry: &Geometry2D, color: Color, mat: Mat4) -> Self {
+        Self {
+            mesh: from_geometry2d(geometry, 0.0),
+            material: color_to_bevy_material(color),
+            transform: mat4_to_bevy_transform(mat),
+        }
+    }
+
+    /// Create a new bevy bundle from µcad 3D geometry.
+    pub fn new_3d(geometry: &Geometry3D, color: Color, mat: Mat4) -> Self {
+        Self {
+            mesh: triangle_mesh_to_bevy_with_smoothness(&geometry.into(), 20.0),
+            material: StandardMaterial {
+                base_color: color_to_bevy_color(color),
+                metallic: 0.5,
+                alpha_mode: AlphaMode::Opaque,
+                unlit: false,
+                ..Default::default()
+            },
+            transform: mat4_to_bevy_transform(mat),
+        }
+    }
+
+    pub fn new_bounds_2d(bounds: Bounds2D, color: Color, mat: Mat4) -> Self {
+        Self {
+            mesh: bounds_2d_to_mesh(bounds),
+            material: color_to_bevy_material(color),
+            transform: mat4_to_bevy_transform(mat),
+        }
+    }
+
+    pub fn new_bounds_3d(bounds: Bounds3D, color: Color, mat: Mat4) -> Self {
+        Self {
+            mesh: bounds_3d_to_mesh(bounds),
+            material: color_to_bevy_material(color),
+            transform: mat4_to_bevy_transform(mat),
+        }
+    }
+}
+
 /// The output geometry from a µcad model that will be passed to Bevy.
 ///
 /// Processing the mesh geometry will spawn bevy commands to eventually add an entity with a mesh, material and other components to a scene.
@@ -147,8 +312,9 @@ pub struct OutputGeometry {
     pub model_hash: u64, // It might be useful to have the model hash as reference to a specific model node.
     //pub color: Color, // We may generate a color
     pub output_type: OutputType,
-    pub mesh: Mesh,
-    pub material: StandardMaterial,
+    pub object: Bundle,
+    pub aabb: Bundle,
+
     pub bounding_radius: f32,
 }
 
@@ -165,30 +331,17 @@ impl OutputGeometry {
                 ..
             } => {
                 let mat = world_matrix.expect("Some matrix");
-                match geometry {
-                    // Create 3D geometry output (with lighting).
-                    Some(geometry) => {
-                        let geometry = geometry.transformed_3d(&mat);
-
-                        Some(Self {
-                            model_hash: model.computed_hash(),
-                            mesh: triangle_mesh_to_bevy_with_smoothness(
-                                &geometry.inner.into(),
-                                20.0,
-                            ),
-                            output_type: OutputType::Geometry3D,
-                            material: StandardMaterial {
-                                base_color: bevy::prelude::Color::srgba(0.5, 0.5, 0.5, 1.0),
-                                metallic: 0.5,
-                                alpha_mode: AlphaMode::Opaque,
-                                unlit: false,
-                                ..Default::default()
-                            },
-                            bounding_radius: geometry.bounds.max.magnitude() as f32,
-                        })
-                    }
-                    None => None,
-                }
+                geometry.as_ref().map(|geometry| Self {
+                    model_hash: model.computed_hash(),
+                    object: Bundle::new_3d(&geometry.inner, Color::default(), mat),
+                    aabb: Bundle::new_bounds_3d(
+                        geometry.bounds.clone(),
+                        Color::rgb(1.0, 1.0, 1.0),
+                        mat,
+                    ),
+                    output_type: OutputType::Geometry3D,
+                    bounding_radius: geometry.bounds.radius() as f32,
+                })
             }
 
             microcad_lang::render::RenderOutput::Geometry2D {
@@ -197,27 +350,19 @@ impl OutputGeometry {
                 ..
             } => {
                 let mat = world_matrix.expect("Some matrix");
+                let mat = mat3_to_mat4(&mat);
 
-                match geometry {
-                    // Create 2D geometry output (without lighting).
-                    Some(geometry) => {
-                        let geometry = geometry.transformed_2d(&mat);
-
-                        Some(Self {
-                            model_hash: model.computed_hash(),
-                            mesh: from_geometry2d(&geometry.inner, 0.0),
-                            output_type: OutputType::Geometry2D,
-                            material: StandardMaterial {
-                                base_color: bevy::prelude::Color::srgba(0.5, 0.5, 0.5, 1.0),
-                                alpha_mode: AlphaMode::Opaque,
-                                unlit: true,
-                                ..Default::default()
-                            },
-                            bounding_radius: geometry.bounds.max.magnitude() as f32,
-                        })
-                    }
-                    None => None,
-                }
+                geometry.as_ref().map(|geometry| Self {
+                    model_hash: model.computed_hash(),
+                    object: Bundle::new_2d(&geometry.inner, Color::default(), mat),
+                    aabb: Bundle::new_bounds_2d(
+                        geometry.bounds.clone(),
+                        Color::rgb(1.0, 1.0, 1.0),
+                        mat,
+                    ),
+                    output_type: OutputType::Geometry2D,
+                    bounding_radius: geometry.bounds.radius() as f32,
+                })
             }
         }
     }

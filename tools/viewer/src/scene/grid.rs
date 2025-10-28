@@ -112,7 +112,6 @@ pub fn update_grid_on_view_angle_change(
             && let Some(material) = materials.get_mut(material)
         {
             material.view_angle = transform.forward().normalize();
-            log::info!("{}", material.view_angle.z);
         }
     }
 }
@@ -129,7 +128,6 @@ pub fn update_grid_on_scene_change(
             && let Ok(material) = mat_query.get(grid)
             && let Some(material) = materials.get_mut(material)
         {
-            log::info!("Scene radius {}", event.new_radius);
             material.radius = event.new_radius;
         }
     }

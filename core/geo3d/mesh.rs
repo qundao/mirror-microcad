@@ -294,6 +294,16 @@ impl From<Geometry3D> for TriangleMesh {
     }
 }
 
+impl From<&Geometry3D> for TriangleMesh {
+    fn from(geo: &Geometry3D) -> Self {
+        match geo {
+            Geometry3D::Mesh(triangle_mesh) => triangle_mesh.clone(),
+            Geometry3D::Manifold(manifold) => manifold.to_mesh().into(),
+            Geometry3D::Collection(collection) => collection.into(),
+        }
+    }
+}
+
 impl From<&Geometries3D> for TriangleMesh {
     fn from(geo: &Geometries3D) -> Self {
         geo.boolean_op(&BooleanOp::Union).to_mesh().into()

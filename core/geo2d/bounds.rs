@@ -71,6 +71,12 @@ impl Bounds2D {
         self.max.x = p.x.max(self.max.x);
         self.max.y = p.y.max(self.max.y);
     }
+
+    /// Return bounding radius.
+    pub fn radius(&self) -> Scalar {
+        use cgmath::InnerSpace;
+        (self.max - self.min).magnitude() * 0.5
+    }
 }
 
 impl Default for Bounds2D {

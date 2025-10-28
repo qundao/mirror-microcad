@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use cgmath::ElementWise;
+use cgmath::{ElementWise, InnerSpace};
 use derive_more::Deref;
 
 use crate::*;
@@ -47,11 +47,6 @@ impl Iterator for Bounds3DCorners {
 }
 
 impl Bounds3D {
-    /// Minimum and maximum corner.
-    pub fn min_max(&self) -> (Vec3, Vec3) {
-        (self.min, self.max)
-    }
-
     /// Calculate extended bounds.
     pub fn extend(self, other: Bounds3D) -> Self {
         match (self.is_valid(), other.is_valid()) {
@@ -101,6 +96,11 @@ impl Bounds3D {
     /// The resulting `Vec3` is normalized between (0,0,0) = min  and (1,1,1) = max.
     pub fn map_vec3(&self, v: Vec3) -> Vec3 {
         (v - self.min).div_element_wise(self.max - self.min)
+    }
+
+    /// Return bounding radius.
+    pub fn radius(&self) -> Scalar {
+        (self.max - self.min).magnitude() * 0.5
     }
 }
 

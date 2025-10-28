@@ -17,4 +17,9 @@ impl<T> Bounds<T> {
     pub fn new(min: T, max: T) -> Self {
         Self { min, max }
     }
+
+    /// Minimum and maximum corner.
+    pub fn min_max(&self) -> (&T, &T) {
+        (&self.min, &self.max)
+    }
 }

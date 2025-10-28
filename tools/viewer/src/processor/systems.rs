@@ -63,7 +63,7 @@ pub fn startup_processor(state: ResMut<crate::state::State>) {
                 let mut watcher = notify::recommended_watcher(tx).unwrap();
                 watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
 
-                println!("Watching external file: {}", path.display());
+                log::info!("Watching external file: {}", path.display());
 
                 loop {
                     if let Ok(Ok(event)) = rx.recv_timeout(std::time::Duration::from_millis(500))
@@ -126,41 +126,33 @@ pub fn handle_processor_responses(
                 for mesh_geometry_output in mesh_geometry_outputs {
                     new_scene_radius = new_scene_radius.max(mesh_geometry_output.bounding_radius);
 
-                    let entity = commands.spawn((
-                        Mesh3d(meshes.add(mesh_geometry_output.mesh)),
-                        MeshMaterial3d(materials.add(mesh_geometry_output.material)),
-                        OutlineVolume {
-                            visible: matches!(
-                                mesh_geometry_output.output_type,
-                                microcad_lang::model::OutputType::Geometry2D
-                            ),
-                            colour: Color::srgba(0.1, 0.1, 0.1, 1.0),
-                            width: 4.0,
-                        },
-                        OutlineMode::FloodFlat,
-                    ));
-                    /*entity.observe(
-                        move |trigger: Trigger<Pointer<Click>>,
-                              mut materials: ResMut<Assets<StandardMaterial>>,
-                              mut query: Query<(
-                            &mut MeshMaterial3d<StandardMaterial>,
-                            &mut OutlineVolume,
-                        )>| {
-                            if let Ok((material, mut component, mut outline)) =
-                                query.get_mut(trigger.target())
-                                && let Some(material) = materials.get_mut(material.id())
-                            {
-                                component.selected = !component.selected;
-                                outline.visible = component.selected;
-                                match component.selected {
-                                    true => material.base_color = Color::srgba(1.0, 1.0, 2.0, 1.0),
-                                    false => material.base_color = Color::srgba(1.0, 1.0, 1.0, 1.0),
-                                }
-                            }
-                        },
-                    );*/
-
-                    entities.push(entity.id());
+                    entities.push(
+                        commands
+                            .spawn((
+                                Mesh3d(meshes.add(mesh_geometry_output.aabb.mesh)),
+                                MeshMaterial3d(materials.add(mesh_geometry_output.aabb.material)),
+                                mesh_geometry_output.aabb.transform,
+                            ))
+                            .id(),
+                    );
+                    entities.push(
+                        commands
+                            .spawn((
+                                Mesh3d(meshes.add(mesh_geometry_output.object.mesh)),
+                                MeshMaterial3d(materials.add(mesh_geometry_output.object.material)),
+                                mesh_geometry_output.object.transform,
+                                OutlineVolume {
+                                    visible: matches!(
+                                        mesh_geometry_output.output_type,
+                                        microcad_lang::model::OutputType::Geometry2D
+                                    ),
+                                    colour: Color::srgba(0.1, 0.1, 0.1, 1.0),
+                                    width: 4.0,
+                                },
+                                OutlineMode::FloodFlat,
+                            ))
+                            .id(),
+                    );
                 }
             }
         }
