@@ -4,15 +4,14 @@
 //! Microcad viewer library.
 
 pub mod asset;
+pub mod config;
 pub mod plugin;
 pub mod processor;
 pub mod scene;
-pub mod settings;
 pub mod state;
 pub mod stdin;
-pub mod watcher;
 
-pub use crate::settings::Settings;
+pub use crate::config::Config;
 
 pub use crate::state::State;
 

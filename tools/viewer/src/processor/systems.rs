@@ -14,7 +14,6 @@ use bevy::{
     pbr::{MeshMaterial3d, StandardMaterial},
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
-use microcad_core::RenderResolution;
 
 use crate::{
     processor::{ProcessorRequest, ProcessorResponse},
@@ -22,21 +21,85 @@ use crate::{
     state::State,
 };
 
+/// Whether a kind of watch event is relevant for compilation.
+fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
+    match kind {
+        notify::EventKind::Any => false,
+        notify::EventKind::Access(_) => false,
+        notify::EventKind::Create(_) => true,
+        notify::EventKind::Modify(kind) => match kind {
+            notify::event::ModifyKind::Any => true,
+            notify::event::ModifyKind::Data(_) => true,
+            notify::event::ModifyKind::Metadata(_) => true,
+            notify::event::ModifyKind::Name(_) => true,
+            notify::event::ModifyKind::Other => false,
+        },
+        notify::EventKind::Remove(_) => true,
+        notify::EventKind::Other => false,
+    }
+}
+
 /// Start up the processor.
-pub fn startup_processor(
-    mut event_writer: EventWriter<crate::processor::ProcessorRequest>,
-    state: ResMut<crate::state::State>,
-) {
+pub fn startup_processor(state: ResMut<crate::state::State>) {
     state
         .processor
         .send_request(ProcessorRequest::Initialize {
-            search_paths: state.settings.search_paths.clone(),
-            path: state.input.clone(),
-            resolution: RenderResolution::default(),
+            search_paths: state.config.search_paths.clone(),
         })
         .expect("No error");
 
-    event_writer.write(ProcessorRequest::Render);
+    match state.mode.clone() {
+        crate::plugin::MicrocadPluginMode::InputFile(path) => {
+            state
+                .processor
+                .send_request(ProcessorRequest::ParseFile(path.clone()))
+                .expect("No error");
+            let flag_clone = state.last_modified.clone();
+
+            std::thread::spawn(move || -> ! {
+                use notify::{RecursiveMode, Watcher};
+
+                let (tx, rx) = std::sync::mpsc::channel();
+                let mut watcher = notify::recommended_watcher(tx).unwrap();
+                watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
+
+                println!("Watching external file: {}", path.display());
+
+                loop {
+                    if let Ok(Ok(event)) = rx.recv_timeout(std::time::Duration::from_millis(500))
+                        && is_relevant_event_kind(&event.kind)
+                        && let Ok(meta) = std::fs::metadata(&path)
+                        && let Ok(modified) = meta.modified()
+                    {
+                        log::info!("Modified");
+                        *flag_clone.lock().unwrap() = Some(modified);
+                        watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
+                    }
+                }
+            });
+        }
+        crate::plugin::MicrocadPluginMode::Stdin => todo!(),
+        _ => { /* Do nothing */ }
+    }
+}
+
+pub fn handle_external_reload(
+    mut event_writer: EventWriter<ProcessorRequest>,
+    state: ResMut<crate::state::State>,
+) {
+    if let crate::plugin::MicrocadPluginMode::InputFile(input) = state.mode.clone() {
+        let mut last_modified_lock = state.last_modified.lock().unwrap();
+        if let Some(last_modified) = *last_modified_lock
+            && let Ok(elapsed) = last_modified.elapsed()
+            && elapsed > state.config.reload_delay
+        {
+            event_writer.write(ProcessorRequest::ParseFile(input));
+            log::info!("Changed file");
+
+            // Reset so we don’t reload again
+            *last_modified_lock = None;
+        }
+    }
 }
 
 /// This system handles responses coming from the processor and fills the Bevy command pipeline.

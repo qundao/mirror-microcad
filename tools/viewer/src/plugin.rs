@@ -6,11 +6,20 @@ use bevy_mod_outline::OutlinePlugin;
 
 use bevy::prelude::*;
 
-use crate::Settings;
+use crate::Config;
+
+#[derive(Clone)]
+pub enum MicrocadPluginMode {
+    Empty,
+    /// Load and watch an input file.
+    InputFile(std::path::PathBuf),
+    /// Remove-controlled via stdin.
+    Stdin,
+}
 
 pub struct MicrocadPlugin {
-    pub input: std::path::PathBuf,
-    pub settings: Settings,
+    pub mode: MicrocadPluginMode,
+    pub config: Config,
 }
 
 impl Plugin for MicrocadPlugin {
@@ -20,17 +29,24 @@ impl Plugin for MicrocadPlugin {
             .add_plugins(crate::scene::ScenePlugin)
             .insert_resource(crate::stdin::MessageReceiver::run())
             .insert_resource(crate::state::State::new(
-                self.input.clone(),
-                self.settings.clone(),
+                self.mode.clone(),
+                self.config.clone(),
             ))
-            .add_systems(Startup, crate::watcher::start_file_watcher)
-            .add_systems(Startup, set_window_title)
-            .add_systems(Update, crate::stdin::handle_messages)
-            .add_systems(Update, crate::watcher::handle_external_reload);
+            .add_systems(Startup, apply_window_settings)
+            .add_systems(Update, crate::stdin::handle_messages);
     }
 }
 
-fn set_window_title(state: Res<crate::State>, mut windows: Query<&mut Window>) {
+fn apply_window_settings(state: Res<crate::State>, mut windows: Query<&mut Window>) {
     let mut window = windows.single_mut().expect("Some window");
-    window.title = format!("µcad - {}", state.input.display());
+
+    window.title = match &state.mode {
+        MicrocadPluginMode::Empty => "µcad".to_string(),
+        MicrocadPluginMode::InputFile(input) => format!("µcad - {}", input.display()),
+        MicrocadPluginMode::Stdin => "µcad -- remote-controlled".to_string(), // To display current file or name here.
+    };
+    window.window_level = match state.config.stay_on_top {
+        true => bevy::window::WindowLevel::AlwaysOnTop,
+        false => bevy::window::WindowLevel::Normal,
+    };
 }

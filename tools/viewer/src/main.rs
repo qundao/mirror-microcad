@@ -5,8 +5,12 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 pub struct Args {
-    /// File input.
-    input: std::path::PathBuf,
+    /// File input (optional).
+    input: Option<std::path::PathBuf>,
+
+    /// Receive commands via stdin.
+    #[arg(long, default_value = "false", action = clap::ArgAction::SetTrue)]
+    stdin: bool,
 
     /// Paths to search for files.
     ///
@@ -15,7 +19,7 @@ pub struct Args {
     pub search_paths: Vec<std::path::PathBuf>,
 }
 
-use microcad_viewer::Settings;
+use microcad_viewer::Config;
 
 use microcad_viewer::MicrocadPlugin;
 
@@ -28,22 +32,28 @@ fn main() {
     // Parse the command-line args before starting the app
     let args = Args::parse();
 
-    let mut settings = Settings {
+    let mut config = Config {
         search_paths: args.search_paths,
         ..Default::default()
     };
 
-    if settings.search_paths.is_empty() {
-        settings
+    if config.search_paths.is_empty() {
+        config
             .search_paths
-            .append(&mut Settings::default_search_paths())
+            .append(&mut Config::default_search_paths())
     }
+
+    use microcad_viewer::plugin::MicrocadPluginMode;
 
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(MicrocadPlugin {
-            input: args.input,
-            settings,
+            mode: match (args.input, args.stdin) {
+                (None, true) => MicrocadPluginMode::Stdin,
+                (Some(input), false) => MicrocadPluginMode::InputFile(input),
+                _ => MicrocadPluginMode::Empty,
+            },
+            config,
         })
         .run();
 }

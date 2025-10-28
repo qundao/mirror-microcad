@@ -6,17 +6,27 @@
 use std::time::Duration;
 
 use bevy::ecs::resource::Resource;
+use microcad_core::{RenderResolution, Scalar};
 
-#[derive(Resource, Clone)]
-pub struct Settings {
-    /// Search paths for microcad interpreter.
+#[derive(Resource, serde::Deserialize, Clone)]
+pub struct Config {
+    /// Additional search paths for microcad interpreter.
     pub search_paths: Vec<std::path::PathBuf>,
 
     /// Delay when the input file is reloaded.
     pub reload_delay: Duration,
+
+    /// Window stays on top.
+    pub stay_on_top: bool,
+
+    /// Render resolution in mm (default = 0.25mm)
+    pub render_resolution: Scalar,
+
+    /// Export resolution in mm (default = 0.1mm)
+    pub export_resolution: Scalar,
 }
 
-impl Settings {
+impl Config {
     /// `./lib` (if exists) and `~/.config/microcad/lib` (if exists).
     pub fn default_search_paths() -> Vec<std::path::PathBuf> {
         let local_dir = std::path::PathBuf::from("./lib");
@@ -49,11 +59,14 @@ impl Settings {
     }
 }
 
-impl Default for Settings {
+impl Default for Config {
     fn default() -> Self {
         Self {
             search_paths: Self::default_search_paths(),
             reload_delay: Duration::from_millis(500),
+            stay_on_top: false,
+            render_resolution: RenderResolution::medium().linear,
+            export_resolution: RenderResolution::high().linear,
         }
     }
 }
