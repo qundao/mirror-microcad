@@ -126,15 +126,22 @@ pub fn handle_processor_responses(
                 for mesh_geometry_output in mesh_geometry_outputs {
                     new_scene_radius = new_scene_radius.max(mesh_geometry_output.bounding_radius);
 
-                    entities.push(
-                        commands
-                            .spawn((
-                                Mesh3d(meshes.add(mesh_geometry_output.aabb.mesh)),
-                                MeshMaterial3d(materials.add(mesh_geometry_output.aabb.material)),
-                                mesh_geometry_output.aabb.transform,
-                            ))
-                            .id(),
-                    );
+                    // Spawn axis-aligned bounding box (AABB) entity.
+                    if std::env::var("MICROCAD_VIEWER_SHOW_AABB").is_ok() {
+                        entities.push(
+                            commands
+                                .spawn((
+                                    Mesh3d(meshes.add(mesh_geometry_output.aabb.mesh)),
+                                    MeshMaterial3d(
+                                        materials.add(mesh_geometry_output.aabb.material),
+                                    ),
+                                    mesh_geometry_output.aabb.transform,
+                                ))
+                                .id(),
+                        );
+                    }
+
+                    // Spawn object entity.
                     entities.push(
                         commands
                             .spawn((

@@ -90,7 +90,7 @@ pub fn mesh_with_smoothness(mesh: &TriangleMesh, threshold_degrees: f32) -> Mesh
 
     let mut mesh_out = Mesh::new(
         bevy::render::render_resource::PrimitiveTopology::TriangleList,
-        RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
+        RenderAssetUsages::default(),
     );
     mesh_out.insert_attribute(Mesh::ATTRIBUTE_POSITION, new_positions);
     mesh_out.insert_attribute(Mesh::ATTRIBUTE_NORMAL, new_normals);

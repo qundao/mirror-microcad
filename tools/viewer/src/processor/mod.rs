@@ -285,7 +285,7 @@ impl ProcessorInterface {
                 state: ProcessorState::default(),
                 request_receiver,
                 response_sender,
-                render_cache: RcMut::new(RenderCache::default()),
+                render_cache: RcMut::new(RenderCache::new()),
             };
 
             loop {

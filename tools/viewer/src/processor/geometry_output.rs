@@ -16,7 +16,6 @@ use crate::processor::mesh_instance::MeshInstance;
 /// Processing the mesh geometry will spawn bevy commands to eventually add an entity with a mesh, material and other components to a scene.
 pub struct OutputGeometry {
     pub model_hash: u64, // It might be useful to have the model hash as reference to a specific model node.
-    //pub color: Color, // We may generate a color
     pub output_type: OutputType,
     pub object: MeshInstance,
     pub aabb: MeshInstance,
