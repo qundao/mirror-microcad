@@ -3,13 +3,13 @@
 
 //! Microcad viewer library.
 
-pub mod asset;
 pub mod config;
 pub mod plugin;
 pub mod processor;
 pub mod scene;
 pub mod state;
 pub mod stdin;
+pub mod to_bevy;
 
 pub use crate::config::Config;
 

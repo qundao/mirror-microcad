@@ -4,6 +4,7 @@
 //! microcad Viewer processor.
 
 mod geometry_output;
+mod mesh_instance;
 mod systems;
 
 use bevy::{
