@@ -13,6 +13,7 @@ default-members = [
     "tools/cli",
     "tools/update-copyright",
     "tools/update-md-banner",
+    "tools/viewer-ipc",
 ]
 
 members = [
@@ -28,6 +29,7 @@ members = [
     "tools/update-copyright",
     "tools/update-md-banner",
     "tools/viewer",
+    "tools/viewer-ipc",
 ]
 resolver = "2"
 
