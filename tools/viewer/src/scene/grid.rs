@@ -7,6 +7,7 @@ use bevy::{
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::{Material, MeshMaterial3d},
     reflect::TypePath,
+    transform::components::Transform,
 };
 use bevy::{
     ecs::event::EventReader,
@@ -28,6 +29,9 @@ pub struct GridMaterial {
 
     #[uniform(1)]
     zoom_level: f32,
+
+    #[uniform(2)]
+    view_angle: Vec3,
 
     alpha_mode: AlphaMode,
 }
@@ -67,6 +71,7 @@ pub fn spawn_grid_plane(
                 MeshMaterial3d(materials.add(GridMaterial {
                     radius,
                     zoom_level: 1.0,
+                    view_angle: Vec3::new(0.0, 0.0, 1.0),
                     alpha_mode: AlphaMode::Blend,
                 })),
                 bevy::picking::Pickable::IGNORE,
@@ -91,6 +96,23 @@ pub fn update_grid(
         {
             material.radius = radius;
             material.zoom_level = 1.0 / get_current_zoom_level(projection);
+        }
+    }
+}
+
+pub fn update_grid_on_view_angle_change(
+    mut materials: ResMut<Assets<GridMaterial>>,
+    state: Res<State>,
+    cam_query: Query<(&Transform, &Camera)>,
+    mat_query: Query<&mut MeshMaterial3d<GridMaterial>>,
+) {
+    for (transform, _) in cam_query {
+        if let Some(grid) = state.scene.grid_entity
+            && let Ok(material) = mat_query.get(grid)
+            && let Some(material) = materials.get_mut(material)
+        {
+            material.view_angle = transform.forward().normalize();
+            log::info!("{}", material.view_angle.z);
         }
     }
 }

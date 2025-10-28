@@ -3,13 +3,14 @@
 
 @group(2) @binding(0) var<uniform> radius: f32;
 @group(2) @binding(1) var<uniform> zoom_level: f32;
+@group(2) @binding(2) var<uniform> view_angle: vec3<f32>;
 
 @vertex
 fn vertex(input: Vertex) -> VertexOutput {
     var output: VertexOutput;
 
     let matrix = get_world_from_local(input.instance_index);
-    // Translate vertex position +0.1 in Z
+    // Translate vertex position -0.05 in Z
     let world_pos = vec4<f32>(input.position + vec3<f32>(0.0, 0.0, -0.05 / zoom_level), 1.0);
 
     output.position = mesh_position_local_to_clip(matrix, world_pos);
@@ -18,8 +19,11 @@ fn vertex(input: Vertex) -> VertexOutput {
     return output;
 }
 
+
 fn grid_opacity(pos: vec2<f32>, zoom: f32) -> vec4<f32> {
-    let logz = log2(zoom) / log2(10.0); // log10(zoom)
+    let angle_z = pow(abs(view_angle.z), 1.0 / 3.0);
+
+    let logz = log2(zoom / angle_z) / log2(10.0); // log10(zoom)
     let spacing = pow(10.0, floor(logz));
     let next_spacing = spacing * 10.0;
     let blend = fract(logz); // fade factor between levels
@@ -39,8 +43,8 @@ fn grid_opacity(pos: vec2<f32>, zoom: f32) -> vec4<f32> {
     );
 
     // Screen-space derivatives (anti-aliasing width)
-    let fw_a = max(fwidth(uv_a.x), fwidth(uv_a.y));
-    let fw_b = max(fwidth(uv_b.x), fwidth(uv_b.y));
+    let fw_a = length(fwidth(uv_a)) * angle_z;
+    let fw_b = length(fwidth(uv_b)) * angle_z;
 
     // Anti-aliased line intensities
     let line_a = 1.0 - smoothstep(0.0, fw_a, d_a);
@@ -60,7 +64,9 @@ fn grid_opacity(pos: vec2<f32>, zoom: f32) -> vec4<f32> {
         color = vec3<f32>(0.0, 1.0, 0.0);
     }
 
-    return vec4<f32>(color, grid);
+    let fade_z = (max(angle_z / 0.8 - 0.2, 0.0));
+
+    return vec4<f32>(color, grid) * fade_z;
 }
 
 

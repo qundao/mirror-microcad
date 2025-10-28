@@ -83,6 +83,7 @@ impl Plugin for ScenePlugin {
             .add_systems(Update, camera::update_camera_on_scene_change)
             .add_systems(Update, draw_mesh_intersections)
             .add_systems(Update, grid::update_grid)
-            .add_systems(Update, grid::update_grid_on_scene_change);
+            .add_systems(Update, grid::update_grid_on_scene_change)
+            .add_systems(Update, grid::update_grid_on_view_angle_change);
     }
 }
