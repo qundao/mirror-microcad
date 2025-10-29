@@ -1,0 +1,2 @@
+// file: second.µcad
+pub fn f() {}

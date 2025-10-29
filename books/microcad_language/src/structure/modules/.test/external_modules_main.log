@@ -10,6 +10,6 @@
 
 -- Output --
 -- Errors --
-error: error reading directory "": No such file or directory (os error 2)
-Evaluation aborted because of prior resolve errors!-- Test Result --
-FAIL
+-- No model --
+-- Test Result --
+OK
