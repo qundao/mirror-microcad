@@ -12,6 +12,10 @@ pub struct Args {
     #[arg(long, default_value = "false", action = clap::ArgAction::SetTrue)]
     stdin: bool,
 
+    /// Windows stays on top.
+    #[arg(long, default_value = "false", action = clap::ArgAction::SetTrue)]
+    stay_on_top: bool,
+
     /// Paths to search for files.
     ///
     /// By default, `./lib` (if it exists) and `~/.microcad/lib` are used.
@@ -34,6 +38,7 @@ fn main() {
 
     let mut config = Config {
         search_paths: args.search_paths,
+        stay_on_top: args.stay_on_top,
         ..Default::default()
     };
 
