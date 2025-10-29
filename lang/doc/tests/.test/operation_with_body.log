@@ -39,6 +39,6 @@
               Transform __builtin::ops::translate(x=0, y=0, z=0) ->
                 Primitive2D __builtin::geo2d::Circle(radius=5) ->
 
-Export successful.
+Export of "../lang/doc/tests/.test/operation_with_body-out.svg" successful.
 -- Test Result --
 OK

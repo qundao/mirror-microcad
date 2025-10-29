@@ -10,7 +10,7 @@
 -- Output --
 -- Errors --
 error: Missing arguments: x,y
-  ---> <FROM STR>:2:4
+  ---> ../lang/doc/structure/arguments.md:2:4
      |
    2 | f( (x=1cm, y=2cm, v=5cm), z=3cm);  // error: Missing arguments: x,y
      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -20,6 +20,6 @@
           - y = -15mm
           Primitive2D __builtin::geo2d::Rect(height=30, width=30, x=-15, y=-15) ->
 
-Export successful.
+Export of "../lang/doc/libs/std/ops/.test/rotate_2d-out.svg" successful.
 -- Test Result --
 OK

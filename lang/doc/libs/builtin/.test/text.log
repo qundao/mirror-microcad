@@ -12,6 +12,6 @@
   Group (root) ->
     Primitive2D __builtin::geo2d::Text(font_file=, height=20, text=Hello World) ->
 
-Export successful.
+Export of "../lang/doc/libs/builtin/.test/text-out.svg" successful.
 -- Test Result --
 OK

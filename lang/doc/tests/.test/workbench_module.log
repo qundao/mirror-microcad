@@ -11,13 +11,13 @@
 -- Output --
 -- Errors --
 error: Statement is not available within sketch
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   mod m {} // error
      |   ^^^^^^^^
      |
 error: Module definition is not available within Sketch
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   mod m {} // error
      |   ^^^^^^^^

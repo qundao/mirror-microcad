@@ -16,6 +16,6 @@
       - text = Hello µcad!
       Primitive2D __builtin::geo2d::Text(font_file=, height=20, text=Hello µcad!) ->
 
-Export successful.
+Export of "../lang/doc/libs/std/geo2d/.test/std_geo2d_text-out.svg" successful.
 -- Test Result --
 OK

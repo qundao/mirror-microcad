@@ -13,7 +13,7 @@
 -- Output --
 -- Errors --
 error: Function statement not available here
-  ---> <FROM STR>:2:5
+  ---> ../lang/doc/structure/functions.md:2:5
      |
    2 |     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -27,6 +27,6 @@
           - y = -1mm
           Primitive2D __builtin::geo2d::Rect(height=2, width=3, x=-1.5, y=-1) ->
 
-Export successful.
+Export of "../lang/doc/libs/std/ops/.test/union_alt_operator-out.svg" successful.
 -- Test Result --
 OK

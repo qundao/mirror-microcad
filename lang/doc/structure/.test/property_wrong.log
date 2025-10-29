@@ -26,7 +26,7 @@ inner: <NO VALUE>
 
 -- Errors --
 error: Property not found: inner
-  ---> <FROM STR>:16:21
+  ---> ../lang/doc/structure/workbench.md:16:21
      |
   16 | std::print("inner: {t.inner}"); // error
      |                     ^^^^^^^

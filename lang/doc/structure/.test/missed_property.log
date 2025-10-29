@@ -13,7 +13,7 @@
 -- Output --
 -- Errors --
 error: Workbench plan incomplete. Missing properties: radius
-  ---> <FROM STR>:2:5
+  ---> ../lang/doc/structure/workbench.md:2:5
      |
    2 |     init( width: Length ) { } // error: misses to set `radius` from building plan
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^

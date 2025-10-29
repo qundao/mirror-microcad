@@ -84,6 +84,6 @@
                     Transform __builtin::ops::translate(x=0, y=0, z=0) ->
                       Primitive2D __builtin::geo2d::Circle(radius=10) ->
 
-Export successful.
+Export of "../lang/doc/libs/std/ops/.test/rotate_3d-out.stl" successful.
 -- Test Result --
 OK

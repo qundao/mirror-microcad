@@ -11,13 +11,13 @@
 -- Output --
 -- Errors --
 error: Assignment statement is not available within function
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   const B = 1; // error
      |   ^^^^^^^^^^^^
      |
 error: Declaration of B not allowed within function_assignment_const::f
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   const B = 1; // error
      |   ^^^^^^^^^^^^

@@ -9,13 +9,13 @@
 -- Output --
 -- Errors --
 error: Assignment statement is not available within file
-  ---> <FROM STR>:1:1
+  ---> ../lang/doc/tests/statement_usage.md:1:1
      |
    1 | prop a = 1;  // error
      | ^^^^^^^^^^^
      |
 error: Declaration of a not allowed within source_assignment_prop
-  ---> <FROM STR>:1:1
+  ---> ../lang/doc/tests/statement_usage.md:1:1
      |
    1 | prop a = 1;  // error
      | ^^^^^^^^^^^

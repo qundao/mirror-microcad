@@ -19,19 +19,19 @@
 -- Output --
 -- Errors --
 error: Missing arguments: x,y
-  ---> <FROM STR>:9:4
+  ---> ../lang/doc/structure/arguments.md:9:4
      |
    9 | f( plane, z=3cm);
      |    ^^^^^^^^^^^^
      |
 error: Missing arguments: x,y
-  ---> <FROM STR>:10:4
+  ---> ../lang/doc/structure/arguments.md:10:4
      |
   10 | f( plane, z=6cm);
      |    ^^^^^^^^^^^^
      |
 error: Missing arguments: x,y
-  ---> <FROM STR>:11:4
+  ---> ../lang/doc/structure/arguments.md:11:4
      |
   11 | f( plane, z=9cm);
      |    ^^^^^^^^^^^^

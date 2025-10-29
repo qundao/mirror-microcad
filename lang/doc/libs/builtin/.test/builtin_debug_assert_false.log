@@ -9,7 +9,7 @@
 -- Output --
 -- Errors --
 error: Assertion failed: false
-  ---> <FROM STR>:1:26
+  ---> ../lang/doc/libs/builtin/debug.md:1:26
      |
    1 | __builtin::debug::assert(false); // error: Assertion failed: false
      |                          ^^^^^

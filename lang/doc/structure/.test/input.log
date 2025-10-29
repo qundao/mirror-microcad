@@ -24,13 +24,13 @@
 -- Output --
 -- Errors --
 error: Symbol count not found.
-  ---> <FROM STR>:4:15
+  ---> ../lang/doc/structure/op.md:4:15
      |
    4 |     if @input.count() == 2 {
      |               ^^^^^
      |
 error: If condition is not a boolean: <NO VALUE>
-  ---> <FROM STR>:4:5
+  ---> ../lang/doc/structure/op.md:4:5
      |
    4 |     if @input.count() == 2 {
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

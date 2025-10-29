@@ -15,7 +15,7 @@
 -- Output --
 -- Errors --
 info: a is zero
-  ---> <FROM STR>:4:20
+  ---> ../lang/doc/debug/README.md:4:20
      |
    4 |     std::log::info("a is zero");
      |                    ^^^^^^^^^^^

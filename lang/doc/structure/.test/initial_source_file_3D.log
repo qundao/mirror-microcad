@@ -15,6 +15,6 @@
       - radius = 10mm
       Primitive3D __builtin::geo3d::Sphere(radius=10) ->
 
-Export successful.
+Export of "../lang/doc/structure/.test/initial_source_file_3D-out.stl" successful.
 -- Test Result --
 OK

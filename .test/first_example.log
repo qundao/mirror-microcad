@@ -120,6 +120,6 @@
                             Transform __builtin::ops::translate(x=0, y=0, z=0) ->
                               Primitive2D __builtin::geo2d::Circle(radius=16.66666666666667) ->
 
-Export successful.
+Export of "../.test/first_example-out.stl" successful.
 -- Test Result --
 OK

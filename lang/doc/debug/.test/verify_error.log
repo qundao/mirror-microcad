@@ -9,7 +9,7 @@
 -- Output --
 -- Errors --
 error: Builtin error: this should not have happened
-  ---> <FROM STR>:1:17
+  ---> ../lang/doc/debug/README.md:1:17
      |
    1 | std::log::error("this should not have happened"); // error
      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
