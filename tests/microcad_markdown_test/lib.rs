@@ -277,7 +277,7 @@ fn scan_for_tests(
                         &test_code,
                         &format!("{}:{start_no}", file_path.to_string_lossy()),
                     ) {
-                        test_outputs.push(env.run(output));
+                        test_outputs.push(env.generate(output));
                     }
 
                     // clear name to signal new test awaited

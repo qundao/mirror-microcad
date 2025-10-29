@@ -1,5 +1,11 @@
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Markdown test environment
+
 use crate::output::Output;
 
+/// Markdown test environment
 pub struct TestEnv {
     orig_name: String,
     name: String,
@@ -11,16 +17,26 @@ pub struct TestEnv {
     log_file: Option<std::fs::File>,
 }
 
+/// Markdown test result
 pub enum TestResult {
+    /// Ok
     Ok,
-    Todo,
-    NotTodo,
-    Fail,
-    FailWrong,
+    /// Ok to fail
     FailOk,
-    TodoFail,
+    /// Marked as todo but is ok
+    NotTodo,
+    /// Todo but fail intentionally
     NotTodoFail,
+    /// Fails
+    Fail,
+    /// Fails with wrong errors
+    FailWrong,
+    /// s ok but was meant to fail
     OkFail,
+    /// Work in progress
+    Todo,
+    /// Work in progress (should fail)
+    TodoFail,
 }
 
 impl std::fmt::Display for TestEnv {
@@ -37,6 +53,12 @@ impl std::fmt::Display for TestEnv {
 }
 
 impl TestEnv {
+    /// Create new test environment
+    /// # Arguments
+    /// - `path`: Path of the markdown file which includes the source file.
+    /// - `name`: Name of the test (including mode and params, e.g. `my_test#ok(hires)`).
+    /// - `code`: Source code of the test.
+    /// - `reference`: Description of the position in the source file (e.g. `path_to/file.md:5:0`).
     pub fn new(
         path: impl AsRef<std::path::Path>,
         name: &str,
@@ -77,7 +99,9 @@ impl TestEnv {
         }
     }
 
-    pub fn run(&mut self, output: &mut String) -> Output {
+    /// Generate the test call.
+    /// - `output`: A string to append the test output to.
+    pub fn generate(&mut self, output: &mut String) -> Output {
         output.push_str(&format!(
             r##"
         #[test]
@@ -98,55 +122,82 @@ impl TestEnv {
         )
     }
 
+    /// Create log file for he test.
     pub fn start_log(&mut self) {
         // create log file
         self.log_file =
             Some(std::fs::File::create(self.log_file()).expect("cannot create log file"));
     }
 
+    /// Return test name.
     pub fn name(&self) -> &str {
         &self.name
     }
+
+    /// Return test source code.
     pub fn code(&self) -> &str {
         &self.code
     }
+
+    /// Return test parameters.
     fn params(&self) -> String {
         self.params.clone().unwrap_or_default()
     }
+
+    /// Return test mode (ok, fail, todo, etc.).
     pub fn mode(&self) -> &str {
         &self.mode
     }
+
+    /// Return path where to store any test output.
     fn test_path(&self) -> std::path::PathBuf {
         self.path.parent().unwrap().join(".test")
     }
+
+    /// Return test banner filename as string.
     pub fn banner(&self) -> String {
         self.banner_file()
             .to_string_lossy()
             .escape_default()
             .to_string()
     }
+
+    /// Return test banner filename as path.
     pub fn banner_file(&self) -> std::path::PathBuf {
         self.test_path().join(format!("{}.svg", self.name()))
     }
+
+    /// Return log file path.
     pub fn log_file(&self) -> std::path::PathBuf {
         self.test_path().join(format!("{}.log", self.name()))
     }
+
+    /// Return output file path (without any file extension).
     pub fn out_file_path_stem(&self) -> std::path::PathBuf {
         self.test_path().join(format!("{}-out", self.name()))
     }
+
+    /// Return output file path with given extension.
     pub fn out_file(&self, ext: &str) -> std::path::PathBuf {
         self.out_file_path_stem().with_extension(ext)
     }
+
+    /// Return if test mode is todo.
     pub fn todo(&self) -> bool {
         matches!(self.mode(), "todo" | "todo_fail")
     }
+
+    /// Return if parameter `hires` is set.
     pub fn hires(&self) -> bool {
         self.params() == "hires"
     }
+
+    /// Return markdown file reference of the test.
     pub fn reference(&self) -> String {
         self.reference.clone()
     }
 
+    /// Write into test log (end line with LF).
     pub fn log_ln(&mut self, text: &str) {
         if let Some(mut log_file) = self.log_file.as_mut() {
             let log_out = &mut std::io::BufWriter::new(&mut log_file);
@@ -155,6 +206,7 @@ impl TestEnv {
         }
     }
 
+    /// Write into test log (no LF at end).
     pub fn log(&mut self, text: &str) {
         if let Some(mut log_file) = self.log_file.as_mut() {
             let log_out = &mut std::io::BufWriter::new(&mut log_file);
@@ -163,6 +215,7 @@ impl TestEnv {
         }
     }
 
+    /// Report output into log file.
     pub fn report_output(&mut self, output: Option<String>) {
         self.log_ln(&format!(
             "-- Output --{}",
@@ -170,10 +223,12 @@ impl TestEnv {
         ));
     }
 
+    /// Report errors into log file.
     pub fn report_errors(&mut self, diagnosis: String) {
         self.log(&format!("-- Errors --\n{diagnosis}"));
     }
 
+    /// Report result into log file.
     pub fn result(&mut self, result: TestResult) {
         let (res, res_long) = match result {
             TestResult::Ok => ("ok", "OK"),

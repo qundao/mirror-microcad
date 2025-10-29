@@ -1,8 +1,11 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! Output of a markdown test.
+
 use std::path::PathBuf;
 
+/// Output of a markdown test.
 pub struct Output {
     name: String,
     input: PathBuf,
@@ -13,6 +16,7 @@ pub struct Output {
 }
 
 impl Output {
+    /// Create new output.
     pub fn new(
         name: String,
         input: PathBuf,
@@ -39,6 +43,8 @@ impl Output {
             log,
         }
     }
+
+    /// check if a path is one of the output files.
     pub fn has_path(&self, path: &PathBuf) -> bool {
         self.banner == *path
             || self.out == *path
