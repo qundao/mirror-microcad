@@ -13,7 +13,7 @@ pub struct TestEnv {
     mode: String,
     params: Option<String>,
     code: String,
-    reference: String,
+    start_no: usize,
     log_file: Option<std::fs::File>,
 }
 
@@ -43,12 +43,25 @@ impl std::fmt::Display for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {reference:?})"#,
+            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {start_no:?})"#,
             path = self.path,
             orig_name = self.orig_name,
             code = self.code,
-            reference = self.reference
+            start_no = self.start_no
         )
+    }
+}
+
+impl std::fmt::Debug for TestEnv {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "   Test name: {}", self.name())?;
+        writeln!(f, "        Mode: {}", self.mode())?;
+        writeln!(f, "      Params: {}", self.params())?;
+        writeln!(f, " Source file: {:?}", self.source_path())?;
+        writeln!(f, "   Test path: {:?}", self.test_path())?;
+        writeln!(f, " Banner file: {:?}", self.banner_file())?;
+        writeln!(f, "    Log file: {:?}", self.log_file())?;
+        writeln!(f, "Output files: {:?}", self.out_file_path_stem())
     }
 }
 
@@ -63,7 +76,7 @@ impl TestEnv {
         path: impl AsRef<std::path::Path>,
         name: &str,
         code: &str,
-        reference: &str,
+        start_no: usize,
     ) -> Option<Self> {
         let orig_name = name.to_string();
         // split name into `name` and optional `mode`
@@ -93,7 +106,7 @@ impl TestEnv {
                 mode: mode.unwrap_or("ok").to_string(),
                 params: params.map(|p| p.to_string()),
                 code: code.into(),
-                reference: reference.to_string(),
+                start_no,
                 log_file: None,
             })
         }
@@ -150,7 +163,12 @@ impl TestEnv {
     }
 
     /// Return path where to store any test output.
-    fn test_path(&self) -> std::path::PathBuf {
+    pub fn source_path(&self) -> std::path::PathBuf {
+        self.path.clone()
+    }
+
+    /// Return path where to store any test output.
+    pub fn test_path(&self) -> std::path::PathBuf {
         self.path.parent().unwrap().join(".test")
     }
 
@@ -194,7 +212,11 @@ impl TestEnv {
 
     /// Return markdown file reference of the test.
     pub fn reference(&self) -> String {
-        self.reference.clone()
+        format!(
+            "{}:{}",
+            self.source_path().to_str().expect("valid path"),
+            self.start_no
+        )
     }
 
     /// Write into test log (end line with LF).

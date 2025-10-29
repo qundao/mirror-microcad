@@ -244,7 +244,10 @@ impl Sources {
         parent_path: impl AsRef<std::path::Path>,
         id: &Identifier,
     ) -> ResolveResult<Rc<SourceFile>> {
-        log::trace!("loading file: {:?} {id}", parent_path.as_ref());
+        log::trace!(
+            "loading file: {:?} [{id}]",
+            parent_path.as_ref().canonicalize().expect("invalid path")
+        );
         let file_path = find_mod_file_by_id(parent_path, id)?;
         let name = self.generate_name_from_path(&file_path)?;
         let source_file = SourceFile::load_with_name(&file_path, name)?;

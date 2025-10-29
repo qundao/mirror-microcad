@@ -13,6 +13,7 @@ pub struct Output {
     exports: Vec<PathBuf>,
     out: PathBuf,
     log: PathBuf,
+    externals: Vec<PathBuf>,
 }
 
 impl Output {
@@ -41,15 +42,22 @@ impl Output {
             },
             out,
             log,
+            externals: Vec::new(),
         }
     }
 
-    /// check if a path is one of the output files.
+    /// Check if a path is one of the output files.
     pub fn has_path(&self, path: &PathBuf) -> bool {
         self.banner == *path
             || self.out == *path
             || self.log == *path
             || self.exports.contains(path)
+            || self.externals.contains(path)
+    }
+
+    /// Add an output file.
+    pub fn add_output(&mut self, path: PathBuf) {
+        self.externals.push(path);
     }
 }
 

@@ -44,7 +44,11 @@ impl SourceFile {
     /// Return filename of loaded file or `<no file>`
     pub fn set_filename(&mut self, path: impl AsRef<std::path::Path>) {
         assert!(self.filename.is_none());
-        self.filename = Some(path.as_ref().canonicalize().expect("path not found"))
+        self.filename = Some(
+            path.as_ref()
+                .canonicalize()
+                .unwrap_or(path.as_ref().to_path_buf()),
+        )
     }
 
     /// Return filename of loaded file or `<no file>`

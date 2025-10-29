@@ -36,11 +36,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
         crate::markdown_test::init();
 
-        log::info!(
-            "Running test '{name}':\n\n{code}",
-            name = env.name(),
-            code = env.code()
-        );
+        log::info!("Running test:\n{env:?}");
 
         // remove generated files before updating
         let _ = fs::remove_file(env.banner_file());
@@ -66,7 +62,8 @@ pub fn run_test(env: Option<TestEnv>) {
         ));
 
         // load and handle µcad source file
-        let source_file_result = SourceFile::load_from_str(env.name(), env.code());
+        let source_file_result =
+            SourceFile::load_from_str(env.name(), env.source_path(), env.code());
 
         match env.mode() {
             // test is expected to fail?
@@ -246,10 +243,7 @@ fn report_model(env: &mut TestEnv, model: Option<Model>) {
         };
         match export {
             Some(export) => match export.render_and_export(&model) {
-                Ok(_) => env.log_ln(&format!(
-                    "Export of {:?} successful.",
-                    export.filename.canonicalize().expect("absolute path")
-                )),
+                Ok(_) => env.log_ln(&format!("Export of {:?} successful.", export.filename)),
                 Err(error) => env.log_ln(&format!("Export error: {error}")),
             },
             None => env.log_ln("Nothing will be exported."),

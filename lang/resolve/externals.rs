@@ -243,7 +243,10 @@ fn search_mod_file_by_id(
     })? {
         Ok(path)
     } else {
-        Err(ResolveError::InvalidPath(path.to_path_buf()))
+        Err(ResolveError::SourceFileNotFound(
+            id.clone(),
+            path.to_path_buf(),
+        ))
     }
 }
 
