@@ -34,6 +34,7 @@ microcad-lang = { workspace = true }
 microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
 microcad-export = { workspace = true }
+microcad-viewer-ipc = { workspace = true }
 
 [build-dependencies]
 slint-build = "1.13"

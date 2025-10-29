@@ -89,7 +89,7 @@ impl<T> RenderCache<T> {
         });
 
         let removed = old_count - self.items.len();
-        log::debug!(
+        log::info!(
             "Removed {removed} items from cache. Cache contains {n} items. {hits} cache hits in this cycle.",
             n = self.items.len(),
             hits = self.hits,

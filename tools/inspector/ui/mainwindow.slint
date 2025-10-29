@@ -101,7 +101,7 @@ component View3DControlPanel {
 
 export component MainWindow inherits Window {
     callback button-launch-3d-view-clicked <=> control-panel.button-launch-3d-view-clicked;
-    in property source-code <=> source-code-view.text;
+    in-out property source-code <=> source-code-view.text;
     in property <[ModelTreeModelItem]> model-tree;
     in property <[SymbolTreeModelItem]> symbol-tree;
 
@@ -115,8 +115,6 @@ export component MainWindow inherits Window {
         height: parent.height;
 
         HorizontalBox {
-            height: parent.height * 80%;
-
             source-code-view := TextEdit { }
 
             symbol-tree-view := ListView {

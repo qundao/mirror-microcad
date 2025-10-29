@@ -10,7 +10,8 @@ use clap::Parser;
 use microcad_lang::resolve::{FullyQualify, Symbol};
 use microcad_lang::syntax::*;
 
-use std::sync::{Arc, Mutex, mpsc};
+use crossbeam::channel::Sender;
+use std::sync::{Arc, Mutex};
 mod watcher;
 
 use slint::VecModel;
@@ -91,6 +92,17 @@ impl ItemsFromTree<Symbol> for SymbolTreeModelItem {
     }
 }
 
+/// A request to the view model.
+#[derive(Debug)]
+pub enum ViewModelRequest {
+    /// Set source code string.
+    SetSourceCode(String),
+    /// Set the symbol tree items.
+    SetSymbolTree(Vec<SymbolTreeModelItem>),
+    /// Set the model tree items.
+    SetModelTree(Vec<ModelTreeModelItem>),
+}
+
 impl Inspector {
     pub fn new() -> anyhow::Result<Self> {
         Ok(Self {
@@ -105,13 +117,20 @@ impl Inspector {
 
         let weak = main_window.as_weak();
         let input = self.args.input.clone();
+        let (tx, rx): (Sender<ViewModelRequest>, _) = crossbeam::channel::unbounded();
 
         // Run file watcher thread.
         std::thread::spawn(move || -> anyhow::Result<()> {
             loop {
-                let (tx, rx): (mpsc::Sender<Vec<ModelTreeModelItem>>, _) = mpsc::channel();
                 // Watch all dependencies of the most recent compilation.
                 self.watcher.update(vec![self.args.input.clone()])?;
+
+                match std::fs::read_to_string(&self.args.input) {
+                    Ok(code) => tx
+                        .send(ViewModelRequest::SetSourceCode(code))
+                        .expect("No error"),
+                    Err(err) => log::error!("{err}"),
+                };
 
                 let source_file = SourceFile::load(&self.args.input)?;
 
@@ -122,6 +141,15 @@ impl Inspector {
                     Some(microcad_builtin::builtin_module()),
                     microcad_lang::diag::DiagHandler::default(),
                 )?;
+
+                tx.send(ViewModelRequest::SetSymbolTree({
+                    let mut items = Vec::new();
+
+                    resolve_context.symbol_table.iter().for_each(|(_, symbol)| {
+                        items.append(&mut SymbolTreeModelItem::items_from_tree(symbol))
+                    });
+                    items
+                }))?;
 
                 let mut eval_context = microcad_lang::eval::EvalContext::new(
                     resolve_context,
@@ -134,20 +162,36 @@ impl Inspector {
                     .eval()
                     .map_err(|err| anyhow::anyhow!("Eval error: {err}"))?
                 {
-                    let items = ModelTreeModelItem::items_from_tree(&model);
-
-                    // Wait until anything relevant happens.
-                    tx.send(items)?;
-
-                    weak.upgrade_in_event_loop(move |main_window| {
-                        let items = rx.recv().expect("No error");
-                        main_window.set_model_tree(model_rc_from_items(items))
-                    })?;
+                    tx.send(ViewModelRequest::SetModelTree(
+                        ModelTreeModelItem::items_from_tree(&model),
+                    ))?;
                 }
 
+                // Wait until anything relevant happens.
                 self.watcher.wait()?;
             }
         });
+
+        weak.upgrade_in_event_loop(move |main_window| {
+            for request in rx.iter() {
+                log::info!("{request:?}");
+                match request {
+                    ViewModelRequest::SetSourceCode(string) => {
+                        main_window.set_source_code(string.into());
+                    }
+                    ViewModelRequest::SetSymbolTree(items) => {
+                        main_window.set_symbol_tree(model_rc_from_items(items))
+                    }
+                    ViewModelRequest::SetModelTree(items) => {
+                        main_window.set_model_tree(model_rc_from_items(items))
+                    }
+                }
+
+                if rx.is_empty() {
+                    break;
+                }
+            }
+        })?;
 
         main_window.on_button_launch_3d_view_clicked(move || {
             // let main_window = weak.unwrap();
