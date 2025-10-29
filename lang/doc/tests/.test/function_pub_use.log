@@ -16,5 +16,6 @@ error: Use statement is not available within function
    2 |   pub use std; // error
      |   ^^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

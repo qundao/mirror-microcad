@@ -16,5 +16,6 @@ error: Statement is not available within module
    2 |   return 1;  // error
      |   ^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

@@ -11,4 +11,4 @@
 -- Parse Error --
 Statement not allowed prior initializers (2:3)
 -- Test Result --
-FAILED AS EXPECTED (PARSE: Cannot check error line)
+FAILED AS EXPECTED

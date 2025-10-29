@@ -16,4 +16,4 @@ Parser error:  --> 3:22
   |
   = expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
 -- Test Result --
-FAILED AS EXPECTED (PARSE: Cannot check error line)
+FAILED AS EXPECTED

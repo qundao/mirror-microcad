@@ -14,4 +14,4 @@ Parser error:  --> 1:10
   |
   = expected single_line_comment
 -- Test Result --
-FAILED AS EXPECTED (PARSE: Cannot check error line)
+FAILED AS EXPECTED

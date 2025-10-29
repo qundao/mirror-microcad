@@ -22,5 +22,6 @@ error: Declaration of B not allowed within function_assignment_const::f
    2 |   const B = 1; // error
      |   ^^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

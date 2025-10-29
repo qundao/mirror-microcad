@@ -22,5 +22,6 @@ error: sketch is not available within sketch
    2 |   sketch F() {} F(); // error
      |   ^^^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

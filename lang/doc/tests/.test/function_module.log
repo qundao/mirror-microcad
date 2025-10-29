@@ -22,5 +22,6 @@ error: Module definition is not available within Function
    2 |   mod m {} // error
      |   ^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

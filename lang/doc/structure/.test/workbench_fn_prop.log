@@ -28,5 +28,6 @@ error: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::in
    3 |         prop hole = radius/2;  // error: prop not allowed in function
      |         ^^^^^^^^^^^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

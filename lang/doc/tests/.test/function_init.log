@@ -16,5 +16,6 @@ error: Statement is not available within function
    2 |   init() {} // error
      |   ^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

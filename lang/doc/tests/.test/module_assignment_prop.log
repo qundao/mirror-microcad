@@ -22,5 +22,6 @@ error: Declaration of a not allowed within module_assignment_prop::k
    2 |   prop a = 1;  // error
      |   ^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

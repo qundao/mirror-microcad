@@ -16,4 +16,4 @@ Parser error:  --> 3:1
   |
   = expected EOI, single_line_comment, final_expression_statement, or statement
 -- Test Result --
-FAILED AS EXPECTED (PARSE: Cannot check error line)
+FAILED AS EXPECTED
