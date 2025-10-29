@@ -48,7 +48,7 @@ pub enum ProcessorRequest {
     Eval,
     /// Set cursor position
     /*SetCursorRange {
-        begin: Position,
+        begin: Option<Position>,
         end: Option<Position>,
     },*/
 
@@ -235,6 +235,7 @@ impl Processor {
 
             // Remove unused cache items.
             {
+                log::info!("Render cache");
                 let mut cache = self.render_cache.borrow_mut();
                 cache.garbage_collection();
             }

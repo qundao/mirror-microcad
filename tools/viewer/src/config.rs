@@ -63,7 +63,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             search_paths: Self::default_search_paths(),
-            reload_delay: Duration::from_millis(500),
+            reload_delay: Duration::from_millis(200),
             stay_on_top: false,
             render_resolution: RenderResolution::medium().linear,
             export_resolution: RenderResolution::high().linear,

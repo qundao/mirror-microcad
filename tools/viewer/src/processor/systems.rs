@@ -55,7 +55,9 @@ pub fn startup_processor(state: ResMut<crate::state::State>) {
                 .send_request(ProcessorRequest::ParseFile(path.clone()))
                 .expect("No error");
             let flag_clone = state.last_modified.clone();
+            let reload_delay = state.config.reload_delay;
 
+            // Run file watcher thread.
             std::thread::spawn(move || -> ! {
                 use notify::{RecursiveMode, Watcher};
 
@@ -66,7 +68,7 @@ pub fn startup_processor(state: ResMut<crate::state::State>) {
                 log::info!("Watching external file: {}", path.display());
 
                 loop {
-                    if let Ok(Ok(event)) = rx.recv_timeout(std::time::Duration::from_millis(500))
+                    if let Ok(Ok(event)) = rx.recv_timeout(reload_delay)
                         && is_relevant_event_kind(&event.kind)
                         && let Ok(meta) = std::fs::metadata(&path)
                         && let Ok(modified) = meta.modified()

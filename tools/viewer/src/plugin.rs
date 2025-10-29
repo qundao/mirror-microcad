@@ -27,13 +27,13 @@ impl Plugin for MicrocadPlugin {
         app.add_plugins((OutlinePlugin, MeshPickingPlugin))
             .add_plugins(crate::processor::ProcessorPlugin)
             .add_plugins(crate::scene::ScenePlugin)
-            .insert_resource(crate::stdin::MessageReceiver::run())
+            .insert_resource(crate::stdin::StdinMessageReceiver::run())
             .insert_resource(crate::state::State::new(
                 self.mode.clone(),
                 self.config.clone(),
             ))
             .add_systems(Startup, apply_window_settings)
-            .add_systems(Update, crate::stdin::handle_messages);
+            .add_systems(Update, crate::stdin::handle_stdin_messages);
     }
 }
 

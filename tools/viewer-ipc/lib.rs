@@ -5,11 +5,27 @@ use std::{any, path::PathBuf};
 
 use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Serialize, Deserialize)]
+pub struct CursorPosition {
+    line: usize,
+    col: usize,
+}
+
 /// A request sent to the viewers stdin
 #[derive(Clone, Serialize, Deserialize)]
 pub enum ViewerRequest {
-    SourceCodeFromFile { path: PathBuf },
-    CursorPosition { line: usize, col: usize },
+    SourceCodeFromFile {
+        path: PathBuf,
+    },
+    SourceCode {
+        path: Option<PathBuf>,
+        name: Option<String>,
+        code: String,
+    },
+    CursorRange {
+        begin: CursorPosition,
+        end: Option<CursorPosition>,
+    },
 }
 
 /// A response sent from the viewers stdout

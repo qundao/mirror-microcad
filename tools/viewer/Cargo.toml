@@ -42,3 +42,4 @@ wkt = "0.14"
 microcad-lang = { workspace = true }
 microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
+microcad-viewer-ipc = { workspace = true }

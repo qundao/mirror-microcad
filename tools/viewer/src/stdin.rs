@@ -3,42 +3,20 @@
 
 //! microcad Viewer Standard input interface.
 
-use std::io::BufRead;
+use std::{io::BufRead, time::Duration};
 
 use crossbeam::channel::Receiver;
 
-use bevy::{
-    asset::Assets,
-    color::Color,
-    ecs::{
-        resource::Resource,
-        system::{Query, Res, ResMut},
-    },
-    pbr::{MeshMaterial3d, StandardMaterial},
-};
-use serde::Deserialize;
+use bevy::ecs::{resource::Resource, system::Res};
 
-#[derive(Deserialize, Debug, Clone)]
-pub struct SourceLocation {
-    #[allow(unused)]
-    line: u64,
-    #[allow(unused)]
-    col: u64,
-    #[allow(unused)]
-    source_hash: u64,
-}
+use microcad_viewer_ipc::ViewerRequest;
 
-#[derive(Deserialize, Debug)]
-#[serde(tag = "type")]
-pub enum StdinMessage {
-    CursorPosition(SourceLocation),
-    ChangeColor { r: f32, g: f32, b: f32 },
-}
+use crate::processor::ProcessorRequest;
 
 #[derive(Resource)]
-pub struct MessageReceiver(Receiver<StdinMessage>);
+pub struct StdinMessageReceiver(Receiver<ViewerRequest>);
 
-impl MessageReceiver {
+impl StdinMessageReceiver {
     pub fn run() -> Self {
         // Create channel for stdin reader to communicate with Bevy
         let (sender, receiver) = crossbeam::channel::unbounded();
@@ -46,15 +24,20 @@ impl MessageReceiver {
         // Spawn thread to read from stdin
         std::thread::spawn(move || {
             let stdin = std::io::stdin();
-            for line in stdin.lock().lines().map_while(Result::ok) {
-                match serde_json::from_str::<crate::stdin::StdinMessage>(&line) {
-                    Ok(msg) => {
-                        if sender.send(msg).is_err() {
-                            break;
+
+            loop {
+                for line in stdin.lock().lines().map_while(Result::ok) {
+                    match serde_json::from_str::<ViewerRequest>(&line) {
+                        Ok(msg) => {
+                            if sender.send(msg).is_err() {
+                                break;
+                            }
                         }
+                        Err(e) => eprintln!("Invalid input: {e}"),
                     }
-                    Err(e) => eprintln!("Invalid input: {e}"),
                 }
+
+                std::thread::sleep(Duration::from_millis(20));
             }
         });
 
@@ -62,24 +45,20 @@ impl MessageReceiver {
     }
 }
 
-/// Message handler
-pub fn handle_messages(
-    receiver: Res<MessageReceiver>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    mut query: Query<&mut MeshMaterial3d<StandardMaterial>>,
+/// Process stdin messages into processor requests.
+pub fn handle_stdin_messages(
+    receiver: Res<StdinMessageReceiver>,
+    mut event_writer: bevy::prelude::EventWriter<ProcessorRequest>,
 ) {
-    for msg in receiver.0.try_iter() {
-        match msg {
-            StdinMessage::ChangeColor { r, g, b } => {
-                println!("Message received: {r} {g} {b}");
-
-                for mat in query.iter_mut() {
-                    if let Some(material) = materials.get_mut(&mat.0) {
-                        material.base_color = Color::srgb(r, g, b);
-                    }
-                }
+    for viewer_request in receiver.0.try_iter() {
+        match viewer_request {
+            microcad_viewer_ipc::ViewerRequest::SourceCodeFromFile { path } => {
+                event_writer.write(ProcessorRequest::ParseFile(path));
             }
-            StdinMessage::CursorPosition(_) => todo!("Handle cursor position"),
+            microcad_viewer_ipc::ViewerRequest::SourceCode { path, name, code } => {
+                event_writer.write(ProcessorRequest::ParseCode { path, name, code });
+            }
+            microcad_viewer_ipc::ViewerRequest::CursorRange { .. } => todo!(),
         }
     }
 }

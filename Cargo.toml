@@ -58,3 +58,4 @@ microcad-export = { path = "export", version = "0.2.6" }
 microcad-lang = { path = "lang", version = "0.2.6" }
 microcad-builtin = { path = "builtin", version = "0.2.6" }
 microcad-builtin-proc-macros = { path = "builtin/proc_macros", version = "0.2.6" }
+microcad-viewer-ipc = { path = "tools/viewer-ipc", version = "0.2.6" }
