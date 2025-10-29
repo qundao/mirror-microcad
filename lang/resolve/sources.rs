@@ -146,6 +146,13 @@ impl Sources {
             return Err(ResolveError::InvalidPath(file_path.to_path_buf()));
         };
 
+        // Remove prefix in testing environment
+        let path = if let Ok(path) = path.strip_prefix(".test") {
+            path.to_path_buf()
+        } else {
+            path
+        };
+
         // check if file is a mod file then it gets it"s name from the parent directory
         let path = if path
             .iter()

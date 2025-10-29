@@ -231,8 +231,16 @@ fn search_mod_file_by_id(
     id: &Identifier,
 ) -> ResolveResult<std::path::PathBuf> {
     let path = path.as_ref();
+
+    // Patch path if we are in a test environment
+    let path = if std::fs::exists(path.join(".test")).expect("file access failure") {
+        path.join(".test")
+    } else {
+        path.into()
+    };
+
     log::trace!("search_mod_file_by_id: {path:?} {id}");
-    if let Some(path) = scan_dir::ScanDir::files().read(path, |iter| {
+    if let Some(path) = scan_dir::ScanDir::files().read(&path, |iter| {
         iter.map(|(entry, _)| entry.path())
             .filter(is_microcad_file)
             .find(|p| {
