@@ -9,7 +9,7 @@ use crate::{diag::*, rc::*, resolve::*, src_ref::*, syntax::*};
 #[derive(Default)]
 pub struct ResolveContext {
     /// Symbol table.
-    pub(crate) symbol_table: SymbolTable,
+    pub symbol_table: SymbolTable,
     /// Source file cache.
     pub(crate) sources: Sources,
     /// Diagnostic handler.

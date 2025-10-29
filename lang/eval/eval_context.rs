@@ -10,7 +10,7 @@ use crate::{
 /// The context is used to store the current state of the evaluation.
 pub struct EvalContext {
     /// Symbol table
-    symbol_table: SymbolTable,
+    pub symbol_table: SymbolTable,
     /// Source cache
     sources: Sources,
     /// Stack of currently opened scopes with symbols while evaluation.
