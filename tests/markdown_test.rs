@@ -246,7 +246,10 @@ fn report_model(env: &mut TestEnv, model: Option<Model>) {
         };
         match export {
             Some(export) => match export.render_and_export(&model) {
-                Ok(_) => env.log_ln("Export successful."),
+                Ok(_) => env.log_ln(&format!(
+                    "Export of {:?} successful.",
+                    export.filename.canonicalize().expect("absolute path")
+                )),
                 Err(error) => env.log_ln(&format!("Export error: {error}")),
             },
             None => env.log_ln("Nothing will be exported."),
