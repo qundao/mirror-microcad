@@ -1,7 +1,7 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::{any, path::PathBuf};
+use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
@@ -26,6 +26,8 @@ pub enum ViewerRequest {
         begin: CursorPosition,
         end: Option<CursorPosition>,
     },
+    /// Exit viewer process.
+    Exit,
 }
 
 /// A response sent from the viewers stdout
@@ -35,13 +37,8 @@ pub enum ViewerResponse {
     StatusMessage(String),
 }
 
-pub enum ViewerState {
-    SourceFile {
-        path: PathBuf,
-        line: usize,
-        col: usize,
-    },
-}
+#[derive(Default)]
+pub struct ViewerState {}
 
 pub struct ViewerProcessInterface {
     state: ViewerState,
@@ -54,32 +51,51 @@ impl ViewerProcessInterface {
         Ok(self.request_sender.send(request)?)
     }
 
-    pub fn run(&self) {
-        /*// Run process thread
-        // Shared handle to the child's stdin so we can send messages
-        let child_stdin: std::sync::Arc<Mutex<Option<std::process::ChildStdin>>> =
-            Arc::new(Mutex::new(None));
+    pub fn run() -> Self {
+        use crossbeam::channel::*;
 
-        let stdin_clone = Arc::clone(&child_stdin);
-        let mut input = input.clone();
+        let (tx, rx): (Sender<ViewerRequest>, Receiver<ViewerRequest>) = unbounded();
 
-        // Spawn the thread to launch and manage the child process
-        std::thread::spawn(move || -> anyhow::Result<()> {
-            log::info!("Input {}", input.display());
+        // Spawn slave process
+        let mut child = std::process::Command::new(
+            std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
+        )
+        .arg("--stdin") // run the slave binary
+        .stdin(std::process::Stdio::piped())
+        .stdout(std::process::Stdio::piped())
+        .spawn()
+        .expect("Failed to start slave process");
 
-            let mut child = std::process::Command::new(self.viewer_executable)
-                .arg("--stdin")
-                .stdin(std::process::Stdio::piped())
-                .spawn()
-                .expect("Failed to spawn child process");
+        let mut stdin = child.stdin.take().unwrap();
+        let stdout = child.stdout.take().unwrap();
+        let (resp_tx, resp_rx) = unbounded::<ViewerResponse>();
 
-            // Share the child's stdin with the main thread
-            *stdin_clone.lock().expect("Successful lock") = child.stdin.take();
+        // Thread to read responses
+        std::thread::spawn(move || {
+            use std::io::BufRead;
+            let reader = std::io::BufReader::new(stdout);
+            for line in reader.lines().map_while(Result::ok) {
+                log::info!("Response: {line}");
+                //                if let Ok(resp) = serde_json::from_str::<ViewerResponse>(&line) {
+                //                  resp_tx.send(resp).unwrap();
+                //            }
+            }
+        });
 
-            // Wait for the process to exit (this will block)
-            let status = child.wait()?;
-            println!("Child exited with: {status}");
-            Ok(())
-        });*/
+        // Thread to write requests
+        std::thread::spawn(move || {
+            for req in rx {
+                use std::io::Write;
+                let json = serde_json::to_string(&req).unwrap();
+                writeln!(stdin, "{}", json).unwrap();
+                stdin.flush().unwrap();
+            }
+        });
+
+        Self {
+            state: Default::default(),
+            request_sender: tx,
+            response_receiver: resp_rx,
+        }
     }
 }

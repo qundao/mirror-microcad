@@ -11,7 +11,8 @@ use microcad_lang::resolve::{FullyQualify, Symbol};
 use microcad_lang::syntax::*;
 
 use crossbeam::channel::Sender;
-use std::sync::{Arc, Mutex};
+use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
+use std::sync::{Arc, Mutex, RwLock};
 use std::thread;
 mod watcher;
 
@@ -29,12 +30,6 @@ struct Args {
     /// Paths to search for files.
     #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append, default_value = "./lib", global = true)]
     pub search_paths: Vec<std::path::PathBuf>,
-}
-
-struct Inspector {
-    args: Args,
-
-    pub watcher: Watcher,
 }
 
 trait ItemsFromTree<T, D = usize>: Sized
@@ -104,11 +99,20 @@ pub enum ViewModelRequest {
     SetModelTree(Vec<ModelTreeModelItem>),
 }
 
+struct Inspector {
+    args: Args,
+
+    pub watcher: Watcher,
+
+    pub viewer_process: Arc<RwLock<Option<microcad_viewer_ipc::ViewerProcessInterface>>>,
+}
+
 impl Inspector {
     pub fn new() -> anyhow::Result<Self> {
         Ok(Self {
             args: Args::parse(),
             watcher: Watcher::new()?,
+            viewer_process: Arc::new(RwLock::new(None)),
         })
     }
 
@@ -192,40 +196,35 @@ impl Inspector {
             }
         });
 
-        main_window.on_button_launch_3d_view_clicked(move || {
-            // let main_window = weak.unwrap();
+        let viewer_process = self.viewer_process.clone();
+        main_window.on_button_launch_viewer_clicked(move || {
+            match viewer_process.write() {
+                Ok(mut process) => {
+                    *process = Some(ViewerProcessInterface::run());
+                    log::warn!("Already running!");
+                }
+                Err(err) => log::error!("{err}"),
+            };
+        });
 
-            // Run process thread
-            // Shared handle to the child's stdin so we can send messages
-            let child_stdin: Arc<Mutex<Option<std::process::ChildStdin>>> =
-                Arc::new(Mutex::new(None));
-
-            let stdin_clone = Arc::clone(&child_stdin);
-            let mut input = input.clone();
-
-            // Spawn the thread to launch and manage the child process
-            std::thread::spawn(move || -> anyhow::Result<()> {
-                input.set_extension("stl");
-                let input = std::env::current_dir().expect("Current dir").join(input);
-
-                log::info!("Input {}", input.display());
-
-                let mut child = std::process::Command::new(
-                    "/home/micha/Work/mcad/bevy_stdin/target/debug/bevy_stdin",
-                ) // Replace with your long-lived process
-                .arg(input)
-                .stdin(std::process::Stdio::piped())
-                .spawn()
-                .expect("Failed to spawn child process");
-
-                // Share the child's stdin with the main thread
-                *stdin_clone.lock().expect("Successful lock") = child.stdin.take();
-
-                // Wait for the process to exit (this will block)
-                let status = child.wait()?;
-                println!("Child exited with: {status}");
-                Ok(())
-            });
+        let weak = main_window.as_weak();
+        let viewer_process = self.viewer_process.clone();
+        main_window.on_button_send_source_code_clicked(move || match viewer_process.read() {
+            Ok(mut process) => match &*process {
+                Some(process) => {
+                    process
+                        .send_request(ViewerRequest::SourceCode {
+                            path: Some(input.clone()),
+                            name: Some("Test".to_string()),
+                            code: weak.upgrade().unwrap().get_source_code().to_string(),
+                        })
+                        .expect("No error");
+                }
+                None => {
+                    log::error!("Process is not running!");
+                }
+            },
+            Err(err) => log::error!("{err}"),
         });
 
         main_window.run()?;

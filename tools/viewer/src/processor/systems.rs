@@ -15,6 +15,7 @@ use bevy::{
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
+use crate::stdin::StdinMessageReceiver;
 use crate::{
     processor::{ProcessorRequest, ProcessorResponse},
     scene::{Scene, SceneRadiusChangeEvent},
@@ -40,7 +41,7 @@ fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
 }
 
 /// Start up the processor.
-pub fn startup_processor(state: ResMut<crate::state::State>) {
+pub fn startup_processor(mut state: ResMut<crate::state::State>) {
     state
         .processor
         .send_request(ProcessorRequest::Initialize {
@@ -80,7 +81,10 @@ pub fn startup_processor(state: ResMut<crate::state::State>) {
                 }
             });
         }
-        crate::plugin::MicrocadPluginMode::Stdin => todo!(),
+        crate::plugin::MicrocadPluginMode::Stdin => {
+            log::info!("Return viewer in stdin remote controlled mode.");
+            state.stdin = Some(StdinMessageReceiver::run());
+        }
         _ => { /* Do nothing */ }
     }
 }

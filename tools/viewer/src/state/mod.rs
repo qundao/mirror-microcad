@@ -10,7 +10,10 @@ use std::{
 
 use bevy::ecs::resource::Resource;
 
-use crate::{Config, plugin::MicrocadPluginMode, processor::ProcessorInterface, scene::Scene};
+use crate::{
+    Config, plugin::MicrocadPluginMode, processor::ProcessorInterface, scene::Scene,
+    stdin::StdinMessageReceiver,
+};
 
 #[derive(Resource)]
 pub struct State {
@@ -19,6 +22,7 @@ pub struct State {
     pub last_modified: Arc<Mutex<Option<SystemTime>>>,
     pub scene: Scene,
     pub processor: ProcessorInterface,
+    pub stdin: Option<StdinMessageReceiver>,
 }
 
 impl State {
@@ -30,6 +34,7 @@ impl State {
             last_modified: Default::default(),
             scene: Default::default(),
             processor: ProcessorInterface::run(),
+            stdin: None,
         }
     }
 }

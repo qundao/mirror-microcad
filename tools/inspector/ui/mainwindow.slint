@@ -89,18 +89,24 @@ component SymbolTreeViewItem inherits TreeViewItem {
     }
 }
 
-component View3DControlPanel {
-    callback button-launch-3d-view-clicked <=> button-launch-3d-view.clicked;
+component ControlPanel {
+    callback button-launch-viewer-clicked <=> button-launch-viewer.clicked;
+    callback button-send-source-code-clicked <=> button-send-source-code.clicked;
 
     VerticalLayout {
-        button-launch-3d-view := Button {
+        button-launch-viewer := Button {
             text: @tr("Launch 3D View");
+        }
+
+        button-send-source-code := Button {
+            text: @tr("Send source code");
         }
     }
 }
 
 export component MainWindow inherits Window {
-    callback button-launch-3d-view-clicked <=> control-panel.button-launch-3d-view-clicked;
+    callback button-launch-viewer-clicked <=> control-panel.button-launch-viewer-clicked;
+    callback button-send-source-code-clicked <=> control-panel.button-send-source-code-clicked;
     in-out property source-code <=> source-code-view.text;
     in property <[ModelTreeModelItem]> model-tree;
     in property <[SymbolTreeModelItem]> symbol-tree;
@@ -136,6 +142,6 @@ export component MainWindow inherits Window {
             }
         }
 
-        control-panel := View3DControlPanel { }
+        control-panel := ControlPanel { }
     }
 }

@@ -8,6 +8,7 @@ use std::{io::BufRead, time::Duration};
 use crossbeam::channel::Receiver;
 
 use bevy::ecs::{resource::Resource, system::Res};
+use bevy::prelude::{AppExit, EventWriter};
 
 use microcad_viewer_ipc::ViewerRequest;
 
@@ -47,18 +48,24 @@ impl StdinMessageReceiver {
 
 /// Process stdin messages into processor requests.
 pub fn handle_stdin_messages(
-    receiver: Res<StdinMessageReceiver>,
+    state: bevy::prelude::ResMut<crate::State>,
     mut event_writer: bevy::prelude::EventWriter<ProcessorRequest>,
+    mut exit: EventWriter<AppExit>,
 ) {
-    for viewer_request in receiver.0.try_iter() {
-        match viewer_request {
-            microcad_viewer_ipc::ViewerRequest::SourceCodeFromFile { path } => {
-                event_writer.write(ProcessorRequest::ParseFile(path));
+    if let Some(stdin) = &state.stdin {
+        for viewer_request in stdin.0.try_iter() {
+            match viewer_request {
+                microcad_viewer_ipc::ViewerRequest::SourceCodeFromFile { path } => {
+                    event_writer.write(ProcessorRequest::ParseFile(path));
+                }
+                microcad_viewer_ipc::ViewerRequest::SourceCode { path, name, code } => {
+                    event_writer.write(ProcessorRequest::ParseCode { path, name, code });
+                }
+                microcad_viewer_ipc::ViewerRequest::CursorRange { .. } => todo!(),
+                microcad_viewer_ipc::ViewerRequest::Exit => {
+                    exit.write(AppExit::Success);
+                }
             }
-            microcad_viewer_ipc::ViewerRequest::SourceCode { path, name, code } => {
-                event_writer.write(ProcessorRequest::ParseCode { path, name, code });
-            }
-            microcad_viewer_ipc::ViewerRequest::CursorRange { .. } => todo!(),
         }
     }
 }
