@@ -12,6 +12,7 @@ use microcad_lang::syntax::*;
 
 use crossbeam::channel::Sender;
 use std::sync::{Arc, Mutex};
+use std::thread;
 mod watcher;
 
 use slint::VecModel;
@@ -172,26 +173,24 @@ impl Inspector {
             }
         });
 
-        weak.upgrade_in_event_loop(move |main_window| {
-            for request in rx.iter() {
-                log::info!("{request:?}");
-                match request {
-                    ViewModelRequest::SetSourceCode(string) => {
-                        main_window.set_source_code(string.into());
-                    }
-                    ViewModelRequest::SetSymbolTree(items) => {
-                        main_window.set_symbol_tree(model_rc_from_items(items))
-                    }
-                    ViewModelRequest::SetModelTree(items) => {
-                        main_window.set_model_tree(model_rc_from_items(items))
-                    }
-                }
-
-                if rx.is_empty() {
-                    break;
+        thread::spawn(move || {
+            loop {
+                if let Ok(request) = rx.recv() {
+                    weak.upgrade_in_event_loop(move |main_window| match request {
+                        ViewModelRequest::SetSourceCode(string) => {
+                            main_window.set_source_code(string.into());
+                        }
+                        ViewModelRequest::SetSymbolTree(items) => {
+                            main_window.set_symbol_tree(model_rc_from_items(items))
+                        }
+                        ViewModelRequest::SetModelTree(items) => {
+                            main_window.set_model_tree(model_rc_from_items(items))
+                        }
+                    })
+                    .expect("No error");
                 }
             }
-        })?;
+        });
 
         main_window.on_button_launch_3d_view_clicked(move || {
             // let main_window = weak.unwrap();
