@@ -15,12 +15,7 @@ pub use geometry_output::*;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
-use microcad_lang::{
-    model::Model,
-    rc::RcMut,
-    render::*,
-    syntax::{QualifiedName, SourceFile},
-};
+use microcad_lang::{model::Model, rc::RcMut, render::*, syntax::SourceFile};
 
 /// A processor request.
 ///
@@ -36,13 +31,13 @@ pub enum ProcessorRequest {
     /// Parse file.
     ParseFile(std::path::PathBuf),
     /// Parse some code into a SourceFile.
-    ParseCode {
+    ParseSource {
         /// Virtual file path
         path: Option<std::path::PathBuf>,
         /// Optional name of the source code snippet, e.g. the full file name.
         name: Option<String>,
         /// The actual source code.
-        code: String,
+        source: String,
     },
     /// Evaluate source file into a model to be rendered.
     Eval,
@@ -130,16 +125,6 @@ pub trait Pipeline {
         Ok(SourceFile::load(path)?)
     }
 
-    /// Parse some source code with a name into a [`SourceFile`].
-    fn parse_virtual_file(
-        &mut self,
-        path: std::path::PathBuf,
-        name: Option<QualifiedName>,
-        code: String,
-    ) -> Result<std::rc::Rc<SourceFile>, PipelineError> {
-        Ok(SourceFile::load_virtual(path, name, code)?)
-    }
-
     fn eval(&mut self) -> PipelineResult<()>;
 
     fn render(&mut self, resolution: Option<RenderResolution>) -> PipelineResult<()>;
@@ -162,18 +147,13 @@ impl Processor {
                 self.eval()?;
                 self.render(None)
             }
-            ProcessorRequest::ParseCode { path, name, code } => {
-                self.state.source_file = match path {
-                    Some(path) => {
-                        let name = name.map(|name| QualifiedName::from_id(name.as_str().into()));
-                        SourceFile::load_virtual(&path, name, code).ok()
-                    }
-                    None => SourceFile::load_from_str(
-                        name.unwrap_or(String::from("<none>")).as_str(),
-                        &code,
-                    )
-                    .ok(),
-                };
+            ProcessorRequest::ParseSource { path, name, source } => {
+                self.state.source_file = SourceFile::load_from_str(
+                    name.unwrap_or(String::from("<none>")).as_str(),
+                    path.unwrap_or(std::path::PathBuf::from("<virtual>")),
+                    &source,
+                )
+                .ok();
                 self.eval()?;
                 self.render(None)
             }

@@ -65,7 +65,11 @@ pub fn handle_stdin_messages(
                     event_writer.write(ProcessorRequest::ParseFile(path));
                 }
                 microcad_viewer_ipc::ViewerRequest::SourceCode { path, name, code } => {
-                    event_writer.write(ProcessorRequest::ParseCode { path, name, code });
+                    event_writer.write(ProcessorRequest::ParseSource {
+                        path,
+                        name,
+                        source: code,
+                    });
                 }
                 microcad_viewer_ipc::ViewerRequest::CursorRange { .. } => todo!(),
                 microcad_viewer_ipc::ViewerRequest::Exit => {
