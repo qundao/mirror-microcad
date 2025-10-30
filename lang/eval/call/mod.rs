@@ -57,7 +57,7 @@ impl Eval<ArgumentValueListRaw> for ArgumentList {
                         Ok(ArgumentValue::new(
                             Value::Target(Target::new(
                                 name.un_super(),
-                                match context.lookup(name) {
+                                match context.lookup(name, LookupTarget::Any) {
                                     Ok(symbol) => Some(symbol.full_name()),
                                     Err(_) => None,
                                 },
@@ -83,7 +83,7 @@ impl Eval<ArgumentValueListRaw> for ArgumentList {
 impl Eval for Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         // find self in symbol table by own name
-        let symbol = match context.lookup(&self.name) {
+        let symbol = match context.lookup(&self.name, LookupTarget::Function) {
             Ok(symbol) => symbol,
             Err(err) => {
                 context.error(self, err)?;
@@ -113,8 +113,8 @@ impl Eval for Call {
             },
             |context| {
                 symbol.with_def(|def| match def {
-                    SymbolDefinition::Builtin(f) => f.call(&args, context),
-                    SymbolDefinition::Workbench(w) => {
+                    SymbolDef::Builtin(f) => f.call(&args, context),
+                    SymbolDef::Workbench(w) => {
                         if matches!(*w.kind, WorkbenchKind::Operation) {
                             context.error(self, EvalError::CannotCallOperationWithoutWorkpiece)?;
                             Ok(Value::None)
@@ -127,7 +127,7 @@ impl Eval for Call {
                             )?))
                         }
                     }
-                    SymbolDefinition::Function(f) => f.call(&args, context),
+                    SymbolDef::Function(f) => f.call(&args, context),
                     _ => {
                         context.error(self, EvalError::SymbolCannotBeCalled(symbol.full_name()))?;
                         Ok(Value::None)

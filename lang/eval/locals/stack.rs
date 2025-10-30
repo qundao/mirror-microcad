@@ -229,7 +229,7 @@ impl Stack {
 }
 
 impl Lookup<EvalError> for Stack {
-    fn lookup(&self, name: &QualifiedName) -> EvalResult<Symbol> {
+    fn lookup(&self, name: &QualifiedName, _: LookupTarget) -> EvalResult<Symbol> {
         log::trace!(
             "{lookup} for local symbol '{name:?}'",
             lookup = crate::mark!(LOOKUP)
@@ -295,10 +295,7 @@ impl Locals for Stack {
     fn set_local_value(&mut self, id: Identifier, value: Value) -> EvalResult<()> {
         self.put_local(
             Some(id.clone()),
-            Symbol::new(
-                SymbolDefinition::Constant(Visibility::Private, id, value),
-                None,
-            ),
+            Symbol::new(SymbolDef::Constant(Visibility::Private, id, value), None),
         )
     }
 
@@ -309,7 +306,7 @@ impl Locals for Stack {
     fn get_local_value(&self, id: &Identifier) -> EvalResult<Value> {
         match self.fetch_symbol(id) {
             Ok(symbol) => symbol.with_def(|def| match def {
-                SymbolDefinition::Constant(.., value) | SymbolDefinition::Argument(.., value) => {
+                SymbolDef::Constant(.., value) | SymbolDef::Argument(.., value) => {
                     Ok(value.clone())
                 }
                 _ => Err(EvalError::LocalNotFound(id.clone())),
@@ -395,7 +392,7 @@ fn local_stack() {
 
     let make_int = |id, value| {
         Symbol::new(
-            SymbolDefinition::Constant(Visibility::Private, id, Value::Integer(value)),
+            SymbolDef::Constant(Visibility::Private, id, Value::Integer(value)),
             None,
         )
     };
@@ -403,7 +400,7 @@ fn local_stack() {
     let fetch_int = |stack: &Stack, id: &str| -> Option<i64> {
         match stack.fetch_symbol(&id.into()) {
             Ok(node) => node.with_def(|def| match def {
-                SymbolDefinition::Constant(.., Value::Integer(value)) => Some(*value),
+                SymbolDef::Constant(.., Value::Integer(value)) => Some(*value),
                 _ => todo!("error"),
             }),
             _ => None,

@@ -10,7 +10,7 @@
 
 -- Output --
 -- Errors --
-error: Assignment statement is not available within module
+error: Assignment statement is not available within Module
   ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   prop a = 1;  // error

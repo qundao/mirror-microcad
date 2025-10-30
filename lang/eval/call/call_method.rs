@@ -59,8 +59,8 @@ impl CallMethod<Option<Model>> for Model {
         args: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Option<Model>> {
-        if let Some(symbol) = name.eval(context)? {
-            context.scope(
+        match context.lookup(name, LookupTarget::Method) {
+            Ok(symbol) => context.scope(
                 StackFrame::Call {
                     symbol: symbol.clone(),
                     args: args.clone(),
@@ -68,7 +68,7 @@ impl CallMethod<Option<Model>> for Model {
                 },
                 |context| {
                     symbol.with_def(|def| match def {
-                        SymbolDefinition::Workbench(workbench_definition) => {
+                        SymbolDef::Workbench(workbench_definition) => {
                             let model = workbench_definition.call(
                                 SrcRef::merge(name, args),
                                 symbol.clone(),
@@ -78,7 +78,7 @@ impl CallMethod<Option<Model>> for Model {
 
                             Ok::<_, EvalError>(Some(model.replace_input_placeholders(self)))
                         }
-                        SymbolDefinition::Builtin(builtin) => match builtin.call(args, context)? {
+                        SymbolDef::Builtin(builtin) => match builtin.call(args, context)? {
                             Value::Model(model) => Ok(Some(model.replace_input_placeholders(self))),
                             value => panic!("Builtin call returned {value} but no models."),
                         },
@@ -88,9 +88,11 @@ impl CallMethod<Option<Model>> for Model {
                         }
                     })
                 },
-            )
-        } else {
-            Ok(None)
+            ),
+            Err(err) => {
+                context.error(name, err)?;
+                Ok(None)
+            }
         }
     }
 }
