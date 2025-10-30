@@ -3,7 +3,7 @@
 
 use crate::{resolve::*, syntax::*};
 
-/// Kind of symbol to look up.
+/// Target of symbol to look up.
 #[derive(Clone, Copy)]
 pub enum LookupTarget {
     /// Lookup for any symbol
@@ -89,8 +89,8 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     /// Search a *symbol* by it's *qualified name*.
     /// # Arguments
     /// - `name`: *Qualified name* to search for.
-    /// - `kind`: What to search for
-    fn lookup(&self, name: &QualifiedName, kind: LookupTarget) -> Result<Symbol, E>;
+    /// - `target`: What to search for
+    fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> Result<Symbol, E>;
 
     /// Return an ambiguity error.
     fn ambiguity_error(ambiguous: QualifiedName, others: QualifiedNames) -> E;
@@ -100,21 +100,21 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     /// # Arguments
     /// - `name`: *Qualified name* to search for.
     /// - `within`: Searches within this *symbol* too.
-    /// - `kind`: What to search for
+    /// - `target`: What to search for
     /// # Return
     /// If both are found and one is an *alias* returns the other one.
     fn lookup_within(
         &self,
         name: &QualifiedName,
         within: &Symbol,
-        kind: LookupTarget,
+        target: LookupTarget,
     ) -> Result<Symbol, E> {
         log::trace!(
             "{lookup} for symbol '{name:?}' within '{within}'",
             within = within.full_name(),
             lookup = crate::mark!(LOOKUP)
         );
-        match (self.lookup(name, kind), within.search(name, true)) {
+        match (self.lookup(name, target), within.search(name, true)) {
             // found both
             (Ok(global), Ok(relative)) => {
                 // check if one is an alias of the other
@@ -160,19 +160,19 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     /// # Arguments
     /// - `name`: *qualified name* to search for
     /// - `within`: If some, searches within this *symbol* too.
-    /// - `kind`: What to search for
+    /// - `target`: What to search for
     /// # Return
     /// If both are found and one is an *alias* returns the other one.
     fn lookup_within_opt(
         &self,
         name: &QualifiedName,
         within: &Option<Symbol>,
-        kind: LookupTarget,
+        target: LookupTarget,
     ) -> Result<Symbol, E> {
         if let Some(within) = within {
-            self.lookup_within(name, within, kind)
+            self.lookup_within(name, within, target)
         } else {
-            self.lookup(name, kind)
+            self.lookup(name, target)
         }
     }
 
@@ -182,14 +182,14 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     /// # Arguments
     /// - `name`: *qualified name* to search for.
     /// - `within`: Searches in the *symbol* with this name too.
-    /// - `kind`: What to search for
+    /// - `target`: What to search for
     fn lookup_within_name(
         &self,
         name: &QualifiedName,
         within: &QualifiedName,
-        kind: LookupTarget,
+        target: LookupTarget,
     ) -> Result<Symbol, E> {
-        self.lookup_within(name, &self.lookup(within, kind)?, kind)
+        self.lookup_within(name, &self.lookup(within, target)?, target)
     }
 
     /// Returns an error if name starts with `super::`.
