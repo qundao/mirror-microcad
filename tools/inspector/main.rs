@@ -123,6 +123,8 @@ impl Inspector {
         let weak = main_window.as_weak();
         let input = self.args.input.clone();
         let (tx, rx): (Sender<ViewModelRequest>, _) = crossbeam::channel::unbounded();
+        let search_paths = self.args.search_paths.clone();
+        let search_path = search_paths.first().unwrap().clone();
 
         // Run file watcher thread.
         std::thread::spawn(move || -> anyhow::Result<()> {
@@ -200,7 +202,7 @@ impl Inspector {
         main_window.on_button_launch_viewer_clicked(move || {
             match viewer_process.write() {
                 Ok(mut process) => {
-                    *process = Some(ViewerProcessInterface::run());
+                    *process = Some(ViewerProcessInterface::run(&search_path));
                     log::warn!("Already running!");
                 }
                 Err(err) => log::error!("{err}"),

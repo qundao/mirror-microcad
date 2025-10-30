@@ -51,7 +51,11 @@ impl ViewerProcessInterface {
         Ok(self.request_sender.send(request)?)
     }
 
-    pub fn run() -> Self {
+    pub fn run(std_search_path: impl AsRef<std::path::Path>) -> Self {
+        log::info!(
+            "Run viewer process with search path {}",
+            std_search_path.as_ref().display()
+        );
         use crossbeam::channel::*;
 
         let (tx, rx): (Sender<ViewerRequest>, Receiver<ViewerRequest>) = unbounded();
@@ -61,7 +65,9 @@ impl ViewerProcessInterface {
             std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
         )
         .arg("--stdin") // run the slave binary
-        .current_dir("/home/micha/Work/mcad/mcad/tools/viewer")
+        .arg("-P")
+        .arg(std_search_path.as_ref().to_str().unwrap())
+        .current_dir(std::env::current_dir().unwrap())
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
         .spawn()
