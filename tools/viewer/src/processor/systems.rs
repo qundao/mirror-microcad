@@ -82,7 +82,7 @@ pub fn startup_processor(mut state: ResMut<crate::state::State>) {
             });
         }
         crate::plugin::MicrocadPluginMode::Stdin => {
-            log::info!("Return viewer in stdin remote controlled mode.");
+            log::info!("Run viewer in stdin remote controlled mode.");
             state.stdin = Some(StdinMessageReceiver::run());
         }
         _ => { /* Do nothing */ }
