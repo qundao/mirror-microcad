@@ -6,7 +6,7 @@
 use crate::render::{GeometryOutput, HashId};
 
 /// An item in the [`RenderCache`].
-pub struct RenderCacheItem<T = GeometryOutput> {
+pub struct RenderCacheItem<T> {
     /// The actual item content.
     content: T,
     /// Number of times this cache item has been accessed successfully.
