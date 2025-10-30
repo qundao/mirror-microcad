@@ -80,7 +80,11 @@ impl Sources {
             by_name,
             search_paths: search_paths
                 .iter()
-                .map(|path| path.as_ref().canonicalize().expect("valid path"))
+                .map(|path| {
+                    path.as_ref()
+                        .canonicalize()
+                        .unwrap_or_else(|_| panic!("valid path: {}", path.as_ref().display()))
+                })
                 .collect(),
         })
     }
