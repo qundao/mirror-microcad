@@ -8,7 +8,6 @@ can easily import this second file.
 [![test](.test/external_modules_main.svg)](.test/external_modules_main.log)
 
 ```µcad,external_modules_main
-// file: main.µcad
 mod second;
 second::f(); 
 ```
@@ -19,3 +18,6 @@ second::f();
 // file: second.µcad
 pub fn f() {}
 ```
+
+By using `mod second,` in the first source file, microcad searches for either a
+file called `second.µcad` or `second/mod.µcad` and loads it into a module.

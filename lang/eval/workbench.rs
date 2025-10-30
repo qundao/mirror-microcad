@@ -60,11 +60,7 @@ impl WorkbenchDefinition {
         .build();
 
         context.scope(
-            StackFrame::Workbench(
-                model,
-                self.id.clone(),
-                non_properties.clone().into_iter().collect(),
-            ),
+            StackFrame::Workbench(model, self.id.clone(), Default::default()),
             |context| {
                 let model = context.get_model()?;
 
