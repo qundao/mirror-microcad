@@ -5,14 +5,14 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CursorPosition {
     line: usize,
     col: usize,
 }
 
 /// A request sent to the viewers stdin
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ViewerRequest {
     SourceCodeFromFile {
         path: PathBuf,
@@ -23,7 +23,7 @@ pub enum ViewerRequest {
         code: String,
     },
     CursorRange {
-        begin: CursorPosition,
+        begin: Option<CursorPosition>,
         end: Option<CursorPosition>,
     },
     /// Exit viewer process.
@@ -61,6 +61,7 @@ impl ViewerProcessInterface {
             std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
         )
         .arg("--stdin") // run the slave binary
+        .current_dir("/home/micha/Work/mcad/mcad/tools/viewer")
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
         .spawn()
@@ -84,11 +85,14 @@ impl ViewerProcessInterface {
 
         // Thread to write requests
         std::thread::spawn(move || {
-            for req in rx {
-                use std::io::Write;
-                let json = serde_json::to_string(&req).unwrap();
-                writeln!(stdin, "{}", json).unwrap();
-                stdin.flush().unwrap();
+            loop {
+                for req in &rx {
+                    use std::io::Write;
+                    let json = serde_json::to_string(&req).unwrap();
+                    log::debug!("Write request as json: {json}");
+                    writeln!(stdin, "{}", json).unwrap();
+                    stdin.flush().unwrap();
+                }
             }
         });
 
