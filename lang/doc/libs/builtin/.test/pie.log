@@ -12,6 +12,6 @@
   Group (root) ->
     Primitive2D __builtin::geo2d::Pie(end=2.35619449019234rad, radius=20, start=0.78539816339745rad) ->
 
-Export successful.
+Export of "../lang/doc/libs/builtin/.test/pie-out.svg" successful.
 -- Test Result --
 OK

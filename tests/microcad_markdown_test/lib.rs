@@ -12,10 +12,8 @@
 //! If test IDs include `.` name will be split into several names which will be
 //! used to crates sub modules.
 
-mod output;
-
 use anyhow::{Context, Result};
-use output::Output;
+use microcad_test_tools::{output::*, test_env::*};
 use std::{io::Write, path::Path};
 
 /// for debugging purpose
@@ -273,14 +271,22 @@ fn scan_for_tests(
             } else if !test_name.is_empty() {
                 // match code end marker
                 if end.captures_iter(line).next().is_some() {
-                    if let Some(output) = create_test(
-                        output,
-                        file_path,
-                        test_name.as_str(),
-                        test_code.as_str(),
-                        &format!("{}:{start_no}", file_path.to_string_lossy()),
-                    ) {
-                        test_outputs.push(output);
+                    if let Some(mut env) = TestEnv::new(file_path, &test_name, &test_code, start_no)
+                    {
+                        let mut test_output = env.generate(output);
+                        if let Some(first_line) = test_code.lines().next() {
+                            let head = "// file: ";
+                            if first_line.starts_with(head) {
+                                let (_, filename) = first_line.split_at(head.len());
+                                let filename = env.test_path().join(filename);
+                                let mut file = std::fs::File::create(filename.clone())
+                                    .expect("cannot create file");
+                                file.write_all(test_code.as_bytes())
+                                    .expect("cannot write file");
+                                test_output.add_output(filename);
+                            }
+                        }
+                        test_outputs.push(test_output);
                     }
 
                     // clear name to signal new test awaited
@@ -297,102 +303,4 @@ fn scan_for_tests(
         }
     }
     Ok(result)
-}
-
-/// Generate code for one test
-fn create_test<'a>(
-    f: &mut String,
-    file_path: &'a Path,
-    name: &'a str,
-    code: &str,
-    reference: &str,
-) -> Option<Output> {
-    // split name into `name` and optional `mode`
-    let (name, mode) = if let Some((name, mode)) = name.split_once('#') {
-        (name, Some(mode))
-    } else {
-        (name, None)
-    };
-
-    let (name, params) = if let Some((name, params)) = name.split_once('(') {
-        if params.ends_with(")") {
-            (name, Some(&params[0..params.len() - 1]))
-        } else {
-            (name, None)
-        }
-    } else {
-        (name, None)
-    };
-
-    warning!(
-        "create test: {name}\t{params}{mode}\t{file_path:?}",
-        params = params.unwrap_or_default(),
-        mode = mode.unwrap_or_default()
-    );
-
-    // where to store generated output
-    let test_path = file_path.parent().unwrap().join(".test");
-    // banner image file of this test
-    let banner = test_path.join(format!("{name}.svg"));
-    // log file of this test
-    let log = test_path.join(format!("{name}.log"));
-
-    // output file of this test, without extension.
-    // The file extension is added later by the respective exporter.
-    let out = test_path.join(format!("{name}-out"));
-
-    // maybe create .test directory
-    let _ = std::fs::create_dir_all(test_path.clone());
-
-    // Early exit for "#no_test" and "#todo" suffixes
-    if mode == Some("no_test") {
-        return None;
-    }
-
-    f.push_str(&create_test_code(
-        name, params, mode, code, &banner, &log, &out, reference,
-    ));
-
-    Some(Output::new(
-        name.into(),
-        file_path.into(),
-        banner,
-        out,
-        log,
-        &["svg", "stl"],
-    ))
-}
-
-/// create test code
-/// - `name`: name of the test
-/// - `mode`: test result expectation
-/// - `code`: µcad code to test
-/// - `banner`: file for banner link
-/// - `log`: file for log output
-/// - `todo`:
-#[allow(clippy::too_many_arguments)]
-fn create_test_code(
-    name: &str,
-    params: Option<&str>,
-    mode: Option<&str>,
-    code: &str,
-    banner: &std::path::Path,
-    log_out: &std::path::Path,
-    out: &std::path::Path,
-    reference: &str,
-) -> String {
-    let banner = &banner.to_string_lossy().escape_default().to_string();
-    let log_out = &log_out.to_string_lossy().escape_default().to_string();
-    let out = &out.to_string_lossy().escape_default().to_string();
-    let mode = mode.unwrap_or("ok");
-    let params = params.unwrap_or_default();
-
-    format!(
-        r###"
-        #[test]
-        #[allow(non_snake_case)]
-        fn r#{name}() {{
-            crate::markdown_test::run_test("{name}", "{params}", "{mode}", r##"{code}"##, "{banner}", "{log_out}", "{out}", "{reference}");
-        }}"###
-    )
 }

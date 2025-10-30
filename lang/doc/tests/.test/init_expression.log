@@ -11,7 +11,7 @@
 -- Output --
 -- Errors --
 error: Expression statement not available here
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   1 + 2; // error
      |   ^^^^^^

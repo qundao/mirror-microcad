@@ -1,8 +1,11 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! Output of a markdown test.
+
 use std::path::PathBuf;
 
+/// Output of a markdown test.
 pub struct Output {
     name: String,
     input: PathBuf,
@@ -10,9 +13,11 @@ pub struct Output {
     exports: Vec<PathBuf>,
     out: PathBuf,
     log: PathBuf,
+    externals: Vec<PathBuf>,
 }
 
 impl Output {
+    /// Create new output.
     pub fn new(
         name: String,
         input: PathBuf,
@@ -37,13 +42,22 @@ impl Output {
             },
             out,
             log,
+            externals: Vec::new(),
         }
     }
+
+    /// Check if a path is one of the output files.
     pub fn has_path(&self, path: &PathBuf) -> bool {
         self.banner == *path
             || self.out == *path
             || self.log == *path
             || self.exports.contains(path)
+            || self.externals.contains(path)
+    }
+
+    /// Add an output file.
+    pub fn add_output(&mut self, path: PathBuf) {
+        self.externals.push(path);
     }
 }
 

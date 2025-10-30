@@ -11,16 +11,17 @@
 -- Output --
 -- Errors --
 error: Assignment statement is not available within sketch
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   const B = 1;  // error
      |   ^^^^^^^^^^^^
      |
 error: Declaration of B not allowed within workbench_assignment_const::K
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   const B = 1;  // error
      |   ^^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

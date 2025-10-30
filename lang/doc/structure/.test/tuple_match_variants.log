@@ -27,31 +27,31 @@
 -- Output --
 -- Errors --
 error: Missing arguments: x,y,z
-  ---> <FROM STR>:7:4
+  ---> ../lang/doc/structure/arguments.md:7:4
      |
    7 | f( (x=1cm, y=2cm, z=3cm) );
      |    ^^^^^^^^^^^^^^^^^^^^^^
      |
 error: Missing arguments: x,y,z
-  ---> <FROM STR>:11:4
+  ---> ../lang/doc/structure/arguments.md:11:4
      |
   11 | f( p );
      |    ^^
      |
 error: Missing arguments: x,y
-  ---> <FROM STR>:14:4
+  ---> ../lang/doc/structure/arguments.md:14:4
      |
   14 | f( (x=1cm, y=2cm), z=3cm );
      |    ^^^^^^^^^^^^^^^^^^^^^^
      |
 error: Missing arguments: x,z
-  ---> <FROM STR>:15:4
+  ---> ../lang/doc/structure/arguments.md:15:4
      |
   15 | f( y=2cm, (x=1cm, z=3cm) );
      |    ^^^^^^^^^^^^^^^^^^^^^^
      |
 error: Missing arguments: x,y
-  ---> <FROM STR>:19:4
+  ---> ../lang/doc/structure/arguments.md:19:4
      |
   19 | f( q, z=3cm );
      |    ^^^^^^^^^

@@ -11,16 +11,17 @@
 -- Output --
 -- Errors --
 error: Statement is not available within sketch
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   sketch F() {} F(); // error
      |   ^^^^^^^^^^^^^
      |
 error: sketch is not available within sketch
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   sketch F() {} F(); // error
      |   ^^^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

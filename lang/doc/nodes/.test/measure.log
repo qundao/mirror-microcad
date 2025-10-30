@@ -15,19 +15,19 @@
 -- Output --
 -- Errors --
 error: Symbol area not found.
-  ---> <FROM STR>:3:37
+  ---> ../lang/doc/nodes/measures.md:3:37
      |
    3 |     std::geo2d::Circle(radius=10mm).area(),
      |                                     ^^^^
      |
 error: Array elements have different types: [<INVALID TYPE>, Area]
-  ---> <FROM STR>:1:29
+  ---> ../lang/doc/nodes/measures.md:1:29
      |
    1 | __builtin::debug::assert_eq([
      |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 error: Assertion failed: Invalid: <NO VALUE>
-  ---> <FROM STR>:1:29
+  ---> ../lang/doc/nodes/measures.md:1:29
      |
    1 | __builtin::debug::assert_eq([
      |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

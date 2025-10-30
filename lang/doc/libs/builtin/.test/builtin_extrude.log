@@ -28,6 +28,6 @@
             Transform __builtin::ops::translate(x=3, y=3, z=0) ->
               Primitive2D __builtin::geo2d::Circle(radius=2) ->
 
-Export successful.
+Export of "../lang/doc/libs/builtin/.test/builtin_extrude-out.stl" successful.
 -- Test Result --
 OK

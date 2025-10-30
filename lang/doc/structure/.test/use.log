@@ -26,6 +26,6 @@
       - y = -20mm
       Primitive2D __builtin::geo2d::Rect(height=40, width=40, x=-20, y=-20) ->
 
-Export successful.
+Export of "../lang/doc/structure/.test/use-out.svg" successful.
 -- Test Result --
 OK

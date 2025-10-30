@@ -33,6 +33,6 @@
             - y = -10mm
             Primitive2D __builtin::geo2d::Rect(height=20, width=20, x=-10, y=-10) ->
 
-Export successful.
+Export of "../lang/doc/structure/.test/call_workbench-out.svg" successful.
 -- Test Result --
 OK

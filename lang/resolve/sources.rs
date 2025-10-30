@@ -146,6 +146,13 @@ impl Sources {
             return Err(ResolveError::InvalidPath(file_path.to_path_buf()));
         };
 
+        // Remove prefix in testing environment
+        let path = if let Ok(path) = path.strip_prefix(".test") {
+            path.to_path_buf()
+        } else {
+            path
+        };
+
         // check if file is a mod file then it gets it"s name from the parent directory
         let path = if path
             .iter()
@@ -244,7 +251,10 @@ impl Sources {
         parent_path: impl AsRef<std::path::Path>,
         id: &Identifier,
     ) -> ResolveResult<Rc<SourceFile>> {
-        log::trace!("loading file: {:?} {id}", parent_path.as_ref());
+        log::trace!(
+            "loading file: {:?} [{id}]",
+            parent_path.as_ref().canonicalize().expect("invalid path")
+        );
         let file_path = find_mod_file_by_id(parent_path, id)?;
         let name = self.generate_name_from_path(&file_path)?;
         let source_file = SourceFile::load_with_name(&file_path, name)?;

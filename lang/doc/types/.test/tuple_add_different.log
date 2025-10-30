@@ -12,19 +12,19 @@
 -- Output --
 -- Errors --
 error: Tuple type mismatch: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
-  ---> <FROM STR>:3:5
+  ---> ../lang/doc/types/tuples.md:3:5
      |
    3 | c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
      |     ^^^^^
      |
 error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
-  ---> <FROM STR>:4:23
+  ---> ../lang/doc/types/tuples.md:4:23
      |
    4 | std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
      |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 error: Assertion failed: Invalid: <NO VALUE>
-  ---> <FROM STR>:4:23
+  ---> ../lang/doc/types/tuples.md:4:23
      |
    4 | std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
      |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^

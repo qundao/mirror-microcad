@@ -9,10 +9,11 @@
 -- Output --
 -- Errors --
 error: Statement is not available within file
-  ---> <FROM STR>:1:1
+  ---> ../lang/doc/tests/statement_usage.md:1:1
      |
    1 | return 1;  // error
      | ^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

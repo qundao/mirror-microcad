@@ -94,6 +94,6 @@
                                           - y = -12.5mm
                                           Primitive2D __builtin::geo2d::Rect(height=25, width=25, x=-12.5, y=-12.5) ->
 
-Export successful.
+Export of "../lang/doc/libs/std/ops/.test/mirror_3d-out.stl" successful.
 -- Test Result --
 OK

@@ -15,6 +15,6 @@
     Workpiece(sketch) workbench_expression_model::K() ->
       Primitive2D __builtin::geo2d::Circle(radius=1) ->
 
-Export successful.
+Export of "../lang/doc/tests/.test/workbench_expression_model-out.svg" successful.
 -- Test Result --
 OK

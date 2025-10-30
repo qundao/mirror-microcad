@@ -702,6 +702,7 @@ impl std::fmt::Debug for Symbol {
 fn test_symbol_resolve() {
     let root = SourceFile::load_from_str(
         "root",
+        "",
         "
         use my; 
         x = my::target;
@@ -714,6 +715,7 @@ fn test_symbol_resolve() {
 
     let my = SourceFile::load_from_str(
         "my",
+        "",
         "
         pub const target = 1;
         ",

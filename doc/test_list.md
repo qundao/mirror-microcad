@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**280** tests from markdown.
+**282** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -132,6 +132,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/structure/.test/missed_property.svg)](../lang/doc/structure/.test/missed_property.log) | [missed_property](../lang/doc/structure/workbench.md) |
 | [![test](../lang/doc/structure/.test/mod.svg)](../lang/doc/structure/.test/mod.log) | [mod](../lang/doc/structure/functions.md) |
 | [![test](../lang/doc/structure/.test/mod_example.svg)](../lang/doc/structure/.test/mod_example.log) | [mod_example](../lang/doc/structure/modules.md) |
+| [![test](../lang/doc/tests/.test/mod_external.svg)](../lang/doc/tests/.test/mod_external.log) | [mod_external](../lang/doc/tests/mod_external.md) |
+| [![test](../lang/doc/tests/.test/mod_external_root.svg)](../lang/doc/tests/.test/mod_external_root.log) | [mod_external_root](../lang/doc/tests/mod_external.md) |
 | [![test](../lang/doc/tests/.test/module_assignment_const.svg)](../lang/doc/tests/.test/module_assignment_const.log) | [module_assignment_const](../lang/doc/tests/statement_usage.md) |
 | [![test](../lang/doc/tests/.test/module_assignment_prop.svg)](../lang/doc/tests/.test/module_assignment_prop.log) | [module_assignment_prop](../lang/doc/tests/statement_usage.md) |
 | [![test](../lang/doc/tests/.test/module_assignment_var.svg)](../lang/doc/tests/.test/module_assignment_var.log) | [module_assignment_var](../lang/doc/tests/statement_usage.md) |

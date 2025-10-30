@@ -89,6 +89,12 @@ pub enum ResolveError {
     /// ScanDir Error
     #[error("{0}")]
     IoError(#[from] std::io::Error),
+
+    /// Invalid path.
+    #[error(
+        "Source of module '{0}' could not be found in {1:?} (expecting a file '{0}.µcad' or '{0}/mod.µcad')"
+    )]
+    SourceFileNotFound(Identifier, std::path::PathBuf),
 }
 
 /// Result type of any resolve.

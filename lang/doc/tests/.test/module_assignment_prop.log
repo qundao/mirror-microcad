@@ -11,16 +11,17 @@
 -- Output --
 -- Errors --
 error: Assignment statement is not available within module
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   prop a = 1;  // error
      |   ^^^^^^^^^^^
      |
 error: Declaration of a not allowed within module_assignment_prop::k
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   prop a = 1;  // error
      |   ^^^^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

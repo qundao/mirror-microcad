@@ -12,6 +12,6 @@
   Group (root) ->
     Primitive2D __builtin::geo2d::Circle(radius=1) ->
 
-Export successful.
+Export of "../lang/doc/tests/.test/source_expression_model-out.svg" successful.
 -- Test Result --
 OK

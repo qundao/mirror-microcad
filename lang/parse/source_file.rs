@@ -48,10 +48,16 @@ impl SourceFile {
 
     /// Create `SourceFile` from string
     /// The hash of the result will be of `crate::from_str!()`.
-    pub fn load_from_str(name: &str, s: &str) -> ParseResult<Rc<Self>> {
+    pub fn load_from_str(
+        name: &str,
+        path: impl AsRef<std::path::Path>,
+        source_str: &str,
+    ) -> ParseResult<Rc<Self>> {
         log::trace!("{load} source from string", load = crate::mark!(LOAD));
-        let mut source_file: Self = Parser::parse_rule(crate::parser::Rule::source_file, s, 0)?;
+        let mut source_file: Self =
+            Parser::parse_rule(crate::parser::Rule::source_file, source_str, 0)?;
         source_file.set_name(QualifiedName::from_id(Identifier::no_ref(name)));
+        source_file.set_filename(path);
         log::debug!("Successfully loaded source from string");
         log::trace!("Syntax tree:\n{}", FormatTree(&source_file));
         Ok(Rc::new(source_file))

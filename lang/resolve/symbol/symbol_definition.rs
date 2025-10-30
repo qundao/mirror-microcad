@@ -97,7 +97,7 @@ impl SymbolDefinition {
             SymbolDefinition::ConstExpression(_, id, _) => id.src_ref().source_hash(),
             SymbolDefinition::Alias(_, id, _) => id.src_ref().source_hash(),
             SymbolDefinition::UseAll(_, name) => name.src_ref().source_hash(),
-            _ => unreachable!(),
+            _ => 0,
         }
     }
 }

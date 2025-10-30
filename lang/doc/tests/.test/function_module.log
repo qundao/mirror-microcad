@@ -11,16 +11,17 @@
 -- Output --
 -- Errors --
 error: Statement is not available within function
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   mod m {} // error
      |   ^^^^^^^^
      |
 error: Module definition is not available within Function
-  ---> <FROM STR>:2:3
+  ---> ../lang/doc/tests/statement_usage.md:2:3
      |
    2 |   mod m {} // error
      |   ^^^^^^^^
      |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

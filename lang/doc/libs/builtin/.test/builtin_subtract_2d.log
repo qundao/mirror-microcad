@@ -23,6 +23,6 @@
           Primitive2D __builtin::geo2d::Circle(radius=3) ->
         Primitive2D __builtin::geo2d::Rect(height=3, width=3, x=0, y=0) ->
 
-Export successful.
+Export of "../lang/doc/libs/builtin/.test/builtin_subtract_2d-out.svg" successful.
 -- Test Result --
 OK
