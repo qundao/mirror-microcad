@@ -31,6 +31,7 @@ impl Plugin for MicrocadPlugin {
                 self.mode.clone(),
                 self.config.clone(),
             ))
+            .add_systems(Startup, load_shaders)
             .add_systems(Startup, apply_window_settings)
             .add_systems(Update, crate::stdin::handle_stdin_messages);
     }
@@ -48,4 +49,18 @@ fn apply_window_settings(state: Res<crate::State>, mut windows: Query<&mut Windo
         true => bevy::window::WindowLevel::AlwaysOnTop,
         false => bevy::window::WindowLevel::Normal,
     };
+}
+
+fn load_shaders(mut shaders: ResMut<Assets<Shader>>) {
+    use crate::scene::*;
+
+    let uuid = crate::scene::internal_asset_uuid_from_str(GridMaterial::SOURCE);
+
+    shaders.insert(
+        uuid,
+        Shader::from_wgsl(
+            include_str!(concat!("../assets/shaders/grid.wgsl")),
+            GridMaterial::SOURCE,
+        ),
+    )
 }

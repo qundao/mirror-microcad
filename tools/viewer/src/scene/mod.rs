@@ -6,6 +6,27 @@ mod grid;
 mod lighting;
 mod ruler;
 
+pub use grid::GridMaterial;
+
+use bevy::asset::uuid::Uuid;
+use bevy::prelude::{Handle, Shader};
+use bevy::render::render_resource::ShaderRef;
+
+pub static INTERNAL_ASSET_ID: u64 = 0x1234123412341234;
+
+pub fn internal_asset_uuid_from_str(s: &'static str) -> Uuid {
+    use std::hash::{Hash, Hasher};
+    let mut hasher = rustc_hash::FxHasher::default();
+    s.hash(&mut hasher);
+    Uuid::from_u64_pair(INTERNAL_ASSET_ID, hasher.finish())
+}
+
+pub fn shader_ref_from_str(s: &'static str) -> ShaderRef {
+    ShaderRef::Handle(Handle::Weak(bevy::asset::AssetId::<Shader>::Uuid {
+        uuid: internal_asset_uuid_from_str(s),
+    }))
+}
+
 pub fn get_current_zoom_level(projection: &Projection) -> f32 {
     match projection {
         Projection::Orthographic(orthographic_projection) => orthographic_projection.scale,

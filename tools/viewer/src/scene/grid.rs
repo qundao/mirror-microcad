@@ -37,16 +37,20 @@ pub struct GridMaterial {
 }
 
 impl GridMaterial {
-    pub const SOURCE: &'static str = "shaders/grid.wgsl";
+    pub const SOURCE: &'static str = "grid.wgsl";
+
+    fn shader_ref() -> ShaderRef {
+        super::shader_ref_from_str(GridMaterial::SOURCE)
+    }
 }
 
 impl Material for GridMaterial {
     fn fragment_shader() -> ShaderRef {
-        Self::SOURCE.into()
+        Self::shader_ref()
     }
 
     fn vertex_shader() -> ShaderRef {
-        Self::SOURCE.into()
+        Self::shader_ref()
     }
 
     fn alpha_mode(&self) -> AlphaMode {
