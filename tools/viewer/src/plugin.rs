@@ -27,7 +27,6 @@ impl Plugin for MicrocadPlugin {
         app.add_plugins((OutlinePlugin, MeshPickingPlugin))
             .add_plugins(crate::processor::ProcessorPlugin)
             .add_plugins(crate::scene::ScenePlugin)
-            .insert_resource(crate::stdin::StdinMessageReceiver::run())
             .insert_resource(crate::state::State::new(
                 self.mode.clone(),
                 self.config.clone(),
