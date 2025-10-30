@@ -4,6 +4,7 @@
 //! Microcad viewer library.
 
 pub mod config;
+pub mod material;
 pub mod plugin;
 pub mod processor;
 pub mod scene;

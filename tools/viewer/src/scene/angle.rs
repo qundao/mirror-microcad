@@ -3,75 +3,28 @@
 
 //! microcad Angle measure scene item.
 
-use bevy::render::{
-    alpha::AlphaMode,
-    mesh::{Mesh, Mesh3d},
-    render_resource::{AsBindGroup, ShaderRef},
-};
+use bevy::render::mesh::{Mesh, Mesh3d};
 use bevy::{
-    asset::{Asset, Assets},
+    asset::Assets,
     ecs::system::{Commands, ResMut},
     math::{Vec2, Vec3, primitives::Plane3d},
-    pbr::{Material, MeshMaterial3d},
-    reflect::TypePath,
+    pbr::MeshMaterial3d,
 };
 
-#[derive(Asset, AsBindGroup, Debug, Clone, Default, TypePath)]
-// This struct defines the data that will be passed to your shader
-pub struct AngleMaterial {
-    #[uniform(0)]
-    start_angle: f32,
-
-    #[uniform(1)]
-    end_angle: f32,
-
-    #[uniform(2)]
-    inner_radius: f32,
-
-    #[uniform(3)]
-    outer_radius: f32,
-
-    alpha_mode: AlphaMode,
-}
-
-impl AngleMaterial {
-    pub const SOURCE: &'static str = "shaders/angle.wgsl";
-}
-
-impl Material for AngleMaterial {
-    fn fragment_shader() -> ShaderRef {
-        Self::SOURCE.into()
-    }
-
-    fn vertex_shader() -> ShaderRef {
-        Self::SOURCE.into()
-    }
-
-    fn alpha_mode(&self) -> AlphaMode {
-        self.alpha_mode
-    }
-}
+use crate::material;
 
 #[allow(unused)]
 pub fn spawn_angle_plane(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<AngleMaterial>>,
+    mut materials: ResMut<Assets<material::Angle>>,
 ) {
     let plane = Mesh::from(Plane3d::new(Vec3::Z, Vec2::new(10.0, 10.0)));
     let mesh_handle = meshes.add(plane);
 
-    use cgmath::{Deg, Rad};
-
     commands.spawn((
         Mesh3d(mesh_handle),
-        MeshMaterial3d(materials.add(AngleMaterial {
-            start_angle: Rad::from(Deg(45.0)).0,
-            end_angle: Rad::from(Deg(135.0)).0,
-            inner_radius: 0.0,
-            outer_radius: 1.0,
-            alpha_mode: AlphaMode::Blend,
-        })),
+        MeshMaterial3d(materials.add(material::Angle::default())),
         bevy::picking::Pickable::IGNORE,
     ));
 }

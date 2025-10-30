@@ -1,70 +1,35 @@
+// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Viewer materials.
+
 use bevy::{
-    asset::{Asset, Assets},
+    asset::Assets,
     ecs::{
         query::With,
         system::{Commands, Query, Res, ResMut},
     },
     math::{Vec2, Vec3, primitives::Plane3d},
-    pbr::{Material, MeshMaterial3d},
-    reflect::TypePath,
+    pbr::MeshMaterial3d,
     transform::components::Transform,
 };
 use bevy::{
     ecs::event::EventReader,
     render::{
-        alpha::AlphaMode,
         camera::{Camera, Projection},
         mesh::{Mesh, Mesh3d},
-        render_resource::{AsBindGroup, ShaderRef},
     },
 };
 
+use crate::*;
 use crate::{scene::get_current_zoom_level, state::State};
-
-#[derive(Asset, AsBindGroup, Debug, Clone, Default, TypePath)]
-// This struct defines the data that will be passed to your shader
-pub struct GridMaterial {
-    #[uniform(0)]
-    radius: f32,
-
-    #[uniform(1)]
-    zoom_level: f32,
-
-    #[uniform(2)]
-    view_angle: Vec3,
-
-    alpha_mode: AlphaMode,
-}
-
-impl GridMaterial {
-    pub const SOURCE: &'static str = "grid.wgsl";
-
-    fn shader_ref() -> ShaderRef {
-        super::shader_ref_from_str(GridMaterial::SOURCE)
-    }
-}
-
-impl Material for GridMaterial {
-    fn fragment_shader() -> ShaderRef {
-        Self::shader_ref()
-    }
-
-    fn vertex_shader() -> ShaderRef {
-        Self::shader_ref()
-    }
-
-    fn alpha_mode(&self) -> AlphaMode {
-        self.alpha_mode
-    }
-}
 
 pub fn spawn_grid_plane(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<GridMaterial>>,
+    mut materials: ResMut<Assets<material::Grid>>,
     mut state: ResMut<State>,
 ) {
-    let radius = state.scene.radius;
     let plane = Mesh::from(Plane3d::new(Vec3::Z, Vec2::new(1000.0, 1000.0)));
     let mesh_handle = meshes.add(plane);
 
@@ -72,12 +37,7 @@ pub fn spawn_grid_plane(
         commands
             .spawn((
                 Mesh3d(mesh_handle),
-                MeshMaterial3d(materials.add(GridMaterial {
-                    radius,
-                    zoom_level: 1.0,
-                    view_angle: Vec3::new(0.0, 0.0, 1.0),
-                    alpha_mode: AlphaMode::Blend,
-                })),
+                MeshMaterial3d(materials.add(material::Grid::default())),
                 bevy::picking::Pickable::IGNORE,
             ))
             .id(),
@@ -86,10 +46,10 @@ pub fn spawn_grid_plane(
 
 /// Update grid material according to zoom level.
 pub fn update_grid(
-    mut materials: ResMut<Assets<GridMaterial>>,
+    mut materials: ResMut<Assets<material::Grid>>,
     state: Res<State>,
     proj_query: Query<&Projection, With<Camera>>,
-    mat_query: Query<&mut MeshMaterial3d<GridMaterial>>,
+    mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
 ) {
     let radius = state.scene.radius;
 
@@ -105,10 +65,10 @@ pub fn update_grid(
 }
 
 pub fn update_grid_on_view_angle_change(
-    mut materials: ResMut<Assets<GridMaterial>>,
+    mut materials: ResMut<Assets<material::Grid>>,
     state: Res<State>,
     cam_query: Query<(&Transform, &Camera)>,
-    mat_query: Query<&mut MeshMaterial3d<GridMaterial>>,
+    mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
 ) {
     for (transform, _) in cam_query {
         if let Some(grid) = state.scene.grid_entity
@@ -123,9 +83,9 @@ pub fn update_grid_on_view_angle_change(
 /// Update grid material when scene radius has changed.
 pub fn update_grid_on_scene_change(
     mut events: EventReader<super::SceneRadiusChangeEvent>,
-    mut materials: ResMut<Assets<GridMaterial>>,
+    mut materials: ResMut<Assets<material::Grid>>,
     state: Res<State>,
-    mat_query: Query<&mut MeshMaterial3d<GridMaterial>>,
+    mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
 ) {
     for event in events.read() {
         if let Some(grid) = state.scene.grid_entity
