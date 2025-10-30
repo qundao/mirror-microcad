@@ -1,0 +1,15 @@
+-- Test --
+  integer_literal
+  ../books/language/src/expressions/literals.md:13
+
+-- Code --
+
+ 1: 50;
+ 2: 1350;
+ 3: -6
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

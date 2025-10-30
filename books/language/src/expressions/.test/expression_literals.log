@@ -1,0 +1,15 @@
+-- Test --
+  expression_literals
+  ../books/language/src/expressions/README.md:8
+
+-- Code --
+
+ 1: 5;        // Scalar literal
+ 2: 4.0mm;    // Quantity literal
+ 3: "Hello";  // String literal
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

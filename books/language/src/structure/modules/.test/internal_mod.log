@@ -1,0 +1,15 @@
+-- Test --
+  internal_mod
+  ../books/language/src/structure/modules/internal_modules.md:8
+
+-- Code --
+
+ 1: mod my_module {
+ 2:     // statements
+ 3: }
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -12,9 +12,9 @@ fn main() {
     );
 
     if let Err(err) = microcad_markdown_test::generate(
-        "../books/microcad_language/src",
+        "../books/language/src",
         "microcad_markdown_test.rs",
-        "../books/microcad_language/src/appendix/test_list.md",
+        "../books/language/src/appendix/test_list.md",
     ) {
         panic!("error generating rust test code from markdown file: {err}");
     }

@@ -1,0 +1,13 @@
+-- Test --
+  string_literal
+  ../books/language/src/expressions/literals.md:54
+
+-- Code --
+
+ 1: "Hello, World!"
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK
