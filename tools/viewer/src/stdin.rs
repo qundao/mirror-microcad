@@ -7,7 +7,7 @@ use std::{io::BufRead, time::Duration};
 
 use crossbeam::channel::Receiver;
 
-use bevy::ecs::{resource::Resource, system::Res};
+use bevy::ecs::resource::Resource;
 use bevy::prelude::{AppExit, EventWriter};
 
 use microcad_viewer_ipc::ViewerRequest;
@@ -19,6 +19,7 @@ pub struct StdinMessageReceiver(Receiver<ViewerRequest>);
 
 impl StdinMessageReceiver {
     pub fn run() -> Self {
+        log::info!("Run stdin message receiver");
         // Create channel for stdin reader to communicate with Bevy
         let (sender, receiver) = crossbeam::channel::unbounded();
 
@@ -28,12 +29,16 @@ impl StdinMessageReceiver {
 
             loop {
                 for line in stdin.lock().lines().map_while(Result::ok) {
+                    log::info!("Line: {line:?}");
                     match serde_json::from_str::<ViewerRequest>(&line) {
-                        Ok(msg) => {
-                            if sender.send(msg).is_err() {
-                                break;
+                        Ok(msg) => match sender.send(msg) {
+                            Ok(_) => {
+                                log::info!("Message sent!");
                             }
-                        }
+                            Err(err) => {
+                                log::error!("{err}");
+                            }
+                        },
                         Err(e) => eprintln!("Invalid input: {e}"),
                     }
                 }
@@ -54,6 +59,7 @@ pub fn handle_stdin_messages(
 ) {
     if let Some(stdin) = &state.stdin {
         for viewer_request in stdin.0.try_iter() {
+            log::info!("{viewer_request:?}");
             match viewer_request {
                 microcad_viewer_ipc::ViewerRequest::SourceCodeFromFile { path } => {
                     event_writer.write(ProcessorRequest::ParseFile(path));
