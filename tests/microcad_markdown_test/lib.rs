@@ -72,10 +72,7 @@ pub fn generate(
         &mut test_outputs,
     )?;
 
-    std::fs::File::create(test_list_file)
-        .expect("file access error")
-        .write_all(make_test_list(&test_outputs).as_bytes())
-        .expect("write error");
+    create_test_list(test_list_file, &test_outputs);
 
     // remove any previous banners
     remove_banners(path, &exclude_dirs, &test_outputs)?;
@@ -95,7 +92,14 @@ pub fn generate(
     }
 }
 
-fn make_test_list(tests: &[Output]) -> String {
+fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
+    std::fs::File::create(path.as_ref())
+        .expect("file access error")
+        .write_all(make_test_list(path, outputs).as_bytes())
+        .expect("write error");
+}
+
+fn make_test_list(path: impl AsRef<std::path::Path>, tests: &[Output]) -> String {
     let count = tests.len();
     let mut result = format!(
         "# Test List
@@ -114,7 +118,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
         let mut tests = tests.iter().collect::<Vec<_>>().clone();
         tests.sort();
         tests.iter().for_each(|test| {
-            result.push_str(&test.to_string());
+            result.push_str(&test.table_line(path.as_ref().parent().expect("invalid path")));
         });
     }
 
