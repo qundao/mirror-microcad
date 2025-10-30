@@ -67,17 +67,15 @@ impl Output {
         let input = &self.input;
         let log = &self.log;
 
-        let e = &format!("wrong paths: {base_path:?}\n{banner:?}\n{input:?}\n{log:?}");
-
-        let base_path = base_path.canonicalize().expect(e);
-        let banner = self.banner.canonicalize().expect(e);
-        let input = self.input.canonicalize().expect(e);
-        let log = self.log.canonicalize().expect(e);
+        let e = &format!(
+            "wrong paths: {:?}\n{base_path:?}\n{banner:?}\n{input:?}\n{log:?}",
+            std::env::current_dir().expect("current dir")
+        );
 
         use pathdiff::diff_paths;
-        let banner = diff_paths(banner, &base_path).expect(e);
-        let input = diff_paths(input, &base_path).expect(e);
-        let log = diff_paths(log, &base_path).expect(e);
+        let banner = diff_paths(banner, base_path).expect(e);
+        let input = diff_paths(input, base_path).expect(e);
+        let log = diff_paths(log, base_path).expect(e);
 
         let banner = banner.to_str().expect(e);
         let input = input.to_str().expect(e);

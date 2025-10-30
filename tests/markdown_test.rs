@@ -135,7 +135,7 @@ pub fn run_test(env: Option<TestEnv>) {
                     env.log_ln(&err.to_string());
 
                     if env.todo() {
-                        env.result(TestResult::TodoFail);
+                        env.result(TestResult::Todo);
                     } else {
                         env.result(TestResult::Fail);
                         panic!("ERROR: {err}")

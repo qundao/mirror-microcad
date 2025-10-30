@@ -1,3 +1,0 @@
-// file: main.µcad
-mod second;
-second::f(); 
