@@ -40,8 +40,8 @@ impl Output {
                     })
                     .collect()
             },
-            out: out,
-            log: log,
+            out,
+            log,
             externals: Vec::new(),
         }
     }
@@ -60,28 +60,31 @@ impl Output {
         self.externals.push(path);
     }
 
-    pub fn table_line(&self, base_path: impl AsRef<std::path::Path>) -> String {
+    /// Return a test list table row.
+    pub fn table_row(&self, base_path: impl AsRef<std::path::Path>) -> String {
         let base_path = base_path.as_ref();
         let banner = &self.banner;
         let input = &self.input;
         let log = &self.log;
 
-        let e = &format!("original:\n{base_path:?}\n{banner:?}\n{input:?}\n{log:?}");
+        let e = &format!("wrong paths: {base_path:?}\n{banner:?}\n{input:?}\n{log:?}");
 
         let base_path = base_path.canonicalize().expect(e);
         let banner = self.banner.canonicalize().expect(e);
         let input = self.input.canonicalize().expect(e);
         let log = self.log.canonicalize().expect(e);
 
-        let e = &format!("canonicalized:\n{base_path:?}\n{banner:?}\n{input:?}\n{log:?}");
+        use pathdiff::diff_paths;
+        let banner = diff_paths(banner, &base_path).expect(e);
+        let input = diff_paths(input, &base_path).expect(e);
+        let log = diff_paths(log, &base_path).expect(e);
 
-        let banner = banner.strip_prefix(&base_path).expect(e).to_str().expect(e);
-        let input = input.strip_prefix(&base_path).expect(e).to_str().expect(e);
-        let log = log.strip_prefix(&base_path).expect(e).to_str().expect(e);
-        let e = &format!("ready:\n{base_path:?}\n{banner:?}\n{input:?}\n{log:?}");
+        let banner = banner.to_str().expect(e);
+        let input = input.to_str().expect(e);
+        let log = log.to_str().expect(e);
 
         format!(
-            "| [![test]({banner})]({log}) | [{name}]({input}) |",
+            "| [![test]({banner})]({log}) | [{name}]({input}) |\n",
             name = self.name,
         )
     }

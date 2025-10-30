@@ -95,8 +95,10 @@ pub fn generate(
 fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
     std::fs::File::create(path.as_ref())
         .expect("file access error")
-        .write_all(make_test_list(path, outputs).as_bytes())
+        .write_all(make_test_list(&path, outputs).as_bytes())
         .expect("write error");
+    // tell cargo to watch this file
+    println!("cargo:rerun-if-changed={}", path.as_ref().display());
 }
 
 fn make_test_list(path: impl AsRef<std::path::Path>, tests: &[Output]) -> String {
@@ -118,7 +120,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
         let mut tests = tests.iter().collect::<Vec<_>>().clone();
         tests.sort();
         tests.iter().for_each(|test| {
-            result.push_str(&test.table_line(path.as_ref().parent().expect("invalid path")));
+            result.push_str(&test.table_row(path.as_ref().parent().expect("invalid path")));
         });
     }
 
