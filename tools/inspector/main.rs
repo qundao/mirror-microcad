@@ -12,7 +12,7 @@ use microcad_lang::syntax::*;
 
 use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
-use std::sync::{Arc, Mutex, RwLock};
+use std::sync::{Arc, RwLock};
 use std::thread;
 mod watcher;
 
@@ -209,22 +209,32 @@ impl Inspector {
 
         let weak = main_window.as_weak();
         let viewer_process = self.viewer_process.clone();
-        main_window.on_button_send_source_code_clicked(move || match viewer_process.read() {
-            Ok(mut process) => match &*process {
-                Some(process) => {
-                    process
-                        .send_request(ViewerRequest::SourceCode {
-                            path: Some(input.clone()),
-                            name: Some("Test".to_string()),
-                            code: weak.upgrade().unwrap().get_source_code().to_string(),
-                        })
-                        .expect("No error");
-                }
-                None => {
-                    log::error!("Process is not running!");
-                }
-            },
-            Err(err) => log::error!("{err}"),
+        main_window.on_button_send_source_code_clicked(move || {
+            let code = weak
+                .upgrade()
+                .expect("MainWindow component")
+                .get_source_code()
+                .to_string();
+            log::info!("Send source code: {code}");
+
+            match viewer_process.read() {
+                Ok(process) => match &*process {
+                    Some(process) => {
+                        log::info!("Viewer request");
+                        process
+                            .send_request(ViewerRequest::SourceCode {
+                                path: Some(input.clone()),
+                                name: None,
+                                code,
+                            })
+                            .expect("No error");
+                    }
+                    None => {
+                        log::error!("Process is not running!");
+                    }
+                },
+                Err(err) => log::error!("{err}"),
+            }
         });
 
         main_window.run()?;
