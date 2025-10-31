@@ -260,7 +260,7 @@ impl TestEnv {
             TestResult::Ok => ("ok", "OK"),
             TestResult::Todo => ("todo", "TODO"),
             TestResult::NotTodo => ("not_todo", "OK BUT IS TODO"),
-            TestResult::Fail => ("fail.svg", "FAIL"),
+            TestResult::Fail => ("fail", "FAIL"),
             TestResult::FailWrong => ("fail_wrong", "FAILED BUT WITH WRONG ERRORS"),
             TestResult::FailOk => ("fail_ok", "FAILED AS EXPECTED"),
             TestResult::NotTodoFail => ("not_todo_fail", "FAILED AS EXPECTED BUT IS TODO"),
