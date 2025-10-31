@@ -11,6 +11,7 @@
  5: PunchedDisk(4.0mm);
 
 -- Output --
+
 -- Errors --
 error: Function statement not available here
   ---> ../books/language/src/structure/functions.md:2:5

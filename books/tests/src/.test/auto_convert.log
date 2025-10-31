@@ -23,6 +23,7 @@
 17: h(1.0);  // error
 
 -- Output --
+
 -- Errors --
 error: Missing arguments: x
   ---> ../books/tests/src/auto_convert.md:4:3

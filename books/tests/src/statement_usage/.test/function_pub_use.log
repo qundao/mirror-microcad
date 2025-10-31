@@ -9,6 +9,7 @@
  3: } f();
 
 -- Output --
+
 -- Errors --
 error: Use statement is not available within Function
   ---> ../books/tests/src/statement_usage/function.md:2:3

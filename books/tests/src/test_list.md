@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**112** tests from markdown.
+**113** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -23,6 +23,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/body_use.svg)](statement_usage/.test/body_use.log) | [body_use](statement_usage/body.md) |
 | [![test](statement_usage/.test/body_workbench.svg)](statement_usage/.test/body_workbench.log) | [body_workbench](statement_usage/body.md) |
 | [![test](.test/builtin_modules.svg)](.test/builtin_modules.log) | [builtin_modules](modules.md) |
+| [![test](.test/condition_return.svg)](.test/condition_return.log) | [condition_return](conditions.md) |
 | [![test](.test/empty_op.svg)](.test/empty_op.log) | [empty_op](semicolon.md) |
 | [![test](statement_usage/.test/function_assignment_const.svg)](statement_usage/.test/function_assignment_const.log) | [function_assignment_const](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_assignment_prop.svg)](statement_usage/.test/function_assignment_prop.log) | [function_assignment_prop](statement_usage/function.md) |

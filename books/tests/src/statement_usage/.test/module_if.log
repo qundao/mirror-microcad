@@ -9,6 +9,7 @@
  3: }
 
 -- Output --
+
 -- Errors --
 error: Statement is not available within Module
   ---> ../books/tests/src/statement_usage/module.md:2:3

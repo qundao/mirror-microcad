@@ -27,6 +27,7 @@
 21: math::pow(2.0, 5);  // error: pow is private
 
 -- Output --
+
 -- Errors --
 error: Symbol math::pow not found.
   ---> ../books/language/src/structure/functions.md:21:1

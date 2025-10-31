@@ -10,6 +10,7 @@
  4: std::debug::assert_eq([b,10]);
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

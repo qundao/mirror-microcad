@@ -7,6 +7,7 @@
  1: {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
 
 -- Output --
+
 -- Errors --
 warning: This expression statement did not produce any model
   ---> ../books/tests/src/semicolon.md:1:1

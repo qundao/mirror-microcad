@@ -7,6 +7,7 @@
  1: init() {} // error
 
 -- Output --
+
 -- Errors --
 error: Statement is not available within SourceFile
   ---> ../books/tests/src/statement_usage/source.md:1:1

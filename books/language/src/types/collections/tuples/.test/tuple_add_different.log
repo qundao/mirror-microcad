@@ -10,6 +10,7 @@
  4: std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
 
 -- Output --
+
 -- Errors --
 error: Tuple type mismatch: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
   ---> ../books/language/src/types/collections/tuples/operators.md:3:5

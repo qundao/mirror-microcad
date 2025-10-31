@@ -9,6 +9,7 @@
  3: std::debug::assert_eq([a + b, (x = 4.0mm, y = 6.0mm)]);
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

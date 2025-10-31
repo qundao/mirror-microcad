@@ -13,7 +13,8 @@
  7: print_error("first");
  8: print_error("second");
 
--- Output --ERROR: first
+-- Output --
+ERROR: first
 ERROR: second
 
 -- Errors --

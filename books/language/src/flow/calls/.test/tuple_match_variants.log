@@ -25,6 +25,7 @@
 19: f( q, z=3cm );
 
 -- Output --
+
 -- Errors --
 error: Missing arguments: x,y,z
   ---> ../books/language/src/flow/calls/arguments.md:7:4

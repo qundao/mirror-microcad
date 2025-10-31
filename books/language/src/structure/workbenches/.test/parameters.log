@@ -22,6 +22,7 @@
 16: }.punch_disk(radius = 1cm);
 
 -- Output --
+
 -- Errors --
 error: Symbol count not found.
   ---> ../books/language/src/structure/workbenches/operations.md:3:15

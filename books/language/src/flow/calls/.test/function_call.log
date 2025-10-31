@@ -1,0 +1,18 @@
+-- Test --
+  function_call
+  ../books/language/src/flow/calls/function_calls.md:7
+
+-- Code --
+
+ 1: // function definition
+ 2: fn f() {}
+ 3: 
+ 4: // function call
+ 5: f();
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

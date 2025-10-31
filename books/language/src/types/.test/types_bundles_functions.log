@@ -8,6 +8,7 @@
  2: fn f(x: Length) {}     // use type (without default)
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

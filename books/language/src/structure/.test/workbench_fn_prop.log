@@ -15,6 +15,7 @@
  9: PunchedDisk(1cm);
 
 -- Output --
+
 -- Errors --
 error: Assignment statement is not available within Function
   ---> ../books/language/src/structure/functions.md:3:9

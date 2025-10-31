@@ -10,7 +10,8 @@
  4: // logging
  5: std::print(text);
 
--- Output --Hello µcad!
+-- Output --
+Hello µcad!
 
 -- Errors --
 -- No model --

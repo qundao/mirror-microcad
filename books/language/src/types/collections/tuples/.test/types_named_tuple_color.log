@@ -9,6 +9,7 @@
  3: std::debug::assert(color.r == 100%);
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

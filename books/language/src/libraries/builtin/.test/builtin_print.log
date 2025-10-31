@@ -6,7 +6,8 @@
 
  1: __builtin::print("ok");
 
--- Output --ok
+-- Output --
+ok
 
 -- Errors --
 -- No model --

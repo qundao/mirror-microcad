@@ -10,6 +10,7 @@
  4: std::debug::assert_eq([c#resolution, 200%]);
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

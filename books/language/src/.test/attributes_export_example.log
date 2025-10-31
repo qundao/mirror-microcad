@@ -9,6 +9,7 @@
  3: c = std::geo2d::Circle(42.0mm);
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

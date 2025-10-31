@@ -13,6 +13,7 @@
  7: std::debug::assert_eq([4 == 5 and 4 == 4, false]);
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

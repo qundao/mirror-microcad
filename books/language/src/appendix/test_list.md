@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**155** tests from markdown.
+**158** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -54,6 +54,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/modules/.test/external_modules_main.svg)](../structure/modules/.test/external_modules_main.log) | [external_modules_main](../structure/modules/external_modules.md) |
 | [![test](../structure/modules/.test/external_modules_second.svg)](../structure/modules/.test/external_modules_second.log) | [external_modules_second](../structure/modules/external_modules.md) |
 | [![test](../libraries/std/ops/.test/extrude.svg)](../libraries/std/ops/.test/extrude.log) | [extrude](../libraries/std/ops/extrude.md) |
+| [![test](../flow/calls/.test/function_call.svg)](../flow/calls/.test/function_call.log) | [function_call](../flow/calls/function_calls.md) |
+| [![test](../flow/calls/.test/function_param_return.svg)](../flow/calls/.test/function_param_return.log) | [function_param_return](../flow/calls/function_calls.md) |
+| [![test](../flow/calls/.test/function_return.svg)](../flow/calls/.test/function_return.log) | [function_return](../flow/calls/function_calls.md) |
 | [![test](../libraries/std/ops/.test/hull_multiple.svg)](../libraries/std/ops/.test/hull_multiple.log) | [hull_multiple](../libraries/std/ops/hull.md) |
 | [![test](../libraries/std/ops/.test/hull_single.svg)](../libraries/std/ops/.test/hull_single.log) | [hull_single](../libraries/std/ops/hull.md) |
 | [![test](../flow/.test/if_functions.svg)](../flow/.test/if_functions.log) | [if_functions](../flow/conditions.md) |
@@ -61,7 +64,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/illegal_workbench_statement.svg)](../structure/workbenches/.test/illegal_workbench_statement.log) | [illegal_workbench_statement](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/init_property.svg)](../structure/workbenches/.test/init_property.log) | [init_property](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/initializers.svg)](../structure/workbenches/.test/initializers.log) | [initializers](../structure/workbenches/README.md) |
-| [![test](../flow/calls/.test/inline_identifiers.svg)](../flow/calls/.test/inline_identifiers.log) | [inline_identifiers](../flow/calls/arguments.md) |
+| [![test](../flow/calls/.test/inline_identifiers.svg)](../flow/calls/.test/inline_identifiers.log) | [inline_identifiers](../flow/calls/multiplicity.md) |
 | [![test](../structure/workbenches/.test/input.svg)](../structure/workbenches/.test/input.log) | [input](../structure/workbenches/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../structure/modules/.test/internal_mod.svg)](../structure/modules/.test/internal_mod.log) | [internal_mod](../structure/modules/internal_modules.md) |
@@ -74,10 +77,10 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/missed_property.svg)](../structure/workbenches/.test/missed_property.log) | [missed_property](../structure/workbenches/README.md) |
 | [![test](../structure/.test/mod.svg)](../structure/.test/mod.log) | [mod](../structure/functions.md) |
 | [![test](../structure/modules/.test/mod_example.svg)](../structure/modules/.test/mod_example.log) | [mod_example](../structure/modules/README.md) |
-| [![test](../flow/calls/.test/multiplicity_arrays.svg)](../flow/calls/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/multiplicity_tuple_array.svg)](../flow/calls/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/calls/arguments.md) |
+| [![test](../flow/calls/.test/multiplicity_arrays.svg)](../flow/calls/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/calls/multiplicity.md) |
+| [![test](../flow/calls/.test/multiplicity_tuple_array.svg)](../flow/calls/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/calls/multiplicity.md) |
 | [![test](../types/collections/tuples/.test/named_tuple_access.svg)](../types/collections/tuples/.test/named_tuple_access.log) | [named_tuple_access](../types/collections/tuples/README.md) |
-| [![test](../flow/calls/.test/no_multiplicity.svg)](../flow/calls/.test/no_multiplicity.log) | [no_multiplicity](../flow/calls/arguments.md) |
+| [![test](../flow/calls/.test/no_multiplicity.svg)](../flow/calls/.test/no_multiplicity.log) | [no_multiplicity](../flow/calls/multiplicity.md) |
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
 | [![test](../structure/workbenches/.test/op_example.svg)](../structure/workbenches/.test/op_example.log) | [op_example](../structure/workbenches/operations.md) |
 | [![test](../expressions/.test/operator_array.svg)](../expressions/.test/operator_array.log) | [operator_array](../expressions/operators.md) |

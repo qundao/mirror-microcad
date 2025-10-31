@@ -21,7 +21,8 @@
 15: // but you cannot access `inner` anymore
 16: std::print("inner: {t.inner}"); // error
 
--- Output --outer: 10mm
+-- Output --
+outer: 10mm
 inner: <NO VALUE>
 
 -- Errors --

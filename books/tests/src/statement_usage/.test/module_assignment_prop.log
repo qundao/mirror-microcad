@@ -9,6 +9,7 @@
  3: }
 
 -- Output --
+
 -- Errors --
 error: Assignment statement is not available within Module
   ---> ../books/tests/src/statement_usage/module.md:2:3

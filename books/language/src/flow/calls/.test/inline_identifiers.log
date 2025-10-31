@@ -1,6 +1,6 @@
 -- Test --
   inline_identifiers
-  ../books/language/src/flow/calls/arguments.md:166
+  ../books/language/src/flow/calls/multiplicity.md:51
 
 -- Code --
 
@@ -9,6 +9,7 @@
  3: std::geo2d::Rect(width, height);
 
 -- Output --
+
 -- Errors --
 -- Model --
   Group (root) ->

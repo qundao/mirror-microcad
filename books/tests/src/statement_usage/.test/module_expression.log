@@ -9,6 +9,7 @@
  3: }
 
 -- Output --
+
 -- Errors --
 error: Expression statement not available here
   ---> ../books/tests/src/statement_usage/module.md:2:3

@@ -9,6 +9,7 @@
  3: init(l:Length) {} } K();
 
 -- Output --
+
 -- Errors --
 error: Use statement is not available within Sketch
   ---> ../books/tests/src/statement_usage/pre-init.md:2:3

@@ -9,6 +9,7 @@
  3: } K();
 
 -- Output --
+
 -- Errors --
 error: Use statement is not available within Sketch
   ---> ../books/tests/src/statement_usage/workbench.md:2:3

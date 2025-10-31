@@ -9,6 +9,7 @@
  3: } } K(1cm);
 
 -- Output --
+
 -- Errors --
 error: Public use statement not available here
   ---> ../books/tests/src/statement_usage/init.md:2:3

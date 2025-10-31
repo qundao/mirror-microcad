@@ -8,6 +8,7 @@
  2: a = a * 2; // error: a already defined in this scope
 
 -- Output --
+
 -- Errors --
 error: Value a already in defined: 5 (at line 1:1)
   ---> ../books/language/src/assignments/values.md:2:1

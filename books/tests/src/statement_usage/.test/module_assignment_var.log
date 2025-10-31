@@ -9,6 +9,7 @@
  3: }
 
 -- Output --
+
 -- Errors --
 error: Declaration of a not allowed within module_assignment_var::k
   ---> ../books/tests/src/statement_usage/module.md:2:3

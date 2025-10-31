@@ -8,6 +8,7 @@
  2: f( (x=1cm, y=2cm, v=5cm), z=3cm);  // error: Missing arguments: x,y
 
 -- Output --
+
 -- Errors --
 error: Missing arguments: x,y
   ---> ../books/language/src/flow/calls/arguments.md:2:4

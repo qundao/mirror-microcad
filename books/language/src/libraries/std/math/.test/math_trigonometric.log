@@ -14,6 +14,7 @@
  8: assert_eq([sin(x)^2. + cos(x)^2., 1.]);
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

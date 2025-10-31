@@ -9,15 +9,16 @@ Conditions lead to different executions paths for different cases.
 ```µcad,if_models
 sketch MySketch(a: Integer) {
     if a == 1 {
-        std::geo2d::Circle(radius = 1mm)
-    } else {
         std::geo2d::Circle(radius = 4mm)
+    } else {
+        std::geo2d::Circle(radius = 10mm)
     }
 }
 
-MySketch(1);
-MySketch(2);
+MySketch(2) - MySketch(1);
 ```
+
+![test](.test/if_models-out.svg)
 
 ## If Statement for functions
 

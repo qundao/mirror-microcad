@@ -11,6 +11,7 @@
  5: std::debug::assert([gram, kilogram].all_equal());
 
 -- Output --
+
 -- Errors --
 -- No model --
 -- Test Result --

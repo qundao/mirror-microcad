@@ -1,6 +1,6 @@
 -- Test --
   if_functions
-  ../books/language/src/flow/conditions.md:26
+  ../books/language/src/flow/conditions.md:27
 
 -- Code --
 
@@ -19,7 +19,8 @@
 13: f(-1); // prints "invalid"
 14: f(6);  // prints "invalid"
 
--- Output --match
+-- Output --
+match
 
 -- Errors --
 -- No model --
