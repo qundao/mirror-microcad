@@ -26,4 +26,12 @@ fn main() {
     ) {
         panic!("error generating rust test code from markdown file: {err}");
     }
+
+    if let Err(err) = microcad_markdown_test::generate(
+        "../books/tutorials/src",
+        "md_test_book_tutorials.rs",
+        "../books/tutorials/src/test_list.md",
+    ) {
+        panic!("error generating rust test code from markdown file: {err}");
+    }
 }
