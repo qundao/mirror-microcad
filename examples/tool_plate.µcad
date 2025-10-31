@@ -1,0 +1,17 @@
+
+sketch ShiftedHex(size: Length) {
+    Hexagon(size).rotate(30°).translate(x = size / 1mm * size);
+}
+
+sketch Tools() {
+    sizes = [0..10] * 1mm;
+    ShiftedHex(sizes).union().align();
+}
+
+({
+    //RoundedRect(width = 10mm, height = 60mm, radius = 10mm).translate(x = 100mm);
+    //RoundedRect(width = 5mm, height = 15mm, radius = 5mm).translate(x = -100mm);
+    Circle(2.0mm * 2).translate(x = -100mm);
+    Circle(14mm * 2).translate(x = 75mm);
+
+}.hull() - Tools()).extrude(z = 4mm);
