@@ -124,7 +124,10 @@ impl Inspector {
         let input = self.args.input.clone();
         let (tx, rx): (Sender<ViewModelRequest>, _) = crossbeam::channel::unbounded();
         let search_paths = self.args.search_paths.clone();
-        let search_path = search_paths.first().unwrap().clone();
+        let search_path = search_paths
+            .first()
+            .unwrap_or(&std::path::PathBuf::from("./lib"))
+            .clone(); // HACK
 
         // Run file watcher thread.
         std::thread::spawn(move || -> anyhow::Result<()> {
