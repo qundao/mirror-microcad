@@ -1,0 +1,19 @@
+-- Test --
+  tuple_assignment_bundle
+  ../books/language/src/types/collections/tuples/assignments.md:20
+
+-- Code --
+
+ 1: (width, height) = [1,2]m;
+ 2: assert_eq([width,1m]);
+ 3: assert_eq([height,2m]);
+
+-- Parse Error --
+Parser error:  --> 1:17
+  |
+1 | (width, height) = [1,2]m;
+  |                 ^---
+  |
+  = expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+TODO

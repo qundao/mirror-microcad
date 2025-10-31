@@ -1,0 +1,14 @@
+-- Test --
+  source_function
+  ../books/tests/src/statement_usage/source.md:17
+
+-- Code --
+
+ 1: fn f() {} f();
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,22 @@
+-- Test --
+  function_pub_use
+  ../books/tests/src/statement_usage/function.md:45
+
+-- Code --
+
+ 1: fn f() {
+ 2:   pub use std; // error
+ 3: } f();
+
+-- Output --
+
+-- Errors --
+error: Use statement is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   pub use std; // error
+     |   ^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

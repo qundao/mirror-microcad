@@ -1,0 +1,14 @@
+-- Test --
+  source_pub_use
+  ../books/tests/src/statement_usage/source.md:35
+
+-- Code --
+
+ 1: pub use std;
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,15 @@
+-- Test --
+  array_mul_scale
+  ../books/language/src/types/collections/arrays.md:84
+
+-- Code --
+
+ 1: d = 0.5mm;
+ 2: std::debug::assert_eq([[-d,d]*2, [-1,1]mm]);
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,21 @@
+-- Test --
+  body_expression
+  ../books/tests/src/statement_usage/body.md:101
+
+-- Code --
+
+ 1: {
+ 2:   1 + 2;
+ 3: }
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Group ->
+
+Could not determine output type.
+Nothing will be exported.
+-- Test Result --
+OK

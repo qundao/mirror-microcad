@@ -1,0 +1,22 @@
+-- Test --
+  function_init
+  ../books/tests/src/statement_usage/function.md:29
+
+-- Code --
+
+ 1: fn f() {
+ 2:   init() {} // error
+ 3: } f();
+
+-- Output --
+
+-- Errors --
+error: Statement is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   init() {} // error
+     |   ^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

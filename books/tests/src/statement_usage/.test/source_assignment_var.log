@@ -1,0 +1,14 @@
+-- Test --
+  source_assignment_var
+  ../books/tests/src/statement_usage/source.md:59
+
+-- Code --
+
+ 1: a = 1;
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

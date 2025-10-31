@@ -1,0 +1,16 @@
+-- Test --
+  function_if
+  ../books/tests/src/statement_usage/function.md:61
+
+-- Code --
+
+ 1: fn f() {
+ 2:   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
+ 3: } f();
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

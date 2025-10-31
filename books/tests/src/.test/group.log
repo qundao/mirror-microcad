@@ -1,0 +1,35 @@
+-- Test --
+  group
+  ../books/tests/src/semicolon.md:60
+
+-- Code --
+
+ 1: use std::geo2d::Circle;
+ 2: use std::ops::translate;
+ 3: 
+ 4: // group
+ 5: { 
+ 6:     Circle(radius = 1mm); 
+ 7:     Circle(radius = 2mm); 
+ 8: }
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Group ->
+      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
+        - center = (x=0mm, y=0mm)
+        - radius = 1mm
+        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+          Primitive2D __builtin::geo2d::Circle(radius=1) ->
+      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2mm) ->
+        - center = (x=0mm, y=0mm)
+        - radius = 2mm
+        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+          Primitive2D __builtin::geo2d::Circle(radius=2) ->
+
+Export of "../books/tests/src/.test/group-out.svg" successful.
+-- Test Result --
+OK

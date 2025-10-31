@@ -1,0 +1,19 @@
+-- Test --
+  quantity_literal
+  ../books/language/src/expressions/literals.md:65
+
+-- Code --
+
+ 1: 4.0mm;   // 4 millimeters
+ 2: 5l;      // 5 liters
+ 3: 4m²;     // 4 square meters
+ 4: 4m2;     // also 4 square meters
+ 5: 10°;     // 10 degree angle
+ 6: 10deg    // also 10 degree angle
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

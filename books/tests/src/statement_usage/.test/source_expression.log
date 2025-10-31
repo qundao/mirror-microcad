@@ -1,0 +1,14 @@
+-- Test --
+  source_expression
+  ../books/tests/src/statement_usage/source.md:71
+
+-- Code --
+
+ 1: 1 + 2;
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

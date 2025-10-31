@@ -117,7 +117,7 @@ bool_literal = @{ "true" | "false" }
 // `kg/²`: fail
 // `/kg`: fail
 // `/1m`: fail
-unit = @{ (alpha_lower+ ~ ((("/" ~ alpha_lower+)? ~ ("²" | "³")))?) | "°" | "%" | "\"" | "'" }
+unit = @{ (alpha_lower+ ~ ((("/" ~ alpha_lower+)? ~ ("²" | "³" | "2" | "3")))?) | "°" | "%" | "\"" | "'" }
 
 // `1`: ok # Integer
 // `1mm`: ok # Number (Length)

@@ -1,0 +1,14 @@
+-- Test --
+  part_basic
+  ../books/language/src/structure/workbenches/parts.md:8
+
+-- Code --
+
+ 1: part MyPart() {}
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

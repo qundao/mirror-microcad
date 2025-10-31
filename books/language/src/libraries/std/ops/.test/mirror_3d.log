@@ -1,0 +1,100 @@
+-- Test --
+  mirror_3d
+  ../books/language/src/libraries/std/ops/mirror.md:7
+
+-- Code --
+
+ 1: use std::math::*;
+ 2: use std::ops::*;
+ 3: use std::geo3d::*;
+ 4: 
+ 5: s = 25mm;
+ 6: p = 5mm;
+ 7: { 
+ 8:     (Cube(s * 2) - Cube(s).translate(x = s/2, y = s/2, z = s/2))
+ 9:         .translate(x = s + p, y = s + p, z = s + p)
+10: }
+11: .mirror(X)
+12: .mirror(Y)
+13: .mirror(Z)
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::mirror(n=(x=0, y=0, z=1), x=0mm, y=0mm, z=0mm) ->
+      - n = (x=0, y=0, z=1)
+      - x = 0mm
+      - y = 0mm
+      - z = 0mm
+      Operation __builtin::ops::mirror(nx=0, ny=0, nz=1, x=0, y=0, z=0) ->
+        Workpiece(op) std::ops::mirror(n=(x=0, y=1, z=0), x=0mm, y=0mm, z=0mm) ->
+          - n = (x=0, y=1, z=0)
+          - x = 0mm
+          - y = 0mm
+          - z = 0mm
+          Operation __builtin::ops::mirror(nx=0, ny=1, nz=0, x=0, y=0, z=0) ->
+            Workpiece(op) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+              - n = (x=1, y=0, z=0)
+              - x = 0mm
+              - y = 0mm
+              - z = 0mm
+              Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0, y=0, z=0) ->
+                Group ->
+                  Workpiece(op) std::ops::translate(x=30mm, y=30mm, z=30mm) ->
+                    - x = 30mm
+                    - y = 30mm
+                    - z = 30mm
+                    Transform __builtin::ops::translate(x=30, y=30, z=30) ->
+                      Operation subtract() ->
+                        Group ->
+                          Workpiece(part) std::geo3d::Cube(size=50mm) ->
+                            - size_x = 50mm
+                            - size_y = 50mm
+                            - size_z = 50mm
+                            Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                              - x = 0mm
+                              - y = 0mm
+                              - z = -25mm
+                              Transform __builtin::ops::translate(x=0, y=0, z=-25) ->
+                                Workpiece(op) std::ops::extrude(z=50mm) ->
+                                  - height = 50mm
+                                  - scale_x = 1
+                                  - scale_y = 1
+                                  Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1) ->
+                                    Workpiece(sketch) std::geo2d::Rect(height=50mm, width=50mm) ->
+                                      - height = 50mm
+                                      - width = 50mm
+                                      - x = -25mm
+                                      - y = -25mm
+                                      Primitive2D __builtin::geo2d::Rect(height=50, width=50, x=-25, y=-25) ->
+                          Workpiece(op) std::ops::translate(x=12.5mm, y=12.5mm, z=12.5mm) ->
+                            - x = 12.5mm
+                            - y = 12.5mm
+                            - z = 12.5mm
+                            Transform __builtin::ops::translate(x=12.5, y=12.5, z=12.5) ->
+                              Workpiece(part) std::geo3d::Cube(size=25mm) ->
+                                - size_x = 25mm
+                                - size_y = 25mm
+                                - size_z = 25mm
+                                Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-12.5mm) ->
+                                  - x = 0mm
+                                  - y = 0mm
+                                  - z = -12.5mm
+                                  Transform __builtin::ops::translate(x=0, y=0, z=-12.5) ->
+                                    Workpiece(op) std::ops::extrude(z=25mm) ->
+                                      - height = 25mm
+                                      - scale_x = 1
+                                      - scale_y = 1
+                                      Operation __builtin::ops::extrude(height=25, scale_x=1, scale_y=1) ->
+                                        Workpiece(sketch) std::geo2d::Rect(height=25mm, width=25mm) ->
+                                          - height = 25mm
+                                          - width = 25mm
+                                          - x = -12.5mm
+                                          - y = -12.5mm
+                                          Primitive2D __builtin::geo2d::Rect(height=25, width=25, x=-12.5, y=-12.5) ->
+
+Export of "../books/language/src/libraries/std/ops/.test/mirror_3d-out.stl" successful.
+-- Test Result --
+OK

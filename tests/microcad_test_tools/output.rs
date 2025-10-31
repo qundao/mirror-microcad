@@ -59,19 +59,31 @@ impl Output {
     pub fn add_output(&mut self, path: PathBuf) {
         self.externals.push(path);
     }
-}
 
-impl std::fmt::Display for Output {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        const M: &str = "make test list error";
-        writeln!(
-            f,
-            "| [![test]({banner})]({log}) | [{name}]({path}) |",
+    /// Return a test list table row.
+    pub fn table_row(&self, base_path: impl AsRef<std::path::Path>) -> String {
+        let base_path = base_path.as_ref();
+        let banner = &self.banner;
+        let input = &self.input;
+        let log = &self.log;
+
+        let e = &format!(
+            "wrong paths: {:?}\n{base_path:?}\n{banner:?}\n{input:?}\n{log:?}",
+            std::env::current_dir().expect("current dir")
+        );
+
+        use pathdiff::diff_paths;
+        let banner = diff_paths(banner, base_path).expect(e);
+        let input = diff_paths(input, base_path).expect(e);
+        let log = diff_paths(log, base_path).expect(e);
+
+        let banner = banner.to_str().expect(e);
+        let input = input.to_str().expect(e);
+        let log = log.to_str().expect(e);
+
+        format!(
+            "| [![test]({banner})]({log}) | [{name}]({input}) |\n",
             name = self.name,
-            banner = self.banner.as_os_str().to_str().expect(M),
-            // TODO: out = self.out.as_os_str().to_str().expect(M),
-            path = self.input.as_os_str().to_str().expect(M),
-            log = self.log.as_os_str().to_str().expect(M)
         )
     }
 }

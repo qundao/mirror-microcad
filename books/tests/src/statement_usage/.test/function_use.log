@@ -1,0 +1,16 @@
+-- Test --
+  function_use
+  ../books/tests/src/statement_usage/function.md:37
+
+-- Code --
+
+ 1: fn f() {
+ 2:   use std;
+ 3: } f();
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

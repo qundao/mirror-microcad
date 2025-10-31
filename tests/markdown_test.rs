@@ -135,7 +135,7 @@ pub fn run_test(env: Option<TestEnv>) {
                     env.log_ln(&err.to_string());
 
                     if env.todo() {
-                        env.result(TestResult::TodoFail);
+                        env.result(TestResult::Todo);
                     } else {
                         env.result(TestResult::Fail);
                         panic!("ERROR: {err}")
@@ -200,7 +200,7 @@ fn create_context(source: &Rc<SourceFile>) -> EvalContext {
     EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
-        &["../lib", "../lang/doc/assets"],
+        &["../lib", "../assets"],
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),

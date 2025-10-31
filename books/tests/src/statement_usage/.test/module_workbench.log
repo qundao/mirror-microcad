@@ -1,0 +1,16 @@
+-- Test --
+  module_workbench
+  ../books/tests/src/statement_usage/module.md:5
+
+-- Code --
+
+ 1: mod k {
+ 2:   sketch F() {}
+ 3: }
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

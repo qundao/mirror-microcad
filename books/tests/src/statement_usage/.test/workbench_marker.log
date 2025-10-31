@@ -1,0 +1,21 @@
+-- Test --
+  workbench_marker
+  ../books/tests/src/statement_usage/workbench.md:69
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   @input
+ 3: } K();
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) workbench_marker::K() ->
+      InputPlaceholder ->
+
+Export error: Render error: Invalid output type: Undetermined
+-- Test Result --
+OK

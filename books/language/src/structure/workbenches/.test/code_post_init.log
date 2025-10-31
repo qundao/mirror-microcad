@@ -1,0 +1,20 @@
+-- Test --
+  code_post_init
+  ../books/language/src/structure/workbenches/README.md:226
+
+-- Code --
+
+ 1: sketch Wheel(radius: Length) {
+ 2:     // initializer
+ 3:     init( diameter: Length ) { radius = diameter / 2; }
+ 4: 
+ 5:     // building code starts here
+ 6:     std::geo2d::Circle(radius);
+ 7: }
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

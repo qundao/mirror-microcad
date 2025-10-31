@@ -1,0 +1,21 @@
+-- Test --
+  body_return
+  ../books/tests/src/statement_usage/body.md:53
+
+-- Code --
+
+ 1: {
+ 2:   return 1; // error
+ 3: }
+
+-- Output --
+
+-- Errors --
+error: Return statement not available here
+  ---> ../books/tests/src/statement_usage/body.md:2:3
+     |
+   2 |   return 1; // error
+     |   ^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

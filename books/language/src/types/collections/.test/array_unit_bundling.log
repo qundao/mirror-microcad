@@ -1,0 +1,21 @@
+-- Test --
+  array_unit_bundling
+  ../books/language/src/types/collections/arrays.md:45
+
+-- Code --
+
+ 1: // without bundling
+ 2: l1 = [1mm, 2mm, 3mm];
+ 3: 
+ 4: // with bundling
+ 5: l2 = [1, 2, 3]mm;
+ 6: 
+ 7: // are the same
+ 8: std::debug::assert(l1 == l2);
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -88,36 +88,6 @@ Any errors which occur here are related to geometrical processing.
 | Operation  | *2D or 3D object* | *2D or 3D object* | `o(..) p;` | `op o(..) {..}`       |
 | Measure    | *2D or 3D object* | *value*           | `a.m();`   | *builtin only*        |
 
-## Coding Conventions
-
-### Naming
-
-| Element   | Example              | Format                |
-| --------- | -------------------- | --------------------- |
-| type      | `MyType`             | pascal case           |
-| const     | `const MY_CONST = 1` | upper case snake case |
-| module    | `mod my_lib`         | snake case            |
-| function  | `fn my_func`         | snake case            |
-| sketch    | `sketch MyBench`     | pascal case           |
-| part      | `part MyBench`       | pascal case           |
-| operation | `op my_bench`        | snake case            |
-| variables | `my_var = 1`         | snake case            |
-
-## Statement Usage
-
-| Stack frame | workbench | module | function | init  |  use  | pub use | return |  if   | marker |    assignment    | expression |
-| :---------- | :-------: | :----: | :------: | :---: | :---: | :-----: | :----: | :---: | :----: | :--------------: | :--------: |
-| Source      |    yes    |  yes   |   yes    |   -   |  yes  |   yes   |   -    |  yes  |   -    |    const, var    |    yes     |
-| Module      |    yes    |  yes   |   yes    |   -   |  yes  |   yes   |   -    |   -   |   -    |    const, var    |     -      |
-| Pre-Init    |     -     |   -    |    -     |  yes  |  yes  |    -    |   -    |   -   |   -    |      const       |     -      |
-| Init        |     -     |   -    |    -     |   -   |  yes  |    -    |   -    |   -   |   -    |       var        |     -      |
-| Workbench   |     -     |   -    |    -     |  yes  |  yes  |    -    |   -    |  yes  |  yes   | const, var, prop |    yes     |
-| Body        |     -     |   -    |    -     |   -   |  yes  |    -    |   -    |  yes  | ?yes?  |    const, var    |    yes     |
-| Function    |     -     |   -    |    -     |   -   |  yes  |    -    |  yes   |  yes  |   -    |       var        |    yes     |
-| Call        |     -     |   -    |    -     |   -   |   -   |    -    |   -    |   -   |   -    |        -         |     -      |
-
-[See tests](tests/statement_usage.md)
-
 ## Stack Frames
 
 ![Stack Frames](images/stack_frames.svg)

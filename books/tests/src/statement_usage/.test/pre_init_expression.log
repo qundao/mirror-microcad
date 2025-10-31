@@ -1,0 +1,14 @@
+-- Test --
+  pre_init_expression
+  ../books/tests/src/statement_usage/pre-init.md:93
+
+-- Code --
+
+ 1: sketch K() { 
+ 2:   1 + 2; // error
+ 3: init(l:Length) {} } K();
+
+-- Parse Error --
+Statement not allowed prior initializers (2:3)
+-- Test Result --
+FAILED AS EXPECTED

@@ -1,0 +1,16 @@
+-- Test --
+  types_quantity_scalar
+  ../books/language/src/types/quantities.md:47
+
+-- Code --
+
+ 1: zero = 0;
+ 2: pi =  3.1415;
+ 3: percent = 55%;
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

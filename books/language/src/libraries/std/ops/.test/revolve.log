@@ -1,0 +1,33 @@
+-- Test --
+  revolve
+  ../books/language/src/libraries/std/ops/revolve.md:7
+
+-- Code --
+
+ 1: // Construct half of a torus. 
+ 2: std::geo2d::Circle(radius = 10mm)
+ 3:     .std::ops::translate(x = 40mm)
+ 4:     .std::ops::revolve(180°);
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+      - angle = 3.14159265358979rad
+      Operation __builtin::ops::revolve(revolve_degrees=180) ->
+        Workpiece(op) std::ops::translate(x=40mm, y=0mm, z=0mm) ->
+          - x = 40mm
+          - y = 0mm
+          - z = 0mm
+          Transform __builtin::ops::translate(x=40, y=0, z=0) ->
+            Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+              - center = (x=0mm, y=0mm)
+              - radius = 10mm
+              Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+                Primitive2D __builtin::geo2d::Circle(radius=10) ->
+
+Export of "../books/language/src/libraries/std/ops/.test/revolve-out.stl" successful.
+-- Test Result --
+OK

@@ -125,6 +125,8 @@ impl TestEnv {
             name = self.name
         ));
 
+        std::fs::create_dir_all(self.test_path()).expect("cant create dir");
+
         Output::new(
             self.name().into(),
             self.path.clone(),
@@ -138,8 +140,10 @@ impl TestEnv {
     /// Create log file for he test.
     pub fn start_log(&mut self) {
         // create log file
-        self.log_file =
-            Some(std::fs::File::create(self.log_file()).expect("cannot create log file"));
+        self.log_file = Some(
+            std::fs::File::create(self.log_file())
+                .unwrap_or_else(|_| panic!("{:?}", self.log_file())),
+        );
     }
 
     /// Return test name.
@@ -256,7 +260,7 @@ impl TestEnv {
             TestResult::Ok => ("ok", "OK"),
             TestResult::Todo => ("todo", "TODO"),
             TestResult::NotTodo => ("not_todo", "OK BUT IS TODO"),
-            TestResult::Fail => ("fail.svg", "FAIL"),
+            TestResult::Fail => ("fail", "FAIL"),
             TestResult::FailWrong => ("fail_wrong", "FAILED BUT WITH WRONG ERRORS"),
             TestResult::FailOk => ("fail_ok", "FAILED AS EXPECTED"),
             TestResult::NotTodoFail => ("not_todo_fail", "FAILED AS EXPECTED BUT IS TODO"),

@@ -1,0 +1,19 @@
+-- Test --
+  verify_assert_fail
+  ../books/language/src/debugging/verification.md:21
+
+-- Code --
+
+ 1: std::debug::assert(false, "this assertion fails"); // error
+
+-- Output --
+
+-- Errors --
+error: Assertion failed: this assertion fails
+  ---> ../books/language/src/debugging/verification.md:1:20
+     |
+   1 | std::debug::assert(false, "this assertion fails"); // error
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

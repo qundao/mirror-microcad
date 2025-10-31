@@ -1,0 +1,21 @@
+-- Test --
+  init_workbench
+  ../books/tests/src/statement_usage/init.md:5
+
+-- Code --
+
+ 1: sketch K() { init(l:Length) {
+ 2:   sketch F() {} // error
+ 3: } } K(1cm);
+
+-- Output --
+
+-- Errors --
+error: sketch statement not available here
+  ---> ../books/tests/src/statement_usage/init.md:2:3
+     |
+   2 |   sketch F() {} // error
+     |   ^^^^^^^^^^^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

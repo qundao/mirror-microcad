@@ -1,0 +1,30 @@
+-- Test --
+  difference_operator
+  ../books/language/src/libraries/std/ops/subtract.md:9
+
+-- Code --
+
+ 1: std::geo2d::Circle(radius = 10mm) - std::geo2d::Rect(size = 2mm);
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Operation subtract() ->
+      Group ->
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+          - center = (x=0mm, y=0mm)
+          - radius = 10mm
+          Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+            Primitive2D __builtin::geo2d::Circle(radius=10) ->
+        Workpiece(sketch) std::geo2d::Rect(size=2mm) ->
+          - height = 2mm
+          - width = 2mm
+          - x = -1mm
+          - y = -1mm
+          Primitive2D __builtin::geo2d::Rect(height=2, width=2, x=-1, y=-1) ->
+
+Export of "../books/language/src/libraries/std/ops/.test/difference_operator-out.svg" successful.
+-- Test Result --
+OK

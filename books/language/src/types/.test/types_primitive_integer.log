@@ -1,0 +1,14 @@
+-- Test --
+  types_primitive_integer
+  ../books/language/src/types/primitives.md:33
+
+-- Code --
+
+ 1: i = 3;
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,14 @@
+-- Test --
+  sketch_basic
+  ../books/language/src/structure/workbenches/sketches.md:8
+
+-- Code --
+
+ 1: sketch MySketch() {}
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

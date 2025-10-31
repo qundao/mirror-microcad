@@ -1,0 +1,105 @@
+# Init
+
+[![test](.test/init_workbench.svg)](.test/init_workbench.log)
+
+```µcad,init_workbench#fail
+sketch K() { init(l:Length) {
+  sketch F() {} // error
+} } K(1cm);
+```
+
+[![test](.test/init_module.svg)](.test/init_module.log)
+
+```µcad,init_module#fail
+sketch K() { init(l:Length) {
+  mod m {} // error
+} } K(1cm);
+```
+
+[![test](.test/init_function.svg)](.test/init_function.log)
+
+```µcad,init_function#fail
+sketch K() { init(l:Length) {
+  fn f() {} // error
+} } K(1cm);
+```
+
+[![test](.test/init_init.svg)](.test/init_init.log)
+
+```µcad,init_init#fail
+sketch K() { init(l:Length) {
+  init() {} // error
+} } K(1cm);
+```
+
+[![test](.test/init_use.svg)](.test/init_use.log)
+
+```µcad,init_use
+sketch K() { init(l:Length) {
+  use std;
+} } K(1cm);
+```
+
+[![test](.test/init_pub_use.svg)](.test/init_pub_use.log)
+
+```µcad,init_pub_use#fail
+sketch K() { init(l:Length) {
+  pub use std; // error
+} } K(1cm);
+```
+
+[![test](.test/init_return.svg)](.test/init_return.log)
+
+```µcad,init_return#fail
+sketch K() { init(l:Length) {
+  return 1; // error
+} } K(1cm);
+```
+
+[![test](.test/init_if.svg)](.test/init_if.log)
+
+```µcad,init_if#fail
+sketch K() { init(l:Length) {
+  if std::math::PI == 3 { } // error
+} } K(1cm);
+```
+
+[![test](.test/init_assignment_const.svg)](.test/init_assignment_const.log)
+
+```µcad,init_assignment_const#fail
+sketch K() { init(l:Length) {
+  const B = 1; // error
+} } K(1cm);
+```
+
+[![test](.test/init_assignment_var.svg)](.test/init_assignment_var.log)
+
+```µcad,init_assignment_var
+sketch K() { init(l:Length) {
+  a = 1;
+} } K(1cm);
+```
+
+[![test](.test/init_assignment_prop.svg)](.test/init_assignment_prop.log)
+
+```µcad,init_assignment_prop#fail
+sketch K() { init(l:Length) {
+  prop a = 1; // error
+} } K(1cm);
+```
+
+[![test](.test/init_expression.svg)](.test/init_expression.log)
+
+```µcad,init_expression#fail
+sketch K() { init(l:Length) {
+  1 + 2; // error
+} } K(1cm);
+```
+
+[![test](.test/init_expression_model.svg)](.test/init_expression_model.log)
+
+```µcad,init_expression_model#fail
+sketch K() { init(l:Length) {
+  __builtin::geo2d::Circle(radius=1); // error
+} } K(1cm);
+```

@@ -6,7 +6,6 @@ use scan_dir::ScanDir;
 use std::fs;
 
 fn main() -> std::io::Result<()> {
-    scan_path("./lang/doc")?;
     scan_path("./books")?;
     Ok(())
 }

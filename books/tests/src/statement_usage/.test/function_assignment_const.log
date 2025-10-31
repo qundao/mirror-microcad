@@ -1,0 +1,28 @@
+-- Test --
+  function_assignment_const
+  ../books/tests/src/statement_usage/function.md:69
+
+-- Code --
+
+ 1: fn f() {
+ 2:   const B = 1; // error
+ 3: } f();
+
+-- Output --
+
+-- Errors --
+error: Assignment statement is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   const B = 1; // error
+     |   ^^^^^^^^^^^^
+     |
+error: Declaration of B not allowed within function_assignment_const::f
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   const B = 1; // error
+     |   ^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

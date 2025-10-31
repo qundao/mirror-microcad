@@ -1,0 +1,21 @@
+-- Test --
+  function_param_return
+  ../books/language/src/flow/calls/function_calls.md:30
+
+-- Code --
+
+ 1: // function definition with parameter
+ 2: fn f(n: Integer) {
+ 3:     return n * 2; 
+ 4: }
+ 5: 
+ 6: // function calls with parameter (and result checks)
+ 7: std::debug::assert_eq([ f(1), 2 ]);
+ 8: std::debug::assert_eq([ f(2), 4 ]);
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

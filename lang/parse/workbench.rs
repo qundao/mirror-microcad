@@ -64,7 +64,7 @@ fn check_statements(body: &Body) -> ParseResult<()> {
                         return Err(ParseError::IllegalWorkbenchStatement(stmt.src_ref()))
                     }
                     Qualifier::Value => {
-                        if n > first_init {
+                        if n > first_init && n < last_init {
                             return Err(ParseError::CodeBetweenInitializers(a_stmt.src_ref()));
                         }
                     }

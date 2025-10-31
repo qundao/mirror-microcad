@@ -1,0 +1,28 @@
+-- Test --
+  function_function
+  ../books/tests/src/statement_usage/function.md:21
+
+-- Code --
+
+ 1: fn f() {
+ 2:   fn f() {} // error
+ 3: } f();
+
+-- Output --
+
+-- Errors --
+error: Statement is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   fn f() {} // error
+     |   ^^^^^^^^^
+     |
+error: Function definition is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   fn f() {} // error
+     |   ^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

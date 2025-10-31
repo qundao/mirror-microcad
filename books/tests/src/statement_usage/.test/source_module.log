@@ -1,0 +1,14 @@
+-- Test --
+  source_module
+  ../books/tests/src/statement_usage/source.md:11
+
+-- Code --
+
+ 1: mod m {}
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

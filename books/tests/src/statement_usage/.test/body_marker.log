@@ -1,0 +1,22 @@
+-- Test --
+  body_marker
+  ../books/tests/src/statement_usage/body.md:69
+
+-- Code --
+
+ 1: {
+ 2:   @input
+ 3: }
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Group ->
+      InputPlaceholder ->
+
+Could not determine output type.
+Nothing will be exported.
+-- Test Result --
+OK

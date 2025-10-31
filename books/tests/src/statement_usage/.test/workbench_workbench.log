@@ -1,0 +1,28 @@
+-- Test --
+  workbench_workbench
+  ../books/tests/src/statement_usage/workbench.md:5
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   sketch F() {} F(); // error
+ 3: } K();
+
+-- Output --
+
+-- Errors --
+error: Statement is not available within Sketch
+  ---> ../books/tests/src/statement_usage/workbench.md:2:3
+     |
+   2 |   sketch F() {} F(); // error
+     |   ^^^^^^^^^^^^^
+     |
+error: Sketch is not available within Sketch
+  ---> ../books/tests/src/statement_usage/workbench.md:2:3
+     |
+   2 |   sketch F() {} F(); // error
+     |   ^^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

@@ -1,0 +1,112 @@
+-- Test --
+  part_declaration
+  ../books/language/src/structure/workbenches/README.md:32
+
+-- Code --
+
+ 1: // sketch with a `radius` as building plan
+ 2: sketch Wheel(radius: Length) {
+ 3:     
+ 4:     // init code
+ 5:     factor = 2;
+ 6: 
+ 7:     // initializer
+ 8:     init(diameter: Length) {
+ 9:         // set `radius`
+10:         radius = diameter / factor;
+11:     }
+12: 
+13:     // function (sub routine)
+14:     fn into_diameter(radius: Length) {
+15:         return radius * factor;
+16:     }
+17: 
+18:     // building code begins
+19: 
+20:     // set a property which can be seen from outside
+21:     prop diameter = into_diameter(radius);
+22:     
+23:     // local variable
+24:     i = 1;
+25:     
+26:     // create circle
+27:     std::geo2d::Circle(radius);
+28: }
+29: 
+30: use std::debug::*;
+31: 
+32: // call sketch with diameter
+33: d = Wheel(diameter = 2cm);
+34: // check radius
+35: assert_eq([d.radius, 1cm]);
+36: 
+37: // call sketch with radius
+38: r = Wheel(radius = 1cm);
+39: // check diameter
+40: assert([r.diameter, 2cm]);
+
+-- Output --
+
+-- Errors --
+error: Symbol factor not found.
+  ---> ../books/language/src/structure/workbenches/README.md:10:29
+     |
+  10 |         radius = diameter / factor;
+     |                             ^^^^^^
+     |
+error: Workbench plan incomplete. Missing properties: radius
+  ---> ../books/language/src/structure/workbenches/README.md:8:5
+     |
+   8 |     init(diameter: Length) {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+error: Ambiguous symbol radius might be one of the following: radius, radius
+  ---> ../books/language/src/structure/workbenches/README.md:15:16
+     |
+  15 |         return radius * factor;
+     |                ^^^^^^
+     |
+error: Symbol factor not found.
+  ---> ../books/language/src/structure/workbenches/README.md:15:25
+     |
+  15 |         return radius * factor;
+     |                         ^^^^^^
+     |
+error: Array elements have different types: [<INVALID TYPE>, Length]
+  ---> ../books/language/src/structure/workbenches/README.md:35:11
+     |
+  35 | assert_eq([d.radius, 1cm]);
+     |           ^^^^^^^^^^^^^^^
+     |
+error: Assertion failed: Invalid: <NO VALUE>
+  ---> ../books/language/src/structure/workbenches/README.md:35:11
+     |
+  35 | assert_eq([d.radius, 1cm]);
+     |           ^^^^^^^^^^^^^^^
+     |
+error: Ambiguous symbol radius might be one of the following: radius, radius
+  ---> ../books/language/src/structure/workbenches/README.md:15:16
+     |
+  15 |         return radius * factor;
+     |                ^^^^^^
+     |
+error: Symbol factor not found.
+  ---> ../books/language/src/structure/workbenches/README.md:15:25
+     |
+  15 |         return radius * factor;
+     |                         ^^^^^^
+     |
+error: Array elements have different types: [<INVALID TYPE>, Length]
+  ---> ../books/language/src/structure/workbenches/README.md:40:8
+     |
+  40 | assert([r.diameter, 2cm]);
+     |        ^^^^^^^^^^^^^^^^^
+     |
+error: Missing arguments: v
+  ---> ../books/language/src/structure/workbenches/README.md:40:8
+     |
+  40 | assert([r.diameter, 2cm]);
+     |        ^^^^^^^^^^^^^^^^^
+     |
+-- Test Result --
+TODO

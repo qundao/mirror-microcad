@@ -1,0 +1,21 @@
+-- Test --
+  body_assignment_var
+  ../books/tests/src/statement_usage/body.md:85
+
+-- Code --
+
+ 1: {
+ 2:   a = 1;
+ 3: }
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Group ->
+
+Could not determine output type.
+Nothing will be exported.
+-- Test Result --
+OK

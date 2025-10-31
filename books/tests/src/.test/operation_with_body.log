@@ -1,0 +1,45 @@
+-- Test --
+  operation_with_body
+  ../books/tests/src/semicolon.md:5
+
+-- Code --
+
+ 1: use std::geo2d::Circle;
+ 2: use std::ops::translate;
+ 3: 
+ 4: { // op with body
+ 5:     Circle(radius = 5mm);
+ 6: }.translate(y=[-34mm/2 , 34mm/2]);
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Multiplicity ->
+      Workpiece(op) std::ops::translate(x=0mm, y=-17mm, z=0mm) ->
+        - x = 0mm
+        - y = -17mm
+        - z = 0mm
+        Transform __builtin::ops::translate(x=0, y=-17, z=0) ->
+          Group ->
+            Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) ->
+              - center = (x=0mm, y=0mm)
+              - radius = 5mm
+              Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+                Primitive2D __builtin::geo2d::Circle(radius=5) ->
+      Workpiece(op) std::ops::translate(x=0mm, y=17mm, z=0mm) ->
+        - x = 0mm
+        - y = 17mm
+        - z = 0mm
+        Transform __builtin::ops::translate(x=0, y=17, z=0) ->
+          Group ->
+            Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) ->
+              - center = (x=0mm, y=0mm)
+              - radius = 5mm
+              Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+                Primitive2D __builtin::geo2d::Circle(radius=5) ->
+
+Export of "../books/tests/src/.test/operation_with_body-out.svg" successful.
+-- Test Result --
+OK

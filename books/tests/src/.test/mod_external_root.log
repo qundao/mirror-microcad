@@ -1,0 +1,15 @@
+-- Test --
+  mod_external_root
+  ../books/tests/src/mod_external.md:5
+
+-- Code --
+
+ 1: mod external;
+ 2: std::debug::assert_valid(external::a);
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

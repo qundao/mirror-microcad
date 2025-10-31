@@ -1,0 +1,28 @@
+-- Test --
+  function_workbench
+  ../books/tests/src/statement_usage/function.md:5
+
+-- Code --
+
+ 1: fn f() {
+ 2:   sketch S() {} // error
+ 3: } f();
+
+-- Output --
+
+-- Errors --
+error: Statement is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   sketch S() {} // error
+     |   ^^^^^^^^^^^^^
+     |
+error: Sketch is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   sketch S() {} // error
+     |   ^^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

@@ -1,0 +1,25 @@
+-- Test --
+  condition_return
+  ../books/tests/src/conditions.md:5
+
+-- Code --
+
+ 1: fn f(x: Integer) {
+ 2:     if x == 5 or x == 4 {
+ 3:         return "match";
+ 4:     } else if x > 0 and x < 4 {
+ 5:         return "no match";
+ 6:     } else {
+ 7:         return "invalid";
+ 8:     }
+ 9: }
+10: 
+11: std::print(f(5));  // prints "match"
+
+-- Output --
+<NO VALUE>
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

@@ -1,0 +1,20 @@
+-- Test --
+  source_return
+  ../books/tests/src/statement_usage/source.md:41
+
+-- Code --
+
+ 1: return 1;  // error
+
+-- Output --
+
+-- Errors --
+error: Statement is not available within SourceFile
+  ---> ../books/tests/src/statement_usage/source.md:1:1
+     |
+   1 | return 1;  // error
+     | ^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

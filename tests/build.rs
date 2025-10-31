@@ -11,7 +11,27 @@ fn main() {
         "../lang/grammar.pest",
     );
 
-    if let Err(err) = microcad_markdown_test::generate("..") {
+    if let Err(err) = microcad_markdown_test::generate(
+        "../books/tests/src",
+        "md_test_book_tests.rs",
+        "../books/tests/src/test_list.md",
+    ) {
+        panic!("error generating rust test code from markdown file: {err}");
+    }
+
+    if let Err(err) = microcad_markdown_test::generate(
+        "../books/language/src",
+        "md_test_book_language.rs",
+        "../books/language/src/appendix/test_list.md",
+    ) {
+        panic!("error generating rust test code from markdown file: {err}");
+    }
+
+    if let Err(err) = microcad_markdown_test::generate(
+        "../books/tutorials/src",
+        "md_test_book_tutorials.rs",
+        "../books/tutorials/src/test_list.md",
+    ) {
         panic!("error generating rust test code from markdown file: {err}");
     }
 }
