@@ -8,7 +8,7 @@ pub fn setup_camera(mut commands: Commands, state: Res<State>) {
     let radius = state.scene.radius;
 
     // Place the camera on the +X, +Y, +Z diagonal of the sphere
-    let direction = bevy::prelude::Vec3::new(1.0, 1.0, 1.0).normalize() * radius;
+    let direction = bevy::prelude::Vec3::new(1.0, -1.0, 1.0).normalize() * radius;
 
     // camera
     commands.spawn((
