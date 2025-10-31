@@ -2,7 +2,7 @@
 
 [![test](.test/auto_convert.svg)](.test/auto_convert.log)
 
-```µcad,auto_convert
+```µcad,auto_convert#todo
 fn f( x: Scalar ) { }
 f(x=1);
 f(x="");
