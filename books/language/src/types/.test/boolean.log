@@ -1,0 +1,19 @@
+-- Test --
+  boolean
+  ../books/language/src/types/primitives.md:17
+
+-- Code --
+
+ 1: std::debug::assert_eq([true or false, true]);
+ 2: std::debug::assert_eq([true and false, false]);
+ 3: 
+ 4: std::debug::assert_eq([4 == 4, true]);
+ 5: std::debug::assert_eq([4 == 5, false]);
+ 6: std::debug::assert_eq([4 == 5 or 4 == 4, true]);
+ 7: std::debug::assert_eq([4 == 5 and 4 == 4, false]);
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

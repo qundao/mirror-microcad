@@ -1,0 +1,13 @@
+-- Test --
+  unnamed_tuple
+  ../books/language/src/types/collections/tuples/README.md:28
+
+-- Code --
+
+ 1: tuple = (10cm, 10cm², 1l);
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

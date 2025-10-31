@@ -1,0 +1,19 @@
+-- Test --
+  init_assignment_var
+  ../books/tests/src/statement_usage/init.md:77
+
+-- Code --
+
+ 1: sketch K() { init(l:Length) {
+ 2:   a = 1;
+ 3: } } K(1cm);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) init_assignment_var::K(l=10mm) ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK

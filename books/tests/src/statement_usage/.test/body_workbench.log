@@ -1,0 +1,26 @@
+-- Test --
+  body_workbench
+  ../books/tests/src/statement_usage/body.md:5
+
+-- Code --
+
+ 1: {
+ 2:   sketch F() {} F(); // error
+ 3: }
+
+-- Output --
+-- Errors --
+error: sketch statement not available here
+  ---> ../books/tests/src/statement_usage/body.md:2:3
+     |
+   2 |   sketch F() {} F(); // error
+     |   ^^^^^^^^^^^^^
+     |
+error: Symbol F not found.
+  ---> ../books/tests/src/statement_usage/body.md:2:17
+     |
+   2 |   sketch F() {} F(); // error
+     |                 ^^^
+     |
+-- Test Result --
+FAILED AS EXPECTED

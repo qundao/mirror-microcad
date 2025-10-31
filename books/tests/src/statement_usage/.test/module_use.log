@@ -1,0 +1,15 @@
+-- Test --
+  module_use
+  ../books/tests/src/statement_usage/module.md:37
+
+-- Code --
+
+ 1: mod k {
+ 2:   use std::geo2d;
+ 3: }
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

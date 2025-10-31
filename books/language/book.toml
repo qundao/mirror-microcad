@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [book]
-authors = ["Patrick Hoffmann"]
+authors = ["Patrick Hoffmann", "Michael Winkelmann"]
 language = "en"
 src = "src"
 title = "The µcad book"

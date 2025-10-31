@@ -4,9 +4,8 @@
 
 -- Code --
 
- 1: // file: main.µcad
- 2: mod second;
- 3: second::f(); 
+ 1: mod second;
+ 2: second::f(); 
 
 -- Output --
 -- Errors --

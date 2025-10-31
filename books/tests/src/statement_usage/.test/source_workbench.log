@@ -1,0 +1,17 @@
+-- Test --
+  source_workbench
+  ../books/tests/src/statement_usage/source.md:5
+
+-- Code --
+
+ 1: sketch F() {} F();
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) source_workbench::F() ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK

@@ -1,12 +1,6 @@
 # Use Statements
 
-- [Use Statement](#use-statement)
-- [Use As Statement](#use-as-statement)
-- [Use All Statement](#use-all-statement)
-- [Public Use Statement](#public-use-statement)
-- [Tests](#tests)
-
-When including code from other *modules* or [other files](modules.md#file-modules)
+When including code from other *modules* or [other files](modules/external_modules.md)
 *fully qualified names* of *symbols* (e.g. `std:geo3d::cube`) often produce much
 boiler plate code when using them often.
 The powerful `use` statement solves this problem and gives you an elegant method

@@ -1,0 +1,79 @@
+# Source
+
+[![test](.test/source_workbench.svg)](.test/source_workbench.log)
+
+```µcad,source_workbench
+sketch F() {} F();
+```
+
+[![test](.test/source_module.svg)](.test/source_module.log)
+
+```µcad,source_module
+mod m {}
+```
+
+[![test](.test/source_function.svg)](.test/source_function.log)
+
+```µcad,source_function
+fn f() {} f();
+```
+
+[![test](.test/source_init.svg)](.test/source_init.log)
+
+```µcad,source_init#fail
+init() {} // error
+```
+
+[![test](.test/source_use.svg)](.test/source_use.log)
+
+```µcad,source_use
+use std;
+```
+
+[![test](.test/source_pub_use.svg)](.test/source_pub_use.log)
+
+```µcad,source_pub_use
+pub use std;
+```
+
+[![test](.test/source_return.svg)](.test/source_return.log)
+
+```µcad,source_return#fail
+return 1;  // error
+```
+
+[![test](.test/source_if.svg)](.test/source_if.log)
+
+```µcad,source_if
+if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
+```
+
+[![test](.test/source_assignment_const.svg)](.test/source_assignment_const.log)
+
+```µcad,source_assignment_const
+const B = 1;
+```
+
+[![test](.test/source_assignment_var.svg)](.test/source_assignment_var.log)
+
+```µcad,source_assignment_var
+a = 1;
+```
+
+[![test](.test/source_assignment_prop.svg)](.test/source_assignment_prop.log)
+
+```µcad,source_assignment_prop#fail
+prop a = 1;  // error
+```
+
+[![test](.test/source_expression.svg)](.test/source_expression.log)
+
+```µcad,source_expression
+1 + 2;
+```
+
+[![test](.test/source_expression_model.svg)](.test/source_expression_model.log)
+
+```µcad,source_expression_model
+__builtin::geo2d::Circle(radius=1);
+```

@@ -1,0 +1,27 @@
+-- Test --
+  function_assignment_prop
+  ../books/tests/src/statement_usage/function.md:85
+
+-- Code --
+
+ 1: fn f() {
+ 2:   prop a = 1; // error
+ 3: } f();
+
+-- Output --
+-- Errors --
+error: Assignment statement is not available within Function
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   prop a = 1; // error
+     |   ^^^^^^^^^^^
+     |
+error: Declaration of a not allowed within function_assignment_prop::f
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   prop a = 1; // error
+     |   ^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

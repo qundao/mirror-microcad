@@ -1,0 +1,58 @@
+-- Test --
+  auto_convert
+  ../books/tests/src/auto_convert.md:5
+
+-- Code --
+
+ 1: fn f( x: Scalar ) { }
+ 2: f(x=1);
+ 3: f(x="");
+ 4: f("");
+ 5: f(1);   // error
+ 6: 
+ 7: fn g( x: Integer ) { }
+ 8: g(x=1.0);
+ 9: g(x="");
+10: g("");
+11: g(1.0);  // error
+12: 
+13: fn h( x: String ) { }
+14: h(x=1.0);
+15: h(x="");
+16: h("");
+17: h(1.0);  // error
+
+-- Output --
+-- Errors --
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:4:3
+     |
+   4 | f("");
+     |   ^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:5:3
+     |
+   5 | f(1);   // error
+     |   ^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:10:3
+     |
+  10 | g("");
+     |   ^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:11:3
+     |
+  11 | g(1.0);  // error
+     |   ^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:17:3
+     |
+  17 | h(1.0);  // error
+     |   ^^^
+     |
+-- Test Result --
+FAIL

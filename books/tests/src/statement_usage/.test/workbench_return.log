@@ -1,0 +1,21 @@
+-- Test --
+  workbench_return
+  ../books/tests/src/statement_usage/workbench.md:53
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   return 1; // error
+ 3: } K();
+
+-- Output --
+-- Errors --
+error: Statement is not available within Sketch
+  ---> ../books/tests/src/statement_usage/workbench.md:2:3
+     |
+   2 |   return 1; // error
+     |   ^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

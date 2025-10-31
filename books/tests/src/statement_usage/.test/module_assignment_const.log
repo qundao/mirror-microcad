@@ -1,0 +1,15 @@
+-- Test --
+  module_assignment_const
+  ../books/tests/src/statement_usage/module.md:69
+
+-- Code --
+
+ 1: mod k {
+ 2:   const B = 1;
+ 3: }
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

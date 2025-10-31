@@ -1,0 +1,17 @@
+-- Test --
+  source_expression_model
+  ../books/tests/src/statement_usage/source.md:77
+
+-- Code --
+
+ 1: __builtin::geo2d::Circle(radius=1);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Primitive2D __builtin::geo2d::Circle(radius=1) ->
+
+Export of "../books/tests/src/statement_usage/.test/source_expression_model-out.svg" successful.
+-- Test Result --
+OK

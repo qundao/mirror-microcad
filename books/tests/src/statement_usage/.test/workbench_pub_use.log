@@ -1,0 +1,21 @@
+-- Test --
+  workbench_pub_use
+  ../books/tests/src/statement_usage/workbench.md:45
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   pub use std; // error
+ 3: } K();
+
+-- Output --
+-- Errors --
+error: Use statement is not available within Sketch
+  ---> ../books/tests/src/statement_usage/workbench.md:2:3
+     |
+   2 |   pub use std; // error
+     |   ^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

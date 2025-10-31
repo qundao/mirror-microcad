@@ -1,0 +1,21 @@
+-- Test --
+  module_if
+  ../books/tests/src/statement_usage/module.md:61
+
+-- Code --
+
+ 1: mod k {
+ 2:   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }  // error
+ 3: }
+
+-- Output --
+-- Errors --
+error: Statement is not available within Module
+  ---> ../books/tests/src/statement_usage/module.md:2:3
+     |
+   2 |   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }  // error
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

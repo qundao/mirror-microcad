@@ -1,0 +1,40 @@
+-- Test --
+  tuple_match
+  ../books/language/src/flow/calls/arguments.md:54
+
+-- Code --
+
+ 1: // Function with three parameters: x, y, and z
+ 2: fn f( x: Length, y: Length, z: Length ) {}
+ 3: 
+ 4: // Since we do not want to change x and y in the following statements,
+ 5: // we prepare a tuple named plane:
+ 6: plane = (x=1cm, y=2cm);
+ 7: 
+ 8: // Then we pass plane to f() three times with different z values
+ 9: f( plane, z=3cm);
+10: f( plane, z=6cm);
+11: f( plane, z=9cm);
+
+-- Output --
+-- Errors --
+error: Missing arguments: x,y
+  ---> ../books/language/src/flow/calls/arguments.md:9:4
+     |
+   9 | f( plane, z=3cm);
+     |    ^^^^^^^^^^^^
+     |
+error: Missing arguments: x,y
+  ---> ../books/language/src/flow/calls/arguments.md:10:4
+     |
+  10 | f( plane, z=6cm);
+     |    ^^^^^^^^^^^^
+     |
+error: Missing arguments: x,y
+  ---> ../books/language/src/flow/calls/arguments.md:11:4
+     |
+  11 | f( plane, z=9cm);
+     |    ^^^^^^^^^^^^
+     |
+-- Test Result --
+TODO

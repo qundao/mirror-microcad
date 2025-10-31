@@ -1,0 +1,38 @@
+-- Test --
+  call_workbench
+  ../books/language/src/flow/calls/README.md:28
+
+-- Code --
+
+ 1: // definition of a sketch workbench
+ 2: sketch Square(size: Length) { 
+ 3:     std::geo2d::Rect(size);
+ 4: }
+ 5: 
+ 6: // call square with a size and store object node in s
+ 7: s = Square(size=2cm);
+ 8: 
+ 9: // translate object s
+10: s.std::ops::translate(x = 1cm);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+      - x = 10mm
+      - y = 0mm
+      - z = 0mm
+      Transform __builtin::ops::translate(x=10, y=0, z=0) ->
+        Workpiece(sketch) call_workbench::Square(size=20mm) ->
+          - size = 20mm
+          Workpiece(sketch) std::geo2d::Rect(size=20mm) ->
+            - height = 20mm
+            - width = 20mm
+            - x = -10mm
+            - y = -10mm
+            Primitive2D __builtin::geo2d::Rect(height=20, width=20, x=-10, y=-10) ->
+
+Export of "../books/language/src/flow/calls/.test/call_workbench-out.svg" successful.
+-- Test Result --
+OK

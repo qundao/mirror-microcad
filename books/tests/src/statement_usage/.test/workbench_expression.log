@@ -1,0 +1,19 @@
+-- Test --
+  workbench_expression
+  ../books/tests/src/statement_usage/workbench.md:101
+
+-- Code --
+
+ 1: sketch K() {
+ 2:   1 + 2;
+ 3: } K();
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) workbench_expression::K() ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK

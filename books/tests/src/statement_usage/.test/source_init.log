@@ -1,0 +1,19 @@
+-- Test --
+  source_init
+  ../books/tests/src/statement_usage/source.md:23
+
+-- Code --
+
+ 1: init() {} // error
+
+-- Output --
+-- Errors --
+error: Statement is not available within SourceFile
+  ---> ../books/tests/src/statement_usage/source.md:1:1
+     |
+   1 | init() {} // error
+     | ^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

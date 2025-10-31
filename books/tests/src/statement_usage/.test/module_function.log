@@ -1,0 +1,15 @@
+-- Test --
+  module_function
+  ../books/tests/src/statement_usage/module.md:21
+
+-- Code --
+
+ 1: mod k {
+ 2:   fn f() {}
+ 3: }
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

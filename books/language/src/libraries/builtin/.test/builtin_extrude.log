@@ -1,0 +1,33 @@
+-- Test --
+  builtin_extrude
+  ../books/language/src/libraries/builtin/ops.md:40
+
+-- Code --
+
+ 1: use __builtin::*;
+ 2: 
+ 3: a = geo2d::Circle(radius = 9.0) - geo2d::Circle(radius = 2.0).ops::translate(x = [-3.0, 3.0], y = [-3.0, 3.0], z = 0.0);
+ 4: 
+ 5: a.ops::extrude(height = 4.0, scale_x = 100%, scale_y = 100%);
+
+-- Output --
+-- Errors --
+-- Model --
+  Group (root) ->
+    Operation __builtin::ops::extrude(height=4, scale_x=1, scale_y=1) ->
+      Operation subtract() ->
+        Group ->
+          Primitive2D __builtin::geo2d::Circle(radius=9) ->
+          Multiplicity ->
+            Transform __builtin::ops::translate(x=-3, y=-3, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=2) ->
+            Transform __builtin::ops::translate(x=3, y=-3, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=2) ->
+            Transform __builtin::ops::translate(x=-3, y=3, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=2) ->
+            Transform __builtin::ops::translate(x=3, y=3, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=2) ->
+
+Export of "../books/language/src/libraries/builtin/.test/builtin_extrude-out.stl" successful.
+-- Test Result --
+OK

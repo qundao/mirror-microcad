@@ -1,0 +1,25 @@
+-- Test --
+  source_assignment_prop
+  ../books/tests/src/statement_usage/source.md:65
+
+-- Code --
+
+ 1: prop a = 1;  // error
+
+-- Output --
+-- Errors --
+error: Assignment statement is not available within SourceFile
+  ---> ../books/tests/src/statement_usage/source.md:1:1
+     |
+   1 | prop a = 1;  // error
+     | ^^^^^^^^^^^
+     |
+error: Declaration of a not allowed within source_assignment_prop
+  ---> ../books/tests/src/statement_usage/source.md:1:1
+     |
+   1 | prop a = 1;  // error
+     | ^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILED AS EXPECTED

@@ -1,0 +1,33 @@
+-- Test --
+  pre_init_code
+  ../books/language/src/structure/workbenches/README.md:161
+
+-- Code --
+
+ 1: sketch Wheel(radius: Length) {
+ 2:     // init code
+ 3:     const FACTOR = 2.0;
+ 4: 
+ 5:     // initializer
+ 6:     init(diameter: Length) { into_radius(radius); }
+ 7: 
+ 8:     // function
+ 9:     fn into_radius( diameter: Length ) {
+10:         // use constant FACTOR from init code
+11:         return diameter / FACTOR;
+12:     }
+13: 
+14:     // set property diameter and use FACTOR from init code
+15:     prop diameter = radius * FACTOR;
+16:     
+17:     // code body
+18:     std::geo2d::Circle(radius);
+19: }
+20: 
+21: __builtin::debug::assert(Wheel(5cm).radius == 5cm);
+22: __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
+
+-- Parse Error --
+Statement not allowed within workbenches (3:5)
+-- Test Result --
+TODO

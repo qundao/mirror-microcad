@@ -1,0 +1,13 @@
+-- Test --
+  types_primitive_bool
+  ../books/language/src/types/primitives.md:9
+
+-- Code --
+
+ 1: std::debug::assert(true != false);
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK

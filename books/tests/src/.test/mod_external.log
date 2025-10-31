@@ -1,0 +1,14 @@
+-- Test --
+  mod_external
+  ../books/tests/src/mod_external.md:12
+
+-- Code --
+
+ 1: // file: external.µcad
+ 2: pub const a =1;
+
+-- Output --
+-- Errors --
+-- No model --
+-- Test Result --
+OK
