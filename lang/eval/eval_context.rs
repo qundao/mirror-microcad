@@ -10,7 +10,7 @@ use crate::{
 /// The context is used to store the current state of the evaluation.
 pub struct EvalContext {
     /// Symbol table
-    pub symbol_table: SymbolTable,
+    symbol_table: SymbolTable,
     /// Source cache
     sources: Sources,
     /// Stack of currently opened scopes with symbols while evaluation.
@@ -252,6 +252,11 @@ impl EvalContext {
                 .search(&self.stack.current_module_name(), false)?,
             target,
         )
+    }
+
+    /// Symbol table accessor.
+    pub fn symbol_table(&self) -> &SymbolTable {
+        &self.symbol_table
     }
 }
 

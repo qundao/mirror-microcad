@@ -9,7 +9,7 @@ use crate::{diag::*, rc::*, resolve::*, src_ref::*, syntax::*};
 #[derive(Default)]
 pub struct ResolveContext {
     /// Symbol table.
-    pub symbol_table: SymbolTable,
+    pub(crate) symbol_table: SymbolTable,
     /// Source file cache.
     pub(crate) sources: Sources,
     /// Diagnostic handler.
@@ -293,6 +293,11 @@ impl ResolveContext {
         // re-resolve
         self.mode = ResolveMode::Symbolized;
         self.resolve()
+    }
+
+    /// Symbol table accessor.
+    pub fn symbol_table(&self) -> &SymbolTable {
+        &self.symbol_table
     }
 }
 

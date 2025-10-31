@@ -152,9 +152,12 @@ impl Inspector {
                 tx.send(ViewModelRequest::SetSymbolTree({
                     let mut items = Vec::new();
 
-                    resolve_context.symbol_table.iter().for_each(|(_, symbol)| {
-                        items.append(&mut SymbolTreeModelItem::items_from_tree(symbol))
-                    });
+                    resolve_context
+                        .symbol_table()
+                        .iter()
+                        .for_each(|(_, symbol)| {
+                            items.append(&mut SymbolTreeModelItem::items_from_tree(symbol))
+                        });
                     items
                 }))?;
 
