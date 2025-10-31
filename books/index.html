@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>µcad Documentation</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+        }
+
+        .book-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .book-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: 0.2s;
+        }
+
+        .book-card:hover {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="logo.png" width="10%" />
+    <p>Welcome to the homepage of µcad!</p>
+    <p>
+        <a href="https://codeberg.org/microcad/microcad">This project</a> is
+        still in an early stage and so this website is.
+    </p>
+    <p>So please enjoy our books until this website is replaced with something better:</p>
+    <div class="book-list">
+        <div class="book-card">
+            <h2><a href="language/book/index.html">The µcad Book</a></h2>
+            <p>µcad Language specification.</p>
+        </div>
+        <div class="book-card">
+            <h2><a href="tutorials/book/index.html">Tutorials</a></h2>
+            <p>Several language tutorials.</p>
+        </div>
+        <div class="book-card">
+            <h2><a href="tests/book/index.html">Tests</a></h2>
+            <p>Further tests.</p>
+        </div>
+    </div>
+</body>
+
+</html>
