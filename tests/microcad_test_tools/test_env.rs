@@ -244,7 +244,7 @@ impl TestEnv {
     /// Report output into log file.
     pub fn report_output(&mut self, output: Option<String>) {
         self.log_ln(&format!(
-            "-- Output --{}",
+            "-- Output --\n{}",
             output.unwrap_or("output error".into())
         ));
     }
