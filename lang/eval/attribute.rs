@@ -4,15 +4,15 @@
 use std::str::FromStr;
 
 use crate::{
+    Id,
     builtin::ExporterAccess,
     eval::{self, *},
     model::{Attributes, CustomCommand, ExportCommand, MeasureCommand, ResolutionAttribute},
     parameter,
     syntax::{self, *},
-    Id,
 };
 
-use microcad_core::{theme::Theme, Color, RenderResolution, Size2};
+use microcad_core::{Color, RenderResolution, Size2, theme::Theme};
 use thiserror::Error;
 
 /// Error type for attributes.
@@ -226,7 +226,7 @@ impl Eval<Option<ResolutionAttribute>> for syntax::AttributeCommand {
                 match value {
                     Value::Quantity(qty) => match qty.quantity_type {
                         QuantityType::Scalar => Ok(Some(ResolutionAttribute::Relative(qty.value))),
-                        QuantityType::Length => Ok(Some(ResolutionAttribute::Linear(qty.value))),
+                        QuantityType::Length => Ok(Some(ResolutionAttribute::Absolute(qty.value))),
                         _ => unimplemented!(),
                     },
                     _ => todo!("Error handling"),

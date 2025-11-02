@@ -64,6 +64,8 @@ pub struct RenderOutput {
     pub resolution: Option<RenderResolution>,
     /// The output geometry.
     pub geometry: Option<GeometryOutput>,
+    /// Render attributes.
+    pub attributes: RenderAttributes,
     /// Computed model hash.
     hash: HashId,
 }
@@ -75,6 +77,7 @@ impl RenderOutput {
         let mut hasher = rustc_hash::FxHasher::default();
         model.hash(&mut hasher);
         let hash = hasher.finish();
+        let model_ = model.borrow();
 
         let local_matrix = model
             .borrow()
@@ -88,6 +91,7 @@ impl RenderOutput {
             world_matrix: None,
             resolution: None,
             geometry: None,
+            attributes: model_.attributes().into(),
             hash,
         })
     }

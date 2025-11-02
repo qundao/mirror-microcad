@@ -79,9 +79,14 @@ impl ModelInner {
         self.children.is_empty()
     }
 
-    /// Return element of this model.
+    /// Read-only access to the element of this model.
     pub fn element(&self) -> &Element {
         &self.element
+    }
+
+    /// Read-only access to the attributes of this model.
+    pub fn attributes(&self) -> &Attributes {
+        &self.attributes
     }
 
     /// Returns the render output, panics if there is no render output.

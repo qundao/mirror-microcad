@@ -3,6 +3,7 @@
 
 //! Model methods and trait implementations for rendering.
 
+mod attribute;
 mod cache;
 mod context;
 mod hash;
@@ -10,6 +11,7 @@ mod output;
 
 use std::rc::Rc;
 
+pub use attribute::*;
 pub use cache::*;
 pub use context::*;
 pub use hash::*;
@@ -113,10 +115,23 @@ impl Model {
 
         /// Set the resolution for this model.
         pub fn set_resolution(model: &Model, resolution: RenderResolution) {
+            let resolution = match model.borrow().attributes().get_resolution() {
+                Some(resolution_attribute) => RenderResolution {
+                    linear: match resolution_attribute {
+                        ResolutionAttribute::Absolute(linear) => linear,
+                        ResolutionAttribute::Relative(factor) =>
+                        // Example: A relative resolution of 200% scales an absolution resolution from 0.1mm to 0.5mm.
+                        {
+                            resolution.linear / factor
+                        }
+                    },
+                },
+                None => resolution,
+            };
+
             let new_resolution = {
                 let mut model_ = model.borrow_mut();
                 let output = model_.output.as_mut().expect("Output");
-
                 let resolution = resolution * output.local_matrix().unwrap_or(Mat4::identity());
                 output.set_resolution(resolution.clone());
                 resolution
