@@ -184,7 +184,6 @@ impl Eval<Vec<CustomCommand>> for syntax::Attribute {
 impl Eval<Option<Color>> for syntax::AttributeCommand {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Color>> {
         match self {
-            AttributeCommand::Call(_, _) => todo!(),
             // Get color from a tuple or string.
             AttributeCommand::Expression(expression) => {
                 let value: Value = expression.eval(context)?;
@@ -214,6 +213,7 @@ impl Eval<Option<Color>> for syntax::AttributeCommand {
                     }
                 }
             }
+            AttributeCommand::Call(_, _) => todo!(),
         }
     }
 }

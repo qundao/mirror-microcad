@@ -124,7 +124,7 @@ impl From<BuiltinValueHelper> for Value {
             }
             BuiltinValueHelper::String(s) => Value::String(s),
             BuiltinValueHelper::Bool(b) => Value::Bool(b),
-            BuiltinValueHelper::Color(c) => c.try_into().expect("Valid value"),
+            BuiltinValueHelper::Color(c) => c.into(),
             BuiltinValueHelper::Name(t) => t.try_into().expect("Valid value"),
         }
     }
