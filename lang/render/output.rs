@@ -77,8 +77,6 @@ impl RenderOutput {
         let mut hasher = rustc_hash::FxHasher::default();
         model.hash(&mut hasher);
         let hash = hasher.finish();
-        let model_ = model.borrow();
-
         let local_matrix = model
             .borrow()
             .element
@@ -91,7 +89,7 @@ impl RenderOutput {
             world_matrix: None,
             resolution: None,
             geometry: None,
-            attributes: model_.attributes().into(),
+            attributes: model.into(),
             hash,
         })
     }

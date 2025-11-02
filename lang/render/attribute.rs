@@ -65,8 +65,8 @@ impl From<&Attributes> for RenderAttributes {
     }
 }
 
-impl From<Model> for RenderAttributes {
-    fn from(model: Model) -> Self {
+impl From<&Model> for RenderAttributes {
+    fn from(model: &Model) -> Self {
         let model_ = model.borrow();
         let mut render_attributes: RenderAttributes = model_.attributes().into();
 

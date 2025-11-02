@@ -32,10 +32,12 @@ impl OutputGeometry {
         let output_type = output.output_type;
         use microcad_lang::render::GeometryOutput;
 
+        let color = output.attributes.get_color().cloned().unwrap_or_default();
+
         match &output.geometry {
             Some(GeometryOutput::Geometry2D(geometry)) => Some(Self {
                 model_hash: model.computed_hash(),
-                object: MeshInstance::new_2d(&geometry.inner, Color::default(), mat),
+                object: MeshInstance::new_2d(&geometry.inner, color, mat),
                 aabb: MeshInstance::new_bounds_2d(
                     geometry.bounds.clone(),
                     Color::rgb(1.0, 1.0, 1.0),
@@ -46,7 +48,7 @@ impl OutputGeometry {
             }),
             Some(GeometryOutput::Geometry3D(geometry)) => Some(Self {
                 model_hash: model.computed_hash(),
-                object: MeshInstance::new_3d(&geometry.inner, Color::default(), mat),
+                object: MeshInstance::new_3d(&geometry.inner, color, mat),
                 aabb: MeshInstance::new_bounds_3d(
                     geometry.bounds.clone(),
                     Color::rgb(1.0, 1.0, 1.0),
