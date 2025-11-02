@@ -6,7 +6,7 @@
 use cgmath::{Deg, InnerSpace};
 use geo::{CoordsIter as _, Point, Rect, Translate};
 use microcad_core::*;
-use microcad_lang::{model::Model, render::RenderOutput};
+use microcad_lang::{model::Model, render::GeometryOutput};
 
 use crate::svg::{attributes::SvgTagAttribute, *};
 
@@ -154,34 +154,23 @@ impl WriteSvg for Model {
 
         let self_ = self.borrow();
         let output = self_.output();
-        match output {
-            RenderOutput::Geometry2D {
-                local_matrix,
-                geometry,
-                ..
-            } => {
-                let node_attr = match local_matrix {
-                    Some(matrix) => node_attr
-                        .clone()
-                        .insert(SvgTagAttribute::Transform(*matrix)),
-                    None => node_attr.clone(),
-                };
+        let geometry = &output.geometry;
+        let node_attr = match output.local_matrix {
+            Some(matrix) => node_attr
+                .clone()
+                .insert(SvgTagAttribute::Transform(mat4_to_mat3(&matrix))),
+            None => node_attr.clone(),
+        };
 
+        match geometry {
+            Some(GeometryOutput::Geometry2D(geometry)) => {
                 writer.begin_group(&node_attr)?;
-
-                match geometry {
-                    Some(geometry) => {
-                        geometry.write_svg_mapped(writer, attr)?;
-                    }
-                    None => {
-                        self_
-                            .children()
-                            .try_for_each(|model| model.write_svg(writer, attr))?;
-                    }
-                }
-
+                geometry.write_svg_mapped(writer, attr)?;
                 writer.end_group()
             }
+            None => self_
+                .children()
+                .try_for_each(|model| model.write_svg(writer, attr)),
             _ => Ok(()),
         }
     }

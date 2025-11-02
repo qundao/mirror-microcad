@@ -68,13 +68,11 @@ impl ModelInner {
     /// Get render resolution.
     pub fn resolution(&self) -> RenderResolution {
         let output = self.output.as_ref().expect("Some render output.");
-
-        match output {
-            RenderOutput::Geometry2D { resolution, .. }
-            | RenderOutput::Geometry3D { resolution, .. } => {
-                resolution.as_ref().expect("Some resolution.").clone()
-            }
-        }
+        output
+            .resolution
+            .as_ref()
+            .expect("Some resolution.")
+            .clone()
     }
 }
 
@@ -147,12 +145,10 @@ impl Model {
 impl CalcBounds2D for Model {
     fn calc_bounds_2d(&self) -> Bounds2D {
         let self_ = self.borrow();
-        match self_.output() {
-            RenderOutput::Geometry2D { geometry, .. } => match geometry {
-                Some(geometry) => geometry.bounds.clone(),
-                None => Bounds2D::default(),
-            },
-            RenderOutput::Geometry3D { .. } => Bounds2D::default(),
+        match &self_.output().geometry {
+            Some(GeometryOutput::Geometry2D(geometry)) => geometry.bounds.clone(),
+            Some(GeometryOutput::Geometry3D(_)) => Bounds2D::default(),
+            None => Bounds2D::default(),
         }
     }
 }
@@ -179,13 +175,13 @@ impl RenderWithContext<Geometry2DOutput> for Model {
                             _ => Ok(model_.children.render_with_context(context)?),
                         }
                     }
-                    _ => unreachable!(),
+                    output_type => Err(RenderError::InvalidOutputType(output_type)),
                 }
             }?;
 
             self.borrow_mut()
                 .output_mut()
-                .set_geometry_2d(geometry.clone());
+                .set_geometry(GeometryOutput::Geometry2D(geometry.clone()));
             Ok(geometry)
         })
     }
@@ -213,13 +209,13 @@ impl RenderWithContext<Geometry3DOutput> for Model {
                             _ => model_.children.render_with_context(context),
                         }
                     }
-                    _ => unreachable!(),
+                    output_type => Err(RenderError::InvalidOutputType(output_type)),
                 }
             }?;
 
             self.borrow_mut()
                 .output_mut()
-                .set_geometry_3d(geometry.clone());
+                .set_geometry(GeometryOutput::Geometry3D(geometry.clone()));
             Ok(geometry)
         })
     }

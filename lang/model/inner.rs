@@ -49,11 +49,7 @@ impl ModelInner {
     /// Return render state of the model.
     pub fn render_state(&self) -> ModelRenderState {
         match &self.output {
-            Some(RenderOutput::Geometry2D { geometry, .. }) => match geometry {
-                Some(_) => ModelRenderState::Complete,
-                None => ModelRenderState::Preparing,
-            },
-            Some(RenderOutput::Geometry3D { geometry, .. }) => match geometry {
+            Some(output) => match output.geometry {
                 Some(_) => ModelRenderState::Complete,
                 None => ModelRenderState::Preparing,
             },

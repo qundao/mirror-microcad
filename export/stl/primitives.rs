@@ -36,21 +36,16 @@ impl WriteStl for Model {
     fn write_stl(&self, writer: &mut StlWriter) -> std::io::Result<()> {
         let self_ = self.borrow();
         let output = self_.output();
-        match output {
-            microcad_lang::render::RenderOutput::Geometry3D {
-                world_matrix,
-                geometry,
-                ..
-            } => {
-                let mat = world_matrix.expect("Some matrix");
-                match geometry {
-                    Some(geometry) => geometry.transformed_3d(&mat).write_stl(writer),
-                    None => self_
-                        .children()
-                        .try_for_each(|model| model.write_stl(writer)),
-                }
+        let geometry = &output.geometry;
+        let mat = output.world_matrix.expect("Some matrix");
+        match geometry {
+            Some(microcad_lang::render::GeometryOutput::Geometry3D(geometry)) => {
+                geometry.transformed_3d(&mat).write_stl(writer)
             }
-            _ => Ok(()),
+            Some(_) => Ok(()),
+            None => self_
+                .children()
+                .try_for_each(|model| model.write_stl(writer)),
         }
     }
 }

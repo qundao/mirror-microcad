@@ -34,7 +34,7 @@ use microcad_core::BooleanOp;
 use crate::{
     diag::WriteToFile,
     rc::RcMut,
-    render::{ComputedHash, HashId, RenderOutput},
+    render::{ComputedHash, HashId},
     src_ref::SrcReferrer,
     syntax::Identifier,
     tree_display::*,
@@ -170,11 +170,11 @@ impl Model {
     /// Get render output type. Expects a render output.
     pub fn render_output_type(&self) -> OutputType {
         let self_ = self.borrow();
-        match self_.output {
-            Some(RenderOutput::Geometry2D { .. }) => OutputType::Geometry2D,
-            Some(RenderOutput::Geometry3D { .. }) => OutputType::Geometry3D,
-            None => OutputType::InvalidMixed,
-        }
+        self_
+            .output
+            .as_ref()
+            .map(|output| output.output_type)
+            .unwrap_or(OutputType::InvalidMixed)
     }
 
     /// Return inner group if this model only contains a group as single child.

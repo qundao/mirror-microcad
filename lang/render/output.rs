@@ -53,34 +53,19 @@ impl From<Geometry3DOutput> for GeometryOutput {
 
 /// The model output when a model has been processed.
 #[derive(Debug, Clone)]
-pub enum RenderOutput {
-    /// 2D render output.
-    Geometry2D {
-        /// Local transformation matrix.
-        local_matrix: Option<Mat3>,
-        /// World transformation matrix.
-        world_matrix: Option<Mat3>,
-        /// The render resolution, calculated from transformation matrix.
-        resolution: Option<RenderResolution>,
-        /// The output geometry.
-        geometry: Option<Geometry2DOutput>,
-        /// Computed model hash.
-        hash: HashId,
-    },
-
-    /// 3D render output.
-    Geometry3D {
-        /// Local transformation matrix.
-        local_matrix: Option<Mat4>,
-        /// World transformation matrix.
-        world_matrix: Option<Mat4>,
-        /// The render resolution, calculated from transformation matrix.
-        resolution: Option<RenderResolution>,
-        /// The output geometry.
-        geometry: Option<Geometry3DOutput>,
-        /// Computed model hash.
-        hash: HashId,
-    },
+pub struct RenderOutput {
+    /// The output (2D/3D) this render output is expected to produce.
+    pub output_type: OutputType,
+    /// Local transformation matrix.
+    pub local_matrix: Option<Mat4>,
+    /// World transformation matrix.
+    pub world_matrix: Option<Mat4>,
+    /// The render resolution, calculated from transformation matrix.
+    pub resolution: Option<RenderResolution>,
+    /// The output geometry.
+    pub geometry: Option<GeometryOutput>,
+    /// Computed model hash.
+    hash: HashId,
 }
 
 impl RenderOutput {
@@ -91,163 +76,76 @@ impl RenderOutput {
         model.hash(&mut hasher);
         let hash = hasher.finish();
 
-        match output_type {
-            OutputType::Geometry2D => {
-                let local_matrix = model
-                    .borrow()
-                    .element
-                    .get_affine_transform()?
-                    .map(|affine_transform| affine_transform.mat2d());
+        let local_matrix = model
+            .borrow()
+            .element
+            .get_affine_transform()?
+            .map(|affine_transform| affine_transform.mat3d());
 
-                Ok(RenderOutput::Geometry2D {
-                    local_matrix,
-                    world_matrix: None,
-                    resolution: None,
-                    geometry: None,
-                    hash,
-                })
-            }
-
-            OutputType::Geometry3D => {
-                let local_matrix = model
-                    .borrow()
-                    .element
-                    .get_affine_transform()?
-                    .map(|affine_transform| affine_transform.mat3d());
-
-                Ok(RenderOutput::Geometry3D {
-                    local_matrix,
-                    world_matrix: None,
-                    resolution: None,
-                    geometry: None,
-                    hash,
-                })
-            }
-            output_type => Err(RenderError::InvalidOutputType(output_type)),
-        }
+        Ok(RenderOutput {
+            output_type,
+            local_matrix,
+            world_matrix: None,
+            resolution: None,
+            geometry: None,
+            hash,
+        })
     }
 
     /// Set the world matrix for render output.
     pub fn set_world_matrix(&mut self, m: Mat4) {
-        match self {
-            RenderOutput::Geometry2D { world_matrix, .. } => *world_matrix = Some(mat4_to_mat3(&m)),
-            RenderOutput::Geometry3D { world_matrix, .. } => {
-                *world_matrix = Some(m);
-            }
-        }
+        self.world_matrix = Some(m);
     }
 
     /// Set the 2D geometry as render output.
-    pub fn set_geometry_2d(&mut self, geo: Geometry2DOutput) {
-        match self {
-            RenderOutput::Geometry2D { geometry, .. } => *geometry = Some(geo),
-            RenderOutput::Geometry3D { .. } => unreachable!(),
-        }
-    }
-
-    /// Set the 2D geometry as render output.
-    pub fn set_geometry_3d(&mut self, geo: Geometry3DOutput) {
-        match self {
-            RenderOutput::Geometry2D { .. } => unreachable!(),
-            RenderOutput::Geometry3D { geometry, .. } => *geometry = Some(geo),
-        }
+    pub fn set_geometry(&mut self, geo: GeometryOutput) {
+        self.geometry = Some(geo)
     }
 
     /// Get render resolution.
     pub fn resolution(&self) -> &Option<RenderResolution> {
-        match self {
-            RenderOutput::Geometry2D { resolution, .. }
-            | RenderOutput::Geometry3D { resolution, .. } => resolution,
-        }
+        &self.resolution
     }
 
     /// Set render resolution.
     pub fn set_resolution(&mut self, render_resolution: RenderResolution) {
-        match self {
-            RenderOutput::Geometry2D { resolution, .. }
-            | RenderOutput::Geometry3D { resolution, .. } => *resolution = Some(render_resolution),
-        }
+        self.resolution = Some(render_resolution);
     }
 
     /// Local matrix.
     pub fn local_matrix(&self) -> Option<Mat4> {
-        match self {
-            RenderOutput::Geometry2D { local_matrix, .. } => {
-                local_matrix.as_ref().map(mat3_to_mat4)
-            }
-            RenderOutput::Geometry3D { local_matrix, .. } => *local_matrix,
-        }
-    }
-
-    /// Get world matrix.
-    pub fn world_matrix(&self) -> Mat4 {
-        match self {
-            RenderOutput::Geometry2D { world_matrix, .. } => {
-                mat3_to_mat4(&world_matrix.expect("World matrix"))
-            }
-            RenderOutput::Geometry3D { world_matrix, .. } => world_matrix.expect("World matrix"),
-        }
+        self.local_matrix
     }
 }
 
 impl std::fmt::Display for RenderOutput {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
-            RenderOutput::Geometry2D {
-                local_matrix,
-                geometry,
-                hash,
-                ..
-            } => {
-                write!(f, "2D ({hash:X}): ")?;
-                if local_matrix.is_none() && geometry.is_none() {
-                    write!(f, "(nothing to render)")?;
-                }
-                if local_matrix.is_some() {
-                    write!(f, "transform ")?;
-                }
-                if let Some(geometry) = geometry {
-                    write!(
-                        f,
-                        "{} {}",
-                        match &geometry.inner {
-                            Geometry2D::Collection(geometries) =>
-                                format!("Collection({} items)", geometries.len()),
-                            geometry => geometry.name().to_string(),
-                        },
-                        geometry.bounds
-                    )?;
-                }
-            }
-            RenderOutput::Geometry3D {
-                local_matrix,
-                geometry,
-                hash,
-                ..
-            } => {
-                write!(f, "3D ({hash:X}): ")?;
-                match (geometry, local_matrix) {
-                    (None, None) => write!(f, "(nothing to render)"),
-                    (None, Some(_)) => {
-                        write!(f, "transform")
-                    }
-                    (Some(geometry), None) => write!(f, "{}", geometry.inner.name()),
-                    (Some(geometry), Some(_)) => write!(f, "transformed {}", geometry.inner.name()),
-                }?;
-            }
-        }
-
-        if let Some(resolution) = self.resolution() {
-            write!(f, " {resolution}")?
-        }
+        write!(
+            f,
+            "{output_type} ({hash:X}): {geo} {resolution}",
+            output_type = match self.output_type {
+                OutputType::Geometry2D => "2D",
+                OutputType::Geometry3D => "3D",
+                OutputType::InvalidMixed => "Mixed",
+                OutputType::NotDetermined => "?",
+            },
+            hash = self.computed_hash(),
+            geo = match &self.geometry {
+                Some(GeometryOutput::Geometry2D(geo)) => geo.name(),
+                Some(GeometryOutput::Geometry3D(geo)) => geo.name(),
+                None => "",
+            },
+            resolution = match &self.resolution {
+                Some(resolution) => resolution.to_string(),
+                None => "".to_string(),
+            },
+        )?;
         Ok(())
     }
 }
 
 impl ComputedHash for RenderOutput {
     fn computed_hash(&self) -> HashId {
-        match self {
-            RenderOutput::Geometry2D { hash, .. } | RenderOutput::Geometry3D { hash, .. } => *hash,
-        }
+        self.hash
     }
 }
