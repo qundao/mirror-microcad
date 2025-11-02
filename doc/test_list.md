@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**283** tests from markdown.
+**280** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -24,9 +24,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../lang/doc/structure/.test/assignment_immutable.svg)](../lang/doc/structure/.test/assignment_immutable.log) | [assignment_immutable](../lang/doc/structure/assignments.md) |
 | [![test](../lang/doc/.test/attributes_color.svg)](../lang/doc/.test/attributes_color.log) | [attributes_color](../lang/doc/attributes.md) |
 | [![test](../lang/doc/.test/attributes_export.svg)](../lang/doc/.test/attributes_export.log) | [attributes_export](../lang/doc/attributes.md) |
-| [![test](../lang/doc/.test/attributes_export_example.svg)](../lang/doc/.test/attributes_export_example.log) | [attributes_export_example](../lang/doc/attributes.md) |
-| [![test](../lang/doc/.test/attributes_export_measure.svg)](../lang/doc/.test/attributes_export_measure.log) | [attributes_export_measure](../lang/doc/attributes.md) |
-| [![test](../lang/doc/.test/attributes_export_svg.svg)](../lang/doc/.test/attributes_export_svg.log) | [attributes_export_svg](../lang/doc/attributes.md) |
 | [![test](../lang/doc/.test/attributes_precision.svg)](../lang/doc/.test/attributes_precision.log) | [attributes_precision](../lang/doc/attributes.md) |
 | [![test](../lang/doc/.test/attributes_simple_example.svg)](../lang/doc/.test/attributes_simple_example.log) | [attributes_simple_example](../lang/doc/attributes.md) |
 | [![test](../books/tutorials/src/lego_brick/base/.test/base.svg)](../books/tutorials/src/lego_brick/base/.test/base.log) | [base](../books/tutorials/src/lego_brick/base/sketch.md) |
