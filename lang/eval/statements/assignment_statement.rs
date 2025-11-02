@@ -38,6 +38,7 @@ impl Eval<()> for AssignmentStatement {
         // apply any attributes to model value
         let new_value = match new_value {
             Value::Model(model) => {
+                model.set_id(assignment.id.clone());
                 let attributes = self.attribute_list.eval(context)?;
                 model.borrow_mut().attributes = attributes.clone();
                 Value::Model(model)

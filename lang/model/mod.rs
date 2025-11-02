@@ -172,6 +172,13 @@ impl Model {
             )
         })
     }
+
+    /// Set the id of a model. This happens if the model was created by an assignment.
+    ///
+    /// For example, the assignment statement `a = Circle(4mm)` will result in a model with id `a`.
+    pub fn set_id(&self, id: Identifier) {
+        self.borrow_mut().id = Some(id);
+    }
 }
 
 /// Iterator methods.
