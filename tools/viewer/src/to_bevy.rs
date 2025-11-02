@@ -3,14 +3,9 @@
 
 //! Conversions from microcad core types to bevy types.
 
+use bevy::{asset::RenderAssetUsages, math::Vec3, platform::collections::HashMap};
 use bevy::{
-    asset::RenderAssetUsages, math::Vec3, pbr::StandardMaterial, platform::collections::HashMap,
-};
-use bevy::{
-    render::{
-        alpha::AlphaMode,
-        mesh::{Indices, Mesh},
-    },
+    render::mesh::{Indices, Mesh},
     transform::components::Transform,
 };
 use microcad_core::*;
@@ -99,7 +94,7 @@ pub fn mesh_with_smoothness(mesh: &TriangleMesh, threshold_degrees: f32) -> Mesh
 }
 
 /// Create a bevy mesh from a 2D geometry.
-pub fn geometry2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
+pub fn geometry_2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
     let multi_polygon = geometry.to_multi_polygon();
     use geo::TriangulateEarcut;
 
@@ -138,6 +133,12 @@ pub fn geometry2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
     mesh
 }
 
+/// Create a bevy mesh from a 3D geometry.
+pub fn geometry_3d(geometry: &Geometry3D) -> Mesh {
+    mesh_with_smoothness(&geometry.into(), 30.0)
+}
+
+/// Convert cgmath Matrix into a bevy Matrix.
 pub fn mat4(m: cgmath::Matrix4<f64>) -> bevy::prelude::Mat4 {
     use cgmath::Matrix;
 
@@ -163,24 +164,17 @@ pub fn mat4(m: cgmath::Matrix4<f64>) -> bevy::prelude::Mat4 {
     ])
 }
 
-pub fn color(color: microcad_core::Color) -> bevy::prelude::Color {
+/// Convert a µcad color into a bevy color.
+pub fn color(color: &microcad_core::Color) -> bevy::prelude::Color {
     bevy::prelude::Color::srgba(color.r, color.g, color.b, color.a)
-}
-
-pub fn material(color: Color) -> StandardMaterial {
-    StandardMaterial {
-        base_color: self::color(color),
-        alpha_mode: AlphaMode::Opaque,
-        unlit: true,
-        ..Default::default()
-    }
 }
 
 pub fn transform(mat: Mat4) -> Transform {
     Transform::from_matrix(mat4(mat))
 }
 
-pub fn bounds_2d(bounds: Bounds2D) -> Mesh {
+/// Create mesh from a [`Bounds2D`].
+pub fn bounds_2d(bounds: &Bounds2D) -> Mesh {
     let mut mesh = Mesh::new(
         bevy::render::mesh::PrimitiveTopology::LineStrip,
         RenderAssetUsages::default(),
@@ -205,7 +199,8 @@ pub fn bounds_2d(bounds: Bounds2D) -> Mesh {
     mesh
 }
 
-pub fn bounds_3d(bounds: Bounds3D) -> Mesh {
+/// Create mesh from a [`Bounds3D`].
+pub fn bounds_3d(bounds: &Bounds3D) -> Mesh {
     let mut mesh = Mesh::new(
         bevy::render::mesh::PrimitiveTopology::LineStrip,
         RenderAssetUsages::default(),

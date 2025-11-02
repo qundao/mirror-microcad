@@ -11,7 +11,7 @@ mod grid;
 mod lighting;
 mod ruler;
 
-/// Get current symbol.
+/// Get current zoom level.
 pub fn get_current_zoom_level(projection: &Projection) -> f32 {
     match projection {
         Projection::Orthographic(orthographic_projection) => orthographic_projection.scale,
@@ -19,18 +19,33 @@ pub fn get_current_zoom_level(projection: &Projection) -> f32 {
     }
 }
 
+/// Get current resolution in mm.
+pub fn get_current_resolution(projection: &Projection, window: &Window) -> f32 {
+    let area_size = match projection {
+        Projection::Orthographic(orthographic_projection) => orthographic_projection
+            .area
+            .width()
+            .max(orthographic_projection.area.height()),
+        _ => todo!(),
+    };
+
+    area_size / window.width().max(window.height()) * 10.0
+}
+
 /// A system that draws hit indicators for every pointer.
 pub fn draw_mesh_intersections(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,
     mut gizmos: Gizmos,
-    query: Query<&Projection>,
+    projections: Query<&Projection>,
 ) {
     for (_entity, hit) in pointers
         .iter()
         .filter_map(|interaction| interaction.get_nearest_hit())
     {
         if let Some(position) = hit.position {
-            let zoom = get_current_zoom_level(query.iter().next().unwrap());
+            let proj = projections.iter().next().unwrap();
+
+            let zoom = get_current_zoom_level(proj);
             gizmos.sphere(
                 position,
                 zoom * 0.1,

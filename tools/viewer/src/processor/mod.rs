@@ -4,7 +4,6 @@
 //! microcad Viewer processor.
 
 mod geometry_output;
-mod mesh_instance;
 mod systems;
 
 use bevy::{
@@ -63,7 +62,7 @@ pub enum ProcessorRequest {
 /// Contains the geometry to rendered.
 pub enum ProcessorResponse {
     /// The response contains output geometry from a render request.
-    OutputGeometry(Vec<OutputGeometry>),
+    OutputGeometry(Vec<ModelOutputGeometry>),
 }
 
 /// The state of the interpreter.
@@ -230,8 +229,11 @@ impl Processor {
     }
 
     /// Generate mesh geometry output for model.
-    fn generate_mesh_geometry_from_model(model: &Model, mesh_geometry: &mut Vec<OutputGeometry>) {
-        match OutputGeometry::from_model(model) {
+    fn generate_mesh_geometry_from_model(
+        model: &Model,
+        mesh_geometry: &mut Vec<ModelOutputGeometry>,
+    ) {
+        match ModelOutputGeometry::from_model(model) {
             Some(output_geometry) => {
                 mesh_geometry.push(output_geometry);
             }
