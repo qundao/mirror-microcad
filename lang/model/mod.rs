@@ -96,18 +96,6 @@ impl Model {
         s.children.retain(|model| !model.is_same_as(child));
     }
 
-    /// Detaches a model from its parent. Children are not affected.
-    pub fn detach(&self) {
-        match self.0.borrow_mut().parent {
-            Some(ref mut parent) => {
-                parent.remove_child(self);
-            }
-            None => return,
-        }
-
-        self.0.borrow_mut().parent = None;
-    }
-
     /// Append a single model as child.
     ///
     /// Also tries to set the output type if it has not been determined yet.
@@ -177,14 +165,11 @@ impl Model {
     /// This function is used when we evaluate operations like `subtract() {}` or `hull() {}`.
     /// When evaluating these operations, we want to iterate over the group's children.
     pub fn into_group(&self) -> Option<Model> {
-        let children = &self.borrow().children;
-        if children.len() != 1 {
-            return None;
-        }
-
-        children.first().and_then(|n| match *n.0.borrow().element {
-            Element::Group | Element::Multiplicity => Some(n.clone()),
-            _ => None,
+        self.borrow().children.single_model().filter(|model| {
+            matches!(
+                model.borrow().element.value,
+                Element::Group | Element::Multiplicity
+            )
         })
     }
 }
