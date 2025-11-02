@@ -18,7 +18,7 @@
     Workpiece(op) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
       - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
       Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
-        Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
+        cylinder: Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
           - height = 50mm
           - offset = -25mm
           - radius_bottom = 10mm
@@ -41,7 +41,7 @@
     Workpiece(op) std::ops::rotate(x=0rad, y=1.5707963267949rad, z=0rad) ->
       - matrix = Matrix3 [[6.123233995736766e-17, 0.0, -1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 6.123233995736766e-17]]
       Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 0.0, -1.0], [0.0, 1.0, 0.0], [1.0, 0.0, 6.123233995736766e-17]]) ->
-        Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
+        cylinder: Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
           - height = 50mm
           - offset = -25mm
           - radius_bottom = 10mm
@@ -64,7 +64,7 @@
     Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=1.5707963267949rad) ->
       - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
       Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
-        Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
+        cylinder: Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
           - height = 50mm
           - offset = -25mm
           - radius_bottom = 10mm
