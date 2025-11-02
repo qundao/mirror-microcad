@@ -56,11 +56,6 @@ impl Model {
         self.parents().count()
     }
 
-    /// Check if a model contains an operation element.
-    pub fn is_operation(&self) -> bool {
-        self.borrow().element.is_operation()
-    }
-
     /// Return `true`, if model has no children.
     pub fn is_empty(&self) -> bool {
         self.borrow().is_empty()
