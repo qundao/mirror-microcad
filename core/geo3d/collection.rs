@@ -9,6 +9,7 @@ use derive_more::{Deref, DerefMut};
 
 use crate::{
     geo3d::{CalcBounds3D, bounds::Bounds3D},
+    traits::{TotalMemory, VertexCount},
     *,
 };
 
@@ -76,5 +77,17 @@ impl Transformed3D for Geometries3D {
                 .map(|geometry| Rc::new(geometry.transformed_3d(mat)))
                 .collect::<Vec<_>>(),
         )
+    }
+}
+
+impl TotalMemory for Geometries3D {
+    fn heap_memory(&self) -> usize {
+        self.iter().map(|g| g.heap_memory()).sum()
+    }
+}
+
+impl VertexCount for Geometries3D {
+    fn vertex_count(&self) -> usize {
+        self.iter().map(|g| g.vertex_count()).sum()
     }
 }

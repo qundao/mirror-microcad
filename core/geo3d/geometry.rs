@@ -1,7 +1,10 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::*;
+use crate::{
+    traits::{TotalMemory, VertexCount},
+    *,
+};
 
 use derive_more::From;
 use std::rc::Rc;
@@ -94,6 +97,34 @@ impl From<Geometry3D> for Rc<Manifold> {
             Geometry3D::Collection(ref collection) => {
                 Rc::new(TriangleMesh::from(collection).to_manifold())
             }
+        }
+    }
+}
+
+impl TotalMemory for Rc<Manifold> {} // TODO: Get estimation of total memory of Manifold via C++ API.
+
+impl TotalMemory for Geometry3D {
+    fn heap_memory(&self) -> usize {
+        match &self {
+            Geometry3D::Mesh(triangle_mesh) => triangle_mesh.heap_memory(),
+            Geometry3D::Manifold(manifold) => manifold.heap_memory(),
+            Geometry3D::Collection(collection) => collection.heap_memory(),
+        }
+    }
+}
+
+impl VertexCount for Rc<Manifold> {
+    fn vertex_count(&self) -> usize {
+        0 // TODO: Get number of vertices for Manifold via C++ API
+    }
+}
+
+impl VertexCount for Geometry3D {
+    fn vertex_count(&self) -> usize {
+        match &self {
+            Geometry3D::Mesh(triangle_mesh) => triangle_mesh.vertex_count(),
+            Geometry3D::Manifold(manifold) => manifold.vertex_count(),
+            Geometry3D::Collection(collection) => collection.vertex_count(),
         }
     }
 }

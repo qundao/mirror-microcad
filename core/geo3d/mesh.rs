@@ -1,7 +1,10 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::*;
+use crate::{
+    traits::{TotalMemory, VertexCount},
+    *,
+};
 use cgmath::{ElementWise, Vector3};
 use manifold_rs::{Manifold, Mesh};
 
@@ -281,6 +284,23 @@ impl WithBounds3D<TriangleMesh> {
     pub fn repair(&mut self) {
         self.update_bounds();
         self.inner.repair(&self.bounds);
+    }
+}
+
+impl TotalMemory for TriangleMesh {
+    fn heap_memory(&self) -> usize {
+        self.positions.heap_memory()
+            + self.triangle_indices.heap_memory()
+            + match &self.normals {
+                Some(normals) => normals.heap_memory(),
+                None => 0,
+            }
+    }
+}
+
+impl VertexCount for TriangleMesh {
+    fn vertex_count(&self) -> usize {
+        self.positions.len()
     }
 }
 
