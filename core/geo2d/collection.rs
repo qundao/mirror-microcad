@@ -9,6 +9,7 @@ use std::rc::Rc;
 
 use crate::{
     geo2d::{CalcBounds2D, bounds::Bounds2D},
+    traits::{TotalMemory, VertexCount},
     *,
 };
 
@@ -154,5 +155,17 @@ impl From<Geometries2D> for MultiPolygon {
                 })
                 .collect(),
         )
+    }
+}
+
+impl TotalMemory for Geometries2D {
+    fn heap_memory(&self) -> usize {
+        self.iter().map(|geo| geo.heap_memory()).sum()
+    }
+}
+
+impl VertexCount for Geometries2D {
+    fn vertex_count(&self) -> usize {
+        self.iter().map(|geo| geo.vertex_count()).sum()
     }
 }
