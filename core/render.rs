@@ -11,6 +11,13 @@ use crate::*;
 pub trait Render<T> {
     /// The render function.
     fn render(&self, resolution: &RenderResolution) -> T;
+
+    /// A render hint to tell whether this geometry is independent from resolution.
+    ///
+    /// Example: a rectangle is resolution independent, but a circle is not.
+    fn is_resolution_independent(&self) -> bool {
+        false
+    }
 }
 
 /// Render resolution when rendering things to polygons or meshes.
