@@ -19,18 +19,53 @@ pub struct Color {
 }
 
 impl Color {
+    /// Built-in red color.
+    pub const RED: Self = Self::rgb(1.0, 0.0, 0.0);
+    /// Built-in green color.
+    pub const GREEN: Self = Self::rgb(0.0, 1.0, 0.0);
+    /// Built-in blue color.
+    pub const BLUE: Self = Self::rgb(0.0, 0.0, 1.0);
+    /// Built-in yellow color.
+    pub const YELLOW: Self = Self::rgb(1.0, 1.0, 0.0);
+    /// Built-in cyan color.
+    pub const CYAN: Self = Self::rgb(0.0, 1.0, 1.0);
+    /// Built-in magenta color.
+    pub const MAGENTA: Self = Self::rgb(1.0, 0.0, 1.0);
+    /// Built-in black color.
+    pub const BLACK: Self = Self::rgb(0.0, 0.0, 0.0);
+    /// Built-in white color.
+    pub const WHITE: Self = Self::rgb(1.0, 1.0, 1.0);
+    /// Built-in gray color.
+    pub const GRAY: Self = Self::rgb(0.5, 0.5, 0.5);
+    /// Built-in orange color.
+    pub const ORANGE: Self = Self::rgb(1.0, 0.5, 0.0);
+    /// Built-in purple color.
+    pub const PURPLE: Self = Self::rgb(0.5, 0.0, 0.5);
+    /// Built-in pink color.
+    pub const PINK: Self = Self::rgb(1.0, 0.75, 0.8);
+    /// Built-in brown color.
+    pub const BROWN: Self = Self::rgb(0.6, 0.3, 0.1);
+    /// Built-in lime color.
+    pub const LIME: Self = Self::rgb(0.75, 1.0, 0.0);
+    /// Built-in teal color.
+    pub const TEAL: Self = Self::rgb(0.0, 0.5, 0.5);
+    /// Built-in navy color.
+    pub const NAVY: Self = Self::rgb(0.0, 0.0, 0.5);
+    /// Built-in transparent color.
+    pub const TRANSPARENT: Self = Self::rgba(0.0, 0.0, 0.0, 0.0);
+
     /// Create new color.
-    pub fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
+    pub const fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
         Self { r, g, b, a }
     }
 
     /// Create new color from RGBA values.
-    pub fn rgba(r: f32, g: f32, b: f32, a: f32) -> Self {
+    pub const fn rgba(r: f32, g: f32, b: f32, a: f32) -> Self {
         Self::new(r, g, b, a)
     }
 
     /// Create new color from RGB values. Alpha is 1.0.
-    pub fn rgb(r: f32, g: f32, b: f32) -> Self {
+    pub const fn rgb(r: f32, g: f32, b: f32) -> Self {
         Self::rgba(r, g, b, 1.0_f32)
     }
 
@@ -102,23 +137,23 @@ impl FromStr for Color {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "blue" => Ok(Self::rgb(0.0, 0.0, 1.0)),
-            "red" => Ok(Self::rgb(1.0, 0.0, 0.0)),
-            "green" => Ok(Self::rgb(0.0, 1.0, 0.0)),
-            "yellow" => Ok(Self::rgb(1.0, 1.0, 0.0)),
-            "cyan" => Ok(Self::rgb(0.0, 1.0, 1.0)),
-            "magenta" => Ok(Self::rgb(1.0, 0.0, 1.0)),
-            "black" => Ok(Self::rgb(0.0, 0.0, 0.0)),
-            "white" => Ok(Self::rgb(1.0, 1.0, 1.0)),
-            "gray" => Ok(Self::rgb(0.5, 0.5, 0.5)),
-            "orange" => Ok(Self::rgb(1.0, 0.5, 0.0)),
-            "purple" => Ok(Self::rgb(0.5, 0.0, 0.5)),
-            "pink" => Ok(Self::rgb(1.0, 0.75, 0.8)),
-            "brown" => Ok(Self::rgb(0.6, 0.3, 0.1)),
-            "lime" => Ok(Self::rgb(0.75, 1.0, 0.0)),
-            "teal" => Ok(Self::rgb(0.0, 0.5, 0.5)),
-            "navy" => Ok(Self::rgb(0.0, 0.0, 0.5)),
-            "transparent" => Ok(Self::rgba(0.0, 0.0, 0.0, 0.0)),
+            "blue" => Ok(Self::BLUE),
+            "red" => Ok(Self::RED),
+            "green" => Ok(Self::GREEN),
+            "yellow" => Ok(Self::YELLOW),
+            "cyan" => Ok(Self::CYAN),
+            "magenta" => Ok(Self::MAGENTA),
+            "black" => Ok(Self::BLACK),
+            "white" => Ok(Self::WHITE),
+            "gray" => Ok(Self::GRAY),
+            "orange" => Ok(Self::ORANGE),
+            "purple" => Ok(Self::PURPLE),
+            "pink" => Ok(Self::PINK),
+            "brown" => Ok(Self::BROWN),
+            "lime" => Ok(Self::LIME),
+            "teal" => Ok(Self::TEAL),
+            "navy" => Ok(Self::NAVY),
+            "transparent" => Ok(Self::TRANSPARENT),
             s => {
                 if s.starts_with("#") {
                     Self::from_hex_str(s)
