@@ -3,7 +3,7 @@
 
 use cgmath::{InnerSpace, SquareMatrix};
 use microcad_core::{Mat3, Scalar, Vec3};
-use microcad_lang::{diag::*, eval::*, parameter, resolve::*, syntax::*, ty::*, value::*};
+use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
 /// Absolute value abs(x)
 fn abs() -> Symbol {
@@ -220,38 +220,10 @@ fn rotate_zyx() -> Symbol {
 
 pub fn math() -> Symbol {
     crate::ModuleBuilder::new("math")
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("PI"),
-                Value::Quantity(Quantity::new(std::f64::consts::PI, QuantityType::Scalar)),
-            ),
-            None,
-        ))
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("X"),
-                Value::Tuple(Box::new(Vec3::unit_x().into())),
-            ),
-            None,
-        ))
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("Y"),
-                Value::Tuple(Box::new(Vec3::unit_y().into())),
-            ),
-            None,
-        ))
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("Z"),
-                Value::Tuple(Box::new(Vec3::unit_z().into())),
-            ),
-            None,
-        ))
+        .pub_const("PI", std::f64::consts::PI)
+        .pub_const("X", Value::Tuple(Box::new(Vec3::unit_x().into())))
+        .pub_const("Y", Value::Tuple(Box::new(Vec3::unit_y().into())))
+        .pub_const("Z", Value::Tuple(Box::new(Vec3::unit_z().into())))
         .symbol(abs())
         .symbol(sqrt())
         .symbol(cos())
