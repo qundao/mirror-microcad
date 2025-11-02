@@ -13,11 +13,8 @@ pub struct Create {
 }
 
 impl RunCommand for Create {
-    fn run(&self, _cli: &crate::cli::Cli) -> anyhow::Result<()> {
-        let mut path = self.path.to_path_buf();
-        if path.extension().is_none() {
-            path.set_extension("µcad");
-        }
+    fn run(&self, cli: &Cli) -> anyhow::Result<()> {
+        let path = cli.path_with_default_ext(&self.path);
 
         if path.exists() {
             eprintln!("Error: File {path:?} already exists.")

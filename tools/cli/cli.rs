@@ -17,15 +17,20 @@ pub struct Cli {
     pub(crate) time: bool,
 
     /// Load config from file.
-    #[arg(short = 'C', long)]
-    config: Option<std::path::PathBuf>,
+    #[arg(short = 'C', long = "config")]
+    config_path: Option<std::path::PathBuf>,
 
     /// Verbosity level (use -v, -vv, or -vvv)
     #[arg(short, action = clap::ArgAction::Count)]
     pub(crate) verbose: u8,
 
+    /// Subcommands.
     #[command(subcommand)]
     command: Commands,
+
+    /// The loaded or default CLI config.
+    #[clap(skip)]
+    pub config: Config,
 }
 
 impl Default for Cli {
@@ -36,6 +41,15 @@ impl Default for Cli {
 }
 
 impl Cli {
+    /// Create a new CLI.
+    pub fn new() -> anyhow::Result<Self> {
+        let mut cli = Self::parse();
+        if let Some(config_path) = &cli.config_path {
+            cli.config = Config::load(config_path)?
+        }
+        Ok(cli)
+    }
+
     /// `./lib` (if exists) and `~/.config/microcad/lib` (if exists).
     pub fn default_search_paths() -> Vec<std::path::PathBuf> {
         let local_dir = std::path::PathBuf::from("./lib");
@@ -51,6 +65,15 @@ impl Cli {
         }
 
         search_paths
+    }
+
+    /// Return a path with default µcad extension given in the config.
+    pub fn path_with_default_ext(&self, path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
+        let mut path = path.as_ref().to_path_buf();
+        if path.extension().is_none() {
+            path.set_extension(self.config.default_extension.clone());
+        }
+        path
     }
 
     /// Returns microcad's config dir, even if it does not exist.
@@ -102,14 +125,6 @@ impl Cli {
             );
         }
         Ok(())
-    }
-
-    /// Fetch a config from file or default config.
-    pub fn fetch_config(&self) -> anyhow::Result<Config> {
-        match &self.config {
-            Some(config) => Config::load(config),
-            None => Ok(Config::default()),
-        }
     }
 
     pub(super) fn is_parse(&self) -> bool {

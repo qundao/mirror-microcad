@@ -48,7 +48,7 @@ impl RunCommand for Watch {
                 }
 
                 // Watch all dependencies of the most recent compilation.
-                watcher.update(vec![self.export.eval.resolve.parse.input.clone()])?;
+                watcher.update(vec![self.export.eval.resolve.parse.input_with_ext(cli)])?;
 
                 // Remove unused cache items.
                 {

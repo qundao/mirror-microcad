@@ -40,9 +40,7 @@ impl RunCommand<Vec<(Model, ExportCommand)>> for Export {
         let (context, model) = self.eval.run(cli)?;
 
         if let Some(model) = model {
-            let config = cli.fetch_config()?;
-
-            let target_models = self.target_models(&model, &config, context.exporters())?;
+            let target_models = self.target_models(&model, cli, context.exporters())?;
 
             if self.targets {
                 self.list_targets(&target_models)?;
@@ -124,11 +122,11 @@ impl Export {
     fn default_export_attribute(
         &self,
         model: &Model,
-        config: &Config,
+        cli: &Cli,
         exporters: &ExporterRegistry,
     ) -> anyhow::Result<ExportCommand> {
         let default_exporter =
-            Self::default_exporter(&model.deduce_output_type(), config, exporters);
+            Self::default_exporter(&model.deduce_output_type(), &cli.config, exporters);
         let resolution = self.resolution();
 
         match &self.output {
@@ -140,7 +138,7 @@ impl Export {
                     .or(default_exporter)?,
             }),
             None => {
-                let mut filename = self.eval.resolve.parse.input.clone();
+                let mut filename = self.eval.resolve.parse.input_with_ext(cli);
                 let exporter = default_exporter?;
 
                 let ext = exporter
@@ -168,7 +166,7 @@ impl Export {
     pub fn target_models(
         &self,
         model: &Model,
-        config: &Config,
+        cli: &Cli,
         exporters: &ExporterRegistry,
     ) -> anyhow::Result<Vec<(Model, ExportCommand)>> {
         let mut models = model
@@ -191,7 +189,7 @@ impl Export {
             // Add the root model with default exporters.
             models.push((
                 model.clone(),
-                self.default_export_attribute(model, config, exporters)?,
+                self.default_export_attribute(model, cli, exporters)?,
             ))
         }
 

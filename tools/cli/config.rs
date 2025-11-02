@@ -6,18 +6,40 @@
 use serde::Deserialize;
 
 /// Microcad CLI config.
-#[derive(Deserialize, Default)]
+#[derive(Deserialize)]
 pub struct Config {
+    /// Default extension (default: `µcad`).
+    pub default_extension: String,
+
     /// Export settings.
     pub export: Export,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            default_extension: "µcad".to_string(),
+            export: Default::default(),
+        }
+    }
 }
 
 impl Config {
     /// Load config from TOML file.
     pub fn load(filename: &std::path::Path) -> anyhow::Result<Self> {
         let content = std::fs::read_to_string(filename)?;
+        let mut config: Config = toml::from_str(&content)?;
 
-        Ok(toml::from_str(&content)?)
+        if !microcad_lang::MICROCAD_EXTENSIONS.contains(&config.default_extension.as_str()) {
+            let fallback = Config::default().default_extension;
+            log::warn!(
+                "`{}` is a valid µcad extension, switching to `{fallback}`.",
+                &config.default_extension
+            );
+            config.default_extension = fallback;
+        }
+
+        Ok(config)
     }
 }
 
