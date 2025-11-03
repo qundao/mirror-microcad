@@ -6,9 +6,6 @@ import {
     TextEdit,
 } from "std-widgets.slint";
 
-
-
-
 export struct VM_Argument {
     id: string,
     value: string,
@@ -18,6 +15,14 @@ export struct VM_Creator {
     symbol_name: string,
 }
 
+
+// Model item for a single line of code.
+export struct SourceCodeModelItem {
+    line: string,
+    line_number: int,
+    byte_range_start: int,
+    byte_range_end: int,
+}
 
 export struct SymbolTreeModelItem {
     depth: int,
