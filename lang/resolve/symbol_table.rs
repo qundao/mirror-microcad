@@ -92,7 +92,7 @@ impl SymbolTable {
         within: &QualifiedName,
         target: LookupTarget,
     ) -> ResolveResult<Symbol> {
-        self.lookup_within(name, &self.lookup(within, target)?, target)
+        self.lookup_within(name, &self.search(within, false)?, target)
     }
 }
 
