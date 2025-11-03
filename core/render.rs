@@ -43,7 +43,7 @@ impl RenderResolution {
         Self { linear: 0.25 }
     }
 
-    /// High render resolution of 0.25mm.
+    /// High render resolution of 0.1mm.
     pub fn high() -> Self {
         Self { linear: 0.1 }
     }
