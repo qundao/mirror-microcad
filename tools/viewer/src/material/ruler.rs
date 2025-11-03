@@ -24,16 +24,18 @@ impl Default for Ruler {
 }
 
 impl Ruler {
-    pub const SOURCE: &'static str = "shaders/ruler.wgsl";
+    fn shader_ref() -> ShaderRef {
+        super::shader_ref_from_str("ruler.wgsl")
+    }
 }
 
 impl Material for Ruler {
     fn fragment_shader() -> ShaderRef {
-        Self::SOURCE.into()
+        Self::shader_ref()
     }
 
     fn vertex_shader() -> ShaderRef {
-        Self::SOURCE.into()
+        Self::shader_ref()
     }
 
     fn alpha_mode(&self) -> AlphaMode {
