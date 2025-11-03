@@ -1,0 +1,21 @@
+/*Atom	x (mm)	y (mm)	z (mm)
+W	0.00	37.7	19.2
+O1	16.3	25.6	3.8
+O2	20.3	63.8	19.4
+O3	2.8	19.4	32.0
+*/
+
+
+use std::geo3d::Sphere;
+use std::ops::translate;
+
+w = Sphere(diameter = 12mm).translate(x = 0.0mm, y = 37.7mm, z = 19.2mm);
+o1 = Sphere(diameter = 8mm).translate(x = 16.3mm, y = 25.6mm, z = 3.8mm);
+o2 = Sphere(diameter = 8mm).translate(x = 20.3mm, y = 63.8mm, z = 19.4mm);
+o3 = Sphere(diameter = 8mm).translate(x = 2.8mm, y = 19.4mm, z = 32.0mm);
+
+#[color = std::color::GRAY]
+w;
+
+#[color = std::color::RED]
+(o1 | o2 | o3).translate(x = 0.0mm);
