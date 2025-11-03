@@ -176,22 +176,6 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
         }
     }
 
-    /// Search a *symbol* by it's *qualified name* **and** within a *symbol* given by name.
-    ///
-    /// If both are found
-    /// # Arguments
-    /// - `name`: *qualified name* to search for.
-    /// - `within`: Searches in the *symbol* with this name too.
-    /// - `target`: What to search for
-    fn lookup_within_name(
-        &self,
-        name: &QualifiedName,
-        within: &QualifiedName,
-        target: LookupTarget,
-    ) -> Result<Symbol, E> {
-        self.lookup_within(name, &self.lookup(within, target)?, target)
-    }
-
     /// Returns an error if name starts with `super::`.
     fn deny_super(&self, name: &QualifiedName) -> ResolveResult<()> {
         if name.count_super() > 0 {

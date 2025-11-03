@@ -78,6 +78,22 @@ impl SymbolTable {
             symbol.recursive_for_each_mut(id, &f);
         });
     }
+
+    /// Search a *symbol* by it's *qualified name* **and** within a *symbol* given by name.
+    ///
+    /// If both are found
+    /// # Arguments
+    /// - `name`: *qualified name* to search for.
+    /// - `within`: Searches in the *symbol* with this name too.
+    /// - `target`: What to search for
+    pub(crate) fn lookup_within_name(
+        &self,
+        name: &QualifiedName,
+        within: &QualifiedName,
+        target: LookupTarget,
+    ) -> ResolveResult<Symbol> {
+        self.lookup_within(name, &self.lookup(within, target)?, target)
+    }
 }
 
 impl WriteToFile for SymbolTable {}
