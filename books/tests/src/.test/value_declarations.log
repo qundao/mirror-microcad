@@ -29,7 +29,7 @@
 23: 
 24:         // public workbench
 25:         pub sketch Workbench(param = 5) {
-26:             sketch_local = 6;
+26:             const sketch_local = 6;
 27: 
 28:             init(alt_param = 7) {
 29:                 init_local = 8;

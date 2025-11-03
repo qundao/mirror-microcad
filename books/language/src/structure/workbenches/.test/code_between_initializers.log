@@ -7,15 +7,28 @@
  1: sketch Wheel(radius: Length) {
  2:     init( width:Length ) { radius = width / 2; }
  3:     
- 4:     // error: code between initializers not allowed
- 5:     radius = 1;
- 6: 
- 7:     init( height:Length ) { radius = height / 2; }
- 8: }
- 9: 
-10: Wheel(radius = 1.0mm);
+ 4:     radius = 1; // error: code between initializers not allowed
+ 5: 
+ 6:     init( height:Length ) { radius = height / 2; }
+ 7: }
+ 8: 
+ 9: Wheel(radius = 1.0mm);
 
--- Parse Error --
-Code between initializers is not allowed (5:5)
+-- Output --
+
+-- Errors --
+error: Code between initializers is not allowed
+  ---> ../books/language/src/structure/workbenches/README.md:4:5
+     |
+   4 |     radius = 1; // error: code between initializers not allowed
+     |     ^^^^^^^^^^^
+     |
+error: Statement not allowed prior initializers
+  ---> ../books/language/src/structure/workbenches/README.md:4:5
+     |
+   4 |     radius = 1; // error: code between initializers not allowed
+     |     ^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

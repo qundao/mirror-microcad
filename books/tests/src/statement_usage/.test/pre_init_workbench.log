@@ -8,7 +8,33 @@
  2:   sketch F() {} K();  // error
  3: init(l:Length) {} } K();
 
--- Parse Error --
-Statement not allowed within workbenches (2:3)
+-- Output --
+
+-- Errors --
+error: Statement not allowed within workbenches
+  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+     |
+   2 |   sketch F() {} K();  // error
+     |   ^^^^^^^^^^^^^
+     |
+error: Statement not allowed prior initializers
+  ---> ../books/tests/src/statement_usage/pre-init.md:2:17
+     |
+   2 |   sketch F() {} K();  // error
+     |                 ^^^^
+     |
+error: Statement is not available within Sketch
+  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+     |
+   2 |   sketch F() {} K();  // error
+     |   ^^^^^^^^^^^^^
+     |
+error: Sketch is not available within Sketch
+  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+     |
+   2 |   sketch F() {} K();  // error
+     |   ^^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

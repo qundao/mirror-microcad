@@ -5,16 +5,18 @@
 -- Code --
 
  1: sketch K() { 
- 2:   a = 1;
+ 2:   a = 1; // error
  3: init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) pre_init_assignment_var::K() ->
-
-Export error: Render error: Nothing to render
+error: Statement not allowed prior initializers
+  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+     |
+   2 |   a = 1; // error
+     |   ^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-OK
+FAILED AS EXPECTED
