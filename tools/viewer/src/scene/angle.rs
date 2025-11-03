@@ -1,0 +1,30 @@
+// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! microcad Angle measure scene item.
+
+use bevy::render::mesh::{Mesh, Mesh3d};
+use bevy::{
+    asset::Assets,
+    ecs::system::{Commands, ResMut},
+    math::{Vec2, Vec3, primitives::Plane3d},
+    pbr::MeshMaterial3d,
+};
+
+use crate::material;
+
+#[allow(unused)]
+pub fn spawn_angle_plane(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<material::Angle>>,
+) {
+    let plane = Mesh::from(Plane3d::new(Vec3::Z, Vec2::new(10.0, 10.0)));
+    let mesh_handle = meshes.add(plane);
+
+    commands.spawn((
+        Mesh3d(mesh_handle),
+        MeshMaterial3d(materials.add(material::Angle::default())),
+        bevy::picking::Pickable::IGNORE,
+    ));
+}

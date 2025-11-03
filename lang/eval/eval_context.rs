@@ -253,6 +253,11 @@ impl EvalContext {
             target,
         )
     }
+
+    /// Symbol table accessor.
+    pub fn symbol_table(&self) -> &SymbolTable {
+        &self.symbol_table
+    }
 }
 
 impl UseSymbol for EvalContext {

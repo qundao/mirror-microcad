@@ -13,6 +13,7 @@ default-members = [
     "tools/cli",
     "tools/update-copyright",
     "tools/update-md-banner",
+    "tools/viewer-ipc",
 ]
 
 members = [
@@ -24,8 +25,11 @@ members = [
     "import",
     "export",
     "tools/cli",
+    "tools/inspector",
     "tools/update-copyright",
     "tools/update-md-banner",
+    "tools/viewer",
+    "tools/viewer-ipc",
 ]
 resolver = "2"
 
@@ -54,3 +58,4 @@ microcad-export = { path = "export", version = "0.2.6" }
 microcad-lang = { path = "lang", version = "0.2.6" }
 microcad-builtin = { path = "builtin", version = "0.2.6" }
 microcad-builtin-proc-macros = { path = "builtin/proc_macros", version = "0.2.6" }
+microcad-viewer-ipc = { path = "tools/viewer-ipc", version = "0.2.6" }

@@ -294,6 +294,11 @@ impl ResolveContext {
         self.mode = ResolveMode::Symbolized;
         self.resolve()
     }
+
+    /// Symbol table accessor.
+    pub fn symbol_table(&self) -> &SymbolTable {
+        &self.symbol_table
+    }
 }
 
 #[test]

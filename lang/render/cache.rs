@@ -6,9 +6,9 @@
 use crate::render::{GeometryOutput, HashId};
 
 /// An item in the [`RenderCache`].
-pub struct RenderCacheItem {
+pub struct RenderCacheItem<T> {
     /// The actual item content.
-    content: GeometryOutput,
+    content: T,
     /// Number of times this cache item has been accessed successfully.
     hits: u64,
     /// Number of milliseconds this item took to create.
@@ -17,9 +17,9 @@ pub struct RenderCacheItem {
     last_access: u64,
 }
 
-impl RenderCacheItem {
+impl<T> RenderCacheItem<T> {
     /// Create new cache item.
-    pub fn new(content: impl Into<GeometryOutput>, millis: f64, last_access: u64) -> Self {
+    pub fn new(content: impl Into<T>, millis: f64, last_access: u64) -> Self {
         Self {
             content: content.into(),
             hits: 1,
@@ -28,8 +28,7 @@ impl RenderCacheItem {
         }
     }
 
-    /// The cost of this cache item.
-    pub fn cost(&self, current_time_stamp: u64) -> f64 {
+    fn cost(&self, current_time_stamp: u64) -> f64 {
         // Weighted sum of:
         // - Recency: more recent items are more valuable
         // - Frequency: more frequently accessed items are more valuable
@@ -51,7 +50,7 @@ impl RenderCacheItem {
 }
 
 /// The [`RenderCache`] owns all geometry created during the render process.
-pub struct RenderCache {
+pub struct RenderCache<T = GeometryOutput> {
     /// Current render cache item stamp.
     current_time_stamp: u64,
     /// Number of cache hits in this cycle.
@@ -59,16 +58,16 @@ pub struct RenderCache {
     /// Maximum cost of a cache item before it is removed during garbage collection.
     max_cost: f64,
     /// The actual cache item store.
-    items: rustc_hash::FxHashMap<HashId, RenderCacheItem>,
+    items: rustc_hash::FxHashMap<HashId, RenderCacheItem<T>>,
 }
 
-impl RenderCache {
+impl<T> RenderCache<T> {
     /// Create a new empty cache.
     pub fn new() -> Self {
         Self {
             current_time_stamp: 0,
             hits: 0,
-            items: Default::default(),
+            items: rustc_hash::FxHashMap::default(),
             max_cost: std::env::var("MICROCAD_CACHE_MAX_COST")
                 .ok()
                 .and_then(|s| s.parse::<f64>().ok())
@@ -90,7 +89,7 @@ impl RenderCache {
         });
 
         let removed = old_count - self.items.len();
-        log::debug!(
+        log::info!(
             "Removed {removed} items from cache. Cache contains {n} items. {hits} cache hits in this cycle.",
             n = self.items.len(),
             hits = self.hits,
@@ -105,7 +104,7 @@ impl RenderCache {
     }
 
     /// Get geometry output from the cache.
-    pub fn get(&mut self, hash: &HashId) -> Option<&GeometryOutput> {
+    pub fn get(&mut self, hash: &HashId) -> Option<&T> {
         match self.items.get_mut(hash) {
             Some(item) => {
                 item.hits += 1;
@@ -125,16 +124,15 @@ impl RenderCache {
     pub fn insert_with_cost(
         &mut self,
         hash: impl Into<HashId>,
-        geo: impl Into<GeometryOutput>,
+        geo: impl Into<T>,
         cost: f64,
-    ) -> GeometryOutput {
+    ) -> &T {
         let hash: HashId = hash.into();
-        let geo: GeometryOutput = geo.into();
         self.items.insert(
             hash,
-            RenderCacheItem::new(geo.clone(), cost, self.current_time_stamp),
+            RenderCacheItem::new(geo, cost, self.current_time_stamp),
         );
-        geo
+        &self.items.get(&hash).expect("Hash").content
     }
 }
 

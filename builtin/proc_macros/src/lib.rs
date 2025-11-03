@@ -4,8 +4,8 @@
 extern crate proc_macro;
 use proc_macro::TokenStream;
 
-use quote::quote;
-use syn::*;
+use quote::{quote, quote_spanned};
+use syn::{spanned::Spanned, *};
 
 /// Build parameter list entries: for each field, generate `parameter!(<field_name>: <Type>)`
 fn generate_parameters(
@@ -14,9 +14,9 @@ fn generate_parameters(
     fields.iter().map(|field| {
         let ident = field.ident.as_ref().unwrap();
         let ty = &field.ty;
-        quote! {
+        quote_spanned!(field.span() =>
             microcad_lang::builtin::parameter!( #ident : #ty )
-        }
+        )
     })
 }
 
@@ -26,9 +26,9 @@ fn generate_arguments(
 ) -> impl Iterator<Item = proc_macro2::TokenStream> + '_ {
     fields.iter().map(|field| {
         let ident = field.ident.as_ref().unwrap();
-        quote! {
+        quote_spanned!(field.span() =>
             #ident: args.get(stringify!(#ident))
-        }
+        )
     })
 }
 

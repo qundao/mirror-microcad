@@ -1,0 +1,26 @@
+[package]
+name = "microcad-viewer-ipc"
+description = "µcad Viewer Interprocess Communication"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+anyhow = "1.0.100"
+crossbeam = "0.8"
+log = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+wkt = "0.14"
+
+microcad-lang = { workspace = true }
+microcad-core = { workspace = true }
+microcad-builtin = { workspace = true }

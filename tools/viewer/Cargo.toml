@@ -1,0 +1,47 @@
+[package]
+name = "microcad-viewer"
+description = "µcad Viewer"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+anyhow = "1.0.100"
+bevy = { version = "0.16.1", default-features = false, features = [
+    "bevy_asset",
+    "bevy_color",
+    "bevy_gizmos",
+    "bevy_mesh_picking_backend",
+    "bevy_picking",
+    "bevy_pbr",
+    "bevy_render",
+    "bevy_window",
+    "bevy_winit",
+    "tonemapping_luts",
+    "x11",
+] }
+
+bevy_mod_outline = "0.10.3"
+clap = { version = "4.5.48", features = ["derive"] }
+cgmath = { version = "0.18", features = ["serde"] }
+crossbeam = "0.8"
+dirs = "6"
+env_logger = "0.11"
+geo = "0.31"
+log = "0.4"
+notify = "8"
+rustc-hash = "2.1.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+wkt = "0.14"
+
+microcad-lang = { workspace = true }
+microcad-core = { workspace = true }
+microcad-builtin = { workspace = true }
+microcad-viewer-ipc = { workspace = true }
+once_cell = "1.21.3"

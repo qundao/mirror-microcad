@@ -187,12 +187,9 @@ impl Model {
             return None;
         }
 
-        children.first().and_then(|n| {
-            if let Element::Group = *n.0.borrow().element {
-                Some(n.clone())
-            } else {
-                None
-            }
+        children.first().and_then(|n| match *n.0.borrow().element {
+            Element::Group | Element::Multiplicity => Some(n.clone()),
+            _ => None,
         })
     }
 }

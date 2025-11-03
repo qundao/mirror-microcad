@@ -7,14 +7,7 @@ use std::io::Read;
 impl SourceFile {
     /// Load µcad source file from given `path`
     pub fn load(path: impl AsRef<std::path::Path> + std::fmt::Debug) -> ParseResult<Rc<Self>> {
-        let name = QualifiedName::from_id(Identifier::no_ref(
-            &path
-                .as_ref()
-                .file_stem()
-                .expect("illegal file name")
-                .to_string_lossy(),
-        ));
-        Self::load_with_name(path, name)
+        Self::load_with_name(&path, Self::name_from_path(&path))
     }
 
     /// Load µcad source file from given `path`
@@ -68,6 +61,17 @@ impl SourceFile {
         let mut hasher = rustc_hash::FxHasher::default();
         value.hash(&mut hasher);
         hasher.finish()
+    }
+
+    /// Get the source file name from path.
+    fn name_from_path(path: impl AsRef<std::path::Path>) -> QualifiedName {
+        QualifiedName::from_id(Identifier::no_ref(
+            &path
+                .as_ref()
+                .file_stem()
+                .expect("illegal file name")
+                .to_string_lossy(),
+        ))
     }
 }
 
