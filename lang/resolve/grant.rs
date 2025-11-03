@@ -190,12 +190,7 @@ impl Grant for AssignmentStatement {
                     Qualifier::Prop => false,
                 }
             }
-            SymbolDef::Workbench(..) => match self.assignment.qualifier() {
-                Qualifier::Value | Qualifier::Prop => {
-                    matches!(self.assignment.visibility, Visibility::Private)
-                }
-                Qualifier::Const => false,
-            },
+            SymbolDef::Workbench(..) => matches!(self.assignment.visibility, Visibility::Private),
             SymbolDef::Function(..) => match self.assignment.qualifier() {
                 Qualifier::Value => {
                     matches!(self.assignment.visibility, Visibility::Private)

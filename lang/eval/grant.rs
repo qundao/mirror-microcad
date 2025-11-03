@@ -115,6 +115,8 @@ impl Grant for AssignmentStatement {
             match self.assignment.qualifier() {
                 Qualifier::Const => {
                     matches!(stack_frame, StackFrame::Source(..) | StackFrame::Module(..))
+                        | (matches!(stack_frame, StackFrame::Workbench(..))
+                            && self.assignment.visibility == Visibility::Private)
                 }
                 Qualifier::Value => {
                     matches!(
@@ -167,7 +169,7 @@ impl Grant for Marker {
             false
         };
         if !granted {
-            context.error(self, EvalError::StatementNotSupported("Expression"))?;
+            context.error(self, EvalError::StatementNotSupported("@input"))?;
         }
         Ok(())
     }
