@@ -5,7 +5,7 @@ use crate::eval::*;
 
 impl Eval<Value> for ReturnStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        context.grant(self)?;
+        self.grant(context)?;
         log::debug!("Evaluating return statement to value: {self}");
         if let Some(result) = &self.result {
             let result = result.eval(context)?;

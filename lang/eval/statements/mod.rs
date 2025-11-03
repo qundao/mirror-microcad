@@ -20,7 +20,7 @@ impl Eval for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match self {
             Self::Workbench(w) => {
-                context.grant(w.as_ref())?;
+                w.grant(context)?;
                 Ok(Value::None)
             }
             Self::Module(m) => m.eval(context),
@@ -36,11 +36,11 @@ impl Eval for Statement {
             Self::If(i) => i.eval(context),
             Self::Expression(e) => e.eval(context),
             Self::InnerAttribute(i) => {
-                context.grant(i)?;
+                i.grant(context)?;
                 Ok(Value::None)
             }
             Self::Init(i) => {
-                context.grant(i.as_ref())?;
+                i.grant(context)?;
                 Ok(Value::None)
             }
             Self::Return(r) => r.eval(context),
@@ -52,7 +52,7 @@ impl Eval<Option<Model>> for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         let model: Option<Model> = match self {
             Self::Workbench(w) => {
-                context.grant(w.as_ref())?;
+                w.grant(context)?;
                 None
             }
             Self::Module(m) => {
@@ -60,15 +60,15 @@ impl Eval<Option<Model>> for Statement {
                 None
             }
             Self::Function(f) => {
-                context.grant(f.as_ref())?;
+                f.grant(context)?;
                 None
             }
             Self::Init(i) => {
-                context.grant(i.as_ref())?;
+                i.grant(context)?;
                 None
             }
             Self::Return(r) => {
-                context.grant(r)?;
+                r.grant(context)?;
                 None
             }
             Self::Use(u) => {
@@ -82,7 +82,7 @@ impl Eval<Option<Model>> for Statement {
             Self::If(i) => i.eval(context)?,
             Self::Expression(e) => e.eval(context)?,
             Self::InnerAttribute(a) => {
-                context.grant(a)?;
+                a.grant(context)?;
                 None
             }
         };

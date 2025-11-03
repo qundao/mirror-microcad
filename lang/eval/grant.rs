@@ -4,97 +4,94 @@
 use crate::{eval::*, syntax::*};
 
 /// Grant statements depending on context
-pub trait Grant<T> {
+pub trait Grant {
     /// Check if given statement `T` is granted within the current context
-    fn grant(&mut self, t: &T) -> EvalResult<()>;
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()>;
 }
 
-impl Grant<WorkbenchDefinition> for EvalContext {
-    fn grant(&mut self, statement: &WorkbenchDefinition) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for WorkbenchDefinition {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(stack_frame, StackFrame::Source(..) | StackFrame::Module(..))
         } else {
             false
         };
         if !granted {
-            self.error(
-                statement,
-                EvalError::StatementNotSupported(statement.kind.as_str()),
-            )?;
+            context.error(self, EvalError::StatementNotSupported(self.kind.as_str()))?;
         }
         Ok(())
     }
 }
 
-impl Grant<ModuleDefinition> for EvalContext {
-    fn grant(&mut self, statement: &ModuleDefinition) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for ModuleDefinition {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(stack_frame, StackFrame::Source(..) | StackFrame::Module(..))
         } else {
             false
         };
         if !granted {
-            self.error(statement, EvalError::StatementNotSupported("Module"))?;
+            context.error(self, EvalError::StatementNotSupported("Module"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<FunctionDefinition> for EvalContext {
-    fn grant(&mut self, statement: &FunctionDefinition) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for FunctionDefinition {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             match stack_frame {
                 // TODO: check if expression generates models (see test `source_expression``)
                 StackFrame::Source(..) | StackFrame::Module(..) => true,
-                StackFrame::Workbench(..) => statement.visibility == Visibility::Private,
+                StackFrame::Workbench(..) => self.visibility == Visibility::Private,
                 _ => false,
             }
         } else {
             false
         };
         if !granted {
-            self.error(statement, EvalError::StatementNotSupported("Function"))?;
+            context.error(self, EvalError::StatementNotSupported("Function"))?;
         }
         Ok(())
     }
 }
-impl Grant<InitDefinition> for EvalContext {
-    fn grant(&mut self, statement: &InitDefinition) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for InitDefinition {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(stack_frame, StackFrame::Workbench(..))
         } else {
             false
         };
         if !granted {
-            self.error(statement, EvalError::StatementNotSupported("Init"))?;
+            context.error(self, EvalError::StatementNotSupported("Init"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<UseStatement> for EvalContext {
-    fn grant(&mut self, statement: &UseStatement) -> EvalResult<()> {
-        match (&statement.visibility, self.stack.current_frame()) {
+impl Grant for UseStatement {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        match (&self.visibility, context.stack.current_frame()) {
             (Visibility::Private, _)
             | (Visibility::Public, Some(StackFrame::Source(..) | StackFrame::Module(..))) => (),
-            _ => self.error(statement, EvalError::StatementNotSupported("Public use"))?,
+            _ => context.error(self, EvalError::StatementNotSupported("Public use"))?,
         }
         Ok(())
     }
 }
 
-impl Grant<ReturnStatement> for EvalContext {
-    fn grant(&mut self, statement: &ReturnStatement) -> EvalResult<()> {
-        if !self.is_within_function() {
-            self.error(statement, EvalError::StatementNotSupported("Return"))?;
+impl Grant for ReturnStatement {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        if !context.is_within_function() {
+            context.error(self, EvalError::StatementNotSupported("Return"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<IfStatement> for EvalContext {
-    fn grant(&mut self, statement: &IfStatement) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for IfStatement {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(
                 stack_frame,
                 StackFrame::Source(..)
@@ -106,16 +103,16 @@ impl Grant<IfStatement> for EvalContext {
             false
         };
         if !granted {
-            self.error(statement, EvalError::StatementNotSupported("If"))?;
+            context.error(self, EvalError::StatementNotSupported("If"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<AssignmentStatement> for EvalContext {
-    fn grant(&mut self, statement: &AssignmentStatement) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
-            match statement.assignment.qualifier() {
+impl Grant for AssignmentStatement {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
+            match self.assignment.qualifier() {
                 Qualifier::Const => {
                     matches!(stack_frame, StackFrame::Source(..) | StackFrame::Module(..))
                 }
@@ -136,15 +133,15 @@ impl Grant<AssignmentStatement> for EvalContext {
             false
         };
         if !granted {
-            self.error(statement, EvalError::StatementNotSupported("Assignment"))?;
+            context.error(self, EvalError::StatementNotSupported("Assignment"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<ExpressionStatement> for EvalContext {
-    fn grant(&mut self, statement: &ExpressionStatement) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for ExpressionStatement {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(
                 stack_frame,
                 StackFrame::Source(..)
@@ -156,29 +153,29 @@ impl Grant<ExpressionStatement> for EvalContext {
             false
         };
         if !granted {
-            self.error(statement, EvalError::StatementNotSupported("Expression"))?;
+            context.error(self, EvalError::StatementNotSupported("Expression"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<Marker> for EvalContext {
-    fn grant(&mut self, statement: &Marker) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for Marker {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(stack_frame, StackFrame::Workbench(..))
         } else {
             false
         };
         if !granted {
-            self.error(statement, EvalError::StatementNotSupported("Expression"))?;
+            context.error(self, EvalError::StatementNotSupported("Expression"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<Attribute> for EvalContext {
-    fn grant(&mut self, statement: &crate::syntax::Attribute) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for Attribute {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(
                 stack_frame,
                 StackFrame::Source(..) | StackFrame::Body(..) | StackFrame::Workbench(..)
@@ -187,18 +184,15 @@ impl Grant<Attribute> for EvalContext {
             false
         };
         if !granted {
-            self.error(
-                statement,
-                EvalError::StatementNotSupported("InnerAttribute"),
-            )?;
+            context.error(self, EvalError::StatementNotSupported("InnerAttribute"))?;
         }
         Ok(())
     }
 }
 
-impl Grant<Body> for EvalContext {
-    fn grant(&mut self, body: &Body) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = self.stack.current_frame() {
+impl Grant for Body {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = if let Some(stack_frame) = context.stack.current_frame() {
             matches!(
                 stack_frame,
                 StackFrame::Source(..) | StackFrame::Body(..) | StackFrame::Workbench(..)
@@ -207,7 +201,7 @@ impl Grant<Body> for EvalContext {
             false
         };
         if !granted {
-            self.error(body, EvalError::StatementNotSupported("Body"))?;
+            context.error(self, EvalError::StatementNotSupported("Body"))?;
         }
         Ok(())
     }

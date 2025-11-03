@@ -24,7 +24,7 @@ impl Assignment {
 impl Eval<()> for AssignmentStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<()> {
         log::debug!("Evaluating assignment statement:\n{self}");
-        context.grant(self)?;
+        self.grant(context)?;
 
         let assignment = &self.assignment;
 

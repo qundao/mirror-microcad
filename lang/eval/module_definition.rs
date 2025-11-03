@@ -5,7 +5,7 @@ use crate::eval::*;
 
 impl Eval for ModuleDefinition {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        context.grant(self)?;
+        self.grant(context)?;
         context.scope(
             StackFrame::Module(self.id.clone(), Default::default()),
             |context| {
