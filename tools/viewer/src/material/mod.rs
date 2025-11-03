@@ -68,11 +68,11 @@ pub fn create_2d_material(color: &microcad_core::Color) -> bevy_types::StandardM
 pub fn create_3d_material(color: &microcad_core::Color) -> bevy_types::StandardMaterial {
     bevy_types::StandardMaterial {
         base_color: to_bevy::color(color),
-        metallic: 0.5,
+        metallic: 0.1,
         alpha_mode: alpha_mode_for_color(color),
         unlit: false,
         perceptual_roughness: 0.1,
-        reflectance: 0.8,
+        reflectance: 0.4,
         ..Default::default()
     }
 }
