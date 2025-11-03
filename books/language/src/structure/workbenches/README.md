@@ -158,7 +158,7 @@ in all following code (including code within *initializers* and *functions*).
 
 [![test](.test/pre_init_code.svg)](.test/pre_init_code.log)
 
-```µcad,pre_init_code#todo
+```µcad,pre_init_code
 sketch Wheel(radius: Length) {
     // init code
     const FACTOR = 2.0;
@@ -193,8 +193,7 @@ It's **not allowed** to write any code between *initializers*.
 sketch Wheel(radius: Length) {
     init( width:Length ) { radius = width / 2; }
     
-    // error: code between initializers not allowed
-    radius = 1;
+    radius = 1; // error: code between initializers not allowed
 
     init( height:Length ) { radius = height / 2; }
 }
