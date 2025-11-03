@@ -66,13 +66,21 @@ pub struct ModelInfo {
 impl ModelOutputGeometry {
     /// Create [`OutputGeometry`] from µcad model.
     pub fn from_model(model: &Model) -> Option<Self> {
-        let model_ = model.borrow();
-        let output = model_.output();
-        let mat = output.world_matrix.expect("Some matrix");
-        let output_type = output.output_type;
+        use microcad_lang::model::Element::*;
         use microcad_lang::render::GeometryOutput;
 
-        let transform = to_bevy::transform(mat);
+        let model_ = model.borrow();
+        // We only consider output geometries of workpieces and ignore the rest.
+        match model_.element() {
+            InputPlaceholder | Multiplicity | Group => {
+                return None;
+            }
+            Workpiece(_) | BuiltinWorkpiece(_) => {}
+        }
+
+        let output = model_.output();
+        let output_type = output.output_type;
+        let transform = to_bevy::transform(output.world_matrix.expect("Some matrix"));
         let materials = ModelMaterials::new(&output_type, &output.attributes);
         let aabb_material = crate::material::create_2d_material(&Color::rgb(1.0, 1.0, 1.0));
 
