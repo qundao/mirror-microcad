@@ -93,13 +93,13 @@ impl TriangleMesh {
         let vertices = self
             .positions
             .iter()
-            .flat_map(|v| vec![v.x, v.y, v.z])
+            .flat_map(|v| [v.x, v.y, v.z])
             .collect::<Vec<_>>();
 
         let triangle_indices = self
             .triangle_indices
             .iter()
-            .flat_map(|t| vec![t.0, t.1, t.2])
+            .flat_map(|t| [t.0, t.1, t.2])
             .collect::<Vec<_>>();
 
         assert_eq!(vertices.len(), self.positions.len() * 3);
