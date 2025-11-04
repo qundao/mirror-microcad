@@ -147,21 +147,23 @@ impl TriangleMesh {
         let mut vertex_map: std::collections::HashMap<(u32, u32, u32), u32> =
             std::collections::HashMap::new();
         let mut new_positions: Vec<Vector3<f32>> = Vec::with_capacity(self.positions.len());
-        let mut remap: Vec<u32> = vec![0; self.positions.len()];
-
-        for (i, position) in self.positions.iter().enumerate() {
-            let key = quantize(position);
-            if let Some(&existing_idx) = vertex_map.get(&key) {
-                // Duplicate vertex found
-                remap[i] = existing_idx;
-            } else {
-                // New unique vertex
-                let new_idx = new_positions.len() as u32;
-                new_positions.push(*position);
-                vertex_map.insert(key, new_idx);
-                remap[i] = new_idx;
-            }
-        }
+        let remap: Vec<u32> = self
+            .positions
+            .iter()
+            .map(|position| {
+                let key = quantize(position);
+                if let Some(&existing_idx) = vertex_map.get(&key) {
+                    // Duplicate vertex found
+                    existing_idx
+                } else {
+                    // New unique vertex
+                    let new_idx = new_positions.len() as u32;
+                    new_positions.push(*position);
+                    vertex_map.insert(key, new_idx);
+                    new_idx
+                }
+            })
+            .collect();
 
         self.positions = new_positions;
 
