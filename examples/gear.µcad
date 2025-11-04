@@ -2,40 +2,44 @@ use std::ops::*;
 use std::geo2d::*;
 use std::math::*;
 
-op polar(angle: Angle, radius: Length, shift: Length = 0.0mm) {
-    @input.translate(x = radius, y = shift).rotate(z = angle);
-}
+angle = 600°;
 
-/*sketch Gear(
-    d_a: Length,
-    d: Length,
-    d_b: Length,
-    d_f: Length,
-) {
-    teeth = {
-        Circle(d = (d_a - d_f) / 2)
-            .polar(length = d / 2, shift = d_b / 2, angle = 0°);
-        Circle(d = (d_a - d_f) / 2)
-            .polar(length = d / 2, shift = d_b / 2, angle = 360°/32);
+part Gear(teeth: Integer) {
+    gear_profile = InvoluteGearProfile(module = 1.0mm, teeth, pressure_angle = 12°);
 
-        Circle(d = d_a);
-    }
-    .intersect();
+    prop pitch_radius = gear_profile.pitch_radius;
+    prop outer_radius = gear_profile.outer_radius;
 
-    teeth | Circle(d = d_f);
-}
+    n_holes = 5;
+
+    bearing_hole = Circle(gear_profile.pitch_radius / 8);
+    
+    hole_radius = pitch_radius / n_holes;
+    holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
+
+    inner = Circle(pitch_radius - 3mm);
 
 
-Gear(d_a = 40mm, d = 30mm, d_b = 25mm, d_f = 20mm).extrude(4mm);
-*/
+    bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+        Circle(gear_profile.module)
+            .extrude(pitch_radius / 4)
+            .translate(z = -pitch_radius / 4).rotate(x = 90°).translate(z = 5mm);
+    
 
-sketch Gear(
-    d_0: Length,
-    m: Integer,
-    z: Integer
-) {
-    Circle(d = d_0) - Circle(d = 2 / z * d_0).polar(radius = d_0 / 2, angle = [0..z]/z*360°)
+    bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
 }
 
 
-Gear(d_0 = 40mm, m = 1, z = 100).extrude(4mm);
+gear1 = Gear(80);
+gear2 = Gear(40);
+gear3 = Gear(20);
+
+//#[color = std::color::BLUE]
+gear1.rotate(angle / gear1.teeth);
+
+//#[color = std::color::RED]
+gear2.rotate(-angle / gear2.teeth + 4.5°).translate(gear2.outer_radius + gear1.pitch_radius, 135°);
+
+//#[color = std::color::GREEN]
+gear3.rotate(-angle / gear3.teeth).translate(gear1.outer_radius + gear3.pitch_radius, 45°);
+
