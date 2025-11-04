@@ -228,22 +228,18 @@ impl From<Mesh> for TriangleMesh {
 
 impl From<TriangleMesh> for Mesh {
     fn from(mesh: TriangleMesh) -> Self {
-        let mut vertices = Vec::new();
-        let mut indices = Vec::new();
-
-        for v in &mesh.positions {
-            vertices.push(v.x);
-            vertices.push(v.y);
-            vertices.push(v.z);
-        }
-
-        for t in &mesh.triangle_indices {
-            indices.push(t.0);
-            indices.push(t.1);
-            indices.push(t.2);
-        }
-
-        Mesh::new(vertices.as_slice(), indices.as_slice())
+        Mesh::new(
+            &mesh
+                .positions
+                .iter()
+                .flat_map(|v| [v.x, v.y, v.z])
+                .collect::<Vec<_>>(),
+            &mesh
+                .triangle_indices
+                .iter()
+                .flat_map(|t| [t.0, t.1, t.2])
+                .collect::<Vec<_>>(),
+        )
     }
 }
 
