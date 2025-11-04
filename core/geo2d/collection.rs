@@ -68,34 +68,26 @@ impl Geometries2D {
 
     /// Apply contex hull operation to geometries.
     pub fn hull(&self) -> geo2d::Polygon {
-        let mut coords = self.iter().fold(Vec::new(), |mut coords, geo| {
-            match geo.as_ref() {
+        let mut coords: Vec<_> = self
+            .iter()
+            .flat_map(|geo| match geo.as_ref() {
                 Geometry2D::LineString(line_string) => {
-                    coords.append(&mut line_string.coords_iter().collect())
+                    line_string.coords_iter().collect::<Vec<_>>()
                 }
                 Geometry2D::MultiLineString(multi_line_string) => {
-                    coords.append(&mut multi_line_string.coords_iter().collect())
+                    multi_line_string.coords_iter().collect::<Vec<_>>()
                 }
-                Geometry2D::Polygon(polygon) => {
-                    coords.append(&mut polygon.exterior_coords_iter().collect())
-                }
+                Geometry2D::Polygon(polygon) => polygon.exterior_coords_iter().collect::<Vec<_>>(),
                 Geometry2D::MultiPolygon(multi_polygon) => {
-                    coords.append(&mut multi_polygon.exterior_coords_iter().collect())
+                    multi_polygon.exterior_coords_iter().collect::<Vec<_>>()
                 }
-                Geometry2D::Rect(rect) => {
-                    let mut rect_corners: Vec<_> = rect.coords_iter().collect();
-                    coords.append(&mut rect_corners)
-                }
-                Geometry2D::Line(line) => {
-                    coords.push(line.0.into());
-                    coords.push(line.1.into());
-                }
+                Geometry2D::Rect(rect) => rect.coords_iter().collect::<Vec<_>>(),
+                Geometry2D::Line(line) => vec![line.0.into(), line.1.into()],
                 Geometry2D::Collection(collection) => {
-                    coords.append(&mut collection.hull().exterior_coords_iter().collect())
+                    collection.hull().exterior_coords_iter().collect::<Vec<_>>()
                 }
-            }
-            coords
-        });
+            })
+            .collect();
 
         geo2d::Polygon::new(
             geo::algorithm::convex_hull::qhull::quick_hull(&mut coords),
