@@ -93,44 +93,108 @@ pub fn mesh_with_smoothness(mesh: &TriangleMesh, threshold_degrees: f32) -> Mesh
     mesh_out
 }
 
-/// Create a bevy mesh from a 2D geometry.
-pub fn geometry_2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
-    let multi_polygon = geometry.to_multi_polygon();
-    use geo::TriangulateEarcut;
+mod to_mesh {
+    use super::*;
 
-    let mut positions = Vec::new();
-    let mut indices = Vec::new();
-
-    for poly in &multi_polygon.0 {
-        let triangulation = poly.earcut_triangles_raw();
-        let n = positions.len();
-        positions.append(
-            &mut triangulation
-                .vertices
-                .as_slice()
-                .chunks_exact(2)
-                .map(|chunk| [chunk[0] as f32, chunk[1] as f32, z as f32])
-                .collect(),
+    /// Create a mesh from a line string.
+    pub fn line_string(line_string: &microcad_core::LineString, z: Scalar) -> Mesh {
+        let mut mesh = Mesh::new(
+            bevy::render::mesh::PrimitiveTopology::LineStrip,
+            RenderAssetUsages::default(),
         );
+        use bevy::prelude::Vec3;
 
-        indices.append(
-            &mut triangulation
-                .triangle_indices
-                .iter()
-                .map(|i| (i + n) as u32)
-                .collect(),
+        mesh.insert_attribute(
+            Mesh::ATTRIBUTE_POSITION,
+            line_string
+                .coords()
+                .map(|c| Vec3::new(c.x as f32, c.y as f32, z as f32))
+                .collect::<Vec<_>>(),
         );
+        mesh
     }
 
-    let mut mesh = Mesh::new(
-        bevy::render::mesh::PrimitiveTopology::TriangleList,
-        RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
-    );
+    /// Create a mesh from a multi line string.
+    pub fn multi_line_string(
+        multi_line_string: &microcad_core::MultiLineString,
+        z: Scalar,
+    ) -> Mesh {
+        let mut mesh = Mesh::new(
+            bevy::render::mesh::PrimitiveTopology::LineList,
+            RenderAssetUsages::default(),
+        );
+        use bevy::prelude::Vec3;
 
-    mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
-    mesh.insert_indices(Indices::U32(indices));
+        mesh.insert_attribute(
+            Mesh::ATTRIBUTE_POSITION,
+            multi_line_string
+                .0
+                .iter()
+                .flat_map(|line_string| {
+                    line_string
+                        .0
+                        .as_slice()
+                        .windows(2)
+                        .flat_map(|c| {
+                            c.iter()
+                                .map(|c| Vec3::new(c.x as f32, c.y as f32, z as f32))
+                        })
+                        .collect::<Vec<_>>()
+                })
+                .collect::<Vec<_>>(),
+        );
+        mesh
+    }
+}
 
-    mesh
+/// Create a bevy mesh from a 2D geometry.
+pub fn geometry_2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
+    match geometry {
+        Geometry2D::LineString(line_string) => to_mesh::line_string(line_string, z),
+        Geometry2D::MultiLineString(multi_line_string) => {
+            to_mesh::multi_line_string(multi_line_string, z)
+        }
+        Geometry2D::Line(line) => {
+            to_mesh::line_string(&LineString::new(vec![line.0.into(), line.1.into()]), z)
+        }
+        geometry => {
+            let multi_polygon = geometry.to_multi_polygon();
+            use geo::TriangulateEarcut;
+
+            let mut positions = Vec::new();
+            let mut indices = Vec::new();
+
+            for poly in &multi_polygon.0 {
+                let triangulation = poly.earcut_triangles_raw();
+                let n = positions.len();
+                positions.append(
+                    &mut triangulation
+                        .vertices
+                        .as_slice()
+                        .chunks_exact(2)
+                        .map(|chunk| [chunk[0] as f32, chunk[1] as f32, z as f32])
+                        .collect(),
+                );
+
+                indices.append(
+                    &mut triangulation
+                        .triangle_indices
+                        .iter()
+                        .map(|i| (i + n) as u32)
+                        .collect(),
+                );
+            }
+
+            let mut mesh = Mesh::new(
+                bevy::render::mesh::PrimitiveTopology::TriangleList,
+                RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
+            );
+
+            mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
+            mesh.insert_indices(Indices::U32(indices));
+            mesh
+        }
+    }
 }
 
 /// Create a bevy mesh from a 3D geometry.
