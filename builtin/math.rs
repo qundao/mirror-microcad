@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use cgmath::{InnerSpace, SquareMatrix};
-use microcad_core::{Mat3, Scalar, Vec3};
+use microcad_core::{Integer, Mat3, Scalar, Vec3};
 use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
 /// Absolute value abs(x)
@@ -47,6 +47,24 @@ fn sqrt() -> Symbol {
             })
         },
     )
+}
+
+/// Cast some Quantity into an Integer.
+fn int() -> Symbol {
+    Symbol::new_builtin_fn("int", [parameter!(x)].into_iter(), &|_params, args, ctx| {
+        let (_, arg) = args.get_single()?;
+        Ok(match &arg.value {
+            Value::Integer(i) => Value::Integer(*i),
+            Value::Quantity(q) => Value::Integer(q.value.floor() as Integer),
+            value => {
+                ctx.error(
+                    arg,
+                    EvalError::BuiltinError(format!("Cannot calculate int({value})")),
+                )?;
+                Value::None
+            }
+        })
+    })
 }
 
 /// Implementation for a builtin trigonometric function.
@@ -232,6 +250,7 @@ pub fn math() -> Symbol {
         .pub_const("Z", Value::Tuple(Box::new(Vec3::unit_z().into())))
         .symbol(abs())
         .symbol(sqrt())
+        .symbol(int())
         .symbol(cos())
         .symbol(sin())
         .symbol(tan())
