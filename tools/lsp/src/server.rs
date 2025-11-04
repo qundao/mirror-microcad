@@ -96,7 +96,6 @@ impl LanguageServer for Backend {
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
-        let _ = params;
         log::info!("Did open: {}", params.text_document.uri);
 
         self.processor
@@ -155,7 +154,7 @@ use crate::processor::{ProcessorRequest, ProcessorResponse, WorkspaceSettings};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
-struct Cli {
+struct Args {
     /// log into given file
     #[arg(short, long, value_name = "FILE")]
     log_file: Option<std::path::PathBuf>,
@@ -167,7 +166,7 @@ struct Cli {
     pub search_paths: Vec<std::path::PathBuf>,
 }
 
-impl Cli {
+impl Args {
     /// Returns microcad's config dir, even if it does not exist.
     ///
     /// On Linux, the config dir is located in `~/.config/microcad`.
@@ -202,8 +201,8 @@ impl Cli {
 
 #[tokio::main]
 async fn main() {
-    let cli = Cli::parse();
-    if let Some(log_file) = cli.log_file {
+    let args = Args::parse();
+    if let Some(log_file) = args.log_file {
         let file = std::fs::File::create(log_file).expect("could not open log file");
         let target = Box::new(file);
         env_logger::Builder::new()
@@ -220,10 +219,10 @@ async fn main() {
     */
 
     // add default paths if no search paths are given.
-    let mut search_paths = cli.search_paths.clone();
+    let mut search_paths = args.search_paths.clone();
 
     if search_paths.is_empty() {
-        search_paths.append(&mut Cli::default_search_paths())
+        search_paths.append(&mut Args::default_search_paths())
     };
 
     log::info!("Starting LSP server");
