@@ -11,15 +11,13 @@ pub op buffer(distance: Length) {
 
 pub op extrude(
 		height: Length,
-		scale_x = 100%,
-		scale_y = 100%) {
+		scale = (x = 100%, y = 100%)) {
 	init(z: Length) {
 		height = z;
-		scale_x = 100%;
-		scale_y = 100%;
+		scale = (x = 100%, y = 100%);
 	}
 
-    @input.__builtin::ops::extrude(height = height / 1mm, scale_x, scale_y);
+    @input.__builtin::ops::extrude(height = height / 1mm, scale_x = scale.x, scale_y = scale.y);
 }
 
 /// Mirror along an axis, keeping existing geometry.
