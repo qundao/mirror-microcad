@@ -33,6 +33,7 @@
         "powf",
         "pratt",
         "rctree",
+        "recv",
         "renderable",
         "Renderable",
         "rsplit",
