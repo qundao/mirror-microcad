@@ -166,3 +166,10 @@ pub sketch RoundedRect(
 pub sketch Text(height: Length, text: String, font_file = "") {
     __builtin::geo2d::Text(height = height / 1mm, text, font_file);
 }
+
+pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle: Angle) {
+    prop pitch_radius = module * teeth / 2.0;
+    prop outer_radius = pitch_radius + module;
+
+    __builtin::geo2d::InvoluteGearProfile(module = module / 1mm, teeth, pressure_angle)
+}

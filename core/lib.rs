@@ -32,8 +32,13 @@ pub type Mat2 = cgmath::Matrix2<Scalar>;
 pub type Mat3 = cgmath::Matrix3<Scalar>;
 /// 4D matrix type
 pub type Mat4 = cgmath::Matrix4<Scalar>;
-/// Primitive angle type
+/// Primitive angle type in radians.
 pub type Angle = cgmath::Rad<Scalar>;
+
+/// Constants.
+pub mod consts {
+    pub use std::f64::consts::PI;
+}
 
 pub use boolean_op::BooleanOp;
 pub use bounds::*;
