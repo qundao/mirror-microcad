@@ -139,10 +139,10 @@ pub struct WorkspaceSettings {
     pub search_paths: Vec<PathBuf>,
 }
 
-/// The processor  responsable for generating view commands.
+/// The processor  responsible for generating view commands.
 ///
-/// The processor itself runs in a seperate thread and can be controlled
-/// via [`ProcessorInterface`] by sending requests and handling the corresponing responses.
+/// The processor itself runs in a separate thread and can be controlled
+/// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 pub struct Processor {
     workspace_settings: WorkspaceSettings,
     documents: HashMap<Url, Document>,
