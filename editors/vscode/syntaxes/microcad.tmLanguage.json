@@ -23,7 +23,7 @@
             "name": "keyword.operator.microcad"
         },
         {
-            "match": "\\b(([0-9]+(\\.[0-9]+)?)(%|m|cm|mm|µm|in|ft|yd|deg|°|grad|turn|rad|g|kg|lb|oz|m²|cm²|mm²|µm²|in²|ft²|yd²|m³|cm³|mm³|µm³|in³|ft³|yd³|ml|cl|l|µl)?|true|false)\\b",
+            "match": "\\b(([0-9]+(\\.[0-9]+)?)(%|m²|cm²|mm²|µm²|in²|ft²|yd²|m³|cm³|mm³|µm³|in³|ft³|yd³|ml|cl|l|µl|cm|mm|m|µm|in|ft|yd|deg|°|grad|turn|rad|g|kg|lb|oz)?)|true|false\\b",
             "name": "constant.numeric.microcad"
         },
         {
@@ -125,7 +125,7 @@
             "name": "keyword.operator.microcad"
         },
         "numbers": {
-            "match": "\\b(([0-9]+(\\.[0-9]+)?)(%|m|cm|mm|µm|in|ft|yd|deg|°|grad|turn|rad|g|kg|lb|oz|m²|cm²|mm²|µm²|in²|ft²|yd²|m³|cm³|mm³|µm³|in³|ft³|yd³|ml|cl|l|µl)?)|true|false\\b",
+            "match": "\\b(([0-9]+(\\.[0-9]+)?)(%|m²|cm²|mm²|µm²|in²|ft²|yd²|m³|cm³|mm³|µm³|in³|ft³|yd³|ml|cl|l|µl|cm|mm|m|µm|in|ft|yd|deg|°|grad|turn|rad|g|kg|lb|oz)?)|true|false\\b",
             "name": "constant.numeric.microcad"
         },
         "namespaces": {
