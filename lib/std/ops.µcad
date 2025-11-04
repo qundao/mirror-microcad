@@ -57,6 +57,14 @@ pub op spiralize(
 }
 
 pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
+
+	/// Polar-style translage with distance and angle.
+	init(distance: Length, angle: Angle) {
+		x = distance * __builtin::math::cos(angle);
+		y = distance * __builtin::math::sin(angle);
+		z = 0.0mm;
+	}
+
 	@input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
 }
 
