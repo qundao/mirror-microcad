@@ -27,6 +27,7 @@ export struct SourceCodeModelItem {
 export struct SymbolTreeModelItem {
     depth: int,
     name: string,
+    source_hash: int,
 }
 
 export struct ModelTreeModelItem {
@@ -37,10 +38,11 @@ export struct ModelTreeModelItem {
 }
 
 
-component TreeViewItem inherits Rectangle {
+component ViewItem inherits Rectangle {
     in property <int> index: 0;
+    callback clicked <=> touch-area.clicked;
 
-    height: 40px;
+    height: 32px;
     border-radius: 4px;
     background: Math.mod(self.index, 2) == 0 ? #f0f0f0 : #e0e0e0;
     Rectangle {
@@ -62,23 +64,33 @@ component TreeViewItem inherits Rectangle {
     }
 }
 
-component ModelTreeViewItem inherits TreeViewItem {
-    in property <ModelTreeModelItem> item;
+component SourceCodeViewItem inherits ViewItem {
+    in property <SourceCodeModelItem> item;
+    height: 20px;
 
     Rectangle {
-        width: item.depth * 32px;
+        background: #e0e0e0;
+        height: root.height;
+        width: 32px;
+
+        Text {
+            height: parent.height;
+            text: item.line-number + 1;
+            vertical-alignment: center;
+            horizontal-alignment: left;
+            font-weight: 600;
+        }
     }
 
     Text {
-        text: item.element;
-        vertical-alignment: center;
+        text: item.line;
+        height: 20px;
+        y: 4px;
         horizontal-alignment: left;
-        font-size: 16px;
-        font-weight: 600;
     }
 }
 
-component SymbolTreeViewItem inherits TreeViewItem {
+component SymbolTreeViewItem inherits ViewItem {
     in property <SymbolTreeModelItem> item;
 
     Rectangle {
@@ -87,6 +99,22 @@ component SymbolTreeViewItem inherits TreeViewItem {
 
     Text {
         text: item.name;
+        vertical-alignment: center;
+        horizontal-alignment: left;
+        font-size: 16px;
+        font-weight: 600;
+    }
+}
+
+component ModelTreeViewItem inherits ViewItem {
+    in property <ModelTreeModelItem> item;
+
+    Rectangle {
+        width: item.depth * 32px;
+    }
+
+    Text {
+        text: item.element;
         vertical-alignment: center;
         horizontal-alignment: left;
         font-size: 16px;
@@ -112,7 +140,9 @@ component ControlPanel {
 export component MainWindow inherits Window {
     callback button-launch-viewer-clicked <=> control-panel.button-launch-viewer-clicked;
     callback button-send-source-code-clicked <=> control-panel.button-send-source-code-clicked;
-    in-out property source-code <=> source-code-view.text;
+
+    in property <string> source-code;
+    in property <[SourceCodeModelItem]> source-code-model;
     in property <[ModelTreeModelItem]> model-tree;
     in property <[SymbolTreeModelItem]> symbol-tree;
 
@@ -126,7 +156,15 @@ export component MainWindow inherits Window {
         height: parent.height;
 
         HorizontalBox {
-            source-code-view := TextEdit { }
+            source-code-view := ListView {
+                mouse-drag-pan-enabled: true;
+                for item[index] in root.source-code-model: SourceCodeViewItem {
+                    height: 20px;
+                    width: symbol-tree-view.viewport-width;
+                    item: item;
+                    index: index;
+                }
+            }
 
             symbol-tree-view := ListView {
                 mouse-drag-pan-enabled: true;
