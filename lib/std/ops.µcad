@@ -5,10 +5,18 @@ pub use __builtin::ops::hull;
 pub use __builtin::ops::align;
 
 
+/// Create a new geometry whose boundary is offset the specified distance from the input.
 pub op buffer(distance: Length) {
 	@input.__builtin::ops::buffer(distance = distance / 1mm);
 }
 
+/// Generate a contour geometry out of an input geometry.
+pub op contour(thickness: Length, distance = 0mm) {
+    @input.buffer(distance + thickness / 2) - @input.buffer(distance - thickness / 2);
+}
+
+
+/// Linear extrude a 2D geometry into a 3D.
 pub op extrude(
 		height: Length,
 		scale = (x = 100%, y = 100%)) {
