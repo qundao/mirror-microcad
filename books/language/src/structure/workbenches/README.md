@@ -29,22 +29,22 @@ The following code demonstrates most of these elements:
 
 [![test](.test/part_declaration.svg)](.test/part_declaration.log)
 
-```µcad,part_declaration#todo
+```µcad,part_declaration
 // sketch with a `radius` as building plan
 sketch Wheel(radius: Length) {
     
     // init code
-    factor = 2;
+    const FACTOR = 2;
 
     // initializer
     init(diameter: Length) {
         // set `radius`
-        radius = diameter / factor;
+        radius = diameter / FACTOR;
     }
 
     // function (sub routine)
-    fn into_diameter(radius: Length) {
-        return radius * factor;
+    fn into_diameter(r: Length) {
+        return r * FACTOR;
     }
 
     // building code begins
@@ -69,7 +69,7 @@ assert_eq([d.radius, 1cm]);
 // call sketch with radius
 r = Wheel(radius = 1cm);
 // check diameter
-assert([r.diameter, 2cm]);
+assert_eq([r.diameter, 2cm]);
 ```
 
 ### Building Plan
