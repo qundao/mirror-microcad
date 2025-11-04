@@ -39,9 +39,7 @@ impl SrcReferrer for SymbolInner {
             SymbolDef::Module(module) => module.src_ref(),
             SymbolDef::Workbench(workbench) => workbench.src_ref(),
             SymbolDef::Function(function) => function.src_ref(),
-            SymbolDef::Builtin(_) => {
-                unreachable!("builtin has no source code reference")
-            }
+            SymbolDef::Builtin(_) => SrcRef(None),
             SymbolDef::Constant(_, identifier, _)
             | SymbolDef::ConstExpression(_, identifier, _)
             | SymbolDef::Argument(identifier, _) => identifier.src_ref(),
