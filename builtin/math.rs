@@ -120,22 +120,28 @@ fn rotation_matrices_xyz(args: &Tuple) -> (Mat3, Mat3, Mat3) {
 
 pub fn orient_z_to(target: Vec3) -> Mat3 {
     let z_axis = Vec3::unit_z();
-    let target_dir = target.normalize();
+    let target = target.normalize();
 
     // Handle edge case where target is already Z
-    if (target_dir - z_axis).magnitude2() < 1e-6 {
+    if (target - z_axis).magnitude2() < 1e-6 {
         return Mat3::identity();
     }
 
-    // Handle 180-degree rotation
-    if (target_dir + z_axis).magnitude2() < 1e-6 {
-        // Rotate 180 degrees around any axis perpendicular to Z
-        return Mat3::identity();
+    // Handle 180-degree rotation (target is -Z)
+    if (target + z_axis).magnitude2() < 1e-6 {
+        // Rotate 180° around any axis perpendicular to Z.
+        // For stability, pick X if possible, otherwise Y.
+        let perp_axis = if z_axis.cross(Vec3::unit_x()).magnitude2() > 1e-6 {
+            Vec3::unit_x()
+        } else {
+            Vec3::unit_y()
+        };
+        return Mat3::from_axis_angle(perp_axis, cgmath::Rad(std::f64::consts::PI));
     }
 
-    // Axis to rotate around is cross product of z and target
-    let rotation_axis = z_axis.cross(target_dir).normalize();
-    let dot = z_axis.dot(target_dir);
+    // Normal case
+    let rotation_axis = z_axis.cross(target).normalize();
+    let dot = z_axis.dot(target).clamp(-1.0, 1.0); // avoid NaNs
     let angle = cgmath::Rad(dot.acos());
 
     Mat3::from_axis_angle(rotation_axis, angle)
