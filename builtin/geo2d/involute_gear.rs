@@ -5,15 +5,31 @@ use microcad_builtin_proc_macros::BuiltinPrimitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
-/// A parametric involute gear.
+/// A parametric **involute spur gear** profile.
+///
+/// This type defines the geometric parameters for generating a 2D involute gear shape.
+///
+/// # See also
+/// - [`involute_gear_tooth`](#method.involute_gear_tooth): Generates a single gear tooth.
+///
+/// # References
+/// - [Involute Gear Geometry (Wikipedia)](https://en.wikipedia.org/wiki/Involute_gear)
 #[derive(BuiltinPrimitive2D)]
 pub struct InvoluteGearProfile {
-    module: Scalar,
-    teeth: Integer,
-    pressure_angle: Angle,
+    /// Gear module (mm per tooth), controlling the overall gear size.
+    /// Defines the ratio between the pitch diameter and the number of teeth:
+    /// `pitch_diameter = module * teeth`.
+    pub module: Scalar,
+    /// Total number of teeth on the gear. Must be a positive integer.
+    pub teeth: Integer,
+    /// Pressure angle (radians or degrees), defining the shape of the involute flank.
+    /// The standard pressure angle of the gear, typically
+    /// `20°` or `25°`, which determines the shape of the involute profile and
+    /// the base circle radius.
+    pub pressure_angle: Angle,
 }
 
-use geo::{Coord, LineString, coord};
+use geo::{Coord, coord};
 
 impl InvoluteGearProfile {
     fn involute(base_radius: Scalar, involute_angle: Scalar) -> Coord<Scalar> {
@@ -28,15 +44,14 @@ impl InvoluteGearProfile {
         ((radius / base_radius).powi(2) - 1.0).sqrt()
     }
 
-    fn rotate_point(angle: Scalar, c: &Coord<f64>) -> Coord<Scalar> {
-        let (x, y) = (c.x, c.y);
+    fn rotate_point(angle: Scalar, c: &Coord<Scalar>) -> Coord<Scalar> {
         coord! {
-            x:  x * angle.cos() - y * angle.sin(),
-            y:  x * angle.sin() + y * angle.cos()
+            x:  c.x * angle.cos() - c.y * angle.sin(),
+            y:  c.x * angle.sin() + c.y * angle.cos()
         }
     }
 
-    fn mirror_point(c: &Coord<f64>) -> Coord<f64> {
+    fn mirror_point(c: &Coord<Scalar>) -> Coord<Scalar> {
         coord! { x: c.x, y: -c.y }
     }
 
@@ -68,9 +83,10 @@ impl InvoluteGearProfile {
         let pitch_half = consts::PI / (2.0 * z);
 
         // Correction for involute starting at base circle
-        pitch_half + (phi.tan() - phi)
+        pitch_half + phi.tan() - phi
     }
 
+    /// Create the line string for a single gear tooth.
     pub fn involute_gear_tooth(&self, facets: usize) -> LineString {
         let r = self.base_radius();
         let involute = |angle| Self::involute(r, angle);
