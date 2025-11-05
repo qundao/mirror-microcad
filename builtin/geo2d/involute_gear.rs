@@ -71,44 +71,34 @@ impl InvoluteGearProfile {
         pitch_half + (phi.tan() - phi)
     }
 
-    pub fn involute_gear_tooth(&self, involute_facets: usize) -> LineString<f64> {
+    pub fn involute_gear_tooth(&self, facets: usize) -> LineString {
         let r = self.base_radius();
-        let facets = if involute_facets > 0 {
-            involute_facets
-        } else {
-            8
-        };
+        let involute = |angle| Self::involute(r, angle);
+        let intersect_angle = |angle| Self::involute_intersect_angle(r, angle);
+        let facets = facets.max(8);
 
-        let pitch_point = Self::involute(r, Self::involute_intersect_angle(r, self.pitch_radius()));
+        let pitch_point = involute(intersect_angle(self.pitch_radius()));
         let pitch_angle = pitch_point.y.atan2(pitch_point.x);
-        let centre_angle = pitch_angle + self.half_thick_angle(); // tooth center
+        let theta = pitch_angle + self.half_thick_angle(); // tooth center
 
-        let start_angle = Self::involute_intersect_angle(r, self.root_radius().max(r));
-        let stop_angle = Self::involute_intersect_angle(r, self.outer_radius());
-        let delta_angle = (stop_angle - start_angle) / facets as Scalar;
+        let start_angle = intersect_angle(self.root_radius().max(r));
+        let stop_angle = intersect_angle(self.outer_radius());
+        let d = (stop_angle - start_angle) / facets as Scalar;
 
-        let mut points = Vec::with_capacity(facets * 2 + 1);
-        let mut left_points = Vec::new();
-        let mut right_points = Vec::new();
+        let mut left_points = Vec::with_capacity(facets * 2);
+        let mut right_points = Vec::with_capacity(facets * 2);
 
-        // One side (right flank)
-        for i in 1..=facets {
+        for i in 0..facets {
             let p = (
-                Self::involute(r, start_angle + delta_angle * (i - 1) as Scalar),
-                Self::involute(r, start_angle + delta_angle * i as Scalar),
+                Self::rotate_point(theta, &involute(start_angle + d * i as Scalar)),
+                Self::rotate_point(theta, &involute(start_angle + d * (i + 1) as Scalar)),
             );
 
-            left_points.push(Self::rotate_point(centre_angle, &p.0));
-            left_points.push(Self::rotate_point(centre_angle, &p.1));
-            right_points.push(Self::mirror_point(&Self::rotate_point(centre_angle, &p.0)));
-            right_points.push(Self::mirror_point(&Self::rotate_point(centre_angle, &p.1)));
+            right_points.extend([Self::mirror_point(&p.0), Self::mirror_point(&p.1)]);
+            left_points.extend([p.0, p.1]);
         }
 
-        right_points.reverse();
-        points.extend(right_points);
-        points.extend(left_points);
-
-        LineString::new(points)
+        LineString::new(right_points.into_iter().rev().chain(left_points).collect())
     }
 }
 
@@ -118,14 +108,20 @@ impl Render<Geometry2D> for InvoluteGearProfile {
             (resolution.circular_segments(self.outer_radius()) / self.teeth.max(5) as u32) as usize,
         );
 
-        let points = (0..self.teeth)
-            .flat_map(|i| {
-                let angle = 2.0 * consts::PI * i as Scalar / self.teeth as Scalar;
-                tooth.coords().map(move |p| Self::rotate_point(angle, p))
-            })
-            .collect::<Vec<_>>();
+        let inv = 2.0 * consts::PI / self.teeth as Scalar;
 
-        Polygon::new(LineString::from(points), vec![]).into()
+        Polygon::new(
+            LineString::new(
+                (0..self.teeth)
+                    .flat_map(|i| {
+                        let angle = i as Scalar * inv;
+                        tooth.coords().map(move |p| Self::rotate_point(angle, p))
+                    })
+                    .collect(),
+            ),
+            vec![],
+        )
+        .into()
     }
 }
 
