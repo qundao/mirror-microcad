@@ -1,5 +1,16 @@
 # `std::geo2d`
 
+## `InvoluteGearProfile`
+
+Constructs the profile of an involute gear with a number of teeth, the module size (~teeth size) and a pressure angle.
+The profile can be extruded to construct 3D gear.
+
+[![test](.test/std_geo2d_involute_gear_profile.svg)](.test/std_geo2d_involute_gear_profile.log)
+
+```µcad,std_geo2d_involute_gear_profile
+std::geo2d::InvoluteGearProfile(module = 4.0mm, teeth = 20, pressure_angle = 0°);
+```
+
 ## `Pie`
 
 Constructs a point at origin with a radius and a start and end angle.
