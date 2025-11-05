@@ -72,16 +72,10 @@ impl InvoluteGearProfile {
     }
 
     pub fn involute_gear_tooth(&self, involute_facets: usize) -> LineString<f64> {
-        let pitch_radius = self.pitch_radius();
         let root_radius = self.root_radius();
         let base_radius = self.base_radius();
         let outer_radius = self.outer_radius();
         let half_thick_angle = self.half_thick_angle();
-
-        let min_radius = root_radius.max(base_radius);
-
-        let start_angle = involute_intersect_angle(base_radius, min_radius);
-        let stop_angle = involute_intersect_angle(base_radius, outer_radius);
 
         let facets = if involute_facets > 0 {
             involute_facets
@@ -89,33 +83,51 @@ impl InvoluteGearProfile {
             8
         };
 
-        // Pitch point angle along involute (center of tooth)
-        let pitch_angle = {
-            let pitch_point = involute(
-                base_radius,
-                involute_intersect_angle(base_radius, pitch_radius),
-            );
-            pitch_point.y.atan2(pitch_point.x)
-        };
+        // Derived quantities
+        let min_radius = root_radius.max(base_radius);
+
+        let pitch_point = involute(
+            base_radius,
+            involute_intersect_angle(base_radius, self.pitch_radius()),
+        );
+        let pitch_angle = pitch_point.y.atan2(pitch_point.x);
+        let centre_angle = pitch_angle + half_thick_angle; // tooth center
+
+        let start_angle = involute_intersect_angle(base_radius, min_radius);
+        let stop_angle = involute_intersect_angle(base_radius, outer_radius);
 
         let mut points: Vec<Coord<f64>> = Vec::with_capacity(facets * 2 + 1);
+        let res = facets;
 
-        for i in 0..=facets {
-            let t = i as f64 / facets as f64;
-            let theta = start_angle + (stop_angle - start_angle) * t;
-            let p = involute(base_radius, theta);
-            points.push(rotate_point(pitch_angle - half_thick_angle, &p));
+        let mut left_points = Vec::new();
+        let mut right_points = Vec::new();
+
+        // One side (right flank)
+        for i in 1..=res {
+            let t1 = start_angle + (stop_angle - start_angle) * ((i - 1) as f64 / res as f64);
+            let t2 = start_angle + (stop_angle - start_angle) * (i as f64 / res as f64);
+
+            let p1 = involute(base_radius, t1);
+            let p2 = involute(base_radius, t2);
+
+            let side1_p1 = rotate_point(centre_angle, &p1);
+            let side1_p2 = rotate_point(centre_angle, &p2);
+            let side2_p1 = mirror_point(&rotate_point(centre_angle, &p1));
+            let side2_p2 = mirror_point(&rotate_point(centre_angle, &p2));
+
+            left_points.push(side1_p1);
+            left_points.push(side1_p2);
+
+            right_points.push(side2_p1);
+            right_points.push(side2_p2);
         }
 
-        for i in (0..=facets).rev() {
-            let t = i as f64 / facets as f64;
-            let theta = start_angle + (stop_angle - start_angle) * t;
-            let p = involute(base_radius, theta);
-            points.push(mirror_point(&rotate_point(
-                pitch_angle - half_thick_angle,
-                &p,
-            )));
-        }
+        left_points.reverse();
+
+        points.extend(left_points);
+        points.extend(right_points);
+
+        points.reverse();
 
         LineString::new(points)
     }
@@ -126,6 +138,8 @@ impl Render<Geometry2D> for InvoluteGearProfile {
         let tooth = self.involute_gear_tooth(
             (resolution.circular_segments(self.outer_radius()) / self.teeth.max(5) as u32) as usize,
         );
+        //tooth.into()
+
         let z = self.teeth as usize;
         let mut points: Vec<Coord<f64>> = Vec::new();
 
