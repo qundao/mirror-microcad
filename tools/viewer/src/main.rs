@@ -1,3 +1,5 @@
+use bevy::render::RenderApp;
+use bevy::render::batching::gpu_preprocessing::{GpuPreprocessingMode, GpuPreprocessingSupport};
 use bevy::{DefaultPlugins, app::App};
 use clap::Parser;
 
@@ -50,15 +52,22 @@ fn main() {
 
     use microcad_viewer::plugin::MicrocadPluginMode;
 
-    App::new()
-        .add_plugins(DefaultPlugins)
-        .add_plugins(MicrocadPlugin {
-            mode: match (args.input, args.stdin) {
-                (None, true) => MicrocadPluginMode::Stdin,
-                (Some(input), false) => MicrocadPluginMode::InputFile(input),
-                _ => MicrocadPluginMode::Empty,
-            },
-            config,
-        })
-        .run();
+    let mut app = App::new();
+    app.add_plugins(DefaultPlugins).add_plugins(MicrocadPlugin {
+        mode: match (args.input, args.stdin) {
+            (None, true) => MicrocadPluginMode::Stdin,
+            (Some(input), false) => MicrocadPluginMode::InputFile(input),
+            _ => MicrocadPluginMode::Empty,
+        },
+        config,
+    });
+
+    // Workaround for flickering entity bug on Intel GPUs:
+    // https://github.com/bevyengine/bevy/issues/18904
+    app.sub_app_mut(RenderApp)
+        .insert_resource(GpuPreprocessingSupport {
+            max_supported_mode: GpuPreprocessingMode::None,
+        });
+
+    app.run();
 }
