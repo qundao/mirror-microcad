@@ -286,7 +286,7 @@ impl Symbol {
     pub(super) fn can_const(&self) -> bool {
         matches!(
             self.inner.borrow().def,
-            SymbolDef::Module(..) | SymbolDef::SourceFile(..)
+            SymbolDef::Module(..) | SymbolDef::SourceFile(..) | SymbolDef::Workbench(..)
         )
     }
 

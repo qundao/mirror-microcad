@@ -190,12 +190,7 @@ impl Grant for AssignmentStatement {
                     Qualifier::Prop => false,
                 }
             }
-            SymbolDef::Workbench(..) => match self.assignment.qualifier() {
-                Qualifier::Value | Qualifier::Prop => {
-                    matches!(self.assignment.visibility, Visibility::Private)
-                }
-                Qualifier::Const => false,
-            },
+            SymbolDef::Workbench(..) => matches!(self.assignment.visibility, Visibility::Private),
             SymbolDef::Function(..) => match self.assignment.qualifier() {
                 Qualifier::Value => {
                     matches!(self.assignment.visibility, Visibility::Private)
@@ -221,10 +216,13 @@ impl Grant for AssignmentStatement {
 impl Grant for Body {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDef::SourceFile(..)
-            | SymbolDef::Module(..)
-            | SymbolDef::Workbench(..)
-            | SymbolDef::Function(..) => Ok(()),
+            SymbolDef::SourceFile(..) | SymbolDef::Module(..) | SymbolDef::Function(..) => Ok(()),
+            SymbolDef::Workbench(..) => {
+                if let Err(err) = self.check_statements(context) {
+                    context.error(self, err)?;
+                }
+                Ok(())
+            }
             _ => context.error(
                 self,
                 ResolveError::StatementNotSupported("Code body".to_string(), parent.kind_str()),
@@ -233,6 +231,87 @@ impl Grant for Body {
         Ok(self)
     }
 }
+
+impl Body {
+    fn check_statements(&self, context: &mut ResolveContext) -> ResolveResult<()> {
+        if let (Some(first_init), Some(last_init)) = (
+            self.iter()
+                .position(|stmt| matches!(stmt, Statement::Init(_))),
+            self.iter()
+                .rposition(|stmt| matches!(stmt, Statement::Init(_))),
+        ) {
+            for (n, stmt) in self.iter().enumerate() {
+                match stmt {
+                    // ignore inits
+                    Statement::Init(_) => (),
+
+                    // RULE: Illegal statements in workbenches
+                    Statement::Module(_) | Statement::Workbench(_) | Statement::Return(_) => {
+                        context.error(stmt, ResolveError::IllegalWorkbenchStatement)?;
+                    }
+
+                    // RULE: Ony use or assignments before initializers
+                    Statement::Use(_) => {
+                        if n > first_init && n < last_init {
+                            context.error(stmt, ResolveError::CodeBetweenInitializers)?;
+                        }
+                    }
+
+                    // Some assignments are post init statements
+                    Statement::Assignment(a_stmt) => match a_stmt.assignment.qualifier() {
+                        Qualifier::Const => {
+                            if matches!(a_stmt.assignment.visibility, Visibility::Public) {
+                                context.error(a_stmt, ResolveError::IllegalWorkbenchStatement)?;
+                            }
+                            if n > first_init && n < last_init {
+                                context.error(a_stmt, ResolveError::CodeBetweenInitializers)?;
+                            }
+                        }
+                        Qualifier::Value => {
+                            if n < last_init {
+                                if n > first_init {
+                                    context.error(a_stmt, ResolveError::CodeBetweenInitializers)?;
+                                }
+                                context.error(
+                                    a_stmt,
+                                    ResolveError::StatementNotAllowedPriorInitializers,
+                                )?;
+                            }
+                        }
+                        Qualifier::Prop => {
+                            if n < last_init {
+                                if n > first_init {
+                                    context.error(a_stmt, ResolveError::CodeBetweenInitializers)?;
+                                }
+                                context.error(
+                                    a_stmt,
+                                    ResolveError::StatementNotAllowedPriorInitializers,
+                                )?;
+                            }
+                        }
+                    },
+
+                    // Post init statements
+                    Statement::If(_)
+                    | Statement::InnerAttribute(_)
+                    | Statement::Expression(_)
+                    | Statement::Function(_) => {
+                        // RULE: No code between initializers
+                        if n < last_init {
+                            if n > first_init {
+                                context.error(stmt, ResolveError::CodeBetweenInitializers)?;
+                            }
+                            context
+                                .error(stmt, ResolveError::StatementNotAllowedPriorInitializers)?;
+                        }
+                    }
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
 impl Grant for UseStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         let grant = parent.with_def(|def| match def {

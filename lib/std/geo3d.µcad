@@ -32,8 +32,6 @@ pub part Cube(size_x: Length, size_y: Length, size_z: Length) {
 /// Examples:
 /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm);`
 pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
-    scale = radius_top / radius_bottom;
-
     /// Initialize by `radius` and `height`. Cylinder will be centered.
     init(radius: Length, height: Length) {
         radius_bottom = radius;

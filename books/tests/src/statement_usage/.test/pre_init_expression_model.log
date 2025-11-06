@@ -8,7 +8,15 @@
  2:   __builtin::geo2d::Circle(radius=1); // error
  3: init(l:Length) {} }
 
--- Parse Error --
-Statement not allowed prior initializers (2:3)
+-- Output --
+
+-- Errors --
+error: Statement not allowed prior initializers
+  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+     |
+   2 |   __builtin::geo2d::Circle(radius=1); // error
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILED AS EXPECTED

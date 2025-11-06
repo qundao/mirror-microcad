@@ -27,7 +27,9 @@
 21: __builtin::debug::assert(Wheel(5cm).radius == 5cm);
 22: __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
 
--- Parse Error --
-Statement not allowed within workbenches (3:5)
+-- Output --
+
+-- Errors --
+-- No model --
 -- Test Result --
-TODO
+OK

@@ -7,7 +7,7 @@ use crate::{eval::*, syntax::*, value::*};
 
 impl Eval for FunctionDefinition {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        context.grant(self)?;
+        self.grant(context)?;
         context.scope(
             StackFrame::Function(self.id.clone(), Default::default()),
             |_context| {

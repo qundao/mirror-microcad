@@ -29,22 +29,22 @@ The following code demonstrates most of these elements:
 
 [![test](.test/part_declaration.svg)](.test/part_declaration.log)
 
-```µcad,part_declaration#todo
+```µcad,part_declaration
 // sketch with a `radius` as building plan
 sketch Wheel(radius: Length) {
     
     // init code
-    factor = 2;
+    const FACTOR = 2;
 
     // initializer
     init(diameter: Length) {
         // set `radius`
-        radius = diameter / factor;
+        radius = diameter / FACTOR;
     }
 
     // function (sub routine)
-    fn into_diameter(radius: Length) {
-        return radius * factor;
+    fn into_diameter(r: Length) {
+        return r * FACTOR;
     }
 
     // building code begins
@@ -69,7 +69,7 @@ assert_eq([d.radius, 1cm]);
 // call sketch with radius
 r = Wheel(radius = 1cm);
 // check diameter
-assert([r.diameter, 2cm]);
+assert_eq([r.diameter, 2cm]);
 ```
 
 ### Building Plan
@@ -158,7 +158,7 @@ in all following code (including code within *initializers* and *functions*).
 
 [![test](.test/pre_init_code.svg)](.test/pre_init_code.log)
 
-```µcad,pre_init_code#todo
+```µcad,pre_init_code
 sketch Wheel(radius: Length) {
     // init code
     const FACTOR = 2.0;
@@ -193,8 +193,7 @@ It's **not allowed** to write any code between *initializers*.
 sketch Wheel(radius: Length) {
     init( width:Length ) { radius = width / 2; }
     
-    // error: code between initializers not allowed
-    radius = 1;
+    radius = 1; // error: code between initializers not allowed
 
     init( height:Length ) { radius = height / 2; }
 }

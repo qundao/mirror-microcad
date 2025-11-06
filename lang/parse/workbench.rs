@@ -23,80 +23,9 @@ impl Parse for Rc<WorkbenchDefinition> {
             kind: find_rule_exact!(pair, workbench_kind)?,
             id: find_rule!(pair, identifier)?,
             plan: find_rule!(pair, parameter_list)?,
-            body: {
-                let body = crate::find_rule!(pair, body)?;
-                check_statements(&body)?;
-                body
-            },
+            body: crate::find_rule!(pair, body)?,
             src_ref: pair.into(),
         }
         .into())
     }
-}
-
-fn check_statements(body: &Body) -> ParseResult<()> {
-    if let (Some(first_init), Some(last_init)) = (
-        body.iter()
-            .position(|stmt| matches!(stmt, Statement::Init(_))),
-        body.iter()
-            .rposition(|stmt| matches!(stmt, Statement::Init(_))),
-    ) {
-        for (n, stmt) in body.iter().enumerate() {
-            match stmt {
-                // ignore inits
-                Statement::Init(_) => (),
-
-                // RULE: Illegal statements in workbenches
-                Statement::Module(_) | Statement::Workbench(_) | Statement::Return(_) => {
-                    return Err(ParseError::IllegalWorkbenchStatement(stmt.src_ref()));
-                }
-
-                // RULE: Ony use or assignments before initializers
-                Statement::Use(_) => {
-                    if n > first_init && n < last_init {
-                        return Err(ParseError::CodeBetweenInitializers(stmt.src_ref()));
-                    }
-                }
-
-                // Some assignments are post init statements
-                Statement::Assignment(a_stmt) => match a_stmt.assignment.qualifier() {
-                    Qualifier::Const => {
-                        return Err(ParseError::IllegalWorkbenchStatement(stmt.src_ref()))
-                    }
-                    Qualifier::Value => {
-                        if n > first_init && n < last_init {
-                            return Err(ParseError::CodeBetweenInitializers(a_stmt.src_ref()));
-                        }
-                    }
-                    Qualifier::Prop => {
-                        if n < last_init {
-                            if n > first_init {
-                                return Err(ParseError::CodeBetweenInitializers(a_stmt.src_ref()));
-                            }
-                            return Err(ParseError::StatementNotAllowedPriorInitializers(
-                                a_stmt.src_ref(),
-                            ));
-                        }
-                    }
-                },
-
-                // Post init statements
-                Statement::If(_)
-                | Statement::InnerAttribute(_)
-                | Statement::Expression(_)
-                | Statement::Function(_) => {
-                    // RULE: No code between initializers
-                    if n < last_init {
-                        if n > first_init {
-                            return Err(ParseError::CodeBetweenInitializers(stmt.src_ref()));
-                        }
-                        return Err(ParseError::StatementNotAllowedPriorInitializers(
-                            stmt.src_ref(),
-                        ));
-                    }
-                }
-            }
-        }
-    }
-    Ok(())
 }

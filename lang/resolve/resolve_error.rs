@@ -99,6 +99,18 @@ pub enum ResolveError {
     /// Wrong lookup target
     #[error("Wrong lookup target")]
     WrongTarget,
+
+    /// Statement not allowed within workbenches
+    #[error("Statement not allowed within workbenches")]
+    IllegalWorkbenchStatement,
+
+    /// Code Between initializers
+    #[error("Code between initializers is not allowed")]
+    CodeBetweenInitializers,
+
+    /// Statement not allowed prior initializers
+    #[error("Statement not allowed prior initializers")]
+    StatementNotAllowedPriorInitializers,
 }
 
 /// Result type of any resolve.

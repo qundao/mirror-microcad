@@ -66,17 +66,17 @@ init(l:Length) {} } K();
 
 [![test](.test/pre_init_assignment_const.svg)](.test/pre_init_assignment_const.log)
 
-```µcad,pre_init_assignment_const#fail
+```µcad,pre_init_assignment_const
 sketch K() { 
-  const B = 1; // error
+  const B = 1;
 init(l:Length) {} } K();
 ```
 
 [![test](.test/pre_init_assignment_var.svg)](.test/pre_init_assignment_var.log)
 
-```µcad,pre_init_assignment_var
+```µcad,pre_init_assignment_var#fail
 sketch K() { 
-  a = 1;
+  a = 1; // error
 init(l:Length) {} } K();
 ```
 

@@ -40,7 +40,7 @@ mod module {
 
         // public workbench
         pub sketch Workbench(param = 5) {
-            sketch_local = 6;
+            const sketch_local = 6;
 
             init(alt_param = 7) {
                 init_local = 8;

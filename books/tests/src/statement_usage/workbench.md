@@ -74,9 +74,9 @@ sketch K() {
 
 [![test](.test/workbench_assignment_const.svg)](.test/workbench_assignment_const.log)
 
-```µcad,workbench_assignment_const#fail
+```µcad,workbench_assignment_const
 sketch K() {
-  const B = 1;  // error
+  const B = 1;
 } K();
 ```
 
