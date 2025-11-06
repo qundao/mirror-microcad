@@ -22,6 +22,7 @@ export struct SourceCodeModelItem {
     line_number: int,
     byte_range_start: int,
     byte_range_end: int,
+    selected: bool,
 }
 
 export struct SymbolTreeModelItem {
@@ -40,7 +41,11 @@ export struct ModelTreeModelItem {
 
 component ViewItem inherits Rectangle {
     in property <int> index: 0;
-    callback clicked <=> touch-area.clicked;
+    in property <bool> is-selectable;
+    in-out property <bool> is-selected;
+
+    callback clicked;
+    callback is-selected-changed;
 
     height: 32px;
     border-radius: 4px;
@@ -58,14 +63,31 @@ component ViewItem inherits Rectangle {
         @children
     }
 
+    Rectangle {
+        visible: root.is-selectable && root.is-selected;
+        width: root.width;
+        height: root.height;
+        background: transparent;
+        border-color: #0000ff;
+        border-width: 2px;
+    }
+
     touch-area := TouchArea {
         width: root.width;
         height: root.height;
+        clicked => {
+            if root.is-selectable {
+                root.is-selected = !root.is-selected;
+            }
+            root.clicked();
+        }
     }
 }
 
 component SourceCodeViewItem inherits ViewItem {
     in property <SourceCodeModelItem> item;
+    is-selectable: true;
+
     height: 20px;
 
     Rectangle {
@@ -159,6 +181,10 @@ export component MainWindow inherits Window {
             source-code-view := ListView {
                 mouse-drag-pan-enabled: true;
                 for item[index] in root.source-code-model: SourceCodeViewItem {
+
+                    clicked => {
+                        debug("Hello {}", item.line-number);
+                    }
                     height: 20px;
                     width: symbol-tree-view.viewport-width;
                     item: item;

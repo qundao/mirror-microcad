@@ -106,6 +106,7 @@ fn split_source_code(source: &str) -> Vec<SourceCodeModelItem> {
             line_number: line_number as i32,
             byte_range_start: byte_index as i32,
             byte_range_end: (byte_index + line_len) as i32,
+            ..Default::default()
         });
 
         byte_index += line_len;
@@ -122,6 +123,7 @@ fn split_source_code(source: &str) -> Vec<SourceCodeModelItem> {
                 line_number: items.len() as i32,
                 byte_range_start: line_start as i32,
                 byte_range_end: source.len() as i32,
+                ..Default::default()
             });
         }
     }
