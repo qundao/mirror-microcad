@@ -9,7 +9,7 @@ use crate::svg::attributes::SvgTagAttribute;
 
 use super::*;
 use geo::{Translate, coord};
-use microcad_core::{theme::Theme, *};
+use microcad_core::*;
 
 #[test]
 fn svg_writer() {
