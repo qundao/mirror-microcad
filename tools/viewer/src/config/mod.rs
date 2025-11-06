@@ -3,7 +3,10 @@
 
 //! microcad Viewer settings.
 
+pub mod theme;
+
 use std::time::Duration;
+use theme::Theme;
 
 use bevy::ecs::resource::Resource;
 use microcad_core::{RenderResolution, Scalar};
@@ -24,6 +27,9 @@ pub struct Config {
 
     /// Export resolution in mm (default = 0.1mm)
     pub export_resolution: Scalar,
+
+    /// The viewer theme.
+    pub theme: Theme,
 }
 
 impl Config {
@@ -67,6 +73,7 @@ impl Default for Config {
             stay_on_top: false,
             render_resolution: RenderResolution::medium().linear,
             export_resolution: RenderResolution::high().linear,
+            theme: Theme::default(),
         }
     }
 }
