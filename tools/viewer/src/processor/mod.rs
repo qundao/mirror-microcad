@@ -141,20 +141,33 @@ impl Processor {
                 self.state.initialized = true;
                 Ok(vec![])
             }
-            ProcessorRequest::ParseFile(path) => {
-                self.state.source_file = SourceFile::load(&path).ok();
-                self.eval()?;
-                self.render(None)
-            }
+            ProcessorRequest::ParseFile(path) => match SourceFile::load(&path) {
+                Ok(source_file) => {
+                    self.state.source_file = Some(source_file);
+                    self.eval()?;
+                    self.render(None)
+                }
+                Err(err) => {
+                    log::error!("{err}");
+                    Ok(vec![])
+                }
+            },
             ProcessorRequest::ParseSource { path, name, source } => {
-                self.state.source_file = SourceFile::load_from_str(
+                match SourceFile::load_from_str(
                     name.unwrap_or(String::from("<none>")).as_str(),
                     path.unwrap_or(std::path::PathBuf::from("<virtual>")),
                     &source,
-                )
-                .ok();
-                self.eval()?;
-                self.render(None)
+                ) {
+                    Ok(source_file) => {
+                        self.state.source_file = Some(source_file);
+                        self.eval()?;
+                        self.render(None)
+                    }
+                    Err(err) => {
+                        log::error!("{err}");
+                        Ok(vec![])
+                    }
+                }
             }
             ProcessorRequest::Eval => {
                 self.eval()?;
