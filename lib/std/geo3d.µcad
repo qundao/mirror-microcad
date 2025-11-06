@@ -7,6 +7,14 @@ pub part Sphere(radius: Length) {
         radius = r;
     }
 
+    init(d: Length) {
+        radius = d / 2;
+    }
+
+    init(diameter: Length) {
+        radius = diameter / 2;
+    }
+
     __builtin::geo3d::Sphere(radius / 1mm);
 }
 

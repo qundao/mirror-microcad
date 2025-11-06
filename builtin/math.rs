@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use cgmath::{InnerSpace, SquareMatrix};
-use microcad_core::{Mat3, Scalar, Vec3};
-use microcad_lang::{diag::*, eval::*, parameter, resolve::*, syntax::*, ty::*, value::*};
+use microcad_core::{Integer, Mat3, Scalar, Vec3};
+use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
 /// Absolute value abs(x)
 fn abs() -> Symbol {
@@ -47,6 +47,24 @@ fn sqrt() -> Symbol {
             })
         },
     )
+}
+
+/// Cast some Quantity into an Integer.
+fn int() -> Symbol {
+    Symbol::new_builtin_fn("int", [parameter!(x)].into_iter(), &|_params, args, ctx| {
+        let (_, arg) = args.get_single()?;
+        Ok(match &arg.value {
+            Value::Integer(i) => Value::Integer(*i),
+            Value::Quantity(q) => Value::Integer(q.value.floor() as Integer),
+            value => {
+                ctx.error(
+                    arg,
+                    EvalError::BuiltinError(format!("Cannot calculate int({value})")),
+                )?;
+                Value::None
+            }
+        })
+    })
 }
 
 /// Implementation for a builtin trigonometric function.
@@ -120,22 +138,28 @@ fn rotation_matrices_xyz(args: &Tuple) -> (Mat3, Mat3, Mat3) {
 
 pub fn orient_z_to(target: Vec3) -> Mat3 {
     let z_axis = Vec3::unit_z();
-    let target_dir = target.normalize();
+    let target = target.normalize();
 
     // Handle edge case where target is already Z
-    if (target_dir - z_axis).magnitude2() < 1e-6 {
+    if (target - z_axis).magnitude2() < 1e-6 {
         return Mat3::identity();
     }
 
-    // Handle 180-degree rotation
-    if (target_dir + z_axis).magnitude2() < 1e-6 {
-        // Rotate 180 degrees around any axis perpendicular to Z
-        return Mat3::identity();
+    // Handle 180-degree rotation (target is -Z)
+    if (target + z_axis).magnitude2() < 1e-6 {
+        // Rotate 180° around any axis perpendicular to Z.
+        // For stability, pick X if possible, otherwise Y.
+        let perp_axis = if z_axis.cross(Vec3::unit_x()).magnitude2() > 1e-6 {
+            Vec3::unit_x()
+        } else {
+            Vec3::unit_y()
+        };
+        return Mat3::from_axis_angle(perp_axis, cgmath::Rad(std::f64::consts::PI));
     }
 
-    // Axis to rotate around is cross product of z and target
-    let rotation_axis = z_axis.cross(target_dir).normalize();
-    let dot = z_axis.dot(target_dir);
+    // Normal case
+    let rotation_axis = z_axis.cross(target).normalize();
+    let dot = z_axis.dot(target).clamp(-1.0, 1.0); // avoid NaNs
     let angle = cgmath::Rad(dot.acos());
 
     Mat3::from_axis_angle(rotation_axis, angle)
@@ -220,40 +244,13 @@ fn rotate_zyx() -> Symbol {
 
 pub fn math() -> Symbol {
     crate::ModuleBuilder::new("math")
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("PI"),
-                Value::Quantity(Quantity::new(std::f64::consts::PI, QuantityType::Scalar)),
-            ),
-            None,
-        ))
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("X"),
-                Value::Tuple(Box::new(Vec3::unit_x().into())),
-            ),
-            None,
-        ))
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("Y"),
-                Value::Tuple(Box::new(Vec3::unit_y().into())),
-            ),
-            None,
-        ))
-        .symbol(Symbol::new(
-            SymbolDef::Constant(
-                Visibility::Public,
-                Identifier::no_ref("Z"),
-                Value::Tuple(Box::new(Vec3::unit_z().into())),
-            ),
-            None,
-        ))
+        .pub_const("PI", std::f64::consts::PI)
+        .pub_const("X", Value::Tuple(Box::new(Vec3::unit_x().into())))
+        .pub_const("Y", Value::Tuple(Box::new(Vec3::unit_y().into())))
+        .pub_const("Z", Value::Tuple(Box::new(Vec3::unit_z().into())))
         .symbol(abs())
         .symbol(sqrt())
+        .symbol(int())
         .symbol(cos())
         .symbol(sin())
         .symbol(tan())

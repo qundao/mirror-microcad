@@ -3,6 +3,7 @@
 
 //! Model methods and trait implementations for rendering.
 
+mod attribute;
 mod cache;
 mod context;
 mod hash;
@@ -10,6 +11,7 @@ mod output;
 
 use std::rc::Rc;
 
+pub use attribute::*;
 pub use cache::*;
 pub use context::*;
 pub use hash::*;
@@ -68,13 +70,11 @@ impl ModelInner {
     /// Get render resolution.
     pub fn resolution(&self) -> RenderResolution {
         let output = self.output.as_ref().expect("Some render output.");
-
-        match output {
-            RenderOutput::Geometry2D { resolution, .. }
-            | RenderOutput::Geometry3D { resolution, .. } => {
-                resolution.as_ref().expect("Some resolution.").clone()
-            }
-        }
+        output
+            .resolution
+            .as_ref()
+            .expect("Some resolution.")
+            .clone()
     }
 }
 
@@ -115,10 +115,23 @@ impl Model {
 
         /// Set the resolution for this model.
         pub fn set_resolution(model: &Model, resolution: RenderResolution) {
+            let resolution = match model.borrow().attributes().get_resolution() {
+                Some(resolution_attribute) => RenderResolution {
+                    linear: match resolution_attribute {
+                        ResolutionAttribute::Absolute(linear) => linear,
+                        ResolutionAttribute::Relative(factor) =>
+                        // Example: A relative resolution of 200% scales an absolution resolution from 0.1mm to 0.5mm.
+                        {
+                            resolution.linear / factor
+                        }
+                    },
+                },
+                None => resolution,
+            };
+
             let new_resolution = {
                 let mut model_ = model.borrow_mut();
                 let output = model_.output.as_mut().expect("Output");
-
                 let resolution = resolution * output.local_matrix().unwrap_or(Mat4::identity());
                 output.set_resolution(resolution.clone());
                 resolution
@@ -147,12 +160,10 @@ impl Model {
 impl CalcBounds2D for Model {
     fn calc_bounds_2d(&self) -> Bounds2D {
         let self_ = self.borrow();
-        match self_.output() {
-            RenderOutput::Geometry2D { geometry, .. } => match geometry {
-                Some(geometry) => geometry.bounds.clone(),
-                None => Bounds2D::default(),
-            },
-            RenderOutput::Geometry3D { .. } => Bounds2D::default(),
+        match &self_.output().geometry {
+            Some(GeometryOutput::Geometry2D(geometry)) => geometry.bounds.clone(),
+            Some(GeometryOutput::Geometry3D(_)) => Bounds2D::default(),
+            None => Bounds2D::default(),
         }
     }
 }
@@ -179,13 +190,13 @@ impl RenderWithContext<Geometry2DOutput> for Model {
                             _ => Ok(model_.children.render_with_context(context)?),
                         }
                     }
-                    _ => unreachable!(),
+                    output_type => Err(RenderError::InvalidOutputType(output_type)),
                 }
             }?;
 
             self.borrow_mut()
                 .output_mut()
-                .set_geometry_2d(geometry.clone());
+                .set_geometry(GeometryOutput::Geometry2D(geometry.clone()));
             Ok(geometry)
         })
     }
@@ -213,13 +224,13 @@ impl RenderWithContext<Geometry3DOutput> for Model {
                             _ => model_.children.render_with_context(context),
                         }
                     }
-                    _ => unreachable!(),
+                    output_type => Err(RenderError::InvalidOutputType(output_type)),
                 }
             }?;
 
             self.borrow_mut()
                 .output_mut()
-                .set_geometry_3d(geometry.clone());
+                .set_geometry(GeometryOutput::Geometry3D(geometry.clone()));
             Ok(geometry)
         })
     }

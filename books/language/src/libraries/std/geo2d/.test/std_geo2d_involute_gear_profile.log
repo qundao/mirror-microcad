@@ -1,0 +1,24 @@
+-- Test --
+  std_geo2d_involute_gear_profile
+  ../books/language/src/libraries/std/geo2d/README.md:10
+
+-- Code --
+
+ 1: std::geo2d::InvoluteGearProfile(module = 4.0mm, teeth = 20, pressure_angle = 0°);
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=4mm, pressure_angle=0rad, teeth=20) ->
+      - module = 4mm
+      - outer_radius = 44mm
+      - pitch_radius = 40mm
+      - pressure_angle = 0rad
+      - teeth = 20
+      Primitive2D __builtin::geo2d::InvoluteGearProfile(module=4, pressure_angle=0rad, teeth=20) ->
+
+Export of "../books/language/src/libraries/std/geo2d/.test/std_geo2d_involute_gear_profile-out.svg" successful.
+-- Test Result --
+OK

@@ -26,8 +26,7 @@
         Transform __builtin::ops::translate(x=0, y=0, z=-20) ->
           Workpiece(op) std::ops::extrude(z=40mm) ->
             - height = 40mm
-            - scale_x = 1
-            - scale_y = 1
+            - scale = (x=1, y=1)
             Operation __builtin::ops::extrude(height=40, scale_x=1, scale_y=1) ->
               Workpiece(sketch) std::geo2d::Rect(height=40mm, width=40mm) ->
                 - height = 40mm

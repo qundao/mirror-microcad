@@ -3,14 +3,9 @@
 
 //! Conversions from microcad core types to bevy types.
 
+use bevy::{asset::RenderAssetUsages, math::Vec3, platform::collections::HashMap};
 use bevy::{
-    asset::RenderAssetUsages, math::Vec3, pbr::StandardMaterial, platform::collections::HashMap,
-};
-use bevy::{
-    render::{
-        alpha::AlphaMode,
-        mesh::{Indices, Mesh},
-    },
+    render::mesh::{Indices, Mesh},
     transform::components::Transform,
 };
 use microcad_core::*;
@@ -98,46 +93,116 @@ pub fn mesh_with_smoothness(mesh: &TriangleMesh, threshold_degrees: f32) -> Mesh
     mesh_out
 }
 
-/// Create a bevy mesh from a 2D geometry.
-pub fn geometry2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
-    let multi_polygon = geometry.to_multi_polygon();
-    use geo::TriangulateEarcut;
+mod to_mesh {
+    use super::*;
 
-    let mut positions = Vec::new();
-    let mut indices = Vec::new();
-
-    for poly in &multi_polygon.0 {
-        let triangulation = poly.earcut_triangles_raw();
-        let n = positions.len();
-        positions.append(
-            &mut triangulation
-                .vertices
-                .as_slice()
-                .chunks_exact(2)
-                .map(|chunk| [chunk[0] as f32, chunk[1] as f32, z as f32])
-                .collect(),
+    /// Create a mesh from a line string.
+    pub fn line_string(line_string: &microcad_core::LineString, z: Scalar) -> Mesh {
+        let mut mesh = Mesh::new(
+            bevy::render::mesh::PrimitiveTopology::LineStrip,
+            RenderAssetUsages::default(),
         );
+        use bevy::prelude::Vec3;
 
-        indices.append(
-            &mut triangulation
-                .triangle_indices
-                .iter()
-                .map(|i| (i + n) as u32)
-                .collect(),
+        mesh.insert_attribute(
+            Mesh::ATTRIBUTE_POSITION,
+            line_string
+                .coords()
+                .map(|c| Vec3::new(c.x as f32, c.y as f32, z as f32))
+                .collect::<Vec<_>>(),
         );
+        mesh
     }
 
-    let mut mesh = Mesh::new(
-        bevy::render::mesh::PrimitiveTopology::TriangleList,
-        RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
-    );
+    /// Create a mesh from a multi line string.
+    pub fn multi_line_string(
+        multi_line_string: &microcad_core::MultiLineString,
+        z: Scalar,
+    ) -> Mesh {
+        let mut mesh = Mesh::new(
+            bevy::render::mesh::PrimitiveTopology::LineList,
+            RenderAssetUsages::default(),
+        );
+        use bevy::prelude::Vec3;
 
-    mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
-    mesh.insert_indices(Indices::U32(indices));
-
-    mesh
+        mesh.insert_attribute(
+            Mesh::ATTRIBUTE_POSITION,
+            multi_line_string
+                .0
+                .iter()
+                .flat_map(|line_string| {
+                    line_string
+                        .0
+                        .as_slice()
+                        .windows(2)
+                        .flat_map(|c| {
+                            c.iter()
+                                .map(|c| Vec3::new(c.x as f32, c.y as f32, z as f32))
+                        })
+                        .collect::<Vec<_>>()
+                })
+                .collect::<Vec<_>>(),
+        );
+        mesh
+    }
 }
 
+/// Create a bevy mesh from a 2D geometry.
+pub fn geometry_2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
+    match geometry {
+        Geometry2D::LineString(line_string) => to_mesh::line_string(line_string, z),
+        Geometry2D::MultiLineString(multi_line_string) => {
+            to_mesh::multi_line_string(multi_line_string, z)
+        }
+        Geometry2D::Line(line) => {
+            to_mesh::line_string(&LineString::new(vec![line.0.into(), line.1.into()]), z)
+        }
+        geometry => {
+            let multi_polygon = geometry.to_multi_polygon();
+            use geo::TriangulateEarcut;
+
+            let mut positions = Vec::new();
+            let mut indices = Vec::new();
+
+            for poly in &multi_polygon.0 {
+                let triangulation = poly.earcut_triangles_raw();
+                let n = positions.len();
+                positions.append(
+                    &mut triangulation
+                        .vertices
+                        .as_slice()
+                        .chunks_exact(2)
+                        .map(|chunk| [chunk[0] as f32, chunk[1] as f32, z as f32])
+                        .collect(),
+                );
+
+                indices.append(
+                    &mut triangulation
+                        .triangle_indices
+                        .iter()
+                        .map(|i| (i + n) as u32)
+                        .collect(),
+                );
+            }
+
+            let mut mesh = Mesh::new(
+                bevy::render::mesh::PrimitiveTopology::TriangleList,
+                RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
+            );
+
+            mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
+            mesh.insert_indices(Indices::U32(indices));
+            mesh
+        }
+    }
+}
+
+/// Create a bevy mesh from a 3D geometry.
+pub fn geometry_3d(geometry: &Geometry3D) -> Mesh {
+    mesh_with_smoothness(&geometry.into(), 30.0)
+}
+
+/// Convert cgmath Matrix into a bevy Matrix.
 pub fn mat4(m: cgmath::Matrix4<f64>) -> bevy::prelude::Mat4 {
     use cgmath::Matrix;
 
@@ -163,24 +228,17 @@ pub fn mat4(m: cgmath::Matrix4<f64>) -> bevy::prelude::Mat4 {
     ])
 }
 
-pub fn color(color: microcad_core::Color) -> bevy::prelude::Color {
+/// Convert a µcad color into a bevy color.
+pub fn color(color: &microcad_core::Color) -> bevy::prelude::Color {
     bevy::prelude::Color::srgba(color.r, color.g, color.b, color.a)
-}
-
-pub fn material(color: Color) -> StandardMaterial {
-    StandardMaterial {
-        base_color: self::color(color),
-        alpha_mode: AlphaMode::Opaque,
-        unlit: true,
-        ..Default::default()
-    }
 }
 
 pub fn transform(mat: Mat4) -> Transform {
     Transform::from_matrix(mat4(mat))
 }
 
-pub fn bounds_2d(bounds: Bounds2D) -> Mesh {
+/// Create mesh from a [`Bounds2D`].
+pub fn bounds_2d(bounds: &Bounds2D) -> Mesh {
     let mut mesh = Mesh::new(
         bevy::render::mesh::PrimitiveTopology::LineStrip,
         RenderAssetUsages::default(),
@@ -205,7 +263,8 @@ pub fn bounds_2d(bounds: Bounds2D) -> Mesh {
     mesh
 }
 
-pub fn bounds_3d(bounds: Bounds3D) -> Mesh {
+/// Create mesh from a [`Bounds3D`].
+pub fn bounds_3d(bounds: &Bounds3D) -> Mesh {
     let mut mesh = Mesh::new(
         bevy::render::mesh::PrimitiveTopology::LineStrip,
         RenderAssetUsages::default(),

@@ -6,7 +6,7 @@
 
  1: use __builtin::*;
  2: 
- 3: #[svg = (style = "fill:red")]
+ 3: #[color = color::RED]
  4: geo2d::Rect(x = 0.0, y = 0.0, width = 10.0, height = 10.0)
  5:     .ops::translate(x = 0.0, y = 15.0, z = 0.0)
  6:     .ops::translate(x = 15.0, y = 0.0, z = 0.0);
@@ -17,7 +17,7 @@
 -- Model --
   Group (root) ->
     Transform __builtin::ops::translate(x=15, y=0, z=0) ->
-      #[svg = svg = (fill=, style=fill:red)]
+      #[color = rgba(1, 0, 0, 1)]
       Transform __builtin::ops::translate(x=0, y=15, z=0) ->
         Primitive2D __builtin::geo2d::Rect(height=10, width=10, x=0, y=0) ->
 

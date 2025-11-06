@@ -1,0 +1,20 @@
+use std::geo2d::*;
+use std::ops::*;
+
+sketch Heart(size: Length) {
+    r = size / 3;
+    Circle(d = size).translate(x = [r, -r], y = r) | Rect(size).rotate(45°);
+}
+
+op contour(thickness: Length, distance = 0mm) {
+    @input.buffer(distance + thickness / 2) - @input.buffer(distance - thickness / 2);
+}
+
+heart = Heart(100mm);
+
+bottom = {
+    heart.contour(1mm).extrude(20mm);
+    heart.extrude(1mm);
+};
+
+Heart(10mm).contour(1mm).translate(x = 30mm).revolve(90°);

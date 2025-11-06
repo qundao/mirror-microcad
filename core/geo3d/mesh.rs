@@ -1,7 +1,10 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::*;
+use crate::{
+    traits::{TotalMemory, VertexCount},
+    *,
+};
 use cgmath::{ElementWise, Vector3};
 use manifold_rs::{Manifold, Mesh};
 
@@ -90,13 +93,13 @@ impl TriangleMesh {
         let vertices = self
             .positions
             .iter()
-            .flat_map(|v| vec![v.x, v.y, v.z])
+            .flat_map(|v| [v.x, v.y, v.z])
             .collect::<Vec<_>>();
 
         let triangle_indices = self
             .triangle_indices
             .iter()
-            .flat_map(|t| vec![t.0, t.1, t.2])
+            .flat_map(|t| [t.0, t.1, t.2])
             .collect::<Vec<_>>();
 
         assert_eq!(vertices.len(), self.positions.len() * 3);
@@ -144,21 +147,23 @@ impl TriangleMesh {
         let mut vertex_map: std::collections::HashMap<(u32, u32, u32), u32> =
             std::collections::HashMap::new();
         let mut new_positions: Vec<Vector3<f32>> = Vec::with_capacity(self.positions.len());
-        let mut remap: Vec<u32> = vec![0; self.positions.len()];
-
-        for (i, position) in self.positions.iter().enumerate() {
-            let key = quantize(position);
-            if let Some(&existing_idx) = vertex_map.get(&key) {
-                // Duplicate vertex found
-                remap[i] = existing_idx;
-            } else {
-                // New unique vertex
-                let new_idx = new_positions.len() as u32;
-                new_positions.push(*position);
-                vertex_map.insert(key, new_idx);
-                remap[i] = new_idx;
-            }
-        }
+        let remap: Vec<u32> = self
+            .positions
+            .iter()
+            .map(|position| {
+                let key = quantize(position);
+                if let Some(&existing_idx) = vertex_map.get(&key) {
+                    // Duplicate vertex found
+                    existing_idx
+                } else {
+                    // New unique vertex
+                    let new_idx = new_positions.len() as u32;
+                    new_positions.push(*position);
+                    vertex_map.insert(key, new_idx);
+                    new_idx
+                }
+            })
+            .collect();
 
         self.positions = new_positions;
 
@@ -223,22 +228,18 @@ impl From<Mesh> for TriangleMesh {
 
 impl From<TriangleMesh> for Mesh {
     fn from(mesh: TriangleMesh) -> Self {
-        let mut vertices = Vec::new();
-        let mut indices = Vec::new();
-
-        for v in &mesh.positions {
-            vertices.push(v.x);
-            vertices.push(v.y);
-            vertices.push(v.z);
-        }
-
-        for t in &mesh.triangle_indices {
-            indices.push(t.0);
-            indices.push(t.1);
-            indices.push(t.2);
-        }
-
-        Mesh::new(vertices.as_slice(), indices.as_slice())
+        Mesh::new(
+            &mesh
+                .positions
+                .iter()
+                .flat_map(|v| [v.x, v.y, v.z])
+                .collect::<Vec<_>>(),
+            &mesh
+                .triangle_indices
+                .iter()
+                .flat_map(|t| [t.0, t.1, t.2])
+                .collect::<Vec<_>>(),
+        )
     }
 }
 
@@ -281,6 +282,23 @@ impl WithBounds3D<TriangleMesh> {
     pub fn repair(&mut self) {
         self.update_bounds();
         self.inner.repair(&self.bounds);
+    }
+}
+
+impl TotalMemory for TriangleMesh {
+    fn heap_memory(&self) -> usize {
+        self.positions.heap_memory()
+            + self.triangle_indices.heap_memory()
+            + match &self.normals {
+                Some(normals) => normals.heap_memory(),
+                None => 0,
+            }
+    }
+}
+
+impl VertexCount for TriangleMesh {
+    fn vertex_count(&self) -> usize {
+        self.positions.len()
     }
 }
 

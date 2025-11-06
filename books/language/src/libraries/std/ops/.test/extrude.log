@@ -12,10 +12,9 @@
 -- Errors --
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::extrude(height=20mm, scale_x=1, scale_y=1) ->
+    Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1)) ->
       - height = 20mm
-      - scale_x = 1
-      - scale_y = 1
+      - scale = (x=1, y=1)
       Operation __builtin::ops::extrude(height=20, scale_x=1, scale_y=1) ->
         Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
           - center = (x=0mm, y=0mm)

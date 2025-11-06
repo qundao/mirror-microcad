@@ -6,7 +6,7 @@
 use std::fmt::Write;
 
 use geo::line_string;
-use microcad_core::{Geometries2D, Geometry2D, Transformed2D};
+use microcad_core::{Geometries2D, Geometry2D, Transformed2D, mat4_to_mat3};
 use microcad_lang::{
     Id,
     builtin::{ExportError, Exporter, FileIoInterface},
@@ -64,20 +64,14 @@ impl WriteWkt for Model {
     fn write_wkt(&self, writer: &mut impl Write) -> std::fmt::Result {
         let self_ = self.borrow();
         let output = self_.output();
-        match output {
-            microcad_lang::render::RenderOutput::Geometry2D {
-                world_matrix,
-                geometry,
-                ..
-            } => {
-                let mat = world_matrix.expect("Some matrix");
-                match geometry {
-                    Some(geometry) => (*geometry.transformed_2d(&mat)).write_wkt(writer),
-                    None => self_
-                        .children()
-                        .try_for_each(|model| model.write_wkt(writer)),
-                }
+        match &output.geometry {
+            Some(microcad_lang::render::GeometryOutput::Geometry2D(geometry)) => {
+                let mat = output.world_matrix.expect("Some matrix");
+                (*geometry.transformed_2d(&mat4_to_mat3(&mat))).write_wkt(writer)
             }
+            None => self_
+                .children()
+                .try_for_each(|model| model.write_wkt(writer)),
             _ => Ok(()),
         }
     }

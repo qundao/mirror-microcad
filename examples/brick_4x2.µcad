@@ -1,0 +1,30 @@
+use std::geo2d::*;
+use std::ops::*;
+
+const SPACING = 8mm;
+
+width = 4 * SPACING - 0.2mm;
+height = 2 * SPACING - 0.2mm;
+thickness = 1.2mm;
+base_height = 9.6mm;
+
+base = {
+    Frame(width, height, thickness);
+    Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+        .translate(x = [-1..1] * SPACING);
+    }
+    .extrude(base_height - thickness);
+
+    
+knobs = Circle(d = 4.8mm)
+    .translate(x = [1..4] * SPACING, y = [1..2] * SPACING)
+    .align()
+    .extrude(1.7mm)
+    .translate(z = base_height);
+
+cap = Rect(width, height)
+    .extrude(thickness)
+    .translate(z = base_height - thickness);
+
+#[color = std::color::RED]
+base | knobs | cap;

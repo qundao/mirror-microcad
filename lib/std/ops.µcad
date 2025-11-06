@@ -5,21 +5,27 @@ pub use __builtin::ops::hull;
 pub use __builtin::ops::align;
 
 
+/// Create a new geometry whose boundary is offset the specified distance from the input.
 pub op buffer(distance: Length) {
 	@input.__builtin::ops::buffer(distance = distance / 1mm);
 }
 
+/// Generate a contour geometry out of an input geometry.
+pub op contour(thickness: Length, distance = 0mm) {
+    @input.buffer(distance + thickness / 2) - @input.buffer(distance - thickness / 2);
+}
+
+
+/// Linear extrude a 2D geometry into a 3D.
 pub op extrude(
 		height: Length,
-		scale_x = 100%,
-		scale_y = 100%) {
+		scale = (x = 100%, y = 100%)) {
 	init(z: Length) {
 		height = z;
-		scale_x = 100%;
-		scale_y = 100%;
+		scale = (x = 100%, y = 100%);
 	}
 
-    @input.__builtin::ops::extrude(height = height / 1mm, scale_x, scale_y);
+    @input.__builtin::ops::extrude(height = height / 1mm, scale_x = scale.x, scale_y = scale.y);
 }
 
 /// Mirror along an axis, keeping existing geometry.
@@ -51,6 +57,14 @@ pub op spiralize(
 }
 
 pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
+
+	/// Polar-style translage with distance and angle.
+	init(distance: Length, angle: Angle) {
+		x = distance * __builtin::math::cos(angle);
+		y = distance * __builtin::math::sin(angle);
+		z = 0.0mm;
+	}
+
 	@input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
 }
 

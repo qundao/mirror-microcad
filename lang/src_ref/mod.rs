@@ -59,6 +59,16 @@ pub struct SrcRefInner {
     pub source_file_hash: u64,
 }
 
+impl SrcRefInner {
+    /// Check if two source refs are overlapping.
+    pub fn is_overlapping(&self, other: &Self) -> bool {
+        self.source_file_hash != 0
+            && other.source_file_hash != 0
+            && (self.range.start < other.range.end)
+            && (other.range.start < self.range.end)
+    }
+}
+
 impl std::fmt::Display for SrcRef {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.0 {
@@ -192,6 +202,15 @@ impl SrcRef {
     /// Return line and column in source code or `None` if not available.
     pub fn at(&self) -> Option<LineCol> {
         self.0.as_ref().map(|s| s.at.clone())
+    }
+    /// Returns `true` two source code references overlap.
+    ///
+    /// This means they must have the same non-zero source file hash and its ranges must overlap.
+    pub fn is_overlapping(&self, other: &Self) -> bool {
+        match (&self.0, &other.0) {
+            (Some(a), Some(b)) => a.is_overlapping(b),
+            _ => false,
+        }
     }
 }
 

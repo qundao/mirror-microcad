@@ -1,10 +1,8 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::rc::Rc;
-
 use super::*;
-use crate::traits::Align;
+use crate::traits::{Align, TotalMemory, VertexCount};
 use derive_more::From;
 
 use geo::{ConvexHull, MultiPolygon};
@@ -189,16 +187,103 @@ impl From<Geometry2D> for MultiPolygon {
     }
 }
 
-/// Something that can rendered into a 2D geometry with a certain resolution.
-pub trait RenderToGeometry2D {
-    /// Render self into some Geometry with a certain render resolution
-    ///
-    /// Note: We might want to have [`RenderCache`] as argument here, hence we return an `Rc`.
-    fn render_to_geometry(&self, resolution: &RenderResolution) -> Rc<Geometry2D>;
+impl TotalMemory for LineString {
+    fn heap_memory(&self) -> usize {
+        self.0.heap_memory()
+    }
 }
 
-impl RenderToGeometry2D for Rc<Geometry2D> {
-    fn render_to_geometry(&self, _: &RenderResolution) -> Rc<Geometry2D> {
-        self.clone()
+impl TotalMemory for MultiLineString {
+    fn heap_memory(&self) -> usize {
+        self.0.iter().map(|l| l.heap_memory()).sum()
+    }
+}
+
+impl TotalMemory for Polygon {
+    fn heap_memory(&self) -> usize {
+        self.exterior().heap_memory()
+            + self
+                .interiors()
+                .iter()
+                .map(|l| l.heap_memory())
+                .sum::<usize>()
+    }
+}
+
+impl TotalMemory for MultiPolygon {
+    fn heap_memory(&self) -> usize {
+        self.0.iter().map(|p| p.heap_memory()).sum()
+    }
+}
+
+impl TotalMemory for Rect {}
+impl TotalMemory for Line {}
+
+impl TotalMemory for Geometry2D {
+    fn heap_memory(&self) -> usize {
+        match &self {
+            Geometry2D::LineString(line_string) => line_string.heap_memory(),
+            Geometry2D::MultiLineString(multi_line_string) => multi_line_string.heap_memory(),
+            Geometry2D::Polygon(polygon) => polygon.heap_memory(),
+            Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.heap_memory(),
+            Geometry2D::Rect(rect) => rect.heap_memory(),
+            Geometry2D::Line(line) => line.heap_memory(),
+            Geometry2D::Collection(collection) => collection.heap_memory(),
+        }
+    }
+}
+
+impl VertexCount for LineString {
+    fn vertex_count(&self) -> usize {
+        self.0.len()
+    }
+}
+
+impl VertexCount for MultiLineString {
+    fn vertex_count(&self) -> usize {
+        self.iter().map(|l| l.vertex_count()).sum()
+    }
+}
+
+impl VertexCount for Polygon {
+    fn vertex_count(&self) -> usize {
+        self.exterior().vertex_count()
+            + self
+                .interiors()
+                .iter()
+                .map(|l| l.vertex_count())
+                .sum::<usize>()
+    }
+}
+
+impl VertexCount for MultiPolygon {
+    fn vertex_count(&self) -> usize {
+        self.iter().map(|p| p.vertex_count()).sum()
+    }
+}
+
+impl VertexCount for Rect {
+    fn vertex_count(&self) -> usize {
+        4
+    }
+}
+
+impl VertexCount for Line {
+    fn vertex_count(&self) -> usize {
+        2
+    }
+}
+
+impl VertexCount for Geometry2D {
+    fn vertex_count(&self) -> usize {
+        match &self {
+            Geometry2D::LineString(line_string) => line_string.vertex_count(),
+            Geometry2D::MultiLineString(multi_line_string) => multi_line_string.vertex_count(),
+            Geometry2D::Polygon(polygon) => polygon.vertex_count(),
+            Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.vertex_count(),
+            Geometry2D::Rect(rect) => rect.vertex_count(),
+            Geometry2D::Line(line) => line.vertex_count(),
+            Geometry2D::Collection(collection) => collection.vertex_count(),
+        }
     }
 }

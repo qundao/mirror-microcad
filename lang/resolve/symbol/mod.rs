@@ -673,6 +673,12 @@ impl FullyQualify for Symbol {
     }
 }
 
+impl SrcReferrer for Symbol {
+    fn src_ref(&self) -> SrcRef {
+        self.inner.borrow().src_ref()
+    }
+}
+
 impl Default for Symbol {
     fn default() -> Self {
         Self {

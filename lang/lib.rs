@@ -33,7 +33,8 @@ pub mod value;
 /// Id type (base of all identifiers)
 pub type Id = compact_str::CompactString;
 
-const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
+/// List of valid µcad extensions.
+pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
 /// Parse a rule from given string into a syntax element.
 /// - `ty`: Type of the output syntax element

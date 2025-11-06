@@ -11,7 +11,7 @@ use crate::{ty::QuantityType, value::*};
 #[derive(Debug, Clone)]
 pub enum ResolutionAttribute {
     /// Linear resolution in millimeters (Default = 0.1mm)
-    Linear(Scalar),
+    Absolute(Scalar),
 
     /// Relative resolution.
     Relative(Scalar),
@@ -19,14 +19,14 @@ pub enum ResolutionAttribute {
 
 impl Default for ResolutionAttribute {
     fn default() -> Self {
-        Self::Linear(0.1)
+        Self::Absolute(0.1)
     }
 }
 
 impl From<ResolutionAttribute> for Value {
     fn from(resolution_attribute: ResolutionAttribute) -> Self {
         match resolution_attribute {
-            ResolutionAttribute::Linear(linear) => {
+            ResolutionAttribute::Absolute(linear) => {
                 Self::Quantity(Quantity::new(linear, QuantityType::Length))
             }
             ResolutionAttribute::Relative(relative) => {
@@ -48,7 +48,7 @@ impl TryFrom<Value> for ResolutionAttribute {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Length,
-            }) => Ok(ResolutionAttribute::Linear(value)),
+            }) => Ok(ResolutionAttribute::Absolute(value)),
             _ => Err(ValueError::CannotConvert(
                 value.to_string(),
                 "ResolutionAttribute".to_string(),
@@ -60,7 +60,7 @@ impl TryFrom<Value> for ResolutionAttribute {
 impl std::fmt::Display for ResolutionAttribute {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ResolutionAttribute::Linear(linear) => write!(f, "Linear({linear} mm)"),
+            ResolutionAttribute::Absolute(linear) => write!(f, "Linear({linear} mm)"),
             ResolutionAttribute::Relative(relative) => write!(f, "Relative({relative}%)"),
         }
     }

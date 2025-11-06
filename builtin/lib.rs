@@ -3,6 +3,7 @@
 
 //! µcad builtin library
 
+mod color;
 mod debug;
 mod geo2d;
 mod geo3d;
@@ -51,6 +52,7 @@ pub fn builtin_module() -> Symbol {
         .symbol(print::print())
         .symbol(ops::ops())
         .symbol(math::math())
+        .symbol(color::color())
         .symbol(import::import())
         .symbol(geo2d::geo2d())
         .symbol(geo3d::geo3d())

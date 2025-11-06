@@ -92,7 +92,7 @@ r.translate(x = 4.0mm, y = 4.0mm);
 ```µcad,builtin_translate_twice
 use __builtin::*;
 
-#[svg = (style = "fill:red")]
+#[color = color::RED]
 geo2d::Rect(x = 0.0, y = 0.0, width = 10.0, height = 10.0)
     .ops::translate(x = 0.0, y = 15.0, z = 0.0)
     .ops::translate(x = 15.0, y = 0.0, z = 0.0);

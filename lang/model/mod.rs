@@ -34,7 +34,7 @@ use microcad_core::BooleanOp;
 use crate::{
     diag::WriteToFile,
     rc::RcMut,
-    render::{ComputedHash, HashId, RenderOutput},
+    render::{ComputedHash, HashId},
     src_ref::SrcReferrer,
     syntax::Identifier,
     tree_display::*,
@@ -54,11 +54,6 @@ impl Model {
     /// Calculate depth of the model.
     pub fn depth(&self) -> usize {
         self.parents().count()
-    }
-
-    /// Check if a model contains an operation element.
-    pub fn is_operation(&self) -> bool {
-        self.borrow().element.is_operation()
     }
 
     /// Return `true`, if model has no children.
@@ -99,18 +94,6 @@ impl Model {
     pub fn remove_child(&self, child: &Model) {
         let mut s = self.0.borrow_mut();
         s.children.retain(|model| !model.is_same_as(child));
-    }
-
-    /// Detaches a model from its parent. Children are not affected.
-    pub fn detach(&self) {
-        match self.0.borrow_mut().parent {
-            Some(ref mut parent) => {
-                parent.remove_child(self);
-            }
-            None => return,
-        }
-
-        self.0.borrow_mut().parent = None;
     }
 
     /// Append a single model as child.
@@ -170,11 +153,11 @@ impl Model {
     /// Get render output type. Expects a render output.
     pub fn render_output_type(&self) -> OutputType {
         let self_ = self.borrow();
-        match self_.output {
-            Some(RenderOutput::Geometry2D { .. }) => OutputType::Geometry2D,
-            Some(RenderOutput::Geometry3D { .. }) => OutputType::Geometry3D,
-            None => OutputType::InvalidMixed,
-        }
+        self_
+            .output
+            .as_ref()
+            .map(|output| output.output_type)
+            .unwrap_or(OutputType::InvalidMixed)
     }
 
     /// Return inner group if this model only contains a group as single child.
@@ -182,15 +165,19 @@ impl Model {
     /// This function is used when we evaluate operations like `subtract() {}` or `hull() {}`.
     /// When evaluating these operations, we want to iterate over the group's children.
     pub fn into_group(&self) -> Option<Model> {
-        let children = &self.borrow().children;
-        if children.len() != 1 {
-            return None;
-        }
-
-        children.first().and_then(|n| match *n.0.borrow().element {
-            Element::Group | Element::Multiplicity => Some(n.clone()),
-            _ => None,
+        self.borrow().children.single_model().filter(|model| {
+            matches!(
+                model.borrow().element.value,
+                Element::Group | Element::Multiplicity
+            )
         })
+    }
+
+    /// Set the id of a model. This happens if the model was created by an assignment.
+    ///
+    /// For example, the assignment statement `a = Circle(4mm)` will result in a model with id `a`.
+    pub fn set_id(&self, id: Identifier) {
+        self.borrow_mut().id = Some(id);
     }
 }
 

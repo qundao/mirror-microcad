@@ -16,7 +16,7 @@
 -- Model --
   Group (root) ->
     Operation __builtin::ops::extrude(height=4, scale_x=1, scale_y=1) ->
-      Operation subtract() ->
+      a: Operation subtract() ->
         Group ->
           Primitive2D __builtin::geo2d::Circle(radius=9) ->
           Multiplicity ->

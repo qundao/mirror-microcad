@@ -31,11 +31,6 @@ impl Models {
         }
     }
 
-    /// Check if all models contain an operation element.
-    pub fn is_operation(&self) -> bool {
-        self.iter().all(Model::is_operation)
-    }
-
     /// A union operation model for this collection.
     pub fn union(&self) -> Model {
         self.boolean_op(microcad_core::BooleanOp::Union)
@@ -59,12 +54,6 @@ impl Models {
         }
     }
 
-    /// Merge two lists of [`Models`] into one by concatenation.
-    /// TODO: Use iterators!
-    pub fn merge(lhs: Models, rhs: Models) -> Self {
-        lhs.iter().chain(rhs.iter()).cloned().collect()
-    }
-
     /// Filter the models by source file.
     pub fn filter_by_source_hash(&self, source_hash: u64) -> Models {
         self.iter()
@@ -77,8 +66,7 @@ impl Models {
     pub fn deduce_output_type(&self) -> OutputType {
         self.iter().map(|model| model.deduce_output_type()).fold(
             OutputType::NotDetermined,
-            // TODO: weird naming
-            |output_type, model_output_type| output_type.merge(&model_output_type),
+            |result_output_type, model_output_type| result_output_type.merge(&model_output_type),
         )
     }
 }

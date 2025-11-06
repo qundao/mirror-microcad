@@ -3,7 +3,7 @@
 
 //! Builder pattern to build built-in modules.
 
-use crate::{builtin::BuiltinWorkbenchDefinition, resolve::*, syntax::*};
+use crate::{builtin::BuiltinWorkbenchDefinition, resolve::*, syntax::*, value::Value};
 
 /// Builder pattern to build built-in modules.
 pub struct ModuleBuilder {
@@ -31,6 +31,19 @@ impl ModuleBuilder {
     /// Add the symbol from a built-in workbench definition.
     pub fn builtin<T: BuiltinWorkbenchDefinition>(self) -> Self {
         self.symbol(T::symbol())
+    }
+
+    /// Add a constant.
+    pub fn constant(self, visibility: Visibility, name: &str, value: impl Into<Value>) -> Self {
+        self.symbol(Symbol::new(
+            SymbolDef::Constant(visibility, name.into(), value.into()),
+            None,
+        ))
+    }
+
+    /// Add a public constant.
+    pub fn pub_const(self, name: &str, value: impl Into<Value>) -> Self {
+        self.constant(Visibility::Public, name, value)
     }
 
     /// Return our module symbol.

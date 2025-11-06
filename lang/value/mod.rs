@@ -541,19 +541,25 @@ impl From<Scalar> for Value {
 
 impl From<Size2> for Value {
     fn from(value: Size2) -> Self {
-        Value::Tuple(Box::new(value.into()))
+        Self::Tuple(Box::new(value.into()))
     }
 }
 
 impl From<Quantity> for Value {
     fn from(qty: Quantity) -> Self {
-        Value::Quantity(qty)
+        Self::Quantity(qty)
     }
 }
 
 impl From<String> for Value {
     fn from(value: String) -> Self {
-        Value::String(value)
+        Self::String(value)
+    }
+}
+
+impl From<Color> for Value {
+    fn from(color: Color) -> Self {
+        Self::Tuple(Box::new(color.into()))
     }
 }
 

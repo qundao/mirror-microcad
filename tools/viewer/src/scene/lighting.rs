@@ -4,7 +4,7 @@ use bevy::{
         system::{Commands, ResMut},
     },
     math::Vec3,
-    pbr::{DirectionalLight, PointLight, light_consts},
+    pbr::{DirectionalLight, light_consts},
     transform::components::Transform,
 };
 
@@ -22,7 +22,6 @@ pub fn spawn_lights(mut commands: Commands, mut state: ResMut<crate::state::Stat
         commands
             .spawn((
                 DirectionalLight {
-                    shadows_enabled: true,
                     illuminance: light_consts::lux::AMBIENT_DAYLIGHT,
                     ..Default::default()
                 },
@@ -34,14 +33,12 @@ pub fn spawn_lights(mut commands: Commands, mut state: ResMut<crate::state::Stat
     entities.push(
         commands
             .spawn((
-                PointLight {
-                    intensity: 10_000_000.0,
-                    range: radius * 10.0,
-                    radius: radius * 2.0,
-                    shadows_enabled: false,
+                DirectionalLight {
+                    illuminance: light_consts::lux::AMBIENT_DAYLIGHT,
                     ..Default::default()
                 },
-                Transform::from_xyz(0.0, 0.0, radius * 4.0),
+                Transform::from_xyz(-2.0 * radius, radius, -3.0 * radius)
+                    .looking_at(Vec3::ZERO, Vec3::Z),
             ))
             .id(),
     );

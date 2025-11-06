@@ -77,15 +77,56 @@ impl ItemsFromTree<Model> for ModelTreeModelItem {
 
 impl ItemsFromTree<Symbol> for SymbolTreeModelItem {
     fn _from_tree(symbol: &Symbol, items: &mut Vec<Self>, depth: usize) {
+        use microcad_lang::src_ref::SrcReferrer;
+
         items.push(Self {
             depth: depth as i32,
             name: symbol.full_name().to_string().into(),
+            source_hash: symbol.src_ref().source_hash() as i32,
         });
 
         symbol.with_children(|(_, symbol)| {
             Self::_from_tree(symbol, items, depth + 1);
         })
     }
+}
+
+fn split_source_code(source: &str) -> Vec<SourceCodeModelItem> {
+    let mut items = Vec::new();
+    let mut byte_index = 0;
+
+    for (line_number, line) in source.split_inclusive('\n').enumerate() {
+        // `split_inclusive('\n')` keeps the newline at the end of each line,
+        // which helps preserve correct byte ranges and offsets.
+        let line_bytes = line.as_bytes();
+        let line_len = line_bytes.len();
+
+        items.push(SourceCodeModelItem {
+            line: line.to_string().into(),
+            line_number: line_number as i32,
+            byte_range_start: byte_index as i32,
+            byte_range_end: (byte_index + line_len) as i32,
+        });
+
+        byte_index += line_len;
+    }
+
+    // Handle case where the last line does not end with a newline
+    if !source.ends_with('\n') && !source.is_empty() {
+        if let Some(last_line) = source.lines().last() {
+            let line_len = last_line.len();
+            let line_start = source.len() - line_len;
+
+            items.push(SourceCodeModelItem {
+                line: last_line.to_string().into(),
+                line_number: items.len() as i32,
+                byte_range_start: line_start as i32,
+                byte_range_end: source.len() as i32,
+            });
+        }
+    }
+
+    items
 }
 
 /// A request to the view model.
@@ -189,8 +230,11 @@ impl Inspector {
             loop {
                 if let Ok(request) = rx.recv() {
                     weak.upgrade_in_event_loop(move |main_window| match request {
-                        ViewModelRequest::SetSourceCode(string) => {
-                            main_window.set_source_code(string.into());
+                        ViewModelRequest::SetSourceCode(source_code) => {
+                            let items = split_source_code(&source_code);
+                            main_window.set_source_code_model(model_rc_from_items(items));
+
+                            main_window.set_source_code(source_code.into());
                         }
                         ViewModelRequest::SetSymbolTree(items) => {
                             main_window.set_symbol_tree(model_rc_from_items(items))

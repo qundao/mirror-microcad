@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 mod circle;
+mod involute_gear;
 mod line;
 mod ngon;
 mod pie;
@@ -11,6 +12,7 @@ mod text;
 mod thread_profile;
 
 pub use circle::*;
+pub use involute_gear::*;
 pub use line::*;
 pub use ngon::*;
 pub use pie::*;
@@ -25,6 +27,7 @@ use microcad_lang::builtin::*;
 pub fn geo2d() -> Symbol {
     crate::ModuleBuilder::new("geo2d")
         .builtin::<Circle>()
+        .builtin::<InvoluteGearProfile>()
         .builtin::<Line>()
         .builtin::<Ngon>()
         .builtin::<Pie>()

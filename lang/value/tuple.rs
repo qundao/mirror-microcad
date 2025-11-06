@@ -436,19 +436,6 @@ impl TryFrom<&Tuple> for Color {
     }
 }
 
-impl TryFrom<Color> for Value {
-    type Error = ValueError;
-
-    fn try_from(c: Color) -> Result<Self, Self::Error> {
-        Ok(crate::create_tuple_value!(
-            r = c.r,
-            g = c.g,
-            b = c.b,
-            a = c.a
-        ))
-    }
-}
-
 impl TryFrom<&Tuple> for Size2 {
     type Error = ValueError;
 

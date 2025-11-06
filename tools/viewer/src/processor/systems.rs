@@ -122,26 +122,27 @@ pub fn handle_processor_responses(
 
     for response in state.processor.response_receiver.try_iter() {
         match response {
-            ProcessorResponse::OutputGeometry(mesh_geometry_outputs) => {
+            ProcessorResponse::OutputGeometry(model_geometry_outputs) => {
                 // Despawn all entities to remove them from the scene
                 for entity in &state.scene.model_entities {
                     commands.entity(*entity).despawn();
                 }
                 new_entities = true;
 
-                for mesh_geometry_output in mesh_geometry_outputs {
-                    new_scene_radius = new_scene_radius.max(mesh_geometry_output.bounding_radius);
+                for model_geometry_output in model_geometry_outputs {
+                    new_scene_radius =
+                        new_scene_radius.max(model_geometry_output.info.bounding_radius);
 
                     // Spawn axis-aligned bounding box (AABB) entity.
                     if std::env::var("MICROCAD_VIEWER_SHOW_AABB").is_ok() {
                         entities.push(
                             commands
                                 .spawn((
-                                    Mesh3d(meshes.add(mesh_geometry_output.aabb.mesh)),
+                                    Mesh3d(meshes.add(model_geometry_output.aabb_mesh)),
                                     MeshMaterial3d(
-                                        materials.add(mesh_geometry_output.aabb.material),
+                                        materials.add(model_geometry_output.aabb_material),
                                     ),
-                                    mesh_geometry_output.aabb.transform,
+                                    model_geometry_output.transform,
                                 ))
                                 .id(),
                         );
@@ -151,12 +152,14 @@ pub fn handle_processor_responses(
                     entities.push(
                         commands
                             .spawn((
-                                Mesh3d(meshes.add(mesh_geometry_output.object.mesh)),
-                                MeshMaterial3d(materials.add(mesh_geometry_output.object.material)),
-                                mesh_geometry_output.object.transform,
+                                Mesh3d(meshes.add(model_geometry_output.mesh)),
+                                MeshMaterial3d(
+                                    materials.add(model_geometry_output.materials.default),
+                                ),
+                                model_geometry_output.transform,
                                 OutlineVolume {
                                     visible: matches!(
-                                        mesh_geometry_output.output_type,
+                                        model_geometry_output.info.output_type,
                                         microcad_lang::model::OutputType::Geometry2D
                                     ),
                                     colour: Color::srgba(0.1, 0.1, 0.1, 1.0),

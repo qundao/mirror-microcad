@@ -10,18 +10,23 @@ use microcad_lang::{rc::*, syntax::*, tree_display::*};
 #[derive(clap::Parser)]
 pub struct Parse {
     /// Input µcad file.
-    pub input: std::path::PathBuf,
+    input: std::path::PathBuf,
 
     /// Print syntax tree.
     #[clap(long)]
     pub syntax: bool,
 }
 
+impl Parse {
+    pub fn input_with_ext(&self, cli: &Cli) -> std::path::PathBuf {
+        cli.path_with_default_ext(&self.input)
+    }
+}
+
 impl RunCommand<Rc<SourceFile>> for Parse {
     fn run(&self, cli: &Cli) -> anyhow::Result<Rc<SourceFile>> {
         let start = std::time::Instant::now();
-
-        let source_file = SourceFile::load(self.input.clone())?;
+        let source_file = SourceFile::load(self.input_with_ext(cli))?;
 
         if cli.time {
             eprintln!("Parsing Time   : {}", Cli::time_to_string(&start.elapsed()));

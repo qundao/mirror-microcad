@@ -50,7 +50,7 @@
 -- Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) logo::microcad::Icon(radius=10mm) ->
+    icon: Workpiece(sketch) logo::microcad::Icon(radius=10mm) ->
       - gap = 2mm
       - radius = 10mm
       Multiplicity ->
@@ -71,7 +71,7 @@
                         - y = 10mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=0, y=10, z=0) ->
-                          Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
+                          c: Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
                             - radius = 10mm
                             Operation subtract() ->
                               Group ->
@@ -96,7 +96,7 @@
                         - y = 0mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=-5, y=0, z=0) ->
-                          Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
+                          r: Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
                             - height = 20mm
                             - width = 10mm
                             - x = -5mm
@@ -119,7 +119,7 @@
                         - y = 10mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=0, y=10, z=0) ->
-                          Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
+                          c: Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
                             - radius = 10mm
                             Operation subtract() ->
                               Group ->
@@ -144,7 +144,7 @@
                         - y = 0mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=-5, y=0, z=0) ->
-                          Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
+                          r: Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
                             - height = 20mm
                             - width = 10mm
                             - x = -5mm
@@ -167,7 +167,7 @@
                         - y = 10mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=0, y=10, z=0) ->
-                          Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
+                          c: Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
                             - radius = 10mm
                             Operation subtract() ->
                               Group ->
@@ -192,7 +192,7 @@
                         - y = 0mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=-5, y=0, z=0) ->
-                          Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
+                          r: Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
                             - height = 20mm
                             - width = 10mm
                             - x = -5mm
@@ -215,7 +215,7 @@
                         - y = 10mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=0, y=10, z=0) ->
-                          Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
+                          c: Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
                             - radius = 10mm
                             Operation subtract() ->
                               Group ->
@@ -240,7 +240,7 @@
                         - y = 0mm
                         - z = 0mm
                         Transform __builtin::ops::translate(x=-5, y=0, z=0) ->
-                          Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
+                          r: Workpiece(sketch) std::geo2d::Rect(height=20mm, width=10mm) ->
                             - height = 20mm
                             - width = 10mm
                             - x = -5mm
@@ -263,7 +263,7 @@
                     - y = 5mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0, y=5, z=0) ->
-                      Operation subtract() ->
+                      u: Operation subtract() ->
                         Group ->
                           Workpiece(sketch) logo::microcad::HalfCircle(radius=10mm) ->
                             - radius = 10mm
@@ -310,7 +310,7 @@
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=-8, y=0, z=0) ->
-                      Workpiece(sketch) std::geo2d::Rect(height=30mm, width=4mm) ->
+                      r_l: Workpiece(sketch) std::geo2d::Rect(height=30mm, width=4mm) ->
                         - height = 30mm
                         - width = 4mm
                         - x = -2mm
@@ -321,7 +321,7 @@
                 - y = 5mm
                 - z = 0mm
                 Transform __builtin::ops::translate(x=8, y=5, z=0) ->
-                  Workpiece(sketch) std::geo2d::Rect(height=20mm, width=4mm) ->
+                  r_r: Workpiece(sketch) std::geo2d::Rect(height=20mm, width=4mm) ->
                     - height = 20mm
                     - width = 4mm
                     - x = -2mm

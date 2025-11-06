@@ -9,3 +9,4 @@ pub use __builtin::count;
 pub use __builtin::import;
 pub use __builtin::debug;
 pub use __builtin::log;
+pub use __builtin::color;

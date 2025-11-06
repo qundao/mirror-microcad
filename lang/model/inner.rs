@@ -3,6 +3,8 @@
 
 //! Model
 
+use rustc_hash::FxHashMap;
+
 use crate::{model::*, render::*, src_ref::*, syntax::*};
 
 /// Render state of the model.
@@ -29,6 +31,8 @@ pub struct ModelInner {
     pub parent: Option<Model>,
     /// Children of the model.
     pub children: Models,
+    /// All models that have been created by an assignment.
+    pub assignments: FxHashMap<Identifier, Model>,
     /// Element of the model with [SrcRef].
     pub element: Refer<Element>,
     /// Attributes used for export.
@@ -49,11 +53,7 @@ impl ModelInner {
     /// Return render state of the model.
     pub fn render_state(&self) -> ModelRenderState {
         match &self.output {
-            Some(RenderOutput::Geometry2D { geometry, .. }) => match geometry {
-                Some(_) => ModelRenderState::Complete,
-                None => ModelRenderState::Preparing,
-            },
-            Some(RenderOutput::Geometry3D { geometry, .. }) => match geometry {
+            Some(output) => match output.geometry {
                 Some(_) => ModelRenderState::Complete,
                 None => ModelRenderState::Preparing,
             },
@@ -68,6 +68,7 @@ impl ModelInner {
             parent: None,
             element: self.element.clone(),
             attributes: self.attributes.clone(),
+            assignments: self.assignments.clone(),
             output: self.output.clone(),
             ..Default::default()
         }
@@ -83,9 +84,14 @@ impl ModelInner {
         self.children.is_empty()
     }
 
-    /// Return element of this model.
+    /// Read-only access to the element of this model.
     pub fn element(&self) -> &Element {
         &self.element
+    }
+
+    /// Read-only access to the attributes of this model.
+    pub fn attributes(&self) -> &Attributes {
+        &self.attributes
     }
 
     /// Returns the render output, panics if there is no render output.
