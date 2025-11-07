@@ -137,23 +137,32 @@ fn tan() -> Symbol {
 }
 
 /// Helper function to get an angle from a field in an argument list.
-fn get_angle(args: &Tuple, axis: &str) -> cgmath::Rad<f64> {
+///
+/// Returns `None` if the argument is not an angle.
+fn get_angle(args: &Tuple, axis: &str) -> Option<cgmath::Rad<f64>> {
     match args.get_value(axis).expect("angle missing") {
         Value::Quantity(Quantity {
             value,
             quantity_type: QuantityType::Angle,
-        }) => cgmath::Rad::<f64>(*value),
-        _ => unreachable!(),
+        }) => Some(cgmath::Rad::<f64>(*value)),
+        _ => None,
     }
 }
 
 /// Helper function to return rotation X,Y,Z rotation matrices from an [`Tuple`].
 fn rotation_matrices_xyz(args: &Tuple) -> (Mat3, Mat3, Mat3) {
-    (
-        Mat3::from_angle_x(get_angle(args, "x")),
-        Mat3::from_angle_y(get_angle(args, "y")),
-        Mat3::from_angle_z(get_angle(args, "z")),
-    )
+    match (
+        get_angle(args, "x"),
+        get_angle(args, "y"),
+        get_angle(args, "z"),
+    ) {
+        (Some(angle_x), Some(angle_y), Some(angle_z)) => (
+            Mat3::from_angle_x(angle_x),
+            Mat3::from_angle_y(angle_y),
+            Mat3::from_angle_z(angle_z),
+        ),
+        _ => (Mat3::identity(), Mat3::identity(), Mat3::identity()),
+    }
 }
 
 pub fn orient_z_to(target: Vec3) -> Mat3 {
@@ -197,13 +206,14 @@ fn rotate_around_axis() -> Symbol {
         ]
         .into_iter(),
         &|params, args, ctx| match ArgumentMatch::find_match(args, params) {
-            Ok(ref args) => {
-                let angle = get_angle(args, "angle");
-                let axis = Vec3::new(args.get("x"), args.get("y"), args.get("z"));
-
-                let matrix = Mat3::from_axis_angle(axis, angle);
-                Ok(Value::Matrix(Box::new(Matrix::Matrix3(matrix))))
-            }
+            Ok(ref args) => Ok(match get_angle(args, "angle") {
+                Some(angle) => {
+                    let axis = Vec3::new(args.get("x"), args.get("y"), args.get("z"));
+                    let matrix = Mat3::from_axis_angle(axis, angle);
+                    Value::Matrix(Box::new(Matrix::Matrix3(matrix)))
+                }
+                None => Value::None,
+            }),
             Err(err) => {
                 ctx.error(args, err)?;
                 Ok(Value::None)
