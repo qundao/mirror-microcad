@@ -11,6 +11,7 @@ pub mod core_error;
 pub mod geo2d;
 #[cfg(feature = "geo3d")]
 pub mod geo3d;
+pub mod length;
 pub mod render;
 pub mod traits;
 pub mod triangle;
@@ -33,17 +34,8 @@ pub type Mat3 = cgmath::Matrix3<Scalar>;
 pub type Mat4 = cgmath::Matrix4<Scalar>;
 /// Primitive angle type in radians.
 pub type Angle = cgmath::Rad<Scalar>;
-
-/// A length in millimeters.
-#[derive(Clone, Deref, DerefMut)]
-pub struct Length(pub Scalar);
-
-impl Length {
-    /// Return a new length from millimeters.
-    pub fn mm(mm: Scalar) -> Self {
-        Length(mm)
-    }
-}
+/// Length type.
+pub use length::Length;
 
 /// Constants.
 pub mod consts {
@@ -54,7 +46,6 @@ pub use boolean_op::BooleanOp;
 pub use bounds::*;
 pub use color::*;
 pub use core_error::*;
-use derive_more::{Deref, DerefMut};
 pub use geo2d::*;
 pub use geo3d::*;
 pub use render::*;
