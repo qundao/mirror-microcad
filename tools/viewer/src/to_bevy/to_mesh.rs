@@ -8,10 +8,15 @@ use super::*;
 /// Convert a microcad type into a Bevy with optional custom parameters.
 pub trait ToBevyMesh {
     /// A custom parameter type to pass to the function.
-    type Parameters;
+    type Parameters: Default;
 
     /// The conversion function.
     fn to_bevy_mesh(&self, parameters: Self::Parameters) -> Mesh;
+
+    /// The conversion function with default parameters.
+    fn to_bevy_mesh_default(&self) -> Mesh {
+        self.to_bevy_mesh(Self::Parameters::default())
+    }
 }
 
 impl ToBevyMesh for microcad_core::LineString {
@@ -22,12 +27,10 @@ impl ToBevyMesh for microcad_core::LineString {
             bevy::render::mesh::PrimitiveTopology::LineStrip,
             RenderAssetUsages::default(),
         );
-        use bevy::prelude::Vec3;
-
         mesh.insert_attribute(
             Mesh::ATTRIBUTE_POSITION,
             self.coords()
-                .map(|c| Vec3::new(c.x as f32, c.y as f32, z))
+                .map(|c| [c.x as f32, c.y as f32, z])
                 .collect::<Vec<_>>(),
         );
         mesh
@@ -42,8 +45,6 @@ impl ToBevyMesh for microcad_core::MultiLineString {
             bevy::render::mesh::PrimitiveTopology::LineList,
             RenderAssetUsages::default(),
         );
-        use bevy::prelude::Vec3;
-
         mesh.insert_attribute(
             Mesh::ATTRIBUTE_POSITION,
             self.0
@@ -53,7 +54,7 @@ impl ToBevyMesh for microcad_core::MultiLineString {
                         .0
                         .as_slice()
                         .windows(2)
-                        .flat_map(|c| c.iter().map(|c| Vec3::new(c.x as f32, c.y as f32, z)))
+                        .flat_map(|c| c.iter().map(|c| [c.x as f32, c.y as f32, z]))
                         .collect::<Vec<_>>()
                 })
                 .collect::<Vec<_>>(),
@@ -88,6 +89,7 @@ impl Triangulation {
         }
     }
 
+    /// Triangulate a multi-polygon.
     fn from_multi_polygon(multi_polygon: &MultiPolygon, z: f32) -> Self {
         let mut triangulation = Self::default();
         for polygon in &multi_polygon.0 {
@@ -138,43 +140,8 @@ impl ToBevyMesh for microcad_core::Geometry2D {
             }
             Geometry2D::Polygon(polygon) => polygon.to_bevy_mesh(z),
             Geometry2D::Rect(rect) => rect.to_polygon().to_bevy_mesh(z),
-            geometry => {
-                let multi_polygon = geometry.to_multi_polygon();
-                use geo::TriangulateEarcut;
-
-                let mut positions = Vec::new();
-                let mut indices = Vec::new();
-
-                for poly in &multi_polygon.0 {
-                    let triangulation = poly.earcut_triangles_raw();
-                    let n = positions.len();
-                    positions.append(
-                        &mut triangulation
-                            .vertices
-                            .as_slice()
-                            .chunks_exact(2)
-                            .map(|chunk| [chunk[0] as f32, chunk[1] as f32, z])
-                            .collect(),
-                    );
-
-                    indices.append(
-                        &mut triangulation
-                            .triangle_indices
-                            .iter()
-                            .map(|i| (i + n) as u32)
-                            .collect(),
-                    );
-                }
-
-                let mut mesh = Mesh::new(
-                    bevy::render::mesh::PrimitiveTopology::TriangleList,
-                    RenderAssetUsages::default(),
-                );
-
-                mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
-                mesh.insert_indices(Indices::U32(indices));
-                mesh
-            }
+            Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.to_bevy_mesh(z),
+            Geometry2D::Collection(collection) => collection.to_multi_polygon().to_bevy_mesh(z),
         }
     }
 }
@@ -356,5 +323,13 @@ impl ToBevyMesh for Bounds3D {
             .collect::<Vec<_>>(),
         );
         mesh
+    }
+}
+
+impl ToBevyMesh for microcad_builtin::geo2d::Text {
+    type Parameters = f32;
+
+    fn to_bevy_mesh(&self, _: Self::Parameters) -> Mesh {
+        self.render(&RenderResolution::medium()).to_bevy_mesh(0.0)
     }
 }

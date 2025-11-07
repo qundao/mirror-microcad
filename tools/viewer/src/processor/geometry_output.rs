@@ -90,9 +90,9 @@ impl ModelOutputGeometry {
 
         match &output.geometry {
             Some(GeometryOutput::Geometry2D(geometry)) => Some(Self {
-                mesh: geometry.inner.to_bevy_mesh(0.0),
+                mesh: geometry.inner.to_bevy_mesh_default(),
                 materials,
-                aabb_mesh: geometry.bounds.to_bevy_mesh(()),
+                aabb_mesh: geometry.bounds.to_bevy_mesh_default(),
                 aabb_material,
                 transform,
                 info: ModelInfo {
@@ -104,7 +104,7 @@ impl ModelOutputGeometry {
             Some(GeometryOutput::Geometry3D(geometry)) => Some(Self {
                 mesh: geometry.inner.to_bevy_mesh(30.0),
                 materials,
-                aabb_mesh: geometry.bounds.to_bevy_mesh(()),
+                aabb_mesh: geometry.bounds.to_bevy_mesh_default(),
                 aabb_material,
                 transform,
                 info: ModelInfo {
