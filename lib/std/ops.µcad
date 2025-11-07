@@ -36,36 +36,25 @@ pub op mirror(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
 	)
 }
 
+/// Orient an object towards a vector.
+pub op orient(v: Vec3) {
+    @input.__builtin::ops::orient(x = v.x, y = v.y, z = v.z);
+}
+
+
+/// Reflect a geometry along an axis.
+pub op reflect(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
+	@input.__builtin::ops::reflect(
+		x = x / 1mm, y = y / 1mm, z = z / 1mm,
+		nx = n.x, ny = n.y, nz = n.z
+	)
+}
+
+/// Revolve a geometry around 360°.
 pub op revolve(angle = 360°) {
     @input.__builtin::ops::revolve(
         revolve_degrees = angle / 1°
     );
-}
-
-pub op spiralize(
-	inner_radius: Length, 
-	outer_radius: Length,
-	angle: Angle,
-	height = 0mm
-) {
-    @input.__builtin::ops::spiralize(
-        height = height / 1mm,
-		inner_radius = inner_radius / 1mm,
-		outer_radius = outer_radius / 1mm,
-		turns = angle / 1turns
-    );
-}
-
-pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
-
-	/// Polar-style translage with distance and angle.
-	init(distance: Length, angle: Angle) {
-		x = distance * __builtin::math::cos(angle);
-		y = distance * __builtin::math::sin(angle);
-		z = 0.0mm;
-	}
-
-	@input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
 }
 
 /// An operation that rotates a part.
@@ -158,7 +147,29 @@ pub op scale(v: Vec3) {
 }
 
 
-/// Orient an object towards a vector.
-pub op orient(v: Vec3) {
-    @input.__builtin::ops::orient(x = v.x, y = v.y, z = v.z);
+pub op spiralize(
+	inner_radius: Length, 
+	outer_radius: Length,
+	angle: Angle,
+	height = 0mm
+) {
+    @input.__builtin::ops::spiralize(
+        height = height / 1mm,
+		inner_radius = inner_radius / 1mm,
+		outer_radius = outer_radius / 1mm,
+		turns = angle / 1turns
+    );
 }
+
+pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
+
+	/// Polar-style translage with distance and angle.
+	init(distance: Length, angle: Angle) {
+		x = distance * __builtin::math::cos(angle);
+		y = distance * __builtin::math::sin(angle);
+		z = 0.0mm;
+	}
+
+	@input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
+}
+
