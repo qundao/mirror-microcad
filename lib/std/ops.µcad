@@ -24,6 +24,7 @@ pub op extrude(
 	init(z: Length) {
 		height = z;
 		scale = (x = 100%, y = 100%);
+		twist = 0°;
 	}
 
     @input.__builtin::ops::extrude(height = height / 1mm, scale_x = scale.x, scale_y = scale.y, twist);
