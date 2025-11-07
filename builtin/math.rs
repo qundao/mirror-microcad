@@ -140,7 +140,7 @@ fn tan() -> Symbol {
 ///
 /// Returns `None` if the argument is not an angle.
 fn get_angle(args: &Tuple, axis: &str) -> Option<cgmath::Rad<f64>> {
-    match args.get_value(axis).expect("angle missing") {
+    match args.get_value(axis).expect("Argument expected") {
         Value::Quantity(Quantity {
             value,
             quantity_type: QuantityType::Angle,

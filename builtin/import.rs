@@ -1,13 +1,13 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad builtin library
+//! Built-in import function.
 
 use microcad_lang::{builtin::*, diag::*, eval::*, value::*};
 
 use crate::Symbol;
 
-/// `__builtin::import` function.
+/// `__builtin::import` function to import data from files.
 pub fn import() -> Symbol {
     Symbol::new_builtin_fn(
         "import",

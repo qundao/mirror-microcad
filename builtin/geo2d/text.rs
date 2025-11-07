@@ -5,7 +5,7 @@ use geo::Centroid;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
-/// Pie geometry with offset.
+/// Text geometry with a height.
 #[derive(Debug, Clone)]
 pub struct Text {
     /// Text height.
@@ -18,16 +18,10 @@ pub struct Text {
     pub font_file: String,
 }
 
-impl From<Text> for BuiltinWorkpieceOutput {
-    fn from(text: Text) -> Self {
-        BuiltinWorkpieceOutput::Primitive2D(Box::new(text))
-    }
-}
-
 impl Render<Geometry2D> for Text {
     fn render(&self, resolution: &RenderResolution) -> Geometry2D {
         let font_data = if self.font_file.is_empty() {
-            Vec::from(include_bytes!("../assets/dosis-regular.ttf"))
+            Vec::from(include_bytes!("../assets/fira-code-mono.ttf"))
         } else {
             std::fs::read(&self.font_file).expect("Failed to read font file")
         };
@@ -43,10 +37,13 @@ impl Render<Geometry2D> for Text {
             .simplify(resolution.linear * 0.5);
 
         if let Some(center) = polygons.centroid() {
-            let polygons = polygons.reflect_2d(&Line(center, center + Point::new(1.0, 0.0)));
-            Geometry2D::MultiPolygon(polygons)
+            use microcad_core::traits::Align;
+            Geometry2D::MultiPolygon(
+                polygons.reflect_2d(&Line(center, center + Point::new(1.0, 0.0))),
+            )
+            .align()
         } else {
-            Geometry2D::Collection(Geometries2D::default())
+            Geometries2D::default().into()
         }
     }
 }
@@ -68,12 +65,11 @@ impl BuiltinWorkbenchDefinition for Text {
 
     fn workpiece_function() -> &'static BuiltinWorkpieceFn {
         &|args| {
-            Ok(Text {
+            Ok(BuiltinWorkpieceOutput::Primitive2D(Box::new(Text {
                 height: args.get("height"),
                 text: args.get("text"),
                 font_file: args.get("font_file"),
-            }
-            .into())
+            })))
         }
     }
 
