@@ -12,7 +12,7 @@ part Gear(teeth: Integer) {
 
     {
         holes = (
-            Pie(plate.radius, 360° / 5, offset = [1..5] * 360° / 5 * 99%)  - Circle(gear_profile.module * 10.0))
+            Sector(plate.radius, 360° / 5, offset = [1..5] * 360° / 5 * 99%)  - Circle(gear_profile.module * 10.0))
                 .buffer(-plate.radius * 15%)
                 .buffer(plate.radius * 12%);
 
