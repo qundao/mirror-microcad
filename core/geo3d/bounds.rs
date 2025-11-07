@@ -102,6 +102,11 @@ impl Bounds3D {
     pub fn radius(&self) -> Scalar {
         (self.max - self.min).magnitude() * 0.5
     }
+
+    /// Calculate center of the bounds.
+    pub fn center(&self) -> Vec3 {
+        (self.min + self.max) * 0.5
+    }
 }
 
 impl Default for Bounds3D {
