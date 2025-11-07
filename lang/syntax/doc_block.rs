@@ -5,6 +5,23 @@
 
 use crate::{src_ref::*, syntax::*};
 
+trait Doc {
+    fn doc(&self) -> &DocBlock;
+    fn split_doc(&self) -> Option<(String, Option<String>)> {
+        let mut parts = self.doc().lines.split(|line| line.trim().is_empty());
+
+        let summary = parts.next().unwrap_or(&[]).join("\n");
+        let summary = summary.trim();
+        let details = parts.next().map(|lines| lines.join("\n"));
+
+        if summary.is_empty() {
+            None
+        } else {
+            Some((summary.to_string(), details))
+        }
+    }
+}
+
 /// Block of documentation comments, starting with `/// `.
 #[derive(Clone, Default)]
 pub struct DocBlock {

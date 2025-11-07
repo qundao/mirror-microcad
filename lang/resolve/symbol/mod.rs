@@ -3,6 +3,7 @@
 
 mod symbol_definition;
 mod symbol_inner;
+mod symbol_inquiry;
 mod symbol_map;
 mod symbols;
 

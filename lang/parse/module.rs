@@ -6,6 +6,7 @@ use crate::{parse::*, parser::*, rc::*, syntax::*};
 impl Parse for Rc<ModuleDefinition> {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Ok(Rc::new(ModuleDefinition {
+            doc: crate::find_rule!(pair, doc_block)?,
             visibility: crate::find_rule!(pair, visibility)?,
             id: crate::find_rule!(pair, identifier)?,
             body: crate::find_rule_opt!(pair, body),

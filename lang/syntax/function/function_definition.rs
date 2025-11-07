@@ -8,6 +8,8 @@ use crate::{src_ref::*, syntax::*};
 /// Function definition
 #[derive(Clone)]
 pub struct FunctionDefinition {
+    /// Documentation.
+    pub doc: DocBlock,
     /// Visibility
     pub visibility: Visibility,
     /// Name of the function

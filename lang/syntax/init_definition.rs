@@ -16,6 +16,8 @@ use crate::{src_ref::*, syntax::*};
 /// ```
 #[derive(Clone)]
 pub struct InitDefinition {
+    /// Documentation.
+    pub doc: DocBlock,
     /// Parameter list for this init definition
     pub parameters: ParameterList,
     /// Body if the init definition

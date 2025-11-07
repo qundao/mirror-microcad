@@ -8,6 +8,8 @@ use crate::{src_ref::*, syntax::*};
 /// µcad source file
 #[derive(Clone, Default)]
 pub struct SourceFile {
+    /// Documentation.
+    pub doc: DocBlock,
     /// Qualified name of the file if loaded from externals
     pub name: QualifiedName,
     /// Root code body.
@@ -26,8 +28,9 @@ pub struct SourceFile {
 
 impl SourceFile {
     /// Create new source file from existing source.
-    pub fn new(statements: StatementList, source: String, hash: u64) -> Self {
+    pub fn new(doc: DocBlock, statements: StatementList, source: String, hash: u64) -> Self {
         Self {
+            doc,
             statements,
             source,
             hash,
