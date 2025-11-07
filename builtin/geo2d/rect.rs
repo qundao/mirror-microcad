@@ -5,20 +5,25 @@ use microcad_builtin_proc_macros::BuiltinPrimitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
+/// A rectangle.
 #[derive(BuiltinPrimitive2D)]
 pub struct Rect {
-    x: Scalar,
-    y: Scalar,
-    width: Scalar,
-    height: Scalar,
+    /// X position (left side) of the rectangle.
+    x: Length,
+    /// Y position (bottom side) of the rectangle.
+    y: Length,
+    /// Width of the rectangle.
+    width: Length,
+    /// Height of the rectangle.
+    height: Length,
 }
 
 impl Render<Geometry2D> for Rect {
     fn render(&self, _: &RenderResolution) -> Geometry2D {
-        use geo::coord;
+        let (x, y, w, h) = (*self.x, *self.y, *self.width, *self.height);
         Geometry2D::Rect(geo2d::Rect::new(
-            coord! {x: self.x, y: self.y},
-            coord! {x: self.x + self.width, y: self.y + self.height},
+            geo::coord! {x: x, y: y},
+            geo::coord! {x: x + w, y: y + h},
         ))
     }
 }

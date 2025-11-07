@@ -106,12 +106,7 @@ pub sketch Rect(width: Length, height: Length, x: Length, y: Length) {
         y = -size / 2.0; // center y
     }
 
-    __builtin::geo2d::Rect(
-            width = width / 1mm,
-            height = height / 1mm,
-            x = x / 1mm,
-            y = y / 1mm
-    );
+    __builtin::geo2d::Rect(width, height, x, y);
 }
 
 pub sketch Ring(outer_r: Length, inner_r: Length ) {
