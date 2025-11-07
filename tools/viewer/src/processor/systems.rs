@@ -6,7 +6,6 @@
 use bevy::render::mesh::{Mesh, Mesh3d};
 use bevy::{
     asset::Assets,
-    color::Color,
     ecs::{
         event::{EventReader, EventWriter},
         system::{Commands, Res, ResMut},
@@ -16,10 +15,10 @@ use bevy::{
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
 use crate::stdin::StdinMessageReceiver;
+use crate::*;
 use crate::{
     processor::{ProcessorRequest, ProcessorResponse},
-    scene::{Scene, SceneRadiusChangeEvent},
-    state::State,
+    scene::SceneRadiusChangeEvent,
 };
 
 /// Whether a kind of watch event is relevant for compilation.
@@ -45,7 +44,7 @@ pub fn startup_processor(mut state: ResMut<crate::state::State>) {
     state
         .processor
         .send_request(ProcessorRequest::Initialize {
-            search_paths: state.config.search_paths.clone(),
+            config: state.config.clone(),
         })
         .expect("No error");
 
@@ -118,7 +117,7 @@ pub fn handle_processor_responses(
 ) {
     let mut entities = Vec::new();
     let mut new_entities = false;
-    let mut new_scene_radius = Scene::MINIMUM_RADIUS;
+    let mut new_scene_radius = scene::Scene::MINIMUM_RADIUS;
 
     for response in state.processor.response_receiver.try_iter() {
         match response {
@@ -162,7 +161,7 @@ pub fn handle_processor_responses(
                                         model_geometry_output.info.output_type,
                                         microcad_lang::model::OutputType::Geometry2D
                                     ),
-                                    colour: Color::srgba(0.1, 0.1, 0.1, 1.0),
+                                    colour: state.config.theme.signal.to_bevy(),
                                     width: 4.0,
                                 },
                                 OutlineMode::FloodFlat,

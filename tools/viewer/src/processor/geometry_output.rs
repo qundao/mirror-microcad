@@ -11,7 +11,10 @@ use microcad_lang::{
 
 use bevy::prelude::{Component, Mesh, StandardMaterial, Transform};
 
-use crate::to_bevy::{self, ToBevy};
+use crate::{
+    config::theme::Theme,
+    to_bevy::{self, ToBevy},
+};
 
 /// The output geometry from a µcad model that will be passed to Bevy.
 ///
@@ -37,8 +40,8 @@ pub struct ModelMaterials {
 
 impl ModelMaterials {
     /// Create new model materials from render attributes.
-    pub fn new(output_type: &OutputType, attributes: &RenderAttributes) -> Self {
-        let color = attributes.get_color().cloned().unwrap_or_default();
+    pub fn new(output_type: &OutputType, attributes: &RenderAttributes, theme: &Theme) -> Self {
+        let color = attributes.get_color().cloned().unwrap_or(theme.brighter);
         let transparent_color = color.make_transparent(color.a * 0.3);
         use crate::material::{create_2d_material, create_3d_material};
 
@@ -65,7 +68,7 @@ pub struct ModelInfo {
 
 impl ModelOutputGeometry {
     /// Create [`OutputGeometry`] from µcad model.
-    pub fn from_model(model: &Model) -> Option<Self> {
+    pub fn from_model(model: &Model, theme: &Theme) -> Option<Self> {
         use microcad_lang::model::Element::*;
         use microcad_lang::render::GeometryOutput;
 
@@ -81,7 +84,7 @@ impl ModelOutputGeometry {
         let output = model_.output();
         let output_type = output.output_type;
         let transform = output.world_matrix.expect("Some matrix").to_bevy();
-        let materials = ModelMaterials::new(&output_type, &output.attributes);
+        let materials = ModelMaterials::new(&output_type, &output.attributes, theme);
         let aabb_material = crate::material::create_2d_material(&Color::rgb(1.0, 1.0, 1.0));
 
         match &output.geometry {

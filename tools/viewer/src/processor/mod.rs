@@ -6,6 +6,8 @@
 mod geometry_output;
 mod systems;
 
+use crate::*;
+
 use bevy::{
     app::{Plugin, Startup, Update},
     ecs::event::Event,
@@ -24,9 +26,7 @@ pub enum ProcessorRequest {
     /// Initialize the interpreter.
     ///
     /// Request must only be sent once and sets the initialize flag to `true`.
-    Initialize {
-        search_paths: Vec<std::path::PathBuf>,
-    },
+    Initialize { config: Config },
     /// Parse file.
     ParseFile(std::path::PathBuf),
     /// Parse some code into a SourceFile.
@@ -76,6 +76,7 @@ pub struct ProcessorState {
     search_paths: Vec<std::path::PathBuf>,
 
     resolution: microcad_core::RenderResolution,
+    theme: config::Theme,
 
     pub source_file: Option<std::rc::Rc<SourceFile>>,
     pub model: Option<Model>,
@@ -111,24 +112,6 @@ pub enum PipelineError {
 
 pub type PipelineResult<T> = Result<T, PipelineError>;
 
-/// A processing pipeline.
-pub trait Pipeline {
-    /// Initialize the pipeline with search paths.
-    fn initialize(&mut self, additional_search_paths: Vec<std::path::PathBuf>);
-
-    /// Parse a file.
-    fn parse_file(
-        &mut self,
-        path: std::path::PathBuf,
-    ) -> Result<std::rc::Rc<SourceFile>, PipelineError> {
-        Ok(SourceFile::load(path)?)
-    }
-
-    fn eval(&mut self) -> PipelineResult<()>;
-
-    fn render(&mut self, resolution: Option<RenderResolution>) -> PipelineResult<()>;
-}
-
 impl Processor {
     /// Handle processor request.
     pub(crate) fn handle_request(
@@ -136,8 +119,9 @@ impl Processor {
         request: ProcessorRequest,
     ) -> anyhow::Result<Vec<ProcessorResponse>> {
         match request {
-            ProcessorRequest::Initialize { search_paths } => {
-                self.state.search_paths = search_paths.clone();
+            ProcessorRequest::Initialize { config } => {
+                self.state.search_paths = config.search_paths.clone();
+                self.state.theme = config.theme;
                 self.state.initialized = true;
                 Ok(vec![])
             }
@@ -234,7 +218,7 @@ impl Processor {
 
             let mut mesh_geometry = Vec::new();
             self.state.resolution = resolution;
-            Self::generate_mesh_geometry_from_model(&model, &mut mesh_geometry);
+            self.generate_mesh_geometry_from_model(&model, &mut mesh_geometry);
             Ok(vec![ProcessorResponse::OutputGeometry(mesh_geometry)])
         } else {
             Err(anyhow::anyhow!("Could not render model."))
@@ -243,10 +227,11 @@ impl Processor {
 
     /// Generate mesh geometry output for model.
     fn generate_mesh_geometry_from_model(
+        &self,
         model: &Model,
         mesh_geometry: &mut Vec<ModelOutputGeometry>,
     ) {
-        match ModelOutputGeometry::from_model(model) {
+        match ModelOutputGeometry::from_model(model, &self.state.theme) {
             Some(output_geometry) => {
                 mesh_geometry.push(output_geometry);
             }
@@ -254,7 +239,7 @@ impl Processor {
                 let model_ = model.borrow();
                 model_
                     .children()
-                    .for_each(|model| Self::generate_mesh_geometry_from_model(model, mesh_geometry))
+                    .for_each(|model| self.generate_mesh_geometry_from_model(model, mesh_geometry))
             }
         }
     }

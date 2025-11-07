@@ -6,7 +6,7 @@
 pub mod theme;
 
 use std::time::Duration;
-use theme::Theme;
+pub use theme::Theme;
 
 use bevy::ecs::resource::Resource;
 use microcad_core::{RenderResolution, Scalar};
