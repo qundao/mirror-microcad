@@ -3,6 +3,8 @@
 
 //! Grid material.
 
+use bevy::render::render_resource::RenderPipelineDescriptor;
+
 use super::bevy_types::*;
 
 /// A colored zoom-adaptive grid and fade out radius.
@@ -59,5 +61,15 @@ impl Material for Grid {
 
     fn alpha_mode(&self) -> AlphaMode {
         AlphaMode::Blend
+    }
+
+    fn specialize(
+        _pipeline: &bevy::pbr::MaterialPipeline<Self>,
+        descriptor: &mut RenderPipelineDescriptor,
+        _layout: &bevy::render::mesh::MeshVertexBufferLayoutRef,
+        _key: bevy::pbr::MaterialPipelineKey<Self>,
+    ) -> Result<(), bevy::render::render_resource::SpecializedMeshPipelineError> {
+        descriptor.primitive.cull_mode = None; // ✅ Disable backface culling
+        Ok(())
     }
 }

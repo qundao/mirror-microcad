@@ -10,7 +10,7 @@ use bevy::{
     prelude::*,
     window::CursorGrabMode,
 };
-use std::{f32::consts::*, fmt};
+use std::fmt;
 
 /// A freecam-style camera controller plugin.
 pub struct CameraControllerPlugin;
@@ -258,20 +258,9 @@ fn run_camera_controller(
     let orbit_distance = 200.0;
 
     if mouse_button_input.pressed(MouseButton::Left) {
-        // Mouse motion is one of the few inputs that should not be multiplied by delta time,
-        // as we are already receiving the full movement since the last frame was rendered. Multiplying
-        // by delta time here would make the movement slower that it should be.
-        let delta_pitch = delta.y * orbit_speed;
-        let delta_yaw = delta.x * orbit_speed;
-
-        // Obtain the existing pitch, yaw, and roll values from the transform.
-        let (yaw, pitch, roll) = transform.rotation.to_euler(EulerRot::ZXY);
-
-        let pitch_limit = FRAC_PI_2 - 0.01;
-        // Establish the new yaw and pitch, preventing the pitch value from exceeding our limits.
-        let pitch = (pitch + delta_pitch).clamp(-pitch_limit, pitch_limit);
-        let yaw = yaw + delta_yaw;
-        transform.rotation = Quat::from_euler(EulerRot::ZXY, yaw, pitch, roll);
+        let yaw_rot = Quat::from_rotation_z(delta.x * orbit_speed);
+        let pitch_rot = Quat::from_rotation_x(delta.y * orbit_speed);
+        transform.rotation = yaw_rot * transform.rotation * pitch_rot;
     }
 
     // Adjust the translation to maintain the correct orientation toward the orbit target.
