@@ -121,7 +121,7 @@ impl InvoluteGearProfile {
 impl Render<Geometry2D> for InvoluteGearProfile {
     fn render(&self, resolution: &RenderResolution) -> Geometry2D {
         let tooth = self.involute_gear_tooth(
-            (resolution.circular_segments(self.outer_radius()) / self.teeth.max(5) as u32) as usize,
+            (resolution.circular_segments(self.outer_radius() / self.teeth as f64)) as usize,
         );
 
         let inv = 2.0 * consts::PI / self.teeth as Scalar;
