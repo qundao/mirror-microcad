@@ -72,14 +72,14 @@ pub sketch Ngon(n: Integer, radius: Length) {
     __builtin::geo2d::Ngon(n, radius = radius / 1mm);
 }
 
-/// Pie definition.
-pub sketch Pie(radius: Length, start: Angle, end: Angle) {
-    init(radius: Length, sector: Angle, offset = 0°) {
+/// Circle sector definition.
+pub sketch Sector(radius: Length, start: Angle, end: Angle) {
+    init(radius: Length, angle: Angle, offset = 0°) {
         start = offset;
-        end = offset + sector;
+        end = offset + angle;
     }
 
-    __builtin::geo2d::Pie(radius = radius / 1mm, start, end);
+    __builtin::geo2d::Sector(radius = radius / 1mm, start, end);
 }
 
 /// Rectangle definition.

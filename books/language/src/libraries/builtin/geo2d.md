@@ -6,12 +6,12 @@
 
 ### `Line`
 
-### `Pie`
+### `Sector`
 
-[![test](.test/pie.svg)](.test/pie.log)
+[![test](.test/sector.svg)](.test/sector.log)
 
 ```µcad,pie
-__builtin::geo2d::Pie(radius = 20mm / 1mm, start = 45°, end = 135°);
+__builtin::geo2d::Sector(radius = 20mm / 1mm, start = 45°, end = 135°);
 ```
 
 ### `Rect`
