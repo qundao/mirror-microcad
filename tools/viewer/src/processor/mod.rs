@@ -231,7 +231,7 @@ impl Processor {
         model: &Model,
         mesh_geometry: &mut Vec<ModelOutputGeometry>,
     ) {
-        match ModelOutputGeometry::from_model(model, &self.state.theme) {
+        match ModelOutputGeometry::from_model(model, &self.state) {
             Some(output_geometry) => {
                 mesh_geometry.push(output_geometry);
             }

@@ -22,6 +22,9 @@ pub struct Config {
     /// Window stays on top.
     pub stay_on_top: bool,
 
+    /// Mesh smoothness threshold angle (default = 20°)
+    pub mesh_smoothness_angle: Scalar,
+
     /// Render resolution in mm (default = 0.25mm)
     pub render_resolution: Scalar,
 
@@ -71,6 +74,7 @@ impl Default for Config {
             search_paths: Self::default_search_paths(),
             reload_delay: Duration::from_millis(200),
             stay_on_top: false,
+            mesh_smoothness_angle: 20.0,
             render_resolution: RenderResolution::medium().linear,
             export_resolution: RenderResolution::high().linear,
             theme: Theme::default(),

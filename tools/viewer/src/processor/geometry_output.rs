@@ -13,7 +13,8 @@ use bevy::prelude::{Component, Mesh, StandardMaterial, Transform};
 
 use crate::{
     config::theme::Theme,
-    to_bevy::{self, ToBevy},
+    processor::ProcessorState,
+    to_bevy::{ToBevy, ToBevyMesh},
 };
 
 /// The output geometry from a µcad model that will be passed to Bevy.
@@ -68,7 +69,7 @@ pub struct ModelInfo {
 
 impl ModelOutputGeometry {
     /// Create [`OutputGeometry`] from µcad model.
-    pub fn from_model(model: &Model, theme: &Theme) -> Option<Self> {
+    pub fn from_model(model: &Model, state: &ProcessorState) -> Option<Self> {
         use microcad_lang::model::Element::*;
         use microcad_lang::render::GeometryOutput;
 
@@ -84,14 +85,14 @@ impl ModelOutputGeometry {
         let output = model_.output();
         let output_type = output.output_type;
         let transform = output.world_matrix.expect("Some matrix").to_bevy();
-        let materials = ModelMaterials::new(&output_type, &output.attributes, theme);
+        let materials = ModelMaterials::new(&output_type, &output.attributes, &state.theme);
         let aabb_material = crate::material::create_2d_material(&Color::rgb(1.0, 1.0, 1.0));
 
         match &output.geometry {
             Some(GeometryOutput::Geometry2D(geometry)) => Some(Self {
-                mesh: to_bevy::geometry_2d(&geometry.inner, 0.0),
+                mesh: geometry.inner.to_bevy_mesh(0.0),
                 materials,
-                aabb_mesh: to_bevy::bounds_2d(&geometry.bounds),
+                aabb_mesh: geometry.bounds.to_bevy_mesh(()),
                 aabb_material,
                 transform,
                 info: ModelInfo {
@@ -101,9 +102,9 @@ impl ModelOutputGeometry {
                 },
             }),
             Some(GeometryOutput::Geometry3D(geometry)) => Some(Self {
-                mesh: to_bevy::geometry_3d(&geometry.inner),
+                mesh: geometry.inner.to_bevy_mesh(30.0),
                 materials,
-                aabb_mesh: to_bevy::bounds_3d(&geometry.bounds),
+                aabb_mesh: geometry.bounds.to_bevy_mesh(()),
                 aabb_material,
                 transform,
                 info: ModelInfo {
