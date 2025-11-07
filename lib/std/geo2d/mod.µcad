@@ -167,7 +167,7 @@ pub sketch Text(height: Length, text: String, font_file = "") {
     __builtin::geo2d::Text(height = height / 1mm, text, font_file);
 }
 
-pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle: Angle) {
+pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
     prop pitch_radius = module * teeth / 2.0;
     prop outer_radius = pitch_radius + module;
 
