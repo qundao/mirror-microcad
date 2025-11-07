@@ -31,15 +31,43 @@ pub sketch Frame(width: Length, height: Length, thickness: Length) {
     Rect(width, height) - Rect(width = width - 2*thickness, height = height - 2*thickness)
 }
 
+/// A regular hexagon.
+pub sketch Hexagon(radius: Length) {
+    Ngon(6, radius);
+}
+
+
+pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
+    prop pitch_radius = module * teeth / 2.0;
+    prop outer_radius = pitch_radius + module;
+
+    __builtin::geo2d::InvoluteGearProfile(module = module / 1mm, teeth, pressure_angle)
+}
+
+
+pub sketch Line(p0: Vec2, p1: Vec2) {
+    init(width: Length, y = 0.0mm) {
+        p0 = (x = -width / 2mm, y = y / 1mm);
+        p1 = (x =  width / 2mm , y = y / 1mm);
+    }
+
+    init(height: Length, x = 0.0mm) {
+        p0 = (x = x / 1mm, y = -height / 2mm);
+        p1 = (x = x / 1mm, y =  height / 2mm);
+    }
+
+    init(width: Length, p: (x: Length, y: Length)) {
+        p0 = (x = p.x / 1mm, y = p.y / 1mm);
+        p1 = (x = (p.x + width) / 1mm , y = p.y / 1mm);
+    }
+
+    __builtin::geo2d::Line(x0 = p0.x, y0 = p0.y, x1 = p1.x, y1 = p1.y);
+}
+
 /// A regular convex polygon with `n` corners.
 pub sketch Ngon(n: Integer, radius: Length) {
     std::debug::assert(n > 2, "N must be at least 3.");
     __builtin::geo2d::Ngon(n, radius = radius / 1mm);
-}
-
-/// A regular hexagon.
-pub sketch Hexagon(radius: Length) {
-    Ngon(6, radius);
 }
 
 /// Pie definition.
@@ -77,26 +105,6 @@ pub sketch Rect(width: Length, height: Length, x: Length, y: Length) {
             x = x / 1mm,
             y = y / 1mm
     );
-}
-
-
-pub sketch Line(p0: Vec2, p1: Vec2) {
-    init(width: Length, y = 0.0mm) {
-        p0 = (x = -width / 2mm, y = y / 1mm);
-        p1 = (x =  width / 2mm , y = y / 1mm);
-    }
-
-    init(height: Length, x = 0.0mm) {
-        p0 = (x = x / 1mm, y = -height / 2mm);
-        p1 = (x = x / 1mm, y =  height / 2mm);
-    }
-
-    init(width: Length, p: (x: Length, y: Length)) {
-        p0 = (x = p.x / 1mm, y = p.y / 1mm);
-        p1 = (x = (p.x + width) / 1mm , y = p.y / 1mm);
-    }
-
-    __builtin::geo2d::Line(x0 = p0.x, y0 = p0.y, x1 = p1.x, y1 = p1.y);
 }
 
 pub sketch Ring(outer_r: Length, inner_r: Length ) {
@@ -165,11 +173,4 @@ pub sketch RoundedRect(
 /// Text definition.
 pub sketch Text(height: Length, text: String, font_file = "") {
     __builtin::geo2d::Text(height = height / 1mm, text, font_file);
-}
-
-pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
-    prop pitch_radius = module * teeth / 2.0;
-    prop outer_radius = pitch_radius + module;
-
-    __builtin::geo2d::InvoluteGearProfile(module = module / 1mm, teeth, pressure_angle)
 }
