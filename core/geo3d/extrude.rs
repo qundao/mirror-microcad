@@ -21,6 +21,8 @@ pub enum Extrusion {
         scale_x: Scalar,
         /// Scale in Y direction (default is 1.0).
         scale_y: Scalar,
+        /// Twist angle (default = °0).
+        twist: Angle,
     },
     /// Revolve extrusion.
     Revolve {
@@ -40,7 +42,8 @@ pub trait Extrude {
                 height,
                 scale_x,
                 scale_y,
-            } => self.linear_extrude(height, scale_x, scale_y),
+                twist,
+            } => self.linear_extrude(height, scale_x, scale_y, twist),
             Extrusion::Revolve { angle, segments } => self.revolve_extrude(angle, segments),
         }
     }
@@ -59,9 +62,11 @@ pub trait Extrude {
         height: Scalar,
         scale_x: Scalar,
         scale_y: Scalar,
+        twist: Angle,
     ) -> WithBounds3D<TriangleMesh> {
         let m_a = Mat4::identity();
-        let m_b = Mat4::from_translation(Vec3::new(0.0, 0.0, height))
+        let m_b = Mat4::from_angle_z(twist)
+            * Mat4::from_translation(Vec3::new(0.0, 0.0, height))
             * Mat4::from_nonuniform_scale(scale_x, scale_y, 1.0);
         let mut mesh = self.extrude_slice(&m_a, &m_b);
         mesh.append(&self.cap(&m_a, true));

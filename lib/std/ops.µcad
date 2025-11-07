@@ -15,17 +15,18 @@ pub op contour(thickness: Length, distance = 0mm) {
     @input.buffer(distance + thickness / 2) - @input.buffer(distance - thickness / 2);
 }
 
-
 /// Linear extrude a 2D geometry into a 3D.
 pub op extrude(
 		height: Length,
-		scale = (x = 100%, y = 100%)) {
+		scale = (x = 100%, y = 100%),
+		twist = 0°,
+) {
 	init(z: Length) {
 		height = z;
 		scale = (x = 100%, y = 100%);
 	}
 
-    @input.__builtin::ops::extrude(height = height / 1mm, scale_x = scale.x, scale_y = scale.y);
+    @input.__builtin::ops::extrude(height = height / 1mm, scale_x = scale.x, scale_y = scale.y, twist);
 }
 
 /// Mirror along an axis, keeping existing geometry.
@@ -40,7 +41,6 @@ pub op mirror(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
 pub op orient(v: Vec3) {
     @input.__builtin::ops::orient(x = v.x, y = v.y, z = v.z);
 }
-
 
 /// Reflect a geometry along an axis.
 pub op reflect(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
@@ -146,7 +146,7 @@ pub op scale(v: Vec3) {
 	@input.__builtin::ops::scale(x = v.x, y = v.y, z = v.z);
 }
 
-
+/// Create a spiral with a height and an inner and outer radius.
 pub op spiralize(
 	inner_radius: Length, 
 	outer_radius: Length,
@@ -161,8 +161,8 @@ pub op spiralize(
     );
 }
 
+/// An operation that translates (moves) a geometry.
 pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
-
 	/// Polar-style translage with distance and angle.
 	init(distance: Length, angle: Angle) {
 		x = distance * __builtin::math::cos(angle);

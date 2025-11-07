@@ -5,8 +5,10 @@
 
 use super::bevy_types::*;
 
+/// A colored zoom-adaptive grid and fade out radius.
+///
+/// This struct defines the data that will be passed to your shader.
 #[derive(Asset, AsBindGroup, Debug, Clone, TypePath)]
-// This struct defines the data that will be passed to your shader
 pub struct Grid {
     #[uniform(0)]
     pub radius: f32,
