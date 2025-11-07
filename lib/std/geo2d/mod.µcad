@@ -40,6 +40,8 @@ pub sketch Hexagon(radius: Length) {
 pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
     prop pitch_radius = module * teeth / 2.0;
     prop outer_radius = pitch_radius + module;
+    prop tooth_angle = 360° / teeth;
+    prop tooth_distance = (outer_radius - pitch_radius) * __builtin::math::PI;
 
     __builtin::geo2d::InvoluteGearProfile(module = module / 1mm, teeth, pressure_angle)
 }
@@ -72,6 +74,11 @@ pub sketch Ngon(n: Integer, radius: Length) {
 
 /// Pie definition.
 pub sketch Pie(radius: Length, start: Angle, end: Angle) {
+    init(radius: Length, sector: Angle, offset = 0°) {
+        start = offset;
+        end = offset + sector;
+    }
+
     __builtin::geo2d::Pie(radius = radius / 1mm, start, end);
 }
 
