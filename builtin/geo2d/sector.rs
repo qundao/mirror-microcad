@@ -9,7 +9,7 @@ use microcad_lang::{builtin::*, render::*};
 #[derive(BuiltinPrimitive2D)]
 pub struct Sector {
     /// Radius of the circle.
-    pub radius: Scalar,
+    pub radius: Length,
 
     /// Start angle.
     pub start: Angle,
@@ -40,13 +40,14 @@ impl Render<Geometry2D> for Sector {
         };
 
         let offset = self.offset_angle();
-        let n = (resolution.circular_segments(self.radius) as f64 * (offset.0 / PI / 2.0)) as u32;
+        let r = *self.radius;
+        let n = (resolution.circular_segments(r) as f64 * (offset.0 / PI / 2.0)) as u32;
 
         let points = if !self.is_circle() && n > 0 {
             (0..=n)
                 .map(|i| {
                     let angle = start + offset * (i as f64) / (n as f64);
-                    geo::coord!(x: angle.0.cos(), y: angle.0.sin()) * self.radius
+                    geo::coord!(x: angle.0.cos(), y: angle.0.sin()) * r
                 })
                 .chain(
                     // Add center point.
@@ -59,7 +60,7 @@ impl Render<Geometry2D> for Sector {
             (0..n)
                 .map(|i| {
                     let angle = 2.0 * PI * (i as f64) / (n as f64);
-                    geo::coord!(x: angle.cos(), y: angle.sin()) * self.radius
+                    geo::coord!(x: angle.cos(), y: angle.sin()) * r
                 })
                 .collect()
         };

@@ -10,8 +10,8 @@
 
 [![test](.test/sector.svg)](.test/sector.log)
 
-```µcad,pie
-__builtin::geo2d::Sector(radius = 20mm / 1mm, start = 45°, end = 135°);
+```µcad,sector
+__builtin::geo2d::Sector(radius = 20mm, start = 45°, end = 135°);
 ```
 
 ### `Rect`

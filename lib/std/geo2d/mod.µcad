@@ -79,7 +79,7 @@ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
         end = offset + angle;
     }
 
-    __builtin::geo2d::Sector(radius = radius / 1mm, start, end);
+    __builtin::geo2d::Sector(radius, start, end);
 }
 
 /// Rectangle definition.

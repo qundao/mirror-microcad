@@ -499,6 +499,23 @@ impl TryFrom<&Value> for Angle {
     }
 }
 
+impl TryFrom<&Value> for Length {
+    type Error = ValueError;
+
+    fn try_from(value: &Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::Quantity(Quantity {
+                value,
+                quantity_type: QuantityType::Length,
+            }) => Ok(Length(*value)),
+            _ => Err(ValueError::CannotConvert(
+                value.to_string(),
+                "Length".into(),
+            )),
+        }
+    }
+}
+
 impl TryFrom<&Value> for Size2 {
     type Error = ValueError;
 
@@ -536,6 +553,12 @@ impl From<f32> for Value {
 impl From<Scalar> for Value {
     fn from(scalar: Scalar) -> Self {
         Value::Quantity(scalar.into())
+    }
+}
+
+impl From<Length> for Value {
+    fn from(length: Length) -> Self {
+        Value::Quantity(length.into())
     }
 }
 
