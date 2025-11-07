@@ -56,27 +56,27 @@ impl InvoluteGearProfile {
     }
 
     #[inline]
-    pub fn pitch_radius(&self) -> Scalar {
+    fn pitch_radius(&self) -> Scalar {
         self.module * self.teeth as Scalar / 2.0
     }
 
     #[inline]
-    pub fn base_radius(&self) -> Scalar {
+    fn base_radius(&self) -> Scalar {
         self.pitch_radius() * self.pressure_angle.0.cos()
     }
 
     #[inline]
-    pub fn outer_radius(&self) -> Scalar {
+    fn outer_radius(&self) -> Scalar {
         self.pitch_radius() + self.module
     }
 
     #[inline]
-    pub fn root_radius(&self) -> Scalar {
+    fn root_radius(&self) -> Scalar {
         self.pitch_radius() - 1.25 * self.module
     }
 
     #[inline]
-    pub fn half_thick_angle(&self) -> Scalar {
+    fn half_thick_angle(&self) -> Scalar {
         // Half tooth thickness angle at pitch circle
         let z = self.teeth as Scalar;
         let phi = self.pressure_angle.0; // in radians
