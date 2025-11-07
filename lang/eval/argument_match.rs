@@ -247,18 +247,19 @@ impl std::fmt::Debug for ArgumentMatch<'_> {
 
 #[test]
 fn argument_matching() {
+    use microcad_core::Length;
     let params: ParameterValueList = [
         crate::parameter!(a: Scalar),
         crate::parameter!(b: Length),
         crate::parameter!(c: Scalar),
-        crate::parameter!(d: Length = 4.0),
+        crate::parameter!(d: Length = Length::mm(4.0)),
     ]
     .into_iter()
     .collect();
 
     let arguments: ArgumentValueList = [
         crate::argument!(a: Scalar = 1.0),
-        crate::argument!(b: Length = 2.0),
+        crate::argument!(b: Length = Length::mm(2.0)),
         crate::argument!(Scalar = 3.0),
     ]
     .into_iter()
@@ -271,6 +272,8 @@ fn argument_matching() {
 
 #[test]
 fn argument_match_fail() {
+    use microcad_core::Length;
+
     let params: ParameterValueList = [
         crate::parameter!(x: Scalar),
         crate::parameter!(y: Length),
@@ -280,7 +283,7 @@ fn argument_match_fail() {
     .collect();
     let arguments: ArgumentValueList = [
         crate::argument!(x: Scalar = 1.0),
-        crate::argument!(Length = 1.0),
+        crate::argument!(Length = Length::mm(1.0)),
     ]
     .into_iter()
     .collect();

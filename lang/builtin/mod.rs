@@ -84,7 +84,7 @@ pub enum BuiltinValueHelper {
     /// Scalar type.
     Scalar(Scalar),
     /// Length type.
-    Length(Scalar),
+    Length(Length),
     /// Area type
     Area(Scalar),
     /// Volume type
@@ -113,7 +113,7 @@ impl From<BuiltinValueHelper> for Value {
             }
             BuiltinValueHelper::Integer(i) => Value::Integer(i),
             BuiltinValueHelper::Length(v) => {
-                Value::Quantity(Quantity::new(v, QuantityType::Length))
+                Value::Quantity(Quantity::new(*v, QuantityType::Length))
             }
             BuiltinValueHelper::Area(v) => Value::Quantity(Quantity::new(v, QuantityType::Area)),
             BuiltinValueHelper::Volume(v) => {

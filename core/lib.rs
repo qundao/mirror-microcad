@@ -34,6 +34,17 @@ pub type Mat4 = cgmath::Matrix4<Scalar>;
 /// Primitive angle type in radians.
 pub type Angle = cgmath::Rad<Scalar>;
 
+/// A length in millimeters.
+#[derive(Clone, Deref, DerefMut)]
+pub struct Length(pub Scalar);
+
+impl Length {
+    /// Return a new length from millimeters.
+    pub fn mm(mm: Scalar) -> Self {
+        Length(mm)
+    }
+}
+
 /// Constants.
 pub mod consts {
     pub use std::f64::consts::PI;
@@ -43,6 +54,7 @@ pub use boolean_op::BooleanOp;
 pub use bounds::*;
 pub use color::*;
 pub use core_error::*;
+use derive_more::{Deref, DerefMut};
 pub use geo2d::*;
 pub use geo3d::*;
 pub use render::*;

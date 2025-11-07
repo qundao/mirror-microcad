@@ -12,7 +12,7 @@ use crate::{
     syntax::{self, *},
 };
 
-use microcad_core::{Color, RenderResolution, Size2};
+use microcad_core::{Color, Length, RenderResolution, Size2};
 use thiserror::Error;
 
 /// Error type for attributes.
@@ -43,7 +43,7 @@ impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
                     &argument_list.eval(context)?,
                     &[
                         parameter!(filename: String),
-                        parameter!(resolution: Length = 0.1 /*mm*/),
+                        parameter!(resolution: Length = Length::mm(0.1)),
                         (
                             Identifier::no_ref("size"),
                             eval::ParameterValue {
