@@ -4,6 +4,11 @@
 @group(2) @binding(0) var<uniform> radius: f32;
 @group(2) @binding(1) var<uniform> zoom_level: f32;
 @group(2) @binding(2) var<uniform> view_angle: vec3<f32>;
+@group(2) @binding(3) var<uniform> grid_color: vec3<f32>;
+@group(2) @binding(4) var<uniform> x_axis_color: vec3<f32>;
+@group(2) @binding(5) var<uniform> y_axis_color: vec3<f32>;
+
+
 
 @vertex
 fn vertex(input: Vertex) -> VertexOutput {
@@ -56,30 +61,26 @@ fn grid_opacity(pos: vec2<f32>, zoom: f32) -> vec4<f32> {
 
     let grid = (line_a * w_a + line_b * w_b) / (w_a + w_b); // Always adds to 1.0 total brightness
 
-    var color = vec3<f32>(0.7);
+    var color = grid_color;
     if fw_a < abs(uv_a.x) && fw_a > abs(uv_a.y)  {
-        color = vec3<f32>(1.0, 0.0, 0.0);
+        color = x_axis_color;
     }
     if fw_a < abs(uv_a.y) && fw_a > abs(uv_a.x) {
-        color = vec3<f32>(0.0, 1.0, 0.0);
+        color = y_axis_color;
     }
 
     let fade_z = (max(angle_z / 0.8 - 0.2, 0.0));
 
-    return vec4<f32>(color, grid) * fade_z;
+    return vec4<f32>(color, grid * fade_z);
 }
-
-
 
 @fragment
 fn fragment(
     mesh: VertexOutput,
 ) -> @location(0) vec4<f32> {
     let p = mesh.world_position.xy;
-
     let grid = grid_opacity(p, 8.0 / zoom_level);
     let fade = min(2.0 - length(p) / radius, 1.0);
-    
-    return vec4(grid * fade);
+    return vec4(grid.xyz, grid.w * fade);
 }
 

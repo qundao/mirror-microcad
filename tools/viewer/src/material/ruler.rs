@@ -10,16 +10,11 @@ use super::bevy_types::*;
 pub struct Ruler {
     #[uniform(0)]
     zoom_level: f32,
-
-    alpha_mode: AlphaMode,
 }
 
 impl Default for Ruler {
     fn default() -> Self {
-        Self {
-            zoom_level: 1.0,
-            alpha_mode: AlphaMode::Blend,
-        }
+        Self { zoom_level: 1.0 }
     }
 }
 
@@ -39,6 +34,6 @@ impl Material for Ruler {
     }
 
     fn alpha_mode(&self) -> AlphaMode {
-        self.alpha_mode
+        AlphaMode::Blend
     }
 }

@@ -17,7 +17,14 @@ pub struct Grid {
     #[uniform(2)]
     pub view_angle: Vec3,
 
-    alpha_mode: AlphaMode,
+    #[uniform(3)]
+    pub grid_color: Vec3,
+
+    #[uniform(4)]
+    pub x_axis_color: Vec3,
+
+    #[uniform(5)]
+    pub y_axis_color: Vec3,
 }
 
 impl Grid {
@@ -32,7 +39,9 @@ impl Default for Grid {
             radius: 1.0,
             zoom_level: 1.0,
             view_angle: Vec3::new(0.0, 0.0, 1.0),
-            alpha_mode: AlphaMode::Blend,
+            grid_color: Vec3::new(0.7, 0.7, 0.7),
+            x_axis_color: Vec3::new(1.0, 0.0, 0.0),
+            y_axis_color: Vec3::new(0.0, 1.0, 0.0),
         }
     }
 }
@@ -47,6 +56,6 @@ impl Material for Grid {
     }
 
     fn alpha_mode(&self) -> AlphaMode {
-        self.alpha_mode
+        AlphaMode::Blend
     }
 }

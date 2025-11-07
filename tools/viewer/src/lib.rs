@@ -13,6 +13,7 @@ pub mod stdin;
 pub mod to_bevy;
 
 pub use crate::config::Config;
+pub use crate::to_bevy::ToBevy;
 
 pub use crate::state::State;
 

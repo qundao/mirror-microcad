@@ -21,8 +21,8 @@ use bevy::{
     },
 };
 
-use crate::*;
 use crate::{scene::get_current_zoom_level, state::State};
+use crate::{to_bevy::ToBevy, *};
 
 pub fn spawn_grid_plane(
     mut commands: Commands,
@@ -33,11 +33,18 @@ pub fn spawn_grid_plane(
     let plane = Mesh::from(Plane3d::new(Vec3::Z, Vec2::new(1000.0, 1000.0)));
     let mesh_handle = meshes.add(plane);
 
+    let theme = &state.config.theme;
+
     state.scene.grid_entity = Some(
         commands
             .spawn((
                 Mesh3d(mesh_handle),
-                MeshMaterial3d(materials.add(material::Grid::default())),
+                MeshMaterial3d(materials.add(material::Grid {
+                    grid_color: theme.darker.to_bevy(),
+                    x_axis_color: theme.bright.to_bevy(),
+                    y_axis_color: theme.bright.to_bevy(),
+                    ..Default::default()
+                })),
                 bevy::picking::Pickable::IGNORE,
             ))
             .id(),

@@ -15,41 +15,38 @@ pub struct Theme {
 
     /// Primary color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    primary: Color,
+    pub primary: Color,
 
     /// Brighter color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    bright: Color,
+    pub bright: Color,
 
     /// Brighter color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    brighter: Color,
+    pub brighter: Color,
 
     /// Darker color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    darker: Color,
+    pub darker: Color,
 
     /// Complementary color (e.g. operators, intersections).
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    complementary: Color,
+    pub complementary: Color,
 
     /// Signal color, e.g. for selections.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    signal: Color,
+    pub signal: Color,
 
     /// Color for guidelines (e.g. inference lines).
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    guide: Color,
+    pub guide: Color,
 }
 
 fn deserialize_color_from_hex<'de, D>(deserializer: D) -> Result<Color, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
-    // First, deserialize the input as a string
     let s = String::deserialize(deserializer)?;
-
-    // Then, use your existing parsing function
     Color::from_hex_str(&s)
         .map_err(|err| serde::de::Error::custom(format!("invalid color '{}': {}", s, err)))
 }

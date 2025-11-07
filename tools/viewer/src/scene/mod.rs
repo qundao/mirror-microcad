@@ -3,6 +3,7 @@
 
 //! microcad viewer scene elements and routines.
 
+use crate::*;
 use bevy::prelude::*;
 
 mod angle;
@@ -36,6 +37,7 @@ pub fn get_current_resolution(projection: &Projection, window: &Window) -> f32 {
 pub fn draw_mesh_intersections(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,
     mut gizmos: Gizmos,
+    state: Res<State>,
     projections: Query<&Projection>,
 ) {
     for (_entity, hit) in pointers
@@ -46,11 +48,8 @@ pub fn draw_mesh_intersections(
             let proj = projections.iter().next().unwrap();
 
             let zoom = get_current_zoom_level(proj);
-            gizmos.sphere(
-                position,
-                zoom * 0.1,
-                bevy::color::palettes::tailwind::RED_500,
-            );
+            let color: Color = state.config.theme.guide.to_bevy();
+            gizmos.sphere(position, zoom * 0.1, color);
         }
     }
 }

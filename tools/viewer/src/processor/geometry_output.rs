@@ -11,7 +11,7 @@ use microcad_lang::{
 
 use bevy::prelude::{Component, Mesh, StandardMaterial, Transform};
 
-use crate::to_bevy;
+use crate::to_bevy::{self, ToBevy};
 
 /// The output geometry from a µcad model that will be passed to Bevy.
 ///
@@ -80,7 +80,7 @@ impl ModelOutputGeometry {
 
         let output = model_.output();
         let output_type = output.output_type;
-        let transform = to_bevy::transform(output.world_matrix.expect("Some matrix"));
+        let transform = output.world_matrix.expect("Some matrix").to_bevy();
         let materials = ModelMaterials::new(&output_type, &output.attributes);
         let aabb_material = crate::material::create_2d_material(&Color::rgb(1.0, 1.0, 1.0));
 

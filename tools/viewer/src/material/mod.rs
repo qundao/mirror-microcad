@@ -18,7 +18,7 @@ pub use angle::Angle;
 pub use grid::Grid;
 pub use ruler::Ruler;
 
-use crate::to_bevy;
+use crate::to_bevy::ToBevy;
 
 pub mod bevy_types {
     pub use bevy::prelude::{AlphaMode, TypePath, Vec3};
@@ -56,7 +56,7 @@ pub fn alpha_mode_for_color(color: &microcad_core::Color) -> bevy_types::AlphaMo
 /// Create a 2D material (unlit) from render attributes.
 pub fn create_2d_material(color: &microcad_core::Color) -> bevy_types::StandardMaterial {
     bevy_types::StandardMaterial {
-        base_color: to_bevy::color(color),
+        base_color: color.to_bevy(),
         alpha_mode: alpha_mode_for_color(color),
         unlit: true,
         double_sided: true,
@@ -67,7 +67,7 @@ pub fn create_2d_material(color: &microcad_core::Color) -> bevy_types::StandardM
 /// Create a 3D material (lit) from a color.
 pub fn create_3d_material(color: &microcad_core::Color) -> bevy_types::StandardMaterial {
     bevy_types::StandardMaterial {
-        base_color: to_bevy::color(color),
+        base_color: color.to_bevy(),
         metallic: 0.1,
         alpha_mode: alpha_mode_for_color(color),
         unlit: false,

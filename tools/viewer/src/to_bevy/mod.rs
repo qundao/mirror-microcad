@@ -12,6 +12,56 @@ use bevy::{
 };
 use microcad_core::*;
 
+pub trait ToBevy<T> {
+    fn to_bevy(self) -> T;
+}
+
+/// Convert a µcad color into a bevy color.
+impl ToBevy<bevy::prelude::Color> for microcad_core::Color {
+    fn to_bevy(self) -> bevy::prelude::Color {
+        bevy::prelude::Color::srgba(self.r, self.g, self.b, self.a)
+    }
+}
+
+impl ToBevy<bevy::prelude::Vec3> for microcad_core::Color {
+    fn to_bevy(self) -> bevy::prelude::Vec3 {
+        bevy::prelude::Vec3::new(self.r, self.g, self.b)
+    }
+}
+
+impl ToBevy<bevy::prelude::Mat4> for microcad_core::Mat4 {
+    fn to_bevy(self) -> bevy::prelude::Mat4 {
+        use cgmath::Matrix;
+
+        // cgmath stores as column-major, same as glam/Bevy
+        let m = self.transpose(); // optional if you’re unsure about order
+        bevy::prelude::Mat4::from_cols_array(&[
+            m.x.x as f32,
+            m.x.y as f32,
+            m.x.z as f32,
+            m.x.w as f32,
+            m.y.x as f32,
+            m.y.y as f32,
+            m.y.z as f32,
+            m.y.w as f32,
+            m.z.x as f32,
+            m.z.y as f32,
+            m.z.z as f32,
+            m.z.w as f32,
+            m.w.x as f32,
+            m.w.y as f32,
+            m.w.z as f32,
+            m.w.w as f32,
+        ])
+    }
+}
+
+impl ToBevy<bevy::prelude::Transform> for microcad_core::Mat4 {
+    fn to_bevy(self) -> bevy::prelude::Transform {
+        Transform::from_matrix(self.to_bevy())
+    }
+}
+
 /// Converts a TriangleMesh into a Bevy Mesh with smooth normals (within angle threshold),
 /// and sharp edges where the angle between adjacent faces exceeds the threshold.
 pub fn mesh_with_smoothness(mesh: &TriangleMesh, threshold_degrees: f32) -> Mesh {
@@ -148,41 +198,6 @@ pub fn geometry_2d(geometry: &Geometry2D, z: Scalar) -> Mesh {
 /// Create a bevy mesh from a 3D geometry.
 pub fn geometry_3d(geometry: &Geometry3D) -> Mesh {
     mesh_with_smoothness(&geometry.into(), 30.0)
-}
-
-/// Convert cgmath Matrix into a bevy Matrix.
-pub fn mat4(m: cgmath::Matrix4<f64>) -> bevy::prelude::Mat4 {
-    use cgmath::Matrix;
-
-    // cgmath stores as column-major, same as glam/Bevy
-    let m = m.transpose(); // optional if you’re unsure about order
-    bevy::prelude::Mat4::from_cols_array(&[
-        m.x.x as f32,
-        m.x.y as f32,
-        m.x.z as f32,
-        m.x.w as f32,
-        m.y.x as f32,
-        m.y.y as f32,
-        m.y.z as f32,
-        m.y.w as f32,
-        m.z.x as f32,
-        m.z.y as f32,
-        m.z.z as f32,
-        m.z.w as f32,
-        m.w.x as f32,
-        m.w.y as f32,
-        m.w.z as f32,
-        m.w.w as f32,
-    ])
-}
-
-/// Convert a µcad color into a bevy color.
-pub fn color(color: &microcad_core::Color) -> bevy::prelude::Color {
-    bevy::prelude::Color::srgba(color.r, color.g, color.b, color.a)
-}
-
-pub fn transform(mat: Mat4) -> Transform {
-    Transform::from_matrix(mat4(mat))
 }
 
 /// Create mesh from a [`Bounds2D`].

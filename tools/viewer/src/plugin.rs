@@ -6,7 +6,7 @@ use bevy_mod_outline::OutlinePlugin;
 
 use bevy::prelude::*;
 
-use crate::Config;
+use crate::*;
 
 #[derive(Clone)]
 pub enum MicrocadPluginMode {
@@ -24,20 +24,18 @@ pub struct MicrocadPlugin {
 
 impl Plugin for MicrocadPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((OutlinePlugin, MeshPickingPlugin))
-            .add_plugins(crate::processor::ProcessorPlugin)
-            .add_plugins(crate::material::MaterialPlugin)
-            .add_plugins(crate::scene::ScenePlugin)
-            .insert_resource(crate::state::State::new(
-                self.mode.clone(),
-                self.config.clone(),
-            ))
+        app.insert_resource(ClearColor(self.config.theme.primary.to_bevy()))
+            .insert_resource(State::new(self.mode.clone(), self.config.clone()))
+            .add_plugins((OutlinePlugin, MeshPickingPlugin))
+            .add_plugins(processor::ProcessorPlugin)
+            .add_plugins(material::MaterialPlugin)
+            .add_plugins(scene::ScenePlugin)
             .add_systems(Startup, apply_window_settings)
-            .add_systems(Update, crate::stdin::handle_stdin_messages);
+            .add_systems(Update, stdin::handle_stdin_messages);
     }
 }
 
-fn apply_window_settings(state: Res<crate::State>, mut windows: Query<&mut Window>) {
+fn apply_window_settings(state: Res<State>, mut windows: Query<&mut Window>) {
     let mut window = windows.single_mut().expect("Some window");
 
     window.title = match &state.mode {
