@@ -28,10 +28,11 @@
             - y = 0mm
             - z = -25mm
             Transform __builtin::ops::translate(x=0, y=0, z=-25) ->
-              Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1)) ->
+              Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
                 - height = 50mm
                 - scale = (x=1, y=1)
-                Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1) ->
+                - twist = 0rad
+                Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1, twist=0rad) ->
                   Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
                     - center = (x=0mm, y=0mm)
                     - radius = 10mm
@@ -50,10 +51,11 @@
             - y = 0mm
             - z = -25mm
             Transform __builtin::ops::translate(x=0, y=0, z=-25) ->
-              Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1)) ->
+              Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
                 - height = 50mm
                 - scale = (x=1, y=1)
-                Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1) ->
+                - twist = 0rad
+                Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1, twist=0rad) ->
                   Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
                     - center = (x=0mm, y=0mm)
                     - radius = 10mm
@@ -72,10 +74,11 @@
             - y = 0mm
             - z = -25mm
             Transform __builtin::ops::translate(x=0, y=0, z=-25) ->
-              Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1)) ->
+              Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
                 - height = 50mm
                 - scale = (x=1, y=1)
-                Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1) ->
+                - twist = 0rad
+                Operation __builtin::ops::extrude(height=50, scale_x=1, scale_y=1, twist=0rad) ->
                   Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
                     - center = (x=0mm, y=0mm)
                     - radius = 10mm

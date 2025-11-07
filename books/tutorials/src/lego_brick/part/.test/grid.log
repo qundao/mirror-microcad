@@ -83,6 +83,12 @@ warning: Unused global symbol orient.
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
+warning: Unused global symbol reflect.
+  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
+     |
+  11 | use std::ops::*;
+     |     ^^^^^^^^
+     |
 warning: Unused global symbol revolve.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |

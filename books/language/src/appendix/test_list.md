@@ -107,8 +107,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/.test/source_file_mixed.svg)](../structure/.test/source_file_mixed.log) | [source_file_mixed](../structure/source_file.md) |
 | [![test](../libraries/std/ops/.test/std_geo2d_buffer.svg)](../libraries/std/ops/.test/std_geo2d_buffer.log) | [std_geo2d_buffer](../libraries/std/ops/buffer.md) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.svg)](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.log) | [std_geo2d_involute_gear_profile](../libraries/std/geo2d/README.md) |
-| [![test](../libraries/std/geo2d/.test/std_geo2d_pie.svg)](../libraries/std/geo2d/.test/std_geo2d_pie.log) | [std_geo2d_pie](../libraries/std/geo2d/README.md) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.svg)](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.log) | [std_geo2d_rounded_rect](../libraries/std/geo2d/README.md) |
+| [![test](../libraries/std/geo2d/.test/std_geo2d_sector.svg)](../libraries/std/geo2d/.test/std_geo2d_sector.log) | [std_geo2d_sector](../libraries/std/geo2d/README.md) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_text.svg)](../libraries/std/geo2d/.test/std_geo2d_text.log) | [std_geo2d_text](../libraries/std/geo2d/README.md) |
 | [![test](../expressions/.test/string_literal.svg)](../expressions/.test/string_literal.log) | [string_literal](../expressions/literals.md) |
 | [![test](../libraries/builtin/.test/text.svg)](../libraries/builtin/.test/text.log) | [text](../libraries/builtin/geo2d.md) |

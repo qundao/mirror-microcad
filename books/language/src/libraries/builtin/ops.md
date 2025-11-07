@@ -42,7 +42,7 @@ use __builtin::*;
 
 a = geo2d::Circle(radius = 9.0) - geo2d::Circle(radius = 2.0).ops::translate(x = [-3.0, 3.0], y = [-3.0, 3.0], z = 0.0);
 
-a.ops::extrude(height = 4.0, scale_x = 100%, scale_y = 100%);
+a.ops::extrude(height = 4.0, scale_x = 100%, scale_y = 100%, twist = 0°);
 ```
 
 ### `orient`

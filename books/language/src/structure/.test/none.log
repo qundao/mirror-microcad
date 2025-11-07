@@ -27,7 +27,8 @@
           Workpiece(op) std::ops::extrude(z=40mm) ->
             - height = 40mm
             - scale = (x=1, y=1)
-            Operation __builtin::ops::extrude(height=40, scale_x=1, scale_y=1) ->
+            - twist = 0rad
+            Operation __builtin::ops::extrude(height=40, scale_x=1, scale_y=1, twist=0rad) ->
               Workpiece(sketch) std::geo2d::Rect(height=40mm, width=40mm) ->
                 - height = 40mm
                 - width = 40mm

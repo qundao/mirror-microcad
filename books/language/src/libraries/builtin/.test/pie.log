@@ -4,14 +4,14 @@
 
 -- Code --
 
-  14:   __builtin::geo2d::Pie(radius = 20mm / 1mm, start = 45°, end = 135°);
+  14:   __builtin::geo2d::Sector(radius = 20mm / 1mm, start = 45°, end = 135°);
 
 -- Output --
 
 -- Errors --
 -- Model --
   Group (root) ->
-    Primitive2D __builtin::geo2d::Pie(end=2.35619449019234rad, radius=20, start=0.78539816339745rad) ->
+    Primitive2D __builtin::geo2d::Sector(end=2.35619449019234rad, radius=20, start=0.78539816339745rad) ->
 
 Export of "../books/language/src/libraries/builtin/.test/pie-out.svg" successful.
 -- Test Result --

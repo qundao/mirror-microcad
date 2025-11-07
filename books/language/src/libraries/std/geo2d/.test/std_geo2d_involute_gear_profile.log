@@ -17,6 +17,8 @@
       - pitch_radius = 40mm
       - pressure_angle = 0rad
       - teeth = 20
+      - tooth_angle = 0.31415926535898rad
+      - tooth_distance = 12.56637061435917mm
       Primitive2D __builtin::geo2d::InvoluteGearProfile(module=4, pressure_angle=0rad, teeth=20) ->
 
 Export of "../books/language/src/libraries/std/geo2d/.test/std_geo2d_involute_gear_profile-out.svg" successful.
