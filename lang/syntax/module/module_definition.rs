@@ -9,7 +9,7 @@ use crate::{rc::*, src_ref::*, syntax::*};
 #[derive(Clone, Default)]
 pub struct ModuleDefinition {
     /// Documentation.
-    pub doc: DocBlock,
+    pub doc: Option<DocBlock>,
     /// Visibility of the module.
     pub visibility: Visibility,
     /// Name of the module.
@@ -48,6 +48,9 @@ impl TreeDisplay for ModuleDefinition {
                 visibility = self.visibility,
             )?;
             depth.indent();
+            if let Some(doc) = &self.doc {
+                doc.tree_print(f, depth)?;
+            }
             body.tree_print(f, depth)
         } else {
             writeln!(
@@ -56,7 +59,11 @@ impl TreeDisplay for ModuleDefinition {
                 "",
                 id = self.id,
                 visibility = self.visibility,
-            )
+            )?;
+            if let Some(doc) = &self.doc {
+                doc.tree_print(f, depth)?;
+            }
+            Ok(())
         }
     }
 }
@@ -80,5 +87,11 @@ impl std::fmt::Debug for ModuleDefinition {
             id = self.id,
             visibility = self.visibility,
         )
+    }
+}
+
+impl Doc for ModuleDefinition {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
     }
 }

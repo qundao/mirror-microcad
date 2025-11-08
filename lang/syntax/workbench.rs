@@ -33,7 +33,7 @@ impl WorkbenchKind {
 #[derive(Clone)]
 pub struct WorkbenchDefinition {
     /// Documentation.
-    pub doc: DocBlock,
+    pub doc: Option<DocBlock>,
     /// Workbench attributes.
     pub attribute_list: AttributeList,
     /// Visibility from outside modules.
@@ -110,8 +110,16 @@ impl TreeDisplay for WorkbenchDefinition {
             id = self.id
         )?;
         depth.indent();
-        self.doc.tree_print(f, depth)?;
+        if let Some(doc) = &self.doc {
+            doc.tree_print(f, depth)?;
+        }
         self.plan.tree_print(f, depth)?;
         self.body.tree_print(f, depth)
+    }
+}
+
+impl Doc for WorkbenchDefinition {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
     }
 }

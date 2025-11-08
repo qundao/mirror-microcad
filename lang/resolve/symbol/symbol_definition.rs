@@ -145,3 +145,15 @@ impl std::fmt::Debug for SymbolDef {
         }
     }
 }
+
+impl Doc for SymbolDef {
+    fn doc(&self) -> Option<DocBlock> {
+        match self {
+            SymbolDef::SourceFile(sf) => sf.doc(),
+            SymbolDef::Module(md) => md.doc(),
+            SymbolDef::Workbench(wd) => wd.doc(),
+            SymbolDef::Function(fd) => fd.doc(),
+            _ => None,
+        }
+    }
+}

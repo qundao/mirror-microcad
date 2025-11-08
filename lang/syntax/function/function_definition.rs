@@ -9,7 +9,7 @@ use crate::{src_ref::*, syntax::*};
 #[derive(Clone)]
 pub struct FunctionDefinition {
     /// Documentation.
-    pub doc: DocBlock,
+    pub doc: Option<DocBlock>,
     /// Visibility
     pub visibility: Visibility,
     /// Name of the function
@@ -32,6 +32,9 @@ impl TreeDisplay for FunctionDefinition {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}FunctionDefinition '{}':", "", self.id)?;
         depth.indent();
+        if let Some(doc) = &self.doc {
+            doc.tree_print(f, depth)?;
+        }
         writeln!(f, "{:depth$}Signature:", "")?;
         self.signature.tree_print(f, depth)?;
         writeln!(f, "{:depth$}Body:", "")?;
@@ -48,5 +51,11 @@ impl std::fmt::Display for FunctionDefinition {
 impl std::fmt::Debug for FunctionDefinition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "fn {:?}{:?}", self.id, self.signature)
+    }
+}
+
+impl Doc for FunctionDefinition {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
     }
 }

@@ -3,7 +3,6 @@
 
 mod symbol_definition;
 mod symbol_inner;
-mod symbol_inquiry;
 mod symbol_map;
 mod symbols;
 
@@ -705,6 +704,12 @@ impl std::fmt::Display for Symbol {
 impl std::fmt::Debug for Symbol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.print_symbol(f, None, 0, true, false)
+    }
+}
+
+impl Doc for Symbol {
+    fn doc(&self) -> Option<DocBlock> {
+        self.with_def(|def| def.doc())
     }
 }
 

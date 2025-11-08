@@ -9,7 +9,7 @@ use crate::{src_ref::*, syntax::*};
 #[derive(Clone, Default)]
 pub struct SourceFile {
     /// Documentation.
-    pub doc: DocBlock,
+    pub doc: Option<DocBlock>,
     /// Qualified name of the file if loaded from externals
     pub name: QualifiedName,
     /// Root code body.
@@ -28,7 +28,12 @@ pub struct SourceFile {
 
 impl SourceFile {
     /// Create new source file from existing source.
-    pub fn new(doc: DocBlock, statements: StatementList, source: String, hash: u64) -> Self {
+    pub fn new(
+        doc: Option<DocBlock>,
+        statements: StatementList,
+        source: String,
+        hash: u64,
+    ) -> Self {
         Self {
             doc,
             statements,
@@ -109,6 +114,9 @@ impl TreeDisplay for SourceFile {
             self.filename_as_str()
         )?;
         depth.indent();
+        if let Some(doc) = &self.doc {
+            doc.tree_print(f, depth)?;
+        }
         self.statements
             .iter()
             .try_for_each(|s| s.tree_print(f, depth))
@@ -118,6 +126,12 @@ impl TreeDisplay for SourceFile {
 impl SrcReferrer for SourceFile {
     fn src_ref(&self) -> crate::src_ref::SrcRef {
         SrcRef::new(0..self.num_lines(), 0, 0, self.hash)
+    }
+}
+
+impl Doc for SourceFile {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
     }
 }
 
