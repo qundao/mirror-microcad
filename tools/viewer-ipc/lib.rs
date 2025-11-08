@@ -67,7 +67,7 @@ impl ViewerProcessInterface {
             let mut child = std::process::Command::new(
                 std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
             )
-            .arg("--stdin") // run the slave binary
+            .arg("stdin") // run the slave binary
             .arg("-P")
             .arg(std_search_path.to_str().unwrap())
             .current_dir(std::env::current_dir().unwrap())

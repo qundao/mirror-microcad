@@ -48,8 +48,15 @@ pub fn startup_processor(mut state: ResMut<crate::state::State>) {
         })
         .expect("No error");
 
-    match state.mode.clone() {
-        crate::plugin::MicrocadPluginMode::InputFile(path) => {
+    use crate::plugin::MicrocadPluginInput::*;
+
+    match &mut state.input {
+        Some(File {
+            path,
+            symbol: _,
+            line: _,
+        }) => {
+            let path = path.clone();
             state
                 .processor
                 .send_request(ProcessorRequest::ParseFile(path.clone()))
@@ -80,9 +87,9 @@ pub fn startup_processor(mut state: ResMut<crate::state::State>) {
                 }
             });
         }
-        crate::plugin::MicrocadPluginMode::Stdin => {
+        Some(crate::plugin::MicrocadPluginInput::Stdin(stdin)) => {
             log::info!("Run viewer in stdin remote controlled mode.");
-            state.stdin = Some(StdinMessageReceiver::run());
+            *stdin = Some(StdinMessageReceiver::run());
         }
         _ => { /* Do nothing */ }
     }
@@ -92,18 +99,23 @@ pub fn handle_external_reload(
     mut event_writer: EventWriter<ProcessorRequest>,
     state: ResMut<crate::state::State>,
 ) {
-    if let crate::plugin::MicrocadPluginMode::InputFile(input) = state.mode.clone() {
-        let mut last_modified_lock = state.last_modified.lock().unwrap();
-        if let Some(last_modified) = *last_modified_lock
-            && let Ok(elapsed) = last_modified.elapsed()
-            && elapsed > state.config.reload_delay
-        {
-            event_writer.write(ProcessorRequest::ParseFile(input));
-            log::info!("Changed file");
+    use crate::plugin::MicrocadPluginInput::*;
 
-            // Reset so we don’t reload again
-            *last_modified_lock = None;
+    match &state.input {
+        Some(File { path, .. }) => {
+            let mut last_modified_lock = state.last_modified.lock().unwrap();
+            if let Some(last_modified) = *last_modified_lock
+                && let Ok(elapsed) = last_modified.elapsed()
+                && elapsed > state.config.reload_delay
+            {
+                event_writer.write(ProcessorRequest::ParseFile(path.to_path_buf()));
+                log::info!("Changed file");
+
+                // Reset so we don’t reload again
+                *last_modified_lock = None;
+            }
         }
+        _ => { /* Do nothing */ }
     }
 }
 

@@ -10,31 +10,26 @@ use std::{
 
 use bevy::ecs::resource::Resource;
 
-use crate::{
-    Config, plugin::MicrocadPluginMode, processor::ProcessorInterface, scene::Scene,
-    stdin::StdinMessageReceiver,
-};
+use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, scene::Scene};
 
 #[derive(Resource)]
 pub struct State {
-    pub mode: MicrocadPluginMode,
+    pub input: Option<MicrocadPluginInput>,
     pub config: Config,
     pub last_modified: Arc<Mutex<Option<SystemTime>>>,
     pub scene: Scene,
     pub processor: ProcessorInterface,
-    pub stdin: Option<StdinMessageReceiver>,
 }
 
 impl State {
     /// Create new state from arguments
-    pub fn new(mode: MicrocadPluginMode, config: Config) -> Self {
+    pub fn new(input: Option<MicrocadPluginInput>, config: Config) -> Self {
         Self {
-            mode,
+            input,
             config,
             last_modified: Default::default(),
             scene: Default::default(),
             processor: ProcessorInterface::run(),
-            stdin: None,
         }
     }
 }

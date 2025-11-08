@@ -12,9 +12,10 @@ use bevy::prelude::{AppExit, EventWriter};
 
 use microcad_viewer_ipc::ViewerRequest;
 
+use crate::plugin::MicrocadPluginInput;
 use crate::processor::ProcessorRequest;
 
-#[derive(Resource)]
+#[derive(Resource, Clone)]
 pub struct StdinMessageReceiver(Receiver<ViewerRequest>);
 
 impl StdinMessageReceiver {
@@ -57,22 +58,23 @@ pub fn handle_stdin_messages(
     mut event_writer: bevy::prelude::EventWriter<ProcessorRequest>,
     mut exit: EventWriter<AppExit>,
 ) {
-    if let Some(stdin) = &state.stdin {
+    use microcad_viewer_ipc::ViewerRequest::*;
+    if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &state.input {
         for viewer_request in stdin.0.try_iter() {
             log::info!("{viewer_request:?}");
             match viewer_request {
-                microcad_viewer_ipc::ViewerRequest::SourceCodeFromFile { path } => {
+                SourceCodeFromFile { path } => {
                     event_writer.write(ProcessorRequest::ParseFile(path));
                 }
-                microcad_viewer_ipc::ViewerRequest::SourceCode { path, name, code } => {
+                SourceCode { path, name, code } => {
                     event_writer.write(ProcessorRequest::ParseSource {
                         path,
                         name,
                         source: code,
                     });
                 }
-                microcad_viewer_ipc::ViewerRequest::CursorRange { .. } => todo!(),
-                microcad_viewer_ipc::ViewerRequest::Exit => {
+                CursorRange { .. } => todo!(),
+                Exit => {
                     exit.write(AppExit::Success);
                 }
             }

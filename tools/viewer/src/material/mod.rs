@@ -60,6 +60,7 @@ pub fn create_2d_material(color: &microcad_core::Color) -> bevy_types::StandardM
         alpha_mode: alpha_mode_for_color(color),
         unlit: true,
         double_sided: true,
+        cull_mode: None,
         ..Default::default()
     }
 }
