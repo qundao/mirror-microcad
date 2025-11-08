@@ -3,13 +3,18 @@
 
 //! microcad Viewer geometry output.
 
+use bevy_mod_outline::OutlineVolume;
 use microcad_core::*;
 use microcad_lang::{
     model::{Model, OutputType},
     render::{ComputedHash, RenderAttributes},
 };
 
-use bevy::prelude::{Component, Mesh, StandardMaterial, Transform};
+use bevy::{
+    asset::Asset,
+    prelude::{Component, Mesh, StandardMaterial, Transform},
+    reflect::TypePath,
+};
 
 use crate::{
     config::theme::Theme,
@@ -20,6 +25,7 @@ use crate::{
 /// The output geometry from a µcad model that will be passed to Bevy.
 ///
 /// Processing the mesh geometry will spawn bevy commands to eventually add an entity with a mesh, material and other components to a scene.
+#[derive(Asset, TypePath)]
 pub struct ModelOutputGeometry {
     pub mesh: Mesh,
     pub materials: ModelMaterials,
@@ -37,6 +43,8 @@ pub struct ModelMaterials {
     pub default: StandardMaterial,
     /// Material when a model is supposed to be drawn in the background.
     pub transparent: StandardMaterial,
+    /// The outline.
+    pub outline: OutlineVolume,
 }
 
 impl ModelMaterials {
@@ -50,10 +58,20 @@ impl ModelMaterials {
             OutputType::Geometry2D => Self {
                 default: create_2d_material(&color),
                 transparent: create_2d_material(&transparent_color),
+                outline: OutlineVolume {
+                    visible: true,
+                    colour: theme.bright.to_bevy(),
+                    width: 4.0,
+                },
             },
             OutputType::Geometry3D => Self {
                 default: create_3d_material(&color),
                 transparent: create_3d_material(&transparent_color),
+                outline: OutlineVolume {
+                    visible: true,
+                    colour: theme.bright.to_bevy(),
+                    width: 4.0,
+                },
             },
             _ => unreachable!(),
         }

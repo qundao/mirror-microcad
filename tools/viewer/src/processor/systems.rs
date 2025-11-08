@@ -12,7 +12,7 @@ use bevy::{
     },
     pbr::{MeshMaterial3d, StandardMaterial},
 };
-use bevy_mod_outline::{OutlineMode, OutlineVolume};
+use bevy_mod_outline::OutlineMode;
 
 use crate::stdin::StdinMessageReceiver;
 use crate::*;
@@ -40,7 +40,9 @@ fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
 }
 
 /// Start up the processor.
-pub fn startup_processor(mut state: ResMut<crate::state::State>) {
+///
+/// Sends an initialize request to the processor and handles input.
+pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
     state
         .processor
         .send_request(ProcessorRequest::Initialize {
@@ -49,20 +51,20 @@ pub fn startup_processor(mut state: ResMut<crate::state::State>) {
         .expect("No error");
 
     use crate::plugin::MicrocadPluginInput::*;
+    let flag_clone = state.last_modified.clone();
+    let reload_delay = state.config.reload_delay;
+
+    let mut requests = Vec::new();
 
     match &mut state.input {
         Some(File {
             path,
             symbol: _,
-            line: _,
+            line,
         }) => {
             let path = path.clone();
-            state
-                .processor
-                .send_request(ProcessorRequest::ParseFile(path.clone()))
-                .expect("No error");
-            let flag_clone = state.last_modified.clone();
-            let reload_delay = state.config.reload_delay;
+            requests.push(ProcessorRequest::ParseFile(path.clone()));
+            requests.push(ProcessorRequest::SetLineNumber(*line));
 
             // Run file watcher thread.
             std::thread::spawn(move || -> ! {
@@ -93,6 +95,10 @@ pub fn startup_processor(mut state: ResMut<crate::state::State>) {
         }
         _ => { /* Do nothing */ }
     }
+
+    requests
+        .into_iter()
+        .for_each(|request| state.processor.send_request(request).expect("No error"));
 }
 
 pub fn handle_external_reload(
@@ -133,63 +139,38 @@ pub fn handle_processor_responses(
 
     for response in state.processor.response_receiver.try_iter() {
         match response {
-            ProcessorResponse::OutputGeometry(model_geometry_outputs) => {
-                // Despawn all entities to remove them from the scene
-                for entity in &state.scene.model_entities {
-                    commands.entity(*entity).despawn();
-                }
+            ProcessorResponse::NewModelGeometry(model_geometry_output) => {
                 new_entities = true;
+                new_scene_radius = new_scene_radius.max(model_geometry_output.info.bounding_radius);
 
-                for model_geometry_output in model_geometry_outputs {
-                    new_scene_radius =
-                        new_scene_radius.max(model_geometry_output.info.bounding_radius);
-
-                    // Spawn axis-aligned bounding box (AABB) entity.
-                    if std::env::var("MICROCAD_VIEWER_SHOW_AABB").is_ok() {
-                        entities.push(
-                            commands
-                                .spawn((
-                                    Mesh3d(meshes.add(model_geometry_output.aabb_mesh)),
-                                    MeshMaterial3d(
-                                        materials.add(model_geometry_output.aabb_material),
-                                    ),
-                                    model_geometry_output.transform,
-                                ))
-                                .id(),
-                        );
-                    }
-
-                    // Spawn object entity.
-                    entities.push(
-                        commands
-                            .spawn((
-                                Mesh3d(meshes.add(model_geometry_output.mesh)),
-                                MeshMaterial3d(
-                                    materials.add(model_geometry_output.materials.default),
-                                ),
-                                model_geometry_output.transform,
-                                OutlineVolume {
-                                    visible: matches!(
-                                        model_geometry_output.info.output_type,
-                                        microcad_lang::model::OutputType::Geometry2D
-                                    ),
-                                    colour: state.config.theme.signal.to_bevy(),
-                                    width: 4.0,
-                                },
-                                OutlineMode::FloodFlat,
-                            ))
-                            .id(),
-                    );
-                }
+                // Spawn object entity.
+                entities.push(
+                    commands
+                        .spawn((
+                            Mesh3d(meshes.add(model_geometry_output.mesh)),
+                            MeshMaterial3d(materials.add(model_geometry_output.materials.default)),
+                            model_geometry_output.transform,
+                            model_geometry_output.materials.outline,
+                            OutlineMode::FloodFlat,
+                        ))
+                        .id(),
+                );
+            }
+            ProcessorResponse::OutputGeometryId(id) => {
+                log::info!("This output geometries has alredy been rendered, just respawn {id}");
             }
         }
 
-        if new_entities {
+        if state.processor.response_receiver.is_empty() {
             break;
         }
     }
 
     if new_entities {
+        // Despawn all entities to remove them from the scene
+        for entity in &state.scene.model_entities {
+            commands.entity(*entity).despawn();
+        }
         state.scene.model_entities = entities;
         state.scene.radius = new_scene_radius;
         event_writer.write(SceneRadiusChangeEvent {

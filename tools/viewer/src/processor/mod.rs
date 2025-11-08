@@ -4,70 +4,50 @@
 //! microcad Viewer processor.
 
 mod geometry_output;
+mod request;
 mod systems;
 
 use crate::*;
 
-use bevy::{
-    app::{Plugin, Startup, Update},
-    ecs::event::Event,
-};
+use bevy::app::{Plugin, Startup, Update};
 pub use geometry_output::*;
+
+pub use request::ProcessorRequest;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
 use microcad_lang::{model::Model, rc::RcMut, render::*, syntax::SourceFile};
-
-/// A processor request.
-///
-/// Commands that can be passed to the [`Processor`].
-#[derive(Event, Clone)]
-pub enum ProcessorRequest {
-    /// Initialize the interpreter.
-    ///
-    /// Request must only be sent once and sets the initialize flag to `true`.
-    Initialize { config: Config },
-    /// Parse file.
-    ParseFile(std::path::PathBuf),
-    /// Parse some code into a SourceFile.
-    ParseSource {
-        /// Virtual file path
-        path: Option<std::path::PathBuf>,
-        /// Optional name of the source code snippet, e.g. the full file name.
-        name: Option<String>,
-        /// The actual source code.
-        source: String,
-    },
-    /// Evaluate source file into a model to be rendered.
-    Eval,
-    /// Set cursor position
-    /*SetCursorRange {
-        begin: Option<Position>,
-        end: Option<Position>,
-    },*/
-
-    /// Render the geometry. This message should be sent when the source code has been modified.
-    Render(Option<microcad_core::RenderResolution>),
-    /// Export the geometry to a file.
-    Export {
-        /// File name.
-        filename: std::path::PathBuf,
-        /// Optional exporter ("svg", "stl").
-        exporter: Option<String>,
-    },
-}
+use rustc_hash::FxHashMap;
 
 /// A processor response.
 ///
 /// Contains the geometry to rendered.
 pub enum ProcessorResponse {
     /// The response contains output geometry from a render request.
-    OutputGeometry(Vec<ModelOutputGeometry>),
+    NewModelGeometry(Box<ModelOutputGeometry>),
+    /// Id of an already rendered output geometry.
+    OutputGeometryId(u64),
+}
+
+#[derive(Default)]
+pub struct RenderedModels {
+    /// A list of models that have been rendered.
+    models: Vec<Model>,
+    models_by_hash: FxHashMap<u64, Model>,
+}
+
+impl RenderedModels {
+    fn clear(&mut self) {
+        self.models.clear();
+    }
+
+    fn insert_model(&mut self, model: Model) {
+        self.models.push(model.clone());
+        self.models_by_hash.insert(model.computed_hash(), model);
+    }
 }
 
 /// The state of the interpreter.
-
-#[derive(Default)]
 pub struct ProcessorState {
     /// Flag to tell whether to initializer.
     initialized: bool,
@@ -78,8 +58,31 @@ pub struct ProcessorState {
     resolution: microcad_core::RenderResolution,
     theme: config::Theme,
 
+    line_number: Option<u32>,
+
     pub source_file: Option<std::rc::Rc<SourceFile>>,
+
     pub model: Option<Model>,
+    pub rendered_models: RenderedModels,
+
+    /// Render cache.
+    pub render_cache: RcMut<RenderCache>,
+}
+
+impl Default for ProcessorState {
+    fn default() -> Self {
+        Self {
+            initialized: false,
+            search_paths: Default::default(),
+            resolution: Default::default(),
+            theme: Default::default(),
+            source_file: None,
+            model: None,
+            line_number: None,
+            rendered_models: RenderedModels::default(),
+            render_cache: RcMut::new(RenderCache::new()),
+        }
+    }
 }
 
 /// The processor  responsable for generating view commands.
@@ -95,9 +98,6 @@ struct Processor {
 
     /// Output responses.
     pub response_sender: Sender<ProcessorResponse>,
-
-    /// Render cache.
-    pub render_cache: RcMut<RenderCache>,
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -159,6 +159,10 @@ impl Processor {
             }
             ProcessorRequest::Render(resolution) => self.render(resolution),
             ProcessorRequest::Export { .. } => todo!(),
+            ProcessorRequest::SetLineNumber(line_number) => {
+                self.state.line_number = line_number;
+                self.render(None)
+            }
         }
     }
 
@@ -205,21 +209,29 @@ impl Processor {
             };
             let model = self.state.model.as_ref().expect("Model");
 
-            let mut render_context =
-                RenderContext::init(model, resolution.clone(), Some(self.render_cache.clone()))?;
+            let mut render_context = RenderContext::init(
+                model,
+                resolution.clone(),
+                Some(self.state.render_cache.clone()),
+            )?;
             let model: Model = model.render_with_context(&mut render_context)?;
 
             // Remove unused cache items.
             {
                 log::info!("Render cache");
-                let mut cache = self.render_cache.borrow_mut();
+                let mut cache = self.state.render_cache.borrow_mut();
                 cache.garbage_collection();
             }
 
-            let mut mesh_geometry = Vec::new();
+            let mut mesh_geometries = Vec::new();
             self.state.resolution = resolution;
-            self.generate_mesh_geometry_from_model(&model, &mut mesh_geometry);
-            Ok(vec![ProcessorResponse::OutputGeometry(mesh_geometry)])
+            self.state.rendered_models.clear();
+
+            self.generate_mesh_geometry_from_model(&model, &mut mesh_geometries);
+            Ok(mesh_geometries
+                .into_iter()
+                .map(|output| ProcessorResponse::NewModelGeometry(Box::new(output)))
+                .collect())
         } else {
             Err(anyhow::anyhow!("Could not render model."))
         }
@@ -227,12 +239,13 @@ impl Processor {
 
     /// Generate mesh geometry output for model.
     fn generate_mesh_geometry_from_model(
-        &self,
+        &mut self,
         model: &Model,
         mesh_geometry: &mut Vec<ModelOutputGeometry>,
     ) {
         match ModelOutputGeometry::from_model(model, &self.state) {
             Some(output_geometry) => {
+                self.state.rendered_models.insert_model(model.clone());
                 mesh_geometry.push(output_geometry);
             }
             None => {
@@ -266,7 +279,6 @@ impl ProcessorInterface {
                 state: ProcessorState::default(),
                 request_receiver,
                 response_sender,
-                render_cache: RcMut::new(RenderCache::new()),
             };
 
             loop {
@@ -293,7 +305,7 @@ pub struct ProcessorPlugin;
 impl Plugin for ProcessorPlugin {
     fn build(&self, app: &mut bevy::app::App) {
         app.add_event::<ProcessorRequest>()
-            .add_systems(Startup, systems::startup_processor)
+            .add_systems(Startup, systems::initialize_processor)
             .add_systems(Update, systems::handle_processor_request)
             .add_systems(Update, systems::handle_processor_responses)
             .add_systems(Update, systems::handle_external_reload);
