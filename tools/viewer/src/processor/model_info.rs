@@ -50,7 +50,7 @@ impl ModelInfo {
             .attributes
             .get_color()
             .cloned()
-            .unwrap_or(state.theme.darker)
+            .unwrap_or(state.theme.brighter)
             .to_bevy();
 
         Self {

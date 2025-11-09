@@ -68,6 +68,7 @@ pub fn create_2d_material(base_color: bevy::prelude::Color) -> bevy_types::Stand
 pub fn create_3d_material(base_color: bevy::prelude::Color) -> bevy_types::StandardMaterial {
     bevy_types::StandardMaterial {
         alpha_mode: alpha_mode_for_color(&base_color),
+        base_color,
         metallic: 0.1,
         unlit: false,
         perceptual_roughness: 0.1,
