@@ -55,23 +55,29 @@ impl StdinMessageReceiver {
 /// Process stdin messages into processor requests.
 pub fn handle_stdin_messages(
     state: bevy::prelude::ResMut<crate::State>,
-    mut event_writer: bevy::prelude::EventWriter<ProcessorRequest>,
     mut exit: EventWriter<AppExit>,
 ) {
-    use microcad_viewer_ipc::ViewerRequest::*;
     if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &state.input {
         for viewer_request in stdin.0.try_iter() {
             log::info!("{viewer_request:?}");
+
+            use microcad_viewer_ipc::ViewerRequest::*;
             match viewer_request {
                 SourceCodeFromFile { path } => {
-                    event_writer.write(ProcessorRequest::ParseFile(path));
+                    state
+                        .processor
+                        .send_request(ProcessorRequest::ParseFile(path))
+                        .expect("No error");
                 }
                 SourceCode { path, name, code } => {
-                    event_writer.write(ProcessorRequest::ParseSource {
-                        path,
-                        name,
-                        source: code,
-                    });
+                    state
+                        .processor
+                        .send_request(ProcessorRequest::ParseSource {
+                            path,
+                            name,
+                            source: code,
+                        })
+                        .expect("No error");
                 }
                 CursorRange { .. } => todo!(),
                 Exit => {

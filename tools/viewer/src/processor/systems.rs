@@ -6,10 +6,7 @@
 use bevy::render::mesh::{Mesh, Mesh3d};
 use bevy::{
     asset::Assets,
-    ecs::{
-        event::{EventReader, EventWriter},
-        system::{Commands, Res, ResMut},
-    },
+    ecs::system::{Commands, Res, ResMut},
     pbr::StandardMaterial,
     prelude::*,
 };
@@ -100,10 +97,7 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
         .for_each(|request| state.processor.send_request(request).expect("No error"));
 }
 
-pub fn handle_external_reload(
-    mut event_writer: EventWriter<ProcessorRequest>,
-    state: ResMut<crate::state::State>,
-) {
+pub fn handle_external_reload(state: ResMut<crate::state::State>) {
     use crate::plugin::MicrocadPluginInput::*;
 
     match &state.input {
@@ -113,7 +107,10 @@ pub fn handle_external_reload(
                 && let Ok(elapsed) = last_modified.elapsed()
                 && elapsed > state.config.reload_delay
             {
-                event_writer.write(ProcessorRequest::ParseFile(path.to_path_buf()));
+                state
+                    .processor
+                    .send_request(ProcessorRequest::ParseFile(path.to_path_buf()))
+                    .expect("No error");
                 log::info!("Changed file");
 
                 // Reset so we don’t reload again
@@ -186,17 +183,6 @@ pub fn handle_processor_responses(
             commands.entity(*entity).despawn();
         }
         state.scene.model_entities = entities;
-    }
-}
-
-pub fn handle_processor_request(
-    mut event_reader: EventReader<ProcessorRequest>,
-    state: Res<State>,
-) {
-    for event in event_reader.read() {
-        if let Err(error) = state.processor.send_request(event.clone()) {
-            log::error!("Render error: {error}");
-        }
     }
 }
 

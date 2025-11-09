@@ -3,14 +3,12 @@
 
 //! microcad Viewer processor request.
 
-use bevy::ecs::event::Event;
-
 use crate::Config;
 
 /// A processor request.
 ///
 /// Commands that can be passed to the [`Processor`].
-#[derive(Event, Clone)]
+#[derive(Clone)]
 pub enum ProcessorRequest {
     /// Initialize the interpreter.
     ///
