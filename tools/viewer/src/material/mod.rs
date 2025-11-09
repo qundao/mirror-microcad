@@ -18,7 +18,6 @@ mod ruler;
 pub use angle::Angle;
 pub use grid::Grid;
 pub use ruler::Ruler;
-
 pub mod bevy_types {
     pub use bevy::prelude::{AlphaMode, TypePath, Vec3};
     pub use bevy::{

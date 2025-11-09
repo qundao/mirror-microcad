@@ -133,7 +133,8 @@ pub struct MicrocadPlugin {
 
 impl Plugin for MicrocadPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(ClearColor(self.config.theme.primary.to_bevy()))
+        app.init_asset::<state::ModelViewState>()
+            .insert_resource(ClearColor(self.config.theme.primary.to_bevy()))
             .insert_resource(State::new(self.input.clone(), self.config.clone()))
             .add_plugins((OutlinePlugin, MeshPickingPlugin))
             .add_plugins(processor::ProcessorPlugin)

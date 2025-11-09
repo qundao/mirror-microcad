@@ -3,17 +3,17 @@
 
 //! microcad Viewer bevy systems
 
-use bevy::render::mesh::{Mesh, Mesh3d};
 use bevy::{
     asset::Assets,
     ecs::system::{Commands, Res, ResMut},
     pbr::StandardMaterial,
     prelude::*,
+    render::mesh::{Mesh, Mesh3d},
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
-use crate::processor::model_info::ModelInfo;
 use crate::processor::{ProcessorRequest, ProcessorResponse};
+use crate::state::ModelViewState;
 use crate::stdin::StdinMessageReceiver;
 use crate::*;
 
@@ -98,7 +98,7 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
         .for_each(|request| state.processor.send_request(request).expect("No error"));
 }
 
-pub fn handle_external_reload(state: ResMut<crate::state::State>) {
+pub fn file_reload(state: ResMut<crate::state::State>) {
     use crate::plugin::MicrocadPluginInput::*;
 
     match &state.input {
@@ -131,7 +131,7 @@ pub fn handle_processor_responses(
     mut commands: Commands,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
-    mut infos: ResMut<Assets<ModelInfo>>,
+    mut model_view_states: ResMut<Assets<ModelViewState>>,
     mut state: ResMut<State>,
 ) {
     let mut entities = Vec::new();
@@ -139,7 +139,7 @@ pub fn handle_processor_responses(
     for response in state.processor.response_receiver.try_iter() {
         match response {
             ProcessorResponse::RemoveModelInstances(uuids) => uuids.iter().for_each(|uuid| {
-                infos.remove(*uuid);
+                model_view_states.remove(*uuid);
                 materials.remove(*uuid);
             }),
             ProcessorResponse::NewMeshAsset(uuid, mesh) => {
@@ -148,28 +148,33 @@ pub fn handle_processor_responses(
             }
             ProcessorResponse::NewModelInfo(uuid, info) => {
                 log::info!("New model info: {uuid}");
-                materials.insert(uuid, info.get_default_material());
-                infos.insert(uuid, info);
+                model_view_states.insert(uuid, ModelViewState::new(info, &state));
+            }
+            ProcessorResponse::UpdateMaterials(uuids) => {
+                uuids.iter().for_each(|uuid| {
+                    let view_state = model_view_states.get(*uuid).expect("Model info");
+                    materials.insert(*uuid, view_state.generate_material());
+                });
             }
             ProcessorResponse::SpawnModelInstances(uuids) => {
-                entities.extend(uuids.iter().filter_map(|uuid| {
+                entities.extend(uuids.iter().cloned().filter_map(|uuid| {
                     log::info!("Spawn model: {uuid}");
 
-                    infos.get(*uuid).map(|info| {
+                    model_view_states.get(uuid).map(|view_state| {
                         commands
                             .spawn((
                                 Mesh3d(Handle::Weak(bevy::asset::AssetId::<Mesh>::Uuid {
-                                    uuid: info.geometry_output_uuid,
+                                    uuid: view_state.info().geometry_output_uuid,
                                 })),
                                 MeshMaterial3d(Handle::Weak(bevy::asset::AssetId::<
                                     StandardMaterial,
                                 >::Uuid {
-                                    uuid: *uuid,
+                                    uuid,
                                 })),
-                                info.transform,
-                                info.get_outline(),
+                                view_state.info().transform,
+                                view_state.outline_volume.clone(),
                                 OutlineMode::FloodFlat,
-                                info.clone(),
+                                view_state.clone(),
                             ))
                             .id()
                     })
@@ -196,7 +201,7 @@ pub fn model_info_under_cursor(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,
     buttons: Res<ButtonInput<MouseButton>>,
     mut query: Query<(
-        &ModelInfo,
+        &ModelViewState,
         &mut MeshMaterial3d<StandardMaterial>,
         &mut OutlineVolume,
     )>,
@@ -207,14 +212,14 @@ pub fn model_info_under_cursor(
         .filter_map(|interaction| interaction.get_nearest_hit())
     {
         match query.get_mut(*entity) {
-            Ok((model_info, ref mut _material, ref mut outline)) => {
+            Ok((view_state, ref mut _material, ref mut outline)) => {
                 if buttons.just_pressed(MouseButton::Left) {
                     //let material = assets.get(material.id()).expect("Material");
 
                     outline.visible = !outline.visible;
                     log::info!(
                         "Model info {} @ {}",
-                        model_info.model_hash,
+                        view_state.info().model_hash,
                         hit.position.unwrap()
                     );
                 }

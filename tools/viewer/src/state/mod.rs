@@ -3,15 +3,22 @@
 
 //! microcad Viewer State module.
 
+mod cursor;
+mod model;
+
 use bevy::ecs::resource::Resource;
 
 use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, scene::Scene};
+
+pub use cursor::Cursor;
+pub use model::ModelViewState;
 
 #[derive(Resource)]
 pub struct State {
     pub input: Option<MicrocadPluginInput>,
     pub config: Config,
     pub scene: Scene,
+    pub cursor: Cursor,
     pub processor: ProcessorInterface,
 }
 
@@ -21,6 +28,7 @@ impl State {
         Self {
             input,
             config,
+            cursor: Default::default(),
             scene: Default::default(),
             processor: ProcessorInterface::run(),
         }

@@ -7,7 +7,8 @@ mod model_info;
 mod request;
 mod systems;
 
-use crate::{processor::model_info::ModelInfo, to_bevy::ToBevyMesh, *};
+use crate::{to_bevy::ToBevyMesh, *};
+pub use processor::model_info::ModelInfo;
 
 use bevy::{
     app::{Plugin, Startup, Update},
@@ -29,6 +30,7 @@ pub enum ProcessorResponse {
     RemoveModelInstances(Vec<Uuid>),
     NewMeshAsset(Uuid, Mesh),
     NewModelInfo(Uuid, ModelInfo),
+    UpdateMaterials(Vec<Uuid>),
     SpawnModelInstances(Vec<Uuid>),
 }
 
@@ -36,11 +38,11 @@ const MODEL_UUID_SEED: u64 = 0xDEAD_BEEF_DEED_BEAF;
 
 const MODEL_GEOMETRY_OUTPUT_UUID_SEED: u64 = 0x4321_4321_4321_4321;
 
-fn model_uuid(model: &Model) -> Uuid {
+fn generate_model_uuid(model: &Model) -> Uuid {
     Uuid::from_u64_pair(MODEL_UUID_SEED, model.as_ptr() as u64)
 }
 
-fn model_geometry_output_uuid(model: &Model) -> Uuid {
+fn generate_model_geometry_output_uuid(model: &Model) -> Uuid {
     Uuid::from_u64_pair(MODEL_GEOMETRY_OUTPUT_UUID_SEED, model.computed_hash())
 }
 
@@ -148,7 +150,8 @@ impl Processor {
                 Ok(source_file) => {
                     self.state.source_file = Some(source_file);
                     self.eval()?;
-                    self.render(None)
+                    self.render(None)?;
+                    self.respond()
                 }
                 Err(err) => {
                     log::error!("{err}");
@@ -164,7 +167,8 @@ impl Processor {
                     Ok(source_file) => {
                         self.state.source_file = Some(source_file);
                         self.eval()?;
-                        self.render(None)
+                        self.render(None)?;
+                        self.respond()
                     }
                     Err(err) => {
                         log::error!("{err}");
@@ -174,13 +178,17 @@ impl Processor {
             }
             ProcessorRequest::Eval => {
                 self.eval()?;
-                self.render(None)
+                self.render(None)?;
+                self.respond()
             }
-            ProcessorRequest::Render(resolution) => self.render(resolution),
+            ProcessorRequest::Render(resolution) => {
+                self.render(resolution)?;
+                self.respond()
+            }
             ProcessorRequest::Export { .. } => todo!(),
             ProcessorRequest::SetLineNumber(line_number) => {
                 self.state.line_number = line_number;
-                self.render(None)
+                self.respond()
             }
         }
     }
@@ -190,7 +198,7 @@ impl Processor {
         self.state.initialized && self.state.model.is_some()
     }
 
-    pub(crate) fn eval(&mut self) -> anyhow::Result<Vec<ProcessorResponse>> {
+    pub(crate) fn eval(&mut self) -> anyhow::Result<()> {
         match &self.state.source_file {
             Some(source_file) => {
                 // resolve the file
@@ -209,18 +217,14 @@ impl Processor {
                 );
 
                 self.state.model = eval_context.eval()?;
-
-                Ok(vec![])
+                Ok(())
             }
             None => Err(anyhow::anyhow!("No source code to evaluate.")),
         }
     }
 
-    /// Render geometry from µcad file.
-    pub(crate) fn render(
-        &mut self,
-        resolution: Option<RenderResolution>,
-    ) -> anyhow::Result<Vec<ProcessorResponse>> {
+    /// Render geometry from model.
+    fn render(&mut self, resolution: Option<RenderResolution>) -> anyhow::Result<()> {
         if self.can_render() {
             let resolution = match resolution {
                 Some(resolution) => resolution,
@@ -234,12 +238,7 @@ impl Processor {
                 Some(self.state.render_cache.clone()),
             )?;
 
-            let mut responses = Vec::new();
-
-            responses.push(ProcessorResponse::RemoveModelInstances(
-                self.state.instance_cache.fetch_model_uuids(),
-            ));
-            let model: Model = model.render_with_context(&mut render_context)?;
+            let _: Model = model.render_with_context(&mut render_context)?;
 
             // Remove unused cache items.
             {
@@ -249,10 +248,26 @@ impl Processor {
             }
 
             self.state.resolution = resolution;
+            Ok(())
+        } else {
+            Err(anyhow::anyhow!("Could not render model."))
+        }
+    }
+
+    fn respond(&mut self) -> anyhow::Result<Vec<ProcessorResponse>> {
+        if let Some(model) = self.state.model.clone() {
+            let mut responses = Vec::new();
+            responses.push(ProcessorResponse::RemoveModelInstances(
+                self.state.instance_cache.fetch_model_uuids(),
+            ));
 
             self.state.instance_cache.clear_model_uuids();
             self.generate_responses(&model, &mut responses);
             log::info!("{} responses", responses.len());
+
+            responses.push(ProcessorResponse::UpdateMaterials(
+                self.state.instance_cache.fetch_model_uuids(),
+            ));
 
             responses.push(ProcessorResponse::SpawnModelInstances(
                 self.state.instance_cache.fetch_model_uuids(),
@@ -260,7 +275,7 @@ impl Processor {
 
             Ok(responses)
         } else {
-            Err(anyhow::anyhow!("Could not render model."))
+            Err(anyhow::anyhow!("No model to draw."))
         }
     }
 
@@ -273,7 +288,7 @@ impl Processor {
         let recurse = match model_.element() {
             InputPlaceholder | Multiplicity | Group => true,
             Workpiece(_) | BuiltinWorkpiece(_) => {
-                let uuid = model_geometry_output_uuid(model);
+                let uuid = generate_model_geometry_output_uuid(model);
                 let output = model_.output();
                 let mut recurse = false;
 
@@ -300,14 +315,13 @@ impl Processor {
                     }
                 }
 
-                let uuid = model_uuid(model);
-
+                let uuid = generate_model_uuid(model);
                 if !self.state.instance_cache.contains_model(&uuid) {
                     self.state.instance_cache.insert_model(uuid);
 
                     responses.push(ProcessorResponse::NewModelInfo(
                         uuid,
-                        ModelInfo::from_model(model, &self.state),
+                        ModelInfo::from_model(model),
                     ));
                 }
 
@@ -369,11 +383,9 @@ pub struct ProcessorPlugin;
 
 impl Plugin for ProcessorPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        use bevy::prelude::AssetApp;
-        app.init_asset::<ModelInfo>()
-            .add_systems(Startup, systems::initialize_processor)
+        app.add_systems(Startup, systems::initialize_processor)
             .add_systems(Update, systems::handle_processor_responses)
-            .add_systems(Update, systems::handle_external_reload)
+            .add_systems(Update, systems::file_reload)
             .add_systems(Update, systems::model_info_under_cursor);
     }
 }
