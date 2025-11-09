@@ -20,12 +20,13 @@ use microcad_lang::{
 use crate::{
     ToBevy,
     material::{create_2d_material, create_3d_material},
-    processor::ProcessorState,
+    processor::{ProcessorState, model_geometry_output_uuid},
 };
 
 #[derive(Asset, Component, Clone, Default, TypePath)]
 pub struct ModelInfo {
     pub model_uuid: Uuid,
+    pub geometry_output_uuid: Uuid,
     pub model_hash: u64,
     pub output_type: OutputType,
     pub transform: Transform,
@@ -49,12 +50,13 @@ impl ModelInfo {
             .attributes
             .get_color()
             .cloned()
-            .unwrap_or(state.theme.brighter)
+            .unwrap_or(state.theme.darker)
             .to_bevy();
 
         Self {
             model_uuid: super::model_uuid(model),
             model_hash: model.computed_hash(),
+            geometry_output_uuid: model_geometry_output_uuid(model),
             output_type: model.render_output_type(),
             transform,
             color,

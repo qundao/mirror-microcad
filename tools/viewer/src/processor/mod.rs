@@ -3,11 +3,11 @@
 
 //! microcad Viewer processor.
 
-mod model_instance;
+mod model_info;
 mod request;
 mod systems;
 
-use crate::{processor::model_instance::ModelInfo, to_bevy::ToBevyMesh, *};
+use crate::{processor::model_info::ModelInfo, to_bevy::ToBevyMesh, *};
 
 use bevy::{
     app::{Plugin, Startup, Update},
@@ -252,6 +252,7 @@ impl Processor {
 
             self.state.instance_cache.clear_model_uuids();
             self.generate_responses(&model, &mut responses);
+            log::info!("{} responses", responses.len());
 
             responses.push(ProcessorResponse::SpawnModelInstances(
                 self.state.instance_cache.fetch_model_uuids(),
@@ -269,51 +270,50 @@ impl Processor {
 
         let model_ = model.borrow();
         // We only consider output geometries of workpieces and ignore the rest.
-        match model_.element() {
-            InputPlaceholder | Multiplicity | Group => {
-                return;
+        let recurse = match model_.element() {
+            InputPlaceholder | Multiplicity | Group => true,
+            Workpiece(_) | BuiltinWorkpiece(_) => {
+                let uuid = model_geometry_output_uuid(model);
+                let output = model_.output();
+                let mut recurse = false;
+
+                // Add a new mesh asset, when we do not have geometry with a uuid in the cache.
+                if !self.state.instance_cache.contains_geometry_output(&uuid) {
+                    let mesh = match &output.geometry {
+                        Some(GeometryOutput::Geometry2D(geometry)) => {
+                            Some(geometry.inner.to_bevy_mesh_default())
+                        }
+                        Some(GeometryOutput::Geometry3D(geometry)) => {
+                            Some(geometry.inner.to_bevy_mesh(30.0))
+                        }
+                        None => None,
+                    };
+
+                    match mesh {
+                        Some(mesh) => {
+                            self.state.instance_cache.insert_geometry_output(uuid);
+                            responses.push(ProcessorResponse::NewMeshAsset(uuid, mesh));
+                        }
+                        None => {
+                            recurse = true;
+                        }
+                    }
+                }
+
+                let uuid = model_uuid(model);
+
+                if !self.state.instance_cache.contains_model(&uuid) {
+                    self.state.instance_cache.insert_model(uuid);
+
+                    responses.push(ProcessorResponse::NewModelInfo(
+                        uuid,
+                        ModelInfo::from_model(model, &self.state),
+                    ));
+                }
+
+                recurse
             }
-            Workpiece(_) | BuiltinWorkpiece(_) => {}
-        }
-
-        let uuid = model_geometry_output_uuid(model);
-        let output = model_.output();
-
-        let mut recurse = false;
-
-        // Add a new mesh asset, when we do not have geometry with a uuid in the cache.
-        if !self.state.instance_cache.contains_geometry_output(&uuid) {
-            let mesh = match &output.geometry {
-                Some(GeometryOutput::Geometry2D(geometry)) => {
-                    Some(geometry.inner.to_bevy_mesh_default())
-                }
-                Some(GeometryOutput::Geometry3D(geometry)) => {
-                    Some(geometry.inner.to_bevy_mesh(30.0))
-                }
-                None => None,
-            };
-
-            match mesh {
-                Some(mesh) => {
-                    self.state.instance_cache.insert_geometry_output(uuid);
-                    responses.push(ProcessorResponse::NewMeshAsset(uuid, mesh));
-                }
-                None => {
-                    recurse = true;
-                }
-            }
-        }
-
-        let uuid = model_uuid(model);
-
-        if !self.state.instance_cache.contains_model(&uuid) {
-            self.state.instance_cache.insert_model(uuid);
-
-            responses.push(ProcessorResponse::NewModelInfo(
-                uuid,
-                ModelInfo::from_model(model, &self.state),
-            ));
-        }
+        };
 
         if recurse {
             model_

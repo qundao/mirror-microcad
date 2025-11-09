@@ -15,7 +15,7 @@ use bevy::{
 };
 use bevy_mod_outline::OutlineMode;
 
-use crate::processor::model_instance::ModelInfo;
+use crate::processor::model_info::ModelInfo;
 use crate::processor::{ProcessorRequest, ProcessorResponse};
 use crate::stdin::StdinMessageReceiver;
 use crate::*;
@@ -141,19 +141,23 @@ pub fn handle_processor_responses(
                 materials.remove(*uuid);
             }),
             ProcessorResponse::NewMeshAsset(uuid, mesh) => {
+                log::info!("New mesh: {uuid}");
                 meshes.insert(uuid, mesh);
             }
             ProcessorResponse::NewModelInfo(uuid, info) => {
+                log::info!("New model info: {uuid}");
                 materials.insert(uuid, info.get_default_material());
                 infos.insert(uuid, info);
             }
             ProcessorResponse::SpawnModelInstances(uuids) => {
                 entities.extend(uuids.iter().filter_map(|uuid| {
+                    log::info!("Spawn model: {uuid}");
+
                     infos.get(*uuid).map(|info| {
                         commands
                             .spawn((
                                 Mesh3d(Handle::Weak(bevy::asset::AssetId::<Mesh>::Uuid {
-                                    uuid: *uuid,
+                                    uuid: info.geometry_output_uuid,
                                 })),
                                 MeshMaterial3d(Handle::Weak(bevy::asset::AssetId::<
                                     StandardMaterial,
