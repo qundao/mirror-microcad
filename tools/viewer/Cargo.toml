@@ -26,6 +26,7 @@ bevy = { version = "0.16.1", default-features = false, features = [
 ] }
 
 bevy_mod_outline = "0.10.3"
+bytemuck = "1.24"
 clap = { version = "4.5.48", features = ["derive"] }
 cgmath = { version = "0.18", features = ["serde"] }
 crossbeam = "0.8"
