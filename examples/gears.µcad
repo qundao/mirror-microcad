@@ -7,7 +7,7 @@ const TEETH = 20;
 angle = 30° * TEETH;
 
 part Gear(teeth: Integer) {
-    gear_profile = InvoluteGearProfile(module = 1.0mm, teeth, pressure_angle = 2°);
+    gear_profile = InvoluteGearProfile(module = 1.0mm, teeth);
 
     prop pitch_radius = gear_profile.pitch_radius;
     prop outer_radius = gear_profile.outer_radius;
