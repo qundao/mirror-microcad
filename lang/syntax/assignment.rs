@@ -8,6 +8,8 @@ use crate::{src_ref::*, syntax::*, ty::*};
 /// Assignment specifying an identifier, type and value
 #[derive(Clone)]
 pub struct Assignment {
+    /// Documentation.
+    pub doc: Option<DocBlock>,
     /// Value's visibility
     pub visibility: Visibility,
     /// Assignee qualifier
@@ -25,6 +27,7 @@ pub struct Assignment {
 impl Assignment {
     /// Create new assignment.
     pub fn new(
+        doc: Option<DocBlock>,
         visibility: Visibility,
         qualifier: Qualifier,
         id: Identifier,
@@ -33,6 +36,7 @@ impl Assignment {
         src_ref: SrcRef,
     ) -> Self {
         Self {
+            doc,
             visibility,
             qualifier,
             id,
@@ -51,6 +55,7 @@ impl Assignment {
         }
     }
 }
+
 impl SrcReferrer for Assignment {
     fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
@@ -113,5 +118,11 @@ impl TreeDisplay for Assignment {
             specified_type.tree_print(f, depth)?;
         }
         self.expression.tree_print(f, depth)
+    }
+}
+
+impl Doc for Assignment {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
     }
 }

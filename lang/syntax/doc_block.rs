@@ -7,6 +7,7 @@ use crate::{src_ref::*, syntax::*};
 
 /// Retrieve doc from symbol definition.
 pub trait Doc {
+    /// Return documentation
     fn doc(&self) -> Option<DocBlock>;
 }
 

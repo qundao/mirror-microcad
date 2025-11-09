@@ -359,7 +359,7 @@ qualifier = { "const" | "prop" }
 // `r`: error # neither type specifier or default value
 // `const r = 5.0mm`: Make value of assignment a public constant
 // `prop r = 5.0mm`: Make value of assignment a public property
-assignment = { (visibility ~ ws+)? ~ (qualifier ~ ws+)? ~ identifier ~ ws* ~ type_annotation? ~ ws* ~ "=" ~ ws* ~ expression }
+assignment = { doc_block? ~ (visibility ~ ws+)? ~ (qualifier ~ ws+)? ~ identifier ~ ws* ~ type_annotation? ~ ws* ~ "=" ~ ws* ~ expression }
 
 assignment_statement = { (attribute_list ~ ws+)? ~ assignment ~ ws* ~ ";" }
 
