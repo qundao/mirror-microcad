@@ -13,17 +13,23 @@ use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, 
 pub use cursor::Cursor;
 pub use model::ModelViewState;
 
+/// The application state (the bevy view model).
 #[derive(Resource)]
 pub struct State {
+    /// Input interface (e.g. file or stdin).
     pub input: Option<MicrocadPluginInput>,
+    /// The configuration settings of loaded at startup.
     pub config: Config,
+    /// The scene entities to be spawned and rendered.
     pub scene: Scene,
+    /// Information at cursor positions (view cursor and editor cursor).
     pub cursor: Cursor,
+    /// The µcad geometry processor.
     pub processor: ProcessorInterface,
 }
 
 impl State {
-    /// Create new state from arguments
+    /// Create new state from arguments.
     pub fn new(input: Option<MicrocadPluginInput>, config: Config) -> Self {
         Self {
             input,
