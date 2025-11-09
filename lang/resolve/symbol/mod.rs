@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 mod symbol_definition;
+mod symbol_info;
 mod symbol_inner;
 mod symbol_map;
 mod symbols;
 
 pub use symbol_definition::*;
+pub use symbol_info::*;
 pub(crate) use symbol_map::*;
 pub(crate) use symbols::*;
 
@@ -707,9 +709,9 @@ impl std::fmt::Debug for Symbol {
     }
 }
 
-impl Doc for Symbol {
-    fn doc(&self) -> Option<DocBlock> {
-        self.with_def(|def| def.doc())
+impl Info for Symbol {
+    fn info(&self) -> SymbolInfo {
+        self.with_def(|def| def.info())
     }
 }
 

@@ -80,6 +80,12 @@ impl CallTrait for Builtin {
     }
 }
 
+impl Doc for Builtin {
+    fn doc(&self) -> Option<DocBlock> {
+        todo!()
+    }
+}
+
 /// The kind of the built-in workbench determines its output.
 #[derive(Debug, Clone, Display, PartialEq)]
 pub enum BuiltinWorkbenchKind {

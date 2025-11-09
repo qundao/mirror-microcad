@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{builtin::*, rc::*, src_ref::*, syntax::*, value::*};
+use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, value::*};
 
 /// Symbol definition
 #[derive(Clone)]
@@ -151,6 +151,30 @@ impl Doc for SymbolDef {
             SymbolDef::Workbench(wd) => wd.doc(),
             SymbolDef::Function(fd) => fd.doc(),
             _ => None,
+        }
+    }
+}
+
+impl Info for SymbolDef {
+    fn info(&self) -> SymbolInfo {
+        match self {
+            SymbolDef::SourceFile(sf) => sf.into(),
+            SymbolDef::Module(md) => md.into(),
+            SymbolDef::Workbench(wd) => wd.into(),
+            SymbolDef::Function(fd) => fd.into(),
+            SymbolDef::Builtin(bi) => bi.into(),
+            SymbolDef::Assignment(a) => a.into(),
+
+            SymbolDef::Constant(visibility, id, value) => {
+                SymbolInfo::new_constant(visibility, id, value)
+            }
+            SymbolDef::Argument(id, value) => SymbolInfo::new_arg(id, value),
+
+            SymbolDef::Alias(..) => unimplemented!(),
+            SymbolDef::UseAll(..) => unimplemented!(),
+
+            #[cfg(test)]
+            SymbolDef::Tester(_) => unreachable!(),
         }
     }
 }

@@ -26,6 +26,12 @@ pub struct InitDefinition {
     pub src_ref: SrcRef,
 }
 
+impl Doc for InitDefinition {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
+    }
+}
+
 impl SrcReferrer for InitDefinition {
     fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
