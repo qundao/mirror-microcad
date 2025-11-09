@@ -3,6 +3,7 @@
 
 //! µcad builtin library
 
+pub mod dirs;
 pub mod geo2d;
 pub mod geo3d;
 pub mod ops;

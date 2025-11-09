@@ -101,7 +101,7 @@ fn main() {
     if config.search_paths.is_empty() {
         config
             .search_paths
-            .append(&mut Config::default_search_paths())
+            .append(&mut microcad_builtin::dirs::default_search_paths())
     }
 
     use microcad_viewer::plugin::MicrocadPluginInput;
