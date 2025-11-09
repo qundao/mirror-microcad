@@ -3,11 +3,6 @@
 
 //! microcad Viewer State module.
 
-use std::{
-    sync::{Arc, Mutex},
-    time::SystemTime,
-};
-
 use bevy::ecs::resource::Resource;
 
 use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, scene::Scene};
@@ -16,7 +11,6 @@ use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, 
 pub struct State {
     pub input: Option<MicrocadPluginInput>,
     pub config: Config,
-    pub last_modified: Arc<Mutex<Option<SystemTime>>>,
     pub scene: Scene,
     pub processor: ProcessorInterface,
 }
@@ -27,7 +21,6 @@ impl State {
         Self {
             input,
             config,
-            last_modified: Default::default(),
             scene: Default::default(),
             processor: ProcessorInterface::run(),
         }

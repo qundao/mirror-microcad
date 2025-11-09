@@ -1,6 +1,11 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use std::{
+    sync::{Arc, Mutex},
+    time::SystemTime,
+};
+
 use bevy::app::{App, Plugin, Startup, Update};
 use bevy_mod_outline::OutlinePlugin;
 
@@ -28,6 +33,9 @@ pub enum MicrocadPluginInput {
 
         /// Line number, starting with 1.
         line: Option<u32>,
+
+        /// Time stamp of last modification.
+        last_modified: Arc<Mutex<Option<SystemTime>>>,
     },
     /// Remove-controlled via stdin.
     Stdin(Option<StdinMessageReceiver>),
@@ -50,6 +58,7 @@ impl MicrocadPluginInput {
                     .fragment()
                     .and_then(|frag| frag.strip_prefix('L'))
                     .and_then(|n| n.parse::<u32>().ok()),
+                last_modified: Default::default(),
             }),
             "stdin" => Ok(Self::Stdin(None)),
             scheme => Err(anyhow::anyhow!("{scheme} not supported!")),
@@ -59,7 +68,9 @@ impl MicrocadPluginInput {
     /// Get the URL for the input.
     pub fn get_url(&self) -> Url {
         match self {
-            MicrocadPluginInput::File { path, symbol, line } => {
+            MicrocadPluginInput::File {
+                path, symbol, line, ..
+            } => {
                 // Start with base: file://<path>
                 let mut url = Url::parse("file://").unwrap();
 

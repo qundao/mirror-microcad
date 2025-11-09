@@ -47,7 +47,6 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
         .expect("No error");
 
     use crate::plugin::MicrocadPluginInput;
-    let flag_clone = state.last_modified.clone();
     let reload_delay = state.config.reload_delay;
 
     let mut requests = Vec::new();
@@ -57,7 +56,9 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
             path,
             symbol: _,
             line,
+            last_modified,
         }) => {
+            let flag_clone = last_modified.clone();
             let path = path.clone();
             requests.push(ProcessorRequest::ParseFile(path.clone()));
             requests.push(ProcessorRequest::SetLineNumber(*line));
@@ -101,8 +102,12 @@ pub fn handle_external_reload(state: ResMut<crate::state::State>) {
     use crate::plugin::MicrocadPluginInput::*;
 
     match &state.input {
-        Some(File { path, .. }) => {
-            let mut last_modified_lock = state.last_modified.lock().unwrap();
+        Some(File {
+            path,
+            last_modified,
+            ..
+        }) => {
+            let mut last_modified_lock = last_modified.lock().unwrap();
             if let Some(last_modified) = *last_modified_lock
                 && let Ok(elapsed) = last_modified.elapsed()
                 && elapsed > state.config.reload_delay
