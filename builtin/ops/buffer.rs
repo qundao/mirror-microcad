@@ -13,7 +13,7 @@ use microcad_lang::{builtin::*, render::*};
 #[derive(BuiltinOperation2D)]
 pub struct Buffer {
     /// Specified distance in mm.
-    distance: Scalar,
+    distance: Length,
 }
 
 impl Operation for Buffer {
@@ -22,7 +22,7 @@ impl Operation for Buffer {
             let model_ = model.borrow();
             let geometries: Geometries2D = model_.children.render_with_context(context)?;
             use geo::Buffer;
-            Ok(Geometry2D::MultiPolygon(geometries.buffer(self.distance)))
+            Ok(Geometry2D::MultiPolygon(geometries.buffer(*self.distance)))
         })
     }
 }

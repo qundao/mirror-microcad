@@ -108,6 +108,6 @@
 
 ```µcad,body_expression_model
 {
-  __builtin::geo2d::Circle(radius=1);
+  __builtin::geo2d::Circle(radius=1mm);
 }
 ```

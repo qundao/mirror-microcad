@@ -21,5 +21,5 @@ __builtin::geo2d::Sector(radius = 20mm, start = 45°, end = 135°);
 [![test](.test/text.svg)](.test/text.log)
 
 ```µcad,text
-__builtin::geo2d::Text(height = 20mm / 1mm, text = "Hello World");
+__builtin::geo2d::Text(height = 20mm, text = "Hello World");
 ```

@@ -9,7 +9,7 @@ use microcad_lang::{builtin::*, model::*, render::*};
 #[derive(BuiltinOperation3D)]
 pub struct Extrude {
     /// Extrusion height in mm (in Z direction).
-    height: Scalar,
+    height: Length,
     /// Scale in X direction.
     scale_x: Scalar,
     /// Scale in Y direction.

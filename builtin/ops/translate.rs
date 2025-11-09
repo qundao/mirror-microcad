@@ -23,9 +23,9 @@ impl BuiltinWorkbenchDefinition for Translate {
         &|args| {
             Ok(BuiltinWorkpieceOutput::Transform(
                 AffineTransform::Translation(Vec3::new(
-                    args.get("x"),
-                    args.get("y"),
-                    args.get("z"),
+                    *args.get::<Length>("x"),
+                    *args.get::<Length>("y"),
+                    *args.get::<Length>("z"),
                 )),
             ))
         }
@@ -33,9 +33,9 @@ impl BuiltinWorkbenchDefinition for Translate {
 
     fn parameters() -> ParameterValueList {
         [
-            parameter!(x: Scalar = 0.0),
-            parameter!(y: Scalar = 0.0),
-            parameter!(z: Scalar = 0.0),
+            parameter!(x: Length = Length::default()),
+            parameter!(y: Length = Length::default()),
+            parameter!(z: Length = Length::default()),
         ]
         .into_iter()
         .collect()

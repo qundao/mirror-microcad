@@ -7,7 +7,7 @@ use super::Scalar;
 use derive_more::{Deref, DerefMut};
 
 /// A length in millimeters.
-#[derive(Clone, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Copy, Default, Deref, DerefMut)]
 pub struct Length(pub Scalar);
 
 impl Length {

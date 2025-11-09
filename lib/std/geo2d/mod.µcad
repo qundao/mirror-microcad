@@ -21,8 +21,8 @@ pub sketch Circle(radius: Length, center = (x = 0.0mm, y = 0.0mm)) {
         center = c;
     }
 
-    __builtin::geo2d::Circle(radius = radius / 1mm)
-        .__builtin::ops::translate(x = center.x / 1mm, y = center.y / 1mm, z = 0.0)
+    __builtin::geo2d::Circle(radius)
+        .__builtin::ops::translate(x = center.x, y = center.y)
 }
 
 /// A frame with a thickness.
@@ -43,7 +43,7 @@ pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 
     prop tooth_angle = 360° / teeth;
     prop tooth_distance = (outer_radius - pitch_radius) * __builtin::math::PI;
 
-    __builtin::geo2d::InvoluteGearProfile(module = module / 1mm, teeth, pressure_angle)
+    __builtin::geo2d::InvoluteGearProfile(module, teeth, pressure_angle)
 }
 
 
@@ -69,7 +69,7 @@ pub sketch Line(p0: Vec2, p1: Vec2) {
 /// A regular convex polygon with `n` corners.
 pub sketch Ngon(n: Integer, radius: Length) {
     std::debug::assert(n > 2, "N must be at least 3.");
-    __builtin::geo2d::Ngon(n, radius = radius / 1mm);
+    __builtin::geo2d::Ngon(n, radius);
 }
 
 /// Circle sector definition.
@@ -161,18 +161,15 @@ pub sketch RoundedRect(
     }
 
     __builtin::geo2d::RoundedRect(
-        width = width / 1mm,
-        height = height / 1mm,
-        x = x / 1mm,
-        y = y / 1mm,
-        radius_bottom_left = radius_bottom_left / 1mm,
-        radius_bottom_right = radius_bottom_right / 1mm,
-        radius_top_left = radius_top_left / 1mm,
-        radius_top_right = radius_top_right / 1mm,
+        width, height, x, y,
+        radius_bottom_left,
+        radius_bottom_right,
+        radius_top_left,
+        radius_top_right
     )
 }
 
 /// Text definition.
 pub sketch Text(height: Length, text: String, font_file = "") {
-    __builtin::geo2d::Text(height = height / 1mm, text, font_file);
+    __builtin::geo2d::Text(height, text, font_file);
 }

@@ -88,7 +88,7 @@ prop a = 1;  // error
 [![test](.test/source_expression_model.svg)](.test/source_expression_model.log)
 
 ```µcad,source_expression_model
-__builtin::geo2d::Circle(radius=1);
+__builtin::geo2d::Circle(radius=1mm);
 ```
 
 ### Module

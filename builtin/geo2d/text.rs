@@ -6,10 +6,10 @@ use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
 /// Text geometry with a height.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Text {
     /// Text height.
-    pub height: Scalar,
+    pub height: Length,
 
     /// Text.
     pub text: String,
@@ -30,7 +30,7 @@ impl Render<Geometry2D> for Text {
         let font = rusttype::Font::try_from_bytes(font_data.as_slice())
             .expect("Failed to load font into rusttype");
 
-        let options = geo_rusttype::TextOptions::new(self.height as f32, font, None, None);
+        let options = geo_rusttype::TextOptions::new(*self.height as f32, font, None, None);
 
         use geo::Simplify;
         let polygons = geo_rusttype::text_to_multi_polygon(&self.text, options)

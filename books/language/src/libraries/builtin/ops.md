@@ -11,8 +11,8 @@ use __builtin::*;
 
 #[color = "red"]
 {
-    geo2d::Circle(radius = 3.0).ops::translate(x = 1.0, y = 1.0, z = 0.0);
-    geo2d::Rect(x = 0.0, y = 0.0, width = 3.0, height = 3.0);
+    geo2d::Circle(radius = 3.0mm).ops::translate(x = 1.0mm, y = 1.0mm, z = 0.0mm);
+    geo2d::Rect(x = 0.0mm, y = 0.0mm, width = 3.0mm, height = 3.0mm);
 }.ops::subtract();
 ```
 
@@ -22,8 +22,8 @@ use __builtin::*;
 use __builtin::*;
 
 {
-    geo3d::Sphere(radius = 3.0);
-    geo3d::Sphere(radius = 2.0).__builtin::ops::translate(x = 3.0);    
+    geo3d::Sphere(radius = 3.0mm);
+    geo3d::Sphere(radius = 2.0mm).__builtin::ops::translate(x = 3.0mm);    
 }.ops::subtract();
 ```
 
@@ -40,9 +40,9 @@ use __builtin::*;
 ```µcad,builtin_extrude
 use __builtin::*;
 
-a = geo2d::Circle(radius = 9.0) - geo2d::Circle(radius = 2.0).ops::translate(x = [-3.0, 3.0], y = [-3.0, 3.0], z = 0.0);
+a = geo2d::Circle(radius = 9.0mm) - geo2d::Circle(radius = 2.0mm).ops::translate(x = [-3.0, 3.0]mm, y = [-3.0, 3.0]mm);
 
-a.ops::extrude(height = 4.0, scale_x = 100%, scale_y = 100%, twist = 0°);
+a.ops::extrude(height = 4.0mm, scale_x = 100%, scale_y = 100%, twist = 0°);
 ```
 
 ### `orient`
@@ -55,8 +55,8 @@ a.ops::extrude(height = 4.0, scale_x = 100%, scale_y = 100%, twist = 0°);
 use __builtin::*;
 
 std::geo2d::Circle(10mm)
-    .ops::translate(x = 20.0, y = 0.0, z = 0.0)
-    .ops::revolve(revolve_degrees = 360.0);
+    .ops::translate(x = 20.0mm, y = 0.0mm, z = 0.0mm)
+    .ops::revolve(angle = 360.0°);
 ```
 
 ### `rotate`
@@ -69,10 +69,10 @@ use __builtin::*;
 
 ```µcad,builtin_translate
 op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
-    @input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
+    @input.__builtin::ops::translate(x, y, z);
 }
 
-r = __builtin::geo2d::Rect(x = 0, y = 0, width = 3, height = 3);
+r = __builtin::geo2d::Rect(x = 0mm, y = 0mm, width = 3mm, height = 3mm);
 
 #[color = "red"]
 r.translate(x = 0.0mm, y = 0.0mm);
@@ -93,7 +93,7 @@ r.translate(x = 4.0mm, y = 4.0mm);
 use __builtin::*;
 
 #[color = color::RED]
-geo2d::Rect(x = 0.0, y = 0.0, width = 10.0, height = 10.0)
-    .ops::translate(x = 0.0, y = 15.0, z = 0.0)
-    .ops::translate(x = 15.0, y = 0.0, z = 0.0);
+geo2d::Rect(x = 0.0mm, y = 0.0mm, width = 10.0mm, height = 10.0mm)
+    .ops::translate(x = 0.0mm, y = 15.0mm, z = 0.0mm)
+    .ops::translate(x = 15.0mm, y = 0.0mm, z = 0.0mm);
 ```

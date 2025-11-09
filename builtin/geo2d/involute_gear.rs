@@ -19,7 +19,7 @@ pub struct InvoluteGearProfile {
     /// Gear module (mm per tooth), controlling the overall gear size.
     /// Defines the ratio between the pitch diameter and the number of teeth:
     /// `pitch_diameter = module * teeth`.
-    pub module: Scalar,
+    pub module: Length,
     /// Total number of teeth on the gear. Must be a positive integer.
     pub teeth: Integer,
     /// Pressure angle (radians or degrees), defining the shape of the involute flank.
@@ -57,7 +57,7 @@ impl InvoluteGearProfile {
 
     #[inline]
     fn pitch_radius(&self) -> Scalar {
-        self.module * self.teeth as Scalar / 2.0
+        *self.module * self.teeth as Scalar / 2.0
     }
 
     #[inline]
@@ -67,12 +67,12 @@ impl InvoluteGearProfile {
 
     #[inline]
     fn outer_radius(&self) -> Scalar {
-        self.pitch_radius() + self.module
+        self.pitch_radius() + *self.module
     }
 
     #[inline]
     fn root_radius(&self) -> Scalar {
-        self.pitch_radius() - 1.25 * self.module
+        self.pitch_radius() - 1.25 * *self.module
     }
 
     #[inline]

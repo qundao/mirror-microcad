@@ -1,16 +1,16 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_builtin_proc_macros::BuiltinOperation3D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, model::*, render::*};
 
-#[derive(Debug)]
-#[allow(dead_code)]
+#[derive(BuiltinOperation3D)]
 pub struct Spiralize {
-    height: Scalar,
-    inner_radius: Scalar,
-    outer_radius: Scalar,
-    turns: Scalar,
+    height: Length,
+    inner_radius: Length,
+    outer_radius: Length,
+    angle: Angle,
 }
 
 impl Operation for Spiralize {
@@ -28,50 +28,14 @@ impl Operation for Spiralize {
             use microcad_core::Extrude;
 
             let WithBounds3D { inner, bounds } = geometries.spiralize(
-                self.height,
-                self.inner_radius,
-                self.outer_radius,
-                self.turns,
+                *self.height,
+                *self.inner_radius,
+                *self.outer_radius,
+                self.angle.0 / consts::PI * 0.5,
                 context.current_resolution().circular_segments(radius) as usize,
             );
 
             Ok(WithBounds3D::new(inner.into(), bounds))
         })
-    }
-}
-
-impl BuiltinWorkbenchDefinition for Spiralize {
-    fn id() -> &'static str {
-        "spiralize"
-    }
-
-    fn kind() -> BuiltinWorkbenchKind {
-        BuiltinWorkbenchKind::Operation
-    }
-
-    fn output_type() -> OutputType {
-        OutputType::Geometry3D
-    }
-
-    fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        &|args| {
-            Ok(BuiltinWorkpieceOutput::Operation(Box::new(Spiralize {
-                height: args.get("height"),
-                inner_radius: args.get("inner_radius"),
-                outer_radius: args.get("outer_radius"),
-                turns: args.get("turns"),
-            })))
-        }
-    }
-
-    fn parameters() -> ParameterValueList {
-        [
-            parameter!(height: Scalar),
-            parameter!(inner_radius: Scalar),
-            parameter!(outer_radius: Scalar),
-            parameter!(turns: Scalar),
-        ]
-        .into_iter()
-        .collect()
     }
 }

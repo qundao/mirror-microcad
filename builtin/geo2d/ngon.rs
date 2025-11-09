@@ -13,7 +13,7 @@ pub struct Ngon {
     /// Number of sides.
     n: Integer,
     /// Radius.
-    radius: Scalar,
+    radius: Length,
 }
 
 impl Render<Geometry2D> for Ngon {
@@ -21,7 +21,7 @@ impl Render<Geometry2D> for Ngon {
         Geometry2D::Polygon(Polygon::new(
             LineString::new(
                 NgonIterator::new(self.n as u32)
-                    .map(|p| p * self.radius)
+                    .map(|p| p * *self.radius)
                     .collect(),
             ),
             vec![],

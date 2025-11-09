@@ -40,6 +40,7 @@ pub use length::Length;
 /// Constants.
 pub mod consts {
     pub use std::f64::consts::PI;
+    pub use std::f64::consts::TAU;
 }
 
 pub use boolean_op::BooleanOp;

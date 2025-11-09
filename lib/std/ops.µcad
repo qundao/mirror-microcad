@@ -7,7 +7,7 @@ pub use __builtin::ops::align;
 
 /// Create a new geometry whose boundary is offset the specified distance from the input.
 pub op buffer(distance: Length) {
-	@input.__builtin::ops::buffer(distance = distance / 1mm);
+	@input.__builtin::ops::buffer(distance);
 }
 
 /// Generate a contour geometry out of an input geometry.
@@ -27,14 +27,13 @@ pub op extrude(
 		twist = 0°;
 	}
 
-    @input.__builtin::ops::extrude(height = height / 1mm, scale_x = scale.x, scale_y = scale.y, twist);
+    @input.__builtin::ops::extrude(height, scale_x = scale.x, scale_y = scale.y, twist);
 }
 
 /// Mirror along an axis, keeping existing geometry.
 pub op mirror(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
 	@input.__builtin::ops::mirror(
-		x = x / 1mm, y = y / 1mm, z = z / 1mm,
-		nx = n.x, ny = n.y, nz = n.z
+		x, y, z, nx = n.x, ny = n.y, nz = n.z
 	)
 }
 
@@ -46,16 +45,13 @@ pub op orient(v: Vec3) {
 /// Reflect a geometry along an axis.
 pub op reflect(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
 	@input.__builtin::ops::reflect(
-		x = x / 1mm, y = y / 1mm, z = z / 1mm,
-		nx = n.x, ny = n.y, nz = n.z
+		x, y, z, nx = n.x, ny = n.y, nz = n.z
 	)
 }
 
 /// Revolve a geometry around 360°.
 pub op revolve(angle = 360°) {
-    @input.__builtin::ops::revolve(
-        revolve_degrees = angle / 1°
-    );
+    @input.__builtin::ops::revolve(angle);
 }
 
 /// An operation that rotates a part.
@@ -154,12 +150,7 @@ pub op spiralize(
 	angle: Angle,
 	height = 0mm
 ) {
-    @input.__builtin::ops::spiralize(
-        height = height / 1mm,
-		inner_radius = inner_radius / 1mm,
-		outer_radius = outer_radius / 1mm,
-		turns = angle / 1turns
-    );
+    @input.__builtin::ops::spiralize(height, inner_radius, outer_radius, angle);
 }
 
 /// An operation that translates (moves) a geometry.
@@ -171,6 +162,6 @@ pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
 		z = 0.0mm;
 	}
 
-	@input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
+	@input.__builtin::ops::translate(x, y, z);
 }
 
