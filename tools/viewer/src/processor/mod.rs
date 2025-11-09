@@ -3,47 +3,77 @@
 
 //! microcad Viewer processor.
 
-mod geometry_output;
+mod model_instance;
 mod request;
 mod systems;
 
-use crate::*;
+use crate::{processor::model_instance::ModelInfo, to_bevy::ToBevyMesh, *};
 
-use bevy::app::{Plugin, Startup, Update};
-pub use geometry_output::*;
+use bevy::{
+    app::{Plugin, Startup, Update},
+    asset::uuid::Uuid,
+    render::mesh::Mesh,
+};
 
 pub use request::ProcessorRequest;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
 use microcad_lang::{model::Model, rc::RcMut, render::*, syntax::SourceFile};
-use rustc_hash::FxHashMap;
+use rustc_hash::FxHashSet;
 
 /// A processor response.
 ///
 /// Contains the geometry to rendered.
 pub enum ProcessorResponse {
-    /// The response contains output geometry from a render request.
-    NewModelGeometry(Box<ModelOutputGeometry>),
-    /// Id of an already rendered output geometry.
-    OutputGeometryId(u64),
+    RemoveModelInstances(Vec<Uuid>),
+    NewMeshAsset(Uuid, Mesh),
+    NewModelInfo(Uuid, ModelInfo),
+    SpawnModelInstances(Vec<Uuid>),
+}
+
+const MODEL_UUID_SEED: u64 = 0xDEAD_BEEF_DEED_BEAF;
+
+const MODEL_GEOMETRY_OUTPUT_UUID_SEED: u64 = 0x4321_4321_4321_4321;
+
+fn model_uuid(model: &Model) -> Uuid {
+    Uuid::from_u64_pair(MODEL_UUID_SEED, model.as_ptr() as u64)
+}
+
+fn model_geometry_output_uuid(model: &Model) -> Uuid {
+    Uuid::from_u64_pair(MODEL_GEOMETRY_OUTPUT_UUID_SEED, model.computed_hash())
 }
 
 #[derive(Default)]
-pub struct RenderedModels {
-    /// A list of models that have been rendered.
-    models: Vec<Model>,
-    models_by_hash: FxHashMap<u64, Model>,
+pub struct InstanceCache {
+    geometry_output_uuids: FxHashSet<Uuid>,
+
+    model_uuids: FxHashSet<Uuid>,
 }
 
-impl RenderedModels {
-    fn clear(&mut self) {
-        self.models.clear();
+impl InstanceCache {
+    fn contains_geometry_output(&self, uuid: &Uuid) -> bool {
+        self.geometry_output_uuids.contains(uuid)
     }
 
-    fn insert_model(&mut self, model: Model) {
-        self.models.push(model.clone());
-        self.models_by_hash.insert(model.computed_hash(), model);
+    fn contains_model(&self, uuid: &Uuid) -> bool {
+        self.model_uuids.contains(uuid)
+    }
+
+    fn insert_geometry_output(&mut self, uuid: Uuid) {
+        self.geometry_output_uuids.insert(uuid);
+    }
+
+    fn insert_model(&mut self, uuid: Uuid) {
+        self.model_uuids.insert(uuid);
+    }
+
+    fn fetch_model_uuids(&self) -> Vec<Uuid> {
+        self.model_uuids.iter().cloned().collect()
+    }
+
+    fn clear_model_uuids(&mut self) {
+        self.model_uuids.clear()
     }
 }
 
@@ -63,9 +93,10 @@ pub struct ProcessorState {
     pub source_file: Option<std::rc::Rc<SourceFile>>,
 
     pub model: Option<Model>,
-    pub rendered_models: RenderedModels,
 
-    /// Render cache.
+    pub instance_cache: InstanceCache,
+
+    /// µcad Render cache.
     pub render_cache: RcMut<RenderCache>,
 }
 
@@ -79,7 +110,7 @@ impl Default for ProcessorState {
             source_file: None,
             model: None,
             line_number: None,
-            rendered_models: RenderedModels::default(),
+            instance_cache: Default::default(),
             render_cache: RcMut::new(RenderCache::new()),
         }
     }
@@ -99,18 +130,6 @@ struct Processor {
     /// Output responses.
     pub response_sender: Sender<ProcessorResponse>,
 }
-
-#[derive(thiserror::Error, Debug)]
-pub enum PipelineError {
-    /// Input/output error.
-    #[error("I/O Error: {0}")]
-    IoError(#[from] std::io::Error),
-    /// Parse error.
-    #[error("Parse error: {0}")]
-    ParseError(#[from] microcad_lang::parse::ParseError),
-}
-
-pub type PipelineResult<T> = Result<T, PipelineError>;
 
 impl Processor {
     /// Handle processor request.
@@ -214,6 +233,12 @@ impl Processor {
                 resolution.clone(),
                 Some(self.state.render_cache.clone()),
             )?;
+
+            let mut responses = Vec::new();
+
+            responses.push(ProcessorResponse::RemoveModelInstances(
+                self.state.instance_cache.fetch_model_uuids(),
+            ));
             let model: Model = model.render_with_context(&mut render_context)?;
 
             // Remove unused cache items.
@@ -223,37 +248,77 @@ impl Processor {
                 cache.garbage_collection();
             }
 
-            let mut mesh_geometries = Vec::new();
             self.state.resolution = resolution;
-            self.state.rendered_models.clear();
 
-            self.generate_mesh_geometry_from_model(&model, &mut mesh_geometries);
-            Ok(mesh_geometries
-                .into_iter()
-                .map(|output| ProcessorResponse::NewModelGeometry(Box::new(output)))
-                .collect())
+            self.state.instance_cache.clear_model_uuids();
+            self.generate_responses(&model, &mut responses);
+
+            responses.push(ProcessorResponse::SpawnModelInstances(
+                self.state.instance_cache.fetch_model_uuids(),
+            ));
+
+            Ok(responses)
         } else {
             Err(anyhow::anyhow!("Could not render model."))
         }
     }
 
     /// Generate mesh geometry output for model.
-    fn generate_mesh_geometry_from_model(
-        &mut self,
-        model: &Model,
-        mesh_geometry: &mut Vec<ModelOutputGeometry>,
-    ) {
-        match ModelOutputGeometry::from_model(model, &self.state) {
-            Some(output_geometry) => {
-                self.state.rendered_models.insert_model(model.clone());
-                mesh_geometry.push(output_geometry);
+    fn generate_responses(&mut self, model: &Model, responses: &mut Vec<ProcessorResponse>) {
+        use microcad_lang::model::Element::*;
+
+        let model_ = model.borrow();
+        // We only consider output geometries of workpieces and ignore the rest.
+        match model_.element() {
+            InputPlaceholder | Multiplicity | Group => {
+                return;
             }
-            None => {
-                let model_ = model.borrow();
-                model_
-                    .children()
-                    .for_each(|model| self.generate_mesh_geometry_from_model(model, mesh_geometry))
+            Workpiece(_) | BuiltinWorkpiece(_) => {}
+        }
+
+        let uuid = model_geometry_output_uuid(model);
+        let output = model_.output();
+
+        let mut recurse = false;
+
+        // Add a new mesh asset, when we do not have geometry with a uuid in the cache.
+        if !self.state.instance_cache.contains_geometry_output(&uuid) {
+            let mesh = match &output.geometry {
+                Some(GeometryOutput::Geometry2D(geometry)) => {
+                    Some(geometry.inner.to_bevy_mesh_default())
+                }
+                Some(GeometryOutput::Geometry3D(geometry)) => {
+                    Some(geometry.inner.to_bevy_mesh(30.0))
+                }
+                None => None,
+            };
+
+            match mesh {
+                Some(mesh) => {
+                    self.state.instance_cache.insert_geometry_output(uuid);
+                    responses.push(ProcessorResponse::NewMeshAsset(uuid, mesh));
+                }
+                None => {
+                    recurse = true;
+                }
             }
+        }
+
+        let uuid = model_uuid(model);
+
+        if !self.state.instance_cache.contains_model(&uuid) {
+            self.state.instance_cache.insert_model(uuid);
+
+            responses.push(ProcessorResponse::NewModelInfo(
+                uuid,
+                ModelInfo::from_model(model, &self.state),
+            ));
+        }
+
+        if recurse {
+            model_
+                .children()
+                .for_each(|model| self.generate_responses(model, responses));
         }
     }
 }
@@ -304,7 +369,9 @@ pub struct ProcessorPlugin;
 
 impl Plugin for ProcessorPlugin {
     fn build(&self, app: &mut bevy::app::App) {
+        use bevy::prelude::AssetApp;
         app.add_event::<ProcessorRequest>()
+            .init_asset::<ModelInfo>()
             .add_systems(Startup, systems::initialize_processor)
             .add_systems(Update, systems::handle_processor_request)
             .add_systems(Update, systems::handle_processor_responses)

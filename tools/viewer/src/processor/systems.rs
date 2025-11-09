@@ -10,16 +10,15 @@ use bevy::{
         event::{EventReader, EventWriter},
         system::{Commands, Res, ResMut},
     },
-    pbr::{MeshMaterial3d, StandardMaterial},
+    pbr::StandardMaterial,
+    prelude::*,
 };
 use bevy_mod_outline::OutlineMode;
 
+use crate::processor::model_instance::ModelInfo;
+use crate::processor::{ProcessorRequest, ProcessorResponse};
 use crate::stdin::StdinMessageReceiver;
 use crate::*;
-use crate::{
-    processor::{ProcessorRequest, ProcessorResponse},
-    scene::SceneRadiusChangeEvent,
-};
 
 /// Whether a kind of watch event is relevant for compilation.
 fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
@@ -130,34 +129,45 @@ pub fn handle_processor_responses(
     mut commands: Commands,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
+    mut infos: ResMut<Assets<ModelInfo>>,
     mut state: ResMut<State>,
-    mut event_writer: EventWriter<SceneRadiusChangeEvent>,
 ) {
     let mut entities = Vec::new();
-    let mut new_entities = false;
-    let mut new_scene_radius = scene::Scene::MINIMUM_RADIUS;
 
     for response in state.processor.response_receiver.try_iter() {
         match response {
-            ProcessorResponse::NewModelGeometry(model_geometry_output) => {
-                new_entities = true;
-                new_scene_radius = new_scene_radius.max(model_geometry_output.info.bounding_radius);
-
-                // Spawn object entity.
-                entities.push(
-                    commands
-                        .spawn((
-                            Mesh3d(meshes.add(model_geometry_output.mesh)),
-                            MeshMaterial3d(materials.add(model_geometry_output.materials.default)),
-                            model_geometry_output.transform,
-                            model_geometry_output.materials.outline,
-                            OutlineMode::FloodFlat,
-                        ))
-                        .id(),
-                );
+            ProcessorResponse::RemoveModelInstances(uuids) => uuids.iter().for_each(|uuid| {
+                infos.remove(*uuid);
+                materials.remove(*uuid);
+            }),
+            ProcessorResponse::NewMeshAsset(uuid, mesh) => {
+                meshes.insert(uuid, mesh);
             }
-            ProcessorResponse::OutputGeometryId(id) => {
-                log::info!("This output geometries has alredy been rendered, just respawn {id}");
+            ProcessorResponse::NewModelInfo(uuid, info) => {
+                materials.insert(uuid, info.get_default_material());
+                infos.insert(uuid, info);
+            }
+            ProcessorResponse::SpawnModelInstances(uuids) => {
+                entities.extend(uuids.iter().filter_map(|uuid| {
+                    infos.get(*uuid).map(|info| {
+                        commands
+                            .spawn((
+                                Mesh3d(Handle::Weak(bevy::asset::AssetId::<Mesh>::Uuid {
+                                    uuid: *uuid,
+                                })),
+                                MeshMaterial3d(Handle::Weak(bevy::asset::AssetId::<
+                                    StandardMaterial,
+                                >::Uuid {
+                                    uuid: *uuid,
+                                })),
+                                info.transform,
+                                info.get_outline(),
+                                OutlineMode::FloodFlat,
+                                info.clone(),
+                            ))
+                            .id()
+                    })
+                }))
             }
         }
 
@@ -166,16 +176,12 @@ pub fn handle_processor_responses(
         }
     }
 
-    if new_entities {
+    if !entities.is_empty() {
         // Despawn all entities to remove them from the scene
         for entity in &state.scene.model_entities {
             commands.entity(*entity).despawn();
         }
         state.scene.model_entities = entities;
-        state.scene.radius = new_scene_radius;
-        event_writer.write(SceneRadiusChangeEvent {
-            new_radius: new_scene_radius,
-        });
     }
 }
 

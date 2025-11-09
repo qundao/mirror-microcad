@@ -6,6 +6,7 @@
 use bevy::{
     app::{App, Plugin, Startup},
     asset::{Assets, Handle, uuid::Uuid},
+    color::Alpha,
     ecs::system::ResMut,
     render::render_resource::{Shader, ShaderRef},
 };
@@ -17,8 +18,6 @@ mod ruler;
 pub use angle::Angle;
 pub use grid::Grid;
 pub use ruler::Ruler;
-
-use crate::to_bevy::ToBevy;
 
 pub mod bevy_types {
     pub use bevy::prelude::{AlphaMode, TypePath, Vec3};
@@ -45,8 +44,8 @@ pub fn shader_ref_from_str(s: &'static str) -> ShaderRef {
 }
 
 /// Get correct alpha mode for colors.
-pub fn alpha_mode_for_color(color: &microcad_core::Color) -> bevy_types::AlphaMode {
-    if color.a >= 1.0 {
+pub fn alpha_mode_for_color(color: &bevy::prelude::Color) -> bevy_types::AlphaMode {
+    if color.alpha() >= 1.0 {
         bevy_types::AlphaMode::Opaque
     } else {
         bevy_types::AlphaMode::Blend
@@ -54,10 +53,10 @@ pub fn alpha_mode_for_color(color: &microcad_core::Color) -> bevy_types::AlphaMo
 }
 
 /// Create a 2D material (unlit) from render attributes.
-pub fn create_2d_material(color: &microcad_core::Color) -> bevy_types::StandardMaterial {
+pub fn create_2d_material(base_color: bevy::prelude::Color) -> bevy_types::StandardMaterial {
     bevy_types::StandardMaterial {
-        base_color: color.to_bevy(),
-        alpha_mode: alpha_mode_for_color(color),
+        alpha_mode: alpha_mode_for_color(&base_color),
+        base_color,
         unlit: true,
         double_sided: true,
         cull_mode: None,
@@ -66,11 +65,10 @@ pub fn create_2d_material(color: &microcad_core::Color) -> bevy_types::StandardM
 }
 
 /// Create a 3D material (lit) from a color.
-pub fn create_3d_material(color: &microcad_core::Color) -> bevy_types::StandardMaterial {
+pub fn create_3d_material(base_color: bevy::prelude::Color) -> bevy_types::StandardMaterial {
     bevy_types::StandardMaterial {
-        base_color: color.to_bevy(),
+        alpha_mode: alpha_mode_for_color(&base_color),
         metallic: 0.1,
-        alpha_mode: alpha_mode_for_color(color),
         unlit: false,
         perceptual_roughness: 0.1,
         reflectance: 0.4,
