@@ -27,7 +27,7 @@ Unexpected warnings(s) which did occur in line(s): 6
         - width = 160mm
         - x = -80mm
         - y = -80mm
-        Primitive2D __builtin::geo2d::Rect(height=160, width=160, x=-80, y=-80) ->
+        Primitive2D __builtin::geo2d::Rect(height=160mm, width=160mm, x=-80mm, y=-80mm) ->
 
 Export of "../books/tests/src/.test/method_call-out.svg" successful.
 -- Test Result --

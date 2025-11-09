@@ -16,7 +16,7 @@
       - width = 10mm
       - x = -5mm
       - y = -5mm
-      Primitive2D __builtin::geo2d::Rect(height=10, width=10, x=-5, y=-5) ->
+      Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
 
 Export of "../books/language/src/expressions/.test/expression_model-out.svg" successful.
 -- Test Result --

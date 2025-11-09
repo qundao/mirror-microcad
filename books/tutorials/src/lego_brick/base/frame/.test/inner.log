@@ -17,7 +17,7 @@
       - width = 29.4mm
       - x = -14.7mm
       - y = -6.7mm
-      Primitive2D __builtin::geo2d::Rect(height=13.4, width=29.4, x=-14.7, y=-6.7) ->
+      Primitive2D __builtin::geo2d::Rect(height=13.4mm, width=29.4mm, x=-14.7mm, y=-6.7mm) ->
 
 Export of "../books/tutorials/src/lego_brick/base/frame/.test/inner-out.svg" successful.
 -- Test Result --

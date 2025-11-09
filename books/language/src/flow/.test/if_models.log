@@ -27,16 +27,16 @@
             Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
               - center = (x=0mm, y=0mm)
               - radius = 10mm
-              Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                Primitive2D __builtin::geo2d::Circle(radius=10) ->
+              Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
         Workpiece(sketch) if_models::MySketch(a=1) ->
           - a = 1
           Group ->
             Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
               - center = (x=0mm, y=0mm)
               - radius = 4mm
-              Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                Primitive2D __builtin::geo2d::Circle(radius=4) ->
+              Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                Primitive2D __builtin::geo2d::Circle(radius=4mm) ->
 
 Export of "../books/language/src/flow/.test/if_models-out.svg" successful.
 -- Test Result --

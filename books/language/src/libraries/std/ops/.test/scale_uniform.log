@@ -19,7 +19,7 @@
           - width = 30mm
           - x = -15mm
           - y = -15mm
-          Primitive2D __builtin::geo2d::Rect(height=30, width=30, x=-15, y=-15) ->
+          Primitive2D __builtin::geo2d::Rect(height=30mm, width=30mm, x=-15mm, y=-15mm) ->
 
 Export of "../books/language/src/libraries/std/ops/.test/scale_uniform-out.svg" successful.
 -- Test Result --

@@ -11,6 +11,12 @@
 -- Output --
 
 -- Errors --
--- No model --
+error: Missing arguments: radius
+  ---> ../books/tests/src/statement_usage/function.md:103:3
+     |
+ 103 |   __builtin::geo2d::Circle(radius=1);
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+Unexpected error(s) which did occur in line(s): 103
 -- Test Result --
-OK
+FAIL

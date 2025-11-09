@@ -8,8 +8,8 @@
   11:   
   12:   #[color = "red"]
   13:   {
-  14:       geo2d::Circle(radius = 3.0).ops::translate(x = 1.0, y = 1.0, z = 0.0);
-  15:       geo2d::Rect(x = 0.0, y = 0.0, width = 3.0, height = 3.0);
+  14:       geo2d::Circle(radius = 3.0mm).ops::translate(x = 1.0mm, y = 1.0mm, z = 0.0mm);
+  15:       geo2d::Rect(x = 0.0mm, y = 0.0mm, width = 3.0mm, height = 3.0mm);
   16:   }.ops::subtract();
 
 -- Output --
@@ -20,9 +20,9 @@
     Operation __builtin::ops::subtract() ->
       #[color = rgba(1, 0, 0, 1)]
       Group ->
-        Transform __builtin::ops::translate(x=1, y=1, z=0) ->
-          Primitive2D __builtin::geo2d::Circle(radius=3) ->
-        Primitive2D __builtin::geo2d::Rect(height=3, width=3, x=0, y=0) ->
+        Transform __builtin::ops::translate(x=1mm, y=1mm, z=0mm) ->
+          Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+        Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
 
 Export of "../books/language/src/libraries/builtin/.test/builtin_subtract_2d-out.svg" successful.
 -- Test Result --

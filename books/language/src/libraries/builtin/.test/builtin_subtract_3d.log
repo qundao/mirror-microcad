@@ -7,8 +7,8 @@
   22:   use __builtin::*;
   23:   
   24:   {
-  25:       geo3d::Sphere(radius = 3.0);
-  26:       geo3d::Sphere(radius = 2.0).__builtin::ops::translate(x = 3.0);    
+  25:       geo3d::Sphere(radius = 3.0mm);
+  26:       geo3d::Sphere(radius = 2.0mm).__builtin::ops::translate(x = 3.0mm);    
   27:   }.ops::subtract();
 
 -- Output --
@@ -18,9 +18,9 @@
   Group (root) ->
     Operation __builtin::ops::subtract() ->
       Group ->
-        Primitive3D __builtin::geo3d::Sphere(radius=3) ->
-        Transform __builtin::ops::translate(x=3, y=0, z=0) ->
-          Primitive3D __builtin::geo3d::Sphere(radius=2) ->
+        Primitive3D __builtin::geo3d::Sphere(radius=3mm) ->
+        Transform __builtin::ops::translate(x=3mm, y=0mm, z=0mm) ->
+          Primitive3D __builtin::geo3d::Sphere(radius=2mm) ->
 
 Export of "../books/language/src/libraries/builtin/.test/builtin_subtract_3d-out.stl" successful.
 -- Test Result --

@@ -63,7 +63,7 @@
                 - height = 9.6mm
                 - scale = (x=1, y=1)
                 - twist = 0rad
-                Operation __builtin::ops::extrude(height=9.6, scale_x=1, scale_y=1, twist=0rad) ->
+                Operation __builtin::ops::extrude(height=9.6mm, scale_x=1, scale_y=1, twist=0rad) ->
                   Workpiece(sketch) first_version::Base(height=31.8mm, width=15.8mm) ->
                     - height = 31.8mm
                     - width = 15.8mm
@@ -80,20 +80,20 @@
                                 - width = 15.8mm
                                 - x = -7.9mm
                                 - y = -15.9mm
-                                Primitive2D __builtin::geo2d::Rect(height=31.8, width=15.8, x=-7.9, y=-15.9) ->
+                                Primitive2D __builtin::geo2d::Rect(height=31.8mm, width=15.8mm, x=-7.9mm, y=-15.9mm) ->
                               Workpiece(sketch) std::geo2d::Rect(height=29.4mm, width=13.4mm) ->
                                 - height = 29.4mm
                                 - width = 13.4mm
                                 - x = -6.7mm
                                 - y = -14.7mm
-                                Primitive2D __builtin::geo2d::Rect(height=29.4, width=13.4, x=-6.7, y=-14.7) ->
+                                Primitive2D __builtin::geo2d::Rect(height=29.4mm, width=13.4mm, x=-6.7mm, y=-14.7mm) ->
                         struts: Operation __builtin::ops::align() ->
                           Multiplicity ->
                             Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
                               - x = 0mm
                               - y = 0mm
                               - z = 0mm
-                              Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+                              Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                 Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
                                   - inner_r = 2.4mm
                                   - outer_r = 3.255mm
@@ -102,18 +102,18 @@
                                       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
                                         - center = (x=0mm, y=0mm)
                                         - radius = 3.255mm
-                                        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                                          Primitive2D __builtin::geo2d::Circle(radius=3.255) ->
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) ->
                                       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) ->
                                         - center = (x=0mm, y=0mm)
                                         - radius = 2.4mm
-                                        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                                          Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
                             Workpiece(op) std::ops::translate(x=0mm, y=8mm, z=0mm) ->
                               - x = 0mm
                               - y = 8mm
                               - z = 0mm
-                              Transform __builtin::ops::translate(x=0, y=8, z=0) ->
+                              Transform __builtin::ops::translate(x=0mm, y=8mm, z=0mm) ->
                                 Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
                                   - inner_r = 2.4mm
                                   - outer_r = 3.255mm
@@ -122,18 +122,18 @@
                                       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
                                         - center = (x=0mm, y=0mm)
                                         - radius = 3.255mm
-                                        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                                          Primitive2D __builtin::geo2d::Circle(radius=3.255) ->
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) ->
                                       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) ->
                                         - center = (x=0mm, y=0mm)
                                         - radius = 2.4mm
-                                        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                                          Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
                             Workpiece(op) std::ops::translate(x=0mm, y=16mm, z=0mm) ->
                               - x = 0mm
                               - y = 16mm
                               - z = 0mm
-                              Transform __builtin::ops::translate(x=0, y=16, z=0) ->
+                              Transform __builtin::ops::translate(x=0mm, y=16mm, z=0mm) ->
                                 Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
                                   - inner_r = 2.4mm
                                   - outer_r = 3.255mm
@@ -142,61 +142,61 @@
                                       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
                                         - center = (x=0mm, y=0mm)
                                         - radius = 3.255mm
-                                        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                                          Primitive2D __builtin::geo2d::Circle(radius=3.255) ->
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) ->
                                       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) ->
                                         - center = (x=0mm, y=0mm)
                                         - radius = 2.4mm
-                                        Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                                          Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
               cap: Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=8.6mm) ->
                 - x = 0mm
                 - y = 0mm
                 - z = 8.6mm
-                Transform __builtin::ops::translate(x=0, y=0, z=8.6) ->
+                Transform __builtin::ops::translate(x=0mm, y=0mm, z=8.6mm) ->
                   Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
                     - height = 1mm
                     - scale = (x=1, y=1)
                     - twist = 0rad
-                    Operation __builtin::ops::extrude(height=1, scale_x=1, scale_y=1, twist=0rad) ->
+                    Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
                       Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) ->
                         - height = 31.8mm
                         - width = 15.8mm
                         - x = -7.9mm
                         - y = -15.9mm
-                        Primitive2D __builtin::geo2d::Rect(height=31.8, width=15.8, x=-7.9, y=-15.9) ->
+                        Primitive2D __builtin::geo2d::Rect(height=31.8mm, width=15.8mm, x=-7.9mm, y=-15.9mm) ->
           knobs: Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=9.6mm) ->
             - x = 0mm
             - y = 0mm
             - z = 9.6mm
-            Transform __builtin::ops::translate(x=0, y=0, z=9.6) ->
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.6mm) ->
               Workpiece(op) std::ops::extrude(height=1.7mm, scale=(x=1, y=1), twist=0rad) ->
                 - height = 1.7mm
                 - scale = (x=1, y=1)
                 - twist = 0rad
-                Operation __builtin::ops::extrude(height=1.7, scale_x=1, scale_y=1, twist=0rad) ->
+                Operation __builtin::ops::extrude(height=1.7mm, scale_x=1, scale_y=1, twist=0rad) ->
                   Workpiece(sketch) first_version::Knobs() ->
                     Operation __builtin::ops::align() ->
                       Workpiece(sketch) std::geo2d::Circle(center=(x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm]), diameter=4.8mm) ->
                         - center = (x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm])
                         - radius = 2.4mm
                         Multiplicity ->
-                          Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
-                          Transform __builtin::ops::translate(x=8, y=0, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
-                          Transform __builtin::ops::translate(x=0, y=8, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
-                          Transform __builtin::ops::translate(x=8, y=8, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
-                          Transform __builtin::ops::translate(x=0, y=16, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
-                          Transform __builtin::ops::translate(x=8, y=16, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
-                          Transform __builtin::ops::translate(x=0, y=24, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
-                          Transform __builtin::ops::translate(x=8, y=24, z=0) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=2.4) ->
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+                          Transform __builtin::ops::translate(x=8mm, y=0mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+                          Transform __builtin::ops::translate(x=0mm, y=8mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+                          Transform __builtin::ops::translate(x=8mm, y=8mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+                          Transform __builtin::ops::translate(x=0mm, y=16mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+                          Transform __builtin::ops::translate(x=8mm, y=16mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+                          Transform __builtin::ops::translate(x=0mm, y=24mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+                          Transform __builtin::ops::translate(x=8mm, y=24mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
 
 Export of "../books/tutorials/src/lego_brick/part/.test/first_version-out.stl" successful.
 -- Test Result --
