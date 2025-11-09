@@ -72,7 +72,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             search_paths: Self::default_search_paths(),
-            reload_delay: Duration::from_millis(200),
+            reload_delay: Duration::from_millis(100),
             stay_on_top: false,
             mesh_smoothness_angle: 20.0,
             render_resolution: RenderResolution::medium().linear,

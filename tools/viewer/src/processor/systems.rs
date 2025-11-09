@@ -13,7 +13,7 @@ use bevy::{
     pbr::StandardMaterial,
     prelude::*,
 };
-use bevy_mod_outline::OutlineMode;
+use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
 use crate::processor::model_info::ModelInfo;
 use crate::processor::{ProcessorRequest, ProcessorResponse};
@@ -49,14 +49,14 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
         })
         .expect("No error");
 
-    use crate::plugin::MicrocadPluginInput::*;
+    use crate::plugin::MicrocadPluginInput;
     let flag_clone = state.last_modified.clone();
     let reload_delay = state.config.reload_delay;
 
     let mut requests = Vec::new();
 
     match &mut state.input {
-        Some(File {
+        Some(MicrocadPluginInput::File {
             path,
             symbol: _,
             line,
@@ -88,7 +88,7 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
                 }
             });
         }
-        Some(crate::plugin::MicrocadPluginInput::Stdin(stdin)) => {
+        Some(MicrocadPluginInput::Stdin(stdin)) => {
             log::info!("Run viewer in stdin remote controlled mode.");
             *stdin = Some(StdinMessageReceiver::run());
         }
@@ -196,6 +196,41 @@ pub fn handle_processor_request(
     for event in event_reader.read() {
         if let Err(error) = state.processor.send_request(event.clone()) {
             log::error!("Render error: {error}");
+        }
+    }
+}
+
+/// A system that draws hit indicators for every pointer.
+pub fn model_info_under_cursor(
+    pointers: Query<&bevy::picking::pointer::PointerInteraction>,
+    buttons: Res<ButtonInput<MouseButton>>,
+    mut query: Query<(
+        &ModelInfo,
+        &mut MeshMaterial3d<StandardMaterial>,
+        &mut OutlineVolume,
+    )>,
+    _assets: ResMut<Assets<StandardMaterial>>,
+) {
+    for (entity, hit) in pointers
+        .iter()
+        .filter_map(|interaction| interaction.get_nearest_hit())
+    {
+        match query.get_mut(*entity) {
+            Ok((model_info, ref mut _material, ref mut outline)) => {
+                if buttons.just_pressed(MouseButton::Left) {
+                    //let material = assets.get(material.id()).expect("Material");
+
+                    outline.visible = !outline.visible;
+                    log::info!(
+                        "Model info {} @ {}",
+                        model_info.model_hash,
+                        hit.position.unwrap()
+                    );
+                }
+            }
+            Err(err) => {
+                log::error!("{err}");
+            }
         }
     }
 }

@@ -375,6 +375,7 @@ impl Plugin for ProcessorPlugin {
             .add_systems(Startup, systems::initialize_processor)
             .add_systems(Update, systems::handle_processor_request)
             .add_systems(Update, systems::handle_processor_responses)
-            .add_systems(Update, systems::handle_external_reload);
+            .add_systems(Update, systems::handle_external_reload)
+            .add_systems(Update, systems::model_info_under_cursor);
     }
 }
