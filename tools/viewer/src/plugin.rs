@@ -134,6 +134,7 @@ pub struct MicrocadPlugin {
 impl Plugin for MicrocadPlugin {
     fn build(&self, app: &mut App) {
         app.init_asset::<state::ModelViewState>()
+            .add_event::<state::StateEvent>()
             .insert_resource(ClearColor(self.config.theme.primary.to_bevy()))
             .insert_resource(State::new(self.input.clone(), self.config.clone()))
             .add_plugins((OutlinePlugin, MeshPickingPlugin))
@@ -141,7 +142,8 @@ impl Plugin for MicrocadPlugin {
             .add_plugins(material::MaterialPlugin)
             .add_plugins(scene::ScenePlugin)
             .add_systems(Startup, apply_window_settings)
-            .add_systems(Update, stdin::handle_stdin_messages);
+            .add_systems(Update, stdin::handle_stdin_messages)
+            .add_systems(Update, state::handle_state_event);
     }
 }
 

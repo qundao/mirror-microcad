@@ -3,6 +3,10 @@
 
 //! Viewer materials.
 
+use bevy::render::{
+    camera::{Camera, Projection},
+    mesh::{Mesh, Mesh3d},
+};
 use bevy::{
     asset::Assets,
     ecs::{
@@ -12,13 +16,6 @@ use bevy::{
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::MeshMaterial3d,
     transform::components::Transform,
-};
-use bevy::{
-    ecs::event::EventReader,
-    render::{
-        camera::{Camera, Projection},
-        mesh::{Mesh, Mesh3d},
-    },
 };
 
 use crate::{scene::get_current_zoom_level, state::State};
@@ -83,23 +80,6 @@ pub fn update_grid_on_view_angle_change(
             && let Some(material) = materials.get_mut(material)
         {
             material.view_angle = transform.forward().normalize();
-        }
-    }
-}
-
-/// Update grid material when scene radius has changed.
-pub fn update_grid_on_scene_change(
-    mut events: EventReader<super::SceneRadiusChangeEvent>,
-    mut materials: ResMut<Assets<material::Grid>>,
-    state: Res<State>,
-    mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
-) {
-    for event in events.read() {
-        if let Some(grid) = state.scene.grid_entity
-            && let Ok(material) = mat_query.get(grid)
-            && let Some(material) = materials.get_mut(material)
-        {
-            material.radius = event.new_radius;
         }
     }
 }

@@ -4,6 +4,7 @@
 //! microcad Viewer State module.
 
 mod cursor;
+mod event;
 mod model;
 
 use bevy::ecs::resource::Resource;
@@ -11,6 +12,7 @@ use bevy::ecs::resource::Resource;
 use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, scene::Scene};
 
 pub use cursor::Cursor;
+pub use event::{StateEvent, handle_state_event};
 pub use model::ModelViewState;
 
 /// The application state (the bevy view model).

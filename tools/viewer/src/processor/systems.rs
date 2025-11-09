@@ -12,10 +12,13 @@ use bevy::{
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
-use crate::processor::{ProcessorRequest, ProcessorResponse};
 use crate::state::ModelViewState;
 use crate::stdin::StdinMessageReceiver;
 use crate::*;
+use crate::{
+    processor::{ProcessorRequest, ProcessorResponse},
+    state::StateEvent,
+};
 
 /// Whether a kind of watch event is relevant for compilation.
 fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
@@ -133,8 +136,10 @@ pub fn handle_processor_responses(
     mut meshes: ResMut<Assets<Mesh>>,
     mut model_view_states: ResMut<Assets<ModelViewState>>,
     mut state: ResMut<State>,
+    mut events: EventWriter<StateEvent>,
 ) {
     let mut entities = Vec::new();
+    let mut ground_radius = microcad_core::Length::default();
 
     for response in state.processor.response_receiver.try_iter() {
         match response {
@@ -161,6 +166,10 @@ pub fn handle_processor_responses(
                     log::info!("Spawn model: {uuid}");
 
                     model_view_states.get(uuid).map(|view_state| {
+                        ground_radius = microcad_core::Length::mm(
+                            ground_radius.max(view_state.info().ground_radius.0),
+                        );
+
                         commands
                             .spawn((
                                 Mesh3d(Handle::Weak(bevy::asset::AssetId::<Mesh>::Uuid {
@@ -192,7 +201,9 @@ pub fn handle_processor_responses(
         for entity in &state.scene.model_entities {
             commands.entity(*entity).despawn();
         }
+
         state.scene.model_entities = entities;
+        events.write(StateEvent::ChangeGroundRadius(ground_radius));
     }
 }
 
@@ -225,7 +236,7 @@ pub fn model_info_under_cursor(
                 }
             }
             Err(err) => {
-                log::error!("{err}");
+                //log::error!("{err}");
             }
         }
     }
