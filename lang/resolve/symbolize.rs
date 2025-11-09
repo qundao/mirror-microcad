@@ -155,11 +155,7 @@ impl Symbolize for AssignmentStatement {
                 } else {
                     log::trace!("Declaring private const expression: {}", self.assignment.id);
                     Some(Some(Symbol::new(
-                        SymbolDef::ConstExpression(
-                            self.assignment.visibility,
-                            self.assignment.id.clone(),
-                            self.assignment.expression.clone(),
-                        ),
+                        SymbolDef::Assignment(self.assignment.clone()),
                         Some(parent.clone()),
                     )))
                 }

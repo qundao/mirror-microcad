@@ -80,7 +80,7 @@ impl Eval<()> for AssignmentStatement {
                         ))
                     }
                 }
-                SymbolDef::ConstExpression(..) => {
+                SymbolDef::Assignment(..) => {
                     abort = true;
                     None
                 }
@@ -139,5 +139,11 @@ impl Eval<()> for AssignmentStatement {
         }
 
         Ok(())
+    }
+}
+
+impl Eval<Value> for Assignment {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        self.expression.eval(context)
     }
 }

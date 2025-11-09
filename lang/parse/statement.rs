@@ -16,6 +16,12 @@ impl Parse for Assignment {
     }
 }
 
+impl Parse for Rc<Assignment> {
+    fn parse(pair: Pair) -> ParseResult<Self> {
+        Ok(Rc::new(Assignment::parse(pair)?))
+    }
+}
+
 impl Parse for AssignmentStatement {
     fn parse(pair: Pair) -> crate::parse::ParseResult<Self> {
         Ok(Self {

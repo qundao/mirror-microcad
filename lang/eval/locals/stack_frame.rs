@@ -133,11 +133,9 @@ impl StackFrame {
                         ""
                     )
                 }
-                SymbolDef::ConstExpression(visibility, id, expression) => writeln!(
-                    f,
-                    "{:depth$}- {visibility}{id:?} = {expression:?}{full_name} (const expression)",
-                    ""
-                ),
+                SymbolDef::Assignment(a) => {
+                    writeln!(f, "{:depth$}- {a}{full_name} (assignment)", "")
+                }
                 SymbolDef::Argument(id, value) => {
                     writeln!(f, "{:depth$}- {id:?} = {value:?}{full_name} (argument)", "")
                 }

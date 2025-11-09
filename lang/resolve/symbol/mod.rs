@@ -420,7 +420,7 @@ impl Symbol {
                 SymbolDef::Module(m) => m.names(),
                 SymbolDef::Workbench(wb) => wb.names(),
                 SymbolDef::Function(f) => f.names(),
-                SymbolDef::ConstExpression(.., ce) => ce.names(),
+                SymbolDef::Assignment(a) => a.names(),
                 SymbolDef::Alias(..) | SymbolDef::UseAll(..) => {
                     log::error!("Resolve Context:\n{context:?}");
                     return Err(ResolveError::ResolveCheckFailed);

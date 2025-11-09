@@ -112,11 +112,17 @@ impl Names for IfStatement {
 
 impl Names for AssignmentStatement {
     fn names(&self) -> NameList {
-        let names = self.assignment.expression.names();
-        if matches!(self.assignment.qualifier(), Qualifier::Const) {
-            names.add_as_name(&self.assignment.id)
+        self.assignment.names()
+    }
+}
+
+impl Names for Assignment {
+    fn names(&self) -> NameList {
+        let names = self.expression.names();
+        if matches!(self.qualifier(), Qualifier::Const) {
+            names.add_as_name(&self.id)
         } else {
-            names.add_local(&self.assignment.id)
+            names.add_local(&self.id)
         }
     }
 }
