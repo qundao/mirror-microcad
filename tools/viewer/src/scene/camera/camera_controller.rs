@@ -1,3 +1,6 @@
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 //! A freecam-style camera controller plugin.
 //! To use in your own application:
 //! - Copy the code for the [`CameraControllerPlugin`] and add the plugin to your App.
