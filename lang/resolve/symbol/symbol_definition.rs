@@ -14,12 +14,12 @@ pub enum SymbolDef {
     Workbench(Rc<WorkbenchDefinition>),
     /// Function symbol.
     Function(Rc<FunctionDefinition>),
+    /// Assignment.
+    Assignment(Rc<Assignment>),
     /// Builtin symbol.
     Builtin(Rc<Builtin>),
     /// Constant.
     Constant(Visibility, Identifier, Value),
-    /// Constant.
-    Assignment(Rc<Assignment>),
     /// Argument value.
     Argument(Identifier, Value),
     /// Alias of a pub use statement.
