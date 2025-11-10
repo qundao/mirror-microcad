@@ -259,6 +259,7 @@ impl Locals for Stack {
     }
 
     fn close(&mut self) {
+        log::trace!("Stack before closing:\n{self:?}");
         if let Some(frame) = self.0.pop() {
             log::trace!("Closing {} stack frame", frame.kind_str());
         }
