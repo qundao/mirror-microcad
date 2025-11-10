@@ -4,7 +4,7 @@
 use crate::eval::*;
 
 /// Trait to use symbols on the [Stack].
-pub trait UseSymbol {
+pub trait UseLocally {
     /// Find a symbol in the symbol table and copy it to the locals.
     ///
     /// Might load any related external file if not already loaded.

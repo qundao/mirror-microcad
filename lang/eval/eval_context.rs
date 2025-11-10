@@ -260,7 +260,7 @@ impl EvalContext {
     }
 }
 
-impl UseSymbol for EvalContext {
+impl UseLocally for EvalContext {
     fn use_symbol(&mut self, name: &QualifiedName, id: Option<Identifier>) -> EvalResult<Symbol> {
         log::debug!("Using symbol {name:?}");
 
