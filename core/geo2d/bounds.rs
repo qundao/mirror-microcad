@@ -83,7 +83,7 @@ impl Bounds2D {
         (self.max - self.min).magnitude() * 0.5
     }
 
-    /// Distance to boundary from a center.
+    /// Distance to boundary from the bounds' center.
     pub fn distance_center_to_boundary(&self, dir: Vec2) -> Length {
         let center = self.center();
 

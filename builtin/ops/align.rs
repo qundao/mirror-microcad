@@ -33,7 +33,16 @@ impl Operation for Align {
         })
     }
 
-    fn process_3d(&self, _context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        todo!()
+    fn process_3d(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
+        context.update_3d(|context, model| {
+            let model = model.into_group().unwrap_or(model);
+            let model_ = model.borrow();
+
+            let geometries: Geometries3D = model_.children.render_with_context(context)?;
+            use microcad_core::geo3d::Align3D;
+            Ok(Geometry3D::Collection(
+                geometries.align_3d(Vec3::new(self.x, self.y, self.z), self.spacing),
+            ))
+        })
     }
 }
