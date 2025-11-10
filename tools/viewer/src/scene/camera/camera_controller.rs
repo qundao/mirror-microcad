@@ -15,6 +15,8 @@ use bevy::{
 };
 use std::fmt;
 
+use crate::State;
+
 /// A freecam-style camera controller plugin.
 pub struct CameraControllerPlugin;
 
@@ -133,6 +135,7 @@ fn run_camera_controller(
     key_input: Res<ButtonInput<KeyCode>>,
     mut toggle_cursor_grab: Local<bool>,
     mut mouse_cursor_grab: Local<bool>,
+    state: Res<State>,
     mut query: Query<(&mut Projection, &mut Transform, &mut CameraController), With<Camera>>,
 ) {
     let dt = time.delta_secs();
@@ -189,6 +192,7 @@ fn run_camera_controller(
             use bevy::render::camera::CameraProjection;
 
             ortho.scale *= 1.0 + scroll / 50.0;
+            ortho.far = state.scene.radius * 6.0;
 
             let window = windows.iter().next().unwrap();
             ortho.update(window.width(), window.height());
@@ -258,7 +262,7 @@ fn run_camera_controller(
     let delta = accumulated_mouse_motion.delta;
 
     let orbit_speed = 0.015;
-    let orbit_distance = 200.0;
+    let orbit_distance = state.scene.radius * 3.0;
 
     if mouse_button_input.pressed(MouseButton::Left) {
         let yaw_rot = Quat::from_rotation_z(delta.x * orbit_speed);
