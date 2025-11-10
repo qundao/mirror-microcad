@@ -57,7 +57,7 @@ use std::ops::*;
     Queen();
     King();
     Bishop();
-    Knight();
+    Knight().rotate(x = 180°).rotate(90°);
     Rook();
     Pawn();
     Pawn();
@@ -72,20 +72,5 @@ use std::ops::*;
 .translate(y = TILE_SIZE * 3)
 .rotate([0,180]°);
 
-{
-    r = Rect(TILE_SIZE).extrude(1mm);
-    t = TILE_SIZE / 2;
-    #[color = std::color::WHITE]
-    r.translate(x = -t, y = -t);
-
-    #[color = std::color::BLACK]
-    r.translate(x =  t, y = -t);
-
-    #[color = std::color::BLACK]
-    r.translate(x = -t, y =  t);
-
-    #[color = std::color::WHITE]
-    r.translate(x =  t, y =  t);
-}
-.translate(x = [0..3] * TILE_SIZE * 2, y = [0..3] * TILE_SIZE * 2)
-.center();
+board_height = 1mm;
+Rect(TILE_SIZE * 8).extrude(board_height).translate(z = -board_height);
