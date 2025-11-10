@@ -58,7 +58,7 @@ use std::geo2d::Circle;
 // use all symbols in file `geo3d.µcad`
 use std::geo3d::*;
 // alias `bar` in `std/text/foo.µcad` into `baz`
-use std::test::foo::bar as baz;
+use std::math::abs as baz;
 // use print from `std/module.µcad`
 use std::print;
 // public use operation from `std/module.µcad`
@@ -68,12 +68,11 @@ pub use std::ops;
 use std::debug;
 debug::assert(true);
 
-part my_part() {
-    Circle(radius=1);
-    Sphere(radius=1);
-}
+part my_part3d() { Sphere(radius=1mm); }
+part my_part2d() { Circle(radius=1mm); }
 
-my_part();
+x = my_part2d();
+y = my_part3d();
 ```
 
 ```µcad,use_local

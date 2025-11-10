@@ -9,7 +9,7 @@
  3: // use all symbols in file `geo3d.µcad`
  4: use std::geo3d::*;
  5: // alias `bar` in `std/text/foo.µcad` into `baz`
- 6: use std::test::foo::bar as baz;
+ 6: use std::math::abs as baz;
  7: // use print from `std/module.µcad`
  8: use std::print;
  9: // public use operation from `std/module.µcad`
@@ -19,17 +19,21 @@
 13: use std::debug;
 14: debug::assert(true);
 15: 
-16: part my_part() {
-17:     Circle(radius=1);
-18:     Sphere(radius=1);
-19: }
-20: 
-21: my_part();
+16: part my_part3d() {
+17:     Sphere(radius=1mm);
+18: }
+19: 
+20: part my_part2d() {
+21:     Circle(radius=1mm);
+22: }
+23: 
+24: x = my_part2d();
+25: 
+26: y = my_part3d();
 
 -- Output --
 
 -- Errors --
-error: Resolve failed
-Evaluation aborted because of prior resolve errors!
+-- No model --
 -- Test Result --
-FAIL
+OK
