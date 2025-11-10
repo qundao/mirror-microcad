@@ -3,10 +3,18 @@
 
 //! µcad core geometry traits
 
+use crate::{Integer, Rect};
+
 /// Trait to align something to center.
 pub trait Center<T = Self> {
     /// Align geometry.
     fn center(&self) -> T;
+}
+
+/// Trait to distribute geometries in a 2D grid.
+pub trait DistributeGrid<T = Self> {
+    /// Distribute in a grid.
+    fn distribute_grid(&self, rect: Rect, rows: Integer, columns: Integer) -> T;
 }
 
 /// Return total amount of memory in bytes.

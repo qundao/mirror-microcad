@@ -8,6 +8,7 @@ use microcad_lang::builtin::*;
 mod align;
 mod buffer;
 mod center;
+mod distribute_grid;
 mod extrude;
 mod hull;
 mod mirror;
@@ -28,6 +29,7 @@ pub fn ops() -> Symbol {
         .builtin::<align::Align>()
         .builtin::<buffer::Buffer>()
         .builtin::<center::Center>()
+        .builtin::<distribute_grid::DistributeGrid>()
         .builtin::<hull::Hull>()
         .builtin::<extrude::Extrude>()
         .builtin::<mirror::Mirror>()

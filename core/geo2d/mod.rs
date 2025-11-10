@@ -72,3 +72,48 @@ impl Iterator for NgonIterator {
         }
     }
 }
+
+/// An iterator that iterates over grid cells of a rectangle.
+pub struct GridCells {
+    rect: Rect,
+    rows: Integer,
+    columns: Integer,
+    current: Integer,
+}
+
+impl GridCells {
+    /// Construct new grid cell iterator.
+    pub fn new(rect: Rect, rows: Integer, columns: Integer) -> Self {
+        Self {
+            rect,
+            rows,
+            columns,
+            current: 0,
+        }
+    }
+}
+
+impl Iterator for GridCells {
+    type Item = Rect;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.current >= self.rows * self.columns {
+            return None;
+        }
+
+        let cell_width = self.rect.width() / self.columns as Scalar;
+        let cell_height = self.rect.height() / self.rows as Scalar;
+
+        let row = self.current / self.columns;
+        let col = self.current % self.columns;
+        let x = self.rect.min().x + col as Scalar * cell_width;
+        let y = self.rect.min().y + row as Scalar * cell_height;
+
+        self.current += 1;
+
+        Some(Rect::new(
+            geo::coord! {x: x, y: y},
+            geo::coord! {x: x + cell_width, y: y + cell_height},
+        ))
+    }
+}

@@ -9,7 +9,7 @@ use derive_more::{Deref, DerefMut};
 
 use crate::{
     geo3d::{CalcBounds3D, bounds::Bounds3D},
-    traits::{TotalMemory, VertexCount},
+    traits::{DistributeGrid, TotalMemory, VertexCount},
     *,
 };
 
@@ -76,6 +76,23 @@ impl Transformed3D for Geometries3D {
             self.iter()
                 .map(|geometry| Rc::new(geometry.transformed_3d(mat)))
                 .collect::<Vec<_>>(),
+        )
+    }
+}
+
+impl DistributeGrid for Geometries3D {
+    fn distribute_grid(&self, rect: Rect, rows: Integer, columns: Integer) -> Self {
+        Geometries3D(
+            GridCells::new(rect, rows, columns)
+                .zip(self.0.iter())
+                .map(|(cell, geo)| {
+                    let bounds = geo.calc_bounds_3d();
+                    let center = bounds.center();
+                    let cell_center: Vec2 = cell.center().x_y().into();
+                    let d = center - cell_center.extend(bounds.min.z + center.z);
+                    Rc::new(geo.transformed_3d(&Mat4::from_translation(d)))
+                })
+                .collect(),
         )
     }
 }
