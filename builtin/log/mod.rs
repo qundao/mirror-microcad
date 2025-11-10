@@ -14,16 +14,21 @@ pub fn log() -> Symbol {
 }
 
 pub fn error() -> Symbol {
-    Symbol::new_builtin_fn("error", [parameter!(x)].into_iter(), &|_, args, context| {
-        args.iter()
-            .try_for_each(|(_, arg)| -> Result<(), DiagError> {
-                context.error(
-                    args,
-                    EvalError::BuiltinError(format!("{value}", value = arg.value)),
-                )
-            })?;
-        Ok(Value::None)
-    })
+    Symbol::new_builtin_fn(
+        "error",
+        [parameter!(x)].into_iter(),
+        &|_, args, context| {
+            args.iter()
+                .try_for_each(|(_, arg)| -> Result<(), DiagError> {
+                    context.error(
+                        args,
+                        EvalError::BuiltinError(format!("{value}", value = arg.value)),
+                    )
+                })?;
+            Ok(Value::None)
+        },
+        None,
+    )
 }
 
 pub fn warning() -> Symbol {
@@ -40,26 +45,37 @@ pub fn warning() -> Symbol {
                 })?;
             Ok(Value::None)
         },
+        None,
     )
 }
 
 pub fn info() -> Symbol {
-    Symbol::new_builtin_fn("info", [parameter!(x)].into_iter(), &|_, args, context| {
-        args.iter()
-            .try_for_each(|(_, arg)| -> Result<(), EvalError> {
-                context.info(args, format!("{value}", value = arg.value));
-                Ok(())
-            })?;
-        Ok(Value::None)
-    })
+    Symbol::new_builtin_fn(
+        "info",
+        [parameter!(x)].into_iter(),
+        &|_, args, context| {
+            args.iter()
+                .try_for_each(|(_, arg)| -> Result<(), EvalError> {
+                    context.info(args, format!("{value}", value = arg.value));
+                    Ok(())
+                })?;
+            Ok(Value::None)
+        },
+        None,
+    )
 }
 
 pub fn todo() -> Symbol {
-    Symbol::new_builtin_fn("todo", [parameter!(x)].into_iter(), &|_, args, context| {
-        args.iter()
-            .try_for_each(|(_, arg)| -> Result<(), DiagError> {
-                context.error(args, EvalError::Todo(format!("{value}", value = arg.value)))
-            })?;
-        Ok(Value::None)
-    })
+    Symbol::new_builtin_fn(
+        "todo",
+        [parameter!(x)].into_iter(),
+        &|_, args, context| {
+            args.iter()
+                .try_for_each(|(_, arg)| -> Result<(), DiagError> {
+                    context.error(args, EvalError::Todo(format!("{value}", value = arg.value)))
+                })?;
+            Ok(Value::None)
+        },
+        None,
+    )
 }

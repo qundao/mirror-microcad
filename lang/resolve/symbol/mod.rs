@@ -81,12 +81,14 @@ impl Symbol {
         name: &'static str,
         parameters: impl Iterator<Item = (Identifier, ParameterValue)>,
         f: &'static BuiltinFn,
+        doc: Option<&'static str>,
     ) -> Symbol {
         Self::new_builtin(Builtin {
             id: Identifier::no_ref(name),
             parameters: parameters.collect(),
             kind: BuiltinKind::Function,
             f,
+            doc: doc.map(DocBlock::new_builtin),
         })
     }
 

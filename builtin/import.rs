@@ -29,5 +29,6 @@ pub fn import() -> Symbol {
                 Ok(Value::None)
             }
         },
+        None,
     )
 }

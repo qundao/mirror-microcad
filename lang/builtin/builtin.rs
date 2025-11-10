@@ -23,6 +23,9 @@ pub struct Builtin {
 
     /// Functor to evaluate this function
     pub f: &'static BuiltinFn,
+
+    /// Functor which returns documentation of this function
+    pub doc: Option<DocBlock>,
 }
 
 /// Kind of the built-in.
@@ -64,11 +67,5 @@ impl CallTrait for Builtin {
     /// - `context`: Execution context.
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
         (self.f)(&self.parameters, args, context)
-    }
-}
-
-impl Doc for Builtin {
-    fn doc(&self) -> Option<DocBlock> {
-        todo!()
     }
 }

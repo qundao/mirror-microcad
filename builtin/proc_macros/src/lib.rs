@@ -112,8 +112,8 @@ fn derive_workbench_definition(
                             stringify!(#id)
                         }
 
-                        fn help() -> String {
-                            #help.to_string()
+                        fn help() -> Option<&'static str> {
+                            Some(#help)
                         }
 
                         fn output_type() -> microcad_lang::model::OutputType {
@@ -149,8 +149,8 @@ fn derive_workbench_definition(
                             stringify!(#id)
                         }
 
-                        fn help() -> String {
-                            #help.to_string()
+                        fn help() -> Option<&'static str> {
+                            Some(#help)
                         }
 
 

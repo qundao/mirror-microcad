@@ -11,6 +11,9 @@ pub trait Doc {
     fn doc(&self) -> Option<DocBlock>;
 }
 
+/// Static variant of trait Doc for builtins.
+pub type BuiltinDocFn = dyn Fn() -> Option<DocBlock>;
+
 /// Block of documentation comments, starting with `/// `.
 #[derive(Clone, Default)]
 pub struct DocBlock {
@@ -20,6 +23,25 @@ pub struct DocBlock {
     pub details: Option<String>,
     /// Source reference.
     pub src_ref: SrcRef,
+}
+
+impl DocBlock {
+    /// Create new doc block for builtin.
+    pub fn new_builtin(comment: &str) -> Self {
+        let lines: Vec<_> = comment.lines().collect();
+        let (summary, details) =
+            if let Some(pos) = lines.iter().position(|line| line.trim().is_empty()) {
+                (lines[0..pos].join("\n"), Some(lines[pos..].join("\n")))
+            } else {
+                (lines.join("\n"), None)
+            };
+
+        Self {
+            summary,
+            details,
+            src_ref: SrcRef(None),
+        }
+    }
 }
 
 impl SrcReferrer for DocBlock {

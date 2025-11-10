@@ -85,8 +85,8 @@ pub trait BuiltinWorkbenchDefinition {
     fn kind() -> BuiltinWorkbenchKind;
 
     /// A help string as markdown.
-    fn help() -> String {
-        String::new()
+    fn help() -> Option<&'static str> {
+        None
     }
 
     /// The expected output type.
@@ -140,6 +140,11 @@ pub trait BuiltinWorkbenchDefinition {
         }
     }
 
+    /// Workbench function
+    fn doc() -> Option<DocBlock> {
+        Self::help().map(DocBlock::new_builtin)
+    }
+
     /// Part initialization parameters
     fn parameters() -> ParameterValueList {
         ParameterValueList::default()
@@ -152,6 +157,7 @@ pub trait BuiltinWorkbenchDefinition {
             parameters: Self::parameters(),
             kind: BuiltinKind::Workbench(Self::kind()),
             f: Self::function(),
+            doc: Self::doc(),
         })
     }
 }

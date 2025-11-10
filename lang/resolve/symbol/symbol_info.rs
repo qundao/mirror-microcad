@@ -145,11 +145,11 @@ impl From<&Rc<Builtin>> for SymbolInfo {
     fn from(def: &Rc<Builtin>) -> Self {
         SymbolInfo {
             id: def.id.to_string(),
-            kind: "Function".into(),
-            doc: def.doc(),
+            kind: "Builtin".into(),
+            doc: def.doc.clone(),
             signatures: vec![SignatureInfo {
                 params: def.parameters.iter().map(|p| p.into()).collect(),
-                doc: def.doc(),
+                doc: def.doc.clone(),
             }],
         }
     }
