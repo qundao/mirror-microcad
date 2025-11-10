@@ -306,7 +306,7 @@ impl UseSymbol for EvalContext {
         } else {
             if self.is_module() {
                 symbol.try_children(|(id, symbol)| {
-                    let symbol = symbol.clone_with_visibility(visibility);
+                    let symbol = symbol.clone_with_visibility(visibility.clone());
                     if within.is_empty() {
                         self.symbol_table.insert_symbol(id.clone(), symbol)?;
                     } else {

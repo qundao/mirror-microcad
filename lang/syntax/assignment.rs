@@ -49,7 +49,7 @@ impl Assignment {
     /// Get qualifier (makes `pub` => `pub const`)
     pub fn qualifier(&self) -> Qualifier {
         match self.visibility {
-            Visibility::Private => self.qualifier,
+            Visibility::Private | Visibility::PrivateUse(_) => self.qualifier,
             Visibility::Public => Qualifier::Const,
             Visibility::Deleted => unreachable!(),
         }

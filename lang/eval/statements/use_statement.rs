@@ -44,7 +44,7 @@ impl Eval<()> for UseStatement {
         if !context.is_module() {
             log::trace!("Evaluating use statement: {self}");
             let current = &context.current_name();
-            let visibility = self.visibility;
+            let visibility = self.visibility.clone();
             match &self.decl {
                 UseDeclaration::Use(name) => {
                     let mut symbol = context.lookup(name, LookupTarget::Any)?;
