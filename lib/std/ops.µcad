@@ -25,6 +25,37 @@ pub op contour(thickness: Length, distance = 0mm) {
     @input.buffer(distance + thickness / 2) - @input.buffer(distance - thickness / 2);
 }
 
+
+/// Distribute geometries within a 2D rectangular grid.
+///
+/// The `distribute_grid` operator arranges elements evenly inside a rectangular region,
+/// subdivided into a specified number of rows and columns. Each grid cell receives
+/// one element, allowing for structured placement of objects, points, or geometries.
+///
+/// The grid is defined by its position (`x`, `y`), total dimensions (`width`, `height`),
+/// and subdivision counts (`rows`, `columns`).
+pub op distribute_grid(x: Length, y: Length, width: Length, height: Length, rows: Integer, columns: Integer) {
+	/// Initialize a centered rectangular grid.
+	init(width: Length, height: Length, rows: Integer, columns: Integer) {
+        x = -width / 2.0; // center x
+        y = -height / 2.0; // center y
+    }
+
+	/// Initialize a centered square grid.
+	///
+	/// The `init` helper simplifies grid creation by specifying a single `size`
+	/// value instead of separate width and height. It automatically centers
+	/// the grid around the origin and defines its overall dimensions.
+	init(size: Length, rows: Integer, columns: Integer) {
+        width = size;
+        height = size;
+        x = -size / 2.0; // center x
+        y = -size / 2.0; // center y
+    }
+
+	@input.__builtin::ops::distribute_grid(x, y, width, height, rows, columns)
+}
+
 /// Linear extrude a 2D geometry into a 3D.
 pub op extrude(
 		height: Length,
