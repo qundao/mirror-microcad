@@ -13,18 +13,15 @@ pub trait Align3D<T = Self> {
 
 impl Align3D for Geometries3D {
     fn align_3d(&self, direction: Vec3, spacing: Length) -> Self {
-        let mut geometries = Vec::new();
-
-        let mut pos = 0.0_f64;
-        for geo3d in self.iter() {
+        Geometries3D::from_iter(self.iter().scan(0.0_f64, |pos, geo3d| {
             let bounds = geo3d.calc_bounds_3d();
-            let center = bounds.center();
-            let dist = bounds.distance_center_to_boundary(direction);
-            let d = (pos + *dist) * direction - center;
-            pos += 2.0 * *dist + *spacing;
-            geometries.push(geo3d.transformed_3d(&Mat4::from_translation(d)));
-        }
+            let dist = *bounds.distance_center_to_boundary(direction);
+            let d = (*pos + dist) * direction - bounds.center();
+            *pos += 2.0 * dist + *spacing;
 
-        Geometries3D::new(geometries)
+            Some(std::rc::Rc::new(
+                geo3d.transformed_3d(&Mat4::from_translation(d)),
+            ))
+        }))
     }
 }
