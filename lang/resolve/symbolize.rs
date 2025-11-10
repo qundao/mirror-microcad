@@ -220,7 +220,7 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
                     Some(parent.clone()),
                 ),
             ))),
-            UseDeclaration::UseAlias(name, alias) => Ok(Some((
+            UseDeclaration::UseAs(name, alias) => Ok(Some((
                 Identifier::unique(),
                 Symbol::new(
                     SymbolDef::Alias(self.visibility.clone(), alias.clone(), name.clone()),

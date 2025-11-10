@@ -40,7 +40,7 @@ impl Eval<()> for UseStatement {
                         context.error(name, err)?
                     }
                 }
-                UseDeclaration::UseAlias(name, alias) => {
+                UseDeclaration::UseAs(name, alias) => {
                     if let Err(err) = context.use_symbol(name, Some(alias.clone())) {
                         context.error(name, err)?;
                     }

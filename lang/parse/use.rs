@@ -20,7 +20,7 @@ impl Parse for UseDeclaration {
                 let mut inner = first.inner();
                 let name = QualifiedName::parse(inner.next().expect("Expected qualified name"))?;
                 let alias = Identifier::parse(inner.next().expect("Expected identifier"))?;
-                Ok(Self::UseAlias(name, alias))
+                Ok(Self::UseAs(name, alias))
             }
             _ => unreachable!("Invalid use declaration"),
         }

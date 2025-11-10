@@ -24,7 +24,7 @@ pub enum UseDeclaration {
     /// Import all symbols from a module: `use std::*`
     UseAll(QualifiedName),
     /// Import as alias: `use a as b`
-    UseAlias(QualifiedName, Identifier),
+    UseAs(QualifiedName, Identifier),
 }
 
 impl SrcReferrer for UseDeclaration {
@@ -32,7 +32,7 @@ impl SrcReferrer for UseDeclaration {
         match self {
             Self::Use(.., name) => name.src_ref(),
             Self::UseAll(.., name) => name.src_ref(),
-            Self::UseAlias(.., name, _) => name.src_ref(),
+            Self::UseAs(.., name, _) => name.src_ref(),
         }
     }
 }
@@ -42,7 +42,7 @@ impl std::fmt::Display for UseDeclaration {
         match self {
             UseDeclaration::Use(name) => write!(f, "{name}"),
             UseDeclaration::UseAll(name) => write!(f, "{name}::*"),
-            UseDeclaration::UseAlias(name, alias) => {
+            UseDeclaration::UseAs(name, alias) => {
                 write!(f, "{name} as {alias}")
             }
         }
@@ -54,7 +54,7 @@ impl std::fmt::Debug for UseDeclaration {
         match self {
             UseDeclaration::Use(name) => write!(f, "{name:?}"),
             UseDeclaration::UseAll(name) => write!(f, "{name:?}::*"),
-            UseDeclaration::UseAlias(name, alias) => {
+            UseDeclaration::UseAs(name, alias) => {
                 write!(f, "{name:?} as {alias:?}")
             }
         }
@@ -71,7 +71,7 @@ impl TreeDisplay for UseDeclaration {
             UseDeclaration::UseAll(name) => {
                 writeln!(f, "{:depth$}use {name}::*", "")
             }
-            UseDeclaration::UseAlias(name, alias) => {
+            UseDeclaration::UseAs(name, alias) => {
                 writeln!(f, "{:depth$}use {name} as {alias}", "")
             }
         }
