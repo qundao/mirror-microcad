@@ -6,7 +6,7 @@ pub use __builtin::ops::center;
 
 
 /// Align a geometry collection along an axis with a certain spacing.
-pub op align(direction: Vec3, spacing: Length) {
+pub op align(direction: Vec3, spacing = 0mm) {
 	@input.__builtin::ops::align(
 		x = direction.x,
 		y = direction.y,
