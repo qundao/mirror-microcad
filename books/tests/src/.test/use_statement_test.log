@@ -29,7 +29,17 @@
 -- Output --
 
 -- Errors --
-warning: Unused global symbol __builtin::print.
-warning: Unused global symbol __builtin::debug.
+warning: Unused global symbol std::print.
+  ---> ../books/tests/src/use.md:8:5
+     |
+   8 | use std::print;
+     |     ^^^^^^^^^^
+     |
+warning: Unused global symbol std::debug.
+  ---> ../books/tests/src/use.md:13:5
+     |
+  13 | use std::debug;
+     |     ^^^^^^^^^^
+     |
 -- Test Result --
 FAIL

@@ -259,7 +259,7 @@ pub enum EvalError {
 
     /// Found unused global symbols.
     #[error("Unused global symbol {0}.")]
-    UnusedGlobalSymbol(QualifiedName),
+    UnusedGlobalSymbol(String),
 
     /// Evaluation aborted because of prior resolve errors
     #[error("Evaluation aborted because of prior resolve errors!")]

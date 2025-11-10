@@ -214,6 +214,14 @@ impl Sources {
         }
     }
 
+    /// Return code at referrer.
+    pub fn get_code(&self, referrer: &impl SrcReferrer) -> ResolveResult<String> {
+        Ok(self
+            .get_by_src_ref(referrer)?
+            .get_code(&referrer.src_ref())
+            .to_string())
+    }
+
     /// Find a project file by the qualified name which represents the file path.
     pub fn get_by_name(&self, name: &QualifiedName) -> ResolveResult<Rc<SourceFile>> {
         if let Some(index) = self.by_name.get(name) {

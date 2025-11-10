@@ -95,7 +95,9 @@ impl EvalContext {
                 log::error!("{}", symbol.src_ref());
                 self.warning(
                     &symbol.src_ref(),
-                    EvalError::UnusedGlobalSymbol(symbol.full_name()),
+                    EvalError::UnusedGlobalSymbol(
+                        self.sources.get_code(symbol).expect("source not found"),
+                    ),
                 )
             })?;
 
