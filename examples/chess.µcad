@@ -1,0 +1,91 @@
+
+use std::geo2d::*;
+use std::geo3d::*;
+use std::ops::*;
+
+// https://de.wikipedia.org/wiki/Bauhaus-Schachspiel
+
+pub TILE_SIZE = 5.8cm;
+const BASE_SIZE = TILE_SIZE * 70%;
+
+use std::math::*;
+
+pub part Pawn() {
+    Cube(BASE_SIZE * 80%)
+}
+
+pub part King() {
+    { 
+        Cube(BASE_SIZE);
+        Cube(BASE_SIZE / sqrt(2)).rotate(45°);
+    }.align(Z)
+}
+
+pub part Queen() {
+    { 
+        Cube(BASE_SIZE);
+        Sphere(diameter = BASE_SIZE / sqrt(2));
+    }.align(Z)
+}
+
+pub part Bishop() {
+    {
+        size = BASE_SIZE / 3;
+        Rect(size * 90%).translate(size * 150%, [45,-135]°).hull().mirror(X).union().extrude(BASE_SIZE).rotate(x = 90°);
+    }.align(Z)
+}
+
+pub part Rook() {
+    Cube(BASE_SIZE)
+}
+
+pub part Knight() {
+    {
+        s = BASE_SIZE/2;
+        r = Rect(BASE_SIZE);
+        (r - r.translate(x = s, y = s)).extrude(s);
+    }.rotate([0,90]°).align(Z)
+}
+
+use std::math::*;
+use std::ops::*;
+
+{
+    Rook();
+    Knight();
+    Bishop();
+    Queen();
+    King();
+    Bishop();
+    Knight();
+    Rook();
+    Pawn();
+    Pawn();
+    Pawn();
+    Pawn();
+    Pawn();
+    Pawn();
+    Pawn();
+    Pawn();
+}
+.distribute_grid(height = TILE_SIZE * 2, width = TILE_SIZE * 8, rows = 2, columns = 8)
+.translate(y = TILE_SIZE * 3)
+.rotate([0,180]°);
+
+{
+    r = Rect(TILE_SIZE).extrude(1mm);
+    t = TILE_SIZE / 2;
+    #[color = std::color::WHITE]
+    r.translate(x = -t, y = -t);
+
+    #[color = std::color::BLACK]
+    r.translate(x =  t, y = -t);
+
+    #[color = std::color::BLACK]
+    r.translate(x = -t, y =  t);
+
+    #[color = std::color::WHITE]
+    r.translate(x =  t, y =  t);
+}
+.translate(x = [0..3] * TILE_SIZE * 2, y = [0..3] * TILE_SIZE * 2)
+.center();
