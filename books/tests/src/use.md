@@ -49,3 +49,47 @@ use Rect as Cap;
 
 Cap(width=1mm,height=1mm);
 ```
+
+[![test](.test/use_statement_test.svg)](.test/use_statement_test.log)
+
+```µcad,use_statement_test
+// use symbol `circle` in file `geo2d.µcad`
+use std::geo2d::Circle;
+// use all symbols in file `geo3d.µcad`
+use std::geo3d::*;
+// alias `bar` in `std/text/foo.µcad` into `baz`
+use std::test::foo::bar as baz;
+// use print from `std/module.µcad`
+use std::print;
+// public use operation from `std/module.µcad`
+pub use std::ops;
+
+// use debug from `std/module.µcad`
+use std::debug;
+debug::assert(true);
+
+part my_part() {
+    Circle(radius=1);
+    Sphere(radius=1);
+}
+
+my_part();
+```
+
+```µcad,use_local
+fn f() {
+    use std::math::abs;
+    x = abs(-1.0);
+    return x;
+}
+f();
+```
+
+```µcad,use_all_local
+fn f() {
+    use std::math::*;
+    x = abs(-1.0);
+    return x;
+}
+f();
+```

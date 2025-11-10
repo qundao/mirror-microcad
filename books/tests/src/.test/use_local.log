@@ -1,6 +1,6 @@
 -- Test --
   use_local
-  ../books/tests/src/use_local.md:3
+  ../books/tests/src/use.md:79
 
 -- Code --
 
