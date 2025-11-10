@@ -11,6 +11,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol scale.
+  ---> ../books/tests/src/method_call.md:1:1
+     |
+   1 | op scale() {}
+     | ^^^^^^^^^^^^^
+     |
 -- Model --
   Group (root) ->
     Workpiece(sketch) method_call::Sketch(scale=4) ->

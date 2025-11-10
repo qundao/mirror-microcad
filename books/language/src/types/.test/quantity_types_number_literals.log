@@ -17,6 +17,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol f.
+  ---> ../books/language/src/types/quantities.md:5:1
+     |
+   5 | fn f( height = 1m ) {}
+     | ^^^^^^^^^^^^^^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

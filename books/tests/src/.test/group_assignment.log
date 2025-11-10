@@ -16,6 +16,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol translate.
+  ---> ../books/tests/src/semicolon.md:2:5
+     |
+   2 | use std::ops::translate;
+     |     ^^^^^^^^^^^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

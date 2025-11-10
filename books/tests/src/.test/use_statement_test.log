@@ -29,17 +29,12 @@
 -- Output --
 
 -- Errors --
-warning: Unused global symbol std::print.
+warning: Unused global symbol <no code>.
   ---> ../books/tests/src/use.md:8:5
      |
    8 | use std::print;
      |     ^^^^^^^^^^
      |
-warning: Unused global symbol std::debug.
-  ---> ../books/tests/src/use.md:13:5
-     |
-  13 | use std::debug;
-     |     ^^^^^^^^^^
-     |
+-- No model --
 -- Test Result --
-FAIL
+OK

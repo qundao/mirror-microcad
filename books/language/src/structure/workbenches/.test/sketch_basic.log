@@ -9,6 +9,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol MySketch.
+  ---> ../books/language/src/structure/workbenches/sketches.md:1:1
+     |
+   1 | sketch MySketch() {}
+     | ^^^^^^^^^^^^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

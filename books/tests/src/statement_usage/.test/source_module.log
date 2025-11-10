@@ -9,6 +9,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol m.
+  ---> ../books/tests/src/statement_usage/source.md:1:1
+     |
+   1 | mod m {}
+     | ^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK
