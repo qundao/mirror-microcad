@@ -3,10 +3,13 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**156** tests from markdown.
+**159** tests from markdown.
 
 | Result | Name |
 |-------:|------|
+| [![test](../libraries/std/ops/.test/align_2d.svg)](../libraries/std/ops/.test/align_2d.log) | [align_2d](../libraries/std/ops/align.md) |
+| [![test](../libraries/std/ops/.test/align_2d_multiplicity.svg)](../libraries/std/ops/.test/align_2d_multiplicity.log) | [align_2d_multiplicity](../libraries/std/ops/align.md) |
+| [![test](../libraries/std/ops/.test/align_3d.svg)](../libraries/std/ops/.test/align_3d.log) | [align_3d](../libraries/std/ops/align.md) |
 | [![test](../flow/calls/.test/argument_match_mix.svg)](../flow/calls/.test/argument_match_mix.log) | [argument_match_mix](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_name.svg)](../flow/calls/.test/argument_match_name.log) | [argument_match_name](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_type.svg)](../flow/calls/.test/argument_match_type.log) | [argument_match_type](../flow/calls/arguments.md) |
