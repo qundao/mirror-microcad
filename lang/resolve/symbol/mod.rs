@@ -606,6 +606,7 @@ impl Symbol {
                     Err(ResolveError::SymbolIsPrivate(child.full_name().clone()))
                 } else if name.is_single_identifier() && !child.is_deleted() {
                     log::trace!("Found {name:?} in {:?}", self.full_name());
+                    self.set_used();
                     Ok(child.clone())
                 } else {
                     let name = &name.remove_first();
@@ -667,6 +668,10 @@ impl Symbol {
             })?;
         }
         Ok(())
+    }
+
+    pub(super) fn set_src_ref(&mut self, src_ref: SrcRef) {
+        self.src_ref = src_ref;
     }
 }
 

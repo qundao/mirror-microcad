@@ -92,12 +92,12 @@ impl EvalContext {
             .unused_private()
             .iter()
             .try_for_each(|symbol| {
-                log::error!("{}", symbol.src_ref());
                 self.warning(
                     &symbol.src_ref(),
-                    EvalError::UnusedGlobalSymbol(
-                        self.sources.get_code(symbol).expect("source not found"),
-                    ),
+                    EvalError::UnusedGlobalSymbol(match self.sources.get_code(&symbol.id()) {
+                        Ok(id) => id,
+                        Err(_) => "<no code>".to_string(),
+                    }),
                 )
             })?;
 

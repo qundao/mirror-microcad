@@ -240,9 +240,12 @@ impl ResolveContext {
         parent_path: impl AsRef<std::path::Path>,
         id: &Identifier,
     ) -> ResolveResult<Symbol> {
-        self.sources
+        let mut symbol = self
+            .sources
             .load_mod_file(parent_path, id)?
-            .symbolize(visibility, self)
+            .symbolize(visibility, self)?;
+        symbol.set_src_ref(id.src_ref());
+        Ok(symbol)
     }
 
     /// Create a symbol out of all sources (without resolving them)
