@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Builtin align operation.
+//! Builtin align for 2D geometries.
 
 use crate::*;
 
@@ -14,9 +14,16 @@ pub trait Align2D<T = Self> {
 impl Align2D for Geometries2D {
     fn align_2d(&self, direction: Vec2, spacing: Length) -> Self {
         Geometries2D::from_iter(self.iter().scan(0.0_f64, |pos, geo2d| {
+            use cgmath::InnerSpace;
+
             let bounds = geo2d.calc_bounds_2d();
             let dist = *bounds.distance_center_to_boundary(direction);
-            let d = (*pos + dist) * direction - bounds.center();
+            let dir = if direction.magnitude() > f64::EPSILON {
+                direction.normalize()
+            } else {
+                Vec2::new(0.0, 0.0)
+            };
+            let d = (*pos + dist) * dir - bounds.center();
             *pos += 2.0 * dist + *spacing;
 
             Some(std::rc::Rc::new(
