@@ -386,6 +386,6 @@ impl Plugin for ProcessorPlugin {
         app.add_systems(Startup, systems::initialize_processor)
             .add_systems(Update, systems::handle_processor_responses)
             .add_systems(Update, systems::file_reload)
-            .add_systems(Update, systems::model_info_under_cursor);
+            .add_systems(Update, systems::handle_pick_event);
     }
 }

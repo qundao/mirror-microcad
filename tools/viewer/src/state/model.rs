@@ -37,11 +37,15 @@ impl ModelViewState {
     /// Generate material from view state.
     pub fn generate_material(&self) -> StandardMaterial {
         use crate::material::*;
-        match self.info.output_type {
+        let mut material = match self.info.output_type {
             OutputType::Geometry2D => create_2d_material(self.base_color),
             OutputType::Geometry3D => create_3d_material(self.base_color),
             _ => unreachable!(),
+        };
+        if self.is_selected {
+            material.base_color = Color::srgb(1.0, 0.0, 0.0);
         }
+        material
     }
 
     /// Read-only access to model info.

@@ -208,7 +208,7 @@ pub fn handle_processor_responses(
 }
 
 /// A system that draws hit indicators for every pointer.
-pub fn model_info_under_cursor(
+pub fn handle_pick_event(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,
     buttons: Res<ButtonInput<MouseButton>>,
     mut query: Query<(
@@ -216,27 +216,23 @@ pub fn model_info_under_cursor(
         &mut MeshMaterial3d<StandardMaterial>,
         &mut OutlineVolume,
     )>,
-    _assets: ResMut<Assets<StandardMaterial>>,
+    mut events: EventWriter<StateEvent>,
 ) {
-    for (entity, hit) in pointers
+    for (entity, _) in pointers
         .iter()
         .filter_map(|interaction| interaction.get_nearest_hit())
     {
         match query.get_mut(*entity) {
-            Ok((view_state, ref mut _material, ref mut outline)) => {
+            Ok((view_state, ref mut _material, ref mut _outline)) => {
                 if buttons.just_pressed(MouseButton::Left) {
-                    //let material = assets.get(material.id()).expect("Material");
-
-                    outline.visible = !outline.visible;
-                    log::info!(
-                        "Model info {} @ {}",
-                        view_state.info().model_hash,
-                        hit.position.unwrap()
-                    );
+                    events.write(StateEvent::SelectOne(view_state.info().model_uuid));
                 }
             }
-            Err(err) => {
-                //log::error!("{err}");
+            // No Hit was found..
+            Err(_) => {
+                if buttons.any_just_pressed([MouseButton::Left, MouseButton::Right]) {
+                    events.write(StateEvent::ClearSelection);
+                }
             }
         }
     }
