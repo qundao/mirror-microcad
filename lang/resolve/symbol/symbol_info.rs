@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{builtin::Builtin, rc::*, syntax::*, value::*};
+use crate::{builtin::*, rc::*, src_ref::*, syntax::*, value::*};
 
 /// Retrieve symbol information.
 pub trait Info {
@@ -58,6 +58,8 @@ pub struct SymbolInfo {
     pub doc: Option<DocBlock>,
     /// Parameters and alternative parameters if any.
     pub signatures: Vec<SignatureInfo>,
+    /// Source code reference.
+    pub src_ref: SrcRef,
 }
 
 impl SymbolInfo {
@@ -84,6 +86,7 @@ impl From<&Rc<Assignment>> for SymbolInfo {
             kind: "Assignment".into(),
             doc: def.doc(),
             signatures: vec![],
+            src_ref: def.src_ref(),
         }
     }
 }
@@ -95,6 +98,7 @@ impl From<&Rc<SourceFile>> for SymbolInfo {
             kind: "SourceFile".into(),
             doc: def.doc(),
             signatures: vec![],
+            src_ref: def.src_ref(),
         }
     }
 }
@@ -106,6 +110,7 @@ impl From<&Rc<ModuleDefinition>> for SymbolInfo {
             kind: "SourceFile".into(),
             doc: def.doc(),
             signatures: vec![],
+            src_ref: def.src_ref(),
         }
     }
 }
@@ -123,6 +128,7 @@ impl From<&Rc<WorkbenchDefinition>> for SymbolInfo {
                     doc: init.doc(),
                 })
                 .collect(),
+            src_ref: def.src_ref(),
         }
     }
 }
@@ -137,6 +143,7 @@ impl From<&Rc<FunctionDefinition>> for SymbolInfo {
                 params: def.signature.parameters.iter().map(|p| p.into()).collect(),
                 doc: def.doc(),
             }],
+            src_ref: def.src_ref(),
         }
     }
 }
@@ -151,6 +158,7 @@ impl From<&Rc<Builtin>> for SymbolInfo {
                 params: def.parameters.iter().map(|p| p.into()).collect(),
                 doc: def.doc.clone(),
             }],
+            src_ref: SrcRef(None),
         }
     }
 }
