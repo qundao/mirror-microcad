@@ -3,6 +3,7 @@
 
 //! 2D Geometry
 
+mod align;
 mod bounds;
 mod circle;
 mod collection;
@@ -14,6 +15,7 @@ mod size;
 
 use crate::*;
 
+pub use align::*;
 pub use bounds::*;
 pub use circle::*;
 pub use collection::*;

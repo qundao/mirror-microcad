@@ -2,8 +2,18 @@ pub use __builtin::ops::subtract;
 pub use __builtin::ops::intersect;
 pub use __builtin::ops::union;
 pub use __builtin::ops::hull;
-pub use __builtin::ops::align;
+pub use __builtin::ops::center;
 
+
+/// Align a geometry collection along an axis with a certain spacing.
+pub op align(direction: Vec3, spacing: Length) {
+	@input.__builtin::ops::align(
+		x = direction.x,
+		y = direction.y,
+		z = direction.z,
+		spacing
+	)
+}
 
 /// Create a new geometry whose boundary is offset the specified distance from the input.
 pub op buffer(distance: Length) {

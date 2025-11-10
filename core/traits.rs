@@ -3,12 +3,10 @@
 
 //! µcad core geometry traits
 
-/// Trait to align something to center
-///
-/// TODO: This trait might be extended so that.
-pub trait Align<T = Self> {
+/// Trait to align something to center.
+pub trait Center<T = Self> {
     /// Align geometry.
-    fn align(&self) -> T;
+    fn center(&self) -> T;
 }
 
 /// Return total amount of memory in bytes.

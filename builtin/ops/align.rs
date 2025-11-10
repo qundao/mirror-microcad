@@ -8,24 +8,32 @@ use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
 #[derive(BuiltinOperation)]
-pub struct Align;
+pub struct Align {
+    /// x Direction.
+    x: Scalar,
+    /// y Direction.
+    y: Scalar,
+    /// z Direction.
+    z: Scalar,
+    /// Spacing.
+    spacing: Length,
+}
 
 impl Operation for Align {
     fn process_2d(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, model| {
+            let model = model.into_group().unwrap_or(model);
             let model_ = model.borrow();
+
             let geometries: Geometries2D = model_.children.render_with_context(context)?;
-            use microcad_core::traits::Align;
-            Ok(Geometry2D::Collection(geometries).align())
+            use microcad_core::geo2d::Align2D;
+            Ok(Geometry2D::Collection(
+                geometries.align_2d(Vec2::new(self.x, self.y), self.spacing),
+            ))
         })
     }
 
-    fn process_3d(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        context.update_3d(|context, model| {
-            let model_ = model.borrow();
-            let geometries: Geometries3D = model_.children.render_with_context(context)?;
-            use microcad_core::traits::Align;
-            Ok(Geometry3D::Collection(geometries).align())
-        })
+    fn process_3d(&self, _context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
+        todo!()
     }
 }

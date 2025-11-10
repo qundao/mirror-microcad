@@ -37,11 +37,11 @@ impl Render<Geometry2D> for Text {
             .simplify(resolution.linear * 0.5);
 
         if let Some(center) = polygons.centroid() {
-            use microcad_core::traits::Align;
+            use microcad_core::traits::Center;
             Geometry2D::MultiPolygon(
                 polygons.reflect_2d(&Line(center, center + Point::new(1.0, 0.0))),
             )
-            .align()
+            .center()
         } else {
             Geometries2D::default().into()
         }

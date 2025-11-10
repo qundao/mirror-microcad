@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    traits::{Align, TotalMemory, VertexCount},
+    traits::{Center, TotalMemory, VertexCount},
     *,
 };
 
@@ -83,8 +83,8 @@ impl Transformed3D for Geometry3D {
     }
 }
 
-impl Align for Geometry3D {
-    fn align(&self) -> Self {
+impl Center for Geometry3D {
+    fn center(&self) -> Self {
         let d: Vec3 = self.calc_bounds_3d().center();
         self.transformed_3d(&Mat4::from_translation(-d))
     }

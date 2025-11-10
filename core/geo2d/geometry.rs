@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use super::*;
-use crate::traits::{Align, TotalMemory, VertexCount};
+use crate::traits::{Center, TotalMemory, VertexCount};
 use derive_more::From;
 
 use geo::{ConvexHull, MultiPolygon};
@@ -141,8 +141,8 @@ impl Transformed2D for Geometry2D {
     }
 }
 
-impl Align for Geometry2D {
-    fn align(&self) -> Self {
+impl Center for Geometry2D {
+    fn center(&self) -> Self {
         if let Some(bounds) = self.calc_bounds_2d().rect() {
             let d: Vec2 = bounds.center().x_y().into();
             self.transformed_2d(&Mat3::from_translation(-d))
