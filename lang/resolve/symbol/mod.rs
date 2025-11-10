@@ -123,21 +123,6 @@ impl Symbol {
         parent.inner.borrow_mut().children.insert(id, child);
     }
 
-    /// Insert new child
-    ///
-    /// The parent of `new_child` wont be changed!
-    pub(crate) fn insert_child(&self, id: Identifier, new_child: Symbol) {
-        if self
-            .inner
-            .borrow_mut()
-            .children
-            .insert(id, new_child)
-            .is_some()
-        {
-            todo!("symbol already existing");
-        }
-    }
-
     /// Initially set children.
     ///
     /// Panics if children already exist.
@@ -249,11 +234,6 @@ impl Symbol {
         self.visibility.borrow().clone()
     }
 
-    /// Set symbol's visibility.
-    pub(crate) fn set_visibility(&mut self, visibility: Visibility) {
-        self.visibility.replace(visibility);
-    }
-
     /// Return `true` if symbol's visibility set to is public.
     fn is_public(&self) -> bool {
         matches!(self.visibility(), Visibility::Public)
@@ -354,6 +334,7 @@ impl Symbol {
             self.inner.borrow().def,
             SymbolDef::SourceFile(..)
                 | SymbolDef::Module(..)
+                | SymbolDef::Workbench(..)
                 | SymbolDef::UseAll(..)
                 | SymbolDef::Alias(..)
         ) && !self.is_deleted()
@@ -531,7 +512,7 @@ impl Symbol {
                         .symbol_table
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
                         .clone_with_visibility(visibility.clone());
-                    self.visibility.replace(Visibility::Deleted);
+                    self.delete();
                     [(id.clone(), symbol)].into_iter().collect()
                 }
                 SymbolDef::UseAll(visibility, name) => {
@@ -546,7 +527,7 @@ impl Symbol {
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
                         .public_children(visibility.clone());
                     if !symbols.is_empty() {
-                        self.visibility.replace(Visibility::Deleted);
+                        self.delete();
                     }
                     symbols
                 }

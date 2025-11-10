@@ -261,29 +261,10 @@ impl EvalContext {
 }
 
 impl UseSymbol for EvalContext {
-    fn use_symbol(
-        &mut self,
-        visibility: Visibility,
-        name: &QualifiedName,
-        id: Option<Identifier>,
-        within: &QualifiedName,
-    ) -> EvalResult<Symbol> {
+    fn use_symbol(&mut self, name: &QualifiedName, id: Option<Identifier>) -> EvalResult<Symbol> {
         log::debug!("Using symbol {name:?}");
 
         let symbol = self.lookup(name, LookupTarget::Any)?;
-        if self.is_module() {
-            let id = id.clone().unwrap_or(symbol.id());
-            let symbol = symbol.clone_with_visibility(visibility);
-            if within.is_empty() {
-                self.symbol_table.insert_symbol(id, symbol)?;
-            } else {
-                self.symbol_table
-                    .lookup(within, LookupTarget::Module)?
-                    .insert_child(id, symbol);
-            }
-            log::trace!("Symbol Table:\n{}", self.symbol_table);
-        }
-
         if self.is_code() {
             self.stack.put_local(id, symbol.clone())?;
             log::trace!("Local Stack:\n{:?}", self.stack);
@@ -292,33 +273,13 @@ impl UseSymbol for EvalContext {
         Ok(symbol)
     }
 
-    fn use_symbols_of(
-        &mut self,
-        visibility: Visibility,
-        name: &QualifiedName,
-        within: &QualifiedName,
-    ) -> EvalResult<Symbol> {
+    fn use_symbols_of(&mut self, name: &QualifiedName) -> EvalResult<Symbol> {
         log::debug!("Using all symbols in {name:?}");
 
         let symbol = self.lookup(name, LookupTarget::Any)?;
         if symbol.is_empty() {
             Err(EvalError::NoSymbolsToUse(symbol.full_name()))
         } else {
-            if self.is_module() {
-                symbol.try_children(|(id, symbol)| {
-                    let symbol = symbol.clone_with_visibility(visibility.clone());
-                    if within.is_empty() {
-                        self.symbol_table.insert_symbol(id.clone(), symbol)?;
-                    } else {
-                        self.symbol_table
-                            .lookup(within, LookupTarget::Module)?
-                            .insert_child(id.clone(), symbol);
-                    }
-                    Ok::<_, EvalError>(())
-                })?;
-                log::trace!("Symbol Table:\n{}", self.symbol_table);
-            }
-
             if self.is_code() {
                 symbol.try_children(|(id, symbol)| {
                     self.stack.put_local(Some(id.clone()), symbol.clone())
@@ -337,10 +298,6 @@ impl Locals for EvalContext {
 
     fn get_local_value(&self, id: &Identifier) -> EvalResult<Value> {
         self.stack.get_local_value(id)
-    }
-
-    fn add_symbol(&mut self, id: Identifier, symbol: Symbol) -> EvalResult<()> {
-        self.stack.add_symbol(id, symbol)
     }
 
     fn open(&mut self, frame: StackFrame) {
