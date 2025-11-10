@@ -81,10 +81,12 @@ fn derive_workbench_definition(
     let input = parse_macro_input!(input as DeriveInput);
     let name = input.ident.clone();
 
+    use convert_case::{Casing, Case};
+
     // Operations are lower case.
     let id = if kind == "Operation" {
         syn::Ident::new(
-            name.to_string().to_lowercase().as_str(),
+            name.to_string().to_case(Case::Snake).as_str(),
             proc_macro2::Span::call_site(),
         )
     } else {
