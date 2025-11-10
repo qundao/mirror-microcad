@@ -26,6 +26,7 @@ use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, ty::*, value::
 #[derive(Clone)]
 pub struct Symbol {
     visibility: std::cell::RefCell<Visibility>,
+    src_ref: SrcRef,
     inner: RcMut<SymbolInner>,
 }
 
@@ -44,6 +45,7 @@ impl Symbol {
                 parent,
                 ..Default::default()
             }),
+            ..Default::default()
         }
     }
 
@@ -64,6 +66,7 @@ impl Symbol {
                 parent,
                 ..Default::default()
             }),
+            ..Default::default()
         }
     }
 
@@ -145,7 +148,7 @@ impl Symbol {
     }
 
     /// Create a vector of cloned children.
-    fn public_children(&self, visibility: Visibility) -> SymbolMap {
+    fn public_children(&self, visibility: Visibility, src_ref: SrcRef) -> SymbolMap {
         let inner = self.inner.borrow();
 
         inner
@@ -159,7 +162,7 @@ impl Symbol {
                     false
                 }
             })
-            .map(|symbol| symbol.clone_with_visibility(visibility.clone()))
+            .map(|symbol| symbol.clone_with(visibility.clone(), src_ref.clone()))
             .map(|symbol| (symbol.id(), symbol))
             .collect()
     }
@@ -248,10 +251,12 @@ impl Symbol {
     }
 
     /// Clone this symbol but give the clone another visibility.
-    pub(crate) fn clone_with_visibility(&self, visibility: Visibility) -> Self {
-        let cloned = self.clone();
-        cloned.visibility.replace(visibility);
-        cloned
+    pub(crate) fn clone_with(&self, visibility: Visibility, src_ref: SrcRef) -> Self {
+        Self {
+            visibility: std::cell::RefCell::new(visibility),
+            src_ref,
+            inner: self.inner.clone(),
+        }
     }
 
     pub(crate) fn reset_visibility(&self) {
@@ -523,7 +528,7 @@ impl Symbol {
                     let symbol = context
                         .symbol_table
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .clone_with_visibility(visibility.clone());
+                        .clone_with(visibility.clone(), name.src_ref.clone());
                     self.delete();
                     [(id.clone(), symbol)].into_iter().collect()
                 }
@@ -537,7 +542,7 @@ impl Symbol {
                     let symbols = context
                         .symbol_table
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .public_children(visibility.clone());
+                        .public_children(visibility.clone(), name.src_ref.clone());
                     if !symbols.is_empty() {
                         self.delete();
                     }
@@ -686,13 +691,18 @@ impl FullyQualify for Symbol {
 
 impl SrcReferrer for Symbol {
     fn src_ref(&self) -> SrcRef {
-        self.inner.borrow().src_ref()
+        if self.src_ref.is_none() {
+            self.inner.borrow().src_ref()
+        } else {
+            self.src_ref.clone()
+        }
     }
 }
 
 impl Default for Symbol {
     fn default() -> Self {
         Self {
+            src_ref: SrcRef(None),
             visibility: std::cell::RefCell::new(Visibility::default()),
             inner: RcMut::new(Default::default()),
         }
