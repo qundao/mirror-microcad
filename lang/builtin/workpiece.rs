@@ -6,17 +6,7 @@
 use custom_debug::Debug;
 use strum::Display;
 
-use crate::{
-    eval::*,
-    model::*,
-    render::{
-        ComputedHash, Geometry2DOutput, Geometry3DOutput, Hashed, RenderResult, RenderWithContext,
-    },
-    resolve::Symbol,
-    src_ref::SrcRef,
-    syntax::*,
-    value::*,
-};
+use crate::{eval::*, model::*, render::*, resolve::*, src_ref::*, syntax::*, value::*};
 
 /// Builtin function type
 pub type BuiltinFn =
