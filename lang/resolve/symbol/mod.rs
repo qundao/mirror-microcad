@@ -179,9 +179,9 @@ impl Symbol {
         self.inner.borrow_mut().parent = Some(parent);
     }
 
-    pub(crate) fn recursive_collect<F>(&self, f: &F, result: &mut Vec<Symbol>)
+    pub(crate) fn recursive_collect<F>(&self, f: &mut F, result: &mut Vec<Symbol>)
     where
-        F: Fn(&Symbol) -> bool,
+        F: FnMut(&Symbol) -> bool,
     {
         if f(self) {
             result.push(self.clone());
@@ -235,7 +235,7 @@ impl Symbol {
     }
 
     /// Return `true` if symbol's visibility set to is public.
-    fn is_public(&self) -> bool {
+    pub(super) fn is_public(&self) -> bool {
         matches!(self.visibility(), Visibility::Public)
     }
 
@@ -496,6 +496,18 @@ impl Symbol {
     /// Mark this symbol as *used*.
     pub(crate) fn set_used(&self) {
         let _ = self.inner.borrow().used.set(());
+    }
+
+    pub(crate) fn is_unused_private(&self) -> bool {
+        !self.is_used() && !self.is_public() && !self.is_deleted()
+    }
+
+    pub(crate) fn in_module(&self) -> Option<QualifiedName> {
+        if let Visibility::PrivateUse(module) = self.visibility() {
+            Some(module.clone())
+        } else {
+            None
+        }
     }
 
     /// Resolve aliases and use statements in this symbol.

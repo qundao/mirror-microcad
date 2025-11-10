@@ -87,6 +87,18 @@ impl EvalContext {
         let model: Model = self.sources.root().eval(self)?;
         log::trace!("Post-evaluation context:\n{self:?}");
         log::trace!("Evaluated Model:\n{}", FormatTree(&model));
+
+        self.symbol_table
+            .unused_private()
+            .iter()
+            .try_for_each(|symbol| {
+                log::error!("{}", symbol.src_ref());
+                self.warning(
+                    &symbol.src_ref(),
+                    EvalError::UnusedGlobalSymbol(symbol.full_name()),
+                )
+            })?;
+
         if model.is_empty_model() {
             Ok(None)
         } else {

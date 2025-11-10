@@ -73,6 +73,7 @@ part my_part2d() { Circle(radius=1mm); }
 
 x = my_part2d();
 y = my_part3d();
+z = baz(-1.0);
 ```
 
 ```µcad,use_local

@@ -19,21 +19,17 @@
 13: use std::debug;
 14: debug::assert(true);
 15: 
-16: part my_part3d() {
-17:     Sphere(radius=1mm);
-18: }
-19: 
-20: part my_part2d() {
-21:     Circle(radius=1mm);
-22: }
-23: 
-24: x = my_part2d();
-25: 
-26: y = my_part3d();
+16: part my_part3d() { Sphere(radius=1mm); }
+17: part my_part2d() { Circle(radius=1mm); }
+18: 
+19: x = my_part2d();
+20: y = my_part3d();
+21: z = baz(-1.0);
 
 -- Output --
 
 -- Errors --
--- No model --
+warning: Unused global symbol __builtin::print.
+warning: Unused global symbol __builtin::debug.
 -- Test Result --
-OK
+FAIL
