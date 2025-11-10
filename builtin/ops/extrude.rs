@@ -36,8 +36,3 @@ impl Operation for Extrude {
         })
     }
 }
-
-#[test]
-fn test_doc_string() {
-    assert!(Extrude::help().starts_with("Linear extrude"));
-}

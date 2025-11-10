@@ -37,6 +37,7 @@ pub fn assert() -> Symbol {
 
             Ok(Value::None)
         },
+        None,
     )
 }
 
@@ -95,6 +96,7 @@ pub fn assert_eq() -> Symbol {
 
             Ok(Value::None)
         },
+        None,
     )
 }
 
@@ -130,6 +132,7 @@ pub fn assert_valid() -> Symbol {
 
             Ok(Value::None)
         },
+        None,
     )
 }
 
@@ -167,5 +170,6 @@ pub fn assert_invalid() -> Symbol {
 
             Ok(Value::None)
         },
+        None,
     )
 }

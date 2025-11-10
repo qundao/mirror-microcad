@@ -35,15 +35,14 @@ impl Default for SymbolInner {
 impl SrcReferrer for SymbolInner {
     fn src_ref(&self) -> SrcRef {
         match &self.def {
-            SymbolDef::SourceFile(source_file) => source_file.src_ref(),
-            SymbolDef::Module(module) => module.src_ref(),
-            SymbolDef::Workbench(workbench) => workbench.src_ref(),
-            SymbolDef::Function(function) => function.src_ref(),
+            SymbolDef::SourceFile(sf) => sf.src_ref(),
+            SymbolDef::Module(m) => m.src_ref(),
+            SymbolDef::Workbench(wb) => wb.src_ref(),
+            SymbolDef::Function(f) => f.src_ref(),
             SymbolDef::Builtin(_) => SrcRef(None),
-            SymbolDef::Constant(_, identifier, _)
-            | SymbolDef::ConstExpression(_, identifier, _)
-            | SymbolDef::Argument(identifier, _) => identifier.src_ref(),
-            SymbolDef::Alias(_, identifier, _) => identifier.src_ref(),
+            SymbolDef::Assignment(a) => a.src_ref(),
+            SymbolDef::Constant(_, id, _) | SymbolDef::Argument(id, _) => id.src_ref(),
+            SymbolDef::Alias(_, id, _) => id.src_ref(),
             SymbolDef::UseAll(_, name) => name.src_ref(),
             #[cfg(test)]
             SymbolDef::Tester(id) => id.src_ref(),

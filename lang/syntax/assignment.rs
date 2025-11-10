@@ -3,11 +3,13 @@
 
 //! µcad assignment syntax element
 
-use crate::{rc::*, src_ref::*, syntax::*, ty::*};
+use crate::{src_ref::*, syntax::*, ty::*};
 
 /// Assignment specifying an identifier, type and value
 #[derive(Clone)]
 pub struct Assignment {
+    /// Documentation.
+    pub doc: Option<DocBlock>,
     /// Value's visibility
     pub visibility: Visibility,
     /// Assignee qualifier
@@ -17,7 +19,7 @@ pub struct Assignment {
     /// Type of the assignee
     pub specified_type: Option<TypeAnnotation>,
     /// Value to assign
-    pub expression: Rc<Expression>,
+    pub expression: Expression,
     /// Source code reference
     pub src_ref: SrcRef,
 }
@@ -25,14 +27,16 @@ pub struct Assignment {
 impl Assignment {
     /// Create new assignment.
     pub fn new(
+        doc: Option<DocBlock>,
         visibility: Visibility,
         qualifier: Qualifier,
         id: Identifier,
         specified_type: Option<TypeAnnotation>,
-        expression: Rc<Expression>,
+        expression: Expression,
         src_ref: SrcRef,
     ) -> Self {
         Self {
+            doc,
             visibility,
             qualifier,
             id,
@@ -51,6 +55,7 @@ impl Assignment {
         }
     }
 }
+
 impl SrcReferrer for Assignment {
     fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
@@ -113,5 +118,11 @@ impl TreeDisplay for Assignment {
             specified_type.tree_print(f, depth)?;
         }
         self.expression.tree_print(f, depth)
+    }
+}
+
+impl Doc for Assignment {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
     }
 }

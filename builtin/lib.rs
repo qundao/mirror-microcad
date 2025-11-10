@@ -18,28 +18,38 @@ use microcad_lang::{diag::*, eval::*, ty::Ty, value::*};
 
 /// Return type of argument.
 fn type_of() -> Symbol {
-    Symbol::new_builtin_fn("type_of", [].into_iter(), &|_, args, _| {
-        if let Ok(arg) = args.get_single() {
-            let ty = arg.1.ty();
-            return Ok(Value::String(ty.to_string()));
-        }
-        Ok(Value::None)
-    })
+    Symbol::new_builtin_fn(
+        "type_of",
+        [].into_iter(),
+        &|_, args, _| {
+            if let Ok(arg) = args.get_single() {
+                let ty = arg.1.ty();
+                return Ok(Value::String(ty.to_string()));
+            }
+            Ok(Value::None)
+        },
+        None,
+    )
 }
 
 /// Return the count of elements in an array or string.
 fn count() -> Symbol {
-    Symbol::new_builtin_fn("count", [].into_iter(), &|_params, args, ctx| {
-        let arg = args.get_single()?;
-        Ok(match &arg.1.value {
-            Value::String(s) => Value::Integer(s.chars().count() as i64),
-            Value::Array(a) => Value::Integer(a.len() as i64),
-            _ => {
-                ctx.error(arg.1, EvalError::BuiltinError("Value has no count.".into()))?;
-                Value::None
-            }
-        })
-    })
+    Symbol::new_builtin_fn(
+        "count",
+        [].into_iter(),
+        &|_params, args, ctx| {
+            let arg = args.get_single()?;
+            Ok(match &arg.1.value {
+                Value::String(s) => Value::Integer(s.chars().count() as i64),
+                Value::Array(a) => Value::Integer(a.len() as i64),
+                _ => {
+                    ctx.error(arg.1, EvalError::BuiltinError("Value has no count.".into()))?;
+                    Value::None
+                }
+            })
+        },
+        None,
+    )
 }
 
 /// Build the standard module

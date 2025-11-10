@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{builtin::*, rc::*, src_ref::*, syntax::*, value::*};
+use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, value::*};
 
 /// Symbol definition
 #[derive(Clone)]
@@ -14,12 +14,12 @@ pub enum SymbolDef {
     Workbench(Rc<WorkbenchDefinition>),
     /// Function symbol.
     Function(Rc<FunctionDefinition>),
+    /// Assignment.
+    Assignment(Rc<Assignment>),
     /// Builtin symbol.
     Builtin(Rc<Builtin>),
     /// Constant.
     Constant(Visibility, Identifier, Value),
-    /// Constant.
-    ConstExpression(Visibility, Identifier, Rc<Expression>),
     /// Argument value.
     Argument(Identifier, Value),
     /// Alias of a pub use statement.
@@ -40,10 +40,8 @@ impl SymbolDef {
             Self::Function(f) => f.id.clone(),
             Self::SourceFile(s) => s.id(),
             Self::Builtin(m) => m.id(),
-            Self::Constant(_, id, _)
-            | Self::ConstExpression(_, id, _)
-            | Self::Argument(id, _)
-            | Self::Alias(_, id, _) => id.clone(),
+            Self::Assignment(a) => a.id.clone(),
+            Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => id.clone(),
             Self::UseAll(..) => Identifier::none(),
             #[cfg(test)]
             Self::Tester(id) => id.clone(),
@@ -61,10 +59,9 @@ impl SymbolDef {
             Self::Module(md) => md.visibility,
             Self::Workbench(wd) => wd.visibility,
             Self::Function(fd) => fd.visibility,
+            Self::Assignment(a) => a.visibility,
 
-            Self::ConstExpression(visibility, ..)
-            | Self::Alias(visibility, ..)
-            | Self::UseAll(visibility, ..) => *visibility,
+            Self::Alias(visibility, ..) | Self::UseAll(visibility, ..) => *visibility,
 
             #[cfg(test)]
             Self::Tester(..) => Visibility::Public,
@@ -79,7 +76,7 @@ impl SymbolDef {
             Self::SourceFile(..) => "SourceFile".to_string(),
             Self::Builtin(b) => format!("{}", b.kind),
             Self::Constant(..) => "Constant".to_string(),
-            Self::ConstExpression(..) => "ConstExpression".to_string(),
+            Self::Assignment(..) => "ConstExpression".to_string(),
             Self::Argument(..) => "Argument".to_string(),
             Self::Alias(..) => "Alias".to_string(),
             Self::UseAll(..) => "UseAll".to_string(),
@@ -95,10 +92,10 @@ impl SymbolDef {
             Self::Workbench(wd) => wd.src_ref.source_hash(),
             Self::Function(fd) => fd.src_ref.source_hash(),
             Self::Builtin(_) => 0,
-            Self::Constant(_, id, _)
-            | Self::ConstExpression(_, id, _)
-            | Self::Argument(id, _)
-            | Self::Alias(_, id, _) => id.src_ref().source_hash(),
+            Self::Assignment(a) => a.src_ref.source_hash(),
+            Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => {
+                id.src_ref().source_hash()
+            }
             Self::UseAll(_, name) => name.src_ref().source_hash(),
             #[cfg(test)]
             Self::Tester(..) => 0,
@@ -116,7 +113,7 @@ impl std::fmt::Display for SymbolDef {
             | Self::SourceFile(..)
             | Self::Builtin(..) => write!(f, "({kind})"),
             Self::Constant(.., value) => write!(f, "({kind}) = {value}"),
-            Self::ConstExpression(.., value) => write!(f, "({kind}) = {value}"),
+            Self::Assignment(.., value) => write!(f, "({kind}) = {value}"),
             Self::Argument(.., value) => write!(f, "({kind}) = {value}"),
             Self::Alias(.., name) => write!(f, "({kind}) => {name}"),
             Self::UseAll(.., name) => write!(f, "({kind}) => {name}"),
@@ -136,12 +133,48 @@ impl std::fmt::Debug for SymbolDef {
             | Self::SourceFile(..)
             | Self::Builtin(..) => write!(f, "({kind})"),
             Self::Constant(.., value) => write!(f, "({kind}) = {value}"),
-            Self::ConstExpression(.., expr) => write!(f, "({kind}) = {expr:?}"),
+            Self::Assignment(.., expr) => write!(f, "({kind}) = {expr:?}"),
             Self::Argument(.., value) => write!(f, "({kind}) = {value}"),
             Self::Alias(.., name) => write!(f, "({kind}) => {name:?}"),
             Self::UseAll(.., name) => write!(f, "({kind}) => {name:?}"),
             #[cfg(test)]
             Self::Tester(id) => write!(f, "({kind}) => {id:?}"),
+        }
+    }
+}
+
+impl Doc for SymbolDef {
+    fn doc(&self) -> Option<DocBlock> {
+        match self {
+            SymbolDef::SourceFile(sf) => sf.doc(),
+            SymbolDef::Module(md) => md.doc(),
+            SymbolDef::Workbench(wd) => wd.doc(),
+            SymbolDef::Function(fd) => fd.doc(),
+            _ => None,
+        }
+    }
+}
+
+impl Info for SymbolDef {
+    fn info(&self) -> SymbolInfo {
+        match self {
+            SymbolDef::SourceFile(sf) => sf.into(),
+            SymbolDef::Module(md) => md.into(),
+            SymbolDef::Workbench(wd) => wd.into(),
+            SymbolDef::Function(fd) => fd.into(),
+            SymbolDef::Builtin(bi) => bi.into(),
+            SymbolDef::Assignment(a) => a.into(),
+
+            SymbolDef::Constant(visibility, id, value) => {
+                SymbolInfo::new_constant(visibility, id, value)
+            }
+            SymbolDef::Argument(id, value) => SymbolInfo::new_arg(id, value),
+
+            SymbolDef::Alias(..) => unimplemented!(),
+            SymbolDef::UseAll(..) => unimplemented!(),
+
+            #[cfg(test)]
+            SymbolDef::Tester(_) => unreachable!(),
         }
     }
 }

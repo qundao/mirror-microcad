@@ -3,10 +3,7 @@
 
 //! Creator of work pieces.
 
-use crate::{
-    resolve::{FullyQualify, Symbol},
-    value::Tuple,
-};
+use crate::{resolve::*, value::Tuple};
 
 /// A creator is the origin  
 #[derive(Debug, Clone)]
@@ -21,6 +18,12 @@ impl Creator {
     /// New creator.
     pub fn new(symbol: Symbol, arguments: Tuple) -> Self {
         Self { symbol, arguments }
+    }
+}
+
+impl Info for Creator {
+    fn info(&self) -> SymbolInfo {
+        self.symbol.info()
     }
 }
 

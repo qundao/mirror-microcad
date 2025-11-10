@@ -359,7 +359,7 @@ qualifier = { "const" | "prop" }
 // `r`: error # neither type specifier or default value
 // `const r = 5.0mm`: Make value of assignment a public constant
 // `prop r = 5.0mm`: Make value of assignment a public property
-assignment = { (visibility ~ ws+)? ~ (qualifier ~ ws+)? ~ identifier ~ ws* ~ type_annotation? ~ ws* ~ "=" ~ ws* ~ expression }
+assignment = { doc_block? ~ (visibility ~ ws+)? ~ (qualifier ~ ws+)? ~ identifier ~ ws* ~ type_annotation? ~ ws* ~ "=" ~ ws* ~ expression }
 
 assignment_statement = { (attribute_list ~ ws+)? ~ assignment ~ ws* ~ ";" }
 
@@ -394,7 +394,7 @@ function_signature = { parameter_list ~ (ws* ~ "->" ~ ws* ~ type)? }
 // `fn test(a: Scalar, b: Scalar) -> Scalar { c = 1.0; return a + b + c; }`: ok # Function with multiple arguments and local variable
 // `fn weight(density: density = 20g/1mm^3) -> Weight {}` ok # Function with default value
 // `pub fn foo() {}` ok # Public function
-function_definition = { (visibility ~ ws+)? ~ "fn" ~ ws+ ~ identifier ~ ws* ~ function_signature ~ ws* ~ body }
+function_definition = { doc_block? ~ (visibility ~ ws+)? ~ "fn" ~ ws+ ~ identifier ~ ws* ~ function_signature ~ ws* ~ body }
 
 // `return 5.0mm;`: ok
 return_statement = { "return" ~ ws* ~ expression ~ ws* ~ ";" }
@@ -433,7 +433,7 @@ init_definition = { doc_block? ~ "init" ~ ws* ~ parameter_list ~ ws* ~ body }
 
 // `mod math { }`: ok # module
 // `mod math { fn pi() -> Scalar { return 3.14159; } }`: ok # module with function
-module_definition = { (visibility ~ ws+)? ~ "mod" ~ ws+ ~ identifier ~ ws* ~ (body | ";") }
+module_definition = { doc_block? ~ (visibility ~ ws+)? ~ "mod" ~ ws+ ~ identifier ~ ws* ~ (body | ";") }
 
 statement = {
     workbench_definition
@@ -453,4 +453,4 @@ statement_list = { (statement ~ ws*)* ~ final_expression_statement? }
 
 // `Rect(width = 5.0mm).translate(x = 5.0mm); Rect(width = 5.0).translate(x = 5.0mm).rotate(angle = 90°);`: ok
 // `part Foo() { init(size: Length) {} Rectangle(size); }`: ok # Part with init function
-source_file = { SOI ~ ws* ~ statement_list ~ ws* ~ EOI }
+source_file = { SOI ~ doc_block? ~ ws* ~ statement_list ~ ws* ~ EOI }

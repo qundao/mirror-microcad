@@ -111,7 +111,7 @@ impl Eval for QualifiedName {
             .lookup(self, LookupTarget::AnyButMethod)?
             .with_def(|def| match def {
                 SymbolDef::Constant(.., value) | SymbolDef::Argument(_, value) => Ok(value.clone()),
-                SymbolDef::ConstExpression(.., expr) => expr.eval(context),
+                SymbolDef::Assignment(a) => a.eval(context),
                 SymbolDef::SourceFile(_) => Ok(Value::None),
 
                 SymbolDef::Module(ns) => {

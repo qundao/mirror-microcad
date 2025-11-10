@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 mod symbol_definition;
+mod symbol_info;
 mod symbol_inner;
 mod symbol_map;
 mod symbols;
 
 pub use symbol_definition::*;
+pub use symbol_info::*;
 pub(crate) use symbol_map::*;
 pub(crate) use symbols::*;
 
@@ -79,12 +81,14 @@ impl Symbol {
         name: &'static str,
         parameters: impl Iterator<Item = (Identifier, ParameterValue)>,
         f: &'static BuiltinFn,
+        doc: Option<&'static str>,
     ) -> Symbol {
         Self::new_builtin(Builtin {
             id: Identifier::no_ref(name),
             parameters: parameters.collect(),
             kind: BuiltinKind::Function,
             f,
+            doc: doc.map(DocBlock::new_builtin),
         })
     }
 
@@ -420,7 +424,7 @@ impl Symbol {
                 SymbolDef::Module(m) => m.names(),
                 SymbolDef::Workbench(wb) => wb.names(),
                 SymbolDef::Function(f) => f.names(),
-                SymbolDef::ConstExpression(.., ce) => ce.names(),
+                SymbolDef::Assignment(a) => a.names(),
                 SymbolDef::Alias(..) | SymbolDef::UseAll(..) => {
                     log::error!("Resolve Context:\n{context:?}");
                     return Err(ResolveError::ResolveCheckFailed);
@@ -704,6 +708,12 @@ impl std::fmt::Display for Symbol {
 impl std::fmt::Debug for Symbol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.print_symbol(f, None, 0, true, false)
+    }
+}
+
+impl Info for Symbol {
+    fn info(&self) -> SymbolInfo {
+        self.with_def(|def| def.info())
     }
 }
 

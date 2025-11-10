@@ -7,22 +7,27 @@ use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
 /// Absolute value abs(x)
 fn abs() -> Symbol {
-    Symbol::new_builtin_fn("abs", [parameter!(x)].into_iter(), &|_params, args, ctx| {
-        let (_, arg) = args.get_single()?;
-        Ok(match &arg.value {
-            Value::Integer(i) => Value::Integer(i.abs()),
-            Value::Quantity(q) => {
-                Value::Quantity(Quantity::new(q.value.abs(), q.quantity_type.clone()))
-            }
-            value => {
-                ctx.error(
-                    arg,
-                    EvalError::BuiltinError(format!("Cannot calculate abs({value})")),
-                )?;
-                Value::None
-            }
-        })
-    })
+    Symbol::new_builtin_fn(
+        "abs",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::Integer(i) => Value::Integer(i.abs()),
+                Value::Quantity(q) => {
+                    Value::Quantity(Quantity::new(q.value.abs(), q.quantity_type.clone()))
+                }
+                value => {
+                    ctx.error(
+                        arg,
+                        EvalError::BuiltinError(format!("Cannot calculate abs({value})")),
+                    )?;
+                    Value::None
+                }
+            })
+        },
+        None,
+    )
 }
 
 /// Square root sqrt(x).
@@ -46,25 +51,31 @@ fn sqrt() -> Symbol {
                 }
             })
         },
+        None,
     )
 }
 
 /// Cast some Quantity into an Integer.
 fn int() -> Symbol {
-    Symbol::new_builtin_fn("int", [parameter!(x)].into_iter(), &|_params, args, ctx| {
-        let (_, arg) = args.get_single()?;
-        Ok(match &arg.value {
-            Value::Integer(i) => Value::Integer(*i),
-            Value::Quantity(q) => Value::Integer(q.value.floor() as Integer),
-            value => {
-                ctx.error(
-                    arg,
-                    EvalError::BuiltinError(format!("Cannot calculate int({value})")),
-                )?;
-                Value::None
-            }
-        })
-    })
+    Symbol::new_builtin_fn(
+        "int",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::Integer(i) => Value::Integer(*i),
+                Value::Quantity(q) => Value::Integer(q.value.floor() as Integer),
+                value => {
+                    ctx.error(
+                        arg,
+                        EvalError::BuiltinError(format!("Cannot calculate int({value})")),
+                    )?;
+                    Value::None
+                }
+            })
+        },
+        None,
+    )
 }
 
 /// Implementation for a builtin trigonometric function.
@@ -97,23 +108,32 @@ fn trigonometric(
 
 /// Calculate cos(x).
 fn cos() -> Symbol {
-    Symbol::new_builtin_fn("cos", [parameter!(x)].into_iter(), &|_params, args, ctx| {
-        trigonometric("cos", args, ctx, |v| v.cos())
-    })
+    Symbol::new_builtin_fn(
+        "cos",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| trigonometric("cos", args, ctx, |v| v.cos()),
+        None,
+    )
 }
 
 /// Calculate sin(x).
 fn sin() -> Symbol {
-    Symbol::new_builtin_fn("sin", [parameter!(x)].into_iter(), &|_params, args, ctx| {
-        trigonometric("sin", args, ctx, |v| v.sin())
-    })
+    Symbol::new_builtin_fn(
+        "sin",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| trigonometric("sin", args, ctx, |v| v.sin()),
+        None,
+    )
 }
 
 /// Calculate tan(x).
 fn tan() -> Symbol {
-    Symbol::new_builtin_fn("tan", [parameter!(x)].into_iter(), &|_params, args, ctx| {
-        trigonometric("tan", args, ctx, |v| v.tan())
-    })
+    Symbol::new_builtin_fn(
+        "tan",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| trigonometric("tan", args, ctx, |v| v.tan()),
+        None,
+    )
 }
 
 /// Helper function to get an angle from a field in an argument list.
@@ -189,6 +209,7 @@ fn rotate_around_axis() -> Symbol {
                 Ok(Value::None)
             }
         },
+        None,
     )
 }
 
@@ -214,6 +235,7 @@ fn rotate_xyz() -> Symbol {
                 Ok(Value::None)
             }
         },
+        None,
     )
 }
 
@@ -239,6 +261,7 @@ fn rotate_zyx() -> Symbol {
                 Ok(Value::None)
             }
         },
+        None,
     )
 }
 

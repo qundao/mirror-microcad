@@ -3,7 +3,7 @@
 
 //! Assignment statement syntax elements
 
-use crate::{src_ref::*, syntax::*};
+use crate::{rc::*, src_ref::*, syntax::*};
 
 /// An assignment statement, e.g. `#[aux] s = Sphere(3.0mm);`.
 #[derive(Clone)]
@@ -11,7 +11,7 @@ pub struct AssignmentStatement {
     /// List of attributes.
     pub attribute_list: AttributeList,
     /// The actual assignment.
-    pub assignment: Assignment,
+    pub assignment: Rc<Assignment>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }

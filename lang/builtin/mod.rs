@@ -3,6 +3,9 @@
 
 //! Builtin module
 
+#[allow(clippy::module_inception)]
+pub mod builtin;
+
 pub mod export;
 pub mod file_io;
 pub mod import;
@@ -10,6 +13,7 @@ pub mod module_builder;
 pub mod operation;
 pub mod workpiece;
 
+pub use builtin::*;
 pub use export::*;
 pub use file_io::*;
 pub use import::*;

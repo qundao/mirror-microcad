@@ -6,6 +6,7 @@ use crate::{parse::*, parser::*, rc::*, syntax::*};
 impl Parse for Assignment {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Ok(Self::new(
+            crate::find_rule_opt!(pair, doc_block),
             crate::find_rule!(pair, visibility)?,
             crate::find_rule!(pair, qualifier)?,
             crate::find_rule!(pair, identifier)?,
@@ -13,6 +14,12 @@ impl Parse for Assignment {
             crate::find_rule_exact!(pair, expression)?,
             pair.into(),
         ))
+    }
+}
+
+impl Parse for Rc<Assignment> {
+    fn parse(pair: Pair) -> ParseResult<Self> {
+        Ok(Rc::new(Assignment::parse(pair)?))
     }
 }
 

@@ -26,6 +26,7 @@ fn rgb() -> Symbol {
                 .into(),
             )))
         },
+        None,
     )
 }
 
@@ -49,6 +50,7 @@ fn rgba() -> Symbol {
             )
             .into())
         },
+        None,
     )
 }
 

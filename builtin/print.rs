@@ -17,5 +17,6 @@ pub fn print() -> Symbol {
                 })?;
             Ok(Value::None)
         },
+        None,
     )
 }

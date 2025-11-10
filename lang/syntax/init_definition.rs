@@ -16,12 +16,20 @@ use crate::{src_ref::*, syntax::*};
 /// ```
 #[derive(Clone)]
 pub struct InitDefinition {
+    /// Documentation.
+    pub doc: Option<DocBlock>,
     /// Parameter list for this init definition
     pub parameters: ParameterList,
     /// Body if the init definition
     pub body: Body,
     /// Source reference
     pub src_ref: SrcRef,
+}
+
+impl Doc for InitDefinition {
+    fn doc(&self) -> Option<DocBlock> {
+        self.doc.clone()
+    }
 }
 
 impl SrcReferrer for InitDefinition {
@@ -48,6 +56,9 @@ impl TreeDisplay for InitDefinition {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}InitDefinition:", "")?;
         depth.indent();
+        if let Some(doc) = &self.doc {
+            doc.tree_print(f, depth)?;
+        }
         self.parameters.tree_print(f, depth)?;
         self.body.tree_print(f, depth)
     }

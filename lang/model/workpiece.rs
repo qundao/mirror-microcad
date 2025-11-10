@@ -3,13 +3,7 @@
 
 //! Work piece element
 
-use crate::{
-    eval::*,
-    model::*,
-    render::{ComputedHash, Hashed},
-    syntax::*,
-    value::*,
-};
+use crate::{eval::*, model::*, render::*, syntax::*, value::*};
 
 /// A workpiece is an element produced by a workbench.
 #[derive(Debug, Clone)]
