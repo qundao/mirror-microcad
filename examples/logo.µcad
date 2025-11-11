@@ -20,7 +20,7 @@ mod microcad {
             .rotate([0..3] * 90°); 
     }
 
-    pub sketch Micro( radius: Length, thickness: Length ) {
+    pub sketch Micro(radius: Length, thickness: Length) {
         u = Sector(radius, 180°).rotate(90°) - Circle(radius-thickness);
         r_l = Rect(width = thickness, height = radius * 3, x = -radius, y = -2*radius);
         r_r = Rect(width = thickness, height = radius * 2, x = radius - thickness, y = -radius);
