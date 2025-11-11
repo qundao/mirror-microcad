@@ -67,7 +67,11 @@ pub fn shorten(what: &str, max_chars: usize) -> String {
             if p == max_chars {
                 Some('…')
             } else if p < max_chars {
-                if ch == '\n' { Some('⏎') } else { Some(ch) }
+                if ch == '\n' {
+                    Some('⏎')
+                } else {
+                    Some(ch)
+                }
             } else {
                 None
             }
@@ -181,10 +185,10 @@ macro_rules! invalid {
         color_print::cstr!("<R!,k,s> NO VALUE </>")
     };
     (TYPE) => {
-        color_print::cstr!("<R!,k,s> INVALID TYPE </>")
+        color_print::cstr!("<R!,k,s> NO TYPE </>")
     };
     (OUTPUT) => {
-        color_print::cstr!("<R!,k,s> INVALID OUTPUT </>")
+        color_print::cstr!("<R!,k,s> NO OUTPUT </>")
     };
     (STACK) => {
         color_print::cstr!("<W,k,s> EMPTY STACK </>")
@@ -225,31 +229,31 @@ macro_rules! invalid_no_ansi {
         "<NO VALUE>"
     };
     (TYPE) => {
-        "<INVALID TYPE>"
+        "<NO TYPE>"
     };
     (OUTPUT) => {
-        "<INVALID OUTPUT>"
+        "<NO OUTPUT>"
     };
     (STACK) => {
-        "<INVALID STACK>"
+        "<EMPTY STACK>"
     };
     (REF) => {
-        "<INVALID REF>"
+        "<NO REF>"
     };
     (FILE) => {
-        "<INVALID FILE>"
+        "<NO FILE>"
     };
     (RESULT) => {
-        "<INVALID RESULT>"
+        "<NO RESULT>"
     };
     (LINE) => {
-        "<INVALID LINE>"
+        "<NO LINE>"
     };
     (SOURCE) => {
         "<FROM STR>"
     };
     (UNKNOWN) => {
-        "<INVALID UNKNOWN>"
+        "<UNKNOWN>"
     };
     (ID) => {
         "<NO ID>"

@@ -94,7 +94,7 @@ impl Diagnostic {
                     source_file
                         .as_ref()
                         .map(|sf| make_relative(&sf.filename()))
-                        .unwrap_or(crate::invalid!(FILE).to_string()),
+                        .unwrap_or(crate::invalid_no_ansi!(FILE).to_string()),
                     src_ref.with_line_offset(line_offset).at
                 )?;
                 writeln!(f, "     |",)?;
@@ -105,7 +105,7 @@ impl Diagnostic {
                         sf.get_line(src_ref.at.line - 1)
                             .unwrap_or(crate::invalid!(LINE))
                     })
-                    .unwrap_or(crate::invalid!(FILE));
+                    .unwrap_or(crate::invalid_no_ansi!(FILE));
 
                 writeln!(
                     f,
