@@ -26,6 +26,7 @@ pub fn ops() -> Symbol {
         .builtin::<operation::Union>()
         .builtin::<operation::Subtract>()
         .builtin::<operation::Intersect>()
+        .builtin::<operation::Repeat>()
         .builtin::<align::Align>()
         .builtin::<buffer::Buffer>()
         .builtin::<center::Center>()
