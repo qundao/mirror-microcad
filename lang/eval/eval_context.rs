@@ -116,7 +116,7 @@ impl EvalContext {
     ) -> T {
         self.open(stack_frame);
         let result = f(self);
-        let unused: Vec<_> = if let Some(frame) = &self.stack.current_frame() {
+        let mut unused: Vec<_> = if let Some(frame) = &self.stack.current_frame() {
             if let Some(locals) = frame.locals() {
                 locals
                     .iter()
@@ -129,6 +129,7 @@ impl EvalContext {
         } else {
             vec![]
         };
+        unused.sort();
 
         unused
             .iter()
