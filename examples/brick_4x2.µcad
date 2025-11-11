@@ -3,28 +3,34 @@ use std::ops::*;
 use std::math::*;
 
 const SPACING = 8mm;
+const THICKNESS = 1.2mm;
 
-rows = 2;
-columns = 4;
-width = columns * SPACING - 0.2mm;
-height = rows * SPACING - 0.2mm;
-thickness = 1.2mm;
-base_height = 9.6mm;
 
-base = {
-    r = rows - 1;
-    c = columns - 1;
-    Frame(width, height, thickness);
-    (r*c*Ring(outer_d = 6.51mm, inner_d = 4.8mm))
-        .distribute_grid(width = width - width / columns, height - height / rows, rows = r, columns = c);
+part LegoBrick(rows: Integer, columns: Integer, base_height = 9.6mm) {
+    prop width = columns * SPACING - 0.2mm;
+    prop height = rows * SPACING - 0.2mm;
+
+    base = {
+        r = rows - 1;
+        c = columns - 1;
+        Frame(width, height, THICKNESS);
+        Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+            .repeat(r*c)
+            .distribute_grid(width = width - width / columns, height - height / rows, rows = r, columns = c);
     }
-    .extrude(base_height - thickness);
+    .extrude(base_height - THICKNESS);
 
-knobs = (rows*columns*Circle(d = 4.8mm))
-    .distribute_grid(width, height, rows, columns)
-    .extrude(1.7mm);
+    knobs = Circle(d = 4.8mm)
+        .repeat(rows * columns)
+        .distribute_grid(width, height, rows, columns)
+        .extrude(1.7mm);
 
-cap = Rect(width, height).extrude(thickness);
+    cap = Rect(width, height).extrude(THICKNESS);
 
-#[color = std::color::RED]
-{ base; cap; knobs; }.align(Z).union();
+    { base; cap; knobs; }.align(Z).union();
+}
+
+{
+    LegoBrick(rows = 4, columns = 2);
+    LegoBrick(rows = 3, columns = 2);
+}.distribute_grid(100mm, rows = 2, columns = 2);
