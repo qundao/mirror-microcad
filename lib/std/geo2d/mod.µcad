@@ -72,16 +72,6 @@ pub sketch Ngon(n: Integer, radius: Length) {
     __builtin::geo2d::Ngon(n, radius);
 }
 
-/// Circle sector definition.
-pub sketch Sector(radius: Length, start: Angle, end: Angle) {
-    init(radius: Length, angle: Angle, offset = 0°) {
-        start = offset;
-        end = offset + angle;
-    }
-
-    __builtin::geo2d::Sector(radius, start, end);
-}
-
 /// Rectangle definition.
 ///
 /// # Examples
@@ -167,6 +157,16 @@ pub sketch RoundedRect(
         radius_top_left,
         radius_top_right
     )
+}
+
+/// Circle sector definition.
+pub sketch Sector(radius: Length, start: Angle, end: Angle) {
+    init(radius: Length, angle: Angle, offset = 0°) {
+        start = offset - angle / 2;
+        end = offset + angle / 2;
+    }
+
+    __builtin::geo2d::Sector(radius, start, end);
 }
 
 /// Text definition.
