@@ -1,6 +1,11 @@
 -- Test --
-  use_all_local
-  ../books/tests/src/use.md:89
+        Test name: use_all_local
+  Expected result: ok
+      Source file: ../books/tests/src/use.md:89
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/use_all_local.svg
+         Log file: ../books/tests/src/.test/use_all_local.log
+ Output file stem: ../books/tests/src/.test/use_all_local-out
 
 -- Code --
 
@@ -11,8 +16,7 @@
   93:   }
   94:   f();
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local PI.
   ---> [30m[103m[1m NO FILE [39m[49m[22m:89:1
@@ -47,6 +51,6 @@ warning: Unused local sin.
 warning: Unused local sqrt.
 warning: Unused local tan.
 Unexpected warnings(s) which did occur in line(s): 89
--- No model --
+-- No Model --
 -- Test Result --
 OK

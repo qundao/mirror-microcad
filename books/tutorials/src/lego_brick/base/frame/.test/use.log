@@ -1,6 +1,11 @@
 -- Test --
-  use
-  ../books/tutorials/src/lego_brick/base/frame/use.md:18
+        Test name: use
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/use.md:18
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
+      Banner file: ../books/tutorials/src/lego_brick/base/frame/.test/use.svg
+         Log file: ../books/tutorials/src/lego_brick/base/frame/.test/use.log
+ Output file stem: ../books/tutorials/src/lego_brick/base/frame/.test/use-out
 
 -- Code --
 
@@ -15,9 +20,8 @@
   26:       Rect(width = width - 2 * thickness, height = height - 2 * thickness);
   27:   }.subtract();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::subtract() ->

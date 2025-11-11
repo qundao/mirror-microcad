@@ -1,6 +1,11 @@
 -- Test --
-  use_as_test
-  ../books/tests/src/use.md:47
+        Test name: use_as_test
+  Expected result: ok
+      Source file: ../books/tests/src/use.md:47
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/use_as_test.svg
+         Log file: ../books/tests/src/.test/use_as_test.log
+ Output file stem: ../books/tests/src/.test/use_as_test-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   49:   
   50:   Cap(width=1mm,height=1mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Rect(height=1mm, width=1mm) ->

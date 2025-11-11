@@ -1,6 +1,11 @@
 -- Test --
-  pre_init_function
-  ../books/tests/src/statement_usage/pre-init.md:22
+        Test name: pre_init_function
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:22
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/pre_init_function.svg
+         Log file: ../books/tests/src/statement_usage/.test/pre_init_function.log
+ Output file stem: ../books/tests/src/statement_usage/.test/pre_init_function-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   23:     fn f() {} f();   // error
   24:   init(l:Length) {} } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement not allowed prior initializers
   ---> ../books/tests/src/statement_usage/pre-init.md:23:3

@@ -1,13 +1,17 @@
 -- Test --
-  source_module
-  ../books/tests/src/statement_usage/source.md:12
+        Test name: source_module
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/source.md:12
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/source_module.svg
+         Log file: ../books/tests/src/statement_usage/.test/source_module.log
+ Output file stem: ../books/tests/src/statement_usage/.test/source_module-out
 
 -- Code --
 
   12:   mod m {}
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol m.
   ---> ../books/tests/src/statement_usage/source.md:12:1
@@ -16,6 +20,6 @@ warning: Unused global symbol m.
      | ^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 12
--- No model --
+-- No Model --
 -- Test Result --
 OK

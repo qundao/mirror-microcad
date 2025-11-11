@@ -1,6 +1,11 @@
 -- Test --
-  code_post_init
-  ../books/language/src/structure/workbenches/README.md:226
+        Test name: code_post_init
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:226
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/code_post_init.svg
+         Log file: ../books/language/src/structure/workbenches/.test/code_post_init.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/code_post_init-out
 
 -- Code --
 
@@ -12,8 +17,7 @@
  231:       std::geo2d::Circle(radius);
  232:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol Wheel.
   ---> ../books/language/src/structure/workbenches/README.md:226:1
@@ -22,6 +26,6 @@ warning: Unused global symbol Wheel.
      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 226
--- No model --
+-- No Model --
 -- Test Result --
 OK

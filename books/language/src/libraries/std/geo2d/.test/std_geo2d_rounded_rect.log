@@ -1,14 +1,18 @@
 -- Test --
-  std_geo2d_rounded_rect
-  ../books/language/src/libraries/std/geo2d/README.md:31
+        Test name: std_geo2d_rounded_rect
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/geo2d/README.md:31
+        Test path: ../books/language/src/libraries/std/geo2d/.test
+      Banner file: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_rounded_rect.svg
+         Log file: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_rounded_rect.log
+ Output file stem: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_rounded_rect-out
 
 -- Code --
 
   31:   std::geo2d::RoundedRect(20mm, radius = 5mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::RoundedRect(radius=5mm, size=20mm) ->

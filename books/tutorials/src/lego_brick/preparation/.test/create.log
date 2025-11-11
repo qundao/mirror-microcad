@@ -1,6 +1,11 @@
 -- Test --
-  create
-  ../books/tutorials/src/lego_brick/preparation/create.md:16
+        Test name: create
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/preparation/create.md:16
+        Test path: ../books/tutorials/src/lego_brick/preparation/.test
+      Banner file: ../books/tutorials/src/lego_brick/preparation/.test/create.svg
+         Log file: ../books/tutorials/src/lego_brick/preparation/.test/create.log
+ Output file stem: ../books/tutorials/src/lego_brick/preparation/.test/create-out
 
 -- Code --
 
@@ -13,9 +18,8 @@
   22:   // create YourSketch
   23:   YourSketch();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) create::YourSketch() ->

@@ -1,6 +1,11 @@
 -- Test --
-  pre_init_init
-  ../books/tests/src/statement_usage/pre-init.md:30
+        Test name: pre_init_init
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/pre-init.md:30
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/pre_init_init.svg
+         Log file: ../books/tests/src/statement_usage/.test/pre_init_init.log
+ Output file stem: ../books/tests/src/statement_usage/.test/pre_init_init-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   31:     init() {}
   32:   init(l:Length) {} } K();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) pre_init_init::K() ->

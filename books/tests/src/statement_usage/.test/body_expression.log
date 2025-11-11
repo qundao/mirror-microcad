@@ -1,6 +1,11 @@
 -- Test --
-  body_expression
-  ../books/tests/src/statement_usage/body.md:102
+        Test name: body_expression
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/body.md:102
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/body_expression.svg
+         Log file: ../books/tests/src/statement_usage/.test/body_expression.log
+ Output file stem: ../books/tests/src/statement_usage/.test/body_expression-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
  103:     1 + 2;
  104:   }
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Group ->

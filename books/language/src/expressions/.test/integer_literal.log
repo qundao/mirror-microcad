@@ -1,6 +1,11 @@
 -- Test --
-  integer_literal
-  ../books/language/src/expressions/literals.md:14
+        Test name: integer_literal
+  Expected result: ok
+      Source file: ../books/language/src/expressions/literals.md:14
+        Test path: ../books/language/src/expressions/.test
+      Banner file: ../books/language/src/expressions/.test/integer_literal.svg
+         Log file: ../books/language/src/expressions/.test/integer_literal.log
+ Output file stem: ../books/language/src/expressions/.test/integer_literal-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   15:   1350;
   16:   -6
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

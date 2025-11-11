@@ -1,15 +1,19 @@
 -- Test --
-  mod_external_root
-  ../books/tests/src/mod_external.md:6
+        Test name: mod_external_root
+  Expected result: ok
+      Source file: ../books/tests/src/mod_external.md:6
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/mod_external_root.svg
+         Log file: ../books/tests/src/.test/mod_external_root.log
+ Output file stem: ../books/tests/src/.test/mod_external_root-out
 
 -- Code --
 
    6:   mod external;
    7:   std::debug::assert_valid(external::a);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

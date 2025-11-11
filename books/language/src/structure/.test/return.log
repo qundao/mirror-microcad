@@ -1,6 +1,11 @@
 -- Test --
-  return
-  ../books/language/src/structure/functions.md:33
+        Test name: return
+  Expected result: ok
+      Source file: ../books/language/src/structure/functions.md:33
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/return.svg
+         Log file: ../books/language/src/structure/.test/return.log
+ Output file stem: ../books/language/src/structure/.test/return-out
 
 -- Code --
 
@@ -12,8 +17,7 @@
   38:       }
   39:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol pow.
   ---> ../books/language/src/structure/functions.md:33:1
@@ -22,6 +26,6 @@ warning: Unused global symbol pow.
      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 33
--- No model --
+-- No Model --
 -- Test Result --
 OK

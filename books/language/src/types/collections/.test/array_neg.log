@@ -1,15 +1,19 @@
 -- Test --
-  array_neg
-  ../books/language/src/types/collections/arrays.md:105
+        Test name: array_neg
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/arrays.md:105
+        Test path: ../books/language/src/types/collections/.test
+      Banner file: ../books/language/src/types/collections/.test/array_neg.svg
+         Log file: ../books/language/src/types/collections/.test/array_neg.log
+ Output file stem: ../books/language/src/types/collections/.test/array_neg-out
 
 -- Code --
 
  105:   d = 1.0mm;
  106:   std::debug::assert_eq([[-d,d], -[d, -d]]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

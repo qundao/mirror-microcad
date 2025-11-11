@@ -1,13 +1,17 @@
 -- Test --
-  verify_assert_fail
-  ../books/language/src/debugging/verification.md:22
+        Test name: verify_assert_fail
+  Expected result: fail
+      Source file: ../books/language/src/debugging/verification.md:22
+        Test path: ../books/language/src/debugging/.test
+      Banner file: ../books/language/src/debugging/.test/verify_assert_fail.svg
+         Log file: ../books/language/src/debugging/.test/verify_assert_fail.log
+ Output file stem: ../books/language/src/debugging/.test/verify_assert_fail-out
 
 -- Code --
 
   22:   std::debug::assert(false, "this assertion fails"); // error
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Assertion failed: this assertion fails
   ---> ../books/language/src/debugging/verification.md:22:20

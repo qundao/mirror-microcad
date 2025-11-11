@@ -1,13 +1,17 @@
 -- Test --
-  sketch_basic
-  ../books/language/src/structure/workbenches/sketches.md:9
+        Test name: sketch_basic
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/sketches.md:9
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/sketch_basic.svg
+         Log file: ../books/language/src/structure/workbenches/.test/sketch_basic.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/sketch_basic-out
 
 -- Code --
 
    9:   sketch MySketch() {}
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol MySketch.
   ---> ../books/language/src/structure/workbenches/sketches.md:9:1
@@ -16,6 +20,6 @@ warning: Unused global symbol MySketch.
      | ^^^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 9
--- No model --
+-- No Model --
 -- Test Result --
 OK

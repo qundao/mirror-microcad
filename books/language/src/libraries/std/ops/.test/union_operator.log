@@ -1,14 +1,18 @@
 -- Test --
-  union_operator
-  ../books/language/src/libraries/std/ops/union.md:10
+        Test name: union_operator
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/union.md:10
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/union_operator.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/union_operator.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/union_operator-out
 
 -- Code --
 
   10:   std::geo2d::Circle(radius = 3mm) | std::geo2d::Rect(width = 3mm, height = 2mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation union() ->

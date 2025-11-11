@@ -1,15 +1,19 @@
 -- Test --
-  output
-  ../books/tutorials/src/lego_brick/base/frame/naming.md:24
+        Test name: output
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/naming.md:24
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
+      Banner file: ../books/tutorials/src/lego_brick/base/frame/.test/output.svg
+         Log file: ../books/tutorials/src/lego_brick/base/frame/.test/output.log
+ Output file stem: ../books/tutorials/src/lego_brick/base/frame/.test/output-out
 
 -- Code --
 
   24:   outer = std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
   25:   outer;
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     outer: Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->

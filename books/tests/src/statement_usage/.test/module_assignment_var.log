@@ -1,6 +1,11 @@
 -- Test --
-  module_assignment_var
-  ../books/tests/src/statement_usage/module.md:78
+        Test name: module_assignment_var
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/module.md:78
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/module_assignment_var.svg
+         Log file: ../books/tests/src/statement_usage/.test/module_assignment_var.log
+ Output file stem: ../books/tests/src/statement_usage/.test/module_assignment_var-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   79:     a = 1; // error
   80:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Declaration of a not allowed within module_assignment_var::k
   ---> ../books/tests/src/statement_usage/module.md:79:3

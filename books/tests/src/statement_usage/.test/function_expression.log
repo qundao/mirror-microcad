@@ -1,6 +1,11 @@
 -- Test --
-  function_expression
-  ../books/tests/src/statement_usage/function.md:94
+        Test name: function_expression
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/function.md:94
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/function_expression.svg
+         Log file: ../books/tests/src/statement_usage/.test/function_expression.log
+ Output file stem: ../books/tests/src/statement_usage/.test/function_expression-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   95:     1 + 2;
   96:   } f();
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

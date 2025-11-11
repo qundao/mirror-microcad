@@ -1,6 +1,11 @@
 -- Test --
-  workbench_module
-  ../books/tests/src/statement_usage/workbench.md:14
+        Test name: workbench_module
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/workbench.md:14
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/workbench_module.svg
+         Log file: ../books/tests/src/statement_usage/.test/workbench_module.log
+ Output file stem: ../books/tests/src/statement_usage/.test/workbench_module-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   15:     mod m {} // error
   16:   } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement is not available within Sketch
   ---> ../books/tests/src/statement_usage/workbench.md:15:3

@@ -1,14 +1,18 @@
 -- Test --
-  source_expression_model
-  ../books/tests/src/statement_usage/source.md:78
+        Test name: source_expression_model
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/source.md:78
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/source_expression_model.svg
+         Log file: ../books/tests/src/statement_usage/.test/source_expression_model.log
+ Output file stem: ../books/tests/src/statement_usage/.test/source_expression_model-out
 
 -- Code --
 
   78:   __builtin::geo2d::Circle(radius=1mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Primitive2D __builtin::geo2d::Circle(radius=1mm) ->

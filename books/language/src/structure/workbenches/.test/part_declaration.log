@@ -1,6 +1,11 @@
 -- Test --
-  part_declaration
-  ../books/language/src/structure/workbenches/README.md:33
+        Test name: part_declaration
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:33
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/part_declaration.svg
+         Log file: ../books/language/src/structure/workbenches/.test/part_declaration.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/part_declaration-out
 
 -- Code --
 
@@ -45,8 +50,7 @@
   71:   // check diameter
   72:   assert_eq([r.diameter, 2cm]);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local i.
   ---> ../books/language/src/structure/workbenches/README.md:56:5
@@ -61,6 +65,6 @@ warning: Unused local i.
      |     ^
      |
 Unexpected warnings(s) which did occur in line(s): 56
--- No model --
+-- No Model --
 -- Test Result --
 OK

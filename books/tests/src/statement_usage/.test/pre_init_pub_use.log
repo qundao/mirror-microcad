@@ -1,6 +1,11 @@
 -- Test --
-  pre_init_pub_use
-  ../books/tests/src/statement_usage/pre-init.md:46
+        Test name: pre_init_pub_use
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:46
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/pre_init_pub_use.svg
+         Log file: ../books/tests/src/statement_usage/.test/pre_init_pub_use.log
+ Output file stem: ../books/tests/src/statement_usage/.test/pre_init_pub_use-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   47:     pub use std; // error
   48:   init(l:Length) {} } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Use statement is not available within Sketch
   ---> ../books/tests/src/statement_usage/pre-init.md:47:3

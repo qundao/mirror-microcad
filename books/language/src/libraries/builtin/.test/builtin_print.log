@@ -1,6 +1,11 @@
 -- Test --
-  builtin_print
-  ../books/language/src/libraries/builtin/debug.md:8
+        Test name: builtin_print
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/debug.md:8
+        Test path: ../books/language/src/libraries/builtin/.test
+      Banner file: ../books/language/src/libraries/builtin/.test/builtin_print.svg
+         Log file: ../books/language/src/libraries/builtin/.test/builtin_print.log
+ Output file stem: ../books/language/src/libraries/builtin/.test/builtin_print-out
 
 -- Code --
 
@@ -9,7 +14,7 @@
 -- Output --
 ok
 
--- Errors --
--- No model --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

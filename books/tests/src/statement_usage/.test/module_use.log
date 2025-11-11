@@ -1,6 +1,11 @@
 -- Test --
-  module_use
-  ../books/tests/src/statement_usage/module.md:38
+        Test name: module_use
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/module.md:38
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/module_use.svg
+         Log file: ../books/tests/src/statement_usage/.test/module_use.log
+ Output file stem: ../books/tests/src/statement_usage/.test/module_use-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   39:     use std::geo2d;
   40:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol k.
   ---> ../books/tests/src/statement_usage/module.md:38:1
@@ -24,6 +28,6 @@ warning: Unused global symbol <no code>.
      |       ^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 38, 39
--- No model --
+-- No Model --
 -- Test Result --
 OK

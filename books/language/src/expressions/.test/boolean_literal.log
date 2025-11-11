@@ -1,15 +1,19 @@
 -- Test --
-  boolean_literal
-  ../books/language/src/expressions/literals.md:44
+        Test name: boolean_literal
+  Expected result: ok
+      Source file: ../books/language/src/expressions/literals.md:44
+        Test path: ../books/language/src/expressions/.test
+      Banner file: ../books/language/src/expressions/.test/boolean_literal.svg
+         Log file: ../books/language/src/expressions/.test/boolean_literal.log
+ Output file stem: ../books/language/src/expressions/.test/boolean_literal-out
 
 -- Code --
 
   44:   true;
   45:   false
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

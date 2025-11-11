@@ -1,6 +1,11 @@
 -- Test --
-  use_test
-  ../books/tests/src/use.md:6
+        Test name: use_test
+  Expected result: ok
+      Source file: ../books/tests/src/use.md:6
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/use_test.svg
+         Log file: ../books/tests/src/.test/use_test.log
+ Output file stem: ../books/tests/src/.test/use_test-out
 
 -- Code --
 
@@ -44,7 +49,7 @@
 -- Output --
 Hello
 
--- Errors --
--- No model --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

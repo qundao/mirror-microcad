@@ -1,16 +1,20 @@
 -- Test --
-  use_as_module
-  ../books/language/src/structure/use.md:68
+        Test name: use_as_module
+  Expected result: ok
+      Source file: ../books/language/src/structure/use.md:64
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/use_as_module.svg
+         Log file: ../books/language/src/structure/.test/use_as_module.log
+ Output file stem: ../books/language/src/structure/.test/use_as_module-out
 
 -- Code --
 
-  68:   use std::geo2d as geo;
-  69:   
-  70:   geo::Circle(r = 4mm);
+  64:   use std::geo2d as geo;
+  65:   
+  66:   geo::Circle(r = 4mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->

@@ -1,6 +1,11 @@
 -- Test --
-  workbench_marker
-  ../books/tests/src/statement_usage/workbench.md:70
+        Test name: workbench_marker
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/workbench.md:70
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/workbench_marker.svg
+         Log file: ../books/tests/src/statement_usage/.test/workbench_marker.log
+ Output file stem: ../books/tests/src/statement_usage/.test/workbench_marker-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   71:     @input
   72:   } K();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) workbench_marker::K() ->

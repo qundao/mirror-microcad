@@ -1,14 +1,18 @@
 -- Test --
-  source_workbench
-  ../books/tests/src/statement_usage/source.md:6
+        Test name: source_workbench
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/source.md:6
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/source_workbench.svg
+         Log file: ../books/tests/src/statement_usage/.test/source_workbench.log
+ Output file stem: ../books/tests/src/statement_usage/.test/source_workbench-out
 
 -- Code --
 
    6:   sketch F() {} F();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) source_workbench::F() ->

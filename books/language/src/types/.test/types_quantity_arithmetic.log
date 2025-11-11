@@ -1,6 +1,11 @@
 -- Test --
-  types_quantity_arithmetic
-  ../books/language/src/types/quantities.md:173
+        Test name: types_quantity_arithmetic
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:173
+        Test path: ../books/language/src/types/.test
+      Banner file: ../books/language/src/types/.test/types_quantity_arithmetic.svg
+         Log file: ../books/language/src/types/.test/types_quantity_arithmetic.log
+ Output file stem: ../books/language/src/types/.test/types_quantity_arithmetic-out
 
 -- Code --
 
@@ -17,9 +22,8 @@
  183:   e = a - 2.0mm;
  184:   assert([e, 0mm, 0.0mm].all_equal());
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

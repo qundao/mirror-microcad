@@ -1,6 +1,11 @@
 -- Test --
-  operator_examples
-  ../books/language/src/expressions/operators.md:28
+        Test name: operator_examples
+  Expected result: ok
+      Source file: ../books/language/src/expressions/operators.md:28
+        Test path: ../books/language/src/expressions/.test
+      Banner file: ../books/language/src/expressions/.test/operator_examples.svg
+         Log file: ../books/language/src/expressions/.test/operator_examples.log
+ Output file stem: ../books/language/src/expressions/.test/operator_examples-out
 
 -- Code --
 
@@ -21,9 +26,8 @@
   42:   assert(  5 == 6       == false               ); // Equal
   43:   assert(  5 != 6       == true                ); // Not equal
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

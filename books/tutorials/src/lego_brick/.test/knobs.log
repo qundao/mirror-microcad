@@ -1,6 +1,11 @@
 -- Test --
-  knobs
-  ../books/tutorials/src/lego_brick/caps_knobs.md:75
+        Test name: knobs
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/caps_knobs.md:75
+        Test path: ../books/tutorials/src/lego_brick/.test
+      Banner file: ../books/tutorials/src/lego_brick/.test/knobs.svg
+         Log file: ../books/tutorials/src/lego_brick/.test/knobs.log
+ Output file stem: ../books/tutorials/src/lego_brick/.test/knobs-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   79:   
   80:   Knobs();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) knobs::Knobs(diameter=4.8mm) ->

@@ -1,6 +1,11 @@
 -- Test --
-  cap
-  ../books/tutorials/src/lego_brick/caps_knobs.md:14
+        Test name: cap
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/caps_knobs.md:14
+        Test path: ../books/tutorials/src/lego_brick/.test
+      Banner file: ../books/tutorials/src/lego_brick/.test/cap.svg
+         Log file: ../books/tutorials/src/lego_brick/.test/cap.log
+ Output file stem: ../books/tutorials/src/lego_brick/.test/cap-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   16:   
   17:   Cap(width = 31.8mm, height = 15.8mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->

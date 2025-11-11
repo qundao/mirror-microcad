@@ -1,6 +1,11 @@
 -- Test --
-  assignment
-  ../books/language/src/assignments/values.md:14
+        Test name: assignment
+  Expected result: ok
+      Source file: ../books/language/src/assignments/values.md:14
+        Test path: ../books/language/src/assignments/.test
+      Banner file: ../books/language/src/assignments/.test/assignment.svg
+         Log file: ../books/language/src/assignments/.test/assignment.log
+ Output file stem: ../books/language/src/assignments/.test/assignment-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   16:   std::debug::assert_eq([a,5]);
   17:   std::debug::assert_eq([b,10]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

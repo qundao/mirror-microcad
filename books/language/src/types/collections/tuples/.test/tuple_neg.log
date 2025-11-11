@@ -1,15 +1,19 @@
 -- Test --
-  tuple_neg
-  ../books/language/src/types/collections/tuples/operators.md:63
+        Test name: tuple_neg
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/operators.md:63
+        Test path: ../books/language/src/types/collections/tuples/.test
+      Banner file: ../books/language/src/types/collections/tuples/.test/tuple_neg.svg
+         Log file: ../books/language/src/types/collections/tuples/.test/tuple_neg.log
+ Output file stem: ../books/language/src/types/collections/tuples/.test/tuple_neg-out
 
 -- Code --
 
   63:   v = (x = 1.0mm, y = 2.0mm);
   64:   std::debug::assert_eq([-v, (x = -1.0mm, y = -2.0mm)]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,6 +1,11 @@
 -- Test --
-  workbench_fn_prop
-  ../books/language/src/structure/functions.md:133
+        Test name: workbench_fn_prop
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions.md:133
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/workbench_fn_prop.svg
+         Log file: ../books/language/src/structure/.test/workbench_fn_prop.log
+ Output file stem: ../books/language/src/structure/.test/workbench_fn_prop-out
 
 -- Code --
 
@@ -14,8 +19,7 @@
  140:   
  141:   PunchedDisk(1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Assignment statement is not available within Function
   ---> ../books/language/src/structure/functions.md:135:9

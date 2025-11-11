@@ -1,6 +1,11 @@
 -- Test --
-  types_quantity_area
-  ../books/language/src/types/quantities.md:92
+        Test name: types_quantity_area
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:92
+        Test path: ../books/language/src/types/.test
+      Banner file: ../books/language/src/types/.test/types_quantity_area.svg
+         Log file: ../books/language/src/types/.test/types_quantity_area.log
+ Output file stem: ../books/language/src/types/.test/types_quantity_area-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   94:   area = a * b;
   95:   std::debug::assert(area == 6cm²);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,6 +1,11 @@
 -- Test --
-  union_alt_operator
-  ../books/language/src/libraries/std/ops/union.md:18
+        Test name: union_alt_operator
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/union.md:18
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/union_alt_operator.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/union_alt_operator.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/union_alt_operator-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   20:       std::geo2d::Rect(width = 3mm, height = 2mm);
   21:   }.std::ops::union();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::union() ->

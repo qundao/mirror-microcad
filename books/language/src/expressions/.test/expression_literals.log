@@ -1,6 +1,11 @@
 -- Test --
-  expression_literals
-  ../books/language/src/expressions/README.md:9
+        Test name: expression_literals
+  Expected result: ok
+      Source file: ../books/language/src/expressions/README.md:9
+        Test path: ../books/language/src/expressions/.test
+      Banner file: ../books/language/src/expressions/.test/expression_literals.svg
+         Log file: ../books/language/src/expressions/.test/expression_literals.log
+ Output file stem: ../books/language/src/expressions/.test/expression_literals-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   10:   4.0mm;    // Quantity literal
   11:   "Hello";  // String literal
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,6 +1,11 @@
 -- Test --
-  use_local
-  ../books/tests/src/use.md:80
+        Test name: use_local
+  Expected result: ok
+      Source file: ../books/tests/src/use.md:80
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/use_local.svg
+         Log file: ../books/tests/src/.test/use_local.log
+ Output file stem: ../books/tests/src/.test/use_local-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   84:   }
   85:   f();
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

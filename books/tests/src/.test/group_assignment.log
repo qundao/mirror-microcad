@@ -1,6 +1,11 @@
 -- Test --
-  group_assignment
-  ../books/tests/src/semicolon.md:74
+        Test name: group_assignment
+  Expected result: ok
+      Source file: ../books/tests/src/semicolon.md:74
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/group_assignment.svg
+         Log file: ../books/tests/src/.test/group_assignment.log
+ Output file stem: ../books/tests/src/.test/group_assignment-out
 
 -- Code --
 
@@ -13,8 +18,7 @@
   80:       Circle(radius = 2mm); 
   81:   };
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local a.
   ---> ../books/tests/src/semicolon.md:78:1
@@ -29,6 +33,6 @@ warning: Unused global symbol translate.
      |     ^^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 75, 78
--- No model --
+-- No Model --
 -- Test Result --
 OK

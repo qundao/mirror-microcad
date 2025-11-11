@@ -1,6 +1,11 @@
 -- Test --
-  sketch_with_body
-  ../books/tests/src/semicolon.md:45
+        Test name: sketch_with_body
+  Expected result: fail
+      Source file: ../books/tests/src/semicolon.md:45
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/sketch_with_body.svg
+         Log file: ../books/tests/src/.test/sketch_with_body.log
+ Output file stem: ../books/tests/src/.test/sketch_with_body-out
 
 -- Code --
 

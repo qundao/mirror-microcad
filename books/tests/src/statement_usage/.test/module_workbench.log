@@ -1,6 +1,11 @@
 -- Test --
-  module_workbench
-  ../books/tests/src/statement_usage/module.md:6
+        Test name: module_workbench
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/module.md:6
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/module_workbench.svg
+         Log file: ../books/tests/src/statement_usage/.test/module_workbench.log
+ Output file stem: ../books/tests/src/statement_usage/.test/module_workbench-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
    7:     sketch F() {}
    8:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol k.
   ---> ../books/tests/src/statement_usage/module.md:6:1
@@ -24,6 +28,6 @@ warning: Unused global symbol F.
      |   ^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 6, 7
--- No model --
+-- No Model --
 -- Test Result --
 OK

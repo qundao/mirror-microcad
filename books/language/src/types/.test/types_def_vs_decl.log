@@ -1,14 +1,18 @@
 -- Test --
-  types_def_vs_decl
-  ../books/language/src/types/README.md:29
+        Test name: types_def_vs_decl
+  Expected result: ok
+      Source file: ../books/language/src/types/README.md:29
+        Test path: ../books/language/src/types/.test
+      Banner file: ../books/language/src/types/.test/types_def_vs_decl.svg
+         Log file: ../books/language/src/types/.test/types_def_vs_decl.log
+ Output file stem: ../books/language/src/types/.test/types_def_vs_decl-out
 
 -- Code --
 
   29:   x: Length = 4mm;   // explicit type declaration
   30:   y = 4mm;           // implicit type declaration via units.
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local x.
   ---> ../books/language/src/types/README.md:29:1
@@ -23,6 +27,6 @@ warning: Unused local y.
      | ^
      |
 Unexpected warnings(s) which did occur in line(s): 29, 30
--- No model --
+-- No Model --
 -- Test Result --
 OK

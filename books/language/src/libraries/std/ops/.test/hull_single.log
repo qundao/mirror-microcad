@@ -1,6 +1,11 @@
 -- Test --
-  hull_single
-  ../books/language/src/libraries/std/ops/hull.md:8
+        Test name: hull_single
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/hull.md:8
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/hull_single.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/hull_single.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/hull_single-out
 
 -- Code --
 
@@ -12,9 +17,8 @@
   13:       Circle(10mm).translate(x =  0mm, y = 10mm);
   14:   }.hull();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::hull() ->

@@ -1,6 +1,11 @@
 -- Test --
-  tuple_match_variants
-  ../books/language/src/flow/calls/arguments.md:73
+        Test name: tuple_match_variants
+  Expected result: todo
+      Source file: ../books/language/src/flow/calls/arguments.md:73
+        Test path: ../books/language/src/flow/calls/.test
+      Banner file: ../books/language/src/flow/calls/.test/tuple_match_variants.svg
+         Log file: ../books/language/src/flow/calls/.test/tuple_match_variants.log
+ Output file stem: ../books/language/src/flow/calls/.test/tuple_match_variants-out
 
 -- Code --
 
@@ -24,8 +29,7 @@
   90:   q = (x=1cm, y=2cm);
   91:   f( q, z=3cm );
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local x.
   ---> ../books/language/src/flow/calls/arguments.md:73:7

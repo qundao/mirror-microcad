@@ -1,6 +1,11 @@
 -- Test --
-  mirror_3d
-  ../books/language/src/libraries/std/ops/mirror.md:8
+        Test name: mirror_3d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/mirror.md:8
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/mirror_3d.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/mirror_3d.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/mirror_3d-out
 
 -- Code --
 
@@ -18,9 +23,8 @@
   19:   .mirror(Y)
   20:   .mirror(Z)
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::mirror(n=(x=0, y=0, z=1), x=0mm, y=0mm, z=0mm) ->

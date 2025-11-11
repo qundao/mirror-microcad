@@ -1,6 +1,11 @@
 -- Test --
-  function_pub_use
-  ../books/tests/src/statement_usage/function.md:46
+        Test name: function_pub_use
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/function.md:46
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/function_pub_use.svg
+         Log file: ../books/tests/src/statement_usage/.test/function_pub_use.log
+ Output file stem: ../books/tests/src/statement_usage/.test/function_pub_use-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   47:     pub use std; // error
   48:   } f();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Use statement is not available within Function
   ---> ../books/tests/src/statement_usage/function.md:47:3

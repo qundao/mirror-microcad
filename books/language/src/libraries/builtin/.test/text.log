@@ -1,14 +1,18 @@
 -- Test --
-  text
-  ../books/language/src/libraries/builtin/geo2d.md:24
+        Test name: text
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/geo2d.md:24
+        Test path: ../books/language/src/libraries/builtin/.test
+      Banner file: ../books/language/src/libraries/builtin/.test/text.svg
+         Log file: ../books/language/src/libraries/builtin/.test/text.log
+ Output file stem: ../books/language/src/libraries/builtin/.test/text-out
 
 -- Code --
 
   24:   __builtin::geo2d::Text(height = 20mm, text = "Hello World");
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=Hello World) ->

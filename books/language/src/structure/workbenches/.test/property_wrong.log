@@ -1,6 +1,11 @@
 -- Test --
-  property_wrong
-  ../books/language/src/structure/workbenches/README.md:288
+        Test name: property_wrong
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:288
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/property_wrong.svg
+         Log file: ../books/language/src/structure/workbenches/.test/property_wrong.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/property_wrong-out
 
 -- Code --
 

@@ -1,13 +1,17 @@
 -- Test --
-  part_basic
-  ../books/language/src/structure/workbenches/parts.md:9
+        Test name: part_basic
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/parts.md:9
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/part_basic.svg
+         Log file: ../books/language/src/structure/workbenches/.test/part_basic.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/part_basic-out
 
 -- Code --
 
    9:   part MyPart() {}
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol MyPart.
   ---> ../books/language/src/structure/workbenches/parts.md:9:1
@@ -16,6 +20,6 @@ warning: Unused global symbol MyPart.
      | ^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 9
--- No model --
+-- No Model --
 -- Test Result --
 OK

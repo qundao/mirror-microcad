@@ -1,6 +1,11 @@
 -- Test --
-  types_quantity_length
-  ../books/language/src/types/quantities.md:60
+        Test name: types_quantity_length
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:60
+        Test path: ../books/language/src/types/.test
+      Banner file: ../books/language/src/types/.test/types_quantity_length.svg
+         Log file: ../books/language/src/types/.test/types_quantity_length.log
+ Output file stem: ../books/language/src/types/.test/types_quantity_length-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   64:   
   65:   std::debug::assert( [millimeters, centimeters, meters, inches].all_equal() );
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

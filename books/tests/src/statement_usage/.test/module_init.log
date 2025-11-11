@@ -1,6 +1,11 @@
 -- Test --
-  module_init
-  ../books/tests/src/statement_usage/module.md:30
+        Test name: module_init
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/module.md:30
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/module_init.svg
+         Log file: ../books/tests/src/statement_usage/.test/module_init.log
+ Output file stem: ../books/tests/src/statement_usage/.test/module_init-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   31:     init() { }  // error
   32:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement is not available within Module
   ---> ../books/tests/src/statement_usage/module.md:31:3

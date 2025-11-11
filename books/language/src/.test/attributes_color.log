@@ -1,6 +1,11 @@
 -- Test --
-  attributes_color
-  ../books/language/src/attributes.md:42
+        Test name: attributes_color
+  Expected result: ok
+      Source file: ../books/language/src/attributes.md:42
+        Test path: ../books/language/src/.test
+      Banner file: ../books/language/src/.test/attributes_color.svg
+         Log file: ../books/language/src/.test/attributes_color.log
+ Output file stem: ../books/language/src/.test/attributes_color-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   44:   
   45:   std::debug::assert_eq([c#color, (r = 1.0, g = 1.0, b = 1.0, a = 1.0)]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

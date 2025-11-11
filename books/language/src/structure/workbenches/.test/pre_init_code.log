@@ -1,6 +1,11 @@
 -- Test --
-  pre_init_code
-  ../books/language/src/structure/workbenches/README.md:162
+        Test name: pre_init_code
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:162
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/pre_init_code.svg
+         Log file: ../books/language/src/structure/workbenches/.test/pre_init_code.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/pre_init_code-out
 
 -- Code --
 
@@ -27,8 +32,7 @@
  182:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
  183:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol into_radius.
   ---> ../books/language/src/structure/workbenches/README.md:170:5
@@ -37,6 +41,6 @@ warning: Unused global symbol into_radius.
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 170
--- No model --
+-- No Model --
 -- Test Result --
 OK

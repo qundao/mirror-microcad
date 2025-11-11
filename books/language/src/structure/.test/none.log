@@ -1,15 +1,19 @@
 -- Test --
-  none
-  ../books/language/src/structure/use.md:17
+        Test name: none
+  Expected result: ok
+      Source file: ../books/language/src/structure/use.md:17
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/none.svg
+         Log file: ../books/language/src/structure/.test/none.log
+ Output file stem: ../books/language/src/structure/.test/none-out
 
 -- Code --
 
   17:   std::geo3d::Sphere(radius = 40mm);
   18:   std::geo3d::Cube(size = 40mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(part) std::geo3d::Sphere(radius=40mm) ->

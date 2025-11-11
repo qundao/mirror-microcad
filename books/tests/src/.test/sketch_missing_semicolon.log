@@ -1,6 +1,11 @@
 -- Test --
-  sketch_missing_semicolon
-  ../books/tests/src/semicolon.md:28
+        Test name: sketch_missing_semicolon
+  Expected result: ok
+      Source file: ../books/tests/src/semicolon.md:28
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/sketch_missing_semicolon.svg
+         Log file: ../books/tests/src/.test/sketch_missing_semicolon.log
+ Output file stem: ../books/tests/src/.test/sketch_missing_semicolon-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   32:       Circle(radius = 5mm) // missing semicolon is ok.
   33:   }.translate(y=[-34mm/2 , 34mm/2]);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Multiplicity ->

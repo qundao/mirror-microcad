@@ -1,14 +1,18 @@
 -- Test --
-  string_literal
-  ../books/language/src/expressions/literals.md:55
+        Test name: string_literal
+  Expected result: ok
+      Source file: ../books/language/src/expressions/literals.md:55
+        Test path: ../books/language/src/expressions/.test
+      Banner file: ../books/language/src/expressions/.test/string_literal.svg
+         Log file: ../books/language/src/expressions/.test/string_literal.log
+ Output file stem: ../books/language/src/expressions/.test/string_literal-out
 
 -- Code --
 
   55:   "Hello, World!"
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

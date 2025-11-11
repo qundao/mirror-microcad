@@ -1,6 +1,11 @@
 -- Test --
-  pre_init_expression_model
-  ../books/tests/src/statement_usage/pre-init.md:102
+        Test name: pre_init_expression_model
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:102
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/pre_init_expression_model.svg
+         Log file: ../books/tests/src/statement_usage/.test/pre_init_expression_model.log
+ Output file stem: ../books/tests/src/statement_usage/.test/pre_init_expression_model-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
  103:     __builtin::geo2d::Circle(radius=1); // error
  104:   init(l:Length) {} }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement not allowed prior initializers
   ---> ../books/tests/src/statement_usage/pre-init.md:103:3

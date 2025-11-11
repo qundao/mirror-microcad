@@ -1,6 +1,11 @@
 -- Test --
-  workbench_workbench
-  ../books/tests/src/statement_usage/workbench.md:6
+        Test name: workbench_workbench
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/workbench.md:6
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/workbench_workbench.svg
+         Log file: ../books/tests/src/statement_usage/.test/workbench_workbench.log
+ Output file stem: ../books/tests/src/statement_usage/.test/workbench_workbench-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
    7:     sketch F() {} F(); // error
    8:   } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement is not available within Sketch
   ---> ../books/tests/src/statement_usage/workbench.md:7:3

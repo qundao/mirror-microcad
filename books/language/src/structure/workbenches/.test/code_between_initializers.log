@@ -1,6 +1,11 @@
 -- Test --
-  code_between_initializers
-  ../books/language/src/structure/workbenches/README.md:193
+        Test name: code_between_initializers
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:193
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/code_between_initializers.svg
+         Log file: ../books/language/src/structure/workbenches/.test/code_between_initializers.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/code_between_initializers-out
 
 -- Code --
 
@@ -14,8 +19,7 @@
  200:   
  201:   Wheel(radius = 1.0mm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Code between initializers is not allowed
   ---> ../books/language/src/structure/workbenches/README.md:196:5

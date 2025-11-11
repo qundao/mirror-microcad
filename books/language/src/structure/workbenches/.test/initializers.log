@@ -1,6 +1,11 @@
 -- Test --
-  initializers
-  ../books/language/src/structure/workbenches/README.md:103
+        Test name: initializers
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/README.md:103
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/initializers.svg
+         Log file: ../books/language/src/structure/workbenches/.test/initializers.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/initializers-out
 
 -- Code --
 
@@ -11,8 +16,7 @@
  107:   
  108:   Wheel(radius = 1.0mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Test Result --
 FAIL (TODO)

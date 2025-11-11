@@ -1,6 +1,11 @@
 -- Test --
-  orient_3d
-  ../books/language/src/libraries/std/ops/orient.md:8
+        Test name: orient_3d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/orient.md:8
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/orient_3d.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/orient_3d.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/orient_3d-out
 
 -- Code --
 
@@ -10,9 +15,8 @@
   11:   
   12:   Cylinder(h = 50mm, d = 35mm).orient([X,Y,Z]);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Multiplicity ->

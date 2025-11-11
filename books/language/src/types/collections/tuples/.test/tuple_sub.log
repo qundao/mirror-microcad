@@ -1,6 +1,11 @@
 -- Test --
-  tuple_sub
-  ../books/language/src/types/collections/tuples/operators.md:31
+        Test name: tuple_sub
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/operators.md:31
+        Test path: ../books/language/src/types/collections/tuples/.test
+      Banner file: ../books/language/src/types/collections/tuples/.test/tuple_sub.svg
+         Log file: ../books/language/src/types/collections/tuples/.test/tuple_sub.log
+ Output file stem: ../books/language/src/types/collections/tuples/.test/tuple_sub-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   32:   b = (x = 1.0mm, y = 4.0mm);
   33:   std::debug::assert_eq([a - b, (x = 1.0mm, y = -1.0mm)]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

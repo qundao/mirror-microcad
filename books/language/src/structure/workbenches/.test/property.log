@@ -1,6 +1,11 @@
 -- Test --
-  property
-  ../books/language/src/structure/workbenches/README.md:262
+        Test name: property
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:262
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/property.svg
+         Log file: ../books/language/src/structure/workbenches/.test/property.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/property-out
 
 -- Code --
 
@@ -28,7 +33,7 @@
 outer: 10mm
 inner: 5mm
 
--- Errors --
--- No model --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

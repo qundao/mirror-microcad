@@ -1,0 +1,42 @@
+-- Test --
+        Test name: use_statement_pub_in_module
+  Expected result: ok
+      Source file: ../books/tests/src/use.md:100
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/use_statement_pub_in_module.svg
+         Log file: ../books/tests/src/.test/use_statement_pub_in_module.log
+ Output file stem: ../books/tests/src/.test/use_statement_pub_in_module-out
+
+-- Code --
+
+ 100:   mod my {
+ 101:       mod name {
+ 102:           pub mod space {
+ 103:               pub use std::geo2d::*;
+ 104:           }
+ 105:       }
+ 106:       pub use name::space::*;
+ 107:   }
+ 108:   
+ 109:   my::Circle(r = 4mm);
+ 110:   my::Rect(size = 40mm);
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+      - center = (x=0mm, y=0mm)
+      - radius = 4mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+        Primitive2D __builtin::geo2d::Circle(radius=4mm) ->
+    Workpiece(sketch) std::geo2d::Rect(size=40mm) ->
+      - height = 40mm
+      - width = 40mm
+      - x = -20mm
+      - y = -20mm
+      Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) ->
+
+Export of "../books/tests/src/.test/use_statement_pub_in_module-out.svg" successful.
+-- Test Result --
+OK

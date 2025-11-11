@@ -1,6 +1,11 @@
 -- Test --
-  arrays_and_comments
-  ../books/language/src/types/collections/arrays.md:10
+        Test name: arrays_and_comments
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/arrays.md:10
+        Test path: ../books/language/src/types/collections/.test
+      Banner file: ../books/language/src/types/collections/.test/arrays_and_comments.svg
+         Log file: ../books/language/src/types/collections/.test/arrays_and_comments.log
+ Output file stem: ../books/language/src/types/collections/.test/arrays_and_comments-out
 
 -- Code --
 
@@ -12,9 +17,8 @@
   15:       2
   16:   ];
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

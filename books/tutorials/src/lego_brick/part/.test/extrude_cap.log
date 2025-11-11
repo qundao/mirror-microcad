@@ -1,6 +1,11 @@
 -- Test --
-  extrude_cap
-  ../books/tutorials/src/lego_brick/part/extrude.md:12
+        Test name: extrude_cap
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/part/extrude.md:12
+        Test path: ../books/tutorials/src/lego_brick/part/.test
+      Banner file: ../books/tutorials/src/lego_brick/part/.test/extrude_cap.svg
+         Log file: ../books/tutorials/src/lego_brick/part/.test/extrude_cap.log
+ Output file stem: ../books/tutorials/src/lego_brick/part/.test/extrude_cap-out
 
 -- Code --
 
@@ -13,9 +18,8 @@
   18:   Cap(width, height)
   19:       .extrude(1.0mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->

@@ -1,6 +1,11 @@
 -- Test --
-  hull_multiple
-  ../books/language/src/libraries/std/ops/hull.md:20
+        Test name: hull_multiple
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/hull.md:20
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/hull_multiple.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/hull_multiple.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/hull_multiple-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   24:       .translate(x = [-10, 10]mm, y = [-10, 10]mm)
   25:       .hull();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::hull() ->

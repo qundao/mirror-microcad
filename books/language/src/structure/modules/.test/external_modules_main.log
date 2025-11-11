@@ -1,15 +1,19 @@
 -- Test --
-  external_modules_main
-  ../books/language/src/structure/modules/external_modules.md:11
+        Test name: external_modules_main
+  Expected result: ok
+      Source file: ../books/language/src/structure/modules/external_modules.md:11
+        Test path: ../books/language/src/structure/modules/.test
+      Banner file: ../books/language/src/structure/modules/.test/external_modules_main.svg
+         Log file: ../books/language/src/structure/modules/.test/external_modules_main.log
+ Output file stem: ../books/language/src/structure/modules/.test/external_modules_main-out
 
 -- Code --
 
   11:   mod second;
   12:   second::f(); 
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

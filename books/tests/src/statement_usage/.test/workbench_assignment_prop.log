@@ -1,6 +1,11 @@
 -- Test --
-  workbench_assignment_prop
-  ../books/tests/src/statement_usage/workbench.md:94
+        Test name: workbench_assignment_prop
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/workbench.md:94
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/workbench_assignment_prop.svg
+         Log file: ../books/tests/src/statement_usage/.test/workbench_assignment_prop.log
+ Output file stem: ../books/tests/src/statement_usage/.test/workbench_assignment_prop-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   95:     prop a = 1;
   96:   } K();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) workbench_assignment_prop::K() ->

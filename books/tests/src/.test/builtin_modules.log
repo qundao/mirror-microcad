@@ -1,6 +1,11 @@
 -- Test --
-  builtin_modules
-  ../books/tests/src/modules.md:6
+        Test name: builtin_modules
+  Expected result: ok
+      Source file: ../books/tests/src/modules.md:6
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/builtin_modules.svg
+         Log file: ../books/tests/src/.test/builtin_modules.log
+ Output file stem: ../books/tests/src/.test/builtin_modules-out
 
 -- Code --
 
@@ -17,9 +22,8 @@
   16:   a::b::c::M1();
   17:   a::M2();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(part) builtin_modules::a::b::c::M1() ->

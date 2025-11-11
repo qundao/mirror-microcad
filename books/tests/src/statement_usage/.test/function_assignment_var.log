@@ -1,6 +1,11 @@
 -- Test --
-  function_assignment_var
-  ../books/tests/src/statement_usage/function.md:78
+        Test name: function_assignment_var
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/function.md:78
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/function_assignment_var.svg
+         Log file: ../books/tests/src/statement_usage/.test/function_assignment_var.log
+ Output file stem: ../books/tests/src/statement_usage/.test/function_assignment_var-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   79:     a = 1;
   80:   } f();
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local a.
   ---> ../books/tests/src/statement_usage/function.md:79:3
@@ -18,6 +22,6 @@ warning: Unused local a.
      |   ^
      |
 Unexpected warnings(s) which did occur in line(s): 79
--- No model --
+-- No Model --
 -- Test Result --
 OK

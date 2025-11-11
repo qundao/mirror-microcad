@@ -1,6 +1,11 @@
 -- Test --
-  init_property
-  ../books/language/src/structure/workbenches/README.md:117
+        Test name: init_property
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:117
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/init_property.svg
+         Log file: ../books/language/src/structure/workbenches/.test/init_property.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/init_property-out
 
 -- Code --
 
@@ -24,9 +29,8 @@
  134:   // call with initializer
  135:   Wheel(diameter=10cm, thickness=1cm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) init_property::Wheel(radius=50mm, thickness=10mm) ->

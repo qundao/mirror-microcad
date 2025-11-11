@@ -1,6 +1,11 @@
 -- Test --
-  logo
-  ../books/tests/src/logo.md:6
+        Test name: logo
+  Expected result: ok
+      Source file: ../books/tests/src/logo.md:6
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/logo.svg
+         Log file: ../books/tests/src/.test/logo.log
+ Output file stem: ../books/tests/src/.test/logo-out
 
 -- Code --
 
@@ -45,9 +50,8 @@
   44:   microcad::Micro(radius, thickness).translate(x=radius*2+icon.gap, y=-radius/2);
   45:   
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     icon: Workpiece(sketch) logo::microcad::Icon(radius=10mm) ->

@@ -1,6 +1,11 @@
 -- Test --
-  auto_convert
-  ../books/tests/src/auto_convert.md:6
+        Test name: auto_convert
+  Expected result: fail
+      Source file: ../books/tests/src/auto_convert.md:6
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/auto_convert.svg
+         Log file: ../books/tests/src/.test/auto_convert.log
+ Output file stem: ../books/tests/src/.test/auto_convert-out
 
 -- Code --
 

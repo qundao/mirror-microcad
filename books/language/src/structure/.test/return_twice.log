@@ -1,6 +1,11 @@
 -- Test --
-  return_twice
-  ../books/language/src/structure/functions.md:47
+        Test name: return_twice
+  Expected result: ok
+      Source file: ../books/language/src/structure/functions.md:47
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/return_twice.svg
+         Log file: ../books/language/src/structure/.test/return_twice.log
+ Output file stem: ../books/language/src/structure/.test/return_twice-out
 
 -- Code --
 
@@ -11,8 +16,7 @@
   51:       x * pow(n-1)  // error: unexpected code
   52:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol pow.
   ---> ../books/language/src/structure/functions.md:47:1
@@ -22,6 +26,6 @@ warning: Unused global symbol pow.
      |
 Expected error(s) which did not occur in line(s): 51
 Unexpected warnings(s) which did occur in line(s): 47
--- No model --
+-- No Model --
 -- Test Result --
 OK

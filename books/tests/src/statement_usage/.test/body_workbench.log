@@ -1,6 +1,11 @@
 -- Test --
-  body_workbench
-  ../books/tests/src/statement_usage/body.md:6
+        Test name: body_workbench
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/body.md:6
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/body_workbench.svg
+         Log file: ../books/tests/src/statement_usage/.test/body_workbench.log
+ Output file stem: ../books/tests/src/statement_usage/.test/body_workbench-out
 
 -- Code --
 

@@ -1,6 +1,11 @@
 -- Test --
-  array_mul
-  ../books/tutorials/src/lego_brick/base/struts/multiplicity.md:30
+        Test name: array_mul
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/struts/multiplicity.md:30
+        Test path: ../books/tutorials/src/lego_brick/base/struts/.test
+      Banner file: ../books/tutorials/src/lego_brick/base/struts/.test/array_mul.svg
+         Log file: ../books/tutorials/src/lego_brick/base/struts/.test/array_mul.log
+ Output file stem: ../books/tutorials/src/lego_brick/base/struts/.test/array_mul-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   32:   
   33:   (Circle(d = 6.51mm) - Circle(d = 4.8mm)).translate(x = [-1, 0, 1] * 8mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Multiplicity ->

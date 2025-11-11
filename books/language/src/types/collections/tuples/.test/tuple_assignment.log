@@ -1,6 +1,11 @@
 -- Test --
-  tuple_assignment
-  ../books/language/src/types/collections/tuples/assignments.md:8
+        Test name: tuple_assignment
+  Expected result: todo
+      Source file: ../books/language/src/types/collections/tuples/assignments.md:8
+        Test path: ../books/language/src/types/collections/tuples/.test
+      Banner file: ../books/language/src/types/collections/tuples/.test/tuple_assignment.svg
+         Log file: ../books/language/src/types/collections/tuples/.test/tuple_assignment.log
+ Output file stem: ../books/language/src/types/collections/tuples/.test/tuple_assignment-out
 
 -- Code --
 

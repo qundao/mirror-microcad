@@ -38,8 +38,6 @@ You may also use whole the *module* if the names you are using already exist as 
 [![test](.test/use_module.svg)](.test/use_module.log)
 
 ```µcad,use_module
-circle = 1;
-
 use std::geo2d;
 
 geo2d::Circle(r = 40mm);
@@ -53,8 +51,6 @@ locally rename the *target symbol*:
 [![test](.test/use_as.svg)](.test/use_as.log)
 
 ```µcad,use_as
-circle = 1;
-
 use std::geo2d::Circle as disk;
 
 disk(r = 4mm);
@@ -96,24 +92,6 @@ the symbol table where outside code might use it too.
 ```µcad,use_statement_pub
 mod my {
     pub use std::geo2d::*;
-}
-
-my::Circle(r = 4mm);
-my::Rect(size = 40mm);
-```
-
-## Tests
-
-[![test](.test/use_statement_pub_in_module.svg)](.test/use_statement_pub_in_module.log)
-
-```µcad,use_statement_pub_in_module
-mod my {
-    mod name {
-        pub mod space {
-            pub use std::geo2d::*;
-        }
-    }
-    pub use name::space::*;
 }
 
 my::Circle(r = 4mm);

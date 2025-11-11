@@ -1,6 +1,11 @@
 -- Test --
-  call_function
-  ../books/language/src/flow/calls/README.md:11
+        Test name: call_function
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/README.md:11
+        Test path: ../books/language/src/flow/calls/.test
+      Banner file: ../books/language/src/flow/calls/.test/call_function.svg
+         Log file: ../books/language/src/flow/calls/.test/call_function.log
+ Output file stem: ../books/language/src/flow/calls/.test/call_function-out
 
 -- Code --
 
@@ -13,9 +18,8 @@
   17:   // check value
   18:   std::debug::assert_eq( [s, 4] );
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

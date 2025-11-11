@@ -1,14 +1,18 @@
 -- Test --
-  math_abs
-  ../books/language/src/libraries/std/math/README.md:12
+        Test name: math_abs
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/math/README.md:12
+        Test path: ../books/language/src/libraries/std/math/.test
+      Banner file: ../books/language/src/libraries/std/math/.test/math_abs.svg
+         Log file: ../books/language/src/libraries/std/math/.test/math_abs.log
+ Output file stem: ../books/language/src/libraries/std/math/.test/math_abs-out
 
 -- Code --
 
   12:   std::debug::assert(std::math::abs(-1) == 1);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

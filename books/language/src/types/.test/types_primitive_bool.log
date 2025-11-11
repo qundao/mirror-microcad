@@ -1,14 +1,18 @@
 -- Test --
-  types_primitive_bool
-  ../books/language/src/types/primitives.md:10
+        Test name: types_primitive_bool
+  Expected result: ok
+      Source file: ../books/language/src/types/primitives.md:10
+        Test path: ../books/language/src/types/.test
+      Banner file: ../books/language/src/types/.test/types_primitive_bool.svg
+         Log file: ../books/language/src/types/.test/types_primitive_bool.log
+ Output file stem: ../books/language/src/types/.test/types_primitive_bool-out
 
 -- Code --
 
   10:   std::debug::assert(true != false);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

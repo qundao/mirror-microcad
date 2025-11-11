@@ -1,6 +1,11 @@
 -- Test --
-  init_assignment_const
-  ../books/tests/src/statement_usage/init.md:70
+        Test name: init_assignment_const
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/init.md:70
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/init_assignment_const.svg
+         Log file: ../books/tests/src/statement_usage/.test/init_assignment_const.log
+ Output file stem: ../books/tests/src/statement_usage/.test/init_assignment_const-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   71:     const B = l; // error
   72:   } } K(1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Assignment statement not available here
   ---> ../books/tests/src/statement_usage/init.md:71:3

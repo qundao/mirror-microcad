@@ -1,6 +1,11 @@
 -- Test --
-  builtin_translate_twice
-  ../books/language/src/libraries/builtin/ops.md:93
+        Test name: builtin_translate_twice
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/ops.md:93
+        Test path: ../books/language/src/libraries/builtin/.test
+      Banner file: ../books/language/src/libraries/builtin/.test/builtin_translate_twice.svg
+         Log file: ../books/language/src/libraries/builtin/.test/builtin_translate_twice.log
+ Output file stem: ../books/language/src/libraries/builtin/.test/builtin_translate_twice-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   97:       .ops::translate(x = 0.0mm, y = 15.0mm, z = 0.0mm)
   98:       .ops::translate(x = 15.0mm, y = 0.0mm, z = 0.0mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Transform __builtin::ops::translate(x=15mm, y=0mm, z=0mm) ->

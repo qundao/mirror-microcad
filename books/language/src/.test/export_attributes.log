@@ -1,6 +1,11 @@
 -- Test --
-  export_attributes
-  ../books/language/src/export.md:43
+        Test name: export_attributes
+  Expected result: ok
+      Source file: ../books/language/src/export.md:43
+        Test path: ../books/language/src/.test
+      Banner file: ../books/language/src/.test/export_attributes.svg
+         Log file: ../books/language/src/.test/export_attributes.log
+ Output file stem: ../books/language/src/.test/export_attributes-out
 
 -- Code --
 
@@ -10,9 +15,8 @@
   46:   #[export = "circle.svg"]  // Will be exported to `circle.svg`
   47:   std::geo2d::Circle(r = 42mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Rect(size=42mm) ->

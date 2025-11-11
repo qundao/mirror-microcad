@@ -1,6 +1,11 @@
 -- Test --
-  empty_op
-  ../books/tests/src/semicolon.md:53
+        Test name: empty_op
+  Expected result: fail
+      Source file: ../books/tests/src/semicolon.md:53
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/empty_op.svg
+         Log file: ../books/tests/src/.test/empty_op.log
+ Output file stem: ../books/tests/src/.test/empty_op-out
 
 -- Code --
 

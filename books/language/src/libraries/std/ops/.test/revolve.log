@@ -1,6 +1,11 @@
 -- Test --
-  revolve
-  ../books/language/src/libraries/std/ops/revolve.md:8
+        Test name: revolve
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/revolve.md:8
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/revolve.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/revolve.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/revolve-out
 
 -- Code --
 
@@ -9,9 +14,8 @@
   10:       .std::ops::translate(x = 40mm)
   11:       .std::ops::revolve(180°);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->

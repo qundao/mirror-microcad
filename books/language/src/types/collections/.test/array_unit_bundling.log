@@ -1,6 +1,11 @@
 -- Test --
-  array_unit_bundling
-  ../books/language/src/types/collections/arrays.md:46
+        Test name: array_unit_bundling
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/arrays.md:46
+        Test path: ../books/language/src/types/collections/.test
+      Banner file: ../books/language/src/types/collections/.test/array_unit_bundling.svg
+         Log file: ../books/language/src/types/collections/.test/array_unit_bundling.log
+ Output file stem: ../books/language/src/types/collections/.test/array_unit_bundling-out
 
 -- Code --
 
@@ -13,9 +18,8 @@
   52:   // are the same
   53:   std::debug::assert(l1 == l2);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,14 +1,18 @@
 -- Test --
-  types_bundles_functions
-  ../books/language/src/types/README.md:47
+        Test name: types_bundles_functions
+  Expected result: ok
+      Source file: ../books/language/src/types/README.md:47
+        Test path: ../books/language/src/types/.test
+      Banner file: ../books/language/src/types/.test/types_bundles_functions.svg
+         Log file: ../books/language/src/types/.test/types_bundles_functions.log
+ Output file stem: ../books/language/src/types/.test/types_bundles_functions-out
 
 -- Code --
 
   47:   fn f(x = 4mm) {}        // use unit (with default)
   48:   fn f(x: Length) {}     // use type (without default)
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol f.
   ---> ../books/language/src/types/README.md:48:1
@@ -17,6 +21,6 @@ warning: Unused global symbol f.
      | ^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 48
--- No model --
+-- No Model --
 -- Test Result --
 OK

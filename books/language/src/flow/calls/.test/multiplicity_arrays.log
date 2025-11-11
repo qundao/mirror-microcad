@@ -1,6 +1,11 @@
 -- Test --
-  multiplicity_arrays
-  ../books/language/src/flow/calls/multiplicity.md:12
+        Test name: multiplicity_arrays
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/multiplicity.md:12
+        Test path: ../books/language/src/flow/calls/.test
+      Banner file: ../books/language/src/flow/calls/.test/multiplicity_arrays.svg
+         Log file: ../books/language/src/flow/calls/.test/multiplicity_arrays.log
+ Output file stem: ../books/language/src/flow/calls/.test/multiplicity_arrays-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   13:   
   14:   r.std::ops::translate(x = [-4mm, 4mm], y = [-4mm, 4mm]);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Multiplicity ->

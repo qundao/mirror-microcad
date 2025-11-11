@@ -1,6 +1,11 @@
 -- Test --
-  method_call
-  ../books/tests/src/method_call.md:6
+        Test name: method_call
+  Expected result: ok
+      Source file: ../books/tests/src/method_call.md:6
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/method_call.svg
+         Log file: ../books/tests/src/.test/method_call.log
+ Output file stem: ../books/tests/src/.test/method_call-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
    7:   sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
    8:   Sketch(4.0);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol scale.
   ---> ../books/tests/src/method_call.md:6:1

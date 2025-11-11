@@ -1,6 +1,11 @@
 -- Test --
-  use_statement_test
-  ../books/tests/src/use.md:56
+        Test name: use_statement_test
+  Expected result: ok
+      Source file: ../books/tests/src/use.md:56
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/use_statement_test.svg
+         Log file: ../books/tests/src/.test/use_statement_test.log
+ Output file stem: ../books/tests/src/.test/use_statement_test-out
 
 -- Code --
 
@@ -26,8 +31,7 @@
   75:   y = my_part3d();
   76:   z = baz(-1.0);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local x.
   ---> ../books/tests/src/use.md:74:1
@@ -54,6 +58,6 @@ warning: Unused global symbol <no code>.
      |     ^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 63, 74, 75, 76
--- No model --
+-- No Model --
 -- Test Result --
 OK

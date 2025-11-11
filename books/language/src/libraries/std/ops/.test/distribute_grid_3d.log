@@ -1,6 +1,11 @@
 -- Test --
-  distribute_grid_3d
-  ../books/language/src/libraries/std/ops/distribute_grid.md:24
+        Test name: distribute_grid_3d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/distribute_grid.md:24
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/distribute_grid_3d.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/distribute_grid_3d.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/distribute_grid_3d-out
 
 -- Code --
 
@@ -14,9 +19,8 @@
   31:       Sphere(10mm);
   32:   }.distribute_grid(30mm, rows = 2, columns = 2);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::distribute_grid(columns=2, rows=2, size=30mm) ->

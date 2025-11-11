@@ -1,6 +1,11 @@
 -- Test --
-  body_use
-  ../books/tests/src/statement_usage/body.md:38
+        Test name: body_use
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/body.md:38
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/body_use.svg
+         Log file: ../books/tests/src/statement_usage/.test/body_use.log
+ Output file stem: ../books/tests/src/statement_usage/.test/body_use-out
 
 -- Code --
 
@@ -8,9 +13,8 @@
   39:     use std;
   40:   }
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Group ->

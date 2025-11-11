@@ -1,6 +1,11 @@
 -- Test --
-  building_plan
-  ../books/language/src/structure/workbenches/README.md:86
+        Test name: building_plan
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:86
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/building_plan.svg
+         Log file: ../books/language/src/structure/workbenches/.test/building_plan.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/building_plan-out
 
 -- Code --
 
@@ -12,9 +17,8 @@
   91:   
   92:   std::debug::assert_eq([Wheel(5cm).radius, 5cm]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

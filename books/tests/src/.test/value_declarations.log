@@ -1,6 +1,11 @@
 -- Test --
-  value_declarations
-  ../books/tests/src/value_declarations.md:18
+        Test name: value_declarations
+  Expected result: ok
+      Source file: ../books/tests/src/value_declarations.md:18
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/value_declarations.svg
+         Log file: ../books/tests/src/.test/value_declarations.log
+ Output file stem: ../books/tests/src/.test/value_declarations-out
 
 -- Code --
 
@@ -98,8 +103,7 @@
  109:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
  110:   assert_eq([module::function(), 0]);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol PrivateWorkbench.
   ---> ../books/tests/src/value_declarations.md:39:9
@@ -108,6 +112,6 @@ warning: Unused global symbol PrivateWorkbench.
      |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 39
--- No model --
+-- No Model --
 -- Test Result --
 OK

@@ -1,6 +1,11 @@
 -- Test --
-  illegal_workbench_statement
-  ../books/language/src/structure/workbenches/README.md:242
+        Test name: illegal_workbench_statement
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:242
+        Test path: ../books/language/src/structure/workbenches/.test
+      Banner file: ../books/language/src/structure/workbenches/.test/illegal_workbench_statement.svg
+         Log file: ../books/language/src/structure/workbenches/.test/illegal_workbench_statement.log
+ Output file stem: ../books/language/src/structure/workbenches/.test/illegal_workbench_statement-out
 
 -- Code --
 
@@ -11,8 +16,7 @@
  246:   
  247:   Wheel(radius = 1.0mm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement is not available within Sketch
   ---> ../books/language/src/structure/workbenches/README.md:243:5

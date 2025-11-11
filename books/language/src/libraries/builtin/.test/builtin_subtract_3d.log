@@ -1,6 +1,11 @@
 -- Test --
-  builtin_subtract_3d
-  ../books/language/src/libraries/builtin/ops.md:22
+        Test name: builtin_subtract_3d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/ops.md:22
+        Test path: ../books/language/src/libraries/builtin/.test
+      Banner file: ../books/language/src/libraries/builtin/.test/builtin_subtract_3d.svg
+         Log file: ../books/language/src/libraries/builtin/.test/builtin_subtract_3d.log
+ Output file stem: ../books/language/src/libraries/builtin/.test/builtin_subtract_3d-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   26:       geo3d::Sphere(radius = 2.0mm).__builtin::ops::translate(x = 3.0mm);    
   27:   }.ops::subtract();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::subtract() ->

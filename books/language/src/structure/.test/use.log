@@ -1,6 +1,11 @@
 -- Test --
-  use
-  ../books/language/src/structure/use.md:29
+        Test name: use
+  Expected result: ok
+      Source file: ../books/language/src/structure/use.md:29
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/use.svg
+         Log file: ../books/language/src/structure/.test/use.log
+ Output file stem: ../books/language/src/structure/.test/use-out
 
 -- Code --
 
@@ -10,9 +15,8 @@
   32:   Circle(r = 4mm);
   33:   Rect(size = 40mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->

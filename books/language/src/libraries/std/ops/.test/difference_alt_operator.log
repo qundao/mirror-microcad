@@ -1,6 +1,11 @@
 -- Test --
-  difference_alt_operator
-  ../books/language/src/libraries/std/ops/subtract.md:18
+        Test name: difference_alt_operator
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/subtract.md:18
+        Test path: ../books/language/src/libraries/std/ops/.test
+      Banner file: ../books/language/src/libraries/std/ops/.test/difference_alt_operator.svg
+         Log file: ../books/language/src/libraries/std/ops/.test/difference_alt_operator.log
+ Output file stem: ../books/language/src/libraries/std/ops/.test/difference_alt_operator-out
 
 -- Code --
 
@@ -11,9 +16,8 @@
   22:       geo2d::Rect(size = 2mm);
   23:   }.ops::subtract();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::subtract() ->

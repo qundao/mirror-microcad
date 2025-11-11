@@ -1,6 +1,11 @@
 -- Test --
-  argument_match_type
-  ../books/language/src/flow/calls/arguments.md:29
+        Test name: argument_match_type
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/arguments.md:29
+        Test path: ../books/language/src/flow/calls/.test
+      Banner file: ../books/language/src/flow/calls/.test/argument_match_type.svg
+         Log file: ../books/language/src/flow/calls/.test/argument_match_type.log
+ Output file stem: ../books/language/src/flow/calls/.test/argument_match_type-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   30:   // Who needs names?
   31:   f(1.0, 2cm, 3cm²);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local a.
   ---> ../books/language/src/flow/calls/arguments.md:29:7
@@ -30,6 +34,6 @@ warning: Unused local c.
      |                             ^
      |
 Unexpected warnings(s) which did occur in line(s): 29
--- No model --
+-- No Model --
 -- Test Result --
 OK

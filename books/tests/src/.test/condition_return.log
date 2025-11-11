@@ -1,6 +1,11 @@
 -- Test --
-  condition_return
-  ../books/tests/src/conditions.md:6
+        Test name: condition_return
+  Expected result: ok
+      Source file: ../books/tests/src/conditions.md:6
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/condition_return.svg
+         Log file: ../books/tests/src/.test/condition_return.log
+ Output file stem: ../books/tests/src/.test/condition_return-out
 
 -- Code --
 
@@ -19,7 +24,7 @@
 -- Output --
 <NO VALUE>
 
--- Errors --
--- No model --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

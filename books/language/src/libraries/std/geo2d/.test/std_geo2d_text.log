@@ -1,14 +1,18 @@
 -- Test --
-  std_geo2d_text
-  ../books/language/src/libraries/std/geo2d/README.md:46
+        Test name: std_geo2d_text
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/geo2d/README.md:46
+        Test path: ../books/language/src/libraries/std/geo2d/.test
+      Banner file: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_text.svg
+         Log file: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_text.log
+ Output file stem: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_text-out
 
 -- Code --
 
   46:   std::geo2d::Text(height = 20mm, text = "Hello µcad!");
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=Hello µcad!) ->

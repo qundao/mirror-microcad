@@ -1,15 +1,19 @@
 -- Test --
-  source_file_3D
-  ../books/language/src/structure/source_file.md:38
+        Test name: source_file_3D
+  Expected result: ok
+      Source file: ../books/language/src/structure/source_file.md:38
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/source_file_3D.svg
+         Log file: ../books/language/src/structure/.test/source_file_3D.log
+ Output file stem: ../books/language/src/structure/.test/source_file_3D-out
 
 -- Code --
 
   38:   // simply draw a sphere
   39:   std::geo3d::Sphere(radius = 1cm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(part) std::geo3d::Sphere(radius=10mm) ->

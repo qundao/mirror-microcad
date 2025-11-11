@@ -1,14 +1,18 @@
 -- Test --
-  builtin_debug_assert_true
-  ../books/language/src/libraries/builtin/debug.md:18
+        Test name: builtin_debug_assert_true
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/debug.md:18
+        Test path: ../books/language/src/libraries/builtin/.test
+      Banner file: ../books/language/src/libraries/builtin/.test/builtin_debug_assert_true.svg
+         Log file: ../books/language/src/libraries/builtin/.test/builtin_debug_assert_true.log
+ Output file stem: ../books/language/src/libraries/builtin/.test/builtin_debug_assert_true-out
 
 -- Code --
 
   18:   __builtin::debug::assert(true);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

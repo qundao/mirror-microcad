@@ -1,15 +1,19 @@
 -- Test --
-  mod_external
-  ../books/tests/src/mod_external.md:13
+        Test name: mod_external
+  Expected result: ok
+      Source file: ../books/tests/src/mod_external.md:13
+        Test path: ../books/tests/src/.test
+      Banner file: ../books/tests/src/.test/mod_external.svg
+         Log file: ../books/tests/src/.test/mod_external.log
+ Output file stem: ../books/tests/src/.test/mod_external-out
 
 -- Code --
 
   13:   // file: external.µcad
   14:   pub const a =1;
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,14 +1,18 @@
 -- Test --
-  verify_assert
-  ../books/language/src/debugging/verification.md:16
+        Test name: verify_assert
+  Expected result: ok
+      Source file: ../books/language/src/debugging/verification.md:16
+        Test path: ../books/language/src/debugging/.test
+      Banner file: ../books/language/src/debugging/.test/verify_assert.svg
+         Log file: ../books/language/src/debugging/.test/verify_assert.log
+ Output file stem: ../books/language/src/debugging/.test/verify_assert-out
 
 -- Code --
 
   16:   std::debug::assert(true, "You won't see this message");
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

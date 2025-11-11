@@ -1,14 +1,18 @@
 -- Test --
-  expression_multiply
-  ../books/language/src/expressions/README.md:21
+        Test name: expression_multiply
+  Expected result: ok
+      Source file: ../books/language/src/expressions/README.md:21
+        Test path: ../books/language/src/expressions/.test
+      Banner file: ../books/language/src/expressions/.test/expression_multiply.svg
+         Log file: ../books/language/src/expressions/.test/expression_multiply.log
+ Output file stem: ../books/language/src/expressions/.test/expression_multiply-out
 
 -- Code --
 
   21:   5 * 4.0mm;
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

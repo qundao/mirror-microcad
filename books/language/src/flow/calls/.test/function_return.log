@@ -1,6 +1,11 @@
 -- Test --
-  function_return
-  ../books/language/src/flow/calls/function_calls.md:18
+        Test name: function_return
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/function_calls.md:18
+        Test path: ../books/language/src/flow/calls/.test
+      Banner file: ../books/language/src/flow/calls/.test/function_return.svg
+         Log file: ../books/language/src/flow/calls/.test/function_return.log
+ Output file stem: ../books/language/src/flow/calls/.test/function_return-out
 
 -- Code --
 
@@ -13,9 +18,8 @@
   24:   // function call (and result check)
   25:   std::debug::assert_eq([ f(), 1 ]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**161** tests from markdown.
+**160** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -160,7 +160,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/.test/use_as_module.svg)](../structure/.test/use_as_module.log) | [use_as_module](../structure/use.md) |
 | [![test](../structure/.test/use_module.svg)](../structure/.test/use_module.log) | [use_module](../structure/use.md) |
 | [![test](../structure/.test/use_statement_pub.svg)](../structure/.test/use_statement_pub.log) | [use_statement_pub](../structure/use.md) |
-| [![test](../structure/.test/use_statement_pub_in_module.svg)](../structure/.test/use_statement_pub_in_module.log) | [use_statement_pub_in_module](../structure/use.md) |
 | [![test](../debugging/.test/verify_assert.svg)](../debugging/.test/verify_assert.log) | [verify_assert](../debugging/verification.md) |
 | [![test](../debugging/.test/verify_assert_fail.svg)](../debugging/.test/verify_assert_fail.log) | [verify_assert_fail](../debugging/verification.md) |
 | [![test](../debugging/.test/verify_error.svg)](../debugging/.test/verify_error.log) | [verify_error](../debugging/verification.md) |

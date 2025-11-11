@@ -1,6 +1,11 @@
 -- Test --
-  types_quantity_angle
-  ../books/language/src/types/quantities.md:75
+        Test name: types_quantity_angle
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:75
+        Test path: ../books/language/src/types/.test
+      Banner file: ../books/language/src/types/.test/types_quantity_angle.svg
+         Log file: ../books/language/src/types/.test/types_quantity_angle.log
+ Output file stem: ../books/language/src/types/.test/types_quantity_angle-out
 
 -- Code --
 
@@ -13,9 +18,8 @@
   81:   
   82:   std::debug::assert( [degree, degree_, grad, turn, radian].all_equal() );
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

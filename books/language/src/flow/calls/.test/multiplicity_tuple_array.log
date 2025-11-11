@@ -1,6 +1,11 @@
 -- Test --
-  multiplicity_tuple_array
-  ../books/language/src/flow/calls/multiplicity.md:38
+        Test name: multiplicity_tuple_array
+  Expected result: todo
+      Source file: ../books/language/src/flow/calls/multiplicity.md:38
+        Test path: ../books/language/src/flow/calls/.test
+      Banner file: ../books/language/src/flow/calls/.test/multiplicity_tuple_array.svg
+         Log file: ../books/language/src/flow/calls/.test/multiplicity_tuple_array.log
+ Output file stem: ../books/language/src/flow/calls/.test/multiplicity_tuple_array-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
   39:   
   40:   r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Workbench translate cannot find initialization for those arguments
   ---> ../books/language/src/flow/calls/multiplicity.md:40:23

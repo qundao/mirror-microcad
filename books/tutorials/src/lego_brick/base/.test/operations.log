@@ -1,6 +1,11 @@
 -- Test --
-  operations
-  ../books/tutorials/src/lego_brick/base/union.md:12
+        Test name: operations
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/union.md:12
+        Test path: ../books/tutorials/src/lego_brick/base/.test
+      Banner file: ../books/tutorials/src/lego_brick/base/.test/operations.svg
+         Log file: ../books/tutorials/src/lego_brick/base/.test/operations.log
+ Output file stem: ../books/tutorials/src/lego_brick/base/.test/operations-out
 
 -- Code --
 
@@ -16,9 +21,8 @@
   21:   
   22:   frame | struts; // We could also write `{ frame; struts; }.union()` but the `|` operator is more elegant. 
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation union() ->

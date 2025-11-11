@@ -1,6 +1,11 @@
 -- Test --
-  workbench_pub
-  ../books/language/src/structure/functions.md:121
+        Test name: workbench_pub
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions.md:121
+        Test path: ../books/language/src/structure/.test
+      Banner file: ../books/language/src/structure/.test/workbench_pub.svg
+         Log file: ../books/language/src/structure/.test/workbench_pub.log
+ Output file stem: ../books/language/src/structure/.test/workbench_pub-out
 
 -- Code --
 
@@ -10,8 +15,7 @@
  124:   
  125:   PunchedDisk(4.0mm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Function statement not available here
   ---> ../books/language/src/structure/functions.md:122:5

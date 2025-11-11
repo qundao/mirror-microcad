@@ -1,6 +1,11 @@
 -- Test --
-  pre_init_workbench
-  ../books/tests/src/statement_usage/pre-init.md:6
+        Test name: pre_init_workbench
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:6
+        Test path: ../books/tests/src/statement_usage/.test
+      Banner file: ../books/tests/src/statement_usage/.test/pre_init_workbench.svg
+         Log file: ../books/tests/src/statement_usage/.test/pre_init_workbench.log
+ Output file stem: ../books/tests/src/statement_usage/.test/pre_init_workbench-out
 
 -- Code --
 
@@ -8,8 +13,7 @@
    7:     sketch F() {} K();  // error
    8:   init(l:Length) {} } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement not allowed within workbenches
   ---> ../books/tests/src/statement_usage/pre-init.md:7:3

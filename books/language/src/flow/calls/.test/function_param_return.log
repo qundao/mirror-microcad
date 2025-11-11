@@ -1,6 +1,11 @@
 -- Test --
-  function_param_return
-  ../books/language/src/flow/calls/function_calls.md:31
+        Test name: function_param_return
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/function_calls.md:31
+        Test path: ../books/language/src/flow/calls/.test
+      Banner file: ../books/language/src/flow/calls/.test/function_param_return.svg
+         Log file: ../books/language/src/flow/calls/.test/function_param_return.log
+ Output file stem: ../books/language/src/flow/calls/.test/function_param_return-out
 
 -- Code --
 
@@ -13,9 +18,8 @@
   37:   std::debug::assert_eq([ f(1), 2 ]);
   38:   std::debug::assert_eq([ f(2), 4 ]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK
