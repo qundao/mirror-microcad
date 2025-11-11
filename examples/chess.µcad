@@ -71,7 +71,7 @@ pub part Knight() {
     Pawn();
     Pawn();
 }
-.distribute_grid(height = TILE_SIZE * 2, width = TILE_SIZE * 8, rows = 2, columns = 8)
+.distribute_grid(cell_size = TILE_SIZE, rows = 2, columns = 8)
 .translate(y = TILE_SIZE * 3)
 .rotate([0,180]°);
 
