@@ -76,6 +76,8 @@ y = my_part3d();
 z = baz(-1.0);
 ```
 
+[![test](.test/use_local.svg)](.test/use_local.log)
+
 ```µcad,use_local
 fn f() {
     use std::math::abs;
@@ -84,6 +86,8 @@ fn f() {
 }
 f();
 ```
+
+[![test](.test/use_all_local.svg)](.test/use_all_local.log)
 
 ```µcad,use_all_local
 fn f() {
