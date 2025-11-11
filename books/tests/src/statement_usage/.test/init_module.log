@@ -4,7 +4,7 @@
 
 -- Code --
 
- 1: sketch K() { init(l:Length) {
+ 1: sketch K() { init(l:Length) { // warning
  2:   mod m {} // error
  3: } } K(1cm);
 
@@ -16,6 +16,12 @@ error: Module statement not available here
      |
    2 |   mod m {} // error
      |   ^^^^^^^^
+     |
+warning: Unused local l.
+  ---> ../books/tests/src/statement_usage/init.md:1:19
+     |
+   1 | sketch K() { init(l:Length) { // warning
+     |                   ^
      |
 -- Test Result --
 FAILED AS EXPECTED

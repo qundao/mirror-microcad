@@ -11,6 +11,24 @@
 -- Output --
 
 -- Errors --
+warning: Unused local x.
+  ---> ../books/language/src/flow/calls/arguments.md:1:7
+     |
+   1 | fn f( x: Length, y: Length, z: Length ) {}
+     |       ^
+     |
+warning: Unused local z.
+  ---> ../books/language/src/flow/calls/arguments.md:1:29
+     |
+   1 | fn f( x: Length, y: Length, z: Length ) {}
+     |                             ^
+     |
+warning: Unused local y.
+  ---> ../books/language/src/flow/calls/arguments.md:1:18
+     |
+   1 | fn f( x: Length, y: Length, z: Length ) {}
+     |                  ^
+     |
 -- No model --
 -- Test Result --
 OK

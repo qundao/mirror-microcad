@@ -24,6 +24,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local x.
+  ---> ../books/language/src/structure/modules/README.md:16:1
+     |
+  16 | x = my::math::abs(-1.0) * my::math::PI;
+     | ^
+     |
 -- No model --
 -- Test Result --
 OK

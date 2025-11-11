@@ -5,7 +5,7 @@
 -- Code --
 
  1: sketch K() { init(l:Length) {
- 2:   1 + 2; // error
+ 2:   l + 2; // error
  3: } } K(1cm);
 
 -- Output --
@@ -14,8 +14,14 @@
 error: Expression statement not available here
   ---> ../books/tests/src/statement_usage/init.md:2:3
      |
-   2 |   1 + 2; // error
+   2 |   l + 2; // error
      |   ^^^^^^
+     |
+error: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
+  ---> ../books/tests/src/statement_usage/init.md:2:3
+     |
+   2 |   l + 2; // error
+     |   ^^^^^
      |
 -- Test Result --
 FAILED AS EXPECTED

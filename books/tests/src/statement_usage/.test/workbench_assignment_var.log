@@ -11,6 +11,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local a.
+  ---> ../books/tests/src/statement_usage/workbench.md:2:3
+     |
+   2 |   a = 1;
+     |   ^
+     |
 -- Model --
   Group (root) ->
     Workpiece(sketch) workbench_assignment_var::K() ->

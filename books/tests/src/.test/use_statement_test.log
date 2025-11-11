@@ -29,6 +29,24 @@
 -- Output --
 
 -- Errors --
+warning: Unused local x.
+  ---> ../books/tests/src/use.md:19:1
+     |
+  19 | x = my_part2d();
+     | ^
+     |
+warning: Unused local y.
+  ---> ../books/tests/src/use.md:20:1
+     |
+  20 | y = my_part3d();
+     | ^
+     |
+warning: Unused local z.
+  ---> ../books/tests/src/use.md:21:1
+     |
+  21 | z = baz(-1.0);
+     | ^
+     |
 warning: Unused global symbol <no code>.
   ---> ../books/tests/src/use.md:8:5
      |

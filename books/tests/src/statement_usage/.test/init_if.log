@@ -5,7 +5,7 @@
 -- Code --
 
  1: sketch K() { init(l:Length) {
- 2:   if std::math::PI == 3 { } // error
+ 2:   if std::math::PI == l { } // error
  3: } } K(1cm);
 
 -- Output --
@@ -14,7 +14,7 @@
 error: If statement not available here
   ---> ../books/tests/src/statement_usage/init.md:2:3
      |
-   2 |   if std::math::PI == 3 { } // error
+   2 |   if std::math::PI == l { } // error
      |   ^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --

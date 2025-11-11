@@ -16,6 +16,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local a.
+  ---> ../books/tests/src/semicolon.md:5:1
+     |
+   5 | a = { 
+     | ^
+     |
 warning: Unused global symbol translate.
   ---> ../books/tests/src/semicolon.md:2:5
      |

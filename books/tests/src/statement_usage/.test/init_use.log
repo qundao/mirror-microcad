@@ -11,6 +11,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local l.
+  ---> ../books/tests/src/statement_usage/init.md:1:19
+     |
+   1 | sketch K() { init(l:Length) {
+     |                   ^
+     |
 -- Model --
   Group (root) ->
     Workpiece(sketch) init_use::K(l=10mm) ->

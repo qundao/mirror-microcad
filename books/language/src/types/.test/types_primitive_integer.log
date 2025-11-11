@@ -9,6 +9,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local i.
+  ---> ../books/language/src/types/primitives.md:1:1
+     |
+   1 | i = 3;
+     | ^
+     |
 -- No model --
 -- Test Result --
 OK
