@@ -3,19 +3,20 @@ mod microcad {
     use std::ops::*;
 
     sketch IconElement( radius: Length ) {
-        c = Sector(radius, start = 180°, end = 270°);
-        r = Rect(width = radius, height = radius * 2);
-        c.translate(y = radius) | r.translate(x = -radius/2 );
+        c = Sector(radius, start = 180°, end = 270°).translate(y = radius);
+        r = Rect(width = radius, height = radius * 2, x = -radius, y = -radius);
+        c | r
     }
 
     sketch Arc(radius: Length, thickness: Length, angle = 300°) {
-        Sector(radius, start = -angle / 2, end = angle / 2).rotate(180° - angle) - Circle(radius - thickness)
+        Sector(radius, start = -angle / 2, end = angle / 2)
+            .rotate(180° - angle) - Circle(radius - thickness)
     }
 
-    pub sketch Icon( radius: Length ) {
+    pub sketch Icon(radius: Length) {
         prop gap = radius / 5;
         IconElement(radius)
-            .translate(x = -radius-gap, y = 0mm, z = 0mm)
+            .translate(x = -radius-gap)
             .rotate([0..3] * 90°); 
     }
 
@@ -44,12 +45,9 @@ mod microcad {
 use std::ops::*;
 use std::math::*;
 
-
 radius = 1cm;
-thickness = 4mm;
-spacing = 1mm;
+thickness = radius * 40%;
 
- 
 {
     microcad::Icon(radius);
     {
