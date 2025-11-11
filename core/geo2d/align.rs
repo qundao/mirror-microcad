@@ -23,7 +23,8 @@ impl Align2D for Geometries2D {
             } else {
                 Vec2::new(0.0, 0.0)
             };
-            let d = (*pos + dist) * dir - bounds.center();
+            let d = (*pos + dist) * dir
+                - Vec2::new(dir.x * bounds.center().x, dir.y * bounds.center().y);
             *pos += 2.0 * dist + *spacing;
 
             Some(std::rc::Rc::new(
