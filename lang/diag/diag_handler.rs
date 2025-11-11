@@ -78,6 +78,13 @@ impl DiagHandler {
             })
             .collect()
     }
+
+    /// Clear all errors and warnings
+    pub fn clear(&mut self) {
+        self.diag_list.clear();
+        self.error_count = 0;
+        self.warning_count = 0;
+    }
 }
 
 impl PushDiag for DiagHandler {

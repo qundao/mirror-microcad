@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{diag::*, resolve::*};
-use derive_more::Deref;
+use derive_more::{Deref, DerefMut};
 
 /// Source file diagnostics.
-#[derive(Debug, Default, Deref)]
+#[derive(Debug, Default, Deref, DerefMut)]
 pub struct DiagList(Vec<Diagnostic>);
 
 impl DiagList {

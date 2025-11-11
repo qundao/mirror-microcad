@@ -176,6 +176,7 @@ impl ResolveContext {
                 resolved = true;
                 break;
             }
+            self.diag.clear()
         }
 
         if resolved {
