@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**160** tests from markdown.
+**161** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -106,6 +106,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/scale_3d.svg)](../libraries/std/ops/.test/scale_3d.log) | [scale_3d](../libraries/std/ops/scale.md) |
 | [![test](../libraries/std/ops/.test/scale_uniform.svg)](../libraries/std/ops/.test/scale_uniform.log) | [scale_uniform](../libraries/std/ops/scale.md) |
 | [![test](../libraries/builtin/.test/sector.svg)](../libraries/builtin/.test/sector.log) | [sector](../libraries/builtin/geo2d.md) |
+| [![test](../structure/workbenches/.test/sketch_3d.svg)](../structure/workbenches/.test/sketch_3d.log) | [sketch_3d](../structure/workbenches/sketches.md) |
 | [![test](../structure/workbenches/.test/sketch_basic.svg)](../structure/workbenches/.test/sketch_basic.log) | [sketch_basic](../structure/workbenches/sketches.md) |
 | [![test](../structure/.test/source_file_2D.svg)](../structure/.test/source_file_2D.log) | [source_file_2D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_3D.svg)](../structure/.test/source_file_3D.log) | [source_file_3D](../structure/source_file.md) |

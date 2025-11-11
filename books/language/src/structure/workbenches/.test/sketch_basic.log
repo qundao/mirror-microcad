@@ -9,17 +9,33 @@
 
 -- Code --
 
-   9:   sketch MySketch() {}
+   9:   use std::geo2d::*;
+  10:   sketch MySketch( radius: Length) {
+  11:       Circle(radius) - Rect(radius);
+  12:   }
+  13:   
+  14:   MySketch(1cm);
 
 -- No Output --
--- Errors --
-warning: Unused global symbol MySketch.
-  ---> ../books/language/src/structure/workbenches/sketches.md:9:1
-     |
-   9 | sketch MySketch() {}
-     | ^^^^^^^^^^^^^^^^^^^^
-     |
-Unexpected warnings(s) which did occur in line(s): 9
--- No Model --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) sketch_basic::MySketch(radius=10mm) ->
+      - radius = 10mm
+      Operation subtract() ->
+        Group ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10) ->
+          Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
+            - height = 10mm
+            - width = 10mm
+            - x = -5mm
+            - y = -5mm
+            Primitive2D __builtin::geo2d::Rect(height=10, width=10, x=-5, y=-5) ->
+
+Export of "../books/language/src/structure/workbenches/.test/sketch_basic-out.svg" successful.
 -- Test Result --
-OK (BUT WARNINGS)
+OK
