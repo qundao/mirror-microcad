@@ -70,6 +70,18 @@ impl StackFrame {
     }
 
     /// Print stack frame.
+    pub fn locals(&self) -> Option<&SymbolMap> {
+        match self {
+            StackFrame::Source(_, locals)
+            | StackFrame::Module(_, locals)
+            | StackFrame::Init(locals)
+            | StackFrame::Workbench(.., locals)
+            | StackFrame::Body(locals)
+            | StackFrame::Function(_, locals) => Some(locals),
+            StackFrame::Call { .. } => None,
+        }
+    }
+    /// Print stack frame.
     pub fn print_locals(
         &self,
         f: &mut std::fmt::Formatter<'_>,

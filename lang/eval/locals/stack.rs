@@ -258,11 +258,11 @@ impl Locals for Stack {
         self.0.push(frame);
     }
 
-    fn close(&mut self) {
+    fn close(&mut self) -> StackFrame {
         log::trace!("Stack before closing:\n{self:?}");
-        if let Some(frame) = self.0.pop() {
-            log::trace!("Closing {} stack frame", frame.kind_str());
-        }
+        let frame = self.0.pop().expect("stack underflow");
+        log::trace!("Closing {} stack frame", frame.kind_str());
+        frame
     }
 
     fn set_local_value(&mut self, id: Identifier, value: Value) -> EvalResult<()> {
