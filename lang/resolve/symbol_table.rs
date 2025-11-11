@@ -56,6 +56,7 @@ impl SymbolTable {
                 true
             }
         });
+        symbols.sort_by_key(|s| s.full_name());
         symbols
     }
 
