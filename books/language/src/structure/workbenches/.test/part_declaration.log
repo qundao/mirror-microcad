@@ -9,62 +9,81 @@
 
 -- Code --
 
-  33:   // sketch with a `radius` as building plan
-  34:   sketch Wheel(radius: Length) {
-  35:       
-  36:       // init code
-  37:       const FACTOR = 2;
-  38:   
-  39:       // initializer
-  40:       init(diameter: Length) {
-  41:           // set `radius`
-  42:           radius = diameter / FACTOR;
-  43:       }
-  44:   
-  45:       // function (sub routine)
-  46:       fn into_diameter(r: Length) {
-  47:           return r * FACTOR;
-  48:       }
-  49:   
-  50:       // building code begins
-  51:   
-  52:       // set a property which can be seen from outside
-  53:       prop diameter = into_diameter(radius);
-  54:       
-  55:       // local variable
-  56:       i = 1;
-  57:       
-  58:       // create circle
-  59:       std::geo2d::Circle(radius);
-  60:   }
-  61:   
-  62:   use std::debug::*;
-  63:   
-  64:   // call sketch with diameter
-  65:   d = Wheel(diameter = 2cm);
-  66:   // check radius
-  67:   assert_eq([d.radius, 1cm]);
-  68:   
-  69:   // call sketch with radius
-  70:   r = Wheel(radius = 1cm);
-  71:   // check diameter
-  72:   assert_eq([r.diameter, 2cm]);
+  33:   // Sketch with a `radius` as building plan.
+  34:   // Which will automatically become a property.
+  35:   sketch Wheel(radius: Length) {
+  36:       
+  37:       // Init code...
+  38:       const FACTOR = 2;
+  39:   
+  40:       // Initializer #1
+  41:       init(diameter: Length) {
+  42:           // must set `radius`
+  43:           radius = diameter / FACTOR;
+  44:       }
+  45:   
+  46:       // No code in between!
+  47:   
+  48:       // Initializer #2
+  49:       init(r: Length) {
+  50:           // must set `radius`
+  51:           radius = r;
+  52:       }
+  53:   
+  54:       // Function (sub routine)
+  55:       fn into_diameter(r: Length) {
+  56:           return r * FACTOR;
+  57:       }
+  58:   
+  59:       // Building code...
+  60:   
+  61:       // Set a property which can be seen from outside.
+  62:       prop diameter = into_diameter(radius);
+  63:       
+  64:       // Local variable `r`
+  65:       r = radius;
+  66:       
+  67:       // Create a circle.
+  68:       std::geo2d::Circle(r);
+  69:   }
+  70:   
+  71:   use std::debug::*;
+  72:   
+  73:   // Call sketch with diameter.
+  74:   d = Wheel(diameter = 2cm);
+  75:   // Check radius property.
+  76:   assert_eq([d.radius, 1cm]);
+  77:   
+  78:   // Call sketch with radius.
+  79:   r = Wheel(radius = 1cm);
+  80:   // Check diameter property.
+  81:   assert_eq([r.diameter, 2cm]);
+  82:   
+  83:   d - r;
 
 -- No Output --
--- Errors --
-warning: Unused local i.
-  ---> ../books/language/src/structure/workbenches/README.md:56:5
-     |
-  56 |     i = 1;
-     |     ^
-     |
-warning: Unused local i.
-  ---> ../books/language/src/structure/workbenches/README.md:56:5
-     |
-  56 |     i = 1;
-     |     ^
-     |
-Unexpected warnings(s) which did occur in line(s): 56
--- No Model --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Operation subtract() ->
+      Group ->
+        d: Workpiece(sketch) part_declaration::Wheel(diameter=20mm) ->
+          - diameter = 20mm
+          - radius = 10mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10) ->
+        r: Workpiece(sketch) part_declaration::Wheel(radius=10mm) ->
+          - diameter = 20mm
+          - radius = 10mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10) ->
+
+Export error: Render error: Nothing to render
 -- Test Result --
-OK (BUT WARNINGS)
+OK
