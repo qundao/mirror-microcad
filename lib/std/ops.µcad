@@ -54,6 +54,19 @@ pub op distribute_grid(x: Length, y: Length, width: Length, height: Length, rows
         y = -size / 2.0; // center y
     }
 
+	/// Initialize a centered grid with a squared cell size.
+	///
+	/// The `init` helper simplifies grid creation by specifying a single `cell_size`
+	/// value instead of separate width and height. It automatically centers
+	/// the grid around the origin and defines its overall dimensions.
+	init(cell_size: Length, rows: Integer, columns: Integer) {
+		width = cell_size * columns;
+        height = cell_size * rows;
+        x = -width / 2.0; // center x
+        y = -height / 2.0; // center y
+    }
+
+
 	@input.__builtin::ops::distribute_grid(x, y, width, height, rows, columns)
 }
 
