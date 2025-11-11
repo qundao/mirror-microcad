@@ -15,14 +15,12 @@ base = {
     r = rows - 1;
     c = columns - 1;
     Frame(width, height, thickness);
-    Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-        .repeat(r*c)
+    (r*c*Ring(outer_d = 6.51mm, inner_d = 4.8mm))
         .distribute_grid(width = width - width / columns, height - height / rows, rows = r, columns = c);
     }
     .extrude(base_height - thickness);
 
-knobs = Circle(d = 4.8mm)
-    .repeat(rows*columns)
+knobs = (rows*columns*Circle(d = 4.8mm))
     .distribute_grid(width, height, rows, columns)
     .extrude(1.7mm);
 
