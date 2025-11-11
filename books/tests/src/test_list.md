@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**117** tests from markdown.
+**118** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -106,6 +106,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/use_all_local.svg)](.test/use_all_local.log) | [use_all_local](use.md) |
 | [![test](.test/use_as_test.svg)](.test/use_as_test.log) | [use_as_test](use.md) |
 | [![test](.test/use_local.svg)](.test/use_local.log) | [use_local](use.md) |
+| [![test](.test/use_statement_pub_in_module.svg)](.test/use_statement_pub_in_module.log) | [use_statement_pub_in_module](use.md) |
 | [![test](.test/use_statement_test.svg)](.test/use_statement_test.log) | [use_statement_test](use.md) |
 | [![test](.test/use_test.svg)](.test/use_test.log) | [use_test](use.md) |
 | [![test](.test/value_declarations.svg)](.test/value_declarations.log) | [value_declarations](value_declarations.md) |

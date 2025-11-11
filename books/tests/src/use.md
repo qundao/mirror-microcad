@@ -93,3 +93,19 @@ fn f() {
 }
 f();
 ```
+
+[![test](.test/use_statement_pub_in_module.svg)](.test/use_statement_pub_in_module.log)
+
+```µcad,use_statement_pub_in_module
+mod my {
+    mod name {
+        pub mod space {
+            pub use std::geo2d::*;
+        }
+    }
+    pub use name::space::*;
+}
+
+my::Circle(r = 4mm);
+my::Rect(size = 40mm);
+```
