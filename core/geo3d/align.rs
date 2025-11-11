@@ -3,6 +3,8 @@
 
 //! Builtin align for 3D geometries.
 
+use cgmath::ElementWise;
+
 use crate::*;
 
 /// Trait to align a 2D geometry collection with spacing along an axis.
@@ -23,8 +25,9 @@ impl Align3D for Geometries3D {
                 Vec3::new(0.0, 0.0, 0.0)
             };
             let dist = *bounds.distance_center_to_boundary(dir);
+            let c = bounds.center();
 
-            let d = (*pos + dist) * dir - bounds.center();
+            let d = (*pos + dist) * dir - dir.mul_element_wise(c);
             *pos += 2.0 * dist + *spacing;
 
             Some(std::rc::Rc::new(
