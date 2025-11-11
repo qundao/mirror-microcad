@@ -33,11 +33,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
         env.start_log();
 
-        env.log_ln(&format!(
-            "-- Test --\n  {name}\n  {reference}\n",
-            name = env.name(),
-            reference = env.reference()
-        ));
+        env.log_ln(&format!("-- Test --\n{env:?}"));
         env.log_ln(&format!(
             "-- Code --\n\n{}\n",
             env.code()
@@ -238,6 +234,6 @@ fn report_model(env: &mut TestEnv, model: Option<Model>) {
             None => env.log_ln("Nothing will be exported."),
         }
     } else {
-        env.log_ln("-- No model --");
+        env.log_ln("-- No Model --");
     }
 }

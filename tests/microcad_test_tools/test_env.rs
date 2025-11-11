@@ -3,13 +3,15 @@
 
 //! Markdown test environment
 
+use std::path::PathBuf;
+
 use crate::output::Output;
 
 /// Markdown test environment
 pub struct TestEnv {
     orig_name: String,
     name: String,
-    path: std::path::PathBuf,
+    path: PathBuf,
     mode: String,
     params: Option<String>,
     code: String,
@@ -54,14 +56,25 @@ impl std::fmt::Display for TestEnv {
 
 impl std::fmt::Debug for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "   Test name: {}", self.name())?;
-        writeln!(f, "        Mode: {}", self.mode())?;
-        writeln!(f, "      Params: {}", self.params())?;
-        writeln!(f, " Source file: {:?}", self.source_path())?;
-        writeln!(f, "   Test path: {:?}", self.test_path())?;
-        writeln!(f, " Banner file: {:?}", self.banner_file())?;
-        writeln!(f, "    Log file: {:?}", self.log_file())?;
-        writeln!(f, "Output files: {:?}", self.out_file_path_stem())
+        writeln!(f, "        Test name: {}", self.name())?;
+        writeln!(f, "  Expected result: {}", self.mode())?;
+        if !self.params().is_empty() {
+            writeln!(f, "           Params: {}", self.params())?;
+        }
+        let start = self.start_no;
+        writeln!(
+            f,
+            "      Source file: {}:{start}",
+            self.source_path().display()
+        )?;
+        writeln!(f, "        Test path: {}", self.test_path().display())?;
+        writeln!(f, "      Banner file: {}", self.banner_file().display())?;
+        writeln!(f, "         Log file: {}", self.log_file().display())?;
+        writeln!(
+            f,
+            " Output file stem: {}",
+            self.out_file_path_stem().display()
+        )
     }
 }
 
@@ -167,12 +180,12 @@ impl TestEnv {
     }
 
     /// Return path where to store any test output.
-    pub fn source_path(&self) -> std::path::PathBuf {
+    pub fn source_path(&self) -> PathBuf {
         self.path.clone()
     }
 
     /// Return path where to store any test output.
-    pub fn test_path(&self) -> std::path::PathBuf {
+    pub fn test_path(&self) -> PathBuf {
         self.path.parent().unwrap().join(".test")
     }
 
@@ -185,22 +198,22 @@ impl TestEnv {
     }
 
     /// Return test banner filename as path.
-    pub fn banner_file(&self) -> std::path::PathBuf {
+    pub fn banner_file(&self) -> PathBuf {
         self.test_path().join(format!("{}.svg", self.name()))
     }
 
     /// Return log file path.
-    pub fn log_file(&self) -> std::path::PathBuf {
+    pub fn log_file(&self) -> PathBuf {
         self.test_path().join(format!("{}.log", self.name()))
     }
 
     /// Return output file path (without any file extension).
-    pub fn out_file_path_stem(&self) -> std::path::PathBuf {
+    pub fn out_file_path_stem(&self) -> PathBuf {
         self.test_path().join(format!("{}-out", self.name()))
     }
 
     /// Return output file path with given extension.
-    pub fn out_file(&self, ext: &str) -> std::path::PathBuf {
+    pub fn out_file(&self, ext: &str) -> PathBuf {
         self.out_file_path_stem().with_extension(ext)
     }
 
@@ -253,15 +266,21 @@ impl TestEnv {
 
     /// Report output into log file.
     pub fn report_output(&mut self, output: Option<String>) {
-        self.log_ln(&format!(
-            "-- Output --\n{}",
-            output.unwrap_or("output error".into())
-        ));
+        let output = output.unwrap_or("output error".into());
+        if output.is_empty() {
+            self.log_ln("-- No Output --");
+        } else {
+            self.log_ln(&format!("-- Output --\n{}", output));
+        }
     }
 
     /// Report errors into log file.
     pub fn report_errors(&mut self, diagnosis: String) {
-        self.log(&format!("-- Errors --\n{diagnosis}"));
+        if diagnosis.is_empty() {
+            self.log("-- No Errors --\n");
+        } else {
+            self.log(&format!("-- Errors --\n{diagnosis}"));
+        }
     }
 
     fn diff(
