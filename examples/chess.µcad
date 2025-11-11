@@ -2,13 +2,13 @@
 use std::geo2d::*;
 use std::geo3d::*;
 use std::ops::*;
+use std::math::*;
 
 // https://de.wikipedia.org/wiki/Bauhaus-Schachspiel
 
 pub TILE_SIZE = 5.8cm;
 const BASE_SIZE = TILE_SIZE * 70%;
 
-use std::math::*;
 
 pub part Pawn() {
     Cube(BASE_SIZE * 80%)
@@ -29,10 +29,15 @@ pub part Queen() {
 }
 
 pub part Bishop() {
-    {
-        size = BASE_SIZE / 3;
-        Rect(size * 90%).translate(size * 150%, [45,-135]°).hull().mirror(X).union().extrude(BASE_SIZE).rotate(x = 90°);
-    }.align(Z)
+    size = BASE_SIZE / 3;
+    Rect(size * 90%)
+        .translate(size * 150%, [45,-135]°)
+        .hull()
+        .mirror(X)
+        .union()
+        .extrude(BASE_SIZE)
+        .rotate(x = 90°)
+        .center()
 }
 
 pub part Rook() {
@@ -47,8 +52,6 @@ pub part Knight() {
     }.rotate([0,90]°).align(Z)
 }
 
-use std::math::*;
-use std::ops::*;
 
 {
     Rook();
