@@ -29,7 +29,7 @@ pub use workpiece::*;
 
 use derive_more::{Deref, DerefMut};
 
-use microcad_core::BooleanOp;
+use microcad_core::{BooleanOp, Integer};
 
 use crate::{
     diag::WriteToFile,
@@ -122,6 +122,11 @@ impl Model {
     pub fn boolean_op(self, op: BooleanOp, other: Model) -> Model {
         assert!(self != other, "lhs and rhs must be distinct.");
         Models::from(vec![self.clone(), other]).boolean_op(op)
+    }
+
+    /// Repeat a model n times.
+    pub fn repeat(&self, n: Integer) -> Vec<Model> {
+        (0..n).map(|_| self.make_deep_copy()).collect()
     }
 
     /// Replace each input placeholder with copies of `input_model`.

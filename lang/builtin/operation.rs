@@ -139,11 +139,9 @@ impl BuiltinWorkbenchDefinition for Repeat {
                 ArgumentMatch::find_multi_match(args, params)?
                     .iter()
                     .flat_map(|args| {
-                        (0..args.get::<Integer>("n"))
-                            .map(|_| {
-                                ModelBuilder::new(Element::InputPlaceholder, SrcRef(None)).build()
-                            })
-                            .collect::<Vec<_>>()
+                        ModelBuilder::new(Element::InputPlaceholder, SrcRef(None))
+                            .build()
+                            .repeat(args.get("n"))
                     })
                     .collect::<Models>()
                     .to_multiplicity(SrcRef(None)),
