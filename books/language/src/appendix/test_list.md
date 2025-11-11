@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**159** tests from markdown.
+**161** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -46,6 +46,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/README.md) |
 | [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
+| [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |
+| [![test](../libraries/std/ops/.test/distribute_grid_3d.svg)](../libraries/std/ops/.test/distribute_grid_3d.log) | [distribute_grid_3d](../libraries/std/ops/distribute_grid.md) |
 | [![test](../structure/.test/example.svg)](../structure/.test/example.log) | [example](../structure/functions.md) |
 | [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
 | [![test](../expressions/.test/expression_literals.svg)](../expressions/.test/expression_literals.log) | [expression_literals](../expressions/README.md) |
