@@ -83,11 +83,15 @@ pub fn run_test(env: Option<TestEnv>) {
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
 
+                    let lines_with_errors = lines_with(env.code(), "// error");
+                    let lines_with_warnings = lines_with(env.code(), "// warning");
                     if !env.todo()
-                        && ((context.has_errors()
-                            && lines_with(env.code(), "// error") != context.error_lines())
+                        && ((context.has_errors() && lines_with_errors != context.error_lines())
                             || (context.has_warnings()
-                                && lines_with(env.code(), "// warning") != context.warning_lines()))
+                                && !context.warning_lines().iter().all(|line| {
+                                    lines_with_warnings.contains(line)
+                                        || lines_with_errors.contains(line)
+                                })))
                     {
                         env.result(TestResult::FailWrong);
                         panic!("ERROR: test is marked to fail but fails with wrong errors");
