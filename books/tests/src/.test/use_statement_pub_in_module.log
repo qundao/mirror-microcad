@@ -1,7 +1,7 @@
 -- Test --
         Test name: use_statement_pub_in_module
   Expected result: ok
-      Source file: ../books/tests/src/use.md:100
+      Source file: ../books/tests/src/use.md:104
         Test path: ../books/tests/src/.test
       Banner file: ../books/tests/src/.test/use_statement_pub_in_module.svg
          Log file: ../books/tests/src/.test/use_statement_pub_in_module.log
@@ -9,17 +9,17 @@
 
 -- Code --
 
- 100:   mod my {
- 101:       mod name {
- 102:           pub mod space {
- 103:               pub use std::geo2d::*;
- 104:           }
- 105:       }
- 106:       pub use name::space::*;
- 107:   }
- 108:   
- 109:   my::Circle(r = 4mm);
- 110:   my::Rect(size = 40mm);
+ 104:   mod my {
+ 105:       mod name {
+ 106:           pub mod space {
+ 107:               pub use std::geo2d::*;
+ 108:           }
+ 109:       }
+ 110:       pub use name::space::*;
+ 111:   }
+ 112:   
+ 113:   my::Circle(r = 4mm);
+ 114:   my::Rect(size = 40mm);
 
 -- No Output --
 -- No Errors --

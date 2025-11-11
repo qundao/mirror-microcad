@@ -1,7 +1,7 @@
 -- Test --
         Test name: use_all_local
   Expected result: ok
-      Source file: ../books/tests/src/use.md:89
+      Source file: ../books/tests/src/use.md:93
         Test path: ../books/tests/src/.test
       Banner file: ../books/tests/src/.test/use_all_local.svg
          Log file: ../books/tests/src/.test/use_all_local.log
@@ -9,37 +9,37 @@
 
 -- Code --
 
-  89:   fn f() {
-  90:       use std::math::*;
-  91:       x = abs(-1.0);
-  92:       return x;
-  93:   }
-  94:   f();
+  93:   fn f() {
+  94:       use std::math::*;
+  95:       x = abs(-1.0);
+  96:       return x;
+  97:   }
+  98:   f();
 
 -- No Output --
 -- Errors --
 warning: Unused local PI.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:89:1
+  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
      |
-  89 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | [30m[103m[1m NO FILE [39m[49m[22m
      | ^^
      |
 warning: Unused local X.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:89:1
+  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
      |
-  89 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | [30m[103m[1m NO FILE [39m[49m[22m
      | ^
      |
 warning: Unused local Y.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:89:1
+  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
      |
-  89 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | [30m[103m[1m NO FILE [39m[49m[22m
      | ^
      |
 warning: Unused local Z.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:89:1
+  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
      |
-  89 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | [30m[103m[1m NO FILE [39m[49m[22m
      | ^
      |
 warning: Unused local cos.
@@ -50,7 +50,7 @@ warning: Unused local rotate_zyx.
 warning: Unused local sin.
 warning: Unused local sqrt.
 warning: Unused local tan.
-Unexpected warnings(s) which did occur in line(s): 89
+Unexpected warnings(s) which did occur in line(s): 93
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)
