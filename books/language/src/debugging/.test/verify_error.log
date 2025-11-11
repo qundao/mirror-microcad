@@ -20,4 +20,4 @@ error: Builtin error: this should not have happened
      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

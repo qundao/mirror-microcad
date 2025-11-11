@@ -29,4 +29,4 @@ error: Declaration of a not allowed within function_assignment_prop::f
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

@@ -21,4 +21,4 @@ error: Missing arguments: x,y
      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

@@ -21,4 +21,4 @@ error: Cannot mix 2d and 3d geometries
      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

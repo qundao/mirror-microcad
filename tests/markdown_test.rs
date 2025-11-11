@@ -145,7 +145,11 @@ pub fn run_test(env: Option<TestEnv>) {
                         // test expected to succeed and succeeds with no errors
                         (Ok(model), false, false) => {
                             report_model(&mut env, model);
-                            env.result(TestResult::Ok);
+                            if context.has_warnings() {
+                                env.result(TestResult::OkWarn);
+                            } else {
+                                env.result(TestResult::Ok);
+                            }
                         }
                         // test is todo but succeeds with no errors
                         (Ok(_), false, true) => {

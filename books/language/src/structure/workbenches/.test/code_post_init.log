@@ -28,4 +28,4 @@ warning: Unused global symbol Wheel.
 Unexpected warnings(s) which did occur in line(s): 226
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

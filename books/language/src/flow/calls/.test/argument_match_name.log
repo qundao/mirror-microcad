@@ -36,4 +36,4 @@ warning: Unused local z.
 Unexpected warnings(s) which did occur in line(s): 16
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

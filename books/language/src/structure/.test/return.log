@@ -28,4 +28,4 @@ warning: Unused global symbol pow.
 Unexpected warnings(s) which did occur in line(s): 33
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

@@ -28,4 +28,4 @@ Expected error(s) which did not occur in line(s): 51
 Unexpected warnings(s) which did occur in line(s): 47
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

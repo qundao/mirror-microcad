@@ -28,4 +28,4 @@ warning: Unused local l.
      |                   ^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

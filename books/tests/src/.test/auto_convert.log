@@ -45,4 +45,4 @@ Parser error:  --> 1:26
   |
   = expected single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
 -- Test Result --
-FAILED WITH WRONG ERRORS/WARNINGS
+FAILS WITH WRONG ERRORS

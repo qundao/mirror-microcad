@@ -41,4 +41,4 @@ error: Sketch is not available within Sketch
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

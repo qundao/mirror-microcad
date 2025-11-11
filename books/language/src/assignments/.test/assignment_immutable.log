@@ -27,4 +27,4 @@ warning: Unused local a.
      | ^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

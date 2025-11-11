@@ -23,6 +23,8 @@ pub struct TestEnv {
 pub enum TestResult {
     /// Ok
     Ok,
+    /// Ok but has warning(s)
+    OkWarn,
     /// Ok to fail
     FailOk,
     /// Marked as todo but is ok
@@ -357,13 +359,14 @@ impl TestEnv {
     pub fn result(&mut self, result: TestResult) {
         let (res, res_long) = match result {
             TestResult::Ok => ("ok", "OK"),
+            TestResult::OkWarn => ("ok_warn", "OK (BUT WARNINGS)"),
             TestResult::Todo => ("todo", "TODO"),
-            TestResult::NotTodo => ("not_todo", "OK BUT IS TODO"),
-            TestResult::Fail => ("fail", "FAIL"),
-            TestResult::FailWrong => ("fail_wrong", "FAILED WITH WRONG ERRORS/WARNINGS"),
-            TestResult::FailOk => ("fail_ok", "FAILED AS EXPECTED"),
-            TestResult::NotTodoFail => ("not_todo_fail", "FAILED AS EXPECTED BUT IS TODO"),
-            TestResult::TodoFail => ("todo_fail", "FAIL (TODO)"),
+            TestResult::NotTodo => ("not_todo", "OK (BUT IS TODO)"),
+            TestResult::Fail => ("fail", "FAILS"),
+            TestResult::FailWrong => ("fail_wrong", "FAILS WITH WRONG ERRORS"),
+            TestResult::FailOk => ("fail_ok", "FAILS AS EXPECTED"),
+            TestResult::NotTodoFail => ("not_todo_fail", "FAILS AS EXPECTED (BUT IS TODO)"),
+            TestResult::TodoFail => ("todo_fail", "TODO (SHALL FAIL)"),
             TestResult::OkFail => ("ok_fail", "OK BUT SHOULD FAIL"),
         };
         let _ = std::fs::remove_file(self.banner_file());

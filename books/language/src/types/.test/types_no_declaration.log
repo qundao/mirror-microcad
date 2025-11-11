@@ -19,4 +19,4 @@ Parser error:  --> 1:10
   |
   = expected single_line_comment
 -- Test Result --
-FAILED WITH WRONG ERRORS/WARNINGS
+FAILS WITH WRONG ERRORS

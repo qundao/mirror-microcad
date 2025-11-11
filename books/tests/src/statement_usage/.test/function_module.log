@@ -29,4 +29,4 @@ error: Module definition is not available within Function
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

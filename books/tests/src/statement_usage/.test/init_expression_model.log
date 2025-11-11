@@ -22,4 +22,4 @@ error: Expression statement not available here
      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

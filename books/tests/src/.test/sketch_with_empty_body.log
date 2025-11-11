@@ -20,4 +20,4 @@ warning: This expression statement did not produce any model
      | ^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

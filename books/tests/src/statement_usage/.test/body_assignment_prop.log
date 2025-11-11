@@ -28,4 +28,4 @@ error: Missing model in workbench
      |   ^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

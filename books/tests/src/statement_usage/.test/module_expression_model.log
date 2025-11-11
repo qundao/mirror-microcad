@@ -34,4 +34,4 @@ warning: Unused global symbol k.
      | ^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

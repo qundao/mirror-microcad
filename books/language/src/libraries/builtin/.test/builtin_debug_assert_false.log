@@ -20,4 +20,4 @@ error: Assertion failed: false
      |                          ^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

@@ -28,4 +28,4 @@ error: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
      |   ^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

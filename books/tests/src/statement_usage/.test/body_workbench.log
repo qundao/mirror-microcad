@@ -21,4 +21,4 @@ Parser error:  --> 2:16
   |
   = expected single_line_comment, final_expression_statement, or statement
 -- Test Result --
-FAILED WITH WRONG ERRORS/WARNINGS
+FAILS WITH WRONG ERRORS

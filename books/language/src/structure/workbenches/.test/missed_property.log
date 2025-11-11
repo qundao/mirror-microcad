@@ -24,4 +24,4 @@ error: Workbench plan incomplete. Missing properties: radius
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

@@ -35,4 +35,4 @@ error: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::in
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

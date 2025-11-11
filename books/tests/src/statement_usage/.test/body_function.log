@@ -28,4 +28,4 @@ error: Symbol f not found.
      |             ^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

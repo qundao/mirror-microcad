@@ -38,4 +38,4 @@ error: Property not found: inner
      |                     ^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

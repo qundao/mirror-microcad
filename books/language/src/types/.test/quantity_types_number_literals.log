@@ -36,4 +36,4 @@ warning: Unused global symbol f.
 Unexpected warnings(s) which did occur in line(s): 32, 36
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

@@ -40,4 +40,4 @@ warning: Unused local liter.
 Unexpected warnings(s) which did occur in line(s): 136, 137
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

@@ -35,4 +35,4 @@ error: Assertion failed: Invalid: <NO VALUE>
      |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

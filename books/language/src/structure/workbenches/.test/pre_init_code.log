@@ -43,4 +43,4 @@ warning: Unused global symbol into_radius.
 Unexpected warnings(s) which did occur in line(s): 170
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

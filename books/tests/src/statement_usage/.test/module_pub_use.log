@@ -24,4 +24,4 @@ warning: Unused global symbol k.
 Unexpected warnings(s) which did occur in line(s): 46
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)
