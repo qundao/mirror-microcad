@@ -1,0 +1,34 @@
+-- Test --
+  extrude_cap
+  ../books/tutorials/src/lego_brick/part/extrude.md:11
+
+-- Code --
+
+ 1: use std::ops::extrude;
+ 2: use std::geo2d::Rect as Cap;
+ 3: 
+ 4: width = 15.8mm;
+ 5: height = 31.8mm;
+ 6: 
+ 7: Cap(width, height)
+ 8:     .extrude(1.0mm);
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1)) ->
+      - height = 1mm
+      - scale = (x=1, y=1)
+      Operation __builtin::ops::extrude(height=1, scale_x=1, scale_y=1) ->
+        Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) ->
+          - height = 31.8mm
+          - width = 15.8mm
+          - x = -7.9mm
+          - y = -15.9mm
+          Primitive2D __builtin::geo2d::Rect(height=31.8, width=15.8, x=-7.9, y=-15.9) ->
+
+Export of "../books/tutorials/src/lego_brick/part/.test/extrude_cap-out.stl" successful.
+-- Test Result --
+OK
