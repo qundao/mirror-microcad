@@ -1,7 +1,7 @@
 -- Test --
         Test name: building_plan
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/README.md:86
+      Source file: ../books/language/src/structure/workbenches/README.md:99
         Test path: ../books/language/src/structure/workbenches/.test
       Banner file: ../books/language/src/structure/workbenches/.test/building_plan.svg
          Log file: ../books/language/src/structure/workbenches/.test/building_plan.log
@@ -9,13 +9,13 @@
 
 -- Code --
 
-  86:   // sketch with a `radius` as building plan
-  87:   sketch Wheel(radius: Length) {
-  88:       // access property `radius` from the building plan
-  89:       std::geo2d::Circle(radius);
-  90:   }
-  91:   
-  92:   std::debug::assert_eq([Wheel(5cm).radius, 5cm]);
+  99:   // sketch with a `radius` as building plan
+ 100:   sketch Wheel(radius: Length) {
+ 101:       // access property `radius` from the building plan
+ 102:       std::geo2d::Circle(radius);
+ 103:   }
+ 104:   
+ 105:   std::debug::assert_eq([Wheel(5cm).radius, 5cm]);
 
 -- No Output --
 -- No Errors --

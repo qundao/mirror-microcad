@@ -19,27 +19,27 @@
 -- No Output --
 -- Errors --
 warning: Unused local PI.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
+  ---> <NO FILE>:93:1
      |
-  93 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | <NO FILE>
      | ^^
      |
 warning: Unused local X.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
+  ---> <NO FILE>:93:1
      |
-  93 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | <NO FILE>
      | ^
      |
 warning: Unused local Y.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
+  ---> <NO FILE>:93:1
      |
-  93 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | <NO FILE>
      | ^
      |
 warning: Unused local Z.
-  ---> [30m[103m[1m NO FILE [39m[49m[22m:93:1
+  ---> <NO FILE>:93:1
      |
-  93 | [30m[103m[1m NO FILE [39m[49m[22m
+  93 | <NO FILE>
      | ^
      |
 warning: Unused local cos.

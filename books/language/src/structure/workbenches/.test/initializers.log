@@ -1,7 +1,7 @@
 -- Test --
         Test name: initializers
   Expected result: todo_fail
-      Source file: ../books/language/src/structure/workbenches/README.md:103
+      Source file: ../books/language/src/structure/workbenches/README.md:116
         Test path: ../books/language/src/structure/workbenches/.test
       Banner file: ../books/language/src/structure/workbenches/.test/initializers.svg
          Log file: ../books/language/src/structure/workbenches/.test/initializers.log
@@ -9,12 +9,12 @@
 
 -- Code --
 
- 103:   sketch Wheel(radius: Length) {
- 104:       init( radius: Length ) {} // error: same parameters as in building plan
- 105:       std::geo2d::Circle(1mm);
- 106:   }
- 107:   
- 108:   Wheel(radius = 1.0mm);
+ 116:   sketch Wheel(radius: Length) {
+ 117:       init( radius: Length ) {} // error: same parameters as in building plan
+ 118:       std::geo2d::Circle(1mm);
+ 119:   }
+ 120:   
+ 121:   Wheel(radius = 1.0mm);
 
 -- No Output --
 -- No Errors --

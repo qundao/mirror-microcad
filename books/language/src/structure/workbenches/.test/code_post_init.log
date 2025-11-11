@@ -1,7 +1,7 @@
 -- Test --
         Test name: code_post_init
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/README.md:226
+      Source file: ../books/language/src/structure/workbenches/README.md:239
         Test path: ../books/language/src/structure/workbenches/.test
       Banner file: ../books/language/src/structure/workbenches/.test/code_post_init.svg
          Log file: ../books/language/src/structure/workbenches/.test/code_post_init.log
@@ -9,23 +9,23 @@
 
 -- Code --
 
- 226:   sketch Wheel(radius: Length) {
- 227:       // initializer
- 228:       init( diameter: Length ) { radius = diameter / 2; }
- 229:   
- 230:       // building code starts here
- 231:       std::geo2d::Circle(radius);
- 232:   }
+ 239:   sketch Wheel(radius: Length) {
+ 240:       // initializer
+ 241:       init( diameter: Length ) { radius = diameter / 2; }
+ 242:   
+ 243:       // building code starts here
+ 244:       std::geo2d::Circle(radius);
+ 245:   }
 
 -- No Output --
 -- Errors --
 warning: Unused global symbol Wheel.
-  ---> ../books/language/src/structure/workbenches/README.md:226:1
+  ---> ../books/language/src/structure/workbenches/README.md:239:1
      |
- 226 | sketch Wheel(radius: Length) {
+ 239 | sketch Wheel(radius: Length) {
      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
-Unexpected warnings(s) which did occur in line(s): 226
+Unexpected warnings(s) which did occur in line(s): 239
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

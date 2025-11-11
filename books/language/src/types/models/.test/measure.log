@@ -25,7 +25,7 @@ error: Symbol area not found.
   12 |     std::geo2d::Circle(radius=10mm).area(),
      |                                     ^^^^
      |
-error: Array elements have different types: [<INVALID TYPE>, Area]
+error: Array elements have different types: [<NO TYPE>, Area]
   ---> ../books/language/src/types/models/measures.md:10:29
      |
   10 | __builtin::debug::assert_eq([

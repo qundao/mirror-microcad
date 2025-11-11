@@ -1,7 +1,7 @@
 -- Test --
         Test name: code_between_initializers
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/README.md:193
+      Source file: ../books/language/src/structure/workbenches/README.md:206
         Test path: ../books/language/src/structure/workbenches/.test
       Banner file: ../books/language/src/structure/workbenches/.test/code_between_initializers.svg
          Log file: ../books/language/src/structure/workbenches/.test/code_between_initializers.log
@@ -9,28 +9,28 @@
 
 -- Code --
 
- 193:   sketch Wheel(radius: Length) {
- 194:       init( width:Length ) { radius = width / 2; }
- 195:       
- 196:       radius = 1; // error: code between initializers not allowed
- 197:   
- 198:       init( height:Length ) { radius = height / 2; }
- 199:   }
- 200:   
- 201:   Wheel(radius = 1.0mm);
+ 206:   sketch Wheel(radius: Length) {
+ 207:       init( width:Length ) { radius = width / 2; }
+ 208:       
+ 209:       radius = 1; // error: code between initializers not allowed
+ 210:   
+ 211:       init( height:Length ) { radius = height / 2; }
+ 212:   }
+ 213:   
+ 214:   Wheel(radius = 1.0mm);
 
 -- No Output --
 -- Errors --
 error: Code between initializers is not allowed
-  ---> ../books/language/src/structure/workbenches/README.md:196:5
+  ---> ../books/language/src/structure/workbenches/README.md:209:5
      |
- 196 |     radius = 1; // error: code between initializers not allowed
+ 209 |     radius = 1; // error: code between initializers not allowed
      |     ^^^^^^^^^^^
      |
 error: Statement not allowed prior initializers
-  ---> ../books/language/src/structure/workbenches/README.md:196:5
+  ---> ../books/language/src/structure/workbenches/README.md:209:5
      |
- 196 |     radius = 1; // error: code between initializers not allowed
+ 209 |     radius = 1; // error: code between initializers not allowed
      |     ^^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!
