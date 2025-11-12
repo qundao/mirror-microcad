@@ -59,7 +59,13 @@ pub fn run_test(env: Option<TestEnv>) {
                 Err(err) => {
                     env.log_ln("-- Parse Error --");
                     env.log_ln(&err.to_string());
-                    env.result(TestResult::FailOk);
+                    if env.has_error_markers() {
+                        env.result(TestResult::FailWrong);
+                    } else if env.todo() {
+                        env.result(TestResult::NotTodoFail);
+                    } else {
+                        env.result(TestResult::FailOk);
+                    }
                 }
                 // test expected to fail succeeded at parsing?
                 Ok(source) => {
@@ -69,7 +75,12 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
-                    env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
+                    if !env.todo()
+                        && env.report_wrong_errors(&context.error_lines(), &context.warning_lines())
+                    {
+                        env.result(TestResult::FailWrong);
+                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                    }
 
                     let _ = fs::remove_file(env.banner_file());
 
@@ -114,6 +125,8 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     if env.todo() {
                         env.result(TestResult::Todo);
+                    } else if env.has_error_markers() {
+                        env.result(TestResult::FailWrong);
                     } else {
                         env.result(TestResult::Fail);
                         panic!("ERROR: {err}")
