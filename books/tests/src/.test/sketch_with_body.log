@@ -11,14 +11,14 @@
 
   45:   use std::geo2d::Circle;
   46:   
-  47:   Circle(radius = 2mm) { Circle(radius = 1mm); } // error: sketch with body
+  47:   Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
 
 -- Parse Error --
 Parser error:  --> 3:22
   |
-3 | Circle(radius = 2mm) { Circle(radius = 1mm); } // error: sketch with body
+3 | Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
   |                      ^---
   |
   = expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
 -- Test Result --
-FAILS WITH WRONG ERRORS
+FAILS AS EXPECTED

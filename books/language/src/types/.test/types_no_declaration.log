@@ -9,14 +9,14 @@
 
 -- Code --
 
-  39:   x: Length;         // error
+  39:   x: Length;         // parse_error
 
 -- Parse Error --
 Parser error:  --> 1:10
   |
-1 | x: Length;         // error
+1 | x: Length;         // parse_error
   |          ^---
   |
   = expected single_line_comment
 -- Test Result --
-FAILS WITH WRONG ERRORS
+FAILS AS EXPECTED

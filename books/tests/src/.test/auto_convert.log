@@ -9,7 +9,7 @@
 
 -- Code --
 
-   6:   fn f( x: Scalar ) { _ = x}
+   6:   fn f( x: Scalar ) { _ = x; }
    7:   f(x=1);
    8:   f(x=[1]);
    9:   f(x="");    // error
@@ -19,7 +19,7 @@
   13:   f([1.0]);
   14:   f([1]);
   15:   
-  16:   fn g( x: Integer ) { _ = x }
+  16:   fn g( x: Integer ) { _ = x; }
   17:   g(x=1.0);   // error
   18:   g(x="");    // error
   19:   g("");      // error
@@ -28,7 +28,7 @@
   22:   g(1);
   23:   g([1]);
   24:   
-  25:   fn h( x: String ) { _ = x }
+  25:   fn h( x: String ) { _ = x; }
   26:   h(x=1.0);   // error
   27:   h(x="");
   28:   h(x=[""]);
@@ -37,12 +37,67 @@
   31:   h(1.0);     // error
   32:   h([1.0]);   // error
 
--- Parse Error --
-Parser error:  --> 1:26
-  |
-1 | fn f( x: Scalar ) { _ = x}
-  |                          ^---
-  |
-  = expected single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- No Output --
+-- Errors --
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:9:3
+     |
+   9 | f(x="");    // error
+     |   ^^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:10:3
+     |
+  10 | f("");      // error
+     |   ^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:17:3
+     |
+  17 | g(x=1.0);   // error
+     |   ^^^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:18:3
+     |
+  18 | g(x="");    // error
+     |   ^^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:19:3
+     |
+  19 | g("");      // error
+     |   ^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:20:3
+     |
+  20 | g(1.0);     // error
+     |   ^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:21:3
+     |
+  21 | g([1.0]);   // error
+     |   ^^^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:26:3
+     |
+  26 | h(x=1.0);   // error
+     |   ^^^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:31:3
+     |
+  31 | h(1.0);     // error
+     |   ^^^
+     |
+error: Missing arguments: x
+  ---> ../books/tests/src/auto_convert.md:32:3
+     |
+  32 | h([1.0]);   // error
+     |   ^^^^^
+     |
 -- Test Result --
-FAILS WITH WRONG ERRORS
+FAILS AS EXPECTED

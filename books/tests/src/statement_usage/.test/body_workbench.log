@@ -10,15 +10,16 @@
 -- Code --
 
    6:   {
-   7:     sketch F() {}; // error
+   7:     sketch F() {} // error
    8:   }
 
--- Parse Error --
-Parser error:  --> 2:16
-  |
-2 |   sketch F() {}; // error
-  |                ^---
-  |
-  = expected single_line_comment, final_expression_statement, or statement
+-- No Output --
+-- Errors --
+error: sketch statement not available here
+  ---> ../books/tests/src/statement_usage/body.md:7:3
+     |
+   7 |   sketch F() {} // error
+     |   ^^^^^^^^^^^^^
+     |
 -- Test Result --
-FAILS WITH WRONG ERRORS
+FAILS AS EXPECTED
