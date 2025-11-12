@@ -55,6 +55,18 @@ impl Type {
             || (*self == Type::Integer && *rhs == Type::scalar())
             || (*rhs == Type::Integer && *self == Type::scalar())
     }
+
+    /// Returns if the given type or it's inner type matches the given parameter type.
+    pub fn is_matching(&self, param_type: &Type) -> bool {
+        if matches!(param_type, Type::Quantity(QuantityType::Scalar)) {
+            self == &Type::scalar()
+                || self == &Type::Integer
+                || self.is_array_of(&Type::scalar())
+                || self.is_array_of(&Type::Integer)
+        } else {
+            self == param_type || self.is_array_of(param_type)
+        }
+    }
 }
 
 impl std::ops::Mul for Type {
@@ -143,4 +155,13 @@ fn builtin_type() {
     let ty = Parser::parse_rule::<TypeAnnotation>(Rule::r#type, "Integer", 0).expect("test error");
     assert_eq!(ty.0.to_string(), "Integer");
     assert_eq!(ty.0.value, Type::Integer);
+}
+
+#[test]
+fn type_matching() {
+    assert!(Type::scalar().is_matching(&Type::scalar()));
+    assert!(!Type::scalar().is_matching(&Type::Integer));
+    assert!(Type::Integer.is_matching(&Type::scalar()));
+    assert!(!Type::scalar().is_matching(&Type::String));
+    assert!(!Type::String.is_matching(&Type::scalar()));
 }

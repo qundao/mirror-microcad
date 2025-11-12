@@ -66,7 +66,7 @@ impl<'a> ArgumentMatch<'a> {
                 if !id.is_empty() {
                     if let Some(n) = self.params.iter().position(|(i, _)| *i == id) {
                         if let Some(ty) = &self.params[n].1.specified_type {
-                            if !arg.is_matching(ty) {
+                            if !arg.ty().is_matching(ty) {
                                 return true;
                             }
                         }
@@ -100,7 +100,13 @@ impl<'a> ArgumentMatch<'a> {
                     .enumerate()
                     .filter(|(..)| arg_id.is_empty())
                     .filter_map(|(n, (id, param))| {
-                        if [Type::Invalid, arg.ty(), arg.ty_inner()].contains(&param.ty()) {
+                        if param.ty() == Type::Invalid
+                            || if let Some(ty) = &param.specified_type {
+                                arg.ty().is_matching(ty)
+                            } else {
+                                false
+                            }
+                        {
                             Some((n, id, param))
                         } else {
                             None
