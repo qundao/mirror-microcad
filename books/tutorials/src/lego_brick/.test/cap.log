@@ -1,13 +1,13 @@
 -- Test --
   cap
-  ../books/tutorials/src/lego_brick/caps_knobs.md:13
+  ../books/tutorials/src/lego_brick/caps_knobs.md:14
 
 -- Code --
 
- 1: // alias Rect as Cap
- 2: use std::geo2d::Rect as Cap;
- 3: 
- 4: Cap(width = 31.8mm, height = 15.8mm);
+  14:   // alias Rect as Cap
+  15:   use std::geo2d::Rect as Cap;
+  16:   
+  17:   Cap(width = 31.8mm, height = 15.8mm);
 
 -- Output --
 

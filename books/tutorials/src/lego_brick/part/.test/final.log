@@ -1,61 +1,61 @@
 -- Test --
   final
-  ../books/tutorials/src/lego_brick/part/final.md:8
+  ../books/tutorials/src/lego_brick/part/final.md:9
 
 -- Code --
 
- 1: use std::geo2d::*;
- 2: use std::ops::*;
- 3: 
- 4: const SPACING = 8mm;
- 5: 
- 6: op grid(columns: Integer, rows: Integer) {
- 7:     @input
- 8:         .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
- 9:         .align()
-10: }
-11: 
-12: sketch Base(
-13:     columns: Integer,
-14:     rows: Integer,
-15:     width: Length,
-16:     height: Length
-17: ) {
-18:     thickness = 1.2mm;
-19:     frame = Frame(width, height, thickness);
-20:     struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-21:         .grid(columns = columns-1, rows = rows-1);
-22:     frame | struts;
-23: }
-24: 
-25: use Rect as Cap;
-26: 
-27: sketch Knobs(columns: Integer, rows: Integer) {
-28:     Circle(d = 4.8mm)
-29:         .grid(columns, rows);
-30: }
-31: 
-32: part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
-33:     width = columns * SPACING - 0.2mm;
-34:     height =rows * SPACING - 0.2mm;
-35:     cap_thickness = 1.0mm;
-36: 
-37:     base = Base(rows, columns, width, height)
-38:         .extrude(base_height - cap_thickness);
-39: 
-40:     cap = Cap(width, height)
-41:         .extrude(cap_thickness)
-42:         .translate(z = base_height - cap_thickness);
-43: 
-44:     knobs = Knobs(rows, columns)
-45:         .extrude(1.7mm)
-46:         .translate(z = base_height);
-47: 
-48:     base | cap | knobs;
-49: }
-50: 
-51: // render a brick with default values
-52: LegoBrick();
+   9:   use std::geo2d::*;
+  10:   use std::ops::*;
+  11:   
+  12:   const SPACING = 8mm;
+  13:   
+  14:   op grid(columns: Integer, rows: Integer) {
+  15:       @input
+  16:           .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
+  17:           .align()
+  18:   }
+  19:   
+  20:   sketch Base(
+  21:       columns: Integer,
+  22:       rows: Integer,
+  23:       width: Length,
+  24:       height: Length
+  25:   ) {
+  26:       thickness = 1.2mm;
+  27:       frame = Frame(width, height, thickness);
+  28:       struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+  29:           .grid(columns = columns-1, rows = rows-1);
+  30:       frame | struts;
+  31:   }
+  32:   
+  33:   use Rect as Cap;
+  34:   
+  35:   sketch Knobs(columns: Integer, rows: Integer) {
+  36:       Circle(d = 4.8mm)
+  37:           .grid(columns, rows);
+  38:   }
+  39:   
+  40:   part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
+  41:       width = columns * SPACING - 0.2mm;
+  42:       height =rows * SPACING - 0.2mm;
+  43:       cap_thickness = 1.0mm;
+  44:   
+  45:       base = Base(rows, columns, width, height)
+  46:           .extrude(base_height - cap_thickness);
+  47:   
+  48:       cap = Cap(width, height)
+  49:           .extrude(cap_thickness)
+  50:           .translate(z = base_height - cap_thickness);
+  51:   
+  52:       knobs = Knobs(rows, columns)
+  53:           .extrude(1.7mm)
+  54:           .translate(z = base_height);
+  55:   
+  56:       base | cap | knobs;
+  57:   }
+  58:   
+  59:   // render a brick with default values
+  60:   LegoBrick();
 
 -- Output --
 

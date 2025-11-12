@@ -1,17 +1,17 @@
 -- Test --
   extrude_cap
-  ../books/tutorials/src/lego_brick/part/extrude.md:11
+  ../books/tutorials/src/lego_brick/part/extrude.md:12
 
 -- Code --
 
- 1: use std::ops::extrude;
- 2: use std::geo2d::Rect as Cap;
- 3: 
- 4: width = 15.8mm;
- 5: height = 31.8mm;
- 6: 
- 7: Cap(width, height)
- 8:     .extrude(1.0mm);
+  12:   use std::ops::extrude;
+  13:   use std::geo2d::Rect as Cap;
+  14:   
+  15:   width = 15.8mm;
+  16:   height = 31.8mm;
+  17:   
+  18:   Cap(width, height)
+  19:       .extrude(1.0mm);
 
 -- Output --
 

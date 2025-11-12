@@ -1,48 +1,48 @@
 -- Test --
   custom_op
-  ../books/tutorials/src/lego_brick/part/custom_op.md:34
+  ../books/tutorials/src/lego_brick/part/custom_op.md:35
 
 -- Code --
 
- 1: use std::geo2d::*;
- 2: use std::ops::*;
- 3: 
- 4: const SPACING = 8mm;
- 5: 
- 6: op grid(columns: Integer, rows: Integer) {
- 7:     @input
- 8:         .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
- 9:         .align()
-10: }
-11: 
-12: sketch Base(
-13:     columns: Integer,
-14:     rows: Integer,
-15:     width: Length,
-16:     height: Length
-17: ) {
-18:     thickness = 1.2mm;
-19:     frame = Frame(width, height, thickness);
-20:     struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-21:         .grid(columns = columns-1, rows = rows-1);
-22:     frame | struts;
-23: }
-24: 
-25: sketch Knobs(columns: Integer, rows: Integer) {
-26:     Circle(d = 4.8mm)
-27:         .grid(columns, rows);
-28: }
-29: 
-30: use Rect as Cap;
-31: 
-32: columns = 4;
-33: rows = 2;
-34: width = columns * SPACING - 0.2mm;
-35: height = rows * SPACING - 0.2mm;
-36: 
-37: Base(rows, columns, width, height);
-38: Cap(width, height);
-39: Knobs(rows, columns);
+  35:   use std::geo2d::*;
+  36:   use std::ops::*;
+  37:   
+  38:   const SPACING = 8mm;
+  39:   
+  40:   op grid(columns: Integer, rows: Integer) {
+  41:       @input
+  42:           .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
+  43:           .align()
+  44:   }
+  45:   
+  46:   sketch Base(
+  47:       columns: Integer,
+  48:       rows: Integer,
+  49:       width: Length,
+  50:       height: Length
+  51:   ) {
+  52:       thickness = 1.2mm;
+  53:       frame = Frame(width, height, thickness);
+  54:       struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+  55:           .grid(columns = columns-1, rows = rows-1);
+  56:       frame | struts;
+  57:   }
+  58:   
+  59:   sketch Knobs(columns: Integer, rows: Integer) {
+  60:       Circle(d = 4.8mm)
+  61:           .grid(columns, rows);
+  62:   }
+  63:   
+  64:   use Rect as Cap;
+  65:   
+  66:   columns = 4;
+  67:   rows = 2;
+  68:   width = columns * SPACING - 0.2mm;
+  69:   height = rows * SPACING - 0.2mm;
+  70:   
+  71:   Base(rows, columns, width, height);
+  72:   Cap(width, height);
+  73:   Knobs(rows, columns);
 
 -- Output --
 

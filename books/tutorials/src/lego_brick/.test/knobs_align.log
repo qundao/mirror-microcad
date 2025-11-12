@@ -1,13 +1,13 @@
 -- Test --
   knobs_align
-  ../books/tutorials/src/lego_brick/caps_knobs.md:50
+  ../books/tutorials/src/lego_brick/caps_knobs.md:51
 
 -- Code --
 
- 1: std::geo2d::Circle(d = 4.8mm, c = (
- 2:         x = [0..3] * 8mm, 
- 3:         y = [0..1] * 8mm)
- 4:     ).std::ops::align();
+  51:   std::geo2d::Circle(d = 4.8mm, c = (
+  52:           x = [0..3] * 8mm, 
+  53:           y = [0..1] * 8mm)
+  54:       ).std::ops::align();
 
 -- Output --
 
