@@ -55,9 +55,9 @@
   76:   assert_eq([d.radius, 1cm]);
   77:   
   78:   // Call sketch with radius.
-  79:   r = Wheel(radius = 1cm);
+  79:   r = Wheel(radius = 2cm);
   80:   // Check diameter property.
-  81:   assert_eq([r.diameter, 2cm]);
+  81:   assert_eq([r.diameter, 4cm]);
   82:   
   83:   d - r;
 
@@ -75,14 +75,14 @@
             - radius = 10mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
               Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
-        r: Workpiece(sketch) part_declaration::Wheel(radius=10mm) ->
-          - diameter = 20mm
-          - radius = 10mm
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+        r: Workpiece(sketch) part_declaration::Wheel(radius=20mm) ->
+          - diameter = 40mm
+          - radius = 20mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
             - center = (x=0mm, y=0mm)
-            - radius = 10mm
+            - radius = 20mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

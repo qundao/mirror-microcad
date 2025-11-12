@@ -100,6 +100,6 @@ mod k {  // warning
 
 ```µcad,module_expression_model#fail
 mod k { // warning
-  __builtin::geo2d::Circle(radius=1); // error
+  __builtin::geo2d::Circle(radius=1mm); // error
 }
 ```

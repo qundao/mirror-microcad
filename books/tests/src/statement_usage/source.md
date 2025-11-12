@@ -45,7 +45,7 @@ return 1;  // error
 [![test](.test/source_if.svg)](.test/source_if.log)
 
 ```µcad,source_if
-if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
+if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1mm); }
 ```
 
 [![test](.test/source_assignment_const.svg)](.test/source_assignment_const.log)

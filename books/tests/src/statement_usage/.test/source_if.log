@@ -9,7 +9,7 @@
 
 -- Code --
 
-  48:   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
+  48:   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1mm); }
 
 -- No Output --
 -- No Errors --

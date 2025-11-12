@@ -100,6 +100,6 @@ init(l:Length) {} } K();
 
 ```µcad,pre_init_expression_model#fail
 sketch K() { 
-  __builtin::geo2d::Circle(radius=1); // error
+  __builtin::geo2d::Circle(radius=1mm); // error
 init(l:Length) {} }
 ```

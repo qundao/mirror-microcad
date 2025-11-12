@@ -76,9 +76,9 @@ d = Wheel(diameter = 2cm);
 assert_eq([d.radius, 1cm]);
 
 // Call sketch with radius.
-r = Wheel(radius = 1cm);
+r = Wheel(radius = 2cm);
 // Check diameter property.
-assert_eq([r.diameter, 2cm]);
+assert_eq([r.diameter, 4cm]);
 
 d - r;
 ```

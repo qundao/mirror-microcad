@@ -10,7 +10,7 @@
 -- Code --
 
  102:   sketch K() { 
- 103:     __builtin::geo2d::Circle(radius=1); // error
+ 103:     __builtin::geo2d::Circle(radius=1mm); // error
  104:   init(l:Length) {} }
 
 -- No Output --
@@ -18,8 +18,8 @@
 error: Statement not allowed prior initializers
   ---> ../books/tests/src/statement_usage/pre-init.md:103:3
      |
- 103 |   __builtin::geo2d::Circle(radius=1); // error
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 103 |   __builtin::geo2d::Circle(radius=1mm); // error
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
