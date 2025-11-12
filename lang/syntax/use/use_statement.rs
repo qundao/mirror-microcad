@@ -30,7 +30,7 @@ impl SrcReferrer for UseStatement {
 impl std::fmt::Display for UseStatement {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.visibility {
-            Visibility::Private => write!(f, "use ")?,
+            Visibility::Private | Visibility::PrivateUse(_) => write!(f, "use ")?,
             Visibility::Public => write!(f, "pub use ")?,
             Visibility::Deleted => unreachable!(),
         }
@@ -42,7 +42,7 @@ impl std::fmt::Display for UseStatement {
 impl std::fmt::Debug for UseStatement {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.visibility {
-            Visibility::Private => write!(f, "use ")?,
+            Visibility::Private | Visibility::PrivateUse(_) => write!(f, "use ")?,
             Visibility::Public => write!(f, "pub use ")?,
             Visibility::Deleted => unreachable!(),
         }

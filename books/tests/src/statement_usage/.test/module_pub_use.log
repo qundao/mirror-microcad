@@ -11,6 +11,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol k.
+  ---> ../books/tests/src/statement_usage/module.md:1:1
+     |
+   1 | mod k {
+     | ^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

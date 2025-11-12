@@ -11,6 +11,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol my_module.
+  ---> ../books/language/src/structure/modules/internal_modules.md:1:1
+     |
+   1 | mod my_module {
+     | ^^^^^^^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

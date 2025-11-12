@@ -4,7 +4,7 @@
 
 -- Code --
 
- 1: mod k {
+ 1: mod k { // warning
  2:   __builtin::geo2d::Circle(radius=1); // error
  3: }
 
@@ -16,6 +16,12 @@ error: Expression statement not available here
      |
    2 |   __builtin::geo2d::Circle(radius=1); // error
      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+warning: Unused global symbol k.
+  ---> ../books/tests/src/statement_usage/module.md:1:1
+     |
+   1 | mod k { // warning
+     | ^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
 FAILED AS EXPECTED

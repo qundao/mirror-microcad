@@ -1,0 +1,40 @@
+-- Test --
+  use_statement_test
+  ../books/tests/src/use.md:55
+
+-- Code --
+
+ 1: // use symbol `circle` in file `geo2d.µcad`
+ 2: use std::geo2d::Circle;
+ 3: // use all symbols in file `geo3d.µcad`
+ 4: use std::geo3d::*;
+ 5: // alias `bar` in `std/text/foo.µcad` into `baz`
+ 6: use std::math::abs as baz;
+ 7: // use print from `std/module.µcad`
+ 8: use std::print;
+ 9: // public use operation from `std/module.µcad`
+10: pub use std::ops;
+11: 
+12: // use debug from `std/module.µcad`
+13: use std::debug;
+14: debug::assert(true);
+15: 
+16: part my_part3d() { Sphere(radius=1mm); }
+17: part my_part2d() { Circle(radius=1mm); }
+18: 
+19: x = my_part2d();
+20: y = my_part3d();
+21: z = baz(-1.0);
+
+-- Output --
+
+-- Errors --
+warning: Unused global symbol <no code>.
+  ---> ../books/tests/src/use.md:8:5
+     |
+   8 | use std::print;
+     |     ^^^^^^^^^^
+     |
+-- No model --
+-- Test Result --
+OK

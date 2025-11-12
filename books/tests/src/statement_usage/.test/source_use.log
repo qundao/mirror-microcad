@@ -9,6 +9,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol <no code>.
+  ---> ../books/tests/src/statement_usage/source.md:1:5
+     |
+   1 | use std;
+     |     ^^^
+     |
 -- No model --
 -- Test Result --
 OK

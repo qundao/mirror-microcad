@@ -168,7 +168,7 @@ impl Names for UseStatement {
     fn names(&self) -> NameList {
         match &self.decl {
             UseDeclaration::Use(name) | UseDeclaration::UseAll(name) => name.into(),
-            UseDeclaration::UseAlias(name, _id) => NameList::default().add_name(name),
+            UseDeclaration::UseAs(name, _id) => NameList::default().add_name(name),
         }
     }
 }

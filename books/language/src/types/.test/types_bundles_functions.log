@@ -10,6 +10,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol f.
+  ---> ../books/language/src/types/README.md:2:1
+     |
+   2 | fn f(x: Length) {}     // use type (without default)
+     | ^^^^^^^^^^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

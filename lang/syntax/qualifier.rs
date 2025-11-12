@@ -9,12 +9,12 @@
 /// By default, entities are private.
 #[derive(Copy, Clone, Default)]
 pub enum Qualifier {
-    /// local variable
+    /// Local variable.
     #[default]
     Value,
-    /// private symbol
+    /// Symbol.
     Const,
-    /// workbench property
+    /// Workbench property.
     Prop,
 }
 

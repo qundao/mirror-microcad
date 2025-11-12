@@ -79,6 +79,14 @@ impl SourceFile {
         self.source.lines().nth(line)
     }
 
+    /// get a specific line
+    ///
+    /// - `line`: line number beginning at `0`
+    pub fn get_code(&self, src_ref: &SrcRef) -> &str {
+        let range = &src_ref.as_ref().expect("source reference empty").range;
+        &self.source[range.start..range.end]
+    }
+
     /// return number of source code lines
     pub fn num_lines(&self) -> usize {
         self.source.lines().count()

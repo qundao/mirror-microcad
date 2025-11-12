@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use derive_more::{Deref, DerefMut};
+use indexmap::IndexSet;
 
 use crate::{resolve::*, syntax::*};
 
@@ -34,11 +35,29 @@ impl SymbolTable {
         self.recursive_collect(|symbol| symbol.is_checked())
     }
 
-    /// Return a list of unused symbols
+    /// Return a list of unused private symbols
     ///
     /// Use this after eval for any useful result.
-    pub fn unused(&self) -> Symbols {
-        self.recursive_collect(|symbol| symbol.is_used())
+    pub fn unused_private(&self) -> Symbols {
+        let used_in_module = &mut IndexSet::new();
+        let mut symbols = self.recursive_collect(|symbol| {
+            if let Some(in_module) = symbol.in_module()
+                && symbol.is_used()
+            {
+                used_in_module.insert(in_module);
+            }
+            symbol.is_unused_private()
+        });
+
+        symbols.retain(|symbol| {
+            if let Some(in_module) = symbol.in_module() {
+                !used_in_module.contains(&in_module)
+            } else {
+                true
+            }
+        });
+        symbols.sort_by_key(|s| s.full_name());
+        symbols
     }
 
     /// Search all ids which require target mode (e.g. `assert_valid`)
@@ -49,13 +68,13 @@ impl SymbolTable {
             .collect()
     }
 
-    pub(super) fn recursive_collect<F>(&self, f: F) -> Symbols
+    pub(super) fn recursive_collect<F>(&self, mut f: F) -> Symbols
     where
-        F: Fn(&Symbol) -> bool,
+        F: FnMut(&Symbol) -> bool,
     {
         let mut result = vec![];
         self.values().for_each(|symbol| {
-            symbol.recursive_collect(&f, &mut result);
+            symbol.recursive_collect(&mut f, &mut result);
         });
         result.into()
     }

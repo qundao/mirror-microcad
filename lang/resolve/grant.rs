@@ -317,7 +317,7 @@ impl Grant for UseStatement {
         let grant = parent.with_def(|def| match def {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) => true,
             SymbolDef::Workbench(..) | SymbolDef::Function(..) => match self.visibility {
-                Visibility::Private => true,
+                Visibility::Private | Visibility::PrivateUse(_) => true,
                 Visibility::Public => false,
                 Visibility::Deleted => unreachable!(),
             },

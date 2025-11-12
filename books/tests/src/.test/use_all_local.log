@@ -1,0 +1,19 @@
+-- Test --
+  use_all_local
+  ../books/tests/src/use.md:88
+
+-- Code --
+
+ 1: fn f() {
+ 2:     use std::math::*;
+ 3:     x = abs(-1.0);
+ 4:     return x;
+ 5: }
+ 6: f();
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

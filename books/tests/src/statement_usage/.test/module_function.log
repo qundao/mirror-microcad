@@ -11,6 +11,18 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol k.
+  ---> ../books/tests/src/statement_usage/module.md:1:1
+     |
+   1 | mod k {
+     | ^^^^^^^
+     |
+warning: Unused global symbol f.
+  ---> ../books/tests/src/statement_usage/module.md:2:3
+     |
+   2 |   fn f() {}
+     |   ^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

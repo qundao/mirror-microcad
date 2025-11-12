@@ -40,7 +40,8 @@ impl Symbolize<Symbol> for ModuleDefinition {
             symbol.set_children(body.grant(&symbol, context)?.symbolize(&symbol, context)?);
             symbol
         } else if let Some(parent_path) = parent.source_path() {
-            let mut symbol = context.symbolize_file(self.visibility, parent_path, &self.id)?;
+            let mut symbol =
+                context.symbolize_file(self.visibility.clone(), parent_path, &self.id)?;
             symbol.set_parent(parent.clone());
             symbol
         } else {
@@ -139,7 +140,7 @@ impl Symbolize for AssignmentStatement {
         parent: &Symbol,
         context: &mut ResolveContext,
     ) -> ResolveResult<Option<Symbol>> {
-        let symbol = match (self.assignment.visibility, self.assignment.qualifier()) {
+        let symbol = match (&self.assignment.visibility, self.assignment.qualifier()) {
             // properties do not have a visibility
             (_, Qualifier::Prop) => {
                 if !parent.can_prop() {
@@ -161,7 +162,7 @@ impl Symbolize for AssignmentStatement {
                 }
             }
             // value go on stack
-            (Visibility::Private, Qualifier::Value) => {
+            (Visibility::Private | Visibility::PrivateUse(_), Qualifier::Value) => {
                 if self.assignment.visibility == Visibility::Private && !parent.can_value() {
                     None
                 } else {
@@ -207,7 +208,7 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
                 Ok(Some((
                     Identifier::unique(),
                     Symbol::new(
-                        SymbolDef::Alias(self.visibility, identifier.clone(), name.clone()),
+                        SymbolDef::Alias(self.visibility.clone(), identifier.clone(), name.clone()),
                         Some(parent.clone()),
                     ),
                 )))
@@ -215,14 +216,14 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
             UseDeclaration::UseAll(name) => Ok(Some((
                 Identifier::unique(),
                 Symbol::new(
-                    SymbolDef::UseAll(self.visibility, name.clone()),
+                    SymbolDef::UseAll(self.visibility.clone(), name.clone()),
                     Some(parent.clone()),
                 ),
             ))),
-            UseDeclaration::UseAlias(name, alias) => Ok(Some((
+            UseDeclaration::UseAs(name, alias) => Ok(Some((
                 Identifier::unique(),
                 Symbol::new(
-                    SymbolDef::Alias(self.visibility, alias.clone(), name.clone()),
+                    SymbolDef::Alias(self.visibility.clone(), alias.clone(), name.clone()),
                     Some(parent.clone()),
                 ),
             ))),

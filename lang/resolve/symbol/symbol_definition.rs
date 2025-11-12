@@ -55,13 +55,13 @@ impl SymbolDef {
 
             Self::Argument(..) => Visibility::Private,
 
-            Self::Constant(visibility, ..) => *visibility,
-            Self::Module(md) => md.visibility,
-            Self::Workbench(wd) => wd.visibility,
-            Self::Function(fd) => fd.visibility,
-            Self::Assignment(a) => a.visibility,
+            Self::Constant(visibility, ..) => visibility.clone(),
+            Self::Module(md) => md.visibility.clone(),
+            Self::Workbench(wd) => wd.visibility.clone(),
+            Self::Function(fd) => fd.visibility.clone(),
+            Self::Assignment(a) => a.visibility.clone(),
 
-            Self::Alias(visibility, ..) | Self::UseAll(visibility, ..) => *visibility,
+            Self::Alias(visibility, ..) | Self::UseAll(visibility, ..) => visibility.clone(),
 
             #[cfg(test)]
             Self::Tester(..) => Visibility::Public,
@@ -76,7 +76,7 @@ impl SymbolDef {
             Self::SourceFile(..) => "SourceFile".to_string(),
             Self::Builtin(b) => format!("{}", b.kind),
             Self::Constant(..) => "Constant".to_string(),
-            Self::Assignment(..) => "ConstExpression".to_string(),
+            Self::Assignment(..) => "Assignment".to_string(),
             Self::Argument(..) => "Argument".to_string(),
             Self::Alias(..) => "Alias".to_string(),
             Self::UseAll(..) => "UseAll".to_string(),

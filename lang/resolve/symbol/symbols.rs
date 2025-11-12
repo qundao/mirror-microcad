@@ -2,11 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::resolve::*;
-use custom_debug::Debug;
 use derive_more::{Deref, DerefMut};
 
 /// List of qualified names which can pe displayed
-#[derive(Debug, Deref, DerefMut, Default)]
+#[derive(Deref, DerefMut, Default)]
 pub struct Symbols(Vec<Symbol>);
 
 impl FromIterator<Symbols> for Symbols {
@@ -30,7 +29,21 @@ impl std::fmt::Display for Symbols {
                 .iter()
                 .map(|symbol| symbol.to_string())
                 .collect::<Vec<_>>()
-                .join("")
+                .join("\n")
+        )
+    }
+}
+
+impl std::fmt::Debug for Symbols {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            self.0
+                .iter()
+                .map(|symbol| format!("{symbol:?}"))
+                .collect::<Vec<_>>()
+                .join("\n")
         )
     }
 }

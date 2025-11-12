@@ -9,6 +9,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused global symbol MyPart.
+  ---> ../books/language/src/structure/workbenches/parts.md:1:1
+     |
+   1 | part MyPart() {}
+     | ^^^^^^^^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

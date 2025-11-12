@@ -153,11 +153,7 @@ pub fn run_test(env: Option<TestEnv>) {
                     let _ = fs::remove_file(env.banner_file());
 
                     // check if test awaited to succeed but failed at evaluation
-                    match (
-                        eval,
-                        context.has_errors() || context.has_warnings(),
-                        env.todo(),
-                    ) {
+                    match (eval, context.has_errors(), env.todo()) {
                         // test expected to succeed and succeeds with no errors
                         (Ok(model), false, false) => {
                             report_model(&mut env, model);

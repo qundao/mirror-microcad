@@ -25,7 +25,8 @@ use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, ty::*, value::
 /// `Symbol` can be shared as mutable.
 #[derive(Clone)]
 pub struct Symbol {
-    visibility: std::cell::Cell<Visibility>,
+    visibility: std::cell::RefCell<Visibility>,
+    src_ref: SrcRef,
     inner: RcMut<SymbolInner>,
 }
 
@@ -38,12 +39,13 @@ impl Symbol {
     /// - `parent`: Symbol's parent symbol or none for root
     pub fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
         Symbol {
-            visibility: std::cell::Cell::new(def.visibility()),
+            visibility: std::cell::RefCell::new(def.visibility()),
             inner: RcMut::new(SymbolInner {
                 def,
                 parent,
                 ..Default::default()
             }),
+            ..Default::default()
         }
     }
 
@@ -58,12 +60,13 @@ impl Symbol {
         parent: Option<Symbol>,
     ) -> Self {
         Symbol {
-            visibility: std::cell::Cell::new(visibility),
+            visibility: std::cell::RefCell::new(visibility),
             inner: RcMut::new(SymbolInner {
                 def,
                 parent,
                 ..Default::default()
             }),
+            ..Default::default()
         }
     }
 
@@ -123,21 +126,6 @@ impl Symbol {
         parent.inner.borrow_mut().children.insert(id, child);
     }
 
-    /// Insert new child
-    ///
-    /// The parent of `new_child` wont be changed!
-    pub(crate) fn insert_child(&self, id: Identifier, new_child: Symbol) {
-        if self
-            .inner
-            .borrow_mut()
-            .children
-            .insert(id, new_child)
-            .is_some()
-        {
-            todo!("symbol already existing");
-        }
-    }
-
     /// Initially set children.
     ///
     /// Panics if children already exist.
@@ -160,7 +148,7 @@ impl Symbol {
     }
 
     /// Create a vector of cloned children.
-    fn public_children(&self, visibility: Visibility) -> SymbolMap {
+    fn public_children(&self, visibility: Visibility, src_ref: SrcRef) -> SymbolMap {
         let inner = self.inner.borrow();
 
         inner
@@ -174,7 +162,7 @@ impl Symbol {
                     false
                 }
             })
-            .map(|symbol| symbol.clone_with_visibility(visibility))
+            .map(|symbol| symbol.clone_with(visibility.clone(), src_ref.clone()))
             .map(|symbol| (symbol.id(), symbol))
             .collect()
     }
@@ -194,9 +182,9 @@ impl Symbol {
         self.inner.borrow_mut().parent = Some(parent);
     }
 
-    pub(crate) fn recursive_collect<F>(&self, f: &F, result: &mut Vec<Symbol>)
+    pub(crate) fn recursive_collect<F>(&self, f: &mut F, result: &mut Vec<Symbol>)
     where
-        F: Fn(&Symbol) -> bool,
+        F: FnMut(&Symbol) -> bool,
     {
         if f(self) {
             result.push(self.clone());
@@ -246,36 +234,34 @@ impl Symbol {
 impl Symbol {
     /// Return `true` if symbol's visibility is private
     pub(super) fn visibility(&self) -> Visibility {
-        self.visibility.get()
-    }
-
-    /// Set symbol's visibility.
-    pub(crate) fn set_visibility(&mut self, visibility: Visibility) {
-        self.visibility.set(visibility)
+        self.visibility.borrow().clone()
     }
 
     /// Return `true` if symbol's visibility set to is public.
-    fn is_public(&self) -> bool {
+    pub(super) fn is_public(&self) -> bool {
         matches!(self.visibility(), Visibility::Public)
     }
 
     pub(super) fn is_deleted(&self) -> bool {
-        self.visibility.get() == Visibility::Deleted
+        matches!(self.visibility(), Visibility::Deleted)
     }
 
     pub(super) fn delete(&self) {
-        self.visibility.set(Visibility::Deleted)
+        self.visibility.replace(Visibility::Deleted);
     }
 
     /// Clone this symbol but give the clone another visibility.
-    pub(crate) fn clone_with_visibility(&self, visibility: Visibility) -> Self {
-        let cloned = self.clone();
-        cloned.visibility.set(visibility);
-        cloned
+    pub(crate) fn clone_with(&self, visibility: Visibility, src_ref: SrcRef) -> Self {
+        Self {
+            visibility: std::cell::RefCell::new(visibility),
+            src_ref,
+            inner: self.inner.clone(),
+        }
     }
 
     pub(crate) fn reset_visibility(&self) {
-        self.visibility.set(self.with_def(|def| def.visibility()));
+        self.visibility
+            .replace(self.with_def(|def| def.visibility()));
     }
 }
 
@@ -353,6 +339,7 @@ impl Symbol {
             self.inner.borrow().def,
             SymbolDef::SourceFile(..)
                 | SymbolDef::Module(..)
+                | SymbolDef::Workbench(..)
                 | SymbolDef::UseAll(..)
                 | SymbolDef::Alias(..)
         ) && !self.is_deleted()
@@ -417,7 +404,7 @@ impl Symbol {
         context: &mut ResolveContext,
         exclude_ids: &IdentifierSet,
     ) -> ResolveResult<()> {
-        if !matches!(self.visibility.get(), Visibility::Deleted) {
+        if !matches!(self.visibility.take(), Visibility::Deleted) {
             // get names of symbol definitions
             let names = match &self.inner.borrow().def {
                 SymbolDef::SourceFile(sf) => sf.names(),
@@ -516,6 +503,18 @@ impl Symbol {
         let _ = self.inner.borrow().used.set(());
     }
 
+    pub(crate) fn is_unused_private(&self) -> bool {
+        !self.is_used() && !self.is_public() && !self.is_deleted()
+    }
+
+    pub(crate) fn in_module(&self) -> Option<QualifiedName> {
+        if let Visibility::PrivateUse(module) = self.visibility() {
+            Some(module.clone())
+        } else {
+            None
+        }
+    }
+
     /// Resolve aliases and use statements in this symbol.
     pub(super) fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<SymbolMap> {
         log::trace!("resolving: {self}");
@@ -529,18 +528,23 @@ impl Symbol {
                     let symbol = context
                         .symbol_table
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .clone_with_visibility(*visibility);
-                    self.visibility.set(Visibility::Deleted);
+                        .clone_with(visibility.clone(), name.src_ref.clone());
+                    self.delete();
                     [(id.clone(), symbol)].into_iter().collect()
                 }
                 SymbolDef::UseAll(visibility, name) => {
+                    let visibility = &if matches!(visibility, &Visibility::Private) {
+                        Visibility::PrivateUse(name.clone())
+                    } else {
+                        visibility.clone()
+                    };
                     log::trace!("resolving use all: {self} => {visibility}{name}");
                     let symbols = context
                         .symbol_table
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .public_children(*visibility);
+                        .public_children(visibility.clone(), name.src_ref.clone());
                     if !symbols.is_empty() {
-                        self.visibility.set(Visibility::Deleted);
+                        self.delete();
                     }
                     symbols
                 }
@@ -602,6 +606,7 @@ impl Symbol {
                     Err(ResolveError::SymbolIsPrivate(child.full_name().clone()))
                 } else if name.is_single_identifier() && !child.is_deleted() {
                     log::trace!("Found {name:?} in {:?}", self.full_name());
+                    self.set_used();
                     Ok(child.clone())
                 } else {
                     let name = &name.remove_first();
@@ -636,13 +641,21 @@ impl Symbol {
         let full_name = self.full_name();
         let visibility = self.visibility();
         let hash = self.source_hash();
-        if debug && cfg!(feature = "ansi-color") && self.inner.borrow().used.get().is_none() {
+        if debug && cfg!(feature = "ansi-color") {
             let checked = if self.is_checked() { " ✓" } else { "" };
-            color_print::cwrite!(
+            if self.inner.borrow().used.get().is_none() {
+                color_print::cwrite!(
                 f,
                 "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>{checked}",
                 "",
             )?;
+            } else {
+                color_print::cwrite!(
+                    f,
+                    "{:depth$}{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}{checked}",
+                    "",
+                )?;
+            }
         } else {
             write!(f, "{:depth$}{id} {def} [{full_name}]", "",)?;
         }
@@ -655,6 +668,10 @@ impl Symbol {
             })?;
         }
         Ok(())
+    }
+
+    pub(super) fn set_src_ref(&mut self, src_ref: SrcRef) {
+        self.src_ref = src_ref;
     }
 }
 
@@ -679,14 +696,19 @@ impl FullyQualify for Symbol {
 
 impl SrcReferrer for Symbol {
     fn src_ref(&self) -> SrcRef {
-        self.inner.borrow().src_ref()
+        if self.src_ref.is_none() {
+            self.inner.borrow().src_ref()
+        } else {
+            self.src_ref.clone()
+        }
     }
 }
 
 impl Default for Symbol {
     fn default() -> Self {
         Self {
-            visibility: std::cell::Cell::new(Visibility::default()),
+            src_ref: SrcRef(None),
+            visibility: std::cell::RefCell::new(Visibility::default()),
             inner: RcMut::new(Default::default()),
         }
     }
