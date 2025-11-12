@@ -4,24 +4,28 @@ use std::math::*;
 
 const SPACING = 8mm;
 const THICKNESS = 1.2mm;
+const BASE_HEIGHT = 9.6mm;
+const TOLERANCE = 0.2mm;
 
-
-part LegoBrick(rows: Integer, columns: Integer, base_height = 9.6mm) {
-    prop width = columns * SPACING - 0.2mm;
-    prop height = rows * SPACING - 0.2mm;
+part LegoBrick(rows: Integer, columns: Integer, base_height = BASE_HEIGHT) {
+    prop width = columns * SPACING - TOLERANCE;
+    prop height = rows * SPACING - TOLERANCE;
 
     base = {
         r = rows - 1;
         c = columns - 1;
         Frame(width, height, THICKNESS);
-        Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-            .repeat(r*c)
-            .distribute_grid(width = width - width / columns, height - height / rows, rows = r, columns = c);
+        n_rings = r*c;
+        if n_rings > 0 {
+            Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+                .multiply(n_rings)
+                .distribute_grid(width = width - width / columns, height - height / rows, rows = r, columns = c);
+        }
     }
     .extrude(base_height - THICKNESS);
 
     knobs = Circle(d = 4.8mm)
-        .repeat(rows * columns)
+        .multiply(rows * columns)
         .distribute_grid(width, height, rows, columns)
         .extrude(1.7mm);
 
@@ -30,7 +34,9 @@ part LegoBrick(rows: Integer, columns: Integer, base_height = 9.6mm) {
     { base; cap; knobs; }.align(Z).union();
 }
 
+
+n = 4;
+
 {
-    LegoBrick(rows = 4, columns = 2);
-    LegoBrick(rows = 3, columns = 2);
-}.distribute_grid(100mm, rows = 2, columns = 2);
+    LegoBrick(rows = [1..n], columns = [1..n], base_height = [BASE_HEIGHT / 3, BASE_HEIGHT, BASE_HEIGHT * 2, BASE_HEIGHT *3]);
+}.distribute_grid(cell_size = 50mm, rows = n*2, columns = n*2);
