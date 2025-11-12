@@ -57,6 +57,7 @@ pub fn run_test(env: Option<TestEnv>) {
                     env.log_ln(&err.to_string());
                     if env.has_error_markers() {
                         env.result(TestResult::FailWrong);
+                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     } else if env.todo() {
                         env.result(TestResult::NotTodoFail);
                     } else {
@@ -123,6 +124,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         env.result(TestResult::Todo);
                     } else if env.has_error_markers() {
                         env.result(TestResult::FailWrong);
+                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     } else {
                         env.result(TestResult::Fail);
                         panic!("ERROR: {err}")
