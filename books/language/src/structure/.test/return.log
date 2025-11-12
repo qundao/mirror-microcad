@@ -10,25 +10,26 @@
 -- Code --
 
   33:   fn pow( x: Scalar, n: Integer ) {
-  34:       if n == 1 {
-  35:           x   // return x
-  36:       } else {
-  37:           x * pow(n-1) // return recursive product
+  34:       if n > 1 {
+  35:           return x * pow(x, n-1); // return recursive product
+  36:       } else if n == 1 {
+  37:           return x;   // return x
   38:       }
   39:   }
   40:   
-  41:   std::print(pow(8,2));
+  41:   std::print(pow(8.0,2));
 
 -- Output --
 <NO VALUE>
 
 -- Errors --
-error: Missing arguments: n,x
-  ---> ../books/language/src/structure/functions.md:41:16
+warning: Unused local x.
+  ---> ../books/language/src/structure/functions.md:33:9
      |
-  41 | std::print(pow(8,2));
-     |                ^^^
+  33 | fn pow( x: Scalar, n: Integer ) {
+     |         ^
      |
-Unexpected error(s) which did occur in line(s): 41
+Unexpected warnings(s) which did occur in line(s): 33
+-- No Model --
 -- Test Result --
-FAILS
+OK (BUT WARNINGS)

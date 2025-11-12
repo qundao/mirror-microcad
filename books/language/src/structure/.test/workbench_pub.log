@@ -1,7 +1,7 @@
 -- Test --
         Test name: workbench_pub
   Expected result: fail
-      Source file: ../books/language/src/structure/functions.md:123
+      Source file: ../books/language/src/structure/functions.md:125
         Test path: ../books/language/src/structure/.test
       Banner file: ../books/language/src/structure/.test/workbench_pub.svg
          Log file: ../books/language/src/structure/.test/workbench_pub.log
@@ -9,18 +9,18 @@
 
 -- Code --
 
- 123:   part PunchedDisk(radius: Length) {
- 124:       pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
- 125:   }
- 126:   
- 127:   PunchedDisk(4.0mm);
+ 125:   part PunchedDisk(radius: Length) {
+ 126:       pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
+ 127:   }
+ 128:   
+ 129:   PunchedDisk(4.0mm);
 
 -- No Output --
 -- Errors --
 error: Function statement not available here
-  ---> ../books/language/src/structure/functions.md:124:5
+  ---> ../books/language/src/structure/functions.md:126:5
      |
- 124 |     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
+ 126 |     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
