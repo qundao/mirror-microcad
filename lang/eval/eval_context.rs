@@ -122,6 +122,7 @@ impl EvalContext {
                 locals
                     .iter()
                     .filter(|(_, symbol)| !symbol.is_used())
+                    .filter(|(id, _)| !id.ignore())
                     .map(|(id, _)| id.clone())
                     .collect()
             } else {

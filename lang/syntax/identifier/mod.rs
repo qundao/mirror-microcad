@@ -60,6 +60,11 @@ impl Identifier {
         Identifier::no_ref(&id)
     }
 
+    /// Check if id shall be ignored when warn about unused symbols
+    pub fn ignore(&self) -> bool {
+        self.0.starts_with("_")
+    }
+
     /// Check if id is the `super` id
     pub fn is_super(&self) -> bool {
         *self.0 == "super"
