@@ -65,6 +65,11 @@ impl<'a> ArgumentMatch<'a> {
 
                 if !id.is_empty() {
                     if let Some(n) = self.params.iter().position(|(i, _)| *i == id) {
+                        if let Some(ty) = &self.params[n].1.specified_type {
+                            if !arg.is_matching(ty) {
+                                return true;
+                            }
+                        }
                         let (id, _) = self.params.swap_remove(n);
                         log::trace!(
                             "{found} parameter by id: {id:?}",

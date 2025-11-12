@@ -111,7 +111,7 @@ impl std::ops::Add<Value> for Array {
     type Output = ValueResult;
 
     fn add(self, rhs: Value) -> Self::Output {
-        if self.ty.is_add_compatible_to(&rhs.ty()) {
+        if self.ty.is_compatible_to(&rhs.ty()) {
             Ok(Value::Array(Self::from_values(
                 ValueList::new(
                     self.items
@@ -132,7 +132,7 @@ impl std::ops::Sub<Value> for Array {
     type Output = ValueResult;
 
     fn sub(self, rhs: Value) -> Self::Output {
-        if self.ty.is_add_compatible_to(&rhs.ty()) {
+        if self.ty.is_compatible_to(&rhs.ty()) {
             Ok(Value::Array(Self::from_values(
                 ValueList::new(
                     self.items

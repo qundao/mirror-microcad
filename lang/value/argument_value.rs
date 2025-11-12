@@ -58,4 +58,17 @@ impl ArgumentValue {
             Type::Invalid
         }
     }
+
+    /// Returns if the given type matches the type or inner type.
+    pub fn is_matching(&self, rhs: &Type) -> bool {
+        let ty = &self.ty();
+        if matches!(ty, Type::Quantity(QuantityType::Scalar)) {
+            rhs == &Type::scalar()
+                || rhs == &Type::Integer
+                || rhs.is_array_of(&Type::scalar())
+                || rhs.is_array_of(&Type::Integer)
+        } else {
+            rhs == ty || rhs.is_array_of(ty)
+        }
+    }
 }

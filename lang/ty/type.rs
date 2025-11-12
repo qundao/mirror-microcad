@@ -49,8 +49,8 @@ impl Type {
         }
     }
 
-    /// Check if types are add compatible.
-    pub fn is_add_compatible_to(&self, rhs: &Self) -> bool {
+    /// Check if types are compatible.
+    pub fn is_compatible_to(&self, rhs: &Self) -> bool {
         rhs == self
             || (*self == Type::Integer && *rhs == Type::scalar())
             || (*rhs == Type::Integer && *self == Type::scalar())

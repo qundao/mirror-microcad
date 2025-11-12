@@ -2,22 +2,24 @@
 
 [![test](.test/auto_convert.svg)](.test/auto_convert.log)
 
-```µcad,auto_convert#todo
+```µcad,auto_convert#fail
 fn f( x: Scalar ) { }
 f(x=1);
-f(x="");
-f("");
-f(1);   // error
+f(x="");    // error
+f("");      // error
+f(1.0);
+f(1);
 
 fn g( x: Integer ) { }
-g(x=1.0);
-g(x="");
-g("");
-g(1.0);  // error
+g(x=1.0);   // error
+g(x="");    // error
+g("");      // error
+g(1.0);     // error
+g(1);
 
 fn h( x: String ) { }
-h(x=1.0);
+h(x=1.0);   // error
 h(x="");
 h("");
-h(1.0);  // error
+h(1.0);     // error
 ```
