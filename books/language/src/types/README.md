@@ -36,7 +36,7 @@ Hence, the following example will fail:
 [![test](.test/types_no_declaration.svg)](.test/types_no_declaration.log)
 
 ```µcad,types_no_declaration#fail
-x: Length;         // error
+x: Length;         // parse_error
 ```
 
 However, for parameter lists in functions and workbenches, you can declare the type only but also pass a default value:

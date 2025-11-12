@@ -44,15 +44,14 @@ use std::ops::translate;
 ```µcad,sketch_with_body#fail
 use std::geo2d::Circle;
 
-Circle(radius = 2mm) { Circle(radius = 1mm); } // error: sketch with body
+Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
 ```
 
 [![test](.test/empty_op.svg)](.test/empty_op.log)
 
 ```µcad,empty_op#fail
 std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
-{}.std::ops::translate(x = 3.0mm);  // warning: Empty geometry.
-: Calling operation on empty geometry
+{}.std::ops::translate(x = 3.0mm);  // warning: Calling operation on empty geometry
 ```
 
 [![test](.test/group.svg)](.test/group.log)
