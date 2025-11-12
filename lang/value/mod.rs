@@ -273,7 +273,7 @@ impl std::ops::Mul for Value {
     fn mul(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
             (Value::Integer(lhs), Value::Model(rhs)) => Ok(Value::Model(
-                Models::from(rhs.repeat(lhs)).to_multiplicity(SrcRef(None)),
+                Models::from(rhs.multiply(lhs)).to_multiplicity(SrcRef(None)),
             )),
             // Multiply two integers
             (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Integer(lhs * rhs)),

@@ -124,8 +124,8 @@ impl Model {
         Models::from(vec![self.clone(), other]).boolean_op(op)
     }
 
-    /// Repeat a model n times.
-    pub fn repeat(&self, n: Integer) -> Vec<Model> {
+    /// Multiply a model n times.
+    pub fn multiply(&self, n: Integer) -> Vec<Model> {
         (0..n).map(|_| self.make_deep_copy()).collect()
     }
 

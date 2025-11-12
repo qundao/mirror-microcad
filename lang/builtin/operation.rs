@@ -92,10 +92,10 @@ impl BuiltinWorkbenchDefinition for Intersect {
     }
 }
 
-/// An operation that repeats a geometry n times.
-pub struct Repeat;
+/// An operation that repeats a geometry n-1 times.
+pub struct Multiply;
 
-impl Operation for Repeat {
+impl Operation for Multiply {
     fn process_2d(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, model| {
             Ok(Geometry2D::Collection(
@@ -113,9 +113,9 @@ impl Operation for Repeat {
     }
 }
 
-impl BuiltinWorkbenchDefinition for Repeat {
+impl BuiltinWorkbenchDefinition for Multiply {
     fn id() -> &'static str {
-        "repeat"
+        "multiply"
     }
 
     fn kind() -> BuiltinWorkbenchKind {
@@ -123,30 +123,21 @@ impl BuiltinWorkbenchDefinition for Repeat {
     }
 
     fn workpiece_function() -> &'static BuiltinWorkpieceFn {
-        unimplemented!()
+        &|_| Ok(BuiltinWorkpieceOutput::Operation(Box::new(Multiply)))
     }
 
-    /// Workbench function
-    fn function() -> &'static BuiltinFn {
-        &|params, args, _| {
-            log::trace!(
-                "Built-in workbench {call} {id:?}({args})",
-                call = crate::mark!(CALL),
-                id = Self::id()
-            );
+    fn model(creator: Creator) -> Model {
+        let n: Integer = creator.arguments.get("n");
+        let model = ModelBuilder::new(Element::Multiplicity, SrcRef(None)).build();
 
-            Ok(Value::Model(
-                ArgumentMatch::find_multi_match(args, params)?
-                    .iter()
-                    .flat_map(|args| {
-                        ModelBuilder::new(Element::InputPlaceholder, SrcRef(None))
-                            .build()
-                            .repeat(args.get("n"))
-                    })
-                    .collect::<Models>()
-                    .to_multiplicity(SrcRef(None)),
-            ))
-        }
+        model.append_children(
+            ModelBuilder::new(Element::InputPlaceholder, SrcRef(None))
+                .build()
+                .multiply(n)
+                .into(),
+        );
+
+        model
     }
 
     fn parameters() -> ParameterValueList {

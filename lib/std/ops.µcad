@@ -1,10 +1,9 @@
-pub use __builtin::ops::subtract;
-pub use __builtin::ops::intersect;
-pub use __builtin::ops::union;
-pub use __builtin::ops::repeat;
-pub use __builtin::ops::hull;
 pub use __builtin::ops::center;
-
+pub use __builtin::ops::hull;
+pub use __builtin::ops::intersect;
+pub use __builtin::ops::subtract;
+pub use __builtin::ops::multiply;
+pub use __builtin::ops::union;
 
 /// Align a geometry collection along an axis with a certain spacing.
 pub op align(direction: Vec3, spacing = 0mm) {
