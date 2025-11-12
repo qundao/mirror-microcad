@@ -25,6 +25,18 @@
 -- Output --
 
 -- Errors --
+warning: Unused local x.
+  ---> ../books/tests/src/auto_convert.md:1:7
+     |
+   1 | fn f( x: Scalar ) { }
+     |       ^
+     |
+warning: Unused local x.
+  ---> ../books/tests/src/auto_convert.md:1:7
+     |
+   1 | fn f( x: Scalar ) { }
+     |       ^
+     |
 error: Missing arguments: x
   ---> ../books/tests/src/auto_convert.md:4:3
      |
@@ -37,6 +49,18 @@ error: Missing arguments: x
    5 | f(1);   // error
      |   ^
      |
+warning: Unused local x.
+  ---> ../books/tests/src/auto_convert.md:7:7
+     |
+   7 | fn g( x: Integer ) { }
+     |       ^
+     |
+warning: Unused local x.
+  ---> ../books/tests/src/auto_convert.md:7:7
+     |
+   7 | fn g( x: Integer ) { }
+     |       ^
+     |
 error: Missing arguments: x
   ---> ../books/tests/src/auto_convert.md:10:3
      |
@@ -48,6 +72,24 @@ error: Missing arguments: x
      |
   11 | g(1.0);  // error
      |   ^^^
+     |
+warning: Unused local x.
+  ---> ../books/tests/src/auto_convert.md:13:7
+     |
+  13 | fn h( x: String ) { }
+     |       ^
+     |
+warning: Unused local x.
+  ---> ../books/tests/src/auto_convert.md:13:7
+     |
+  13 | fn h( x: String ) { }
+     |       ^
+     |
+warning: Unused local x.
+  ---> ../books/tests/src/auto_convert.md:13:7
+     |
+  13 | fn h( x: String ) { }
+     |       ^
      |
 error: Missing arguments: x
   ---> ../books/tests/src/auto_convert.md:17:3

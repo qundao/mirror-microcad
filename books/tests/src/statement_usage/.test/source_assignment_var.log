@@ -9,6 +9,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local a.
+  ---> ../books/tests/src/statement_usage/source.md:1:1
+     |
+   1 | a = 1;
+     | ^
+     |
 -- No model --
 -- Test Result --
 OK

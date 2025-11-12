@@ -494,7 +494,7 @@ impl Symbol {
 }
 
 impl Symbol {
-    pub(super) fn is_used(&self) -> bool {
+    pub(crate) fn is_used(&self) -> bool {
         self.inner.borrow().used.get().is_some()
     }
 
@@ -643,18 +643,18 @@ impl Symbol {
         let hash = self.source_hash();
         if debug && cfg!(feature = "ansi-color") {
             let checked = if self.is_checked() { " ✓" } else { "" };
-            if self.inner.borrow().used.get().is_none() {
+            if self.is_used() {
+                write!(
+                    f,
+                    "{:depth$}{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}{checked}",
+                    "",
+                )?;
+            } else {
                 color_print::cwrite!(
                 f,
                 "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>{checked}",
                 "",
             )?;
-            } else {
-                color_print::cwrite!(
-                    f,
-                    "{:depth$}{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}{checked}",
-                    "",
-                )?;
             }
         } else {
             write!(f, "{:depth$}{id} {def} [{full_name}]", "",)?;

@@ -15,6 +15,18 @@
 -- Output --
 
 -- Errors --
+warning: Unused local square_meter.
+  ---> ../books/language/src/types/quantities.md:3:1
+     |
+   3 | square_meter = 0.1m²;
+     | ^^^^^^^^^^^^
+     |
+warning: Unused local square_inch.
+  ---> ../books/language/src/types/quantities.md:4:1
+     |
+   4 | square_inch = 155in²;
+     | ^^^^^^^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

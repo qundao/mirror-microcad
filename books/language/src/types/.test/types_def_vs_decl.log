@@ -10,6 +10,18 @@
 -- Output --
 
 -- Errors --
+warning: Unused local x.
+  ---> ../books/language/src/types/README.md:1:1
+     |
+   1 | x: Length = 4mm;   // explicit type declaration
+     | ^
+     |
+warning: Unused local y.
+  ---> ../books/language/src/types/README.md:2:1
+     |
+   2 | y = 4mm;           // implicit type declaration via units.
+     | ^
+     |
 -- No model --
 -- Test Result --
 OK

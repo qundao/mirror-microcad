@@ -9,6 +9,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local tuple.
+  ---> ../books/language/src/types/collections/tuples/README.md:1:1
+     |
+   1 | tuple = (10cm, 10cm², 1l);
+     | ^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

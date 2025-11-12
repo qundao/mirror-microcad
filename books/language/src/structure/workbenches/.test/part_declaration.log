@@ -48,6 +48,18 @@
 -- Output --
 
 -- Errors --
+warning: Unused local i.
+  ---> ../books/language/src/structure/workbenches/README.md:24:5
+     |
+  24 |     i = 1;
+     |     ^
+     |
+warning: Unused local i.
+  ---> ../books/language/src/structure/workbenches/README.md:24:5
+     |
+  24 |     i = 1;
+     |     ^
+     |
 -- No model --
 -- Test Result --
 OK

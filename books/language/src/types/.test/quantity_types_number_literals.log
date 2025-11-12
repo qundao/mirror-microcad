@@ -17,6 +17,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local width.
+  ---> ../books/language/src/types/quantities.md:9:1
+     |
+   9 | width = height * 2 + 10cm;
+     | ^^^^^
+     |
 warning: Unused global symbol f.
   ---> ../books/language/src/types/quantities.md:5:1
      |

@@ -25,7 +25,7 @@ pub trait Locals {
     fn open(&mut self, frame: StackFrame);
 
     /// Close scope (stack pop).
-    fn close(&mut self);
+    fn close(&mut self) -> StackFrame;
 
     /// Fetch a local variable from current stack frame.
     fn fetch_symbol(&self, id: &Identifier) -> EvalResult<Symbol>;

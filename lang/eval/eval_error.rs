@@ -261,6 +261,10 @@ pub enum EvalError {
     #[error("Unused global symbol {0}.")]
     UnusedGlobalSymbol(String),
 
+    /// Unused local.
+    #[error("Unused local {0}.")]
+    UnusedLocal(Identifier),
+
     /// Evaluation aborted because of prior resolve errors
     #[error("Evaluation aborted because of prior resolve errors!")]
     ResolveFailed,

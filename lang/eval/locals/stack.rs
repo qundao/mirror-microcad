@@ -57,34 +57,6 @@ impl Stack {
         Err(EvalError::LocalStackEmpty(id))
     }
 
-    //    pub(crate) fn current_module(&self) -> Option<QualifiedName> {
-    //        self.0
-    //            .iter()
-    //            .rev()
-    //            .enumerate()
-    //            .find_map(|(n, frame)| match frame {
-    //                StackFrame::Module(id, _) => Some(
-    //                    QualifiedName::new(vec![id.clone()], id.src_ref())
-    //                        .with_prefix(&self.current_module_name()),
-    //                ),
-    //                StackFrame::Call { symbol, .. } => {
-    //                    if n > 0 {
-    //                        let parent = symbol.get_parent().expect("call from nowhere");
-    //                        if parent.is_module() {
-    //                            Some(parent.full_name())
-    //                        } else if parent.is_workbench() {
-    //                            None
-    //                        } else {
-    //                            unreachable!("call must com from either module or workbench")
-    //                        }
-    //                    } else {
-    //                        None
-    //                    }
-    //                }
-    //                _ => None,
-    //            })
-    //    }
-    //
     fn current_workbench_id(&self) -> Option<&Identifier> {
         self.0.iter().rev().find_map(|frame| {
             if let StackFrame::Workbench(_, id, _) = frame {
@@ -286,10 +258,11 @@ impl Locals for Stack {
         self.0.push(frame);
     }
 
-    fn close(&mut self) {
-        if let Some(frame) = self.0.pop() {
-            log::trace!("Closing {} stack frame", frame.kind_str());
-        }
+    fn close(&mut self) -> StackFrame {
+        log::trace!("Stack before closing:\n{self:?}");
+        let frame = self.0.pop().expect("stack underflow");
+        log::trace!("Closing {} stack frame", frame.kind_str());
+        frame
     }
 
     fn set_local_value(&mut self, id: Identifier, value: Value) -> EvalResult<()> {

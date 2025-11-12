@@ -19,5 +19,11 @@ error: Workbench plan incomplete. Missing properties: radius
    2 |     init( width: Length ) { } // error: misses to set `radius` from building plan
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^
      |
+warning: Unused local width.
+  ---> ../books/language/src/structure/workbenches/README.md:2:11
+     |
+   2 |     init( width: Length ) { } // error: misses to set `radius` from building plan
+     |           ^^^^^
+     |
 -- Test Result --
 FAILED AS EXPECTED

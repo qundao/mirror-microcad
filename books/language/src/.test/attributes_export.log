@@ -10,6 +10,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local c.
+  ---> ../books/language/src/attributes.md:2:1
+     |
+   2 | c = std::geo2d::Circle(42.0mm);
+     | ^
+     |
 -- No model --
 -- Test Result --
 OK

@@ -3,7 +3,7 @@
 [![test](.test/init_workbench.svg)](.test/init_workbench.log)
 
 ```µcad,init_workbench#fail
-sketch K() { init(l:Length) {
+sketch K() { init(l:Length) { // warning
   sketch F() {} // error
 } } K(1cm);
 ```
@@ -11,7 +11,7 @@ sketch K() { init(l:Length) {
 [![test](.test/init_module.svg)](.test/init_module.log)
 
 ```µcad,init_module#fail
-sketch K() { init(l:Length) {
+sketch K() { init(l:Length) { // warning
   mod m {} // error
 } } K(1cm);
 ```
@@ -19,7 +19,7 @@ sketch K() { init(l:Length) {
 [![test](.test/init_function.svg)](.test/init_function.log)
 
 ```µcad,init_function#fail
-sketch K() { init(l:Length) {
+sketch K() { init(l:Length) { // warning
   fn f() {} // error
 } } K(1cm);
 ```
@@ -27,7 +27,7 @@ sketch K() { init(l:Length) {
 [![test](.test/init_init.svg)](.test/init_init.log)
 
 ```µcad,init_init#fail
-sketch K() { init(l:Length) {
+sketch K() { init(l:Length) { // warning
   init() {} // error
 } } K(1cm);
 ```
@@ -43,7 +43,7 @@ sketch K() { init(l:Length) {
 [![test](.test/init_pub_use.svg)](.test/init_pub_use.log)
 
 ```µcad,init_pub_use#fail
-sketch K() { init(l:Length) {
+sketch K() { init(l:Length) { // warning
   pub use std; // error
 } } K(1cm);
 ```
@@ -52,7 +52,7 @@ sketch K() { init(l:Length) {
 
 ```µcad,init_return#fail
 sketch K() { init(l:Length) {
-  return 1; // error
+  return l; // error
 } } K(1cm);
 ```
 
@@ -60,7 +60,7 @@ sketch K() { init(l:Length) {
 
 ```µcad,init_if#fail
 sketch K() { init(l:Length) {
-  if std::math::PI == 3 { } // error
+  if std::math::PI == l { } // error
 } } K(1cm);
 ```
 
@@ -68,7 +68,7 @@ sketch K() { init(l:Length) {
 
 ```µcad,init_assignment_const#fail
 sketch K() { init(l:Length) {
-  const B = 1; // error
+  const B = l; // error
 } } K(1cm);
 ```
 
@@ -76,7 +76,7 @@ sketch K() { init(l:Length) {
 
 ```µcad,init_assignment_var
 sketch K() { init(l:Length) {
-  a = 1;
+  a = l;
 } } K(1cm);
 ```
 
@@ -84,7 +84,7 @@ sketch K() { init(l:Length) {
 
 ```µcad,init_assignment_prop#fail
 sketch K() { init(l:Length) {
-  prop a = 1; // error
+  prop a = l; // error
 } } K(1cm);
 ```
 
@@ -92,7 +92,7 @@ sketch K() { init(l:Length) {
 
 ```µcad,init_expression#fail
 sketch K() { init(l:Length) {
-  1 + 2; // error
+  l + 2; // error
 } } K(1cm);
 ```
 
@@ -100,6 +100,6 @@ sketch K() { init(l:Length) {
 
 ```µcad,init_expression_model#fail
 sketch K() { init(l:Length) {
-  __builtin::geo2d::Circle(radius=1); // error
+  __builtin::geo2d::Circle(radius=l); // error
 } } K(1cm);
 ```

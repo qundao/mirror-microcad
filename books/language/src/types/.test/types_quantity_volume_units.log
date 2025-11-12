@@ -21,6 +21,18 @@
 -- Output --
 
 -- Errors --
+warning: Unused local cubic_inch.
+  ---> ../books/language/src/types/quantities.md:4:1
+     |
+   4 | cubic_inch = 61.0237in³;
+     | ^^^^^^^^^^
+     |
+warning: Unused local liter.
+  ---> ../books/language/src/types/quantities.md:5:1
+     |
+   5 | liter = 1.0l;
+     | ^^^^^
+     |
 -- No model --
 -- Test Result --
 OK

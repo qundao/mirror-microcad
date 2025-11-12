@@ -116,6 +116,26 @@ impl EvalContext {
     ) -> T {
         self.open(stack_frame);
         let result = f(self);
+        let mut unused: Vec<_> = if let Some(frame) = &self.stack.current_frame() {
+            if let Some(locals) = frame.locals() {
+                locals
+                    .iter()
+                    .filter(|(_, symbol)| !symbol.is_used())
+                    .map(|(id, _)| id.clone())
+                    .collect()
+            } else {
+                vec![]
+            }
+        } else {
+            vec![]
+        };
+        unused.sort();
+
+        unused
+            .iter()
+            .try_for_each(|id| self.warning(id, EvalError::UnusedLocal(id.clone())))
+            .expect("diag error");
+
         self.close();
         result
     }
@@ -318,8 +338,8 @@ impl Locals for EvalContext {
         self.stack.open(frame);
     }
 
-    fn close(&mut self) {
-        self.stack.close();
+    fn close(&mut self) -> StackFrame {
+        self.stack.close()
     }
 
     fn fetch_symbol(&self, id: &Identifier) -> EvalResult<Symbol> {

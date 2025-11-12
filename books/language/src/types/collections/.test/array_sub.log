@@ -10,6 +10,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local d.
+  ---> ../books/language/src/types/collections/arrays.md:1:1
+     |
+   1 | d = 0.5mm;
+     | ^
+     |
 -- No model --
 -- Test Result --
 OK

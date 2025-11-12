@@ -11,6 +11,24 @@
 -- Output --
 
 -- Errors --
+warning: Unused local c.
+  ---> ../books/language/src/flow/calls/arguments.md:1:29
+     |
+   1 | fn f( a: Scalar, b: Length, c: Area ) {}
+     |                             ^
+     |
+warning: Unused local a.
+  ---> ../books/language/src/flow/calls/arguments.md:1:7
+     |
+   1 | fn f( a: Scalar, b: Length, c: Area ) {}
+     |       ^
+     |
+warning: Unused local b.
+  ---> ../books/language/src/flow/calls/arguments.md:1:18
+     |
+   1 | fn f( a: Scalar, b: Length, c: Area ) {}
+     |                  ^
+     |
 -- No model --
 -- Test Result --
 OK

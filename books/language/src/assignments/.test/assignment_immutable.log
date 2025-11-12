@@ -4,7 +4,7 @@
 
 -- Code --
 
- 1: a = 5;
+ 1: a = 5; // warning: unused local
  2: a = a * 2; // error: a already defined in this scope
 
 -- Output --
@@ -14,6 +14,12 @@ error: Value a already in defined: 5 (at line 1:1)
   ---> ../books/language/src/assignments/values.md:2:1
      |
    2 | a = a * 2; // error: a already defined in this scope
+     | ^
+     |
+warning: Unused local a.
+  ---> ../books/language/src/assignments/values.md:1:1
+     |
+   1 | a = 5; // warning: unused local
      | ^
      |
 -- Test Result --

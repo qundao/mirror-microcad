@@ -11,6 +11,12 @@
 -- Output --
 
 -- Errors --
+warning: Unused local a.
+  ---> ../books/tests/src/statement_usage/function.md:2:3
+     |
+   2 |   a = 1;
+     |   ^
+     |
 -- No model --
 -- Test Result --
 OK
