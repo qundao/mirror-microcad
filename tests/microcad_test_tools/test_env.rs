@@ -270,14 +270,12 @@ impl TestEnv {
         right: &std::collections::HashSet<usize>,
         message: &str,
     ) -> bool {
-        let mut diff = left
-            .difference(right)
-            .map(|line| line.to_string())
-            .collect::<Vec<_>>();
+        let mut diff = left.difference(right).collect::<Vec<_>>();
         if diff.is_empty() {
             true
         } else {
             diff.sort();
+            let diff = diff.iter().map(|line| line.to_string()).collect::<Vec<_>>();
             let message = format!("{message}: {}", diff.join(", "));
             log::trace!("{message}");
             self.log_ln(&message);
