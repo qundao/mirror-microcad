@@ -1,10 +1,10 @@
 -- Test --
   source_assignment_const
-  ../books/tests/src/statement_usage/source.md:53
+  ../books/tests/src/statement_usage/source.md:54
 
 -- Code --
 
- 1: const B = 1;
+  54:   const B = 1;
 
 -- Output --
 

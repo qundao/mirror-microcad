@@ -1,65 +1,66 @@
 -- Test --
   part_declaration
-  ../books/language/src/structure/workbenches/README.md:32
+  ../books/language/src/structure/workbenches/README.md:33
 
 -- Code --
 
- 1: // sketch with a `radius` as building plan
- 2: sketch Wheel(radius: Length) {
- 3:     
- 4:     // init code
- 5:     const FACTOR = 2;
- 6: 
- 7:     // initializer
- 8:     init(diameter: Length) {
- 9:         // set `radius`
-10:         radius = diameter / FACTOR;
-11:     }
-12: 
-13:     // function (sub routine)
-14:     fn into_diameter(r: Length) {
-15:         return r * FACTOR;
-16:     }
-17: 
-18:     // building code begins
-19: 
-20:     // set a property which can be seen from outside
-21:     prop diameter = into_diameter(radius);
-22:     
-23:     // local variable
-24:     i = 1;
-25:     
-26:     // create circle
-27:     std::geo2d::Circle(radius);
-28: }
-29: 
-30: use std::debug::*;
-31: 
-32: // call sketch with diameter
-33: d = Wheel(diameter = 2cm);
-34: // check radius
-35: assert_eq([d.radius, 1cm]);
-36: 
-37: // call sketch with radius
-38: r = Wheel(radius = 1cm);
-39: // check diameter
-40: assert_eq([r.diameter, 2cm]);
+  33:   // sketch with a `radius` as building plan
+  34:   sketch Wheel(radius: Length) {
+  35:       
+  36:       // init code
+  37:       const FACTOR = 2;
+  38:   
+  39:       // initializer
+  40:       init(diameter: Length) {
+  41:           // set `radius`
+  42:           radius = diameter / FACTOR;
+  43:       }
+  44:   
+  45:       // function (sub routine)
+  46:       fn into_diameter(r: Length) {
+  47:           return r * FACTOR;
+  48:       }
+  49:   
+  50:       // building code begins
+  51:   
+  52:       // set a property which can be seen from outside
+  53:       prop diameter = into_diameter(radius);
+  54:       
+  55:       // local variable
+  56:       i = 1;
+  57:       
+  58:       // create circle
+  59:       std::geo2d::Circle(radius);
+  60:   }
+  61:   
+  62:   use std::debug::*;
+  63:   
+  64:   // call sketch with diameter
+  65:   d = Wheel(diameter = 2cm);
+  66:   // check radius
+  67:   assert_eq([d.radius, 1cm]);
+  68:   
+  69:   // call sketch with radius
+  70:   r = Wheel(radius = 1cm);
+  71:   // check diameter
+  72:   assert_eq([r.diameter, 2cm]);
 
 -- Output --
 
 -- Errors --
 warning: Unused local i.
-  ---> ../books/language/src/structure/workbenches/README.md:24:5
+  ---> ../books/language/src/structure/workbenches/README.md:56:5
      |
-  24 |     i = 1;
+  56 |     i = 1;
      |     ^
      |
 warning: Unused local i.
-  ---> ../books/language/src/structure/workbenches/README.md:24:5
+  ---> ../books/language/src/structure/workbenches/README.md:56:5
      |
-  24 |     i = 1;
+  56 |     i = 1;
      |     ^
      |
+Unexpected warnings(s) which did occur in line(s): 56
 -- No model --
 -- Test Result --
 OK

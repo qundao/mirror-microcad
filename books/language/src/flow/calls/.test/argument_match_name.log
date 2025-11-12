@@ -1,34 +1,35 @@
 -- Test --
   argument_match_name
-  ../books/language/src/flow/calls/arguments.md:15
+  ../books/language/src/flow/calls/arguments.md:16
 
 -- Code --
 
- 1: fn f( x: Length, y: Length, z: Length ) {}
- 2: 
- 3: f(x = 1cm, y = 2cm, z = 3cm);
+  16:   fn f( x: Length, y: Length, z: Length ) {}
+  17:   
+  18:   f(x = 1cm, y = 2cm, z = 3cm);
 
 -- Output --
 
 -- Errors --
 warning: Unused local x.
-  ---> ../books/language/src/flow/calls/arguments.md:1:7
+  ---> ../books/language/src/flow/calls/arguments.md:16:7
      |
-   1 | fn f( x: Length, y: Length, z: Length ) {}
+  16 | fn f( x: Length, y: Length, z: Length ) {}
      |       ^
      |
-warning: Unused local z.
-  ---> ../books/language/src/flow/calls/arguments.md:1:29
-     |
-   1 | fn f( x: Length, y: Length, z: Length ) {}
-     |                             ^
-     |
 warning: Unused local y.
-  ---> ../books/language/src/flow/calls/arguments.md:1:18
+  ---> ../books/language/src/flow/calls/arguments.md:16:18
      |
-   1 | fn f( x: Length, y: Length, z: Length ) {}
+  16 | fn f( x: Length, y: Length, z: Length ) {}
      |                  ^
      |
+warning: Unused local z.
+  ---> ../books/language/src/flow/calls/arguments.md:16:29
+     |
+  16 | fn f( x: Length, y: Length, z: Length ) {}
+     |                             ^
+     |
+Unexpected warnings(s) which did occur in line(s): 16
 -- No model --
 -- Test Result --
 OK

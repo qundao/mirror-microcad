@@ -223,6 +223,16 @@ impl TestEnv {
         )
     }
 
+    /// Map line number into MD-line number.
+    pub fn offset_line(&self, line_no: usize) -> usize {
+        line_no + self.start_no
+    }
+
+    /// Map line number into MD-line number.
+    pub fn offset(&self) -> usize {
+        self.start_no
+    }
+
     /// Write into test log (end line with LF).
     pub fn log_ln(&mut self, text: &str) {
         if let Some(mut log_file) = self.log_file.as_mut() {
@@ -254,6 +264,76 @@ impl TestEnv {
         self.log(&format!("-- Errors --\n{diagnosis}"));
     }
 
+    fn diff(
+        &mut self,
+        left: &std::collections::HashSet<usize>,
+        right: &std::collections::HashSet<usize>,
+        message: &str,
+    ) -> bool {
+        let mut diff = left.difference(right).collect::<Vec<_>>();
+        if diff.is_empty() {
+            true
+        } else {
+            diff.sort();
+            let diff = diff.iter().map(|line| line.to_string()).collect::<Vec<_>>();
+            let message = format!("{message}: {}", diff.join(", "));
+            log::trace!("{message}");
+            self.log_ln(&message);
+            false
+        }
+    }
+
+    /// Return if code includes error or warning marker comments
+    pub fn has_error_markers(&self) -> bool {
+        self.code.lines().any(|line| line.contains("// error"))
+            || self.code.lines().any(|line| line.contains("// warning"))
+    }
+
+    /// Report wrong errors into log file.
+    pub fn report_wrong_errors(
+        &mut self,
+        error_lines: &std::collections::HashSet<usize>,
+        warning_lines: &std::collections::HashSet<usize>,
+    ) -> bool {
+        fn lines_with(code: &str, marker: &str, offset: usize) -> std::collections::HashSet<usize> {
+            code.lines()
+                .enumerate()
+                .filter_map(|line| {
+                    if line.1.contains(marker) {
+                        Some(line.0 + offset)
+                    } else {
+                        None
+                    }
+                })
+                .collect()
+        }
+
+        let lines_with_error = lines_with(self.code(), "// error", self.offset());
+        let lines_with_warning = lines_with(self.code(), "// warning", self.offset());
+
+        let errors_ok = self.diff(
+            &lines_with_error,
+            error_lines,
+            "Expected error(s) which did not occur in line(s)",
+        ) && self.diff(
+            error_lines,
+            &lines_with_error,
+            "Unexpected error(s) which did occur in line(s)",
+        );
+
+        let warnings_ok = self.diff(
+            &lines_with_warning,
+            warning_lines,
+            "Expected warnings(s) which did not occur in line(s)",
+        ) && self.diff(
+            warning_lines,
+            &lines_with_warning,
+            "Unexpected warnings(s) which did occur in line(s)",
+        );
+
+        !errors_ok || !warnings_ok
+    }
+
     /// Report result into log file.
     pub fn result(&mut self, result: TestResult) {
         let (res, res_long) = match result {
@@ -261,7 +341,7 @@ impl TestEnv {
             TestResult::Todo => ("todo", "TODO"),
             TestResult::NotTodo => ("not_todo", "OK BUT IS TODO"),
             TestResult::Fail => ("fail", "FAIL"),
-            TestResult::FailWrong => ("fail_wrong", "FAILED BUT WITH WRONG ERRORS"),
+            TestResult::FailWrong => ("fail_wrong", "FAILED WITH WRONG ERRORS/WARNINGS"),
             TestResult::FailOk => ("fail_ok", "FAILED AS EXPECTED"),
             TestResult::NotTodoFail => ("not_todo_fail", "FAILED AS EXPECTED BUT IS TODO"),
             TestResult::TodoFail => ("todo_fail", "FAIL (TODO)"),

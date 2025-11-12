@@ -1,23 +1,23 @@
 -- Test --
   if_functions
-  ../books/language/src/flow/conditions.md:27
+  ../books/language/src/flow/conditions.md:28
 
 -- Code --
 
- 1: fn f(x: Integer) {
- 2:     if x == 5 or x == 4 {
- 3:         std::print("match");
- 4:     } else if x > 0 and x < 4 {
- 5:         std::print("no match");
- 6:     } else {
- 7:         std::print("invalid");
- 8:     }
- 9: }
-10: 
-11: f(5);  // prints "match"
-12: f(1);  // prints "no match"
-13: f(-1); // prints "invalid"
-14: f(6);  // prints "invalid"
+  28:   fn f(x: Integer) {
+  29:       if x == 5 or x == 4 {
+  30:           std::print("match");
+  31:       } else if x > 0 and x < 4 {
+  32:           std::print("no match");
+  33:       } else {
+  34:           std::print("invalid");
+  35:       }
+  36:   }
+  37:   
+  38:   f(5);  // prints "match"
+  39:   f(1);  // prints "no match"
+  40:   f(-1); // prints "invalid"
+  41:   f(6);  // prints "invalid"
 
 -- Output --
 match

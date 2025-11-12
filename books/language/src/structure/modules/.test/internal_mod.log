@@ -1,22 +1,23 @@
 -- Test --
   internal_mod
-  ../books/language/src/structure/modules/internal_modules.md:8
+  ../books/language/src/structure/modules/internal_modules.md:9
 
 -- Code --
 
- 1: mod my_module {
- 2:     // statements
- 3: }
+   9:   mod my_module {
+  10:       // statements
+  11:   }
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol my_module.
-  ---> ../books/language/src/structure/modules/internal_modules.md:1:1
+  ---> ../books/language/src/structure/modules/internal_modules.md:9:1
      |
-   1 | mod my_module {
+   9 | mod my_module {
      | ^^^^^^^^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 9
 -- No model --
 -- Test Result --
 OK

@@ -1,11 +1,11 @@
 -- Test --
   none
-  ../books/language/src/structure/use.md:16
+  ../books/language/src/structure/use.md:17
 
 -- Code --
 
- 1: std::geo3d::Sphere(radius = 40mm);
- 2: std::geo3d::Cube(size = 40mm);
+  17:   std::geo3d::Sphere(radius = 40mm);
+  18:   std::geo3d::Cube(size = 40mm);
 
 -- Output --
 

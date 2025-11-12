@@ -1,10 +1,10 @@
 -- Test --
   source_workbench
-  ../books/tests/src/statement_usage/source.md:5
+  ../books/tests/src/statement_usage/source.md:6
 
 -- Code --
 
- 1: sketch F() {} F();
+   6:   sketch F() {} F();
 
 -- Output --
 

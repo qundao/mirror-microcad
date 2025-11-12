@@ -1,20 +1,20 @@
 -- Test --
   pre_init_if
-  ../books/tests/src/statement_usage/pre-init.md:61
+  ../books/tests/src/statement_usage/pre-init.md:62
 
 -- Code --
 
- 1: sketch K() { 
- 2:   if std::math::PI == 3 { } // error
- 3: init(l:Length) {} } K();
+  62:   sketch K() { 
+  63:     if std::math::PI == 3 { } // error
+  64:   init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
 error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:63:3
      |
-   2 |   if std::math::PI == 3 { } // error
+  63 |   if std::math::PI == 3 { } // error
      |   ^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

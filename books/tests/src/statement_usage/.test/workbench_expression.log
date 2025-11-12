@@ -1,12 +1,12 @@
 -- Test --
   workbench_expression
-  ../books/tests/src/statement_usage/workbench.md:101
+  ../books/tests/src/statement_usage/workbench.md:102
 
 -- Code --
 
- 1: sketch K() {
- 2:   1 + 2;
- 3: } K();
+ 102:   sketch K() {
+ 103:     1 + 2;
+ 104:   } K();
 
 -- Output --
 

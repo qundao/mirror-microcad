@@ -1,21 +1,21 @@
 -- Test --
   builtin_modules
-  ../books/tests/src/modules.md:5
+  ../books/tests/src/modules.md:6
 
 -- Code --
 
- 1: mod a {
- 2:     pub mod b {
- 3:         pub mod c {
- 4:             pub part M1() {}
- 5:         }
- 6:     }
- 7: 
- 8:     pub part M2() {}
- 9: }
-10: 
-11: a::b::c::M1();
-12: a::M2();
+   6:   mod a {
+   7:       pub mod b {
+   8:           pub mod c {
+   9:               pub part M1() {}
+  10:           }
+  11:       }
+  12:   
+  13:       pub part M2() {}
+  14:   }
+  15:   
+  16:   a::b::c::M1();
+  17:   a::M2();
 
 -- Output --
 

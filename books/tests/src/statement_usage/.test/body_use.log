@@ -1,12 +1,12 @@
 -- Test --
   body_use
-  ../books/tests/src/statement_usage/body.md:37
+  ../books/tests/src/statement_usage/body.md:38
 
 -- Code --
 
- 1: {
- 2:   use std;
- 3: }
+  38:   {
+  39:     use std;
+  40:   }
 
 -- Output --
 

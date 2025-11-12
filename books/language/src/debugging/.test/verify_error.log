@@ -1,18 +1,18 @@
 -- Test --
   verify_error
-  ../books/language/src/debugging/verification.md:29
+  ../books/language/src/debugging/verification.md:30
 
 -- Code --
 
- 1: std::log::error("this should not have happened"); // error
+  30:   std::log::error("this should not have happened"); // error
 
 -- Output --
 
 -- Errors --
 error: Builtin error: this should not have happened
-  ---> ../books/language/src/debugging/verification.md:1:17
+  ---> ../books/language/src/debugging/verification.md:30:17
      |
-   1 | std::log::error("this should not have happened"); // error
+  30 | std::log::error("this should not have happened"); // error
      |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --

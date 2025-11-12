@@ -1,12 +1,12 @@
 -- Test --
   body_if
-  ../books/tests/src/statement_usage/body.md:61
+  ../books/tests/src/statement_usage/body.md:62
 
 -- Code --
 
- 1: {
- 2:   if std::math::PI == 3 { }
- 3: }
+  62:   {
+  63:     if std::math::PI == 3 { }
+  64:   }
 
 -- Output --
 

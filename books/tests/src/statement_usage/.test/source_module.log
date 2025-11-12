@@ -1,20 +1,21 @@
 -- Test --
   source_module
-  ../books/tests/src/statement_usage/source.md:11
+  ../books/tests/src/statement_usage/source.md:12
 
 -- Code --
 
- 1: mod m {}
+  12:   mod m {}
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol m.
-  ---> ../books/tests/src/statement_usage/source.md:1:1
+  ---> ../books/tests/src/statement_usage/source.md:12:1
      |
-   1 | mod m {}
+  12 | mod m {}
      | ^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 12
 -- No model --
 -- Test Result --
 OK

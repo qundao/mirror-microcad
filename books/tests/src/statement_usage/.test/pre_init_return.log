@@ -1,26 +1,26 @@
 -- Test --
   pre_init_return
-  ../books/tests/src/statement_usage/pre-init.md:53
+  ../books/tests/src/statement_usage/pre-init.md:54
 
 -- Code --
 
- 1: sketch K() { 
- 2:   return 1; // error
- 3: init(l:Length) {} } K();
+  54:   sketch K() { 
+  55:     return 1; // error
+  56:   init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
 error: Statement not allowed within workbenches
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:55:3
      |
-   2 |   return 1; // error
+  55 |   return 1; // error
      |   ^^^^^^^^^
      |
 error: Statement is not available within Sketch
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:55:3
      |
-   2 |   return 1; // error
+  55 |   return 1; // error
      |   ^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

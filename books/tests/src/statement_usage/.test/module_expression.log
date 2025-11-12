@@ -1,26 +1,26 @@
 -- Test --
   module_expression
-  ../books/tests/src/statement_usage/module.md:93
+  ../books/tests/src/statement_usage/module.md:94
 
 -- Code --
 
- 1: mod k {  // warning
- 2:   1 + 2; // error
- 3: }
+  94:   mod k {  // warning
+  95:     1 + 2; // error
+  96:   }
 
 -- Output --
 
 -- Errors --
 error: Expression statement not available here
-  ---> ../books/tests/src/statement_usage/module.md:2:3
+  ---> ../books/tests/src/statement_usage/module.md:95:3
      |
-   2 |   1 + 2; // error
+  95 |   1 + 2; // error
      |   ^^^^^^
      |
 warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:1:1
+  ---> ../books/tests/src/statement_usage/module.md:94:1
      |
-   1 | mod k {  // warning
+  94 | mod k {  // warning
      | ^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --

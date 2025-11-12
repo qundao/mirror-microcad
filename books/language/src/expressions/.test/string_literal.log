@@ -1,10 +1,10 @@
 -- Test --
   string_literal
-  ../books/language/src/expressions/literals.md:54
+  ../books/language/src/expressions/literals.md:55
 
 -- Code --
 
- 1: "Hello, World!"
+  55:   "Hello, World!"
 
 -- Output --
 

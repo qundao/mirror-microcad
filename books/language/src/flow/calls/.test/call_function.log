@@ -1,17 +1,17 @@
 -- Test --
   call_function
-  ../books/language/src/flow/calls/README.md:10
+  ../books/language/src/flow/calls/README.md:11
 
 -- Code --
 
- 1: // function definition
- 2: fn square(x: Scalar) { return x * x; }
- 3: 
- 4: // call function square with parameter 2 and store result in s
- 5: s = square(x = 2);
- 6: 
- 7: // check value
- 8: std::debug::assert_eq( [s, 4] );
+  11:   // function definition
+  12:   fn square(x: Scalar) { return x * x; }
+  13:   
+  14:   // call function square with parameter 2 and store result in s
+  15:   s = square(x = 2);
+  16:   
+  17:   // check value
+  18:   std::debug::assert_eq( [s, 4] );
 
 -- Output --
 

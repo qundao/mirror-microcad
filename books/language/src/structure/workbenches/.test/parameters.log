@@ -1,40 +1,41 @@
 -- Test --
   parameters
-  ../books/language/src/structure/workbenches/operations.md:53
+  ../books/language/src/structure/workbenches/operations.md:54
 
 -- Code --
 
- 1: // define operation which takes multiple items
- 2: op punch_disk(radius: Length) {
- 3:     if @input.count() == 1 {
- 4:         { 
- 5:             @input;
- 6:             std::geo2d::Circle(radius);
- 7:         }.subtract();
- 8:     } else {
- 9:         std::error("punch_disk must get one object");
-10:     }
-11: }
-12: 
-13: // use operation punch_disk on a circle
-14: {
-15:     std::geo2d::Circle(radius = 2cm);
-16: }.punch_disk(radius = 1cm);
+  54:   // define operation which takes multiple items
+  55:   op punch_disk(radius: Length) {
+  56:       if @input.count() == 1 {
+  57:           { 
+  58:               @input;
+  59:               std::geo2d::Circle(radius);
+  60:           }.subtract();
+  61:       } else {
+  62:           std::error("punch_disk must get one object");
+  63:       }
+  64:   }
+  65:   
+  66:   // use operation punch_disk on a circle
+  67:   {
+  68:       std::geo2d::Circle(radius = 2cm);
+  69:   }.punch_disk(radius = 1cm);
 
 -- Output --
 
 -- Errors --
 error: Symbol count not found.
-  ---> ../books/language/src/structure/workbenches/operations.md:3:15
+  ---> ../books/language/src/structure/workbenches/operations.md:56:15
      |
-   3 |     if @input.count() == 1 {
+  56 |     if @input.count() == 1 {
      |               ^^^^^
      |
 error: If condition is not a boolean: <NO VALUE>
-  ---> ../books/language/src/structure/workbenches/operations.md:3:5
+  ---> ../books/language/src/structure/workbenches/operations.md:56:5
      |
-   3 |     if @input.count() == 1 {
+  56 |     if @input.count() == 1 {
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
+Unexpected error(s) which did occur in line(s): 56
 -- Test Result --
 TODO

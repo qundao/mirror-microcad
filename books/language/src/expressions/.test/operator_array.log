@@ -1,16 +1,16 @@
 -- Test --
   operator_array
-  ../books/language/src/expressions/operators.md:54
+  ../books/language/src/expressions/operators.md:55
 
 -- Code --
 
- 1: use std::debug::assert; // used for testing
- 2: 
- 3: assert(  -[1, 2, 3, 4]              == [-1, -2, -3, -4]     ); // Negation
- 4: assert(  [1, 2, 3, 4] + 5           == [6, 7, 8, 9]         ); // Addition
- 5: assert(  [1, 2, 3, 4] - 5           == [-4, -3, -2, -1]     ); // Subtraction
- 6: assert(  [1, 2, 3, 4] * 5           == [5, 10, 15, 20]      ); // Multiplication
- 7: assert(  [1.0, 2.0, 3.0, 4.0] / 5   == [0.2, 0.4, 0.6, 0.8] ); // Division
+  55:   use std::debug::assert; // used for testing
+  56:   
+  57:   assert(  -[1, 2, 3, 4]              == [-1, -2, -3, -4]     ); // Negation
+  58:   assert(  [1, 2, 3, 4] + 5           == [6, 7, 8, 9]         ); // Addition
+  59:   assert(  [1, 2, 3, 4] - 5           == [-4, -3, -2, -1]     ); // Subtraction
+  60:   assert(  [1, 2, 3, 4] * 5           == [5, 10, 15, 20]      ); // Multiplication
+  61:   assert(  [1.0, 2.0, 3.0, 4.0] / 5   == [0.2, 0.4, 0.6, 0.8] ); // Division
 
 -- Output --
 

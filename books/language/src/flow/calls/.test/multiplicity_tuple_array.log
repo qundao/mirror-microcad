@@ -1,21 +1,22 @@
 -- Test --
   multiplicity_tuple_array
-  ../books/language/src/flow/calls/multiplicity.md:37
+  ../books/language/src/flow/calls/multiplicity.md:38
 
 -- Code --
 
- 1: r = std::geo2d::Rect(width = 2mm, height = 2mm);
- 2: 
- 3: r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
+  38:   r = std::geo2d::Rect(width = 2mm, height = 2mm);
+  39:   
+  40:   r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
 
 -- Output --
 
 -- Errors --
 error: Workbench translate cannot find initialization for those arguments
-  ---> ../books/language/src/flow/calls/multiplicity.md:3:23
+  ---> ../books/language/src/flow/calls/multiplicity.md:40:23
      |
-   3 | r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
+  40 | r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
      |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
+Unexpected error(s) which did occur in line(s): 40
 -- Test Result --
 TODO

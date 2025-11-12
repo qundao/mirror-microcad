@@ -1,13 +1,13 @@
 -- Test --
   use_all
-  ../books/language/src/structure/use.md:80
+  ../books/language/src/structure/use.md:81
 
 -- Code --
 
- 1: use std::geo3d::*;
- 2: 
- 3: Sphere(r = 4mm);
- 4: Cube(size = 40mm);
+  81:   use std::geo3d::*;
+  82:   
+  83:   Sphere(r = 4mm);
+  84:   Cube(size = 40mm);
 
 -- Output --
 

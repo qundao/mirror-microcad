@@ -1,13 +1,13 @@
 -- Test --
   knobs_multiplicity
-  ../books/tutorials/src/lego_brick/caps_knobs.md:31
+  ../books/tutorials/src/lego_brick/caps_knobs.md:32
 
 -- Code --
 
- 1: std::geo2d::Circle(d = 4.8mm, c = (
- 2:         x = ([-1..2] - 0.5) * 8mm, 
- 3:         y = ([0..1] - 0.5) * 8mm)
- 4:     );
+  32:   std::geo2d::Circle(d = 4.8mm, c = (
+  33:           x = ([-1..2] - 0.5) * 8mm, 
+  34:           y = ([0..1] - 0.5) * 8mm)
+  35:       );
 
 -- Output --
 

@@ -1,22 +1,22 @@
 -- Test --
   mirror_3d
-  ../books/language/src/libraries/std/ops/mirror.md:7
+  ../books/language/src/libraries/std/ops/mirror.md:8
 
 -- Code --
 
- 1: use std::math::*;
- 2: use std::ops::*;
- 3: use std::geo3d::*;
- 4: 
- 5: s = 25mm;
- 6: p = 5mm;
- 7: { 
- 8:     (Cube(s * 2) - Cube(s).translate(x = s/2, y = s/2, z = s/2))
- 9:         .translate(x = s + p, y = s + p, z = s + p)
-10: }
-11: .mirror(X)
-12: .mirror(Y)
-13: .mirror(Z)
+   8:   use std::math::*;
+   9:   use std::ops::*;
+  10:   use std::geo3d::*;
+  11:   
+  12:   s = 25mm;
+  13:   p = 5mm;
+  14:   { 
+  15:       (Cube(s * 2) - Cube(s).translate(x = s/2, y = s/2, z = s/2))
+  16:           .translate(x = s + p, y = s + p, z = s + p)
+  17:   }
+  18:   .mirror(X)
+  19:   .mirror(Y)
+  20:   .mirror(Z)
 
 -- Output --
 

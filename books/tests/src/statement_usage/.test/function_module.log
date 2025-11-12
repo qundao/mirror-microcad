@@ -1,26 +1,26 @@
 -- Test --
   function_module
-  ../books/tests/src/statement_usage/function.md:13
+  ../books/tests/src/statement_usage/function.md:14
 
 -- Code --
 
- 1: fn f() {
- 2:   mod m {} // error
- 3: } f();
+  14:   fn f() {
+  15:     mod m {} // error
+  16:   } f();
 
 -- Output --
 
 -- Errors --
 error: Statement is not available within Function
-  ---> ../books/tests/src/statement_usage/function.md:2:3
+  ---> ../books/tests/src/statement_usage/function.md:15:3
      |
-   2 |   mod m {} // error
+  15 |   mod m {} // error
      |   ^^^^^^^^
      |
 error: Module definition is not available within Function
-  ---> ../books/tests/src/statement_usage/function.md:2:3
+  ---> ../books/tests/src/statement_usage/function.md:15:3
      |
-   2 |   mod m {} // error
+  15 |   mod m {} // error
      |   ^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

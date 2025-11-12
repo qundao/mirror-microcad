@@ -10,19 +10,6 @@ use microcad_lang::{
 };
 use microcad_test_tools::test_env::*;
 
-fn lines_with(code: &str, marker: &str) -> std::collections::HashSet<usize> {
-    code.lines()
-        .enumerate()
-        .filter_map(|line| {
-            if line.1.contains(marker) {
-                Some(line.0 + 1)
-            } else {
-                None
-            }
-        })
-        .collect()
-}
-
 #[allow(dead_code)]
 pub fn init() {
     let _ = env_logger::builder().try_init();
@@ -56,7 +43,7 @@ pub fn run_test(env: Option<TestEnv>) {
             env.code()
                 .lines()
                 .enumerate()
-                .map(|(n, line)| format!("{n:2}: {line}", n = n + 1))
+                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset_line(n)))
                 .collect::<Vec<_>>()
                 .join("\n")
         ));
@@ -72,29 +59,27 @@ pub fn run_test(env: Option<TestEnv>) {
                 Err(err) => {
                     env.log_ln("-- Parse Error --");
                     env.log_ln(&err.to_string());
-                    env.result(TestResult::FailOk);
+                    if env.has_error_markers() {
+                        env.result(TestResult::FailWrong);
+                    } else if env.todo() {
+                        env.result(TestResult::NotTodoFail);
+                    } else {
+                        env.result(TestResult::FailOk);
+                    }
                 }
                 // test expected to fail succeeded at parsing?
                 Ok(source) => {
                     // evaluate the code including µcad std library
-                    let mut context = create_context(&source);
+                    let mut context = create_context(&source, env.offset());
                     let eval = context.eval();
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
-
-                    let lines_with_errors = lines_with(env.code(), "// error");
-                    let lines_with_warnings = lines_with(env.code(), "// warning");
                     if !env.todo()
-                        && ((context.has_errors() && lines_with_errors != context.error_lines())
-                            || (context.has_warnings()
-                                && !context.warning_lines().iter().all(|line| {
-                                    lines_with_warnings.contains(line)
-                                        || lines_with_errors.contains(line)
-                                })))
+                        && env.report_wrong_errors(&context.error_lines(), &context.warning_lines())
                     {
                         env.result(TestResult::FailWrong);
-                        panic!("ERROR: test is marked to fail but fails with wrong errors");
+                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     }
 
                     let _ = fs::remove_file(env.banner_file());
@@ -140,6 +125,8 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     if env.todo() {
                         env.result(TestResult::Todo);
+                    } else if env.has_error_markers() {
+                        env.result(TestResult::FailWrong);
                     } else {
                         env.result(TestResult::Fail);
                         panic!("ERROR: {err}")
@@ -148,11 +135,12 @@ pub fn run_test(env: Option<TestEnv>) {
                 // test awaited to succeed and parsing succeeds?
                 Ok(source) => {
                     // evaluate the code including µcad std library
-                    let mut context = create_context(&source);
+                    let mut context = create_context(&source, env.offset());
                     let eval = context.eval();
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
+                    env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
 
                     let _ = fs::remove_file(env.banner_file());
 
@@ -196,7 +184,7 @@ pub fn run_test(env: Option<TestEnv>) {
 }
 
 // evaluate the code including µcad std library
-fn create_context(source: &Rc<SourceFile>) -> EvalContext {
+fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
     EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
@@ -204,6 +192,7 @@ fn create_context(source: &Rc<SourceFile>) -> EvalContext {
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),
+        line_offset - 1,
     )
     .expect("resolve error")
 }

@@ -1,10 +1,10 @@
 -- Test --
   source_pub_use
-  ../books/tests/src/statement_usage/source.md:35
+  ../books/tests/src/statement_usage/source.md:36
 
 -- Code --
 
- 1: pub use std;
+  36:   pub use std;
 
 -- Output --
 

@@ -1,12 +1,12 @@
 -- Test --
   types_named_tuple_vec3
-  ../books/language/src/types/collections/tuples/aliases.md:39
+  ../books/language/src/types/collections/tuples/aliases.md:40
 
 -- Code --
 
- 1: v: Vec3 = (x = 2.0, y = 3.0, z = 4.0);
- 2: 
- 3: std::debug::assert(v.x + v.y + v.z == 9.0);
+  40:   v: Vec3 = (x = 2.0, y = 3.0, z = 4.0);
+  41:   
+  42:   std::debug::assert(v.x + v.y + v.z == 9.0);
 
 -- Output --
 

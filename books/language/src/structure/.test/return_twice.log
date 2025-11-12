@@ -1,25 +1,27 @@
 -- Test --
   return_twice
-  ../books/language/src/structure/functions.md:46
+  ../books/language/src/structure/functions.md:47
 
 -- Code --
 
- 1: fn pow( x: Scalar, n: Integer ) {
- 2:     if n == 1 {
- 3:         x 
- 4:     }
- 5:     x * pow(n-1)  // error: unexpected code
- 6: }
+  47:   fn pow( x: Scalar, n: Integer ) {
+  48:       if n == 1 {
+  49:           x 
+  50:       }
+  51:       x * pow(n-1)  // error: unexpected code
+  52:   }
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol pow.
-  ---> ../books/language/src/structure/functions.md:1:1
+  ---> ../books/language/src/structure/functions.md:47:1
      |
-   1 | fn pow( x: Scalar, n: Integer ) {
+  47 | fn pow( x: Scalar, n: Integer ) {
      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
+Expected error(s) which did not occur in line(s): 51
+Unexpected warnings(s) which did occur in line(s): 47
 -- No model --
 -- Test Result --
 OK

@@ -1,10 +1,10 @@
 -- Test --
   source_function
-  ../books/tests/src/statement_usage/source.md:17
+  ../books/tests/src/statement_usage/source.md:18
 
 -- Code --
 
- 1: fn f() {} f();
+  18:   fn f() {} f();
 
 -- Output --
 

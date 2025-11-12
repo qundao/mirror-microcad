@@ -1,36 +1,36 @@
 -- Test --
   overview
-  ../books/tutorials/src/lego_brick/overview.md:7
+  ../books/tutorials/src/lego_brick/overview.md:8
 
 -- Code --
 
- 1: use std::geo2d::*;
- 2: use std::ops::*;
- 3: 
- 4: const SPACING = 8mm;
- 5: 
- 6: sketch Base(width: Length, height: Length) {
- 7:     thickness = 1.2mm;
- 8:     frame = Frame(width, height, thickness);
- 9:     struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-10:         .translate(x = [0..2] * SPACING)
-11:         .align();
-12:     frame | struts;
-13: }
-14: 
-15: use Rect as Cap;
-16: 
-17: sketch Knobs() {
-18:     Circle(d = 4.8mm, c = (x = [0..3] * SPACING, y = [0..1] * SPACING))
-19:         .align();
-20: }
-21: 
-22: width = 31.8mm;
-23: height = 15.8mm;
-24: 
-25: Base(width, height);
-26: Cap(width, height);
-27: Knobs();
+   8:   use std::geo2d::*;
+   9:   use std::ops::*;
+  10:   
+  11:   const SPACING = 8mm;
+  12:   
+  13:   sketch Base(width: Length, height: Length) {
+  14:       thickness = 1.2mm;
+  15:       frame = Frame(width, height, thickness);
+  16:       struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+  17:           .translate(x = [0..2] * SPACING)
+  18:           .align();
+  19:       frame | struts;
+  20:   }
+  21:   
+  22:   use Rect as Cap;
+  23:   
+  24:   sketch Knobs() {
+  25:       Circle(d = 4.8mm, c = (x = [0..3] * SPACING, y = [0..1] * SPACING))
+  26:           .align();
+  27:   }
+  28:   
+  29:   width = 31.8mm;
+  30:   height = 15.8mm;
+  31:   
+  32:   Base(width, height);
+  33:   Cap(width, height);
+  34:   Knobs();
 
 -- Output --
 

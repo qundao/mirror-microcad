@@ -1,15 +1,15 @@
 -- Test --
   initializers
-  ../books/language/src/structure/workbenches/README.md:102
+  ../books/language/src/structure/workbenches/README.md:103
 
 -- Code --
 
- 1: sketch Wheel(radius: Length) {
- 2:     init( radius: Length ) {} // error: same parameters as in building plan
- 3:     std::geo2d::Circle(1mm);
- 4: }
- 5: 
- 6: Wheel(radius = 1.0mm);
+ 103:   sketch Wheel(radius: Length) {
+ 104:       init( radius: Length ) {} // error: same parameters as in building plan
+ 105:       std::geo2d::Circle(1mm);
+ 106:   }
+ 107:   
+ 108:   Wheel(radius = 1.0mm);
 
 -- Output --
 

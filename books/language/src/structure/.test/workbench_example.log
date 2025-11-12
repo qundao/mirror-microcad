@@ -1,20 +1,20 @@
 -- Test --
   workbench_example
-  ../books/language/src/structure/functions.md:98
+  ../books/language/src/structure/functions.md:99
 
 -- Code --
 
- 1: sketch PunchedDisk(radius: Length) {
- 2:     use std::geo2d::Circle;
- 3: 
- 4:     // calculate inner from radius in a method
- 5:     fn inner() { return radius/2; }
- 6: 
- 7:     // generate donut (and call inner)
- 8:     Circle(radius) - Circle(inner());
- 9: }
-10: 
-11: PunchedDisk(radius = 1cm);
+  99:   sketch PunchedDisk(radius: Length) {
+ 100:       use std::geo2d::Circle;
+ 101:   
+ 102:       // calculate inner from radius in a method
+ 103:       fn inner() { return radius/2; }
+ 104:   
+ 105:       // generate donut (and call inner)
+ 106:       Circle(radius) - Circle(inner());
+ 107:   }
+ 108:   
+ 109:   PunchedDisk(radius = 1cm);
 
 -- Output --
 

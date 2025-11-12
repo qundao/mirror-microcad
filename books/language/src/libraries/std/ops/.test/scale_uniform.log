@@ -1,10 +1,10 @@
 -- Test --
   scale_uniform
-  ../books/language/src/libraries/std/ops/scale.md:7
+  ../books/language/src/libraries/std/ops/scale.md:8
 
 -- Code --
 
- 1: std::geo2d::Rect(30mm).std::ops::scale(200%);
+   8:   std::geo2d::Rect(30mm).std::ops::scale(200%);
 
 -- Output --
 

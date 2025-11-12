@@ -1,27 +1,19 @@
 -- Test --
   body_workbench
-  ../books/tests/src/statement_usage/body.md:5
+  ../books/tests/src/statement_usage/body.md:6
 
 -- Code --
 
- 1: {
- 2:   sketch F() {} F(); // error
- 3: }
+   6:   {
+   7:     sketch F() {}; // error
+   8:   }
 
--- Output --
-
--- Errors --
-error: sketch statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:2:3
-     |
-   2 |   sketch F() {} F(); // error
-     |   ^^^^^^^^^^^^^
-     |
-error: Symbol F not found.
-  ---> ../books/tests/src/statement_usage/body.md:2:17
-     |
-   2 |   sketch F() {} F(); // error
-     |                 ^^^
-     |
+-- Parse Error --
+Parser error:  --> 2:16
+  |
+2 |   sketch F() {}; // error
+  |                ^---
+  |
+  = expected single_line_comment, final_expression_statement, or statement
 -- Test Result --
-FAILED AS EXPECTED
+FAILED WITH WRONG ERRORS/WARNINGS

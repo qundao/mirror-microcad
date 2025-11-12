@@ -1,16 +1,16 @@
 -- Test --
   no_multiplicity
-  ../books/language/src/flow/calls/multiplicity.md:21
+  ../books/language/src/flow/calls/multiplicity.md:22
 
 -- Code --
 
- 1: r = std::geo2d::Rect(width = 2mm, height = 2mm);
- 2: 
- 3: use std::ops::translate;
- 4: r.translate(x = -4mm, y = -4mm);
- 5: r.translate(x = -4mm, y = 4mm);
- 6: r.translate(x = 4mm, y = -4mm);
- 7: r.translate(x = 4mm, y = 4mm);
+  22:   r = std::geo2d::Rect(width = 2mm, height = 2mm);
+  23:   
+  24:   use std::ops::translate;
+  25:   r.translate(x = -4mm, y = -4mm);
+  26:   r.translate(x = -4mm, y = 4mm);
+  27:   r.translate(x = 4mm, y = -4mm);
+  28:   r.translate(x = 4mm, y = 4mm);
 
 -- Output --
 

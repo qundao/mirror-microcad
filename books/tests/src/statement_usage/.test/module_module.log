@@ -1,28 +1,29 @@
 -- Test --
   module_module
-  ../books/tests/src/statement_usage/module.md:13
+  ../books/tests/src/statement_usage/module.md:14
 
 -- Code --
 
- 1: mod k {
- 2:   mod m {}
- 3: }
+  14:   mod k {
+  15:     mod m {}
+  16:   }
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:1:1
+  ---> ../books/tests/src/statement_usage/module.md:14:1
      |
-   1 | mod k {
+  14 | mod k {
      | ^^^^^^^
      |
 warning: Unused global symbol m.
-  ---> ../books/tests/src/statement_usage/module.md:2:3
+  ---> ../books/tests/src/statement_usage/module.md:15:3
      |
-   2 |   mod m {}
+  15 |   mod m {}
      |   ^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 14, 15
 -- No model --
 -- Test Result --
 OK

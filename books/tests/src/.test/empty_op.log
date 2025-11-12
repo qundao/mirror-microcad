@@ -1,12 +1,12 @@
 -- Test --
   empty_op
-  ../books/tests/src/semicolon.md:52
+  ../books/tests/src/semicolon.md:53
 
 -- Code --
 
- 1: std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
- 2: {}.std::ops::translate(x = 3.0mm);  // warning: Empty geometry.
- 3: : Calling operation on empty geometry
+  53:   std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
+  54:   {}.std::ops::translate(x = 3.0mm);  // warning: Empty geometry.
+  55:   : Calling operation on empty geometry
 
 -- Parse Error --
 Parser error:  --> 3:1
@@ -16,4 +16,4 @@ Parser error:  --> 3:1
   |
   = expected EOI, single_line_comment, final_expression_statement, or statement
 -- Test Result --
-FAILED AS EXPECTED
+FAILED WITH WRONG ERRORS/WARNINGS

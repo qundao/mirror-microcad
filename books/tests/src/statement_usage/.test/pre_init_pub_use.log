@@ -1,20 +1,20 @@
 -- Test --
   pre_init_pub_use
-  ../books/tests/src/statement_usage/pre-init.md:45
+  ../books/tests/src/statement_usage/pre-init.md:46
 
 -- Code --
 
- 1: sketch K() { 
- 2:   pub use std; // error
- 3: init(l:Length) {} } K();
+  46:   sketch K() { 
+  47:     pub use std; // error
+  48:   init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
 error: Use statement is not available within Sketch
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:47:3
      |
-   2 |   pub use std; // error
+  47 |   pub use std; // error
      |   ^^^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

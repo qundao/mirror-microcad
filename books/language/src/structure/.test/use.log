@@ -1,14 +1,14 @@
 -- Test --
   use
-  ../books/language/src/structure/use.md:28
+  ../books/language/src/structure/use.md:29
 
 -- Code --
 
- 1: use std::geo2d::Circle;
- 2: use std::geo2d::Rect;
- 3: 
- 4: Circle(r = 4mm);
- 5: Rect(size = 40mm);
+  29:   use std::geo2d::Circle;
+  30:   use std::geo2d::Rect;
+  31:   
+  32:   Circle(r = 4mm);
+  33:   Rect(size = 40mm);
 
 -- Output --
 

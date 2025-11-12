@@ -1,10 +1,10 @@
 -- Test --
   builtin_debug_assert_true
-  ../books/language/src/libraries/builtin/debug.md:17
+  ../books/language/src/libraries/builtin/debug.md:18
 
 -- Code --
 
- 1: __builtin::debug::assert(true);
+  18:   __builtin::debug::assert(true);
 
 -- Output --
 

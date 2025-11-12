@@ -1,15 +1,15 @@
 -- Test --
   knobs
-  ../books/tutorials/src/lego_brick/caps_knobs.md:74
+  ../books/tutorials/src/lego_brick/caps_knobs.md:75
 
 -- Code --
 
- 1: sketch Knobs(diameter = 4.8mm) {
- 2:     std::geo2d::Circle(d = 4.8mm, c = (x = [0..3] * 8mm, y = [0..1] * 8mm))
- 3:         .std::ops::align();
- 4: }
- 5: 
- 6: Knobs();
+  75:   sketch Knobs(diameter = 4.8mm) {
+  76:       std::geo2d::Circle(d = 4.8mm, c = (x = [0..3] * 8mm, y = [0..1] * 8mm))
+  77:           .std::ops::align();
+  78:   }
+  79:   
+  80:   Knobs();
 
 -- Output --
 

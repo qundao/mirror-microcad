@@ -1,10 +1,10 @@
 -- Test --
   builtin_print
-  ../books/language/src/libraries/builtin/debug.md:7
+  ../books/language/src/libraries/builtin/debug.md:8
 
 -- Code --
 
- 1: __builtin::print("ok");
+   8:   __builtin::print("ok");
 
 -- Output --
 ok

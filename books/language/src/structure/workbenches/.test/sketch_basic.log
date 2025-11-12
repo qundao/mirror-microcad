@@ -1,20 +1,21 @@
 -- Test --
   sketch_basic
-  ../books/language/src/structure/workbenches/sketches.md:8
+  ../books/language/src/structure/workbenches/sketches.md:9
 
 -- Code --
 
- 1: sketch MySketch() {}
+   9:   sketch MySketch() {}
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol MySketch.
-  ---> ../books/language/src/structure/workbenches/sketches.md:1:1
+  ---> ../books/language/src/structure/workbenches/sketches.md:9:1
      |
-   1 | sketch MySketch() {}
+   9 | sketch MySketch() {}
      | ^^^^^^^^^^^^^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 9
 -- No model --
 -- Test Result --
 OK

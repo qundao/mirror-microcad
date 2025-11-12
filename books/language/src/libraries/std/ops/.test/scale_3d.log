@@ -1,10 +1,10 @@
 -- Test --
   scale_3d
-  ../books/language/src/libraries/std/ops/scale.md:15
+  ../books/language/src/libraries/std/ops/scale.md:16
 
 -- Code --
 
- 1: std::geo3d::Cylinder(h = 50mm, d = 20mm).std::ops::scale(x = 200%);
+  16:   std::geo3d::Cylinder(h = 50mm, d = 20mm).std::ops::scale(x = 200%);
 
 -- Output --
 

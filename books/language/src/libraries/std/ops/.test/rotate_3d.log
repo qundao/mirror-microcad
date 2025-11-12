@@ -1,14 +1,14 @@
 -- Test --
   rotate_3d
-  ../books/language/src/libraries/std/ops/rotate.md:15
+  ../books/language/src/libraries/std/ops/rotate.md:16
 
 -- Code --
 
- 1: cylinder = std::geo3d::Cylinder(h = 50mm, d = 20mm);
- 2: 
- 3: cylinder.std::ops::rotate(x = 90°);
- 4: cylinder.std::ops::rotate(y = 90°);
- 5: cylinder.std::ops::rotate(z = 90°);
+  16:   cylinder = std::geo3d::Cylinder(h = 50mm, d = 20mm);
+  17:   
+  18:   cylinder.std::ops::rotate(x = 90°);
+  19:   cylinder.std::ops::rotate(y = 90°);
+  20:   cylinder.std::ops::rotate(z = 90°);
 
 -- Output --
 

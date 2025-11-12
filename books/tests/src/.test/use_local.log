@@ -1,15 +1,15 @@
 -- Test --
   use_local
-  ../books/tests/src/use.md:79
+  ../books/tests/src/use.md:80
 
 -- Code --
 
- 1: fn f() {
- 2:     use std::math::abs;
- 3:     x = abs(-1.0);
- 4:     return x;
- 5: }
- 6: f();
+  80:   fn f() {
+  81:       use std::math::abs;
+  82:       x = abs(-1.0);
+  83:       return x;
+  84:   }
+  85:   f();
 
 -- Output --
 

@@ -1,14 +1,14 @@
 -- Test --
   inner_outer
-  ../books/tutorials/src/lego_brick/base/frame/another_rect.md:24
+  ../books/tutorials/src/lego_brick/base/frame/another_rect.md:25
 
 -- Code --
 
- 1: thickness = 1.2mm;
- 2: width = 31.8mm;
- 3: height = 15.8mm;
- 4: std::geo2d::Rect(width, height);
- 5: std::geo2d::Rect(width = width - 2 * thickness, height = height - 2 * thickness);
+  25:   thickness = 1.2mm;
+  26:   width = 31.8mm;
+  27:   height = 15.8mm;
+  28:   std::geo2d::Rect(width, height);
+  29:   std::geo2d::Rect(width = width - 2 * thickness, height = height - 2 * thickness);
 
 -- Output --
 

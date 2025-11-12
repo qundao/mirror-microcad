@@ -49,11 +49,25 @@ impl Type {
         }
     }
 
-    /// Check if types are add compatible.
-    pub fn is_add_compatible_to(&self, rhs: &Self) -> bool {
+    /// Check if types are compatible.
+    pub fn is_compatible_to(&self, rhs: &Self) -> bool {
         rhs == self
             || (*self == Type::Integer && *rhs == Type::scalar())
             || (*rhs == Type::Integer && *self == Type::scalar())
+    }
+
+    /// Returns if the given type or it's inner type matches the given parameter type.
+    pub fn is_matching(&self, param_type: &Type) -> bool {
+        match (self, param_type) {
+            (_, Type::Quantity(QuantityType::Scalar)) => {
+                self == &Type::scalar()
+                    || self == &Type::Integer
+                    || self.is_array_of(&Type::scalar())
+                    || self.is_array_of(&Type::Integer)
+            }
+            (Type::Tuple(ty_s), Type::Tuple(ty_p)) => ty_s.matches(ty_p),
+            _ => self == param_type || self.is_array_of(param_type),
+        }
     }
 }
 
@@ -143,4 +157,13 @@ fn builtin_type() {
     let ty = Parser::parse_rule::<TypeAnnotation>(Rule::r#type, "Integer", 0).expect("test error");
     assert_eq!(ty.0.to_string(), "Integer");
     assert_eq!(ty.0.value, Type::Integer);
+}
+
+#[test]
+fn type_matching() {
+    assert!(Type::scalar().is_matching(&Type::scalar()));
+    assert!(!Type::scalar().is_matching(&Type::Integer));
+    assert!(Type::Integer.is_matching(&Type::scalar()));
+    assert!(!Type::scalar().is_matching(&Type::String));
+    assert!(!Type::String.is_matching(&Type::scalar()));
 }

@@ -1,14 +1,21 @@
 -- Test --
   assignment
-  ../books/tutorials/src/lego_brick/base/frame/naming.md:9
+  ../books/tutorials/src/lego_brick/base/frame/naming.md:10
 
 -- Code --
 
- 1: outer = std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
+  10:   outer = std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
 
 -- Output --
 
 -- Errors --
+warning: Unused local outer.
+  ---> ../books/tutorials/src/lego_brick/base/frame/naming.md:10:1
+     |
+  10 | outer = std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
+     | ^^^^^
+     |
+Unexpected warnings(s) which did occur in line(s): 10
 -- No model --
 -- Test Result --
 OK

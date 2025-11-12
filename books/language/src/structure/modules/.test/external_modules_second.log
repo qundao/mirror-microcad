@@ -1,11 +1,11 @@
 -- Test --
   external_modules_second
-  ../books/language/src/structure/modules/external_modules.md:17
+  ../books/language/src/structure/modules/external_modules.md:18
 
 -- Code --
 
- 1: // file: second.µcad
- 2: pub fn f() {}
+  18:   // file: second.µcad
+  19:   pub fn f() {}
 
 -- Output --
 

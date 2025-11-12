@@ -1,22 +1,23 @@
 -- Test --
   workbench_assignment_var
-  ../books/tests/src/statement_usage/workbench.md:85
+  ../books/tests/src/statement_usage/workbench.md:86
 
 -- Code --
 
- 1: sketch K() {
- 2:   a = 1;
- 3: } K();
+  86:   sketch K() {
+  87:     a = 1;
+  88:   } K();
 
 -- Output --
 
 -- Errors --
 warning: Unused local a.
-  ---> ../books/tests/src/statement_usage/workbench.md:2:3
+  ---> ../books/tests/src/statement_usage/workbench.md:87:3
      |
-   2 |   a = 1;
+  87 |   a = 1;
      |   ^
      |
+Unexpected warnings(s) which did occur in line(s): 87
 -- Model --
   Group (root) ->
     Workpiece(sketch) workbench_assignment_var::K() ->

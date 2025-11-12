@@ -1,20 +1,20 @@
 -- Test --
   pre_init_assignment_prop
-  ../books/tests/src/statement_usage/pre-init.md:85
+  ../books/tests/src/statement_usage/pre-init.md:86
 
 -- Code --
 
- 1: sketch K() {
- 2:   prop a = 1; // error
- 3: init(l:Length) {} } K();
+  86:   sketch K() {
+  87:     prop a = 1; // error
+  88:   init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
 error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:87:3
      |
-   2 |   prop a = 1; // error
+  87 |   prop a = 1; // error
      |   ^^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

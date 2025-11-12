@@ -1,12 +1,12 @@
 -- Test --
   integer_literal
-  ../books/language/src/expressions/literals.md:13
+  ../books/language/src/expressions/literals.md:14
 
 -- Code --
 
- 1: 50;
- 2: 1350;
- 3: -6
+  14:   50;
+  15:   1350;
+  16:   -6
 
 -- Output --
 

@@ -1,18 +1,18 @@
 -- Test --
   named_tuple_access
-  ../books/language/src/types/collections/tuples/README.md:9
+  ../books/language/src/types/collections/tuples/README.md:10
 
 -- Code --
 
- 1: use std::debug::assert_eq;
- 2: 
- 3: tuple = (width=10cm, depth=10cm, volume=1l);
- 4: 
- 5: assert_eq([tuple.width, 10cm]);
- 6: assert_eq([tuple.depth, 10cm]);
- 7: assert_eq([tuple.volume, 1l]);
- 8: 
- 9: assert_eq([tuple, (width=10cm, depth=10cm, volume=1l)]);
+  10:   use std::debug::assert_eq;
+  11:   
+  12:   tuple = (width=10cm, depth=10cm, volume=1l);
+  13:   
+  14:   assert_eq([tuple.width, 10cm]);
+  15:   assert_eq([tuple.depth, 10cm]);
+  16:   assert_eq([tuple.volume, 1l]);
+  17:   
+  18:   assert_eq([tuple, (width=10cm, depth=10cm, volume=1l)]);
 
 -- Output --
 

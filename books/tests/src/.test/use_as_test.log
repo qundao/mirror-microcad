@@ -1,13 +1,13 @@
 -- Test --
   use_as_test
-  ../books/tests/src/use.md:46
+  ../books/tests/src/use.md:47
 
 -- Code --
 
- 1: use std::geo2d::*; 
- 2: use Rect as Cap;
- 3: 
- 4: Cap(width=1mm,height=1mm);
+  47:   use std::geo2d::*; 
+  48:   use Rect as Cap;
+  49:   
+  50:   Cap(width=1mm,height=1mm);
 
 -- Output --
 

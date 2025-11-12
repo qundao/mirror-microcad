@@ -1,11 +1,11 @@
 -- Test --
   mod_external
-  ../books/tests/src/mod_external.md:12
+  ../books/tests/src/mod_external.md:13
 
 -- Code --
 
- 1: // file: external.µcad
- 2: pub const a =1;
+  13:   // file: external.µcad
+  14:   pub const a =1;
 
 -- Output --
 

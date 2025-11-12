@@ -1,19 +1,19 @@
 -- Test --
   call_workbench
-  ../books/language/src/flow/calls/README.md:28
+  ../books/language/src/flow/calls/README.md:29
 
 -- Code --
 
- 1: // definition of a sketch workbench
- 2: sketch Square(size: Length) { 
- 3:     std::geo2d::Rect(size);
- 4: }
- 5: 
- 6: // call square with a size and store object node in s
- 7: s = Square(size=2cm);
- 8: 
- 9: // translate object s
-10: s.std::ops::translate(x = 1cm);
+  29:   // definition of a sketch workbench
+  30:   sketch Square(size: Length) { 
+  31:       std::geo2d::Rect(size);
+  32:   }
+  33:   
+  34:   // call square with a size and store object node in s
+  35:   s = Square(size=2cm);
+  36:   
+  37:   // translate object s
+  38:   s.std::ops::translate(x = 1cm);
 
 -- Output --
 

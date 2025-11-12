@@ -1,24 +1,24 @@
 -- Test --
   verify_todo
-  ../books/language/src/debugging/verification.md:39
+  ../books/language/src/debugging/verification.md:40
 
 -- Code --
 
- 1: a = 0;
- 2: 
- 3: if a == 0 {
- 4:     std::log::info("a is zero");
- 5: } else {
- 6:     std::log::todo("print proper message");
- 7: }
+  40:   a = 0;
+  41:   
+  42:   if a == 0 {
+  43:       std::log::info("a is zero");
+  44:   } else {
+  45:       std::log::todo("print proper message");
+  46:   }
 
 -- Output --
 
 -- Errors --
 info: a is zero
-  ---> ../books/language/src/debugging/verification.md:4:20
+  ---> ../books/language/src/debugging/verification.md:43:20
      |
-   4 |     std::log::info("a is zero");
+  43 |     std::log::info("a is zero");
      |                    ^^^^^^^^^^^
      |
 -- Model --

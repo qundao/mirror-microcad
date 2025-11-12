@@ -1,20 +1,21 @@
 -- Test --
   source_assignment_var
-  ../books/tests/src/statement_usage/source.md:59
+  ../books/tests/src/statement_usage/source.md:60
 
 -- Code --
 
- 1: a = 1;
+  60:   a = 1;
 
 -- Output --
 
 -- Errors --
 warning: Unused local a.
-  ---> ../books/tests/src/statement_usage/source.md:1:1
+  ---> ../books/tests/src/statement_usage/source.md:60:1
      |
-   1 | a = 1;
+  60 | a = 1;
      | ^
      |
+Unexpected warnings(s) which did occur in line(s): 60
 -- No model --
 -- Test Result --
 OK

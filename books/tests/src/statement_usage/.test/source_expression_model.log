@@ -1,10 +1,10 @@
 -- Test --
   source_expression_model
-  ../books/tests/src/statement_usage/source.md:77
+  ../books/tests/src/statement_usage/source.md:78
 
 -- Code --
 
- 1: __builtin::geo2d::Circle(radius=1);
+  78:   __builtin::geo2d::Circle(radius=1);
 
 -- Output --
 

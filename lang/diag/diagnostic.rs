@@ -67,8 +67,10 @@ impl Diagnostic {
         &self,
         f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
+        line_offset: usize,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
+
         let source_file = source_by_hash.get_by_hash(src_ref.source_hash());
 
         fn make_relative(path: &std::path::Path) -> String {
@@ -93,7 +95,7 @@ impl Diagnostic {
                         .as_ref()
                         .map(|sf| make_relative(&sf.filename()))
                         .unwrap_or(crate::invalid!(FILE).to_string()),
-                    src_ref.at
+                    src_ref.with_line_offset(line_offset).at
                 )?;
                 writeln!(f, "     |",)?;
 
@@ -105,7 +107,12 @@ impl Diagnostic {
                     })
                     .unwrap_or(crate::invalid!(FILE));
 
-                writeln!(f, "{: >4} | {}", src_ref.at.line, line)?;
+                writeln!(
+                    f,
+                    "{: >4} | {}",
+                    src_ref.with_line_offset(line_offset).at.line,
+                    line
+                )?;
                 writeln!(
                     f,
                     "{: >4} | {}",

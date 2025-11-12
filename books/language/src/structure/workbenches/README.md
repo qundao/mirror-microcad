@@ -142,7 +142,7 @@ you will get an error:
 
 ```µcad,missed_property#fail
 sketch Wheel(radius: Length) {
-    init( width: Length ) { } // error: misses to set `radius` from building plan
+    init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
 }
 
 Wheel(width = 1.0mm);

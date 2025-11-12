@@ -1,18 +1,18 @@
 -- Test --
   sketch_with_empty_body
-  ../books/tests/src/semicolon.md:38
+  ../books/tests/src/semicolon.md:39
 
 -- Code --
 
- 1: {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
+  39:   {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
 
 -- Output --
 
 -- Errors --
 warning: This expression statement did not produce any model
-  ---> ../books/tests/src/semicolon.md:1:1
+  ---> ../books/tests/src/semicolon.md:39:1
      |
-   1 | {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
+  39 | {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
      | ^^
      |
 -- Test Result --

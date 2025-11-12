@@ -1,12 +1,12 @@
 -- Test --
   function_return
-  ../books/tests/src/statement_usage/function.md:53
+  ../books/tests/src/statement_usage/function.md:54
 
 -- Code --
 
- 1: fn f() {
- 2:   return 1;
- 3: } f();
+  54:   fn f() {
+  55:     return 1;
+  56:   } f();
 
 -- Output --
 

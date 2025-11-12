@@ -1,11 +1,11 @@
 -- Test --
   mod_external_root
-  ../books/tests/src/mod_external.md:5
+  ../books/tests/src/mod_external.md:6
 
 -- Code --
 
- 1: mod external;
- 2: std::debug::assert_valid(external::a);
+   6:   mod external;
+   7:   std::debug::assert_valid(external::a);
 
 -- Output --
 

@@ -1,12 +1,12 @@
 -- Test --
   types_named_tuple_color
-  ../books/language/src/types/collections/tuples/aliases.md:13
+  ../books/language/src/types/collections/tuples/aliases.md:14
 
 -- Code --
 
- 1: color: Color = (r = 100%, g = 50%, b = 25%, a = 100%);
- 2: 
- 3: std::debug::assert(color.r == 100%);
+  14:   color: Color = (r = 100%, g = 50%, b = 25%, a = 100%);
+  15:   
+  16:   std::debug::assert(color.r == 100%);
 
 -- Output --
 

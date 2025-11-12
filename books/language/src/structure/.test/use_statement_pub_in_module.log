@@ -1,20 +1,20 @@
 -- Test --
   use_statement_pub_in_module
-  ../books/language/src/structure/use.md:109
+  ../books/language/src/structure/use.md:110
 
 -- Code --
 
- 1: mod my {
- 2:     mod name {
- 3:         pub mod space {
- 4:             pub use std::geo2d::*;
- 5:         }
- 6:     }
- 7:     pub use name::space::*;
- 8: }
- 9: 
-10: my::Circle(r = 4mm);
-11: my::Rect(size = 40mm);
+ 110:   mod my {
+ 111:       mod name {
+ 112:           pub mod space {
+ 113:               pub use std::geo2d::*;
+ 114:           }
+ 115:       }
+ 116:       pub use name::space::*;
+ 117:   }
+ 118:   
+ 119:   my::Circle(r = 4mm);
+ 120:   my::Rect(size = 40mm);
 
 -- Output --
 

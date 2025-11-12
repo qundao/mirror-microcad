@@ -1,37 +1,38 @@
 -- Test --
   measure
-  ../books/language/src/types/models/measures.md:9
+  ../books/language/src/types/models/measures.md:10
 
 -- Code --
 
- 1: __builtin::debug::assert_eq([
- 2:     // use measure area() on a circle
- 3:     std::geo2d::Circle(radius=10mm).area(),
- 4: 
- 5:     // circle area formula for comparison
- 6:     10mm * 10mm * std::math::PI
- 7: ]);
+  10:   __builtin::debug::assert_eq([
+  11:       // use measure area() on a circle
+  12:       std::geo2d::Circle(radius=10mm).area(),
+  13:   
+  14:       // circle area formula for comparison
+  15:       10mm * 10mm * std::math::PI
+  16:   ]);
 
 -- Output --
 
 -- Errors --
 error: Symbol area not found.
-  ---> ../books/language/src/types/models/measures.md:3:37
+  ---> ../books/language/src/types/models/measures.md:12:37
      |
-   3 |     std::geo2d::Circle(radius=10mm).area(),
+  12 |     std::geo2d::Circle(radius=10mm).area(),
      |                                     ^^^^
      |
 error: Array elements have different types: [<INVALID TYPE>, Area]
-  ---> ../books/language/src/types/models/measures.md:1:29
+  ---> ../books/language/src/types/models/measures.md:10:29
      |
-   1 | __builtin::debug::assert_eq([
+  10 | __builtin::debug::assert_eq([
      |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 error: Assertion failed: Invalid: <NO VALUE>
-  ---> ../books/language/src/types/models/measures.md:1:29
+  ---> ../books/language/src/types/models/measures.md:10:29
      |
-   1 | __builtin::debug::assert_eq([
+  10 | __builtin::debug::assert_eq([
      |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
+Unexpected error(s) which did occur in line(s): 10, 12
 -- Test Result --
 TODO

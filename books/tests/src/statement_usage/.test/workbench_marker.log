@@ -1,12 +1,12 @@
 -- Test --
   workbench_marker
-  ../books/tests/src/statement_usage/workbench.md:69
+  ../books/tests/src/statement_usage/workbench.md:70
 
 -- Code --
 
- 1: sketch K() {
- 2:   @input
- 3: } K();
+  70:   sketch K() {
+  71:     @input
+  72:   } K();
 
 -- Output --
 

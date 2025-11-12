@@ -1,20 +1,20 @@
 -- Test --
   pre_init_expression
-  ../books/tests/src/statement_usage/pre-init.md:93
+  ../books/tests/src/statement_usage/pre-init.md:94
 
 -- Code --
 
- 1: sketch K() { 
- 2:   1 + 2; // error
- 3: init(l:Length) {} } K();
+  94:   sketch K() { 
+  95:     1 + 2; // error
+  96:   init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
 error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:95:3
      |
-   2 |   1 + 2; // error
+  95 |   1 + 2; // error
      |   ^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

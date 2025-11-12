@@ -1,35 +1,36 @@
 -- Test --
   mod_example
-  ../books/language/src/structure/modules/README.md:22
+  ../books/language/src/structure/modules/README.md:23
 
 -- Code --
 
- 1: // define private module
- 2: mod my {
- 3:     // define public module
- 4:     pub mod math {
- 5:         // define PI as a public constant value
- 6:         pub const PI = 3.14159;
- 7: 
- 8:         // define some public calculation function
- 9:         pub fn abs(x: Scalar) -> Scalar {
-10:             if x < 0 { return -x; } else { return x; }
-11:         }
-12:     }
-13: }
-14: 
-15: // use the function and the constant
-16: x = my::math::abs(-1.0) * my::math::PI;
+  23:   // define private module
+  24:   mod my {
+  25:       // define public module
+  26:       pub mod math {
+  27:           // define PI as a public constant value
+  28:           pub const PI = 3.14159;
+  29:   
+  30:           // define some public calculation function
+  31:           pub fn abs(x: Scalar) -> Scalar {
+  32:               if x < 0 { return -x; } else { return x; }
+  33:           }
+  34:       }
+  35:   }
+  36:   
+  37:   // use the function and the constant
+  38:   x = my::math::abs(-1.0) * my::math::PI;
 
 -- Output --
 
 -- Errors --
 warning: Unused local x.
-  ---> ../books/language/src/structure/modules/README.md:16:1
+  ---> ../books/language/src/structure/modules/README.md:38:1
      |
-  16 | x = my::math::abs(-1.0) * my::math::PI;
+  38 | x = my::math::abs(-1.0) * my::math::PI;
      | ^
      |
+Unexpected warnings(s) which did occur in line(s): 38
 -- No model --
 -- Test Result --
 OK

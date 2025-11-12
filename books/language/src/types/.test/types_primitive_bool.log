@@ -1,10 +1,10 @@
 -- Test --
   types_primitive_bool
-  ../books/language/src/types/primitives.md:9
+  ../books/language/src/types/primitives.md:10
 
 -- Code --
 
- 1: std::debug::assert(true != false);
+  10:   std::debug::assert(true != false);
 
 -- Output --
 

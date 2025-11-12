@@ -275,7 +275,7 @@ fn scan_for_tests(
                 if let Some(name) = start.name("name") {
                     // remember test name
                     test_name = name.as_str().to_string();
-                    start_no = line_no + 1;
+                    start_no = line_no + 2;
                     // clear code
                     test_code.clear();
                 }

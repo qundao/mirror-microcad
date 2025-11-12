@@ -48,6 +48,7 @@ impl SrcRef {
         })))
     }
 }
+
 /// A reference into the source code
 #[derive(Clone, Default)]
 pub struct SrcRefInner {
@@ -66,6 +67,13 @@ impl SrcRefInner {
             && other.source_file_hash != 0
             && (self.range.start < other.range.end)
             && (other.range.start < self.range.end)
+    }
+
+    /// Return a reference with a given line offset.
+    pub fn with_line_offset(&self, line_offset: usize) -> Self {
+        let mut s = self.clone();
+        s.at.line += line_offset;
+        s
     }
 }
 

@@ -1,11 +1,11 @@
 -- Test --
   boolean_literal
-  ../books/language/src/expressions/literals.md:43
+  ../books/language/src/expressions/literals.md:44
 
 -- Code --
 
- 1: true;
- 2: false
+  44:   true;
+  45:   false
 
 -- Output --
 

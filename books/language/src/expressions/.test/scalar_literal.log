@@ -1,16 +1,16 @@
 -- Test --
   scalar_literal
-  ../books/language/src/expressions/literals.md:27
+  ../books/language/src/expressions/literals.md:28
 
 -- Code --
 
- 1: 1.23;
- 2: 0.3252;
- 3: .4534;
- 4: 1.;
- 5: -1200.0;
- 6: 12.0E+12;
- 7: 50%    // = 0.5
+  28:   1.23;
+  29:   0.3252;
+  30:   .4534;
+  31:   1.;
+  32:   -1200.0;
+  33:   12.0E+12;
+  34:   50%    // = 0.5
 
 -- Output --
 

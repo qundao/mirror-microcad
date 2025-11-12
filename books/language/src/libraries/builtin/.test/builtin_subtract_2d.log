@@ -1,16 +1,16 @@
 -- Test --
   builtin_subtract_2d
-  ../books/language/src/libraries/builtin/ops.md:9
+  ../books/language/src/libraries/builtin/ops.md:10
 
 -- Code --
 
- 1: use __builtin::*;
- 2: 
- 3: #[color = "red"]
- 4: {
- 5:     geo2d::Circle(radius = 3.0).ops::translate(x = 1.0, y = 1.0, z = 0.0);
- 6:     geo2d::Rect(x = 0.0, y = 0.0, width = 3.0, height = 3.0);
- 7: }.ops::subtract();
+  10:   use __builtin::*;
+  11:   
+  12:   #[color = "red"]
+  13:   {
+  14:       geo2d::Circle(radius = 3.0).ops::translate(x = 1.0, y = 1.0, z = 0.0);
+  15:       geo2d::Rect(x = 0.0, y = 0.0, width = 3.0, height = 3.0);
+  16:   }.ops::subtract();
 
 -- Output --
 
