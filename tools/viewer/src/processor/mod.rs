@@ -282,6 +282,12 @@ impl Processor {
     /// Generate mesh geometry output for model.
     fn generate_responses(&mut self, model: &Model, responses: &mut Vec<ProcessorResponse>) {
         use microcad_lang::model::Element::*;
+        match model.render_output_type() {
+            microcad_lang::model::OutputType::Geometry2D
+            | microcad_lang::model::OutputType::Geometry3D => {}
+            microcad_lang::model::OutputType::NotDetermined
+            | microcad_lang::model::OutputType::InvalidMixed => return,
+        }
 
         let model_ = model.borrow();
         // We only consider output geometries of workpieces and ignore the rest.
