@@ -264,6 +264,75 @@ impl TestEnv {
         self.log(&format!("-- Errors --\n{diagnosis}"));
     }
 
+    fn diff(
+        &mut self,
+        left: &std::collections::HashSet<usize>,
+        right: &std::collections::HashSet<usize>,
+        message: &str,
+    ) -> bool {
+        let mut diff = left
+            .difference(right)
+            .map(|line| line.to_string())
+            .collect::<Vec<_>>();
+        if diff.is_empty() {
+            true
+        } else {
+            diff.sort();
+            let message = format!("{message}: {}", diff.join(", "));
+            log::trace!("{message}");
+            self.log_ln(&message);
+            false
+        }
+    }
+
+    /// Report wrong errors into log file.
+    pub fn report_wrong_errors(
+        &mut self,
+        error_lines: &std::collections::HashSet<usize>,
+        warning_lines: &std::collections::HashSet<usize>,
+    ) {
+        fn lines_with(code: &str, marker: &str, offset: usize) -> std::collections::HashSet<usize> {
+            code.lines()
+                .enumerate()
+                .filter_map(|line| {
+                    if line.1.contains(marker) {
+                        Some(line.0 + offset)
+                    } else {
+                        None
+                    }
+                })
+                .collect()
+        }
+
+        let lines_with_error = lines_with(self.code(), "// error", self.offset());
+        let lines_with_warning = lines_with(self.code(), "// warning", self.offset());
+
+        let errors_ok = self.diff(
+            &lines_with_error,
+            error_lines,
+            "Expected error(s) which did not occur in line(s)",
+        ) && self.diff(
+            error_lines,
+            &lines_with_error,
+            "Unexpected error(s) which did occur in line(s)",
+        );
+
+        let warnings_ok = self.diff(
+            &lines_with_warning,
+            warning_lines,
+            "Expected warnings(s) which did not occur in line(s)",
+        ) && self.diff(
+            warning_lines,
+            &lines_with_warning,
+            "Unexpected warnings(s) which did occur in line(s)",
+        );
+
+        if !self.todo() && (!errors_ok || !warnings_ok) {
+            self.result(TestResult::FailWrong);
+            panic!("ERROR: test is marked to fail but fails with wrong errors/warnings");
+        }
+    }
+
     /// Report result into log file.
     pub fn result(&mut self, result: TestResult) {
         let (res, res_long) = match result {

@@ -10,19 +10,6 @@ use microcad_lang::{
 };
 use microcad_test_tools::test_env::*;
 
-fn lines_with(code: &str, marker: &str) -> std::collections::HashSet<usize> {
-    code.lines()
-        .enumerate()
-        .filter_map(|line| {
-            if line.1.contains(marker) {
-                Some(line.0 + 1)
-            } else {
-                None
-            }
-        })
-        .collect()
-}
-
 #[allow(dead_code)]
 pub fn init() {
     let _ = env_logger::builder().try_init();
@@ -82,20 +69,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
-
-                    let lines_with_errors = lines_with(env.code(), "// error");
-                    let lines_with_warnings = lines_with(env.code(), "// warning");
-                    if !env.todo()
-                        && ((context.has_errors() && lines_with_errors != context.error_lines())
-                            || (context.has_warnings()
-                                && !context.warning_lines().iter().all(|line| {
-                                    lines_with_warnings.contains(line)
-                                        || lines_with_errors.contains(line)
-                                })))
-                    {
-                        env.result(TestResult::FailWrong);
-                        panic!("ERROR: test is marked to fail but fails with wrong errors");
-                    }
+                    env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
 
                     let _ = fs::remove_file(env.banner_file());
 
@@ -153,6 +127,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
+                    env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
 
                     let _ = fs::remove_file(env.banner_file());
 
