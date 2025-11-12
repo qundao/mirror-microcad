@@ -5,7 +5,7 @@
 
 use microcad_core::{BooleanOp, Geometry2D};
 
-use crate::{builtin::*, eval::ArgumentMatch, model::*, render::*, src_ref::SrcRef, value::Tuple};
+use crate::{builtin::*, model::*, render::*, src_ref::SrcRef, value::Tuple};
 
 impl Operation for BooleanOp {
     fn process_2d(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
