@@ -13,6 +13,7 @@ The following banners indicate that the code is tested ok:
 | Banner                                       | Meaning                     |
 | -------------------------------------------- | --------------------------- |
 | ![ok](./images/ok.svg)                       | Ok                          |
+| ![ok](./images/ok_warn.svg)                  | Ok (with warnings)          |
 | ![fail_ok](./images/fail_ok.svg)             | Ok to fail                  |
 | ![not_todo](./images/not_todo.svg)           | marked as todo but is ok    |
 | ![not_todo_fail](./images/not_todo_fail.svg) | todo but fail intentionally |

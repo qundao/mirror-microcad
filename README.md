@@ -4,7 +4,7 @@
 [![Crates.io](https://img.shields.io/crates/v/microcad.svg)](https://crates.io/crates/microcad)
 [![Dependency status](https://deps.rs/repo/codeberg/microcad/microcad/status.svg)](https://deps.rs/repo/codeberg/microcad/microcad)
 
-![µcad Logo](lang/doc/images/logo.png)
+![µcad Logo](images/logo.png)
 
 µcad (pronounced *microcad*) is a description language for modeling parameterizable geometric objects.
 Simple basic shapes can be composed to create complex geometries which then can be rendered into STL
@@ -21,7 +21,6 @@ Feel free to [contribute](CONTRIBUTE.md) by opening issues or pull requests.
 - [Installation](#installation)
 - [Command line usage](#command-line-usage)
 - [Documentation](#documentation)
-- [Test List](#test-list)
 - [💚 Funded by](#-funded-by)
 
 ## Quick Start
@@ -38,7 +37,7 @@ cargo install microcad
 
 **Note**: Currently µcad has no binary install packages so the only ways to install
 it are with [`cargo install`](#installation) or from the source code (see section
-[Contribute](#contribute)).
+[Contribute](CONTRIBUTE.md#contribute-documentation)).
 
 ## First Example
 
@@ -46,8 +45,6 @@ The following µcad source code defines a *part* called `csg_cube`, which has a 
 rounded corners and three cylinders as holes:
 
 ![csg_cube](examples/csg_cube.png)
-
-[![test](.test/first_example.svg)](.test/first_example.log)
 
 ```µcad,first_example
 use std::math::*;
@@ -106,19 +103,14 @@ The resulting STL model looks like this:
 ## Documentation
 
 - [Description of language features](lang/doc/README.md)
-- [Language reference](lang/doc/REFERENCE.md)
+- [Language reference](http://docs.microcad.xyz/language/book/)
 - [Basic concepts](lang/doc/CONCEPTS.md)
 - Code documentation:
   - [`microcad-lang` module](https://docs.rs/microcad-lang)
   - [`microcad-core` module](https://docs.rs/microcad-core)
   - [`microcad-export` module](https://docs.rs/microcad-export)
-- [Markdown Tests](lang/doc/test_list.md)
 - [Glossary](lang/doc/GLOSSARY.md)
 - [Contribute Documentation](CONTRIBUTE.md#contribute-documentation)
-
-## Test List
-
-There is a [list of all tests](lang/doc/test_list.md) included in this documentation.
 
 ## 💚 Funded by
 
