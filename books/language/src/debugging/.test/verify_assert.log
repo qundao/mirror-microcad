@@ -1,10 +1,10 @@
 -- Test --
   verify_assert
-  ../books/language/src/debugging/verification.md:15
+  ../books/language/src/debugging/verification.md:16
 
 -- Code --
 
- 1: std::debug::assert(true, "You won't see this message");
+  16:   std::debug::assert(true, "You won't see this message");
 
 -- Output --
 

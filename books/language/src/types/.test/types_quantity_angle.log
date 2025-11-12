@@ -1,17 +1,17 @@
 -- Test --
   types_quantity_angle
-  ../books/language/src/types/quantities.md:74
+  ../books/language/src/types/quantities.md:75
 
 -- Code --
 
- 1: pi = std::math::PI;
- 2: radian = 1rad * pi;
- 3: degree = 180°;
- 4: degree_ = 180deg;
- 5: grad = 200grad;
- 6: turn = 0.5turns;
- 7: 
- 8: std::debug::assert( [degree, degree_, grad, turn, radian].all_equal() );
+  75:   pi = std::math::PI;
+  76:   radian = 1rad * pi;
+  77:   degree = 180°;
+  78:   degree_ = 180deg;
+  79:   grad = 200grad;
+  80:   turn = 0.5turns;
+  81:   
+  82:   std::debug::assert( [degree, degree_, grad, turn, radian].all_equal() );
 
 -- Output --
 

@@ -1,21 +1,22 @@
 -- Test --
   attributes_export
-  ../books/language/src/attributes.md:69
+  ../books/language/src/attributes.md:70
 
 -- Code --
 
- 1: #[export = "circle.svg"]
- 2: c = std::geo2d::Circle(42.0mm);
+  70:   #[export = "circle.svg"]
+  71:   c = std::geo2d::Circle(42.0mm);
 
 -- Output --
 
 -- Errors --
 warning: Unused local c.
-  ---> ../books/language/src/attributes.md:2:1
+  ---> ../books/language/src/attributes.md:71:1
      |
-   2 | c = std::geo2d::Circle(42.0mm);
+  71 | c = std::geo2d::Circle(42.0mm);
      | ^
      |
+Unexpected warnings(s) which did occur in line(s): 71
 -- No model --
 -- Test Result --
 OK

@@ -1,28 +1,29 @@
 -- Test --
   module_workbench
-  ../books/tests/src/statement_usage/module.md:5
+  ../books/tests/src/statement_usage/module.md:6
 
 -- Code --
 
- 1: mod k {
- 2:   sketch F() {}
- 3: }
+   6:   mod k {
+   7:     sketch F() {}
+   8:   }
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:1:1
+  ---> ../books/tests/src/statement_usage/module.md:6:1
      |
-   1 | mod k {
+   6 | mod k {
      | ^^^^^^^
      |
 warning: Unused global symbol F.
-  ---> ../books/tests/src/statement_usage/module.md:2:3
+  ---> ../books/tests/src/statement_usage/module.md:7:3
      |
-   2 |   sketch F() {}
+   7 |   sketch F() {}
      |   ^^^^^^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 6, 7
 -- No model --
 -- Test Result --
 OK

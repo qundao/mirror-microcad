@@ -1,12 +1,12 @@
 -- Test --
   workbench_assignment_prop
-  ../books/tests/src/statement_usage/workbench.md:93
+  ../books/tests/src/statement_usage/workbench.md:94
 
 -- Code --
 
- 1: sketch K() {
- 2:   prop a = 1;
- 3: } K();
+  94:   sketch K() {
+  95:     prop a = 1;
+  96:   } K();
 
 -- Output --
 

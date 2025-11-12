@@ -1,12 +1,12 @@
 -- Test --
   workbench_init
-  ../books/tests/src/statement_usage/workbench.md:29
+  ../books/tests/src/statement_usage/workbench.md:30
 
 -- Code --
 
- 1: sketch K() {
- 2:   init() {}
- 3: } K();
+  30:   sketch K() {
+  31:     init() {}
+  32:   } K();
 
 -- Output --
 

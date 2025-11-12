@@ -1,20 +1,20 @@
 -- Test --
   module_return
-  ../books/tests/src/statement_usage/module.md:53
+  ../books/tests/src/statement_usage/module.md:54
 
 -- Code --
 
- 1: mod k {
- 2:   return 1;  // error
- 3: }
+  54:   mod k {
+  55:     return 1;  // error
+  56:   }
 
 -- Output --
 
 -- Errors --
 error: Statement is not available within Module
-  ---> ../books/tests/src/statement_usage/module.md:2:3
+  ---> ../books/tests/src/statement_usage/module.md:55:3
      |
-   2 |   return 1;  // error
+  55 |   return 1;  // error
      |   ^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

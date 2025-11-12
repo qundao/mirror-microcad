@@ -1,22 +1,23 @@
 -- Test --
   method_call
-  ../books/tests/src/method_call.md:5
+  ../books/tests/src/method_call.md:6
 
 -- Code --
 
- 1: op scale() {}
- 2: sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
- 3: Sketch(4.0);
+   6:   op scale() {}
+   7:   sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
+   8:   Sketch(4.0);
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol scale.
-  ---> ../books/tests/src/method_call.md:1:1
+  ---> ../books/tests/src/method_call.md:6:1
      |
-   1 | op scale() {}
+   6 | op scale() {}
      | ^^^^^^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 6
 -- Model --
   Group (root) ->
     Workpiece(sketch) method_call::Sketch(scale=4) ->

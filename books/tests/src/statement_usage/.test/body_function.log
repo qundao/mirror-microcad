@@ -1,26 +1,26 @@
 -- Test --
   body_function
-  ../books/tests/src/statement_usage/body.md:21
+  ../books/tests/src/statement_usage/body.md:22
 
 -- Code --
 
- 1: {
- 2:   fn f() {} f(); // error
- 3: }
+  22:   {
+  23:     fn f() {} f(); // error
+  24:   }
 
 -- Output --
 
 -- Errors --
 error: Function statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:2:3
+  ---> ../books/tests/src/statement_usage/body.md:23:3
      |
-   2 |   fn f() {} f(); // error
+  23 |   fn f() {} f(); // error
      |   ^^^^^^^^^
      |
 error: Symbol f not found.
-  ---> ../books/tests/src/statement_usage/body.md:2:13
+  ---> ../books/tests/src/statement_usage/body.md:23:13
      |
-   2 |   fn f() {} f(); // error
+  23 |   fn f() {} f(); // error
      |             ^^^
      |
 -- Test Result --

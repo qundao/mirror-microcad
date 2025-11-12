@@ -1,12 +1,12 @@
 -- Test --
   use_as_module
-  ../books/language/src/structure/use.md:67
+  ../books/language/src/structure/use.md:68
 
 -- Code --
 
- 1: use std::geo2d as geo;
- 2: 
- 3: geo::Circle(r = 4mm);
+  68:   use std::geo2d as geo;
+  69:   
+  70:   geo::Circle(r = 4mm);
 
 -- Output --
 

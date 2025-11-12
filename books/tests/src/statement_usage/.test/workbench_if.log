@@ -1,12 +1,12 @@
 -- Test --
   workbench_if
-  ../books/tests/src/statement_usage/workbench.md:61
+  ../books/tests/src/statement_usage/workbench.md:62
 
 -- Code --
 
- 1: sketch K() {
- 2:   if std::math::PI == 3 { }
- 3: } K();
+  62:   sketch K() {
+  63:     if std::math::PI == 3 { }
+  64:   } K();
 
 -- Output --
 

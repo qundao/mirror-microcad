@@ -1,13 +1,13 @@
 -- Test --
   assignment
-  ../books/language/src/assignments/values.md:13
+  ../books/language/src/assignments/values.md:14
 
 -- Code --
 
- 1: a = 5;
- 2: b = a * 2;
- 3: std::debug::assert_eq([a,5]);
- 4: std::debug::assert_eq([b,10]);
+  14:   a = 5;
+  15:   b = a * 2;
+  16:   std::debug::assert_eq([a,5]);
+  17:   std::debug::assert_eq([b,10]);
 
 -- Output --
 

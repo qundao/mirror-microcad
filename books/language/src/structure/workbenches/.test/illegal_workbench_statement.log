@@ -1,29 +1,29 @@
 -- Test --
   illegal_workbench_statement
-  ../books/language/src/structure/workbenches/README.md:241
+  ../books/language/src/structure/workbenches/README.md:242
 
 -- Code --
 
- 1: sketch Wheel(radius: Length) {
- 2:     sketch Axis(length: Length) {}  // error
- 3:     std::geo2d::Circle(radius);
- 4: }
- 5: 
- 6: Wheel(radius = 1.0mm);
+ 242:   sketch Wheel(radius: Length) {
+ 243:       sketch Axis(length: Length) {}  // error
+ 244:       std::geo2d::Circle(radius);
+ 245:   }
+ 246:   
+ 247:   Wheel(radius = 1.0mm);
 
 -- Output --
 
 -- Errors --
 error: Statement is not available within Sketch
-  ---> ../books/language/src/structure/workbenches/README.md:2:5
+  ---> ../books/language/src/structure/workbenches/README.md:243:5
      |
-   2 |     sketch Axis(length: Length) {}  // error
+ 243 |     sketch Axis(length: Length) {}  // error
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 error: Sketch is not available within Sketch
-  ---> ../books/language/src/structure/workbenches/README.md:2:5
+  ---> ../books/language/src/structure/workbenches/README.md:243:5
      |
-   2 |     sketch Axis(length: Length) {}  // error
+ 243 |     sketch Axis(length: Length) {}  // error
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

@@ -1,21 +1,21 @@
 -- Test --
   types_quantity_arithmetic
-  ../books/language/src/types/quantities.md:172
+  ../books/language/src/types/quantities.md:173
 
 -- Code --
 
- 1: use std::debug::assert;
- 2: 
- 3: a = 2.0mm;
- 4: assert([a, 2mm, 2.0mm].all_equal());
- 5: b = 2 * a;
- 6: assert([b, 4mm, 4.0mm].all_equal());
- 7: c = a / 2;
- 8: assert([c, 1mm, 1.0mm].all_equal());
- 9: d = a + 2.0mm;
-10: assert([d, 4mm, 4.0mm].all_equal());
-11: e = a - 2.0mm;
-12: assert([e, 0mm, 0.0mm].all_equal());
+ 173:   use std::debug::assert;
+ 174:   
+ 175:   a = 2.0mm;
+ 176:   assert([a, 2mm, 2.0mm].all_equal());
+ 177:   b = 2 * a;
+ 178:   assert([b, 4mm, 4.0mm].all_equal());
+ 179:   c = a / 2;
+ 180:   assert([c, 1mm, 1.0mm].all_equal());
+ 181:   d = a + 2.0mm;
+ 182:   assert([d, 4mm, 4.0mm].all_equal());
+ 183:   e = a - 2.0mm;
+ 184:   assert([e, 0mm, 0.0mm].all_equal());
 
 -- Output --
 

@@ -1,10 +1,10 @@
 -- Test --
   translate_2d
-  ../books/language/src/libraries/std/ops/translate.md:7
+  ../books/language/src/libraries/std/ops/translate.md:8
 
 -- Code --
 
- 1: std::geo2d::Rect(30mm).std::ops::translate(x = 10mm, y = 20mm);
+   8:   std::geo2d::Rect(30mm).std::ops::translate(x = 10mm, y = 20mm);
 
 -- Output --
 

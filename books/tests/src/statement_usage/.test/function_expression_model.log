@@ -1,12 +1,12 @@
 -- Test --
   function_expression_model
-  ../books/tests/src/statement_usage/function.md:101
+  ../books/tests/src/statement_usage/function.md:102
 
 -- Code --
 
- 1: fn f() {
- 2:   __builtin::geo2d::Circle(radius=1);
- 3: } f();
+ 102:   fn f() {
+ 103:     __builtin::geo2d::Circle(radius=1);
+ 104:   } f();
 
 -- Output --
 

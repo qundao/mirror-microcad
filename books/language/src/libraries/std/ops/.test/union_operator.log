@@ -1,10 +1,10 @@
 -- Test --
   union_operator
-  ../books/language/src/libraries/std/ops/union.md:9
+  ../books/language/src/libraries/std/ops/union.md:10
 
 -- Code --
 
- 1: std::geo2d::Circle(radius = 3mm) | std::geo2d::Rect(width = 3mm, height = 2mm);
+  10:   std::geo2d::Circle(radius = 3mm) | std::geo2d::Rect(width = 3mm, height = 2mm);
 
 -- Output --
 

@@ -1,15 +1,15 @@
 -- Test --
   builtin_translate_twice
-  ../books/language/src/libraries/builtin/ops.md:92
+  ../books/language/src/libraries/builtin/ops.md:93
 
 -- Code --
 
- 1: use __builtin::*;
- 2: 
- 3: #[color = color::RED]
- 4: geo2d::Rect(x = 0.0, y = 0.0, width = 10.0, height = 10.0)
- 5:     .ops::translate(x = 0.0, y = 15.0, z = 0.0)
- 6:     .ops::translate(x = 15.0, y = 0.0, z = 0.0);
+  93:   use __builtin::*;
+  94:   
+  95:   #[color = color::RED]
+  96:   geo2d::Rect(x = 0.0, y = 0.0, width = 10.0, height = 10.0)
+  97:       .ops::translate(x = 0.0, y = 15.0, z = 0.0)
+  98:       .ops::translate(x = 15.0, y = 0.0, z = 0.0);
 
 -- Output --
 

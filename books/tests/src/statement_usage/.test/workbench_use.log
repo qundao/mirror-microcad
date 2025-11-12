@@ -1,12 +1,12 @@
 -- Test --
   workbench_use
-  ../books/tests/src/statement_usage/workbench.md:37
+  ../books/tests/src/statement_usage/workbench.md:38
 
 -- Code --
 
- 1: sketch K() {
- 2:   use std;
- 3: } K();
+  38:   sketch K() {
+  39:     use std;
+  40:   } K();
 
 -- Output --
 

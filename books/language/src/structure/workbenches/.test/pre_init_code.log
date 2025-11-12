@@ -1,41 +1,42 @@
 -- Test --
   pre_init_code
-  ../books/language/src/structure/workbenches/README.md:161
+  ../books/language/src/structure/workbenches/README.md:162
 
 -- Code --
 
- 1: sketch Wheel(radius: Length) {
- 2:     // init code
- 3:     const FACTOR = 2.0;
- 4: 
- 5:     // initializer
- 6:     init(diameter: Length) { into_radius(radius); }
- 7: 
- 8:     // function
- 9:     fn into_radius( diameter: Length ) {
-10:         // use constant FACTOR from init code
-11:         return diameter / FACTOR;
-12:     }
-13: 
-14:     // set property diameter and use FACTOR from init code
-15:     prop diameter = radius * FACTOR;
-16:     
-17:     // code body
-18:     std::geo2d::Circle(radius);
-19: }
-20: 
-21: __builtin::debug::assert(Wheel(5cm).radius == 5cm);
-22: __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
+ 162:   sketch Wheel(radius: Length) {
+ 163:       // init code
+ 164:       const FACTOR = 2.0;
+ 165:   
+ 166:       // initializer
+ 167:       init(diameter: Length) { into_radius(radius); }
+ 168:   
+ 169:       // function
+ 170:       fn into_radius( diameter: Length ) {
+ 171:           // use constant FACTOR from init code
+ 172:           return diameter / FACTOR;
+ 173:       }
+ 174:   
+ 175:       // set property diameter and use FACTOR from init code
+ 176:       prop diameter = radius * FACTOR;
+ 177:       
+ 178:       // code body
+ 179:       std::geo2d::Circle(radius);
+ 180:   }
+ 181:   
+ 182:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
+ 183:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol into_radius.
-  ---> ../books/language/src/structure/workbenches/README.md:9:5
+  ---> ../books/language/src/structure/workbenches/README.md:170:5
      |
-   9 |     fn into_radius( diameter: Length ) {
+ 170 |     fn into_radius( diameter: Length ) {
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 170
 -- No model --
 -- Test Result --
 OK

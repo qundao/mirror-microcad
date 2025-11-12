@@ -1,112 +1,113 @@
 -- Test --
   value_declarations
-  ../books/tests/src/value_declarations.md:17
+  ../books/tests/src/value_declarations.md:18
 
 -- Code --
 
- 1: use std::debug::*;
- 2: 
- 3: mod module {
- 4:     
- 5:     use std::debug::*;
- 6: 
- 7:     // private module variable
- 8:     const value = 1;
- 9:     // public module variable
-10:     pub pub_value = 2;
-11: 
-12:     pub mod pub_sub_module {
-13:         // pre-init code
-14:         use std::debug::*;
-15: 
-16:         // private module variable
-17:         const value = 3;
-18:         // public module variable
-19:         pub pub_value = 4;
-20: 
-21:         // private workbench
-22:         sketch PrivateWorkbench() {}
-23: 
-24:         // public workbench
-25:         pub sketch Workbench(param = 5) {
-26:             const sketch_local = 6;
-27: 
-28:             init(alt_param = 7) {
-29:                 init_local = 8;
-30: 
-31:                 assert_eq([super::value, 1]);
-32:                 assert_eq([super::pub_value, 2]);
-33:                 assert_eq([value, 3]);
-34:                 assert_eq([pub_value, 4]);
-35:                 assert_invalid(param);
-36:                 assert_eq([sketch_local, 6]);
-37:                 assert_eq([alt_param, 7]);
-38:                 assert_eq([init_local, 8]);
-39: 
-40:                 prop param = 5; // needed to compile
-41:             }
-42: 
-43:             // property of sketch
-44:             prop property = 9;
-45: 
-46:             // post init code
-47:             assert_eq([super::value,1]);
-48:             assert_eq([super::pub_value, 2]);
-49:             assert_eq([value, 3]);
-50:             assert_eq([pub_value, 4]);
-51:             assert_eq([param, 5]);
-52:             assert_eq([sketch_local, 6]);
-53:             assert_invalid(alt_param);
-54:             assert_invalid(init_local);
-55:             assert_eq([property, 9]);
-56: 
-57:             function();
-58:         }
-59: 
-60:         fn function(fn_param = 10) {
-61:             assert_eq([super::value, 1]);
-62:             assert_eq([super::pub_value, 2]);
-63:             assert_eq([value, 3]);
-64:             assert_eq([pub_value, 4]);
-65:             assert_invalid(param);
-66:             // assert_invalid(Workbench);
-67:             assert_eq([fn_param, 10]);
-68: 
-69:             return 0;
-70:         }
-71:     }
-72: 
-73:     pub fn function(fn_param = 11) {
-74:         assert_eq([value, 1]);
-75:         assert_eq([pub_value, 2]);
-76:         assert_invalid(pub_sub_module::value);
-77:         assert_eq([pub_sub_module::pub_value, 4]);
-78:         assert_invalid(Workbench);
-79:         assert_invalid(PrivateWorkbench);
-80:         assert_eq([fn_param, 11]);
-81:         
-82:         return 0;
-83:     }
-84: }
-85: 
-86: // source file code 
-87: assert_invalid(module::value);
-88: assert_eq([module::pub_value, 2]);
-89: assert_invalid(module::pub_sub_module::value);
-90: assert_eq([module::pub_sub_module::pub_value, 4]);
-91: assert_eq([module::pub_sub_module::Workbench().property, 9]);
-92: assert_invalid(module::pub_sub_module::PrivateWorkbench);
-93: assert_eq([module::function(), 0]);
+  18:   use std::debug::*;
+  19:   
+  20:   mod module {
+  21:       
+  22:       use std::debug::*;
+  23:   
+  24:       // private module variable
+  25:       const value = 1;
+  26:       // public module variable
+  27:       pub pub_value = 2;
+  28:   
+  29:       pub mod pub_sub_module {
+  30:           // pre-init code
+  31:           use std::debug::*;
+  32:   
+  33:           // private module variable
+  34:           const value = 3;
+  35:           // public module variable
+  36:           pub pub_value = 4;
+  37:   
+  38:           // private workbench
+  39:           sketch PrivateWorkbench() {}
+  40:   
+  41:           // public workbench
+  42:           pub sketch Workbench(param = 5) {
+  43:               const sketch_local = 6;
+  44:   
+  45:               init(alt_param = 7) {
+  46:                   init_local = 8;
+  47:   
+  48:                   assert_eq([super::value, 1]);
+  49:                   assert_eq([super::pub_value, 2]);
+  50:                   assert_eq([value, 3]);
+  51:                   assert_eq([pub_value, 4]);
+  52:                   assert_invalid(param);
+  53:                   assert_eq([sketch_local, 6]);
+  54:                   assert_eq([alt_param, 7]);
+  55:                   assert_eq([init_local, 8]);
+  56:   
+  57:                   prop param = 5; // needed to compile
+  58:               }
+  59:   
+  60:               // property of sketch
+  61:               prop property = 9;
+  62:   
+  63:               // post init code
+  64:               assert_eq([super::value,1]);
+  65:               assert_eq([super::pub_value, 2]);
+  66:               assert_eq([value, 3]);
+  67:               assert_eq([pub_value, 4]);
+  68:               assert_eq([param, 5]);
+  69:               assert_eq([sketch_local, 6]);
+  70:               assert_invalid(alt_param);
+  71:               assert_invalid(init_local);
+  72:               assert_eq([property, 9]);
+  73:   
+  74:               function();
+  75:           }
+  76:   
+  77:           fn function(fn_param = 10) {
+  78:               assert_eq([super::value, 1]);
+  79:               assert_eq([super::pub_value, 2]);
+  80:               assert_eq([value, 3]);
+  81:               assert_eq([pub_value, 4]);
+  82:               assert_invalid(param);
+  83:               // assert_invalid(Workbench);
+  84:               assert_eq([fn_param, 10]);
+  85:   
+  86:               return 0;
+  87:           }
+  88:       }
+  89:   
+  90:       pub fn function(fn_param = 11) {
+  91:           assert_eq([value, 1]);
+  92:           assert_eq([pub_value, 2]);
+  93:           assert_invalid(pub_sub_module::value);
+  94:           assert_eq([pub_sub_module::pub_value, 4]);
+  95:           assert_invalid(Workbench);
+  96:           assert_invalid(PrivateWorkbench);
+  97:           assert_eq([fn_param, 11]);
+  98:           
+  99:           return 0;
+ 100:       }
+ 101:   }
+ 102:   
+ 103:   // source file code 
+ 104:   assert_invalid(module::value);
+ 105:   assert_eq([module::pub_value, 2]);
+ 106:   assert_invalid(module::pub_sub_module::value);
+ 107:   assert_eq([module::pub_sub_module::pub_value, 4]);
+ 108:   assert_eq([module::pub_sub_module::Workbench().property, 9]);
+ 109:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
+ 110:   assert_eq([module::function(), 0]);
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol PrivateWorkbench.
-  ---> ../books/tests/src/value_declarations.md:22:9
+  ---> ../books/tests/src/value_declarations.md:39:9
      |
-  22 |         sketch PrivateWorkbench() {}
+  39 |         sketch PrivateWorkbench() {}
      |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 39
 -- No model --
 -- Test Result --
 OK

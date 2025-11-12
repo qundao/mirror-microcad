@@ -1,14 +1,14 @@
 -- Test --
   function_call
-  ../books/language/src/flow/calls/function_calls.md:7
+  ../books/language/src/flow/calls/function_calls.md:8
 
 -- Code --
 
- 1: // function definition
- 2: fn f() {}
- 3: 
- 4: // function call
- 5: f();
+   8:   // function definition
+   9:   fn f() {}
+  10:   
+  11:   // function call
+  12:   f();
 
 -- Output --
 

@@ -1,12 +1,12 @@
 -- Test --
   inline_identifiers
-  ../books/language/src/flow/calls/multiplicity.md:51
+  ../books/language/src/flow/calls/multiplicity.md:52
 
 -- Code --
 
- 1: width = 2mm;
- 2: height = 2mm;
- 3: std::geo2d::Rect(width, height);
+  52:   width = 2mm;
+  53:   height = 2mm;
+  54:   std::geo2d::Rect(width, height);
 
 -- Output --
 

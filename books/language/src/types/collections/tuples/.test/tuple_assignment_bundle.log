@@ -1,12 +1,12 @@
 -- Test --
   tuple_assignment_bundle
-  ../books/language/src/types/collections/tuples/assignments.md:20
+  ../books/language/src/types/collections/tuples/assignments.md:21
 
 -- Code --
 
- 1: (width, height) = [1,2]m;
- 2: assert_eq([width,1m]);
- 3: assert_eq([height,2m]);
+  21:   (width, height) = [1,2]m;
+  22:   assert_eq([width,1m]);
+  23:   assert_eq([height,2m]);
 
 -- Parse Error --
 Parser error:  --> 1:17

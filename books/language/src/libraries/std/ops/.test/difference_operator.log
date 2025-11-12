@@ -1,10 +1,10 @@
 -- Test --
   difference_operator
-  ../books/language/src/libraries/std/ops/subtract.md:9
+  ../books/language/src/libraries/std/ops/subtract.md:10
 
 -- Code --
 
- 1: std::geo2d::Circle(radius = 10mm) - std::geo2d::Rect(size = 2mm);
+  10:   std::geo2d::Circle(radius = 10mm) - std::geo2d::Rect(size = 2mm);
 
 -- Output --
 

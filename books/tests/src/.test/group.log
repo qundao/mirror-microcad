@@ -1,27 +1,28 @@
 -- Test --
   group
-  ../books/tests/src/semicolon.md:60
+  ../books/tests/src/semicolon.md:61
 
 -- Code --
 
- 1: use std::geo2d::Circle;
- 2: use std::ops::translate;
- 3: 
- 4: // group
- 5: { 
- 6:     Circle(radius = 1mm); 
- 7:     Circle(radius = 2mm); 
- 8: }
+  61:   use std::geo2d::Circle;
+  62:   use std::ops::translate;
+  63:   
+  64:   // group
+  65:   { 
+  66:       Circle(radius = 1mm); 
+  67:       Circle(radius = 2mm); 
+  68:   }
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol translate.
-  ---> ../books/tests/src/semicolon.md:2:5
+  ---> ../books/tests/src/semicolon.md:62:5
      |
-   2 | use std::ops::translate;
+  62 | use std::ops::translate;
      |     ^^^^^^^^^^^^^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 62
 -- Model --
   Group (root) ->
     Group ->

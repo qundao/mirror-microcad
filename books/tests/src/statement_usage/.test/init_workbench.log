@@ -1,26 +1,26 @@
 -- Test --
   init_workbench
-  ../books/tests/src/statement_usage/init.md:5
+  ../books/tests/src/statement_usage/init.md:6
 
 -- Code --
 
- 1: sketch K() { init(l:Length) { // warning
- 2:   sketch F() {} // error
- 3: } } K(1cm);
+   6:   sketch K() { init(l:Length) { // warning
+   7:     sketch F() {} // error
+   8:   } } K(1cm);
 
 -- Output --
 
 -- Errors --
 error: sketch statement not available here
-  ---> ../books/tests/src/statement_usage/init.md:2:3
+  ---> ../books/tests/src/statement_usage/init.md:7:3
      |
-   2 |   sketch F() {} // error
+   7 |   sketch F() {} // error
      |   ^^^^^^^^^^^^^
      |
 warning: Unused local l.
-  ---> ../books/tests/src/statement_usage/init.md:1:19
+  ---> ../books/tests/src/statement_usage/init.md:6:19
      |
-   1 | sketch K() { init(l:Length) { // warning
+   6 | sketch K() { init(l:Length) { // warning
      |                   ^
      |
 -- Test Result --

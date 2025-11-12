@@ -1,12 +1,12 @@
 -- Test --
   expression_literals
-  ../books/language/src/expressions/README.md:8
+  ../books/language/src/expressions/README.md:9
 
 -- Code --
 
- 1: 5;        // Scalar literal
- 2: 4.0mm;    // Quantity literal
- 3: "Hello";  // String literal
+   9:   5;        // Scalar literal
+  10:   4.0mm;    // Quantity literal
+  11:   "Hello";  // String literal
 
 -- Output --
 

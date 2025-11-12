@@ -1,26 +1,26 @@
 -- Test --
   builtin_translate
-  ../books/language/src/libraries/builtin/ops.md:70
+  ../books/language/src/libraries/builtin/ops.md:71
 
 -- Code --
 
- 1: op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
- 2:     @input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
- 3: }
- 4: 
- 5: r = __builtin::geo2d::Rect(x = 0, y = 0, width = 3, height = 3);
- 6: 
- 7: #[color = "red"]
- 8: r.translate(x = 0.0mm, y = 0.0mm);
- 9: 
-10: #[color = "blue"]
-11: r.translate(x = 4.0mm, y = 0.0mm);
-12: 
-13: #[color = "green"]
-14: r.translate(x = 0.0mm, y = 4.0mm);
-15: 
-16: #[color = "gray"]
-17: r.translate(x = 4.0mm, y = 4.0mm);
+  71:   op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
+  72:       @input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
+  73:   }
+  74:   
+  75:   r = __builtin::geo2d::Rect(x = 0, y = 0, width = 3, height = 3);
+  76:   
+  77:   #[color = "red"]
+  78:   r.translate(x = 0.0mm, y = 0.0mm);
+  79:   
+  80:   #[color = "blue"]
+  81:   r.translate(x = 4.0mm, y = 0.0mm);
+  82:   
+  83:   #[color = "green"]
+  84:   r.translate(x = 0.0mm, y = 4.0mm);
+  85:   
+  86:   #[color = "gray"]
+  87:   r.translate(x = 4.0mm, y = 4.0mm);
 
 -- Output --
 

@@ -1,12 +1,12 @@
 -- Test --
   pre_init_use
-  ../books/tests/src/statement_usage/pre-init.md:37
+  ../books/tests/src/statement_usage/pre-init.md:38
 
 -- Code --
 
- 1: sketch K() { 
- 2:   use std;
- 3: init(l:Length) {} } K();
+  38:   sketch K() { 
+  39:     use std;
+  40:   init(l:Length) {} } K();
 
 -- Output --
 

@@ -1,15 +1,15 @@
 -- Test --
   difference_alt_operator
-  ../books/language/src/libraries/std/ops/subtract.md:17
+  ../books/language/src/libraries/std/ops/subtract.md:18
 
 -- Code --
 
- 1: use std::*;
- 2: 
- 3: {
- 4:     geo2d::Circle(radius = 10mm);
- 5:     geo2d::Rect(size = 2mm);
- 6: }.ops::subtract();
+  18:   use std::*;
+  19:   
+  20:   {
+  21:       geo2d::Circle(radius = 10mm);
+  22:       geo2d::Rect(size = 2mm);
+  23:   }.ops::subtract();
 
 -- Output --
 

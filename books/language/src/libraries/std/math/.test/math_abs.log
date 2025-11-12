@@ -1,10 +1,10 @@
 -- Test --
   math_abs
-  ../books/language/src/libraries/std/math/README.md:11
+  ../books/language/src/libraries/std/math/README.md:12
 
 -- Code --
 
- 1: std::debug::assert(std::math::abs(-1) == 1);
+  12:   std::debug::assert(std::math::abs(-1) == 1);
 
 -- Output --
 

@@ -1,13 +1,13 @@
 -- Test --
   toml_import
-  ../books/language/src/import.md:26
+  ../books/language/src/import.md:27
 
 -- Code --
 
- 1: data = std::import("example.toml");
- 2: 
- 3: std::debug::assert_eq([data.M10.diameter, 10.0]);
- 4: std::debug::assert_eq([data.M6.pitch, 1.0]);
+  27:   data = std::import("example.toml");
+  28:   
+  29:   std::debug::assert_eq([data.M10.diameter, 10.0]);
+  30:   std::debug::assert_eq([data.M6.pitch, 1.0]);
 
 -- Output --
 

@@ -1,10 +1,10 @@
 -- Test --
   types_no_declaration
-  ../books/language/src/types/README.md:38
+  ../books/language/src/types/README.md:39
 
 -- Code --
 
- 1: x: Length;         // error
+  39:   x: Length;         // error
 
 -- Parse Error --
 Parser error:  --> 1:10
@@ -14,4 +14,4 @@ Parser error:  --> 1:10
   |
   = expected single_line_comment
 -- Test Result --
-FAILED AS EXPECTED
+FAILED WITH WRONG ERRORS/WARNINGS

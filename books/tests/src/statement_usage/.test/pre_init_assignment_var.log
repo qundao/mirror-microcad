@@ -1,20 +1,20 @@
 -- Test --
   pre_init_assignment_var
-  ../books/tests/src/statement_usage/pre-init.md:77
+  ../books/tests/src/statement_usage/pre-init.md:78
 
 -- Code --
 
- 1: sketch K() { 
- 2:   a = 1; // error
- 3: init(l:Length) {} } K();
+  78:   sketch K() { 
+  79:     a = 1; // error
+  80:   init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
 error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:79:3
      |
-   2 |   a = 1; // error
+  79 |   a = 1; // error
      |   ^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

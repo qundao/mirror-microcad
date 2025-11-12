@@ -1,11 +1,11 @@
 -- Test --
   extrude
-  ../books/language/src/libraries/std/ops/extrude.md:7
+  ../books/language/src/libraries/std/ops/extrude.md:8
 
 -- Code --
 
- 1: std::geo2d::Circle(radius = 20mm)
- 2:     .std::ops::extrude(height = 20mm);
+   8:   std::geo2d::Circle(radius = 20mm)
+   9:       .std::ops::extrude(height = 20mm);
 
 -- Output --
 

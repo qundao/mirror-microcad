@@ -1,12 +1,12 @@
 -- Test --
   multiplicity_arrays
-  ../books/language/src/flow/calls/multiplicity.md:11
+  ../books/language/src/flow/calls/multiplicity.md:12
 
 -- Code --
 
- 1: r = std::geo2d::Rect(width = 2mm, height = 2mm);
- 2: 
- 3: r.std::ops::translate(x = [-4mm, 4mm], y = [-4mm, 4mm]);
+  12:   r = std::geo2d::Rect(width = 2mm, height = 2mm);
+  13:   
+  14:   r.std::ops::translate(x = [-4mm, 4mm], y = [-4mm, 4mm]);
 
 -- Output --
 

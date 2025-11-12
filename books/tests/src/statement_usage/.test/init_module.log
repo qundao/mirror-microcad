@@ -1,26 +1,26 @@
 -- Test --
   init_module
-  ../books/tests/src/statement_usage/init.md:13
+  ../books/tests/src/statement_usage/init.md:14
 
 -- Code --
 
- 1: sketch K() { init(l:Length) { // warning
- 2:   mod m {} // error
- 3: } } K(1cm);
+  14:   sketch K() { init(l:Length) { // warning
+  15:     mod m {} // error
+  16:   } } K(1cm);
 
 -- Output --
 
 -- Errors --
 error: Module statement not available here
-  ---> ../books/tests/src/statement_usage/init.md:2:3
+  ---> ../books/tests/src/statement_usage/init.md:15:3
      |
-   2 |   mod m {} // error
+  15 |   mod m {} // error
      |   ^^^^^^^^
      |
 warning: Unused local l.
-  ---> ../books/tests/src/statement_usage/init.md:1:19
+  ---> ../books/tests/src/statement_usage/init.md:14:19
      |
-   1 | sketch K() { init(l:Length) { // warning
+  14 | sketch K() { init(l:Length) { // warning
      |                   ^
      |
 -- Test Result --

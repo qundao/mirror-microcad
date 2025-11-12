@@ -1,12 +1,12 @@
 -- Test --
   function_use
-  ../books/tests/src/statement_usage/function.md:37
+  ../books/tests/src/statement_usage/function.md:38
 
 -- Code --
 
- 1: fn f() {
- 2:   use std;
- 3: } f();
+  38:   fn f() {
+  39:     use std;
+  40:   } f();
 
 -- Output --
 

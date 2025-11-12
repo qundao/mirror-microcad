@@ -1,20 +1,20 @@
 -- Test --
   module_init
-  ../books/tests/src/statement_usage/module.md:29
+  ../books/tests/src/statement_usage/module.md:30
 
 -- Code --
 
- 1: mod k {
- 2:   init() { }  // error
- 3: }
+  30:   mod k {
+  31:     init() { }  // error
+  32:   }
 
 -- Output --
 
 -- Errors --
 error: Statement is not available within Module
-  ---> ../books/tests/src/statement_usage/module.md:2:3
+  ---> ../books/tests/src/statement_usage/module.md:31:3
      |
-   2 |   init() { }  // error
+  31 |   init() { }  // error
      |   ^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

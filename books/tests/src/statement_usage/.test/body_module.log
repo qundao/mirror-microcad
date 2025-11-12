@@ -1,20 +1,20 @@
 -- Test --
   body_module
-  ../books/tests/src/statement_usage/body.md:13
+  ../books/tests/src/statement_usage/body.md:14
 
 -- Code --
 
- 1: {
- 2:   mod m {} // error
- 3: }
+  14:   {
+  15:     mod m {} // error
+  16:   }
 
 -- Output --
 
 -- Errors --
 error: Module statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:2:3
+  ---> ../books/tests/src/statement_usage/body.md:15:3
      |
-   2 |   mod m {} // error
+  15 |   mod m {} // error
      |   ^^^^^^^^
      |
 -- Test Result --

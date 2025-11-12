@@ -1,20 +1,20 @@
 -- Test --
   workbench_return
-  ../books/tests/src/statement_usage/workbench.md:53
+  ../books/tests/src/statement_usage/workbench.md:54
 
 -- Code --
 
- 1: sketch K() {
- 2:   return 1; // error
- 3: } K();
+  54:   sketch K() {
+  55:     return 1; // error
+  56:   } K();
 
 -- Output --
 
 -- Errors --
 error: Statement is not available within Sketch
-  ---> ../books/tests/src/statement_usage/workbench.md:2:3
+  ---> ../books/tests/src/statement_usage/workbench.md:55:3
      |
-   2 |   return 1; // error
+  55 |   return 1; // error
      |   ^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!

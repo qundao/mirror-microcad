@@ -1,26 +1,26 @@
 -- Test --
   pre_init_function
-  ../books/tests/src/statement_usage/pre-init.md:21
+  ../books/tests/src/statement_usage/pre-init.md:22
 
 -- Code --
 
- 1: sketch K() { 
- 2:   fn f() {} f();   // error
- 3: init(l:Length) {} } K();
+  22:   sketch K() { 
+  23:     fn f() {} f();   // error
+  24:   init(l:Length) {} } K();
 
 -- Output --
 
 -- Errors --
 error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:23:3
      |
-   2 |   fn f() {} f();   // error
+  23 |   fn f() {} f();   // error
      |   ^^^^^^^^^
      |
 error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:2:13
+  ---> ../books/tests/src/statement_usage/pre-init.md:23:13
      |
-   2 |   fn f() {} f();   // error
+  23 |   fn f() {} f();   // error
      |             ^^^^
      |
 Evaluation aborted because of prior resolve errors!

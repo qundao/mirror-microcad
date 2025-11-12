@@ -1,12 +1,12 @@
 -- Test --
   body_marker
-  ../books/tests/src/statement_usage/body.md:69
+  ../books/tests/src/statement_usage/body.md:70
 
 -- Code --
 
- 1: {
- 2:   @input
- 3: }
+  70:   {
+  71:     @input
+  72:   }
 
 -- Output --
 

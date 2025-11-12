@@ -1,11 +1,11 @@
 -- Test --
   external_modules_main
-  ../books/language/src/structure/modules/external_modules.md:10
+  ../books/language/src/structure/modules/external_modules.md:11
 
 -- Code --
 
- 1: mod second;
- 2: second::f(); 
+  11:   mod second;
+  12:   second::f(); 
 
 -- Output --
 

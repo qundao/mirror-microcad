@@ -1,12 +1,12 @@
 -- Test --
   function_expression
-  ../books/tests/src/statement_usage/function.md:93
+  ../books/tests/src/statement_usage/function.md:94
 
 -- Code --
 
- 1: fn f() {
- 2:   1 + 2;
- 3: } f();
+  94:   fn f() {
+  95:     1 + 2;
+  96:   } f();
 
 -- Output --
 

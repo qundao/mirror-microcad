@@ -1,10 +1,10 @@
 -- Test --
   text
-  ../books/language/src/libraries/builtin/geo2d.md:23
+  ../books/language/src/libraries/builtin/geo2d.md:24
 
 -- Code --
 
- 1: __builtin::geo2d::Text(height = 20mm / 1mm, text = "Hello World");
+  24:   __builtin::geo2d::Text(height = 20mm / 1mm, text = "Hello World");
 
 -- Output --
 

@@ -1,26 +1,26 @@
 -- Test --
   body_assignment_prop
-  ../books/tests/src/statement_usage/body.md:93
+  ../books/tests/src/statement_usage/body.md:94
 
 -- Code --
 
- 1: {
- 2:   prop a = 1; // error
- 3: }
+  94:   {
+  95:     prop a = 1; // error
+  96:   }
 
 -- Output --
 
 -- Errors --
 error: Assignment statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:2:3
+  ---> ../books/tests/src/statement_usage/body.md:95:3
      |
-   2 |   prop a = 1; // error
+  95 |   prop a = 1; // error
      |   ^^^^^^^^^^^
      |
 error: Missing model in workbench
-  ---> ../books/tests/src/statement_usage/body.md:2:3
+  ---> ../books/tests/src/statement_usage/body.md:95:3
      |
-   2 |   prop a = 1; // error
+  95 |   prop a = 1; // error
      |   ^^^^^^^^^^^
      |
 -- Test Result --

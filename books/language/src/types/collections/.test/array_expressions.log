@@ -1,10 +1,10 @@
 -- Test --
   array_expressions
-  ../books/language/src/types/collections/arrays.md:23
+  ../books/language/src/types/collections/arrays.md:24
 
 -- Code --
 
- 1: std::debug::assert_eq([std::count([1,2,3]), 3]);
+  24:   std::debug::assert_eq([std::count([1,2,3]), 3]);
 
 -- Output --
 

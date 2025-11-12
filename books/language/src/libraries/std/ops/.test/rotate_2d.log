@@ -1,10 +1,10 @@
 -- Test --
   rotate_2d
-  ../books/language/src/libraries/std/ops/rotate.md:7
+  ../books/language/src/libraries/std/ops/rotate.md:8
 
 -- Code --
 
- 1: std::geo2d::Rect(30mm).std::ops::rotate(45°);
+   8:   std::geo2d::Rect(30mm).std::ops::rotate(45°);
 
 -- Output --
 

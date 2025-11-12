@@ -1,12 +1,12 @@
 -- Test --
   workbench_expression_model
-  ../books/tests/src/statement_usage/workbench.md:109
+  ../books/tests/src/statement_usage/workbench.md:110
 
 -- Code --
 
- 1: sketch K() {
- 2:   __builtin::geo2d::Circle(radius=1);
- 3: } K();
+ 110:   sketch K() {
+ 111:     __builtin::geo2d::Circle(radius=1);
+ 112:   } K();
 
 -- Output --
 

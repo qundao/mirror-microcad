@@ -1,22 +1,23 @@
 -- Test --
   module_pub_use
-  ../books/tests/src/statement_usage/module.md:45
+  ../books/tests/src/statement_usage/module.md:46
 
 -- Code --
 
- 1: mod k {
- 2:   pub use std::geo2d;
- 3: }
+  46:   mod k {
+  47:     pub use std::geo2d;
+  48:   }
 
 -- Output --
 
 -- Errors --
 warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:1:1
+  ---> ../books/tests/src/statement_usage/module.md:46:1
      |
-   1 | mod k {
+  46 | mod k {
      | ^^^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 46
 -- No model --
 -- Test Result --
 OK

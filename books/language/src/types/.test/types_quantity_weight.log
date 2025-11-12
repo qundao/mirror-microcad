@@ -1,24 +1,25 @@
 -- Test --
   types_quantity_weight
-  ../books/language/src/types/quantities.md:158
+  ../books/language/src/types/quantities.md:159
 
 -- Code --
 
- 1: gram = 1000.0g;
- 2: kilogram = 1.0kg;
- 3: pound = 2.204623lb;
- 4: 
- 5: std::debug::assert([gram, kilogram].all_equal());
+ 159:   gram = 1000.0g;
+ 160:   kilogram = 1.0kg;
+ 161:   pound = 2.204623lb;
+ 162:   
+ 163:   std::debug::assert([gram, kilogram].all_equal());
 
 -- Output --
 
 -- Errors --
 warning: Unused local pound.
-  ---> ../books/language/src/types/quantities.md:3:1
+  ---> ../books/language/src/types/quantities.md:161:1
      |
-   3 | pound = 2.204623lb;
+ 161 | pound = 2.204623lb;
      | ^^^^^
      |
+Unexpected warnings(s) which did occur in line(s): 161
 -- No model --
 -- Test Result --
 OK

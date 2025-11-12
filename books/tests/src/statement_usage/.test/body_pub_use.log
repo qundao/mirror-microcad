@@ -1,20 +1,20 @@
 -- Test --
   body_pub_use
-  ../books/tests/src/statement_usage/body.md:45
+  ../books/tests/src/statement_usage/body.md:46
 
 -- Code --
 
- 1: {
- 2:   pub use std; // error
- 3: }
+  46:   {
+  47:     pub use std; // error
+  48:   }
 
 -- Output --
 
 -- Errors --
 error: Public use statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:2:3
+  ---> ../books/tests/src/statement_usage/body.md:47:3
      |
-   2 |   pub use std; // error
+  47 |   pub use std; // error
      |   ^^^^^^^^^^^^
      |
 -- Test Result --
