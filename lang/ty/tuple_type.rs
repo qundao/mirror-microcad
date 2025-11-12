@@ -49,8 +49,23 @@ impl TupleType {
             .collect()
     }
 
+    /// Match tuples by id.
+    ///
+    /// TODO: Does not check any inner types!
+    /// TODO: Use argument matching to match types.
+    pub fn matches(&self, other: &Self) -> bool {
+        if !self.unnamed.is_empty()
+            || self.named.len() != other.named.len()
+            || !self.unnamed.is_empty()
+            || !other.unnamed.is_empty()
+        {
+            return false;
+        }
+        other.named.iter().all(|k| self.named.contains_key(k.0))
+    }
+
     /// Test if the named tuple has exactly all the given keys
-    fn matches(&self, keys: &[&str]) -> bool {
+    fn matches_keys(&self, keys: &[&str]) -> bool {
         if !self.unnamed.is_empty() || self.named.len() != keys.len() {
             return false;
         }
@@ -81,22 +96,22 @@ impl TupleType {
 
     /// Check if the named tuple is a [`Color`].
     pub(crate) fn is_color(&self) -> bool {
-        self.is_scalar_only() && self.matches(&["r", "g", "b", "a"])
+        self.is_scalar_only() && self.matches_keys(&["r", "g", "b", "a"])
     }
 
     /// Check if the named tuple is a [`Vec2`].
     pub(crate) fn is_vec2(&self) -> bool {
-        self.is_scalar_only() && self.matches(&["x", "y"])
+        self.is_scalar_only() && self.matches_keys(&["x", "y"])
     }
 
     /// Check if the named tuple is a [`Vec3`].
     pub(crate) fn is_vec3(&self) -> bool {
-        self.is_scalar_only() && self.matches(&["x", "y", "z"])
+        self.is_scalar_only() && self.matches_keys(&["x", "y", "z"])
     }
 
     /// Check if the named tuple is a [`Size2`]
     pub(crate) fn is_size2(&self) -> bool {
-        self.is_length_only() && self.matches(&["width", "height"])
+        self.is_length_only() && self.matches_keys(&["width", "height"])
     }
 }
 

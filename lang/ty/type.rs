@@ -58,13 +58,15 @@ impl Type {
 
     /// Returns if the given type or it's inner type matches the given parameter type.
     pub fn is_matching(&self, param_type: &Type) -> bool {
-        if matches!(param_type, Type::Quantity(QuantityType::Scalar)) {
-            self == &Type::scalar()
-                || self == &Type::Integer
-                || self.is_array_of(&Type::scalar())
-                || self.is_array_of(&Type::Integer)
-        } else {
-            self == param_type || self.is_array_of(param_type)
+        match (self, param_type) {
+            (_, Type::Quantity(QuantityType::Scalar)) => {
+                self == &Type::scalar()
+                    || self == &Type::Integer
+                    || self.is_array_of(&Type::scalar())
+                    || self.is_array_of(&Type::Integer)
+            }
+            (Type::Tuple(ty_s), Type::Tuple(ty_p)) => ty_s.matches(ty_p),
+            _ => self == param_type || self.is_array_of(param_type),
         }
     }
 }
