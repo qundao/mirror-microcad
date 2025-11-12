@@ -44,10 +44,19 @@ impl<'a> ArgumentMatch<'a> {
             result: Tuple::new_named(std::collections::HashMap::new(), arguments.src_ref()),
         };
 
+        fn match_exact(left: &Type, right: &Type) -> bool {
+            left == right
+        }
+
+        fn match_auto(left: &Type, right: &Type) -> bool {
+            left.is_matching(right)
+        }
+
         am.match_ids();
-        am.match_types(true);
+        am.match_types(true, match_exact);
+        am.match_types(false, match_auto);
         am.match_defaults();
-        am.match_types(false);
+        am.match_types(false, match_auto);
         am.check_missing()?;
 
         Ok(am)
@@ -85,7 +94,7 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Match arguments by type
-    fn match_types(&mut self, mut exclude_defaults: bool) {
+    fn match_types(&mut self, mut exclude_defaults: bool, match_fn: impl Fn(&Type, &Type) -> bool) {
         if !self.arguments.is_empty() {
             if exclude_defaults {
                 log::trace!("find type matches for (defaults):\n{self:?}");
@@ -102,7 +111,7 @@ impl<'a> ArgumentMatch<'a> {
                     .filter_map(|(n, (id, param))| {
                         if param.ty() == Type::Invalid
                             || if let Some(ty) = &param.specified_type {
-                                arg.ty().is_matching(ty)
+                                match_fn(&arg.ty(), ty)
                             } else {
                                 false
                             }
