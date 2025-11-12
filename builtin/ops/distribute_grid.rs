@@ -38,28 +38,40 @@ impl Operation for DistributeGrid {
     fn process_2d(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, model| {
             let model = model.into_group().unwrap_or(model);
-            let model_ = model.borrow();
-            let geometries: Geometries2D = model_.children.render_with_context(context)?;
+            let mut geometries = Vec::new();
+            model
+                .multiplicity_descendants()
+                .try_for_each(|model| -> RenderResult<()> {
+                    let model_geometries: Geometries2D =
+                        model.borrow().children.render_with_context(context)?;
+                    geometries.extend(model_geometries.iter().map(|geo| geo.as_ref().clone()));
+                    Ok(())
+                })?;
+
             use microcad_core::traits::DistributeGrid;
-            Ok(Geometry2D::Collection(geometries.distribute_grid(
-                self.rect(),
-                self.rows,
-                self.columns,
-            )))
+            Ok(Geometry2D::Collection(
+                Geometries2D::new(geometries).distribute_grid(self.rect(), self.rows, self.columns),
+            ))
         })
     }
 
     fn process_3d(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
         context.update_3d(|context, model| {
             let model = model.into_group().unwrap_or(model);
-            let model_ = model.borrow();
-            let geometries: Geometries3D = model_.children.render_with_context(context)?;
+            let mut geometries = Vec::new();
+            model
+                .multiplicity_descendants()
+                .try_for_each(|model| -> RenderResult<()> {
+                    let model_geometries: Geometries3D =
+                        model.borrow().children.render_with_context(context)?;
+                    geometries.extend(model_geometries.iter().map(|geo| geo.as_ref().clone()));
+                    Ok(())
+                })?;
+
             use microcad_core::traits::DistributeGrid;
-            Ok(Geometry3D::Collection(geometries.distribute_grid(
-                self.rect(),
-                self.rows,
-                self.columns,
-            )))
+            Ok(Geometry3D::Collection(
+                Geometries3D::new(geometries).distribute_grid(self.rect(), self.rows, self.columns),
+            ))
         })
     }
 }
