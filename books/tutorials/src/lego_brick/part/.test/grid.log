@@ -1,0 +1,22 @@
+-- Test --
+  grid
+  ../books/tutorials/src/lego_brick/part/custom_op.md:10
+
+-- Code --
+
+ 1: use std::ops::*;
+ 2: 
+ 3: const SPACING = 8mm;
+ 4: 
+ 5: op grid(rows: Integer, columns: Integer) {
+ 6:     @input
+ 7:         .translate(x = [0..rows] * SPACING, y = [0..columns] * SPACING)
+ 8:         .align()
+ 9: }
+
+-- Output --
+
+-- Errors --
+-- No model --
+-- Test Result --
+OK

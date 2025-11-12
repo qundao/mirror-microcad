@@ -1,0 +1,24 @@
+-- Test --
+  output
+  ../books/tutorials/src/lego_brick/base/frame/naming.md:23
+
+-- Code --
+
+ 1: outer = std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
+ 2: outer;
+
+-- Output --
+
+-- Errors --
+-- Model --
+  Group (root) ->
+    outer: Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
+      - height = 15.8mm
+      - width = 31.8mm
+      - x = -15.9mm
+      - y = -7.9mm
+      Primitive2D __builtin::geo2d::Rect(height=15.8, width=31.8, x=-15.9, y=-7.9) ->
+
+Export of "../books/tutorials/src/lego_brick/base/frame/.test/output-out.svg" successful.
+-- Test Result --
+OK
