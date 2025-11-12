@@ -1,7 +1,7 @@
 -- Test --
         Test name: mod
   Expected result: fail
-      Source file: ../books/language/src/structure/functions.md:65
+      Source file: ../books/language/src/structure/functions.md:67
         Test path: ../books/language/src/structure/.test
       Banner file: ../books/language/src/structure/.test/mod.svg
          Log file: ../books/language/src/structure/.test/mod.log
@@ -9,34 +9,34 @@
 
 -- Code --
 
-  65:   // module math
-  66:   mod math {
-  67:       // pow cannot be called from outside math
-  68:       fn pow( x: Scalar, n: Integer ) {
-  69:           if n == 1 {
-  70:               x   // return x
-  71:           } else {
-  72:               x * pow(x, n-1) // return recursive product
-  73:           }
-  74:       }
-  75:   
-  76:       // square is callable from outside math
-  77:       pub fn square(x: Scalar) {
-  78:           // call internal pow
-  79:           pow(x, 2)
-  80:       }
-  81:   }
-  82:   
-  83:   // call square in math
-  84:   math::square(2.0);
-  85:   math::pow(2.0, 5);  // error: pow is private
+  67:   // module math
+  68:   mod math {
+  69:       // pow cannot be called from outside math
+  70:       fn pow( x: Scalar, n: Integer ) {
+  71:           if n == 1 {
+  72:               x   // return x
+  73:           } else {
+  74:               x * pow(x, n-1) // return recursive product
+  75:           }
+  76:       }
+  77:   
+  78:       // square is callable from outside math
+  79:       pub fn square(x: Scalar) {
+  80:           // call internal pow
+  81:           pow(x, 2)
+  82:       }
+  83:   }
+  84:   
+  85:   // call square in math
+  86:   math::square(2.0);
+  87:   math::pow(2.0, 5);  // error: pow is private
 
 -- No Output --
 -- Errors --
 error: Symbol math::pow not found.
-  ---> ../books/language/src/structure/functions.md:85:1
+  ---> ../books/language/src/structure/functions.md:87:1
      |
-  85 | math::pow(2.0, 5);  // error: pow is private
+  87 | math::pow(2.0, 5);  // error: pow is private
      | ^^^^^^^^^^^^^^^^^
      |
 -- Test Result --

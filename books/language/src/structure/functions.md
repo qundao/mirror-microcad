@@ -37,6 +37,8 @@ fn pow( x: Scalar, n: Integer ) {
         x * pow(n-1) // return recursive product
     }
 }
+
+std::print(pow(8,2));
 ```
 
 Returning a value twice is not allowed.

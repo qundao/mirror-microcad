@@ -1,7 +1,7 @@
 -- Test --
         Test name: return_twice
   Expected result: ok
-      Source file: ../books/language/src/structure/functions.md:47
+      Source file: ../books/language/src/structure/functions.md:49
         Test path: ../books/language/src/structure/.test
       Banner file: ../books/language/src/structure/.test/return_twice.svg
          Log file: ../books/language/src/structure/.test/return_twice.log
@@ -9,23 +9,23 @@
 
 -- Code --
 
-  47:   fn pow( x: Scalar, n: Integer ) {
-  48:       if n == 1 {
-  49:           x 
-  50:       }
-  51:       x * pow(n-1)  // error: unexpected code
-  52:   }
+  49:   fn pow( x: Scalar, n: Integer ) {
+  50:       if n == 1 {
+  51:           x 
+  52:       }
+  53:       x * pow(n-1)  // error: unexpected code
+  54:   }
 
 -- No Output --
 -- Errors --
 warning: Unused global symbol pow.
-  ---> ../books/language/src/structure/functions.md:47:1
+  ---> ../books/language/src/structure/functions.md:49:1
      |
-  47 | fn pow( x: Scalar, n: Integer ) {
+  49 | fn pow( x: Scalar, n: Integer ) {
      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
-Expected error(s) which did not occur in line(s): 51
-Unexpected warnings(s) which did occur in line(s): 47
+Expected error(s) which did not occur in line(s): 53
+Unexpected warnings(s) which did occur in line(s): 49
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

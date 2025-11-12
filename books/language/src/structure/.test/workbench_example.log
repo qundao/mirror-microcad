@@ -1,7 +1,7 @@
 -- Test --
         Test name: workbench_example
   Expected result: ok
-      Source file: ../books/language/src/structure/functions.md:99
+      Source file: ../books/language/src/structure/functions.md:101
         Test path: ../books/language/src/structure/.test
       Banner file: ../books/language/src/structure/.test/workbench_example.svg
          Log file: ../books/language/src/structure/.test/workbench_example.log
@@ -9,17 +9,17 @@
 
 -- Code --
 
-  99:   sketch PunchedDisk(radius: Length) {
- 100:       use std::geo2d::Circle;
- 101:   
- 102:       // calculate inner from radius in a method
- 103:       fn inner() { return radius/2; }
- 104:   
- 105:       // generate donut (and call inner)
- 106:       Circle(radius) - Circle(inner());
- 107:   }
- 108:   
- 109:   PunchedDisk(radius = 1cm);
+ 101:   sketch PunchedDisk(radius: Length) {
+ 102:       use std::geo2d::Circle;
+ 103:   
+ 104:       // calculate inner from radius in a method
+ 105:       fn inner() { return radius/2; }
+ 106:   
+ 107:       // generate donut (and call inner)
+ 108:       Circle(radius) - Circle(inner());
+ 109:   }
+ 110:   
+ 111:   PunchedDisk(radius = 1cm);
 
 -- No Output --
 -- No Errors --

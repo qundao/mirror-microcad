@@ -16,16 +16,19 @@
   37:           x * pow(n-1) // return recursive product
   38:       }
   39:   }
+  40:   
+  41:   std::print(pow(8,2));
 
--- No Output --
+-- Output --
+<NO VALUE>
+
 -- Errors --
-warning: Unused global symbol pow.
-  ---> ../books/language/src/structure/functions.md:33:1
+error: Missing arguments: n,x
+  ---> ../books/language/src/structure/functions.md:41:16
      |
-  33 | fn pow( x: Scalar, n: Integer ) {
-     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  41 | std::print(pow(8,2));
+     |                ^^^
      |
-Unexpected warnings(s) which did occur in line(s): 33
--- No Model --
+Unexpected error(s) which did occur in line(s): 41
 -- Test Result --
-OK (BUT WARNINGS)
+FAILS
