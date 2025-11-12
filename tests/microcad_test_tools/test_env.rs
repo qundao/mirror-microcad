@@ -223,6 +223,16 @@ impl TestEnv {
         )
     }
 
+    /// Map line number into MD-line number.
+    pub fn offset_line(&self, line_no: usize) -> usize {
+        line_no + self.start_no
+    }
+
+    /// Map line number into MD-line number.
+    pub fn offset(&self) -> usize {
+        self.start_no
+    }
+
     /// Write into test log (end line with LF).
     pub fn log_ln(&mut self, text: &str) {
         if let Some(mut log_file) = self.log_file.as_mut() {

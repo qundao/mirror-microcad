@@ -56,7 +56,7 @@ pub fn run_test(env: Option<TestEnv>) {
             env.code()
                 .lines()
                 .enumerate()
-                .map(|(n, line)| format!("{n:2}: {line}", n = n + 1))
+                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset_line(n)))
                 .collect::<Vec<_>>()
                 .join("\n")
         ));
@@ -77,7 +77,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 // test expected to fail succeeded at parsing?
                 Ok(source) => {
                     // evaluate the code including µcad std library
-                    let mut context = create_context(&source);
+                    let mut context = create_context(&source, env.offset());
                     let eval = context.eval();
 
                     env.report_output(context.output());
@@ -148,7 +148,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 // test awaited to succeed and parsing succeeds?
                 Ok(source) => {
                     // evaluate the code including µcad std library
-                    let mut context = create_context(&source);
+                    let mut context = create_context(&source, env.offset());
                     let eval = context.eval();
 
                     env.report_output(context.output());
@@ -196,7 +196,7 @@ pub fn run_test(env: Option<TestEnv>) {
 }
 
 // evaluate the code including µcad std library
-fn create_context(source: &Rc<SourceFile>) -> EvalContext {
+fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
     EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
@@ -204,6 +204,7 @@ fn create_context(source: &Rc<SourceFile>) -> EvalContext {
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),
+        line_offset - 1,
     )
     .expect("resolve error")
 }

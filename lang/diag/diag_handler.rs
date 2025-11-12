@@ -19,15 +19,16 @@ pub struct DiagHandler {
     error_limit_reached: bool,
     /// Treat warnings as errors if `true`.
     warnings_as_errors: bool,
+    /// Line offset for error and warning messages.
+    line_offset: usize,
 }
 
 /// Handler for diagnostics.
 impl DiagHandler {
     /// Create new diag handler.
-    pub fn new(error_limit: Option<u32>, warnings_as_errors: bool) -> Self {
+    pub fn new(line_offset: usize) -> Self {
         Self {
-            error_limit,
-            warnings_as_errors,
+            line_offset,
             ..Default::default()
         }
     }
@@ -38,7 +39,8 @@ impl DiagHandler {
         f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
     ) -> std::fmt::Result {
-        self.diag_list.pretty_print(f, source_by_hash)
+        self.diag_list
+            .pretty_print(f, source_by_hash, self.line_offset)
     }
 
     /// Return overall number of occurred errors.
@@ -57,7 +59,7 @@ impl DiagHandler {
             .iter()
             .filter_map(|d| {
                 if d.level() == Level::Error {
-                    d.line()
+                    d.line().map(|line| line + self.line_offset)
                 } else {
                     None
                 }
@@ -71,7 +73,7 @@ impl DiagHandler {
             .iter()
             .filter_map(|d| {
                 if d.level() == Level::Warning {
-                    d.line()
+                    d.line().map(|line| line + self.line_offset)
                 } else {
                     None
                 }
