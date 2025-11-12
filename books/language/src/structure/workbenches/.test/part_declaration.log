@@ -73,16 +73,16 @@
           Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 10mm
-            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-              Primitive2D __builtin::geo2d::Circle(radius=10) ->
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
         r: Workpiece(sketch) part_declaration::Wheel(radius=10mm) ->
           - diameter = 20mm
           - radius = 10mm
           Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 10mm
-            Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-              Primitive2D __builtin::geo2d::Circle(radius=10) ->
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

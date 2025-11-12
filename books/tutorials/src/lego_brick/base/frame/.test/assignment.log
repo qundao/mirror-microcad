@@ -22,4 +22,4 @@ warning: Unused local outer.
 Unexpected warnings(s) which did occur in line(s): 10
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)
