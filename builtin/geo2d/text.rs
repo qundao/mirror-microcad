@@ -75,7 +75,7 @@ impl BuiltinWorkbenchDefinition for Text {
 
     fn parameters() -> ParameterValueList {
         [
-            parameter!(height: Scalar),
+            parameter!(height: Length),
             parameter!(text: String),
             parameter!(font_file: String = String::new()),
         ]
