@@ -26,7 +26,7 @@ part Gear(teeth: Integer) {
 
         plate - holes - profile;
 
-    }.extrude(gear_profile.tooth_distance * 300%).align();
+    }.extrude(gear_profile.tooth_distance * 300%).center();
 
     (gear_profile - plate)
         .extrude(gear_profile.tooth_distance * 2.0, gear_profile.tooth_angle)
@@ -34,7 +34,7 @@ part Gear(teeth: Integer) {
 }
 
 gear1 = Gear(90);
-gear2 = Gear(30);
+gear2 = Gear(60);
 
 gear1.reflect(X);
 gear2.rotate(gear2.tooth_angle * 0.5).translate(x = gear1.outer_radius + gear2.pitch_radius).rotate([0..3] * 360°/3);
