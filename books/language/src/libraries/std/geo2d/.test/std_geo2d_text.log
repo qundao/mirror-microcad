@@ -9,12 +9,14 @@
 -- Output --
 
 -- Errors --
-error: Missing arguments: height
-  ---> ../lib/std/geo2d/mod.µcad:219:5
-     |
- 219 |     __builtin::geo2d::Text(height, text, font_file);
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
-Unexpected error(s) which did occur in line(s): 219
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=Hello µcad!) ->
+      - font_file = 
+      - height = 20mm
+      - text = Hello µcad!
+      Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=Hello µcad!) ->
+
+Export of "../books/language/src/libraries/std/geo2d/.test/std_geo2d_text-out.svg" successful.
 -- Test Result --
-FAIL
+OK

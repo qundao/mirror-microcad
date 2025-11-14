@@ -1,19 +1,19 @@
 -- Test --
   align_3d
-  ../books/language/src/libraries/std/ops/align.md:38
+  ../books/language/src/libraries/std/ops/align.md:39
 
 -- Code --
 
- 1: use std::geo3d::*;
- 2: use std::ops::*;
- 3: use std::math::*;
- 4: 
- 5: {
- 6:     Sphere(10mm);
- 7:     Cube(10mm);
- 8:     Sphere(10mm);
- 9:     Cube(10mm);
-10: }.align(Z, 4mm);
+  39:   use std::geo3d::*;
+  40:   use std::ops::*;
+  41:   use std::math::*;
+  42:   
+  43:   {
+  44:       Sphere(10mm);
+  45:       Cube(10mm);
+  46:       Sphere(10mm);
+  47:       Cube(10mm);
+  48:   }.align(Z, 4mm);
 
 -- Output --
 

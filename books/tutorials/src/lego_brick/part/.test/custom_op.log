@@ -12,7 +12,7 @@
   40:   op grid(columns: Integer, rows: Integer) {
   41:       @input
   42:           .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
-  43:           .align()
+  43:           .center()
   44:   }
   45:   
   46:   sketch Base(
@@ -77,7 +77,7 @@
           struts: Workpiece(op) custom_op::grid(columns=3, rows=1) ->
             - columns = 3
             - rows = 1
-            Operation __builtin::ops::align() ->
+            Operation __builtin::ops::center() ->
               Multiplicity ->
                 Workpiece(op) std::ops::translate(x=8mm, y=8mm, z=0mm) ->
                   - x = 8mm
@@ -151,7 +151,7 @@
       Workpiece(op) custom_op::grid(columns=4, rows=2) ->
         - columns = 4
         - rows = 2
-        Operation __builtin::ops::align() ->
+        Operation __builtin::ops::center() ->
           Multiplicity ->
             Workpiece(op) std::ops::translate(x=8mm, y=8mm, z=0mm) ->
               - x = 8mm

@@ -5,18 +5,12 @@
 -- Code --
 
  102:   fn f() {
- 103:     __builtin::geo2d::Circle(radius=1);
+ 103:     __builtin::geo2d::Circle(radius=1mm);
  104:   } f();
 
 -- Output --
 
 -- Errors --
-error: Missing arguments: radius
-  ---> ../books/tests/src/statement_usage/function.md:103:3
-     |
- 103 |   __builtin::geo2d::Circle(radius=1);
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
-Unexpected error(s) which did occur in line(s): 103
+-- No model --
 -- Test Result --
-FAIL
+OK

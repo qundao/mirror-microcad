@@ -14,7 +14,7 @@
   15:       frame = Frame(width, height, thickness);
   16:       struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
   17:           .translate(x = [0..2] * SPACING)
-  18:           .align();
+  18:           .center();
   19:       frame | struts;
   20:   }
   21:   
@@ -22,7 +22,7 @@
   23:   
   24:   sketch Knobs() {
   25:       Circle(d = 4.8mm, c = (x = [0..3] * SPACING, y = [0..1] * SPACING))
-  26:           .align();
+  26:           .center();
   27:   }
   28:   
   29:   width = 31.8mm;
@@ -60,7 +60,7 @@
                   - x = -14.7mm
                   - y = -6.7mm
                   Primitive2D __builtin::geo2d::Rect(height=13.4mm, width=29.4mm, x=-14.7mm, y=-6.7mm) ->
-          struts: Operation __builtin::ops::align() ->
+          struts: Operation __builtin::ops::center() ->
             Multiplicity ->
               Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
                 - x = 0mm
@@ -129,7 +129,7 @@
       - y = -7.9mm
       Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) ->
     Workpiece(sketch) overview::Knobs() ->
-      Operation __builtin::ops::align() ->
+      Operation __builtin::ops::center() ->
         Workpiece(sketch) std::geo2d::Circle(c=(x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm]), d=4.8mm) ->
           - center = (x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm])
           - radius = 2.4mm

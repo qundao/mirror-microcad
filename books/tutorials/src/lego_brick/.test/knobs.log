@@ -6,7 +6,7 @@
 
   75:   sketch Knobs(diameter = 4.8mm) {
   76:       std::geo2d::Circle(d = 4.8mm, c = (x = [0..3] * 8mm, y = [0..1] * 8mm))
-  77:           .std::ops::align();
+  77:           .std::ops::center();
   78:   }
   79:   
   80:   Knobs();
@@ -18,7 +18,7 @@
   Group (root) ->
     Workpiece(sketch) knobs::Knobs(diameter=4.8mm) ->
       - diameter = 4.8mm
-      Operation __builtin::ops::align() ->
+      Operation __builtin::ops::center() ->
         Workpiece(sketch) std::geo2d::Circle(c=(x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm]), d=4.8mm) ->
           - center = (x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm])
           - radius = 2.4mm

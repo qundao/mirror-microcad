@@ -9,12 +9,10 @@
 -- Output --
 
 -- Errors --
-error: Missing arguments: height
-  ---> ../books/language/src/libraries/builtin/geo2d.md:24:1
-     |
-  24 | __builtin::geo2d::Text(height = 20mm, text = "Hello World");
-     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
-Unexpected error(s) which did occur in line(s): 24
+-- Model --
+  Group (root) ->
+    Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=Hello World) ->
+
+Export of "../books/language/src/libraries/builtin/.test/text-out.svg" successful.
 -- Test Result --
-FAIL
+OK

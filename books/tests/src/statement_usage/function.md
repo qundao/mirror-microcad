@@ -100,6 +100,6 @@ fn f() {
 
 ```µcad,function_expression_model
 fn f() {
-  __builtin::geo2d::Circle(radius=1);
+  __builtin::geo2d::Circle(radius=1mm);
 } f();
 ```

@@ -14,7 +14,7 @@
   18:       frame = Frame(width, height, thickness);
   19:       struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
   20:           .translate(y = [0..2] * SPACING)
-  21:           .align();
+  21:           .center();
   22:       frame | struts;
   23:   }
   24:   
@@ -22,31 +22,30 @@
   26:   
   27:   sketch Knobs() {
   28:       center = (x = [0..1] * SPACING, y = [0..3] * SPACING);
-  29:       Circle(diameter = 4.8mm, center)
-  30:           .align();
-  31:   }
-  32:   
-  33:   part LegoBrick(base_height = 9.6mm) {
-  34:       width = 15.8mm;
-  35:       height = 31.8mm;
-  36:       top_thickness = 1.0mm;
-  37:   
-  38:       base = Base(width, height)
-  39:           .extrude(base_height);
-  40:   
-  41:       cap = Cap(width, height)
-  42:           .extrude(top_thickness)
-  43:           .translate(z = base_height - top_thickness);
-  44:   
-  45:       knobs = Knobs()
-  46:           .extrude(1.7mm)
-  47:           .translate(z = base_height);
-  48:   
-  49:       // Combine all components
-  50:       base | cap | knobs;
-  51:   }
-  52:   
-  53:   LegoBrick();
+  29:       Circle(diameter = 4.8mm, center).center();
+  30:   }
+  31:   
+  32:   part LegoBrick(base_height = 9.6mm) {
+  33:       width = 15.8mm;
+  34:       height = 31.8mm;
+  35:       top_thickness = 1.0mm;
+  36:   
+  37:       base = Base(width, height)
+  38:           .extrude(base_height);
+  39:   
+  40:       cap = Cap(width, height)
+  41:           .extrude(top_thickness)
+  42:           .translate(z = base_height - top_thickness);
+  43:   
+  44:       knobs = Knobs()
+  45:           .extrude(1.7mm)
+  46:           .translate(z = base_height);
+  47:   
+  48:       // Combine all components
+  49:       base | cap | knobs;
+  50:   }
+  51:   
+  52:   LegoBrick();
 
 -- Output --
 
@@ -87,7 +86,7 @@
                                 - x = -6.7mm
                                 - y = -14.7mm
                                 Primitive2D __builtin::geo2d::Rect(height=29.4mm, width=13.4mm, x=-6.7mm, y=-14.7mm) ->
-                        struts: Operation __builtin::ops::align() ->
+                        struts: Operation __builtin::ops::center() ->
                           Multiplicity ->
                             Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
                               - x = 0mm
@@ -176,7 +175,7 @@
                 - twist = 0rad
                 Operation __builtin::ops::extrude(height=1.7mm, scale_x=1, scale_y=1, twist=0rad) ->
                   Workpiece(sketch) first_version::Knobs() ->
-                    Operation __builtin::ops::align() ->
+                    Operation __builtin::ops::center() ->
                       Workpiece(sketch) std::geo2d::Circle(center=(x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm]), diameter=4.8mm) ->
                         - center = (x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm])
                         - radius = 2.4mm

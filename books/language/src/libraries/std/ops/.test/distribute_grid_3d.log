@@ -1,18 +1,18 @@
 -- Test --
   distribute_grid_3d
-  ../books/language/src/libraries/std/ops/distribute_grid.md:23
+  ../books/language/src/libraries/std/ops/distribute_grid.md:24
 
 -- Code --
 
- 1: use std::geo3d::*;
- 2: use std::ops::*;
- 3: 
- 4: {
- 5:     Sphere(10mm);
- 6:     Cube(10mm);
- 7:     Cube(10mm);
- 8:     Sphere(10mm);
- 9: }.distribute_grid(30mm, rows = 2, columns = 2);
+  24:   use std::geo3d::*;
+  25:   use std::ops::*;
+  26:   
+  27:   {
+  28:       Sphere(10mm);
+  29:       Cube(10mm);
+  30:       Cube(10mm);
+  31:       Sphere(10mm);
+  32:   }.distribute_grid(30mm, rows = 2, columns = 2);
 
 -- Output --
 

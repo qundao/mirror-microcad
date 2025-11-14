@@ -18,7 +18,7 @@ sketch Base(width: Length, height: Length) {
     frame = Frame(width, height, thickness);
     struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
         .translate(y = [0..2] * SPACING)
-        .align();
+        .center();
     frame | struts;
 }
 
@@ -26,8 +26,7 @@ use Rect as Cap;
 
 sketch Knobs() {
     center = (x = [0..1] * SPACING, y = [0..3] * SPACING);
-    Circle(diameter = 4.8mm, center)
-        .align();
+    Circle(diameter = 4.8mm, center).center();
 }
 
 part LegoBrick(base_height = 9.6mm) {
