@@ -1,0 +1,68 @@
+use std::geo2d::*;
+use std::ops::*;
+
+const TEETH_SIZE = 0.5mm;
+
+sketch GearProfile(teeth: Integer) {
+    prop module = TEETH_SIZE;
+    prop radius = teeth * module;
+    SinusoidalGearProfile(module, teeth, stretch = 0.6, roundness = 0.6);
+}
+
+
+sketch RingProfile(outer_teeth: Integer, inner_teeth: Integer, border_width = 7mm, pencil_hole_diameter = 1.0mm) {
+    inner_gear = GearProfile(inner_teeth);
+    outer_gear = GearProfile(outer_teeth);
+    prop shift = inner_gear.radius * 40%;
+
+    n_holes = std::math::int((outer_gear.radius - inner_gear.radius) / border_width * 2);
+    pencil_holes = 
+        Circle(diameter = pencil_hole_diameter)
+            .translate([155°, 205°], [0..n_holes] * (outer_gear.radius - inner_gear.radius) / n_holes * 0.5 + inner_gear.radius);
+    sector = 
+        (Circle(outer_gear.radius - border_width) - 
+        (Sector(radius = outer_gear.radius, start = 30°, end = 90°).rotate(60°) - Circle(inner_gear.radius - border_width * 250%)) - (Ring(outer_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width))
+            .translate(x = shift))
+            .buffer(-TEETH_SIZE * 2)
+            .buffer(TEETH_SIZE * 2);
+
+    outer_gear - sector - inner_gear.translate(x = shift) - pencil_holes;
+
+}
+
+outer_gear = GearProfile(180);
+border_width = 7mm;
+
+frame = {
+    border = RoundedRect(outer_gear.radius * 200% + border_width, radius = border_width * 200%);    
+    holes = {
+        w = 7mm;
+        c = Circle(w);
+        (c | c.translate(x = w))
+            .hull()
+            .translate(x = border.width * 56%)
+            .rotate([0..3] * 90° + 45°);
+    };
+    border - outer_gear - holes;
+};
+
+ring_4 = RingProfile(outer_teeth = 180, inner_teeth = 120);
+ring_3 = RingProfile(outer_teeth = 120, inner_teeth = 72);
+ring_2 = RingProfile(outer_teeth = 72, inner_teeth = 36);
+
+gear = GearProfile(36).translate(x = ring_2.shift + ring_3.shift + ring_4.shift);
+
+thickness = 2mm;
+
+gear.extrude(thickness);
+
+#[color = std::color::YELLOW]
+ring_2.translate(x = ring_3.shift + ring_4.shift).extrude(thickness);
+#[color = std::color::RED]
+ring_3.translate(x = ring_4.shift).extrude(thickness);
+#[color = std::color::GREEN]
+ring_4.extrude(thickness);
+
+
+ #[color = std::color::BLUE]
+frame.extrude(thickness);
