@@ -10,6 +10,7 @@ mod ngon;
 mod rect;
 mod rounded_rect;
 mod sector;
+mod sinusoidal_gear;
 mod text;
 mod thread_profile;
 
@@ -20,6 +21,7 @@ pub use ngon::*;
 pub use rect::*;
 pub use rounded_rect::*;
 pub use sector::*;
+pub use sinusoidal_gear::*;
 pub use text::*;
 pub use thread_profile::*;
 
@@ -35,6 +37,7 @@ pub fn geo2d() -> Symbol {
         .builtin::<Sector>()
         .builtin::<Rect>()
         .builtin::<RoundedRect>()
+        .builtin::<SinusoidalGearProfile>()
         .builtin::<Text>()
         .builtin::<ThreadProfile>()
         .build()
