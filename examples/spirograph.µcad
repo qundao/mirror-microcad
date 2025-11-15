@@ -2,6 +2,7 @@ use std::geo2d::*;
 use std::ops::*;
 
 const TEETH_SIZE = 0.5mm;
+const THICKNESS = 2mm;
 
 sketch GearProfile(teeth: Integer) {
     prop module = TEETH_SIZE;
@@ -10,24 +11,30 @@ sketch GearProfile(teeth: Integer) {
 }
 
 
-sketch RingProfile(outer_teeth: Integer, inner_teeth: Integer, border_width = 7mm, pencil_hole_diameter = 1.0mm) {
+sketch RingProfile(outer_teeth: Integer, inner_teeth: Integer, border_width = 7mm) {
     inner_gear = GearProfile(inner_teeth);
     outer_gear = GearProfile(outer_teeth);
+    prop radius = outer_gear.radius;
     prop shift = inner_gear.radius * 40%;
 
-    n_holes = std::math::int((outer_gear.radius - inner_gear.radius) / border_width * 2);
-    pencil_holes = 
-        Circle(diameter = pencil_hole_diameter)
-            .translate([155°, 205°], [0..n_holes] * (outer_gear.radius - inner_gear.radius) / n_holes * 0.5 + inner_gear.radius);
-    sector = 
-        (Circle(outer_gear.radius - border_width) - 
-        (Sector(radius = outer_gear.radius, start = 30°, end = 90°).rotate(60°) - Circle(inner_gear.radius - border_width * 250%)) - (Ring(outer_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width))
-            .translate(x = shift))
+    sector = {
+        disc = Circle(outer_gear.radius - border_width);
+        sector = Sector(radius = outer_gear.radius, start = 30°, end = 90°).rotate(60°);
+        inner_disc = Circle(inner_gear.radius - border_width * 250%);
+        ring = Ring(outer_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width);
+
+        (disc - (sector - inner_disc) - ring.translate(x = shift))
             .buffer(-TEETH_SIZE * 2)
             .buffer(TEETH_SIZE * 2);
+    };
 
-    outer_gear - sector - inner_gear.translate(x = shift) - pencil_holes;
+    outer_gear - sector - inner_gear.translate(x = shift);
+}
 
+part PencilHole(pencil_hole_diameter = 1.0mm, thickness = 2.0mm, offset = 0.0mm) {
+    Circle(d = pencil_hole_diameter)
+        .extrude(THICKNESS, scale = (x = 200%, y = 200%))
+        .translate(y = offset);
 }
 
 outer_gear = GearProfile(180);
@@ -46,23 +53,44 @@ frame = {
     border - outer_gear - holes;
 };
 
-ring_4 = RingProfile(outer_teeth = 180, inner_teeth = 120);
-ring_3 = RingProfile(outer_teeth = 120, inner_teeth = 72);
-ring_2 = RingProfile(outer_teeth = 72, inner_teeth = 36);
 
-gear = GearProfile(36).translate(x = ring_2.shift + ring_3.shift + ring_4.shift);
 
-thickness = 2mm;
 
-gear.extrude(thickness);
 
-#[color = std::color::YELLOW]
-ring_2.translate(x = ring_3.shift + ring_4.shift).extrude(thickness);
-#[color = std::color::RED]
-ring_3.translate(x = ring_4.shift).extrude(thickness);
-#[color = std::color::GREEN]
-ring_4.extrude(thickness);
-
+ring_1 = RingProfile(outer_teeth = 180, inner_teeth = 120);
+ring_2 = RingProfile(outer_teeth = 120, inner_teeth = 72);
+ring_3 = RingProfile(outer_teeth = 72, inner_teeth = 36);
 
  #[color = std::color::BLUE]
-frame.extrude(thickness);
+frame.extrude(THICKNESS);
+
+
+#[color = std::color::GREEN]
+ring_1.extrude(THICKNESS);
+#[color = std::color::RED]
+ring_2.extrude(THICKNESS).translate(x = ring_1.shift);
+#[color = std::color::YELLOW]
+{
+    ring = ring_3.extrude(THICKNESS);
+    inner_radius = 12mm;
+    pencil_holes = {
+        PencilHole(offset = [1..4] * ring_3.radius / 8 + inner_radius);
+        PencilHole(offset = ([1..4] + 0.5) * ring_3.radius / 8 + inner_radius).rotate(-22.5°);
+        PencilHole(offset = ([1..4] + 1/3) * ring_3.radius / 8 + inner_radius).rotate(22.5°);
+    }.rotate(90°);
+    ring - pencil_holes;
+}.translate(x = ring_2.shift + ring_1.shift);
+
+gear = {
+    profile = GearProfile(36);
+    gear = profile.extrude(THICKNESS);
+    pencil_holes = {
+        PencilHole(offset = [1..3] * profile.radius / 4);
+        PencilHole(offset = ([1..3] + 0.5) * profile.radius / 4).rotate(120°);
+        PencilHole(offset = ([1..3] + 1/3) * profile.radius / 4).rotate(240°);
+    }.rotate(90°);
+
+    gear - pencil_holes;
+};
+
+gear.translate(x = ring_1.shift + ring_2.shift + ring_3.shift);
