@@ -53,7 +53,7 @@ impl RenderResolution {
     /// The minimal number of segments is 4, the maximum number of segments is 1024.
     pub fn circular_segments(&self, radius: Scalar) -> u32 {
         let n = (radius / self.linear * std::f64::consts::PI * 0.5).max(3.0);
-        2_u32.pow(n.log2().ceil() as u32).clamp(4, 1024)
+        2_u32.pow(n.log2().ceil() as u32).clamp(8, 1024)
     }
 }
 
