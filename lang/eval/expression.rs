@@ -47,10 +47,16 @@ impl Eval for RangeExpression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         Ok(
             match (self.first.eval(context)?, self.last.eval(context)?) {
-                (Value::Integer(first), Value::Integer(last)) => Value::Array(Array::from_values(
-                    (first..last + 1).map(Value::Integer).collect(),
-                    Type::Integer,
-                )),
+                (Value::Integer(first), Value::Integer(last)) => {
+                    if first > last {
+                        context.error(self, EvalError::BadRange(first, last));
+                    }
+
+                    Value::Array(Array::from_values(
+                        (first..last + 1).map(Value::Integer).collect(),
+                        Type::Integer,
+                    ))
+                }
                 (_, _) => Value::None,
             },
         )

@@ -268,6 +268,10 @@ pub enum EvalError {
     /// Evaluation aborted because of prior resolve errors
     #[error("Evaluation aborted because of prior resolve errors!")]
     ResolveFailed,
+
+    /// Bad range (first > last)
+    #[error("Bad range, first number ({0}) must be smaller than last ({1})")]
+    BadRange(i64, i64),
 }
 
 /// Result type of any evaluation.
