@@ -1,0 +1,25 @@
+-- Test --
+        Test name: const_assignment_mod
+  Expected result: ok
+      Source file: ../books/language/src/assignments/const.md:11
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  11:   const TEXT = "Hello";
+  12:   
+  13:   mod my_module {
+  14:       pub const TEXT = "Hello";
+  15:   }
+  16:   
+  17:   std::print(TEXT);
+  18:   std::print(my_module::TEXT);
+
+-- Output --
+Hello
+Hello
+
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

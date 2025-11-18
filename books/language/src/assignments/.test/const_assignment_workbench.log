@@ -1,0 +1,32 @@
+-- Test --
+        Test name: const_assignment_workbench
+  Expected result: ok
+      Source file: ../books/language/src/assignments/const.md:27
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  27:   sketch MySketch(text: String) {
+  28:       const TEXT = "Hello";
+  29:   
+  30:       init() {
+  31:           text = TEXT;
+  32:       }
+  33:   
+  34:       std::print(text);
+  35:   }
+  36:   
+  37:   MySketch();
+
+-- Output --
+Hello
+
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) const_assignment_workbench::MySketch() ->
+      - text = Hello
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK
