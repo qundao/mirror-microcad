@@ -7,17 +7,18 @@ mod processor;
 
 use serde::{Deserialize, Serialize};
 use tower_lsp::{
-    Client, LanguageServer, LspService, Server, async_trait,
+    async_trait,
     jsonrpc::Result,
     lsp_types::{
-        DiagnosticOptions, DiagnosticServerCapabilities, DidChangeTextDocumentParams,
-        DidCloseTextDocumentParams, DidOpenTextDocumentParams, DidSaveTextDocumentParams,
-        DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportPartialResult,
-        DocumentDiagnosticReportResult, InitializeParams, InitializeResult, InitializedParams,
-        MessageType, RelatedFullDocumentDiagnosticReport, ServerCapabilities,
-        TextDocumentIdentifier, TextDocumentPositionParams, TextDocumentSyncCapability,
-        TextDocumentSyncKind, notification::Notification,
+        notification::Notification, DiagnosticOptions, DiagnosticServerCapabilities,
+        DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
+        DidSaveTextDocumentParams, DocumentDiagnosticParams, DocumentDiagnosticReport,
+        DocumentDiagnosticReportPartialResult, DocumentDiagnosticReportResult, InitializeParams,
+        InitializeResult, InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport,
+        ServerCapabilities, TextDocumentIdentifier, TextDocumentPositionParams,
+        TextDocumentSyncCapability, TextDocumentSyncKind,
     },
+    Client, LanguageServer, LspService, Server,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -159,6 +160,9 @@ struct Args {
     #[arg(short, long, value_name = "FILE")]
     log_file: Option<std::path::PathBuf>,
 
+    #[arg(long)]
+    stdio: bool,
+
     /// Paths to search for files.
     ///
     /// By default, `./lib` (if it exists) and `~/.microcad/lib` are used.
@@ -226,18 +230,23 @@ async fn main() {
     };
 
     log::info!("Starting LSP server");
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:5007")
-        .await
-        .unwrap();
-    log::info!("LSP server listening...");
-    let (stream, _) = listener.accept().await.unwrap();
-    log::info!("Client has connected to LSP service");
-    let (read, write) = tokio::io::split(stream);
 
     let processor = processor::ProcessorInterface::run(WorkspaceSettings { search_paths });
 
     let (service, socket) = LspService::new(|client| Backend { client, processor });
     log::info!("LSP service has been created");
 
-    Server::new(read, write, socket).serve(service).await;
+    if args.stdio {
+        use tokio::io::{stdin, stdout};
+        Server::new(stdin(), stdout(), socket).serve(service).await;
+    } else {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:5007")
+            .await
+            .unwrap();
+        log::info!("LSP server listening...");
+        let (stream, _) = listener.accept().await.unwrap();
+        log::info!("Client has connected to LSP service");
+        let (read, write) = tokio::io::split(stream);
+        Server::new(read, write, socket).serve(service).await;
+    };
 }

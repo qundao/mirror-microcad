@@ -2,26 +2,33 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } f
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+let client: LanguageClient | undefined;
+
 export async function activate(context: vscode.ExtensionContext) {
     const serverCommand = "microcad-lsp";
 
     const serverOptions: ServerOptions = {
         run: {
             command: serverCommand,
-            args: ["-l", "microcad-lsp.log"]
+            args: ["-l", "microcad-lsp.log"],
+            transport: TransportKind.stdio
         },
         debug: {
             command: serverCommand,
-            args: ["-l", "microcad-lsp-debug.log"]
+            args: ["-l", "microcad-lsp-debug.log"],
+            transport: TransportKind.socket
         }
     };
 
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'microcad' }]
+        documentSelector: [{ scheme: 'file', language: 'microcad' }],
+        synchronize: {
+            fileEvents: vscode.workspace.createFileSystemWatcher('**/*.µcad')
+        }
     };
 
-    const client = new LanguageClient(
-        'MicrocadLanguageServer',
+    client = new LanguageClient(
+        'microcadLSP',
         'Microcad Language Server',
         serverOptions,
         clientOptions
@@ -31,4 +38,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // DISPOSABLE registrieren
     context.subscriptions.push(client);
+}
+
+export async function deactivate() {
+    if (client) {
+        await client.stop(); // Stoppt den LSP-Server sauber
+    }
 }
