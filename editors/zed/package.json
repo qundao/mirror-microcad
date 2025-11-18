@@ -1,0 +1,23 @@
+{
+    "name": "microcad",
+    "displayName": "Microcad Language",
+    "version": "0.0.1",
+    "description": "Microcad Plugin for Zed",
+    "engines": {
+        "zed": "^0.45.0"
+    },
+    "contributes": {
+        "grammars": [
+            {
+                "language": "markdown",
+                "scopeName": "markdown.microcad.codeblock",
+                "path": "./grammars/markdown-microcad.tmLanguage.json"
+            },
+            {
+                "language": "microcad",
+                "scopeName": "source.microcad",
+                "path": "./grammars/microcad.tmLanguage.json"
+            }
+        ]
+    }
+}

@@ -1,0 +1,7 @@
+id = "microcad"
+name = "Microcad Language"
+version = "0.0.1"
+schema_version = 1
+authors = ["Patrick Hoffmann", "Michael Winkelmann"]
+description = "Microcad Plugin for Zed"
+repository = ""

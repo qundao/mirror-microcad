@@ -1,0 +1,44 @@
+{
+    "scopeName": "markdown.microcad.codeblock",
+    "fileTypes": [],
+    "patterns": [
+        {
+            "include": "#microcad-code-block"
+        }
+    ],
+    "repository": {
+        "microcad-code-block": {
+            "begin": "(^|\\G)(\\s*)(\\`{3,}|~{3,})\\s*(?i:(microcad|µcad|mcad)(,[^~`]*)?$)",
+            "beginCaptures": {
+                "3": {
+                    "name": "punctuation.definition.markdown"
+                },
+                "4": {
+                    "name": "fenced_code.block.language.markdown"
+                },
+                "5": {
+                    "name": "fenced_code.block.language.attributes.markdown"
+                }
+            },
+            "end": "(^|\\G)(\\2|\\s{0,3})(\\3)\\s*$",
+            "endCaptures": {
+                "3": {
+                    "name": "punctuation.definition.markdown"
+                }
+            },
+            "name": "markup.fenced_code.block.markdown",
+            "patterns": [
+                {
+                    "begin": "(^|\\G)(\\s*)(.*)",
+                    "while": "(^|\\G)(?!\\s*([`~]{3,})\\s*$)",
+                    "contentName": "meta.embedded.block.microcad",
+                    "patterns": [
+                        {
+                            "include": "source.microcad"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
