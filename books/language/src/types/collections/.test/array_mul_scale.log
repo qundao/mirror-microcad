@@ -1,13 +1,12 @@
 -- Test --
         Test name: array_mul_scale
   Expected result: ok
-      Source file: ../books/language/src/types/collections/arrays.md:85
+      Source file: ../books/language/src/types/collections/arrays.md:96
         Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  85:   d = 0.5mm;
-  86:   std::debug::assert_eq([[-d,d]*2, [-1,1]mm]);
+  96:   std::debug::assert_eq([ [-0.5mm,0.5mm]*2, [-1,1]mm ]);
 
 -- No Output --
 -- No Errors --

@@ -1,0 +1,27 @@
+-- Test --
+        Test name: range_expressions_bad_order
+  Expected result: fail
+      Source file: ../books/language/src/types/collections/arrays.md:45
+        Test path: ../books/language/src/types/collections/.test
+
+-- Code --
+
+  45:   [6..1];  // error
+  46:   [2..-2];  // error
+
+-- No Output --
+-- Errors --
+error: Bad range, first number (6) must be smaller than last (1)
+  ---> ../books/language/src/types/collections/arrays.md:45:2
+     |
+  45 | [6..1];  // error
+     |  ^^^^
+     |
+error: Bad range, first number (2) must be smaller than last (-2)
+  ---> ../books/language/src/types/collections/arrays.md:46:2
+     |
+  46 | [2..-2];  // error
+     |  ^^^^^
+     |
+-- Test Result --
+FAILS AS EXPECTED

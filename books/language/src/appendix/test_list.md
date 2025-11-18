@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**161** tests from markdown.
+**163** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -97,6 +97,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/quantity_literal.svg)](../expressions/.test/quantity_literal.log) | [quantity_literal](../expressions/literals.md) |
 | [![test](../types/.test/quantity_types_number_literals.svg)](../types/.test/quantity_types_number_literals.log) | [quantity_types_number_literals](../types/quantities.md) |
 | [![test](../types/collections/.test/range_expressions.svg)](../types/collections/.test/range_expressions.log) | [range_expressions](../types/collections/arrays.md) |
+| [![test](../types/collections/.test/range_expressions_bad_order.svg)](../types/collections/.test/range_expressions_bad_order.log) | [range_expressions_bad_order](../types/collections/arrays.md) |
+| [![test](../types/collections/.test/range_expressions_bad_type.svg)](../types/collections/.test/range_expressions_bad_type.log) | [range_expressions_bad_type](../types/collections/arrays.md) |
 | [![test](../structure/.test/return.svg)](../structure/.test/return.log) | [return](../structure/functions.md) |
 | [![test](../structure/.test/return_twice.svg)](../structure/.test/return_twice.log) | [return_twice](../structure/functions.md) |
 | [![test](../libraries/std/ops/.test/revolve.svg)](../libraries/std/ops/.test/revolve.log) | [revolve](../libraries/std/ops/revolve.md) |

@@ -1,19 +1,12 @@
 -- Test --
         Test name: array_unit_bundling
   Expected result: ok
-      Source file: ../books/language/src/types/collections/arrays.md:46
+      Source file: ../books/language/src/types/collections/arrays.md:66
         Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  46:   // without bundling
-  47:   l1 = [1mm, 2mm, 3mm];
-  48:   
-  49:   // with bundling
-  50:   l2 = [1, 2, 3]mm;
-  51:   
-  52:   // are the same
-  53:   std::debug::assert(l1 == l2);
+  66:   std::debug::assert_eq([ [1mm, 2mm, 3mm], [1, 2, 3]mm ]);
 
 -- No Output --
 -- No Errors --

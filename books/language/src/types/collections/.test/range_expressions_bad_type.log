@@ -1,0 +1,19 @@
+-- Test --
+        Test name: range_expressions_bad_type
+  Expected result: fail
+      Source file: ../books/language/src/types/collections/arrays.md:54
+        Test path: ../books/language/src/types/collections/.test
+
+-- Code --
+
+  54:   [1.0..2.0];  // parse_error
+
+-- Parse Error --
+Parser error:  --> 1:6
+  |
+1 | [1.0..2.0];  // parse_error
+  |      ^---
+  |
+  = expected single_line_comment or identifier
+-- Test Result --
+FAILS AS EXPECTED
