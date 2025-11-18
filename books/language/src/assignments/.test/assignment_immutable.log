@@ -1,26 +1,26 @@
 -- Test --
         Test name: assignment_immutable
   Expected result: fail
-      Source file: ../books/language/src/assignments/values.md:25
+      Source file: ../books/language/src/assignments/values.md:27
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  25:   a = 5; // warning: unused local
-  26:   a = a * 2; // error: a already defined in this scope
+  27:   a = 5; // warning: unused local
+  28:   a = a * 2; // error: a already defined in this scope
 
 -- No Output --
 -- Errors --
 error: Value a already in defined: 5 (at line 1:1)
-  ---> ../books/language/src/assignments/values.md:26:1
+  ---> ../books/language/src/assignments/values.md:28:1
      |
-  26 | a = a * 2; // error: a already defined in this scope
+  28 | a = a * 2; // error: a already defined in this scope
      | ^
      |
 warning: Unused local a.
-  ---> ../books/language/src/assignments/values.md:25:1
+  ---> ../books/language/src/assignments/values.md:27:1
      |
-  25 | a = 5; // warning: unused local
+  27 | a = 5; // warning: unused local
      | ^
      |
 -- Test Result --
