@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/std/ops/hull.md:20
         Test path: ../books/language/src/libraries/std/ops/.test
-      Banner file: ../books/language/src/libraries/std/ops/.test/hull_multiple.svg
-         Log file: ../books/language/src/libraries/std/ops/.test/hull_multiple.log
- Output file stem: ../books/language/src/libraries/std/ops/.test/hull_multiple-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/tests/src/statement_usage/source.md:24
         Test path: ../books/tests/src/statement_usage/.test
-      Banner file: ../books/tests/src/statement_usage/.test/source_init.svg
-         Log file: ../books/tests/src/statement_usage/.test/source_init.log
- Output file stem: ../books/tests/src/statement_usage/.test/source_init-out
 
 -- Code --
 

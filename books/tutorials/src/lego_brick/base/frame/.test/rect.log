@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/base/frame/rect.md:11
         Test path: ../books/tutorials/src/lego_brick/base/frame/.test
-      Banner file: ../books/tutorials/src/lego_brick/base/frame/.test/rect.svg
-         Log file: ../books/tutorials/src/lego_brick/base/frame/.test/rect.log
- Output file stem: ../books/tutorials/src/lego_brick/base/frame/.test/rect-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/caps_knobs.md:75
         Test path: ../books/tutorials/src/lego_brick/.test
-      Banner file: ../books/tutorials/src/lego_brick/.test/knobs.svg
-         Log file: ../books/tutorials/src/lego_brick/.test/knobs.log
- Output file stem: ../books/tutorials/src/lego_brick/.test/knobs-out
 
 -- Code --
 

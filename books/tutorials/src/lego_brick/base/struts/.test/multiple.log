@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/base/struts/create.md:13
         Test path: ../books/tutorials/src/lego_brick/base/struts/.test
-      Banner file: ../books/tutorials/src/lego_brick/base/struts/.test/multiple.svg
-         Log file: ../books/tutorials/src/lego_brick/base/struts/.test/multiple.log
- Output file stem: ../books/tutorials/src/lego_brick/base/struts/.test/multiple-out
 
 -- Code --
 

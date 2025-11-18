@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/assignments/values.md:25
         Test path: ../books/language/src/assignments/.test
-      Banner file: ../books/language/src/assignments/.test/assignment_immutable.svg
-         Log file: ../books/language/src/assignments/.test/assignment_immutable.log
- Output file stem: ../books/language/src/assignments/.test/assignment_immutable-out
 
 -- Code --
 

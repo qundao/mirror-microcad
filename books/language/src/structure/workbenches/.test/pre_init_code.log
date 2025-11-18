@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/structure/workbenches/README.md:175
         Test path: ../books/language/src/structure/workbenches/.test
-      Banner file: ../books/language/src/structure/workbenches/.test/pre_init_code.svg
-         Log file: ../books/language/src/structure/workbenches/.test/pre_init_code.log
- Output file stem: ../books/language/src/structure/workbenches/.test/pre_init_code-out
 
 -- Code --
 

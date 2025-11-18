@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/flow/calls/README.md:29
         Test path: ../books/language/src/flow/calls/.test
-      Banner file: ../books/language/src/flow/calls/.test/call_workbench.svg
-         Log file: ../books/language/src/flow/calls/.test/call_workbench.log
- Output file stem: ../books/language/src/flow/calls/.test/call_workbench-out
 
 -- Code --
 

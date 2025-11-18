@@ -69,14 +69,7 @@ impl std::fmt::Debug for TestEnv {
             "      Source file: {}:{start}",
             self.source_path().display()
         )?;
-        writeln!(f, "        Test path: {}", self.test_path().display())?;
-        writeln!(f, "      Banner file: {}", self.banner_file().display())?;
-        writeln!(f, "         Log file: {}", self.log_file().display())?;
-        writeln!(
-            f,
-            " Output file stem: {}",
-            self.out_file_path_stem().display()
-        )
+        writeln!(f, "        Test path: {}", self.test_path().display())
     }
 }
 

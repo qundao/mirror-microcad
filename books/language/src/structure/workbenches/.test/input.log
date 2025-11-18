@@ -3,9 +3,6 @@
   Expected result: todo
       Source file: ../books/language/src/structure/workbenches/operations.md:31
         Test path: ../books/language/src/structure/workbenches/.test
-      Banner file: ../books/language/src/structure/workbenches/.test/input.svg
-         Log file: ../books/language/src/structure/workbenches/.test/input.log
- Output file stem: ../books/language/src/structure/workbenches/.test/input-out
 
 -- Code --
 

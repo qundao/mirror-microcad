@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/part/custom_op.md:11
         Test path: ../books/tutorials/src/lego_brick/part/.test
-      Banner file: ../books/tutorials/src/lego_brick/part/.test/grid.svg
-         Log file: ../books/tutorials/src/lego_brick/part/.test/grid.log
- Output file stem: ../books/tutorials/src/lego_brick/part/.test/grid-out
 
 -- Code --
 

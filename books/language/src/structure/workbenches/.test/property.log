@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/structure/workbenches/README.md:275
         Test path: ../books/language/src/structure/workbenches/.test
-      Banner file: ../books/language/src/structure/workbenches/.test/property.svg
-         Log file: ../books/language/src/structure/workbenches/.test/property.log
- Output file stem: ../books/language/src/structure/workbenches/.test/property-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/collections/tuples/README.md:29
         Test path: ../books/language/src/types/collections/tuples/.test
-      Banner file: ../books/language/src/types/collections/tuples/.test/unnamed_tuple.svg
-         Log file: ../books/language/src/types/collections/tuples/.test/unnamed_tuple.log
- Output file stem: ../books/language/src/types/collections/tuples/.test/unnamed_tuple-out
 
 -- Code --
 

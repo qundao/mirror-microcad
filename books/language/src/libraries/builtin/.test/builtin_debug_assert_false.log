@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/libraries/builtin/debug.md:24
         Test path: ../books/language/src/libraries/builtin/.test
-      Banner file: ../books/language/src/libraries/builtin/.test/builtin_debug_assert_false.svg
-         Log file: ../books/language/src/libraries/builtin/.test/builtin_debug_assert_false.log
- Output file stem: ../books/language/src/libraries/builtin/.test/builtin_debug_assert_false-out
 
 -- Code --
 

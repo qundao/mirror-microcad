@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/attributes.md:57
         Test path: ../books/language/src/.test
-      Banner file: ../books/language/src/.test/attributes_precision.svg
-         Log file: ../books/language/src/.test/attributes_precision.log
- Output file stem: ../books/language/src/.test/attributes_precision-out
 
 -- Code --
 

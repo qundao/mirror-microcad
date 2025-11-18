@@ -3,9 +3,6 @@
   Expected result: todo_fail
       Source file: ../books/language/src/structure/functions.md:49
         Test path: ../books/language/src/structure/.test
-      Banner file: ../books/language/src/structure/.test/return_twice.svg
-         Log file: ../books/language/src/structure/.test/return_twice.log
- Output file stem: ../books/language/src/structure/.test/return_twice-out
 
 -- Code --
 

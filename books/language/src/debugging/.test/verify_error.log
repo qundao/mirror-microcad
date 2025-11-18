@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/debugging/verification.md:30
         Test path: ../books/language/src/debugging/.test
-      Banner file: ../books/language/src/debugging/.test/verify_error.svg
-         Log file: ../books/language/src/debugging/.test/verify_error.log
- Output file stem: ../books/language/src/debugging/.test/verify_error-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/statement_usage/source.md:48
         Test path: ../books/tests/src/statement_usage/.test
-      Banner file: ../books/tests/src/statement_usage/.test/source_if.svg
-         Log file: ../books/tests/src/statement_usage/.test/source_if.log
- Output file stem: ../books/tests/src/statement_usage/.test/source_if-out
 
 -- Code --
 

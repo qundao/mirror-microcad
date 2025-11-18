@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/collections/tuples/operators.md:10
         Test path: ../books/language/src/types/collections/tuples/.test
-      Banner file: ../books/language/src/types/collections/tuples/.test/tuple_add_same.svg
-         Log file: ../books/language/src/types/collections/tuples/.test/tuple_add_same.log
- Output file stem: ../books/language/src/types/collections/tuples/.test/tuple_add_same-out
 
 -- Code --
 

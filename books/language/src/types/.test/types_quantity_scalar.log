@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/quantities.md:48
         Test path: ../books/language/src/types/.test
-      Banner file: ../books/language/src/types/.test/types_quantity_scalar.svg
-         Log file: ../books/language/src/types/.test/types_quantity_scalar.log
- Output file stem: ../books/language/src/types/.test/types_quantity_scalar-out
 
 -- Code --
 

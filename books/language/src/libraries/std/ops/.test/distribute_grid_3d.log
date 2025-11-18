@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/std/ops/distribute_grid.md:24
         Test path: ../books/language/src/libraries/std/ops/.test
-      Banner file: ../books/language/src/libraries/std/ops/.test/distribute_grid_3d.svg
-         Log file: ../books/language/src/libraries/std/ops/.test/distribute_grid_3d.log
- Output file stem: ../books/language/src/libraries/std/ops/.test/distribute_grid_3d-out
 
 -- Code --
 

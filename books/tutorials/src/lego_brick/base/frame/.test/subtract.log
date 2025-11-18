@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/base/frame/subtract.md:37
         Test path: ../books/tutorials/src/lego_brick/base/frame/.test
-      Banner file: ../books/tutorials/src/lego_brick/base/frame/.test/subtract.svg
-         Log file: ../books/tutorials/src/lego_brick/base/frame/.test/subtract.log
- Output file stem: ../books/tutorials/src/lego_brick/base/frame/.test/subtract-out
 
 -- Code --
 

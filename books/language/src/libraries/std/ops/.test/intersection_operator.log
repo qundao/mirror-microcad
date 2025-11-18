@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/std/ops/intersect.md:10
         Test path: ../books/language/src/libraries/std/ops/.test
-      Banner file: ../books/language/src/libraries/std/ops/.test/intersection_operator.svg
-         Log file: ../books/language/src/libraries/std/ops/.test/intersection_operator.log
- Output file stem: ../books/language/src/libraries/std/ops/.test/intersection_operator-out
 
 -- Code --
 

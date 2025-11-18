@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/overview.md:8
         Test path: ../books/tutorials/src/lego_brick/.test
-      Banner file: ../books/tutorials/src/lego_brick/.test/overview.svg
-         Log file: ../books/tutorials/src/lego_brick/.test/overview.log
- Output file stem: ../books/tutorials/src/lego_brick/.test/overview-out
 
 -- Code --
 

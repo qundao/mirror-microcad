@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/base/frame/naming.md:24
         Test path: ../books/tutorials/src/lego_brick/base/frame/.test
-      Banner file: ../books/tutorials/src/lego_brick/base/frame/.test/output.svg
-         Log file: ../books/tutorials/src/lego_brick/base/frame/.test/output.log
- Output file stem: ../books/tutorials/src/lego_brick/base/frame/.test/output-out
 
 -- Code --
 

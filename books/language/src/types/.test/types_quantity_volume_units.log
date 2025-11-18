@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/quantities.md:133
         Test path: ../books/language/src/types/.test
-      Banner file: ../books/language/src/types/.test/types_quantity_volume_units.svg
-         Log file: ../books/language/src/types/.test/types_quantity_volume_units.log
- Output file stem: ../books/language/src/types/.test/types_quantity_volume_units-out
 
 -- Code --
 

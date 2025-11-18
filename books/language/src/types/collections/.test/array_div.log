@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/collections/arrays.md:96
         Test path: ../books/language/src/types/collections/.test
-      Banner file: ../books/language/src/types/collections/.test/array_div.svg
-         Log file: ../books/language/src/types/collections/.test/array_div.log
- Output file stem: ../books/language/src/types/collections/.test/array_div-out
 
 -- Code --
 

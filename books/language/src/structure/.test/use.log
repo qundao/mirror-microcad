@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/structure/use.md:29
         Test path: ../books/language/src/structure/.test
-      Banner file: ../books/language/src/structure/.test/use.svg
-         Log file: ../books/language/src/structure/.test/use.log
- Output file stem: ../books/language/src/structure/.test/use-out
 
 -- Code --
 

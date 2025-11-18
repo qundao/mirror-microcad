@@ -3,9 +3,6 @@
   Expected result: warn
       Source file: ../books/tests/src/semicolon.md:39
         Test path: ../books/tests/src/.test
-      Banner file: ../books/tests/src/.test/sketch_with_empty_body.svg
-         Log file: ../books/tests/src/.test/sketch_with_empty_body.log
- Output file stem: ../books/tests/src/.test/sketch_with_empty_body-out
 
 -- Code --
 

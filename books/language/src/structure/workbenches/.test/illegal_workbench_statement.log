@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/structure/workbenches/README.md:255
         Test path: ../books/language/src/structure/workbenches/.test
-      Banner file: ../books/language/src/structure/workbenches/.test/illegal_workbench_statement.svg
-         Log file: ../books/language/src/structure/workbenches/.test/illegal_workbench_statement.log
- Output file stem: ../books/language/src/structure/workbenches/.test/illegal_workbench_statement-out
 
 -- Code --
 

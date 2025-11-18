@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/std/ops/subtract.md:10
         Test path: ../books/language/src/libraries/std/ops/.test
-      Banner file: ../books/language/src/libraries/std/ops/.test/difference_operator.svg
-         Log file: ../books/language/src/libraries/std/ops/.test/difference_operator.log
- Output file stem: ../books/language/src/libraries/std/ops/.test/difference_operator-out
 
 -- Code --
 

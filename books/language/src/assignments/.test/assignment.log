@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/assignments/values.md:14
         Test path: ../books/language/src/assignments/.test
-      Banner file: ../books/language/src/assignments/.test/assignment.svg
-         Log file: ../books/language/src/assignments/.test/assignment.log
- Output file stem: ../books/language/src/assignments/.test/assignment-out
 
 -- Code --
 

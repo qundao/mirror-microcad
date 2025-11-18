@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/structure/modules/internal_modules.md:9
         Test path: ../books/language/src/structure/modules/.test
-      Banner file: ../books/language/src/structure/modules/.test/internal_mod.svg
-         Log file: ../books/language/src/structure/modules/.test/internal_mod.log
- Output file stem: ../books/language/src/structure/modules/.test/internal_mod-out
 
 -- Code --
 

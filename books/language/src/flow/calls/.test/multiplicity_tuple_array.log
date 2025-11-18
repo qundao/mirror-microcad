@@ -3,9 +3,6 @@
   Expected result: todo
       Source file: ../books/language/src/flow/calls/multiplicity.md:38
         Test path: ../books/language/src/flow/calls/.test
-      Banner file: ../books/language/src/flow/calls/.test/multiplicity_tuple_array.svg
-         Log file: ../books/language/src/flow/calls/.test/multiplicity_tuple_array.log
- Output file stem: ../books/language/src/flow/calls/.test/multiplicity_tuple_array-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/flow/conditions.md:10
         Test path: ../books/language/src/flow/.test
-      Banner file: ../books/language/src/flow/.test/if_models.svg
-         Log file: ../books/language/src/flow/.test/if_models.log
- Output file stem: ../books/language/src/flow/.test/if_models-out
 
 -- Code --
 

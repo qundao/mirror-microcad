@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/semicolon.md:73
         Test path: ../books/tests/src/.test
-      Banner file: ../books/tests/src/.test/group_assignment.svg
-         Log file: ../books/tests/src/.test/group_assignment.log
- Output file stem: ../books/tests/src/.test/group_assignment-out
 
 -- Code --
 

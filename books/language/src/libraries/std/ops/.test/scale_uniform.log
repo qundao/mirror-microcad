@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/std/ops/scale.md:8
         Test path: ../books/language/src/libraries/std/ops/.test
-      Banner file: ../books/language/src/libraries/std/ops/.test/scale_uniform.svg
-         Log file: ../books/language/src/libraries/std/ops/.test/scale_uniform.log
- Output file stem: ../books/language/src/libraries/std/ops/.test/scale_uniform-out
 
 -- Code --
 

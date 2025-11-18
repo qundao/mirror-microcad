@@ -3,9 +3,6 @@
   Expected result: todo
       Source file: ../books/language/src/types/models/measures.md:10
         Test path: ../books/language/src/types/models/.test
-      Banner file: ../books/language/src/types/models/.test/measure.svg
-         Log file: ../books/language/src/types/models/.test/measure.log
- Output file stem: ../books/language/src/types/models/.test/measure-out
 
 -- Code --
 

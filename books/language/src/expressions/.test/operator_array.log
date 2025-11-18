@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/expressions/operators.md:55
         Test path: ../books/language/src/expressions/.test
-      Banner file: ../books/language/src/expressions/.test/operator_array.svg
-         Log file: ../books/language/src/expressions/.test/operator_array.log
- Output file stem: ../books/language/src/expressions/.test/operator_array-out
 
 -- Code --
 

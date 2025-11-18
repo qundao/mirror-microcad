@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/collections/tuples/README.md:10
         Test path: ../books/language/src/types/collections/tuples/.test
-      Banner file: ../books/language/src/types/collections/tuples/.test/named_tuple_access.svg
-         Log file: ../books/language/src/types/collections/tuples/.test/named_tuple_access.log
- Output file stem: ../books/language/src/types/collections/tuples/.test/named_tuple_access-out
 
 -- Code --
 

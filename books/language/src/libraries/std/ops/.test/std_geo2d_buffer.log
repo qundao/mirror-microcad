@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/std/ops/buffer.md:9
         Test path: ../books/language/src/libraries/std/ops/.test
-      Banner file: ../books/language/src/libraries/std/ops/.test/std_geo2d_buffer.svg
-         Log file: ../books/language/src/libraries/std/ops/.test/std_geo2d_buffer.log
- Output file stem: ../books/language/src/libraries/std/ops/.test/std_geo2d_buffer-out
 
 -- Code --
 

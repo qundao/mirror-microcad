@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/builtin/geo2d.md:14
         Test path: ../books/language/src/libraries/builtin/.test
-      Banner file: ../books/language/src/libraries/builtin/.test/sector.svg
-         Log file: ../books/language/src/libraries/builtin/.test/sector.log
- Output file stem: ../books/language/src/libraries/builtin/.test/sector-out
 
 -- Code --
 

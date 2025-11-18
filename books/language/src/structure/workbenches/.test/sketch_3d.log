@@ -3,9 +3,6 @@
   Expected result: todo_fail
       Source file: ../books/language/src/structure/workbenches/sketches.md:26
         Test path: ../books/language/src/structure/workbenches/.test
-      Banner file: ../books/language/src/structure/workbenches/.test/sketch_3d.svg
-         Log file: ../books/language/src/structure/workbenches/.test/sketch_3d.log
- Output file stem: ../books/language/src/structure/workbenches/.test/sketch_3d-out
 
 -- Code --
 

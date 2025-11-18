@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/structure/workbenches/sketches.md:9
         Test path: ../books/language/src/structure/workbenches/.test
-      Banner file: ../books/language/src/structure/workbenches/.test/sketch_basic.svg
-         Log file: ../books/language/src/structure/workbenches/.test/sketch_basic.log
- Output file stem: ../books/language/src/structure/workbenches/.test/sketch_basic-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/types/collections/tuples/operators.md:18
         Test path: ../books/language/src/types/collections/tuples/.test
-      Banner file: ../books/language/src/types/collections/tuples/.test/tuple_add_different.svg
-         Log file: ../books/language/src/types/collections/tuples/.test/tuple_add_different.log
- Output file stem: ../books/language/src/types/collections/tuples/.test/tuple_add_different-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: todo_fail
       Source file: ../books/language/src/structure/workbenches/README.md:116
         Test path: ../books/language/src/structure/workbenches/.test
-      Banner file: ../books/language/src/structure/workbenches/.test/initializers.svg
-         Log file: ../books/language/src/structure/workbenches/.test/initializers.log
- Output file stem: ../books/language/src/structure/workbenches/.test/initializers-out
 
 -- Code --
 

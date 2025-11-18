@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/expressions/literals.md:44
         Test path: ../books/language/src/expressions/.test
-      Banner file: ../books/language/src/expressions/.test/boolean_literal.svg
-         Log file: ../books/language/src/expressions/.test/boolean_literal.log
- Output file stem: ../books/language/src/expressions/.test/boolean_literal-out
 
 -- Code --
 

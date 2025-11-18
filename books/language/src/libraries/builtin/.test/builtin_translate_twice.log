@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/builtin/ops.md:93
         Test path: ../books/language/src/libraries/builtin/.test
-      Banner file: ../books/language/src/libraries/builtin/.test/builtin_translate_twice.svg
-         Log file: ../books/language/src/libraries/builtin/.test/builtin_translate_twice.log
- Output file stem: ../books/language/src/libraries/builtin/.test/builtin_translate_twice-out
 
 -- Code --
 

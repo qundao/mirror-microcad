@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tutorials/src/lego_brick/base/frame/naming.md:38
         Test path: ../books/tutorials/src/lego_brick/base/frame/.test
-      Banner file: ../books/tutorials/src/lego_brick/base/frame/.test/operator.svg
-         Log file: ../books/tutorials/src/lego_brick/base/frame/.test/operator.log
- Output file stem: ../books/tutorials/src/lego_brick/base/frame/.test/operator-out
 
 -- Code --
 

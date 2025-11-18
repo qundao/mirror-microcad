@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/collections/arrays.md:34
         Test path: ../books/language/src/types/collections/.test
-      Banner file: ../books/language/src/types/collections/.test/range_expressions.svg
-         Log file: ../books/language/src/types/collections/.test/range_expressions.log
- Output file stem: ../books/language/src/types/collections/.test/range_expressions-out
 
 -- Code --
 

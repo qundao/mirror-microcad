@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/statement_usage/source.md:54
         Test path: ../books/tests/src/statement_usage/.test
-      Banner file: ../books/tests/src/statement_usage/.test/source_assignment_const.svg
-         Log file: ../books/tests/src/statement_usage/.test/source_assignment_const.log
- Output file stem: ../books/tests/src/statement_usage/.test/source_assignment_const-out
 
 -- Code --
 

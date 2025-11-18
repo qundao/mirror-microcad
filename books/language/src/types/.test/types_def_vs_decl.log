@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/README.md:29
         Test path: ../books/language/src/types/.test
-      Banner file: ../books/language/src/types/.test/types_def_vs_decl.svg
-         Log file: ../books/language/src/types/.test/types_def_vs_decl.log
- Output file stem: ../books/language/src/types/.test/types_def_vs_decl-out
 
 -- Code --
 

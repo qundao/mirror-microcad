@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/structure/modules/README.md:23
         Test path: ../books/language/src/structure/modules/.test
-      Banner file: ../books/language/src/structure/modules/.test/mod_example.svg
-         Log file: ../books/language/src/structure/modules/.test/mod_example.log
- Output file stem: ../books/language/src/structure/modules/.test/mod_example-out
 
 -- Code --
 

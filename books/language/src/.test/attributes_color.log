@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/attributes.md:42
         Test path: ../books/language/src/.test
-      Banner file: ../books/language/src/.test/attributes_color.svg
-         Log file: ../books/language/src/.test/attributes_color.log
- Output file stem: ../books/language/src/.test/attributes_color-out
 
 -- Code --
 

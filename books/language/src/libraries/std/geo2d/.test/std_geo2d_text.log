@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/libraries/std/geo2d/README.md:46
         Test path: ../books/language/src/libraries/std/geo2d/.test
-      Banner file: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_text.svg
-         Log file: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_text.log
- Output file stem: ../books/language/src/libraries/std/geo2d/.test/std_geo2d_text-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/statement_usage/init.md:78
         Test path: ../books/tests/src/statement_usage/.test
-      Banner file: ../books/tests/src/statement_usage/.test/init_assignment_var.svg
-         Log file: ../books/tests/src/statement_usage/.test/init_assignment_var.log
- Output file stem: ../books/tests/src/statement_usage/.test/init_assignment_var-out
 
 -- Code --
 

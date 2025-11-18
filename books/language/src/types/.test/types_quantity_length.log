@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/quantities.md:60
         Test path: ../books/language/src/types/.test
-      Banner file: ../books/language/src/types/.test/types_quantity_length.svg
-         Log file: ../books/language/src/types/.test/types_quantity_length.log
- Output file stem: ../books/language/src/types/.test/types_quantity_length-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/semicolon.md:17
         Test path: ../books/tests/src/.test
-      Banner file: ../books/tests/src/.test/operation_no_body.svg
-         Log file: ../books/tests/src/.test/operation_no_body.log
- Output file stem: ../books/tests/src/.test/operation_no_body-out
 
 -- Code --
 

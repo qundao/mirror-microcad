@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/README.md:47
         Test path: ../books/language/src/types/.test
-      Banner file: ../books/language/src/types/.test/types_bundles_functions.svg
-         Log file: ../books/language/src/types/.test/types_bundles_functions.log
- Output file stem: ../books/language/src/types/.test/types_bundles_functions-out
 
 -- Code --
 

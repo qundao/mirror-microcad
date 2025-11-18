@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/structure/functions.md:69
         Test path: ../books/language/src/structure/.test
-      Banner file: ../books/language/src/structure/.test/mod.svg
-         Log file: ../books/language/src/structure/.test/mod.log
- Output file stem: ../books/language/src/structure/.test/mod-out
 
 -- Code --
 

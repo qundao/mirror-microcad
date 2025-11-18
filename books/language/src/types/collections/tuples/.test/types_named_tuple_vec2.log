@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/collections/tuples/aliases.md:27
         Test path: ../books/language/src/types/collections/tuples/.test
-      Banner file: ../books/language/src/types/collections/tuples/.test/types_named_tuple_vec2.svg
-         Log file: ../books/language/src/types/collections/tuples/.test/types_named_tuple_vec2.log
- Output file stem: ../books/language/src/types/collections/tuples/.test/types_named_tuple_vec2-out
 
 -- Code --
 

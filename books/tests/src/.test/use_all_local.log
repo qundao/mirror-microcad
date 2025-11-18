@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/use.md:93
         Test path: ../books/tests/src/.test
-      Banner file: ../books/tests/src/.test/use_all_local.svg
-         Log file: ../books/tests/src/.test/use_all_local.log
- Output file stem: ../books/tests/src/.test/use_all_local-out
 
 -- Code --
 

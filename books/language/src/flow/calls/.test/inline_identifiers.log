@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/flow/calls/multiplicity.md:52
         Test path: ../books/language/src/flow/calls/.test
-      Banner file: ../books/language/src/flow/calls/.test/inline_identifiers.svg
-         Log file: ../books/language/src/flow/calls/.test/inline_identifiers.log
- Output file stem: ../books/language/src/flow/calls/.test/inline_identifiers-out
 
 -- Code --
 

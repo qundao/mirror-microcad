@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/types/README.md:39
         Test path: ../books/language/src/types/.test
-      Banner file: ../books/language/src/types/.test/types_no_declaration.svg
-         Log file: ../books/language/src/types/.test/types_no_declaration.log
- Output file stem: ../books/language/src/types/.test/types_no_declaration-out
 
 -- Code --
 

@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/semicolon.md:28
         Test path: ../books/tests/src/.test
-      Banner file: ../books/tests/src/.test/sketch_missing_semicolon.svg
-         Log file: ../books/tests/src/.test/sketch_missing_semicolon.log
- Output file stem: ../books/tests/src/.test/sketch_missing_semicolon-out
 
 -- Code --
 

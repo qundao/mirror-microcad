@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/tests/src/statement_usage/pre-init.md:62
         Test path: ../books/tests/src/statement_usage/.test
-      Banner file: ../books/tests/src/statement_usage/.test/pre_init_if.svg
-         Log file: ../books/tests/src/statement_usage/.test/pre_init_if.log
- Output file stem: ../books/tests/src/statement_usage/.test/pre_init_if-out
 
 -- Code --
 

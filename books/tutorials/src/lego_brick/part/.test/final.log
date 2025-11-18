@@ -4,9 +4,6 @@
            Params: hires
       Source file: ../books/tutorials/src/lego_brick/part/final.md:9
         Test path: ../books/tutorials/src/lego_brick/part/.test
-      Banner file: ../books/tutorials/src/lego_brick/part/.test/final.svg
-         Log file: ../books/tutorials/src/lego_brick/part/.test/final.log
- Output file stem: ../books/tutorials/src/lego_brick/part/.test/final-out
 
 -- Code --
 

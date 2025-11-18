@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/flow/calls/arguments.md:16
         Test path: ../books/language/src/flow/calls/.test
-      Banner file: ../books/language/src/flow/calls/.test/argument_match_name.svg
-         Log file: ../books/language/src/flow/calls/.test/argument_match_name.log
- Output file stem: ../books/language/src/flow/calls/.test/argument_match_name-out
 
 -- Code --
 

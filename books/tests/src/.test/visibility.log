@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/tests/src/visibility.md:6
         Test path: ../books/tests/src/.test
-      Banner file: ../books/tests/src/.test/visibility.svg
-         Log file: ../books/tests/src/.test/visibility.log
- Output file stem: ../books/tests/src/.test/visibility-out
 
 -- Code --
 

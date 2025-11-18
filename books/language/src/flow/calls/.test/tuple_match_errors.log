@@ -3,9 +3,6 @@
   Expected result: fail
       Source file: ../books/language/src/flow/calls/arguments.md:103
         Test path: ../books/language/src/flow/calls/.test
-      Banner file: ../books/language/src/flow/calls/.test/tuple_match_errors.svg
-         Log file: ../books/language/src/flow/calls/.test/tuple_match_errors.log
- Output file stem: ../books/language/src/flow/calls/.test/tuple_match_errors-out
 
 -- Code --
 

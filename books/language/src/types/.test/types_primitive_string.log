@@ -3,9 +3,6 @@
   Expected result: ok
       Source file: ../books/language/src/types/primitives.md:44
         Test path: ../books/language/src/types/.test
-      Banner file: ../books/language/src/types/.test/types_primitive_string.svg
-         Log file: ../books/language/src/types/.test/types_primitive_string.log
- Output file stem: ../books/language/src/types/.test/types_primitive_string-out
 
 -- Code --
 
