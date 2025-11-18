@@ -46,6 +46,10 @@
             "name": "constant.other.caps.microcad"
         },
         {
+            "match": "\\b([A-Z_][a-zA-Z0-9_]*)\\b",
+            "name": "entity.name.type.microcad"
+        },
+        {
             "match": "\"[^\"]*\"",
             "name": "string.quoted.single.microcad"
         },
@@ -147,13 +151,13 @@
             "match": "\\b([A-Z_][A-Z0-9_]*)\\b",
             "name": "constant.other.caps.microcad"
         },
-        "types": {
-            "match": "\\b(Integer|Scalar|String|Color|Length|Area|Volume|Angle|Weight|Density|Bool)\\b",
-            "name": "storage.type.microcad"
-        },
         "custom_types": {
             "match": "\\b([A-Z_][a-zA-Z0-9_]*)\\b",
             "name": "entity.name.type.microcad"
+        },
+        "types": {
+            "match": "\\b(Integer|Scalar|String|Color|Length|Area|Volume|Angle|Weight|Density|Bool)\\b",
+            "name": "storage.type.microcad"
         },
         "strings": {
             "match": "\"[^\"]*\"",
