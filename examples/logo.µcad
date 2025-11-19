@@ -1,4 +1,4 @@
-mod microcad {
+pub mod microcad {
     use std::geo2d::*;
     use std::ops::*;
 
@@ -40,20 +40,30 @@ mod microcad {
         Arc(radius, thickness)
          | Rect(width = thickness, height = radius * 3, x = radius * 0.5, y = -radius);
     }
+
+    pub sketch Logo(radius: Length, thickness: Length) {
+        use std::math::*;
+        init(size: Length) {
+            radius = size * 50%;
+            thickness = radius * 40%;
+        }
+        
+        {
+            Icon(radius);
+            {
+                Micro(radius, thickness);
+                C(radius, thickness);
+                A(radius, thickness);
+                D(radius, thickness);
+            }.align(X);
+        }.align(X, 4mm).center();
+    }
 }
 
 use std::ops::*;
 use std::math::*;
 
-radius = 1cm;
-thickness = radius * 40%;
+pub SIZE = 1cm;
 
-{
-    microcad::Icon(radius);
-    {
-        microcad::Micro(radius, thickness);
-        microcad::C(radius, thickness);
-        microcad::A(radius, thickness);
-        microcad::D(radius, thickness);
-    }.align(X);
-}.align(X, 4mm).center().extrude(4mm);
+microcad::Logo(size = SIZE).extrude(4mm);
+

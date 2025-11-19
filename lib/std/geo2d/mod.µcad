@@ -169,6 +169,15 @@ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
     __builtin::geo2d::Sector(radius, start, end);
 }
 
+pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5, stretch = 0.5) {
+    prop pitch_radius = module * teeth;
+    prop outer_radius = pitch_radius + module;
+    prop tooth_angle = 360° / teeth;
+
+    __builtin::geo2d::SinusoidalGearProfile(module, teeth, roundness, stretch)
+}
+
+
 /// Text definition.
 pub sketch Text(height: Length, text: String, font_file = "") {
     __builtin::geo2d::Text(height, text, font_file);

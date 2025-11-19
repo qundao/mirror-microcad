@@ -45,9 +45,10 @@ impl InvoluteGearProfile {
     }
 
     fn rotate_point(angle: Scalar, c: &Coord<Scalar>) -> Coord<Scalar> {
+        let (cos, sin) = (angle.cos(), angle.sin());
         coord! {
-            x:  c.x * angle.cos() - c.y * angle.sin(),
-            y:  c.x * angle.sin() + c.y * angle.cos()
+            x:  c.x * cos - c.y * sin,
+            y:  c.x * sin + c.y * cos
         }
     }
 
