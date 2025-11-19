@@ -3,8 +3,9 @@
 
 [package]
 name = "microcad_pest_test"
-version = "0.1.0"
-edition = "2021"
+edition.workspace = true
+rust-version.workspace = true
+version.workspace = true
 
 [lib]
 path = "lib.rs"

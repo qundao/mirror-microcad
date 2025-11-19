@@ -1,9 +1,10 @@
 # Test List
 
 The following table lists all tests included in this documentation.
-Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**167** tests from markdown.
+**167** tests have been evaluated with version **0.2.6** of microcad.
+
+Click on the test names to jump to file with the test or click the buttons to get the logs.
 
 | Result | Name |
 |-------:|------|

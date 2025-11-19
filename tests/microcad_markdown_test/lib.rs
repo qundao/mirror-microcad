@@ -107,13 +107,15 @@ fn make_test_list(path: impl AsRef<std::path::Path>, tests: &[Output]) -> String
         "# Test List
 
 The following table lists all tests included in this documentation.
-Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**{count}** tests from markdown.
+**{count}** tests have been evaluated with version **{version}** of microcad.
+
+Click on the test names to jump to file with the test or click the buttons to get the logs.
 
 | Result | Name |
 |-------:|------|
-"
+",
+        version = env!("CARGO_PKG_VERSION")
     );
 
     {
