@@ -64,4 +64,4 @@ You're now ready to use µcad!
   - <http://microcad.xyz>  
 - Language documentation:
 
-  - <http://github.com/Rustfahrtagentur/microcad/blob/master/doc/README.md>
+  - <https://docs.microcad.xyz/language/book/index.html>
