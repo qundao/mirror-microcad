@@ -49,7 +49,7 @@ impl Eval for RangeExpression {
             match (self.first.eval(context)?, self.last.eval(context)?) {
                 (Value::Integer(first), Value::Integer(last)) => {
                     if first > last {
-                        context.error(self, EvalError::BadRange(first, last));
+                        context.error(self, EvalError::BadRange(first, last))?;
                     }
 
                     Value::Array(Array::from_values(
