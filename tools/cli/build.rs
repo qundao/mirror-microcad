@@ -15,7 +15,7 @@ fn generate_builtin_std_library() -> Result<()> {
         .map(PathBuf::from)
         .expect("Manifest dir");
 
-    let dir = env::var("MICROCAD_STD_DIR")
+    let std_dir = env::var("MICROCAD_STD_DIR")
         .map(PathBuf::from)
         .unwrap_or_else(|_| manifest_dir.join("../../lib/std"));
 
@@ -24,18 +24,26 @@ fn generate_builtin_std_library() -> Result<()> {
         .expect("Output dir")
         .join("microcad_std.rs");
 
-    // Collect all .µcad files recursively
-    let mut files = Vec::new();
-    for entry in WalkDir::new(&dir)
+    // Collect all .µcad sources recursively
+    let sources = WalkDir::new(&std_dir)
         .into_iter()
         .filter_map(|e| e.ok())
         .filter(|e| e.path().extension().is_some_and(|ext| ext == "µcad"))
-    {
-        let path = entry.path();
-        let rel_path = path.strip_prefix(&dir).expect("Some prefix").to_path_buf();
-        let content = fs::read_to_string(path).expect("Unable to read file");
-        files.push((rel_path, content));
-    }
+        .map(|entry| {
+            let path = entry.path();
+            let rel_path = path
+                .strip_prefix(&std_dir)
+                .expect("Some prefix")
+                .to_path_buf();
+            let content = fs::read_to_string(path).expect("Unable to read file");
+            (rel_path, content)
+        })
+        .collect::<Vec<_>>();
+
+    assert!(
+        !sources.is_empty(),
+        "{std_dir:?} does not contain a µcad std library!"
+    );
 
     // Generate the Rust code
     let mut code = String::new();
@@ -52,7 +60,7 @@ fn generate_builtin_std_library() -> Result<()> {
     ",
     );
 
-    for (path, content) in files {
+    for (path, content) in sources {
         let path_str = path.to_string_lossy();
         code.push_str(&format!(
             "        m.insert(PathBuf::from(r#\"{path_str}\"#), r#\"{content}\"#.to_string());\n"
@@ -73,7 +81,10 @@ fn generate_builtin_std_library() -> Result<()> {
         // write all rust code at once
         {
             fs::write(&dest_path, code).context(format!("cannot create file '{dest_path:?}'"))?;
-            println!("cargo:rerun-if-changed={dir}", dir = dir.display());
+            println!(
+                "cargo:rerun-if-changed={std_dir}",
+                std_dir = std_dir.display()
+            );
             Ok(())
         }
         Err(rustfmt_wrapper::Error::Rustfmt(msg)) => {
