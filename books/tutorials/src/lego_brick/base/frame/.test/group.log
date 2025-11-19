@@ -1,6 +1,8 @@
 -- Test --
-  group
-  ../books/tutorials/src/lego_brick/base/frame/subtract.md:13
+        Test name: group
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/subtract.md:13
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
   18:       std::geo2d::Rect(width = width - 2 * thickness, height = height - 2 * thickness);
   19:   }
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Group ->

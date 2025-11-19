@@ -1,6 +1,8 @@
 -- Test --
-  quantity_literal
-  ../books/language/src/expressions/literals.md:66
+        Test name: quantity_literal
+  Expected result: ok
+      Source file: ../books/language/src/expressions/literals.md:66
+        Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
@@ -11,9 +13,8 @@
   70:   10°;     // 10 degree angle
   71:   10deg    // also 10 degree angle
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,6 +1,8 @@
 -- Test --
-  module_assignment_prop
-  ../books/tests/src/statement_usage/module.md:86
+        Test name: module_assignment_prop
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/module.md:86
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   87:     prop a = 1;  // error
   88:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Assignment statement is not available within Module
   ---> ../books/tests/src/statement_usage/module.md:87:3
@@ -25,4 +26,4 @@ error: Declaration of a not allowed within module_assignment_prop::k
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

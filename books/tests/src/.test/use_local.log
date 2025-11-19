@@ -1,19 +1,20 @@
 -- Test --
-  use_local
-  ../books/tests/src/use.md:80
+        Test name: use_local
+  Expected result: ok
+      Source file: ../books/tests/src/use.md:82
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
-  80:   fn f() {
-  81:       use std::math::abs;
-  82:       x = abs(-1.0);
-  83:       return x;
-  84:   }
-  85:   f();
+  82:   fn f() {
+  83:       use std::math::abs;
+  84:       x = abs(-1.0);
+  85:       return x;
+  86:   }
+  87:   f();
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

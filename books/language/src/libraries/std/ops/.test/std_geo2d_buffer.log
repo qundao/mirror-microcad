@@ -1,15 +1,16 @@
 -- Test --
-  std_geo2d_buffer
-  ../books/language/src/libraries/std/ops/buffer.md:9
+        Test name: std_geo2d_buffer
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/buffer.md:9
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
    9:   std::geo2d::Rect(20mm)
   10:       .std::ops::buffer(distance = 20mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::buffer(distance=20mm) ->

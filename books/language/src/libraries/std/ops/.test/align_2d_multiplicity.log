@@ -1,6 +1,8 @@
 -- Test --
-  align_2d_multiplicity
-  ../books/language/src/libraries/std/ops/align.md:27
+        Test name: align_2d_multiplicity
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/align.md:27
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
@@ -10,9 +12,8 @@
   30:   
   31:   Rect(10mm).rotate([0..10] * 90° / 10).align(X, 4mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=4mm) ->

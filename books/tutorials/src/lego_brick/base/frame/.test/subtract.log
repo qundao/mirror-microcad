@@ -1,6 +1,8 @@
 -- Test --
-  subtract
-  ../books/tutorials/src/lego_brick/base/frame/subtract.md:37
+        Test name: subtract
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/subtract.md:37
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
   42:       std::geo2d::Rect(width = width - 2 * thickness, height = height - 2 * thickness);
   43:   }.std::ops::subtract();   // Apply the operation.
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::subtract() ->

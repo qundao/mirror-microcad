@@ -76,6 +76,8 @@ y = my_part3d();
 z = baz(-1.0);
 ```
 
+[![test](.test/use_local.svg)](.test/use_local.log)
+
 ```µcad,use_local
 fn f() {
     use std::math::abs;
@@ -85,6 +87,8 @@ fn f() {
 f();
 ```
 
+[![test](.test/use_all_local.svg)](.test/use_all_local.log)
+
 ```µcad,use_all_local
 fn f() {
     use std::math::*;
@@ -92,4 +96,20 @@ fn f() {
     return x;
 }
 f();
+```
+
+[![test](.test/use_statement_pub_in_module.svg)](.test/use_statement_pub_in_module.log)
+
+```µcad,use_statement_pub_in_module
+mod my {
+    mod name {
+        pub mod space {
+            pub use std::geo2d::*;
+        }
+    }
+    pub use name::space::*;
+}
+
+my::Circle(r = 4mm);
+my::Rect(size = 40mm);
 ```

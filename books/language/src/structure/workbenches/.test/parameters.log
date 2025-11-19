@@ -1,6 +1,8 @@
 -- Test --
-  parameters
-  ../books/language/src/structure/workbenches/operations.md:54
+        Test name: parameters
+  Expected result: todo
+      Source file: ../books/language/src/structure/workbenches/operations.md:54
+        Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
@@ -21,8 +23,7 @@
   68:       std::geo2d::Circle(radius = 2cm);
   69:   }.punch_disk(radius = 1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Symbol count not found.
   ---> ../books/language/src/structure/workbenches/operations.md:56:15

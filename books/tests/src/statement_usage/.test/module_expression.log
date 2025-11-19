@@ -1,6 +1,8 @@
 -- Test --
-  module_expression
-  ../books/tests/src/statement_usage/module.md:94
+        Test name: module_expression
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/module.md:94
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   95:     1 + 2; // error
   96:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Expression statement not available here
   ---> ../books/tests/src/statement_usage/module.md:95:3
@@ -24,4 +25,4 @@ warning: Unused global symbol k.
      | ^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

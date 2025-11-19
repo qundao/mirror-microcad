@@ -1,14 +1,15 @@
 -- Test --
-  difference_operator
-  ../books/language/src/libraries/std/ops/subtract.md:10
+        Test name: difference_operator
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/subtract.md:10
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
   10:   std::geo2d::Circle(radius = 10mm) - std::geo2d::Rect(size = 2mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation subtract() ->

@@ -1,22 +1,15 @@
 -- Test --
-  array_sub
-  ../books/language/src/types/collections/arrays.md:74
+        Test name: array_sub
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/arrays.md:86
+        Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  74:   d = 0.5mm;
-  75:   std::debug::assert_eq([[1,2]mm - 2mm, [-1,0]mm]);
+  86:   std::debug::assert_eq([ [1,2]mm - 2mm, [-1,0]mm ]);
 
--- Output --
-
--- Errors --
-warning: Unused local d.
-  ---> ../books/language/src/types/collections/arrays.md:74:1
-     |
-  74 | d = 0.5mm;
-     | ^
-     |
-Unexpected warnings(s) which did occur in line(s): 74
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

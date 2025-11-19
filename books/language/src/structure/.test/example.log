@@ -1,6 +1,8 @@
 -- Test --
-  example
-  ../books/language/src/structure/functions.md:11
+        Test name: example
+  Expected result: ok
+      Source file: ../books/language/src/structure/functions.md:11
+        Test path: ../books/language/src/structure/.test
 
 -- Code --
 
@@ -17,7 +19,7 @@
 ERROR: first
 ERROR: second
 
--- Errors --
--- No model --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

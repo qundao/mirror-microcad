@@ -1,6 +1,8 @@
 -- Test --
-  scopes
-  ../books/tests/src/scopes.md:8
+        Test name: scopes
+  Expected result: ok
+      Source file: ../books/tests/src/scopes.md:8
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -32,9 +34,8 @@
   33:   __builtin::debug::assert_invalid(b);
   34:   __builtin::debug::assert_invalid(c);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Group ->

@@ -1,13 +1,14 @@
 -- Test --
-  source_assignment_prop
-  ../books/tests/src/statement_usage/source.md:66
+        Test name: source_assignment_prop
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/source.md:66
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
   66:   prop a = 1;  // error
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Assignment statement is not available within SourceFile
   ---> ../books/tests/src/statement_usage/source.md:66:1
@@ -23,4 +24,4 @@ error: Declaration of a not allowed within source_assignment_prop
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

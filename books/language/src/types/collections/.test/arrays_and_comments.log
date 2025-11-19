@@ -1,6 +1,8 @@
 -- Test --
-  arrays_and_comments
-  ../books/language/src/types/collections/arrays.md:10
+        Test name: arrays_and_comments
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/arrays.md:10
+        Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
   15:       2
   16:   ];
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,6 +1,8 @@
 -- Test --
-  workbench_pub_use
-  ../books/tests/src/statement_usage/workbench.md:46
+        Test name: workbench_pub_use
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/workbench.md:46
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   47:     pub use std; // error
   48:   } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Use statement is not available within Sketch
   ---> ../books/tests/src/statement_usage/workbench.md:47:3
@@ -19,4 +20,4 @@ error: Use statement is not available within Sketch
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

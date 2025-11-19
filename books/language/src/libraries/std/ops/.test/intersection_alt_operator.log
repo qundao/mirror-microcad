@@ -1,6 +1,8 @@
 -- Test --
-  intersection_alt_operator
-  ../books/language/src/libraries/std/ops/intersect.md:18
+        Test name: intersection_alt_operator
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/intersect.md:18
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
@@ -9,9 +11,8 @@
   20:       std::geo2d::Rect(width = 3mm, height = 2mm);
   21:   }.std::ops::intersect();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::intersect() ->

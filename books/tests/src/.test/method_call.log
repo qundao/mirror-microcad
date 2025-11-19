@@ -1,6 +1,8 @@
 -- Test --
-  method_call
-  ../books/tests/src/method_call.md:6
+        Test name: method_call
+  Expected result: ok
+      Source file: ../books/tests/src/method_call.md:6
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
    7:   sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
    8:   Sketch(4.0);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol scale.
   ---> ../books/tests/src/method_call.md:6:1
@@ -31,4 +32,4 @@ Unexpected warnings(s) which did occur in line(s): 6
 
 Export of "../books/tests/src/.test/method_call-out.svg" successful.
 -- Test Result --
-OK
+OK (BUT WARNINGS)

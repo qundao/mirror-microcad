@@ -1,6 +1,8 @@
 -- Test --
-  init_use
-  ../books/tests/src/statement_usage/init.md:38
+        Test name: init_use
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/init.md:38
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   39:     use std;
   40:   } } K(1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local l.
   ---> ../books/tests/src/statement_usage/init.md:38:19
@@ -24,4 +25,4 @@ Unexpected warnings(s) which did occur in line(s): 38
 
 Export error: Render error: Nothing to render
 -- Test Result --
-OK
+OK (BUT WARNINGS)

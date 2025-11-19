@@ -1,6 +1,8 @@
 -- Test --
-  quantity_types_number_literals
-  ../books/language/src/types/quantities.md:28
+        Test name: quantity_types_number_literals
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:28
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
@@ -14,8 +16,7 @@
   35:   // `height` with `Scalar` `2` and add ten centimeters
   36:   width = height * 2 + 10cm;
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local width.
   ---> ../books/language/src/types/quantities.md:36:1
@@ -30,6 +31,6 @@ warning: Unused global symbol f.
      | ^^^^^^^^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 32, 36
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

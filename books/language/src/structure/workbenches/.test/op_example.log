@@ -1,6 +1,8 @@
 -- Test --
-  op_example
-  ../books/language/src/structure/workbenches/operations.md:13
+        Test name: op_example
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/operations.md:13
+        Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
@@ -10,9 +12,8 @@
   16:   // use operation nop on a circle
   17:   std::geo2d::Circle(radius = 1cm).nop();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) op_example::nop() ->

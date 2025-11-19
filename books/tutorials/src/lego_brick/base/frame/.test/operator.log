@@ -1,6 +1,8 @@
 -- Test --
-  operator
-  ../books/tutorials/src/lego_brick/base/frame/naming.md:38
+        Test name: operator
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/naming.md:38
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
 
 -- Code --
 
@@ -17,9 +19,8 @@
   48:   // what was { .. }.subtract() before:
   49:   outer - inner;
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation subtract() ->

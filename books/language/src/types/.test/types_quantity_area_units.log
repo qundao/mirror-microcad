@@ -1,6 +1,8 @@
 -- Test --
-  types_quantity_area_units
-  ../books/language/src/types/quantities.md:103
+        Test name: types_quantity_area_units
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:103
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
@@ -12,8 +14,7 @@
  108:   std::debug::assert(square_millimeter == 0.1m²);
  109:   std::debug::assert(square_centimeter == 0.1m²);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local square_inch.
   ---> ../books/language/src/types/quantities.md:106:1
@@ -28,6 +29,6 @@ warning: Unused local square_meter.
      | ^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 105, 106
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

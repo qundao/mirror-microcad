@@ -1,15 +1,16 @@
 -- Test --
-  source_file_2D
-  ../books/language/src/structure/source_file.md:31
+        Test name: source_file_2D
+  Expected result: ok
+      Source file: ../books/language/src/structure/source_file.md:31
+        Test path: ../books/language/src/structure/.test
 
 -- Code --
 
   31:   // simply draw a circle
   32:   std::geo2d::Circle(radius = 1cm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->

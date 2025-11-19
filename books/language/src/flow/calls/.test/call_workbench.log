@@ -1,6 +1,8 @@
 -- Test --
-  call_workbench
-  ../books/language/src/flow/calls/README.md:29
+        Test name: call_workbench
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/README.md:29
+        Test path: ../books/language/src/flow/calls/.test
 
 -- Code --
 
@@ -15,9 +17,8 @@
   37:   // translate object s
   38:   s.std::ops::translate(x = 1cm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->

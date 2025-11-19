@@ -1,6 +1,8 @@
 -- Test --
-  module_pub_use
-  ../books/tests/src/statement_usage/module.md:46
+        Test name: module_pub_use
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/module.md:46
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   47:     pub use std::geo2d;
   48:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol k.
   ---> ../books/tests/src/statement_usage/module.md:46:1
@@ -18,6 +19,6 @@ warning: Unused global symbol k.
      | ^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 46
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

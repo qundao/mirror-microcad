@@ -1,6 +1,8 @@
 -- Test --
-  frame
-  ../books/tutorials/src/lego_brick/base/frame/finish.md:17
+        Test name: frame
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/finish.md:17
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
 
 -- Code --
 
@@ -14,9 +16,8 @@
   24:   // Construct a frame
   25:   Frame(width, height, thickness);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Frame(height=15.8mm, thickness=1.2mm, width=31.8mm) ->

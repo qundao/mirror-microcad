@@ -1,6 +1,8 @@
 -- Test --
-  builtin_extrude
-  ../books/language/src/libraries/builtin/ops.md:41
+        Test name: builtin_extrude
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/ops.md:41
+        Test path: ../books/language/src/libraries/builtin/.test
 
 -- Code --
 
@@ -10,9 +12,8 @@
   44:   
   45:   a.ops::extrude(height = 4.0mm, scale_x = 100%, scale_y = 100%, twist = 0°);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->

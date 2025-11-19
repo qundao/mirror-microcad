@@ -1,6 +1,8 @@
 -- Test --
-  grid
-  ../books/tutorials/src/lego_brick/part/custom_op.md:11
+        Test name: grid
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/part/custom_op.md:11
+        Test path: ../books/tutorials/src/lego_brick/part/.test
 
 -- Code --
 
@@ -14,8 +16,7 @@
   18:           .align()
   19:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol <no code>.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
@@ -138,6 +139,6 @@ warning: Unused global symbol translate.
      |     ^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 11, 15
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

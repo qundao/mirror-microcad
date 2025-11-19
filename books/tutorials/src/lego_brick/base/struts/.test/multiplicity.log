@@ -1,6 +1,8 @@
 -- Test --
-  multiplicity
-  ../books/tutorials/src/lego_brick/base/struts/multiplicity.md:13
+        Test name: multiplicity
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/struts/multiplicity.md:13
+        Test path: ../books/tutorials/src/lego_brick/base/struts/.test
 
 -- Code --
 
@@ -9,9 +11,8 @@
   15:   
   16:   (Circle(d = 6.51mm) - Circle(d = 4.8mm)).translate(x = [-8mm, 0mm, 8mm]);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Multiplicity ->

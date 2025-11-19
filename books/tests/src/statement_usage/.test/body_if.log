@@ -1,6 +1,8 @@
 -- Test --
-  body_if
-  ../books/tests/src/statement_usage/body.md:62
+        Test name: body_if
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/body.md:62
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   63:     if std::math::PI == 3 { }
   64:   }
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Group ->

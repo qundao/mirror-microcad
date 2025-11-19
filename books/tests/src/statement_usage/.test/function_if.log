@@ -1,6 +1,8 @@
 -- Test --
-  function_if
-  ../books/tests/src/statement_usage/function.md:62
+        Test name: function_if
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/function.md:62
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   63:     if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
   64:   } f();
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

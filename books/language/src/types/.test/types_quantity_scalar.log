@@ -1,6 +1,8 @@
 -- Test --
-  types_quantity_scalar
-  ../books/language/src/types/quantities.md:48
+        Test name: types_quantity_scalar
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:48
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   49:   pi =  3.1415;
   50:   percent = 55%;
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local percent.
   ---> ../books/language/src/types/quantities.md:50:1
@@ -30,6 +31,6 @@ warning: Unused local zero.
      | ^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 48, 49, 50
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

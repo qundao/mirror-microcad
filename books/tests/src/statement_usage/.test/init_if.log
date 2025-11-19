@@ -1,6 +1,8 @@
 -- Test --
-  init_if
-  ../books/tests/src/statement_usage/init.md:62
+        Test name: init_if
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/init.md:62
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   63:     if std::math::PI == l { } // error
   64:   } } K(1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: If statement not available here
   ---> ../books/tests/src/statement_usage/init.md:63:3
@@ -18,4 +19,4 @@ error: If statement not available here
      |   ^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

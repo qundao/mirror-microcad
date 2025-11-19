@@ -1,6 +1,8 @@
 -- Test --
-  module_function
-  ../books/tests/src/statement_usage/module.md:22
+        Test name: module_function
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/module.md:22
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   23:     fn f() {}
   24:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol k.
   ---> ../books/tests/src/statement_usage/module.md:22:1
@@ -24,6 +25,6 @@ warning: Unused global symbol f.
      |   ^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 22, 23
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

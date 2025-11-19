@@ -1,6 +1,8 @@
 -- Test --
-  init_expression
-  ../books/tests/src/statement_usage/init.md:94
+        Test name: init_expression
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/init.md:94
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   95:     l + 2; // error
   96:   } } K(1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Expression statement not available here
   ---> ../books/tests/src/statement_usage/init.md:95:3
@@ -24,4 +25,4 @@ error: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
      |   ^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

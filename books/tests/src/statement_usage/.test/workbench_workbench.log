@@ -1,6 +1,8 @@
 -- Test --
-  workbench_workbench
-  ../books/tests/src/statement_usage/workbench.md:6
+        Test name: workbench_workbench
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/workbench.md:6
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
    7:     sketch F() {} F(); // error
    8:   } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement is not available within Sketch
   ---> ../books/tests/src/statement_usage/workbench.md:7:3
@@ -25,4 +26,4 @@ error: Sketch is not available within Sketch
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

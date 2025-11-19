@@ -1,17 +1,18 @@
 -- Test --
-  use_all
-  ../books/language/src/structure/use.md:81
+        Test name: use_all
+  Expected result: ok
+      Source file: ../books/language/src/structure/use.md:77
+        Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  81:   use std::geo3d::*;
-  82:   
-  83:   Sphere(r = 4mm);
-  84:   Cube(size = 40mm);
+  77:   use std::geo3d::*;
+  78:   
+  79:   Sphere(r = 4mm);
+  80:   Cube(size = 40mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(part) std::geo3d::Sphere(r=4mm) ->

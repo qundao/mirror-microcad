@@ -1,6 +1,8 @@
 -- Test --
-  operation_no_body
-  ../books/tests/src/semicolon.md:17
+        Test name: operation_no_body
+  Expected result: ok
+      Source file: ../books/tests/src/semicolon.md:17
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -11,9 +13,8 @@
   21:   Circle( radius = 5mm )
   22:       .translate(y = [-34mm/2 , 34mm/2]);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Multiplicity ->

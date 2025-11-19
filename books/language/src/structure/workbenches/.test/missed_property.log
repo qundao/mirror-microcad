@@ -1,23 +1,24 @@
 -- Test --
-  missed_property
-  ../books/language/src/structure/workbenches/README.md:144
+        Test name: missed_property
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:157
+        Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 144:   sketch Wheel(radius: Length) {
- 145:       init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
- 146:   }
- 147:   
- 148:   Wheel(width = 1.0mm);
+ 157:   sketch Wheel(radius: Length) {
+ 158:       init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
+ 159:   }
+ 160:   
+ 161:   Wheel(width = 1.0mm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Workbench plan incomplete. Missing properties: radius
-  ---> ../books/language/src/structure/workbenches/README.md:145:5
+  ---> ../books/language/src/structure/workbenches/README.md:158:5
      |
- 145 |     init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
+ 158 |     init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

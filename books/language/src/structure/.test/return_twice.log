@@ -1,27 +1,23 @@
 -- Test --
-  return_twice
-  ../books/language/src/structure/functions.md:47
+        Test name: return_twice
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/functions.md:49
+        Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  47:   fn pow( x: Scalar, n: Integer ) {
-  48:       if n == 1 {
-  49:           x 
-  50:       }
-  51:       x * pow(n-1)  // error: unexpected code
-  52:   }
+  49:   fn pow( x: Scalar, n: Integer ) {
+  50:       if n > 1 {
+  51:           return x * pow(x, n-1); // return recursive product
+  52:       }
+  53:       return x;   // error
+  54:   }
+  55:   
+  56:   std::print(pow(8.0,2));
 
 -- Output --
+8
 
--- Errors --
-warning: Unused global symbol pow.
-  ---> ../books/language/src/structure/functions.md:47:1
-     |
-  47 | fn pow( x: Scalar, n: Integer ) {
-     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
-Expected error(s) which did not occur in line(s): 51
-Unexpected warnings(s) which did occur in line(s): 47
--- No model --
+-- No Errors --
 -- Test Result --
-OK
+TODO (SHALL FAIL)

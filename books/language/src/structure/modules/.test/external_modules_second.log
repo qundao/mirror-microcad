@@ -1,15 +1,16 @@
 -- Test --
-  external_modules_second
-  ../books/language/src/structure/modules/external_modules.md:18
+        Test name: external_modules_second
+  Expected result: ok
+      Source file: ../books/language/src/structure/modules/external_modules.md:18
+        Test path: ../books/language/src/structure/modules/.test
 
 -- Code --
 
   18:   // file: second.µcad
   19:   pub fn f() {}
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

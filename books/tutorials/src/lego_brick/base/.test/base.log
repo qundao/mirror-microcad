@@ -1,6 +1,8 @@
 -- Test --
-  base
-  ../books/tutorials/src/lego_brick/base/sketch.md:20
+        Test name: base
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/sketch.md:20
+        Test path: ../books/tutorials/src/lego_brick/base/.test
 
 -- Code --
 
@@ -16,9 +18,8 @@
   29:   
   30:   Base(width = 31.8mm, height = 15.8mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) base::Base(height=15.8mm, thickness=1.2mm, width=31.8mm) ->

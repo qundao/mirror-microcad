@@ -1,22 +1,15 @@
 -- Test --
-  array_add
-  ../books/language/src/types/collections/arrays.md:63
+        Test name: array_add
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/arrays.md:76
+        Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  63:   d = 0.5mm;
-  64:   std::debug::assert_eq([[1,2]mm + 2mm, [3,4]mm]);
+  76:   std::debug::assert_eq([ [1,2]mm + 2mm, [3,4]mm ]);
 
--- Output --
-
--- Errors --
-warning: Unused local d.
-  ---> ../books/language/src/types/collections/arrays.md:63:1
-     |
-  63 | d = 0.5mm;
-     | ^
-     |
-Unexpected warnings(s) which did occur in line(s): 63
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

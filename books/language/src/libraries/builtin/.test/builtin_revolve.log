@@ -1,6 +1,8 @@
 -- Test --
-  builtin_revolve
-  ../books/language/src/libraries/builtin/ops.md:55
+        Test name: builtin_revolve
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/ops.md:55
+        Test path: ../books/language/src/libraries/builtin/.test
 
 -- Code --
 
@@ -10,9 +12,8 @@
   58:       .ops::translate(x = 20.0mm, y = 0.0mm, z = 0.0mm)
   59:       .ops::revolve(angle = 360.0°);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->

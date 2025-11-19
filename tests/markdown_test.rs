@@ -33,11 +33,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
         env.start_log();
 
-        env.log_ln(&format!(
-            "-- Test --\n  {name}\n  {reference}\n",
-            name = env.name(),
-            reference = env.reference()
-        ));
+        env.log_ln(&format!("-- Test --\n{env:?}"));
         env.log_ln(&format!(
             "-- Code --\n\n{}\n",
             env.code()
@@ -61,6 +57,7 @@ pub fn run_test(env: Option<TestEnv>) {
                     env.log_ln(&err.to_string());
                     if env.has_error_markers() {
                         env.result(TestResult::FailWrong);
+                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     } else if env.todo() {
                         env.result(TestResult::NotTodoFail);
                     } else {
@@ -127,6 +124,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         env.result(TestResult::Todo);
                     } else if env.has_error_markers() {
                         env.result(TestResult::FailWrong);
+                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     } else {
                         env.result(TestResult::Fail);
                         panic!("ERROR: {err}")
@@ -149,7 +147,11 @@ pub fn run_test(env: Option<TestEnv>) {
                         // test expected to succeed and succeeds with no errors
                         (Ok(model), false, false) => {
                             report_model(&mut env, model);
-                            env.result(TestResult::Ok);
+                            if context.has_warnings() {
+                                env.result(TestResult::OkWarn);
+                            } else {
+                                env.result(TestResult::Ok);
+                            }
                         }
                         // test is todo but succeeds with no errors
                         (Ok(_), false, true) => {
@@ -238,6 +240,6 @@ fn report_model(env: &mut TestEnv, model: Option<Model>) {
             None => env.log_ln("Nothing will be exported."),
         }
     } else {
-        env.log_ln("-- No model --");
+        env.log_ln("-- No Model --");
     }
 }

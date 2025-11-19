@@ -1,6 +1,8 @@
 -- Test --
-  if_functions
-  ../books/language/src/flow/conditions.md:28
+        Test name: if_functions
+  Expected result: ok
+      Source file: ../books/language/src/flow/conditions.md:28
+        Test path: ../books/language/src/flow/.test
 
 -- Code --
 
@@ -22,7 +24,7 @@
 -- Output --
 match
 
--- Errors --
--- No model --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

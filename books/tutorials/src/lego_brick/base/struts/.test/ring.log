@@ -1,6 +1,8 @@
 -- Test --
-  ring
-  ../books/tutorials/src/lego_brick/base/struts/finish.md:11
+        Test name: ring
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/struts/finish.md:11
+        Test path: ../books/tutorials/src/lego_brick/base/struts/.test
 
 -- Code --
 
@@ -9,9 +11,8 @@
   13:   
   14:   Ring(outer_d = 6.51mm, inner_d = 4.8mm).translate(x = [-1..1] * 8mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Multiplicity ->

@@ -1,14 +1,15 @@
 -- Test --
-  expression_model
-  ../books/language/src/expressions/README.md:34
+        Test name: expression_model
+  Expected result: ok
+      Source file: ../books/language/src/expressions/README.md:34
+        Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
   34:   std::geo2d::Rect(1cm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Rect(size=10mm) ->

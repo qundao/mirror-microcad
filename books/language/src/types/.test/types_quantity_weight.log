@@ -1,6 +1,8 @@
 -- Test --
-  types_quantity_weight
-  ../books/language/src/types/quantities.md:159
+        Test name: types_quantity_weight
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:159
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
@@ -10,8 +12,7 @@
  162:   
  163:   std::debug::assert([gram, kilogram].all_equal());
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local pound.
   ---> ../books/language/src/types/quantities.md:161:1
@@ -20,6 +21,6 @@ warning: Unused local pound.
      | ^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 161
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

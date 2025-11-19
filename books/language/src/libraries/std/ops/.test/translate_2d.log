@@ -1,14 +1,15 @@
 -- Test --
-  translate_2d
-  ../books/language/src/libraries/std/ops/translate.md:8
+        Test name: translate_2d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/translate.md:8
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
    8:   std::geo2d::Rect(30mm).std::ops::translate(x = 10mm, y = 20mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::translate(x=10mm, y=20mm, z=0mm) ->

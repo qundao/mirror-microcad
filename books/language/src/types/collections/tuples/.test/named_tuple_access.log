@@ -1,6 +1,8 @@
 -- Test --
-  named_tuple_access
-  ../books/language/src/types/collections/tuples/README.md:10
+        Test name: named_tuple_access
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/README.md:10
+        Test path: ../books/language/src/types/collections/tuples/.test
 
 -- Code --
 
@@ -14,9 +16,8 @@
   17:   
   18:   assert_eq([tuple, (width=10cm, depth=10cm, volume=1l)]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

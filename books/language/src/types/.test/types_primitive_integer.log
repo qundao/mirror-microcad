@@ -1,13 +1,14 @@
 -- Test --
-  types_primitive_integer
-  ../books/language/src/types/primitives.md:34
+        Test name: types_primitive_integer
+  Expected result: ok
+      Source file: ../books/language/src/types/primitives.md:34
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
   34:   i = 3;
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local i.
   ---> ../books/language/src/types/primitives.md:34:1
@@ -16,6 +17,6 @@ warning: Unused local i.
      | ^
      |
 Unexpected warnings(s) which did occur in line(s): 34
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

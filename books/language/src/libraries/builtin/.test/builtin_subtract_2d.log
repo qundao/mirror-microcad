@@ -1,6 +1,8 @@
 -- Test --
-  builtin_subtract_2d
-  ../books/language/src/libraries/builtin/ops.md:10
+        Test name: builtin_subtract_2d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/ops.md:10
+        Test path: ../books/language/src/libraries/builtin/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
   15:       geo2d::Rect(x = 0.0mm, y = 0.0mm, width = 3.0mm, height = 3.0mm);
   16:   }.ops::subtract();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::subtract() ->

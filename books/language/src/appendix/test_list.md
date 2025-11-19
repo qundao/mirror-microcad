@@ -3,7 +3,7 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**161** tests from markdown.
+**167** tests from markdown.
 
 | Result | Name |
 |-------:|------|
@@ -23,6 +23,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/.test/arrays_and_comments.svg)](../types/collections/.test/arrays_and_comments.log) | [arrays_and_comments](../types/collections/arrays.md) |
 | [![test](../assignments/.test/assignment.svg)](../assignments/.test/assignment.log) | [assignment](../assignments/values.md) |
 | [![test](../assignments/.test/assignment_immutable.svg)](../assignments/.test/assignment_immutable.log) | [assignment_immutable](../assignments/values.md) |
+| [![test](../assignments/.test/assignment_module.svg)](../assignments/.test/assignment_module.log) | [assignment_module](../assignments/values.md) |
 | [![test](../.test/attributes_color.svg)](../.test/attributes_color.log) | [attributes_color](../attributes.md) |
 | [![test](../.test/attributes_export.svg)](../.test/attributes_export.log) | [attributes_export](../attributes.md) |
 | [![test](../.test/attributes_precision.svg)](../.test/attributes_precision.log) | [attributes_precision](../attributes.md) |
@@ -44,6 +45,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/code.svg)](../structure/workbenches/.test/code.log) | [code](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/code_between_initializers.svg)](../structure/workbenches/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/README.md) |
+| [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_workbench_pub.svg)](../assignments/.test/const_assignment_workbench_pub.log) | [const_assignment_workbench_pub](../assignments/const.md) |
 | [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |
@@ -97,6 +101,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/quantity_literal.svg)](../expressions/.test/quantity_literal.log) | [quantity_literal](../expressions/literals.md) |
 | [![test](../types/.test/quantity_types_number_literals.svg)](../types/.test/quantity_types_number_literals.log) | [quantity_types_number_literals](../types/quantities.md) |
 | [![test](../types/collections/.test/range_expressions.svg)](../types/collections/.test/range_expressions.log) | [range_expressions](../types/collections/arrays.md) |
+| [![test](../types/collections/.test/range_expressions_bad_order.svg)](../types/collections/.test/range_expressions_bad_order.log) | [range_expressions_bad_order](../types/collections/arrays.md) |
+| [![test](../types/collections/.test/range_expressions_bad_type.svg)](../types/collections/.test/range_expressions_bad_type.log) | [range_expressions_bad_type](../types/collections/arrays.md) |
 | [![test](../structure/.test/return.svg)](../structure/.test/return.log) | [return](../structure/functions.md) |
 | [![test](../structure/.test/return_twice.svg)](../structure/.test/return_twice.log) | [return_twice](../structure/functions.md) |
 | [![test](../libraries/std/ops/.test/revolve.svg)](../libraries/std/ops/.test/revolve.log) | [revolve](../libraries/std/ops/revolve.md) |
@@ -106,6 +112,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/scale_3d.svg)](../libraries/std/ops/.test/scale_3d.log) | [scale_3d](../libraries/std/ops/scale.md) |
 | [![test](../libraries/std/ops/.test/scale_uniform.svg)](../libraries/std/ops/.test/scale_uniform.log) | [scale_uniform](../libraries/std/ops/scale.md) |
 | [![test](../libraries/builtin/.test/sector.svg)](../libraries/builtin/.test/sector.log) | [sector](../libraries/builtin/geo2d.md) |
+| [![test](../structure/workbenches/.test/sketch_3d.svg)](../structure/workbenches/.test/sketch_3d.log) | [sketch_3d](../structure/workbenches/sketches.md) |
 | [![test](../structure/workbenches/.test/sketch_basic.svg)](../structure/workbenches/.test/sketch_basic.log) | [sketch_basic](../structure/workbenches/sketches.md) |
 | [![test](../structure/.test/source_file_2D.svg)](../structure/.test/source_file_2D.log) | [source_file_2D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_3D.svg)](../structure/.test/source_file_3D.log) | [source_file_3D](../structure/source_file.md) |
@@ -160,7 +167,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/.test/use_as_module.svg)](../structure/.test/use_as_module.log) | [use_as_module](../structure/use.md) |
 | [![test](../structure/.test/use_module.svg)](../structure/.test/use_module.log) | [use_module](../structure/use.md) |
 | [![test](../structure/.test/use_statement_pub.svg)](../structure/.test/use_statement_pub.log) | [use_statement_pub](../structure/use.md) |
-| [![test](../structure/.test/use_statement_pub_in_module.svg)](../structure/.test/use_statement_pub_in_module.log) | [use_statement_pub_in_module](../structure/use.md) |
 | [![test](../debugging/.test/verify_assert.svg)](../debugging/.test/verify_assert.log) | [verify_assert](../debugging/verification.md) |
 | [![test](../debugging/.test/verify_assert_fail.svg)](../debugging/.test/verify_assert_fail.log) | [verify_assert_fail](../debugging/verification.md) |
 | [![test](../debugging/.test/verify_error.svg)](../debugging/.test/verify_error.log) | [verify_error](../debugging/verification.md) |

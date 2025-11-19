@@ -1,6 +1,8 @@
 -- Test --
-  pre_init_module
-  ../books/tests/src/statement_usage/pre-init.md:14
+        Test name: pre_init_module
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:14
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   15:     mod m {}   // error
   16:   init(l:Length) {} } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement not allowed within workbenches
   ---> ../books/tests/src/statement_usage/pre-init.md:15:3
@@ -31,4 +32,4 @@ error: Module definition is not available within Sketch
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

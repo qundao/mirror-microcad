@@ -1,13 +1,14 @@
 -- Test --
-  unnamed_tuple
-  ../books/language/src/types/collections/tuples/README.md:29
+        Test name: unnamed_tuple
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/README.md:29
+        Test path: ../books/language/src/types/collections/tuples/.test
 
 -- Code --
 
   29:   tuple = (10cm, 10cm², 1l);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local tuple.
   ---> ../books/language/src/types/collections/tuples/README.md:29:1
@@ -16,6 +17,6 @@ warning: Unused local tuple.
      | ^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 29
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

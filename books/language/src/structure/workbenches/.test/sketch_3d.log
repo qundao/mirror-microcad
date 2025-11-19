@@ -1,0 +1,19 @@
+-- Test --
+        Test name: sketch_3d
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/sketches.md:26
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  26:   use std::geo3d::*;
+  27:   sketch MySketch( radius: Length) {
+  28:       Sphere(radius) - Cube(radius);  // error
+  29:   }
+  30:   
+  31:   MySketch(1cm);
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+TODO (SHALL FAIL)

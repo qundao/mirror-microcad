@@ -1,14 +1,15 @@
 -- Test --
-  rect
-  ../books/tutorials/src/lego_brick/base/frame/rect.md:11
+        Test name: rect
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/rect.md:11
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
 
 -- Code --
 
   11:   std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->

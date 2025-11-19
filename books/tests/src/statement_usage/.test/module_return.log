@@ -1,6 +1,8 @@
 -- Test --
-  module_return
-  ../books/tests/src/statement_usage/module.md:54
+        Test name: module_return
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/module.md:54
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   55:     return 1;  // error
   56:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement is not available within Module
   ---> ../books/tests/src/statement_usage/module.md:55:3
@@ -19,4 +20,4 @@ error: Statement is not available within Module
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

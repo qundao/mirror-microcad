@@ -1,6 +1,8 @@
 -- Test --
-  pre_init_expression
-  ../books/tests/src/statement_usage/pre-init.md:94
+        Test name: pre_init_expression
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:94
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   95:     1 + 2; // error
   96:   init(l:Length) {} } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement not allowed prior initializers
   ---> ../books/tests/src/statement_usage/pre-init.md:95:3
@@ -19,4 +20,4 @@ error: Statement not allowed prior initializers
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

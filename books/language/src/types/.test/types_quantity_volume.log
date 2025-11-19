@@ -1,6 +1,8 @@
 -- Test --
-  types_quantity_volume
-  ../books/language/src/types/quantities.md:119
+        Test name: types_quantity_volume
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:119
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
  124:   
  125:   std::debug::assert(volume == 24mm³);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

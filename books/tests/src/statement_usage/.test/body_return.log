@@ -1,6 +1,8 @@
 -- Test --
-  body_return
-  ../books/tests/src/statement_usage/body.md:54
+        Test name: body_return
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/body.md:54
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   55:     return 1; // error
   56:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Return statement not available here
   ---> ../books/tests/src/statement_usage/body.md:55:3
@@ -18,4 +19,4 @@ error: Return statement not available here
      |   ^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

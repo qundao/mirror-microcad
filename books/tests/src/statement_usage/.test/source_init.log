@@ -1,13 +1,14 @@
 -- Test --
-  source_init
-  ../books/tests/src/statement_usage/source.md:24
+        Test name: source_init
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/source.md:24
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
   24:   init() {} // error
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement is not available within SourceFile
   ---> ../books/tests/src/statement_usage/source.md:24:1
@@ -17,4 +18,4 @@ error: Statement is not available within SourceFile
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

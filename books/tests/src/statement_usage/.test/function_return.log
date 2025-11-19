@@ -1,6 +1,8 @@
 -- Test --
-  function_return
-  ../books/tests/src/statement_usage/function.md:54
+        Test name: function_return
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/function.md:54
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   55:     return 1;
   56:   } f();
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

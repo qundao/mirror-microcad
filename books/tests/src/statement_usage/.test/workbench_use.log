@@ -1,6 +1,8 @@
 -- Test --
-  workbench_use
-  ../books/tests/src/statement_usage/workbench.md:38
+        Test name: workbench_use
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/workbench.md:38
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   39:     use std;
   40:   } K();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) workbench_use::K() ->

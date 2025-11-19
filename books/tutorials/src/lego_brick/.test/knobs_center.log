@@ -1,6 +1,8 @@
 -- Test --
-  knobs_center
-  ../books/tutorials/src/lego_brick/caps_knobs.md:51
+        Test name: knobs_center
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/caps_knobs.md:51
+        Test path: ../books/tutorials/src/lego_brick/.test
 
 -- Code --
 
@@ -9,9 +11,8 @@
   53:           y = [0..1] * 8mm)
   54:       ).std::ops::center();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation __builtin::ops::center() ->

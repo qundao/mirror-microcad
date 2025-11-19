@@ -1,6 +1,8 @@
 -- Test --
-  math_trigonometric
-  ../books/language/src/libraries/std/math/README.md:20
+        Test name: math_trigonometric
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/math/README.md:20
+        Test path: ../books/language/src/libraries/std/math/.test
 
 -- Code --
 
@@ -13,9 +15,8 @@
   26:   x = 0.5;
   27:   assert_eq([sin(x)^2. + cos(x)^2., 1.]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

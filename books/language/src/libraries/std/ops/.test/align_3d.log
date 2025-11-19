@@ -1,6 +1,8 @@
 -- Test --
-  align_3d
-  ../books/language/src/libraries/std/ops/align.md:39
+        Test name: align_3d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/align.md:39
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
@@ -15,9 +17,8 @@
   47:       Cube(10mm);
   48:   }.align(Z, 4mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=4mm) ->

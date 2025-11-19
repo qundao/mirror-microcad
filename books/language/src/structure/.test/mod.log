@@ -1,39 +1,40 @@
 -- Test --
-  mod
-  ../books/language/src/structure/functions.md:65
+        Test name: mod
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions.md:69
+        Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  65:   // module math
-  66:   mod math {
-  67:       // pow cannot be called from outside math
-  68:       fn pow( x: Scalar, n: Integer ) {
-  69:           if n == 1 {
-  70:               x   // return x
-  71:           } else {
-  72:               x * pow(x, n-1) // return recursive product
-  73:           }
-  74:       }
-  75:   
-  76:       // square is callable from outside math
-  77:       pub fn square(x: Scalar) {
-  78:           // call internal pow
-  79:           pow(x, 2)
-  80:       }
-  81:   }
-  82:   
-  83:   // call square in math
-  84:   math::square(2.0);
-  85:   math::pow(2.0, 5);  // error: pow is private
+  69:   // module math
+  70:   mod math {
+  71:       // pow cannot be called from outside math
+  72:       fn pow( x: Scalar, n: Integer ) {
+  73:           if n == 1 {
+  74:               x   // return x
+  75:           } else {
+  76:               x * pow(x, n-1) // return recursive product
+  77:           }
+  78:       }
+  79:   
+  80:       // square is callable from outside math
+  81:       pub fn square(x: Scalar) {
+  82:           // call internal pow
+  83:           pow(x, 2)
+  84:       }
+  85:   }
+  86:   
+  87:   // call square in math
+  88:   math::square(2.0);
+  89:   math::pow(2.0, 5);  // error: pow is private
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Symbol math::pow not found.
-  ---> ../books/language/src/structure/functions.md:85:1
+  ---> ../books/language/src/structure/functions.md:89:1
      |
-  85 | math::pow(2.0, 5);  // error: pow is private
+  89 | math::pow(2.0, 5);  // error: pow is private
      | ^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

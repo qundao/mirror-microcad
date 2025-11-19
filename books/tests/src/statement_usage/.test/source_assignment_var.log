@@ -1,13 +1,14 @@
 -- Test --
-  source_assignment_var
-  ../books/tests/src/statement_usage/source.md:60
+        Test name: source_assignment_var
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/source.md:60
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
   60:   a = 1;
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local a.
   ---> ../books/tests/src/statement_usage/source.md:60:1
@@ -16,6 +17,6 @@ warning: Unused local a.
      | ^
      |
 Unexpected warnings(s) which did occur in line(s): 60
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

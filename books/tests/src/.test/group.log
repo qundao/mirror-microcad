@@ -1,28 +1,29 @@
 -- Test --
-  group
-  ../books/tests/src/semicolon.md:61
+        Test name: group
+  Expected result: ok
+      Source file: ../books/tests/src/semicolon.md:60
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
-  61:   use std::geo2d::Circle;
-  62:   use std::ops::translate;
-  63:   
-  64:   // group
-  65:   { 
-  66:       Circle(radius = 1mm); 
-  67:       Circle(radius = 2mm); 
-  68:   }
+  60:   use std::geo2d::Circle;
+  61:   use std::ops::translate;
+  62:   
+  63:   // group
+  64:   { 
+  65:       Circle(radius = 1mm); 
+  66:       Circle(radius = 2mm); 
+  67:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol translate.
-  ---> ../books/tests/src/semicolon.md:62:5
+  ---> ../books/tests/src/semicolon.md:61:5
      |
-  62 | use std::ops::translate;
+  61 | use std::ops::translate;
      |     ^^^^^^^^^^^^^^^^^^^
      |
-Unexpected warnings(s) which did occur in line(s): 62
+Unexpected warnings(s) which did occur in line(s): 61
 -- Model --
   Group (root) ->
     Group ->
@@ -39,4 +40,4 @@ Unexpected warnings(s) which did occur in line(s): 62
 
 Export of "../books/tests/src/.test/group-out.svg" successful.
 -- Test Result --
-OK
+OK (BUT WARNINGS)

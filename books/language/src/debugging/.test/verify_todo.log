@@ -1,6 +1,8 @@
 -- Test --
-  verify_todo
-  ../books/language/src/debugging/verification.md:40
+        Test name: verify_todo
+  Expected result: ok
+      Source file: ../books/language/src/debugging/verification.md:40
+        Test path: ../books/language/src/debugging/.test
 
 -- Code --
 
@@ -12,8 +14,7 @@
   45:       std::log::todo("print proper message");
   46:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 info: a is zero
   ---> ../books/language/src/debugging/verification.md:43:20

@@ -1,6 +1,8 @@
 -- Test --
-  types_named_tuple_color
-  ../books/language/src/types/collections/tuples/aliases.md:14
+        Test name: types_named_tuple_color
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/aliases.md:14
+        Test path: ../books/language/src/types/collections/tuples/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   15:   
   16:   std::debug::assert(color.r == 100%);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

@@ -1,6 +1,8 @@
 -- Test --
-  visibility
-  ../books/tests/src/visibility.md:6
+        Test name: visibility
+  Expected result: ok
+      Source file: ../books/tests/src/visibility.md:6
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -20,9 +22,8 @@
   19:   __builtin::debug::assert_invalid(my::mod_private::const_public);
   20:   __builtin::debug::assert_invalid(my::mod_private::const_private);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

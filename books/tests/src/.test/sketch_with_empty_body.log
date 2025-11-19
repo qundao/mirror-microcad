@@ -1,13 +1,14 @@
 -- Test --
-  sketch_with_empty_body
-  ../books/tests/src/semicolon.md:39
+        Test name: sketch_with_empty_body
+  Expected result: warn
+      Source file: ../books/tests/src/semicolon.md:39
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
   39:   {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: This expression statement did not produce any model
   ---> ../books/tests/src/semicolon.md:39:1
@@ -16,4 +17,4 @@ warning: This expression statement did not produce any model
      | ^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

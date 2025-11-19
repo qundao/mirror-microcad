@@ -31,25 +31,29 @@ Functions can also return a value as *result*:
 
 ```µcad,return
 fn pow( x: Scalar, n: Integer ) {
-    if n == 1 {
-        x   // return x
-    } else {
-        x * pow(n-1) // return recursive product
+    if n > 1 {
+        return x * pow(x, n-1); // return recursive product
+    } else if n == 1 {
+        return x;   // return x
     }
 }
+
+std::print(pow(8.0,2));
 ```
 
 Returning a value twice is not allowed.
 
 [![test](.test/return_twice.svg)](.test/return_twice.log)
 
-```µcad,return_twice
+```µcad,return_twice#todo_fail
 fn pow( x: Scalar, n: Integer ) {
-    if n == 1 {
-        x 
+    if n > 1 {
+        return x * pow(x, n-1); // return recursive product
     }
-    x * pow(n-1)  // error: unexpected code
+    return x;   // error
 }
+
+std::print(pow(8.0,2));
 ```
 
 ## Module Functions

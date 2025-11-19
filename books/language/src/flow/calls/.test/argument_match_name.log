@@ -1,6 +1,8 @@
 -- Test --
-  argument_match_name
-  ../books/language/src/flow/calls/arguments.md:16
+        Test name: argument_match_name
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/arguments.md:16
+        Test path: ../books/language/src/flow/calls/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   17:   
   18:   f(x = 1cm, y = 2cm, z = 3cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local x.
   ---> ../books/language/src/flow/calls/arguments.md:16:7
@@ -30,6 +31,6 @@ warning: Unused local z.
      |                             ^
      |
 Unexpected warnings(s) which did occur in line(s): 16
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

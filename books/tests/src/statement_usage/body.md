@@ -4,7 +4,7 @@
 
 ```µcad,body_workbench#fail
 {
-  sketch F() {}; // error
+  sketch F() {} // error
 }
 ```
 

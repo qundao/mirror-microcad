@@ -1,6 +1,8 @@
 -- Test --
-  types_quantity_volume_units
-  ../books/language/src/types/quantities.md:133
+        Test name: types_quantity_volume_units
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:133
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
@@ -18,8 +20,7 @@
  144:   std::debug::assert(centiliter == 1.0l);
  145:   std::debug::assert(milliliter == 1.0l);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local cubic_inch.
   ---> ../books/language/src/types/quantities.md:136:1
@@ -34,6 +35,6 @@ warning: Unused local liter.
      | ^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 136, 137
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

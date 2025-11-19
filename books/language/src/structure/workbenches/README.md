@@ -20,57 +20,70 @@ A *workbench* consists of the following elements:
 - an **identifier** that names the workbench,
 - a **building plan** defined by a *parameter list* following the identifier,
 - optional **init code**, which is executed before any *initializer*,
-- optional **initializers**, offering ways to initialize the *building plan*,
+- optional **initializers**, offering alternative ways to initialize the *building plan*,
 - optional **functions**, acting as subroutines with their own parameters and code bodies,
-- optional **properties**, accessible from outside and defined through initializers or assignments within the code,
-- and typically some **building code** (also called *post-initialization code*), which runs after all initialization steps and generates the final *objects*.
+- optional **properties**, accessible from outside and set from the inside,
+- and typically some **building code**, which runs after all initialization steps and generates the final *objects*.
 
 The following code demonstrates most of these elements:
 
 [![test](.test/part_declaration.svg)](.test/part_declaration.log)
 
 ```µcad,part_declaration
-// sketch with a `radius` as building plan
+// Sketch with a `radius` as building plan.
+// Which will automatically become a property.
 sketch Wheel(radius: Length) {
     
-    // init code
+    // Init code...
     const FACTOR = 2;
 
-    // initializer
+    // Initializer #1
     init(diameter: Length) {
-        // set `radius`
+        // must set `radius`
         radius = diameter / FACTOR;
     }
 
-    // function (sub routine)
+    // No code in between!
+
+    // Initializer #2
+    init(r: Length) {
+        // must set `radius`
+        radius = r;
+    }
+
+    // Function (sub routine)
     fn into_diameter(r: Length) {
         return r * FACTOR;
     }
 
-    // building code begins
+    // Building code...
 
-    // set a property which can be seen from outside
+    // Set a property which can be seen from outside.
     prop diameter = into_diameter(radius);
     
-    // local variable
-    i = 1;
+    // Local variable `r`
+    r = radius;
     
-    // create circle
-    std::geo2d::Circle(radius);
+    // Create a circle.
+    std::geo2d::Circle(r);
 }
 
 use std::debug::*;
 
-// call sketch with diameter
+// Call sketch with diameter.
 d = Wheel(diameter = 2cm);
-// check radius
+// Check radius property.
 assert_eq([d.radius, 1cm]);
 
-// call sketch with radius
-r = Wheel(radius = 1cm);
-// check diameter
-assert_eq([r.diameter, 2cm]);
+// Call sketch with radius.
+r = Wheel(radius = 2cm);
+// Check diameter property.
+assert_eq([r.diameter, 4cm]);
+
+d - r;
 ```
+
+![test](.test/part_declaration-out.svg)
 
 ### Building Plan
 

@@ -1,6 +1,8 @@
 -- Test --
-  internal_mod
-  ../books/language/src/structure/modules/internal_modules.md:9
+        Test name: internal_mod
+  Expected result: ok
+      Source file: ../books/language/src/structure/modules/internal_modules.md:9
+        Test path: ../books/language/src/structure/modules/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   10:       // statements
   11:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol my_module.
   ---> ../books/language/src/structure/modules/internal_modules.md:9:1
@@ -18,6 +19,6 @@ warning: Unused global symbol my_module.
      | ^^^^^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 9
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

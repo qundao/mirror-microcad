@@ -1,14 +1,15 @@
 -- Test --
-  tuple_match_warnings
-  ../books/language/src/flow/calls/arguments.md:112
+        Test name: tuple_match_warnings
+  Expected result: fail
+      Source file: ../books/language/src/flow/calls/arguments.md:112
+        Test path: ../books/language/src/flow/calls/.test
 
 -- Code --
 
  112:   fn f( x: Length, y: Length, z: Length ) {}
  113:   f( (x=1cm, y=2cm, v=5cm), z=3cm);  // error: Missing arguments: x,y
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Missing arguments: x,y
   ---> ../books/language/src/flow/calls/arguments.md:113:4
@@ -17,4 +18,4 @@ error: Missing arguments: x,y
      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

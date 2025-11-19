@@ -1,6 +1,8 @@
 -- Test --
-  mod_example
-  ../books/language/src/structure/modules/README.md:23
+        Test name: mod_example
+  Expected result: ok
+      Source file: ../books/language/src/structure/modules/README.md:23
+        Test path: ../books/language/src/structure/modules/.test
 
 -- Code --
 
@@ -21,8 +23,7 @@
   37:   // use the function and the constant
   38:   x = my::math::abs(-1.0) * my::math::PI;
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused local x.
   ---> ../books/language/src/structure/modules/README.md:38:1
@@ -31,6 +32,6 @@ warning: Unused local x.
      | ^
      |
 Unexpected warnings(s) which did occur in line(s): 38
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

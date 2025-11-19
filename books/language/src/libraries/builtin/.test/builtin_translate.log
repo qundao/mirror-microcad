@@ -1,6 +1,8 @@
 -- Test --
-  builtin_translate
-  ../books/language/src/libraries/builtin/ops.md:71
+        Test name: builtin_translate
+  Expected result: ok
+      Source file: ../books/language/src/libraries/builtin/ops.md:71
+        Test path: ../books/language/src/libraries/builtin/.test
 
 -- Code --
 
@@ -22,9 +24,8 @@
   86:   #[color = "gray"]
   87:   r.translate(x = 4.0mm, y = 4.0mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) builtin_translate::translate(x=0mm, y=0mm, z=0mm) ->

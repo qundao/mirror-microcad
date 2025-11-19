@@ -1,27 +1,22 @@
 -- Test --
-  module_expression_model
-  ../books/tests/src/statement_usage/module.md:102
+        Test name: module_expression_model
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/module.md:102
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
  102:   mod k { // warning
- 103:     __builtin::geo2d::Circle(radius=1); // error
+ 103:     __builtin::geo2d::Circle(radius=1mm); // error
  104:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Expression statement not available here
   ---> ../books/tests/src/statement_usage/module.md:103:3
      |
- 103 |   __builtin::geo2d::Circle(radius=1); // error
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
-error: Missing arguments: radius
-  ---> ../books/tests/src/statement_usage/module.md:103:3
-     |
- 103 |   __builtin::geo2d::Circle(radius=1); // error
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 103 |   __builtin::geo2d::Circle(radius=1mm); // error
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 warning: Unused global symbol k.
   ---> ../books/tests/src/statement_usage/module.md:102:1
@@ -30,4 +25,4 @@ warning: Unused global symbol k.
      | ^^^^^^^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

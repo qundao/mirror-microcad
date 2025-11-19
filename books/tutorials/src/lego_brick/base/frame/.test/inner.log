@@ -1,15 +1,16 @@
 -- Test --
-  inner
-  ../books/tutorials/src/lego_brick/base/frame/another_rect.md:8
+        Test name: inner
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/frame/another_rect.md:8
+        Test path: ../books/tutorials/src/lego_brick/base/frame/.test
 
 -- Code --
 
    8:   thickness = 1.2mm;
    9:   std::geo2d::Rect(width = 31.8mm - 2 * thickness, height = 15.8mm - 2 * thickness);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) std::geo2d::Rect(height=13.4mm, width=29.4mm) ->

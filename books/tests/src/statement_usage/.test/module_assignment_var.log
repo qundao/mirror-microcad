@@ -1,6 +1,8 @@
 -- Test --
-  module_assignment_var
-  ../books/tests/src/statement_usage/module.md:78
+        Test name: module_assignment_var
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/module.md:78
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   79:     a = 1; // error
   80:   }
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Declaration of a not allowed within module_assignment_var::k
   ---> ../books/tests/src/statement_usage/module.md:79:3
@@ -19,4 +20,4 @@ error: Declaration of a not allowed within module_assignment_var::k
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

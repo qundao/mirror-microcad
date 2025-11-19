@@ -1,14 +1,15 @@
 -- Test --
-  rotate_2d
-  ../books/language/src/libraries/std/ops/rotate.md:8
+        Test name: rotate_2d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/rotate.md:8
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
    8:   std::geo2d::Rect(30mm).std::ops::rotate(45°);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->

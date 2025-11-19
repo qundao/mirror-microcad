@@ -1,6 +1,8 @@
 -- Test --
-  pre_init_assignment_const
-  ../books/tests/src/statement_usage/pre-init.md:70
+        Test name: pre_init_assignment_const
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/pre-init.md:70
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   71:     const B = 1;
   72:   init(l:Length) {} } K();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) pre_init_assignment_const::K() ->

@@ -1,23 +1,25 @@
 -- Test --
-  locals_unused
-  ../books/tests/src/locals.md:4
+        Test name: locals_unused
+  Expected result: ok
+      Source file: ../books/tests/src/locals.md:6
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
-   4:   x = 1; // warning: unused local
-   5:   y = 1;
-   6:   std::print("{y}");
+   6:   x = 1; // warning: unused local
+   7:   y = 1;
+   8:   std::print("{y}");
 
 -- Output --
 1
 
 -- Errors --
 warning: Unused local x.
-  ---> ../books/tests/src/locals.md:4:1
+  ---> ../books/tests/src/locals.md:6:1
      |
-   4 | x = 1; // warning: unused local
+   6 | x = 1; // warning: unused local
      | ^
      |
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

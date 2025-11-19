@@ -1,6 +1,8 @@
 -- Test --
-  scalar_literal
-  ../books/language/src/expressions/literals.md:28
+        Test name: scalar_literal
+  Expected result: ok
+      Source file: ../books/language/src/expressions/literals.md:28
+        Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
   33:   12.0E+12;
   34:   50%    // = 0.5
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

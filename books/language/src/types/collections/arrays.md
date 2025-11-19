@@ -24,14 +24,34 @@ You can count the number of elements in an array using `std::count`:
 std::debug::assert_eq([std::count([1,2,3]), 3]);
 ```
 
-## Arrays as range: `[1..3]`
+## Arrays as range: `[1..5]`
 
-You can generate an array via range expressions: `[1..3]`.
+You can generate an array via range expressions: `[1..5]`.
+
+A µcad range includes both of it's end points.
 
 [![test](.test/range_expressions.svg)](.test/range_expressions.log)
 
 ```µcad,range_expressions
-std::debug::assert_eq([std::count([1,2,3]), 3]);
+std::debug::assert_eq([[1..5], [1,2,3,4,5]]);
+std::debug::assert_eq([[-2..2], [-2,-1,0,1,2]]);
+```
+
+The order of the endpoints of a range is important:
+
+[![test](.test/range_expressions_bad_order.svg)](.test/range_expressions_bad_order.log)
+
+```µcad,range_expressions_bad_order#fail
+[6..1];  // error
+[2..-2];  // error
+```
+
+Only `Integer` can be used as endpoint:
+
+[![test](.test/range_expressions_bad_type.svg)](.test/range_expressions_bad_type.log)
+
+```µcad,range_expressions_bad_type#fail
+[1.0..2.0];  // parse_error
 ```
 
 ## Array operations
@@ -43,14 +63,7 @@ Array support unit bundling, which means the you can write the unit after the `[
 [![test](.test/array_unit_bundling.svg)](.test/array_unit_bundling.log)
 
 ```µcad,array_unit_bundling
-// without bundling
-l1 = [1mm, 2mm, 3mm];
-
-// with bundling
-l2 = [1, 2, 3]mm;
-
-// are the same
-std::debug::assert(l1 == l2);
+std::debug::assert_eq([ [1mm, 2mm, 3mm], [1, 2, 3]mm ]);
 ```
 
 ### Addition `+`
@@ -60,8 +73,7 @@ std::debug::assert(l1 == l2);
 [![test](.test/array_add.svg)](.test/array_add.log)
 
 ```µcad,array_add
-d = 0.5mm;
-std::debug::assert_eq([[1,2]mm + 2mm, [3,4]mm]);
+std::debug::assert_eq([ [1,2]mm + 2mm, [3,4]mm ]);
 ```
 
 ### Subtraction `-`
@@ -71,8 +83,7 @@ std::debug::assert_eq([[1,2]mm + 2mm, [3,4]mm]);
 [![test](.test/array_sub.svg)](.test/array_sub.log)
 
 ```µcad,array_sub
-d = 0.5mm;
-std::debug::assert_eq([[1,2]mm - 2mm, [-1,0]mm]);
+std::debug::assert_eq([ [1,2]mm - 2mm, [-1,0]mm ]);
 ```
 
 ### Multiplication `*`
@@ -82,8 +93,7 @@ std::debug::assert_eq([[1,2]mm - 2mm, [-1,0]mm]);
 [![test](.test/array_mul_scale.svg)](.test/array_mul_scale.log)
 
 ```µcad,array_mul_scale
-d = 0.5mm;
-std::debug::assert_eq([[-d,d]*2, [-1,1]mm]);
+std::debug::assert_eq([ [-0.5mm,0.5mm]*2, [-1,1]mm ]);
 ```
 
 ### Division `/`
@@ -93,8 +103,7 @@ std::debug::assert_eq([[-d,d]*2, [-1,1]mm]);
 [![test](.test/array_div.svg)](.test/array_div.log)
 
 ```µcad,array_div
-d = 1.0mm;
-std::debug::assert_eq([[-d,d]/2, [-0.5, 0.5]mm]);
+std::debug::assert_eq([ [-1.0mm,1.0mm]/2, [-0.5, 0.5]mm ]);
 ```
 
 ### Negation `-`
@@ -102,6 +111,5 @@ std::debug::assert_eq([[-d,d]/2, [-0.5, 0.5]mm]);
 [![test](.test/array_neg.svg)](.test/array_neg.log)
 
 ```µcad,array_neg
-d = 1.0mm;
-std::debug::assert_eq([[-d,d], -[d, -d]]);
+std::debug::assert_eq([ [-1.0mm,1.0mm], -[1.0mm, -1.0mm] ]);
 ```

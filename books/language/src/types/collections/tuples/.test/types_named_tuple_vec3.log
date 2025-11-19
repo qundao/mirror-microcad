@@ -1,6 +1,8 @@
 -- Test --
-  types_named_tuple_vec3
-  ../books/language/src/types/collections/tuples/aliases.md:40
+        Test name: types_named_tuple_vec3
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/aliases.md:40
+        Test path: ../books/language/src/types/collections/tuples/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   41:   
   42:   std::debug::assert(v.x + v.y + v.z == 9.0);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

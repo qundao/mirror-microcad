@@ -1,6 +1,8 @@
 -- Test --
-  tuple_add_same
-  ../books/language/src/types/collections/tuples/operators.md:10
+        Test name: tuple_add_same
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/operators.md:10
+        Test path: ../books/language/src/types/collections/tuples/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
   11:   b = (x = 3.0mm, y = 4.0mm);
   12:   std::debug::assert_eq([a + b, (x = 4.0mm, y = 6.0mm)]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

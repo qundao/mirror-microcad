@@ -1,6 +1,8 @@
 -- Test --
-  condition_return
-  ../books/tests/src/conditions.md:6
+        Test name: condition_return
+  Expected result: ok
+      Source file: ../books/tests/src/conditions.md:6
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -19,7 +21,7 @@
 -- Output --
 <NO VALUE>
 
--- Errors --
--- No model --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

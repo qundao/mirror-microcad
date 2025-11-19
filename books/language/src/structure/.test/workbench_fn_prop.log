@@ -1,34 +1,35 @@
 -- Test --
-  workbench_fn_prop
-  ../books/language/src/structure/functions.md:133
+        Test name: workbench_fn_prop
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions.md:137
+        Test path: ../books/language/src/structure/.test
 
 -- Code --
 
- 133:   part PunchedDisk(radius: Length) {
- 134:       fn inner() { 
- 135:           prop hole = radius/2;  // error: prop not allowed in function
- 136:           return hole;
- 137:       }
- 138:       inner();
- 139:   }
- 140:   
- 141:   PunchedDisk(1cm);
+ 137:   part PunchedDisk(radius: Length) {
+ 138:       fn inner() { 
+ 139:           prop hole = radius/2;  // error: prop not allowed in function
+ 140:           return hole;
+ 141:       }
+ 142:       inner();
+ 143:   }
+ 144:   
+ 145:   PunchedDisk(1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Assignment statement is not available within Function
-  ---> ../books/language/src/structure/functions.md:135:9
+  ---> ../books/language/src/structure/functions.md:139:9
      |
- 135 |         prop hole = radius/2;  // error: prop not allowed in function
+ 139 |         prop hole = radius/2;  // error: prop not allowed in function
      |         ^^^^^^^^^^^^^^^^^^^^^
      |
 error: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
-  ---> ../books/language/src/structure/functions.md:135:9
+  ---> ../books/language/src/structure/functions.md:139:9
      |
- 135 |         prop hole = radius/2;  // error: prop not allowed in function
+ 139 |         prop hole = radius/2;  // error: prop not allowed in function
      |         ^^^^^^^^^^^^^^^^^^^^^
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

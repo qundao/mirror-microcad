@@ -1,6 +1,8 @@
 -- Test --
-  no_multiplicity
-  ../books/language/src/flow/calls/multiplicity.md:22
+        Test name: no_multiplicity
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/multiplicity.md:22
+        Test path: ../books/language/src/flow/calls/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
   27:   r.translate(x = 4mm, y = -4mm);
   28:   r.translate(x = 4mm, y = 4mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::translate(x=-4mm, y=-4mm, z=0mm) ->

@@ -1,24 +1,25 @@
 -- Test --
-  workbench_example
-  ../books/language/src/structure/functions.md:99
+        Test name: workbench_example
+  Expected result: ok
+      Source file: ../books/language/src/structure/functions.md:103
+        Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  99:   sketch PunchedDisk(radius: Length) {
- 100:       use std::geo2d::Circle;
- 101:   
- 102:       // calculate inner from radius in a method
- 103:       fn inner() { return radius/2; }
- 104:   
- 105:       // generate donut (and call inner)
- 106:       Circle(radius) - Circle(inner());
- 107:   }
+ 103:   sketch PunchedDisk(radius: Length) {
+ 104:       use std::geo2d::Circle;
+ 105:   
+ 106:       // calculate inner from radius in a method
+ 107:       fn inner() { return radius/2; }
  108:   
- 109:   PunchedDisk(radius = 1cm);
+ 109:       // generate donut (and call inner)
+ 110:       Circle(radius) - Circle(inner());
+ 111:   }
+ 112:   
+ 113:   PunchedDisk(radius = 1cm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) workbench_example::PunchedDisk(radius=10mm) ->

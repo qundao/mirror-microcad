@@ -1,6 +1,8 @@
 -- Test --
-  if_models
-  ../books/language/src/flow/conditions.md:10
+        Test name: if_models
+  Expected result: ok
+      Source file: ../books/language/src/flow/conditions.md:10
+        Test path: ../books/language/src/flow/.test
 
 -- Code --
 
@@ -14,9 +16,8 @@
   17:   
   18:   MySketch(2) - MySketch(1);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation subtract() ->

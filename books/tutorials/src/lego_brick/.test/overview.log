@@ -1,6 +1,8 @@
 -- Test --
-  overview
-  ../books/tutorials/src/lego_brick/overview.md:8
+        Test name: overview
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/overview.md:8
+        Test path: ../books/tutorials/src/lego_brick/.test
 
 -- Code --
 
@@ -32,9 +34,8 @@
   33:   Cap(width, height);
   34:   Knobs();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) overview::Base(height=15.8mm, width=31.8mm) ->

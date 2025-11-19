@@ -1,6 +1,8 @@
 -- Test --
-  multiple
-  ../books/tutorials/src/lego_brick/base/struts/create.md:13
+        Test name: multiple
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/base/struts/create.md:13
+        Test path: ../books/tutorials/src/lego_brick/base/struts/.test
 
 -- Code --
 
@@ -11,9 +13,8 @@
   17:   (Circle(d = 6.51mm) - Circle(d =  4.8mm)).translate(x = 8mm);
   18:   (Circle(d = 6.51mm) - Circle(d =  4.8mm)).translate(x = -8mm);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Operation subtract() ->

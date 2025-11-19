@@ -1,6 +1,8 @@
 -- Test --
-  function_expression_model
-  ../books/tests/src/statement_usage/function.md:102
+        Test name: function_expression_model
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/function.md:102
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,9 +10,8 @@
  103:     __builtin::geo2d::Circle(radius=1mm);
  104:   } f();
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

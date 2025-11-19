@@ -1,6 +1,8 @@
 -- Test --
-  distribute_grid_2d
-  ../books/language/src/libraries/std/ops/distribute_grid.md:10
+        Test name: distribute_grid_2d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/distribute_grid.md:10
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
@@ -14,9 +16,8 @@
   17:       Circle(10mm);
   18:   }.distribute_grid(30mm, rows = 2, columns = 2);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::distribute_grid(columns=2, rows=2, size=30mm) ->

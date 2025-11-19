@@ -1,42 +1,43 @@
 -- Test --
-  pre_init_code
-  ../books/language/src/structure/workbenches/README.md:162
+        Test name: pre_init_code
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:175
+        Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 162:   sketch Wheel(radius: Length) {
- 163:       // init code
- 164:       const FACTOR = 2.0;
- 165:   
- 166:       // initializer
- 167:       init(diameter: Length) { into_radius(radius); }
- 168:   
- 169:       // function
- 170:       fn into_radius( diameter: Length ) {
- 171:           // use constant FACTOR from init code
- 172:           return diameter / FACTOR;
- 173:       }
- 174:   
- 175:       // set property diameter and use FACTOR from init code
- 176:       prop diameter = radius * FACTOR;
- 177:       
- 178:       // code body
- 179:       std::geo2d::Circle(radius);
- 180:   }
+ 175:   sketch Wheel(radius: Length) {
+ 176:       // init code
+ 177:       const FACTOR = 2.0;
+ 178:   
+ 179:       // initializer
+ 180:       init(diameter: Length) { into_radius(radius); }
  181:   
- 182:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
- 183:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
+ 182:       // function
+ 183:       fn into_radius( diameter: Length ) {
+ 184:           // use constant FACTOR from init code
+ 185:           return diameter / FACTOR;
+ 186:       }
+ 187:   
+ 188:       // set property diameter and use FACTOR from init code
+ 189:       prop diameter = radius * FACTOR;
+ 190:       
+ 191:       // code body
+ 192:       std::geo2d::Circle(radius);
+ 193:   }
+ 194:   
+ 195:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
+ 196:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol into_radius.
-  ---> ../books/language/src/structure/workbenches/README.md:170:5
+  ---> ../books/language/src/structure/workbenches/README.md:183:5
      |
- 170 |     fn into_radius( diameter: Length ) {
+ 183 |     fn into_radius( diameter: Length ) {
      |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
-Unexpected warnings(s) which did occur in line(s): 170
--- No model --
+Unexpected warnings(s) which did occur in line(s): 183
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

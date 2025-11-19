@@ -1,6 +1,8 @@
 -- Test --
-  pre_init_function
-  ../books/tests/src/statement_usage/pre-init.md:22
+        Test name: pre_init_function
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:22
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   23:     fn f() {} f();   // error
   24:   init(l:Length) {} } K();
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Statement not allowed prior initializers
   ---> ../books/tests/src/statement_usage/pre-init.md:23:3
@@ -25,4 +26,4 @@ error: Statement not allowed prior initializers
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

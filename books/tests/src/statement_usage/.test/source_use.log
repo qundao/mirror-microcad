@@ -1,13 +1,14 @@
 -- Test --
-  source_use
-  ../books/tests/src/statement_usage/source.md:30
+        Test name: source_use
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/source.md:30
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
   30:   use std;
 
--- Output --
-
+-- No Output --
 -- Errors --
 warning: Unused global symbol <no code>.
   ---> ../books/tests/src/statement_usage/source.md:30:5
@@ -16,6 +17,6 @@ warning: Unused global symbol <no code>.
      |     ^^^
      |
 Unexpected warnings(s) which did occur in line(s): 30
--- No model --
+-- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

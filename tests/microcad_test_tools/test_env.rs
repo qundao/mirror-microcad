@@ -3,13 +3,15 @@
 
 //! Markdown test environment
 
+use std::path::PathBuf;
+
 use crate::output::Output;
 
 /// Markdown test environment
 pub struct TestEnv {
     orig_name: String,
     name: String,
-    path: std::path::PathBuf,
+    path: PathBuf,
     mode: String,
     params: Option<String>,
     code: String,
@@ -21,6 +23,8 @@ pub struct TestEnv {
 pub enum TestResult {
     /// Ok
     Ok,
+    /// Ok but has warning(s)
+    OkWarn,
     /// Ok to fail
     FailOk,
     /// Marked as todo but is ok
@@ -54,14 +58,18 @@ impl std::fmt::Display for TestEnv {
 
 impl std::fmt::Debug for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "   Test name: {}", self.name())?;
-        writeln!(f, "        Mode: {}", self.mode())?;
-        writeln!(f, "      Params: {}", self.params())?;
-        writeln!(f, " Source file: {:?}", self.source_path())?;
-        writeln!(f, "   Test path: {:?}", self.test_path())?;
-        writeln!(f, " Banner file: {:?}", self.banner_file())?;
-        writeln!(f, "    Log file: {:?}", self.log_file())?;
-        writeln!(f, "Output files: {:?}", self.out_file_path_stem())
+        writeln!(f, "        Test name: {}", self.name())?;
+        writeln!(f, "  Expected result: {}", self.mode())?;
+        if !self.params().is_empty() {
+            writeln!(f, "           Params: {}", self.params())?;
+        }
+        let start = self.start_no;
+        writeln!(
+            f,
+            "      Source file: {}:{start}",
+            self.source_path().display()
+        )?;
+        writeln!(f, "        Test path: {}", self.test_path().display())
     }
 }
 
@@ -167,12 +175,12 @@ impl TestEnv {
     }
 
     /// Return path where to store any test output.
-    pub fn source_path(&self) -> std::path::PathBuf {
+    pub fn source_path(&self) -> PathBuf {
         self.path.clone()
     }
 
     /// Return path where to store any test output.
-    pub fn test_path(&self) -> std::path::PathBuf {
+    pub fn test_path(&self) -> PathBuf {
         self.path.parent().unwrap().join(".test")
     }
 
@@ -185,22 +193,22 @@ impl TestEnv {
     }
 
     /// Return test banner filename as path.
-    pub fn banner_file(&self) -> std::path::PathBuf {
+    pub fn banner_file(&self) -> PathBuf {
         self.test_path().join(format!("{}.svg", self.name()))
     }
 
     /// Return log file path.
-    pub fn log_file(&self) -> std::path::PathBuf {
+    pub fn log_file(&self) -> PathBuf {
         self.test_path().join(format!("{}.log", self.name()))
     }
 
     /// Return output file path (without any file extension).
-    pub fn out_file_path_stem(&self) -> std::path::PathBuf {
+    pub fn out_file_path_stem(&self) -> PathBuf {
         self.test_path().join(format!("{}-out", self.name()))
     }
 
     /// Return output file path with given extension.
-    pub fn out_file(&self, ext: &str) -> std::path::PathBuf {
+    pub fn out_file(&self, ext: &str) -> PathBuf {
         self.out_file_path_stem().with_extension(ext)
     }
 
@@ -253,15 +261,21 @@ impl TestEnv {
 
     /// Report output into log file.
     pub fn report_output(&mut self, output: Option<String>) {
-        self.log_ln(&format!(
-            "-- Output --\n{}",
-            output.unwrap_or("output error".into())
-        ));
+        let output = output.unwrap_or("output error".into());
+        if output.is_empty() {
+            self.log_ln("-- No Output --");
+        } else {
+            self.log_ln(&format!("-- Output --\n{}", output));
+        }
     }
 
     /// Report errors into log file.
     pub fn report_errors(&mut self, diagnosis: String) {
-        self.log(&format!("-- Errors --\n{diagnosis}"));
+        if diagnosis.is_empty() {
+            self.log("-- No Errors --\n");
+        } else {
+            self.log(&format!("-- Errors --\n{diagnosis}"));
+        }
     }
 
     fn diff(
@@ -338,13 +352,14 @@ impl TestEnv {
     pub fn result(&mut self, result: TestResult) {
         let (res, res_long) = match result {
             TestResult::Ok => ("ok", "OK"),
+            TestResult::OkWarn => ("ok_warn", "OK (BUT WARNINGS)"),
             TestResult::Todo => ("todo", "TODO"),
-            TestResult::NotTodo => ("not_todo", "OK BUT IS TODO"),
-            TestResult::Fail => ("fail", "FAIL"),
-            TestResult::FailWrong => ("fail_wrong", "FAILED WITH WRONG ERRORS/WARNINGS"),
-            TestResult::FailOk => ("fail_ok", "FAILED AS EXPECTED"),
-            TestResult::NotTodoFail => ("not_todo_fail", "FAILED AS EXPECTED BUT IS TODO"),
-            TestResult::TodoFail => ("todo_fail", "FAIL (TODO)"),
+            TestResult::NotTodo => ("not_todo", "OK (BUT IS TODO)"),
+            TestResult::Fail => ("fail", "FAILS"),
+            TestResult::FailWrong => ("fail_wrong", "FAILS WITH WRONG ERRORS"),
+            TestResult::FailOk => ("fail_ok", "FAILS AS EXPECTED"),
+            TestResult::NotTodoFail => ("not_todo_fail", "FAILS AS EXPECTED (BUT IS TODO)"),
+            TestResult::TodoFail => ("todo_fail", "TODO (SHALL FAIL)"),
             TestResult::OkFail => ("ok_fail", "OK BUT SHOULD FAIL"),
         };
         let _ = std::fs::remove_file(self.banner_file());

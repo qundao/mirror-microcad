@@ -1,6 +1,8 @@
 -- Test --
-  boolean
-  ../books/language/src/types/primitives.md:18
+        Test name: boolean
+  Expected result: ok
+      Source file: ../books/language/src/types/primitives.md:18
+        Test path: ../books/language/src/types/.test
 
 -- Code --
 
@@ -12,9 +14,8 @@
   23:   std::debug::assert_eq([4 == 5 or 4 == 4, true]);
   24:   std::debug::assert_eq([4 == 5 and 4 == 4, false]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

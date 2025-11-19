@@ -1,6 +1,9 @@
 -- Test --
-  final
-  ../books/tutorials/src/lego_brick/part/final.md:9
+        Test name: final
+  Expected result: ok
+           Params: hires
+      Source file: ../books/tutorials/src/lego_brick/part/final.md:9
+        Test path: ../books/tutorials/src/lego_brick/part/.test
 
 -- Code --
 
@@ -57,9 +60,8 @@
   59:   // render a brick with default values
   60:   LegoBrick();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(part) final::LegoBrick(base_height=9.6mm, columns=4, rows=2) ->

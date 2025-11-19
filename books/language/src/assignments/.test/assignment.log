@@ -1,17 +1,18 @@
 -- Test --
-  assignment
-  ../books/language/src/assignments/values.md:14
+        Test name: assignment
+  Expected result: ok
+      Source file: ../books/language/src/assignments/values.md:16
+        Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  14:   a = 5;
-  15:   b = a * 2;
-  16:   std::debug::assert_eq([a,5]);
-  17:   std::debug::assert_eq([b,10]);
+  16:   a = 5;
+  17:   b = a * 2;
+  18:   std::debug::assert_eq([a,5]);
+  19:   std::debug::assert_eq([b,10]);
 
--- Output --
-
--- Errors --
--- No model --
+-- No Output --
+-- No Errors --
+-- No Model --
 -- Test Result --
 OK

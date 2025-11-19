@@ -1,6 +1,8 @@
 -- Test --
-  init_assignment_const
-  ../books/tests/src/statement_usage/init.md:70
+        Test name: init_assignment_const
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/init.md:70
+        Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
@@ -8,8 +10,7 @@
   71:     const B = l; // error
   72:   } } K(1cm);
 
--- Output --
-
+-- No Output --
 -- Errors --
 error: Assignment statement not available here
   ---> ../books/tests/src/statement_usage/init.md:71:3
@@ -24,4 +25,4 @@ error: Symbol B not found.
      |   ^^^^^^^^^^^^
      |
 -- Test Result --
-FAILED AS EXPECTED
+FAILS AS EXPECTED

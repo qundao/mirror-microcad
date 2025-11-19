@@ -1,6 +1,9 @@
 -- Test --
-  first_version
-  ../books/tutorials/src/lego_brick/part/first.md:11
+        Test name: first_version
+  Expected result: ok
+           Params: hires
+      Source file: ../books/tutorials/src/lego_brick/part/first.md:11
+        Test path: ../books/tutorials/src/lego_brick/part/.test
 
 -- Code --
 
@@ -47,9 +50,8 @@
   51:   
   52:   LegoBrick();
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(part) first_version::LegoBrick(base_height=9.6mm) ->

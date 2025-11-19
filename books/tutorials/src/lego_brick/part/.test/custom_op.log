@@ -1,6 +1,8 @@
 -- Test --
-  custom_op
-  ../books/tutorials/src/lego_brick/part/custom_op.md:35
+        Test name: custom_op
+  Expected result: ok
+      Source file: ../books/tutorials/src/lego_brick/part/custom_op.md:35
+        Test path: ../books/tutorials/src/lego_brick/part/.test
 
 -- Code --
 
@@ -44,9 +46,8 @@
   72:   Cap(width, height);
   73:   Knobs(rows, columns);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) custom_op::Base(columns=4, height=15.8mm, rows=2, width=31.8mm) ->

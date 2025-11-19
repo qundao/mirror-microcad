@@ -1,6 +1,8 @@
 -- Test --
-  rotate_3d
-  ../books/language/src/libraries/std/ops/rotate.md:16
+        Test name: rotate_3d
+  Expected result: ok
+      Source file: ../books/language/src/libraries/std/ops/rotate.md:16
+        Test path: ../books/language/src/libraries/std/ops/.test
 
 -- Code --
 
@@ -10,9 +12,8 @@
   19:   cylinder.std::ops::rotate(y = 90°);
   20:   cylinder.std::ops::rotate(z = 90°);
 
--- Output --
-
--- Errors --
+-- No Output --
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
