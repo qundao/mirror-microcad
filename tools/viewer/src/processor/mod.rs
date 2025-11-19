@@ -1,73 +1,85 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! microcad Viewer processor.
 
-mod geometry_output;
+mod model_info;
+mod request;
 mod systems;
+
+use crate::{to_bevy::ToBevyMesh, *};
+pub use processor::model_info::ModelInfo;
 
 use bevy::{
     app::{Plugin, Startup, Update},
-    ecs::event::Event,
+    asset::uuid::Uuid,
+    render::mesh::Mesh,
 };
-pub use geometry_output::*;
+
+pub use request::ProcessorRequest;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
 use microcad_lang::{model::Model, rc::RcMut, render::*, syntax::SourceFile};
-
-/// A processor request.
-///
-/// Commands that can be passed to the [`Processor`].
-#[derive(Event, Clone)]
-pub enum ProcessorRequest {
-    /// Initialize the interpreter.
-    ///
-    /// Request must only be sent once and sets the initialize flag to `true`.
-    Initialize {
-        search_paths: Vec<std::path::PathBuf>,
-    },
-    /// Parse file.
-    ParseFile(std::path::PathBuf),
-    /// Parse some code into a SourceFile.
-    ParseSource {
-        /// Virtual file path
-        path: Option<std::path::PathBuf>,
-        /// Optional name of the source code snippet, e.g. the full file name.
-        name: Option<String>,
-        /// The actual source code.
-        source: String,
-    },
-    /// Evaluate source file into a model to be rendered.
-    Eval,
-    /// Set cursor position
-    /*SetCursorRange {
-        begin: Option<Position>,
-        end: Option<Position>,
-    },*/
-
-    /// Render the geometry. This message should be sent when the source code has been modified.
-    Render(Option<microcad_core::RenderResolution>),
-    /// Export the geometry to a file.
-    Export {
-        /// File name.
-        filename: std::path::PathBuf,
-        /// Optional exporter ("svg", "stl").
-        exporter: Option<String>,
-    },
-}
+use rustc_hash::FxHashSet;
 
 /// A processor response.
 ///
 /// Contains the geometry to rendered.
 pub enum ProcessorResponse {
-    /// The response contains output geometry from a render request.
-    OutputGeometry(Vec<ModelOutputGeometry>),
+    RemoveModelInstances(Vec<Uuid>),
+    NewMeshAsset(Uuid, Mesh),
+    NewModelInfo(Uuid, ModelInfo),
+    UpdateMaterials(Vec<Uuid>),
+    SpawnModelInstances(Vec<Uuid>),
+}
+
+const MODEL_UUID_SEED: u64 = 0xDEAD_BEEF_DEED_BEAF;
+
+const MODEL_GEOMETRY_OUTPUT_UUID_SEED: u64 = 0x4321_4321_4321_4321;
+
+fn generate_model_uuid(model: &Model) -> Uuid {
+    Uuid::from_u64_pair(MODEL_UUID_SEED, model.as_ptr() as u64)
+}
+
+fn generate_model_geometry_output_uuid(model: &Model) -> Uuid {
+    Uuid::from_u64_pair(MODEL_GEOMETRY_OUTPUT_UUID_SEED, model.computed_hash())
+}
+
+#[derive(Default)]
+pub struct InstanceCache {
+    geometry_output_uuids: FxHashSet<Uuid>,
+
+    model_uuids: FxHashSet<Uuid>,
+}
+
+impl InstanceCache {
+    fn contains_geometry_output(&self, uuid: &Uuid) -> bool {
+        self.geometry_output_uuids.contains(uuid)
+    }
+
+    fn contains_model(&self, uuid: &Uuid) -> bool {
+        self.model_uuids.contains(uuid)
+    }
+
+    fn insert_geometry_output(&mut self, uuid: Uuid) {
+        self.geometry_output_uuids.insert(uuid);
+    }
+
+    fn insert_model(&mut self, uuid: Uuid) {
+        self.model_uuids.insert(uuid);
+    }
+
+    fn fetch_model_uuids(&self) -> Vec<Uuid> {
+        self.model_uuids.iter().cloned().collect()
+    }
+
+    fn clear_model_uuids(&mut self) {
+        self.model_uuids.clear()
+    }
 }
 
 /// The state of the interpreter.
-
-#[derive(Default)]
 pub struct ProcessorState {
     /// Flag to tell whether to initializer.
     initialized: bool,
@@ -76,9 +88,34 @@ pub struct ProcessorState {
     search_paths: Vec<std::path::PathBuf>,
 
     resolution: microcad_core::RenderResolution,
+    theme: config::Theme,
+
+    line_number: Option<u32>,
 
     pub source_file: Option<std::rc::Rc<SourceFile>>,
+
     pub model: Option<Model>,
+
+    pub instance_cache: InstanceCache,
+
+    /// µcad Render cache.
+    pub render_cache: RcMut<RenderCache>,
+}
+
+impl Default for ProcessorState {
+    fn default() -> Self {
+        Self {
+            initialized: false,
+            search_paths: Default::default(),
+            resolution: Default::default(),
+            theme: Default::default(),
+            source_file: None,
+            model: None,
+            line_number: None,
+            instance_cache: Default::default(),
+            render_cache: RcMut::new(RenderCache::new()),
+        }
+    }
 }
 
 /// The processor  responsable for generating view commands.
@@ -94,39 +131,6 @@ struct Processor {
 
     /// Output responses.
     pub response_sender: Sender<ProcessorResponse>,
-
-    /// Render cache.
-    pub render_cache: RcMut<RenderCache>,
-}
-
-#[derive(thiserror::Error, Debug)]
-pub enum PipelineError {
-    /// Input/output error.
-    #[error("I/O Error: {0}")]
-    IoError(#[from] std::io::Error),
-    /// Parse error.
-    #[error("Parse error: {0}")]
-    ParseError(#[from] microcad_lang::parse::ParseError),
-}
-
-pub type PipelineResult<T> = Result<T, PipelineError>;
-
-/// A processing pipeline.
-pub trait Pipeline {
-    /// Initialize the pipeline with search paths.
-    fn initialize(&mut self, additional_search_paths: Vec<std::path::PathBuf>);
-
-    /// Parse a file.
-    fn parse_file(
-        &mut self,
-        path: std::path::PathBuf,
-    ) -> Result<std::rc::Rc<SourceFile>, PipelineError> {
-        Ok(SourceFile::load(path)?)
-    }
-
-    fn eval(&mut self) -> PipelineResult<()>;
-
-    fn render(&mut self, resolution: Option<RenderResolution>) -> PipelineResult<()>;
 }
 
 impl Processor {
@@ -136,32 +140,56 @@ impl Processor {
         request: ProcessorRequest,
     ) -> anyhow::Result<Vec<ProcessorResponse>> {
         match request {
-            ProcessorRequest::Initialize { search_paths } => {
-                self.state.search_paths = search_paths.clone();
+            ProcessorRequest::Initialize { config } => {
+                self.state.search_paths = config.search_paths.clone();
+                self.state.theme = config.theme;
                 self.state.initialized = true;
                 Ok(vec![])
             }
-            ProcessorRequest::ParseFile(path) => {
-                self.state.source_file = SourceFile::load(&path).ok();
-                self.eval()?;
-                self.render(None)
-            }
+            ProcessorRequest::ParseFile(path) => match SourceFile::load(&path) {
+                Ok(source_file) => {
+                    self.state.source_file = Some(source_file);
+                    self.eval()?;
+                    self.render(None)?;
+                    self.respond()
+                }
+                Err(err) => {
+                    log::error!("{err}");
+                    Ok(vec![])
+                }
+            },
             ProcessorRequest::ParseSource { path, name, source } => {
-                self.state.source_file = SourceFile::load_from_str(
+                match SourceFile::load_from_str(
                     name.unwrap_or(String::from("<none>")).as_str(),
                     path.unwrap_or(std::path::PathBuf::from("<virtual>")),
                     &source,
-                )
-                .ok();
-                self.eval()?;
-                self.render(None)
+                ) {
+                    Ok(source_file) => {
+                        self.state.source_file = Some(source_file);
+                        self.eval()?;
+                        self.render(None)?;
+                        self.respond()
+                    }
+                    Err(err) => {
+                        log::error!("{err}");
+                        Ok(vec![])
+                    }
+                }
             }
             ProcessorRequest::Eval => {
                 self.eval()?;
-                self.render(None)
+                self.render(None)?;
+                self.respond()
             }
-            ProcessorRequest::Render(resolution) => self.render(resolution),
+            ProcessorRequest::Render(resolution) => {
+                self.render(resolution)?;
+                self.respond()
+            }
             ProcessorRequest::Export { .. } => todo!(),
+            ProcessorRequest::SetLineNumber(line_number) => {
+                self.state.line_number = line_number;
+                self.respond()
+            }
         }
     }
 
@@ -170,7 +198,7 @@ impl Processor {
         self.state.initialized && self.state.model.is_some()
     }
 
-    pub(crate) fn eval(&mut self) -> anyhow::Result<Vec<ProcessorResponse>> {
+    pub(crate) fn eval(&mut self) -> anyhow::Result<()> {
         match &self.state.source_file {
             Some(source_file) => {
                 // resolve the file
@@ -189,18 +217,14 @@ impl Processor {
                 );
 
                 self.state.model = eval_context.eval()?;
-
-                Ok(vec![])
+                Ok(())
             }
             None => Err(anyhow::anyhow!("No source code to evaluate.")),
         }
     }
 
-    /// Render geometry from µcad file.
-    pub(crate) fn render(
-        &mut self,
-        resolution: Option<RenderResolution>,
-    ) -> anyhow::Result<Vec<ProcessorResponse>> {
+    /// Render geometry from model.
+    fn render(&mut self, resolution: Option<RenderResolution>) -> anyhow::Result<()> {
         if self.can_render() {
             let resolution = match resolution {
                 Some(resolution) => resolution,
@@ -208,41 +232,113 @@ impl Processor {
             };
             let model = self.state.model.as_ref().expect("Model");
 
-            let mut render_context =
-                RenderContext::init(model, resolution.clone(), Some(self.render_cache.clone()))?;
-            let model: Model = model.render_with_context(&mut render_context)?;
+            let mut render_context = RenderContext::init(
+                model,
+                resolution.clone(),
+                Some(self.state.render_cache.clone()),
+            )?;
+
+            let _: Model = model.render_with_context(&mut render_context)?;
 
             // Remove unused cache items.
             {
                 log::info!("Render cache");
-                let mut cache = self.render_cache.borrow_mut();
+                let mut cache = self.state.render_cache.borrow_mut();
                 cache.garbage_collection();
             }
 
-            let mut mesh_geometry = Vec::new();
             self.state.resolution = resolution;
-            Self::generate_mesh_geometry_from_model(&model, &mut mesh_geometry);
-            Ok(vec![ProcessorResponse::OutputGeometry(mesh_geometry)])
+            Ok(())
         } else {
             Err(anyhow::anyhow!("Could not render model."))
         }
     }
 
+    fn respond(&mut self) -> anyhow::Result<Vec<ProcessorResponse>> {
+        if let Some(model) = self.state.model.clone() {
+            let mut responses = Vec::new();
+            responses.push(ProcessorResponse::RemoveModelInstances(
+                self.state.instance_cache.fetch_model_uuids(),
+            ));
+
+            self.state.instance_cache.clear_model_uuids();
+            self.generate_responses(&model, &mut responses);
+            log::info!("{} responses", responses.len());
+
+            responses.push(ProcessorResponse::UpdateMaterials(
+                self.state.instance_cache.fetch_model_uuids(),
+            ));
+
+            responses.push(ProcessorResponse::SpawnModelInstances(
+                self.state.instance_cache.fetch_model_uuids(),
+            ));
+
+            Ok(responses)
+        } else {
+            Err(anyhow::anyhow!("No model to draw."))
+        }
+    }
+
     /// Generate mesh geometry output for model.
-    fn generate_mesh_geometry_from_model(
-        model: &Model,
-        mesh_geometry: &mut Vec<ModelOutputGeometry>,
-    ) {
-        match ModelOutputGeometry::from_model(model) {
-            Some(output_geometry) => {
-                mesh_geometry.push(output_geometry);
+    fn generate_responses(&mut self, model: &Model, responses: &mut Vec<ProcessorResponse>) {
+        use microcad_lang::model::Element::*;
+        match model.render_output_type() {
+            microcad_lang::model::OutputType::Geometry2D
+            | microcad_lang::model::OutputType::Geometry3D => {}
+            microcad_lang::model::OutputType::NotDetermined
+            | microcad_lang::model::OutputType::InvalidMixed => return,
+        }
+
+        let model_ = model.borrow();
+        // We only consider output geometries of workpieces and ignore the rest.
+        let recurse = match model_.element() {
+            InputPlaceholder | Multiplicity | Group => true,
+            Workpiece(_) | BuiltinWorkpiece(_) => {
+                let uuid = generate_model_geometry_output_uuid(model);
+                let output = model_.output();
+                let mut recurse = false;
+
+                // Add a new mesh asset, when we do not have geometry with a uuid in the cache.
+                if !self.state.instance_cache.contains_geometry_output(&uuid) {
+                    let mesh = match &output.geometry {
+                        Some(GeometryOutput::Geometry2D(geometry)) => {
+                            Some(geometry.inner.to_bevy_mesh_default())
+                        }
+                        Some(GeometryOutput::Geometry3D(geometry)) => {
+                            Some(geometry.inner.to_bevy_mesh(30.0))
+                        }
+                        None => None,
+                    };
+
+                    match mesh {
+                        Some(mesh) => {
+                            self.state.instance_cache.insert_geometry_output(uuid);
+                            responses.push(ProcessorResponse::NewMeshAsset(uuid, mesh));
+                        }
+                        None => {
+                            recurse = true;
+                        }
+                    }
+                }
+
+                let uuid = generate_model_uuid(model);
+                if !self.state.instance_cache.contains_model(&uuid) {
+                    self.state.instance_cache.insert_model(uuid);
+
+                    responses.push(ProcessorResponse::NewModelInfo(
+                        uuid,
+                        ModelInfo::from_model(model),
+                    ));
+                }
+
+                recurse
             }
-            None => {
-                let model_ = model.borrow();
-                model_
-                    .children()
-                    .for_each(|model| Self::generate_mesh_geometry_from_model(model, mesh_geometry))
-            }
+        };
+
+        if recurse {
+            model_
+                .children()
+                .for_each(|model| self.generate_responses(model, responses));
         }
     }
 }
@@ -268,7 +364,6 @@ impl ProcessorInterface {
                 state: ProcessorState::default(),
                 request_receiver,
                 response_sender,
-                render_cache: RcMut::new(RenderCache::new()),
             };
 
             loop {
@@ -294,10 +389,9 @@ pub struct ProcessorPlugin;
 
 impl Plugin for ProcessorPlugin {
     fn build(&self, app: &mut bevy::app::App) {
-        app.add_event::<ProcessorRequest>()
-            .add_systems(Startup, systems::startup_processor)
-            .add_systems(Update, systems::handle_processor_request)
+        app.add_systems(Startup, systems::initialize_processor)
             .add_systems(Update, systems::handle_processor_responses)
-            .add_systems(Update, systems::handle_external_reload);
+            .add_systems(Update, systems::file_reload)
+            .add_systems(Update, systems::handle_pick_event);
     }
 }

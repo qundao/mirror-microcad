@@ -37,7 +37,7 @@ impl RunCommand<ResolveContext> for Resolve {
         let mut search_paths = self.search_paths.clone();
 
         if !self.omit_default_libs {
-            search_paths.append(&mut Cli::default_search_paths())
+            search_paths.append(&mut microcad_builtin::dirs::default_search_paths())
         };
 
         // search for a usable std library

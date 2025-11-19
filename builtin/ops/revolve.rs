@@ -7,7 +7,7 @@ use microcad_lang::{builtin::*, model::*, render::*};
 
 #[derive(BuiltinOperation3D)]
 pub struct Revolve {
-    revolve_degrees: Scalar,
+    angle: Angle,
 }
 
 impl Operation for Revolve {
@@ -26,7 +26,7 @@ impl Operation for Revolve {
             use microcad_core::Extrude;
 
             let WithBounds3D { inner, bounds } = geometries.extrude(Extrusion::Revolve {
-                angle: cgmath::Deg(self.revolve_degrees).into(),
+                angle: self.angle,
                 segments: context.current_resolution().circular_segments(radius) as usize,
             });
 

@@ -9,17 +9,15 @@ mod layer;
 mod measure_command;
 mod resolution_attribute;
 
-use std::rc::Rc;
-
 pub use attributes::Attributes;
 pub use export_command::ExportCommand;
 pub use layer::Layer;
 pub use measure_command::MeasureCommand;
 pub use resolution_attribute::ResolutionAttribute;
 
-use crate::{create_tuple_value, syntax::*, value::*};
+use crate::{syntax::*, value::*};
 
-use microcad_core::{Color, Size2, theme::Theme};
+use microcad_core::{Color, Size2};
 
 /// A custom command attribute from an exporter, e.g.: `svg = (style = "fill:none")`
 #[derive(Clone, Debug)]
@@ -43,8 +41,6 @@ pub enum Attribute {
     Color(Color),
     /// Render resolution attribute: `resolution = 200%`.
     Resolution(ResolutionAttribute),
-    /// Theme attribute: `theme = "default/dark"`.
-    Theme(Rc<Theme>),
     /// Size attribute: `size = std::A4`.
     Size(Size2),
     /// Export command: `export = "test.svg"`.
@@ -61,7 +57,6 @@ impl Attribute {
         match &self {
             Attribute::Color(_) => Identifier::no_ref("color"),
             Attribute::Resolution(_) => Identifier::no_ref("resolution"),
-            Attribute::Theme(_) => Identifier::no_ref("theme"),
             Attribute::Size(_) => Identifier::no_ref("size"),
             Attribute::Export(_) => Identifier::no_ref("export"),
             Attribute::Measure(_) => Identifier::no_ref("measure"),
@@ -73,10 +68,7 @@ impl Attribute {
     pub fn is_unique(&self) -> bool {
         matches!(
             self,
-            Attribute::Color(_)
-                | Attribute::Resolution(_)
-                | Attribute::Theme(_)
-                | Attribute::Size(_)
+            Attribute::Color(_) | Attribute::Resolution(_) | Attribute::Size(_)
         )
     }
 }
@@ -88,10 +80,8 @@ impl std::fmt::Display for Attribute {
             "#[{id} = {value}]",
             id = self.id(),
             value = match &self {
-                // TODO: Do not use debug outputs, implement proper Display traits instead.
                 Attribute::Color(color) => format!("{color}"),
                 Attribute::Resolution(resolution) => format!("{resolution}"),
-                Attribute::Theme(theme) => theme.name.clone(),
                 Attribute::Size(size) => format!("{size}"),
                 Attribute::Export(export) => format!("{export}"),
                 Attribute::Measure(measure) => format!("{measure}"),
@@ -107,7 +97,6 @@ impl From<Attribute> for Value {
         match value {
             Attribute::Color(color) => Value::Tuple(Box::new(color.into())),
             Attribute::Resolution(resolution_attribute) => resolution_attribute.into(),
-            Attribute::Theme(theme) => theme.into(),
             Attribute::Size(size) => size.into(),
             Attribute::Export(e) => e.into(),
             Attribute::Measure(m) => m.into(),
@@ -119,16 +108,6 @@ impl From<Attribute> for Value {
 impl PartialEq for Attribute {
     fn eq(&self, other: &Self) -> bool {
         self.id() == other.id()
-    }
-}
-
-impl From<Rc<Theme>> for Value {
-    fn from(theme: Rc<Theme>) -> Self {
-        create_tuple_value!(
-            background = theme.background,
-            name = theme.name.clone(),
-            filename = theme.filename.clone().unwrap_or_default()
-        )
     }
 }
 
@@ -174,15 +153,6 @@ pub trait AttributesAccess {
             },
             None => None,
         }
-    }
-
-    /// Color theme (builtin attribute).
-    fn get_theme(&self) -> Option<std::rc::Rc<Theme>> {
-        self.get_single_attribute(&Identifier::no_ref("theme"))
-            .map(|attr| match attr {
-                Attribute::Theme(theme) => theme,
-                _ => unreachable!(),
-            })
     }
 
     /// Get size.

@@ -1,3 +1,6 @@
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 //! A freecam-style camera controller plugin.
 //! To use in your own application:
 //! - Copy the code for the [`CameraControllerPlugin`] and add the plugin to your App.
@@ -10,7 +13,9 @@ use bevy::{
     prelude::*,
     window::CursorGrabMode,
 };
-use std::{f32::consts::*, fmt};
+use std::fmt;
+
+use crate::State;
 
 /// A freecam-style camera controller plugin.
 pub struct CameraControllerPlugin;
@@ -130,6 +135,7 @@ fn run_camera_controller(
     key_input: Res<ButtonInput<KeyCode>>,
     mut toggle_cursor_grab: Local<bool>,
     mut mouse_cursor_grab: Local<bool>,
+    state: Res<State>,
     mut query: Query<(&mut Projection, &mut Transform, &mut CameraController), With<Camera>>,
 ) {
     let dt = time.delta_secs();
@@ -186,6 +192,7 @@ fn run_camera_controller(
             use bevy::render::camera::CameraProjection;
 
             ortho.scale *= 1.0 + scroll / 50.0;
+            ortho.far = state.scene.radius * 6.0;
 
             let window = windows.iter().next().unwrap();
             ortho.update(window.width(), window.height());
@@ -255,23 +262,12 @@ fn run_camera_controller(
     let delta = accumulated_mouse_motion.delta;
 
     let orbit_speed = 0.015;
-    let orbit_distance = 200.0;
+    let orbit_distance = state.scene.radius * 3.0;
 
     if mouse_button_input.pressed(MouseButton::Left) {
-        // Mouse motion is one of the few inputs that should not be multiplied by delta time,
-        // as we are already receiving the full movement since the last frame was rendered. Multiplying
-        // by delta time here would make the movement slower that it should be.
-        let delta_pitch = delta.y * orbit_speed;
-        let delta_yaw = delta.x * orbit_speed;
-
-        // Obtain the existing pitch, yaw, and roll values from the transform.
-        let (yaw, pitch, roll) = transform.rotation.to_euler(EulerRot::ZXY);
-
-        let pitch_limit = FRAC_PI_2 - 0.01;
-        // Establish the new yaw and pitch, preventing the pitch value from exceeding our limits.
-        let pitch = (pitch + delta_pitch).clamp(-pitch_limit, pitch_limit);
-        let yaw = yaw + delta_yaw;
-        transform.rotation = Quat::from_euler(EulerRot::ZXY, yaw, pitch, roll);
+        let yaw_rot = Quat::from_rotation_z(delta.x * orbit_speed);
+        let pitch_rot = Quat::from_rotation_x(delta.y * orbit_speed);
+        transform.rotation = yaw_rot * transform.rotation * pitch_rot;
     }
 
     // Adjust the translation to maintain the correct orientation toward the orbit target.

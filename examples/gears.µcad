@@ -7,7 +7,7 @@ const TEETH = 20;
 angle = 30° * TEETH;
 
 part Gear(teeth: Integer) {
-    gear_profile = InvoluteGearProfile(module = 1.0mm, teeth, pressure_angle = 2°);
+    gear_profile = InvoluteGearProfile(module = 1.0mm, teeth);
 
     prop pitch_radius = gear_profile.pitch_radius;
     prop outer_radius = gear_profile.outer_radius;
@@ -35,11 +35,14 @@ gear2 = Gear(40);
 gear3 = Gear(20);
 
 #[color = std::color::BLUE]
+#[export = "gear1.stl"]
 gear1.rotate(angle / gear1.teeth);
 
 #[color = std::color::RED]
+#[export = "gear2.stl"]
 gear2.rotate(-angle / gear2.teeth + 360°/gear2.teeth/2.0).translate(gear2.outer_radius + gear1.pitch_radius, 135°);
 
 #[color = std::color::GREEN]
+#[export = "gear3.stl"]
 gear3.rotate(-angle / gear3.teeth).translate(gear1.outer_radius + gear3.pitch_radius, 45°);
 

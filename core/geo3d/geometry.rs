@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    traits::{TotalMemory, VertexCount},
+    traits::{Center, TotalMemory, VertexCount},
     *,
 };
 
@@ -80,6 +80,13 @@ impl CalcBounds3D for Geometry3D {
 impl Transformed3D for Geometry3D {
     fn transformed_3d(&self, mat: &Mat4) -> Self {
         TriangleMesh::from(self.clone()).transformed_3d(mat).into()
+    }
+}
+
+impl Center for Geometry3D {
+    fn center(&self) -> Self {
+        let d: Vec3 = self.calc_bounds_3d().center();
+        self.transformed_3d(&Mat4::from_translation(-d))
     }
 }
 

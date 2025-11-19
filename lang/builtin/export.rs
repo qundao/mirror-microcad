@@ -61,12 +61,9 @@ pub trait Exporter: FileIoInterface {
 
     /// Parameters for the export attribute: `export = svg("filename.svg")`
     fn export_parameters(&self) -> ParameterValueList {
-        [
-            parameter!(filename: String),
-            parameter!(resolution: Length = 0.1 /*mm*/),
-        ]
-        .into_iter()
-        .collect()
+        [parameter!(filename: String), parameter!(resolution: Length)]
+            .into_iter()
+            .collect()
     }
 
     /// Export the model if the model is marked for export.

@@ -7,7 +7,7 @@ use std::{fs, process::Command};
 
 fn main() -> std::io::Result<()> {
     let search_path = ".";
-    let extensions = [".rs", ".toml", ".pest"];
+    let extensions = [".rs", ".toml", ".pest", ".slint"];
 
     let re = Regex::new(r"Copyright © (\d{4}(-\d{4})?)").unwrap();
 
@@ -27,7 +27,7 @@ fn main() -> std::io::Result<()> {
             .to_string()
             .as_str()
         {
-            "rs" | "pest" => "//",
+            "rs" | "pest" | "slint" => "//",
             "toml" => "#",
             _ => panic!("unexpected extension"),
         };

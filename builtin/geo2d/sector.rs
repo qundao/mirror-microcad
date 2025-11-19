@@ -5,11 +5,11 @@ use microcad_builtin_proc_macros::BuiltinPrimitive2D;
 use microcad_core::*;
 use microcad_lang::{builtin::*, render::*};
 
-/// Pie geometry with offset.
+/// Circle sector geometry (a pie shape) with start and end angle.
 #[derive(BuiltinPrimitive2D)]
-pub struct Pie {
+pub struct Sector {
     /// Radius of the circle.
-    pub radius: Scalar,
+    pub radius: Length,
 
     /// Start angle.
     pub start: Angle,
@@ -18,29 +18,36 @@ pub struct Pie {
     pub end: Angle,
 }
 
-impl Pie {
-    /// A pie is a circle when `offset_angle >= 360°`.
+impl Sector {
+    /// A sector is a full circle when `offset_angle >= 360°`.
     pub fn is_circle(&self) -> bool {
         self.offset_angle() >= cgmath::Deg(360.0).into()
     }
 
     /// Calculate offset angle.
     pub fn offset_angle(&self) -> Angle {
-        self.end - self.start
+        cgmath::Rad((self.end - self.start).0.abs())
     }
 }
 
-impl Render<Geometry2D> for Pie {
+impl Render<Geometry2D> for Sector {
     fn render(&self, resolution: &RenderResolution) -> Geometry2D {
         use std::f64::consts::PI;
+        let start = if self.start > self.end {
+            self.start
+        } else {
+            self.end
+        };
+
         let offset = self.offset_angle();
-        let n = (resolution.circular_segments(self.radius) as f64 * (offset.0 / PI / 2.0)) as u32;
+        let r = *self.radius;
+        let n = (resolution.circular_segments(r) as f64 * (offset.0 / PI / 2.0)) as u32;
 
         let points = if !self.is_circle() && n > 0 {
             (0..=n)
                 .map(|i| {
-                    let angle = self.start + offset * (i as f64) / (n as f64);
-                    geo::coord!(x: angle.0.cos(), y: angle.0.sin()) * self.radius
+                    let angle = start + offset * (i as f64) / (n as f64);
+                    geo::coord!(x: angle.0.cos(), y: angle.0.sin()) * r
                 })
                 .chain(
                     // Add center point.
@@ -53,7 +60,7 @@ impl Render<Geometry2D> for Pie {
             (0..n)
                 .map(|i| {
                     let angle = 2.0 * PI * (i as f64) / (n as f64);
-                    geo::coord!(x: angle.cos(), y: angle.sin()) * self.radius
+                    geo::coord!(x: angle.cos(), y: angle.sin()) * r
                 })
                 .collect()
         };
@@ -62,7 +69,7 @@ impl Render<Geometry2D> for Pie {
     }
 }
 
-impl RenderWithContext<Geometry2DOutput> for Pie {
+impl RenderWithContext<Geometry2DOutput> for Sector {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.update_2d(|context, _| Ok(self.render(&context.current_resolution())))
     }

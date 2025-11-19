@@ -8,29 +8,28 @@ use microcad_lang::{builtin::*, render::*};
 /// A rounded rectangle with a radius for each corner.
 #[derive(BuiltinPrimitive2D)]
 pub struct RoundedRect {
-    x: Scalar,
-    y: Scalar,
-    width: Scalar,
-    height: Scalar,
-    radius_bottom_left: Scalar,
-    radius_bottom_right: Scalar,
-    radius_top_left: Scalar,
-    radius_top_right: Scalar,
+    x: Length,
+    y: Length,
+    width: Length,
+    height: Length,
+    radius_bottom_left: Length,
+    radius_bottom_right: Length,
+    radius_top_left: Length,
+    radius_top_right: Length,
 }
 
 impl Render<Geometry2D> for RoundedRect {
     fn render(&self, resolution: &RenderResolution) -> Geometry2D {
         use geo::Coord;
-        use std::f64::consts::PI;
 
         // Compute the corners of the rectangle
-        let x0 = self.x;
-        let y0 = self.y;
-        let x1 = self.x + self.width;
-        let y1 = self.y + self.height;
+        let x0 = *self.x;
+        let y0 = *self.y;
+        let x1 = *self.x + *self.width;
+        let y1 = *self.y + *self.height;
 
         // clamp each radius so that no radius exceeds half the width or half the height
-        let max_r = (self.width.min(self.height)) * 0.5;
+        let max_r = (self.width.min(*self.height)) * 0.5;
         let r_bl = self.radius_bottom_left.min(max_r);
         let r_br = self.radius_bottom_right.min(max_r);
         let r_tl = self.radius_top_left.min(max_r);
@@ -64,8 +63,8 @@ impl Render<Geometry2D> for RoundedRect {
         pts.extend(arc_points(
             (x0 + r_bl, y0 + r_bl),
             r_bl,
-            PI,
-            PI * 3.0 / 2.0,
+            consts::PI,
+            consts::PI * 3.0 / 2.0,
             resolution,
         ));
         // Bottom edge straight from after bottom-left arc to start of bottom-right arc
@@ -74,8 +73,8 @@ impl Render<Geometry2D> for RoundedRect {
         pts.extend(arc_points(
             (x1 - r_br, y0 + r_br),
             r_br,
-            PI * 3.0 / 2.0,
-            PI * 2.0,
+            consts::PI * 3.0 / 2.0,
+            consts::PI * 2.0,
             resolution,
         ));
         // Right edge
@@ -86,7 +85,7 @@ impl Render<Geometry2D> for RoundedRect {
             (x1 - r_tr, y1 - r_tr),
             r_tr,
             0.0,
-            PI / 2.0,
+            consts::PI / 2.0,
             resolution,
         ));
         // Top edge
@@ -96,8 +95,8 @@ impl Render<Geometry2D> for RoundedRect {
         pts.extend(arc_points(
             (x0 + r_tl, y1 - r_tl),
             r_tl,
-            PI / 2.0,
-            PI,
+            consts::PI / 2.0,
+            consts::PI,
             resolution,
         ));
         // Left edge (closing)

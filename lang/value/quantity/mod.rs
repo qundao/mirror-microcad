@@ -94,6 +94,12 @@ impl From<Integer> for Quantity {
     }
 }
 
+impl From<Length> for Quantity {
+    fn from(length: Length) -> Self {
+        Self::new(*length, QuantityType::Length)
+    }
+}
+
 impl Ty for Quantity {
     fn ty(&self) -> Type {
         Type::Quantity(self.quantity_type.clone())

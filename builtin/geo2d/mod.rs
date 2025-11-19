@@ -1,13 +1,15 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! Built-in 2D geometries.
+
 mod circle;
 mod involute_gear;
 mod line;
 mod ngon;
-mod pie;
 mod rect;
 mod rounded_rect;
+mod sector;
 mod text;
 mod thread_profile;
 
@@ -15,9 +17,9 @@ pub use circle::*;
 pub use involute_gear::*;
 pub use line::*;
 pub use ngon::*;
-pub use pie::*;
 pub use rect::*;
 pub use rounded_rect::*;
+pub use sector::*;
 pub use text::*;
 pub use thread_profile::*;
 
@@ -30,7 +32,7 @@ pub fn geo2d() -> Symbol {
         .builtin::<InvoluteGearProfile>()
         .builtin::<Line>()
         .builtin::<Ngon>()
-        .builtin::<Pie>()
+        .builtin::<Sector>()
         .builtin::<Rect>()
         .builtin::<RoundedRect>()
         .builtin::<Text>()

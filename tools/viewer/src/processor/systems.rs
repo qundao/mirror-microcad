@@ -1,25 +1,23 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! microcad Viewer bevy systems
 
-use bevy::render::mesh::{Mesh, Mesh3d};
 use bevy::{
     asset::Assets,
-    color::Color,
-    ecs::{
-        event::{EventReader, EventWriter},
-        system::{Commands, Res, ResMut},
-    },
-    pbr::{MeshMaterial3d, StandardMaterial},
+    ecs::system::{Commands, Res, ResMut},
+    pbr::StandardMaterial,
+    prelude::*,
+    render::mesh::{Mesh, Mesh3d},
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
+use crate::state::ModelViewState;
 use crate::stdin::StdinMessageReceiver;
+use crate::*;
 use crate::{
     processor::{ProcessorRequest, ProcessorResponse},
-    scene::{Scene, SceneRadiusChangeEvent},
-    state::State,
+    state::StateEvent,
 };
 
 /// Whether a kind of watch event is relevant for compilation.
@@ -41,22 +39,32 @@ fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
 }
 
 /// Start up the processor.
-pub fn startup_processor(mut state: ResMut<crate::state::State>) {
+///
+/// Sends an initialize request to the processor and handles input.
+pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
     state
         .processor
         .send_request(ProcessorRequest::Initialize {
-            search_paths: state.config.search_paths.clone(),
+            config: state.config.clone(),
         })
         .expect("No error");
 
-    match state.mode.clone() {
-        crate::plugin::MicrocadPluginMode::InputFile(path) => {
-            state
-                .processor
-                .send_request(ProcessorRequest::ParseFile(path.clone()))
-                .expect("No error");
-            let flag_clone = state.last_modified.clone();
-            let reload_delay = state.config.reload_delay;
+    use crate::plugin::MicrocadPluginInput;
+    let reload_delay = state.config.reload_delay;
+
+    let mut requests = Vec::new();
+
+    match &mut state.input {
+        Some(MicrocadPluginInput::File {
+            path,
+            symbol: _,
+            line,
+            last_modified,
+        }) => {
+            let flag_clone = last_modified.clone();
+            let path = path.clone();
+            requests.push(ProcessorRequest::ParseFile(path.clone()));
+            requests.push(ProcessorRequest::SetLineNumber(*line));
 
             // Run file watcher thread.
             std::thread::spawn(move || -> ! {
@@ -81,30 +89,43 @@ pub fn startup_processor(mut state: ResMut<crate::state::State>) {
                 }
             });
         }
-        crate::plugin::MicrocadPluginMode::Stdin => {
+        Some(MicrocadPluginInput::Stdin(stdin)) => {
             log::info!("Run viewer in stdin remote controlled mode.");
-            state.stdin = Some(StdinMessageReceiver::run());
+            *stdin = Some(StdinMessageReceiver::run());
         }
         _ => { /* Do nothing */ }
     }
+
+    requests
+        .into_iter()
+        .for_each(|request| state.processor.send_request(request).expect("No error"));
 }
 
-pub fn handle_external_reload(
-    mut event_writer: EventWriter<ProcessorRequest>,
-    state: ResMut<crate::state::State>,
-) {
-    if let crate::plugin::MicrocadPluginMode::InputFile(input) = state.mode.clone() {
-        let mut last_modified_lock = state.last_modified.lock().unwrap();
-        if let Some(last_modified) = *last_modified_lock
-            && let Ok(elapsed) = last_modified.elapsed()
-            && elapsed > state.config.reload_delay
-        {
-            event_writer.write(ProcessorRequest::ParseFile(input));
-            log::info!("Changed file");
+pub fn file_reload(state: ResMut<crate::state::State>) {
+    use crate::plugin::MicrocadPluginInput::*;
 
-            // Reset so we don’t reload again
-            *last_modified_lock = None;
+    match &state.input {
+        Some(File {
+            path,
+            last_modified,
+            ..
+        }) => {
+            let mut last_modified_lock = last_modified.lock().unwrap();
+            if let Some(last_modified) = *last_modified_lock
+                && let Ok(elapsed) = last_modified.elapsed()
+                && elapsed > state.config.reload_delay
+            {
+                state
+                    .processor
+                    .send_request(ProcessorRequest::ParseFile(path.to_path_buf()))
+                    .expect("No error");
+                log::info!("Changed file");
+
+                // Reset so we don’t reload again
+                *last_modified_lock = None;
+            }
         }
+        _ => { /* Do nothing */ }
     }
 }
 
@@ -113,87 +134,106 @@ pub fn handle_processor_responses(
     mut commands: Commands,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
+    mut model_view_states: ResMut<Assets<ModelViewState>>,
     mut state: ResMut<State>,
-    mut event_writer: EventWriter<SceneRadiusChangeEvent>,
+    mut events: EventWriter<StateEvent>,
 ) {
     let mut entities = Vec::new();
-    let mut new_entities = false;
-    let mut new_scene_radius = Scene::MINIMUM_RADIUS;
+    let mut ground_radius = microcad_core::Length::default();
 
     for response in state.processor.response_receiver.try_iter() {
         match response {
-            ProcessorResponse::OutputGeometry(model_geometry_outputs) => {
-                // Despawn all entities to remove them from the scene
-                for entity in &state.scene.model_entities {
-                    commands.entity(*entity).despawn();
-                }
-                new_entities = true;
+            ProcessorResponse::RemoveModelInstances(uuids) => uuids.iter().for_each(|uuid| {
+                model_view_states.remove(*uuid);
+                materials.remove(*uuid);
+            }),
+            ProcessorResponse::NewMeshAsset(uuid, mesh) => {
+                log::info!("New mesh: {uuid}");
+                meshes.insert(uuid, mesh);
+            }
+            ProcessorResponse::NewModelInfo(uuid, info) => {
+                log::info!("New model info: {uuid}");
+                model_view_states.insert(uuid, ModelViewState::new(info, &state));
+            }
+            ProcessorResponse::UpdateMaterials(uuids) => {
+                uuids.iter().for_each(|uuid| {
+                    let view_state = model_view_states.get(*uuid).expect("Model info");
+                    materials.insert(*uuid, view_state.generate_material());
+                });
+            }
+            ProcessorResponse::SpawnModelInstances(uuids) => {
+                entities.extend(uuids.iter().cloned().filter_map(|uuid| {
+                    log::info!("Spawn model: {uuid}");
 
-                for model_geometry_output in model_geometry_outputs {
-                    new_scene_radius =
-                        new_scene_radius.max(model_geometry_output.info.bounding_radius);
-
-                    // Spawn axis-aligned bounding box (AABB) entity.
-                    if std::env::var("MICROCAD_VIEWER_SHOW_AABB").is_ok() {
-                        entities.push(
-                            commands
-                                .spawn((
-                                    Mesh3d(meshes.add(model_geometry_output.aabb_mesh)),
-                                    MeshMaterial3d(
-                                        materials.add(model_geometry_output.aabb_material),
-                                    ),
-                                    model_geometry_output.transform,
-                                ))
-                                .id(),
+                    model_view_states.get(uuid).map(|view_state| {
+                        ground_radius = microcad_core::Length::mm(
+                            ground_radius.max(view_state.info().ground_radius.0),
                         );
-                    }
 
-                    // Spawn object entity.
-                    entities.push(
                         commands
                             .spawn((
-                                Mesh3d(meshes.add(model_geometry_output.mesh)),
-                                MeshMaterial3d(
-                                    materials.add(model_geometry_output.materials.default),
-                                ),
-                                model_geometry_output.transform,
-                                OutlineVolume {
-                                    visible: matches!(
-                                        model_geometry_output.info.output_type,
-                                        microcad_lang::model::OutputType::Geometry2D
-                                    ),
-                                    colour: Color::srgba(0.1, 0.1, 0.1, 1.0),
-                                    width: 4.0,
-                                },
+                                Mesh3d(Handle::Weak(bevy::asset::AssetId::<Mesh>::Uuid {
+                                    uuid: view_state.info().geometry_output_uuid,
+                                })),
+                                MeshMaterial3d(Handle::Weak(bevy::asset::AssetId::<
+                                    StandardMaterial,
+                                >::Uuid {
+                                    uuid,
+                                })),
+                                view_state.info().transform,
+                                view_state.outline_volume.clone(),
                                 OutlineMode::FloodFlat,
+                                view_state.clone(),
                             ))
-                            .id(),
-                    );
-                }
+                            .id()
+                    })
+                }))
             }
         }
 
-        if new_entities {
+        if state.processor.response_receiver.is_empty() {
             break;
         }
     }
 
-    if new_entities {
+    if !entities.is_empty() {
+        // Despawn all entities to remove them from the scene
+        for entity in &state.scene.model_entities {
+            commands.entity(*entity).despawn();
+        }
+
         state.scene.model_entities = entities;
-        state.scene.radius = new_scene_radius;
-        event_writer.write(SceneRadiusChangeEvent {
-            new_radius: new_scene_radius,
-        });
+        events.write(StateEvent::ChangeGroundRadius(ground_radius));
     }
 }
 
-pub fn handle_processor_request(
-    mut event_reader: EventReader<ProcessorRequest>,
-    state: Res<State>,
+/// A system that draws hit indicators for every pointer.
+pub fn handle_pick_event(
+    pointers: Query<&bevy::picking::pointer::PointerInteraction>,
+    buttons: Res<ButtonInput<MouseButton>>,
+    mut query: Query<(
+        &ModelViewState,
+        &mut MeshMaterial3d<StandardMaterial>,
+        &mut OutlineVolume,
+    )>,
+    mut events: EventWriter<StateEvent>,
 ) {
-    for event in event_reader.read() {
-        if let Err(error) = state.processor.send_request(event.clone()) {
-            log::error!("Render error: {error}");
+    for (entity, _) in pointers
+        .iter()
+        .filter_map(|interaction| interaction.get_nearest_hit())
+    {
+        match query.get_mut(*entity) {
+            Ok((view_state, ref mut _material, ref mut _outline)) => {
+                if buttons.just_pressed(MouseButton::Left) {
+                    events.write(StateEvent::SelectOne(view_state.info().model_uuid));
+                }
+            }
+            // No Hit was found..
+            Err(_) => {
+                if buttons.any_just_pressed([MouseButton::Left, MouseButton::Right]) {
+                    events.write(StateEvent::ClearSelection);
+                }
+            }
         }
     }
 }

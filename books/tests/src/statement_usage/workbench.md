@@ -108,6 +108,6 @@ sketch K() {
 
 ```µcad,workbench_expression_model
 sketch K() {
-  __builtin::geo2d::Circle(radius=1);
+  __builtin::geo2d::Circle(radius=1mm);
 } K();
 ```

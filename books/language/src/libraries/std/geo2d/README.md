@@ -11,14 +11,14 @@ The profile can be extruded to construct 3D gear.
 std::geo2d::InvoluteGearProfile(module = 4.0mm, teeth = 20, pressure_angle = 0°);
 ```
 
-## `Pie`
+## `Sector`
 
 Constructs a point at origin with a radius and a start and end angle.
 
-[![test](.test/std_geo2d_pie.svg)](.test/std_geo2d_pie.log)
+[![test](.test/std_geo2d_sector.svg)](.test/std_geo2d_sector.log)
 
-```µcad,std_geo2d_pie
-std::geo2d::Pie(radius = 20mm, start = 45°, end = 135°);
+```µcad,std_geo2d_sector
+std::geo2d::Sector(radius = 20mm, start = 45°, end = 135°);
 ```
 
 ## `RoundedRect`

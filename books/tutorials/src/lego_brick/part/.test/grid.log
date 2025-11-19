@@ -47,11 +47,23 @@ warning: Unused global symbol <no code>.
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
+warning: Unused global symbol <no code>.
+  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
+     |
+  11 | use std::ops::*;
+     |     ^^^^^^^^
+     |
 warning: Unused global symbol grid.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:15:1
      |
   15 | op grid(rows: Integer, columns: Integer) {
      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+warning: Unused global symbol align.
+  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
+     |
+  11 | use std::ops::*;
+     |     ^^^^^^^^
      |
 warning: Unused global symbol buffer.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
@@ -60,6 +72,12 @@ warning: Unused global symbol buffer.
      |     ^^^^^^^^
      |
 warning: Unused global symbol contour.
+  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
+     |
+  11 | use std::ops::*;
+     |     ^^^^^^^^
+     |
+warning: Unused global symbol distribute_grid.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
@@ -78,6 +96,12 @@ warning: Unused global symbol mirror.
      |     ^^^^^^^^
      |
 warning: Unused global symbol orient.
+  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
+     |
+  11 | use std::ops::*;
+     |     ^^^^^^^^
+     |
+warning: Unused global symbol reflect.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;

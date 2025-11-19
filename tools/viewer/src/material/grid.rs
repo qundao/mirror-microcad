@@ -1,12 +1,16 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Grid material.
 
+use bevy::render::render_resource::RenderPipelineDescriptor;
+
 use super::bevy_types::*;
 
+/// A colored zoom-adaptive grid and fade out radius.
+///
+/// This struct defines the data that will be passed to your shader.
 #[derive(Asset, AsBindGroup, Debug, Clone, TypePath)]
-// This struct defines the data that will be passed to your shader
 pub struct Grid {
     #[uniform(0)]
     pub radius: f32,
@@ -17,7 +21,14 @@ pub struct Grid {
     #[uniform(2)]
     pub view_angle: Vec3,
 
-    alpha_mode: AlphaMode,
+    #[uniform(3)]
+    pub grid_color: Vec3,
+
+    #[uniform(4)]
+    pub x_axis_color: Vec3,
+
+    #[uniform(5)]
+    pub y_axis_color: Vec3,
 }
 
 impl Grid {
@@ -32,7 +43,9 @@ impl Default for Grid {
             radius: 1.0,
             zoom_level: 1.0,
             view_angle: Vec3::new(0.0, 0.0, 1.0),
-            alpha_mode: AlphaMode::Blend,
+            grid_color: Vec3::new(0.7, 0.7, 0.7),
+            x_axis_color: Vec3::new(1.0, 0.0, 0.0),
+            y_axis_color: Vec3::new(0.0, 1.0, 0.0),
         }
     }
 }
@@ -47,6 +60,16 @@ impl Material for Grid {
     }
 
     fn alpha_mode(&self) -> AlphaMode {
-        self.alpha_mode
+        AlphaMode::Blend
+    }
+
+    fn specialize(
+        _pipeline: &bevy::pbr::MaterialPipeline<Self>,
+        descriptor: &mut RenderPipelineDescriptor,
+        _layout: &bevy::render::mesh::MeshVertexBufferLayoutRef,
+        _key: bevy::pbr::MaterialPipelineKey<Self>,
+    ) -> Result<(), bevy::render::render_resource::SpecializedMeshPipelineError> {
+        descriptor.primitive.cull_mode = None; // ✅ Disable backface culling
+        Ok(())
     }
 }

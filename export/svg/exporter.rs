@@ -3,11 +3,56 @@
 
 //! Scalable Vector Graphics (SVG) export
 
-use microcad_core::{Color, Scalar, theme::Theme};
+use microcad_core::{Color, Scalar};
 use microcad_lang::{Id, builtin::*, model::*, parameter, render::RenderError, value::*};
 
 /// SVG Exporter.
 pub struct SvgExporter;
+
+/// A theme for SVG export.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Theme {
+    /// Background color of the drawing canvas.
+    pub background: Color,
+    /// Color used for grid lines.
+    pub grid: Color,
+    /// Color used for selected entities.
+    pub selection: Color,
+    /// Color used for highlighting hovered entities.
+    pub highlight: Color,
+    /// Default color for entities.
+    pub entity: Color,
+    /// Default color for entity outlines.
+    pub outline: Color,
+    /// Color used for active construction lines.
+    pub active: Color,
+    /// Color used for inactive construction lines.
+    pub inactive: Color,
+    /// Color for dimensions and annotations.
+    pub measure: Color,
+    /// Color for snapping indicators.
+    pub snap_indicator: Color,
+    /// Color for guidelines (e.g. inference lines).
+    pub guide: Color,
+}
+
+impl Default for Theme {
+    fn default() -> Self {
+        Self {
+            background: Color::rgb(1.0, 1.0, 1.0),
+            grid: Color::rgb(0.85, 0.85, 0.85),
+            selection: Color::rgb(0.0, 0.4, 0.8),
+            highlight: Color::rgb(1.0, 0.6, 0.0),
+            entity: Color::rgba(0.7, 0.7, 0.7, 0.7),
+            outline: Color::rgb(0.1, 0.1, 0.1),
+            active: Color::rgb(0.2, 0.2, 0.2),
+            inactive: Color::rgb(0.8, 0.8, 0.8),
+            measure: Color::rgb(0.0, 0.8, 0.8),
+            snap_indicator: Color::rgb(0.0, 0.8, 0.8),
+            guide: Color::rgb(0.6, 0.6, 0.6),
+        }
+    }
+}
 
 /// Settings for this exporter.
 pub struct SvgExporterSettings {
@@ -126,9 +171,7 @@ impl Exporter for SvgExporter {
                 content_rect,
                 None,
             )?;
-            writer.style(&SvgExporter::theme_to_svg_style(
-                &model.get_theme().unwrap_or_default(),
-            ))?;
+            writer.style(&SvgExporter::theme_to_svg_style(&Theme::default()))?;
 
             model.write_svg(&mut writer, &SvgTagAttributes::default())?;
             Ok(Value::None)

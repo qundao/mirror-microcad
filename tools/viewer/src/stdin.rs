@@ -1,4 +1,4 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! microcad Viewer Standard input interface.
@@ -12,9 +12,10 @@ use bevy::prelude::{AppExit, EventWriter};
 
 use microcad_viewer_ipc::ViewerRequest;
 
+use crate::plugin::MicrocadPluginInput;
 use crate::processor::ProcessorRequest;
 
-#[derive(Resource)]
+#[derive(Resource, Clone)]
 pub struct StdinMessageReceiver(Receiver<ViewerRequest>);
 
 impl StdinMessageReceiver {
@@ -54,25 +55,32 @@ impl StdinMessageReceiver {
 /// Process stdin messages into processor requests.
 pub fn handle_stdin_messages(
     state: bevy::prelude::ResMut<crate::State>,
-    mut event_writer: bevy::prelude::EventWriter<ProcessorRequest>,
     mut exit: EventWriter<AppExit>,
 ) {
-    if let Some(stdin) = &state.stdin {
+    if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &state.input {
         for viewer_request in stdin.0.try_iter() {
             log::info!("{viewer_request:?}");
+
+            use microcad_viewer_ipc::ViewerRequest::*;
             match viewer_request {
-                microcad_viewer_ipc::ViewerRequest::SourceCodeFromFile { path } => {
-                    event_writer.write(ProcessorRequest::ParseFile(path));
+                SourceCodeFromFile { path } => {
+                    state
+                        .processor
+                        .send_request(ProcessorRequest::ParseFile(path))
+                        .expect("No error");
                 }
-                microcad_viewer_ipc::ViewerRequest::SourceCode { path, name, code } => {
-                    event_writer.write(ProcessorRequest::ParseSource {
-                        path,
-                        name,
-                        source: code,
-                    });
+                SourceCode { path, name, code } => {
+                    state
+                        .processor
+                        .send_request(ProcessorRequest::ParseSource {
+                            path,
+                            name,
+                            source: code,
+                        })
+                        .expect("No error");
                 }
-                microcad_viewer_ipc::ViewerRequest::CursorRange { .. } => todo!(),
-                microcad_viewer_ipc::ViewerRequest::Exit => {
+                CursorRange { .. } => todo!(),
+                Exit => {
                     exit.write(AppExit::Success);
                 }
             }

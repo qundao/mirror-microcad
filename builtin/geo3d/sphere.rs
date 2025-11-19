@@ -9,12 +9,12 @@ use microcad_lang::{builtin::*, render::*};
 #[derive(BuiltinPrimitive3D)]
 pub struct Sphere {
     /// Radius of the sphere in millimeters.
-    pub radius: Scalar,
+    pub radius: Length,
 }
 
 impl Render<Geometry3D> for Sphere {
     fn render(&self, resolution: &RenderResolution) -> Geometry3D {
-        Manifold::sphere(self.radius, resolution.circular_segments(self.radius)).into()
+        Manifold::sphere(*self.radius, resolution.circular_segments(*self.radius)).into()
     }
 }
 

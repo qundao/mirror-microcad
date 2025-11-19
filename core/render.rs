@@ -81,7 +81,7 @@ impl std::ops::Mul<Mat4> for RenderResolution {
 
 impl Default for RenderResolution {
     fn default() -> Self {
-        RenderResolution { linear: 0.1 }
+        RenderResolution::medium()
     }
 }
 

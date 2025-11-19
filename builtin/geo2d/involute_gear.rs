@@ -1,4 +1,4 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_builtin_proc_macros::BuiltinPrimitive2D;
@@ -19,7 +19,7 @@ pub struct InvoluteGearProfile {
     /// Gear module (mm per tooth), controlling the overall gear size.
     /// Defines the ratio between the pitch diameter and the number of teeth:
     /// `pitch_diameter = module * teeth`.
-    pub module: Scalar,
+    pub module: Length,
     /// Total number of teeth on the gear. Must be a positive integer.
     pub teeth: Integer,
     /// Pressure angle (radians or degrees), defining the shape of the involute flank.
@@ -56,27 +56,27 @@ impl InvoluteGearProfile {
     }
 
     #[inline]
-    pub fn pitch_radius(&self) -> Scalar {
-        self.module * self.teeth as Scalar / 2.0
+    fn pitch_radius(&self) -> Scalar {
+        *self.module * self.teeth as Scalar / 2.0
     }
 
     #[inline]
-    pub fn base_radius(&self) -> Scalar {
+    fn base_radius(&self) -> Scalar {
         self.pitch_radius() * self.pressure_angle.0.cos()
     }
 
     #[inline]
-    pub fn outer_radius(&self) -> Scalar {
-        self.pitch_radius() + self.module
+    fn outer_radius(&self) -> Scalar {
+        self.pitch_radius() + *self.module
     }
 
     #[inline]
-    pub fn root_radius(&self) -> Scalar {
-        self.pitch_radius() - 1.25 * self.module
+    fn root_radius(&self) -> Scalar {
+        self.pitch_radius() - 1.25 * *self.module
     }
 
     #[inline]
-    pub fn half_thick_angle(&self) -> Scalar {
+    fn half_thick_angle(&self) -> Scalar {
         // Half tooth thickness angle at pitch circle
         let z = self.teeth as Scalar;
         let phi = self.pressure_angle.0; // in radians
@@ -121,7 +121,7 @@ impl InvoluteGearProfile {
 impl Render<Geometry2D> for InvoluteGearProfile {
     fn render(&self, resolution: &RenderResolution) -> Geometry2D {
         let tooth = self.involute_gear_tooth(
-            (resolution.circular_segments(self.outer_radius()) / self.teeth.max(5) as u32) as usize,
+            (resolution.circular_segments(self.outer_radius() / self.teeth as f64)) as usize,
         );
 
         let inv = 2.0 * consts::PI / self.teeth as Scalar;

@@ -102,6 +102,46 @@ impl Bounds3D {
     pub fn radius(&self) -> Scalar {
         (self.max - self.min).magnitude() * 0.5
     }
+
+    /// Calculate center of the bounds.
+    pub fn center(&self) -> Vec3 {
+        (self.min + self.max) * 0.5
+    }
+
+    /// Distance to boundary from the bounds' center.
+    pub fn distance_center_to_boundary(&self, dir: Vec3) -> Length {
+        let center = self.center();
+
+        // Handle x-axis intersections
+        let tx = if dir.x > 0.0 {
+            (self.max.x - center.x) / dir.x
+        } else if dir.x < 0.0 {
+            (self.min.x - center.x) / dir.x
+        } else {
+            f64::INFINITY
+        };
+
+        // Handle y-axis intersections
+        let ty = if dir.y > 0.0 {
+            (self.max.y - center.y) / dir.y
+        } else if dir.y < 0.0 {
+            (self.min.y - center.y) / dir.y
+        } else {
+            f64::INFINITY
+        };
+
+        // Handle y-axis intersections
+        let tz = if dir.z > 0.0 {
+            (self.max.z - center.z) / dir.z
+        } else if dir.y < 0.0 {
+            (self.min.z - center.z) / dir.z
+        } else {
+            f64::INFINITY
+        };
+
+        // Return the smallest positive intersection
+        Length::mm(tx.min(ty).min(tz))
+    }
 }
 
 impl Default for Bounds3D {

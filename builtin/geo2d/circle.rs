@@ -9,13 +9,13 @@ use microcad_lang::{builtin::*, render::*};
 #[derive(BuiltinPrimitive2D)]
 pub struct Circle {
     /// Circle radius.
-    radius: Scalar,
+    radius: Length,
 }
 
 impl Render<Geometry2D> for Circle {
     fn render(&self, resolution: &RenderResolution) -> Geometry2D {
         Geometry2D::Polygon(microcad_core::Circle::circle_polygon(
-            self.radius,
+            *self.radius,
             resolution,
         ))
     }

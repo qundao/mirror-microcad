@@ -3,17 +3,22 @@
 
 //! µcad builtin library
 
+pub mod dirs;
+pub mod geo2d;
+pub mod geo3d;
+pub mod ops;
+
 mod color;
 mod debug;
-mod geo2d;
-mod geo3d;
-pub mod import;
+mod import;
 mod log;
 mod math;
-mod ops;
 mod print;
 
-pub use microcad_lang::builtin::*;
+pub use microcad_lang::builtin::{
+    Exporter, ExporterAccess, ExporterRegistry, Importer, ImporterRegistry, ModuleBuilder, Symbol,
+};
+
 use microcad_lang::{diag::*, eval::*, ty::Ty, value::*};
 
 /// Return type of argument.
@@ -76,9 +81,10 @@ pub fn builtin_importers() -> ImporterRegistry {
 
 /// Get built-in exporters.
 pub fn builtin_exporters() -> ExporterRegistry {
+    use microcad_export::*;
     ExporterRegistry::new()
-        .insert(microcad_export::svg::SvgExporter)
-        .insert(microcad_export::stl::StlExporter)
-        .insert(microcad_export::json::JsonExporter)
-        .insert(microcad_export::wkt::WktExporter)
+        .insert(svg::SvgExporter)
+        .insert(stl::StlExporter)
+        .insert(json::JsonExporter)
+        .insert(wkt::WktExporter)
 }

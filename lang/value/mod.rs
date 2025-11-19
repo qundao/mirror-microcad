@@ -32,7 +32,7 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{model::*, rc::*, syntax::*, ty::*};
+use crate::{model::*, rc::*, src_ref::SrcRef, syntax::*, ty::*};
 use microcad_core::*;
 
 pub(crate) type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
@@ -272,6 +272,9 @@ impl std::ops::Mul for Value {
 
     fn mul(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
+            (Value::Integer(lhs), Value::Model(rhs)) => Ok(Value::Model(
+                Models::from(rhs.multiply(lhs)).to_multiplicity(SrcRef(None)),
+            )),
             // Multiply two integers
             (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Integer(lhs * rhs)),
             // Multiply an integer and a scalar, result is scalar
@@ -281,6 +284,7 @@ impl std::ops::Mul for Value {
             // Multiply two scalars
             (Value::Quantity(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs * rhs)?)),
             (Value::Array(array), value) | (value, Value::Array(array)) => Ok((array * value)?),
+
             (Value::Tuple(tuple), value) | (value, Value::Tuple(tuple)) => {
                 Ok((tuple.as_ref().clone() * value)?.into())
             }
@@ -499,6 +503,23 @@ impl TryFrom<&Value> for Angle {
     }
 }
 
+impl TryFrom<&Value> for Length {
+    type Error = ValueError;
+
+    fn try_from(value: &Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::Quantity(Quantity {
+                value,
+                quantity_type: QuantityType::Length,
+            }) => Ok(Length(*value)),
+            _ => Err(ValueError::CannotConvert(
+                value.to_string(),
+                "Length".into(),
+            )),
+        }
+    }
+}
+
 impl TryFrom<&Value> for Size2 {
     type Error = ValueError;
 
@@ -536,6 +557,12 @@ impl From<f32> for Value {
 impl From<Scalar> for Value {
     fn from(scalar: Scalar) -> Self {
         Value::Quantity(scalar.into())
+    }
+}
+
+impl From<Length> for Value {
+    fn from(length: Length) -> Self {
+        Value::Quantity(length.into())
     }
 }
 

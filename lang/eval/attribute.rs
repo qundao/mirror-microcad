@@ -12,7 +12,7 @@ use crate::{
     syntax::{self, *},
 };
 
-use microcad_core::{Color, RenderResolution, Size2, theme::Theme};
+use microcad_core::{Color, Length, RenderResolution, Size2};
 use thiserror::Error;
 
 /// Error type for attributes.
@@ -43,7 +43,7 @@ impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
                     &argument_list.eval(context)?,
                     &[
                         parameter!(filename: String),
-                        parameter!(resolution: Length = 0.1 /*mm*/),
+                        parameter!(resolution: Length = Length::mm(0.1)),
                         (
                             Identifier::no_ref("size"),
                             eval::ParameterValue {
@@ -243,21 +243,6 @@ impl Eval<Option<ResolutionAttribute>> for syntax::AttributeCommand {
     }
 }
 
-impl Eval<Option<std::rc::Rc<Theme>>> for syntax::AttributeCommand {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<std::rc::Rc<Theme>>> {
-        match self {
-            AttributeCommand::Expression(_) => todo!(),
-            AttributeCommand::Call(_, _) => {
-                context.warning(
-                    self,
-                    AttributeError::InvalidCommand(Identifier::no_ref("resolution")),
-                )?;
-                Ok(None)
-            }
-        }
-    }
-}
-
 impl Eval<Option<Size2>> for syntax::AttributeCommand {
     fn eval(&self, _: &mut EvalContext) -> EvalResult<Option<Size2>> {
         todo!("Get Size2, e.g. `size = (width = 10mm, height = 10mm) from AttributeCommand")
@@ -283,7 +268,6 @@ macro_rules! eval_to_attribute {
 
 eval_to_attribute!(color: Color);
 eval_to_attribute!(resolution: ResolutionAttribute);
-eval_to_attribute!(theme: std::rc::Rc<Theme>);
 eval_to_attribute!(size: Size2);
 
 impl Eval<Vec<crate::model::Attribute>> for syntax::Attribute {
@@ -297,10 +281,6 @@ impl Eval<Vec<crate::model::Attribute>> for syntax::Attribute {
             },
             "resolution" => match self.eval(context)? {
                 Some(resolution) => vec![Attr::Resolution(resolution)],
-                None => Default::default(),
-            },
-            "theme" => match self.eval(context)? {
-                Some(theme) => vec![Attr::Theme(theme)],
                 None => Default::default(),
             },
             "size" => match self.eval(context)? {

@@ -3,10 +3,13 @@
 The following table lists all tests included in this documentation.
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-**156** tests from markdown.
+**161** tests from markdown.
 
 | Result | Name |
 |-------:|------|
+| [![test](../libraries/std/ops/.test/align_2d.svg)](../libraries/std/ops/.test/align_2d.log) | [align_2d](../libraries/std/ops/align.md) |
+| [![test](../libraries/std/ops/.test/align_2d_multiplicity.svg)](../libraries/std/ops/.test/align_2d_multiplicity.log) | [align_2d_multiplicity](../libraries/std/ops/align.md) |
+| [![test](../libraries/std/ops/.test/align_3d.svg)](../libraries/std/ops/.test/align_3d.log) | [align_3d](../libraries/std/ops/align.md) |
 | [![test](../flow/calls/.test/argument_match_mix.svg)](../flow/calls/.test/argument_match_mix.log) | [argument_match_mix](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_name.svg)](../flow/calls/.test/argument_match_name.log) | [argument_match_name](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_type.svg)](../flow/calls/.test/argument_match_type.log) | [argument_match_type](../flow/calls/arguments.md) |
@@ -43,6 +46,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/README.md) |
 | [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
+| [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |
+| [![test](../libraries/std/ops/.test/distribute_grid_3d.svg)](../libraries/std/ops/.test/distribute_grid_3d.log) | [distribute_grid_3d](../libraries/std/ops/distribute_grid.md) |
 | [![test](../structure/.test/example.svg)](../structure/.test/example.log) | [example](../structure/functions.md) |
 | [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
 | [![test](../expressions/.test/expression_literals.svg)](../expressions/.test/expression_literals.log) | [expression_literals](../expressions/README.md) |
@@ -86,7 +91,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/parameters.svg)](../structure/workbenches/.test/parameters.log) | [parameters](../structure/workbenches/operations.md) |
 | [![test](../structure/workbenches/.test/part_basic.svg)](../structure/workbenches/.test/part_basic.log) | [part_basic](../structure/workbenches/parts.md) |
 | [![test](../structure/workbenches/.test/part_declaration.svg)](../structure/workbenches/.test/part_declaration.log) | [part_declaration](../structure/workbenches/README.md) |
-| [![test](../libraries/builtin/.test/pie.svg)](../libraries/builtin/.test/pie.log) | [pie](../libraries/builtin/geo2d.md) |
 | [![test](../structure/workbenches/.test/pre_init_code.svg)](../structure/workbenches/.test/pre_init_code.log) | [pre_init_code](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/property.svg)](../structure/workbenches/.test/property.log) | [property](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/property_wrong.svg)](../structure/workbenches/.test/property_wrong.log) | [property_wrong](../structure/workbenches/README.md) |
@@ -101,14 +105,15 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/scalar_literal.svg)](../expressions/.test/scalar_literal.log) | [scalar_literal](../expressions/literals.md) |
 | [![test](../libraries/std/ops/.test/scale_3d.svg)](../libraries/std/ops/.test/scale_3d.log) | [scale_3d](../libraries/std/ops/scale.md) |
 | [![test](../libraries/std/ops/.test/scale_uniform.svg)](../libraries/std/ops/.test/scale_uniform.log) | [scale_uniform](../libraries/std/ops/scale.md) |
+| [![test](../libraries/builtin/.test/sector.svg)](../libraries/builtin/.test/sector.log) | [sector](../libraries/builtin/geo2d.md) |
 | [![test](../structure/workbenches/.test/sketch_basic.svg)](../structure/workbenches/.test/sketch_basic.log) | [sketch_basic](../structure/workbenches/sketches.md) |
 | [![test](../structure/.test/source_file_2D.svg)](../structure/.test/source_file_2D.log) | [source_file_2D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_3D.svg)](../structure/.test/source_file_3D.log) | [source_file_3D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_mixed.svg)](../structure/.test/source_file_mixed.log) | [source_file_mixed](../structure/source_file.md) |
 | [![test](../libraries/std/ops/.test/std_geo2d_buffer.svg)](../libraries/std/ops/.test/std_geo2d_buffer.log) | [std_geo2d_buffer](../libraries/std/ops/buffer.md) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.svg)](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.log) | [std_geo2d_involute_gear_profile](../libraries/std/geo2d/README.md) |
-| [![test](../libraries/std/geo2d/.test/std_geo2d_pie.svg)](../libraries/std/geo2d/.test/std_geo2d_pie.log) | [std_geo2d_pie](../libraries/std/geo2d/README.md) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.svg)](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.log) | [std_geo2d_rounded_rect](../libraries/std/geo2d/README.md) |
+| [![test](../libraries/std/geo2d/.test/std_geo2d_sector.svg)](../libraries/std/geo2d/.test/std_geo2d_sector.log) | [std_geo2d_sector](../libraries/std/geo2d/README.md) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_text.svg)](../libraries/std/geo2d/.test/std_geo2d_text.log) | [std_geo2d_text](../libraries/std/geo2d/README.md) |
 | [![test](../expressions/.test/string_literal.svg)](../expressions/.test/string_literal.log) | [string_literal](../expressions/literals.md) |
 | [![test](../libraries/builtin/.test/text.svg)](../libraries/builtin/.test/text.log) | [text](../libraries/builtin/geo2d.md) |

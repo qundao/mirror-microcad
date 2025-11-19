@@ -1,5 +1,0 @@
-use std::ops::*;
-use std::geo2d::*;
-use std::math::*;
-
-InvoluteGearProfile(1.0mm, 40, 12°);

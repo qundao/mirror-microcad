@@ -17,11 +17,5 @@ error: Expression statement not available here
  103 |   __builtin::geo2d::Circle(radius=l); // error
      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
-error: Missing arguments: radius
-  ---> ../books/tests/src/statement_usage/init.md:103:3
-     |
- 103 |   __builtin::geo2d::Circle(radius=l); // error
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
 -- Test Result --
 FAILED AS EXPECTED

@@ -22,7 +22,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](lego_brick/base/frame/.test/inner.svg)](lego_brick/base/frame/.test/inner.log) | [inner](lego_brick/base/frame/another_rect.md) |
 | [![test](lego_brick/base/frame/.test/inner_outer.svg)](lego_brick/base/frame/.test/inner_outer.log) | [inner_outer](lego_brick/base/frame/another_rect.md) |
 | [![test](lego_brick/.test/knobs.svg)](lego_brick/.test/knobs.log) | [knobs](lego_brick/caps_knobs.md) |
-| [![test](lego_brick/.test/knobs_align.svg)](lego_brick/.test/knobs_align.log) | [knobs_align](lego_brick/caps_knobs.md) |
+| [![test](lego_brick/.test/knobs_center.svg)](lego_brick/.test/knobs_center.log) | [knobs_center](lego_brick/caps_knobs.md) |
 | [![test](lego_brick/.test/knobs_multiplicity.svg)](lego_brick/.test/knobs_multiplicity.log) | [knobs_multiplicity](lego_brick/caps_knobs.md) |
 | [![test](lego_brick/base/struts/.test/multiple.svg)](lego_brick/base/struts/.test/multiple.log) | [multiple](lego_brick/base/struts/create.md) |
 | [![test](lego_brick/base/struts/.test/multiplicity.svg)](lego_brick/base/struts/.test/multiplicity.log) | [multiplicity](lego_brick/base/struts/multiplicity.md) |

@@ -5,10 +5,10 @@
 -- Code --
 
   71:   op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
-  72:       @input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
+  72:       @input.__builtin::ops::translate(x, y, z);
   73:   }
   74:   
-  75:   r = __builtin::geo2d::Rect(x = 0, y = 0, width = 3, height = 3);
+  75:   r = __builtin::geo2d::Rect(x = 0mm, y = 0mm, width = 3mm, height = 3mm);
   76:   
   77:   #[color = "red"]
   78:   r.translate(x = 0.0mm, y = 0.0mm);
@@ -32,29 +32,29 @@
       - y = 0mm
       - z = 0mm
       #[color = rgba(1, 0, 0, 1)]
-      Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3, width=3, x=0, y=0) ->
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
     Workpiece(op) builtin_translate::translate(x=4mm, y=0mm, z=0mm) ->
       - x = 4mm
       - y = 0mm
       - z = 0mm
       #[color = rgba(0, 0, 1, 1)]
-      Transform __builtin::ops::translate(x=4, y=0, z=0) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3, width=3, x=0, y=0) ->
+      Transform __builtin::ops::translate(x=4mm, y=0mm, z=0mm) ->
+        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
     Workpiece(op) builtin_translate::translate(x=0mm, y=4mm, z=0mm) ->
       - x = 0mm
       - y = 4mm
       - z = 0mm
       #[color = rgba(0, 1, 0, 1)]
-      Transform __builtin::ops::translate(x=0, y=4, z=0) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3, width=3, x=0, y=0) ->
+      Transform __builtin::ops::translate(x=0mm, y=4mm, z=0mm) ->
+        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
     Workpiece(op) builtin_translate::translate(x=4mm, y=4mm, z=0mm) ->
       - x = 4mm
       - y = 4mm
       - z = 0mm
       #[color = rgba(0.5, 0.5, 0.5, 1)]
-      Transform __builtin::ops::translate(x=4, y=4, z=0) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3, width=3, x=0, y=0) ->
+      Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) ->
+        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
 
 Export of "../books/language/src/libraries/builtin/.test/builtin_translate-out.svg" successful.
 -- Test Result --

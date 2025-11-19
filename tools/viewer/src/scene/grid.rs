@@ -1,8 +1,12 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Viewer materials.
 
+use bevy::render::{
+    camera::{Camera, Projection},
+    mesh::{Mesh, Mesh3d},
+};
 use bevy::{
     asset::Assets,
     ecs::{
@@ -13,16 +17,9 @@ use bevy::{
     pbr::MeshMaterial3d,
     transform::components::Transform,
 };
-use bevy::{
-    ecs::event::EventReader,
-    render::{
-        camera::{Camera, Projection},
-        mesh::{Mesh, Mesh3d},
-    },
-};
 
-use crate::*;
 use crate::{scene::get_current_zoom_level, state::State};
+use crate::{to_bevy::ToBevy, *};
 
 pub fn spawn_grid_plane(
     mut commands: Commands,
@@ -33,11 +30,18 @@ pub fn spawn_grid_plane(
     let plane = Mesh::from(Plane3d::new(Vec3::Z, Vec2::new(1000.0, 1000.0)));
     let mesh_handle = meshes.add(plane);
 
+    let theme = &state.config.theme;
+
     state.scene.grid_entity = Some(
         commands
             .spawn((
                 Mesh3d(mesh_handle),
-                MeshMaterial3d(materials.add(material::Grid::default())),
+                MeshMaterial3d(materials.add(material::Grid {
+                    grid_color: theme.darker.to_bevy(),
+                    x_axis_color: theme.bright.to_bevy(),
+                    y_axis_color: theme.bright.to_bevy(),
+                    ..Default::default()
+                })),
                 bevy::picking::Pickable::IGNORE,
             ))
             .id(),
@@ -76,23 +80,6 @@ pub fn update_grid_on_view_angle_change(
             && let Some(material) = materials.get_mut(material)
         {
             material.view_angle = transform.forward().normalize();
-        }
-    }
-}
-
-/// Update grid material when scene radius has changed.
-pub fn update_grid_on_scene_change(
-    mut events: EventReader<super::SceneRadiusChangeEvent>,
-    mut materials: ResMut<Assets<material::Grid>>,
-    state: Res<State>,
-    mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
-) {
-    for event in events.read() {
-        if let Some(grid) = state.scene.grid_entity
-            && let Ok(material) = mat_query.get(grid)
-            && let Some(material) = materials.get_mut(material)
-        {
-            material.radius = event.new_radius;
         }
     }
 }

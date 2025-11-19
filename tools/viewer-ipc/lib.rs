@@ -1,4 +1,4 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::path::PathBuf;
@@ -67,7 +67,7 @@ impl ViewerProcessInterface {
             let mut child = std::process::Command::new(
                 std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
             )
-            .arg("--stdin") // run the slave binary
+            .arg("stdin") // run the slave binary
             .arg("-P")
             .arg(std_search_path.to_str().unwrap())
             .current_dir(std::env::current_dir().unwrap())

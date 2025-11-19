@@ -102,7 +102,8 @@ impl EvalContext {
                 )
             })?;
 
-        if model.is_empty_model() {
+        if model.has_no_output() {
+            // TODO Check if we can simply return Some(model) even if there is no output.
             Ok(None)
         } else {
             Ok(Some(model))

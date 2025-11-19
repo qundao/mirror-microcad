@@ -32,6 +32,11 @@ impl Bounds2D {
         self.width().max(self.height())
     }
 
+    /// Calculate center of bounds.
+    pub fn center(&self) -> Vec2 {
+        (self.min + self.max) * 0.5
+    }
+
     /// Return rect.
     pub fn rect(&self) -> Option<Rect> {
         if self.is_valid() {
@@ -44,7 +49,7 @@ impl Bounds2D {
         }
     }
 
-    /// Enlarge bounds by a factor and return new bounds
+    /// Enlarge bounds by a factor and return new bounds.
     pub fn enlarge(&self, factor: Scalar) -> Self {
         match self.rect() {
             Some(rect) => {
@@ -76,6 +81,32 @@ impl Bounds2D {
     pub fn radius(&self) -> Scalar {
         use cgmath::InnerSpace;
         (self.max - self.min).magnitude() * 0.5
+    }
+
+    /// Distance to boundary from the bounds' center.
+    pub fn distance_center_to_boundary(&self, dir: Vec2) -> Length {
+        let center = self.center();
+
+        // Handle x-axis intersections
+        let tx = if dir.x > 0.0 {
+            (self.max.x - center.x) / dir.x
+        } else if dir.x < 0.0 {
+            (self.min.x - center.x) / dir.x
+        } else {
+            f64::INFINITY
+        };
+
+        // Handle y-axis intersections
+        let ty = if dir.y > 0.0 {
+            (self.max.y - center.y) / dir.y
+        } else if dir.y < 0.0 {
+            (self.min.y - center.y) / dir.y
+        } else {
+            f64::INFINITY
+        };
+
+        // Return the smallest positive intersection
+        Length::mm(tx.min(ty))
     }
 }
 

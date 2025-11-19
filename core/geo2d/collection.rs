@@ -9,7 +9,7 @@ use std::rc::Rc;
 
 use crate::{
     geo2d::{CalcBounds2D, bounds::Bounds2D},
-    traits::{TotalMemory, VertexCount},
+    traits::{DistributeGrid, TotalMemory, VertexCount},
     *,
 };
 
@@ -144,6 +144,22 @@ impl From<Geometries2D> for MultiPolygon {
                 .flat_map(|geo| {
                     let multi_polygon: MultiPolygon = geo.as_ref().clone().into();
                     multi_polygon.0
+                })
+                .collect(),
+        )
+    }
+}
+
+impl DistributeGrid for Geometries2D {
+    fn distribute_grid(&self, rect: Rect, rows: Integer, columns: Integer) -> Self {
+        Geometries2D(
+            GridCells::new(rect, rows, columns)
+                .zip(self.0.iter())
+                .map(|(cell, geo)| {
+                    let center = geo.calc_bounds_2d().center();
+                    let cell_center: Vec2 = cell.center().x_y().into();
+                    let d = center - cell_center;
+                    Rc::new(geo.transformed_2d(&Mat3::from_translation(d)))
                 })
                 .collect(),
         )

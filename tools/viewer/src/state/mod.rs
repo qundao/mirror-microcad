@@ -1,40 +1,44 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! microcad Viewer State module.
 
-use std::{
-    sync::{Arc, Mutex},
-    time::SystemTime,
-};
+mod cursor;
+mod event;
+mod model;
 
 use bevy::ecs::resource::Resource;
 
-use crate::{
-    Config, plugin::MicrocadPluginMode, processor::ProcessorInterface, scene::Scene,
-    stdin::StdinMessageReceiver,
-};
+use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, scene::Scene};
 
+pub use cursor::Cursor;
+pub use event::{StateEvent, handle_state_event};
+pub use model::ModelViewState;
+
+/// The application state (the bevy view model).
 #[derive(Resource)]
 pub struct State {
-    pub mode: MicrocadPluginMode,
+    /// Input interface (e.g. file or stdin).
+    pub input: Option<MicrocadPluginInput>,
+    /// The configuration settings of loaded at startup.
     pub config: Config,
-    pub last_modified: Arc<Mutex<Option<SystemTime>>>,
+    /// The scene entities to be spawned and rendered.
     pub scene: Scene,
+    /// Information at cursor positions (view cursor and editor cursor).
+    pub cursor: Cursor,
+    /// The µcad geometry processor.
     pub processor: ProcessorInterface,
-    pub stdin: Option<StdinMessageReceiver>,
 }
 
 impl State {
-    /// Create new state from arguments
-    pub fn new(mode: MicrocadPluginMode, config: Config) -> Self {
+    /// Create new state from arguments.
+    pub fn new(input: Option<MicrocadPluginInput>, config: Config) -> Self {
         Self {
-            mode,
+            input,
             config,
-            last_modified: Default::default(),
+            cursor: Default::default(),
             scene: Default::default(),
             processor: ProcessorInterface::run(),
-            stdin: None,
         }
     }
 }

@@ -66,6 +66,42 @@ impl Iterator for Descendants {
     }
 }
 
+/// Iterator over all descendants of multiplicities.
+pub struct MultiplicityDescendants {
+    stack: Models,
+}
+
+impl MultiplicityDescendants {
+    /// Create new descendants iterator
+    pub fn new(root: Model) -> Self {
+        Self {
+            stack: root
+                .borrow()
+                .children
+                .iter()
+                .rev()
+                .cloned()
+                .collect::<Vec<_>>()
+                .into(),
+        }
+    }
+}
+
+impl Iterator for MultiplicityDescendants {
+    type Item = Model;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let model = self.stack.pop();
+        if let Some(ref model) = model {
+            let model_ = model.borrow();
+            if matches!(model_.element(), Element::Multiplicity) {
+                self.stack.extend(model_.children.iter().rev().cloned());
+            }
+        }
+        model
+    }
+}
+
 /// Iterator over all parents of a [`Model`].
 pub struct Parents {
     model: Option<Model>,

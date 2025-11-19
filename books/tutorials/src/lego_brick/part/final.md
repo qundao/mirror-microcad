@@ -14,7 +14,7 @@ const SPACING = 8mm;
 op grid(columns: Integer, rows: Integer) {
     @input
         .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
-        .align()
+        .center()
 }
 
 sketch Base(

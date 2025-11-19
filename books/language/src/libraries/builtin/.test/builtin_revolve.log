@@ -7,21 +7,21 @@
   55:   use __builtin::*;
   56:   
   57:   std::geo2d::Circle(10mm)
-  58:       .ops::translate(x = 20.0, y = 0.0, z = 0.0)
-  59:       .ops::revolve(revolve_degrees = 360.0);
+  58:       .ops::translate(x = 20.0mm, y = 0.0mm, z = 0.0mm)
+  59:       .ops::revolve(angle = 360.0°);
 
 -- Output --
 
 -- Errors --
 -- Model --
   Group (root) ->
-    Operation __builtin::ops::revolve(revolve_degrees=360) ->
-      Transform __builtin::ops::translate(x=20, y=0, z=0) ->
+    Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+      Transform __builtin::ops::translate(x=20mm, y=0mm, z=0mm) ->
         Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
           - center = (x=0mm, y=0mm)
           - radius = 10mm
-          Transform __builtin::ops::translate(x=0, y=0, z=0) ->
-            Primitive2D __builtin::geo2d::Circle(radius=10) ->
+          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+            Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
 
 Export of "../books/language/src/libraries/builtin/.test/builtin_revolve-out.stl" successful.
 -- Test Result --

@@ -1,13 +1,23 @@
-pub use __builtin::ops::subtract;
-pub use __builtin::ops::intersect;
-pub use __builtin::ops::union;
+pub use __builtin::ops::center;
 pub use __builtin::ops::hull;
-pub use __builtin::ops::align;
+pub use __builtin::ops::intersect;
+pub use __builtin::ops::subtract;
+pub use __builtin::ops::multiply;
+pub use __builtin::ops::union;
 
+/// Align a geometry collection along an axis with a certain spacing.
+pub op align(direction: Vec3, spacing = 0mm) {
+	@input.__builtin::ops::align(
+		x = direction.x,
+		y = direction.y,
+		z = direction.z,
+		spacing
+	)
+}
 
 /// Create a new geometry whose boundary is offset the specified distance from the input.
 pub op buffer(distance: Length) {
-	@input.__builtin::ops::buffer(distance = distance / 1mm);
+	@input.__builtin::ops::buffer(distance);
 }
 
 /// Generate a contour geometry out of an input geometry.
@@ -16,56 +26,86 @@ pub op contour(thickness: Length, distance = 0mm) {
 }
 
 
+/// Distribute geometries within a 2D rectangular grid.
+///
+/// The `distribute_grid` operator arranges elements evenly inside a rectangular region,
+/// subdivided into a specified number of rows and columns. Each grid cell receives
+/// one element, allowing for structured placement of objects, points, or geometries.
+///
+/// The grid is defined by its position (`x`, `y`), total dimensions (`width`, `height`),
+/// and subdivision counts (`rows`, `columns`).
+pub op distribute_grid(x: Length, y: Length, width: Length, height: Length, rows: Integer, columns: Integer) {
+	/// Initialize a centered rectangular grid.
+	init(width: Length, height: Length, rows: Integer, columns: Integer) {
+        x = -width / 2.0; // center x
+        y = -height / 2.0; // center y
+    }
+
+	/// Initialize a centered square grid.
+	///
+	/// The `init` helper simplifies grid creation by specifying a single `size`
+	/// value instead of separate width and height. It automatically centers
+	/// the grid around the origin and defines its overall dimensions.
+	init(size: Length, rows: Integer, columns: Integer) {
+        width = size;
+        height = size;
+        x = -size / 2.0; // center x
+        y = -size / 2.0; // center y
+    }
+
+	/// Initialize a centered grid with a squared cell size.
+	///
+	/// The `init` helper simplifies grid creation by specifying a single `cell_size`
+	/// value instead of separate width and height. It automatically centers
+	/// the grid around the origin and defines its overall dimensions.
+	init(cell_size: Length, rows: Integer, columns: Integer) {
+		width = cell_size * columns;
+        height = cell_size * rows;
+        x = -width / 2.0; // center x
+        y = -height / 2.0; // center y
+    }
+
+
+	@input.__builtin::ops::distribute_grid(x, y, width, height, rows, columns)
+}
+
 /// Linear extrude a 2D geometry into a 3D.
 pub op extrude(
 		height: Length,
-		scale = (x = 100%, y = 100%)) {
+		scale = (x = 100%, y = 100%),
+		twist = 0°,
+) {
 	init(z: Length) {
 		height = z;
 		scale = (x = 100%, y = 100%);
+		twist = 0°;
 	}
 
-    @input.__builtin::ops::extrude(height = height / 1mm, scale_x = scale.x, scale_y = scale.y);
+    @input.__builtin::ops::extrude(height, scale_x = scale.x, scale_y = scale.y, twist);
 }
 
 /// Mirror along an axis, keeping existing geometry.
 pub op mirror(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
 	@input.__builtin::ops::mirror(
-		x = x / 1mm, y = y / 1mm, z = z / 1mm,
-		nx = n.x, ny = n.y, nz = n.z
+		x, y, z, nx = n.x, ny = n.y, nz = n.z
 	)
 }
 
+/// Orient an object towards a vector.
+pub op orient(v: Vec3) {
+    @input.__builtin::ops::orient(x = v.x, y = v.y, z = v.z);
+}
+
+/// Reflect a geometry along an axis.
+pub op reflect(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
+	@input.__builtin::ops::reflect(
+		x, y, z, nx = n.x, ny = n.y, nz = n.z
+	)
+}
+
+/// Revolve a geometry around 360°.
 pub op revolve(angle = 360°) {
-    @input.__builtin::ops::revolve(
-        revolve_degrees = angle / 1°
-    );
-}
-
-pub op spiralize(
-	inner_radius: Length, 
-	outer_radius: Length,
-	angle: Angle,
-	height = 0mm
-) {
-    @input.__builtin::ops::spiralize(
-        height = height / 1mm,
-		inner_radius = inner_radius / 1mm,
-		outer_radius = outer_radius / 1mm,
-		turns = angle / 1turns
-    );
-}
-
-pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
-
-	/// Polar-style translage with distance and angle.
-	init(distance: Length, angle: Angle) {
-		x = distance * __builtin::math::cos(angle);
-		y = distance * __builtin::math::sin(angle);
-		z = 0.0mm;
-	}
-
-	@input.__builtin::ops::translate(x = x / 1mm, y = y / 1mm, z = z / 1mm);
+    @input.__builtin::ops::revolve(angle);
 }
 
 /// An operation that rotates a part.
@@ -157,8 +197,25 @@ pub op scale(v: Vec3) {
 	@input.__builtin::ops::scale(x = v.x, y = v.y, z = v.z);
 }
 
-
-/// Orient an object towards a vector.
-pub op orient(v: Vec3) {
-    @input.__builtin::ops::orient(x = v.x, y = v.y, z = v.z);
+/// Create a spiral with a height and an inner and outer radius.
+pub op spiralize(
+	inner_radius: Length, 
+	outer_radius: Length,
+	angle: Angle,
+	height = 0mm
+) {
+    @input.__builtin::ops::spiralize(height, inner_radius, outer_radius, angle);
 }
+
+/// An operation that translates (moves) a geometry.
+pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
+	/// Polar-style translage with distance and angle.
+	init(distance: Length, angle: Angle) {
+		x = distance * __builtin::math::cos(angle);
+		y = distance * __builtin::math::sin(angle);
+		z = 0.0mm;
+	}
+
+	@input.__builtin::ops::translate(x, y, z);
+}
+

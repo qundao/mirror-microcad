@@ -29,7 +29,7 @@ pub use workpiece::*;
 
 use derive_more::{Deref, DerefMut};
 
-use microcad_core::BooleanOp;
+use microcad_core::{BooleanOp, Integer};
 
 use crate::{
     diag::WriteToFile,
@@ -62,7 +62,7 @@ impl Model {
     }
 
     /// Return `true`, if model wont produce any output
-    pub fn is_empty_model(&self) -> bool {
+    pub fn has_no_output(&self) -> bool {
         let self_ = self.borrow();
         match self_.element.value {
             Element::BuiltinWorkpiece(_) | Element::InputPlaceholder => false,
@@ -124,6 +124,11 @@ impl Model {
         Models::from(vec![self.clone(), other]).boolean_op(op)
     }
 
+    /// Multiply a model n times.
+    pub fn multiply(&self, n: Integer) -> Vec<Model> {
+        (0..n).map(|_| self.make_deep_copy()).collect()
+    }
+
     /// Replace each input placeholder with copies of `input_model`.
     pub fn replace_input_placeholders(&self, input_model: &Model) -> Self {
         self.descendants().for_each(|model| {
@@ -165,12 +170,10 @@ impl Model {
     /// This function is used when we evaluate operations like `subtract() {}` or `hull() {}`.
     /// When evaluating these operations, we want to iterate over the group's children.
     pub fn into_group(&self) -> Option<Model> {
-        self.borrow().children.single_model().filter(|model| {
-            matches!(
-                model.borrow().element.value,
-                Element::Group | Element::Multiplicity
-            )
-        })
+        self.borrow()
+            .children
+            .single_model()
+            .filter(|model| matches!(model.borrow().element.value, Element::Group))
     }
 
     /// Set the id of a model. This happens if the model was created by an assignment.
@@ -188,6 +191,11 @@ impl Model {
     /// Includes the current model.
     pub fn descendants(&self) -> Descendants {
         Descendants::new(self.clone())
+    }
+
+    /// An iterator that descends to multiplicity nodes.
+    pub fn multiplicity_descendants(&self) -> MultiplicityDescendants {
+        MultiplicityDescendants::new(self.clone())
     }
 
     /// Returns an iterator of models that belong to the same source file as this one

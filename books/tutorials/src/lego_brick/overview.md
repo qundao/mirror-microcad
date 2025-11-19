@@ -15,7 +15,7 @@ sketch Base(width: Length, height: Length) {
     frame = Frame(width, height, thickness);
     struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
         .translate(x = [0..2] * SPACING)
-        .align();
+        .center();
     frame | struts;
 }
 
@@ -23,7 +23,7 @@ use Rect as Cap;
 
 sketch Knobs() {
     Circle(d = 4.8mm, c = (x = [0..3] * SPACING, y = [0..1] * SPACING))
-        .align();
+        .center();
 }
 
 width = 31.8mm;

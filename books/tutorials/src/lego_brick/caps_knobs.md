@@ -42,16 +42,16 @@ because `x` is `[-1..2]` (which is `[-1, 0, 1, 2]`) and `y` is `[0..1]`, we now 
 element in the middle anymore.
 So we have to subtract `0.5` from all the array values before multiplying with `8mm` to get a centered result.
 
-To avoid this complication we can use the operation `align()`.
+To avoid this complication we can use the operation `center()`.
 By default, if we do not pass any arguments to operation, it will center the object to origin.
 
-[![test](.test/knobs_align.svg)](.test/knobs_align.log)
+[![test](.test/knobs_center.svg)](.test/knobs_center.log)
 
-```µcad,knobs_align
+```µcad,knobs_center
 std::geo2d::Circle(d = 4.8mm, c = (
         x = [0..3] * 8mm, 
         y = [0..1] * 8mm)
-    ).std::ops::align();
+    ).std::ops::center();
 ```
 
 ![Picture](.test/knobs_align-out.svg)
@@ -74,7 +74,7 @@ Let's create a sketch for the knobs:
 ```µcad,knobs
 sketch Knobs(diameter = 4.8mm) {
     std::geo2d::Circle(d = 4.8mm, c = (x = [0..3] * 8mm, y = [0..1] * 8mm))
-        .std::ops::align();
+        .std::ops::center();
 }
 
 Knobs();

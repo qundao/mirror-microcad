@@ -1,30 +1,52 @@
 use std::geo2d::*;
 use std::ops::*;
+use std::math::*;
 
 const SPACING = 8mm;
+const THICKNESS = 1.2mm;
+const BASE_HEIGHT = 9.6mm;
+const TOLERANCE = 0.2mm;
 
-width = 4 * SPACING - 0.2mm;
-height = 2 * SPACING - 0.2mm;
-thickness = 1.2mm;
-base_height = 9.6mm;
+part LegoBrick(rows = 2, columns = 4, base_height = BASE_HEIGHT) {
+    width = columns * SPACING - TOLERANCE;
+    height = rows * SPACING - TOLERANCE;
 
-base = {
-    Frame(width, height, thickness);
-    Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-        .translate(x = [-1..1] * SPACING);
+    base = {
+        Frame(width, height, THICKNESS);
+        r = rows - 1;
+        c = columns - 1;
+        n_rings = r * c;
+        if n_rings > 0 {
+            Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+                .multiply(n_rings)
+                .distribute_grid(
+                    width = width - width / columns,
+                    height = height - height / rows,
+                    rows = r, 
+                    columns = c
+                );
+        }
     }
-    .extrude(base_height - thickness);
+    .extrude(base_height - THICKNESS);
 
-    
-knobs = Circle(d = 4.8mm)
-    .translate(x = [1..4] * SPACING, y = [1..2] * SPACING)
-    .align()
-    .extrude(1.7mm)
-    .translate(z = base_height);
+    cap = Rect(width, height).extrude(THICKNESS);
 
-cap = Rect(width, height)
-    .extrude(thickness)
-    .translate(z = base_height - thickness);
+    knobs = Circle(d = 4.8mm)
+        .multiply(rows * columns)
+        .distribute_grid(width, height, rows, columns)
+        .extrude(1.7mm);
 
-#[color = std::color::RED]
-base | knobs | cap;
+    { base; cap; knobs; }.align(Z).union();
+}
+
+n = 4;
+
+LegoBrick(
+    rows = [1..n], 
+    columns = [1..n], 
+    base_height = BASE_HEIGHT * [1 / 3, 100%, 200%, 300%]
+)
+.distribute_grid(cell_size = n * 10mm, 
+    rows = 2*n, 
+    columns = 2*n,
+);

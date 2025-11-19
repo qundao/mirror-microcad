@@ -6,10 +6,6 @@ sketch Heart(size: Length) {
     Circle(d = size).translate(x = [r, -r], y = r) | Rect(size).rotate(45°);
 }
 
-op contour(thickness: Length, distance = 0mm) {
-    @input.buffer(distance + thickness / 2) - @input.buffer(distance - thickness / 2);
-}
-
 heart = Heart(100mm);
 
 bottom = {

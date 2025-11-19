@@ -3,6 +3,7 @@
 
 //! 3D Geometry
 
+mod align;
 mod bounds;
 mod collection;
 mod extrude;
@@ -13,6 +14,7 @@ mod reflect;
 mod triangle;
 mod vertex;
 
+pub use align::*;
 pub use bounds::*;
 pub use collection::*;
 pub use extrude::*;

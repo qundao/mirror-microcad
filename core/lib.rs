@@ -11,33 +11,36 @@ pub mod core_error;
 pub mod geo2d;
 #[cfg(feature = "geo3d")]
 pub mod geo3d;
+pub mod length;
 pub mod render;
-pub mod theme;
 pub mod traits;
 pub mod triangle;
 
-/// Primitive integer type
+/// Primitive integer type.
 pub type Integer = i64;
-/// Primitive floating point type
+/// Primitive floating point type.
 pub type Scalar = f64;
-/// 2D vector type
+/// 2D vector type.
 pub type Vec2 = cgmath::Vector2<Scalar>;
-/// 3D vector type
+/// 3D vector type.
 pub type Vec3 = cgmath::Vector3<Scalar>;
-/// 4D vector type
+/// 4D vector type.
 pub type Vec4 = cgmath::Vector4<Scalar>;
-/// 2D matrix type
+/// 2D matrix type.
 pub type Mat2 = cgmath::Matrix2<Scalar>;
-/// 3D matrix type
+/// 3D matrix type.
 pub type Mat3 = cgmath::Matrix3<Scalar>;
-/// 4D matrix type
+/// 4D matrix type.
 pub type Mat4 = cgmath::Matrix4<Scalar>;
 /// Primitive angle type in radians.
 pub type Angle = cgmath::Rad<Scalar>;
+/// Length type.
+pub use length::Length;
 
 /// Constants.
 pub mod consts {
     pub use std::f64::consts::PI;
+    pub use std::f64::consts::TAU;
 }
 
 pub use boolean_op::BooleanOp;

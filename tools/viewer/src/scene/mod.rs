@@ -1,8 +1,9 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! microcad viewer scene elements and routines.
 
+use crate::*;
 use bevy::prelude::*;
 
 mod angle;
@@ -36,6 +37,7 @@ pub fn get_current_resolution(projection: &Projection, window: &Window) -> f32 {
 pub fn draw_mesh_intersections(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,
     mut gizmos: Gizmos,
+    state: Res<State>,
     projections: Query<&Projection>,
 ) {
     for (_entity, hit) in pointers
@@ -46,11 +48,8 @@ pub fn draw_mesh_intersections(
             let proj = projections.iter().next().unwrap();
 
             let zoom = get_current_zoom_level(proj);
-            gizmos.sphere(
-                position,
-                zoom * 0.1,
-                bevy::color::palettes::tailwind::RED_500,
-            );
+            let color: Color = state.config.theme.guide.to_bevy();
+            gizmos.sphere(position, zoom * 0.1, color);
         }
     }
 }
@@ -82,26 +81,18 @@ impl Default for Scene {
     }
 }
 
-#[derive(Event)]
-pub struct SceneRadiusChangeEvent {
-    pub new_radius: f32,
-}
-
 pub struct ScenePlugin;
 
 impl Plugin for ScenePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(camera::camera_controller::CameraControllerPlugin)
-            .add_event::<SceneRadiusChangeEvent>()
             .add_systems(Update, lighting::spawn_lights)
             .add_systems(Startup, grid::spawn_grid_plane)
             //.add_systems(Startup, angle::spawn_angle_plane)
             //.add_systems(Startup, ruler::spawn_ruler_plane)
             .add_systems(Startup, camera::setup_camera)
-            .add_systems(Update, camera::update_camera_on_scene_change)
             .add_systems(Update, draw_mesh_intersections)
             .add_systems(Update, grid::update_grid)
-            .add_systems(Update, grid::update_grid_on_scene_change)
             .add_systems(Update, grid::update_grid_on_view_angle_change);
     }
 }

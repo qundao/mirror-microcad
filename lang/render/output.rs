@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Model output types.
+//! Render output type.
 
 use std::{
     hash::{Hash, Hasher},
@@ -19,12 +19,38 @@ pub type Geometry2DOutput = Rc<WithBounds2D<Geometry2D>>;
 pub type Geometry3DOutput = Rc<WithBounds3D<Geometry3D>>;
 
 /// Geometry output to be stored in the render cache.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, derive_more::From)]
 pub enum GeometryOutput {
     /// 2D output.
     Geometry2D(Geometry2DOutput),
     /// 3D output.
     Geometry3D(Geometry3DOutput),
+}
+
+impl GeometryOutput {
+    /// The radius of a centered circle that wraps the output geometries bounds on the ground.
+    pub fn ground_radius(&self) -> Length {
+        let mut bounds = match &self {
+            GeometryOutput::Geometry2D(geo2d) => geo2d.bounds.clone(),
+            GeometryOutput::Geometry3D(geo3d) => {
+                Bounds2D::new(geo3d.bounds.min.truncate(), geo3d.bounds.max.truncate())
+            }
+        };
+        bounds.extend_by_point(Vec2::new(0.0, 0.0));
+        Length::mm(bounds.radius())
+    }
+
+    /// The radius of a centered sphere, that wrap the geometries bounds.
+    pub fn scene_radius(&self) -> Length {
+        let mut bounds = match &self {
+            GeometryOutput::Geometry2D(geo2d) => {
+                Bounds3D::new(geo2d.bounds.min.extend(0.0), geo2d.bounds.max.extend(0.0))
+            }
+            GeometryOutput::Geometry3D(geo3d) => geo3d.bounds.clone(),
+        };
+        bounds.extend_by_point(Vec3::new(0.0, 0.0, 0.0));
+        Length::mm(bounds.radius())
+    }
 }
 
 impl From<Geometry2D> for GeometryOutput {
@@ -36,18 +62,6 @@ impl From<Geometry2D> for GeometryOutput {
 impl From<Geometry3D> for GeometryOutput {
     fn from(geo: Geometry3D) -> Self {
         Self::Geometry3D(Rc::new(geo.into()))
-    }
-}
-
-impl From<Geometry2DOutput> for GeometryOutput {
-    fn from(geo: Geometry2DOutput) -> Self {
-        Self::Geometry2D(geo)
-    }
-}
-
-impl From<Geometry3DOutput> for GeometryOutput {
-    fn from(geo: Geometry3DOutput) -> Self {
-        Self::Geometry3D(geo)
     }
 }
 
@@ -118,6 +132,22 @@ impl RenderOutput {
     pub fn local_matrix(&self) -> Option<Mat4> {
         self.local_matrix
     }
+
+    /// The radius of a centered circle that wraps the output geometries bounds on the ground.
+    pub fn ground_radius(&self) -> Length {
+        self.geometry
+            .as_ref()
+            .map(|geo| geo.ground_radius())
+            .unwrap_or_default()
+    }
+
+    /// The radius of a centered sphere that wraps the output geometries bounds.
+    pub fn scene_radius(&self) -> Length {
+        self.geometry
+            .as_ref()
+            .map(|geo| geo.scene_radius())
+            .unwrap_or_default()
+    }
 }
 
 impl std::fmt::Display for RenderOutput {
@@ -149,5 +179,23 @@ impl std::fmt::Display for RenderOutput {
 impl ComputedHash for RenderOutput {
     fn computed_hash(&self) -> HashId {
         self.hash
+    }
+}
+
+impl CalcBounds2D for RenderOutput {
+    fn calc_bounds_2d(&self) -> Bounds2D {
+        match &self.geometry {
+            Some(GeometryOutput::Geometry2D(output)) => output.bounds.clone(),
+            _ => Bounds2D::default(),
+        }
+    }
+}
+
+impl CalcBounds3D for RenderOutput {
+    fn calc_bounds_3d(&self) -> Bounds3D {
+        match &self.geometry {
+            Some(GeometryOutput::Geometry3D(output)) => output.bounds.clone(),
+            _ => Bounds3D::default(),
+        }
     }
 }
