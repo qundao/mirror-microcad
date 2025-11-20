@@ -28,15 +28,13 @@ pub fn model_rc_from_items<T: Sized + Clone + 'static>(items: Vec<T>) -> slint::
 
 impl From<&SrcRef> for VM_SrcRef {
     fn from(src_ref: &SrcRef) -> Self {
+        let src_ref = src_ref.as_ref();
         Self {
-            line: src_ref
-                .as_ref()
-                .map(|src_ref| src_ref.at.line)
-                .unwrap_or_default() as i32,
-            col: src_ref
-                .as_ref()
-                .map(|src_ref| src_ref.at.col)
-                .unwrap_or_default() as i32,
+            line: src_ref.map(|src_ref| src_ref.at.line).unwrap_or_default() as i32,
+            col: src_ref.map(|src_ref| src_ref.at.col).unwrap_or_default() as i32,
+            source_hash: src_ref
+                .map(|src_ref| format!("{:016X}", src_ref.source_file_hash).into())
+                .unwrap_or_default(),
         }
     }
 }
