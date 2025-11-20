@@ -46,7 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 vscode.window.showErrorMessage("No active editor");
                 return;
             }
-            const uri = editor.document.uri.toString();
+            const uri = editor.document.uri;
             try {
                 const result = await client.sendRequest("workspace/executeCommand", {
                     command: "microcad.showPreview",

@@ -144,33 +144,54 @@ impl LanguageServer for Backend {
         &self,
         params: ExecuteCommandParams,
     ) -> Result<Option<serde_json::Value>> {
+        log::trace!("{params:?}");
         match params.command.as_str() {
             "microcad.showPreview" => {
                 if let Some(arg) = params.arguments.first() {
-                    let uri = arg["uri"].as_str().unwrap().to_string();
-                    log::info!("ShowPreview received for {uri}");
-                    if let Ok(uri) = Url::parse(&uri) {
-                        self.processor
-                            .send_request(ProcessorRequest::DocumentPreview(uri.clone()))
-                            .expect("processor request failed");
-                        self.client
-                            .log_message(MessageType::INFO, format!("Preview generated for {uri}"))
-                            .await;
+                    let uri = match uri_obj_to_lsp_url(match arg.get("uri") {
+                        Some(v) => v,
+                        None => {
+                            log::error!("Missing 'uri' field");
+                            return Ok(Some(serde_json::json!({
+                                "error": "Missing 'uri' field"
+                            })));
+                        }
+                    }) {
+                        Ok(uri) => uri,
+                        Err(err) => {
+                            return Ok(Some(serde_json::json!(format!(
+                                "Parsing uri failed: {err}"
+                            ))));
+                        }
+                    };
 
-                        return Ok(Some(serde_json::json!({ "ok": true })));
-                    } else {
-                        return Ok(Some(serde_json::json!({
-                            "error": "Missing or invalid 'uri' field (must be a string)"
-                        })));
+                    log::info!("ShowPreview received for {uri}");
+                    if let Err(err) = self
+                        .processor
+                        .send_request(ProcessorRequest::DocumentShowPreview(uri.clone()))
+                    {
+                        return Ok(Some(serde_json::json!(format!(
+                            "processor request failed: {err}"
+                        ))));
                     }
+
+                    self.client
+                        .log_message(MessageType::INFO, format!("Preview generated for {uri}"))
+                        .await;
+
+                    return Ok(Some(serde_json::json!({ "ok": true })));
                 }
             }
             "microcad.hidePreview" => {
                 log::info!("HidePreview received");
-
-                self.processor
+                if let Err(err) = self
+                    .processor
                     .send_request(ProcessorRequest::DocumentHidePreview)
-                    .expect("processor request failed");
+                {
+                    return Ok(Some(serde_json::json!(format!(
+                        "processor request failed:{err}"
+                    ))));
+                }
                 self.client
                     .log_message(MessageType::INFO, "Preview hidden")
                     .await;
@@ -283,4 +304,25 @@ async fn main() {
         let (read, write) = tokio::io::split(stream);
         Server::new(read, write, socket).serve(service).await;
     };
+}
+
+fn uri_obj_to_lsp_url(uri_obj: &serde_json::Value) -> std::result::Result<Url, String> {
+    // Versuche zuerst das "external"-Feld
+    if let Some(external) = uri_obj.get("external").and_then(serde_json::Value::as_str) {
+        return Url::parse(external).map_err(|e| {
+            log::info!("Failed to parse external URL: {e}");
+            format!("Failed to parse external URL: {e}")
+        });
+    }
+
+    // Falls external fehlt, versuche fsPath
+    if let Some(fs_path) = uri_obj.get("fsPath").and_then(serde_json::Value::as_str) {
+        log::info!("convert fsPath to URL: {fs_path}");
+        return Url::from_file_path(fs_path).map_err(|_| {
+            log::info!("Failed to convert fsPath to URL: {fs_path}");
+            format!("Failed to convert fsPath to URL: {fs_path}")
+        });
+    }
+
+    Err("Neither external nor fsPath found in uri object".to_string())
 }
