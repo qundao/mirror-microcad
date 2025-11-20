@@ -48,13 +48,14 @@ component ViewItem inherits Rectangle {
 
     callback clicked;
     callback is-selected-changed;
+    callback selected();
 
     height: 32px;
     border-radius: 4px;
     background: Math.mod(self.index, 2) == 0 ? #f0f0f0 : #e0e0e0;
     Rectangle {
         // Hover effect
-        background: touch-area.has-hover ? #cce5ff : transparent;
+      //  background: touch-area.has-hover ? #cce5ff : transparent;
         width: root.width;
         height: root.height;
     }
@@ -74,7 +75,7 @@ component ViewItem inherits Rectangle {
         border-width: 2px;
     }
 
-    touch-area := TouchArea {
+    /*touch-area := TouchArea {
         width: root.width;
         height: root.height;
         clicked => {
@@ -83,7 +84,7 @@ component ViewItem inherits Rectangle {
             }
             root.clicked();
         }
-    }
+    }*/
 }
 
 component SourceCodeViewItem inherits ViewItem {
@@ -137,6 +138,8 @@ component LineNumberItem inherits Rectangle {
     callback clicked(src_ref: VM-SrcRef);
 
     width: 32px;
+    border-width: state.current-line == src_ref.line ? 1px : 0px;
+    border-color: black;
 
     Text {
         text: src-ref.line;
@@ -148,6 +151,8 @@ component LineNumberItem inherits Rectangle {
     }
 
     TouchArea {
+        width: root.width;
+        height: root.height;
         clicked => {
             debug(root.src_ref);
             root.clicked(root.src_ref);
@@ -158,17 +163,27 @@ component LineNumberItem inherits Rectangle {
 component ModelTreeViewItem inherits ViewItem {
     in property <ModelTreeModelItem> item;
     in property <VM-State> state;
+    is-selectable: true;
+    callback src_ref_clicked(src-ref: VM-SrcRef);
 
     element-info := LineNumberItem {
         src_ref: root.item.element.src_ref;
         state: root.state;
         background: #6d85ee;
+        clicked(src-ref) => {
+            root.selected();
+            root.src_ref_clicked(src-ref);
+        }
     }
 
     creator-info := LineNumberItem {
         src_ref: root.item.creator.src_ref;
         state: root.state;
         background: #6deec3;
+        clicked(src-ref) => {
+            root.selected();
+            root.src_ref_clicked(src-ref);
+        }
     }
 
     Rectangle {
@@ -202,12 +217,18 @@ component ControlPanel {
 export component MainWindow inherits Window {
     callback button-launch-viewer-clicked <=> control-panel.button-launch-viewer-clicked;
     callback button-send-source-code-clicked <=> control-panel.button-send-source-code-clicked;
+    callback src_ref_clicked(src-ref: VM-SrcRef);
 
     in property <string> source-code;
     in property <[SourceCodeModelItem]> source-code-model;
     in property <[ModelTreeModelItem]> model-tree;
     in property <[SymbolTreeModelItem]> symbol-tree;
-    in property <VM-State> state;
+    in-out property <VM-State> state;
+
+    src_ref_clicked(src_ref) => {
+        root.state.current-line = src-ref.line;
+        debug("Current line: {}", root.state.current-line);
+    }
 
     title: "µcad Inspector";
     default-font-family: "Jetbrains Mono";
@@ -247,8 +268,11 @@ export component MainWindow inherits Window {
                 for item[index] in root.model-tree: ModelTreeViewItem {
                     width: model-tree-view.viewport-width;
                     item: item;
-                    state: root.state;
+                    state <=> root.state;
                     index: index;
+                    src_ref_clicked(src-ref) => {
+                        root.src_ref_clicked(src-ref)
+                    }
                 }
             }
         }

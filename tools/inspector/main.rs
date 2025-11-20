@@ -50,6 +50,8 @@ pub enum ViewModelRequest {
     SetSymbolTree(Vec<SymbolTreeModelItem>),
     /// Set the model tree items.
     SetModelTree(Vec<ModelTreeModelItem>),
+    /// The current line of source code.
+    SetCurrentLine(u64),
 }
 
 struct Inspector {
@@ -153,6 +155,7 @@ impl Inspector {
 
                             main_window.set_state(VM_State {
                                 current_source_hash: hash_to_shared_string(hash),
+                                current_line: 1,
                             });
                             main_window.set_source_code(code.into());
                         }
@@ -161,6 +164,11 @@ impl Inspector {
                         }
                         ViewModelRequest::SetModelTree(items) => {
                             main_window.set_model_tree(to_slint::model_rc_from_items(items))
+                        }
+                        ViewModelRequest::SetCurrentLine(line) => {
+                            let mut state = main_window.get_state();
+                            state.current_line = line as i32;
+                            main_window.set_state(state);
                         }
                     })
                     .expect("No error");
