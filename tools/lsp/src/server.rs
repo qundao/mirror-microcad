@@ -144,7 +144,7 @@ impl LanguageServer for Backend {
         &self,
         params: ExecuteCommandParams,
     ) -> Result<Option<serde_json::Value>> {
-        log::trace!("{params:?}");
+        log::trace!("execute_command: {params:?}");
         match params.command.as_str() {
             "microcad.showPreview" => {
                 if let Some(arg) = params.arguments.first() {
