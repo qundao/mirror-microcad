@@ -1,1 +1,1 @@
-std::geo3d::Torus(major_radius = [45.0mm, 40.0mm, 20.0mm, 15.0mm], minor_radius = 1.0mm);
+std::geo3d::Torus([1..5] * 10mm, minor_radius = 3mm);
