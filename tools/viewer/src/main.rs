@@ -36,44 +36,51 @@ impl Args {
 
         match &self.input {
             Some(input) => {
-                if input.starts_with("stdin:") {
-                    let url = Url::parse("stdin://")?;
-                    return Ok(Some(url));
+                let (scheme, part) = input.split_once("://").unwrap_or(("file", input));
+                match scheme {
+                    "stdin" => {
+                        let url = Url::parse("stdin://")?;
+                        Ok(Some(url))
+                    }
+                    "file" => {
+                        // Split fragment first (after '#')
+                        let (path_and_query, fragment) = match part.split_once('#') {
+                            Some((before, frag)) => (before, Some(frag)),
+                            None => (part, None),
+                        };
+
+                        // Split query next (after '?')
+                        let (path_part, query) = match path_and_query.split_once('?') {
+                            Some((path, q)) => (path, Some(q)),
+                            None => (path_and_query, None),
+                        };
+
+                        // Canonicalize the path if relative
+                        let path = Path::new(path_part);
+                        let canonical_path: PathBuf = if path.is_absolute() {
+                            path.to_path_buf()
+                        } else {
+                            let path = std::env::current_dir()?.join(path_part);
+                            log::info!("Path: {path:?}");
+                            path.canonicalize()?
+                        };
+
+                        // Convert canonical path to file:// URL
+                        let mut url = Url::from_file_path(&canonical_path)
+                            .map_err(|_| anyhow::anyhow!("Failed to convert path to file URL"))?;
+
+                        // Set query and fragment if present
+                        if let Some(q) = query {
+                            url.set_query(Some(q));
+                        }
+                        if let Some(f) = fragment {
+                            url.set_fragment(Some(f));
+                        }
+
+                        Ok(Some(url))
+                    }
+                    scheme => Err(anyhow::anyhow!("Unknown scheme: {scheme}")),
                 }
-
-                // Split fragment first (after '#')
-                let (path_and_query, fragment) = match input.split_once('#') {
-                    Some((before, frag)) => (before, Some(frag)),
-                    None => (input.as_str(), None),
-                };
-
-                // Split query next (after '?')
-                let (path_part, query) = match path_and_query.split_once('?') {
-                    Some((path, q)) => (path, Some(q)),
-                    None => (path_and_query, None),
-                };
-
-                // Canonicalize the path if relative
-                let path = Path::new(path_part);
-                let canonical_path: PathBuf = if path.is_absolute() {
-                    path.to_path_buf()
-                } else {
-                    std::env::current_dir()?.join(path).canonicalize()?
-                };
-
-                // Convert canonical path to file:// URL
-                let mut url = Url::from_file_path(&canonical_path)
-                    .map_err(|_| anyhow::anyhow!("Failed to convert path to file URL"))?;
-
-                // Set query and fragment if present
-                if let Some(q) = query {
-                    url.set_query(Some(q));
-                }
-                if let Some(f) = fragment {
-                    url.set_fragment(Some(f));
-                }
-
-                Ok(Some(url))
             }
             None => Ok(None),
         }
