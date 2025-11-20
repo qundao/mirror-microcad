@@ -78,8 +78,9 @@ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, off
         height = h;
     }
 
+    s = radius_top / radius_bottom;
     std::geo2d::Circle(radius = radius_bottom)
-        .std::ops::extrude(height)
+        .std::ops::extrude(height, scale = (x = s, y = s))
         .std::ops::translate(z = offset)
 }
 
