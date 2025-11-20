@@ -261,12 +261,12 @@ fn run_camera_controller(
 
     let delta = accumulated_mouse_motion.delta;
 
-    let orbit_speed = 0.015;
+    let orbit_speed = 0.005;
     let orbit_distance = state.scene.radius * 3.0;
 
     if mouse_button_input.pressed(MouseButton::Left) {
         let yaw_rot = Quat::from_rotation_z(delta.x * orbit_speed);
-        let pitch_rot = Quat::from_rotation_x(delta.y * orbit_speed);
+        let pitch_rot = Quat::from_rotation_x(-delta.y * orbit_speed);
         transform.rotation = yaw_rot * transform.rotation * pitch_rot;
     }
 
