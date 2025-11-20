@@ -34,7 +34,7 @@ impl Render<Geometry2D> for Text {
 
         use geo::Simplify;
         let polygons = geo_rusttype::text_to_multi_polygon(&self.text, options)
-            .simplify(resolution.linear * 0.5);
+            .simplify(resolution.linear * 0.25);
 
         if let Some(center) = polygons.centroid() {
             use microcad_core::traits::Center;
