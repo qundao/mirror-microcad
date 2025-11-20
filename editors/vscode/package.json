@@ -53,8 +53,8 @@
     ],
     "commands": [
       {
-        "command": "microcad.helloWorld",
-        "title": "Hello World"
+        "command": "microcad.showPreview",
+        "title": "MicroCAD: Show Preview"
       }
     ]
   },

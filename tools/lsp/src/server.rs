@@ -13,10 +13,10 @@ use tower_lsp::{
         notification::Notification, DiagnosticOptions, DiagnosticServerCapabilities,
         DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
         DidSaveTextDocumentParams, DocumentDiagnosticParams, DocumentDiagnosticReport,
-        DocumentDiagnosticReportPartialResult, DocumentDiagnosticReportResult, InitializeParams,
-        InitializeResult, InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport,
-        ServerCapabilities, TextDocumentIdentifier, TextDocumentPositionParams,
-        TextDocumentSyncCapability, TextDocumentSyncKind,
+        DocumentDiagnosticReportPartialResult, DocumentDiagnosticReportResult,
+        ExecuteCommandParams, InitializeParams, InitializeResult, InitializedParams, MessageType,
+        RelatedFullDocumentDiagnosticReport, ServerCapabilities, TextDocumentIdentifier,
+        TextDocumentPositionParams, TextDocumentSyncCapability, TextDocumentSyncKind, Url,
     },
     Client, LanguageServer, LspService, Server,
 };
@@ -146,6 +146,32 @@ impl LanguageServer for Backend {
                 },
             ))
         }
+    }
+
+    async fn execute_command(
+        &self,
+        params: ExecuteCommandParams,
+    ) -> Result<Option<serde_json::Value>> {
+        match params.command.as_str() {
+            "microcad.showPreview" => {
+                if let Some(arg) = params.arguments.first() {
+                    let uri = arg["uri"].as_str().unwrap().to_string();
+                    log::info!("ShowPreview received for {uri}");
+                    if let Ok(uri) = Url::parse(&uri) {
+                        self.processor
+                            .send_request(ProcessorRequest::DocumentPreview(uri.clone()))
+                            .expect("processor request failed");
+                        self.client
+                            .log_message(MessageType::INFO, format!("Preview generated for {uri}"))
+                            .await;
+                    }
+                    return Ok(Some(serde_json::json!({ "ok": true })));
+                }
+            }
+            _ => log::info!("Unknown command '{}'", params.command),
+        }
+
+        Ok(None)
     }
 }
 

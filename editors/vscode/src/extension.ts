@@ -36,7 +36,33 @@ export async function activate(context: vscode.ExtensionContext) {
 
     await client.start();
 
-    // DISPOSABLE registrieren
+    const showPreviewCmd = vscode.commands.registerCommand(
+        "microcad.showPreview",
+        async () => {
+            if (!client) { return; }
+
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+                vscode.window.showErrorMessage("No active editor");
+                return;
+            }
+
+            const uri = editor.document.uri.toString();
+
+            try {
+                const result = await client.sendRequest("workspace/executeCommand", {
+                    command: "microcad.showPreview",
+                    arguments: [{ uri }]
+                });
+
+                vscode.window.showInformationMessage("Preview requested.");
+            } catch (err) {
+                vscode.window.showErrorMessage("Show Preview failed: " + err);
+            }
+        }
+    );
+
+    context.subscriptions.push(showPreviewCmd);
     context.subscriptions.push(client);
 }
 
