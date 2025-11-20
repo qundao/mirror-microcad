@@ -22,6 +22,10 @@ pub struct Args {
     #[arg(long, default_value = "false", action = clap::ArgAction::SetTrue)]
     stay_on_top: bool,
 
+    /// Verbosity level (use -v, -vv, or -vvv)
+    #[arg(short, action = clap::ArgAction::Count)]
+    pub(crate) verbose: u8,
+
     /// Paths to search for files.
     ///
     /// By default, `./lib` (if it exists) and `~/.microcad/lib` are used.
@@ -93,13 +97,20 @@ use microcad_viewer::MicrocadPlugin;
 use url::Url;
 
 fn main() {
-    // Initialize env_logger with a default filter level
-    env_logger::Builder::from_default_env()
-        .filter_level(log::LevelFilter::Info) // Set the default log level
-        .init();
-
     // Parse the command-line args before starting the app
     let args = Args::parse();
+
+    // Initialize env_logger with a default filter level
+    env_logger::Builder::from_default_env()
+        .filter_level(match args.verbose {
+            0 => log::LevelFilter::Off,
+            1 => log::LevelFilter::Info,
+            2 => log::LevelFilter::Debug,
+            3 => log::LevelFilter::Trace,
+            _ => panic!("unknown verbosity level"),
+        }) // Set the default log level
+        .init();
+
     let url = args.input_as_url();
 
     let mut config = Config {
