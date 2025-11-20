@@ -8,6 +8,7 @@
 use clap::Parser;
 
 use microcad_lang::resolve::{FullyQualify, Symbol};
+use microcad_lang::src_ref::{Refer, SrcRef, SrcReferrer};
 use microcad_lang::syntax::*;
 
 use crossbeam::channel::Sender;
@@ -51,23 +52,40 @@ fn model_rc_from_items<T: Sized + Clone + 'static>(items: Vec<T>) -> slint::Mode
     slint::ModelRc::new(VecModel::from(items))
 }
 
-use microcad_lang::model::Model;
+impl From<&SrcRef> for VM_SrcRef {
+    fn from(src_ref: &SrcRef) -> Self {
+        Self {
+            line: src_ref
+                .as_ref()
+                .map(|src_ref| src_ref.at.line)
+                .unwrap_or_default() as i32,
+            col: src_ref
+                .as_ref()
+                .map(|src_ref| src_ref.at.col)
+                .unwrap_or_default() as i32,
+        }
+    }
+}
+
+impl From<&Refer<Element>> for VM_Element {
+    fn from(value: &Refer<Element>) -> Self {
+        Self {
+            name: value.value.to_string().into(),
+            src_ref: (&value.src_ref).into(),
+        }
+    }
+}
+
+use microcad_lang::model::{Element, Model};
 
 impl ItemsFromTree<Model> for ModelTreeModelItem {
     fn _from_tree(model: &Model, items: &mut Vec<Self>, depth: usize) {
         let model_ = model.borrow();
-        let creator = match model_.element.creator() {
-            Some(creator) => VM_Creator {
-                symbol_name: creator.symbol.full_name().to_string().into(),
-            },
-            None => VM_Creator::default(),
-        };
 
         items.push(Self {
             depth: depth as i32,
-            element: model_.element.value.to_string().into(),
-            src_ref: model_.element.src_ref.to_string().into(),
-            creator,
+            element: (&model_.element).into(),
+            creator: VM_Creator::default(), // TODO impl
         });
         model_
             .children()

@@ -7,6 +7,7 @@ import {
     Button,
     HorizontalBox,
     TextEdit,
+    Palette,
 } from "std-widgets.slint";
 
 export struct VM_Argument {
@@ -14,10 +15,20 @@ export struct VM_Argument {
     value: string,
 }
 
-export struct VM_Creator {
-    symbol_name: string,
+export struct VM_SrcRef {
+    line: int,
+    col: int,
 }
 
+export struct VM_Creator {
+    symbol_name: string,
+    src_ref: VM_SrcRef,
+}
+
+export struct VM_Element {
+    name: string,
+    src_ref: VM_SrcRef,
+}
 
 // Model item for a single line of code.
 export struct SourceCodeModelItem {
@@ -36,8 +47,7 @@ export struct SymbolTreeModelItem {
 
 export struct ModelTreeModelItem {
     depth: int,
-    element: string,
-    src_ref: string,
+    element: VM_Element,
     creator: VM_Creator,
 }
 
@@ -135,11 +145,37 @@ component ModelTreeViewItem inherits ViewItem {
     in property <ModelTreeModelItem> item;
 
     Rectangle {
+        width: 32px;
+        background: #ee8b6d;
+        Text {
+            text: item.element.src-ref.line;
+            vertical-alignment: center;
+            horizontal-alignment: left;
+            font-size: 16px;
+            font-weight: 600;
+            visible: item.element.src-ref.line > 0;
+        }
+    }
+
+    Rectangle {
+        width: 32px;
+        background: #7cee6d;
+        Text {
+            text: item.creator.src-ref.line;
+            vertical-alignment: center;
+            horizontal-alignment: left;
+            font-size: 16px;
+            font-weight: 600;
+            visible: item.creator.src-ref.line > 0;
+        }
+    }
+
+    Rectangle {
         width: item.depth * 32px;
     }
 
     Text {
-        text: item.element;
+        text: item.element.name;
         vertical-alignment: center;
         horizontal-alignment: left;
         font-size: 16px;
