@@ -107,7 +107,7 @@ impl From<&Rc<ModuleDefinition>> for SymbolInfo {
     fn from(def: &Rc<ModuleDefinition>) -> Self {
         SymbolInfo {
             id: def.id.to_string(),
-            kind: "SourceFile".into(),
+            kind: "ModuleDefinition".into(),
             doc: def.doc(),
             signatures: vec![],
             src_ref: def.src_ref(),
