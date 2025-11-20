@@ -202,7 +202,7 @@ impl Inspector {
                     Some(process) => {
                         log::info!("Viewer request");
                         process
-                            .send_request(ViewerRequest::SourceCode {
+                            .send_request(ViewerRequest::ShowSourceCode {
                                 path: Some(input.clone()),
                                 name: None,
                                 code,

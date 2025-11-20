@@ -14,15 +14,16 @@ pub struct CursorPosition {
 /// A request sent to the viewers stdin
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ViewerRequest {
-    SourceCodeFromFile {
-        path: PathBuf,
-    },
-    SourceCode {
+    /// Show source code from file.
+    ShowSourceCodeFromFile { path: PathBuf },
+    /// Show a source code snipped.
+    ShowSourceCode {
         path: Option<PathBuf>,
         name: Option<String>,
         code: String,
     },
-    CursorRange {
+    /// Set the current cursor range.
+    SetCursorRange {
         begin: Option<CursorPosition>,
         end: Option<CursorPosition>,
     },
