@@ -57,6 +57,19 @@ fn count() -> Symbol {
     )
 }
 
+/// Convert a value into a string.
+fn to_string() -> Symbol {
+    Symbol::new_builtin_fn(
+        "to_string",
+        [].into_iter(),
+        &|_, args, _| {
+            let (_, arg) = args.get_single()?;
+            Ok(Value::String(arg.value.to_string()))
+        },
+        None,
+    )
+}
+
 /// Build the standard module
 pub fn builtin_module() -> Symbol {
     ModuleBuilder::new("__builtin")
@@ -64,6 +77,7 @@ pub fn builtin_module() -> Symbol {
         .symbol(log::log())
         .symbol(count())
         .symbol(type_of())
+        .symbol(to_string())
         .symbol(print::print())
         .symbol(ops::ops())
         .symbol(math::math())
