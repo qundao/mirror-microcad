@@ -55,6 +55,10 @@
       {
         "command": "microcad.showPreview",
         "title": "MicroCAD: Show Preview"
+      },
+      {
+        "command": "microcad.hidePreview",
+        "title": "MicroCAD: Hide Preview"
       }
     ]
   },

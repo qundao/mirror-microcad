@@ -46,9 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
                 vscode.window.showErrorMessage("No active editor");
                 return;
             }
-
             const uri = editor.document.uri.toString();
-
             try {
                 const result = await client.sendRequest("workspace/executeCommand", {
                     command: "microcad.showPreview",
@@ -58,6 +56,23 @@ export async function activate(context: vscode.ExtensionContext) {
                 vscode.window.showInformationMessage("Preview requested.");
             } catch (err) {
                 vscode.window.showErrorMessage("Show Preview failed: " + err);
+            }
+        }
+    );
+
+    const hidePreviewCmd = vscode.commands.registerCommand(
+        "microcad.hidePreview",
+        async () => {
+            if (!client) { return; }
+            try {
+                const result = await client.sendRequest("workspace/executeCommand", {
+                    command: "microcad.hidePreview",
+                    arguments: []
+                });
+
+                vscode.window.showInformationMessage("Hide Preview requested.");
+            } catch (err) {
+                vscode.window.showErrorMessage("Hide Preview failed: " + err);
             }
         }
     );

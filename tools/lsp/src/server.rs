@@ -5,7 +5,6 @@
 
 mod processor;
 
-use serde::{Deserialize, Serialize};
 use tower_lsp::{
     async_trait,
     jsonrpc::Result,
@@ -20,13 +19,6 @@ use tower_lsp::{
     },
     Client, LanguageServer, LspService, Server,
 };
-
-#[derive(Debug, Serialize, Deserialize)]
-struct NotificationParams {
-    title: String,
-    message: String,
-    description: String,
-}
 
 enum CustomNotification {}
 impl Notification for CustomNotification {
@@ -164,9 +156,25 @@ impl LanguageServer for Backend {
                         self.client
                             .log_message(MessageType::INFO, format!("Preview generated for {uri}"))
                             .await;
+
+                        return Ok(Some(serde_json::json!({ "ok": true })));
+                    } else {
+                        return Ok(Some(serde_json::json!({
+                            "error": "Missing or invalid 'uri' field (must be a string)"
+                        })));
                     }
-                    return Ok(Some(serde_json::json!({ "ok": true })));
                 }
+            }
+            "microcad.hidePreview" => {
+                log::info!("HidePreview received");
+
+                self.processor
+                    .send_request(ProcessorRequest::DocumentHidePreview)
+                    .expect("processor request failed");
+                self.client
+                    .log_message(MessageType::INFO, "Preview hidden")
+                    .await;
+                return Ok(Some(serde_json::json!({ "ok": true })));
             }
             _ => log::info!("Unknown command '{}'", params.command),
         }
