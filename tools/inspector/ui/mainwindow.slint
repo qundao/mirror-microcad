@@ -20,8 +20,23 @@ export struct VM_SrcRef {
     col: int,
 }
 
+
+export struct VM_DocBlock {
+    summary: string,
+    details: string,
+    src_ref: VM_SrcRef,
+}
+
+export struct VM_SymbolInfo {
+    id: string,
+    kind: string,
+    doc: VM_DocBlock,
+    // signatures: [VM_Signatures]
+    src_ref: VM_SrcRef, 
+}
+
 export struct VM_Creator {
-    symbol_name: string,
+    symbol: VM_SymbolInfo,
     src_ref: VM_SrcRef,
 }
 

@@ -7,7 +7,7 @@
 
 use clap::Parser;
 
-use microcad_lang::resolve::{FullyQualify, Symbol};
+use microcad_lang::resolve::{FullyQualify, Symbol, SymbolInfo};
 use microcad_lang::src_ref::{Refer, SrcRef, SrcReferrer};
 use microcad_lang::syntax::*;
 
@@ -76,7 +76,45 @@ impl From<&Refer<Element>> for VM_Element {
     }
 }
 
-use microcad_lang::model::{Element, Model};
+impl From<&DocBlock> for VM_DocBlock {
+    fn from(doc: &DocBlock) -> Self {
+        Self {
+            summary: (&doc.summary).into(),
+            details: doc
+                .details
+                .as_ref()
+                .map(|details| details.into())
+                .unwrap_or_default(),
+            src_ref: (&doc.src_ref).into(),
+        }
+    }
+}
+
+impl From<SymbolInfo> for VM_SymbolInfo {
+    fn from(info: SymbolInfo) -> Self {
+        Self {
+            id: info.id.into(),
+            kind: info.kind.into(),
+            doc: info.doc.as_ref().map(|doc| doc.into()).unwrap_or_default(),
+            src_ref: (&info.src_ref).into(),
+        }
+    }
+}
+
+impl From<Option<&Creator>> for VM_Creator {
+    fn from(creator: Option<&Creator>) -> Self {
+        use microcad_lang::resolve::Info;
+        match creator {
+            Some(creator) => Self {
+                symbol: creator.symbol.info().into(),
+                src_ref: (&creator.symbol.src_ref()).into(),
+            },
+            None => Self::default(),
+        }
+    }
+}
+
+use microcad_lang::model::{Creator, Element, Model};
 
 impl ItemsFromTree<Model> for ModelTreeModelItem {
     fn _from_tree(model: &Model, items: &mut Vec<Self>, depth: usize) {
@@ -85,7 +123,7 @@ impl ItemsFromTree<Model> for ModelTreeModelItem {
         items.push(Self {
             depth: depth as i32,
             element: (&model_.element).into(),
-            creator: VM_Creator::default(), // TODO impl
+            creator: model_.element.creator().into(),
         });
         model_
             .children()
