@@ -232,6 +232,20 @@ impl Processor {
         match url.to_file_path() {
             Ok(filename) => {
                 log::info!("show_preview received for {filename:?}");
+                if let Some(viewer) = &mut self.viewer {
+                    match viewer.try_wait() {
+                        Ok(Some(status)) => {
+                            println!("Child exited with: {}", status);
+                            self.viewer = None;
+                        }
+                        Ok(None) => {
+                            println!("Child is still running...");
+                        }
+                        Err(e) => {
+                            eprintln!("Error attempting to wait: {}", e);
+                        }
+                    }
+                }
                 if self.viewer.is_none() {
                     self.viewer = Some(
                         match Command::new("microcad-viewer")
