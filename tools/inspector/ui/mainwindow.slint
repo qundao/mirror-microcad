@@ -46,7 +46,6 @@ component ViewItem inherits Rectangle {
     in property <bool> is-selectable;
     in-out property <bool> is-selected;
 
-    callback clicked;
     callback is-selected-changed;
     callback selected();
 
@@ -65,53 +64,61 @@ component ViewItem inherits Rectangle {
         height: root.height;
         @children
     }
-
-    Rectangle {
-        visible: root.is-selectable && root.is-selected;
-        width: root.width;
-        height: root.height;
-        background: transparent;
-        border-color: #0000ff;
-        border-width: 2px;
-    }
-
-    /*touch-area := TouchArea {
-        width: root.width;
-        height: root.height;
-        clicked => {
-            if root.is-selectable {
-                root.is-selected = !root.is-selected;
-            }
-            root.clicked();
-        }
-    }*/
 }
 
-component SourceCodeViewItem inherits ViewItem {
+component SourceCodeViewItem inherits Rectangle {
     in property <SourceCodeModelItem> item;
-    is-selectable: true;
+    in property <int> index: 0;
+
+    in-out property <VM-State> state;
+    callback clicked(src_ref: VM-SrcRef);
 
     height: 20px;
 
-    Rectangle {
-        background: #e0e0e0;
+    HorizontalLayout {
+        width: root.width;
         height: root.height;
-        width: 32px;
+
+        Rectangle {
+            background: #e0e0e0;
+            height: root.height;
+            width: 32px;
+
+            Text {
+                height: parent.height;
+                text: item.line-number + 1;
+                vertical-alignment: center;
+                horizontal-alignment: left;
+                font-weight: 600;
+            }
+        }
 
         Text {
-            height: parent.height;
-            text: item.line-number + 1;
-            vertical-alignment: center;
+            text: item.line;
+            height: 20px;
+            y: 4px;
             horizontal-alignment: left;
-            font-weight: 600;
         }
     }
 
-    Text {
-        text: item.line;
-        height: 20px;
-        y: 4px;
-        horizontal-alignment: left;
+    Rectangle {
+        width: root.width;
+        height: root.height;
+        background: transparent;
+        visible: root.state.current-line == item.line_number + 1;
+        border-color: black;
+        border-width: 1px;
+    }
+
+    TouchArea {
+        width: root.width;
+        height: root.height;
+        clicked => {
+            let src-ref: VM-SrcRef = { line: item.line_number, col: 1, source-hash: state.current-source-hash };
+            root.state.current-line = item.line-number + 1;
+            debug(src-ref);
+            root.clicked(src-ref);
+        }
     }
 }
 
@@ -153,6 +160,7 @@ component LineNumberItem inherits Rectangle {
     TouchArea {
         width: root.width;
         height: root.height;
+        enabled: root.src_ref.source-hash == root.state.current-source-hash;
         clicked => {
             debug(root.src_ref);
             root.clicked(root.src_ref);
@@ -169,7 +177,7 @@ component ModelTreeViewItem inherits ViewItem {
     element-info := LineNumberItem {
         src_ref: root.item.element.src_ref;
         state: root.state;
-        background: #6d85ee;
+        background: self.src_ref.source-hash == state.current-source-hash ? #6d85ee : transparent;
         clicked(src-ref) => {
             root.selected();
             root.src_ref_clicked(src-ref);
@@ -179,7 +187,8 @@ component ModelTreeViewItem inherits ViewItem {
     creator-info := LineNumberItem {
         src_ref: root.item.creator.src_ref;
         state: root.state;
-        background: #6deec3;
+        background: self.src_ref.source-hash == state.current-source-hash ? #6deec3 : transparent;
+
         clicked(src-ref) => {
             root.selected();
             root.src_ref_clicked(src-ref);
@@ -250,6 +259,7 @@ export component MainWindow inherits Window {
                     height: 20px;
                     width: symbol-tree-view.viewport-width;
                     item: item;
+                    state <=> root.state;
                     index: index;
                 }
             }
