@@ -7,10 +7,10 @@ sketch Heart(size: Length) {
 }
 
 #[color = std::color::GREEN]
-Text("µcad", height = 80mm).align().translate(x = -90mm).extrude(4mm);
+Text("µcad", height = 80mm).center().translate(x = -110mm).extrude(4mm);
 
 #[color = std::color::RED]
 Heart(40mm).extrude(12mm);
 
 #[color = std::color::BLUE]
-Text("PTF", height = 80mm).align().translate(x = 90mm).extrude(4mm);
+Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);

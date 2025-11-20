@@ -16,7 +16,7 @@ pub mod microcad {
     pub sketch Icon(radius: Length) {
         prop gap = radius / 5;
         IconElement(radius)
-            .translate(x = -radius-gap)
+            .translate(x = -radius - gap)
             .rotate([0..3] * 90°); 
     }
 
@@ -61,7 +61,6 @@ pub mod microcad {
 }
 
 use std::ops::*;
-use std::math::*;
 
 pub SIZE = 1cm;
 
