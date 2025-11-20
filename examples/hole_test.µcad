@@ -11,16 +11,16 @@ part Hole(diameter: Length) {
 }
 
 part LabeledHole(diameter: Length) {
-    t = "Test"; // std::to_string(diameter);
-    text = Text(t, 15mm).extrude(THICKNESS);
+    t = std::to_string(diameter);
+    text = Text(t, 10mm).extrude(THICKNESS*2.0);
     hole = Hole(diameter);
 
-    { text; hole }.align(Y, 10mm).center();
+    hole;
 }
 
-r = RoundedRect(100mm, radius = 10mm).extrude(THICKNESS);
+r = RoundedRect(60mm, radius = 10mm).extrude(THICKNESS);
 
 holes = LabeledHole([1..9] * 0.25mm)
-    .distribute_grid(100mm, rows = 3, columns = 3);
+    .distribute_grid(60mm, rows = 3, columns = 3);
 
 r - holes;
