@@ -33,7 +33,7 @@ impl From<&SrcRef> for VM_SrcRef {
             line: src_ref.map(|src_ref| src_ref.at.line).unwrap_or_default() as i32,
             col: src_ref.map(|src_ref| src_ref.at.col).unwrap_or_default() as i32,
             source_hash: src_ref
-                .map(|src_ref| format!("{:016X}", src_ref.source_file_hash).into())
+                .map(|src_ref| hash_to_shared_string(src_ref.source_file_hash))
                 .unwrap_or_default(),
         }
     }
@@ -156,4 +156,8 @@ pub fn split_source_code(source: &str) -> Vec<SourceCodeModelItem> {
     }
 
     items
+}
+
+pub fn hash_to_shared_string(hash: u64) -> slint::SharedString {
+    format!("{hash:016X}").into()
 }

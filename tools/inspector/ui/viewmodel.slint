@@ -21,7 +21,7 @@ export struct VM_SymbolInfo {
     id: string,
     kind: string,
     doc: VM_DocBlock,
-    // signatures: [VM_Signatures]
+    // TODO: signatures: [VM_Signatures]
     src_ref: VM_SrcRef, 
 }
 
@@ -30,7 +30,13 @@ export struct VM_Creator {
     src_ref: VM_SrcRef,
 }
 
+/// Wrapper to map a model::Element into slint viewmodel Element
 export struct VM_Element {
     name: string,
     src_ref: VM_SrcRef,
+}
+
+/// Current state of the view
+export struct VM_State {
+    current_source_hash: string,
 }

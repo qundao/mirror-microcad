@@ -11,10 +11,11 @@ import {
 } from "std-widgets.slint";
 
 import {
-    VM_Element,
     VM_Creator,
     VM_DocBlock,
+    VM_Element,
     VM_SrcRef,
+    VM_State,
     VM_SymbolInfo,
 } from "viewmodel.slint";
 
@@ -129,33 +130,45 @@ component SymbolTreeViewItem inherits ViewItem {
     }
 }
 
-component ModelTreeViewItem inherits ViewItem {
-    in property <ModelTreeModelItem> item;
+component LineNumberItem inherits Rectangle {
+    in property <VM-SrcRef> src_ref;
+    in property <VM-State> state;
 
-    Rectangle {
-        width: 32px;
-        background: #ee8b6d;
-        Text {
-            text: item.element.src-ref.line;
-            vertical-alignment: center;
-            horizontal-alignment: left;
-            font-size: 16px;
-            font-weight: 600;
-            visible: item.element.src-ref.line > 0;
-        }
+    callback clicked(src_ref: VM-SrcRef);
+
+    width: 32px;
+
+    Text {
+        text: src-ref.line;
+        vertical-alignment: center;
+        horizontal-alignment: left;
+        font-size: 12px;
+        font-weight: 600;
+        visible: state.current_source_hash == src_ref.source-hash && src-ref.line > 0;
     }
 
-    Rectangle {
-        width: 32px;
-        background: #7cee6d;
-        Text {
-            text: item.creator.src-ref.line;
-            vertical-alignment: center;
-            horizontal-alignment: left;
-            font-size: 16px;
-            font-weight: 600;
-            visible: item.creator.src-ref.line > 0;
+    TouchArea {
+        clicked => {
+            debug(root.src_ref);
+            root.clicked(root.src_ref);
         }
+    }
+}
+
+component ModelTreeViewItem inherits ViewItem {
+    in property <ModelTreeModelItem> item;
+    in property <VM-State> state;
+
+    element-info := LineNumberItem {
+        src_ref: root.item.element.src_ref;
+        state: root.state;
+        background: #6d85ee;
+    }
+
+    creator-info := LineNumberItem {
+        src_ref: root.item.creator.src_ref;
+        state: root.state;
+        background: #6deec3;
     }
 
     Rectangle {
@@ -194,6 +207,7 @@ export component MainWindow inherits Window {
     in property <[SourceCodeModelItem]> source-code-model;
     in property <[ModelTreeModelItem]> model-tree;
     in property <[SymbolTreeModelItem]> symbol-tree;
+    in property <VM-State> state;
 
     title: "µcad Inspector";
     default-font-family: "Jetbrains Mono";
@@ -233,6 +247,7 @@ export component MainWindow inherits Window {
                 for item[index] in root.model-tree: ModelTreeViewItem {
                     width: model-tree-view.viewport-width;
                     item: item;
+                    state: root.state;
                     index: index;
                 }
             }
