@@ -1,0 +1,26 @@
+use std::geo2d::*;
+use std::geo3d::*;
+use std::ops::*;
+use std::math::*;
+
+const THICKNESS = 2mm;
+
+part Hole(diameter: Length) {
+    r = diameter * 50%;
+    Cylinder(radius_bottom = r, radius_top = r + THICKNESS * 50%, height = THICKNESS);
+}
+
+part LabeledHole(diameter: Length) {
+    t = "Test"; // std::to_string(diameter);
+    text = Text(t, 15mm).extrude(THICKNESS);
+    hole = Hole(diameter);
+
+    { text; hole }.align(Y, 10mm).center();
+}
+
+r = RoundedRect(100mm, radius = 10mm).extrude(THICKNESS);
+
+holes = LabeledHole([1..9] * 0.25mm)
+    .distribute_grid(100mm, rows = 3, columns = 3);
+
+r - holes;
