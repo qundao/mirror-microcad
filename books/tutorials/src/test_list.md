@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**28** tests have been evaluated with version **0.2.7** of microcad.
+**28** tests have been evaluated with version **0.2.8** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
