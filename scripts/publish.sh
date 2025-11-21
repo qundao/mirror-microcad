@@ -38,6 +38,7 @@ PACKAGES=(
     "microcad-export"
     "microcad-import"
     "microcad-builtin"
+    "microcad-builtin-proc-macros"
     "microcad"
 )
 
