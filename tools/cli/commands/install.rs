@@ -8,8 +8,8 @@ use crate::*;
 use rust_embed::RustEmbed;
 
 #[derive(RustEmbed)]
-#[folder = "lib/std"]
-struct StdLib;
+#[folder = "lib"]
+struct Lib;
 
 #[derive(clap::Parser)]
 pub struct Install {
@@ -28,7 +28,7 @@ pub struct Install {
 fn get_user_stdlib_path() -> std::path::PathBuf {
     let mut path = dirs::config_dir().expect("config directory");
     path.push("microcad");
-    path.push("std");
+    path.push("lib");
     path
 }
 
@@ -51,15 +51,15 @@ fn extract_stdlib(overwrite: bool) -> std::io::Result<()> {
     std::fs::create_dir_all(&dst)?;
 
     // Extrahiere alle eingebetteten Dateien
-    StdLib::iter().try_for_each(|file| {
+    Lib::iter().try_for_each(|file| {
         let file_path = dst.join(file.as_ref());
         if let Some(parent) = file_path.parent() {
             std::fs::create_dir_all(parent)?;
         }
         std::fs::write(
             file_path,
-            StdLib::get(file.as_ref())
-                .expect("embedded std not found")
+            Lib::get(file.as_ref())
+                .expect("embedded folder 'lib' not found")
                 .data,
         )
     })?;
