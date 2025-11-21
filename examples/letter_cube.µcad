@@ -5,7 +5,7 @@ use std::geo2d::*;
 
 part Letter(letter: String, size: Length, axis: Vec3) {
     Text(letter, height = size)
-        .align()
+        .center()
         .contour(thickness = 0.25mm, distance = 0.5mm)
         .extrude(1mm)
         .translate(z = size / 2 - 0.5mm)

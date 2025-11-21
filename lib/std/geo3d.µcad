@@ -38,7 +38,7 @@ pub part Cube(size_x: Length, size_y: Length, size_z: Length) {
 /// Cylinder definition.
 ///
 /// Examples:
-/// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm);`
+/// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
 pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
     /// Initialize by `radius` and `height`. Cylinder will be centered.
     init(radius: Length, height: Length) {
@@ -78,7 +78,18 @@ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, off
         height = h;
     }
 
+    s = radius_top / radius_bottom;
     std::geo2d::Circle(radius = radius_bottom)
-        .std::ops::extrude(height)
+        .std::ops::extrude(height, scale = (x = s, y = s))
         .std::ops::translate(z = offset)
+}
+
+/// A torus.
+///
+/// Examples:
+/// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
+pub part Torus(major_radius: Length, minor_radius: Length) {
+    std::geo2d::Circle(minor_radius)
+        .std::ops::translate(x = major_radius)
+        .std::ops::revolve();
 }

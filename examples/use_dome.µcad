@@ -1,3 +1,3 @@
 mod dome;
 
-dome::Dome(10mm).std::ops::rotate(x = [0,180]°);
+dome::Dome(10mm, strut_width = 0.5mm).std::ops::mirror(std::math::Z);

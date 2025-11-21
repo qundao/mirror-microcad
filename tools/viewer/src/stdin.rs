@@ -63,13 +63,13 @@ pub fn handle_stdin_messages(
 
             use microcad_viewer_ipc::ViewerRequest::*;
             match viewer_request {
-                SourceCodeFromFile { path } => {
+                ShowSourceCodeFromFile { path } => {
                     state
                         .processor
                         .send_request(ProcessorRequest::ParseFile(path))
                         .expect("No error");
                 }
-                SourceCode { path, name, code } => {
+                ShowSourceCode { path, name, code } => {
                     state
                         .processor
                         .send_request(ProcessorRequest::ParseSource {
@@ -79,7 +79,7 @@ pub fn handle_stdin_messages(
                         })
                         .expect("No error");
                 }
-                CursorRange { .. } => todo!(),
+                SetCursorRange { .. } => todo!(),
                 Exit => {
                     exit.write(AppExit::Success);
                 }

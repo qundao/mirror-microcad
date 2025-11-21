@@ -14,15 +14,16 @@ pub struct CursorPosition {
 /// A request sent to the viewers stdin
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ViewerRequest {
-    SourceCodeFromFile {
-        path: PathBuf,
-    },
-    SourceCode {
+    /// Show source code from file.
+    ShowSourceCodeFromFile { path: PathBuf },
+    /// Show a source code snipped.
+    ShowSourceCode {
         path: Option<PathBuf>,
         name: Option<String>,
         code: String,
     },
-    CursorRange {
+    /// Set the current cursor range.
+    SetCursorRange {
         begin: Option<CursorPosition>,
         end: Option<CursorPosition>,
     },
@@ -37,20 +38,19 @@ pub enum ViewerResponse {
     StatusMessage(String),
 }
 
-#[derive(Default)]
-pub struct ViewerState {}
-
+/// Our interface to the viewer process.
 pub struct ViewerProcessInterface {
-    _state: ViewerState,
     request_sender: crossbeam::channel::Sender<ViewerRequest>,
     _response_receiver: crossbeam::channel::Receiver<ViewerResponse>,
 }
 
 impl ViewerProcessInterface {
+    /// Send a request to the viewer process.
     pub fn send_request(&self, request: ViewerRequest) -> anyhow::Result<()> {
         Ok(self.request_sender.send(request)?)
     }
 
+    /// Run the viewer process.
     pub fn run(std_search_path: impl AsRef<std::path::Path>) -> Self {
         log::info!(
             "Run viewer process with search path {}",
@@ -67,9 +67,9 @@ impl ViewerProcessInterface {
             let mut child = std::process::Command::new(
                 std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
             )
-            .arg("stdin") // run the slave binary
             .arg("-P")
             .arg(std_search_path.to_str().unwrap())
+            .arg("stdin://") // run the viewer as slave via stdin.
             .current_dir(std::env::current_dir().unwrap())
             .stdin(std::process::Stdio::piped())
             .stdout(std::process::Stdio::piped())
@@ -109,7 +109,6 @@ impl ViewerProcessInterface {
         });
 
         Self {
-            _state: Default::default(),
             request_sender: tx,
             _response_receiver: resp_rx,
         }

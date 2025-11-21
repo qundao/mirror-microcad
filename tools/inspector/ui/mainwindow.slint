@@ -7,17 +7,17 @@ import {
     Button,
     HorizontalBox,
     TextEdit,
+    Palette,
 } from "std-widgets.slint";
 
-export struct VM_Argument {
-    id: string,
-    value: string,
-}
-
-export struct VM_Creator {
-    symbol_name: string,
-}
-
+import {
+    VM_Creator,
+    VM_DocBlock,
+    VM_Element,
+    VM_SrcRef,
+    VM_State,
+    VM_SymbolInfo,
+} from "viewmodel.slint";
 
 // Model item for a single line of code.
 export struct SourceCodeModelItem {
@@ -36,8 +36,7 @@ export struct SymbolTreeModelItem {
 
 export struct ModelTreeModelItem {
     depth: int,
-    element: string,
-    src_ref: string,
+    element: VM_Element,
     creator: VM_Creator,
 }
 
@@ -47,15 +46,15 @@ component ViewItem inherits Rectangle {
     in property <bool> is-selectable;
     in-out property <bool> is-selected;
 
-    callback clicked;
     callback is-selected-changed;
+    callback selected();
 
     height: 32px;
     border-radius: 4px;
     background: Math.mod(self.index, 2) == 0 ? #f0f0f0 : #e0e0e0;
     Rectangle {
         // Hover effect
-        background: touch-area.has-hover ? #cce5ff : transparent;
+      //  background: touch-area.has-hover ? #cce5ff : transparent;
         width: root.width;
         height: root.height;
     }
@@ -65,53 +64,61 @@ component ViewItem inherits Rectangle {
         height: root.height;
         @children
     }
-
-    Rectangle {
-        visible: root.is-selectable && root.is-selected;
-        width: root.width;
-        height: root.height;
-        background: transparent;
-        border-color: #0000ff;
-        border-width: 2px;
-    }
-
-    touch-area := TouchArea {
-        width: root.width;
-        height: root.height;
-        clicked => {
-            if root.is-selectable {
-                root.is-selected = !root.is-selected;
-            }
-            root.clicked();
-        }
-    }
 }
 
-component SourceCodeViewItem inherits ViewItem {
+component SourceCodeViewItem inherits Rectangle {
     in property <SourceCodeModelItem> item;
-    is-selectable: true;
+    in property <int> index: 0;
+
+    in-out property <VM-State> state;
+    callback clicked(src_ref: VM-SrcRef);
 
     height: 20px;
 
-    Rectangle {
-        background: #e0e0e0;
+    HorizontalLayout {
+        width: root.width;
         height: root.height;
-        width: 32px;
+
+        Rectangle {
+            background: #e0e0e0;
+            height: root.height;
+            width: 32px;
+
+            Text {
+                height: parent.height;
+                text: item.line-number + 1;
+                vertical-alignment: center;
+                horizontal-alignment: left;
+                font-weight: 600;
+            }
+        }
 
         Text {
-            height: parent.height;
-            text: item.line-number + 1;
-            vertical-alignment: center;
+            text: item.line;
+            height: 20px;
+            y: 4px;
             horizontal-alignment: left;
-            font-weight: 600;
         }
     }
 
-    Text {
-        text: item.line;
-        height: 20px;
-        y: 4px;
-        horizontal-alignment: left;
+    Rectangle {
+        width: root.width;
+        height: root.height;
+        background: transparent;
+        visible: root.state.current-line == item.line_number + 1;
+        border-color: black;
+        border-width: 1px;
+    }
+
+    TouchArea {
+        width: root.width;
+        height: root.height;
+        clicked => {
+            let src-ref: VM-SrcRef = { line: item.line_number, col: 1, source-hash: state.current-source-hash };
+            root.state.current-line = item.line-number + 1;
+            debug(src-ref);
+            root.clicked(src-ref);
+        }
     }
 }
 
@@ -131,15 +138,69 @@ component SymbolTreeViewItem inherits ViewItem {
     }
 }
 
+component LineNumberItem inherits Rectangle {
+    in property <VM-SrcRef> src_ref;
+    in property <VM-State> state;
+
+    callback clicked(src_ref: VM-SrcRef);
+
+    width: 32px;
+    border-width: state.current-line == src_ref.line ? 1px : 0px;
+    border-color: black;
+
+    Text {
+        text: src-ref.line;
+        vertical-alignment: center;
+        horizontal-alignment: left;
+        font-size: 12px;
+        font-weight: 600;
+        visible: state.current_source_hash == src_ref.source-hash && src-ref.line > 0;
+    }
+
+    TouchArea {
+        width: root.width;
+        height: root.height;
+        enabled: root.src_ref.source-hash == root.state.current-source-hash;
+        clicked => {
+            debug(root.src_ref);
+            root.clicked(root.src_ref);
+        }
+    }
+}
+
 component ModelTreeViewItem inherits ViewItem {
     in property <ModelTreeModelItem> item;
+    in property <VM-State> state;
+    is-selectable: true;
+    callback src_ref_clicked(src-ref: VM-SrcRef);
+
+    element-info := LineNumberItem {
+        src_ref: root.item.element.src_ref;
+        state: root.state;
+        background: self.src_ref.source-hash == state.current-source-hash ? #6d85ee : transparent;
+        clicked(src-ref) => {
+            root.selected();
+            root.src_ref_clicked(src-ref);
+        }
+    }
+
+    creator-info := LineNumberItem {
+        src_ref: root.item.creator.src_ref;
+        state: root.state;
+        background: self.src_ref.source-hash == state.current-source-hash ? #6deec3 : transparent;
+
+        clicked(src-ref) => {
+            root.selected();
+            root.src_ref_clicked(src-ref);
+        }
+    }
 
     Rectangle {
         width: item.depth * 32px;
     }
 
     Text {
-        text: item.element;
+        text: item.element.name;
         vertical-alignment: center;
         horizontal-alignment: left;
         font-size: 16px;
@@ -165,11 +226,18 @@ component ControlPanel {
 export component MainWindow inherits Window {
     callback button-launch-viewer-clicked <=> control-panel.button-launch-viewer-clicked;
     callback button-send-source-code-clicked <=> control-panel.button-send-source-code-clicked;
+    callback src_ref_clicked(src-ref: VM-SrcRef);
 
     in property <string> source-code;
     in property <[SourceCodeModelItem]> source-code-model;
     in property <[ModelTreeModelItem]> model-tree;
     in property <[SymbolTreeModelItem]> symbol-tree;
+    in-out property <VM-State> state;
+
+    src_ref_clicked(src_ref) => {
+        root.state.current-line = src-ref.line;
+        debug("Current line: {}", root.state.current-line);
+    }
 
     title: "µcad Inspector";
     default-font-family: "Jetbrains Mono";
@@ -191,6 +259,7 @@ export component MainWindow inherits Window {
                     height: 20px;
                     width: symbol-tree-view.viewport-width;
                     item: item;
+                    state <=> root.state;
                     index: index;
                 }
             }
@@ -209,7 +278,11 @@ export component MainWindow inherits Window {
                 for item[index] in root.model-tree: ModelTreeViewItem {
                     width: model-tree-view.viewport-width;
                     item: item;
+                    state <=> root.state;
                     index: index;
+                    src_ref_clicked(src-ref) => {
+                        root.src_ref_clicked(src-ref)
+                    }
                 }
             }
         }

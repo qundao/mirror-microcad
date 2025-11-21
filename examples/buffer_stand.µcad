@@ -35,7 +35,7 @@ part BufferStand() {
         .orient(X)
         .translate(z = 3.25in);
 
-    mount = Rect(height = 4.25in - 3.5in, width = 1.5in)
+    mount = Rect(height = 4.25in - 3.5in, width = 1.5in * 50%, x = 0mm, y = 0mm)
         .revolve()
         .orient(X)
         .translate(x = [2.0, -2.0]in, z = 3.25in);

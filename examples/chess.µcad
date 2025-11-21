@@ -62,18 +62,11 @@ pub part Knight() {
     Bishop();
     Knight().rotate(x = 180°).rotate(90°);
     Rook();
-    Pawn();
-    Pawn();
-    Pawn();
-    Pawn();
-    Pawn();
-    Pawn();
-    Pawn();
-    Pawn();
+    8 * Pawn();
 }
 .distribute_grid(cell_size = TILE_SIZE, rows = 2, columns = 8)
 .translate(y = TILE_SIZE * 3)
-.rotate([0,180]°);
+.rotate([0, 180]°);
 
 board_height = 1mm;
 Rect(TILE_SIZE * 8).extrude(board_height).translate(z = -board_height);

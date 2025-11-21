@@ -1,10 +1,1 @@
-use std::*;
-use std::geo2d::*;
-use std::ops::revolve;
-use std::ops::translate;
-
-part Torus(major_radius: Length, minor_radius: Length) {
-    std::geo2d::Circle(minor_radius).translate(x = major_radius).revolve(240°);
-}
-
-Torus(major_radius = [45.0mm, 40.0mm, 20.0mm, 15.0mm], minor_radius = 1.0mm);
+std::geo3d::Torus([1..5] * 10mm, minor_radius = 3mm);

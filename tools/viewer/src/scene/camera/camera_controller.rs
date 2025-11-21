@@ -260,18 +260,24 @@ fn run_camera_controller(
     }
 
     let delta = accumulated_mouse_motion.delta;
-
-    let orbit_speed = 0.015;
     let orbit_distance = state.scene.radius * 3.0;
 
     if mouse_button_input.pressed(MouseButton::Left) {
+        let orbit_speed = 0.005;
         let yaw_rot = Quat::from_rotation_z(delta.x * orbit_speed);
-        let pitch_rot = Quat::from_rotation_x(delta.y * orbit_speed);
+        let pitch_rot = Quat::from_rotation_x(-delta.y * orbit_speed);
         transform.rotation = yaw_rot * transform.rotation * pitch_rot;
+        // Adjust the translation to maintain the correct orientation toward the orbit target.
+        // In our example it's a static target, but this could easily be customized.
+        //  let target = Vec3::ZERO;
+        transform.translation = controller.target - transform.forward() * orbit_distance;
     }
 
-    // Adjust the translation to maintain the correct orientation toward the orbit target.
-    // In our example it's a static target, but this could easily be customized.
-    //  let target = Vec3::ZERO;
-    transform.translation = controller.target - transform.forward() * orbit_distance;
+    if mouse_button_input.pressed(MouseButton::Right) {
+        let forward = *transform.up() * delta.y * 10.0;
+        let right = *transform.right() * delta.x * -10.0;
+        controller.target = controller.target + dt * right + dt * Vec3::Z + dt * forward;
+
+        transform.translation = controller.target - transform.forward() * orbit_distance;
+    }
 }

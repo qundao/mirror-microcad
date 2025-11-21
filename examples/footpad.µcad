@@ -32,22 +32,22 @@ part FootPad(
     .translate(z = base_lower_height);
     
     center = {
-        (Circle(d = center_hole.d_outer) - Circle(d = center_hole.inner_d))
+        (Circle(d = center_hole.d_outer) - Circle(d = center_hole.d_inner))
             .extrude(height);
         
-        rect(height = slot.x, width = center_hole.outer_d)
+        Rect(height = slot.x, width = center_hole.d_outer)
             .extrude(slot.y)
             .translate(z = height - slot.y);
         
     }.subtract();
 
     holes = {
-        Circle(d = corner_hole.lower_d, c = hole_pos)
+        Circle(d = corner_hole.d_lower, c = hole_pos)
             .extrude(height = base_lower_height);
-        Circle(d = corner_hole.upper_d, c = hole_pos)
+        Circle(d = corner_hole.d_upper, c = hole_pos)
             .extrude(height = base.z * 2)
             .translate(z = base_lower_height);
-        Circle(d = center_hole.inner_d)
+        Circle(d = center_hole.d_inner)
             .extrude(height);
     }.union();
 

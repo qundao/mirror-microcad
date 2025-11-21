@@ -81,7 +81,7 @@ cargo install microcad
 After installing, you can run a basic example by typing:
 
 ```sh
-microcad eval ./examples/lego_brick.µcad
+microcad eval ./examples/bricks/brick.µcad
 ```
 
 This will *evaluate* the input file and will output the model tree.
@@ -98,7 +98,7 @@ which can be displayed e.g. with [MeshLab](https://www.meshlab.net/).
 
 The resulting STL model looks like this:
 
-![Parametric Lego Brick](examples/lego_brick.png)
+![Parametric Lego Brick](examples/brick/bricks.png)
 
 ## Documentation
 

@@ -7,5 +7,5 @@ use microcad_lang::src_ref::SrcRef;
 
 #[derive(Default)]
 pub struct Cursor {
-    src_ref: SrcRef,
+    _src_ref: SrcRef,
 }

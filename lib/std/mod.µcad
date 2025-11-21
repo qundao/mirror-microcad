@@ -10,3 +10,4 @@ pub use __builtin::import;
 pub use __builtin::debug;
 pub use __builtin::log;
 pub use __builtin::color;
+pub use __builtin::to_string;
