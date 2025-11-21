@@ -28,12 +28,9 @@ Either the example may be wrong or the microcad compiler might have a bug.
 | ![ok_fail](./images/ok_fail.svg)       | Is ok but was meant to fail |
 | ![parse_fail](./images/parse_fail.svg) | Fails early while parsing   |
 
-The following banners occur if a test is still marked as todo but is ok
-already.
-This can be corrected by changing the documentation.
+The following banners occur if a test is marked as todo (upcoming or planned feature).
 
 | Banner                               | Meaning                        |
 | ------------------------------------ | ------------------------------ |
 | ![todo](./images/todo.svg)           | Work in progress               |
 | ![todo_fail](./images/todo_fail.svg) | Work in progress (should fail) |
-
