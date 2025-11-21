@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [package]
+include = ["**/*.rs", "Cargo.toml", "lib/std/**/*"]
+
 name = "microcad"
 description = "µcad Command Line Interface"
 documentation = "https://docs.rs/microcad"
@@ -13,7 +15,6 @@ repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
 default-run = "microcad"
-
 [[bin]]
 name = "microcad"
 path = "main.rs"
@@ -30,6 +31,7 @@ toml = "0.9"
 notify = "8"
 dirs = "6"
 num-format = "0.4"
+rust-embed = "8.9"
 
 microcad-lang = { workspace = true }
 microcad-core = { workspace = true }

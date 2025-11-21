@@ -5,9 +5,12 @@
 
 use crate::*;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
+use rust_embed::RustEmbed;
 
-include!(concat!(env!("OUT_DIR"), "/microcad_std.rs"));
+#[derive(RustEmbed)]
+#[folder = "../../lib/std"]
+struct StdLib;
 
 #[derive(clap::Parser)]
 pub struct Install {
@@ -23,54 +26,54 @@ pub struct Install {
     force: bool,
 }
 
-impl Install {
-    /// Get library dir in which the library is supposed to installed.
-    pub fn library_dir(&self) -> std::path::PathBuf {
-        match &self.root {
-            Some(root) => root.clone(),
-            // If root has not been passed as argument, install to home directory
-            None => {
-                let root_dir = microcad_builtin::dirs::global_root_dir()
-                    .unwrap_or(std::path::PathBuf::from("./lib"));
-                root_dir.join(self.library.clone())
-            }
+fn get_user_stdlib_path() -> std::path::PathBuf {
+    let mut path = dirs::config_dir().expect("config directory");
+    path.push("microcad");
+    path.push("std");
+    path
+}
+
+fn extract_stdlib(overwrite: bool) -> std::io::Result<()> {
+    let dst = get_user_stdlib_path();
+    if dst.exists() {
+        if overwrite {
+            println!("Overwriting existing µcad standard library in {:?}", dst);
+        } else {
+            println!(
+                "Found µcad standard library already in {:?} (use -f to force overwrite)",
+                dst
+            );
+            return Ok(());
         }
     }
 
-    pub fn install_std_library(&self) -> Result<()> {
-        let library_dir = self.library_dir();
-        println!("Install µcad library to {library_dir:?} ...");
+    println!("Installing µcad standard library into {:?}...", dst);
 
-        if !library_dir.exists() {
-            log::debug!("Creating directory for µcad std library");
-            std::fs::create_dir_all(library_dir.clone())?;
-        } else if !self.force {
-            return Err(anyhow::anyhow!(
-                "The library seems to be installed already. Use `--force` to overwrite the existing installation."
-            ));
+    std::fs::create_dir_all(&dst)?;
+
+    // Extrahiere alle eingebetteten Dateien
+    StdLib::iter().try_for_each(|file| {
+        let file_path = dst.join(file.as_ref());
+        if let Some(parent) = file_path.parent() {
+            std::fs::create_dir_all(parent)?;
         }
+        std::fs::write(
+            file_path,
+            StdLib::get(file.as_ref())
+                .expect("embedded std not found")
+                .data,
+        )
+    })?;
 
-        for (filename, content) in microcad_std::FILES.iter() {
-            let dest_path = library_dir.join(filename);
-            // Ensure parent directories exist
-            if let Some(parent) = dest_path.parent() {
-                std::fs::create_dir_all(parent)?;
-            }
-            std::fs::write(&dest_path, content)
-                .with_context(|| format!("Failed to write file: {}", dest_path.display()))?;
-            log::trace!("Wrote µcad file: {dest_path:?}");
-        }
+    println!("Successfully installed µcad standard library.");
 
-        println!("Successfully installed µcad library to {library_dir:?}.");
-
-        Ok(())
-    }
+    Ok(())
 }
 
 impl RunCommand for Install {
     fn run(&self, _cli: &Cli) -> anyhow::Result<()> {
         if self.library == "std" {
-            self.install_std_library()
+            Ok(extract_stdlib(self.force)?)
         } else {
             Err(anyhow::anyhow!(
                 "Only `std` is supported as installable library at the moment.",
