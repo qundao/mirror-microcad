@@ -37,9 +37,11 @@ PACKAGES=(
     "microcad-lang"
     "microcad-export"
     "microcad-import"
-    "microcad-builtin"
     "microcad-builtin-proc-macros"
+    "microcad-builtin"
     "microcad"
+    "microcad-viewer-ipc"
+    "microcad-viewer"
 )
 
 # Publish all packages.
