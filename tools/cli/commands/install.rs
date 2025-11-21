@@ -8,7 +8,7 @@ use crate::*;
 use rust_embed::RustEmbed;
 
 #[derive(RustEmbed)]
-#[folder = "../../lib/std"]
+#[folder = "lib/std"]
 struct StdLib;
 
 #[derive(clap::Parser)]
