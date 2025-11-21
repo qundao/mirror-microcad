@@ -5,12 +5,15 @@
 
 use crate::*;
 
-use std::io::Write;
-
 #[derive(clap::Parser)]
 pub struct Create {
     path: std::path::PathBuf,
 }
+use rust_embed::RustEmbed;
+
+#[derive(RustEmbed)]
+#[folder = "hello.µcad"]
+struct Hello;
 
 impl RunCommand for Create {
     fn run(&self, cli: &Cli) -> anyhow::Result<()> {
@@ -19,9 +22,12 @@ impl RunCommand for Create {
         if path.exists() {
             eprintln!("Error: File {path:?} already exists.")
         } else {
-            // create demo program
-            let mut f = std::fs::File::create(path.clone())?;
-            f.write_all(include_bytes!("../hello.µcad"))?;
+            std::fs::write(
+                path.clone(),
+                Hello::get("hello.µcad")
+                    .expect("embedded std not found")
+                    .data,
+            )?;
             eprintln!("File {path:?} generated.")
         }
 

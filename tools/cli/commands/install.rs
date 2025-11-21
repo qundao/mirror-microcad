@@ -5,7 +5,6 @@
 
 use crate::*;
 
-use anyhow::Result;
 use rust_embed::RustEmbed;
 
 #[derive(RustEmbed)]
