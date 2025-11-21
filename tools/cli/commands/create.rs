@@ -12,7 +12,7 @@ pub struct Create {
 use rust_embed::RustEmbed;
 
 #[derive(RustEmbed)]
-#[folder = "hello.µcad"]
+#[folder = "examples"]
 struct Hello;
 
 impl RunCommand for Create {
@@ -25,7 +25,7 @@ impl RunCommand for Create {
             std::fs::write(
                 path.clone(),
                 Hello::get("hello.µcad")
-                    .expect("embedded std not found")
+                    .expect("embedded hello.µcad not found")
                     .data,
             )?;
             eprintln!("File {path:?} generated.")

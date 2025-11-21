@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [package]
-include = ["**/*.rs", "Cargo.toml", "lib/std/**/*"]
-
 name = "microcad"
 description = "µcad Command Line Interface"
 documentation = "https://docs.rs/microcad"
