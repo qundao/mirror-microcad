@@ -1,3 +1,0 @@
-mod your;
-
-const X = your::Y;
