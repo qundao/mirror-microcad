@@ -33,6 +33,7 @@ microcad-lang = { workspace = true }
 microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
 microcad-export = { workspace = true }
+microcad-viewer-ipc = { workspace = true }
 
 
 [[bin]]
@@ -42,3 +43,9 @@ path = "src/client.rs"
 [[bin]]
 name = "microcad-lsp"
 path = "src/server.rs"
+
+[lints.rust]
+missing_docs = "warn"
+
+[lints.clippy]
+unwrap_used = "warn"
