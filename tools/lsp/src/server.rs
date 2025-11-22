@@ -20,8 +20,8 @@ use tower_lsp::{
     Client, LanguageServer, LspService, Server,
 };
 
-enum CustomNotification {}
-impl Notification for CustomNotification {
+enum CursorPositionNotify {}
+impl Notification for CursorPositionNotify {
     type Params = TextDocumentPositionParams;
     const METHOD: &'static str = "textDocument/cursorPosition";
 }
@@ -30,6 +30,19 @@ impl Notification for CustomNotification {
 struct Backend {
     client: Client,
     processor: processor::ProcessorInterface,
+}
+
+impl Backend {
+    async fn on_active_file_changed(&self, params: serde_json::Value) {
+        if let Ok(Some(uri)) = read_uri("uri", &params) {
+            log::info!("New active document: {}", uri);
+            self.processor
+                .send_request(ProcessorRequest::UpdateDocument(uri))
+                .expect("No error");
+        } else {
+            log::error!("No 'uri' field in notification parameters");
+        }
+    }
 }
 
 #[async_trait]
@@ -82,7 +95,7 @@ impl LanguageServer for Backend {
                 };
 
                 self.client
-                    .send_notification::<CustomNotification>(params)
+                    .send_notification::<CursorPositionNotify>(params)
                     .await;
             }
         }
@@ -288,7 +301,9 @@ async fn main() {
 
     let processor = processor::ProcessorInterface::run(WorkspaceSettings { search_paths });
 
-    let (service, socket) = LspService::new(|client| Backend { client, processor });
+    let (service, socket) = LspService::build(|client| Backend { client, processor })
+        .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
+        .finish();
     log::info!("LSP service has been created");
 
     if args.stdio {
@@ -307,22 +322,24 @@ async fn main() {
 }
 
 fn uri_obj_to_lsp_url(uri_obj: &serde_json::Value) -> std::result::Result<Url, String> {
-    // Versuche zuerst das "external"-Feld
-    if let Some(external) = uri_obj.get("external").and_then(serde_json::Value::as_str) {
-        return Url::parse(external).map_err(|e| {
-            log::info!("Failed to parse external URL: {e}");
-            format!("Failed to parse external URL: {e}")
-        });
+    if let Some(uri) = read_uri("external", uri_obj)? {
+        return Ok(uri);
     }
-
-    // Falls external fehlt, versuche fsPath
-    if let Some(fs_path) = uri_obj.get("fsPath").and_then(serde_json::Value::as_str) {
-        log::info!("convert fsPath to URL: {fs_path}");
-        return Url::from_file_path(fs_path).map_err(|_| {
-            log::info!("Failed to convert fsPath to URL: {fs_path}");
-            format!("Failed to convert fsPath to URL: {fs_path}")
-        });
+    if let Some(fs_path) = read_uri("fsPath", uri_obj)? {
+        return Ok(fs_path);
     }
-
     Err("Neither external nor fsPath found in uri object".to_string())
+}
+
+fn read_uri(value: &str, uri_obj: &serde_json::Value) -> std::result::Result<Option<Url>, String> {
+    if let Some(external) = uri_obj.get(value).and_then(serde_json::Value::as_str) {
+        return Url::parse(external)
+            .map_err(|e| {
+                log::info!("Failed to parse external URL: {e}");
+                format!("Failed to parse external URL: {e}")
+            })
+            .map(Some);
+    }
+
+    Ok(None)
 }

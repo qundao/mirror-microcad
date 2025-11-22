@@ -79,6 +79,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(showPreviewCmd);
     context.subscriptions.push(client);
+
+    vscode.window.onDidChangeActiveTextEditor((editor) => {
+        if (editor && client) {
+            const uri = editor.document.uri.toString();
+            client.sendNotification("custom/activeFileChanged", { uri });
+        }
+    });
 }
 
 export async function deactivate() {

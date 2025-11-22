@@ -198,7 +198,11 @@ impl Processor {
     /// Update (re-evaluate) a document.
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
-            Some(document) => document.eval()?,
+            Some(document) => {
+                
+                // TODO: update viewer
+
+                document.eval()?},
             None => {
                 log::warn!("Document {url} does not exist!");
             }
