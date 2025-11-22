@@ -47,6 +47,8 @@
         "thirdparty",
         "thiserror",
         "unitless",
+        "uuid",
+        "uuids",
         "µcad"
     ],
     "[markdown]": {

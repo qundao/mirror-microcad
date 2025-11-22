@@ -1,6 +1,8 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! Viewer IPC interface
+
 use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
@@ -27,6 +29,10 @@ pub enum ViewerRequest {
         begin: Option<CursorPosition>,
         end: Option<CursorPosition>,
     },
+    /// Hide window
+    Show,
+    /// Hide window
+    Hide,
     /// Exit viewer process.
     Exit,
 }
@@ -39,6 +45,7 @@ pub enum ViewerResponse {
 }
 
 /// Our interface to the viewer process.
+#[derive(Debug)]
 pub struct ViewerProcessInterface {
     request_sender: crossbeam::channel::Sender<ViewerRequest>,
     _response_receiver: crossbeam::channel::Receiver<ViewerResponse>,
@@ -51,33 +58,41 @@ impl ViewerProcessInterface {
     }
 
     /// Run the viewer process.
-    pub fn run(std_search_path: impl AsRef<std::path::Path>) -> Self {
+    pub fn run(search_paths: &[std::path::PathBuf]) -> Self {
+        let search_paths = search_paths
+            .iter()
+            .map(|p| p.display().to_string())
+            .collect::<Vec<String>>();
+
         log::info!(
-            "Run viewer process with search path {}",
-            std_search_path.as_ref().display()
+            "Running viewer process with search path {}",
+            search_paths.join(", ")
         );
+
         use crossbeam::channel::*;
 
         let (tx, rx): (Sender<ViewerRequest>, Receiver<ViewerRequest>) = unbounded();
         let (_, resp_rx) = unbounded::<ViewerResponse>();
-        let std_search_path = std_search_path.as_ref().to_path_buf();
 
         std::thread::spawn(move || {
             // Spawn slave process
-            let mut child = std::process::Command::new(
+            let mut command = std::process::Command::new(
                 std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
-            )
-            .arg("-P")
-            .arg(std_search_path.to_str().unwrap())
-            .arg("stdin://") // run the viewer as slave via stdin.
-            .current_dir(std::env::current_dir().unwrap())
-            .stdin(std::process::Stdio::piped())
-            .stdout(std::process::Stdio::piped())
-            .spawn()
-            .expect("Failed to start slave process");
+            );
+            // handle multiple search paths
+            search_paths.iter().for_each(|search_path| {
+                command.arg("-P").arg(search_path);
+            });
+            let mut child = command
+                .arg("stdin://") // run the viewer as slave via stdin.
+                .current_dir(std::env::current_dir().expect("current dir"))
+                .stdin(std::process::Stdio::piped())
+                .stdout(std::process::Stdio::piped())
+                .spawn()
+                .expect("Failed to start slave process");
 
-            let mut stdin = child.stdin.take().unwrap();
-            let stdout = child.stdout.take().unwrap();
+            let mut stdin = child.stdin.take().expect("stdin");
+            let stdout = child.stdout.take().expect("stdout");
 
             // Thread to read responses
             std::thread::spawn(move || {
@@ -93,15 +108,17 @@ impl ViewerProcessInterface {
             });
 
             // Thread to write requests
-            std::thread::spawn(move || {
-                loop {
-                    for req in &rx {
-                        use std::io::Write;
-                        let json = serde_json::to_string(&req).unwrap();
-                        log::debug!("Write request as json: {json}");
-                        writeln!(stdin, "{}", json).unwrap();
-                        stdin.flush().unwrap();
-                    }
+            std::thread::spawn(move || loop {
+                for req in &rx {
+                    use std::io::Write;
+                    match serde_json::to_string(&req) {
+                        Ok(json) => {
+                            log::debug!("Write request as json: {json}");
+                            writeln!(stdin, "{}", json).expect("io error");
+                            stdin.flush().expect("io error");
+                        }
+                        Err(_) => todo!(),
+                    };
                 }
             });
 

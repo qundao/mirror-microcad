@@ -83,6 +83,8 @@ pub fn handle_stdin_messages(
                 Exit => {
                     exit.write(AppExit::Success);
                 }
+                Show => todo!(),
+                Hide => todo!(),
             }
         }
     }

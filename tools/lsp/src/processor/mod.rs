@@ -7,7 +7,7 @@
 //! It runs in a separate thread and communication is handled via
 //! crossbeam channels with requests and responses.
 
-use std::{collections::HashMap, path::PathBuf, process::Child, rc::Rc};
+use std::{collections::HashMap, path::PathBuf, rc::Rc};
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_lang::{
@@ -27,8 +27,6 @@ pub enum ProcessorRequest {
     AddDocument(Url),
     RemoveDocument(Url),
     UpdateDocument(Url),
-    DocumentShowPreview(Url),
-    DocumentHidePreview,
     GetDocumentDiagnostics(Url),
 }
 
@@ -152,8 +150,6 @@ pub struct Processor {
 
     /// Outputs
     pub response_sender: Sender<ProcessorResponse>,
-    // pub cursor_position: SourceLocation,
-    viewer: Option<Child>,
 }
 
 pub type ProcessorResult = anyhow::Result<Vec<ProcessorResponse>>;
@@ -166,8 +162,6 @@ impl Processor {
             ProcessorRequest::AddDocument(url) => self.add_document(&url),
             ProcessorRequest::RemoveDocument(url) => self.remove_document(&url),
             ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
-            ProcessorRequest::DocumentShowPreview(url) => self.show_preview(&url),
-            ProcessorRequest::DocumentHidePreview => self.hide_preview(),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
         }
     }
@@ -199,10 +193,8 @@ impl Processor {
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
             Some(document) => {
-                
-                // TODO: update viewer
-
-                document.eval()?},
+                document.eval()?
+            }
             None => {
                 log::warn!("Document {url} does not exist!");
             }
@@ -228,55 +220,6 @@ impl Processor {
             },
             None => Ok(vec![]),
         }
-    }
-
-    fn show_preview(&mut self, url: &Url) -> ProcessorResult {
-        use std::process::{Command, Stdio};
-
-        match url.to_file_path() {
-            Ok(filename) => {
-                log::info!("show_preview received for {filename:?}");
-                if let Some(viewer) = &mut self.viewer {
-                    match viewer.try_wait() {
-                        Ok(Some(status)) => {
-                            println!("Child exited with: {}", status);
-                            self.viewer = None;
-                        }
-                        Ok(None) => {
-                            println!("Child is still running...");
-                        }
-                        Err(e) => {
-                            eprintln!("Error attempting to wait: {}", e);
-                        }
-                    }
-                }
-                if self.viewer.is_none() {
-                    self.viewer = Some(
-                        match Command::new("microcad-viewer")
-                            .arg(filename)
-                            .stdin(Stdio::piped())
-                            .stdout(Stdio::piped())
-                            .spawn()
-                        {
-                            Ok(viewer) => viewer,
-                            Err(err) => return Err(anyhow::anyhow!("Viewer not found: {err}")),
-                        },
-                    );
-                }
-                Ok(vec![])
-            }
-            Err(_) => Err(anyhow::anyhow!("URL {url} is no file.")),
-        }
-    }
-
-    fn hide_preview(&mut self) -> ProcessorResult {
-        if let Some(viewer) = self.viewer.as_mut() {
-            if let Err(err) = viewer.kill() {
-                return Err(anyhow::anyhow!("{err}"));
-            }
-        }
-        self.viewer = None;
-        Ok(vec![])
     }
 }
 
@@ -307,7 +250,6 @@ impl ProcessorInterface {
                 documents: HashMap::default(),
                 request_handler: request_receiver,
                 response_sender,
-                viewer: None,
             };
 
             loop {

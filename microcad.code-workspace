@@ -14,7 +14,8 @@
 			"ansi",
 			"Cura",
 			"lego",
-			"rposition"
+			"rposition",
+			"uuid"
 		]
 	}
 }

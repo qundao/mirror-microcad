@@ -5,6 +5,7 @@
 
 mod processor;
 
+use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
     async_trait,
     jsonrpc::Result,
@@ -30,15 +31,25 @@ impl Notification for CursorPositionNotify {
 struct Backend {
     client: Client,
     processor: processor::ProcessorInterface,
+    viewer: ViewerProcessInterface,
 }
 
 impl Backend {
     async fn on_active_file_changed(&self, params: serde_json::Value) {
-        if let Ok(Some(uri)) = read_uri("uri", &params) {
-            log::info!("New active document: {}", uri);
-            self.processor
-                .send_request(ProcessorRequest::UpdateDocument(uri))
-                .expect("No error");
+        log::trace!("on_active_file_changed: {params:?}");
+        if let Ok(Some(url)) = read_uri("uri", &params) {
+            //            self.processor
+            //                .send_request(ProcessorRequest::UpdateDocument(url.clone()))
+            //                .expect("No error");
+            match url.to_file_path() {
+                Ok(path) => {
+                    log::info!("New active document: {:?}", path);
+                    self.viewer
+                        .send_request(ViewerRequest::ShowSourceCodeFromFile { path })
+                        .expect("No error");
+                }
+                Err(_) => todo!(),
+            }
         } else {
             log::error!("No 'uri' field in notification parameters");
         }
@@ -72,6 +83,9 @@ impl LanguageServer for Backend {
 
     async fn shutdown(&self) -> Result<()> {
         log::info!("Event: shutdown");
+        if let Err(err) = self.viewer.send_request(ViewerRequest::Exit) {
+            log::trace!("Cannot show viewer: {err}");
+        }
         Ok(())
     }
 
@@ -179,13 +193,18 @@ impl LanguageServer for Backend {
                     };
 
                     log::info!("ShowPreview received for {uri}");
-                    if let Err(err) = self
-                        .processor
-                        .send_request(ProcessorRequest::DocumentShowPreview(uri.clone()))
+                    if let Err(err) =
+                        self.viewer
+                            .send_request(ViewerRequest::ShowSourceCodeFromFile {
+                                path: uri.path().into(),
+                            })
                     {
-                        return Ok(Some(serde_json::json!(format!(
-                            "processor request failed: {err}"
-                        ))));
+                        log::error!(
+                            "Could not send request to viewer: ShowSourceCodeFromFile(\"{uri}\"): {err}"
+                        );
+                        return Ok(Some(serde_json::json!({
+                            "error": "Cannot show viewer: {err}"
+                        })));
                     }
 
                     self.client
@@ -197,13 +216,11 @@ impl LanguageServer for Backend {
             }
             "microcad.hidePreview" => {
                 log::info!("HidePreview received");
-                if let Err(err) = self
-                    .processor
-                    .send_request(ProcessorRequest::DocumentHidePreview)
-                {
-                    return Ok(Some(serde_json::json!(format!(
-                        "processor request failed:{err}"
-                    ))));
+                if let Err(err) = self.viewer.send_request(ViewerRequest::Hide) {
+                    log::error!("Could not send request ViewerRequest::Hide: {err}");
+                    return Ok(Some(serde_json::json!({
+                        "error": "Cannot hide viewer: {err}"
+                    })));
                 }
                 self.client
                     .log_message(MessageType::INFO, "Preview hidden")
@@ -299,11 +316,18 @@ async fn main() {
 
     log::info!("Starting LSP server");
 
-    let processor = processor::ProcessorInterface::run(WorkspaceSettings { search_paths });
+    let processor = processor::ProcessorInterface::run(WorkspaceSettings {
+        search_paths: search_paths.clone(),
+    });
+    let viewer = ViewerProcessInterface::run(&search_paths);
 
-    let (service, socket) = LspService::build(|client| Backend { client, processor })
-        .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
-        .finish();
+    let (service, socket) = LspService::build(|client| Backend {
+        client,
+        processor,
+        viewer,
+    })
+    .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
+    .finish();
     log::info!("LSP service has been created");
 
     if args.stdio {
@@ -312,9 +336,9 @@ async fn main() {
     } else {
         let listener = tokio::net::TcpListener::bind("127.0.0.1:5007")
             .await
-            .unwrap();
+            .expect("bind listener to 127.0.0.1:5007");
         log::info!("LSP server listening...");
-        let (stream, _) = listener.accept().await.unwrap();
+        let (stream, _) = listener.accept().await.expect("accept socket");
         log::info!("Client has connected to LSP service");
         let (read, write) = tokio::io::split(stream);
         Server::new(read, write, socket).serve(service).await;

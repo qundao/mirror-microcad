@@ -38,6 +38,7 @@ PACKAGES=(
     "microcad"
     "microcad-viewer-ipc"
     "microcad-viewer"
+    "microcad-lsp"
 )
 
 # Publish all packages.
