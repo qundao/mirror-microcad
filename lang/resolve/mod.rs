@@ -10,7 +10,7 @@
 //! let source_file = SourceFile::load("my.µcad").expect("parsing success");
 //! let mut context = ResolveContext::create(
 //!     source_file,
-//!     &["./lib"],
+//!     &["./std/lib"],
 //!     None,
 //!     DiagHandler::default(),
 //! ).unwrap();

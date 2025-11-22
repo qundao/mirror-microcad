@@ -3,7 +3,7 @@
 
 //! External files register
 
-use crate::{resolve::*, syntax::*, MICROCAD_EXTENSIONS};
+use crate::{MICROCAD_EXTENSIONS, resolve::*, syntax::*};
 use derive_more::Deref;
 
 /// External files register.
@@ -260,17 +260,21 @@ fn search_mod_file_by_id(
 
 #[test]
 fn resolve_external_file() {
-    let externals = Externals::new(&["../lib"]).expect("test error");
+    let externals = Externals::new(&["../std/lib"]).expect("test error");
 
     assert!(!externals.is_empty());
 
     log::trace!("{externals}");
 
-    assert!(externals
-        .fetch_external(&"std::geo2d::Circle".into())
-        .is_ok());
+    assert!(
+        externals
+            .fetch_external(&"std::geo2d::Circle".into())
+            .is_ok()
+    );
 
-    assert!(externals
-        .fetch_external(&"non_std::geo2d::Circle".into())
-        .is_err());
+    assert!(
+        externals
+            .fetch_external(&"non_std::geo2d::Circle".into())
+            .is_err()
+    );
 }

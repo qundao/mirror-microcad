@@ -32,7 +32,7 @@ struct Args {
     pub input: std::path::PathBuf,
 
     /// Paths to search for files.
-    #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append, default_value = "./lib", global = true)]
+    #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append, default_value = "./std/lib", global = true)]
     pub search_paths: Vec<std::path::PathBuf>,
 }
 
@@ -81,7 +81,7 @@ impl Inspector {
         let search_paths = self.args.search_paths.clone();
         let search_path = search_paths
             .first()
-            .unwrap_or(&std::path::PathBuf::from("./lib"))
+            .unwrap_or(&std::path::PathBuf::from("./std/lib"))
             .clone(); // HACK
 
         // Run file watcher thread.

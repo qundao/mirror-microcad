@@ -28,7 +28,7 @@ pub struct Args {
 
     /// Paths to search for files.
     ///
-    /// By default, `./lib` (if it exists) and `~/.microcad/lib` are used.
+    /// By default, `./std/lib` (if it exists) and `~/.microcad/lib` are used.
     #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append, global = true)]
     pub search_paths: Vec<std::path::PathBuf>,
 }

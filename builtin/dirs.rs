@@ -3,9 +3,9 @@
 
 //! Builtin directories
 
-/// `./lib` (if exists) and `~/.config/microcad/lib` (if exists).
+/// `./std/lib` (if exists) and `~/.config/microcad/lib` (if exists).
 pub fn default_search_paths() -> Vec<std::path::PathBuf> {
-    let local_dir = std::path::PathBuf::from("./lib");
+    let local_dir = std::path::PathBuf::from("./std/lib");
     let mut search_paths = Vec::new();
 
     if let Some(global_root_dir) = global_root_dir()

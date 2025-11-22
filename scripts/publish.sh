@@ -26,11 +26,6 @@ else
 fi
 
 
-export MICROCAD_STD_DIR=`pwd`/lib/std
-echo "Publishing microcad..."
-echo "µcad std lib is located in: ${MICROCAD_STD_DIR}"
-# Try to build with `MICROCAD_STD_DIR` set before, so we can check if we actually have a standard library included in the binary and fail early if not. 
-cargo build
 
 PACKAGES=(
     "microcad-core"
@@ -39,6 +34,7 @@ PACKAGES=(
     "microcad-import"
     "microcad-builtin-proc-macros"
     "microcad-builtin"
+    "microcad-std"
     "microcad"
     "microcad-viewer-ipc"
     "microcad-viewer"
