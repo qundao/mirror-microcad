@@ -58,7 +58,7 @@ impl ViewerProcessInterface {
     }
 
     /// Run the viewer process.
-    pub fn run(search_paths: &[std::path::PathBuf]) -> Self {
+    pub fn run(search_paths: &[std::path::PathBuf], show_window: bool) -> Self {
         let search_paths = search_paths
             .iter()
             .map(|p| p.display().to_string())
@@ -83,6 +83,9 @@ impl ViewerProcessInterface {
             search_paths.iter().for_each(|search_path| {
                 command.arg("-P").arg(search_path);
             });
+            if !show_window {
+                command.arg("--hidden");
+            }
             let mut child = command
                 .arg("stdin://") // run the viewer as slave via stdin.
                 .current_dir(std::env::current_dir().expect("current dir"))

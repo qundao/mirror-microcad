@@ -38,9 +38,9 @@ impl Backend {
     async fn on_active_file_changed(&self, params: serde_json::Value) {
         log::trace!("on_active_file_changed: {params:?}");
         if let Ok(Some(url)) = read_uri("uri", &params) {
-            //            self.processor
-            //                .send_request(ProcessorRequest::UpdateDocument(url.clone()))
-            //                .expect("No error");
+            self.processor
+                .send_request(ProcessorRequest::UpdateDocument(url.clone()))
+                .expect("No error");
             match url.to_file_path() {
                 Ok(path) => {
                     log::info!("New active document: {:?}", path);
@@ -127,7 +127,7 @@ impl LanguageServer for Backend {
         log::info!("Did save: {}", params.text_document.uri);
 
         self.processor
-            .send_request(ProcessorRequest::UpdateDocument(params.text_document.uri))
+            .send_request(ProcessorRequest::AddDocument(params.text_document.uri))
             .expect("No error");
     }
 
@@ -186,9 +186,7 @@ impl LanguageServer for Backend {
                     }) {
                         Ok(uri) => uri,
                         Err(err) => {
-                            return Ok(Some(serde_json::json!(format!(
-                                "Parsing uri failed: {err}"
-                            ))));
+                            return Ok(Some(serde_json::json! ({"error": format!("{err}")})));
                         }
                     };
 
@@ -199,12 +197,8 @@ impl LanguageServer for Backend {
                                 path: uri.path().into(),
                             })
                     {
-                        log::error!(
-                            "Could not send request to viewer: ShowSourceCodeFromFile(\"{uri}\"): {err}"
-                        );
-                        return Ok(Some(serde_json::json!({
-                            "error": "Cannot show viewer: {err}"
-                        })));
+                        log::error!("{err}");
+                        return Ok(Some(serde_json::json! ({"error": format!("{err}")})));
                     }
 
                     self.client
@@ -319,7 +313,7 @@ async fn main() {
     let processor = processor::ProcessorInterface::run(WorkspaceSettings {
         search_paths: search_paths.clone(),
     });
-    let viewer = ViewerProcessInterface::run(&search_paths);
+    let viewer = ViewerProcessInterface::run(&search_paths, true);
 
     let (service, socket) = LspService::build(|client| Backend {
         client,

@@ -1,6 +1,8 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! µcad viewer
+
 use bevy::{
     app::App,
     render::{
@@ -26,6 +28,10 @@ pub struct Args {
     /// Windows stays on top.
     #[arg(long, default_value = "false", action = clap::ArgAction::SetTrue)]
     stay_on_top: bool,
+
+    /// Windows stays hidden (and can be shown via IPC.
+    #[arg(long, default_value = "false", action = clap::ArgAction::SetTrue)]
+    hidden: bool,
 
     /// Verbosity level (use -v, -vv, or -vvv)
     #[arg(short, action = clap::ArgAction::Count)]

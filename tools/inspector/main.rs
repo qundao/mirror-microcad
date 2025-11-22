@@ -174,7 +174,7 @@ impl Inspector {
         main_window.on_button_launch_viewer_clicked(move || {
             match viewer_process.write() {
                 Ok(mut process) => {
-                    *process = Some(ViewerProcessInterface::run(&search_paths));
+                    *process = Some(ViewerProcessInterface::run(&search_paths, false));
                     log::warn!("Already running!");
                 }
                 Err(err) => log::error!("{err}"),
