@@ -19,14 +19,7 @@
 -- Output --
 <NO VALUE>
 
--- Errors --
-warning: Unused local x.
-  ---> ../books/language/src/structure/functions.md:33:9
-     |
-  33 | fn pow( x: Scalar, n: Integer ) {
-     |         ^
-     |
-Unexpected warnings(s) which did occur in line(s): 33
+-- No Errors --
 -- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

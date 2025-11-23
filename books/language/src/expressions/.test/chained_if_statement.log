@@ -1,0 +1,63 @@
+-- Test --
+        Test name: chained_if_statement
+  Expected result: ok
+      Source file: ../books/language/src/expressions/if.md:32
+        Test path: ../books/language/src/expressions/.test
+
+-- Code --
+
+  32:   use std::ops::*;
+  33:   use std::math::*;
+  34:   use std::geo2d::*;
+  35:   
+  36:   sketch MySketch(a: Integer) {
+  37:       if a == 1 {
+  38:           Circle(1cm)
+  39:       } else if a == 2 {
+  40:           Rect(1cm)
+  41:       } else {
+  42:           Hexagon(1cm)
+  43:       }
+  44:   }
+  45:   
+  46:   MySketch([1,2,3]).align(X, 1cm);
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=10mm) ->
+      - direction = (x=1, y=0, z=0)
+      - spacing = 10mm
+      Operation __builtin::ops::align(spacing=10mm, x=1, y=0, z=0) ->
+        Multiplicity ->
+          Workpiece(sketch) chained_if_statement::MySketch(a=1) ->
+            - a = 1
+            Group ->
+              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+                - center = (x=0mm, y=0mm)
+                - radius = 10mm
+                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                  Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+          Workpiece(sketch) chained_if_statement::MySketch(a=2) ->
+            - a = 2
+            Group ->
+              Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
+                - height = 10mm
+                - width = 10mm
+                - x = -5mm
+                - y = -5mm
+                Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
+          Workpiece(sketch) chained_if_statement::MySketch(a=3) ->
+            - a = 3
+            Group ->
+              Workpiece(sketch) std::geo2d::Hexagon(radius=10mm) ->
+                - radius = 10mm
+                Workpiece(sketch) std::geo2d::Ngon(n=6, radius=10mm) ->
+                  - n = 6
+                  - radius = 10mm
+                  Primitive2D __builtin::geo2d::Ngon(n=6, radius=10mm) ->
+
+Export of "../books/language/src/expressions/.test/chained_if_statement-out.svg" successful.
+-- Test Result --
+OK

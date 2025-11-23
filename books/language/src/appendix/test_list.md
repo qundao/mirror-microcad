@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**168** tests have been evaluated with version **0.2.14** of microcad.
+**169** tests have been evaluated with version **0.2.14** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -44,6 +44,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/builtin/.test/builtin_translate_twice.svg)](../libraries/builtin/.test/builtin_translate_twice.log) | [builtin_translate_twice](../libraries/builtin/ops.md) |
 | [![test](../flow/calls/.test/call_function.svg)](../flow/calls/.test/call_function.log) | [call_function](../flow/calls/README.md) |
 | [![test](../flow/calls/.test/call_workbench.svg)](../flow/calls/.test/call_workbench.log) | [call_workbench](../flow/calls/README.md) |
+| [![test](../expressions/.test/chained_if_statement.svg)](../expressions/.test/chained_if_statement.log) | [chained_if_statement](../expressions/if.md) |
 | [![test](../structure/workbenches/.test/code.svg)](../structure/workbenches/.test/code.log) | [code](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/code_between_initializers.svg)](../structure/workbenches/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/README.md) |
@@ -69,6 +70,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/hull_single.svg)](../libraries/std/ops/.test/hull_single.log) | [hull_single](../libraries/std/ops/hull.md) |
 | [![test](../flow/.test/if_functions.svg)](../flow/.test/if_functions.log) | [if_functions](../flow/conditions.md) |
 | [![test](../flow/.test/if_models.svg)](../flow/.test/if_models.log) | [if_models](../flow/conditions.md) |
+| [![test](../expressions/.test/if_statement.svg)](../expressions/.test/if_statement.log) | [if_statement](../expressions/if.md) |
 | [![test](../structure/workbenches/.test/illegal_workbench_statement.svg)](../structure/workbenches/.test/illegal_workbench_statement.log) | [illegal_workbench_statement](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/init_property.svg)](../structure/workbenches/.test/init_property.log) | [init_property](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/initializers.svg)](../structure/workbenches/.test/initializers.log) | [initializers](../structure/workbenches/README.md) |
