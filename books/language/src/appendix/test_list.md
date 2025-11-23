@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**167** tests have been evaluated with version **0.2.14** of microcad.
+**168** tests have been evaluated with version **0.2.14** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -17,6 +17,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/.test/array_add.svg)](../types/collections/.test/array_add.log) | [array_add](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_div.svg)](../types/collections/.test/array_div.log) | [array_div](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_expressions.svg)](../types/collections/.test/array_expressions.log) | [array_expressions](../types/collections/arrays.md) |
+| [![test](../types/collections/.test/array_expressions_head_tail.svg)](../types/collections/.test/array_expressions_head_tail.log) | [array_expressions_head_tail](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_mul_scale.svg)](../types/collections/.test/array_mul_scale.log) | [array_mul_scale](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_neg.svg)](../types/collections/.test/array_neg.log) | [array_neg](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_sub.svg)](../types/collections/.test/array_sub.log) | [array_sub](../types/collections/arrays.md) |

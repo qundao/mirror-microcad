@@ -1,12 +1,12 @@
 -- Test --
         Test name: array_sub
   Expected result: ok
-      Source file: ../books/language/src/types/collections/arrays.md:86
+      Source file: ../books/language/src/types/collections/arrays.md:95
         Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  86:   std::debug::assert_eq([ [1,2]mm - 2mm, [-1,0]mm ]);
+  95:   std::debug::assert_eq([ [1,2]mm - 2mm, [-1,0]mm ]);
 
 -- No Output --
 -- No Errors --

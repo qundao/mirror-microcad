@@ -1,13 +1,13 @@
 -- Test --
         Test name: range_expressions
   Expected result: ok
-      Source file: ../books/language/src/types/collections/arrays.md:36
+      Source file: ../books/language/src/types/collections/arrays.md:45
         Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  36:   std::debug::assert_eq([[1..5], [1,2,3,4,5]]);
-  37:   std::debug::assert_eq([[-2..2], [-2,-1,0,1,2]]);
+  45:   std::debug::assert_eq([[1..5], [1,2,3,4,5]]);
+  46:   std::debug::assert_eq([[-2..2], [-2,-1,0,1,2]]);
 
 -- No Output --
 -- No Errors --

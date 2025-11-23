@@ -24,6 +24,15 @@ You can count the number of elements in an array using `std::count`:
 std::debug::assert_eq([std::count([1,2,3]), 3]);
 ```
 
+You can get the head and tail of an array using `std::head` and `std::tail`:
+
+[![test](.test/array_expressions_head_tail.svg)](.test/array_expressions_head_tail.log)
+
+```µcad,array_expressions_head_tail
+std::debug::assert_eq([std::head([1,2,3]), 1]);
+std::debug::assert_eq([std::tail([1,2,3]), [2,3]]);
+```
+
 ## Arrays as range: `[1..5]`
 
 You can generate an array via range expressions: `[1..5]`.
