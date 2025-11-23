@@ -91,14 +91,17 @@ impl Iterator for MultiplicityDescendants {
     type Item = Model;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let model = self.stack.pop();
-        if let Some(ref model) = model {
+        while let Some(ref model) = self.stack.pop() {
             let model_ = model.borrow();
             if matches!(model_.element(), Element::Multiplicity) {
+                // Expand but don't yield this node itself
                 self.stack.extend(model_.children.iter().rev().cloned());
+                continue;
             }
+            // Return only non-multiplicity elements
+            return Some(model.clone());
         }
-        model
+        None
     }
 }
 
