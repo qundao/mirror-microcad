@@ -1,12 +1,12 @@
 -- Test --
         Test name: array_add
   Expected result: ok
-      Source file: ../books/language/src/types/collections/arrays.md:76
+      Source file: ../books/language/src/types/collections/arrays.md:85
         Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  76:   std::debug::assert_eq([ [1,2]mm + 2mm, [3,4]mm ]);
+  85:   std::debug::assert_eq([ [1,2]mm + 2mm, [3,4]mm ]);
 
 -- No Output --
 -- No Errors --

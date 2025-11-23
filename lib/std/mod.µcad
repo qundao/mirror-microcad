@@ -6,6 +6,8 @@ pub use __builtin::math;
 pub use __builtin::print;
 pub use __builtin::type_of;
 pub use __builtin::count;
+pub use __builtin::head;
+pub use __builtin::tail;
 pub use __builtin::import;
 pub use __builtin::debug;
 pub use __builtin::log;

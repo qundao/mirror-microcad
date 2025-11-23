@@ -1,12 +1,12 @@
 -- Test --
         Test name: array_unit_bundling
   Expected result: ok
-      Source file: ../books/language/src/types/collections/arrays.md:66
+      Source file: ../books/language/src/types/collections/arrays.md:75
         Test path: ../books/language/src/types/collections/.test
 
 -- Code --
 
-  66:   std::debug::assert_eq([ [1mm, 2mm, 3mm], [1, 2, 3]mm ]);
+  75:   std::debug::assert_eq([ [1mm, 2mm, 3mm], [1, 2, 3]mm ]);
 
 -- No Output --
 -- No Errors --
