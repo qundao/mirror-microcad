@@ -57,6 +57,50 @@ fn count() -> Symbol {
     )
 }
 
+/// Return the first element in an array or string.
+fn head() -> Symbol {
+    Symbol::new_builtin_fn(
+        "head",
+        [].into_iter(),
+        &|_params, args, ctx| {
+            let arg = args.get_single()?;
+            Ok(match &arg.1.value {
+                Value::String(s) if s.len() > 0 => Value::String(s.chars().next().unwrap().to_string()),
+                Value::Array(a) if a.len() > 0 => a.head(),
+                Value::String(_) | Value::Array(_) => {
+                    ctx.error(arg.1, EvalError::BuiltinError("Value is empty.".into()))?;
+                    Value::None
+                }
+                _ => {
+                    ctx.error(arg.1, EvalError::BuiltinError("Value has no head.".into()))?;
+                    Value::None
+                }
+            })
+        },
+        None,
+    )
+}
+
+/// Return everything but the first element in an array or string.
+fn tail() -> Symbol {
+    Symbol::new_builtin_fn(
+        "tail",
+        [].into_iter(),
+        &|_params, args, ctx| {
+            let arg = args.get_single()?;
+            Ok(match &arg.1.value {
+                Value::String(s) => Value::String(s.chars().skip(1).collect()),
+                Value::Array(a) => Value::Array(a.tail()),
+                _ => {
+                    ctx.error(arg.1, EvalError::BuiltinError("Value has no tail.".into()))?;
+                    Value::None
+                }
+            })
+        },
+        None,
+    )
+}
+
 /// Convert a value into a string.
 fn to_string() -> Symbol {
     Symbol::new_builtin_fn(
@@ -76,6 +120,8 @@ pub fn builtin_module() -> Symbol {
         .symbol(debug::debug())
         .symbol(log::log())
         .symbol(count())
+        .symbol(head())
+        .symbol(tail())
         .symbol(type_of())
         .symbol(to_string())
         .symbol(print::print())

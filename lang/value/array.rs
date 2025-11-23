@@ -35,6 +35,16 @@ impl Array {
     pub fn fetch(&self) -> Vec<Value> {
         self.items.iter().cloned().collect::<Vec<_>>()
     }
+
+    /// Get the first element, or None
+    pub fn head(&self) -> Value {
+        self.items.iter().cloned().next().unwrap_or(Value::None)
+    }
+
+    /// Get all elements but the first
+    pub fn tail(&self) -> Array {
+        Array::from_values(self.items.iter().skip(1).cloned().collect(), self.ty.clone())
+    }
 }
 
 impl PartialEq for Array {

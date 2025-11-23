@@ -44,6 +44,8 @@ impl CallMethod for Array {
                 let is_descending = self.as_slice().windows(2).all(|w| w[0] >= w[1]);
                 Ok(Value::Bool(is_descending))
             }
+            "head" => Ok(self.head()),
+            "tail" => Ok(Value::Array(self.tail())),
             _ => {
                 context.error(id, EvalError::UnknownMethod(id.clone()))?;
                 Ok(Value::None)
