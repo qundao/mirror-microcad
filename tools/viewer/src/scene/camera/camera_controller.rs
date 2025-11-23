@@ -22,7 +22,7 @@ pub struct CameraControllerPlugin;
 
 impl Plugin for CameraControllerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, run_camera_controller);
+        app.add_systems(Update, (run_camera_controller, zoom_to_fit));
     }
 }
 
@@ -262,6 +262,7 @@ fn run_camera_controller(
     let delta = accumulated_mouse_motion.delta;
     let orbit_distance = state.scene.radius * 3.0;
 
+    // Orbit.
     if mouse_button_input.pressed(MouseButton::Left) {
         let orbit_speed = 0.005;
         let yaw_rot = Quat::from_rotation_z(delta.x * orbit_speed);
@@ -273,11 +274,47 @@ fn run_camera_controller(
         transform.translation = controller.target - transform.forward() * orbit_distance;
     }
 
+    // Strafe/translate.
     if mouse_button_input.pressed(MouseButton::Right) {
         let forward = *transform.up() * delta.y * 10.0;
         let right = *transform.right() * delta.x * -10.0;
         controller.target = controller.target + dt * right + dt * Vec3::Z + dt * forward;
 
         transform.translation = controller.target - transform.forward() * orbit_distance;
+    }
+}
+
+fn zoom_to_fit(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    state: Res<State>,
+    windows: Query<&Window>,
+    mut query: Query<&mut Projection, With<Camera>>,
+) {
+    if !keyboard.just_pressed(KeyCode::KeyF) {
+        return;
+    }
+    log::info!("Test");
+
+    let Ok(mut projection) = query.single_mut() else {
+        return;
+    };
+    let Ok(window) = windows.single() else {
+        return;
+    };
+
+    match projection.as_mut() {
+        Projection::Orthographic(ortho) => {
+            // Change the projection parameters
+            use bevy::render::camera::CameraProjection;
+
+            ortho.scale = 1.0;
+            ortho.far = state.scene.radius * 6.0;
+
+            ortho.update(window.width(), window.height());
+            projection.update(window.width(), window.height());
+        }
+        _ => {
+            // Not an orthographic camera
+        }
     }
 }
