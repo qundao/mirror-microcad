@@ -18,7 +18,8 @@ ln -s editors/vscode ~/.vscode/extensions/
 ### Build VSIX package
 
 ```sh
-npm install -g @vscode/vsce
+sudo npm install -g @vscode/vsce
+npm install vscode-languageclient 
 vsce package
 ```
 
