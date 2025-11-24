@@ -35,20 +35,27 @@ struct Backend {
 }
 
 impl Backend {
+    fn send_lsp(&self, req: ProcessorRequest) {
+        if let Err(err) = self.processor.send_request(req) {
+            log::error!("Cannot send request to lsp processor: {err}")
+        }
+    }
+    fn send_viewer(&self, req: ViewerRequest) {
+        if let Err(err) = self.viewer.send_request(req) {
+            log::error!("Cannot send request to viewer: {err}")
+        }
+    }
+
     async fn on_active_file_changed(&self, params: serde_json::Value) {
         log::trace!("on_active_file_changed: {params:?}");
-        if let Ok(Some(url)) = read_uri("uri", &params) {
-            self.processor
-                .send_request(ProcessorRequest::UpdateDocument(url.clone()))
-                .expect("No error");
-            match url.to_file_path() {
+        if let Ok(Some(uri)) = read_uri("uri", &params) {
+            self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
+            match uri.to_file_path() {
                 Ok(path) => {
                     log::info!("New active document: {:?}", path);
-                    self.viewer
-                        .send_request(ViewerRequest::ShowSourceCodeFromFile { path })
-                        .expect("No error");
+                    self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
                 }
-                Err(_) => todo!(),
+                Err(()) => log::error!("Cannot parse URI: {uri}"),
             }
         } else {
             log::error!("No 'uri' field in notification parameters");
@@ -59,7 +66,7 @@ impl Backend {
 #[async_trait]
 impl LanguageServer for Backend {
     async fn initialize(&self, _: InitializeParams) -> Result<InitializeResult> {
-        log::info!("Event: initialize");
+        log::info!("initialize");
         Ok(InitializeResult {
             server_info: None,
             capabilities: ServerCapabilities {
@@ -75,77 +82,87 @@ impl LanguageServer for Backend {
     }
 
     async fn initialized(&self, _: InitializedParams) {
-        log::info!("Event: initialized");
+        log::info!("initialized");
         self.client
             .log_message(MessageType::INFO, "server initialized!")
             .await;
     }
 
     async fn shutdown(&self) -> Result<()> {
-        log::info!("Event: shutdown");
-        if let Err(err) = self.viewer.send_request(ViewerRequest::Exit) {
-            log::trace!("Cannot show viewer: {err}");
-        }
+        log::info!("shutdown");
+        self.send_viewer(ViewerRequest::Exit);
         Ok(())
     }
 
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
-        log::info!("Event: did_change");
         let uri = params.text_document.uri;
-        let content_changes = params.content_changes;
+        match uri.to_file_path() {
+            Ok(path) => {
+                log::info!("Did change {path:?}");
+                for change in params.content_changes {
+                    self.client
+                        .log_message(
+                            MessageType::INFO,
+                            format!("Change in {:?}: {:?}", path, change.range),
+                        )
+                        .await;
 
-        for change in content_changes {
-            self.client
-                .log_message(
-                    MessageType::INFO,
-                    format!("Change in {}: {:?}", uri, change.range),
-                )
-                .await;
+                    if let Some(range) = change.range {
+                        let params = TextDocumentPositionParams {
+                            text_document: TextDocumentIdentifier { uri: uri.clone() },
+                            position: range.start,
+                        };
 
-            if let Some(range) = change.range {
-                let params = TextDocumentPositionParams {
-                    text_document: TextDocumentIdentifier { uri: uri.clone() },
-                    position: range.start,
-                };
-
-                self.client
-                    .send_notification::<CursorPositionNotify>(params)
-                    .await;
+                        self.client
+                            .send_notification::<CursorPositionNotify>(params)
+                            .await;
+                    }
+                }
             }
+            Err(()) => log::error!("Cannot parse URI: {uri}"),
         }
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
-        log::info!("Did open: {}", params.text_document.uri);
-
-        self.processor
-            .send_request(ProcessorRequest::AddDocument(params.text_document.uri))
-            .expect("No error");
+        let uri = params.text_document.uri;
+        match uri.to_file_path() {
+            Ok(path) => {
+                log::info!("Did open: {path:?}");
+                self.send_lsp(ProcessorRequest::AddDocument(uri))
+            }
+            Err(_) => log::error!("Cannot parse URI: {uri}"),
+        }
     }
 
     async fn did_save(&self, params: DidSaveTextDocumentParams) {
-        log::info!("Did save: {}", params.text_document.uri);
-
-        self.processor
-            .send_request(ProcessorRequest::AddDocument(params.text_document.uri))
-            .expect("No error");
+        let uri = params.text_document.uri;
+        match uri.to_file_path() {
+            Ok(path) => {
+                log::info!("Did save: {path:?}");
+                self.send_lsp(ProcessorRequest::AddDocument(uri))
+            }
+            Err(_) => log::error!("Cannot parse URI: {uri}"),
+        }
     }
 
     async fn did_close(&self, params: DidCloseTextDocumentParams) {
-        self.processor
-            .send_request(ProcessorRequest::RemoveDocument(params.text_document.uri))
-            .expect("No error")
+        let uri = params.text_document.uri;
+        match uri.to_file_path() {
+            Ok(path) => {
+                log::info!("Did close: {path:?}");
+                self.send_lsp(ProcessorRequest::RemoveDocument(uri))
+            }
+            Err(_) => log::error!("Cannot parse URI: {uri}"),
+        }
     }
 
     async fn diagnostic(
         &self,
         params: DocumentDiagnosticParams,
     ) -> Result<DocumentDiagnosticReportResult> {
-        self.processor
-            .send_request(ProcessorRequest::GetDocumentDiagnostics(
-                params.text_document.uri,
-            ))
-            .expect("No error");
+        self.send_lsp(ProcessorRequest::GetDocumentDiagnostics(
+            params.text_document.uri,
+        ));
 
         // Wait for response
         if let Ok(ProcessorResponse::DocumentDiagnostics(_url, diag)) =
@@ -286,11 +303,11 @@ impl Args {
 async fn main() {
     let args = Args::parse();
     if let Some(log_file) = args.log_file {
-        let file = std::fs::File::create(log_file).expect("could not open log file");
+        let file = std::fs::File::create(log_file).expect("could not create log file");
         let target = Box::new(file);
         env_logger::Builder::new()
             .target(env_logger::Target::Pipe(target))
-            .filter(None, log::LevelFilter::Trace)
+            .filter(None, log::LevelFilter::Info)
             .init();
     } else {
         env_logger::init()

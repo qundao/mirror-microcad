@@ -7,12 +7,11 @@
 //! It runs in a separate thread and communication is handled via
 //! crossbeam channels with requests and responses.
 
-use std::{collections::HashMap, path::PathBuf, rc::Rc};
+use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_lang::{
-    eval::EvalContext,
-    resolve::ResolveContext,
+    eval::{Capture, EvalContext},
     src_ref::{SrcRef, SrcReferrer},
     syntax::SourceFile,
 };
@@ -36,101 +35,23 @@ pub enum ProcessorResponse {
     DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
 }
 
-struct Document {
-    source_file: Rc<SourceFile>,
-    eval_context: EvalContext,
-    diag: Option<FullDocumentDiagnosticReport>,
-}
+fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<tower_lsp::lsp_types::Range> {
+    match src_ref.0 {
+        Some(src_ref_inner) => {
+            use tower_lsp::lsp_types::{Position, Range};
 
-impl Document {
-    fn new(source_file: Rc<SourceFile>, search_paths: &[PathBuf]) -> anyhow::Result<Self> {
-        // resolve the file
-        let resolve_context = ResolveContext::create(
-            source_file.clone(),
-            search_paths,
-            Some(microcad_builtin::builtin_module()),
-            microcad_lang::diag::DiagHandler::default(),
-        )?;
+            let start = Position::new(
+                src_ref_inner.at.line as u32 - 1,
+                src_ref_inner.at.col as u32 - 1,
+            );
+            let end = Position::new(
+                src_ref_inner.at.line as u32 - 1,
+                (src_ref_inner.at.col + src_ref_inner.range.len()) as u32 - 1,
+            );
 
-        let eval_context = EvalContext::new(
-            resolve_context,
-            microcad_lang::eval::Stdout::new(),
-            microcad_builtin::builtin_exporters(),
-            microcad_builtin::builtin_importers(),
-        );
-
-        Ok(Self {
-            source_file,
-            eval_context,
-            diag: None,
-        })
-    }
-
-    fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<tower_lsp::lsp_types::Range> {
-        match src_ref.0 {
-            Some(src_ref_inner) => {
-                use tower_lsp::lsp_types::{Position, Range};
-
-                let start = Position::new(
-                    src_ref_inner.at.line as u32 - 1,
-                    src_ref_inner.at.col as u32 - 1,
-                );
-                let end = Position::new(
-                    src_ref_inner.at.line as u32 - 1,
-                    (src_ref_inner.at.col + src_ref_inner.range.len()) as u32 - 1,
-                );
-
-                Some(Range::new(start, end))
-            }
-            None => None,
+            Some(Range::new(start, end))
         }
-    }
-
-    fn eval(&mut self) -> anyhow::Result<()> {
-        let _ = self
-            .eval_context
-            .eval()
-            .map_err(|err| anyhow::anyhow!("Eval error: {err}"));
-
-        // Create diagnostic.
-
-        let diagnostics = self
-            .eval_context
-            .diag
-            .diag_list
-            .iter()
-            .filter_map(|diag| {
-                let message = diag.message();
-                match Self::src_ref_to_lsp_range(diag.src_ref()) {
-                    Some(range) => {
-                        let severity = match diag.level() {
-                            microcad_lang::diag::Level::Trace => DiagnosticSeverity::HINT,
-                            microcad_lang::diag::Level::Info => DiagnosticSeverity::INFORMATION,
-                            microcad_lang::diag::Level::Warning => DiagnosticSeverity::WARNING,
-                            microcad_lang::diag::Level::Error => DiagnosticSeverity::ERROR,
-                        };
-
-                        Some(Diagnostic::new(
-                            range,
-                            Some(severity),
-                            None,
-                            None,
-                            message,
-                            None,
-                            None,
-                        ))
-                    }
-                    None => None,
-                }
-            })
-            .collect();
-
-        self.diag = Some(FullDocumentDiagnosticReport {
-            result_id: None,
-            items: diagnostics,
-        });
-
-        Ok(())
+        None => None,
     }
 }
 
@@ -144,10 +65,8 @@ pub struct WorkspaceSettings {
 /// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 pub struct Processor {
     workspace_settings: WorkspaceSettings,
-    documents: HashMap<Url, Document>,
-
+    context: Option<EvalContext>,
     pub request_handler: Receiver<ProcessorRequest>,
-
     /// Outputs
     pub response_sender: Sender<ProcessorResponse>,
 }
@@ -160,7 +79,7 @@ impl Processor {
         match request {
             ProcessorRequest::SetCursorPosition { .. } => todo!(),
             ProcessorRequest::AddDocument(url) => self.add_document(&url),
-            ProcessorRequest::RemoveDocument(url) => self.remove_document(&url),
+            ProcessorRequest::RemoveDocument(_) => Ok(vec![]),
             ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
         }
@@ -168,55 +87,82 @@ impl Processor {
 
     /// Process a µcad file (parse, resolve, eval).
     pub fn add_document(&mut self, url: &Url) -> ProcessorResult {
-        match self.documents.get(url) {
-            Some(_) => {
-                log::info!("Document {url} already exists.");
-            }
-            None => {
-                let source_file = SourceFile::load(
-                    url.to_file_path()
-                        .map_err(|_| anyhow::anyhow!("Error converting {url} to file path."))?,
-                )?;
-                self.documents.insert(
-                    url.clone(),
-                    Document::new(source_file, &self.workspace_settings.search_paths)?,
-                );
-            }
-        }
-
-        self.update_document(url)?;
-
-        Ok(vec![])
+        self.update_document(url)
     }
 
     /// Update (re-evaluate) a document.
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
-        match self.documents.get_mut(url) {
-            Some(document) => document.eval()?,
-            None => {
-                log::warn!("Document {url} does not exist!");
-            }
+        let source_file = SourceFile::load(
+            url.to_file_path()
+                .map_err(|_| anyhow::anyhow!("Error converting {url} to file path."))?,
+        )?;
+
+        self.context = EvalContext::from_source(
+            source_file,
+            Some(microcad_builtin::builtin_module()),
+            &self.workspace_settings.search_paths,
+            Capture::new(),
+            microcad_builtin::builtin_exporters(),
+            microcad_builtin::builtin_importers(),
+            0,
+        )
+        .ok();
+
+        if let Some(context) = &mut self.context {
+            context.eval()?;
         }
 
         Ok(vec![])
     }
 
-    /// Remove a document.
-    pub fn remove_document(&mut self, url: &Url) -> ProcessorResult {
-        self.documents.remove(url);
-        Ok(vec![])
-    }
-
     pub fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
-        match self.documents.get(url) {
-            Some(document) => match &document.diag {
-                Some(diag) => Ok(vec![ProcessorResponse::DocumentDiagnostics(
-                    url.clone(),
-                    diag.clone(),
-                )]),
-                None => Ok(vec![]), // TODO: No diagnostics available response here?
-            },
-            None => Ok(vec![]),
+        if let Some(context) = &self.context {
+            log::info!("{:?}", context.diag.diag_list);
+            Ok(vec![ProcessorResponse::DocumentDiagnostics(
+                url.clone(),
+                FullDocumentDiagnosticReport {
+                    result_id: None,
+                    items: context
+                        .diag
+                        .diag_list
+                        .iter()
+                        .filter_map(|diag| {
+                            let message = diag.message();
+                            match src_ref_to_lsp_range(diag.src_ref()) {
+                                Some(range) => {
+                                    let severity = match diag.level() {
+                                        microcad_lang::diag::Level::Trace => {
+                                            DiagnosticSeverity::HINT
+                                        }
+                                        microcad_lang::diag::Level::Info => {
+                                            DiagnosticSeverity::INFORMATION
+                                        }
+                                        microcad_lang::diag::Level::Warning => {
+                                            DiagnosticSeverity::WARNING
+                                        }
+                                        microcad_lang::diag::Level::Error => {
+                                            DiagnosticSeverity::ERROR
+                                        }
+                                    };
+
+                                    Some(Diagnostic::new(
+                                        range,
+                                        Some(severity),
+                                        None,
+                                        None,
+                                        message,
+                                        None,
+                                        None,
+                                    ))
+                                }
+                                None => None,
+                            }
+                        })
+                        .collect(),
+                },
+            )])
+        } else {
+            Ok(vec![])
         }
     }
 }
@@ -245,9 +191,9 @@ impl ProcessorInterface {
         std::thread::spawn(move || {
             let mut processor = Processor {
                 workspace_settings,
-                documents: HashMap::default(),
                 request_handler: request_receiver,
                 response_sender,
+                context: None,
             };
 
             loop {
