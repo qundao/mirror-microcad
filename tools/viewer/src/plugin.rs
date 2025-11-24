@@ -24,6 +24,7 @@ use crate::{stdin::StdinMessageReceiver, *};
 pub enum MicrocadPluginInput {
     /// Load and watch an input file.
     File {
+        /// File path that is loaded.
         path: std::path::PathBuf,
 
         /// Full name of resolved symbol to displayed, `std::geo2d::Rect`.
@@ -92,9 +93,15 @@ impl MicrocadPluginInput {
                 url
             }
 
-            MicrocadPluginInput::Stdin(_) => {
+            MicrocadPluginInput::Stdin(stdin) => {
+                let default = Url::parse("stdin://").unwrap();
+                match stdin {
+                    Some(stdin) => stdin.current_path().as_ref().map_or(default, |path| {
+                        Url::parse(format!("stdin://{}", path.display()).as_str()).unwrap()
+                    }),
+                    None => default,
+                }
                 // Simplest possible representation
-                Url::parse("stdin://").unwrap()
             }
         }
     }
