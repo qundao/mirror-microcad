@@ -1,25 +1,47 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Viewer materials.
+//! Grid entity.
 
-use bevy::render::{
-    camera::{Camera, Projection},
-    mesh::{Mesh, Mesh3d},
-};
 use bevy::{
     asset::Assets,
     ecs::{
+        component::Component,
         query::With,
         system::{Commands, Query, Res, ResMut},
     },
+    input::ButtonInput,
+    input::keyboard::KeyCode,
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::MeshMaterial3d,
+    render::view::Visibility,
+    render::{
+        camera::{Camera, Projection},
+        mesh::{Mesh, Mesh3d},
+    },
     transform::components::Transform,
 };
 
+#[derive(Component)]
+pub struct ToggleMe;
+
 use crate::{scene::get_current_zoom_level, state::State};
 use crate::{to_bevy::ToBevy, *};
+
+pub fn toggle_grid(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    mut query: Query<&mut Visibility, With<ToggleMe>>,
+) {
+    if keyboard.just_pressed(KeyCode::KeyG) {
+        let mut visibility = query.single_mut().expect("Visible");
+
+        *visibility = match *visibility {
+            Visibility::Visible => Visibility::Hidden,
+            Visibility::Hidden => Visibility::Visible,
+            _ => Visibility::Visible,
+        };
+    }
+}
 
 pub fn spawn_grid_plane(
     mut commands: Commands,
@@ -43,6 +65,8 @@ pub fn spawn_grid_plane(
                     ..Default::default()
                 })),
                 bevy::picking::Pickable::IGNORE,
+                Visibility::Visible,
+                ToggleMe,
             ))
             .id(),
     );
