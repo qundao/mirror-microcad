@@ -98,7 +98,7 @@ which can be displayed e.g. with [MeshLab](https://www.meshlab.net/).
 
 The resulting STL model looks like this:
 
-![Parametric Lego Brick](examples/brick/bricks.png)
+![Parametric Lego Brick](examples/brick/brick.png)
 
 ## Documentation
 
