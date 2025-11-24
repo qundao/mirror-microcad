@@ -13,6 +13,7 @@ repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
 default-run = "microcad"
+
 [[bin]]
 name = "microcad"
 path = "main.rs"
@@ -35,6 +36,7 @@ microcad-lang = { workspace = true }
 microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
 microcad-export = { workspace = true }
+microcad-std = { workspace = true }
 
 [build-dependencies]
 walkdir = "2"

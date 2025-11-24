@@ -17,7 +17,7 @@
 //! let mut context = EvalContext::from_source(
 //!     "my.µcad",              // root file name
 //!     builtin_module(),    // `__builtin` library
-//!     &["./lib".into()]       // list of library paths
+//!     &["./std/lib".into()]       // list of std library path
 //! ).expect("successful load, parse and resolve");
 //!
 //! // evaluate the source file in it's context

@@ -9,6 +9,7 @@ default-members = [
     "lang",
     "import",
     "export",
+    "std",
     "tests",
     "tools/cli",
     "tools/update-copyright",
@@ -24,6 +25,7 @@ members = [
     "tests",
     "import",
     "export",
+    "std",
     "tools/cli",
     "tools/inspector",
     "tools/update-copyright",
@@ -60,3 +62,4 @@ microcad-builtin = { path = "builtin", version = "0.2.14" }
 microcad-builtin-proc-macros = { path = "builtin/proc_macros", version = "0.2.14" }
 microcad-viewer-ipc = { path = "tools/viewer-ipc", version = "0.2.14" }
 microcad-viewer = { path = "tools/viewer", version = "0.2.14" }
+microcad-std = { path = "std", version = "0.2.14" }

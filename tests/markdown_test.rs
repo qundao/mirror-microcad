@@ -190,7 +190,7 @@ fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
     EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
-        &["../lib", "../assets"],
+        &["../std/lib", "../assets"],
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),

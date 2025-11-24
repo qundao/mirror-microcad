@@ -1,0 +1,21 @@
+# Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-std"
+description = "µcad Standard Library"
+documentation = "https://docs.rs/microcad-std"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+dirs = "6"
+rust-embed = "8.9"
