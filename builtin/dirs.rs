@@ -16,6 +16,9 @@ pub fn default_search_paths() -> Vec<std::path::PathBuf> {
     if local_dir.exists() {
         search_paths.push(local_dir);
     }
+    if let Some(root_dir) = option_env!("STDLIB_PATH") {
+        search_paths.push(root_dir.into());
+    }
 
     search_paths
 }
