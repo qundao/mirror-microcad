@@ -189,6 +189,9 @@ pub fn handle_processor_responses(
                     })
                 }))
             }
+            ProcessorResponse::StateChanged(state) => {
+                events.write(ViewerEvent::ProcessingStateChanged(state));
+            }
         }
 
         if state.processor.response_receiver.is_empty() {

@@ -18,6 +18,7 @@ use microcad_core::Length;
 
 use crate::{
     State, material,
+    processor::ProcessingState,
     state::{Cursor, ModelViewState},
 };
 
@@ -30,6 +31,7 @@ pub enum ViewerEvent {
     SelectOne(Uuid),
     SetCursor(Cursor),
     ZoomToFit,
+    ProcessingStateChanged(ProcessingState),
 }
 
 impl ViewerEvent {
@@ -72,7 +74,6 @@ pub fn handle_viewer_event(
                 {
                     state.scene.radius = **radius as f32;
                     material.radius = **radius as f32;
-                    log::info!("Radius: {}", **radius);
                 }
             }
             ViewerEvent::SelectAll => {
@@ -114,7 +115,10 @@ pub fn handle_viewer_event(
                 let Ok(window) = windows.single() else {
                     return;
                 };
-                crate::scene::zoom_to_fit(projection.as_mut(), window);
+                crate::scene::zoom_to_fit(state.scene.radius, projection.as_mut(), window);
+            }
+            ViewerEvent::ProcessingStateChanged(processing_state) => {
+                state.processing_state = processing_state.clone();
             }
         }
     }

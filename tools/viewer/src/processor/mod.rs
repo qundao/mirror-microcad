@@ -21,7 +21,7 @@ pub use request::ProcessorRequest;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
-use microcad_lang::{model::Model, rc::RcMut, render::*, syntax::SourceFile};
+use microcad_lang::{diag::Diag, model::Model, rc::RcMut, render::*, syntax::SourceFile};
 
 /// A processor response.
 ///
@@ -32,10 +32,25 @@ pub enum ProcessorResponse {
     NewModelInfo(Uuid, ModelInfo),
     UpdateMaterials(Vec<Uuid>),
     SpawnModelInstances(Vec<Uuid>),
+    StateChanged(ProcessingState),
 }
 
-/// The state of the processor.
+/// The current state of the processor.
+#[derive(Debug, Clone, Default)]
+pub enum ProcessingState {
+    #[default]
+    /// The processor does currently nothing.
+    Idle,
+    /// The processor is busy.
+    Busy,
+    /// The processor is in an error state.
+    Error,
+}
+
+/// The context of the processor.
 pub struct ProcessorContext {
+    state: ProcessingState,
+
     /// Flag to tell whether to initialize.
     initialized: bool,
 
@@ -61,6 +76,7 @@ pub struct ProcessorContext {
 impl Default for ProcessorContext {
     fn default() -> Self {
         Self {
+            state: Default::default(),
             initialized: false,
             search_paths: Default::default(),
             resolution: Default::default(),
@@ -80,7 +96,7 @@ impl Default for ProcessorContext {
 /// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 struct Processor {
     /// The state of the processor.
-    pub state: ProcessorContext,
+    pub context: ProcessorContext,
 
     /// Requests.
     pub request_receiver: Receiver<ProcessorRequest>,
@@ -90,6 +106,13 @@ struct Processor {
 }
 
 impl Processor {
+    fn state_change(&mut self, state: ProcessingState) {
+        self.context.state = state.clone();
+        self.response_sender
+            .send(ProcessorResponse::StateChanged(state))
+            .expect("No error")
+    }
+
     /// Handle processor request.
     pub(crate) fn handle_request(
         &mut self,
@@ -97,53 +120,65 @@ impl Processor {
     ) -> anyhow::Result<Vec<ProcessorResponse>> {
         match request {
             ProcessorRequest::Initialize { config } => {
-                self.state.search_paths = config.search_paths.clone();
-                self.state.theme = config.theme;
-                self.state.initialized = true;
+                self.context.search_paths = config.search_paths.clone();
+                self.context.theme = config.theme;
+                self.context.initialized = true;
+                self.context.state = ProcessingState::Idle;
                 Ok(vec![])
             }
-            ProcessorRequest::ParseFile(path) => match SourceFile::load(&path) {
-                Ok(source_file) => {
-                    self.state.source_file = Some(source_file);
-                    self.eval()?;
-                    self.render(None)?;
-                    self.respond()
-                }
-                Err(err) => {
-                    log::error!("{err}");
-                    Ok(vec![])
-                }
-            },
-            ProcessorRequest::ParseSource { path, name, source } => {
-                match SourceFile::load_from_str(
-                    Some(name.unwrap_or(String::from("<none>")).as_str()),
-                    path.unwrap_or(std::path::PathBuf::from("<virtual>")),
-                    &source,
-                ) {
+            ProcessorRequest::ParseFile(path) => {
+                self.state_change(ProcessingState::Busy);
+
+                match SourceFile::load(&path) {
                     Ok(source_file) => {
-                        self.state.source_file = Some(source_file);
+                        self.context.source_file = Some(source_file);
                         self.eval()?;
                         self.render(None)?;
                         self.respond()
                     }
                     Err(err) => {
                         log::error!("{err}");
+                        self.state_change(ProcessingState::Error);
+                        Ok(vec![])
+                    }
+                }
+            }
+            ProcessorRequest::ParseSource { path, name, source } => {
+                self.state_change(ProcessingState::Busy);
+
+                match SourceFile::load_from_str(
+                    name.as_ref().map(|s| s.as_str()),
+                    path.unwrap_or(std::path::PathBuf::from("<virtual>")),
+                    &source,
+                ) {
+                    Ok(source_file) => {
+                        self.context.source_file = Some(source_file);
+                        self.eval()?;
+                        self.render(None)?;
+                        self.respond()
+                    }
+                    Err(err) => {
+                        log::error!("{err}");
+                        self.state_change(ProcessingState::Error);
                         Ok(vec![])
                     }
                 }
             }
             ProcessorRequest::Eval => {
+                self.state_change(ProcessingState::Busy);
                 self.eval()?;
                 self.render(None)?;
                 self.respond()
             }
             ProcessorRequest::Render(resolution) => {
+                self.state_change(ProcessingState::Busy);
                 self.render(resolution)?;
                 self.respond()
             }
             ProcessorRequest::Export { .. } => todo!(),
             ProcessorRequest::SetLineNumber(line_number) => {
-                self.state.line_number = line_number;
+                self.state_change(ProcessingState::Busy);
+                self.context.line_number = line_number;
                 self.respond()
             }
         }
@@ -151,16 +186,16 @@ impl Processor {
 
     /// We can render if the processor is initialized and we have evaluated some source into a model.
     pub(crate) fn can_render(&self) -> bool {
-        self.state.initialized && self.state.model.is_some()
+        self.context.initialized && self.context.model.is_some()
     }
 
     pub(crate) fn eval(&mut self) -> anyhow::Result<()> {
-        match &self.state.source_file {
+        match &self.context.source_file {
             Some(source_file) => {
                 // resolve the file
                 let resolve_context = microcad_lang::resolve::ResolveContext::create(
                     source_file.clone(),
-                    &self.state.search_paths,
+                    &self.context.search_paths,
                     Some(microcad_builtin::builtin_module()),
                     microcad_lang::diag::DiagHandler::default(),
                 )?;
@@ -172,10 +207,27 @@ impl Processor {
                     microcad_builtin::builtin_importers(),
                 );
 
-                self.state.model = eval_context.eval()?;
+                match eval_context.eval() {
+                    Ok(model) => {
+                        self.context.model = model;
+                        if eval_context.has_errors() {
+                            self.state_change(ProcessingState::Error);
+                            return Err(anyhow::anyhow!("Eval error"));
+                        }
+                    }
+                    Err(err) => {
+                        log::error!("Eval error {err}");
+                        self.state_change(ProcessingState::Error);
+                        return Err(err.into());
+                    }
+                }
+
                 Ok(())
             }
-            None => Err(anyhow::anyhow!("No source code to evaluate.")),
+            None => {
+                self.state_change(ProcessingState::Error);
+                Err(anyhow::anyhow!("No source code to evaluate."))
+            }
         }
     }
 
@@ -184,14 +236,14 @@ impl Processor {
         if self.can_render() {
             let resolution = match resolution {
                 Some(resolution) => resolution,
-                None => self.state.resolution.clone(),
+                None => self.context.resolution.clone(),
             };
-            let model = self.state.model.as_ref().expect("Model");
+            let model = self.context.model.as_ref().expect("Model");
 
             let mut render_context = RenderContext::init(
                 model,
                 resolution.clone(),
-                Some(self.state.render_cache.clone()),
+                Some(self.context.render_cache.clone()),
             )?;
 
             let _: Model = model.render_with_context(&mut render_context)?;
@@ -199,35 +251,40 @@ impl Processor {
             // Remove unused cache items.
             {
                 log::info!("Render cache");
-                let mut cache = self.state.render_cache.borrow_mut();
+                let mut cache = self.context.render_cache.borrow_mut();
                 cache.garbage_collection();
             }
 
-            self.state.resolution = resolution;
+            self.context.resolution = resolution;
             Ok(())
         } else {
+            self.state_change(ProcessingState::Error);
+
             Err(anyhow::anyhow!("Could not render model."))
         }
     }
 
+    /// Update the model instances and generate processor responses.
     fn respond(&mut self) -> anyhow::Result<Vec<ProcessorResponse>> {
-        if let Some(model) = self.state.model.clone() {
+        if let Some(model) = self.context.model.clone() {
             let mut responses = Vec::new();
             responses.push(ProcessorResponse::RemoveModelInstances(
-                self.state.instance_registry.fetch_model_uuids(),
+                self.context.instance_registry.fetch_model_uuids(),
             ));
 
-            self.state.instance_registry.clear_model_uuids();
+            self.context.instance_registry.clear_model_uuids();
             self.generate_responses(&model, &mut responses);
             log::info!("{} responses", responses.len());
 
             responses.push(ProcessorResponse::UpdateMaterials(
-                self.state.instance_registry.fetch_model_uuids(),
+                self.context.instance_registry.fetch_model_uuids(),
             ));
 
             responses.push(ProcessorResponse::SpawnModelInstances(
-                self.state.instance_registry.fetch_model_uuids(),
+                self.context.instance_registry.fetch_model_uuids(),
             ));
+
+            self.state_change(ProcessingState::Idle);
 
             Ok(responses)
         } else {
@@ -255,7 +312,11 @@ impl Processor {
                 let mut recurse = false;
 
                 // Add a new mesh asset, when we do not have geometry with a uuid in the cache.
-                if !self.state.instance_registry.contains_geometry_output(&uuid) {
+                if !self
+                    .context
+                    .instance_registry
+                    .contains_geometry_output(&uuid)
+                {
                     let mesh = match &output.geometry {
                         Some(GeometryOutput::Geometry2D(geometry)) => {
                             Some(geometry.inner.to_bevy_mesh_default())
@@ -268,7 +329,7 @@ impl Processor {
 
                     match mesh {
                         Some(mesh) => {
-                            self.state.instance_registry.insert_geometry_output(uuid);
+                            self.context.instance_registry.insert_geometry_output(uuid);
                             responses.push(ProcessorResponse::NewMeshAsset(uuid, mesh));
                         }
                         None => {
@@ -278,8 +339,8 @@ impl Processor {
                 }
 
                 let uuid = registry::generate_model_uuid(model);
-                if !self.state.instance_registry.contains_model(&uuid) {
-                    self.state.instance_registry.insert_model(uuid);
+                if !self.context.instance_registry.contains_model(&uuid) {
+                    self.context.instance_registry.insert_model(uuid);
 
                     responses.push(ProcessorResponse::NewModelInfo(
                         uuid,
@@ -317,7 +378,7 @@ impl ProcessorInterface {
 
         std::thread::spawn(move || {
             let mut processor = Processor {
-                state: ProcessorContext::default(),
+                context: ProcessorContext::default(),
                 request_receiver,
                 response_sender,
             };

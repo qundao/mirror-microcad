@@ -109,6 +109,7 @@ impl Plugin for ScenePlugin {
             //.add_systems(Startup, ruler::spawn_ruler_plane)
             .add_systems(Startup, camera::setup_camera)
             .add_systems(Update, draw_mesh_intersections)
+            .add_systems(Update, overlay::update_overlay)
             .add_systems(Update, grid::update_grid)
             .add_systems(Update, grid::update_grid_on_view_angle_change);
     }
