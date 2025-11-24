@@ -281,15 +281,12 @@ fn run_camera_controller(
 
 fn zoom_to_fit(
     keyboard: Res<ButtonInput<KeyCode>>,
-    state: Res<State>,
     windows: Query<&Window>,
     mut query: Query<&mut Projection, With<Camera>>,
 ) {
     if !keyboard.just_pressed(KeyCode::KeyF) {
         return;
     }
-    log::info!("Test");
-
     let Ok(mut projection) = query.single_mut() else {
         return;
     };
@@ -297,19 +294,5 @@ fn zoom_to_fit(
         return;
     };
 
-    match projection.as_mut() {
-        Projection::Orthographic(ortho) => {
-            // Change the projection parameters
-            use bevy::render::camera::CameraProjection;
-
-            ortho.scale = 1.0;
-            ortho.far = state.scene.radius * 6.0;
-
-            ortho.update(window.width(), window.height());
-            projection.update(window.width(), window.height());
-        }
-        _ => {
-            // Not an orthographic camera
-        }
-    }
+    crate::scene::zoom_to_fit(projection.as_mut(), window);
 }

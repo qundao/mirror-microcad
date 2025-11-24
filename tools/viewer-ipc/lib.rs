@@ -33,6 +33,8 @@ pub enum ViewerRequest {
     Show,
     /// Hide window
     Hide,
+    /// Set zoom level to 100%, so we can see the entire model.
+    ZoomToFit,
     /// Exit viewer process.
     Exit,
 }
@@ -111,17 +113,19 @@ impl ViewerProcessInterface {
             });
 
             // Thread to write requests
-            std::thread::spawn(move || loop {
-                for req in &rx {
-                    use std::io::Write;
-                    match serde_json::to_string(&req) {
-                        Ok(json) => {
-                            log::debug!("Write request as json: {json}");
-                            writeln!(stdin, "{}", json).expect("io error");
-                            stdin.flush().expect("io error");
-                        }
-                        Err(_) => todo!(),
-                    };
+            std::thread::spawn(move || {
+                loop {
+                    for req in &rx {
+                        use std::io::Write;
+                        match serde_json::to_string(&req) {
+                            Ok(json) => {
+                                log::debug!("Write request as json: {json}");
+                                writeln!(stdin, "{}", json).expect("io error");
+                                stdin.flush().expect("io error");
+                            }
+                            Err(_) => todo!(),
+                        };
+                    }
                 }
             });
 

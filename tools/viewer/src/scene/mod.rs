@@ -33,6 +33,21 @@ pub fn get_current_resolution(projection: &Projection, window: &Window) -> f32 {
     area_size / window.width().max(window.height()) * 10.0
 }
 
+/// Set zoom level to 100%.
+pub fn zoom_to_fit(projection: &mut Projection, window: &Window) {
+    match projection {
+        Projection::Orthographic(ortho) => {
+            // Change the projection parameters
+            use bevy::render::camera::CameraProjection;
+            ortho.scale = 1.0;
+            ortho.update(window.width(), window.height());
+        }
+        _ => {
+            // Not an orthographic camera
+        }
+    }
+}
+
 /// A system that draws hit indicators for every pointer.
 pub fn draw_mesh_intersections(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,

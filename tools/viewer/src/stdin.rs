@@ -16,6 +16,7 @@ use microcad_viewer_ipc::ViewerRequest;
 
 use crate::plugin::MicrocadPluginInput;
 use crate::processor::ProcessorRequest;
+use crate::state::ViewerEvent;
 
 #[derive(Resource, Clone)]
 pub struct StdinMessageReceiver {
@@ -69,6 +70,7 @@ pub fn handle_stdin_messages(
     mut state: bevy::prelude::ResMut<crate::State>,
     mut exit: EventWriter<AppExit>,
     mut windows: Query<&mut Window>,
+    mut events: EventWriter<ViewerEvent>,
 ) {
     let mut requests = Vec::new();
     if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &mut state.input {
@@ -90,6 +92,9 @@ pub fn handle_stdin_messages(
                     });
                 }
                 SetCursorRange { .. } => todo!(),
+                ZoomToFit => {
+                    events.write(ViewerEvent::ZoomToFit);
+                }
                 Exit => {
                     exit.write(AppExit::Success);
                 }

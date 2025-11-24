@@ -17,7 +17,7 @@ use crate::stdin::StdinMessageReceiver;
 use crate::*;
 use crate::{
     processor::{ProcessorRequest, ProcessorResponse},
-    state::StateEvent,
+    state::ViewerEvent,
 };
 
 /// Whether a kind of watch event is relevant for compilation.
@@ -136,7 +136,7 @@ pub fn handle_processor_responses(
     mut meshes: ResMut<Assets<Mesh>>,
     mut model_view_states: ResMut<Assets<ModelViewState>>,
     mut state: ResMut<State>,
-    mut events: EventWriter<StateEvent>,
+    mut events: EventWriter<ViewerEvent>,
 ) {
     let mut entities = Vec::new();
     let mut ground_radius = microcad_core::Length::default();
@@ -203,7 +203,7 @@ pub fn handle_processor_responses(
         }
 
         state.scene.model_entities = entities;
-        events.write(StateEvent::ChangeGroundRadius(ground_radius));
+        events.write(ViewerEvent::ChangeGroundRadius(ground_radius));
     }
 }
 
@@ -216,7 +216,7 @@ pub fn handle_pick_event(
         &mut MeshMaterial3d<StandardMaterial>,
         &mut OutlineVolume,
     )>,
-    mut events: EventWriter<StateEvent>,
+    mut events: EventWriter<ViewerEvent>,
 ) {
     for (entity, _) in pointers
         .iter()
@@ -225,13 +225,13 @@ pub fn handle_pick_event(
         match query.get_mut(*entity) {
             Ok((view_state, ref mut _material, ref mut _outline)) => {
                 if buttons.just_pressed(MouseButton::Left) {
-                    events.write(StateEvent::SelectOne(view_state.info().model_uuid));
+                    events.write(ViewerEvent::SelectOne(view_state.info().model_uuid));
                 }
             }
             // No Hit was found..
             Err(_) => {
                 if buttons.any_just_pressed([MouseButton::Left, MouseButton::Right]) {
-                    events.write(StateEvent::ClearSelection);
+                    events.write(ViewerEvent::ClearSelection);
                 }
             }
         }
