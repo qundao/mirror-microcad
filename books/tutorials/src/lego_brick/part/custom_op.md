@@ -12,9 +12,9 @@ use std::ops::*;
 
 const SPACING = 8mm;
 
-op grid(rows: Integer, columns: Integer) {
+op grid(columns: Integer, rows: Integer) {
     @input
-        .translate(x = [0..rows] * SPACING, y = [0..columns] * SPACING)
+        .translate(x = [0..columns] * SPACING, y = [0..rows] * SPACING)
         .center()
 }
 ```
