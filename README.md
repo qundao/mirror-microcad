@@ -90,15 +90,15 @@ The *evaluate* command will not export the output geometry.
 To generate an STL model file use the `export` command with an additional output file name:
 
 ```sh
-microcad export ./examples/lego_brick.µcad
+microcad export ./examples/bricks/brick.µcad
 ```
 
-The file [`lego_brick.µcad`](examples/lego_brick.µcad) generate a file called`lego_brick.stl`
+The file [`lego_brick.µcad`](examples/lego_brick.µcad) generate a file called`brick.stl`
 which can be displayed e.g. with [MeshLab](https://www.meshlab.net/).
 
-The resulting STL model looks like this:
+The resulting STL mesh looks like this:
 
-![Parametric Lego Brick](examples/brick/brick.png)
+![Parametric Bricks](examples/bricks/bricks.png)
 
 ## Documentation
 
