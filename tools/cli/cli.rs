@@ -85,6 +85,9 @@ impl Cli {
             Commands::Install(install) => {
                 install.run(self)?;
             }
+            Commands::Completions(completions) => {
+                completions.run(self)?;
+            }
         }
 
         if self.time {

@@ -3,6 +3,7 @@
 
 //! µcad CLI commands
 
+mod completions;
 mod create;
 mod eval;
 mod export;
@@ -20,6 +21,8 @@ pub use install::Install;
 pub use parse::Parse;
 pub use resolve::Resolve;
 pub use watch::Watch;
+
+use crate::commands::completions::Completions;
 
 #[derive(Subcommand)]
 pub enum Commands {
@@ -43,6 +46,9 @@ pub enum Commands {
 
     /// Install µcad standard library
     Install(Install),
+
+    /// Print shell completions
+    Completions(Completions),
 }
 
 /// Run this command for a CLI.
