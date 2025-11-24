@@ -3,7 +3,7 @@
 
 //! microcad viewer scene elements and routines.
 
-use crate::*;
+use crate::{scene::overlay::Overlay, *};
 use bevy::prelude::*;
 
 mod angle;
@@ -35,12 +35,12 @@ pub fn get_current_resolution(projection: &Projection, window: &Window) -> f32 {
 }
 
 /// Set zoom level to 100%.
-pub fn zoom_to_fit(projection: &mut Projection, window: &Window) {
+pub fn zoom_to_fit(radius: f32, projection: &mut Projection, window: &Window) {
     match projection {
         Projection::Orthographic(ortho) => {
             // Change the projection parameters
             use bevy::render::camera::CameraProjection;
-            ortho.scale = 1.0;
+            ortho.scale = radius * 0.01;
             ortho.update(window.width(), window.height());
         }
         _ => {
@@ -80,6 +80,8 @@ pub struct Scene {
     pub light_entities: Vec<Entity>,
     /// Model entities.
     pub model_entities: Vec<Entity>,
+    /// Overlay entities.
+    pub overlay: Overlay,
 }
 
 impl Scene {
@@ -93,6 +95,7 @@ impl Default for Scene {
             grid_entity: Default::default(),
             light_entities: Default::default(),
             model_entities: Default::default(),
+            overlay: Default::default(),
         }
     }
 }
@@ -104,13 +107,13 @@ impl Plugin for ScenePlugin {
         app.add_plugins(camera::camera_controller::CameraControllerPlugin)
             .add_systems(Update, lighting::spawn_lights)
             .add_systems(Startup, grid::spawn_grid_plane)
-            .add_systems(Startup, overlay::spawn_overlay)
             //.add_systems(Startup, angle::spawn_angle_plane)
             //.add_systems(Startup, ruler::spawn_ruler_plane)
             .add_systems(Startup, camera::setup_camera)
             .add_systems(Update, draw_mesh_intersections)
             .add_systems(Update, overlay::update_overlay)
             .add_systems(Update, grid::update_grid)
+            .add_systems(Update, grid::toggle_grid)
             .add_systems(Update, grid::update_grid_on_view_angle_change);
     }
 }

@@ -186,22 +186,20 @@ fn run_camera_controller(
         scroll -= 1.0;
     }
 
-    match projection.as_mut() {
+    let current_scale = match projection.as_mut() {
         Projection::Orthographic(ortho) => {
             // Change the projection parameters
             use bevy::render::camera::CameraProjection;
-
             ortho.scale *= 1.0 + scroll / 50.0;
             ortho.far = state.scene.radius * 6.0;
-
             let window = windows.iter().next().unwrap();
             ortho.update(window.width(), window.height());
-            projection.update(window.width(), window.height());
+            state.scene.radius * Vec2::new(ortho.scale, ortho.scale)
         }
         _ => {
-            // Not an orthographic camera
+            unimplemented!("Only orthographic camera is supported")
         }
-    }
+    };
 
     let mut cursor_grab_change = false;
     if key_input.just_pressed(controller.keyboard_key_toggle_cursor_grab) {
@@ -272,8 +270,8 @@ fn run_camera_controller(
 
     // Strafe/translate.
     if mouse_button_input.pressed(MouseButton::Right) {
-        let forward = *transform.up() * delta.y * 10.0;
-        let right = *transform.right() * delta.x * -10.0;
+        let forward = *transform.up() * delta.y * current_scale.y;
+        let right = *transform.right() * delta.x * -current_scale.x;
         controller.target = controller.target + dt * right + dt * Vec3::Z + dt * forward;
     }
     transform.translation = controller.target - transform.forward() * orbit_distance;
@@ -282,6 +280,7 @@ fn run_camera_controller(
 fn zoom_to_fit(
     keyboard: Res<ButtonInput<KeyCode>>,
     windows: Query<&Window>,
+    state: Res<crate::State>,
     mut query: Query<&mut Projection, With<Camera>>,
 ) {
     if !keyboard.just_pressed(KeyCode::KeyF) {
@@ -294,5 +293,5 @@ fn zoom_to_fit(
         return;
     };
 
-    crate::scene::zoom_to_fit(projection.as_mut(), window);
+    crate::scene::zoom_to_fit(state.scene.radius, projection.as_mut(), window);
 }
