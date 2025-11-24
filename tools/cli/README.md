@@ -6,10 +6,35 @@ This crate provides the command line interpreter of µcad.
 
 ## Installation
 
-To install the latest version via *cargo*, type:
+First, install [Ninja Build](https://github.com/ninja-build/ninja) which is needed to compile
+the [manifold geometry library](https://github.com/elalish/manifold).
+For example, *Debian* based *Linux* distributions use the following line:
+
+```sh
+sudo apt install ninja-build
+```
+
+To install the latest release of *µcad* via *cargo*, type:
 
 ```sh
 cargo install microcad
+```
+
+## Command line usage
+
+After installing, you can run a basic example by typing:
+
+```sh
+microcad eval ./examples/bricks/brick.µcad
+```
+
+This will *evaluate* the input file and will output the model tree.
+The *evaluate* command will not export the output geometry.
+
+To generate an STL model file use the `export` command with an additional output file name:
+
+```sh
+microcad export ./examples/lego_brick.µcad
 ```
 
 ## Run
