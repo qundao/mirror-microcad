@@ -15,7 +15,7 @@ const SPACING = 8mm;
 op grid(rows: Integer, columns: Integer) {
     @input
         .translate(x = [0..rows] * SPACING, y = [0..columns] * SPACING)
-        .align()
+        .center()
 }
 ```
 
