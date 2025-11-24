@@ -9,7 +9,12 @@ mod model;
 
 use bevy::ecs::resource::Resource;
 
-use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, scene::Scene};
+use crate::{
+    Config,
+    plugin::MicrocadPluginInput,
+    processor::{ProcessingState, ProcessorInterface},
+    scene::Scene,
+};
 
 pub use cursor::Cursor;
 pub use event::{ViewerEvent, handle_viewer_event};
@@ -28,6 +33,8 @@ pub struct State {
     pub cursor: Cursor,
     /// The µcad geometry processor.
     pub processor: ProcessorInterface,
+    /// The current processing state.
+    pub processing_state: ProcessingState,
 }
 
 impl State {
@@ -39,6 +46,7 @@ impl State {
             cursor: Default::default(),
             scene: Default::default(),
             processor: ProcessorInterface::run(),
+            processing_state: Default::default(),
         }
     }
 }
