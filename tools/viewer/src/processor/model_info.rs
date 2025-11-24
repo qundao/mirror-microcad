@@ -11,7 +11,7 @@ use microcad_lang::{
     src_ref::{SrcRef, SrcReferrer},
 };
 
-use crate::{ToBevy, processor::generate_model_geometry_output_uuid};
+use crate::{ToBevy, processor::registry};
 
 #[derive(Clone, Default, TypePath)]
 pub struct ModelInfo {
@@ -35,9 +35,9 @@ impl ModelInfo {
         let output = model_.output();
 
         Self {
-            model_uuid: super::generate_model_uuid(model),
+            model_uuid: registry::generate_model_uuid(model),
             model_hash: model.computed_hash(),
-            geometry_output_uuid: generate_model_geometry_output_uuid(model),
+            geometry_output_uuid: registry::generate_model_geometry_output_uuid(model),
             output_type: model.render_output_type(),
             transform: output.world_matrix.expect("Some matrix").to_bevy(),
             color: output.attributes.get_color().map(|c| c.to_bevy()),

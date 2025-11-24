@@ -10,6 +10,7 @@ mod angle;
 mod camera;
 mod grid;
 mod lighting;
+mod overlay;
 mod ruler;
 
 /// Get current zoom level.
@@ -103,6 +104,7 @@ impl Plugin for ScenePlugin {
         app.add_plugins(camera::camera_controller::CameraControllerPlugin)
             .add_systems(Update, lighting::spawn_lights)
             .add_systems(Startup, grid::spawn_grid_plane)
+            .add_systems(Startup, overlay::spawn_overlay)
             //.add_systems(Startup, angle::spawn_angle_plane)
             //.add_systems(Startup, ruler::spawn_ruler_plane)
             .add_systems(Startup, camera::setup_camera)

@@ -4,10 +4,11 @@
 //! microcad Viewer processor.
 
 mod model_info;
+mod registry;
 mod request;
 mod systems;
 
-use crate::{to_bevy::ToBevyMesh, *};
+use crate::{processor::registry::InstanceRegistry, to_bevy::ToBevyMesh, *};
 pub use processor::model_info::ModelInfo;
 
 use bevy::{
@@ -21,7 +22,6 @@ pub use request::ProcessorRequest;
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
 use microcad_lang::{model::Model, rc::RcMut, render::*, syntax::SourceFile};
-use rustc_hash::FxHashSet;
 
 /// A processor response.
 ///
@@ -34,59 +34,15 @@ pub enum ProcessorResponse {
     SpawnModelInstances(Vec<Uuid>),
 }
 
-const MODEL_UUID_SEED: u64 = 0xDEAD_BEEF_DEED_BEAF;
-
-const MODEL_GEOMETRY_OUTPUT_UUID_SEED: u64 = 0x4321_4321_4321_4321;
-
-fn generate_model_uuid(model: &Model) -> Uuid {
-    Uuid::from_u64_pair(MODEL_UUID_SEED, model.as_ptr() as u64)
-}
-
-fn generate_model_geometry_output_uuid(model: &Model) -> Uuid {
-    Uuid::from_u64_pair(MODEL_GEOMETRY_OUTPUT_UUID_SEED, model.computed_hash())
-}
-
-#[derive(Default)]
-pub struct InstanceCache {
-    geometry_output_uuids: FxHashSet<Uuid>,
-
-    model_uuids: FxHashSet<Uuid>,
-}
-
-impl InstanceCache {
-    fn contains_geometry_output(&self, uuid: &Uuid) -> bool {
-        self.geometry_output_uuids.contains(uuid)
-    }
-
-    fn contains_model(&self, uuid: &Uuid) -> bool {
-        self.model_uuids.contains(uuid)
-    }
-
-    fn insert_geometry_output(&mut self, uuid: Uuid) {
-        self.geometry_output_uuids.insert(uuid);
-    }
-
-    fn insert_model(&mut self, uuid: Uuid) {
-        self.model_uuids.insert(uuid);
-    }
-
-    fn fetch_model_uuids(&self) -> Vec<Uuid> {
-        self.model_uuids.iter().cloned().collect()
-    }
-
-    fn clear_model_uuids(&mut self) {
-        self.model_uuids.clear()
-    }
-}
-
-/// The state of the interpreter.
-pub struct ProcessorState {
-    /// Flag to tell whether to initializer.
+/// The state of the processor.
+pub struct ProcessorContext {
+    /// Flag to tell whether to initialize.
     initialized: bool,
 
     /// Search paths are set during initialization.
     search_paths: Vec<std::path::PathBuf>,
 
+    /// The current render resolutions.
     resolution: microcad_core::RenderResolution,
     theme: config::Theme,
 
@@ -96,13 +52,13 @@ pub struct ProcessorState {
 
     pub model: Option<Model>,
 
-    pub instance_cache: InstanceCache,
+    pub instance_registry: InstanceRegistry,
 
     /// µcad Render cache.
     pub render_cache: RcMut<RenderCache>,
 }
 
-impl Default for ProcessorState {
+impl Default for ProcessorContext {
     fn default() -> Self {
         Self {
             initialized: false,
@@ -112,7 +68,7 @@ impl Default for ProcessorState {
             source_file: None,
             model: None,
             line_number: None,
-            instance_cache: Default::default(),
+            instance_registry: Default::default(),
             render_cache: RcMut::new(RenderCache::new()),
         }
     }
@@ -124,7 +80,7 @@ impl Default for ProcessorState {
 /// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 struct Processor {
     /// The state of the processor.
-    pub state: ProcessorState,
+    pub state: ProcessorContext,
 
     /// Requests.
     pub request_receiver: Receiver<ProcessorRequest>,
@@ -258,19 +214,19 @@ impl Processor {
         if let Some(model) = self.state.model.clone() {
             let mut responses = Vec::new();
             responses.push(ProcessorResponse::RemoveModelInstances(
-                self.state.instance_cache.fetch_model_uuids(),
+                self.state.instance_registry.fetch_model_uuids(),
             ));
 
-            self.state.instance_cache.clear_model_uuids();
+            self.state.instance_registry.clear_model_uuids();
             self.generate_responses(&model, &mut responses);
             log::info!("{} responses", responses.len());
 
             responses.push(ProcessorResponse::UpdateMaterials(
-                self.state.instance_cache.fetch_model_uuids(),
+                self.state.instance_registry.fetch_model_uuids(),
             ));
 
             responses.push(ProcessorResponse::SpawnModelInstances(
-                self.state.instance_cache.fetch_model_uuids(),
+                self.state.instance_registry.fetch_model_uuids(),
             ));
 
             Ok(responses)
@@ -294,12 +250,12 @@ impl Processor {
         let recurse = match model_.element() {
             InputPlaceholder | Multiplicity | Group => true,
             Workpiece(_) | BuiltinWorkpiece(_) => {
-                let uuid = generate_model_geometry_output_uuid(model);
+                let uuid = registry::generate_model_geometry_output_uuid(model);
                 let output = model_.output();
                 let mut recurse = false;
 
                 // Add a new mesh asset, when we do not have geometry with a uuid in the cache.
-                if !self.state.instance_cache.contains_geometry_output(&uuid) {
+                if !self.state.instance_registry.contains_geometry_output(&uuid) {
                     let mesh = match &output.geometry {
                         Some(GeometryOutput::Geometry2D(geometry)) => {
                             Some(geometry.inner.to_bevy_mesh_default())
@@ -312,7 +268,7 @@ impl Processor {
 
                     match mesh {
                         Some(mesh) => {
-                            self.state.instance_cache.insert_geometry_output(uuid);
+                            self.state.instance_registry.insert_geometry_output(uuid);
                             responses.push(ProcessorResponse::NewMeshAsset(uuid, mesh));
                         }
                         None => {
@@ -321,9 +277,9 @@ impl Processor {
                     }
                 }
 
-                let uuid = generate_model_uuid(model);
-                if !self.state.instance_cache.contains_model(&uuid) {
-                    self.state.instance_cache.insert_model(uuid);
+                let uuid = registry::generate_model_uuid(model);
+                if !self.state.instance_registry.contains_model(&uuid) {
+                    self.state.instance_registry.insert_model(uuid);
 
                     responses.push(ProcessorResponse::NewModelInfo(
                         uuid,
@@ -361,7 +317,7 @@ impl ProcessorInterface {
 
         std::thread::spawn(move || {
             let mut processor = Processor {
-                state: ProcessorState::default(),
+                state: ProcessorContext::default(),
                 request_receiver,
                 response_sender,
             };
