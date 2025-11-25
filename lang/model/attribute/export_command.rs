@@ -33,7 +33,7 @@ impl ExportCommand {
     pub fn render_and_export(&self, model: &Model) -> Result<Value, ExportError> {
         let render_cache = RcMut::new(RenderCache::default());
         let mut render_context =
-            RenderContext::init(model, self.resolution.clone(), Some(render_cache))?;
+            RenderContext::new(model, self.resolution.clone(), Some(render_cache), None)?;
         log::trace!(
             "Pre-rendered model:\n{}",
             crate::tree_display::FormatTree(model)

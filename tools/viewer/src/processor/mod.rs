@@ -41,8 +41,8 @@ pub enum ProcessingState {
     #[default]
     /// The processor does currently nothing.
     Idle,
-    /// The processor is busy.
-    Busy,
+    /// The processor is busy (with progress between 0..100.0)
+    Busy(f32),
     /// The processor is in an error state.
     Error,
 }
@@ -127,7 +127,7 @@ impl Processor {
                 Ok(vec![])
             }
             ProcessorRequest::ParseFile(path) => {
-                self.state_change(ProcessingState::Busy);
+                self.state_change(ProcessingState::Busy(0.0));
 
                 match SourceFile::load(&path) {
                     Ok(source_file) => {
@@ -144,7 +144,7 @@ impl Processor {
                 }
             }
             ProcessorRequest::ParseSource { path, name, source } => {
-                self.state_change(ProcessingState::Busy);
+                self.state_change(ProcessingState::Busy(0.0));
 
                 match SourceFile::load_from_str(
                     name.as_ref().map(|s| s.as_str()),
@@ -165,19 +165,19 @@ impl Processor {
                 }
             }
             ProcessorRequest::Eval => {
-                self.state_change(ProcessingState::Busy);
+                self.state_change(ProcessingState::Busy(0.0));
                 self.eval()?;
                 self.render(None)?;
                 self.respond()
             }
             ProcessorRequest::Render(resolution) => {
-                self.state_change(ProcessingState::Busy);
+                self.state_change(ProcessingState::Busy(0.0));
                 self.render(resolution)?;
                 self.respond()
             }
             ProcessorRequest::Export { .. } => todo!(),
             ProcessorRequest::SetLineNumber(line_number) => {
-                self.state_change(ProcessingState::Busy);
+                self.state_change(ProcessingState::Busy(0.0));
                 self.context.line_number = line_number;
                 self.respond()
             }
@@ -239,12 +239,24 @@ impl Processor {
                 None => self.context.resolution.clone(),
             };
             let model = self.context.model.as_ref().expect("Model");
+            let (tx, rx) = std::sync::mpsc::channel();
 
-            let mut render_context = RenderContext::init(
+            let mut render_context = RenderContext::new(
                 model,
                 resolution.clone(),
                 Some(self.context.render_cache.clone()),
+                Some(tx),
             )?;
+
+            let sender = self.response_sender.clone();
+            std::thread::spawn(move || {
+                while let Ok(progress) = rx.recv() {
+                    log::info!("{progress}");
+                    sender.send(ProcessorResponse::StateChanged(ProcessingState::Busy(
+                        progress,
+                    )));
+                }
+            });
 
             let _: Model = model.render_with_context(&mut render_context)?;
 

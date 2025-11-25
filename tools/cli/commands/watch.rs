@@ -28,10 +28,11 @@ impl RunCommand for Watch {
                     Ok(target_models) => {
                         target_models.iter().try_for_each(
                             |(model, export)| -> anyhow::Result<()> {
-                                let mut render_context = RenderContext::init(
+                                let mut render_context = RenderContext::new(
                                     model,
                                     self.export.resolution(),
                                     Some(render_cache.clone()),
+                                    None,
                                 )?;
                                 let model: Model =
                                     model.render_with_context(&mut render_context)?;

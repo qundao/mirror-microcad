@@ -3,9 +3,13 @@
 
 //! Render context
 
+use std::sync::mpsc;
+
 use microcad_core::RenderResolution;
 
 use crate::{model::Model, rc::RcMut, render::*};
+
+pub type ProgressTx = mpsc::Sender<f32>;
 
 /// The render context.
 ///
@@ -17,24 +21,28 @@ pub struct RenderContext {
 
     /// Optional render cache.
     pub cache: Option<RcMut<RenderCache>>,
+
+    models_to_render: usize,
+
+    models_rendered: usize,
+    /// Progress is given as a percentage between 0.0 and 100.0.
+    pub progress_tx: Option<ProgressTx>,
 }
 
 impl RenderContext {
-    /// Create default context.
-    pub fn new() -> Self {
-        Self::default()
-    }
-
     /// Initialize context with current model and prerender model.
-    pub fn init(
+    pub fn new(
         model: &Model,
         resolution: RenderResolution,
         cache: Option<RcMut<RenderCache>>,
+        progress_tx: Option<ProgressTx>,
     ) -> RenderResult<Self> {
-        model.prerender(resolution)?;
         Ok(Self {
             model_stack: vec![model.clone()],
             cache,
+            models_to_render: model.prerender(resolution)?,
+            models_rendered: 0,
+            progress_tx,
         })
     }
 
@@ -48,7 +56,30 @@ impl RenderContext {
         self.model_stack.push(model);
         let result = f(self);
         self.model_stack.pop();
+
+        self.step();
+
         result
+    }
+
+    fn step(&mut self) {
+        let old_percent = self.progress_in_percent();
+        self.models_rendered += 1;
+        let new_percent = self.progress_in_percent();
+
+        // Check if integer percentage increased
+        if (old_percent.floor() as u32) < (new_percent.floor() as u32)
+            && let Some(progress_tx) = &mut self.progress_tx
+        {
+            log::warn!("{new_percent} {}", self.models_rendered);
+
+            progress_tx.send(new_percent).expect("No error");
+        }
+    }
+
+    /// Return render progress in percent.
+    pub fn progress_in_percent(&self) -> f32 {
+        (self.models_rendered as f32 / self.models_to_render as f32) * 100.0
     }
 
     /// Update a 2D geometry if it is not in cache.

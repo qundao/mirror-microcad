@@ -82,7 +82,7 @@ impl Model {
     /// Pre-render the model.
     ///
     /// Pre-rendering create as render output and calculates the matrices, resolutions and hashes of a model.
-    pub fn prerender(&self, resolution: RenderResolution) -> RenderResult<()> {
+    pub fn prerender(&self, resolution: RenderResolution) -> RenderResult<usize> {
         pub fn create_render_output(model: &Model) -> RenderResult<()> {
             let output = RenderOutput::new(model)?;
             {
@@ -153,7 +153,10 @@ impl Model {
 
         log::trace!("Finished prerender:\n{}", FormatTree(self));
 
-        Ok(())
+        Ok(self
+            .descendants()
+            .filter(|model| !model.has_no_output())
+            .count())
     }
 }
 
