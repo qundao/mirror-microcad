@@ -95,9 +95,9 @@ impl EvalContext {
             .try_for_each(|symbol| {
                 self.warning(
                     &symbol.src_ref(),
-                    EvalError::UnusedGlobalSymbol(match self.sources.get_code(&symbol.id()) {
+                    EvalError::UnusedGlobalSymbol(match self.sources.get_code(&symbol) {
                         Ok(id) => id,
-                        Err(_) => "<no code>".to_string(),
+                        Err(_) => symbol.id().to_string(),
                     }),
                 )
             })?;
