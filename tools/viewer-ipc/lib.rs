@@ -98,6 +98,7 @@ impl ViewerProcessInterface {
                 command.arg("--hidden");
             }
             let mut child = command
+                .arg("--stay-on-top")
                 .arg("stdin://") // run the viewer as slave via stdin.
                 .current_dir(std::env::current_dir().expect("current dir"))
                 .stdin(std::process::Stdio::piped())
