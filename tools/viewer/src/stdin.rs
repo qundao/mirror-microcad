@@ -18,6 +18,7 @@ use crate::plugin::MicrocadPluginInput;
 use crate::processor::ProcessorRequest;
 use crate::state::ViewerEvent;
 
+/// A message handler for stdin messages.
 #[derive(Resource, Clone)]
 pub struct StdinMessageReceiver {
     receiver: Receiver<ViewerRequest>,
@@ -25,6 +26,7 @@ pub struct StdinMessageReceiver {
 }
 
 impl StdinMessageReceiver {
+    /// Run the listening to standard messages.
     pub fn run() -> Self {
         log::info!("Run stdin message receiver");
         // Create channel for stdin reader to communicate with Bevy
@@ -60,6 +62,7 @@ impl StdinMessageReceiver {
         }
     }
 
+    /// The current file path.
     pub fn current_path(&self) -> &Option<std::path::PathBuf> {
         &self.current_path
     }

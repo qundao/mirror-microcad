@@ -61,7 +61,7 @@ pub fn draw_mesh_intersections(
         .filter_map(|interaction| interaction.get_nearest_hit())
     {
         if let Some(position) = hit.position {
-            let proj = projections.iter().next().unwrap();
+            let proj = projections.single().expect("Some projections");
 
             let zoom = get_current_zoom_level(proj);
             let color: Color = state.config.theme.guide.to_bevy();
@@ -83,6 +83,7 @@ pub struct Scene {
 }
 
 impl Scene {
+    /// Minimum radius in mm for a scene.
     pub const MINIMUM_RADIUS: f32 = 10.0;
 }
 
@@ -97,6 +98,7 @@ impl Default for Scene {
     }
 }
 
+/// The bevy scene plugin contains all systems that are to be rendered except the µcad models.
 pub struct ScenePlugin;
 
 impl Plugin for ScenePlugin {

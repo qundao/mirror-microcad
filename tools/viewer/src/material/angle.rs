@@ -5,8 +5,8 @@
 
 use super::bevy_types::*;
 
+/// A shader material to draw an angle measure.
 #[derive(Asset, AsBindGroup, Debug, Clone, TypePath)]
-// This struct defines the data that will be passed to your shader
 pub struct Angle {
     #[uniform(0)]
     start_angle: f32,

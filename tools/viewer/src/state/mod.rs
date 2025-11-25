@@ -3,7 +3,6 @@
 
 //! microcad Viewer State module.
 
-mod cursor;
 mod event;
 mod model;
 
@@ -16,9 +15,12 @@ use crate::{
     scene::Scene,
 };
 
-pub use cursor::Cursor;
 pub use event::{ViewerEvent, handle_viewer_event};
 pub use model::ModelViewState;
+
+/// TODO Cursor struct to infos about a cursor.
+#[derive(Default)]
+pub struct Cursor;
 
 /// The application state (the bevy view model).
 #[derive(Resource)]

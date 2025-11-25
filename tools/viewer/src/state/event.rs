@@ -22,15 +22,22 @@ use crate::{
     state::{Cursor, ModelViewState},
 };
 
-/// An event that is fired when the state is
+/// An event that is fired when the view model changes in some way.
 #[derive(Event)]
 pub enum ViewerEvent {
+    /// The ground radius has changed.
     ChangeGroundRadius(Length),
+    /// All models have been selected.
     SelectAll,
+    /// Clear the selection.
     ClearSelection,
+    /// Select a model.
     SelectOne(Uuid),
+    /// Set the cursor position in a source file to highlighted.
     SetCursor(Cursor),
+    /// Zoom to fit.
     ZoomToFit,
+    /// The processing state has changed (e.g. required to show the progress bar).
     ProcessingStateChanged(ProcessingState),
 }
 
@@ -54,6 +61,7 @@ impl ViewerEvent {
     }
 }
 
+/// Handler for viewer events.
 #[allow(clippy::too_many_arguments)]
 pub fn handle_viewer_event(
     mut grid_materials: ResMut<Assets<material::Grid>>,

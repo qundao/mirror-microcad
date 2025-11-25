@@ -13,7 +13,10 @@ pub enum ProcessorRequest {
     /// Initialize the interpreter.
     ///
     /// Request must only be sent once and sets the initialize flag to `true`.
-    Initialize { config: Config },
+    Initialize {
+        /// The initial config
+        config: Config,
+    },
     /// Parse file.
     ParseFile(std::path::PathBuf),
     /// Parse some code into a SourceFile.

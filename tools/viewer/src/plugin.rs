@@ -1,6 +1,8 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! This module contains the microcad bevy plugin and its input interface.
+
 use std::{
     sync::{Arc, Mutex},
     time::SystemTime,
@@ -73,7 +75,7 @@ impl MicrocadPluginInput {
                 path, symbol, line, ..
             } => {
                 // Start with base: file://<path>
-                let mut url = Url::parse("file://").unwrap();
+                let mut url = Url::parse("file://").expect("A valid URL");
 
                 // PathBuf -> string (handle both relative and absolute)
                 // Note: url::Url requires forward slashes
@@ -94,10 +96,11 @@ impl MicrocadPluginInput {
             }
 
             MicrocadPluginInput::Stdin(stdin) => {
-                let default = Url::parse("stdin://").unwrap();
+                let default = Url::parse("stdin://").expect("No error");
                 match stdin {
                     Some(stdin) => stdin.current_path().as_ref().map_or(default, |path| {
-                        Url::parse(format!("stdin://{}", path.display()).as_str()).unwrap()
+                        Url::parse(format!("stdin://{}", path.display()).as_str())
+                            .expect("No error")
                     }),
                     None => default,
                 }
@@ -133,8 +136,11 @@ impl std::fmt::Display for MicrocadPluginInput {
     }
 }
 
+/// The microcad plugin.
 pub struct MicrocadPlugin {
+    /// The input for the plugin (e.g. file or stdin).
     pub input: Option<MicrocadPluginInput>,
+    /// The viewer configuration.
     pub config: Config,
 }
 

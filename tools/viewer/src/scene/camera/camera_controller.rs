@@ -192,7 +192,7 @@ fn run_camera_controller(
             use bevy::render::camera::CameraProjection;
             ortho.scale *= 1.0 + scroll / 50.0;
             ortho.far = state.scene.radius * 6.0;
-            let window = windows.iter().next().unwrap();
+            let window = windows.single().expect("Some window");
             ortho.update(window.width(), window.height());
             state.scene.radius * Vec2::new(ortho.scale, ortho.scale)
         }

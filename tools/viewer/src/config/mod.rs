@@ -11,6 +11,7 @@ pub use theme::Theme;
 use bevy::ecs::resource::Resource;
 use microcad_core::{RenderResolution, Scalar};
 
+/// Viewer configuration.
 #[derive(Resource, serde::Deserialize, Clone)]
 pub struct Config {
     /// Additional search paths for microcad interpreter.

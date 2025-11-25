@@ -71,8 +71,10 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
                 use notify::{RecursiveMode, Watcher};
 
                 let (tx, rx) = std::sync::mpsc::channel();
-                let mut watcher = notify::recommended_watcher(tx).unwrap();
-                watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
+                let mut watcher = notify::recommended_watcher(tx).expect("Some watcher");
+                watcher
+                    .watch(&path, RecursiveMode::NonRecursive)
+                    .expect("No error");
 
                 log::info!("Watching external file: {}", path.display());
 
@@ -83,8 +85,10 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
                         && let Ok(modified) = meta.modified()
                     {
                         log::info!("Modified");
-                        *flag_clone.lock().unwrap() = Some(modified);
-                        watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
+                        *flag_clone.lock().expect("Lock") = Some(modified);
+                        watcher
+                            .watch(&path, RecursiveMode::NonRecursive)
+                            .expect("No error");
                     }
                 }
             });
@@ -110,7 +114,7 @@ pub fn file_reload(state: ResMut<crate::state::State>) {
             last_modified,
             ..
         }) => {
-            let mut last_modified_lock = last_modified.lock().unwrap();
+            let mut last_modified_lock = last_modified.lock().expect("Lock");
             if let Some(last_modified) = *last_modified_lock
                 && let Ok(elapsed) = last_modified.elapsed()
                 && elapsed > state.config.reload_delay
