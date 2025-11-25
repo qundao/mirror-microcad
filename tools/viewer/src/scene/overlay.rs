@@ -44,10 +44,12 @@ pub fn setup_overlay(state: Res<State>, mut commands: Commands) {
     ));
 }
 
+type NodeVisibility<'a> = (&'a mut Node, &'a mut Visibility);
+
 pub fn update_overlay(
     state: Res<State>,
-    mut progress_bar: Query<(&mut Node, &mut Visibility), With<ProgressBar>>,
-    mut error_frame: Query<(&mut Node, &mut Visibility), (With<ErrorFrame>, Without<ProgressBar>)>,
+    mut progress_bar: Query<NodeVisibility, With<ProgressBar>>,
+    mut error_frame: Query<NodeVisibility, (With<ErrorFrame>, Without<ProgressBar>)>,
 ) {
     use crate::processor::ProcessingState;
 

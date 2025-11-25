@@ -72,8 +72,6 @@ impl RenderContext {
         if (old_percent.floor() as u32) < (new_percent.floor() as u32)
             && let Some(progress_tx) = &mut self.progress_tx
         {
-            log::warn!("{new_percent} {}", self.models_rendered);
-
             progress_tx.send(new_percent).expect("No error");
         }
     }
