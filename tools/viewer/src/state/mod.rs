@@ -6,7 +6,7 @@
 mod event;
 mod model;
 
-use bevy::ecs::resource::Resource;
+use bevy::{ecs::resource::Resource, window::Window};
 
 use crate::{
     Config,
@@ -50,5 +50,20 @@ impl State {
             processor: ProcessorInterface::run(),
             processing_state: Default::default(),
         }
+    }
+
+    /// Update window title and window level.
+    pub fn update_window_settings(&self, window: &mut Window) {
+        window.title = format!(
+            "µcad{}",
+            match &self.input {
+                Some(input) => format!(" - {input}"),
+                None => String::new(),
+            }
+        );
+        window.window_level = match self.config.stay_on_top {
+            true => bevy::window::WindowLevel::AlwaysOnTop,
+            false => bevy::window::WindowLevel::Normal,
+        };
     }
 }

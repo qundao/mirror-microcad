@@ -116,4 +116,7 @@ pub fn handle_stdin_messages(
     for request in requests {
         state.processor.send_request(request).expect("No error");
     }
+
+    let mut window = windows.single_mut().expect("Some window");
+    state.update_window_settings(&mut window);
 }

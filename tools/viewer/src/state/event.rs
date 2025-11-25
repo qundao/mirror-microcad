@@ -123,7 +123,7 @@ pub fn handle_viewer_event(
                 let Ok(window) = windows.single() else {
                     return;
                 };
-                crate::scene::zoom_to_fit(state.scene.radius, projection.as_mut(), window);
+                crate::scene::zoom_to_fit(projection.as_mut(), window);
             }
             ViewerEvent::ProcessingStateChanged(processing_state) => {
                 state.processing_state = processing_state.clone();

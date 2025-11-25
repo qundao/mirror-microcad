@@ -10,16 +10,16 @@ use bevy::{
         query::With,
         system::{Commands, Query, Res, ResMut},
     },
-    input::ButtonInput,
-    input::keyboard::KeyCode,
+    input::{ButtonInput, keyboard::KeyCode},
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::MeshMaterial3d,
-    render::view::Visibility,
     render::{
         camera::{Camera, Projection},
         mesh::{Mesh, Mesh3d},
+        view::Visibility,
     },
     transform::components::Transform,
+    window::Window,
 };
 
 #[derive(Component)]
@@ -77,9 +77,13 @@ pub fn update_grid(
     mut materials: ResMut<Assets<material::Grid>>,
     state: Res<State>,
     proj_query: Query<&Projection, With<Camera>>,
+    windows: Query<&Window>,
     mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
 ) {
     let radius = state.scene.radius;
+    let Ok(window) = windows.single() else {
+        return;
+    };
 
     for projection in proj_query {
         if let Some(grid) = state.scene.grid_entity
@@ -87,7 +91,10 @@ pub fn update_grid(
             && let Some(material) = materials.get_mut(material)
         {
             material.radius = radius;
-            material.zoom_level = 1.0 / get_current_zoom_level(projection);
+            material.zoom_level = window.width().max(window.height())
+                / 20.0
+                / get_current_zoom_level(projection)
+                / radius;
         }
     }
 }

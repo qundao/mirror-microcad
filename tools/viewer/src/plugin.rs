@@ -104,7 +104,6 @@ impl MicrocadPluginInput {
                     }),
                     None => default,
                 }
-                // Simplest possible representation
             }
         }
     }
@@ -126,6 +125,7 @@ impl MicrocadPluginInput {
             s.push_str(frag);
         }
 
+        log::error!("Input URL: {s}");
         s
     }
 }
@@ -162,16 +162,5 @@ impl Plugin for MicrocadPlugin {
 
 fn apply_window_settings(state: Res<State>, mut windows: Query<&mut Window>) {
     let mut window = windows.single_mut().expect("Some window");
-    window.title = format!(
-        "µcad{}",
-        match &state.input {
-            Some(input) => format!(" - {input}"),
-            None => String::new(),
-        }
-    );
-    window.window_level = match state.config.stay_on_top {
-        true => bevy::window::WindowLevel::AlwaysOnTop,
-        false => bevy::window::WindowLevel::Normal,
-    };
-    window.present_mode = bevy::window::PresentMode::Mailbox;
+    state.update_window_settings(&mut window);
 }

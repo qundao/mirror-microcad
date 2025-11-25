@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! microcad Registry.
+//! microcad Model Registry.
 
 use bevy::asset::uuid::Uuid;
 use microcad_lang::{model::Model, render::ComputedHash};

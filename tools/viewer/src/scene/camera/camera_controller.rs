@@ -8,14 +8,12 @@
 //!
 //! Unlike other examples, which demonstrate an application, this demonstrates a plugin library.
 
+use crate::State;
 use bevy::{
     input::mouse::{AccumulatedMouseMotion, AccumulatedMouseScroll, MouseScrollUnit},
     prelude::*,
     window::CursorGrabMode,
 };
-use std::fmt;
-
-use crate::State;
 
 /// A freecam-style camera controller plugin.
 pub struct CameraControllerPlugin;
@@ -98,33 +96,6 @@ impl Default for CameraController {
     }
 }
 
-impl fmt::Display for CameraController {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "
-Freecam Controls:
-    Mouse\t- Move camera orientation
-    Scroll\t- Adjust movement speed
-    {:?}\t- Hold to grab cursor
-    {:?}\t- Toggle cursor grab
-    {:?} & {:?}\t- Fly forward & backwards
-    {:?} & {:?}\t- Fly sideways left & right
-    {:?} & {:?}\t- Fly up & down
-    {:?}\t- Fly faster while held",
-            self.mouse_key_cursor_grab,
-            self.keyboard_key_toggle_cursor_grab,
-            self.key_forward,
-            self.key_back,
-            self.key_left,
-            self.key_right,
-            self.key_up,
-            self.key_down,
-            self.key_run,
-        )
-    }
-}
-
 #[allow(clippy::too_many_arguments)]
 fn run_camera_controller(
     time: Res<Time>,
@@ -149,7 +120,6 @@ fn run_camera_controller(
         controller.yaw = yaw;
         controller.pitch = pitch;
         controller.initialized = true;
-        info!("{}", *controller);
     }
     if !controller.enabled {
         return;
@@ -192,6 +162,9 @@ fn run_camera_controller(
             use bevy::render::camera::CameraProjection;
             ortho.scale *= 1.0 + scroll / 50.0;
             ortho.far = state.scene.radius * 6.0;
+            ortho.scaling_mode = bevy::render::camera::ScalingMode::FixedVertical {
+                viewport_height: 2.0 * state.scene.radius,
+            };
             let window = windows.single().expect("Some window");
             ortho.update(window.width(), window.height());
             state.scene.radius * Vec2::new(ortho.scale, ortho.scale)
@@ -280,7 +253,6 @@ fn run_camera_controller(
 fn zoom_to_fit(
     keyboard: Res<ButtonInput<KeyCode>>,
     windows: Query<&Window>,
-    state: Res<crate::State>,
     mut query: Query<&mut Projection, With<Camera>>,
 ) {
     if !keyboard.just_pressed(KeyCode::KeyF) {
@@ -293,5 +265,5 @@ fn zoom_to_fit(
         return;
     };
 
-    crate::scene::zoom_to_fit(state.scene.radius, projection.as_mut(), window);
+    crate::scene::zoom_to_fit(projection.as_mut(), window);
 }
