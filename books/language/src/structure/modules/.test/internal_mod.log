@@ -13,10 +13,10 @@
 -- No Output --
 -- Errors --
 warning: Unused global symbol my_module.
-  ---> ../books/language/src/structure/modules/internal_modules.md:9:1
+  ---> ../books/language/src/structure/modules/internal_modules.md:9:5
      |
    9 | mod my_module {
-     | ^^^^^^^^^^^^^^^
+     |     ^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 9
 -- No Model --

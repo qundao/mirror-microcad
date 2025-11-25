@@ -32,10 +32,10 @@
 -- No Output --
 -- Errors --
 warning: Unused global symbol into_radius.
-  ---> ../books/language/src/structure/workbenches/README.md:183:5
+  ---> ../books/language/src/structure/workbenches/README.md:183:8
      |
  183 |     fn into_radius( diameter: Length ) {
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |        ^^^^^^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 183
 -- No Model --

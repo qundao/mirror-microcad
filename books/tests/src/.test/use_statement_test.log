@@ -48,7 +48,7 @@ warning: Unused local z.
   76 | z = baz(-1.0);
      | ^
      |
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::print.
   ---> ../books/tests/src/use.md:63:5
      |
   63 | use std::print;

@@ -39,14 +39,6 @@ warning: Unused local Z.
   93 | <NO FILE>
      | ^
      |
-warning: Unused local cos.
-warning: Unused local int.
-warning: Unused local rotate_around_axis.
-warning: Unused local rotate_xyz.
-warning: Unused local rotate_zyx.
-warning: Unused local sin.
-warning: Unused local sqrt.
-warning: Unused local tan.
 Unexpected warnings(s) which did occur in line(s): 93
 -- No Model --
 -- Test Result --

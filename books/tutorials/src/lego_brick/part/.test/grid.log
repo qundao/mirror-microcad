@@ -18,121 +18,121 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
 warning: Unused global symbol grid.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:15:1
+  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:15:4
      |
   15 | op grid(rows: Integer, columns: Integer) {
-     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |    ^^^^
      |
-warning: Unused global symbol align.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol buffer.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol contour.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol distribute_grid.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol extrude.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol mirror.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol orient.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol reflect.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol revolve.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol rotate.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol scale.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol spiralize.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;
      |     ^^^^^^^^
      |
-warning: Unused global symbol translate.
+warning: Unused global symbol std::ops.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
      |
   11 | use std::ops::*;

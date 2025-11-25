@@ -25,10 +25,10 @@ warning: Unused local width.
      | ^^^^^
      |
 warning: Unused global symbol f.
-  ---> ../books/language/src/types/quantities.md:32:1
+  ---> ../books/language/src/types/quantities.md:32:4
      |
   32 | fn f( height = 1m ) {}
-     | ^^^^^^^^^^^^^^^^^^^^^^
+     |    ^
      |
 Unexpected warnings(s) which did occur in line(s): 32, 36
 -- No Model --

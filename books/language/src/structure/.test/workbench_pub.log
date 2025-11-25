@@ -15,10 +15,10 @@
 -- No Output --
 -- Errors --
 error: Function statement not available here
-  ---> ../books/language/src/structure/functions.md:126:5
+  ---> ../books/language/src/structure/functions.md:126:12
      |
  126 |     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |            ^^^^^
      |
 -- Test Result --
 FAILS AS EXPECTED

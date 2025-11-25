@@ -16,16 +16,16 @@
 -- No Output --
 -- Errors --
 error: Statement is not available within Sketch
-  ---> ../books/language/src/structure/workbenches/README.md:256:5
+  ---> ../books/language/src/structure/workbenches/README.md:256:12
      |
  256 |     sketch Axis(length: Length) {}  // error
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |            ^^^^
      |
 error: Sketch is not available within Sketch
-  ---> ../books/language/src/structure/workbenches/README.md:256:5
+  ---> ../books/language/src/structure/workbenches/README.md:256:12
      |
  256 |     sketch Axis(length: Length) {}  // error
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |            ^^^^
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

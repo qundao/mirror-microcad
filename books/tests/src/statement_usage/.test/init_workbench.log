@@ -13,10 +13,10 @@
 -- No Output --
 -- Errors --
 error: sketch statement not available here
-  ---> ../books/tests/src/statement_usage/init.md:7:3
+  ---> ../books/tests/src/statement_usage/init.md:7:10
      |
    7 |   sketch F() {} // error
-     |   ^^^^^^^^^^^^^
+     |          ^
      |
 warning: Unused local l.
   ---> ../books/tests/src/statement_usage/init.md:6:19

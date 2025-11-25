@@ -19,10 +19,10 @@ error: Expression statement not available here
      |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      |
 warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:102:1
+  ---> ../books/tests/src/statement_usage/module.md:102:5
      |
  102 | mod k { // warning
-     | ^^^^^^^^^^^^^^^^^^
+     |     ^
      |
 -- Test Result --
 FAILS AS EXPECTED

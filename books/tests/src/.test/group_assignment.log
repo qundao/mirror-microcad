@@ -23,7 +23,7 @@ warning: Unused local a.
   77 | a = { 
      | ^
      |
-warning: Unused global symbol translate.
+warning: Unused global symbol std::ops::translate.
   ---> ../books/tests/src/semicolon.md:74:5
      |
   74 | use std::ops::translate;

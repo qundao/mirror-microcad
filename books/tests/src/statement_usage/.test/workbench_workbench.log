@@ -13,16 +13,16 @@
 -- No Output --
 -- Errors --
 error: Statement is not available within Sketch
-  ---> ../books/tests/src/statement_usage/workbench.md:7:3
+  ---> ../books/tests/src/statement_usage/workbench.md:7:10
      |
    7 |   sketch F() {} F(); // error
-     |   ^^^^^^^^^^^^^
+     |          ^
      |
 error: Sketch is not available within Sketch
-  ---> ../books/tests/src/statement_usage/workbench.md:7:3
+  ---> ../books/tests/src/statement_usage/workbench.md:7:10
      |
    7 |   sketch F() {} F(); // error
-     |   ^^^^^^^^^^^^^
+     |          ^
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
