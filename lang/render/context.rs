@@ -9,6 +9,7 @@ use microcad_core::RenderResolution;
 
 use crate::{model::Model, rc::RcMut, render::*};
 
+/// Our progress sender.
 pub type ProgressTx = mpsc::Sender<f32>;
 
 /// The render context.

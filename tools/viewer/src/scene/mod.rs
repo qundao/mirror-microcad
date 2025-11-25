@@ -3,7 +3,7 @@
 
 //! microcad viewer scene elements and routines.
 
-use crate::{scene::overlay::Overlay, *};
+use crate::*;
 use bevy::prelude::*;
 
 mod angle;
@@ -80,8 +80,6 @@ pub struct Scene {
     pub light_entities: Vec<Entity>,
     /// Model entities.
     pub model_entities: Vec<Entity>,
-    /// Overlay entities.
-    pub overlay: Overlay,
 }
 
 impl Scene {
@@ -95,7 +93,6 @@ impl Default for Scene {
             grid_entity: Default::default(),
             light_entities: Default::default(),
             model_entities: Default::default(),
-            overlay: Default::default(),
         }
     }
 }

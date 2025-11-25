@@ -251,10 +251,11 @@ impl Processor {
             let sender = self.response_sender.clone();
             std::thread::spawn(move || {
                 while let Ok(progress) = rx.recv() {
-                    log::info!("{progress}");
-                    sender.send(ProcessorResponse::StateChanged(ProcessingState::Busy(
-                        progress,
-                    )));
+                    sender
+                        .send(ProcessorResponse::StateChanged(ProcessingState::Busy(
+                            progress,
+                        )))
+                        .expect("No error");
                 }
             });
 
