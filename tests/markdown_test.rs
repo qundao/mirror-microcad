@@ -46,7 +46,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
         // load and handle µcad source file
         let source_file_result =
-            SourceFile::load_from_str(env.name(), env.source_path(), env.code());
+            SourceFile::load_from_str(Some(env.name()), env.source_path(), env.code());
 
         match env.mode() {
             // test is expected to fail?

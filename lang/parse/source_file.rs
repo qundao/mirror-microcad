@@ -42,14 +42,18 @@ impl SourceFile {
     /// Create `SourceFile` from string
     /// The hash of the result will be of `crate::from_str!()`.
     pub fn load_from_str(
-        name: &str,
+        name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
     ) -> ParseResult<Rc<Self>> {
         log::trace!("{load} source from string", load = crate::mark!(LOAD));
         let mut source_file: Self =
             Parser::parse_rule(crate::parser::Rule::source_file, source_str, 0)?;
-        source_file.set_name(QualifiedName::from_id(Identifier::no_ref(name)));
+        if let Some(name) = name {
+            source_file.set_name(QualifiedName::from_id(Identifier::no_ref(name)));
+        } else {
+            source_file.set_name(Self::name_from_path(&path));
+        };
         source_file.set_filename(path);
         log::debug!("Successfully loaded source from string");
         log::trace!("Syntax tree:\n{}", FormatTree(&source_file));
@@ -64,7 +68,7 @@ impl SourceFile {
     }
 
     /// Get the source file name from path.
-    fn name_from_path(path: impl AsRef<std::path::Path>) -> QualifiedName {
+    pub fn name_from_path(path: impl AsRef<std::path::Path>) -> QualifiedName {
         QualifiedName::from_id(Identifier::no_ref(
             &path
                 .as_ref()

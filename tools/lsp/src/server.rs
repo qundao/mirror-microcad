@@ -99,24 +99,9 @@ impl LanguageServer for Backend {
         match uri.to_file_path() {
             Ok(path) => {
                 log::info!("Did change {path:?}");
-                for change in params.content_changes {
-                    self.client
-                        .log_message(
-                            MessageType::INFO,
-                            format!("Change in {:?}: {:?}", path, change.range),
-                        )
-                        .await;
-
-                    if let Some(range) = change.range {
-                        let params = TextDocumentPositionParams {
-                            text_document: TextDocumentIdentifier { uri: uri.clone() },
-                            position: range.start,
-                        };
-
-                        self.client
-                            .send_notification::<CursorPositionNotify>(params)
-                            .await;
-                    }
+                if let Some(last) = params.content_changes.last() {
+                    log::info!("{}", last.text);
+                    self.send_lsp(ProcessorRequest::UpdateDocumentStr(uri, last.text.clone()));
                 }
             }
             Err(()) => log::error!("Cannot parse URI: {uri}"),
@@ -139,7 +124,8 @@ impl LanguageServer for Backend {
         match uri.to_file_path() {
             Ok(path) => {
                 log::info!("Did save: {path:?}");
-                self.send_lsp(ProcessorRequest::AddDocument(uri))
+                self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
+                self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
             }
             Err(_) => log::error!("Cannot parse URI: {uri}"),
         }

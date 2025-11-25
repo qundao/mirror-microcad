@@ -160,7 +160,7 @@ impl Processor {
             },
             ProcessorRequest::ParseSource { path, name, source } => {
                 match SourceFile::load_from_str(
-                    name.unwrap_or(String::from("<none>")).as_str(),
+                    Some(name.unwrap_or(String::from("<none>")).as_str()),
                     path.unwrap_or(std::path::PathBuf::from("<virtual>")),
                     &source,
                 ) {
