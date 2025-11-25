@@ -2,6 +2,14 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } f
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+/*
+import {
+    StreamInfo,
+} from 'vscode-languageclient/node';
+
+import * as net from 'net';
+*/
+
 let client: LanguageClient | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -19,6 +27,27 @@ export async function activate(context: vscode.ExtensionContext) {
             transport: TransportKind.socket
         }
     };
+
+    /* 
+    // With these server options you can connect to an already running LSP, which makes development more convenient.
+    const serverOptions: ServerOptions = () => {
+        return new Promise<StreamInfo>((resolve, reject) => {
+            const port = 5007;
+            const socket = net.connect(port, '127.0.0.1', () => {
+                console.log(`Connected to language server on port ${port}`);
+                resolve({
+                    reader: socket,
+                    writer: socket,
+                });
+            });
+
+            socket.on('error', (err) => {
+                console.error('Failed to connect to language server:', err);
+                reject(err);
+            });
+        });
+    };
+    */
 
     const clientOptions: LanguageClientOptions = {
         documentSelector: [{ scheme: 'file', language: 'microcad' }],
