@@ -88,9 +88,9 @@ impl SymbolDef {
     pub(crate) fn source_hash(&self) -> u64 {
         match self {
             Self::SourceFile(sf) => sf.hash,
-            Self::Module(md) => md.src_ref.source_hash(),
-            Self::Workbench(wd) => wd.src_ref.source_hash(),
-            Self::Function(fd) => fd.src_ref.source_hash(),
+            Self::Module(md) => md.src_ref().source_hash(),
+            Self::Workbench(wd) => wd.src_ref().source_hash(),
+            Self::Function(fd) => fd.src_ref().source_hash(),
             Self::Builtin(_) => 0,
             Self::Assignment(a) => a.src_ref.source_hash(),
             Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => {

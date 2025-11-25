@@ -16,8 +16,6 @@ pub struct ModuleDefinition {
     pub id: Identifier,
     /// Module body. ('None' if external module
     pub body: Option<Body>,
-    /// Source code reference.
-    pub src_ref: SrcRef,
 }
 
 impl ModuleDefinition {
@@ -33,7 +31,7 @@ impl ModuleDefinition {
 
 impl SrcReferrer for ModuleDefinition {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.id.src_ref()
     }
 }
 

@@ -15,7 +15,6 @@ impl Parse for Rc<FunctionDefinition> {
                 .find(Rule::function_signature)
                 .expect("Function signature"),
             body: crate::find_rule!(pair, body)?,
-            src_ref: pair.clone().into(),
         }))
     }
 }

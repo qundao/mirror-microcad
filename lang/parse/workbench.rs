@@ -24,7 +24,6 @@ impl Parse for Rc<WorkbenchDefinition> {
             id: crate::find_rule!(pair, identifier)?,
             plan: crate::find_rule!(pair, parameter_list)?,
             body: crate::find_rule!(pair, body)?,
-            src_ref: pair.into(),
         }
         .into())
     }

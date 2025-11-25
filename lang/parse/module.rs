@@ -10,7 +10,6 @@ impl Parse for Rc<ModuleDefinition> {
             visibility: crate::find_rule!(pair, visibility)?,
             id: crate::find_rule!(pair, identifier)?,
             body: crate::find_rule_opt!(pair, body),
-            src_ref: pair.clone().into(),
         }))
     }
 }

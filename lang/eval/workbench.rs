@@ -72,7 +72,7 @@ impl WorkbenchDefinition {
                         kind = self.kind
                     );
                     if let Err(err) = init.eval(non_properties.into_iter().collect(), context) {
-                        context.error(&self.src_ref_head(), err)?;
+                        context.error(&self.src_ref(), err)?;
                     }
                 }
 
@@ -91,14 +91,10 @@ impl WorkbenchDefinition {
                             match result {
                                 Ok(()) => {}
                                 Err(EvalError::WorkbenchNoOutput(..)) => {
-                                    context.warning(
-                                        &self.src_ref_head(),
-                                        result.expect_err("Error"),
-                                    )?;
+                                    context.warning(&self.src_ref(), result.expect_err("Error"))?;
                                 }
                                 result => {
-                                    context
-                                        .error(&self.src_ref_head(), result.expect_err("Error"))?;
+                                    context.error(&self.src_ref(), result.expect_err("Error"))?;
                                 }
                             }
                         }
@@ -197,6 +193,6 @@ impl WorkbenchDefinition {
             }
         }
 
-        Ok(models.to_multiplicity(self.src_ref.clone()))
+        Ok(models.to_multiplicity(self.src_ref()))
     }
 }
