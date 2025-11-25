@@ -23,9 +23,12 @@ pub struct RenderContext {
     /// Optional render cache.
     pub cache: Option<RcMut<RenderCache>>,
 
+    /// The number of models to be rendered.
     models_to_render: usize,
 
+    /// The number of model that been been rendered.
     models_rendered: usize,
+
     /// Progress is given as a percentage between 0.0 and 100.0.
     pub progress_tx: Option<ProgressTx>,
 }
@@ -63,6 +66,7 @@ impl RenderContext {
         result
     }
 
+    /// Make a single progress step. A progress signal is sent with each new percentage.
     fn step(&mut self) {
         let old_percent = self.progress_in_percent();
         self.models_rendered += 1;
