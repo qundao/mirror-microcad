@@ -163,4 +163,5 @@ impl Plugin for MicrocadPlugin {
 fn apply_window_settings(state: Res<State>, mut windows: Query<&mut Window>) {
     let mut window = windows.single_mut().expect("Some window");
     state.update_window_settings(&mut window);
+    window.present_mode = bevy::window::PresentMode::Mailbox;
 }
