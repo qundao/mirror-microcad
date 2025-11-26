@@ -7,7 +7,13 @@ use std::{fs, process::Command};
 
 fn main() -> std::io::Result<()> {
     let search_path = ".";
-    let extensions = [".rs", ".toml", ".pest", ".slint"];
+    let extensions = [
+        ".rs",    // Rust files
+        ".toml",  // TOML files, like Cargo.toml
+        ".pest",  // Pest grammar
+        ".slint", // Slint UI files
+        ".wgsl",  // WGSL shader files used in microcad-viewer
+    ];
 
     let re = Regex::new(r"Copyright © (\d{4}(-\d{4})?)").unwrap();
 
@@ -27,7 +33,7 @@ fn main() -> std::io::Result<()> {
             .to_string()
             .as_str()
         {
-            "rs" | "pest" | "slint" => "//",
+            "rs" | "pest" | "slint" | "wgsl" => "//",
             "toml" => "#",
             _ => panic!("unexpected extension"),
         };
