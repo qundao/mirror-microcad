@@ -7,7 +7,7 @@ mod processor;
 
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
-    Client, LanguageServer, LspService, Server, async_trait,
+    async_trait,
     jsonrpc::Result,
     lsp_types::{
         DiagnosticOptions, DiagnosticServerCapabilities, DidChangeTextDocumentParams,
@@ -15,16 +15,10 @@ use tower_lsp::{
         DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportPartialResult,
         DocumentDiagnosticReportResult, ExecuteCommandParams, InitializeParams, InitializeResult,
         InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport, ServerCapabilities,
-        TextDocumentIdentifier, TextDocumentPositionParams, TextDocumentSyncCapability,
-        TextDocumentSyncKind, Url, notification::Notification,
+        TextDocumentSyncCapability, TextDocumentSyncKind, Url,
     },
+    Client, LanguageServer, LspService, Server,
 };
-
-enum CursorPositionNotify {}
-impl Notification for CursorPositionNotify {
-    type Params = TextDocumentPositionParams;
-    const METHOD: &'static str = "textDocument/cursorPosition";
-}
 
 #[derive(Debug)]
 struct Backend {
@@ -99,7 +93,6 @@ impl LanguageServer for Backend {
             Ok(path) => {
                 log::info!("Did change {path:?}");
                 if let Some(last) = params.content_changes.last() {
-                    log::info!("{}", last.text);
                     self.send_lsp(ProcessorRequest::UpdateDocumentStr(uri, last.text.clone()));
                 }
             }

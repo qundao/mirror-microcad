@@ -164,7 +164,6 @@ impl Processor {
             ) {
                 Ok(mut context) => {
                     context.eval()?;
-                    log::info!("evaluated");
                     Context::Eval(context.into())
                 }
                 Err(_) => todo!(),
@@ -186,7 +185,6 @@ impl Processor {
 
     pub fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
         if let Some(diag) = &self.context.diag() {
-            log::info!("{:?}", diag.diag_list);
             Ok(vec![ProcessorResponse::DocumentDiagnostics(
                 url.clone(),
                 FullDocumentDiagnosticReport {
