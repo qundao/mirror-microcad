@@ -6,13 +6,26 @@ This crate provides the command line interpreter of µcad.
 
 ## Installation
 
-First, install [Ninja Build](https://github.com/ninja-build/ninja) which is needed to compile
+First, install [CMake](https://cmake.org/) and [Ninja](https://github.com/ninja-build/ninja) which are needed to compile
 the [manifold geometry library](https://github.com/elalish/manifold).
-For example, *Debian* based *Linux* distributions use the following line:
+
+### *Debian* based *Linux* distributions
+
+Use the following line to install Ninja and CMake:
 
 ```sh
-sudo apt install ninja-build
+sudo apt install ninja-build cmake
 ```
+
+### MacOS
+
+If you are on using MacOS, you have to install `cmake` and `ninja` using `brew`:
+
+```sh
+brew install cmake ninja
+```
+
+### Install µcad via cargo
 
 To install the latest release of *µcad* via *cargo*, type:
 
@@ -41,7 +54,7 @@ microcad export ./examples/bricks/brick
 
 Start the microcad CLI by typing `microcad` into your console.
 
-```plain
+```sh
 microcad
 ```
 
@@ -72,7 +85,7 @@ Options:
 
 ## Install standard library
 
-In most cases you might want to use the *microcad standard library* (`std`).
+In most cases you might want to use the *µcad standard library* (`std`).
 
 This must be installed once by running the following command:
 
