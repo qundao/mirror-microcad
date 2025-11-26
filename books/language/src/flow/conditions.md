@@ -2,23 +2,53 @@
 
 Conditions lead to different executions paths for different cases.
 
-## If Statement for models
+## If statements in workbenches
 
-[![test](.test/if_models.svg)](.test/if_models.log)
+Inside a workbench block, an if statement can be used to select different shapes or constructions depending on input parameters.
 
-```µcad,if_models
+[![test](.test/if_statement.svg)](.test/if_statement.log)
+
+```µcad,if_statement
+use std::ops::*;
+use std::math::*;
+use std::geo2d::*;
+
 sketch MySketch(a: Integer) {
     if a == 1 {
-        std::geo2d::Circle(radius = 4mm)
+        Circle(1cm)
     } else {
-        std::geo2d::Circle(radius = 10mm)
+        Rect(1cm)
     }
 }
 
-MySketch(2) - MySketch(1);
+MySketch([1,2]).align(X, 1cm);
 ```
 
-![test](.test/if_models-out.svg)
+Multiple conditions can be chained, allowing more than two alternatives:
+
+![output](.test/if_statement-out.svg)
+
+[![test](.test/chained_if_statement.svg)](.test/chained_if_statement.log)
+
+```µcad,chained_if_statement
+use std::ops::*;
+use std::math::*;
+use std::geo2d::*;
+
+sketch MySketch(a: Integer) {
+    if a == 1 {
+        Circle(1cm)
+    } else if a == 2 {
+        Rect(1cm)
+    } else {
+        Hexagon(1cm)
+    }
+}
+
+MySketch([1,2,3]).align(X, 1cm);
+```
+
+![output](.test/chained_if_statement-out.svg)
 
 ## If Statement for functions
 
