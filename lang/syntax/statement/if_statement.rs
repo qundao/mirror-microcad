@@ -29,6 +29,9 @@ impl SrcReferrer for IfStatement {
 impl std::fmt::Display for IfStatement {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "if {cond} {body}", cond = self.cond, body = self.body)?;
+        if let Some(next) = &self.next_if {
+            writeln!(f, "else {next}")?;
+        }
         if let Some(body) = &self.body_else {
             writeln!(f, "else {body}")?;
         }
@@ -44,6 +47,9 @@ impl std::fmt::Debug for IfStatement {
             cond = self.cond,
             body = self.body
         )?;
+        if let Some(next) = &self.next_if {
+            writeln!(f, "else {next:?}")?;
+        }
         if let Some(body) = &self.body_else {
             writeln!(f, "else {body:?}")?;
         }

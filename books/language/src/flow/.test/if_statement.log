@@ -1,0 +1,52 @@
+-- Test --
+        Test name: if_statement
+  Expected result: ok
+      Source file: ../books/language/src/flow/conditions.md:12
+        Test path: ../books/language/src/flow/.test
+
+-- Code --
+
+  12:   use std::ops::*;
+  13:   use std::math::*;
+  14:   use std::geo2d::*;
+  15:   
+  16:   sketch MySketch(a: Integer) {
+  17:       if a == 1 {
+  18:           Circle(1cm)
+  19:       } else {
+  20:           Rect(1cm)
+  21:       }
+  22:   }
+  23:   
+  24:   MySketch([1,2]).align(X, 1cm);
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=10mm) ->
+      - direction = (x=1, y=0, z=0)
+      - spacing = 10mm
+      Operation __builtin::ops::align(spacing=10mm, x=1, y=0, z=0) ->
+        Multiplicity ->
+          Workpiece(sketch) if_statement::MySketch(a=1) ->
+            - a = 1
+            Group ->
+              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+                - center = (x=0mm, y=0mm)
+                - radius = 10mm
+                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                  Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+          Workpiece(sketch) if_statement::MySketch(a=2) ->
+            - a = 2
+            Group ->
+              Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
+                - height = 10mm
+                - width = 10mm
+                - x = -5mm
+                - y = -5mm
+                Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
+
+Export of "../books/language/src/flow/.test/if_statement-out.svg" successful.
+-- Test Result --
+OK

@@ -1,28 +1,31 @@
 -- Test --
         Test name: if_functions
   Expected result: ok
-      Source file: ../books/language/src/flow/conditions.md:28
+      Source file: ../books/language/src/flow/conditions.md:58
         Test path: ../books/language/src/flow/.test
 
 -- Code --
 
-  28:   fn f(x: Integer) {
-  29:       if x == 5 or x == 4 {
-  30:           std::print("match");
-  31:       } else if x > 0 and x < 4 {
-  32:           std::print("no match");
-  33:       } else {
-  34:           std::print("invalid");
-  35:       }
-  36:   }
-  37:   
-  38:   f(5);  // prints "match"
-  39:   f(1);  // prints "no match"
-  40:   f(-1); // prints "invalid"
-  41:   f(6);  // prints "invalid"
+  58:   fn f(x: Integer) {
+  59:       if x == 5 or x == 4 {
+  60:           std::print("match");
+  61:       } else if x > 0 and x < 4 {
+  62:           std::print("no match");
+  63:       } else {
+  64:           std::print("invalid");
+  65:       }
+  66:   }
+  67:   
+  68:   f(5);  // prints "match"
+  69:   f(1);  // prints "no match"
+  70:   f(-1); // prints "invalid"
+  71:   f(6);  // prints "invalid"
 
 -- Output --
 match
+no match
+invalid
+invalid
 
 -- No Errors --
 -- No Model --

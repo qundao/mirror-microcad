@@ -15,6 +15,8 @@ impl Eval<Value> for IfStatement {
             Value::Bool(false) => {
                 if let Some(body) = &self.body_else {
                     Ok(body.eval(context)?)
+                } else if let Some(next) = &self.next_if {
+                    next.eval(context)
                 } else {
                     Ok(Value::None)
                 }
@@ -37,6 +39,8 @@ impl Eval<Option<Model>> for IfStatement {
             Value::Bool(false) => {
                 if let Some(body) = &self.body_else {
                     Ok(body.eval(context)?)
+                } else if let Some(next) = &self.next_if {
+                    next.eval(context)
                 } else {
                     Ok(None)
                 }
