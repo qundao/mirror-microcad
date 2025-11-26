@@ -137,6 +137,7 @@ impl Parse for Expression {
                         Ok(Self::FormatString(FormatString::parse(primary)?))
                     }
                     (primary, Rule::body) => Ok(Self::Body(Body::parse(primary)?)),
+                    (primary, Rule::if_statement) => Ok(Self::If(Box::new(IfStatement::parse(primary)?))),
                     (primary, Rule::call) => Ok(Self::Call(Call::parse(primary)?)),
                     (primary, Rule::qualified_name) => {
                         Ok(Self::QualifiedName(QualifiedName::parse(primary)?))

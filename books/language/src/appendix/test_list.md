@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**169** tests have been evaluated with version **0.2.17** of microcad.
+**170** tests have been evaluated with version **0.2.17** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -68,6 +68,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/calls/.test/function_return.svg)](../flow/calls/.test/function_return.log) | [function_return](../flow/calls/function_calls.md) |
 | [![test](../libraries/std/ops/.test/hull_multiple.svg)](../libraries/std/ops/.test/hull_multiple.log) | [hull_multiple](../libraries/std/ops/hull.md) |
 | [![test](../libraries/std/ops/.test/hull_single.svg)](../libraries/std/ops/.test/hull_single.log) | [hull_single](../libraries/std/ops/hull.md) |
+| [![test](../expressions/.test/if_expression.svg)](../expressions/.test/if_expression.log) | [if_expression](../expressions/README.md) |
 | [![test](../flow/.test/if_functions.svg)](../flow/.test/if_functions.log) | [if_functions](../flow/conditions.md) |
 | [![test](../flow/.test/if_statement.svg)](../flow/.test/if_statement.log) | [if_statement](../flow/conditions.md) |
 | [![test](../structure/workbenches/.test/illegal_workbench_statement.svg)](../structure/workbenches/.test/illegal_workbench_statement.log) | [illegal_workbench_statement](../structure/workbenches/README.md) |

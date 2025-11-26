@@ -20,6 +20,17 @@ pub struct IfStatement {
     pub src_ref: SrcRef,
 }
 
+impl IfStatement {
+    /// Checks if all branches of the if statement are set
+    pub fn is_complete(&self) -> bool {
+        if let Some(next_if) = &self.next_if {
+            next_if.is_complete()
+        } else {
+            self.body_else.is_some()
+        }
+    }
+}
+
 impl SrcReferrer for IfStatement {
     fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()

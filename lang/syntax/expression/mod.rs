@@ -34,6 +34,8 @@ pub enum Expression {
     TupleExpression(TupleExpression),
     /// A body: `{}`.
     Body(Body),
+    /// An if statement: `if {} else {}`.
+    If(Box<IfStatement>),
     /// A call: `ops::subtract()`.
     Call(Call),
     /// A qualified name: `foo::bar`.
@@ -93,6 +95,7 @@ impl SrcReferrer for Expression {
             Self::TupleExpression(te) => te.src_ref(),
             Self::Call(c) => c.src_ref(),
             Self::Body(b) => b.src_ref(),
+            Self::If(i) => i.src_ref(),
             Self::QualifiedName(q) => q.src_ref(),
             Self::Marker(m) => m.src_ref(),
             Self::BinaryOp {
@@ -138,6 +141,7 @@ impl std::fmt::Display for Expression {
             Self::MethodCall(lhs, method_call, _) => write!(f, "{lhs}.{method_call}"),
             Self::Call(call) => write!(f, "{call}"),
             Self::Body(body) => write!(f, "{body}"),
+            Self::If(if_) => write!(f, "{if_}"),
             Self::QualifiedName(qualified_name) => write!(f, "{qualified_name}"),
             Self::Marker(marker) => write!(f, "{marker}"),
             _ => unimplemented!(),
@@ -169,6 +173,7 @@ impl std::fmt::Debug for Expression {
             Self::MethodCall(lhs, method_call, _) => write!(f, "{lhs:?}.{method_call:?}"),
             Self::Call(call) => write!(f, "{call:?}"),
             Self::Body(body) => write!(f, "{body:?}"),
+            Self::If(if_) => write!(f, "{if_:?}"),
             Self::QualifiedName(qualified_name) => write!(f, "{qualified_name:?}"),
             Self::Marker(marker) => write!(f, "{marker:?}"),
             _ => unimplemented!(),
@@ -235,6 +240,7 @@ impl TreeDisplay for Expression {
             }
             Expression::Call(call) => call.tree_print(f, depth),
             Expression::Body(body) => body.tree_print(f, depth),
+            Expression::If(if_) => if_.tree_print(f, depth),
             Expression::QualifiedName(qualified_name) => qualified_name.tree_print(f, depth),
             Expression::Marker(marker) => marker.tree_print(f, depth),
             Expression::Invalid => write!(f, "{}", crate::invalid!(EXPRESSION)),

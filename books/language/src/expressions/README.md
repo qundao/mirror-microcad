@@ -39,3 +39,29 @@ This too is an expression — one that contains an element, specifically a
 that will actually be rendered into this:
 
 ![output](.test/expression_model-out.svg)
+
+If statements can also be used as an expression, evaluating to the value from
+the chosen branch.
+
+[![test](.test/if_expression.svg)](.test/if_expression.log)
+
+```µcad,if_expression
+use std::ops::*;
+use std::math::*;
+use std::geo2d::*;
+
+sketch MySketch(a: Integer) {
+    outer = if a == 1 {
+        Circle(1cm)
+    } else if a == 2 {
+        Rect(1cm)
+    } else {
+        Hexagon(1cm)
+    };
+    outer - Circle(3mm)
+}
+
+MySketch([1,2,3]).align(X, 1cm);
+```
+
+![output](.test/if_expression-out.svg)
