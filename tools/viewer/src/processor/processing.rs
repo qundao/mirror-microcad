@@ -75,7 +75,7 @@ impl Processor {
                 self.state_change(ProcessingState::Busy(0.0));
 
                 match SourceFile::load_from_str(
-                    name.unwrap_or(String::from("<none>")).as_str(),
+                    name.as_deref(),
                     path.unwrap_or(std::path::PathBuf::from("<virtual>")),
                     &source,
                 ) {
