@@ -104,7 +104,6 @@ pub struct ScenePlugin;
 impl Plugin for ScenePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(camera::camera_controller::CameraControllerPlugin)
-            .add_systems(Update, lighting::spawn_lights)
             .add_systems(Startup, grid::spawn_grid_plane)
             //.add_systems(Startup, angle::spawn_angle_plane)
             //.add_systems(Startup, ruler::spawn_ruler_plane)
@@ -114,6 +113,7 @@ impl Plugin for ScenePlugin {
             .add_systems(Update, overlay::update_overlay)
             .add_systems(Update, grid::update_grid)
             .add_systems(Update, grid::toggle_grid)
-            .add_systems(Update, grid::update_grid_on_view_angle_change);
+            .add_systems(Update, grid::update_grid_on_view_angle_change)
+            .add_systems(Update, lighting::spawn_lights);
     }
 }
