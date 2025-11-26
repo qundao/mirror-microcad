@@ -19,11 +19,18 @@ impl SourceFile {
 
         let mut file = match std::fs::File::open(&path) {
             Ok(file) => file,
-            _ => return Err(ParseError::LoadSource(path.as_ref().into())),
+            _ => {
+                return Err(ParseError::LoadSource(Refer::new(
+                    path.as_ref().into(),
+                    name.src_ref(),
+                )))
+            }
         };
 
         let mut buf = String::new();
-        file.read_to_string(&mut buf)?;
+        if let Err(err) = file.read_to_string(&mut buf) {
+            return Err(ParseError::IoError(Refer::new(err, name.src_ref())));
+        }
 
         let mut source_file: Self = Parser::parse_rule(crate::parser::Rule::source_file, &buf, 0)?;
         assert_ne!(source_file.hash, 0);

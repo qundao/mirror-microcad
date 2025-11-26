@@ -20,9 +20,15 @@ impl Parse for Type {
                 "Integer" => Ok(Type::Integer),
                 "Bool" => Ok(Type::Bool),
                 "String" => Ok(Type::String),
-                _ => Err(ParseError::UnknownType(inner.to_string())),
+                _ => Err(ParseError::UnknownType(Refer::new(
+                    inner.to_string(),
+                    pair.into(),
+                ))),
             },
-            _ => Err(ParseError::UnknownType(inner.to_string())),
+            _ => Err(ParseError::UnknownType(Refer::new(
+                inner.to_string(),
+                pair.into(),
+            ))),
         }
     }
 }

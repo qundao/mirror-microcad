@@ -24,7 +24,7 @@ pub fn find_rule<T: crate::parser::Parse>(
             if let Some(def) = def {
                 Ok(def)
             } else {
-                Err(ParseError::NotAvailable)
+                Err(ParseError::NotAvailable(pair.clone().into()))
             }
         }
     }

@@ -9,7 +9,7 @@ impl Parse for Refer<WorkbenchKind> {
             "part" => Ok(Refer::new(WorkbenchKind::Part, pair.into())),
             "sketch" => Ok(Refer::new(WorkbenchKind::Sketch, pair.into())),
             "op" => Ok(Refer::new(WorkbenchKind::Operation, pair.into())),
-            _ => Err(ParseError::UnexpectedToken),
+            _ => Err(ParseError::UnexpectedToken(pair.into())),
         }
     }
 }
