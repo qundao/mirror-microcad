@@ -73,10 +73,6 @@ pub enum ParseError {
     #[error("Duplicate argument: {0}")]
     DuplicateArgument(Identifier),
 
-    /// Invalid map key type
-    #[error("Invalid map key type: {0}")]
-    InvalidMapKeyType(String),
-
     /// Duplicated type name in map
     #[error("Duplicated type name in map: {0}")]
     DuplicatedMapType(Identifier),
@@ -171,20 +167,19 @@ impl SrcReferrer for ParseError {
             | ParseError::MissingFormatExpression(src_ref)
             | ParseError::StatementBetweenInit(src_ref)
             | ParseError::NotAvailable(src_ref) => src_ref.clone(),
-            ParseError::ParseFloatError(parse_float_error) => todo!(),
-            ParseError::ParseIntError(parse_int_error) => todo!(),
-            ParseError::RuleNotFoundError(rule) => todo!(),
-            ParseError::IoError(error) => todo!(),
-            ParseError::ParseColorError(parse_color_error) => todo!(),
-            ParseError::UnknownColorName(_) => todo!(),
-            ParseError::UnknownUnit(_) => todo!(),
-            ParseError::InvalidMapKeyType(_) => todo!(),
-            ParseError::DuplicateTupleType(_) => todo!(),
-            ParseError::LoadSource(path_buf) => todo!(),
-            ParseError::GrammarRuleError(_) => todo!(),
-            ParseError::InvalidQualifiedName(_) => todo!(),
-            ParseError::InvalidIdentifier(_) => todo!(),
-            ParseError::UnknownType(_) => todo!(),
+            ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
+            ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
+            ParseError::RuleNotFoundError(_) => SrcRef(None),
+            ParseError::IoError(error) => error.src_ref(),
+            ParseError::ParseColorError(parse_color_error) => parse_color_error.src_ref(),
+            ParseError::UnknownColorName(name) => name.src_ref(),
+            ParseError::UnknownUnit(unit) => unit.src_ref(),
+            ParseError::DuplicateTupleType(ty) => ty.src_ref(),
+            ParseError::LoadSource(path) => path.src_ref(),
+            ParseError::GrammarRuleError(rule) => rule.src_ref(),
+            ParseError::InvalidQualifiedName(name) => name.src_ref(),
+            ParseError::InvalidIdentifier(id) => id.src_ref(),
+            ParseError::UnknownType(ty) => ty.src_ref(),
         }
     }
 }
