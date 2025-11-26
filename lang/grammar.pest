@@ -281,7 +281,7 @@ unary_minus =  { "-" }
 unary_plus  =  { "+" }
 unary_not   =  { "!" }
 postfix     = _{ element_access }
-primary     = _{ literal | marker | body | call | qualified_name | format_string | array_expression | "(" ~ ws* ~ expression ~ ws* ~ ")" | tuple_expression }
+primary     = _{ literal | marker | body | call | qualified_name | format_string | array_expression | "(" ~ ws* ~ expression ~ ws* ~ ")" | tuple_expression | if_statement }
 
 // `a, b, c`: ok
 // `1+2, 4*3, 3.2`: ok

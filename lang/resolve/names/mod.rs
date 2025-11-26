@@ -144,6 +144,7 @@ impl Names for Expression {
             Expression::ArrayExpression(ae) => ae.names(),
             Expression::TupleExpression(te) => te.names(),
             Expression::Body(body) => body.names(),
+            Expression::If(if_) => if_.names(),
             Expression::Call(call) => call.names(),
             Expression::QualifiedName(name) => name.into(),
             Expression::BinaryOp {
