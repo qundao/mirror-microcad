@@ -1,6 +1,6 @@
 # Operations
 
-*Operations* process 2D xor 3D geometries into 2D xor 3D geometries.
+*Operations* process 2D or 3D geometries into 2D or 3D geometries.
 
 Actual operations are workbenches that process or transform their child *object
 nodes* to generate a new geometry.
