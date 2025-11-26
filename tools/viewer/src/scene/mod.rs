@@ -10,6 +10,7 @@ mod angle;
 mod camera;
 mod grid;
 mod lighting;
+mod overlay;
 mod ruler;
 
 /// Get current zoom level.
@@ -33,6 +34,21 @@ pub fn get_current_resolution(projection: &Projection, window: &Window) -> f32 {
     area_size / window.width().max(window.height()) * 10.0
 }
 
+/// Set zoom level to 100%.
+pub fn zoom_to_fit(projection: &mut Projection, window: &Window) {
+    match projection {
+        Projection::Orthographic(ortho) => {
+            // Change the projection parameters
+            use bevy::render::camera::CameraProjection;
+            ortho.scale = 1.0;
+            ortho.update(window.width(), window.height());
+        }
+        _ => {
+            // Not an orthographic camera
+        }
+    }
+}
+
 /// A system that draws hit indicators for every pointer.
 pub fn draw_mesh_intersections(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,
@@ -45,7 +61,7 @@ pub fn draw_mesh_intersections(
         .filter_map(|interaction| interaction.get_nearest_hit())
     {
         if let Some(position) = hit.position {
-            let proj = projections.iter().next().unwrap();
+            let proj = projections.single().expect("Some projections");
 
             let zoom = get_current_zoom_level(proj);
             let color: Color = state.config.theme.guide.to_bevy();
@@ -67,6 +83,7 @@ pub struct Scene {
 }
 
 impl Scene {
+    /// Minimum radius in mm for a scene.
     pub const MINIMUM_RADIUS: f32 = 10.0;
 }
 
@@ -81,6 +98,7 @@ impl Default for Scene {
     }
 }
 
+/// The bevy scene plugin contains all systems that are to be rendered except the µcad models.
 pub struct ScenePlugin;
 
 impl Plugin for ScenePlugin {
@@ -91,8 +109,11 @@ impl Plugin for ScenePlugin {
             //.add_systems(Startup, angle::spawn_angle_plane)
             //.add_systems(Startup, ruler::spawn_ruler_plane)
             .add_systems(Startup, camera::setup_camera)
+            .add_systems(Startup, overlay::setup_overlay)
             .add_systems(Update, draw_mesh_intersections)
+            .add_systems(Update, overlay::update_overlay)
             .add_systems(Update, grid::update_grid)
+            .add_systems(Update, grid::toggle_grid)
             .add_systems(Update, grid::update_grid_on_view_angle_change);
     }
 }

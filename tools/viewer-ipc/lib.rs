@@ -7,6 +7,7 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
+/// The cursor position to be sent.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CursorPosition {
     line: usize,
@@ -17,22 +18,32 @@ pub struct CursorPosition {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum ViewerRequest {
     /// Show source code from file.
-    ShowSourceCodeFromFile { path: PathBuf },
-    /// Show a source code snipped.
+    ShowSourceCodeFromFile {
+        /// File path.
+        path: PathBuf,
+    },
+    /// Show a source code snippet.
     ShowSourceCode {
+        /// An optional path to the file, if this snippet is part of a file.
         path: Option<PathBuf>,
+        /// An optional name for the source code snippet.
         name: Option<String>,
+        /// The actual source code.
         code: String,
     },
     /// Set the current cursor range.
     SetCursorRange {
+        /// Begin of the cursor range.
         begin: Option<CursorPosition>,
+        /// End of the cursor range.
         end: Option<CursorPosition>,
     },
-    /// Hide window
+    /// Hide window.
     Show,
-    /// Hide window
+    /// Hide window.
     Hide,
+    /// Set zoom level to 100%, so we can see the entire model.
+    ZoomToFit,
     /// Exit viewer process.
     Exit,
 }
@@ -87,6 +98,7 @@ impl ViewerProcessInterface {
                 command.arg("--hidden");
             }
             let mut child = command
+                .arg("--stay-on-top")
                 .arg("stdin://") // run the viewer as slave via stdin.
                 .current_dir(std::env::current_dir().expect("current dir"))
                 .stdin(std::process::Stdio::piped())
@@ -111,17 +123,19 @@ impl ViewerProcessInterface {
             });
 
             // Thread to write requests
-            std::thread::spawn(move || loop {
-                for req in &rx {
-                    use std::io::Write;
-                    match serde_json::to_string(&req) {
-                        Ok(json) => {
-                            log::debug!("Write request as json: {json}");
-                            writeln!(stdin, "{}", json).expect("io error");
-                            stdin.flush().expect("io error");
-                        }
-                        Err(_) => todo!(),
-                    };
+            std::thread::spawn(move || {
+                loop {
+                    for req in &rx {
+                        use std::io::Write;
+                        match serde_json::to_string(&req) {
+                            Ok(json) => {
+                                log::debug!("Write request as json: {json}");
+                                writeln!(stdin, "{}", json).expect("io error");
+                                stdin.flush().expect("io error");
+                            }
+                            Err(_) => todo!(),
+                        };
+                    }
                 }
             });
 

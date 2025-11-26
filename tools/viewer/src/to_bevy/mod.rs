@@ -14,7 +14,9 @@ use bevy::{
 };
 use microcad_core::*;
 
+/// A trait to convert a µcad type into a bevy type.
 pub trait ToBevy<T> {
+    /// Convert into bevy type.
     fn to_bevy(self) -> T;
 }
 

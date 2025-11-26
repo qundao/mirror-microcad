@@ -3,17 +3,24 @@
 
 //! microcad Viewer State module.
 
-mod cursor;
 mod event;
 mod model;
 
-use bevy::ecs::resource::Resource;
+use bevy::{ecs::resource::Resource, window::Window};
 
-use crate::{Config, plugin::MicrocadPluginInput, processor::ProcessorInterface, scene::Scene};
+use crate::{
+    Config,
+    plugin::MicrocadPluginInput,
+    processor::{ProcessingState, ProcessorInterface},
+    scene::Scene,
+};
 
-pub use cursor::Cursor;
-pub use event::{StateEvent, handle_state_event};
+pub use event::{ViewerEvent, handle_viewer_event};
 pub use model::ModelViewState;
+
+/// TODO Cursor struct to infos about a cursor.
+#[derive(Default)]
+pub struct Cursor;
 
 /// The application state (the bevy view model).
 #[derive(Resource)]
@@ -28,6 +35,8 @@ pub struct State {
     pub cursor: Cursor,
     /// The µcad geometry processor.
     pub processor: ProcessorInterface,
+    /// The current processing state.
+    pub processing_state: ProcessingState,
 }
 
 impl State {
@@ -39,6 +48,22 @@ impl State {
             cursor: Default::default(),
             scene: Default::default(),
             processor: ProcessorInterface::run(),
+            processing_state: Default::default(),
         }
+    }
+
+    /// Update window title and window level.
+    pub fn update_window_settings(&self, window: &mut Window) {
+        window.title = format!(
+            "µcad{}",
+            match &self.input {
+                Some(input) => format!(" - {input}"),
+                None => String::new(),
+            }
+        );
+        window.window_level = match self.config.stay_on_top {
+            true => bevy::window::WindowLevel::AlwaysOnTop,
+            false => bevy::window::WindowLevel::Normal,
+        };
     }
 }

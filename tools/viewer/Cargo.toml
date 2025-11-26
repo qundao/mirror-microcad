@@ -15,6 +15,7 @@ version.workspace = true
 [dependencies]
 anyhow = "1.0.100"
 bevy = { version = "0.16.1", default-features = false, features = [
+    "png",
     "bevy_asset",
     "bevy_color",
     "bevy_gizmos",
@@ -22,6 +23,8 @@ bevy = { version = "0.16.1", default-features = false, features = [
     "bevy_picking",
     "bevy_pbr",
     "bevy_render",
+    "bevy_ui",
+    "bevy_text",
     "bevy_window",
     "bevy_winit",
     "tonemapping_luts",

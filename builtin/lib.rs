@@ -65,8 +65,10 @@ fn head() -> Symbol {
         &|_params, args, ctx| {
             let arg = args.get_single()?;
             Ok(match &arg.1.value {
-                Value::String(s) if s.len() > 0 => Value::String(s.chars().next().unwrap().to_string()),
-                Value::Array(a) if a.len() > 0 => a.head(),
+                Value::String(s) if !s.is_empty() => {
+                    Value::String(s.chars().next().unwrap_or_default().to_string())
+                }
+                Value::Array(a) if !a.is_empty() => a.head(),
                 Value::String(_) | Value::Array(_) => {
                     ctx.error(arg.1, EvalError::BuiltinError("Value is empty.".into()))?;
                     Value::None

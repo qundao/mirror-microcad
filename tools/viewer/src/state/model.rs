@@ -11,16 +11,22 @@ use microcad_lang::model::OutputType;
 
 use crate::*;
 
+/// Contains the state of each model. TODO This could be refactored into several separate components.
 #[derive(Clone, Default, Asset, Component, TypePath)]
 pub struct ModelViewState {
     info: processor::ModelInfo,
+    /// The selection state of a model.
     pub is_selected: bool,
+    /// The hovered state of a model.
     pub is_hovered: bool,
+    /// The outlines to be rendered for 2D model.
     pub outline_volume: OutlineVolume,
+    /// The base color of a model.
     pub base_color: Color,
 }
 
 impl ModelViewState {
+    /// A model view state is constucted from the current state and the view model.
     pub fn new(info: processor::ModelInfo, state: &State) -> Self {
         Self {
             outline_volume: OutlineVolume {

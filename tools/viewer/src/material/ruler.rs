@@ -5,8 +5,8 @@
 
 use super::bevy_types::*;
 
+/// Ruler.
 #[derive(Asset, AsBindGroup, Debug, Clone, TypePath)]
-// This struct defines the data that will be passed to your shader
 pub struct Ruler {
     #[uniform(0)]
     zoom_level: f32,

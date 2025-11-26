@@ -18,6 +18,8 @@ mod ruler;
 pub use angle::Angle;
 pub use grid::Grid;
 pub use ruler::Ruler;
+
+/// Common types to be used from bevy.
 pub mod bevy_types {
     pub use bevy::prelude::{AlphaMode, TypePath, Vec3};
     pub use bevy::{
@@ -27,6 +29,7 @@ pub mod bevy_types {
     };
 }
 
+/// The shader material asset id. This assures that we can query the correct material from a model node.
 pub static BUILTIN_MATERIAL_ASSET_ID: u64 = 0x1234123412341234;
 
 fn asset_uuid_from_str(s: &'static str) -> Uuid {
@@ -36,6 +39,7 @@ fn asset_uuid_from_str(s: &'static str) -> Uuid {
     Uuid::from_u64_pair(BUILTIN_MATERIAL_ASSET_ID, hasher.finish())
 }
 
+/// Build a shader ref from a string (mostly the shader filename).
 pub fn shader_ref_from_str(s: &'static str) -> ShaderRef {
     ShaderRef::Handle(Handle::Weak(bevy::asset::AssetId::<Shader>::Uuid {
         uuid: asset_uuid_from_str(s),
@@ -76,6 +80,7 @@ pub fn create_3d_material(base_color: bevy::prelude::Color) -> bevy_types::Stand
     }
 }
 
+/// Material plugin.
 pub struct MaterialPlugin;
 
 impl Plugin for MaterialPlugin {

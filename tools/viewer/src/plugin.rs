@@ -1,6 +1,8 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! This module contains the microcad bevy plugin and its input interface.
+
 use std::{
     sync::{Arc, Mutex},
     time::SystemTime,
@@ -24,6 +26,7 @@ use crate::{stdin::StdinMessageReceiver, *};
 pub enum MicrocadPluginInput {
     /// Load and watch an input file.
     File {
+        /// File path that is loaded.
         path: std::path::PathBuf,
 
         /// Full name of resolved symbol to displayed, `std::geo2d::Rect`.
@@ -72,7 +75,7 @@ impl MicrocadPluginInput {
                 path, symbol, line, ..
             } => {
                 // Start with base: file://<path>
-                let mut url = Url::parse("file://").unwrap();
+                let mut url = Url::parse("file://").expect("A valid URL");
 
                 // PathBuf -> string (handle both relative and absolute)
                 // Note: url::Url requires forward slashes
@@ -92,9 +95,15 @@ impl MicrocadPluginInput {
                 url
             }
 
-            MicrocadPluginInput::Stdin(_) => {
-                // Simplest possible representation
-                Url::parse("stdin://").unwrap()
+            MicrocadPluginInput::Stdin(stdin) => {
+                let default = Url::parse("stdin://").expect("No error");
+                match stdin {
+                    Some(stdin) => stdin.current_path().as_ref().map_or(default, |path| {
+                        Url::parse(format!("stdin://{}", path.display()).as_str())
+                            .expect("No error")
+                    }),
+                    None => default,
+                }
             }
         }
     }
@@ -116,6 +125,7 @@ impl MicrocadPluginInput {
             s.push_str(frag);
         }
 
+        log::error!("Input URL: {s}");
         s
     }
 }
@@ -126,15 +136,18 @@ impl std::fmt::Display for MicrocadPluginInput {
     }
 }
 
+/// The microcad plugin.
 pub struct MicrocadPlugin {
+    /// The input for the plugin (e.g. file or stdin).
     pub input: Option<MicrocadPluginInput>,
+    /// The viewer configuration.
     pub config: Config,
 }
 
 impl Plugin for MicrocadPlugin {
     fn build(&self, app: &mut App) {
         app.init_asset::<state::ModelViewState>()
-            .add_event::<state::StateEvent>()
+            .add_event::<state::ViewerEvent>()
             .insert_resource(ClearColor(self.config.theme.primary.to_bevy()))
             .insert_resource(State::new(self.input.clone(), self.config.clone()))
             .add_plugins((OutlinePlugin, MeshPickingPlugin))
@@ -143,22 +156,11 @@ impl Plugin for MicrocadPlugin {
             .add_plugins(scene::ScenePlugin)
             .add_systems(Startup, apply_window_settings)
             .add_systems(Update, stdin::handle_stdin_messages)
-            .add_systems(Update, state::handle_state_event);
+            .add_systems(Update, state::handle_viewer_event);
     }
 }
 
 fn apply_window_settings(state: Res<State>, mut windows: Query<&mut Window>) {
     let mut window = windows.single_mut().expect("Some window");
-    window.title = format!(
-        "µcad{}",
-        match &state.input {
-            Some(input) => format!(" - {input}"),
-            None => String::new(),
-        }
-    );
-    window.window_level = match state.config.stay_on_top {
-        true => bevy::window::WindowLevel::AlwaysOnTop,
-        false => bevy::window::WindowLevel::Normal,
-    };
-    window.present_mode = bevy::window::PresentMode::Mailbox;
+    state.update_window_settings(&mut window);
 }

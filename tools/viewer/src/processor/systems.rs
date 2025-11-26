@@ -17,7 +17,7 @@ use crate::stdin::StdinMessageReceiver;
 use crate::*;
 use crate::{
     processor::{ProcessorRequest, ProcessorResponse},
-    state::StateEvent,
+    state::ViewerEvent,
 };
 
 /// Whether a kind of watch event is relevant for compilation.
@@ -71,8 +71,10 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
                 use notify::{RecursiveMode, Watcher};
 
                 let (tx, rx) = std::sync::mpsc::channel();
-                let mut watcher = notify::recommended_watcher(tx).unwrap();
-                watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
+                let mut watcher = notify::recommended_watcher(tx).expect("Some watcher");
+                watcher
+                    .watch(&path, RecursiveMode::NonRecursive)
+                    .expect("No error");
 
                 log::info!("Watching external file: {}", path.display());
 
@@ -83,8 +85,10 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
                         && let Ok(modified) = meta.modified()
                     {
                         log::info!("Modified");
-                        *flag_clone.lock().unwrap() = Some(modified);
-                        watcher.watch(&path, RecursiveMode::NonRecursive).unwrap();
+                        *flag_clone.lock().expect("Lock") = Some(modified);
+                        watcher
+                            .watch(&path, RecursiveMode::NonRecursive)
+                            .expect("No error");
                     }
                 }
             });
@@ -110,7 +114,7 @@ pub fn file_reload(state: ResMut<crate::state::State>) {
             last_modified,
             ..
         }) => {
-            let mut last_modified_lock = last_modified.lock().unwrap();
+            let mut last_modified_lock = last_modified.lock().expect("Lock");
             if let Some(last_modified) = *last_modified_lock
                 && let Ok(elapsed) = last_modified.elapsed()
                 && elapsed > state.config.reload_delay
@@ -136,7 +140,7 @@ pub fn handle_processor_responses(
     mut meshes: ResMut<Assets<Mesh>>,
     mut model_view_states: ResMut<Assets<ModelViewState>>,
     mut state: ResMut<State>,
-    mut events: EventWriter<StateEvent>,
+    mut events: EventWriter<ViewerEvent>,
 ) {
     let mut entities = Vec::new();
     let mut ground_radius = microcad_core::Length::default();
@@ -189,6 +193,9 @@ pub fn handle_processor_responses(
                     })
                 }))
             }
+            ProcessorResponse::StateChanged(state) => {
+                events.write(ViewerEvent::ProcessingStateChanged(state));
+            }
         }
 
         if state.processor.response_receiver.is_empty() {
@@ -203,7 +210,7 @@ pub fn handle_processor_responses(
         }
 
         state.scene.model_entities = entities;
-        events.write(StateEvent::ChangeGroundRadius(ground_radius));
+        events.write(ViewerEvent::ChangeGroundRadius(ground_radius));
     }
 }
 
@@ -216,7 +223,7 @@ pub fn handle_pick_event(
         &mut MeshMaterial3d<StandardMaterial>,
         &mut OutlineVolume,
     )>,
-    mut events: EventWriter<StateEvent>,
+    mut events: EventWriter<ViewerEvent>,
 ) {
     for (entity, _) in pointers
         .iter()
@@ -225,13 +232,13 @@ pub fn handle_pick_event(
         match query.get_mut(*entity) {
             Ok((view_state, ref mut _material, ref mut _outline)) => {
                 if buttons.just_pressed(MouseButton::Left) {
-                    events.write(StateEvent::SelectOne(view_state.info().model_uuid));
+                    events.write(ViewerEvent::SelectOne(view_state.info().model_uuid));
                 }
             }
             // No Hit was found..
             Err(_) => {
                 if buttons.any_just_pressed([MouseButton::Left, MouseButton::Right]) {
-                    events.write(StateEvent::ClearSelection);
+                    events.write(ViewerEvent::ClearSelection);
                 }
             }
         }

@@ -16,11 +16,17 @@ use microcad_viewer_ipc::ViewerRequest;
 
 use crate::plugin::MicrocadPluginInput;
 use crate::processor::ProcessorRequest;
+use crate::state::ViewerEvent;
 
+/// A message handler for stdin messages.
 #[derive(Resource, Clone)]
-pub struct StdinMessageReceiver(Receiver<ViewerRequest>);
+pub struct StdinMessageReceiver {
+    receiver: Receiver<ViewerRequest>,
+    current_path: Option<std::path::PathBuf>,
+}
 
 impl StdinMessageReceiver {
+    /// Run the listening to standard messages.
     pub fn run() -> Self {
         log::info!("Run stdin message receiver");
         // Create channel for stdin reader to communicate with Bevy
@@ -50,39 +56,48 @@ impl StdinMessageReceiver {
             }
         });
 
-        Self(receiver)
+        Self {
+            receiver,
+            current_path: None,
+        }
+    }
+
+    /// The current file path.
+    pub fn current_path(&self) -> &Option<std::path::PathBuf> {
+        &self.current_path
     }
 }
 
 /// Process stdin messages into processor requests.
 pub fn handle_stdin_messages(
-    state: bevy::prelude::ResMut<crate::State>,
+    mut state: bevy::prelude::ResMut<crate::State>,
     mut exit: EventWriter<AppExit>,
     mut windows: Query<&mut Window>,
+    mut events: EventWriter<ViewerEvent>,
 ) {
-    if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &state.input {
-        for viewer_request in stdin.0.try_iter() {
+    let mut requests = Vec::new();
+    if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &mut state.input {
+        for viewer_request in stdin.receiver.try_iter() {
             log::info!("{viewer_request:?}");
 
             use microcad_viewer_ipc::ViewerRequest::*;
             match viewer_request {
                 ShowSourceCodeFromFile { path } => {
-                    state
-                        .processor
-                        .send_request(ProcessorRequest::ParseFile(path))
-                        .expect("No error");
+                    stdin.current_path = Some(path.clone());
+                    requests.push(ProcessorRequest::ParseFile(path));
                 }
                 ShowSourceCode { path, name, code } => {
-                    state
-                        .processor
-                        .send_request(ProcessorRequest::ParseSource {
-                            path,
-                            name,
-                            source: code,
-                        })
-                        .expect("No error");
+                    stdin.current_path = path.clone();
+                    requests.push(ProcessorRequest::ParseSource {
+                        path,
+                        name,
+                        source: code,
+                    });
                 }
                 SetCursorRange { .. } => todo!(),
+                ZoomToFit => {
+                    events.write(ViewerEvent::ZoomToFit);
+                }
                 Exit => {
                     exit.write(AppExit::Success);
                 }
@@ -97,4 +112,11 @@ pub fn handle_stdin_messages(
             }
         }
     }
+
+    for request in requests {
+        state.processor.send_request(request).expect("No error");
+    }
+
+    let mut window = windows.single_mut().expect("Some window");
+    state.update_window_settings(&mut window);
 }

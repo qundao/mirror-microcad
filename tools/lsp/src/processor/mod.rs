@@ -27,7 +27,7 @@ pub enum ProcessorRequest {
     AddDocument(Url),
     RemoveDocument(Url),
     UpdateDocument(Url),
-    UpdateDocumentStr(Url, String),
+    UpdateDocumentStr(Url,String),
     GetDocumentDiagnostics(Url),
 }
 
@@ -101,7 +101,7 @@ impl Processor {
             ProcessorRequest::AddDocument(url) => self.add_document(&url),
             ProcessorRequest::RemoveDocument(_) => Ok(vec![]),
             ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
-            ProcessorRequest::UpdateDocumentStr(url, doc) => self.update_document_str(&url, &doc),
+            ProcessorRequest::UpdateDocumentStr(url,doc) => self.update_document_str(&url,&doc),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
         }
     }
@@ -179,7 +179,6 @@ impl Processor {
                 Context::Parse(diag.into())
             }
         };
-
         Ok(vec![])
     }
 

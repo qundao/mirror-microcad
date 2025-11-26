@@ -1,25 +1,47 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Viewer materials.
+//! Grid entity.
 
-use bevy::render::{
-    camera::{Camera, Projection},
-    mesh::{Mesh, Mesh3d},
-};
 use bevy::{
     asset::Assets,
     ecs::{
+        component::Component,
         query::With,
         system::{Commands, Query, Res, ResMut},
     },
+    input::{ButtonInput, keyboard::KeyCode},
     math::{Vec2, Vec3, primitives::Plane3d},
     pbr::MeshMaterial3d,
+    render::{
+        camera::{Camera, Projection},
+        mesh::{Mesh, Mesh3d},
+        view::Visibility,
+    },
     transform::components::Transform,
+    window::Window,
 };
+
+#[derive(Component)]
+pub struct ToggleMe;
 
 use crate::{scene::get_current_zoom_level, state::State};
 use crate::{to_bevy::ToBevy, *};
+
+pub fn toggle_grid(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    mut query: Query<&mut Visibility, With<ToggleMe>>,
+) {
+    if keyboard.just_pressed(KeyCode::KeyG) {
+        let mut visibility = query.single_mut().expect("Visible");
+
+        *visibility = match *visibility {
+            Visibility::Visible => Visibility::Hidden,
+            Visibility::Hidden => Visibility::Visible,
+            _ => Visibility::Visible,
+        };
+    }
+}
 
 pub fn spawn_grid_plane(
     mut commands: Commands,
@@ -43,6 +65,8 @@ pub fn spawn_grid_plane(
                     ..Default::default()
                 })),
                 bevy::picking::Pickable::IGNORE,
+                Visibility::Visible,
+                ToggleMe,
             ))
             .id(),
     );
@@ -53,9 +77,13 @@ pub fn update_grid(
     mut materials: ResMut<Assets<material::Grid>>,
     state: Res<State>,
     proj_query: Query<&Projection, With<Camera>>,
+    windows: Query<&Window>,
     mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
 ) {
     let radius = state.scene.radius;
+    let Ok(window) = windows.single() else {
+        return;
+    };
 
     for projection in proj_query {
         if let Some(grid) = state.scene.grid_entity
@@ -63,7 +91,10 @@ pub fn update_grid(
             && let Some(material) = materials.get_mut(material)
         {
             material.radius = radius;
-            material.zoom_level = 1.0 / get_current_zoom_level(projection);
+            material.zoom_level = window.width().max(window.height())
+                / 20.0
+                / get_current_zoom_level(projection)
+                / radius;
         }
     }
 }

@@ -8,21 +8,19 @@
 //!
 //! Unlike other examples, which demonstrate an application, this demonstrates a plugin library.
 
+use crate::State;
 use bevy::{
     input::mouse::{AccumulatedMouseMotion, AccumulatedMouseScroll, MouseScrollUnit},
     prelude::*,
     window::CursorGrabMode,
 };
-use std::fmt;
-
-use crate::State;
 
 /// A freecam-style camera controller plugin.
 pub struct CameraControllerPlugin;
 
 impl Plugin for CameraControllerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, run_camera_controller);
+        app.add_systems(Update, (run_camera_controller, zoom_to_fit));
     }
 }
 
@@ -98,33 +96,6 @@ impl Default for CameraController {
     }
 }
 
-impl fmt::Display for CameraController {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "
-Freecam Controls:
-    Mouse\t- Move camera orientation
-    Scroll\t- Adjust movement speed
-    {:?}\t- Hold to grab cursor
-    {:?}\t- Toggle cursor grab
-    {:?} & {:?}\t- Fly forward & backwards
-    {:?} & {:?}\t- Fly sideways left & right
-    {:?} & {:?}\t- Fly up & down
-    {:?}\t- Fly faster while held",
-            self.mouse_key_cursor_grab,
-            self.keyboard_key_toggle_cursor_grab,
-            self.key_forward,
-            self.key_back,
-            self.key_left,
-            self.key_right,
-            self.key_up,
-            self.key_down,
-            self.key_run,
-        )
-    }
-}
-
 #[allow(clippy::too_many_arguments)]
 fn run_camera_controller(
     time: Res<Time>,
@@ -149,7 +120,6 @@ fn run_camera_controller(
         controller.yaw = yaw;
         controller.pitch = pitch;
         controller.initialized = true;
-        info!("{}", *controller);
     }
     if !controller.enabled {
         return;
@@ -186,22 +156,23 @@ fn run_camera_controller(
         scroll -= 1.0;
     }
 
-    match projection.as_mut() {
+    let current_scale = match projection.as_mut() {
         Projection::Orthographic(ortho) => {
             // Change the projection parameters
             use bevy::render::camera::CameraProjection;
-
             ortho.scale *= 1.0 + scroll / 50.0;
             ortho.far = state.scene.radius * 6.0;
-
-            let window = windows.iter().next().unwrap();
+            ortho.scaling_mode = bevy::render::camera::ScalingMode::FixedVertical {
+                viewport_height: 2.0 * state.scene.radius,
+            };
+            let window = windows.single().expect("Some window");
             ortho.update(window.width(), window.height());
-            projection.update(window.width(), window.height());
+            state.scene.radius * Vec2::new(ortho.scale, ortho.scale)
         }
         _ => {
-            // Not an orthographic camera
+            unimplemented!("Only orthographic camera is supported")
         }
-    }
+    };
 
     let mut cursor_grab_change = false;
     if key_input.just_pressed(controller.keyboard_key_toggle_cursor_grab) {
@@ -262,22 +233,37 @@ fn run_camera_controller(
     let delta = accumulated_mouse_motion.delta;
     let orbit_distance = state.scene.radius * 3.0;
 
+    // Orbit.
     if mouse_button_input.pressed(MouseButton::Left) {
         let orbit_speed = 0.005;
         let yaw_rot = Quat::from_rotation_z(delta.x * orbit_speed);
         let pitch_rot = Quat::from_rotation_x(-delta.y * orbit_speed);
         transform.rotation = yaw_rot * transform.rotation * pitch_rot;
-        // Adjust the translation to maintain the correct orientation toward the orbit target.
-        // In our example it's a static target, but this could easily be customized.
-        //  let target = Vec3::ZERO;
-        transform.translation = controller.target - transform.forward() * orbit_distance;
     }
 
+    // Strafe/translate.
     if mouse_button_input.pressed(MouseButton::Right) {
-        let forward = *transform.up() * delta.y * 10.0;
-        let right = *transform.right() * delta.x * -10.0;
+        let forward = *transform.up() * delta.y * current_scale.y;
+        let right = *transform.right() * delta.x * -current_scale.x;
         controller.target = controller.target + dt * right + dt * Vec3::Z + dt * forward;
-
-        transform.translation = controller.target - transform.forward() * orbit_distance;
     }
+    transform.translation = controller.target - transform.forward() * orbit_distance;
+}
+
+fn zoom_to_fit(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    windows: Query<&Window>,
+    mut query: Query<&mut Projection, With<Camera>>,
+) {
+    if !keyboard.just_pressed(KeyCode::KeyF) {
+        return;
+    }
+    let Ok(mut projection) = query.single_mut() else {
+        return;
+    };
+    let Ok(window) = windows.single() else {
+        return;
+    };
+
+    crate::scene::zoom_to_fit(projection.as_mut(), window);
 }

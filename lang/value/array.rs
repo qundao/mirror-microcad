@@ -38,12 +38,15 @@ impl Array {
 
     /// Get the first element, or None
     pub fn head(&self) -> Value {
-        self.items.iter().cloned().next().unwrap_or(Value::None)
+        self.items.iter().next().cloned().unwrap_or(Value::None)
     }
 
     /// Get all elements but the first
     pub fn tail(&self) -> Array {
-        Array::from_values(self.items.iter().skip(1).cloned().collect(), self.ty.clone())
+        Array::from_values(
+            self.items.iter().skip(1).cloned().collect(),
+            self.ty.clone(),
+        )
     }
 }
 
