@@ -18,12 +18,13 @@ impl Parse for FormatSpec {
         let mut opt = FormatSpec::default();
 
         for pair in pair.inner() {
-            match pair.as_rule() {
-                Rule::format_spec_precision => {
-                    opt.precision = Some(pair.as_span().as_str()[1..].parse()?)
-                }
-                Rule::format_spec_width => opt.width = Some(pair.as_span().as_str()[1..].parse()?),
-                _ => unreachable!(),
+            match pair.as_span().as_str()[1..].parse() {
+                Ok(parsed) => match pair.as_rule() {
+                    Rule::format_spec_precision => opt.precision = Some(parsed),
+                    Rule::format_spec_width => opt.width = Some(parsed),
+                    _ => unreachable!(),
+                },
+                Err(err) => return Err(ParseError::ParseIntError(Refer::new(err, pair.into()))),
             }
         }
 

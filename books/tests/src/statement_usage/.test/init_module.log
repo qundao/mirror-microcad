@@ -13,10 +13,10 @@
 -- No Output --
 -- Errors --
 error: Module statement not available here
-  ---> ../books/tests/src/statement_usage/init.md:15:3
+  ---> ../books/tests/src/statement_usage/init.md:15:7
      |
   15 |   mod m {} // error
-     |   ^^^^^^^^
+     |       ^
      |
 warning: Unused local l.
   ---> ../books/tests/src/statement_usage/init.md:14:19

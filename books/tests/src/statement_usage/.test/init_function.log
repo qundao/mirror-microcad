@@ -13,10 +13,10 @@
 -- No Output --
 -- Errors --
 error: Function statement not available here
-  ---> ../books/tests/src/statement_usage/init.md:23:3
+  ---> ../books/tests/src/statement_usage/init.md:23:6
      |
   23 |   fn f() {} // error
-     |   ^^^^^^^^^
+     |      ^
      |
 warning: Unused local l.
   ---> ../books/tests/src/statement_usage/init.md:22:19

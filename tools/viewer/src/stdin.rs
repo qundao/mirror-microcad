@@ -5,6 +5,8 @@
 
 use std::{io::BufRead, time::Duration};
 
+use bevy::ecs::system::Query;
+use bevy::window::Window;
 use crossbeam::channel::Receiver;
 
 use bevy::ecs::resource::Resource;
@@ -56,6 +58,7 @@ impl StdinMessageReceiver {
 pub fn handle_stdin_messages(
     state: bevy::prelude::ResMut<crate::State>,
     mut exit: EventWriter<AppExit>,
+    mut windows: Query<&mut Window>,
 ) {
     if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &state.input {
         for viewer_request in stdin.0.try_iter() {
@@ -82,6 +85,14 @@ pub fn handle_stdin_messages(
                 SetCursorRange { .. } => todo!(),
                 Exit => {
                     exit.write(AppExit::Success);
+                }
+                ViewerRequest::Show => {
+                    let mut window = windows.single_mut().expect("A window");
+                    window.visible = true;
+                }
+                ViewerRequest::Hide => {
+                    let mut window = windows.single_mut().expect("A window");
+                    window.visible = false;
                 }
             }
         }

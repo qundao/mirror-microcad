@@ -13,12 +13,12 @@
 -- No Output --
 -- Errors --
 warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:38:1
+  ---> ../books/tests/src/statement_usage/module.md:38:5
      |
   38 | mod k {
-     | ^^^^^^^
+     |     ^
      |
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std::geo2d.
   ---> ../books/tests/src/statement_usage/module.md:39:7
      |
   39 |   use std::geo2d;

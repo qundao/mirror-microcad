@@ -7,7 +7,10 @@ use crate::{parse::*, parser::*, syntax::*};
 
 impl Parse for Refer<Integer> {
     fn parse(pair: Pair) -> ParseResult<Self> {
-        Ok(Refer::new(pair.as_str().parse::<i64>()?, pair.into()))
+        match pair.as_str().parse::<i64>() {
+            Ok(value) => Ok(Refer::new(value, pair.into())),
+            Err(err) => Err(ParseError::ParseIntError(Refer::new(err, pair.into()))),
+        }
     }
 }
 
@@ -52,7 +55,10 @@ impl Parse for NumberLiteral {
                 || number_token.as_rule() == Rule::integer_literal
         );
 
-        let value = number_token.as_str().parse::<f64>()?;
+        let value = match number_token.as_str().parse::<f64>() {
+            Ok(value) => value,
+            Err(err) => return Err(ParseError::ParseFloatError(Refer::new(err, pair.src_ref()))),
+        };
 
         let mut unit = Unit::None;
 
@@ -76,13 +82,16 @@ impl Parse for Unit {
         use std::str::FromStr;
         match Unit::from_str(pair.as_str()) {
             Ok(unit) => Ok(unit),
-            Err(_) => Err(ParseError::UnknownUnit(pair.as_str().to_string())),
+            Err(()) => Err(ParseError::UnknownUnit(Refer::new(
+                pair.as_str().to_string(),
+                pair.into(),
+            ))),
         }
     }
 }
 
 impl std::str::FromStr for Unit {
-    type Err = ParseError;
+    type Err = ();
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             // Scalars
@@ -139,7 +148,7 @@ impl std::str::FromStr for Unit {
             "g/m³" => Ok(Self::GramPerMeter3),
 
             // Unknown
-            _ => Err(ParseError::UnknownUnit(s.to_string())),
+            _ => Err(()),
         }
     }
 }

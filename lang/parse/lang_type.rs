@@ -36,7 +36,10 @@ impl Parse for TupleType {
                     } else {
                         let ty = TypeAnnotation::parse(next)?.ty();
                         if !unnamed.insert(ty.clone()) {
-                            return Err(ParseError::DuplicateTupleType(ty));
+                            return Err(ParseError::DuplicateTupleType(Refer::new(
+                                ty,
+                                pair.clone().into(),
+                            )));
                         }
                     }
 

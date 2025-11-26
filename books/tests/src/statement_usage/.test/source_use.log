@@ -10,7 +10,7 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol <no code>.
+warning: Unused global symbol std.
   ---> ../books/tests/src/statement_usage/source.md:30:5
      |
   30 | use std;

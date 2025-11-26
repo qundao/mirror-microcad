@@ -295,29 +295,13 @@ impl From<&str> for QualifiedName {
 
 #[cfg(not(test))]
 impl TryFrom<&str> for QualifiedName {
-    type Error = crate::parse::ParseError;
+    type Error = ();
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         let mut name = Vec::new();
         for id in value.split("::").map(Identifier::try_from) {
             if id.is_err() {
-                return Err(crate::parse::ParseError::InvalidQualifiedName(value.into()));
-            }
-            name.push(id.expect("unexpected error"));
-        }
-
-        Ok(Self(Refer::none(name)))
-    }
-}
-
-impl TryFrom<String> for QualifiedName {
-    type Error = crate::parse::ParseError;
-
-    fn try_from(value: String) -> Result<Self, Self::Error> {
-        let mut name = Vec::new();
-        for id in value.split("::").map(Identifier::try_from) {
-            if id.is_err() {
-                return Err(crate::parse::ParseError::InvalidQualifiedName(value));
+                return Err(());
             }
             name.push(id.expect("unexpected error"));
         }

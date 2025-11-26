@@ -742,7 +742,7 @@ impl Info for Symbol {
 #[test]
 fn test_symbol_resolve() {
     let root = SourceFile::load_from_str(
-        "root",
+        Some("root"),
         "",
         "
         use my; 
@@ -755,7 +755,7 @@ fn test_symbol_resolve() {
     .expect("parse error");
 
     let my = SourceFile::load_from_str(
-        "my",
+        Some("my"),
         "",
         "
         pub const target = 1;

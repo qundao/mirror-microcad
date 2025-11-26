@@ -11,10 +11,10 @@
 -- No Output --
 -- Errors --
 warning: Unused global symbol MyPart.
-  ---> ../books/language/src/structure/workbenches/parts.md:9:1
+  ---> ../books/language/src/structure/workbenches/parts.md:9:6
      |
    9 | part MyPart() {}
-     | ^^^^^^^^^^^^^^^^
+     |      ^^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 9
 -- No Model --

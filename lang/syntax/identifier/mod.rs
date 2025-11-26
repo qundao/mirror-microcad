@@ -72,7 +72,7 @@ impl Identifier {
 
     /// Check if this was created with none()
     pub fn is_none(&self) -> bool {
-        self.0.src_ref().is_empty() && self.0.is_empty()
+        self.0.src_ref().is_empty() && self.src_ref().is_empty()
     }
 
     /// Make empty (invalid) id

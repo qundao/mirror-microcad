@@ -160,4 +160,5 @@ fn apply_window_settings(state: Res<State>, mut windows: Query<&mut Window>) {
         true => bevy::window::WindowLevel::AlwaysOnTop,
         false => bevy::window::WindowLevel::Normal,
     };
+    window.present_mode = bevy::window::PresentMode::Mailbox;
 }

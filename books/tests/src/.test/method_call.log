@@ -13,10 +13,10 @@
 -- No Output --
 -- Errors --
 warning: Unused global symbol scale.
-  ---> ../books/tests/src/method_call.md:6:1
+  ---> ../books/tests/src/method_call.md:6:4
      |
    6 | op scale() {}
-     | ^^^^^^^^^^^^^
+     |    ^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 6
 -- Model --

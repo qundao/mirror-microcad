@@ -22,7 +22,7 @@ pub struct EvalContext {
     /// Importer registry.
     importers: ImporterRegistry,
     /// Diagnostics handler.
-    diag: DiagHandler,
+    pub diag: DiagHandler,
 }
 
 impl EvalContext {
@@ -95,9 +95,9 @@ impl EvalContext {
             .try_for_each(|symbol| {
                 self.warning(
                     &symbol.src_ref(),
-                    EvalError::UnusedGlobalSymbol(match self.sources.get_code(&symbol.id()) {
+                    EvalError::UnusedGlobalSymbol(match self.sources.get_code(&symbol) {
                         Ok(id) => id,
-                        Err(_) => "<no code>".to_string(),
+                        Err(_) => symbol.id().to_string(),
                     }),
                 )
             })?;
@@ -124,6 +124,7 @@ impl EvalContext {
                     .iter()
                     .filter(|(_, symbol)| !symbol.is_used())
                     .filter(|(id, _)| !id.ignore())
+                    .filter(|(_, symbol)| !symbol.src_ref().is_none())
                     .map(|(id, _)| id.clone())
                     .collect()
             } else {

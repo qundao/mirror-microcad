@@ -17,10 +17,10 @@
 -- No Output --
 -- Errors --
 warning: Unused global symbol Wheel.
-  ---> ../books/language/src/structure/workbenches/README.md:239:1
+  ---> ../books/language/src/structure/workbenches/README.md:239:8
      |
  239 | sketch Wheel(radius: Length) {
-     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |        ^^^^^
      |
 Unexpected warnings(s) which did occur in line(s): 239
 -- No Model --

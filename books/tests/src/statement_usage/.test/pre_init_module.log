@@ -13,22 +13,22 @@
 -- No Output --
 -- Errors --
 error: Statement not allowed within workbenches
-  ---> ../books/tests/src/statement_usage/pre-init.md:15:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:15:7
      |
   15 |   mod m {}   // error
-     |   ^^^^^^^^
+     |       ^
      |
 error: Statement is not available within Sketch
-  ---> ../books/tests/src/statement_usage/pre-init.md:15:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:15:7
      |
   15 |   mod m {}   // error
-     |   ^^^^^^^^
+     |       ^
      |
 error: Module definition is not available within Sketch
-  ---> ../books/tests/src/statement_usage/pre-init.md:15:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:15:7
      |
   15 |   mod m {}   // error
-     |   ^^^^^^^^
+     |       ^
      |
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

@@ -9,7 +9,7 @@ impl Parse for Refer<WorkbenchKind> {
             "part" => Ok(Refer::new(WorkbenchKind::Part, pair.into())),
             "sketch" => Ok(Refer::new(WorkbenchKind::Sketch, pair.into())),
             "op" => Ok(Refer::new(WorkbenchKind::Operation, pair.into())),
-            _ => Err(ParseError::UnexpectedToken),
+            _ => Err(ParseError::UnexpectedToken(pair.into())),
         }
     }
 }
@@ -24,7 +24,6 @@ impl Parse for Rc<WorkbenchDefinition> {
             id: crate::find_rule!(pair, identifier)?,
             plan: crate::find_rule!(pair, parameter_list)?,
             body: crate::find_rule!(pair, body)?,
-            src_ref: pair.into(),
         }
         .into())
     }

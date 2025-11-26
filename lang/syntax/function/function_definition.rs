@@ -18,13 +18,11 @@ pub struct FunctionDefinition {
     pub signature: FunctionSignature,
     /// Function body
     pub body: Body,
-    /// Source code reference
-    pub src_ref: SrcRef,
 }
 
 impl SrcReferrer for FunctionDefinition {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.id.src_ref()
     }
 }
 

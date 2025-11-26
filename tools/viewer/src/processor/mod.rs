@@ -118,10 +118,10 @@ impl Default for ProcessorState {
     }
 }
 
-/// The processor  responsable for generating view commands.
+/// The processor  responsible for generating view commands.
 ///
-/// The processor itself runs in a seperate thread and can be controlled
-/// via [`ProcessorInterface`] by sending requests and handling the corresponing responses.
+/// The processor itself runs in a separate thread and can be controlled
+/// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 struct Processor {
     /// The state of the processor.
     pub state: ProcessorState,
@@ -160,7 +160,7 @@ impl Processor {
             },
             ProcessorRequest::ParseSource { path, name, source } => {
                 match SourceFile::load_from_str(
-                    name.unwrap_or(String::from("<none>")).as_str(),
+                    Some(name.unwrap_or(String::from("<none>")).as_str()),
                     path.unwrap_or(std::path::PathBuf::from("<virtual>")),
                     &source,
                 ) {

@@ -13,10 +13,10 @@
 -- No Output --
 -- Errors --
 error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:23:3
+  ---> ../books/tests/src/statement_usage/pre-init.md:23:6
      |
   23 |   fn f() {} f();   // error
-     |   ^^^^^^^^^
+     |      ^
      |
 error: Statement not allowed prior initializers
   ---> ../books/tests/src/statement_usage/pre-init.md:23:13
