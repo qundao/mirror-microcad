@@ -2,7 +2,7 @@
 
 µcad brings a
 [*VSCode*](https://code.visualstudio.com)
-plugin with syntax coloring which you might want to install from our source code repository at [github.com](https://codeberg.org/microcad/microcad/src/branch/master/editors/vscode/microcad-syntax-0.0.1.vsix).
+plugin with syntax coloring which you might want to install from our source code repository at [github.com](https://codeberg.org/microcad/microcad/src/branch/main/editors/vscode/microcad-syntax-0.0.1.vsix).
 
 ## Other useful plugins
 

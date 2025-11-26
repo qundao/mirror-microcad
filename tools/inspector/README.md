@@ -1,4 +1,4 @@
-# microcad inspector
+# µcad inspector
 
 This crate provides the inspector app to inspect µcad files.
 

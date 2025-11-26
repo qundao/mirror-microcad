@@ -1,7 +1,9 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad builtin library
+//! µcad builtin library.
+//!
+//! The built-in library is provides as µcad module `__builtin` and inserted into a resolve context.
 
 pub mod dirs;
 pub mod geo2d;
