@@ -93,7 +93,7 @@ To generate an STL model file use the `export` command with an additional output
 microcad export ./examples/bricks/brick.µcad
 ```
 
-The file [`lego_brick.µcad`](examples/lego_brick.µcad) generate a file called`brick.stl`
+The file [`brick.µcad`](examples/bricks/brick.µcad) generate a file called`brick.stl`
 which can be displayed e.g. with [MeshLab](https://www.meshlab.net/).
 
 The resulting STL mesh looks like this:
@@ -105,10 +105,6 @@ The resulting STL mesh looks like this:
 - [Description of language features](lang/doc/README.md)
 - [Language reference](http://docs.microcad.xyz/language/book/)
 - [Basic concepts](lang/doc/CONCEPTS.md)
-- Code documentation:
-  - [`microcad-lang` module](https://docs.rs/microcad-lang)
-  - [`microcad-core` module](https://docs.rs/microcad-core)
-  - [`microcad-export` module](https://docs.rs/microcad-export)
 - [Glossary](lang/doc/GLOSSARY.md)
 - [Contribute Documentation](CONTRIBUTE.md#contribute-documentation)
 
@@ -116,6 +112,6 @@ The resulting STL mesh looks like this:
 
 Thanks to the [Prototype Fund](https://www.prototypefund.de/) and the [Federal Ministry of Research, Technology and Space](https://www.bmbf.de/EN/) for funding this project in 2025.
 
-![https://prototypefund.de/en/](https://codeberg.org/microcad/microcad/raw/branch/master/images/Prototype_Fund_Logo_2025.svg)
-![https://okfn.de/en/](https://codeberg.org/microcad/microcad/raw/branch/master/images/Open_Knowledge_Foundation_Deutschland_Logo.svg)
+![https://prototypefund.de/en/](https://codeberg.org/microcad/microcad/raw/branch/main/images/Prototype_Fund_Logo_2025.svg)
+![https://okfn.de/en/](https://codeberg.org/microcad/microcad/raw/branch/main/images/Open_Knowledge_Foundation_Deutschland_Logo.svg)
 ![https://www.bmbf.de/EN/](https://upload.wikimedia.org/wikipedia/commons/d/df/BMFTR_Logo.svg)
