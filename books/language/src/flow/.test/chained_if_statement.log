@@ -1,26 +1,26 @@
 -- Test --
         Test name: chained_if_statement
   Expected result: ok
-      Source file: ../books/language/src/expressions/if.md:32
-        Test path: ../books/language/src/expressions/.test
+      Source file: ../books/language/src/flow/conditions.md:34
+        Test path: ../books/language/src/flow/.test
 
 -- Code --
 
-  32:   use std::ops::*;
-  33:   use std::math::*;
-  34:   use std::geo2d::*;
-  35:   
-  36:   sketch MySketch(a: Integer) {
-  37:       if a == 1 {
-  38:           Circle(1cm)
-  39:       } else if a == 2 {
-  40:           Rect(1cm)
-  41:       } else {
-  42:           Hexagon(1cm)
-  43:       }
-  44:   }
-  45:   
-  46:   MySketch([1,2,3]).align(X, 1cm);
+  34:   use std::ops::*;
+  35:   use std::math::*;
+  36:   use std::geo2d::*;
+  37:   
+  38:   sketch MySketch(a: Integer) {
+  39:       if a == 1 {
+  40:           Circle(1cm)
+  41:       } else if a == 2 {
+  42:           Rect(1cm)
+  43:       } else {
+  44:           Hexagon(1cm)
+  45:       }
+  46:   }
+  47:   
+  48:   MySketch([1,2,3]).align(X, 1cm);
 
 -- No Output --
 -- No Errors --
@@ -58,6 +58,6 @@
                   - radius = 10mm
                   Primitive2D __builtin::geo2d::Ngon(n=6, radius=10mm) ->
 
-Export of "../books/language/src/expressions/.test/chained_if_statement-out.svg" successful.
+Export of "../books/language/src/flow/.test/chained_if_statement-out.svg" successful.
 -- Test Result --
 OK

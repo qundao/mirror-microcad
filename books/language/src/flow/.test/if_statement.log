@@ -1,24 +1,24 @@
 -- Test --
         Test name: if_statement
   Expected result: ok
-      Source file: ../books/language/src/expressions/if.md:10
-        Test path: ../books/language/src/expressions/.test
+      Source file: ../books/language/src/flow/conditions.md:12
+        Test path: ../books/language/src/flow/.test
 
 -- Code --
 
-  10:   use std::ops::*;
-  11:   use std::math::*;
-  12:   use std::geo2d::*;
-  13:   
-  14:   sketch MySketch(a: Integer) {
-  15:       if a == 1 {
-  16:           Circle(1cm)
-  17:       } else {
-  18:           Rect(1cm)
-  19:       }
-  20:   }
-  21:   
-  22:   MySketch([1,2]).align(X, 1cm);
+  12:   use std::ops::*;
+  13:   use std::math::*;
+  14:   use std::geo2d::*;
+  15:   
+  16:   sketch MySketch(a: Integer) {
+  17:       if a == 1 {
+  18:           Circle(1cm)
+  19:       } else {
+  20:           Rect(1cm)
+  21:       }
+  22:   }
+  23:   
+  24:   MySketch([1,2]).align(X, 1cm);
 
 -- No Output --
 -- No Errors --
@@ -47,6 +47,6 @@
                 - y = -5mm
                 Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
 
-Export of "../books/language/src/expressions/.test/if_statement-out.svg" successful.
+Export of "../books/language/src/flow/.test/if_statement-out.svg" successful.
 -- Test Result --
 OK
