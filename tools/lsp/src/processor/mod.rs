@@ -11,9 +11,10 @@ use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_lang::{
-    eval::{Capture, EvalContext},
-    src_ref::{SrcRef, SrcReferrer},
-    syntax::SourceFile,
+    diag::{self, PushDiag},
+    eval,
+    src_ref::{self, SrcReferrer},
+    syntax,
 };
 use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Url};
 
@@ -26,7 +27,7 @@ pub enum ProcessorRequest {
     AddDocument(Url),
     RemoveDocument(Url),
     UpdateDocument(Url),
-    UpdateDocumentStr(Url,String),
+    UpdateDocumentStr(Url, String),
     GetDocumentDiagnostics(Url),
 }
 
@@ -36,7 +37,7 @@ pub enum ProcessorResponse {
     DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
 }
 
-fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<tower_lsp::lsp_types::Range> {
+fn src_ref_to_lsp_range(src_ref: src_ref::SrcRef) -> Option<tower_lsp::lsp_types::Range> {
     match src_ref.0 {
         Some(src_ref_inner) => {
             use tower_lsp::lsp_types::{Position, Range};
@@ -60,13 +61,31 @@ pub struct WorkspaceSettings {
     pub search_paths: Vec<PathBuf>,
 }
 
+#[derive(Default)]
+enum Context {
+    #[default]
+    None,
+    Parse(Box<diag::DiagHandler>),
+    Eval(Box<eval::EvalContext>),
+}
+
+impl Context {
+    fn diag(&self) -> Option<&diag::DiagHandler> {
+        match self{
+            Context::None => None,
+            Context::Parse(diag_handler) => Some(diag_handler),
+            Context::Eval(eval_context) => Some(&eval_context.diag),
+        }
+    }
+}
+
 /// The processor  responsible for generating view commands.
 ///
 /// The processor itself runs in a separate thread and can be controlled
 /// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 pub struct Processor {
     workspace_settings: WorkspaceSettings,
-    context: Option<EvalContext>,
+    context: Context,
     pub request_handler: Receiver<ProcessorRequest>,
     /// Outputs
     pub response_sender: Sender<ProcessorResponse>,
@@ -82,7 +101,7 @@ impl Processor {
             ProcessorRequest::AddDocument(url) => self.add_document(&url),
             ProcessorRequest::RemoveDocument(_) => Ok(vec![]),
             ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
-            ProcessorRequest::UpdateDocumentStr(url,doc) => self.update_document_str(&url,&doc),
+            ProcessorRequest::UpdateDocumentStr(url, doc) => self.update_document_str(&url, &doc),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
         }
     }
@@ -94,62 +113,86 @@ impl Processor {
 
     /// Update (re-evaluate) a document.
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
-        let source_file = SourceFile::load(
+        self.context = match syntax::SourceFile::load(
             url.to_file_path()
                 .map_err(|_| anyhow::anyhow!("Error converting {url} to file path."))?,
-        )?;
+        ) {
+            Ok(source_file) => match eval::EvalContext::from_source(
+                source_file,
+                Some(microcad_builtin::builtin_module()),
+                &self.workspace_settings.search_paths,
+                eval::Capture::new(),
+                microcad_builtin::builtin_exporters(),
+                microcad_builtin::builtin_importers(),
+                0,
+            ) {
+                Ok(eval) => Context::Eval(eval.into()),
+                Err(_) => todo!(),
+            },
 
-        self.context = EvalContext::from_source(
-            source_file,
-            Some(microcad_builtin::builtin_module()),
-            &self.workspace_settings.search_paths,
-            Capture::new(),
-            microcad_builtin::builtin_exporters(),
-            microcad_builtin::builtin_importers(),
-            0,
-        )
-        .ok();
+            Err(err) => {
+                let mut diag = diag::DiagHandler::default();
+                let src_ref = err.src_ref();
+                diag.push_diag(diag::Diagnostic::Error(src_ref::Refer::new(
+                    err.into(),
+                    src_ref,
+                )))?;
+                Context::Parse(diag.into())
+            }
+        };
 
-        if let Some(context) = &mut self.context {
+        if let Context::Eval(context) = &mut self.context {
             context.eval()?;
         }
 
         Ok(vec![])
     }
 
-    pub fn update_document_str(&mut self,url: &Url, doc: &str) -> ProcessorResult {
-        let path = url.to_file_path()
-                .map_err(|_| anyhow::anyhow!("Error converting {url} to file path."))?;
-        let source_file = SourceFile::load_from_str(None,path,doc)?;
+    pub fn update_document_str(&mut self, url: &Url, doc: &str) -> ProcessorResult {
+        let path = url
+            .to_file_path()
+            .map_err(|_| anyhow::anyhow!("Error converting {url} to file path."))?;
+        self.context = match syntax::SourceFile::load_from_str(None, path, doc) {
+            Ok(source_file) => match eval::EvalContext::from_source(
+                source_file,
+                Some(microcad_builtin::builtin_module()),
+                &self.workspace_settings.search_paths,
+                eval::Capture::new(),
+                microcad_builtin::builtin_exporters(),
+                microcad_builtin::builtin_importers(),
+                0,
+            ) {
+                Ok(mut context) => {
+                    context.eval()?;
+                    log::info!("evaluated");
+                    Context::Eval(context.into())
+                }
+                Err(_) => todo!(),
+            },
 
-        self.context = EvalContext::from_source(
-            source_file,
-            Some(microcad_builtin::builtin_module()),
-            &self.workspace_settings.search_paths,
-            Capture::new(),
-            microcad_builtin::builtin_exporters(),
-            microcad_builtin::builtin_importers(),
-            0,
-        )
-        .ok();
+            Err(err) => {
+                let mut diag = diag::DiagHandler::default();
+                let src_ref = err.src_ref();
+                diag.push_diag(diag::Diagnostic::Error(src_ref::Refer::new(
+                    err.into(),
+                    src_ref,
+                )))?;
+                Context::Parse(diag.into())
+            }
+        };
 
-        if let Some(context) = &mut self.context {
-            context.eval()?;
-            log::info!("evaluated");
-        }
-        
         Ok(vec![])
     }
 
     pub fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
-        if let Some(context) = &self.context {
-            log::info!("{:?}", context.diag.diag_list);
+        if let Some(diag) = &self.context.diag() {
+            log::info!("{:?}", diag.diag_list);
             Ok(vec![ProcessorResponse::DocumentDiagnostics(
                 url.clone(),
                 FullDocumentDiagnosticReport {
                     result_id: None,
-                    items: context
-                        .diag
+                    items: 
+                        diag
                         .diag_list
                         .iter()
                         .filter_map(|diag| {
@@ -219,7 +262,7 @@ impl ProcessorInterface {
                 workspace_settings,
                 request_handler: request_receiver,
                 response_sender,
-                context: None,
+                context: Context::None,
             };
 
             loop {

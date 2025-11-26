@@ -7,18 +7,17 @@ mod processor;
 
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
-    async_trait,
+    Client, LanguageServer, LspService, Server, async_trait,
     jsonrpc::Result,
     lsp_types::{
-        notification::Notification, DiagnosticOptions, DiagnosticServerCapabilities,
-        DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
-        DidSaveTextDocumentParams, DocumentDiagnosticParams, DocumentDiagnosticReport,
-        DocumentDiagnosticReportPartialResult, DocumentDiagnosticReportResult,
-        ExecuteCommandParams, InitializeParams, InitializeResult, InitializedParams, MessageType,
-        RelatedFullDocumentDiagnosticReport, ServerCapabilities, TextDocumentIdentifier,
-        TextDocumentPositionParams, TextDocumentSyncCapability, TextDocumentSyncKind, Url,
+        DiagnosticOptions, DiagnosticServerCapabilities, DidChangeTextDocumentParams,
+        DidCloseTextDocumentParams, DidOpenTextDocumentParams, DidSaveTextDocumentParams,
+        DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportPartialResult,
+        DocumentDiagnosticReportResult, ExecuteCommandParams, InitializeParams, InitializeResult,
+        InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport, ServerCapabilities,
+        TextDocumentIdentifier, TextDocumentPositionParams, TextDocumentSyncCapability,
+        TextDocumentSyncKind, Url, notification::Notification,
     },
-    Client, LanguageServer, LspService, Server,
 };
 
 enum CursorPositionNotify {}
