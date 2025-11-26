@@ -1,6 +1,5 @@
 /target
 /tree/*.svg
-/Cargo.lock
 /tests/.test
 *.stl
 /microcad-lsp.log
