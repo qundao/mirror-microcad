@@ -13,7 +13,7 @@ repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
 keywords = ["microcad", "lsp", "language"]
-categories = ["Programming Languages"]
+categories = ["development-tools"]
 
 [dependencies]
 anyhow = "1.0"
