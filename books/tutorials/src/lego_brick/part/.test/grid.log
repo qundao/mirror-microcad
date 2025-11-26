@@ -10,10 +10,10 @@
   12:   
   13:   const SPACING = 8mm;
   14:   
-  15:   op grid(rows: Integer, columns: Integer) {
+  15:   op grid(columns: Integer, rows: Integer) {
   16:       @input
-  17:           .translate(x = [0..rows] * SPACING, y = [0..columns] * SPACING)
-  18:           .align()
+  17:           .translate(x = [0..columns] * SPACING, y = [0..rows] * SPACING)
+  18:           .center()
   19:   }
 
 -- No Output --
@@ -57,7 +57,7 @@ warning: Unused global symbol std::ops.
 warning: Unused global symbol grid.
   ---> ../books/tutorials/src/lego_brick/part/custom_op.md:15:4
      |
-  15 | op grid(rows: Integer, columns: Integer) {
+  15 | op grid(columns: Integer, rows: Integer) {
      |    ^^^^
      |
 warning: Unused global symbol std::ops.
