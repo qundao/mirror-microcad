@@ -5,3 +5,4 @@
 *.stl
 /microcad-lsp.log
 node_modules
+*.vsix
