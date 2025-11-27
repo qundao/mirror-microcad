@@ -124,6 +124,10 @@ pub enum ParseError {
     /// Unknown type
     #[error("Unknown type: {0}")]
     UnknownType(Refer<String>),
+
+    /// If expression is missing an `else`
+    #[error("If expression must return a value in all cases")]
+    IncompleteIfExpression(SrcRef)
 }
 
 /// Result with parse error
@@ -166,7 +170,8 @@ impl SrcReferrer for ParseError {
             | ParseError::EmptyTupleExpression(src_ref)
             | ParseError::MissingFormatExpression(src_ref)
             | ParseError::StatementBetweenInit(src_ref)
-            | ParseError::NotAvailable(src_ref) => src_ref.clone(),
+            | ParseError::NotAvailable(src_ref)
+            | ParseError::IncompleteIfExpression(src_ref) => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             ParseError::RuleNotFoundError(_) => SrcRef(None),
