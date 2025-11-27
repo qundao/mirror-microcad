@@ -31,11 +31,6 @@ microcad-lang = { workspace = true }
 microcad-export = { workspace = true }
 microcad-import = { workspace = true }
 
-
-[features]
-default = ["geo3d"]
-geo3d = []
-
 [lints.rust]
 missing_docs = "warn"
 

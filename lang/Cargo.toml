@@ -43,8 +43,7 @@ debug-cell = { workspace = true, optional = true }
 round = "0.1.2"
 
 [features]
-default = ["geo3d", "ansi-color"]
-geo3d = []
+default = ["ansi-color"]
 ansi-color = ["dep:color-print"]
 debug-cell = ["dep:debug-cell"]
 

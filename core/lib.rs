@@ -9,7 +9,6 @@ pub mod bounds;
 pub mod color;
 pub mod core_error;
 pub mod geo2d;
-#[cfg(feature = "geo3d")]
 pub mod geo3d;
 pub mod length;
 pub mod render;
