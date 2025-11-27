@@ -54,20 +54,20 @@ part PencilHoles(radius: Length, n = 4, start = 4, angle = 22.5°) {
 #[color = std::color::BLUE]
 {
     outer_gear = GearProfile(180);
-    size = outer_gear.radius * 200% + BORDER_WIDTH;
+    size = outer_gear.radius * 200% + 3 * BORDER_WIDTH;
     frame = {
         border = RoundedRect(size, radius = BORDER_WIDTH * 200%);    
         border - outer_gear;
-    }.extrude(THICKNESS);
+    }.extrude(THICKNESS*2);
 
-    logo2 = Logo(size = BORDER_WIDTH*60%)
+    logo2 = Logo(size = BORDER_WIDTH*85%)
         .extrude(THICKNESS)
-        .translate(x = size * 38%, y = size * 45%, z = THICKNESS * 50%);
+        .translate(x = size * 35%, y = size * 43%, z = THICKNESS * 150%);
     
-    url = Text("microcad.xyz", BORDER_WIDTH)
+    url = Text("microcad.xyz", BORDER_WIDTH*150%)
         .center()
         .extrude(THICKNESS)
-        .translate(x = size * 36%, y = -size * 46%, z = THICKNESS * 50%);
+        .translate(x = size * 32%, y = -size * 46%, z = THICKNESS * 150%);
 
     frame - logo2 - url;
 }.translate(x = 0mm);
