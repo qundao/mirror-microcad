@@ -6,7 +6,7 @@ use crate::{parse::*, parser::*, syntax::*};
 impl Parse for FormatExpression {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Ok(Self::new(
-            crate::find_rule_opt!(pair, format_spec),
+            crate::find_rule_opt!(pair, format_spec)?,
             crate::find_rule!(pair, expression)?,
             pair.into(),
         ))

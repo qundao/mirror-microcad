@@ -43,8 +43,9 @@ macro_rules! find_rule {
 macro_rules! find_rule_opt {
     ($pair:ident, $rule:ident) => {
         match find_rule(&$pair, Rule::$rule, None) {
-            Ok(t) => Some(t),
-            Err(_) => None,
+            Ok(t) => Ok(Some(t)),
+            Err(ParseError::NotAvailable(_)) => Ok(None),
+            Err(e) => Err(e),
         }
     };
 }

@@ -17,7 +17,7 @@ impl Parse for Refer<WorkbenchKind> {
 impl Parse for Rc<WorkbenchDefinition> {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Ok(WorkbenchDefinition {
-            doc: crate::find_rule_opt!(pair, doc_block),
+            doc: crate::find_rule_opt!(pair, doc_block)?,
             visibility: crate::find_rule!(pair, visibility)?,
             attribute_list: crate::find_rule!(pair, attribute_list)?,
             kind: crate::find_rule_exact!(pair, workbench_kind)?,
