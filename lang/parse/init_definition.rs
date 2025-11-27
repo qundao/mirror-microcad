@@ -8,7 +8,7 @@ impl Parse for InitDefinition {
         Parser::ensure_rule(&pair, Rule::init_definition);
 
         Ok(InitDefinition {
-            doc: crate::find_rule_opt!(pair, doc_block),
+            doc: crate::find_rule_opt!(pair, doc_block)?,
             parameters: crate::find_rule!(pair, parameter_list)?,
             body: crate::find_rule!(pair, body)?,
             src_ref: pair.into(),

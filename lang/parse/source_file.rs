@@ -90,7 +90,7 @@ impl Parse for SourceFile {
         pair.set_source_hash(hash);
 
         Ok(SourceFile::new(
-            crate::find_rule_opt!(pair, doc_block),
+            crate::find_rule_opt!(pair, doc_block)?,
             crate::find_rule!(pair, statement_list)?,
             pair.as_span().as_str().to_string(),
             hash,
