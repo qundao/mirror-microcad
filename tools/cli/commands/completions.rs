@@ -15,8 +15,8 @@ pub struct Completions {
     /// Print completions for the given shell (instead of generating any icons).
     /// These can be loaded/stored permanently, but they can also be sourced directly, e.g.:
     ///
-    ///  microcad --completions fish | source # fish
-    ///  source <(microcad --completions zsh) # zsh
+    ///  microcad completions fish | source # fish
+    ///  source <(microcad completions zsh) # zsh
     #[clap(verbatim_doc_comment, id = "SHELL")]
     shell: Shell,
 }
