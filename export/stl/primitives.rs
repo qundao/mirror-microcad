@@ -4,7 +4,7 @@
 //! Write primitives to STL ([`WriteSvg`] trait implementations).
 
 use microcad_core::{Geometry3D, Manifold, Transformed3D, TriangleMesh};
-use microcad_lang::model::Model;
+use microcad_lang::model::{Element, Model};
 
 use crate::stl::{StlWriter, WriteStl};
 
@@ -35,6 +35,14 @@ impl WriteStl for Geometry3D {
 impl WriteStl for Model {
     fn write_stl(&self, writer: &mut StlWriter) -> std::io::Result<()> {
         let self_ = self.borrow();
+        // Recurse into groups.
+        if matches!(self_.element(), Element::Group | Element::Multiplicity) {
+            self_
+                .children()
+                .try_for_each(|model| model.write_stl(writer))?;
+            return Ok(());
+        }
+
         let output = self_.output();
         let geometry = &output.geometry;
         let mat = output.world_matrix.expect("Some matrix");
