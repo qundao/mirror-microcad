@@ -8,7 +8,7 @@ impl Parse for Rc<FunctionDefinition> {
         Parser::ensure_rule(&pair, Rule::function_definition);
 
         Ok(Rc::new(FunctionDefinition {
-            doc: crate::find_rule_opt!(pair, doc_block),
+            doc: crate::find_rule_opt!(pair, doc_block)?,
             visibility: crate::find_rule!(pair, visibility)?,
             id: crate::find_rule!(pair, identifier)?,
             signature: pair
