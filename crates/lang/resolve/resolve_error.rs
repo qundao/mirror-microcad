@@ -13,7 +13,7 @@ use crate::{diag::*, parse::*, syntax::*};
 pub enum ResolveError {
     /// Parse Error.
     #[error("Parse Error: {0}")]
-    ParseError(#[from] ParseError),
+    ParseError(#[from] ParseErrorWithSource),
 
     /// Can't find a project file by hash.
     #[error("Could not find a file with hash {0}")]
