@@ -15,6 +15,8 @@ use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use std::sync::{Arc, RwLock};
 use std::thread;
+use miette::IntoDiagnostic;
+
 mod watcher;
 
 use slint::VecModel;
@@ -63,7 +65,7 @@ struct Inspector {
 }
 
 impl Inspector {
-    pub fn new() -> anyhow::Result<Self> {
+    pub fn new() -> miette::Result<Self> {
         Ok(Self {
             args: Args::parse(),
             watcher: Watcher::new()?,
@@ -71,9 +73,9 @@ impl Inspector {
         })
     }
 
-    pub fn run(mut self) -> anyhow::Result<()> {
+    pub fn run(mut self) -> miette::Result<()> {
         // Create the Slint UI component
-        let main_window = MainWindow::new()?;
+        let main_window = MainWindow::new().into_diagnostic()?;
 
         let weak = main_window.as_weak();
         let input = self.args.input.clone();
@@ -81,7 +83,7 @@ impl Inspector {
         let search_paths = self.args.search_paths.clone();
 
         // Run file watcher thread.
-        std::thread::spawn(move || -> anyhow::Result<()> {
+        std::thread::spawn(move || -> miette::Result<()> {
             loop {
                 // Watch all dependencies of the most recent compilation.
                 self.watcher.update(vec![self.args.input.clone()])?;
@@ -117,7 +119,7 @@ impl Inspector {
                             items.append(&mut SymbolTreeModelItem::items_from_tree(symbol))
                         });
                     items
-                }))?;
+                })).into_diagnostic()?;
 
                 let mut eval_context = microcad_lang::eval::EvalContext::new(
                     resolve_context,
@@ -128,12 +130,12 @@ impl Inspector {
 
                 if let Some(model) = eval_context
                     .eval()
-                    .map_err(|err| anyhow::anyhow!("Eval error: {err}"))?
+                    .map_err(|err| miette::miette!("Eval error: {err}"))?
                 {
                     use crate::to_slint::ItemsFromTree;
                     tx.send(ViewModelRequest::SetModelTree(
                         ModelTreeModelItem::items_from_tree(&model),
-                    ))?;
+                    )).into_diagnostic()?;
                 }
 
                 // Wait until anything relevant happens.
@@ -211,13 +213,13 @@ impl Inspector {
             }
         });
 
-        main_window.run()?;
+        main_window.run().into_diagnostic()?;
 
         Ok(())
     }
 }
 
-fn main() -> anyhow::Result<()> {
+fn main() -> miette::Result<()> {
     env_logger::init();
 
     Inspector::new()?.run()

@@ -4,7 +4,7 @@
 //! µcad CLI watcher. Most parts proudly taken from [typst](https://github.com/typst/typst/blob/main/crates/typst-cli/src/watch.rs)
 
 use std::{iter, path::PathBuf, sync::mpsc::Receiver, time::Duration};
-
+use miette::IntoDiagnostic;
 use notify::{Event, RecommendedWatcher};
 
 /// Watches file system activity.
@@ -35,7 +35,7 @@ impl Watcher {
     const POLL_INTERVAL: Duration = Duration::from_millis(300);
 
     /// Create a new, blank watcher.
-    pub fn new() -> anyhow::Result<Self> {
+    pub fn new() -> miette::Result<Self> {
         // Setup file watching.
         let (tx, rx) = std::sync::mpsc::channel();
         use notify::Watcher;
@@ -46,7 +46,7 @@ impl Watcher {
         // this only affects a tiny number of systems. Most do not use the
         // [`notify::PollWatcher`].
         let config = notify::Config::default().with_poll_interval(Self::POLL_INTERVAL);
-        let watcher = RecommendedWatcher::new(tx, config)?;
+        let watcher = RecommendedWatcher::new(tx, config).into_diagnostic()?;
 
         Ok(Self {
             rx,
@@ -60,7 +60,7 @@ impl Watcher {
     ///
     /// Files that are not yet watched will be watched. Files that are already
     /// watched, but don't need to be watched anymore, will be unwatched.
-    pub fn update(&mut self, iter: impl IntoIterator<Item = PathBuf>) -> anyhow::Result<()> {
+    pub fn update(&mut self, iter: impl IntoIterator<Item = PathBuf>) -> miette::Result<()> {
         use notify::{RecursiveMode, Watcher};
 
         // Mark all files as not "seen" so that we may unwatch them if they
@@ -85,7 +85,7 @@ impl Watcher {
 
             // Watch the path if it's not already watched.
             if !self.watched.contains_key(&path) {
-                self.watcher.watch(&path, RecursiveMode::NonRecursive)?;
+                self.watcher.watch(&path, RecursiveMode::NonRecursive).into_diagnostic()?;
             }
 
             // Mark the file as "seen" so that we don't unwatch it.
@@ -104,7 +104,7 @@ impl Watcher {
     }
 
     /// Wait until there is a change to a watched path.
-    pub fn wait(&mut self) -> anyhow::Result<()> {
+    pub fn wait(&mut self) -> miette::Result<()> {
         use notify::Watcher;
         use std::time::Instant;
 
@@ -133,7 +133,7 @@ impl Watcher {
                 }))
                 .take_while(|_| batch_start.elapsed() <= Self::STARVE_TIMEOUT)
             {
-                let event = event?;
+                let event = event.into_diagnostic()?;
 
                 if !Self::is_relevant_event_kind(&event.kind) {
                     continue;

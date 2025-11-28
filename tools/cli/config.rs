@@ -3,6 +3,7 @@
 
 //! µcad CLI config.
 
+use miette::IntoDiagnostic;
 use serde::Deserialize;
 
 /// Microcad CLI config.
@@ -26,9 +27,9 @@ impl Default for Config {
 
 impl Config {
     /// Load config from TOML file.
-    pub fn load(filename: &std::path::Path) -> anyhow::Result<Self> {
-        let content = std::fs::read_to_string(filename)?;
-        let mut config: Config = toml::from_str(&content)?;
+    pub fn load(filename: &std::path::Path) -> miette::Result<Self> {
+        let content = std::fs::read_to_string(filename).into_diagnostic()?;
+        let mut config: Config = toml::from_str(&content).into_diagnostic()?;
 
         if !microcad_lang::MICROCAD_EXTENSIONS.contains(&config.default_extension.as_str()) {
             let fallback = Config::default().default_extension;

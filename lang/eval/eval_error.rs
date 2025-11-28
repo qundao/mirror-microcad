@@ -3,11 +3,12 @@
 
 //! Evaluation error
 
+use miette::Diagnostic;
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
 use thiserror::Error;
 
 /// Evaluation error.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum EvalError {
     /// Can't find a project file by it's qualified name.
     #[error("Not implemented: {0}")]

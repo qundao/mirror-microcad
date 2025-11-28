@@ -24,7 +24,7 @@ impl Parse {
 }
 
 impl RunCommand<Rc<SourceFile>> for Parse {
-    fn run(&self, cli: &Cli) -> anyhow::Result<Rc<SourceFile>> {
+    fn run(&self, cli: &Cli) -> miette::Result<Rc<SourceFile>> {
         let start = std::time::Instant::now();
         let source_file = SourceFile::load(self.input_with_ext(cli))?;
 

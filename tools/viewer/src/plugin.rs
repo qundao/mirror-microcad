@@ -46,7 +46,7 @@ pub enum MicrocadPluginInput {
 
 impl MicrocadPluginInput {
     /// Construct input from URL.
-    pub fn from_url(url: Url) -> anyhow::Result<Self> {
+    pub fn from_url(url: Url) -> miette::Result<Self> {
         match url.scheme() {
             "file" => Ok(MicrocadPluginInput::File {
                 path: url.to_file_path().expect("Valid file path").to_path_buf(),
@@ -64,7 +64,7 @@ impl MicrocadPluginInput {
                 last_modified: Default::default(),
             }),
             "stdin" => Ok(Self::Stdin(None)),
-            scheme => Err(anyhow::anyhow!("{scheme} not supported!")),
+            scheme => Err(miette::miette!("{scheme} not supported!")),
         }
     }
 

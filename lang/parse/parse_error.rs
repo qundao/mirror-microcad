@@ -3,6 +3,8 @@
 
 //! Parser errors
 
+use std::iter::once;
+use miette::{Diagnostic, LabeledSpan};
 use crate::{parse::*, ty::*};
 use thiserror::Error;
 
@@ -181,5 +183,15 @@ impl SrcReferrer for ParseError {
             ParseError::InvalidIdentifier(id) => id.src_ref(),
             ParseError::UnknownType(ty) => ty.src_ref(),
         }
+    }
+}
+
+impl Diagnostic for ParseError {
+    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
+        self.src_ref().as_deref().map(|src_ref| Box::new(once(LabeledSpan::new(
+            Some(self.to_string()),
+            src_ref.range.start,
+            src_ref.range.len(),
+        ))) as Box<dyn Iterator<Item = LabeledSpan>>)
     }
 }

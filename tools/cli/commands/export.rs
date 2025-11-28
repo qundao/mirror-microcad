@@ -3,7 +3,7 @@
 
 //! µcad CLI export command
 
-use anyhow::anyhow;
+use miette::{bail, miette};
 use microcad_builtin::*;
 use microcad_core::RenderResolution;
 use microcad_lang::{model::*, ty::*, value::*};
@@ -35,7 +35,7 @@ pub struct Export {
 }
 
 impl RunCommand<Vec<(Model, ExportCommand)>> for Export {
-    fn run(&self, cli: &Cli) -> anyhow::Result<Vec<(Model, ExportCommand)>> {
+    fn run(&self, cli: &Cli) -> miette::Result<Vec<(Model, ExportCommand)>> {
         // run prior parse step
         let (context, model) = self.eval.run(cli)?;
 
@@ -68,7 +68,7 @@ impl RunCommand<Vec<(Model, ExportCommand)>> for Export {
             }
             Ok(target_models)
         } else {
-            Err(anyhow!("Model missing!"))
+            bail!("Model missing!")
         }
     }
 }
@@ -79,14 +79,14 @@ impl Export {
         output_type: &OutputType,
         config: &Config,
         exporters: &ExporterRegistry,
-    ) -> anyhow::Result<std::rc::Rc<dyn Exporter>> {
+    ) -> miette::Result<std::rc::Rc<dyn Exporter>> {
         match output_type {
-            OutputType::NotDetermined => Err(anyhow!("Could not determine output type.")),
+            OutputType::NotDetermined => Err(miette!("Could not determine output type.")),
             OutputType::Geometry2D => {
                 Ok(exporters.exporter_by_id(&(&config.export.sketch).into())?)
             }
             OutputType::Geometry3D => Ok(exporters.exporter_by_id(&(&config.export.part).into())?),
-            OutputType::InvalidMixed => Err(anyhow!(
+            OutputType::InvalidMixed => Err(miette!(
                 "Invalid output type, the model cannot be exported."
             )),
         }
@@ -124,7 +124,7 @@ impl Export {
         model: &Model,
         cli: &Cli,
         exporters: &ExporterRegistry,
-    ) -> anyhow::Result<ExportCommand> {
+    ) -> miette::Result<ExportCommand> {
         let default_exporter =
             Self::default_exporter(&model.deduce_output_type(), &cli.config, exporters);
         let resolution = self.resolution();
@@ -168,7 +168,7 @@ impl Export {
         model: &Model,
         cli: &Cli,
         exporters: &ExporterRegistry,
-    ) -> anyhow::Result<Vec<(Model, ExportCommand)>> {
+    ) -> miette::Result<Vec<(Model, ExportCommand)>> {
         let mut models = model
             .source_file_descendants()
             .fold(Vec::new(), |mut models, model| {
@@ -196,10 +196,10 @@ impl Export {
         Ok(models)
     }
 
-    pub fn export_targets(&self, models: &[(Model, ExportCommand)]) -> anyhow::Result<()> {
+    pub fn export_targets(&self, models: &[(Model, ExportCommand)]) -> miette::Result<()> {
         models
             .iter()
-            .try_for_each(|(model, export)| -> anyhow::Result<()> {
+            .try_for_each(|(model, export)| -> miette::Result<()> {
                 let value = export.render_and_export(model)?;
                 if !matches!(value, Value::None) {
                     log::info!("{value}");
@@ -209,7 +209,7 @@ impl Export {
         Ok(())
     }
 
-    pub fn list_targets(&self, models: &Vec<(Model, ExportCommand)>) -> anyhow::Result<()> {
+    pub fn list_targets(&self, models: &Vec<(Model, ExportCommand)>) -> miette::Result<()> {
         for (model, attr) in models {
             eprintln!("{model} => {attr}");
         }

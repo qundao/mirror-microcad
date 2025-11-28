@@ -10,6 +10,7 @@
 use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
+use miette::IntoDiagnostic;
 use microcad_lang::{
     diag::{self, PushDiag},
     eval,
@@ -91,7 +92,7 @@ pub struct Processor {
     pub response_sender: Sender<ProcessorResponse>,
 }
 
-pub type ProcessorResult = anyhow::Result<Vec<ProcessorResponse>>;
+pub type ProcessorResult = miette::Result<Vec<ProcessorResponse>>;
 
 impl Processor {
     /// Handle processor request.
@@ -115,7 +116,7 @@ impl Processor {
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
         self.context = match syntax::SourceFile::load(
             url.to_file_path()
-                .map_err(|_| anyhow::anyhow!("Error converting {url} to file path."))?,
+                .map_err(|_| miette::miette!("Error converting {url} to file path."))?,
         ) {
             Ok(source_file) => match eval::EvalContext::from_source(
                 source_file,
@@ -151,7 +152,7 @@ impl Processor {
     pub fn update_document_str(&mut self, url: &Url, doc: &str) -> ProcessorResult {
         let path = url
             .to_file_path()
-            .map_err(|_| anyhow::anyhow!("Error converting {url} to file path."))?;
+            .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
         self.context = match syntax::SourceFile::load_from_str(None, path, doc) {
             Ok(source_file) => match eval::EvalContext::from_source(
                 source_file,
@@ -241,12 +242,12 @@ pub struct ProcessorInterface {
 
 impl ProcessorInterface {
     /// Send request.
-    pub fn send_request(&self, request: ProcessorRequest) -> anyhow::Result<()> {
-        Ok(self.request_sender.send(request)?)
+    pub fn send_request(&self, request: ProcessorRequest) -> miette::Result<()> {
+        Ok(self.request_sender.send(request).into_diagnostic()?)
     }
 
-    pub fn recv_response(&self) -> anyhow::Result<ProcessorResponse> {
-        Ok(self.response_receiver.recv()?)
+    pub fn recv_response(&self) -> miette::Result<ProcessorResponse> {
+        Ok(self.response_receiver.recv().into_diagnostic()?)
     }
 
     /// Run the processing thread and create interface.
