@@ -4,7 +4,7 @@
 //! Parser errors
 
 use std::iter::once;
-use miette::{Diagnostic, LabeledSpan};
+use miette::{Diagnostic, LabeledSpan, SourceCode};
 use crate::{parse::*, ty::*};
 use thiserror::Error;
 
@@ -28,7 +28,7 @@ pub enum ParseError {
     IoError(Refer<std::io::Error>),
 
     /// Error in pest parser
-    #[error("Parser error: {0}")]
+    #[error("Parser error: {}", .0.variant.message())]
     Parser(Box<pest::error::Error<crate::parser::Rule>>),
 
     /// Error parsing color literal
@@ -100,8 +100,8 @@ pub enum ParseError {
     StatementBetweenInit(SrcRef),
 
     /// Loading of a source file failed
-    #[error("Loading of source file {0:?} failed")]
-    LoadSource(Refer<std::path::PathBuf>),
+    #[error("Loading of source file {1:?} failed: {2}")]
+    LoadSource(SrcRef, std::path::PathBuf, std::io::Error),
 
     /// Grammar rule error
     #[error("Grammar rule error {0}")]
@@ -168,7 +168,8 @@ impl SrcReferrer for ParseError {
             | ParseError::EmptyTupleExpression(src_ref)
             | ParseError::MissingFormatExpression(src_ref)
             | ParseError::StatementBetweenInit(src_ref)
-            | ParseError::NotAvailable(src_ref) => src_ref.clone(),
+            | ParseError::NotAvailable(src_ref)
+            | ParseError::LoadSource(src_ref , ..) => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             ParseError::RuleNotFoundError(_) => SrcRef(None),
@@ -177,7 +178,6 @@ impl SrcReferrer for ParseError {
             ParseError::UnknownColorName(name) => name.src_ref(),
             ParseError::UnknownUnit(unit) => unit.src_ref(),
             ParseError::DuplicateTupleType(ty) => ty.src_ref(),
-            ParseError::LoadSource(path) => path.src_ref(),
             ParseError::GrammarRuleError(rule) => rule.src_ref(),
             ParseError::InvalidQualifiedName(name) => name.src_ref(),
             ParseError::InvalidIdentifier(id) => id.src_ref(),
@@ -186,12 +186,63 @@ impl SrcReferrer for ParseError {
     }
 }
 
+impl ParseError {
+    /// Add source code to the error
+    pub fn with_source(self, source: String) -> ParseErrorWithSource {
+        ParseErrorWithSource {
+            error: self,
+            source_code: Some(source),
+        }
+    }
+}
+
 impl Diagnostic for ParseError {
     fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
-        self.src_ref().as_deref().map(|src_ref| Box::new(once(LabeledSpan::new(
-            Some(self.to_string()),
+        let src_ref = self.src_ref().0?;
+        let message = match self {
+            ParseError::Parser(err) => {
+                err.variant.message().to_string()
+            }
+            _ => self.to_string()
+        };
+        let label = LabeledSpan::new(
+            Some(message),
             src_ref.range.start,
             src_ref.range.len(),
-        ))) as Box<dyn Iterator<Item = LabeledSpan>>)
+        );
+        Some(Box::new(once(label)))
+    }
+}
+
+/// Parse error, possibly with source code
+#[derive(Debug, Error)]
+#[error("{error}")]
+pub struct ParseErrorWithSource {
+    error: ParseError,
+    source_code: Option<String>,
+}
+
+impl From<ParseError> for ParseErrorWithSource {
+    fn from(value: ParseError) -> Self {
+        ParseErrorWithSource {
+            error: value,
+            source_code: None,
+        }
+    }
+}
+
+impl Diagnostic for ParseErrorWithSource {
+    fn source_code(&self) -> Option<&dyn SourceCode> {
+        self.source_code.as_ref().map(|source| &*source as &dyn SourceCode)
+    }
+
+    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
+        self.error.labels()
+    }
+}
+
+impl SrcReferrer for ParseErrorWithSource {
+    fn src_ref(&self) -> SrcRef {
+        self.error.src_ref()
     }
 }

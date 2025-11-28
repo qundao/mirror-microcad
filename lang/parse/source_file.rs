@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, rc::*, tree_display::*};
-use std::io::Read;
+use std::fs::read_to_string;
 
 impl SourceFile {
     /// Load µcad source file from given `path`
-    pub fn load(path: impl AsRef<std::path::Path> + std::fmt::Debug) -> ParseResult<Rc<Self>> {
+    pub fn load(
+        path: impl AsRef<std::path::Path> + std::fmt::Debug,
+    ) -> Result<Rc<Self>, ParseErrorWithSource> {
         Self::load_with_name(&path, Self::name_from_path(&path))
     }
 
@@ -14,31 +16,26 @@ impl SourceFile {
     pub fn load_with_name(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
         name: QualifiedName,
-    ) -> ParseResult<Rc<Self>> {
-        log::trace!("{load} file {path:?} [{name}]", load = crate::mark!(LOAD));
+    ) -> Result<Rc<Self>, ParseErrorWithSource> {
+        let path = path.as_ref();
+        log::trace!(
+            "{load} file {path} [{name}]",
+            path = path.display(),
+            load = crate::mark!(LOAD)
+        );
 
-        let mut file = match std::fs::File::open(&path) {
-            Ok(file) => file,
-            _ => {
-                return Err(ParseError::LoadSource(Refer::new(
-                    path.as_ref().into(),
-                    name.src_ref(),
-                )))
-            }
-        };
+        let buf = read_to_string(path).map_err(|error| {
+            ParseError::LoadSource(name.src_ref(), path.into(), error)
+        })?;
 
-        let mut buf = String::new();
-        if let Err(err) = file.read_to_string(&mut buf) {
-            return Err(ParseError::IoError(Refer::new(err, name.src_ref())));
-        }
-
-        let mut source_file: Self = Parser::parse_rule(crate::parser::Rule::source_file, &buf, 0)?;
+        let mut source_file: Self = Parser::parse_rule(Rule::source_file, &buf, 0)
+            .map_err(|error| error.with_source(buf))?;
         assert_ne!(source_file.hash, 0);
-        source_file.set_filename(path.as_ref());
+        source_file.set_filename(path);
         source_file.name = name;
         log::debug!(
             "Successfully loaded external file {} to {}",
-            path.as_ref().to_string_lossy(),
+            path.display(),
             source_file.name
         );
         log::trace!("Syntax tree:\n{}", FormatTree(&source_file));
