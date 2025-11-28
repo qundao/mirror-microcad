@@ -42,7 +42,7 @@ impl Default for Cli {
 
 impl Cli {
     /// Create a new CLI.
-    pub fn new() -> anyhow::Result<Self> {
+    pub fn new() -> miette::Result<Self> {
         let mut cli = Self::parse();
         if let Some(config_path) = &cli.config_path {
             cli.config = Config::load(config_path)?
@@ -60,7 +60,7 @@ impl Cli {
     }
 
     /// Run the CLI.
-    pub fn run(&self) -> anyhow::Result<()> {
+    pub fn run(&self) -> miette::Result<()> {
         let start = std::time::Instant::now();
 
         match &self.command {

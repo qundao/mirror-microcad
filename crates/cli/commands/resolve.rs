@@ -6,7 +6,6 @@
 use microcad_lang::{diag::*, resolve::*};
 
 use crate::*;
-use anyhow::*;
 
 #[derive(clap::Parser)]
 pub struct Resolve {
@@ -29,7 +28,7 @@ pub struct Resolve {
 }
 
 impl RunCommand<ResolveContext> for Resolve {
-    fn run(&self, cli: &Cli) -> anyhow::Result<ResolveContext> {
+    fn run(&self, cli: &Cli) -> miette::Result<ResolveContext> {
         // run prior parse step
         let root = self.parse.run(cli)?;
 

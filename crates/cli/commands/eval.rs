@@ -9,7 +9,6 @@ use crate::{
     commands::{Resolve, RunCommand},
     Cli,
 };
-use anyhow::*;
 
 #[derive(clap::Parser)]
 pub struct Eval {
@@ -22,7 +21,7 @@ pub struct Eval {
 }
 
 impl RunCommand<(EvalContext, Option<Model>)> for Eval {
-    fn run(&self, cli: &Cli) -> anyhow::Result<(EvalContext, Option<Model>)> {
+    fn run(&self, cli: &Cli) -> miette::Result<(EvalContext, Option<Model>)> {
         // run prior parse step
         let resolve_context = self.resolve.run(cli)?;
 
@@ -69,7 +68,7 @@ impl RunCommand<(EvalContext, Option<Model>)> for Eval {
                 if cli.is_eval() {
                     eprintln!("Model construction failed.");
                 }
-                Ok(Err(err)?)
+                Err(err.into())
             }
         }
     }

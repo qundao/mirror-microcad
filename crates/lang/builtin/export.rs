@@ -4,13 +4,13 @@
 //! Model export
 
 use std::rc::Rc;
-
+use miette::Diagnostic;
 use crate::{Id, builtin::file_io::*, model::*, parameter, render::RenderError, value::*};
 
 use thiserror::Error;
 
 /// Export error stub.
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Diagnostic)]
 pub enum ExportError {
     /// IO Error.
     #[error("IO Error")]

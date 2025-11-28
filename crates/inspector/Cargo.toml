@@ -19,7 +19,7 @@ name = "microcad-inspector"
 path = "main.rs"
 
 [dependencies]
-anyhow = "1.0"
+miette = "7.6.0"
 clap = { version = "4", features = ["derive"] }
 crossbeam = "0.8"
 env_logger = "0.11"

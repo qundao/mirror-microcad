@@ -3,12 +3,13 @@
 
 //! Resolve error
 
+use miette::Diagnostic;
 use thiserror::Error;
 
 use crate::{diag::*, parse::*, syntax::*};
 
 /// Resolve error.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum ResolveError {
     /// Parse Error.
     #[error("Parse Error: {0}")]

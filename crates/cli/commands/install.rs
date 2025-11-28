@@ -3,6 +3,7 @@
 
 //! µcad CLI install command.
 
+use miette::{bail, IntoDiagnostic};
 use crate::*;
 
 #[derive(clap::Parser)]
@@ -20,13 +21,11 @@ pub struct Install {
 }
 
 impl RunCommand for Install {
-    fn run(&self, _cli: &Cli) -> anyhow::Result<()> {
+    fn run(&self, _cli: &Cli) -> miette::Result<()> {
         if self.library == "std" {
-            Ok(microcad_std::extract(self.force)?)
+            Ok(microcad_std::extract(self.force).into_diagnostic()?)
         } else {
-            Err(anyhow::anyhow!(
-                "Only `std` is supported as installable library at the moment.",
-            ))
+            bail!("Only `std` is supported as installable library at the moment.")
         }
     }
 }

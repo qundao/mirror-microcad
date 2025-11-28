@@ -12,6 +12,7 @@ use bevy::{
     },
 };
 use clap::Parser;
+use miette::IntoDiagnostic;
 
 /// µcad cli
 #[derive(Parser)]
@@ -46,7 +47,7 @@ pub struct Args {
 
 impl Args {
     /// Return input string as URL.
-    fn input_as_url(&self) -> anyhow::Result<Option<Url>> {
+    fn input_as_url(&self) -> miette::Result<Option<Url>> {
         use std::path::*;
 
         match &self.input {
@@ -54,7 +55,7 @@ impl Args {
                 let (scheme, part) = input.split_once("://").unwrap_or(("file", input));
                 match scheme {
                     "stdin" => {
-                        let url = Url::parse("stdin://")?;
+                        let url = Url::parse("stdin://").into_diagnostic()?;
                         Ok(Some(url))
                     }
                     "file" => {
@@ -75,14 +76,14 @@ impl Args {
                         let canonical_path: PathBuf = if path.is_absolute() {
                             path.to_path_buf()
                         } else {
-                            let path = std::env::current_dir()?.join(path_part);
+                            let path = std::env::current_dir().into_diagnostic()?.join(path_part);
                             log::info!("Path: {path:?}");
-                            path.canonicalize()?
+                            path.canonicalize().into_diagnostic()?
                         };
 
                         // Convert canonical path to file:// URL
                         let mut url = Url::from_file_path(&canonical_path)
-                            .map_err(|_| anyhow::anyhow!("Failed to convert path to file URL"))?;
+                            .map_err(|_| miette::miette!("Failed to convert path to file URL"))?;
 
                         // Set query and fragment if present
                         if let Some(q) = query {
@@ -94,7 +95,7 @@ impl Args {
 
                         Ok(Some(url))
                     }
-                    scheme => Err(anyhow::anyhow!("Unknown scheme: {scheme}")),
+                    scheme => Err(miette::miette!("Unknown scheme: {scheme}")),
                 }
             }
             None => Ok(None),
