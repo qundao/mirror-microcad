@@ -10,6 +10,6 @@
 
 ### `abs`
 
-### `cos`, `sin`, `tan`
+### `cos`, `sin`, `tan`, `acos`, `asin`, `atan`
 
 ### `rotate_around_axis`, `rotate_xyz`, `rotate_zyx`

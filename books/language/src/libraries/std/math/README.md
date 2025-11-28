@@ -12,7 +12,7 @@ Calculate absolute value:
 std::debug::assert(std::math::abs(-1) == 1);
 ```
 
-### Trigonometric functions: (`sin(x)`, `cos(x)`, `tan(x)`)
+### Trigonometric functions: (`sin(x)`, `cos(x)`, `tan(x)`, `asin(x)`, `acos(x)`, `atan(x)`)
 
 [![test](.test/math_trigonometric.svg)](.test/math_trigonometric.log)
 
@@ -25,6 +25,8 @@ assert_eq([tan(0), 0.]);
 
 x = 0.5;
 assert_eq([sin(x)^2. + cos(x)^2., 1.]);
+
+assert_eq([sin(asin(x)), x]);
 ```
 
 ### Rotation matrices
