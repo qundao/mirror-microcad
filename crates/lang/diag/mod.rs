@@ -16,6 +16,7 @@ mod diag_list;
 mod diagnostic;
 mod level;
 
+use miette::Report;
 pub use diag_error::*;
 pub use diag_handler::*;
 pub use diag_list::*;
@@ -31,19 +32,19 @@ pub trait PushDiag {
 
     /// Push new trace message.
     fn trace(&mut self, src: &impl SrcReferrer, message: String) {
-        self.push_diag(Diagnostic::Trace(Refer::new(message, src.src_ref())))
+        self.push_diag(Diagnostic::Trace(Refer::new(Report::msg(message), src.src_ref())))
             .expect("could not push diagnostic trace message");
     }
     /// Push new informative message.
     fn info(&mut self, src: &impl SrcReferrer, message: String) {
-        self.push_diag(Diagnostic::Info(Refer::new(message, src.src_ref())))
+        self.push_diag(Diagnostic::Info(Refer::new(Report::msg(message), src.src_ref())))
             .expect("could not push diagnostic info message");
     }
     /// Push new warning.
     fn warning(
         &mut self,
         src: &impl SrcReferrer,
-        err: impl std::error::Error + 'static,
+        err: impl Into<Report>,
     ) -> DiagResult<()> {
         let err = Diagnostic::Warning(Refer::new(err.into(), src.src_ref()));
         if cfg!(feature = "ansi-color") {
@@ -57,7 +58,7 @@ pub trait PushDiag {
     fn error(
         &mut self,
         src: &impl SrcReferrer,
-        err: impl std::error::Error + 'static,
+        err: impl Into<Report>,
     ) -> DiagResult<()> {
         let err = Diagnostic::Error(Refer::new(err.into(), src.src_ref()));
         if cfg!(feature = "ansi-color") {

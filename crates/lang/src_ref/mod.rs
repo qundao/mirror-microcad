@@ -23,6 +23,7 @@ pub use src_referrer::*;
 
 use crate::parser::*;
 use derive_more::Deref;
+use miette::SourceSpan;
 
 /// Reference into a source file.
 ///
@@ -46,6 +47,11 @@ impl SrcRef {
             at: LineCol { line, col },
             source_file_hash,
         })))
+    }
+
+    /// Return a span for the source reference as expected by miette
+    pub fn as_miette_span(&self) -> Option<SourceSpan> {
+        self.0.as_ref().map(|s| SourceSpan::new(s.range.start.into(), s.range.len()))
     }
 }
 

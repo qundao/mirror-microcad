@@ -4,6 +4,7 @@
 //! Import values from TOML
 
 use microcad_lang::{builtin::*, src_ref::*, value::*, Id};
+use miette::Report;
 
 /// Import TOML files into a tuple.
 pub struct TomlImporter;
@@ -46,7 +47,7 @@ impl Importer for TomlImporter {
 
         Ok(Self::toml_to_value(
             &toml::from_str::<toml::Value>(&content)
-                .map_err(|err| ImportError::CustomError(Box::new(err)))?,
+                .map_err(|err| ImportError::CustomError(Report::from_err(err)))?,
         ))
     }
 }
