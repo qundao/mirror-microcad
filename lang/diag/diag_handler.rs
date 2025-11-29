@@ -95,7 +95,7 @@ impl PushDiag for DiagHandler {
             if self.error_count >= error_limit && !self.error_limit_reached {
                 self.error(
                     &SrcRef(None),
-                    Box::new(DiagError::ErrorLimitReached(error_limit)),
+                    DiagError::ErrorLimitReached(error_limit),
                 )?;
                 self.error_limit_reached = true;
             }

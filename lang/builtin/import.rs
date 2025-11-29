@@ -4,13 +4,13 @@
 //! Value importer
 
 use std::rc::Rc;
-
+use miette::{Diagnostic, Report};
 use crate::{builtin::file_io::*, syntax::*, value::*, Id};
 
 use thiserror::Error;
 
 /// Export error stub.
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Diagnostic)]
 pub enum ImportError {
     /// IO Error.
     #[error("IO Error")]
@@ -34,10 +34,12 @@ pub enum ImportError {
 
     /// Custom error.
     #[error("{0}")]
-    CustomError(Box<dyn std::error::Error>),
+    #[diagnostic(transparent)]
+    CustomError(Report),
 
     /// IO Error.
     #[error("Value Error")]
+    #[diagnostic(transparent)]
     ValueError(#[from] ValueError),
 }
 

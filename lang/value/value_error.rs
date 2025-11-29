@@ -3,11 +3,12 @@
 
 //! Value errors.
 
+use miette::Diagnostic;
 use crate::value::{error::QuantityError, *};
 use thiserror::Error;
 
 /// Value error
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum ValueError {
     /// Invalid operator
     #[error("Invalid operator: {0}")]

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::str::FromStr;
-
+use miette::Diagnostic;
 use crate::{
     Id,
     builtin::ExporterAccess,
@@ -16,7 +16,7 @@ use microcad_core::{Color, Length, RenderResolution, Size2};
 use thiserror::Error;
 
 /// Error type for attributes.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum AttributeError {
     /// Unknown attribute.
     #[error("Attribute not supported: {0}")]
