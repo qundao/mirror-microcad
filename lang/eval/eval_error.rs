@@ -176,7 +176,8 @@ pub enum EvalError {
 
     /// Workbench didn't find a initialization routine matching the given arguments
     #[error("Workbench {0} cannot find initialization for those arguments")]
-    NoInitializationFound(Identifier),
+    #[diagnostic(help("Possible initializations: \n\t{}", .1.join("\n\t")))]
+    NoInitializationFound(Identifier, Vec<String>),
 
     /// Initializer missed to set a property from plan
     #[error("Workbench plan incomplete. Missing properties: {0}")]

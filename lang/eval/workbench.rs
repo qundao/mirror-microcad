@@ -188,7 +188,10 @@ impl WorkbenchDefinition {
                     }
                 }
                 if !initialized {
-                    context.error(arguments, EvalError::NoInitializationFound(self.id.clone()))?;
+                    let possible_params = self.inits()
+                        .map(|init| init.parameters.to_string())
+                        .collect();
+                    context.error(arguments, EvalError::NoInitializationFound(self.id.clone(), possible_params))?;
                 }
             }
         }
