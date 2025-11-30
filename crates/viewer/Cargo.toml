@@ -13,7 +13,6 @@ rust-version.workspace = true
 version.workspace = true
 
 [dependencies]
-miette = "7.6.0"
 bevy = { version = "0.16.1", default-features = false, features = [
     "png",
     "bevy_asset",
@@ -40,6 +39,7 @@ dirs = "6"
 env_logger = "0.11"
 geo = "0.31"
 log = "0.4"
+miette = { version = "7.6.0", features = ["fancy"] }
 notify = "8"
 percent-encoding = "2.3.2"
 rustc-hash = "2.1.1"
