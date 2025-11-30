@@ -77,19 +77,7 @@ pub fn generate(
     // remove any previous banners
     remove_banners(path, &exclude_dirs, &test_outputs)?;
 
-    // reformat code and write into file
-    match rustfmt_wrapper::rustfmt(code) {
-        Ok(code) =>
-        // write all rust code at once
-        {
-            fs::write(&dest_path, code).context(format!("cannot create file '{dest_path:?}'"))?;
-            Ok(())
-        }
-        Err(rustfmt_wrapper::Error::Rustfmt(msg)) => {
-            Err(anyhow::Error::msg(msg.clone())).context(msg)
-        }
-        Err(err) => Err(anyhow::Error::new(err)),
-    }
+    fs::write(&dest_path, code).context(format!("cannot create file '{dest_path:?}'"))
 }
 
 fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
