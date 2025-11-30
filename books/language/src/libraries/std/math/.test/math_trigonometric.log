@@ -14,6 +14,8 @@
   25:   
   26:   x = 0.5;
   27:   assert_eq([sin(x)^2. + cos(x)^2., 1.]);
+  28:   
+  29:   assert_eq([sin(asin(x)), x]);
 
 -- No Output --
 -- No Errors --

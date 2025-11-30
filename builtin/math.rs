@@ -136,6 +136,36 @@ fn tan() -> Symbol {
     )
 }
 
+/// Calculate acos(x).
+fn acos() -> Symbol {
+    Symbol::new_builtin_fn(
+        "acos",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| trigonometric("acos", args, ctx, |v| v.acos()),
+        None,
+    )
+}
+
+/// Calculate asin(x).
+fn asin() -> Symbol {
+    Symbol::new_builtin_fn(
+        "asin",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| trigonometric("asin", args, ctx, |v| v.asin()),
+        None,
+    )
+}
+
+/// Calculate atan(x).
+fn atan() -> Symbol {
+    Symbol::new_builtin_fn(
+        "atan",
+        [parameter!(x)].into_iter(),
+        &|_params, args, ctx| trigonometric("atan", args, ctx, |v| v.atan()),
+        None,
+    )
+}
+
 /// Helper function to get an angle from a field in an argument list.
 ///
 /// Returns `None` if the argument is not an angle.
@@ -287,6 +317,9 @@ pub fn math() -> Symbol {
         .symbol(cos())
         .symbol(sin())
         .symbol(tan())
+        .symbol(acos())
+        .symbol(asin())
+        .symbol(atan())
         .symbol(rotate_around_axis())
         .symbol(rotate_xyz())
         .symbol(rotate_zyx())
