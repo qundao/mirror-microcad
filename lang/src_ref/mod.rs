@@ -51,7 +51,22 @@ impl SrcRef {
 
     /// Return a span for the source reference as expected by miette
     pub fn as_miette_span(&self) -> Option<SourceSpan> {
-        self.0.as_ref().map(|s| SourceSpan::new(s.range.start.into(), s.range.len()))
+        self.0
+            .as_ref()
+            .map(|s| SourceSpan::new(s.range.start.into(), s.range.len()))
+    }
+
+    /// Return a reference with a given line offset.
+    pub fn with_line_offset(&self, line_offset: usize) -> Self {
+        match &self.0 {
+            Some(src) => Self::new(
+                src.range.clone(),
+                src.at.line + line_offset,
+                src.at.col,
+                src.source_file_hash,
+            ),
+            None => Self(None),
+        }
     }
 }
 
