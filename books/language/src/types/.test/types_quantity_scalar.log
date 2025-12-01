@@ -12,24 +12,28 @@
 
 -- No Output --
 -- Errors --
-warning: Unused local percent.
-  ---> ../books/language/src/types/quantities.md:50:1
-     |
-  50 | percent = 55%;
-     | ^^^^^^^
-     |
-warning: Unused local pi.
-  ---> ../books/language/src/types/quantities.md:49:1
-     |
-  49 | pi =  3.1415;
-     | ^^
-     |
-warning: Unused local zero.
-  ---> ../books/language/src/types/quantities.md:48:1
-     |
-  48 | zero = 0;
-     | ^^^^
-     |
+  ⚠ warning: 3:1: Unused local percent.
+   ╭─[../books/language/src/types/quantities.md:3:1]
+ 2 │ pi =  3.1415;
+ 3 │ percent = 55%;
+   · ───┬───
+   ·    ╰── warning: 3:1: Unused local percent.
+   ╰────
+  ⚠ warning: 2:1: Unused local pi.
+   ╭─[../books/language/src/types/quantities.md:2:1]
+ 1 │ zero = 0;
+ 2 │ pi =  3.1415;
+   · ─┬
+   ·  ╰── warning: 2:1: Unused local pi.
+ 3 │ percent = 55%;
+   ╰────
+  ⚠ warning: 1:1: Unused local zero.
+   ╭─[../books/language/src/types/quantities.md:1:1]
+ 1 │ zero = 0;
+   · ──┬─
+   ·   ╰── warning: 1:1: Unused local zero.
+ 2 │ pi =  3.1415;
+   ╰────
 Unexpected warnings(s) which did occur in line(s): 48, 49, 50
 -- No Model --
 -- Test Result --

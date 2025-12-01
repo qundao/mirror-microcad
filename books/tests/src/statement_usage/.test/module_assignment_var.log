@@ -12,12 +12,14 @@
 
 -- No Output --
 -- Errors --
-error: Declaration of a not allowed within module_assignment_var::k
-  ---> ../books/tests/src/statement_usage/module.md:79:3
-     |
-  79 |   a = 1; // error
-     |   ^^^^^^
-     |
+  × error: 2:3: Declaration of a not allowed within module_assignment_var::k
+   ╭─[../books/tests/src/statement_usage/module.md:2:3]
+ 1 │ mod k {
+ 2 │   a = 1; // error
+   ·   ───┬──
+   ·      ╰── error: 2:3: Declaration of a not allowed within module_assignment_var::k
+ 3 │ }
+   ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

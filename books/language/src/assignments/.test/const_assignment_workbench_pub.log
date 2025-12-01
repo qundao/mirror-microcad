@@ -15,12 +15,14 @@
 
 -- No Output --
 -- Errors --
-error: Assignment statement is not available within Sketch
-  ---> ../books/language/src/assignments/const.md:46:5
-     |
-  46 |     pub const TEXT = "Hello";  // error
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
+  × error: 2:5: Assignment statement is not available within Sketch
+   ╭─[../books/language/src/assignments/const.md:2:5]
+ 1 │ sketch MySketch() {
+ 2 │     pub const TEXT = "Hello";  // error
+   ·     ────────────┬────────────
+   ·                 ╰── error: 2:5: Assignment statement is not available within Sketch
+ 3 │     std::print(TEXT);
+   ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

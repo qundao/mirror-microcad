@@ -28,11 +28,12 @@ outer: 10mm
 inner: <NO VALUE>
 
 -- Errors --
-error: Property not found: inner
-  ---> ../books/language/src/structure/workbenches/README.md:316:21
-     |
- 316 | std::print("inner: {t.inner}"); // error
-     |                     ^^^^^^^
-     |
+  × error: 16:21: Property not found: inner
+    ╭─[../books/language/src/structure/workbenches/README.md:16:21]
+ 15 │ // but you cannot access `inner` anymore
+ 16 │ std::print("inner: {t.inner}"); // error
+    ·                     ───┬───
+    ·                        ╰── error: 16:21: Property not found: inner
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED

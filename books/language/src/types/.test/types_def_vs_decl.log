@@ -11,18 +11,20 @@
 
 -- No Output --
 -- Errors --
-warning: Unused local x.
-  ---> ../books/language/src/types/README.md:29:1
-     |
-  29 | x: Length = 4mm;   // explicit type declaration
-     | ^
-     |
-warning: Unused local y.
-  ---> ../books/language/src/types/README.md:30:1
-     |
-  30 | y = 4mm;           // implicit type declaration via units.
-     | ^
-     |
+  ⚠ warning: 1:1: Unused local x.
+   ╭─[../books/language/src/types/README.md:1:1]
+ 1 │ x: Length = 4mm;   // explicit type declaration
+   · ┬
+   · ╰── warning: 1:1: Unused local x.
+ 2 │ y = 4mm;           // implicit type declaration via units.
+   ╰────
+  ⚠ warning: 2:1: Unused local y.
+   ╭─[../books/language/src/types/README.md:2:1]
+ 1 │ x: Length = 4mm;   // explicit type declaration
+ 2 │ y = 4mm;           // implicit type declaration via units.
+   · ┬
+   · ╰── warning: 2:1: Unused local y.
+   ╰────
 Unexpected warnings(s) which did occur in line(s): 29, 30
 -- No Model --
 -- Test Result --

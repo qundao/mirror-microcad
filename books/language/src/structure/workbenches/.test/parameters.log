@@ -25,18 +25,28 @@
 
 -- No Output --
 -- Errors --
-error: Symbol count not found.
-  ---> ../books/language/src/structure/workbenches/operations.md:56:15
-     |
-  56 |     if @input.count() == 1 {
-     |               ^^^^^
-     |
-error: If condition is not a boolean: <NO VALUE>
-  ---> ../books/language/src/structure/workbenches/operations.md:56:5
-     |
-  56 |     if @input.count() == 1 {
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
+  × error: 3:15: Symbol count not found.
+   ╭─[../books/language/src/structure/workbenches/operations.md:3:15]
+ 2 │ op punch_disk(radius: Length) {
+ 3 │     if @input.count() == 1 {
+   ·               ──┬──
+   ·                 ╰── error: 3:15: Symbol count not found.
+ 4 │         { 
+   ╰────
+  × error: 3:5: If condition is not a boolean: <NO VALUE>
+    ╭─[../books/language/src/structure/workbenches/operations.md:3:5]
+  2 │     op punch_disk(radius: Length) {
+  3 │ ╭─▶     if @input.count() == 1 {
+  4 │ │           { 
+  5 │ │               @input;
+  6 │ │               std::geo2d::Circle(radius);
+  7 │ │           }.subtract();
+  8 │ │       } else {
+  9 │ │           std::error("punch_disk must get one object");
+ 10 │ ├─▶     }
+    · ╰──── error: 3:5: If condition is not a boolean: <NO VALUE>
+ 11 │     }
+    ╰────
 Unexpected error(s) which did occur in line(s): 56
 -- Test Result --
 TODO

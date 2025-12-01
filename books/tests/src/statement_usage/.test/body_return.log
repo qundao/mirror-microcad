@@ -12,11 +12,13 @@
 
 -- No Output --
 -- Errors --
-error: Return statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:55:3
-     |
-  55 |   return 1; // error
-     |   ^^^^^^^^^
-     |
+  × error: 2:3: Return statement not available here
+   ╭─[../books/tests/src/statement_usage/body.md:2:3]
+ 1 │ {
+ 2 │   return 1; // error
+   ·   ────┬────
+   ·       ╰── error: 2:3: Return statement not available here
+ 3 │ }
+   ╰────
 -- Test Result --
 FAILS AS EXPECTED

@@ -10,12 +10,12 @@
 
 -- No Output --
 -- Errors --
-warning: Unused local tuple.
-  ---> ../books/language/src/types/collections/tuples/README.md:29:1
-     |
-  29 | tuple = (10cm, 10cm², 1l);
-     | ^^^^^
-     |
+  ⚠ warning: 1:1: Unused local tuple.
+   ╭─[../books/language/src/types/collections/tuples/README.md:1:1]
+ 1 │ tuple = (10cm, 10cm², 1l);
+   · ──┬──
+   ·   ╰── warning: 1:1: Unused local tuple.
+   ╰────
 Unexpected warnings(s) which did occur in line(s): 29
 -- No Model --
 -- Test Result --

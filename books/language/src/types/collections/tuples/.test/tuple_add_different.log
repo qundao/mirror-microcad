@@ -13,23 +13,27 @@
 
 -- No Output --
 -- Errors --
-error: Tuple type mismatch: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
-  ---> ../books/language/src/types/collections/tuples/operators.md:20:5
-     |
-  20 | c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
-     |     ^^^^^
-     |
-error: Array elements have different types: [<NO TYPE>, (x: Length, y: Length)]
-  ---> ../books/language/src/types/collections/tuples/operators.md:21:23
-     |
-  21 | std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
-     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
-error: Assertion failed: Invalid: <NO VALUE>
-  ---> ../books/language/src/types/collections/tuples/operators.md:21:23
-     |
-  21 | std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
-     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
+  × error: 3:5: Tuple type mismatch: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+   ╭─[../books/language/src/types/collections/tuples/operators.md:3:5]
+ 2 │ b = (x = 3.0mm, z = 4.0mm);
+ 3 │ c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+   ·     ──┬──
+   ·       ╰── error: 3:5: Tuple type mismatch: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+ 4 │ std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+   ╰────
+  × error: 4:23: Array elements have different types: [<NO TYPE>, (x: Length, y: Length)]
+   ╭─[../books/language/src/types/collections/tuples/operators.md:4:23]
+ 3 │ c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+ 4 │ std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+   ·                       ─────────────┬─────────────
+   ·                                    ╰── error: 4:23: Array elements have different types: [<NO TYPE>, (x: Length, y: Length)]
+   ╰────
+  × error: 4:23: Assertion failed: Invalid: <NO VALUE>
+   ╭─[../books/language/src/types/collections/tuples/operators.md:4:23]
+ 3 │ c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+ 4 │ std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+   ·                       ─────────────┬─────────────
+   ·                                    ╰── error: 4:23: Assertion failed: Invalid: <NO VALUE>
+   ╰────
 -- Test Result --
 FAILS AS EXPECTED

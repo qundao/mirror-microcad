@@ -12,11 +12,13 @@
 
 -- No Output --
 -- Errors --
-error: sketch statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:7:10
-     |
-   7 |   sketch F() {} // error
-     |          ^
-     |
+  × error: 2:10: sketch statement not available here
+   ╭─[../books/tests/src/statement_usage/body.md:2:10]
+ 1 │ {
+ 2 │   sketch F() {} // error
+   ·          ┬
+   ·          ╰── error: 2:10: sketch statement not available here
+ 3 │ }
+   ╰────
 -- Test Result --
 FAILS AS EXPECTED

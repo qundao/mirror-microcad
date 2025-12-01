@@ -20,24 +20,29 @@
 
 -- No Output --
 -- Errors --
-error: Missing arguments: x,y
-  ---> ../books/language/src/flow/calls/arguments.md:63:4
-     |
-  63 | f( plane, z=3cm);
-     |    ^^^^^^^^^^^^
-     |
-error: Missing arguments: x,y
-  ---> ../books/language/src/flow/calls/arguments.md:64:4
-     |
-  64 | f( plane, z=6cm);
-     |    ^^^^^^^^^^^^
-     |
-error: Missing arguments: x,y
-  ---> ../books/language/src/flow/calls/arguments.md:65:4
-     |
-  65 | f( plane, z=9cm);
-     |    ^^^^^^^^^^^^
-     |
+  × error: 9:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:9:4]
+  8 │ // Then we pass plane to f() three times with different z values
+  9 │ f( plane, z=3cm);
+    ·    ──────┬─────
+    ·          ╰── error: 9:4: Missing arguments: x,y
+ 10 │ f( plane, z=6cm);
+    ╰────
+  × error: 10:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:10:4]
+  9 │ f( plane, z=3cm);
+ 10 │ f( plane, z=6cm);
+    ·    ──────┬─────
+    ·          ╰── error: 10:4: Missing arguments: x,y
+ 11 │ f( plane, z=9cm);
+    ╰────
+  × error: 11:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:11:4]
+ 10 │ f( plane, z=6cm);
+ 11 │ f( plane, z=9cm);
+    ·    ──────┬─────
+    ·          ╰── error: 11:4: Missing arguments: x,y
+    ╰────
 Unexpected error(s) which did occur in line(s): 63, 64, 65
 -- Test Result --
 TODO

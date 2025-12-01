@@ -12,18 +12,22 @@
 
 -- No Output --
 -- Errors --
-error: Statement is not available within Function
-  ---> ../books/tests/src/statement_usage/function.md:7:10
-     |
-   7 |   sketch S() {} // error
-     |          ^
-     |
-error: Sketch is not available within Function
-  ---> ../books/tests/src/statement_usage/function.md:7:10
-     |
-   7 |   sketch S() {} // error
-     |          ^
-     |
+  × error: 2:10: Statement is not available within Function
+   ╭─[../books/tests/src/statement_usage/function.md:2:10]
+ 1 │ fn f() {
+ 2 │   sketch S() {} // error
+   ·          ┬
+   ·          ╰── error: 2:10: Statement is not available within Function
+ 3 │ } f();
+   ╰────
+  × error: 2:10: Sketch is not available within Function
+   ╭─[../books/tests/src/statement_usage/function.md:2:10]
+ 1 │ fn f() {
+ 2 │   sketch S() {} // error
+   ·          ┬
+   ·          ╰── error: 2:10: Sketch is not available within Function
+ 3 │ } f();
+   ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -18,126 +18,147 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol grid.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:15:4
-     |
-  15 | op grid(columns: Integer, rows: Integer) {
-     |    ^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
-warning: Unused global symbol std::ops.
-  ---> ../books/tutorials/src/lego_brick/part/custom_op.md:11:5
-     |
-  11 | use std::ops::*;
-     |     ^^^^^^^^
-     |
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 5:4: Unused global symbol grid.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:5:4]
+ 4 │ 
+ 5 │ op grid(columns: Integer, rows: Integer) {
+   ·    ──┬─
+   ·      ╰── warning: 5:4: Unused global symbol grid.
+ 6 │     @input
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:5: Unused global symbol std::ops.
+   ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:1:5]
+ 1 │ use std::ops::*;
+   ·     ────┬───
+   ·         ╰── warning: 1:5: Unused global symbol std::ops.
+ 2 │ 
+   ╰────
 Unexpected warnings(s) which did occur in line(s): 11, 15
 -- No Model --
 -- Test Result --

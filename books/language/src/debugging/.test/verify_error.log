@@ -10,11 +10,11 @@
 
 -- No Output --
 -- Errors --
-error: Builtin error: this should not have happened
-  ---> ../books/language/src/debugging/verification.md:30:17
-     |
-  30 | std::log::error("this should not have happened"); // error
-     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
+  × error: 1:17: Builtin error: this should not have happened
+   ╭─[../books/language/src/debugging/verification.md:1:17]
+ 1 │ std::log::error("this should not have happened"); // error
+   ·                 ───────────────┬───────────────
+   ·                                ╰── error: 1:17: Builtin error: this should not have happened
+   ╰────
 -- Test Result --
 FAILS AS EXPECTED

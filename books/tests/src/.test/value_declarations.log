@@ -102,12 +102,14 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol PrivateWorkbench.
-  ---> ../books/tests/src/value_declarations.md:39:16
-     |
-  39 |         sketch PrivateWorkbench() {}
-     |                ^^^^^^^^^^^^^^^^
-     |
+  ⚠ warning: 22:16: Unused global symbol PrivateWorkbench.
+    ╭─[../books/tests/src/value_declarations.md:22:16]
+ 21 │         // private workbench
+ 22 │         sketch PrivateWorkbench() {}
+    ·                ────────┬───────
+    ·                        ╰── warning: 22:16: Unused global symbol PrivateWorkbench.
+ 23 │ 
+    ╰────
 Unexpected warnings(s) which did occur in line(s): 39
 -- No Model --
 -- Test Result --

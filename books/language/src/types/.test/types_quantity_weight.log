@@ -14,12 +14,14 @@
 
 -- No Output --
 -- Errors --
-warning: Unused local pound.
-  ---> ../books/language/src/types/quantities.md:161:1
-     |
- 161 | pound = 2.204623lb;
-     | ^^^^^
-     |
+  ⚠ warning: 3:1: Unused local pound.
+   ╭─[../books/language/src/types/quantities.md:3:1]
+ 2 │ kilogram = 1.0kg;
+ 3 │ pound = 2.204623lb;
+   · ──┬──
+   ·   ╰── warning: 3:1: Unused local pound.
+ 4 │ 
+   ╰────
 Unexpected warnings(s) which did occur in line(s): 161
 -- No Model --
 -- Test Result --

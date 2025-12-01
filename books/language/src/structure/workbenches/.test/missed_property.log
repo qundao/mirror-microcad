@@ -14,11 +14,13 @@
 
 -- No Output --
 -- Errors --
-error: Workbench plan incomplete. Missing properties: radius
-  ---> ../books/language/src/structure/workbenches/README.md:158:5
-     |
- 158 |     init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
+  × error: 2:5: Workbench plan incomplete. Missing properties: radius
+   ╭─[../books/language/src/structure/workbenches/README.md:2:5]
+ 1 │ sketch Wheel(radius: Length) {
+ 2 │     init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
+   ·     ──────────────────┬─────────────────
+   ·                       ╰── error: 2:5: Workbench plan incomplete. Missing properties: radius
+ 3 │ }
+   ╰────
 -- Test Result --
 FAILS AS EXPECTED

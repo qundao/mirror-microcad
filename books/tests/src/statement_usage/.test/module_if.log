@@ -12,12 +12,14 @@
 
 -- No Output --
 -- Errors --
-error: Statement is not available within Module
-  ---> ../books/tests/src/statement_usage/module.md:63:3
-     |
-  63 |   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }  // error
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
+  × error: 2:3: Statement is not available within Module
+   ╭─[../books/tests/src/statement_usage/module.md:2:3]
+ 1 │ mod k {
+ 2 │   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }  // error
+   ·   ──────────────────────────────┬──────────────────────────────
+   ·                                 ╰── error: 2:3: Statement is not available within Module
+ 3 │ }
+   ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

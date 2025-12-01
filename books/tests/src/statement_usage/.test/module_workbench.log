@@ -12,18 +12,21 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:6:5
-     |
-   6 | mod k {
-     |     ^
-     |
-warning: Unused global symbol F.
-  ---> ../books/tests/src/statement_usage/module.md:7:10
-     |
-   7 |   sketch F() {}
-     |          ^
-     |
+  ⚠ warning: 1:5: Unused global symbol k.
+   ╭─[../books/tests/src/statement_usage/module.md:1:5]
+ 1 │ mod k {
+   ·     ┬
+   ·     ╰── warning: 1:5: Unused global symbol k.
+ 2 │   sketch F() {}
+   ╰────
+  ⚠ warning: 2:10: Unused global symbol F.
+   ╭─[../books/tests/src/statement_usage/module.md:2:10]
+ 1 │ mod k {
+ 2 │   sketch F() {}
+   ·          ┬
+   ·          ╰── warning: 2:10: Unused global symbol F.
+ 3 │ }
+   ╰────
 Unexpected warnings(s) which did occur in line(s): 6, 7
 -- No Model --
 -- Test Result --

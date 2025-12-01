@@ -28,54 +28,66 @@
 
 -- No Output --
 -- Errors --
-warning: Unused local x.
-  ---> ../books/language/src/flow/calls/arguments.md:73:7
-     |
-  73 | fn f( x: Length, y: Length, z: Length ) {}
-     |       ^
-     |
-warning: Unused local y.
-  ---> ../books/language/src/flow/calls/arguments.md:73:18
-     |
-  73 | fn f( x: Length, y: Length, z: Length ) {}
-     |                  ^
-     |
-warning: Unused local z.
-  ---> ../books/language/src/flow/calls/arguments.md:73:29
-     |
-  73 | fn f( x: Length, y: Length, z: Length ) {}
-     |                             ^
-     |
-error: Missing arguments: x,y,z
-  ---> ../books/language/src/flow/calls/arguments.md:79:4
-     |
-  79 | f( (x=1cm, y=2cm, z=3cm) );
-     |    ^^^^^^^^^^^^^^^^^^^^^^
-     |
-error: Missing arguments: x,y,z
-  ---> ../books/language/src/flow/calls/arguments.md:83:4
-     |
-  83 | f( p );
-     |    ^^
-     |
-error: Missing arguments: x,y
-  ---> ../books/language/src/flow/calls/arguments.md:86:4
-     |
-  86 | f( (x=1cm, y=2cm), z=3cm );
-     |    ^^^^^^^^^^^^^^^^^^^^^^
-     |
-error: Missing arguments: x,z
-  ---> ../books/language/src/flow/calls/arguments.md:87:4
-     |
-  87 | f( y=2cm, (x=1cm, z=3cm) );
-     |    ^^^^^^^^^^^^^^^^^^^^^^
-     |
-error: Missing arguments: x,y
-  ---> ../books/language/src/flow/calls/arguments.md:91:4
-     |
-  91 | f( q, z=3cm );
-     |    ^^^^^^^^^
-     |
+  ⚠ warning: 1:7: Unused local x.
+   ╭─[../books/language/src/flow/calls/arguments.md:1:7]
+ 1 │ fn f( x: Length, y: Length, z: Length ) {}
+   ·       ┬
+   ·       ╰── warning: 1:7: Unused local x.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:18: Unused local y.
+   ╭─[../books/language/src/flow/calls/arguments.md:1:18]
+ 1 │ fn f( x: Length, y: Length, z: Length ) {}
+   ·                  ┬
+   ·                  ╰── warning: 1:18: Unused local y.
+ 2 │ 
+   ╰────
+  ⚠ warning: 1:29: Unused local z.
+   ╭─[../books/language/src/flow/calls/arguments.md:1:29]
+ 1 │ fn f( x: Length, y: Length, z: Length ) {}
+   ·                             ┬
+   ·                             ╰── warning: 1:29: Unused local z.
+ 2 │ 
+   ╰────
+  × error: 7:4: Missing arguments: x,y,z
+   ╭─[../books/language/src/flow/calls/arguments.md:7:4]
+ 6 │ // Parameters given by named tuple
+ 7 │ f( (x=1cm, y=2cm, z=3cm) );
+   ·    ───────────┬──────────
+   ·               ╰── error: 7:4: Missing arguments: x,y,z
+ 8 │ 
+   ╰────
+  × error: 11:4: Missing arguments: x,y,z
+    ╭─[../books/language/src/flow/calls/arguments.md:11:4]
+ 10 │ p = (x=1cm, y=2cm, z=3cm);
+ 11 │ f( p );
+    ·    ─┬
+    ·     ╰── error: 11:4: Missing arguments: x,y,z
+ 12 │ 
+    ╰────
+  × error: 14:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:14:4]
+ 13 │ // Parameters given by named tuple and a single value
+ 14 │ f( (x=1cm, y=2cm), z=3cm );
+    ·    ───────────┬──────────
+    ·               ╰── error: 14:4: Missing arguments: x,y
+ 15 │ f( y=2cm, (x=1cm, z=3cm) );
+    ╰────
+  × error: 15:4: Missing arguments: x,z
+    ╭─[../books/language/src/flow/calls/arguments.md:15:4]
+ 14 │ f( (x=1cm, y=2cm), z=3cm );
+ 15 │ f( y=2cm, (x=1cm, z=3cm) );
+    ·    ───────────┬──────────
+    ·               ╰── error: 15:4: Missing arguments: x,z
+ 16 │ 
+    ╰────
+  × error: 19:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:19:4]
+ 18 │ q = (x=1cm, y=2cm);
+ 19 │ f( q, z=3cm );
+    ·    ────┬────
+    ·        ╰── error: 19:4: Missing arguments: x,y
+    ╰────
 Unexpected error(s) which did occur in line(s): 79, 83, 86, 87, 91
 Unexpected warnings(s) which did occur in line(s): 73
 -- Test Result --

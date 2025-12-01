@@ -12,17 +12,21 @@
 
 -- No Output --
 -- Errors --
-error: Assignment statement not available here
-  ---> ../books/tests/src/statement_usage/init.md:71:3
-     |
-  71 |   const B = l; // error
-     |   ^^^^^^^^^^^^
-     |
-error: Symbol B not found.
-  ---> ../books/tests/src/statement_usage/init.md:71:3
-     |
-  71 |   const B = l; // error
-     |   ^^^^^^^^^^^^
-     |
+  × error: 2:3: Assignment statement not available here
+   ╭─[../books/tests/src/statement_usage/init.md:2:3]
+ 1 │ sketch K() { init(l:Length) {
+ 2 │   const B = l; // error
+   ·   ──────┬─────
+   ·         ╰── error: 2:3: Assignment statement not available here
+ 3 │ } } K(1cm);
+   ╰────
+  × error: 2:3: Symbol B not found.
+   ╭─[../books/tests/src/statement_usage/init.md:2:3]
+ 1 │ sketch K() { init(l:Length) {
+ 2 │   const B = l; // error
+   ·   ──────┬─────
+   ·         ╰── error: 2:3: Symbol B not found.
+ 3 │ } } K(1cm);
+   ╰────
 -- Test Result --
 FAILS AS EXPECTED
