@@ -21,6 +21,15 @@ pub fn run_test(env: Option<TestEnv>) {
         use microcad_lang::{diag::*, syntax::*};
         use std::fs;
 
+        /// HACK: I did not found a better solution then using this environment variable to
+        /// get graphical output but not ANSI colors.
+        /// Described here: https://docs.rs/miette/latest/miette/#features
+        /// Using the NarratableReportHandler of miette seems to be an alternative but it
+        /// lacks the graphics
+        unsafe {
+            std::env::set_var("NO_COLOR", "1");
+        }
+
         crate::markdown_test::init();
 
         log::info!("Running test:\n{env:?}");

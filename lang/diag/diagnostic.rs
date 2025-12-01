@@ -1,11 +1,11 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use crate::syntax::MietteSourceFile;
+use crate::{diag::*, resolve::*, src_ref::*};
+use miette::{GraphicalReportHandler, LabeledSpan, Report, Severity, SourceCode};
 use std::fmt::Display;
 use std::iter::once;
-use miette::{GraphicalReportHandler, LabeledSpan, Report, Severity, SourceCode};
-use crate::{diag::*, resolve::*, src_ref::*};
-use crate::syntax::MietteSourceFile;
 
 /// Diagnostic message with source code reference attached.
 pub enum Diagnostic {
@@ -54,7 +54,7 @@ impl Diagnostic {
             Diagnostic::Trace(r)
             | Diagnostic::Info(r)
             | Diagnostic::Warning(r)
-            | Diagnostic::Error(r) => &r.value
+            | Diagnostic::Error(r) => &r.value,
         }
     }
 
@@ -200,16 +200,15 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
         self.diagnostic.report().diagnostic_source()
     }
 
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
-        self.diagnostic.report().labels()
-            .or_else(|| {
-                let span = self.diagnostic.src_ref().as_miette_span()?;
-                let label = LabeledSpan::new_with_span(Some(self.diagnostic.to_string()), span);
-                Some(Box::new(once(label)))
-            })
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
+        self.diagnostic.report().labels().or_else(|| {
+            let span = self.diagnostic.src_ref().as_miette_span()?;
+            let label = LabeledSpan::new_with_span(Some(self.diagnostic.to_string()), span);
+            Some(Box::new(once(label)))
+        })
     }
 
-    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item=&'a dyn miette::Diagnostic> + 'a>> {
+    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item = &'a dyn miette::Diagnostic> + 'a>> {
         self.diagnostic.report().related()
     }
 
