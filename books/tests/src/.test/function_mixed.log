@@ -1,0 +1,27 @@
+-- Test --
+        Test name: function_mixed
+  Expected result: ok
+      Source file: ../books/tests/src/function.md:55
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  55:   fn f(n: Scalar) {
+  56:       if n > 3 {
+  57:           return n-1
+  58:       }
+  59:       n+1
+  60:   }
+  61:   use std::debug::*;
+  62:   assert_eq([ f(1), 2 ]);
+  63:   assert_eq([ f(4), 3 ]);
+
+-- Parse Error --
+Parser error:  --> 4:5
+  |
+4 |     }
+  |     ^---
+  |
+  = expected single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+FAILS

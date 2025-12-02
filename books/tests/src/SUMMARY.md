@@ -6,6 +6,7 @@
   - [Conditions](conditions.md)
   - [Method Call](method_call.md)
   - [External Module](mod_external.md)
+  - [Function](function.md)
   - [Modules](modules.md)
   - [Scopes](scopes.md)
   - [Semicolon](semicolon.md)
