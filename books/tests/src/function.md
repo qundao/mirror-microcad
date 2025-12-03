@@ -53,7 +53,7 @@ assert_eq([ f(4), 3 ]);
 ```µcad,function_mixed
 fn f(n: Scalar) {
     if n > 3 {
-        return n-1
+        return n-1;
     }
     n+1
 }
@@ -64,9 +64,9 @@ assert_eq([ f(4), 3 ]);
 
 [![test](.test/function_missing.svg)](.test/function_missing.log)
 
-```µcad,function_missing#fail
-fn f(n: Scalar) {
-    if n > 3 { // error
+```µcad,function_missing#todo_fail
+fn f(n: Scalar) { // error: not all paths return a value
+    if n > 3 {
          n-1
     }
 }
