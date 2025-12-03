@@ -11,7 +11,7 @@ f();
 
 [![test](.test/function_value.svg)](.test/function_value.log)
 
-```µcad,function_value#todo
+```µcad,function_value
 // parameter
 fn f(n: Scalar) {
     // result value

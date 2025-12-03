@@ -1,6 +1,6 @@
 -- Test --
         Test name: function_value
-  Expected result: todo
+  Expected result: ok
       Source file: ../books/tests/src/function.md:15
         Test path: ../books/tests/src/.test
 
@@ -17,5 +17,6 @@
 
 -- No Output --
 -- No Errors --
+-- No Model --
 -- Test Result --
-OK (BUT IS TODO)
+OK
