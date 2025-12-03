@@ -18,31 +18,7 @@
   48:   assert_eq([ f(4), 3 ]);
 
 -- No Output --
--- Errors --
-error: Array elements have different types: [<NO TYPE>, Integer]
-  ---> ../books/tests/src/function.md:47:11
-     |
-  47 | assert_eq([ f(1), 2 ]);
-     |           ^^^^^^^^^^^
-     |
-error: Assertion failed: Invalid: <NO VALUE>
-  ---> ../books/tests/src/function.md:47:11
-     |
-  47 | assert_eq([ f(1), 2 ]);
-     |           ^^^^^^^^^^^
-     |
-error: Array elements have different types: [<NO TYPE>, Integer]
-  ---> ../books/tests/src/function.md:48:11
-     |
-  48 | assert_eq([ f(4), 3 ]);
-     |           ^^^^^^^^^^^
-     |
-error: Assertion failed: Invalid: <NO VALUE>
-  ---> ../books/tests/src/function.md:48:11
-     |
-  48 | assert_eq([ f(4), 3 ]);
-     |           ^^^^^^^^^^^
-     |
-Unexpected error(s) which did occur in line(s): 47, 48
+-- No Errors --
+-- No Model --
 -- Test Result --
-FAILS
+OK

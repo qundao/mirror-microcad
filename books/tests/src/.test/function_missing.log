@@ -1,46 +1,33 @@
 -- Test --
         Test name: function_missing
-  Expected result: fail
-      Source file: ../books/tests/src/function.md:70
+  Expected result: todo_fail
+      Source file: ../books/tests/src/function.md:68
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  70:   fn f(n: Scalar) {
-  71:       if n > 3 { // error
-  72:            n-1
-  73:       }
-  74:   }
-  75:   use std::debug::*;
-  76:   assert_eq([ f(1), 2 ]);
-  77:   assert_eq([ f(4), 3 ]);
+  68:   fn f(n: Scalar) { // error: not all paths return a value
+  69:       if n > 3 {
+  70:            n-1
+  71:       }
+  72:   }
+  73:   use std::debug::*;
+  74:   assert_eq([ f(1), 2 ]);
+  75:   assert_eq([ f(4), 3 ]);
 
 -- No Output --
 -- Errors --
 error: Array elements have different types: [<NO TYPE>, Integer]
-  ---> ../books/tests/src/function.md:76:11
+  ---> ../books/tests/src/function.md:74:11
      |
-  76 | assert_eq([ f(1), 2 ]);
+  74 | assert_eq([ f(1), 2 ]);
      |           ^^^^^^^^^^^
      |
 error: Assertion failed: Invalid: <NO VALUE>
-  ---> ../books/tests/src/function.md:76:11
+  ---> ../books/tests/src/function.md:74:11
      |
-  76 | assert_eq([ f(1), 2 ]);
+  74 | assert_eq([ f(1), 2 ]);
      |           ^^^^^^^^^^^
      |
-error: Array elements have different types: [<NO TYPE>, Integer]
-  ---> ../books/tests/src/function.md:77:11
-     |
-  77 | assert_eq([ f(4), 3 ]);
-     |           ^^^^^^^^^^^
-     |
-error: Assertion failed: Invalid: <NO VALUE>
-  ---> ../books/tests/src/function.md:77:11
-     |
-  77 | assert_eq([ f(4), 3 ]);
-     |           ^^^^^^^^^^^
-     |
-Expected error(s) which did not occur in line(s): 71
 -- Test Result --
-FAILS WITH WRONG ERRORS
+FAILS AS EXPECTED (BUT IS TODO)
