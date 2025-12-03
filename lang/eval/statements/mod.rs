@@ -105,12 +105,14 @@ impl Eval<Option<Model>> for Statement {
 
 impl Eval<Value> for StatementList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        let mut result = Value::None;
         for statement in self.iter() {
-            if let Value::Return(result) = statement.eval(context)? {
-                return Ok(*result);
+            match statement.eval(context)? {
+                Value::Return(result) => return Ok(*result),
+                value => result = value,
             }
         }
-        Ok(Value::None)
+        Ok(result)
     }
 }
 
