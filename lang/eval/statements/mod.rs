@@ -23,8 +23,14 @@ impl Eval for Statement {
                 w.grant(context)?;
                 Ok(Value::None)
             }
-            Self::Module(m) => m.eval(context),
-            Self::Function(f) => f.eval(context),
+            Self::Module(m) => {
+                m.grant(context)?;
+                Ok(Value::None)
+            }
+            Self::Function(f) => {
+                f.grant(context)?;
+                Ok(Value::None)
+            }
             Self::Use(u) => {
                 u.eval(context)?;
                 Ok(Value::None)

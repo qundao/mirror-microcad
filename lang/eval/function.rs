@@ -5,38 +5,6 @@
 
 use crate::{eval::*, syntax::*, value::*};
 
-impl Eval for FunctionDefinition {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        self.grant(context)?;
-        context.scope(
-            StackFrame::Function(self.id.clone(), Default::default()),
-            |_context| {
-                /*
-
-                TODO: This whole thing is not working proper because statements can
-                      have other statements inside. Thinking about if clauses every path
-                      must be checked instead of just the top statements.
-
-                // check if there is any return statement
-                if !self
-                    .body
-                    .statements
-                    .iter()
-                    .any(|s| matches!(&s, Statement::Return(..)))
-                {
-                    context.error(
-                        &self.body,
-                        EvalError::MissingReturn(context.current_name().with_suffix(self.id.clone())),
-                    )?
-                }
-                */
-                // avoid body frame
-                Ok(Value::None)
-            },
-        )
-    }
-}
-
 impl CallTrait for FunctionDefinition {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
         match ArgumentMatch::find_multi_match(args, &self.signature.parameters.eval(context)?) {
