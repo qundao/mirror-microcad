@@ -107,8 +107,11 @@ impl Eval<Value> for StatementList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         let mut result = Value::None;
         for statement in self.iter() {
+            log::trace!("Evaluating statement: {statement}");
             match statement.eval(context)? {
-                Value::Return(result) => return Ok(*result),
+                Value::Return(result) => {
+                    return Ok(Value::Return(result));
+                }
                 value => result = value,
             }
         }
