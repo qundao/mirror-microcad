@@ -6,11 +6,11 @@ use crate::{parse::*, parser::*, rc::*, syntax::*};
 impl Parse for Assignment {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Ok(Self::new(
-            crate::find_rule_opt!(pair, doc_block),
+            crate::find_rule_opt!(pair, doc_block)?,
             crate::find_rule!(pair, visibility)?,
             crate::find_rule!(pair, qualifier)?,
             crate::find_rule!(pair, identifier)?,
-            crate::find_rule_opt!(pair, r#type),
+            crate::find_rule_opt!(pair, r#type)?,
             crate::find_rule_exact!(pair, expression)?,
             pair.into(),
         ))
@@ -27,7 +27,7 @@ impl Parse for AssignmentStatement {
     fn parse(pair: Pair) -> crate::parse::ParseResult<Self> {
         Ok(Self {
             attribute_list: crate::find_rule!(pair, attribute_list)?,
-            assignment: crate::find_rule_opt!(pair, assignment).expect("Assignment"),
+            assignment: crate::find_rule_opt!(pair, assignment)?.expect("Assignment"),
             src_ref: pair.into(),
         })
     }

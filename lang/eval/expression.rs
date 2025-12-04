@@ -262,6 +262,13 @@ impl Eval for Expression {
                     Ok(Value::None)
                 }
             }
+            Self::If(if_) => {
+                if let Some(model) = if_.eval(context)? {
+                    Ok(model.into())
+                } else {
+                    Ok(Value::None)
+                }
+            }
             Self::QualifiedName(qualified_name) => qualified_name.eval(context),
             Self::Marker(marker) => {
                 let model: Option<Model> = marker.eval(context)?;
