@@ -1,0 +1,18 @@
+-- Test --
+        Test name: function
+  Expected result: ok
+      Source file: ../books/tests/src/function.md:6
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   6:   // function definition
+   7:   fn f() {}
+   8:   // call
+   9:   f();
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

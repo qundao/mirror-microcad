@@ -10,14 +10,12 @@
   50:       if n > 1 {
   51:           return x * pow(x, n-1); // return recursive product
   52:       }
-  53:       return x;   // error
+  53:       return x;
   54:   }
   55:   
-  56:   std::print(pow(8.0,2));
+  56:   std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
 
--- Output --
-8
-
+-- No Output --
 -- No Errors --
 -- Test Result --
 TODO (SHALL FAIL)

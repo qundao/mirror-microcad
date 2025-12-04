@@ -19,7 +19,7 @@
   16:   std::print(f(5));  // prints "match"
 
 -- Output --
-<NO VALUE>
+match
 
 -- No Errors --
 -- No Model --

@@ -38,7 +38,7 @@ fn pow( x: Scalar, n: Integer ) {
     }
 }
 
-std::print(pow(8.0,2));
+std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
 ```
 
 Returning a value twice is not allowed.
@@ -50,10 +50,10 @@ fn pow( x: Scalar, n: Integer ) {
     if n > 1 {
         return x * pow(x, n-1); // return recursive product
     }
-    return x;   // error
+    return x;
 }
 
-std::print(pow(8.0,2));
+std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
 ```
 
 ## Module Functions

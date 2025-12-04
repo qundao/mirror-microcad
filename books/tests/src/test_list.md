@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**118** tests have been evaluated with version **0.2.17** of microcad.
+**124** tests have been evaluated with version **0.2.17** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -26,6 +26,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/builtin_modules.svg)](.test/builtin_modules.log) | [builtin_modules](modules.md) |
 | [![test](.test/condition_return.svg)](.test/condition_return.log) | [condition_return](conditions.md) |
 | [![test](.test/empty_op.svg)](.test/empty_op.log) | [empty_op](semicolon.md) |
+| [![test](.test/function.svg)](.test/function.log) | [function](function.md) |
 | [![test](statement_usage/.test/function_assignment_const.svg)](statement_usage/.test/function_assignment_const.log) | [function_assignment_const](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_assignment_prop.svg)](statement_usage/.test/function_assignment_prop.log) | [function_assignment_prop](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_assignment_var.svg)](statement_usage/.test/function_assignment_var.log) | [function_assignment_var](statement_usage/function.md) |
@@ -33,11 +34,16 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/function_expression_model.svg)](statement_usage/.test/function_expression_model.log) | [function_expression_model](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_function.svg)](statement_usage/.test/function_function.log) | [function_function](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_if.svg)](statement_usage/.test/function_if.log) | [function_if](statement_usage/function.md) |
+| [![test](.test/function_if.svg)](.test/function_if.log) | [function_if](function.md) |
 | [![test](statement_usage/.test/function_init.svg)](statement_usage/.test/function_init.log) | [function_init](statement_usage/function.md) |
+| [![test](.test/function_missing.svg)](.test/function_missing.log) | [function_missing](function.md) |
+| [![test](.test/function_mixed.svg)](.test/function_mixed.log) | [function_mixed](function.md) |
 | [![test](statement_usage/.test/function_module.svg)](statement_usage/.test/function_module.log) | [function_module](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_pub_use.svg)](statement_usage/.test/function_pub_use.log) | [function_pub_use](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_return.svg)](statement_usage/.test/function_return.log) | [function_return](statement_usage/function.md) |
+| [![test](.test/function_return.svg)](.test/function_return.log) | [function_return](function.md) |
 | [![test](statement_usage/.test/function_use.svg)](statement_usage/.test/function_use.log) | [function_use](statement_usage/function.md) |
+| [![test](.test/function_value.svg)](.test/function_value.log) | [function_value](function.md) |
 | [![test](statement_usage/.test/function_workbench.svg)](statement_usage/.test/function_workbench.log) | [function_workbench](statement_usage/function.md) |
 | [![test](.test/group.svg)](.test/group.log) | [group](semicolon.md) |
 | [![test](.test/group_assignment.svg)](.test/group_assignment.log) | [group_assignment](semicolon.md) |

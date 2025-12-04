@@ -144,6 +144,14 @@ impl Value {
 
         Err(ValueError::CannotConvert(self.to_string(), "Scalar".into()))
     }
+
+    /// Unpack any Value::Return(..)
+    pub fn un_return(&self) -> Value {
+        match self {
+            Value::Return(value) => value.as_ref().clone(),
+            value => value.clone(),
+        }
+    }
 }
 
 impl PartialOrd for Value {

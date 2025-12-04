@@ -33,7 +33,7 @@ Rect(10mm).rotate([0..10] * 90° / 10).align(X, 4mm);
 
 You can also align 3D geometries:
 
-[![test](.test/align_3d.svg)](.test/align_2d.log)
+[![test](.test/align_3d.svg)](.test/align_3d.log)
 
 ```µcad,align_3d
 use std::geo3d::*;

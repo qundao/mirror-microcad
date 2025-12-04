@@ -23,8 +23,14 @@ impl Eval for Statement {
                 w.grant(context)?;
                 Ok(Value::None)
             }
-            Self::Module(m) => m.eval(context),
-            Self::Function(f) => f.eval(context),
+            Self::Module(m) => {
+                m.grant(context)?;
+                Ok(Value::None)
+            }
+            Self::Function(f) => {
+                f.grant(context)?;
+                Ok(Value::None)
+            }
             Self::Use(u) => {
                 u.eval(context)?;
                 Ok(Value::None)
@@ -99,12 +105,17 @@ impl Eval<Option<Model>> for Statement {
 
 impl Eval<Value> for StatementList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        let mut result = Value::None;
         for statement in self.iter() {
-            if let Value::Return(result) = statement.eval(context)? {
-                return Ok(*result);
+            log::trace!("Evaluating statement: {statement}");
+            match statement.eval(context)? {
+                Value::Return(result) => {
+                    return Ok(Value::Return(result));
+                }
+                value => result = value,
             }
         }
-        Ok(Value::None)
+        Ok(result)
     }
 }
 
