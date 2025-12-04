@@ -1,0 +1,36 @@
+-- Test --
+        Test name: if_model
+  Expected result: ok
+      Source file: ../books/tests/src/if.md:15
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  15:   use std::geo2d::*;
+  16:   use std::debug::*;
+  17:   
+  18:   fn f(a:Length) {
+  19:       m = if a > 5mm { Circle(a) } else { Circle(a*2) };
+  20:       return m;
+  21:   }
+  22:   
+  23:   assert_eq([ f(4mm), Circle(8mm) ]);
+  24:   assert_eq([ f(6mm), Circle(6mm) ]);
+
+-- No Output --
+-- Errors --
+error: Assertion failed: Values differ: [m: Group (root) ->, Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=8mm) (root) ->]
+  ---> ../books/tests/src/if.md:23:11
+     |
+  23 | assert_eq([ f(4mm), Circle(8mm) ]);
+     |           ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+error: Assertion failed: Values differ: [m: Group (root) ->, Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=6mm) (root) ->]
+  ---> ../books/tests/src/if.md:24:11
+     |
+  24 | assert_eq([ f(6mm), Circle(6mm) ]);
+     |           ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+Unexpected error(s) which did occur in line(s): 23, 24
+-- Test Result --
+FAILS

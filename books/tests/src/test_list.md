@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**124** tests have been evaluated with version **0.2.17** of microcad.
+**126** tests have been evaluated with version **0.2.17** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -47,6 +47,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/function_workbench.svg)](statement_usage/.test/function_workbench.log) | [function_workbench](statement_usage/function.md) |
 | [![test](.test/group.svg)](.test/group.log) | [group](semicolon.md) |
 | [![test](.test/group_assignment.svg)](.test/group_assignment.log) | [group_assignment](semicolon.md) |
+| [![test](.test/if_model.svg)](.test/if_model.log) | [if_model](if.md) |
+| [![test](.test/if_value.svg)](.test/if_value.log) | [if_value](if.md) |
 | [![test](statement_usage/.test/init_assignment_const.svg)](statement_usage/.test/init_assignment_const.log) | [init_assignment_const](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_assignment_prop.svg)](statement_usage/.test/init_assignment_prop.log) | [init_assignment_prop](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_assignment_var.svg)](statement_usage/.test/init_assignment_var.log) | [init_assignment_var](statement_usage/init.md) |
