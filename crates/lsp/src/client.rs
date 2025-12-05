@@ -1,7 +1,9 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use serde_json::{json, Value};
+//! Microcad LSP test client.
+
+use serde_json::{Value, json};
 use std::error::Error;
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},

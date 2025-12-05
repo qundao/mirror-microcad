@@ -260,7 +260,7 @@ fn search_mod_file_by_id(
 
 #[test]
 fn resolve_external_file() {
-    let externals = Externals::new(&["../std/lib"]).expect("test error");
+    let externals = Externals::new(&["../../crates/std/lib"]).expect("test error");
 
     assert!(!externals.is_empty());
 
