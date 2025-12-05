@@ -22,12 +22,13 @@ use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, FullDocumentDiagnosti
 ///
 /// Commands that can be passed to the [`Processor`].
 #[derive(Clone)]
+#[allow(unused)]
 pub enum ProcessorRequest {
     SetCursorPosition { url: Url, line: u32, col: u32 },
     AddDocument(Url),
     RemoveDocument(Url),
     UpdateDocument(Url),
-    UpdateDocumentStr(Url,String),
+    UpdateDocumentStr(Url, String),
     GetDocumentDiagnostics(Url),
 }
 
@@ -71,7 +72,7 @@ enum Context {
 
 impl Context {
     fn diag(&self) -> Option<&diag::DiagHandler> {
-        match self{
+        match self {
             Context::None => None,
             Context::Parse(diag_handler) => Some(diag_handler),
             Context::Eval(eval_context) => Some(&eval_context.diag),
@@ -101,7 +102,7 @@ impl Processor {
             ProcessorRequest::AddDocument(url) => self.add_document(&url),
             ProcessorRequest::RemoveDocument(_) => Ok(vec![]),
             ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
-            ProcessorRequest::UpdateDocumentStr(url,doc) => self.update_document_str(&url,&doc),
+            ProcessorRequest::UpdateDocumentStr(url, doc) => self.update_document_str(&url, &doc),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
         }
     }
@@ -188,8 +189,7 @@ impl Processor {
                 url.clone(),
                 FullDocumentDiagnosticReport {
                     result_id: None,
-                    items: 
-                        diag
+                    items: diag
                         .diag_list
                         .iter()
                         .filter_map(|diag| {
