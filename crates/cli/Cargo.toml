@@ -41,7 +41,6 @@ microcad-std = { workspace = true }
 
 [build-dependencies]
 walkdir = "2"
-rustfmt-wrapper = "0.2"
 anyhow = "1.0"
 
 [lints.rust]
