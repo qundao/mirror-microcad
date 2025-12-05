@@ -1,5 +1,5 @@
 -- Test --
-        Test name: function_return
+        Test name: function_return_value
   Expected result: ok
       Source file: ../books/tests/src/function.md:28
         Test path: ../books/tests/src/.test

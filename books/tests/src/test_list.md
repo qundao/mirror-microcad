@@ -6,8 +6,8 @@ The following table lists all tests included in this documentation.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-| Result | Name |
-|-------:|------|
+| Result | Source | Name |
+|-------:|--------|------|
 | [![test](.test/auto_convert.svg)](.test/auto_convert.log) | [auto_convert](auto_convert.md) |
 | [![test](statement_usage/.test/body_assignment_const.svg)](statement_usage/.test/body_assignment_const.log) | [body_assignment_const](statement_usage/body.md) |
 | [![test](statement_usage/.test/body_assignment_prop.svg)](statement_usage/.test/body_assignment_prop.log) | [body_assignment_prop](statement_usage/body.md) |
@@ -33,15 +33,15 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/function_expression.svg)](statement_usage/.test/function_expression.log) | [function_expression](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_expression_model.svg)](statement_usage/.test/function_expression_model.log) | [function_expression_model](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_function.svg)](statement_usage/.test/function_function.log) | [function_function](statement_usage/function.md) |
-| [![test](.test/function_if.svg)](.test/function_if.log) | [function_if](function.md) |
 | [![test](statement_usage/.test/function_if.svg)](statement_usage/.test/function_if.log) | [function_if](statement_usage/function.md) |
+| [![test](.test/function_if_result.svg)](.test/function_if_result.log) | [function_if_result](function.md) |
 | [![test](statement_usage/.test/function_init.svg)](statement_usage/.test/function_init.log) | [function_init](statement_usage/function.md) |
 | [![test](.test/function_missing.svg)](.test/function_missing.log) | [function_missing](function.md) |
 | [![test](.test/function_mixed.svg)](.test/function_mixed.log) | [function_mixed](function.md) |
 | [![test](statement_usage/.test/function_module.svg)](statement_usage/.test/function_module.log) | [function_module](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_pub_use.svg)](statement_usage/.test/function_pub_use.log) | [function_pub_use](statement_usage/function.md) |
-| [![test](.test/function_return.svg)](.test/function_return.log) | [function_return](function.md) |
 | [![test](statement_usage/.test/function_return.svg)](statement_usage/.test/function_return.log) | [function_return](statement_usage/function.md) |
+| [![test](.test/function_return_value.svg)](.test/function_return_value.log) | [function_return_value](function.md) |
 | [![test](statement_usage/.test/function_use.svg)](statement_usage/.test/function_use.log) | [function_use](statement_usage/function.md) |
 | [![test](.test/function_value.svg)](.test/function_value.log) | [function_value](function.md) |
 | [![test](statement_usage/.test/function_workbench.svg)](statement_usage/.test/function_workbench.log) | [function_workbench](statement_usage/function.md) |

@@ -22,9 +22,9 @@ assert_eq([ f(1), 2 ]);
 assert_eq([ f(4), 5 ]);
 ```
 
-[![test](.test/function_return.svg)](.test/function_return.log)
+[![test](.test/function_return_value.svg)](.test/function_return_value.log)
 
-```µcad,function_return
+```µcad,function_return_value
 fn f(n: Scalar) {
     return n+1;
 }
@@ -35,7 +35,7 @@ assert_eq([ f(4), 5 ]);
 
 [![test](.test/function_if.svg)](.test/function_if.log)
 
-```µcad,function_if
+```µcad,function_if_result
 fn f(n: Scalar) {
     if n > 3 {
         n-1

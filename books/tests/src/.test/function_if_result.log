@@ -1,5 +1,5 @@
 -- Test --
-        Test name: function_if
+        Test name: function_if_result
   Expected result: ok
       Source file: ../books/tests/src/function.md:39
         Test path: ../books/tests/src/.test
