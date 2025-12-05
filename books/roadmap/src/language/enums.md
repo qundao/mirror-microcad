@@ -1,4 +1,4 @@
-# Enums
+# Enums & Match
 
 E.g. simple enums can be useful when functions or workbenches have different modes:
 
@@ -13,25 +13,26 @@ enum Alignment {
     /// ALign at right, bottom or back
     FAR,
 }
-
-enum Axis {
-    X,
-    Y,
-    Z,
-}
 ```
 
-Those may then be used in a match statement:
+Those may then be used in `if` statements:
 
 ```µcad
-op align(axis: Axis, align: Alignment ) {
-    match align {
-    FIX => ...,
-    NEAR => ...,
-    CENTER => ...,
-    FAR => ...,
-    }
+// get X, Y, Z
+use std::math::*
+
+op align(axis: Vec3, align: Alignment ) {
+    if align == Alignment::FIX {
+        ...
+    } else if align == Alignment::NEAR {
+        ...
+    } ...
 }
 
 s.align(X, CENTER).align(Y, FAR);
 ```
+
+## Consequences
+
+The enum type will be the first user defined type.
+This must be integrated in our static type system.

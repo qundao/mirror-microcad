@@ -17,3 +17,7 @@ use std::geo2d::*;
 Rect(10cm).corner([a,b]).round(1mm);  // round two corners
 Rect(10cm).edge([a..c]).fillet(1mm); // create a fillet at three edges
 ```
+
+## Consequences
+
+It will be hard to stick the names to edges so that the relation fixed.
