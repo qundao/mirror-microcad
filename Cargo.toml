@@ -3,37 +3,41 @@
 
 [workspace]
 default-members = [
-    "builtin",
-    "builtin/proc_macros",
-    "core",
-    "lang",
-    "import",
-    "export",
-    "std",
+    "crates/builtin",
+    "crates/builtin-proc-macros",
+    "crates/cli",
+    "crates/core",
+    "crates/export",
+    "crates/import",
+    "crates/lang",
+    "crates/lsp",
+    "crates/std",
+    "crates/viewer-ipc",
+
     "tests",
-    "tools/cli",
-    "tools/lsp",
     "tools/update-copyright",
     "tools/update-md-banner",
-    "tools/viewer-ipc",
 ]
 
 members = [
-    "builtin",
-    "builtin/proc_macros",
-    "core",
-    "lang",
+    "crates/builtin",
+    "crates/builtin-proc-macros",
+    "crates/cli",
+    "crates/core",
+    "crates/export",
+    "crates/import",
+    "crates/lang",
+    "crates/lsp",
+    "crates/std",
+    "crates/viewer-ipc",
+
     "tests",
-    "import",
-    "export",
-    "std",
-    "tools/cli",
-    "tools/inspector",
-    "tools/lsp",
     "tools/update-copyright",
     "tools/update-md-banner",
-    "tools/viewer",
-    "tools/viewer-ipc",
+
+    # Non default members
+    "crates/viewer",
+    "crates/inspector",
 ]
 resolver = "2"
 
@@ -56,12 +60,12 @@ keywords = ["cad", "geometry", "3d", "printing", "cnc", "openscad"]
 
 [workspace.dependencies]
 debug-cell = { git = "https://github.com/fightling/debug-cell.git", version = "0.1.1" }
-microcad-core = { path = "core", version = "0.2.17" }
-microcad-import = { path = "import", version = "0.2.17" }
-microcad-export = { path = "export", version = "0.2.17" }
-microcad-lang = { path = "lang", version = "0.2.17" }
-microcad-builtin = { path = "builtin", version = "0.2.17" }
-microcad-builtin-proc-macros = { path = "builtin/proc_macros", version = "0.2.17" }
-microcad-viewer-ipc = { path = "tools/viewer-ipc", version = "0.2.17" }
-microcad-viewer = { path = "tools/viewer", version = "0.2.17" }
-microcad-std = { path = "std", version = "0.2.17" }
+microcad-core = { path = "crates/core", version = "0.2.17" }
+microcad-import = { path = "crates/import", version = "0.2.17" }
+microcad-export = { path = "crates/export", version = "0.2.17" }
+microcad-lang = { path = "crates/lang", version = "0.2.17" }
+microcad-builtin = { path = "crates/builtin", version = "0.2.17" }
+microcad-builtin-proc-macros = { path = "crates/builtin-proc-macros", version = "0.2.17" }
+microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.2.17" }
+microcad-viewer = { path = "crates/viewer", version = "0.2.17" }
+microcad-std = { path = "crates/std", version = "0.2.17" }

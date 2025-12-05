@@ -14,7 +14,7 @@ use microcad_core::*;
 #[test]
 fn svg_writer() {
     // Write to file test.svg
-    let file = std::fs::File::create("../target/svg_write.svg").expect("test error");
+    let file = std::fs::File::create("../../target/svg_write.svg").expect("test error");
 
     let mut svg = SvgWriter::new_canvas(
         Box::new(file),
@@ -53,7 +53,7 @@ fn svg_writer() {
 
 #[test]
 fn svg_canvas() -> std::io::Result<()> {
-    let file = std::fs::File::create("../target/svg_canvas.svg").expect("test error");
+    let file = std::fs::File::create("../../target/svg_canvas.svg").expect("test error");
 
     let content_rect = Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 100.0, y: 100.0});
     let mut svg = SvgWriter::new_canvas(
@@ -127,7 +127,7 @@ fn svg_canvas() -> std::io::Result<()> {
 
 #[test]
 fn svg_sample_sketch() -> std::io::Result<()> {
-    let file = std::fs::File::create("../target/svg_sample_sketch.svg").expect("test error");
+    let file = std::fs::File::create("../../target/svg_sample_sketch.svg").expect("test error");
 
     let content_rect = Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 50.0, y: 50.0});
     let mut svg = SvgWriter::new_canvas(

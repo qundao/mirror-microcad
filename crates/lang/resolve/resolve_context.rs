@@ -310,25 +310,25 @@ fn test_update_sub_mod() {
     use crate::eval::*;
 
     std::fs::copy(
-        "../tests/test_files/update_files/sub/sub_0.µcad",
-        "../tests/test_files/update_files/sub/sub.µcad",
+        "../../tests/test_files/update_files/sub/sub_0.µcad",
+        "../../tests/test_files/update_files/sub/sub.µcad",
     )
     .expect("test error");
 
     let root =
-        SourceFile::load("../tests/test_files/update_files/sub/top.µcad").expect("test error");
+        SourceFile::load("../../tests/test_files/update_files/sub/top.µcad").expect("test error");
     let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
 
     eprintln!("{context:?}");
 
     std::fs::copy(
-        "../tests/test_files/update_files/sub/sub_1.µcad",
-        "../tests/test_files/update_files/sub/sub.µcad",
+        "../../tests/test_files/update_files/sub/sub_1.µcad",
+        "../../tests/test_files/update_files/sub/sub.µcad",
     )
     .expect("test error");
 
     context
-        .reload_files(&["../tests/test_files/update_files/sub/sub.µcad"])
+        .reload_files(&["../../tests/test_files/update_files/sub/sub.µcad"])
         .expect("test error");
 
     eprintln!("{context:?}");
@@ -348,25 +348,25 @@ fn test_update_top_mod() {
     use crate::eval::*;
 
     std::fs::copy(
-        "../tests/test_files/update_files/top/top_0.µcad",
-        "../tests/test_files/update_files/top/top.µcad",
+        "../../tests/test_files/update_files/top/top_0.µcad",
+        "../../tests/test_files/update_files/top/top.µcad",
     )
     .expect("test error");
 
     let root =
-        SourceFile::load("../tests/test_files/update_files/top/top.µcad").expect("test error");
+        SourceFile::load("../../tests/test_files/update_files/top/top.µcad").expect("test error");
     let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
 
     eprintln!("{context:?}");
 
     std::fs::copy(
-        "../tests/test_files/update_files/top/top_1.µcad",
-        "../tests/test_files/update_files/top/top.µcad",
+        "../../tests/test_files/update_files/top/top_1.µcad",
+        "../../tests/test_files/update_files/top/top.µcad",
     )
     .expect("test error");
 
     context
-        .reload_files(&["../tests/test_files/update_files/top/top.µcad"])
+        .reload_files(&["../../tests/test_files/update_files/top/top.µcad"])
         .expect("test error");
 
     eprintln!("{context:?}");
