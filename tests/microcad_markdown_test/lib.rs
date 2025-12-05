@@ -81,6 +81,13 @@ pub fn generate(
 }
 
 fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
+    let mut seen = std::collections::HashSet::new();
+    for item in outputs.iter().map(|o| &o.name) {
+        if !seen.insert(item) {
+            panic!("doublet test name '{item}' in {:?}", path.as_ref())
+        }
+    }
+
     std::fs::File::create(path.as_ref())
         .expect("file access error")
         .write_all(make_test_list(&path, outputs).as_bytes())
@@ -100,8 +107,8 @@ The following table lists all tests included in this documentation.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-| Result | Name |
-|-------:|------|
+| Result | Source | Name |
+|-------:|--------|------|
 ",
         version = env!("CARGO_PKG_VERSION")
     );
