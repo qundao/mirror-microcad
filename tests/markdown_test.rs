@@ -21,11 +21,11 @@ pub fn run_test(env: Option<TestEnv>) {
         use microcad_lang::{diag::*, syntax::*};
         use std::fs;
 
-        /// HACK: I did not found a better solution then using this environment variable to
-        /// get graphical output but not ANSI colors.
-        /// Described here: https://docs.rs/miette/latest/miette/#features
-        /// Using the NarratableReportHandler of miette seems to be an alternative but it
-        /// lacks the graphics
+        // HACK: I did not found a better solution then using this environment variable to
+        // get graphical output but not ANSI colors.
+        // Described here: https://docs.rs/miette/latest/miette/#features
+        // Using the NarratableReportHandler of miette seems to be an alternative but it
+        // lacks the graphics
         unsafe {
             std::env::set_var("NO_COLOR", "1");
         }
@@ -48,7 +48,7 @@ pub fn run_test(env: Option<TestEnv>) {
             env.code()
                 .lines()
                 .enumerate()
-                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset_line(n)))
+                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset().line_offset(n)))
                 .collect::<Vec<_>>()
                 .join("\n")
         ));
@@ -195,7 +195,10 @@ pub fn run_test(env: Option<TestEnv>) {
 }
 
 // evaluate the code including µcad std library
-fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
+fn create_context(
+    source: &Rc<SourceFile>,
+    offset: microcad_test_tools::test_env::SourceOffset,
+) -> EvalContext {
     EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
@@ -203,7 +206,10 @@ fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),
-        line_offset - 1,
+        microcad_lang::diag::SourceOffset {
+            byte_pos: offset.byte_pos,
+            line: offset.line,
+        },
     )
     .expect("resolve error")
 }

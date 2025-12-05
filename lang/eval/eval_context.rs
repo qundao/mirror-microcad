@@ -59,10 +59,10 @@ impl EvalContext {
         output: Box<dyn Output>,
         exporters: ExporterRegistry,
         importers: ImporterRegistry,
-        line_offset: usize,
+        offset: SourceOffset,
     ) -> EvalResult<Self> {
         Ok(Self::new(
-            ResolveContext::create(root, search_paths, builtin, DiagHandler::new(line_offset))?,
+            ResolveContext::create(root, search_paths, builtin, DiagHandler::new(offset))?,
             output,
             exporters,
             importers,

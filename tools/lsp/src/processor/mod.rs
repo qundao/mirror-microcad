@@ -10,13 +10,13 @@
 use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
-use miette::IntoDiagnostic;
 use microcad_lang::{
     diag::{self, PushDiag},
     eval,
     src_ref::{self, SrcReferrer},
     syntax,
 };
+use miette::IntoDiagnostic;
 use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Url};
 
 /// A processor request.
@@ -28,7 +28,7 @@ pub enum ProcessorRequest {
     AddDocument(Url),
     RemoveDocument(Url),
     UpdateDocument(Url),
-    UpdateDocumentStr(Url,String),
+    UpdateDocumentStr(Url, String),
     GetDocumentDiagnostics(Url),
 }
 
@@ -72,7 +72,7 @@ enum Context {
 
 impl Context {
     fn diag(&self) -> Option<&diag::DiagHandler> {
-        match self{
+        match self {
             Context::None => None,
             Context::Parse(diag_handler) => Some(diag_handler),
             Context::Eval(eval_context) => Some(&eval_context.diag),
@@ -102,7 +102,7 @@ impl Processor {
             ProcessorRequest::AddDocument(url) => self.add_document(&url),
             ProcessorRequest::RemoveDocument(_) => Ok(vec![]),
             ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
-            ProcessorRequest::UpdateDocumentStr(url,doc) => self.update_document_str(&url,&doc),
+            ProcessorRequest::UpdateDocumentStr(url, doc) => self.update_document_str(&url, &doc),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
         }
     }
@@ -125,7 +125,7 @@ impl Processor {
                 eval::Capture::new(),
                 microcad_builtin::builtin_exporters(),
                 microcad_builtin::builtin_importers(),
-                0,
+                diag::SourceOffset::default(),
             ) {
                 Ok(eval) => Context::Eval(eval.into()),
                 Err(_) => todo!(),
@@ -161,7 +161,7 @@ impl Processor {
                 eval::Capture::new(),
                 microcad_builtin::builtin_exporters(),
                 microcad_builtin::builtin_importers(),
-                0,
+                diag::SourceOffset::default(),
             ) {
                 Ok(mut context) => {
                     context.eval()?;
@@ -189,8 +189,7 @@ impl Processor {
                 url.clone(),
                 FullDocumentDiagnosticReport {
                     result_id: None,
-                    items: 
-                        diag
+                    items: diag
                         .diag_list
                         .iter()
                         .filter_map(|diag| {

@@ -80,7 +80,7 @@ impl Diagnostic {
         &self,
         mut f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
-        line_offset: usize,
+        offset: &SourceOffset,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
 
@@ -108,7 +108,7 @@ impl Diagnostic {
                 let wrapper = DiagnosticWrapper {
                     diagnostic: self,
                     source: miette_source,
-                    line_offset,
+                    offset: offset.clone(),
                 };
                 let handler = GraphicalReportHandler::new();
                 handler.render_report(&mut f, &wrapper)?
@@ -152,10 +152,19 @@ impl std::fmt::Debug for Diagnostic {
     }
 }
 
+/// Source code offset by line and byte position.
+#[derive(Debug, Clone, Default)]
+pub struct SourceOffset {
+    /// Byte position offset.
+    pub byte_pos: usize,
+    /// Line offset.
+    pub line: usize,
+}
+
 struct DiagnosticWrapper<'a> {
     diagnostic: &'a Diagnostic,
     source: MietteSourceFile<'a>,
-    line_offset: usize,
+    offset: SourceOffset,
 }
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {
@@ -207,7 +216,7 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
             let span = self
                 .diagnostic
                 .src_ref()
-                .with_line_offset(self.line_offset)
+                .with_offset(&self.offset)
                 .as_miette_span()?;
             let label = LabeledSpan::new_with_span(Some(self.diagnostic.to_string()), span);
             Some(Box::new(once(label)))

@@ -21,7 +21,7 @@ pub use line_col::*;
 pub use refer::*;
 pub use src_referrer::*;
 
-use crate::parser::*;
+use crate::{diag::SourceOffset, parser::*};
 use derive_more::Deref;
 use miette::SourceSpan;
 
@@ -57,11 +57,11 @@ impl SrcRef {
     }
 
     /// Return a reference with a given line offset.
-    pub fn with_line_offset(&self, line_offset: usize) -> Self {
+    pub fn with_offset(&self, offset: &SourceOffset) -> Self {
         match &self.0 {
             Some(src) => Self::new(
-                src.range.clone(),
-                src.at.line + line_offset,
+                src.range.start + offset.byte_pos..src.range.end + offset.byte_pos,
+                src.at.line + offset.line,
                 src.at.col,
                 src.source_file_hash,
             ),

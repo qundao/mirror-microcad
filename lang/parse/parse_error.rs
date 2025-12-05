@@ -3,9 +3,9 @@
 
 //! Parser errors
 
-use std::iter::once;
-use miette::{Diagnostic, LabeledSpan, SourceCode};
 use crate::{parse::*, ty::*};
+use miette::{Diagnostic, LabeledSpan, SourceCode};
+use std::iter::once;
 use thiserror::Error;
 
 /// Parsing errors
@@ -169,7 +169,7 @@ impl SrcReferrer for ParseError {
             | ParseError::MissingFormatExpression(src_ref)
             | ParseError::StatementBetweenInit(src_ref)
             | ParseError::NotAvailable(src_ref)
-            | ParseError::LoadSource(src_ref , ..) => src_ref.clone(),
+            | ParseError::LoadSource(src_ref, ..) => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             ParseError::RuleNotFoundError(_) => SrcRef(None),
@@ -197,19 +197,13 @@ impl ParseError {
 }
 
 impl Diagnostic for ParseError {
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         let src_ref = self.src_ref().0?;
         let message = match self {
-            ParseError::Parser(err) => {
-                err.variant.message().to_string()
-            }
-            _ => self.to_string()
+            ParseError::Parser(err) => err.variant.message().to_string(),
+            _ => self.to_string(),
         };
-        let label = LabeledSpan::new(
-            Some(message),
-            src_ref.range.start,
-            src_ref.range.len(),
-        );
+        let label = LabeledSpan::new(Some(message), src_ref.range.start, src_ref.range.len());
         Some(Box::new(once(label)))
     }
 }
@@ -233,10 +227,12 @@ impl From<ParseError> for ParseErrorWithSource {
 
 impl Diagnostic for ParseErrorWithSource {
     fn source_code(&self) -> Option<&dyn SourceCode> {
-        self.source_code.as_ref().map(|source| &*source as &dyn SourceCode)
+        self.source_code
+            .as_ref()
+            .map(|source| source as &dyn SourceCode)
     }
 
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         self.error.labels()
     }
 }

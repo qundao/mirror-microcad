@@ -7,6 +7,24 @@ use std::path::PathBuf;
 
 use crate::output::Output;
 
+/// Source code offset by line and byte position.
+///
+/// Copied from [`microcad_lang::diag::SourceOffset`].
+#[derive(Debug, Clone, Default)]
+pub struct SourceOffset {
+    /// Byte position offset.
+    pub byte_pos: usize,
+    /// Line offset.
+    pub line: usize,
+}
+
+impl SourceOffset {
+    /// Calculate line offset.
+    pub fn line_offset(&self, line: usize) -> usize {
+        self.line + line
+    }
+}
+
 /// Markdown test environment
 pub struct TestEnv {
     orig_name: String,
@@ -15,7 +33,7 @@ pub struct TestEnv {
     mode: String,
     params: Option<String>,
     code: String,
-    start_no: usize,
+    offset: SourceOffset,
     log_file: Option<std::fs::File>,
 }
 
@@ -47,11 +65,11 @@ impl std::fmt::Display for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {start_no:?})"#,
+            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, microcad_test_tools::test_env::{offset:?})"#,
             path = self.path,
             orig_name = self.orig_name,
             code = self.code,
-            start_no = self.start_no
+            offset = self.offset
         )
     }
 }
@@ -63,7 +81,7 @@ impl std::fmt::Debug for TestEnv {
         if !self.params().is_empty() {
             writeln!(f, "           Params: {}", self.params())?;
         }
-        let start = self.start_no;
+        let start = self.offset.line;
         writeln!(
             f,
             "      Source file: {}:{start}",
@@ -84,7 +102,7 @@ impl TestEnv {
         path: impl AsRef<std::path::Path>,
         name: &str,
         code: &str,
-        start_no: usize,
+        offset: SourceOffset,
     ) -> Option<Self> {
         let orig_name = name.to_string();
         // split name into `name` and optional `mode`
@@ -114,7 +132,7 @@ impl TestEnv {
                 mode: mode.unwrap_or("ok").to_string(),
                 params: params.map(|p| p.to_string()),
                 code: code.into(),
-                start_no,
+                offset,
                 log_file: None,
             })
         }
@@ -227,18 +245,18 @@ impl TestEnv {
         format!(
             "{}:{}",
             self.source_path().to_str().expect("valid path"),
-            self.start_no
+            self.offset.line
         )
     }
 
     /// Map line number into MD-line number.
     pub fn offset_line(&self, line_no: usize) -> usize {
-        line_no + self.start_no
+        line_no + self.offset.line
     }
 
     /// Map line number into MD-line number.
-    pub fn offset(&self) -> usize {
-        self.start_no
+    pub fn offset(&self) -> SourceOffset {
+        self.offset.clone()
     }
 
     /// Write into test log (end line with LF).
@@ -322,8 +340,8 @@ impl TestEnv {
                 .collect()
         }
 
-        let lines_with_error = lines_with(self.code(), "// error", self.offset());
-        let lines_with_warning = lines_with(self.code(), "// warning", self.offset());
+        let lines_with_error = lines_with(self.code(), "// error", self.offset().line);
+        let lines_with_warning = lines_with(self.code(), "// warning", self.offset().line);
 
         let errors_ok = self.diff(
             &lines_with_error,

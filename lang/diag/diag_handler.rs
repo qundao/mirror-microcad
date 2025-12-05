@@ -20,15 +20,15 @@ pub struct DiagHandler {
     /// Treat warnings as errors if `true`.
     warnings_as_errors: bool,
     /// Line offset for error and warning messages.
-    line_offset: usize,
+    offset: SourceOffset,
 }
 
 /// Handler for diagnostics.
 impl DiagHandler {
     /// Create new diag handler.
-    pub fn new(line_offset: usize) -> Self {
+    pub fn new(offset: SourceOffset) -> Self {
         Self {
-            line_offset,
+            offset,
             ..Default::default()
         }
     }
@@ -39,8 +39,7 @@ impl DiagHandler {
         f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
     ) -> std::fmt::Result {
-        self.diag_list
-            .pretty_print(f, source_by_hash, self.line_offset)
+        self.diag_list.pretty_print(f, source_by_hash, &self.offset)
     }
 
     /// Return overall number of occurred errors.
@@ -59,7 +58,7 @@ impl DiagHandler {
             .iter()
             .filter_map(|d| {
                 if d.level() == Level::Error {
-                    d.line().map(|line| line + self.line_offset)
+                    d.line().map(|line| line + self.offset.line)
                 } else {
                     None
                 }
@@ -73,7 +72,7 @@ impl DiagHandler {
             .iter()
             .filter_map(|d| {
                 if d.level() == Level::Warning {
-                    d.line().map(|line| line + self.line_offset)
+                    d.line().map(|line| line + self.offset.line)
                 } else {
                     None
                 }
@@ -93,10 +92,7 @@ impl PushDiag for DiagHandler {
     fn push_diag(&mut self, diag: Diagnostic) -> DiagResult<()> {
         if let Some(error_limit) = self.error_limit {
             if self.error_count >= error_limit && !self.error_limit_reached {
-                self.error(
-                    &SrcRef(None),
-                    DiagError::ErrorLimitReached(error_limit),
-                )?;
+                self.error(&SrcRef(None), DiagError::ErrorLimitReached(error_limit))?;
                 self.error_limit_reached = true;
             }
             return Err(DiagError::ErrorLimitReached(error_limit));
