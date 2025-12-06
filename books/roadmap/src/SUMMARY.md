@@ -23,6 +23,7 @@
   - [Tuple Matching](language/tuple_matching.md)
   - [Enums](language/enums.md)
   - [Match](language/match.md)
+  - [Paths](language/path.md)
   - [Assembly Benches](language/assemblies.md)
   - [Materials](language/materials.md)
   - [Addressing of Corners & Edges](language/corners_edges.md)
