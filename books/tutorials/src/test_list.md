@@ -6,8 +6,8 @@ The following table lists all tests included in this documentation.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
-| Result | Name |
-|-------:|------|
+| Result | Source | Name |
+|-------:|--------|------|
 | [![test](lego_brick/base/struts/.test/array_mul.svg)](lego_brick/base/struts/.test/array_mul.log) | [array_mul](lego_brick/base/struts/multiplicity.md) |
 | [![test](lego_brick/base/frame/.test/assignment.svg)](lego_brick/base/frame/.test/assignment.log) | [assignment](lego_brick/base/frame/naming.md) |
 | [![test](lego_brick/base/.test/base.svg)](lego_brick/base/.test/base.log) | [base](lego_brick/base/sketch.md) |

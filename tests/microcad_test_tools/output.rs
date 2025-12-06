@@ -7,7 +7,8 @@ use std::path::PathBuf;
 
 /// Output of a markdown test.
 pub struct Output {
-    name: String,
+    /// Name of the test
+    pub name: String,
     input: PathBuf,
     banner: PathBuf,
     exports: Vec<PathBuf>,
