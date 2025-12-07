@@ -67,11 +67,7 @@ pub fn shorten(what: &str, max_chars: usize) -> String {
             if p == max_chars {
                 Some('…')
             } else if p < max_chars {
-                if ch == '\n' {
-                    Some('⏎')
-                } else {
-                    Some(ch)
-                }
+                if ch == '\n' { Some('⏎') } else { Some(ch) }
             } else {
                 None
             }
