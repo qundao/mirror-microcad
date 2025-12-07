@@ -71,11 +71,13 @@ impl Args {
                         };
 
                         // Canonicalize the path if relative
-                        let path = Path::new(path_part);
+                        let path = microcad_lang::resolve::microcad_file_path(path_part)
+                            .map_err(|err| anyhow::anyhow!("{err}"))?;
+
                         let canonical_path: PathBuf = if path.is_absolute() {
                             path.to_path_buf()
                         } else {
-                            let path = std::env::current_dir()?.join(path_part);
+                            let path = std::env::current_dir()?.join(path);
                             log::info!("Path: {path:?}");
                             path.canonicalize()?
                         };
@@ -123,6 +125,19 @@ fn main() {
         .init();
 
     let url = args.input_as_url();
+    let url = match &url {
+        Ok(url) => url.clone(),
+        Err(err) => {
+            log::error!(
+                "{err} ({input})",
+                input = match &args.input {
+                    Some(input) => format!("({input})"),
+                    None => String::new(),
+                }
+            );
+            None
+        }
+    };
 
     let mut config = Config {
         search_paths: args.search_paths,
@@ -144,9 +159,7 @@ fn main() {
         .insert_resource(bevy::winit::WinitSettings::desktop_app())
         .add_plugins(DefaultPlugins)
         .add_plugins(MicrocadPlugin {
-            input: url
-                .expect("A valid URL")
-                .map(|url| MicrocadPluginInput::from_url(url).expect("Valid URL")),
+            input: url.map(|url| MicrocadPluginInput::from_url(url).expect("Valid URL")),
             config,
         });
 
