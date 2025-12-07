@@ -4,12 +4,12 @@
 //! µcad viewer
 
 use bevy::{
+    DefaultPlugins,
     app::App,
     render::{
-        batching::gpu_preprocessing::{GpuPreprocessingMode, GpuPreprocessingSupport},
         RenderApp,
+        batching::gpu_preprocessing::{GpuPreprocessingMode, GpuPreprocessingSupport},
     },
-    DefaultPlugins,
 };
 use clap::Parser;
 
@@ -139,12 +139,16 @@ fn main() {
     use microcad_viewer::plugin::MicrocadPluginInput;
 
     let mut app = App::new();
-    app.add_plugins(DefaultPlugins).add_plugins(MicrocadPlugin {
-        input: url
-            .expect("A valid URL")
-            .map(|url| MicrocadPluginInput::from_url(url).expect("Valid URL")),
-        config,
-    });
+    app
+        // Power-saving reactive rendering for applications.
+        .insert_resource(bevy::winit::WinitSettings::desktop_app())
+        .add_plugins(DefaultPlugins)
+        .add_plugins(MicrocadPlugin {
+            input: url
+                .expect("A valid URL")
+                .map(|url| MicrocadPluginInput::from_url(url).expect("Valid URL")),
+            config,
+        });
 
     // Workaround for flickering entity bug on Intel GPUs:
     // https://github.com/bevyengine/bevy/issues/18904
