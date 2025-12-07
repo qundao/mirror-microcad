@@ -3,9 +3,9 @@
 
 //! Viewer IPC interface
 
-use std::path::PathBuf;
 use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 /// The cursor position to be sent.
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -123,19 +123,17 @@ impl ViewerProcessInterface {
             });
 
             // Thread to write requests
-            std::thread::spawn(move || {
-                loop {
-                    for req in &rx {
-                        use std::io::Write;
-                        match serde_json::to_string(&req) {
-                            Ok(json) => {
-                                log::debug!("Write request as json: {json}");
-                                writeln!(stdin, "{}", json).expect("io error");
-                                stdin.flush().expect("io error");
-                            }
-                            Err(_) => todo!(),
-                        };
-                    }
+            std::thread::spawn(move || loop {
+                for req in &rx {
+                    use std::io::Write;
+                    match serde_json::to_string(&req) {
+                        Ok(json) => {
+                            log::debug!("Write request as json: {json}");
+                            writeln!(stdin, "{}", json).expect("io error");
+                            stdin.flush().expect("io error");
+                        }
+                        Err(_) => todo!(),
+                    };
                 }
             });
 
