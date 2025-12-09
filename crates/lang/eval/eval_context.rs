@@ -89,18 +89,25 @@ impl EvalContext {
         log::trace!("Post-evaluation context:\n{self:?}");
         log::trace!("Evaluated Model:\n{}", FormatTree(&model));
 
-        self.symbol_table
+        let unused = self
+            .symbol_table
             .unused_private()
             .iter()
-            .try_for_each(|symbol| {
-                self.warning(
-                    &symbol.src_ref(),
-                    EvalError::UnusedGlobalSymbol(match self.sources.get_code(&symbol) {
+            .map(|symbol| {
+                (
+                    match self.sources.get_code(&symbol) {
                         Ok(id) => id,
                         Err(_) => symbol.id().to_string(),
-                    }),
+                    },
+                    symbol.src_ref(),
                 )
-            })?;
+            })
+            // intermediate hasp storage to avoid duplicates
+            .collect::<indexmap::IndexMap<_, _>>();
+
+        unused.into_iter().try_for_each(|(id, src_ref)| {
+            self.warning(&src_ref, EvalError::UnusedGlobalSymbol(id))
+        })?;
 
         if model.has_no_output() {
             // TODO Check if we can simply return Some(model) even if there is no output.

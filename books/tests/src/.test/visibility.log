@@ -37,18 +37,12 @@ warning: Unused global symbol mod_private.
      |         ^^^^^^^^^^^
      |
 warning: Unused global symbol const const_private = 1.
-  ---> ../books/tests/src/visibility.md:9:9
-     |
-   9 |         const const_private = 1;
-     |         ^^^^^^^^^^^^^^^^^^^^^^^
-     |
-warning: Unused global symbol const const_private = 1.
   ---> ../books/tests/src/visibility.md:13:9
      |
   13 |         const const_private = 1;
      |         ^^^^^^^^^^^^^^^^^^^^^^^
      |
-Unexpected warnings(s) which did occur in line(s): 6, 7, 9, 13
+Unexpected warnings(s) which did occur in line(s): 6, 7, 13
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)
