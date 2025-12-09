@@ -80,7 +80,7 @@ impl Parse for ExpressionStatement {
 
         Ok(Self {
             attribute_list: crate::find_rule!(pair, attribute_list)?,
-            expression: pair.find(Rule::expression).expect("Expression"),
+            expression: crate::find_rule!(pair, expression)?,
             src_ref: pair.into(),
         })
     }

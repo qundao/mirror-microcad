@@ -1,0 +1,17 @@
+-- Test --
+        Test name: call_same_parameter_name
+  Expected result: ok
+      Source file: ../books/tests/src/calls.md:4
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   4:   use std::geo2d::*;
+   5:   use std::ops::*;
+   6:   
+   7:   Rect(w = 10mm, w = 10mm);
+
+-- Parse Error --
+Duplicate argument: w
+-- Test Result --
+FAILS
