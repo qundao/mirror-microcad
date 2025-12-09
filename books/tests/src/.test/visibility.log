@@ -39,14 +39,6 @@
    ·              ╰── warning: 2:9: Unused global symbol mod_private.
  8 │         pub const_public = 1;
    ╰────
-  ⚠ warning: 4:9: Unused global symbol const const_private = 1.
-    ╭─[../books/tests/src/visibility.md:9:9]
-  8 │         pub const_public = 1;
-  9 │         const const_private = 1;
-    ·         ───────────┬───────────
-    ·                    ╰── warning: 4:9: Unused global symbol const const_private = 1.
- 10 │     }
-    ╰────
   ⚠ warning: 8:9: Unused global symbol const const_private = 1.
     ╭─[../books/tests/src/visibility.md:13:9]
  12 │         pub const_public = 1;
@@ -55,7 +47,7 @@
     ·                    ╰── warning: 8:9: Unused global symbol const const_private = 1.
  14 │     }
     ╰────
-Unexpected warnings(s) which did occur in line(s): 6, 7, 9, 13
+Unexpected warnings(s) which did occur in line(s): 6, 7, 13
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)
