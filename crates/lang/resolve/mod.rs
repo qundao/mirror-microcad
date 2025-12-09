@@ -29,7 +29,7 @@ mod symbol;
 mod symbol_table;
 mod symbolize;
 
-use crate::{diag::*, syntax::*};
+use crate::{diag::*, rc::*, syntax::*};
 pub use externals::*;
 pub use lookup::*;
 pub use resolve_context::*;
@@ -45,4 +45,16 @@ use names::*;
 pub trait FullyQualify {
     /// Get a fully (up to root of symbol map) qualified name.
     fn full_name(&self) -> QualifiedName;
+}
+
+impl GetSourceByHash for Rc<SourceFile> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<SourceFile>> {
+        if hash == self.hash {
+            Ok(self.clone())
+        } else if hash == 0 {
+            Err(ResolveError::NulHash)
+        } else {
+            Err(ResolveError::UnknownHash(hash))
+        }
+    }
 }

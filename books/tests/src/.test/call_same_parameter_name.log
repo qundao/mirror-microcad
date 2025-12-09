@@ -12,6 +12,6 @@
    7:   Rect(w = 10mm, w = 10mm);
 
 -- Parse Error --
-Duplicate argument: w
+error: 4:16: Duplicate argument: w
 -- Test Result --
 FAILS

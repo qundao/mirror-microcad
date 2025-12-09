@@ -127,7 +127,7 @@ pub enum ParseError {
 
     /// If expression is missing an `else`
     #[error("If expression must return a value in all cases")]
-    IncompleteIfExpression(SrcRef)
+    IncompleteIfExpression(SrcRef),
 }
 
 /// Result with parse error

@@ -4,15 +4,47 @@
 use std::rc::Rc;
 
 use microcad_lang::{
+    diag::{DiagHandler, DiagResult, PushDiag},
     eval::{Capture, EvalContext},
     model::Model,
-    syntax::SourceFile,
+    parse::ParseError,
+    resolve::GetSourceByHash,
+    src_ref::SrcReferrer,
+    syntax::{Identifier, QualifiedName, SourceFile},
 };
 use microcad_test_tools::test_env::*;
 
 #[allow(dead_code)]
 pub fn init() {
     let _ = env_logger::builder().try_init();
+}
+
+struct UnparsedSourceFile {
+    source: String,
+    name: QualifiedName,
+    filename: std::path::PathBuf,
+}
+
+impl UnparsedSourceFile {
+    pub fn load_from_str(
+        name: &str,
+        path: impl AsRef<std::path::Path>,
+        source_str: &str,
+    ) -> Rc<Self> {
+        log::trace!("loading source from string without parsing");
+        Self {
+            source: source_str.to_string(),
+            name: QualifiedName::from_id(Identifier::no_ref(name)),
+            filename: path.as_ref().to_path_buf(),
+        }
+        .into()
+    }
+}
+
+impl GetSourceByHash for UnparsedSourceFile {
+    fn get_by_hash(&self, hash: u64) -> microcad_lang::resolve::ResolveResult<Rc<SourceFile>> {
+        todo!()
+    }
 }
 
 #[allow(dead_code, clippy::too_many_arguments)]
@@ -47,14 +79,16 @@ pub fn run_test(env: Option<TestEnv>) {
         // load and handle µcad source file
         let source_file_result =
             SourceFile::load_from_str(Some(env.name()), env.source_path(), env.code());
+        let source_file_alt =
+            UnparsedSourceFile::load_from_str(env.name(), env.source_path(), env.code());
 
         match env.mode() {
             // test is expected to fail?
             "fail" | "todo_fail" | "warn" | "todo_warn" => match source_file_result {
                 // test expected to fail failed at parsing?
                 Err(err) => {
-                    env.log_ln("-- Parse Error --");
-                    env.log_ln(&err.to_string());
+                    report_parse_error(&mut env, source_file_alt.as_ref(), err)
+                        .expect("test error");
                     if env.has_error_markers() {
                         env.result(TestResult::FailWrong);
                         panic!("ERROR: test is marked to fail but with wrong errors/warnings");
@@ -117,9 +151,9 @@ pub fn run_test(env: Option<TestEnv>) {
             "ok" | "todo" => match source_file_result {
                 // test awaited to succeed and parsing failed?
                 Err(err) => {
-                    env.log_ln("-- Parse Error --");
-                    env.log_ln(&err.to_string());
-
+                    let out = format!("ERROR: {err}");
+                    report_parse_error(&mut env, source_file_alt.as_ref(), err)
+                        .expect("test error");
                     if env.todo() {
                         env.result(TestResult::Todo);
                     } else if env.has_error_markers() {
@@ -127,7 +161,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     } else {
                         env.result(TestResult::Fail);
-                        panic!("ERROR: {err}")
+                        panic!("{out}");
                     }
                 }
                 // test awaited to succeed and parsing succeeds?
@@ -242,4 +276,18 @@ fn report_model(env: &mut TestEnv, model: Option<Model>) {
     } else {
         env.log_ln("-- No Model --");
     }
+}
+
+fn report_parse_error(
+    env: &mut TestEnv,
+    source_by_hash: &impl GetSourceByHash,
+    err: ParseError,
+) -> DiagResult<()> {
+    env.log_ln("-- Parse Error --");
+    let mut diag = DiagHandler::new(env.offset());
+    diag.error(&err.src_ref(), err)?;
+    let mut s = String::new();
+    diag.pretty_print(&mut s, source_by_hash);
+    env.log_ln(&s);
+    Ok(())
 }

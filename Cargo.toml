@@ -36,8 +36,8 @@ members = [
     "tools/update-md-banner",
 
     # Non default members
-    "crates/viewer",
-    "crates/inspector",
+    #    "crates/viewer",
+    #    "crates/inspector",
 ]
 resolver = "2"
 
