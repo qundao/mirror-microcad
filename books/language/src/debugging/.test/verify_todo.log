@@ -16,12 +16,14 @@
 
 -- No Output --
 -- Errors --
-info: a is zero
-  ---> ../books/language/src/debugging/verification.md:43:20
-     |
-  43 |     std::log::info("a is zero");
-     |                    ^^^^^^^^^^^
-     |
+  ☞ info: 4:20: a is zero
+    ╭─[../books/language/src/debugging/verification.md:43:20]
+ 42 │ if a == 0 {
+ 43 │     std::log::info("a is zero");
+    ·                    ─────┬─────
+    ·                         ╰── info: 4:20: a is zero
+ 44 │ } else {
+    ╰────
 -- Model --
   Group (root) ->
     Group ->

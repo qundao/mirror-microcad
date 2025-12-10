@@ -12,11 +12,13 @@
 
 -- No Output --
 -- Errors --
-error: Init statement not available here
-  ---> ../books/tests/src/statement_usage/body.md:31:3
-     |
-  31 |   init() {} // error
-     |   ^^^^^^^^^
-     |
+  × error: 2:3: Init statement not available here
+    ╭─[../books/tests/src/statement_usage/body.md:31:3]
+ 30 │ {
+ 31 │   init() {} // error
+    ·   ────┬────
+    ·       ╰── error: 2:3: Init statement not available here
+ 32 │ }
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED

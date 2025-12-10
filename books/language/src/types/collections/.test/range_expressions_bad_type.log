@@ -9,11 +9,6 @@
   63:   [1.0..2.0];  // parse_error
 
 -- Parse Error --
-Parser error:  --> 1:6
-  |
-1 | [1.0..2.0];  // parse_error
-  |      ^---
-  |
-  = expected single_line_comment or identifier
+Parser error: expected single_line_comment or identifier
 -- Test Result --
 FAILS AS EXPECTED

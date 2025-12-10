@@ -10,12 +10,12 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol m.
-  ---> ../books/tests/src/statement_usage/source.md:12:5
-     |
-  12 | mod m {}
-     |     ^
-     |
+  ⚠ warning: 1:5: Unused global symbol m.
+    ╭─[../books/tests/src/statement_usage/source.md:12:5]
+ 12 │ mod m {}
+    ·     ┬
+    ·     ╰── warning: 1:5: Unused global symbol m.
+    ╰────
 Unexpected warnings(s) which did occur in line(s): 12
 -- No Model --
 -- Test Result --

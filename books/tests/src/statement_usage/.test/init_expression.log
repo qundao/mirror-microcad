@@ -12,17 +12,22 @@
 
 -- No Output --
 -- Errors --
-error: Expression statement not available here
-  ---> ../books/tests/src/statement_usage/init.md:95:3
-     |
-  95 |   l + 2; // error
-     |   ^^^^^^
-     |
-error: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
-  ---> ../books/tests/src/statement_usage/init.md:95:3
-     |
-  95 |   l + 2; // error
-     |   ^^^^^
-     |
+  × error: 2:3: Expression statement not available here
+    ╭─[../books/tests/src/statement_usage/init.md:95:3]
+ 94 │ sketch K() { init(l:Length) {
+ 95 │   l + 2; // error
+    ·   ───┬──
+    ·      ╰── error: 2:3: Expression statement not available here
+ 96 │ } } K(1cm);
+    ╰────
+  × error: 2:3: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
+  ╰─▶ Invalid operation: `10mm` + `2` (try `2` + `10mm`)
+    ╭─[../books/tests/src/statement_usage/init.md:95:3]
+ 94 │ sketch K() { init(l:Length) {
+ 95 │   l + 2; // error
+    ·   ──┬──
+    ·     ╰── error: 2:3: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
+ 96 │ } } K(1cm);
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED

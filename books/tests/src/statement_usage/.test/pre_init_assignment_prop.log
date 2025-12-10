@@ -12,12 +12,14 @@
 
 -- No Output --
 -- Errors --
-error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:87:3
-     |
-  87 |   prop a = 1; // error
-     |   ^^^^^^^^^^^
-     |
+  × error: 2:3: Statement not allowed prior initializers
+    ╭─[../books/tests/src/statement_usage/pre-init.md:87:3]
+ 86 │ sketch K() {
+ 87 │   prop a = 1; // error
+    ·   ─────┬─────
+    ·        ╰── error: 2:3: Statement not allowed prior initializers
+ 88 │ init(l:Length) {} } K();
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

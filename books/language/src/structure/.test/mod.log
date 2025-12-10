@@ -30,11 +30,12 @@
 
 -- No Output --
 -- Errors --
-error: Symbol math::pow not found.
-  ---> ../books/language/src/structure/functions.md:89:1
-     |
-  89 | math::pow(2.0, 5);  // error: pow is private
-     | ^^^^^^^^^^^^^^^^^
-     |
+  × error: 21:1: Symbol math::pow not found.
+    ╭─[../books/language/src/structure/functions.md:89:1]
+ 88 │ math::square(2.0);
+ 89 │ math::pow(2.0, 5);  // error: pow is private
+    · ────────┬────────
+    ·         ╰── error: 21:1: Symbol math::pow not found.
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED

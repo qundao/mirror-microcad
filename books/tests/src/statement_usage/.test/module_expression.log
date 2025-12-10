@@ -12,17 +12,20 @@
 
 -- No Output --
 -- Errors --
-error: Expression statement not available here
-  ---> ../books/tests/src/statement_usage/module.md:95:3
-     |
-  95 |   1 + 2; // error
-     |   ^^^^^^
-     |
-warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:94:5
-     |
-  94 | mod k {  // warning
-     |     ^
-     |
+  × error: 2:3: Expression statement not available here
+    ╭─[../books/tests/src/statement_usage/module.md:95:3]
+ 94 │ mod k {  // warning
+ 95 │   1 + 2; // error
+    ·   ───┬──
+    ·      ╰── error: 2:3: Expression statement not available here
+ 96 │ }
+    ╰────
+  ⚠ warning: 1:5: Unused global symbol k.
+    ╭─[../books/tests/src/statement_usage/module.md:94:5]
+ 94 │ mod k {  // warning
+    ·     ┬
+    ·     ╰── warning: 1:5: Unused global symbol k.
+ 95 │   1 + 2; // error
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED
