@@ -1,6 +1,9 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use std::env::var;
+use std::io::{stderr, stdout, IsTerminal};
+use miette::GraphicalTheme;
 use crate::{diag::*, resolve::*};
 
 /// Handler for diagnostics.
@@ -21,6 +24,38 @@ pub struct DiagHandler {
     warnings_as_errors: bool,
     /// Line offset for error and warning messages.
     line_offset: usize,
+    /// Diagnostic rendering options
+    pub render_options: DiagRenderOptions,
+}
+
+/// Options that control the rendering of diagnostics
+#[derive(Debug)]
+pub struct DiagRenderOptions {
+    /// Render diagnostic with colors
+    pub color: bool,
+    /// Render diagnostic with unicode characters
+    pub unicode: bool,
+}
+
+impl Default for DiagRenderOptions {
+    fn default() -> Self {
+        DiagRenderOptions {
+            color: var("NO_COLOR").as_deref().unwrap_or("0") == "0",
+            unicode: stdout().is_terminal() && stderr().is_terminal()
+        }
+    }
+}
+
+impl DiagRenderOptions {
+    /// Get the miette theme for the options
+    pub fn theme(&self) -> GraphicalTheme {
+        match (self.unicode, self.color) {
+            (true, true) => GraphicalTheme::unicode(),
+            (true, false) => GraphicalTheme::unicode_nocolor(),
+            (false, true) => GraphicalTheme::ascii(),
+            (false, false) => GraphicalTheme::none(),
+        }
+    }
 }
 
 /// Handler for diagnostics.
@@ -40,7 +75,7 @@ impl DiagHandler {
         source_by_hash: &impl GetSourceByHash,
     ) -> std::fmt::Result {
         self.diag_list
-            .pretty_print(f, source_by_hash, self.line_offset)
+            .pretty_print(f, source_by_hash, self.line_offset, &self.render_options)
     }
 
     /// Return overall number of occurred errors.

@@ -81,6 +81,7 @@ impl Diagnostic {
         mut f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
         line_offset: usize,
+        options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
 
@@ -109,7 +110,7 @@ impl Diagnostic {
                     diagnostic: self,
                     source: miette_source,
                 };
-                let handler = GraphicalReportHandler::new();
+                let handler = GraphicalReportHandler::new_themed(options.theme());
                 handler.render_report(&mut f, &wrapper)?
             }
         }
