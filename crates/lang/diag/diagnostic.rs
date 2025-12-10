@@ -80,7 +80,7 @@ impl Diagnostic {
         &self,
         mut f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
-        _line_offset: usize,
+        line_offset: usize,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
 
@@ -103,7 +103,7 @@ impl Diagnostic {
             SrcRef(Some(_)) => {
                 let miette_source = source_file
                     .as_ref()
-                    .map(|s| s.miette_source(make_relative(&s.filename())))
+                    .map(|s| s.miette_source(make_relative(&s.filename()), line_offset))
                     .unwrap_or_else(|_| MietteSourceFile::invalid());
                 let wrapper = DiagnosticWrapper {
                     diagnostic: self,

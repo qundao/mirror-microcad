@@ -159,6 +159,7 @@ fn load_source_file_wrong_location() {
 pub struct MietteSourceFile<'a> {
     source: &'a str,
     name: String,
+    line_offset: usize,
 }
 
 impl MietteSourceFile<'static> {
@@ -167,16 +168,18 @@ impl MietteSourceFile<'static> {
         MietteSourceFile {
             source: crate::invalid_no_ansi!(FILE),
             name: crate::invalid_no_ansi!(FILE).into(),
+            line_offset: 0,
         }
     }
 }
 
 impl SourceFile {
     /// Get a miette source adapter for the SourceFile
-    pub fn miette_source<'a>(&'a self, path: String) -> MietteSourceFile<'a> {
+    pub fn miette_source<'a>(&'a self, path: String, line_offset: usize) -> MietteSourceFile<'a> {
         MietteSourceFile {
             source: &self.source,
             name: path,
+            line_offset,
         }
     }
 }
@@ -193,7 +196,7 @@ impl SourceCode for MietteSourceFile<'_> {
             self.name.clone(),
             inner_contents.data(),
             *inner_contents.span(),
-            inner_contents.line(),
+            inner_contents.line() + self.line_offset,
             inner_contents.column(),
             inner_contents.line_count(),
         ).with_language("µcad");
