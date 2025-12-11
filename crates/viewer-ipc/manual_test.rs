@@ -15,8 +15,19 @@ fn prompt_for_confirmation(prompt: &str) -> std::io::Result<bool> {
     }
 }
 
-/// Test show hide
-fn test_show_hide_window() -> std::io::Result<()> {
+fn example_files() -> miette::Result<Vec<std::path::PathBuf>> {
+    Ok(std::fs::read_dir("examples")
+        .map_err(|err| miette::miette!("{err}"))?
+        .filter_map(|entry| {
+            // entry? inside filter_map must be handled manually
+            let path = entry.ok()?.path();
+            microcad_lang::resolve::is_microcad_file(&path).then_some(path)
+        })
+        .collect())
+}
+
+/// Test minimize/restoring window
+fn test_minimize_restore() -> miette::Result<()> {
     env_logger::init();
     let search_paths = microcad_builtin::dirs::default_search_paths();
     let viewer = ViewerProcessInterface::run(&search_paths, false); // Start hidden
@@ -55,8 +66,49 @@ fn test_show_hide_window() -> std::io::Result<()> {
     }
 }
 
-fn main() -> std::io::Result<()> {
-    //  export MICROCAD_VIEWER_BIN
+fn test_code_from_file() -> miette::Result<()> {
+    env_logger::init();
+    let search_paths = microcad_builtin::dirs::default_search_paths();
+    let viewer = ViewerProcessInterface::run(&search_paths, false); // Start hidden
 
-    test_show_hide_window()
+    // List examples directory
+    example_files()?.iter().try_for_each(|path| {
+        let path = path.to_path_buf();
+        viewer.send_request(ViewerRequest::ShowSourceCodeFromFile { path })?;
+
+        prompt_for_confirmation("Was the file loaded?").expect("Invalid source code");
+
+        Ok(())
+    })
+}
+
+fn main() -> miette::Result<()> {
+    use std::env;
+    type Test<'a> = (&'a str, fn() -> miette::Result<()>);
+
+    // A single source of truth for test names and functions
+    let tests: &[Test] = &[
+        ("minimize_restore", test_minimize_restore),
+        ("code_from_file", test_code_from_file),
+    ];
+
+    let args: Vec<_> = env::args().skip(1).collect(); // skip program name
+
+    if args.is_empty() {
+        // Run all tests
+        for (_, func) in tests {
+            func()?;
+        }
+        return Ok(());
+    }
+
+    // Run only specified tests
+    for arg in args {
+        let Some((_, func)) = tests.iter().find(|(name, _)| *name == arg) else {
+            return Err(miette::miette!("Unknown test: {arg}"));
+        };
+        func()?;
+    }
+
+    Ok(())
 }
