@@ -165,8 +165,12 @@ fn run_camera_controller(
             ortho.scaling_mode = bevy::render::camera::ScalingMode::FixedVertical {
                 viewport_height: 2.0 * state.scene.radius,
             };
-            let window = windows.single().expect("Some window");
-            ortho.update(window.width(), window.height());
+            match windows.single() {
+                Ok(window) => {
+                    ortho.update(window.width(), window.height());
+                }
+                Err(e) => log::error!("{e}"),
+            }
             state.scene.radius * Vec2::new(ortho.scale, ortho.scale)
         }
         _ => {
