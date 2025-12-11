@@ -101,14 +101,14 @@ pub fn handle_stdin_messages(
                 Exit => {
                     exit.write(AppExit::Success);
                 }
-                ViewerRequest::Show => {
-                    let mut window = windows.single_mut().expect("A window");
-                    window.visible = true;
-                }
-                ViewerRequest::Hide => {
-                    let mut window = windows.single_mut().expect("A window");
-                    window.visible = false;
-                }
+                ViewerRequest::Show => match windows.single_mut() {
+                    Ok(mut window) => window.visible = true,
+                    Err(e) => log::error!("{e}"),
+                },
+                ViewerRequest::Hide => match windows.single_mut() {
+                    Ok(mut window) => window.visible = false,
+                    Err(e) => log::error!("{e}"),
+                },
             }
         }
     }
@@ -117,6 +117,7 @@ pub fn handle_stdin_messages(
         state.processor.send_request(request).expect("No error");
     }
 
-    let mut window = windows.single_mut().expect("Some window");
-    state.update_window_settings(&mut window);
+    if let Ok(mut window) = windows.single_mut() {
+        state.update_window_settings(&mut window);
+    }
 }

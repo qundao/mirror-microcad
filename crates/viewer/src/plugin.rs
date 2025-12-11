@@ -125,7 +125,6 @@ impl MicrocadPluginInput {
             s.push_str(frag);
         }
 
-        log::error!("Input URL: {s}");
         s
     }
 }
