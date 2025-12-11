@@ -3,12 +3,15 @@
 
 //! µcad viewer
 
+use std::time::Duration;
+
 use bevy::{
     app::App,
     render::{
         batching::gpu_preprocessing::{GpuPreprocessingMode, GpuPreprocessingSupport},
         RenderApp,
     },
+    winit::UpdateMode,
     DefaultPlugins,
 };
 use clap::Parser;
@@ -156,7 +159,10 @@ fn main() {
     let mut app = App::new();
     app
         // Power-saving reactive rendering for applications.
-        .insert_resource(bevy::winit::WinitSettings::desktop_app())
+        .insert_resource(bevy::winit::WinitSettings {
+            focused_mode: UpdateMode::reactive(Duration::from_secs(1)),
+            unfocused_mode: UpdateMode::reactive_low_power(Duration::from_secs(1)),
+        })
         .add_plugins(DefaultPlugins)
         .add_plugins(MicrocadPlugin {
             input: url.map(|url| MicrocadPluginInput::from_url(url).expect("Valid URL")),
