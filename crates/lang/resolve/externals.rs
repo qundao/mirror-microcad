@@ -167,7 +167,7 @@ fn search_mod_dir_file(
 }
 
 /// Return `true` if given path has a valid microcad extension
-fn is_microcad_file(p: impl AsRef<std::path::Path>) -> bool {
+pub fn is_microcad_file(p: impl AsRef<std::path::Path>) -> bool {
     p.as_ref().is_file()
         && p.as_ref()
             .extension()

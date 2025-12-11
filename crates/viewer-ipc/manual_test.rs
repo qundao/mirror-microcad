@@ -15,8 +15,18 @@ fn prompt_for_confirmation(prompt: &str) -> anyhow::Result<bool> {
     }
 }
 
-/// Test show hide
-fn test_show_hide_window() -> anyhow::Result<()> {
+fn example_files() -> anyhow::Result<Vec<std::path::PathBuf>> {
+    Ok(std::fs::read_dir("examples")?
+        .filter_map(|entry| {
+            // entry? inside filter_map must be handled manually
+            let path = entry.ok()?.path();
+            microcad_lang::resolve::is_microcad_file(&path).then_some(path)
+        })
+        .collect())
+}
+
+/// Test minimize/restoring window
+fn test_minimize_restore() -> anyhow::Result<()> {
     env_logger::init();
     let search_paths = microcad_builtin::dirs::default_search_paths();
     let viewer = ViewerProcessInterface::run(&search_paths, false); // Start hidden
@@ -55,8 +65,51 @@ fn test_show_hide_window() -> anyhow::Result<()> {
     }
 }
 
-fn main() -> anyhow::Result<()> {
-    //  export MICROCAD_VIEWER_BIN
+fn test_code_from_file() -> anyhow::Result<()> {
+    env_logger::init();
+    let search_paths = microcad_builtin::dirs::default_search_paths();
+    let viewer = ViewerProcessInterface::run(&search_paths, false); // Start hidden
 
-    test_show_hide_window()
+    // List examples directory
+    example_files()?.iter().try_for_each(|path| {
+        let path = path.to_path_buf();
+        viewer.send_request(ViewerRequest::ShowSourceCodeFromFile { path })?;
+
+        if !prompt_for_confirmation("Was the file loaded?")? {
+            return Err(anyhow::anyhow!("Invalid source code"));
+        }
+
+        Ok(())
+    })
+}
+
+fn main() -> anyhow::Result<()> {
+    use std::env;
+    type Test<'a> = (&'a str, fn() -> anyhow::Result<()>);
+
+    // A single source of truth for test names and functions
+    let tests: &[Test] = &[
+        ("minimize_restore", test_minimize_restore),
+        ("code_from_file", test_code_from_file),
+    ];
+
+    let args: Vec<_> = env::args().skip(1).collect(); // skip program name
+
+    if args.is_empty() {
+        // Run all tests
+        for (_, func) in tests {
+            func()?;
+        }
+        return Ok(());
+    }
+
+    // Run only specified tests
+    for arg in args {
+        let Some((_, func)) = tests.iter().find(|(name, _)| *name == arg) else {
+            return Err(anyhow::anyhow!("Unknown test: {arg}"));
+        };
+        func()?;
+    }
+
+    Ok(())
 }
