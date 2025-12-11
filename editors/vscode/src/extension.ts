@@ -107,6 +107,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(showPreviewCmd);
+    context.subscriptions.push(minimizePreviewCmd);
     context.subscriptions.push(client);
 
     vscode.window.onDidChangeActiveTextEditor((editor) => {
