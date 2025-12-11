@@ -7,7 +7,7 @@ mod processor;
 
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
-    async_trait,
+    Client, LanguageServer, LspService, Server, async_trait,
     jsonrpc::Result,
     lsp_types::{
         DiagnosticOptions, DiagnosticServerCapabilities, DidChangeTextDocumentParams,
@@ -17,7 +17,6 @@ use tower_lsp::{
         InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport, ServerCapabilities,
         TextDocumentSyncCapability, TextDocumentSyncKind, Url,
     },
-    Client, LanguageServer, LspService, Server,
 };
 
 #[derive(Debug)]
@@ -203,12 +202,12 @@ impl LanguageServer for Backend {
                     return Ok(Some(serde_json::json!({ "ok": true })));
                 }
             }
-            "microcad.hidePreview" => {
-                log::info!("HidePreview received");
-                if let Err(err) = self.viewer.send_request(ViewerRequest::Hide) {
-                    log::error!("Could not send request ViewerRequest::Hide: {err}");
+            "microcad.minimizePreview" => {
+                log::info!("MinimizePreview received");
+                if let Err(err) = self.viewer.send_request(ViewerRequest::Minimize) {
+                    log::error!("Could not send request ViewerRequest::Minimize: {err}");
                     return Ok(Some(serde_json::json!({
-                        "error": "Cannot hide viewer: {err}"
+                        "error": "Cannot minimize viewer: {err}"
                     })));
                 }
                 self.client

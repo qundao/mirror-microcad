@@ -24,7 +24,7 @@ fn test_show_hide_window() -> anyhow::Result<()> {
     let mut cycle = 0;
 
     loop {
-        viewer.send_request(ViewerRequest::Show)?;
+        viewer.send_request(ViewerRequest::Restore)?;
 
         if !prompt_for_confirmation("Is the window visible?")? {
             return Err(anyhow::anyhow!("Window did not appear as expected."));
@@ -45,7 +45,7 @@ fn test_show_hide_window() -> anyhow::Result<()> {
             return Err(anyhow::anyhow!("Invalid source code"));
         }
 
-        viewer.send_request(ViewerRequest::Hide)?;
+        viewer.send_request(ViewerRequest::Minimize)?;
         if !prompt_for_confirmation("Is the window hidden?")? {
             return Err(anyhow::anyhow!("Window did not hide as expected."));
         }
