@@ -184,7 +184,13 @@ impl LanguageServer for Backend {
                         }
                     };
 
-                    log::info!("ShowPreview received for {uri}");
+                    if let Err(err) = self.viewer.send_request(ViewerRequest::Restore) {
+                        log::error!("Could not send request ViewerRequest::Show: {err}");
+                        return Ok(Some(serde_json::json!({
+                            "error": "Cannot show viewer: {err}"
+                        })));
+                    }
+
                     if let Err(err) =
                         self.viewer
                             .send_request(ViewerRequest::ShowSourceCodeFromFile {

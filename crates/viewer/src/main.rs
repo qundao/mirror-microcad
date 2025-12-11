@@ -160,8 +160,8 @@ fn main() {
     app
         // Power-saving reactive rendering for applications.
         .insert_resource(bevy::winit::WinitSettings {
-            focused_mode: UpdateMode::reactive(Duration::from_secs(1)),
-            unfocused_mode: UpdateMode::reactive_low_power(Duration::from_secs(1)),
+            focused_mode: UpdateMode::reactive(Duration::from_millis(1000 / 60)),
+            unfocused_mode: UpdateMode::reactive_low_power(Duration::from_millis(1000 / 10)),
         })
         .add_plugins(DefaultPlugins)
         .add_plugins(MicrocadPlugin {
