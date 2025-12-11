@@ -73,8 +73,7 @@ impl Args {
 
                         // Canonicalize the path if relative
                         let path = microcad_lang::resolve::microcad_file_path(path_part)
-                            .map_err(|err| anyhow::anyhow!("{err}"))?;
-
+                            .map_err(|err| miette::miette!("{err}"))?;
                         let canonical_path: PathBuf = if path.is_absolute() {
                             path.to_path_buf()
                         } else {

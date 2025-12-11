@@ -99,6 +99,7 @@ impl ViewerProcessInterface {
             }
             let mut child = command
                 .arg("--stay-on-top")
+                .arg("-v")
                 .arg("stdin://") // run the viewer as slave via stdin.
                 .current_dir(std::env::current_dir().expect("current dir"))
                 .stdin(std::process::Stdio::piped())

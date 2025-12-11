@@ -18,25 +18,37 @@ fn prompt_for_confirmation(prompt: &str) -> std::io::Result<bool> {
 /// Test show hide
 fn test_show_hide_window() -> std::io::Result<()> {
     env_logger::init();
-    let search_paths = vec![std::env::current_dir()?];
+    let search_paths = microcad_builtin::dirs::default_search_paths();
     let viewer = ViewerProcessInterface::run(&search_paths, false); // Start hidden
 
     let mut cycle = 0;
 
     loop {
-        log::info!("Sending 'Show' request...");
         viewer
             .send_request(ViewerRequest::Show)
             .expect("Successful show request.");
         prompt_for_confirmation("Is the window visible?")
             .expect("Window did not appear as expected.");
 
-        log::info!("Sending 'Hide' request...");
+        viewer
+            .send_request(ViewerRequest::ShowSourceCode {
+                path: None,
+                name: Some("Test".to_string()),
+                code: format!(
+                    r#" 
+                use std::geo2d::Text;
+                Text("{cycle}", height = 10mm);
+            "#
+                ),
+            })
+            .expect("Successful show source code request.");
+
+        prompt_for_confirmation("Is there a number?").expect("Valid source code");
+
         viewer
             .send_request(ViewerRequest::Hide)
             .expect("Successful hide request.");
         prompt_for_confirmation("Is the window hidden?").expect("Window did not hide as expected.");
-
         cycle += 1;
 
         log::info!("Show/Hide Cycle #{cycle}")
