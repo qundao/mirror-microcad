@@ -80,7 +80,7 @@ impl Args {
                         let canonical_path: PathBuf = if path.is_absolute() {
                             path.to_path_buf()
                         } else {
-                            let path = std::env::current_dir()?.join(path);
+                            let path = std::env::current_dir()?.join(path_part);
                             log::info!("Path: {path:?}");
                             path.canonicalize()?
                         };
