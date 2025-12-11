@@ -4,6 +4,7 @@
 //! µcad color syntax element
 
 use std::str::FromStr;
+use miette::Diagnostic;
 
 /// A color with RGBA channels
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -168,7 +169,7 @@ impl FromStr for Color {
 use thiserror::Error;
 
 /// An error when parsing a color from a string
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Diagnostic)]
 pub enum ParseColorError {
     /// Unknown color name.
     #[error("Unknown color name: {0}")]

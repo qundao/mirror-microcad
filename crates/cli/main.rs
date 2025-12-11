@@ -17,7 +17,7 @@ use commands::*;
 pub use watcher::*;
 
 /// Main of the command line interpreter
-fn main() -> anyhow::Result<()> {
+fn main() -> miette::Result<()> {
     let cli = Cli::default();
 
     // Initialize env_logger with a default filter level

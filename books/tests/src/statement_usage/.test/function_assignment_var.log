@@ -12,12 +12,14 @@
 
 -- No Output --
 -- Errors --
-warning: Unused local a.
-  ---> ../books/tests/src/statement_usage/function.md:79:3
-     |
-  79 |   a = 1;
-     |   ^
-     |
+  ⚠ warning: 2:3: Unused local a.
+    ╭─[../books/tests/src/statement_usage/function.md:79:3]
+ 78 │ fn f() {
+ 79 │   a = 1;
+    ·   ┬
+    ·   ╰── warning: 2:3: Unused local a.
+ 80 │ } f();
+    ╰────
 Unexpected warnings(s) which did occur in line(s): 79
 -- No Model --
 -- Test Result --

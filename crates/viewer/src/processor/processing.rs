@@ -45,7 +45,7 @@ impl Processor {
     pub(crate) fn handle_request(
         &mut self,
         request: ProcessorRequest,
-    ) -> anyhow::Result<Vec<ProcessorResponse>> {
+    ) -> miette::Result<Vec<ProcessorResponse>> {
         match request {
             ProcessorRequest::Initialize { config } => {
                 self.context.search_paths = config.search_paths.clone();
@@ -117,7 +117,7 @@ impl Processor {
         self.context.initialized && self.context.model.is_some()
     }
 
-    pub(crate) fn eval(&mut self) -> anyhow::Result<()> {
+    pub(crate) fn eval(&mut self) -> miette::Result<()> {
         match &self.context.source_file {
             Some(source_file) => {
                 // resolve the file
@@ -140,7 +140,7 @@ impl Processor {
                         self.context.model = model;
                         if eval_context.has_errors() {
                             self.state_change(ProcessingState::Error);
-                            return Err(anyhow::anyhow!("Eval error"));
+                            return Err(miette::miette!("Eval error"));
                         }
                     }
                     Err(err) => {
@@ -154,13 +154,13 @@ impl Processor {
             }
             None => {
                 self.state_change(ProcessingState::Error);
-                Err(anyhow::anyhow!("No source code to evaluate."))
+                Err(miette::miette!("No source code to evaluate."))
             }
         }
     }
 
     /// Render geometry from model.
-    fn render(&mut self, resolution: Option<RenderResolution>) -> anyhow::Result<()> {
+    fn render(&mut self, resolution: Option<RenderResolution>) -> miette::Result<()> {
         if self.can_render() {
             let resolution = match resolution {
                 Some(resolution) => resolution,
@@ -201,12 +201,12 @@ impl Processor {
         } else {
             self.state_change(ProcessingState::Error);
 
-            Err(anyhow::anyhow!("Could not render model."))
+            Err(miette::miette!("Could not render model."))
         }
     }
 
     /// Update the model instances and generate processor responses.
-    fn respond(&mut self) -> anyhow::Result<Vec<ProcessorResponse>> {
+    fn respond(&mut self) -> miette::Result<Vec<ProcessorResponse>> {
         if let Some(model) = self.context.model.clone() {
             let mut responses = Vec::new();
             responses.push(ProcessorResponse::RemoveModelInstances(
@@ -229,7 +229,7 @@ impl Processor {
 
             Ok(responses)
         } else {
-            Err(anyhow::anyhow!("No model to draw."))
+            Err(miette::miette!("No model to draw."))
         }
     }
 

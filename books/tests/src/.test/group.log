@@ -17,12 +17,14 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol std::ops::translate.
-  ---> ../books/tests/src/semicolon.md:61:5
-     |
-  61 | use std::ops::translate;
-     |     ^^^^^^^^^^^^^^^^^^^
-     |
+  ⚠ warning: 2:5: Unused global symbol std::ops::translate.
+    ╭─[../books/tests/src/semicolon.md:61:5]
+ 60 │ use std::geo2d::Circle;
+ 61 │ use std::ops::translate;
+    ·     ─────────┬─────────
+    ·              ╰── warning: 2:5: Unused global symbol std::ops::translate.
+ 62 │ 
+    ╰────
 Unexpected warnings(s) which did occur in line(s): 61
 -- Model --
   Group (root) ->

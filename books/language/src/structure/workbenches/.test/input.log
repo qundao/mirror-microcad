@@ -25,18 +25,26 @@
 
 -- No Output --
 -- Errors --
-error: Symbol count not found.
-  ---> ../books/language/src/structure/workbenches/operations.md:34:15
-     |
-  34 |     if @input.count() == 2 {
-     |               ^^^^^
-     |
-error: If condition is not a boolean: <NO VALUE>
-  ---> ../books/language/src/structure/workbenches/operations.md:34:5
-     |
-  34 |     if @input.count() == 2 {
-     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
+  × error: 4:15: Symbol count not found.
+    ╭─[../books/language/src/structure/workbenches/operations.md:34:15]
+ 33 │     // check number of children
+ 34 │     if @input.count() == 2 {
+    ·               ──┬──
+    ·                 ╰── error: 4:15: Symbol count not found.
+ 35 │         // make hole
+    ╰────
+  × error: 4:5: If condition is not a boolean: <NO VALUE>
+    ╭─[../books/language/src/structure/workbenches/operations.md:34:5]
+ 33 │         // check number of children
+ 34 │ ╭─▶     if @input.count() == 2 {
+ 35 │ │           // make hole
+ 36 │ │           @input.subtract(); 
+ 37 │ │       } else {
+ 38 │ │           std::error("punched_disk must get two objects");
+ 39 │ ├─▶     }
+    · ╰──── error: 4:5: If condition is not a boolean: <NO VALUE>
+ 40 │     }
+    ╰────
 Unexpected error(s) which did occur in line(s): 34
 -- Test Result --
 TODO

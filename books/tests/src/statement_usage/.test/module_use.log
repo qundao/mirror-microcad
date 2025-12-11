@@ -12,18 +12,21 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:38:5
-     |
-  38 | mod k {
-     |     ^
-     |
-warning: Unused global symbol std::geo2d.
-  ---> ../books/tests/src/statement_usage/module.md:39:7
-     |
-  39 |   use std::geo2d;
-     |       ^^^^^^^^^^
-     |
+  ⚠ warning: 1:5: Unused global symbol k.
+    ╭─[../books/tests/src/statement_usage/module.md:38:5]
+ 38 │ mod k {
+    ·     ┬
+    ·     ╰── warning: 1:5: Unused global symbol k.
+ 39 │   use std::geo2d;
+    ╰────
+  ⚠ warning: 2:7: Unused global symbol std::geo2d.
+    ╭─[../books/tests/src/statement_usage/module.md:39:7]
+ 38 │ mod k {
+ 39 │   use std::geo2d;
+    ·       ─────┬────
+    ·            ╰── warning: 2:7: Unused global symbol std::geo2d.
+ 40 │ }
+    ╰────
 Unexpected warnings(s) which did occur in line(s): 38, 39
 -- No Model --
 -- Test Result --

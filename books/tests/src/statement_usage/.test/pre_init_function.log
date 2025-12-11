@@ -12,18 +12,22 @@
 
 -- No Output --
 -- Errors --
-error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:23:6
-     |
-  23 |   fn f() {} f();   // error
-     |      ^
-     |
-error: Statement not allowed prior initializers
-  ---> ../books/tests/src/statement_usage/pre-init.md:23:13
-     |
-  23 |   fn f() {} f();   // error
-     |             ^^^^
-     |
+  × error: 2:6: Statement not allowed prior initializers
+    ╭─[../books/tests/src/statement_usage/pre-init.md:23:6]
+ 22 │ sketch K() { 
+ 23 │   fn f() {} f();   // error
+    ·      ┬
+    ·      ╰── error: 2:6: Statement not allowed prior initializers
+ 24 │ init(l:Length) {} } K();
+    ╰────
+  × error: 2:13: Statement not allowed prior initializers
+    ╭─[../books/tests/src/statement_usage/pre-init.md:23:13]
+ 22 │ sketch K() { 
+ 23 │   fn f() {} f();   // error
+    ·             ──┬─
+    ·               ╰── error: 2:13: Statement not allowed prior initializers
+ 24 │ init(l:Length) {} } K();
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -22,6 +22,7 @@ microcad-lang = { workspace = true }
 thiserror = "2.0.12"
 toml = "0.9"
 serde = "1"
+miette = "7.6.0"
 
 
 [lints.rust]

@@ -3,6 +3,7 @@
 
 //! µcad CLI create command
 
+use miette::IntoDiagnostic;
 use crate::*;
 
 #[derive(clap::Parser)]
@@ -16,7 +17,7 @@ use rust_embed::RustEmbed;
 struct Hello;
 
 impl RunCommand for Create {
-    fn run(&self, cli: &Cli) -> anyhow::Result<()> {
+    fn run(&self, cli: &Cli) -> miette::Result<()> {
         let path = cli.path_with_default_ext(&self.path);
 
         if path.exists() {
@@ -27,7 +28,7 @@ impl RunCommand for Create {
                 Hello::get("hello.µcad")
                     .expect("embedded hello.µcad not found")
                     .data,
-            )?;
+            ).into_diagnostic()?;
             eprintln!("File {path:?} generated.")
         }
 

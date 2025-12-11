@@ -22,7 +22,7 @@ pub struct Completions {
 }
 
 impl RunCommand for Completions {
-    fn run(&self, _cli: &Cli) -> anyhow::Result<()> {
+    fn run(&self, _cli: &Cli) -> miette::Result<()> {
         generate(self.shell, &mut Cli::command(), "microcad", &mut stdout());
         Ok(())
     }

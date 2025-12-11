@@ -1,18 +1,20 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use miette::SourceCode;
 use crate::{diag::*, resolve::*, src_ref::*};
+use crate::syntax::MietteSourceFile;
 
 /// Diagnostic message with source code reference attached.
 pub enum Diagnostic {
     /// Trace message.
-    Trace(Refer<String>),
+    Trace(Refer<Report>),
     /// Informative message.
-    Info(Refer<String>),
+    Info(Refer<Report>),
     /// Warning.
-    Warning(Refer<Box<dyn std::error::Error>>),
+    Warning(Refer<Report>),
     /// Error.
-    Error(Refer<Box<dyn std::error::Error>>),
+    Error(Refer<Report>),
 }
 
 impl Diagnostic {
@@ -45,6 +47,15 @@ impl Diagnostic {
         src_ref.as_ref().map(|r| r.at.line)
     }
 
+    fn report(&self) -> &Report {
+        match self {
+            Diagnostic::Trace(r)
+            | Diagnostic::Info(r)
+            | Diagnostic::Warning(r)
+            | Diagnostic::Error(r) => &r.value
+        }
+    }
+
     /// Pretty print the diagnostic.
     ///
     /// This will print the diagnostic to the given writer, including the source code reference.
@@ -65,9 +76,10 @@ impl Diagnostic {
     /// ```
     pub fn pretty_print(
         &self,
-        f: &mut dyn std::fmt::Write,
+        mut f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
         line_offset: usize,
+        options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
 
@@ -84,43 +96,20 @@ impl Diagnostic {
             .to_string_lossy()
             .to_string()
         }
+
         match &src_ref {
             SrcRef(None) => writeln!(f, "{}: {}", self.level(), self.message())?,
-            SrcRef(Some(src_ref)) => {
-                writeln!(f, "{}: {}", self.level(), self.message())?;
-                writeln!(
-                    f,
-                    "  ---> {}:{}",
-                    source_file
-                        .as_ref()
-                        .map(|sf| make_relative(&sf.filename()))
-                        .unwrap_or(crate::invalid_no_ansi!(FILE).to_string()),
-                    src_ref.with_line_offset(line_offset).at
-                )?;
-                writeln!(f, "     |",)?;
-
-                let line = source_file
+            SrcRef(Some(_)) => {
+                let miette_source = source_file
                     .as_ref()
-                    .map(|sf| {
-                        sf.get_line(src_ref.at.line - 1)
-                            .unwrap_or(crate::invalid!(LINE))
-                    })
-                    .unwrap_or(crate::invalid_no_ansi!(FILE));
-
-                writeln!(
-                    f,
-                    "{: >4} | {}",
-                    src_ref.with_line_offset(line_offset).at.line,
-                    line
-                )?;
-                writeln!(
-                    f,
-                    "{: >4} | {}",
-                    "",
-                    " ".repeat(src_ref.at.col - 1)
-                        + &"^".repeat(src_ref.range.len().min(line.len())),
-                )?;
-                writeln!(f, "     |",)?;
+                    .map(|s| s.miette_source(make_relative(&s.filename()), line_offset))
+                    .unwrap_or_else(|_| MietteSourceFile::invalid());
+                let wrapper = DiagnosticWrapper {
+                    diagnostic: self,
+                    source: miette_source,
+                };
+                let handler = miette::GraphicalReportHandler::new_themed(options.theme());
+                handler.render_report(&mut f, &wrapper)?
             }
         }
 
@@ -158,5 +147,72 @@ impl std::fmt::Debug for Diagnostic {
             Diagnostic::Warning(error) => write!(f, "warning: {}: {error:?}", self.src_ref()),
             Diagnostic::Error(error) => write!(f, "error: {}: {error:?}", self.src_ref()),
         }
+    }
+}
+
+struct DiagnosticWrapper<'a> {
+    diagnostic: &'a Diagnostic,
+    source: MietteSourceFile<'a>,
+}
+
+impl std::fmt::Debug for DiagnosticWrapper<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self.diagnostic)
+    }
+}
+
+impl std::fmt::Display for DiagnosticWrapper<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.diagnostic)
+    }
+}
+
+impl std::error::Error for DiagnosticWrapper<'_> {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        self.diagnostic.report().source()
+    }
+}
+
+impl miette::Diagnostic for DiagnosticWrapper<'_> {
+    fn code<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
+        self.diagnostic.report().code()
+    }
+
+    fn severity(&self) -> Option<miette::Severity> {
+        match self.diagnostic {
+            Diagnostic::Trace(_) => None,
+            Diagnostic::Info(_) => Some(miette::Severity::Advice),
+            Diagnostic::Warning(_) => Some(miette::Severity::Warning),
+            Diagnostic::Error(_) => Some(miette::Severity::Error),
+        }
+    }
+
+    fn help<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
+        self.diagnostic.report().help()
+    }
+
+    fn source_code(&self) -> Option<&dyn SourceCode> {
+        Some(&self.source)
+    }
+
+    fn diagnostic_source(&self) -> Option<&dyn miette::Diagnostic> {
+        self.diagnostic.report().diagnostic_source()
+    }
+
+    fn labels(&self) -> Option<Box<dyn Iterator<Item=miette::LabeledSpan> + '_>> {
+        self.diagnostic.report().labels()
+            .or_else(|| {
+                let span = self.diagnostic.src_ref().as_miette_span()?;
+                let label = miette::LabeledSpan::new_with_span(Some(self.diagnostic.to_string()), span);
+                Some(Box::new(std::iter::once(label)))
+            })
+    }
+
+    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item=&'a dyn miette::Diagnostic> + 'a>> {
+        self.diagnostic.report().related()
+    }
+
+    fn url<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
+        self.diagnostic.report().url()
     }
 }

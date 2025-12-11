@@ -3,10 +3,11 @@
 
 //! Resolve error
 
+use miette::Diagnostic;
 use thiserror::Error;
 
 /// Resolve error.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum DiagError {
     /// Cannot continue evaluation after error limit has been reached.
     #[error("Error limit reached: Stopped evaluation after {0} errors")]

@@ -12,7 +12,7 @@
 //! If test IDs include `.` name will be split into several names which will be
 //! used to crates sub modules.
 
-use anyhow::{Context, Result};
+use miette::{Context, IntoDiagnostic, Result};
 use microcad_test_tools::{output::*, test_env::*};
 use std::{io::Write, path::Path};
 
@@ -46,7 +46,7 @@ pub fn generate(
     use std::*;
 
     // get target path
-    let out_dir = env::var("OUT_DIR")?;
+    let out_dir = env::var("OUT_DIR").into_diagnostic()?;
     let dest_path = path::Path::new(&out_dir).join(out_file);
     // we will create a single output file whose content will be written into this variable first
     let mut code = String::from(
@@ -77,7 +77,9 @@ pub fn generate(
     // remove any previous banners
     remove_banners(path, &exclude_dirs, &test_outputs)?;
 
-    fs::write(&dest_path, code).context(format!("cannot create file '{dest_path:?}'"))
+    fs::write(&dest_path, code)
+        .into_diagnostic()
+        .context(format!("cannot create file '{dest_path:?}'"))
 }
 
 fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
@@ -132,7 +134,7 @@ fn remove_banners(
     exclude_outputs: &[Output],
 ) -> Result<()> {
     //warning!("remove_banners: {:?} {exclude_files:?}", path.as_ref());
-    for entry in std::fs::read_dir(&path)?.flatten() {
+    for entry in std::fs::read_dir(&path).into_diagnostic()?.flatten() {
         // get file type
         if let Ok(file_type) = entry.file_type() {
             // check if directory or file
@@ -167,7 +169,7 @@ fn clean_dir(path: impl AsRef<Path>, exclude_files: &[Output]) -> Result<()> {
             .count()
         {
             // warning!("remove: {:?}", entry.path());
-            std::fs::remove_file(entry.path())?;
+            std::fs::remove_file(entry.path()).into_diagnostic()?;
         }
     }
     Ok(())
@@ -184,7 +186,7 @@ fn scan(
     // prepare return value
     let mut found = false;
     // read given directory
-    for entry in std::fs::read_dir(path)?.flatten() {
+    for entry in std::fs::read_dir(path).into_diagnostic()?.flatten() {
         // get file type
         if let Ok(file_type) = entry.file_type() {
             let file_name = entry.file_name().into_string().unwrap();
@@ -238,16 +240,13 @@ fn scan_for_tests(
     test_outputs: &mut Vec<Output>,
 ) -> Result<bool> {
     use regex::*;
-    use std::{fs::*, io::*};
+    use std::{fs::*};
 
     // `true`` if we didn't found anything
     let mut result = true;
 
     // load markdown file
-    let mut md_content = String::new();
-    {
-        File::open(file_path)?.read_to_string(&mut md_content)?;
-    }
+    let md_content = read_to_string(file_path).into_diagnostic()?;
 
     // accumulate name and code while reading file
     let mut test_name = String::new();

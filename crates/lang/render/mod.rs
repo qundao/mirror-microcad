@@ -18,6 +18,7 @@ pub use hash::*;
 pub use output::*;
 
 use cgmath::SquareMatrix;
+use miette::Diagnostic;
 use microcad_core::*;
 use thiserror::Error;
 
@@ -28,7 +29,7 @@ use crate::{
 };
 
 /// An error that occurred during rendering.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum RenderError {
     /// Invalid output type.
     #[error("Invalid output type: {0}")]

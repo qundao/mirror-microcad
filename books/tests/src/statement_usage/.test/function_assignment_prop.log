@@ -12,18 +12,22 @@
 
 -- No Output --
 -- Errors --
-error: Assignment statement is not available within Function
-  ---> ../books/tests/src/statement_usage/function.md:87:3
-     |
-  87 |   prop a = 1; // error
-     |   ^^^^^^^^^^^
-     |
-error: Declaration of a not allowed within function_assignment_prop::f
-  ---> ../books/tests/src/statement_usage/function.md:87:3
-     |
-  87 |   prop a = 1; // error
-     |   ^^^^^^^^^^^
-     |
+  × error: 2:3: Assignment statement is not available within Function
+    ╭─[../books/tests/src/statement_usage/function.md:87:3]
+ 86 │ fn f() {
+ 87 │   prop a = 1; // error
+    ·   ─────┬─────
+    ·        ╰── error: 2:3: Assignment statement is not available within Function
+ 88 │ } f();
+    ╰────
+  × error: 2:3: Declaration of a not allowed within function_assignment_prop::f
+    ╭─[../books/tests/src/statement_usage/function.md:87:3]
+ 86 │ fn f() {
+ 87 │   prop a = 1; // error
+    ·   ─────┬─────
+    ·        ╰── error: 2:3: Declaration of a not allowed within function_assignment_prop::f
+ 88 │ } f();
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

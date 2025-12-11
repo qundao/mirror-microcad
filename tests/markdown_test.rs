@@ -187,7 +187,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
 // evaluate the code including µcad std library
 fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
-    EvalContext::from_source(
+    let mut context = EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
         &["../crates/std/lib", "../assets"],
@@ -196,7 +196,9 @@ fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
         microcad_builtin::builtin_importers(),
         line_offset - 1,
     )
-    .expect("resolve error")
+    .expect("resolve error");
+    context.diag.render_options.color = false;
+    context
 }
 
 fn report_model(env: &mut TestEnv, model: Option<Model>) {

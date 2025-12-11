@@ -3,11 +3,12 @@
 
 //! Evaluation error
 
+use miette::Diagnostic;
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
 use thiserror::Error;
 
 /// Evaluation error.
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum EvalError {
     /// Can't find a project file by it's qualified name.
     #[error("Not implemented: {0}")]
@@ -175,7 +176,8 @@ pub enum EvalError {
 
     /// Workbench didn't find a initialization routine matching the given arguments
     #[error("Workbench {0} cannot find initialization for those arguments")]
-    NoInitializationFound(Identifier),
+    #[diagnostic(help("Possible initializations: \n\t{}", .1.join("\n\t")))]
+    NoInitializationFound(Identifier, Vec<String>),
 
     /// Initializer missed to set a property from plan
     #[error("Workbench plan incomplete. Missing properties: {0}")]

@@ -19,18 +19,22 @@
 
 -- No Output --
 -- Errors --
-error: Declaration of a not allowed within assignment_module::my_module
-  ---> ../books/language/src/assignments/values.md:38:5
-     |
-  38 |     a = 1; // error
-     |     ^^^^^^
-     |
-error: Statement not allowed prior initializers
-  ---> ../books/language/src/assignments/values.md:42:5
-     |
-  42 |     a = 1;   // error
-     |     ^^^^^^
-     |
+  × error: 2:5: Declaration of a not allowed within assignment_module::my_module
+    ╭─[../books/language/src/assignments/values.md:38:5]
+ 37 │ mod my_module {
+ 38 │     a = 1; // error
+    ·     ───┬──
+    ·        ╰── error: 2:5: Declaration of a not allowed within assignment_module::my_module
+ 39 │ }
+    ╰────
+  × error: 6:5: Statement not allowed prior initializers
+    ╭─[../books/language/src/assignments/values.md:42:5]
+ 41 │ sketch MySketch() {
+ 42 │     a = 1;   // error
+    ·     ───┬──
+    ·        ╰── error: 6:5: Statement not allowed prior initializers
+ 43 │     init(_x : Scalar) {}
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

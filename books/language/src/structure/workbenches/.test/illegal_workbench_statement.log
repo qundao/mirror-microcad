@@ -15,18 +15,22 @@
 
 -- No Output --
 -- Errors --
-error: Statement is not available within Sketch
-  ---> ../books/language/src/structure/workbenches/README.md:256:12
-     |
- 256 |     sketch Axis(length: Length) {}  // error
-     |            ^^^^
-     |
-error: Sketch is not available within Sketch
-  ---> ../books/language/src/structure/workbenches/README.md:256:12
-     |
- 256 |     sketch Axis(length: Length) {}  // error
-     |            ^^^^
-     |
+  × error: 2:12: Statement is not available within Sketch
+     ╭─[../books/language/src/structure/workbenches/README.md:256:12]
+ 255 │ sketch Wheel(radius: Length) {
+ 256 │     sketch Axis(length: Length) {}  // error
+     ·            ──┬─
+     ·              ╰── error: 2:12: Statement is not available within Sketch
+ 257 │     std::geo2d::Circle(radius);
+     ╰────
+  × error: 2:12: Sketch is not available within Sketch
+     ╭─[../books/language/src/structure/workbenches/README.md:256:12]
+ 255 │ sketch Wheel(radius: Length) {
+ 256 │     sketch Axis(length: Length) {}  // error
+     ·            ──┬─
+     ·              ╰── error: 2:12: Sketch is not available within Sketch
+ 257 │     std::geo2d::Circle(radius);
+     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

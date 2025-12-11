@@ -1,6 +1,7 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use std::io::IsTerminal;
 use crate::{diag::*, resolve::*};
 
 /// Handler for diagnostics.
@@ -21,6 +22,38 @@ pub struct DiagHandler {
     warnings_as_errors: bool,
     /// Line offset for error and warning messages.
     line_offset: usize,
+    /// Diagnostic rendering options
+    pub render_options: DiagRenderOptions,
+}
+
+/// Options that control the rendering of diagnostics
+#[derive(Debug)]
+pub struct DiagRenderOptions {
+    /// Render diagnostic with colors
+    pub color: bool,
+    /// Render diagnostic with unicode characters
+    pub unicode: bool,
+}
+
+impl Default for DiagRenderOptions {
+    fn default() -> Self {
+        DiagRenderOptions {
+            color: std::env::var("NO_COLOR").as_deref().unwrap_or("0") == "0",
+            unicode: std::io::stdout().is_terminal() && std::io::stderr().is_terminal()
+        }
+    }
+}
+
+impl DiagRenderOptions {
+    /// Get the miette theme for the options
+    pub fn theme(&self) -> miette::GraphicalTheme {
+        match (self.unicode, self.color) {
+            (true, true) => miette::GraphicalTheme::unicode(),
+            (true, false) => miette::GraphicalTheme::unicode_nocolor(),
+            (false, true) => miette::GraphicalTheme::ascii(),
+            (false, false) => miette::GraphicalTheme::none(),
+        }
+    }
 }
 
 /// Handler for diagnostics.
@@ -40,7 +73,7 @@ impl DiagHandler {
         source_by_hash: &impl GetSourceByHash,
     ) -> std::fmt::Result {
         self.diag_list
-            .pretty_print(f, source_by_hash, self.line_offset)
+            .pretty_print(f, source_by_hash, self.line_offset, &self.render_options)
     }
 
     /// Return overall number of occurred errors.
@@ -95,7 +128,7 @@ impl PushDiag for DiagHandler {
             if self.error_count >= error_limit && !self.error_limit_reached {
                 self.error(
                     &SrcRef(None),
-                    Box::new(DiagError::ErrorLimitReached(error_limit)),
+                    DiagError::ErrorLimitReached(error_limit),
                 )?;
                 self.error_limit_reached = true;
             }

@@ -16,7 +16,7 @@ pub struct Watch {
 
 /// Run this command for a CLI.
 impl RunCommand for Watch {
-    fn run(&self, cli: &Cli) -> anyhow::Result<()> {
+    fn run(&self, cli: &Cli) -> miette::Result<()> {
         let mut watcher = Watcher::new()?;
         let render_cache = RcMut::new(RenderCache::default());
 
@@ -27,7 +27,7 @@ impl RunCommand for Watch {
                 match self.export.run(cli) {
                     Ok(target_models) => {
                         target_models.iter().try_for_each(
-                            |(model, export)| -> anyhow::Result<()> {
+                            |(model, export)| -> miette::Result<()> {
                                 let mut render_context = RenderContext::new(
                                     model,
                                     self.export.resolution(),

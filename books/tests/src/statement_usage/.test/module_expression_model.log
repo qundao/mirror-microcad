@@ -12,17 +12,20 @@
 
 -- No Output --
 -- Errors --
-error: Expression statement not available here
-  ---> ../books/tests/src/statement_usage/module.md:103:3
-     |
- 103 |   __builtin::geo2d::Circle(radius=1mm); // error
-     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     |
-warning: Unused global symbol k.
-  ---> ../books/tests/src/statement_usage/module.md:102:5
-     |
- 102 | mod k { // warning
-     |     ^
-     |
+  × error: 2:3: Expression statement not available here
+     ╭─[../books/tests/src/statement_usage/module.md:103:3]
+ 102 │ mod k { // warning
+ 103 │   __builtin::geo2d::Circle(radius=1mm); // error
+     ·   ──────────────────┬──────────────────
+     ·                     ╰── error: 2:3: Expression statement not available here
+ 104 │ }
+     ╰────
+  ⚠ warning: 1:5: Unused global symbol k.
+     ╭─[../books/tests/src/statement_usage/module.md:102:5]
+ 102 │ mod k { // warning
+     ·     ┬
+     ·     ╰── warning: 1:5: Unused global symbol k.
+ 103 │   __builtin::geo2d::Circle(radius=1mm); // error
+     ╰────
 -- Test Result --
 FAILS AS EXPECTED

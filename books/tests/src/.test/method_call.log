@@ -12,12 +12,13 @@
 
 -- No Output --
 -- Errors --
-warning: Unused global symbol scale.
-  ---> ../books/tests/src/method_call.md:6:4
-     |
-   6 | op scale() {}
-     |    ^^^^^
-     |
+  ⚠ warning: 1:4: Unused global symbol scale.
+   ╭─[../books/tests/src/method_call.md:6:4]
+ 6 │ op scale() {}
+   ·    ──┬──
+   ·      ╰── warning: 1:4: Unused global symbol scale.
+ 7 │ sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
+   ╰────
 Unexpected warnings(s) which did occur in line(s): 6
 -- Model --
   Group (root) ->

@@ -11,17 +11,19 @@
 
 -- No Output --
 -- Errors --
-error: Value a already in defined: 5 (at line 1:1)
-  ---> ../books/language/src/assignments/values.md:28:1
-     |
-  28 | a = a * 2; // error: a already defined in this scope
-     | ^
-     |
-warning: Unused local a.
-  ---> ../books/language/src/assignments/values.md:27:1
-     |
-  27 | a = 5; // warning: unused local
-     | ^
-     |
+  × error: 2:1: Value a already in defined: 5 (at line 1:1)
+    ╭─[../books/language/src/assignments/values.md:28:1]
+ 27 │ a = 5; // warning: unused local
+ 28 │ a = a * 2; // error: a already defined in this scope
+    · ┬
+    · ╰── error: 2:1: Value a already in defined: 5 (at line 1:1)
+    ╰────
+  ⚠ warning: 1:1: Unused local a.
+    ╭─[../books/language/src/assignments/values.md:27:1]
+ 27 │ a = 5; // warning: unused local
+    · ┬
+    · ╰── warning: 1:1: Unused local a.
+ 28 │ a = a * 2; // error: a already defined in this scope
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED

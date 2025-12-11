@@ -4,7 +4,7 @@
 //! Viewer IPC interface
 
 use std::path::PathBuf;
-
+use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
 
 /// The cursor position to be sent.
@@ -64,8 +64,8 @@ pub struct ViewerProcessInterface {
 
 impl ViewerProcessInterface {
     /// Send a request to the viewer process.
-    pub fn send_request(&self, request: ViewerRequest) -> anyhow::Result<()> {
-        Ok(self.request_sender.send(request)?)
+    pub fn send_request(&self, request: ViewerRequest) -> miette::Result<()> {
+        self.request_sender.send(request).into_diagnostic()
     }
 
     /// Run the viewer process.

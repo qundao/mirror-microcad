@@ -14,11 +14,13 @@
 
 -- No Output --
 -- Errors --
-error: Function statement not available here
-  ---> ../books/language/src/structure/functions.md:126:12
-     |
- 126 |     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
-     |            ^^^^^
-     |
+  × error: 2:12: Function statement not available here
+     ╭─[../books/language/src/structure/functions.md:126:12]
+ 125 │ part PunchedDisk(radius: Length) {
+ 126 │     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
+     ·            ──┬──
+     ·              ╰── error: 2:12: Function statement not available here
+ 127 │ }
+     ╰────
 -- Test Result --
 FAILS AS EXPECTED

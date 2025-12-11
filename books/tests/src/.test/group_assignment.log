@@ -17,18 +17,22 @@
 
 -- No Output --
 -- Errors --
-warning: Unused local a.
-  ---> ../books/tests/src/semicolon.md:77:1
-     |
-  77 | a = { 
-     | ^
-     |
-warning: Unused global symbol std::ops::translate.
-  ---> ../books/tests/src/semicolon.md:74:5
-     |
-  74 | use std::ops::translate;
-     |     ^^^^^^^^^^^^^^^^^^^
-     |
+  ⚠ warning: 5:1: Unused local a.
+    ╭─[../books/tests/src/semicolon.md:77:1]
+ 76 │ // assignment + group
+ 77 │ a = { 
+    · ┬
+    · ╰── warning: 5:1: Unused local a.
+ 78 │     Circle(radius = 1mm); 
+    ╰────
+  ⚠ warning: 2:5: Unused global symbol std::ops::translate.
+    ╭─[../books/tests/src/semicolon.md:74:5]
+ 73 │ use std::geo2d::Circle;
+ 74 │ use std::ops::translate;
+    ·     ─────────┬─────────
+    ·              ╰── warning: 2:5: Unused global symbol std::ops::translate.
+ 75 │ 
+    ╰────
 Unexpected warnings(s) which did occur in line(s): 74, 77
 -- No Model --
 -- Test Result --
