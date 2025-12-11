@@ -194,7 +194,9 @@ impl LanguageServer for Backend {
                     if let Err(err) =
                         self.viewer
                             .send_request(ViewerRequest::ShowSourceCodeFromFile {
-                                path: uri.path().into(),
+                                path: uri
+                                    .to_file_path()
+                                    .expect("A valid URI containing a file path"),
                             })
                     {
                         log::error!("{err}");
