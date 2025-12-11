@@ -1,9 +1,7 @@
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::fmt::Display;
-use std::iter::once;
-use miette::{GraphicalReportHandler, LabeledSpan, Report, Severity, SourceCode};
+use miette::SourceCode;
 use crate::{diag::*, resolve::*, src_ref::*};
 use crate::syntax::MietteSourceFile;
 
@@ -110,7 +108,7 @@ impl Diagnostic {
                     diagnostic: self,
                     source: miette_source,
                 };
-                let handler = GraphicalReportHandler::new_themed(options.theme());
+                let handler = miette::GraphicalReportHandler::new_themed(options.theme());
                 handler.render_report(&mut f, &wrapper)?
             }
         }
@@ -176,20 +174,20 @@ impl std::error::Error for DiagnosticWrapper<'_> {
 }
 
 impl miette::Diagnostic for DiagnosticWrapper<'_> {
-    fn code<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+    fn code<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
         self.diagnostic.report().code()
     }
 
-    fn severity(&self) -> Option<Severity> {
+    fn severity(&self) -> Option<miette::Severity> {
         match self.diagnostic {
             Diagnostic::Trace(_) => None,
-            Diagnostic::Info(_) => Some(Severity::Advice),
-            Diagnostic::Warning(_) => Some(Severity::Warning),
-            Diagnostic::Error(_) => Some(Severity::Error),
+            Diagnostic::Info(_) => Some(miette::Severity::Advice),
+            Diagnostic::Warning(_) => Some(miette::Severity::Warning),
+            Diagnostic::Error(_) => Some(miette::Severity::Error),
         }
     }
 
-    fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+    fn help<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
         self.diagnostic.report().help()
     }
 
@@ -201,12 +199,12 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
         self.diagnostic.report().diagnostic_source()
     }
 
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
+    fn labels(&self) -> Option<Box<dyn Iterator<Item=miette::LabeledSpan> + '_>> {
         self.diagnostic.report().labels()
             .or_else(|| {
                 let span = self.diagnostic.src_ref().as_miette_span()?;
-                let label = LabeledSpan::new_with_span(Some(self.diagnostic.to_string()), span);
-                Some(Box::new(once(label)))
+                let label = miette::LabeledSpan::new_with_span(Some(self.diagnostic.to_string()), span);
+                Some(Box::new(std::iter::once(label)))
             })
     }
 
@@ -214,7 +212,7 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
         self.diagnostic.report().related()
     }
 
-    fn url<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+    fn url<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
         self.diagnostic.report().url()
     }
 }

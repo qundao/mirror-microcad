@@ -3,7 +3,6 @@
 
 //! µcad CLI export command
 
-use miette::{bail, miette};
 use microcad_builtin::*;
 use microcad_core::RenderResolution;
 use microcad_lang::{model::*, ty::*, value::*};
@@ -68,7 +67,7 @@ impl RunCommand<Vec<(Model, ExportCommand)>> for Export {
             }
             Ok(target_models)
         } else {
-            bail!("Model missing!")
+            miette::bail!("Model missing!")
         }
     }
 }
@@ -81,12 +80,12 @@ impl Export {
         exporters: &ExporterRegistry,
     ) -> miette::Result<std::rc::Rc<dyn Exporter>> {
         match output_type {
-            OutputType::NotDetermined => Err(miette!("Could not determine output type.")),
+            OutputType::NotDetermined => Err(miette::miette!("Could not determine output type.")),
             OutputType::Geometry2D => {
                 Ok(exporters.exporter_by_id(&(&config.export.sketch).into())?)
             }
             OutputType::Geometry3D => Ok(exporters.exporter_by_id(&(&config.export.part).into())?),
-            OutputType::InvalidMixed => Err(miette!(
+            OutputType::InvalidMixed => Err(miette::miette!(
                 "Invalid output type, the model cannot be exported."
             )),
         }
