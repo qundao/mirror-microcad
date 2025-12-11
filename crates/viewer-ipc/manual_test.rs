@@ -25,8 +25,8 @@ fn test_show_hide_window() -> std::io::Result<()> {
 
     loop {
         viewer
-            .send_request(ViewerRequest::Show)
-            .expect("Successful show request.");
+            .send_request(ViewerRequest::Restore)
+            .expect("Successful restore request.");
         prompt_for_confirmation("Is the window visible?")
             .expect("Window did not appear as expected.");
 
@@ -46,8 +46,8 @@ fn test_show_hide_window() -> std::io::Result<()> {
         prompt_for_confirmation("Is there a number?").expect("Valid source code");
 
         viewer
-            .send_request(ViewerRequest::Hide)
-            .expect("Successful hide request.");
+            .send_request(ViewerRequest::Minimize)
+            .expect("Successful minimize request.");
         prompt_for_confirmation("Is the window hidden?").expect("Window did not hide as expected.");
         cycle += 1;
 
