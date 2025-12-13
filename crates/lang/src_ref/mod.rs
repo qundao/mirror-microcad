@@ -55,6 +55,12 @@ impl SrcRef {
     }
 }
 
+impl From<SrcRef> for SourceSpan {
+    fn from(value: SrcRef) -> Self {
+        value.as_miette_span().unwrap_or(SourceSpan::new(0.into(), 0))
+    }
+}
+
 /// A reference into the source code
 #[derive(Clone, Default)]
 pub struct SrcRefInner {
