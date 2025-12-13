@@ -61,15 +61,16 @@ impl ResolveContext {
         builtin: Option<Symbol>,
         diag: DiagHandler,
     ) -> ResolveResult<Self> {
-        match Self::create_ex(root, search_paths, builtin, diag, ResolveMode::Checked) {
+        match Self::create_ex(root.clone(), search_paths, builtin, diag, ResolveMode::Checked) {
             Ok(context) => Ok(context),
             Err(err) => {
                 // create empty context which might be given to following stages like export.
                 let mut context = ResolveContext {
+                    sources: Sources::load(root, search_paths)?,
                     mode: ResolveMode::Failed,
                     ..Default::default()
                 };
-                context.error(&SrcRef(None), err)?;
+                context.error(&err.src_ref(), err)?;
                 Ok(context)
             }
         }
