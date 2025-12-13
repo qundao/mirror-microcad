@@ -7,6 +7,7 @@ mod identifier_list;
 mod qualified_name;
 
 use derive_more::{Deref, DerefMut};
+use miette::SourceSpan;
 pub use identifier_list::*;
 pub use qualified_name::*;
 
@@ -160,6 +161,12 @@ impl Identifier {
 impl SrcReferrer for Identifier {
     fn src_ref(&self) -> SrcRef {
         self.0.src_ref.clone()
+    }
+}
+
+impl From<Identifier> for SourceSpan {
+    fn from(value: Identifier) -> Self {
+        value.src_ref().into()
     }
 }
 
