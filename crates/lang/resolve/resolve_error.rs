@@ -96,7 +96,11 @@ pub enum ResolveError {
     #[error(
         "Source of module '{0}' could not be found in {1:?} (expecting a file '{0}.µcad' or '{0}/mod.µcad')"
     )]
-    SourceFileNotFound(Identifier, std::path::PathBuf),
+    SourceFileNotFound(
+        #[label("module not found")]
+        Identifier,
+        std::path::PathBuf
+    ),
 
     /// Wrong lookup target
     #[error("Wrong lookup target")]
