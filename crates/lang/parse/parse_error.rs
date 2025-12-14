@@ -86,11 +86,13 @@ pub enum ParseError {
         Identifier
     ),
 
-    #[error("Duplicate argument: {0}")]
-    DuplicateArgument(
-        #[label("Duplicate argument")]
-        Identifier
-    ),
+    #[error("Duplicate argument: {id}")]
+    DuplicateArgument {
+        #[label(primary, "Duplicate identifier")]
+        id: Identifier,
+        #[label("Previous declaration")]
+        previous: Identifier,
+    },
 
     #[error("Duplicated type name in map: {0}")]
     DuplicatedMapType(
@@ -227,7 +229,7 @@ impl SrcReferrer for ParseError {
             ParseError::DuplicateNamedArgument(id)
             | ParseError::ParameterMissingTypeOrValue(id)
             | ParseError::DuplicateParameter(id)
-            | ParseError::DuplicateArgument(id)
+            | ParseError::DuplicateArgument{id, ..}
             | ParseError::DuplicatedMapType(id)
             | ParseError::DuplicateIdentifier(id)
             | ParseError::DuplicateTupleIdentifier{id, ..} => id.src_ref(),
