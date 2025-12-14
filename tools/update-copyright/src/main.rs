@@ -1,11 +1,29 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
+use clap::Parser;
+
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Path to search for files
+    #[arg(default_value = ".")]
+    search_path: std::path::PathBuf,
+    /// File extensions to include (using "# " as comment prefix)
+    #[arg(short = 'H', long)]
+    hash_extensions: Vec<String>,
+    /// File extensions to include (using "// " as comment prefix)
+    #[arg(short = 'S', long)]
+    slash_extension: Vec<String>,
+    /// patterns to exclude (e.g. "./target/*")
+    #[arg(short, long)]
+    exclude_patterns: Vec<String>,
+}
 
 use regex::Regex;
 use scan_dir::ScanDir;
 use std::{fs, process::Command};
 
-fn is_excluded(path: impl AsRef<std::path::Path>, excluded_patterns: &[&str]) -> bool {
+fn is_excluded(path: impl AsRef<std::path::Path>, excluded_patterns: &[String]) -> bool {
     let path_str = path.as_ref().to_str().unwrap_or_default();
 
     excluded_patterns.iter().any(|pattern| {
@@ -18,29 +36,34 @@ fn is_excluded(path: impl AsRef<std::path::Path>, excluded_patterns: &[&str]) ->
 }
 
 fn main() -> std::io::Result<()> {
-    let search_path = ".";
-    let extensions = [
-        ".rs",    // Rust files
-        ".toml",  // TOML files, like Cargo.toml
-        ".pest",  // Pest grammar
-        ".slint", // Slint UI files
-        ".wgsl",  // WGSL shader files used in microcad-viewer
-        ".µcad",  // microcad files
-    ];
+    let args = Args::parse();
 
-    let excluded_patterns = [
-        "./target/*",                   // Ignore build output
-        "./tests/*.µcad",               // Ignore all µcad test files
-        "./crates/cli/examples/*.µcad", // Ignore hello world and other templates.
-    ];
+    let mut extensions = vec![];
+    extensions.extend_from_slice(
+        &args
+            .hash_extensions
+            .iter()
+            .map(|s| format!(".{s}"))
+            .collect::<Vec<_>>(),
+    );
+    extensions.extend_from_slice(
+        &args
+            .slash_extension
+            .iter()
+            .map(|s| format!(".{s}"))
+            .collect::<Vec<_>>(),
+    );
+
+    eprintln!("Searching for extensions: {}", extensions.join(", "));
+    eprintln!("Excluding: {}", args.exclude_patterns.join(", "));
 
     let re = Regex::new(r"Copyright © (\d{4}(-\d{4})?)").unwrap();
 
     let files = ScanDir::files()
-        .walk(search_path, |iter| {
+        .walk(args.search_path, |iter| {
             iter.filter(|(entry, name)| {
                 extensions.iter().any(|extension| {
-                    name.ends_with(extension) && !is_excluded(entry.path(), &excluded_patterns)
+                    name.ends_with(extension) && !is_excluded(entry.path(), &args.exclude_patterns)
                 })
             })
             .map(|(ref entry, _)| entry.path())
@@ -49,16 +72,18 @@ fn main() -> std::io::Result<()> {
         .expect("scan_path failed");
 
     for path in files {
-        let prefix = match path
+        let ext = path
             .extension()
             .expect("extension")
             .to_string_lossy()
-            .to_string()
-            .as_str()
-        {
-            "rs" | "pest" | "slint" | "wgsl" | "µcad" => "//",
-            "toml" => "#",
-            _ => panic!("unexpected extension"),
+            .to_string();
+
+        let prefix = if args.slash_extension.contains(&ext) {
+            "//"
+        } else if args.hash_extensions.contains(&ext) {
+            "#"
+        } else {
+            panic!("unexpected extension")
         };
 
         let content = fs::read_to_string(&path)?;
@@ -109,7 +134,7 @@ fn main() -> std::io::Result<()> {
                 fs::write(&path, new_content.to_string())?;
             }
         } else {
-            println!("untracked file: {path:?}");
+            eprintln!("untracked file: {path:?}");
         }
     }
 

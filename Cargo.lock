@@ -8442,6 +8442,7 @@ checksum = "6d49784317cd0d1ee7ec5c716dd598ec5b4483ea832a2dced265471cc0f690ae"
 name = "update_copyright"
 version = "0.2.18"
 dependencies = [
+ "clap",
  "env_logger",
  "regex",
  "scan_dir",

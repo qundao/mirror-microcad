@@ -17,3 +17,4 @@ keywords.workspace = true
 regex = "1"
 scan_dir = "0.3"
 env_logger = "0.11"
+clap = { version = "4", features = ["derive"] }
