@@ -179,7 +179,7 @@ pub enum EvalError {
     #[error("Workbench {name} cannot find initialization for those arguments")]
     #[diagnostic(help("Possible initializations: \n\t{}", possible_params.join("\n\t")))]
     NoInitializationFound {
-        #[label("Cannot find initialization for: {actual_params}")]
+        #[label("Got: {name}( {actual_params} )")]
         src_ref: SrcRef,
         name: Identifier,
         actual_params: String,
