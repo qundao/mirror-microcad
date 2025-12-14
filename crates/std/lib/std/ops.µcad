@@ -1,3 +1,6 @@
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 pub use __builtin::ops::center;
 pub use __builtin::ops::hull;
 pub use __builtin::ops::intersect;
