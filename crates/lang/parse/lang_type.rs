@@ -20,7 +20,8 @@ impl Parse for TupleType {
                 pair.inner().try_for_each(|pair| {
                     let mut inner = pair.inner();
                     let next = inner.next().expect("Identifier or type expected");
-                    if let Ok(id) = Identifier::parse(next.clone()) {
+                    if next.as_rule() == Rule::identifier {
+                        let id = Identifier::parse(next)?;
                         if named
                             .insert(
                                 id.clone(),

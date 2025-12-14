@@ -167,7 +167,8 @@ tuple_type = {
 }
 
 // `a: Length`: ok
-tuple_type_element = { identifier ~ ws* ~ ":" ~ ws* ~ type }
+// `Length`: ok
+tuple_type_element = { identifier ~ ws* ~ ":" ~ ws* ~ type | type }
 
 // `Matrix4x3`: ok
 // `Matrix3`: ok
