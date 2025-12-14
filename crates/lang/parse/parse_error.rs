@@ -116,11 +116,13 @@ pub enum ParseError {
         previous: Identifier,
     },
 
-    #[error("Duplicate unnamed type in tuple: {0}")]
-    DuplicateTupleType(
-        #[label("Duplicate item")]
-        Refer<Type>
-    ),
+    #[error("Duplicate unnamed type in tuple: {ty}")]
+    DuplicateTupleType {
+        #[label(primary, "Duplicate item")]
+        ty: Refer<Type>,
+        #[label("Previous declaration")]
+        previous: Refer<Type>,
+    },
 
     #[error("Missing format expression")]
     MissingFormatExpression(
@@ -259,7 +261,7 @@ impl SrcReferrer for ParseError {
             ParseError::ParseColorError(parse_color_error) => parse_color_error.src_ref(),
             ParseError::UnknownColorName(name) => name.src_ref(),
             ParseError::UnknownUnit(unit) => unit.src_ref(),
-            ParseError::DuplicateTupleType(ty) => ty.src_ref(),
+            ParseError::DuplicateTupleType{ty, ..} => ty.src_ref(),
             ParseError::GrammarRuleError(rule) => rule.src_ref(),
             ParseError::InvalidQualifiedName(name) => name.src_ref(),
             ParseError::InvalidIdentifier(id) => id.src_ref(),
