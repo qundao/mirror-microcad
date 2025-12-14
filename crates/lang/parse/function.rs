@@ -11,9 +11,7 @@ impl Parse for Rc<FunctionDefinition> {
             doc: crate::find_rule_opt!(pair, doc_block)?,
             visibility: crate::find_rule!(pair, visibility)?,
             id: crate::find_rule!(pair, identifier)?,
-            signature: pair
-                .find(Rule::function_signature)
-                .expect("Function signature"),
+            signature: crate::find_rule_exact!(pair, function_signature)?,
             body: crate::find_rule!(pair, body)?,
         }))
     }
