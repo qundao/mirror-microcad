@@ -192,18 +192,18 @@ impl WorkbenchDefinition {
                         .iter()
                         .map(|(name, val)| {
                             if !name.is_empty() {
-                                format!("{name}: {} = {val}", val.value.ty())
+                                format!("{name}: {}", val.value.ty())
                             } else if let Some(id) = &val.inline_id {
-                                format!("{id}: {} = {val}", val.value.ty())
+                                format!("{id}: {}", val.value.ty())
                             } else {
-                                format!("{} = {val}", val.value.ty())
+                                format!("{}", val.value.ty())
                             }
                         })
                         .collect::<Vec<_>>()
                         .join(", ");
                     let possible_params = std::iter::once(&self.plan)
                         .chain(self.inits().map(|init| &init.parameters))
-                        .map(|params| params.to_string())
+                        .map(|params| format!("{}( {})", self.id, params))
                         .collect();
                     context.error(
                         arguments,
