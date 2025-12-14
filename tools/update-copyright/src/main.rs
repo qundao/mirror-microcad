@@ -5,6 +5,18 @@ use regex::Regex;
 use scan_dir::ScanDir;
 use std::{fs, process::Command};
 
+fn is_excluded(path: impl AsRef<std::path::Path>, excluded_patterns: &[&str]) -> bool {
+    let path_str = path.as_ref().to_str().unwrap_or_default();
+
+    excluded_patterns.iter().any(|pattern| {
+        // Convert wildcard '*' to regex '.*'
+        let regex_pattern = format!("^{}$", regex::escape(pattern).replace(r"\*", ".*"));
+        Regex::new(&regex_pattern)
+            .map(|re| re.is_match(path_str))
+            .unwrap_or(false)
+    })
+}
+
 fn main() -> std::io::Result<()> {
     let search_path = ".";
     let extensions = [
@@ -13,15 +25,26 @@ fn main() -> std::io::Result<()> {
         ".pest",  // Pest grammar
         ".slint", // Slint UI files
         ".wgsl",  // WGSL shader files used in microcad-viewer
+        ".µcad",  // microcad files
+    ];
+
+    let excluded_patterns = [
+        "./target/*",                   // Ignore build output
+        "./tests/*.µcad",               // Ignore all µcad test files
+        "./crates/cli/examples/*.µcad", // Ignore hello world and other templates.
     ];
 
     let re = Regex::new(r"Copyright © (\d{4}(-\d{4})?)").unwrap();
 
     let files = ScanDir::files()
         .walk(search_path, |iter| {
-            iter.filter(|(_, name)| extensions.iter().any(|extension| name.ends_with(extension)))
-                .map(|(ref entry, _)| entry.path())
-                .collect::<Vec<_>>()
+            iter.filter(|(entry, name)| {
+                extensions.iter().any(|extension| {
+                    name.ends_with(extension) && !is_excluded(entry.path(), &excluded_patterns)
+                })
+            })
+            .map(|(ref entry, _)| entry.path())
+            .collect::<Vec<_>>()
         })
         .expect("scan_path failed");
 
@@ -33,7 +56,7 @@ fn main() -> std::io::Result<()> {
             .to_string()
             .as_str()
         {
-            "rs" | "pest" | "slint" | "wgsl" => "//",
+            "rs" | "pest" | "slint" | "wgsl" | "µcad" => "//",
             "toml" => "#",
             _ => panic!("unexpected extension"),
         };
