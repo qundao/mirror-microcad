@@ -104,11 +104,13 @@ pub enum ParseError {
         Identifier
     ),
 
-    #[error("Duplicate id in tuple: {0}")]
-    DuplicateTupleIdentifier(
-        #[label("Duplicate identifier")]
-        Identifier
-    ),
+    #[error("Duplicate id in tuple: {id}")]
+    DuplicateTupleIdentifier {
+        #[label(primary, "Duplicate identifier")]
+        id: Identifier,
+        #[label("Previous declaration")]
+        previous: Identifier,
+    },
 
     #[error("Duplicate unnamed type in tuple: {0}")]
     DuplicateTupleType(
@@ -228,7 +230,7 @@ impl SrcReferrer for ParseError {
             | ParseError::DuplicateArgument(id)
             | ParseError::DuplicatedMapType(id)
             | ParseError::DuplicateIdentifier(id)
-            | ParseError::DuplicateTupleIdentifier(id) => id.src_ref(),
+            | ParseError::DuplicateTupleIdentifier{id, ..} => id.src_ref(),
             ParseError::QualifiedNameIsNoId(name) | ParseError::InvalidAttributeCall(name) => {
                 name.src_ref()
             }
