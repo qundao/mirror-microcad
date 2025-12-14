@@ -192,11 +192,11 @@ impl WorkbenchDefinition {
                         .iter()
                         .map(|(name, val)| {
                             if !name.is_empty() {
-                                format!("{name}: {}", val.value.ty())
+                                format!("{name}: {} = {val}", val.value.ty())
                             } else if let Some(id) = &val.inline_id {
-                                format!("{id}: {}", val.value.ty())
+                                format!("{id}: {} = {val}", val.value.ty())
                             } else {
-                                format!("{val}: {}", val.value.ty())
+                                format!("{} = {val}", val.value.ty())
                             }
                         })
                         .collect::<Vec<_>>()
