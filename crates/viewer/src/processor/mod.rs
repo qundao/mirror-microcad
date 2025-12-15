@@ -52,7 +52,7 @@ pub struct ProcessorInterface {
 impl ProcessorInterface {
     /// Send request.
     pub fn send_request(&self, request: ProcessorRequest) -> miette::Result<()> {
-        Ok(self.request_sender.send(request).into_diagnostic()?)
+        self.request_sender.send(request).into_diagnostic()
     }
 
     /// Run the processing thread and create interface.
