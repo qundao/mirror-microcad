@@ -7,9 +7,9 @@ items public available).
 **In short:**
 
 - Modules define a namespace for your code.
-- They can be nested to create hierarchies.
-- Declared with the `mod` keyword, either in separate files or directly in
-  your code.
+- They can be nested to create hierarchies,
+- declared with the `mod` keyword (internal modules)
+- or in separate files (external modules).
 - Control what is exposed to the outside world using `pub`.
 
 ## Example

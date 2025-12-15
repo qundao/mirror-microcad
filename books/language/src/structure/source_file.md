@@ -1,29 +1,35 @@
 # Source Files
 
-*Source files* are simply files which contain microcad code.
-Microcad files have the extension `.µcad`.
-If your keyboard has no `µ` key you can also use `.ucad` or `.mcad`.
+*Source files* are simply files which contain µcad code.
+Such files might have the extension `.µcad`, `.mcad` or `.ucad`.
 
 A source file can include the following types of *statements* which we will all
-discuss in this book:
+discuss within this book:
 
-| Statement                     | Purpose                                     | Example        |
-| ----------------------------- | ------------------------------------------- | -------------- |
-| [expression](../expressions)  | calculate values                            | `x * 5;`       |
-| [assignment](../assignments)  | store values                                | `y = x;`       |
-| [function](./functions.md)    | separate calculations                       | `fn f() { }`   |
-| [workbench](../workbenches)   | build or transform 2D sketches and 3D parts | `part P() { }` |
-| [module](./)                  | modularization of complex code              | `mod m { }`    |
-| [if](../flow/conditions.md)   | process conditions                          | `if x > 1 { }` |
-| [use](./use.md)               | use elements from other modules             | `use m;`       |
-| [call](../flow/calls)         | use functions and workbenches               | `f();`         |
-| [comment](../doc/comments.md) | for documentation                           | `// comment`   |
+| Statement                              | Purpose                                     | Example        |
+| -------------------------------------- | ------------------------------------------- | -------------- |
+| [expression](../expressions/README.md) | calculate values                            | `x * 5;`       |
+| [assignment](../assignments/README.md) | store values                                | `y = x;`       |
+| [function](functions.md)               | separate calculations                       | `fn f() { }`   |
+| [workbench](workbenches/README.md)     | build or transform 2D sketches and 3D parts | `part P() { }` |
+| [module](modules/README.md)            | modularization of complex code              | `mod m { }`    |
+| [if](../flow/conditions.md)            | process conditions                          | `if x > 1 { }` |
+| [use](use.md)                          | use elements from other modules             | `use m;`       |
+| [call](../flow/calls)                  | use functions and workbenches               | `f();`         |
+| [comment](../doc/comments.md)          | for documentation                           | `// comment`   |
 
-In the simplest case, a microcad program consists of a single file containing
-one or more of the above statements.  
-These statements generate, for example, a 2D graphic or a 3D model — as shown
-in the following examples, where a circle and a sphere are created, each with a
-radius of one centimeter.
+In its simplest form, a µcad program consists of a single file containing one
+or more of the above statements.
+
+A source file can serve as both a module and a workbench.
+You can use it to provide structure (for example, by organizing submodules) or
+as a kind of workbench where you add statements to generate outputs—such as a
+2D graphic or a 3D model.
+The workbench section of the file is only evaluated if it is in the main file
+(the one that `microcad` was called with).
+
+The following examples illustrate this: a circle and a sphere are created, each
+with a radius of one centimeter.
 
 [![test](.test/source_file_2D.svg)](.test/source_file_2D.log)
 
@@ -50,6 +56,6 @@ std::geo2d::Circle(radius = 1cm);
 std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
 ```
 
-However, microcad programs can also be split across multiple files.
+However, µcad programs can also be split across multiple files.
 To include other files, the [`mod`](modules/external_modules.md)
 statement is used...
