@@ -1,0 +1,25 @@
+-- Test --
+        Test name: argument_match_single_identifier
+  Expected result: todo
+      Source file: ../books/tests/src/argument_match.md:10
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  10:   fn f(x: Integer, y: Integer) -> Integer { x*y }
+  11:   x = 1;
+  12:   y = 2;
+  13:   f(x * 2, y * 2); // matches because `x` and `y` match parameter names
+
+-- No Output --
+-- Errors --
+  × error: 4:3: Missing arguments: x,y
+    ╭─[../books/tests/src/argument_match.md:13:3]
+ 12 │ y = 2;
+ 13 │ f(x * 2, y * 2); // matches because `x` and `y` match parameter names
+    ·   ──────┬─────
+    ·         ╰── error: 4:3: Missing arguments: x,y
+    ╰────
+Unexpected error(s) which did occur in line(s): 13
+-- Test Result --
+TODO
