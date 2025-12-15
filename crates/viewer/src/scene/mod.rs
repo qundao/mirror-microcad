@@ -53,7 +53,7 @@ pub fn zoom_to_fit(projection: &mut Projection, window: &Window) {
 pub fn draw_mesh_intersections(
     pointers: Query<&bevy::picking::pointer::PointerInteraction>,
     mut gizmos: Gizmos,
-    state: Res<State>,
+    view_model: Res<ViewModel>,
     projections: Query<&Projection>,
 ) {
     for (_entity, hit) in pointers
@@ -64,7 +64,7 @@ pub fn draw_mesh_intersections(
             let proj = projections.single().expect("Some projections");
 
             let zoom = get_current_zoom_level(proj);
-            let color: Color = state.config.theme.guide.to_bevy();
+            let color: Color = view_model.config.theme.guide.to_bevy();
             gizmos.sphere(position, zoom * 0.1, color);
         }
     }

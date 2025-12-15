@@ -27,7 +27,7 @@ pub struct ModelViewState {
 
 impl ModelViewState {
     /// A model view state is constucted from the current state and the view model.
-    pub fn new(info: processor::ModelInfo, state: &State) -> Self {
+    pub fn new(info: processor::ModelInfo, state: &ViewModel) -> Self {
         Self {
             outline_volume: OutlineVolume {
                 visible: matches!(info.output_type, OutputType::Geometry2D),
