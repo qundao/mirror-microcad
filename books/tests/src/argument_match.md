@@ -6,7 +6,7 @@ x = 1;
 f(x, y=2); // matches because `x` and `y` match parameter names
 ```
 
-```µcad,argument_match_single_identifier#todo
+```µcad,argument_match_single_identifier
 fn f(x: Integer, y: Integer) -> Integer { x*y }
 x = 1;
 y = 2;

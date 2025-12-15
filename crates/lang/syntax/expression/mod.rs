@@ -75,12 +75,46 @@ pub enum Expression {
     MethodCall(Box<Expression>, MethodCall, SrcRef),
 }
 
-impl Expression {
-    /// If the expression consists of a single identifier, e.g. `a`
-    pub fn single_identifier(&self) -> Option<&Identifier> {
+impl SingleIdentifier for Expression {
+    /// If the expression includes just one identifier, e.g. `a` or `a * (a + 2)`
+    fn single_identifier(&self) -> Option<&Identifier> {
         match &self {
-            Self::QualifiedName(qualified_name) => qualified_name.single_identifier(),
-            _ => None,
+            Expression::Invalid
+            | Expression::Literal(..)
+            | Expression::FormatString(..)
+            | Expression::Marker(..)
+            | Expression::PropertyAccess(..)
+            | Expression::AttributeAccess(..)
+            | Expression::MethodCall(..)
+            | Expression::ArrayExpression(..)
+            | Expression::TupleExpression(..)
+            | Expression::Body(..)
+            | Expression::If(..)
+            | Expression::Call(..) => None,
+
+            Expression::QualifiedName(qualified_name) => qualified_name.single_identifier(),
+            Expression::BinaryOp {
+                lhs,
+                op: _,
+                rhs,
+                src_ref: _,
+            } => {
+                let l = lhs.single_identifier();
+                let r = rhs.single_identifier();
+                if l == r || r.is_none() {
+                    l
+                } else if l.is_none() {
+                    r
+                } else {
+                    None
+                }
+            }
+            Expression::UnaryOp {
+                op: _,
+                rhs,
+                src_ref: _,
+            } => rhs.single_identifier(),
+            Expression::ArrayElementAccess(expression, ..) => expression.single_identifier(),
         }
     }
 }
