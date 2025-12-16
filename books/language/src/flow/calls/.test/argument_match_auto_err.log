@@ -1,22 +1,22 @@
 -- Test --
         Test name: argument_match_auto_err
   Expected result: fail
-      Source file: ../books/language/src/flow/calls/arguments.md:138
+      Source file: ../books/language/src/flow/calls/arguments.md:144
         Test path: ../books/language/src/flow/calls/.test
 
 -- Code --
 
- 138:   fn f(x: Integer, y: Integer) -> Integer { x*y }
- 139:   x = 1;
- 140:   y = 2;
- 141:   f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
+ 144:   fn f(x: Integer, y: Integer) -> Integer { x*y }
+ 145:   x = 1;
+ 146:   y = 2;
+ 147:   f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
 
 -- No Output --
 -- Errors --
   × error: 4:3: Missing arguments: x,y
-     ╭─[../books/language/src/flow/calls/arguments.md:141:3]
- 140 │ y = 2;
- 141 │ f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
+     ╭─[../books/language/src/flow/calls/arguments.md:147:3]
+ 146 │ y = 2;
+ 147 │ f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
      ·   ──────┬─────
      ·         ╰── error: 4:3: Missing arguments: x,y
      ╰────

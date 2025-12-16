@@ -33,7 +33,7 @@ assert_eq([ f(1), 2 ]);
 assert_eq([ f(4), 5 ]);
 ```
 
-[![test](.test/function_if.svg)](.test/function_if.log)
+[![test](.test/function_if_result.svg)](.test/function_if_result.log)
 
 ```µcad,function_if_result
 fn f(n: Scalar) {
