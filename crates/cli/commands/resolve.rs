@@ -65,15 +65,14 @@ Use `microcad install std` to install the std library.",
             eprintln!("Resolving Time : {}", Cli::time_to_string(&start.elapsed()));
         }
 
-        if context.has_errors() {
-            eprint!("{}", context.diagnosis());
-        }
-
         if self.resolve {
             print!("{context}");
         }
 
         if cli.is_resolve() {
+            if context.has_errors() {
+                eprint!("{}", context.diagnosis());
+            }
             eprintln!("Resolved successfully!");
         }
 

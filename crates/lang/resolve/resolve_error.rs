@@ -7,6 +7,7 @@ use miette::Diagnostic;
 use thiserror::Error;
 
 use crate::{diag::*, parse::*, syntax::*};
+use crate::src_ref::{SrcRef, SrcReferrer};
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
@@ -95,7 +96,11 @@ pub enum ResolveError {
     #[error(
         "Source of module '{0}' could not be found in {1:?} (expecting a file '{0}.µcad' or '{0}/mod.µcad')"
     )]
-    SourceFileNotFound(Identifier, std::path::PathBuf),
+    SourceFileNotFound(
+        #[label("module not found")]
+        Identifier,
+        std::path::PathBuf
+    ),
 
     /// Wrong lookup target
     #[error("Wrong lookup target")]
@@ -112,6 +117,15 @@ pub enum ResolveError {
     /// Statement not allowed prior initializers
     #[error("Statement not allowed prior initializers")]
     StatementNotAllowedPriorInitializers,
+}
+
+impl SrcReferrer for ResolveError {
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            ResolveError::SourceFileNotFound(identifier, _) => identifier.src_ref(),
+            _ => SrcRef(None),
+        }
+    }
 }
 
 /// Result type of any resolve.

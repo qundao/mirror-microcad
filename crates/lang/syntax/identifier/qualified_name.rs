@@ -3,6 +3,7 @@
 
 use crate::{src_ref::*, syntax::*};
 use derive_more::{Deref, DerefMut};
+use miette::SourceSpan;
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,
 /// e.g. `a::b::c`
@@ -180,6 +181,12 @@ impl QualifiedName {
 
     pub(crate) fn un_super(&self) -> Self {
         self.iter().filter(|id| !id.is_super()).cloned().collect()
+    }
+}
+
+impl From<QualifiedName> for SourceSpan {
+    fn from(value: QualifiedName) -> Self {
+        value.src_ref().into()
     }
 }
 
