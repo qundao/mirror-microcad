@@ -26,6 +26,17 @@ impl std::iter::FromIterator<Identifier> for IdentifierSet {
     }
 }
 
+/// Check if the element only includes one identifier
+pub trait SingleIdentifier {
+    /// If the element only includes one identifier, return it
+    fn single_identifier(&self) -> Option<&Identifier>;
+
+    /// Returns true if the element only includes a single identifier.
+    fn is_single_identifier(&self) -> bool {
+        self.single_identifier().is_some()
+    }
+}
+
 static UNIQUE_ID_NEXT: std::sync::Mutex<usize> = std::sync::Mutex::new(0);
 
 /// A case for an identifier.

@@ -72,20 +72,6 @@ impl QualifiedName {
         Self(Refer::none(ids))
     }
 
-    /// If the QualifiedName only consists of a single identifier, return it
-    pub fn single_identifier(&self) -> Option<&Identifier> {
-        if self.is_single_identifier() {
-            self.0.first()
-        } else {
-            None
-        }
-    }
-
-    /// Returns true if the QualifiedName only consists of a single identifier.
-    pub fn is_single_identifier(&self) -> bool {
-        self.0.len() == 1
-    }
-
     /// Returns true if self is a qualified name with multiple ids in it
     pub fn is_qualified(&self) -> bool {
         self.0.len() > 1
@@ -181,6 +167,20 @@ impl QualifiedName {
 
     pub(crate) fn un_super(&self) -> Self {
         self.iter().filter(|id| !id.is_super()).cloned().collect()
+    }
+}
+
+impl SingleIdentifier for QualifiedName {
+    fn single_identifier(&self) -> Option<&Identifier> {
+        if self.is_single_identifier() {
+            self.0.first()
+        } else {
+            None
+        }
+    }
+
+    fn is_single_identifier(&self) -> bool {
+        self.0.len() == 1
     }
 }
 

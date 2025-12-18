@@ -3,10 +3,7 @@
 
 //! List of expression
 
-use crate::{
-    src_ref::*,
-    syntax::{expression::range_expression::RangeExpression, *},
-};
+use crate::{src_ref::*, syntax::*};
 use derive_more::{Deref, DerefMut};
 
 /// Inner of an [`ArrayExpression`].
