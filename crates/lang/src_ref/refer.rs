@@ -80,12 +80,12 @@ impl<T: std::iter::IntoIterator> std::iter::IntoIterator for Refer<T> {
 
 impl<T> From<Refer<T>> for SourceSpan {
     fn from(value: Refer<T>) -> Self {
-        value.src_ref.as_miette_span().unwrap()
+        value.src_ref.as_miette_span().expect("Miette span")
     }
 }
 
 impl<T> From<&Refer<T>> for SourceSpan {
     fn from(value: &Refer<T>) -> Self {
-        value.src_ref.as_miette_span().unwrap()
+        value.src_ref.as_miette_span().expect("Miette span")
     }
 }
