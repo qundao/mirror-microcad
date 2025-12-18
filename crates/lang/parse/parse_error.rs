@@ -3,10 +3,9 @@
 
 //! Parser errors
 
-use miette::{Diagnostic, LabeledSpan, SourceCode};
+use miette::{Diagnostic, SourceCode};
 use crate::{parse::*, ty::*};
 use microcad_syntax::ast::LiteralErrorKind;
-use std::iter::once;
 use thiserror::Error;
 
 /// Parsing errors
@@ -15,7 +14,7 @@ use thiserror::Error;
 pub enum ParseError {
     #[error("Error parsing floating point literal: {0}")]
     ParseFloatError(
-        #[label("Error parsing floating point literal: {0}")]
+        #[label("{0}")]
         Refer<std::num::ParseFloatError>
     ),
 
@@ -23,19 +22,6 @@ pub enum ParseError {
     ParseIntError(
         #[label("{0}")]
         Refer<std::num::ParseIntError>
-    ),
-
-    /// Error parsing color literal
-    #[error("Error parsing color: {0}")]
-    ParseColorError(
-        #[label("Invalid color literal")]
-        Refer<microcad_core::ParseColorError>
-    ),
-
-    #[error("Unknown color: {0}")]
-    UnknownColorName(
-        #[label("Unknown color")]
-        Refer<String>
     ),
 
     #[error("Unknown unit: {0}")]
@@ -50,39 +36,9 @@ pub enum ParseError {
         SrcRef
     ),
 
-    #[error("Tuple expression contains both named and positional arguments")]
-    MixedTupleArguments(
-        #[label("Mixed tuple expression")]
-        SrcRef
-    ),
-
-    #[error("Duplicate named argument: {0}")]
-    DuplicateNamedArgument(
-        #[label("Duplicate argument")]
-        Identifier
-    ),
-
-    #[error("Positional argument after named argument")]
-    PositionalArgumentAfterNamed(
-        #[label("Positional argument after named argument")]
-        SrcRef
-    ),
-
-    #[error("Empty tuple expression")]
-    EmptyTupleExpression(
-        #[label("Empty expression")]
-        SrcRef
-    ),
-
     #[error("Missing type or value for definition parameter: {0}")]
     ParameterMissingTypeOrValue(
         #[label("Missing type or value")]
-        Identifier
-    ),
-
-    #[error("Duplicate parameter: {0}")]
-    DuplicateParameter(
-        #[label("Duplicate parameter")]
         Identifier
     ),
 
@@ -93,12 +49,6 @@ pub enum ParseError {
         #[label("Previous declaration")]
         previous: Identifier,
     },
-
-    #[error("Duplicated type name in map: {0}")]
-    DuplicatedMapType(
-        #[label("Duplicate type")]
-        Identifier
-    ),
 
     #[error("Duplicate id: {id}")]
     DuplicateIdentifier {
@@ -124,44 +74,12 @@ pub enum ParseError {
         previous: Refer<Type>,
     },
 
-    #[error("Missing format expression")]
-    MissingFormatExpression(
-        #[label("Missing expression")]
-        SrcRef
-    ),
-
-    #[error("Statement between two init statements")]
-    StatementBetweenInit(
-        #[label("Statement between two init statements")]
-        SrcRef
-    ),
-
     #[error("Loading of source file {1:?} failed: {2}")]
     LoadSource(SrcRef, std::path::PathBuf, std::io::Error),
 
-    #[error("Grammar rule error {0}")]
-    GrammarRuleError(
-        #[label("Invalid grammar rule")]
-        Refer<String>
-    ),
-
-    #[error("Invalid qualified name '{0}'")]
-    InvalidQualifiedName(
-        #[label("Invalid name")]
-        Refer<String>
-    ),
-
+    /// Grammar rule error
     #[error("Invalid id '{0}'")]
-    InvalidIdentifier(
-        #[label("Invalid identifier")]
-        Refer<String>
-    ),
-
-    #[error("Qualified name {0} cannot be converted into an Id")]
-    QualifiedNameIsNoId(
-        #[label("Invalid name")]
-        QualifiedName
-    ),
+    InvalidIdentifier(Refer<String>),
 
     #[error("Element is not available")]
     NotAvailable(
@@ -200,10 +118,6 @@ pub enum ParseError {
         error: microcad_syntax::ParseError,
     },
 
-    /// Call attribute with a non-identifier name
-    #[error("Call attributes must have a plain identifier as name")]
-    InvalidAttributeCall(QualifiedName),
-
     /// An invalid literal was encountered
     #[error("Invalid literal: {error}")]
     InvalidLiteral {
@@ -230,22 +144,11 @@ pub type ParseResult<T> = Result<T, ParseError>;
 impl SrcReferrer for ParseError {
     fn src_ref(&self) -> SrcRef {
         match self {
-            ParseError::DuplicateNamedArgument(id)
-            | ParseError::ParameterMissingTypeOrValue(id)
-            | ParseError::DuplicateParameter(id)
+            ParseError::ParameterMissingTypeOrValue(id)
             | ParseError::DuplicateArgument{id, ..}
-            | ParseError::DuplicatedMapType(id)
             | ParseError::DuplicateIdentifier{id, ..}
             | ParseError::DuplicateTupleIdentifier{id, ..} => id.src_ref(),
-            ParseError::QualifiedNameIsNoId(name) | ParseError::InvalidAttributeCall(name) => {
-                name.src_ref()
-            }
             ParseError::UnexpectedToken(src_ref)
-            | ParseError::MixedTupleArguments(src_ref)
-            | ParseError::PositionalArgumentAfterNamed(src_ref)
-            | ParseError::EmptyTupleExpression(src_ref)
-            | ParseError::MissingFormatExpression(src_ref)
-            | ParseError::StatementBetweenInit(src_ref)
             | ParseError::NotAvailable(src_ref)
             | ParseError::IncompleteIfExpression(src_ref)
             | ParseError::LoadSource(src_ref, ..)
@@ -258,13 +161,9 @@ impl SrcReferrer for ParseError {
             | ParseError::InvalidRangeType { src_ref } => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
-            ParseError::ParseColorError(parse_color_error) => parse_color_error.src_ref(),
-            ParseError::UnknownColorName(name) => name.src_ref(),
+            ParseError::InvalidIdentifier(id) => id.src_ref(),
             ParseError::UnknownUnit(unit) => unit.src_ref(),
             ParseError::DuplicateTupleType{ty, ..} => ty.src_ref(),
-            ParseError::GrammarRuleError(rule) => rule.src_ref(),
-            ParseError::InvalidQualifiedName(name) => name.src_ref(),
-            ParseError::InvalidIdentifier(id) => id.src_ref(),
             ParseError::UnknownType(ty) => ty.src_ref(),
             ParseError::InvalidMatrixType(ty) => ty.src_ref(),
         }
