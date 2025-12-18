@@ -9,6 +9,7 @@ use thiserror::Error;
 
 /// Evaluation error.
 #[derive(Debug, Error, Diagnostic)]
+#[allow(missing_docs)]
 pub enum EvalError {
     /// Can't find a project file by it's qualified name.
     #[error("Not implemented: {0}")]
@@ -175,9 +176,15 @@ pub enum EvalError {
     IfConditionIsNotBool(String),
 
     /// Workbench didn't find a initialization routine matching the given arguments
-    #[error("Workbench {0} cannot find initialization for those arguments")]
-    #[diagnostic(help("Possible initializations: \n\t{}", .1.join("\n\t")))]
-    NoInitializationFound(Identifier, Vec<String>),
+    #[error("Workbench {name} cannot find initialization for those arguments")]
+    #[diagnostic(help("Possible initializations: \n\t{}", possible_params.join("\n\t")))]
+    NoInitializationFound {
+        #[label("Got: {name}( {actual_params} )")]
+        src_ref: SrcRef,
+        name: Identifier,
+        actual_params: String,
+        possible_params: Vec<String>
+    },
 
     /// Initializer missed to set a property from plan
     #[error("Workbench plan incomplete. Missing properties: {0}")]
