@@ -47,7 +47,7 @@ authors = [
     "Michael Winkelmann (michael@winkelmann.site)",
     "Patrick Hoffmann (p.hoffmann@berlin.de)",
 ]
-version = "0.2.18"
+version = "0.2.19"
 edition = "2024"
 homepage = "https://microcad.xyz"
 repository = "https://codeberg.org/microcad/microcad"
@@ -60,12 +60,12 @@ keywords = ["cad", "geometry", "3d", "printing", "cnc", "openscad"]
 
 [workspace.dependencies]
 debug-cell = { git = "https://github.com/fightling/debug-cell.git", version = "0.1.1" }
-microcad-core = { path = "crates/core", version = "0.2.18" }
-microcad-import = { path = "crates/import", version = "0.2.18" }
-microcad-export = { path = "crates/export", version = "0.2.18" }
-microcad-lang = { path = "crates/lang", version = "0.2.18" }
-microcad-builtin = { path = "crates/builtin", version = "0.2.18" }
-microcad-builtin-proc-macros = { path = "crates/builtin-proc-macros", version = "0.2.18" }
-microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.2.18" }
-microcad-viewer = { path = "crates/viewer", version = "0.2.18" }
-microcad-std = { path = "crates/std", version = "0.2.18" }
+microcad-core = { path = "crates/core", version = "0.2.19" }
+microcad-import = { path = "crates/import", version = "0.2.19" }
+microcad-export = { path = "crates/export", version = "0.2.19" }
+microcad-lang = { path = "crates/lang", version = "0.2.19" }
+microcad-builtin = { path = "crates/builtin", version = "0.2.19" }
+microcad-builtin-proc-macros = { path = "crates/builtin-proc-macros", version = "0.2.19" }
+microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.2.19" }
+microcad-viewer = { path = "crates/viewer", version = "0.2.19" }
+microcad-std = { path = "crates/std", version = "0.2.19" }
