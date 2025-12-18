@@ -72,11 +72,12 @@ impl Eval<()> for AssignmentStatement {
                     } else {
                         Some((
                             assignment.id.clone(),
-                            EvalError::ValueAlreadyDefined(
-                                id.clone(),
-                                value.to_string(),
-                                id.src_ref(),
-                            ),
+                            EvalError::ValueAlreadyDefined {
+                                location: assignment.src_ref(),
+                                name: id.clone(),
+                                value: value.to_string(),
+                                previous_location: id.src_ref(),
+                            },
                         ))
                     }
                 }

@@ -232,8 +232,20 @@ pub enum EvalError {
     AmbiguousProperty(QualifiedName, Identifier),
 
     /// Assignment failed because value already has been defined before.
-    #[error("Value {0} already in defined: {1} (at line {2})")]
-    ValueAlreadyDefined(Identifier, String, SrcRef),
+    #[error("Value {name} already in defined: {value}")]
+    #[diagnostic(help("Values in microcad are immutable"))]
+    ValueAlreadyDefined {
+        /// Location of the error
+        #[label(primary, "{name} is already defined")]
+        location: SrcRef,
+        /// Name of the value
+        name: Identifier,
+        /// Previous value
+        value: String,
+        /// Previous definition
+        #[label("Previously defined here")]
+        previous_location: SrcRef,
+    },
 
     /// Assignment failed because left side is not an l-value
     #[error("Assignment failed because {0} is not an l-value")]

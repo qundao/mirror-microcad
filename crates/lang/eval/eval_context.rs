@@ -176,11 +176,12 @@ impl EvalContext {
             Ok(model) => {
                 if let Some(previous_value) = model.borrow_mut().set_property(id.clone(), value) {
                     if !previous_value.is_invalid() {
-                        return Err(EvalError::ValueAlreadyDefined(
-                            id.clone(),
-                            previous_value.to_string(),
-                            id.src_ref(),
-                        ));
+                        return Err(EvalError::ValueAlreadyDefined {
+                            location: id.src_ref(),
+                            name: id.clone(),
+                            value: previous_value.to_string(),
+                            previous_location: id.src_ref(),
+                        });
                     }
                 }
                 Ok(())
