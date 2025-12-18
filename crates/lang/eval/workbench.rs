@@ -188,30 +188,28 @@ impl WorkbenchDefinition {
                     }
                 }
                 if !initialized {
-                    let actual_params = arguments
-                        .iter()
-                        .map(|(name, val)| {
-                            if !name.is_empty() {
-                                format!("{name}: {}", val.value.ty())
-                            } else if let Some(id) = &val.inline_id {
-                                format!("{id}: {}", val.value.ty())
-                            } else {
-                                format!("{}", val.value.ty())
-                            }
-                        })
-                        .collect::<Vec<_>>()
-                        .join(", ");
-                    let possible_params = std::iter::once(&self.plan)
-                        .chain(self.inits().map(|init| &init.parameters))
-                        .map(|params| format!("{}( {})", self.id, params))
-                        .collect();
                     context.error(
                         arguments,
                         EvalError::NoInitializationFound {
                             src_ref: call_src_ref,
-                            name: self.id.clone(),
-                            actual_params,
-                            possible_params,
+                            name: symbol.full_name(),
+                            given_arguments: arguments
+                                .iter()
+                                .map(|(name, val)| {
+                                    if !name.is_empty() {
+                                        format!("{name}: {}", val.value.ty())
+                                    } else if let Some(id) = &val.inline_id {
+                                        format!("{id}: {}", val.value.ty())
+                                    } else {
+                                        format!("{}", val.value.ty())
+                                    }
+                                })
+                                .collect::<Vec<_>>()
+                                .join(", "),
+                            possible_inits: std::iter::once(&self.plan)
+                                .chain(self.inits().map(|init| &init.parameters))
+                                .map(|params| format!("{}( {})", self.id, params))
+                                .collect(),
                         },
                     )?;
                 }

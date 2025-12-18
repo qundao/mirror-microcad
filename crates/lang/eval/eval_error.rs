@@ -3,13 +3,13 @@
 
 //! Evaluation error
 
-use miette::Diagnostic;
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
+use miette::Diagnostic;
 use thiserror::Error;
 
 /// Evaluation error.
 #[derive(Debug, Error, Diagnostic)]
-#[allow(missing_docs)]
+#[allow(missing_docs, unused)]
 pub enum EvalError {
     /// Can't find a project file by it's qualified name.
     #[error("Not implemented: {0}")]
@@ -177,13 +177,17 @@ pub enum EvalError {
 
     /// Workbench didn't find a initialization routine matching the given arguments
     #[error("Workbench {name} cannot find initialization for those arguments")]
-    #[diagnostic(help("Possible initializations: \n\t{}", possible_params.join("\n\t")))]
+    #[diagnostic(help("Possible initializations: \n\t{}", possible_inits.join("\n\t")))]
     NoInitializationFound {
-        #[label("Got: {name}( {actual_params} )")]
+        /// Source code reference.
+        #[label("Got: {name}( {given_arguments} )")]
         src_ref: SrcRef,
-        name: Identifier,
-        actual_params: String,
-        possible_params: Vec<String>
+        /// Full name of the symbol.
+        name: QualifiedName,
+        /// Given parameters.
+        given_arguments: String,
+        /// Possible parameter.
+        possible_inits: Vec<String>,
     },
 
     /// Initializer missed to set a property from plan
