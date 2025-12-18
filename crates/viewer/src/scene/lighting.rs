@@ -12,7 +12,7 @@ use bevy::{
 };
 
 /// Setup lights
-pub fn spawn_lights(mut commands: Commands, mut state: ResMut<crate::state::State>) {
+pub fn spawn_lights(mut commands: Commands, mut state: ResMut<crate::view_model::ViewModel>) {
     // Despawn all light entities to remove them from the scene
     for entity in &state.scene.light_entities {
         commands.entity(*entity).despawn();

@@ -12,12 +12,12 @@ use bevy::{
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
-use crate::state::ModelViewState;
 use crate::stdin::StdinMessageReceiver;
+use crate::view_model::ModelViewState;
 use crate::*;
 use crate::{
     processor::{ProcessorRequest, ProcessorResponse},
-    state::ViewerEvent,
+    view_model::ViewerEvent,
 };
 
 /// Whether a kind of watch event is relevant for compilation.
@@ -41,7 +41,7 @@ fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
 /// Start up the processor.
 ///
 /// Sends an initialize request to the processor and handles input.
-pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
+pub fn initialize_processor(mut state: ResMut<crate::view_model::ViewModel>) {
     state
         .processor
         .send_request(ProcessorRequest::Initialize {
@@ -105,7 +105,7 @@ pub fn initialize_processor(mut state: ResMut<crate::state::State>) {
         .for_each(|request| state.processor.send_request(request).expect("No error"));
 }
 
-pub fn file_reload(state: ResMut<crate::state::State>) {
+pub fn file_reload(state: ResMut<crate::view_model::ViewModel>) {
     use crate::plugin::MicrocadPluginInput::*;
 
     match &state.input {
@@ -139,13 +139,13 @@ pub fn handle_processor_responses(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut meshes: ResMut<Assets<Mesh>>,
     mut model_view_states: ResMut<Assets<ModelViewState>>,
-    mut state: ResMut<State>,
+    mut view_model: ResMut<ViewModel>,
     mut events: EventWriter<ViewerEvent>,
 ) {
     let mut entities = Vec::new();
     let mut ground_radius = microcad_core::Length::default();
 
-    for response in state.processor.response_receiver.try_iter() {
+    for response in view_model.processor.response_receiver.try_iter() {
         match response {
             ProcessorResponse::RemoveModelInstances(uuids) => uuids.iter().for_each(|uuid| {
                 model_view_states.remove(*uuid);
@@ -157,7 +157,7 @@ pub fn handle_processor_responses(
             }
             ProcessorResponse::NewModelInfo(uuid, info) => {
                 log::info!("New model info: {uuid}");
-                model_view_states.insert(uuid, ModelViewState::new(info, &state));
+                model_view_states.insert(uuid, ModelViewState::new(info, &view_model));
             }
             ProcessorResponse::UpdateMaterials(uuids) => {
                 uuids.iter().for_each(|uuid| {
@@ -198,18 +198,18 @@ pub fn handle_processor_responses(
             }
         }
 
-        if state.processor.response_receiver.is_empty() {
+        if view_model.processor.response_receiver.is_empty() {
             break;
         }
     }
 
     if !entities.is_empty() {
         // Despawn all entities to remove them from the scene
-        for entity in &state.scene.model_entities {
+        for entity in &view_model.scene.model_entities {
             commands.entity(*entity).despawn();
         }
 
-        state.scene.model_entities = entities;
+        view_model.scene.model_entities = entities;
         events.write(ViewerEvent::ChangeGroundRadius(ground_radius));
     }
 }

@@ -25,7 +25,7 @@ use bevy::{
 #[derive(Component)]
 pub struct ToggleMe;
 
-use crate::{scene::get_current_zoom_level, state::State};
+use crate::{scene::get_current_zoom_level, view_model::ViewModel};
 use crate::{to_bevy::ToBevy, *};
 
 pub fn toggle_grid(
@@ -47,7 +47,7 @@ pub fn spawn_grid_plane(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<material::Grid>>,
-    mut state: ResMut<State>,
+    mut state: ResMut<ViewModel>,
 ) {
     let plane = Mesh::from(Plane3d::new(Vec3::Z, Vec2::new(1000.0, 1000.0)));
     let mesh_handle = meshes.add(plane);
@@ -75,7 +75,7 @@ pub fn spawn_grid_plane(
 /// Update grid material according to zoom level.
 pub fn update_grid(
     mut materials: ResMut<Assets<material::Grid>>,
-    state: Res<State>,
+    state: Res<ViewModel>,
     proj_query: Query<&Projection, With<Camera>>,
     windows: Query<&Window>,
     mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
@@ -101,7 +101,7 @@ pub fn update_grid(
 
 pub fn update_grid_on_view_angle_change(
     mut materials: ResMut<Assets<material::Grid>>,
-    state: Res<State>,
+    state: Res<ViewModel>,
     cam_query: Query<(&Transform, &Camera)>,
     mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
 ) {

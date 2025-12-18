@@ -28,6 +28,7 @@ bevy = { version = "0.16.1", default-features = false, features = [
     "bevy_winit",
     "tonemapping_luts",
     "x11",
+    "wayland",
 ] }
 
 bevy_mod_outline = "0.10.3"

@@ -8,7 +8,7 @@ use bevy::prelude::{Color, Val};
 use bevy::render::view::Visibility;
 use bevy::ui::{BackgroundColor, BorderColor, Node, UiRect};
 
-use crate::{State, ToBevy};
+use crate::{ViewModel, ToBevy};
 
 #[derive(Component)]
 pub struct ProgressBar;
@@ -16,7 +16,7 @@ pub struct ProgressBar;
 #[derive(Component)]
 pub struct ErrorFrame;
 
-pub fn setup_overlay(state: Res<State>, mut commands: Commands) {
+pub fn setup_overlay(state: Res<ViewModel>, mut commands: Commands) {
     commands.spawn((
         BackgroundColor(Color::NONE),
         BorderColor(Color::srgb(1.0, 0.0, 0.0)),
@@ -47,7 +47,7 @@ pub fn setup_overlay(state: Res<State>, mut commands: Commands) {
 type NodeVisibility<'a> = (&'a mut Node, &'a mut Visibility);
 
 pub fn update_overlay(
-    state: Res<State>,
+    state: Res<ViewModel>,
     mut progress_bar: Query<NodeVisibility, With<ProgressBar>>,
     mut error_frame: Query<NodeVisibility, (With<ErrorFrame>, Without<ProgressBar>)>,
 ) {

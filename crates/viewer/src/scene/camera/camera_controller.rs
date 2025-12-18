@@ -8,7 +8,7 @@
 //!
 //! Unlike other examples, which demonstrate an application, this demonstrates a plugin library.
 
-use crate::State;
+use crate::ViewModel;
 use bevy::{
     input::mouse::{AccumulatedMouseMotion, AccumulatedMouseScroll, MouseScrollUnit},
     prelude::*,
@@ -106,7 +106,7 @@ fn run_camera_controller(
     key_input: Res<ButtonInput<KeyCode>>,
     mut toggle_cursor_grab: Local<bool>,
     mut mouse_cursor_grab: Local<bool>,
-    state: Res<State>,
+    state: Res<ViewModel>,
     mut query: Query<(&mut Projection, &mut Transform, &mut CameraController), With<Camera>>,
 ) {
     let dt = time.delta_secs();

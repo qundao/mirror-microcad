@@ -24,7 +24,7 @@ pub struct Cursor;
 
 /// The application state (the bevy view model).
 #[derive(Resource)]
-pub struct State {
+pub struct ViewModel {
     /// Input interface (e.g. file or stdin).
     pub input: Option<MicrocadPluginInput>,
     /// The configuration settings of loaded at startup.
@@ -39,7 +39,7 @@ pub struct State {
     pub processing_state: ProcessingState,
 }
 
-impl State {
+impl ViewModel {
     /// Create new state from arguments.
     pub fn new(input: Option<MicrocadPluginInput>, config: Config) -> Self {
         Self {

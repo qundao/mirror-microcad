@@ -146,21 +146,21 @@ pub struct MicrocadPlugin {
 
 impl Plugin for MicrocadPlugin {
     fn build(&self, app: &mut App) {
-        app.init_asset::<state::ModelViewState>()
-            .add_event::<state::ViewerEvent>()
+        app.init_asset::<view_model::ModelViewState>()
+            .add_event::<view_model::ViewerEvent>()
             .insert_resource(ClearColor(self.config.theme.primary.to_bevy()))
-            .insert_resource(State::new(self.input.clone(), self.config.clone()))
+            .insert_resource(ViewModel::new(self.input.clone(), self.config.clone()))
             .add_plugins((OutlinePlugin, MeshPickingPlugin))
             .add_plugins(processor::ProcessorPlugin)
             .add_plugins(material::MaterialPlugin)
             .add_plugins(scene::ScenePlugin)
             .add_systems(Startup, apply_window_settings)
             .add_systems(Update, stdin::handle_stdin_messages)
-            .add_systems(Update, state::handle_viewer_event);
+            .add_systems(Update, view_model::handle_viewer_event);
     }
 }
 
-fn apply_window_settings(state: Res<State>, mut windows: Query<&mut Window>) {
+fn apply_window_settings(view_model: Res<ViewModel>, mut windows: Query<&mut Window>) {
     let mut window = windows.single_mut().expect("Some window");
-    state.update_window_settings(&mut window);
+    view_model.update_window_settings(&mut window);
 }

@@ -16,7 +16,7 @@ use microcad_viewer_ipc::ViewerRequest;
 
 use crate::plugin::MicrocadPluginInput;
 use crate::processor::ProcessorRequest;
-use crate::state::ViewerEvent;
+use crate::view_model::ViewerEvent;
 
 /// A message handler for stdin messages.
 #[derive(Resource, Clone)]
@@ -70,7 +70,7 @@ impl StdinMessageReceiver {
 
 /// Process stdin messages into processor requests.
 pub fn handle_stdin_messages(
-    mut state: bevy::prelude::ResMut<crate::State>,
+    mut state: bevy::prelude::ResMut<crate::ViewModel>,
     mut exit: EventWriter<AppExit>,
     mut windows: Query<&mut Window>,
     mut events: EventWriter<ViewerEvent>,

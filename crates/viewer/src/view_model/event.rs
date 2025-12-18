@@ -17,9 +17,9 @@ use bevy::{
 use microcad_core::Length;
 
 use crate::{
-    State, material,
+    ViewModel, material,
     processor::ProcessingState,
-    state::{Cursor, ModelViewState},
+    view_model::{Cursor, ModelViewState},
 };
 
 /// An event that is fired when the view model changes in some way.
@@ -68,7 +68,7 @@ pub fn handle_viewer_event(
     mat_query: Query<&mut MeshMaterial3d<material::Grid>>,
     windows: Query<&Window>,
     mut projection: Query<&mut Projection, With<Camera>>,
-    mut state: ResMut<State>,
+    mut state: ResMut<ViewModel>,
     mut view_states: ResMut<Assets<ModelViewState>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut events: EventReader<ViewerEvent>,

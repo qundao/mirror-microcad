@@ -5,9 +5,9 @@ pub mod camera_controller;
 
 use bevy::prelude::*;
 
-use crate::State;
+use crate::ViewModel;
 
-pub fn setup_camera(mut commands: Commands, state: Res<State>) {
+pub fn setup_camera(mut commands: Commands, state: Res<ViewModel>) {
     let radius = state.scene.radius;
 
     // Place the camera on the +X, +Y, +Z diagonal of the sphere
