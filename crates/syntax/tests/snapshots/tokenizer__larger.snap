@@ -1,0 +1,60 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(\"fn(a: Length) -> Length {a * 2}\")"
+---
+Ok(
+    [
+        Spanned {
+            span: 0..2,
+            val: KeywordFn,
+        },
+        Spanned {
+            span: 2..3,
+            val: SigilOpenBracket,
+        },
+        Spanned {
+            span: 3..4,
+            val: Identifier,
+        },
+        Spanned {
+            span: 4..5,
+            val: SigilColon,
+        },
+        Spanned {
+            span: 6..12,
+            val: Identifier,
+        },
+        Spanned {
+            span: 12..13,
+            val: SigilCloseBracket,
+        },
+        Spanned {
+            span: 14..16,
+            val: SigilSingleArrow,
+        },
+        Spanned {
+            span: 17..23,
+            val: Identifier,
+        },
+        Spanned {
+            span: 24..25,
+            val: SigilOpenCurlyBracket,
+        },
+        Spanned {
+            span: 25..26,
+            val: Identifier,
+        },
+        Spanned {
+            span: 27..28,
+            val: OperatorMultiply,
+        },
+        Spanned {
+            span: 29..30,
+            val: LiteralInt,
+        },
+        Spanned {
+            span: 30..31,
+            val: SigilCloseCurlyBracket,
+        },
+    ],
+)

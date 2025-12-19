@@ -1,0 +1,35 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(r#\"a = \"plain string int expression\" + 1\"#)"
+---
+Ok(
+    [
+        Spanned {
+            span: 0..1,
+            val: Identifier,
+        },
+        Spanned {
+            span: 2..3,
+            val: OperatorAssignment,
+        },
+        Spanned {
+            span: 32..33,
+            val: LiteralString(
+                [
+                    Spanned {
+                        span: 5..32,
+                        val: Content,
+                    },
+                ],
+            ),
+        },
+        Spanned {
+            span: 34..35,
+            val: OperatorAdd,
+        },
+        Spanned {
+            span: 36..37,
+            val: LiteralInt,
+        },
+    ],
+)

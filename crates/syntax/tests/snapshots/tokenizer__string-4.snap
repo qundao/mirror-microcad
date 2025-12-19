@@ -1,0 +1,43 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(r#\"\"string \\\" with \\\" escaped \\ quotes\"\"#)"
+---
+Ok(
+    [
+        Spanned {
+            span: 35..36,
+            val: LiteralString(
+                [
+                    Spanned {
+                        span: 1..8,
+                        val: Content,
+                    },
+                    Spanned {
+                        span: 8..10,
+                        val: Escaped,
+                    },
+                    Spanned {
+                        span: 10..16,
+                        val: Content,
+                    },
+                    Spanned {
+                        span: 16..18,
+                        val: Escaped,
+                    },
+                    Spanned {
+                        span: 18..27,
+                        val: Content,
+                    },
+                    Spanned {
+                        span: 27..28,
+                        val: BackSlash,
+                    },
+                    Spanned {
+                        span: 28..35,
+                        val: Content,
+                    },
+                ],
+            ),
+        },
+    ],
+)

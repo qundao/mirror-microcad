@@ -1,0 +1,28 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(\"a = b * 2\")"
+---
+Ok(
+    [
+        Spanned {
+            span: 0..1,
+            val: Identifier,
+        },
+        Spanned {
+            span: 2..3,
+            val: OperatorAssignment,
+        },
+        Spanned {
+            span: 4..5,
+            val: Identifier,
+        },
+        Spanned {
+            span: 6..7,
+            val: OperatorMultiply,
+        },
+        Spanned {
+            span: 8..9,
+            val: LiteralInt,
+        },
+    ],
+)

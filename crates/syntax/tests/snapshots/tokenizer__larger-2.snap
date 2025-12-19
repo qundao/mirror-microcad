@@ -1,0 +1,24 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(\"a = 1 // comment\")"
+---
+Ok(
+    [
+        Spanned {
+            span: 0..1,
+            val: Identifier,
+        },
+        Spanned {
+            span: 2..3,
+            val: OperatorAssignment,
+        },
+        Spanned {
+            span: 4..5,
+            val: LiteralInt,
+        },
+        Spanned {
+            span: 6..16,
+            val: SingleLineComment,
+        },
+    ],
+)

@@ -12,6 +12,7 @@ default-members = [
     "crates/lang",
     "crates/lsp",
     "crates/std",
+    "crates/syntax",
     "crates/viewer-ipc",
 
     "tests",
@@ -29,6 +30,7 @@ members = [
     "crates/lang",
     "crates/lsp",
     "crates/std",
+    "crates/syntax",
     "crates/viewer-ipc",
 
     "tests",

@@ -1,0 +1,19 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(r#\"\"plain string\"\"#)"
+---
+Ok(
+    [
+        Spanned {
+            span: 13..14,
+            val: LiteralString(
+                [
+                    Spanned {
+                        span: 1..13,
+                        val: Content,
+                    },
+                ],
+            ),
+        },
+    ],
+)

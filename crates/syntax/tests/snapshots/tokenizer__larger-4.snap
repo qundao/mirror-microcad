@@ -1,0 +1,88 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(r#\"/// Doc comment\n    part Foo() {\n        Cylinder(height = 10mm, radius = 5mm);\n    }\"#)"
+---
+Ok(
+    [
+        Spanned {
+            span: 0..15,
+            val: DocComment,
+        },
+        Spanned {
+            span: 20..24,
+            val: KeywordPart,
+        },
+        Spanned {
+            span: 25..28,
+            val: Identifier,
+        },
+        Spanned {
+            span: 28..29,
+            val: SigilOpenBracket,
+        },
+        Spanned {
+            span: 29..30,
+            val: SigilCloseBracket,
+        },
+        Spanned {
+            span: 31..32,
+            val: SigilOpenCurlyBracket,
+        },
+        Spanned {
+            span: 41..49,
+            val: Identifier,
+        },
+        Spanned {
+            span: 49..50,
+            val: SigilOpenBracket,
+        },
+        Spanned {
+            span: 50..56,
+            val: Identifier,
+        },
+        Spanned {
+            span: 57..58,
+            val: OperatorAssignment,
+        },
+        Spanned {
+            span: 59..61,
+            val: LiteralInt,
+        },
+        Spanned {
+            span: 61..63,
+            val: Identifier,
+        },
+        Spanned {
+            span: 63..64,
+            val: SigilComma,
+        },
+        Spanned {
+            span: 65..71,
+            val: Identifier,
+        },
+        Spanned {
+            span: 72..73,
+            val: OperatorAssignment,
+        },
+        Spanned {
+            span: 74..75,
+            val: LiteralInt,
+        },
+        Spanned {
+            span: 75..77,
+            val: Identifier,
+        },
+        Spanned {
+            span: 77..78,
+            val: SigilCloseBracket,
+        },
+        Spanned {
+            span: 78..79,
+            val: SigilSemiColon,
+        },
+        Spanned {
+            span: 84..85,
+            val: SigilCloseCurlyBracket,
+        },
+    ],
+)

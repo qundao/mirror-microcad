@@ -1,0 +1,54 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(r#\"\"string {formated - expression:03.5} expression\"\"#)"
+---
+Ok(
+    [
+        Spanned {
+            span: 47..48,
+            val: LiteralString(
+                [
+                    Spanned {
+                        span: 1..8,
+                        val: Content,
+                    },
+                    Spanned {
+                        span: 35..36,
+                        val: FormatStart(
+                            (
+                                [
+                                    Spanned {
+                                        span: 9..17,
+                                        val: Identifier,
+                                    },
+                                    Spanned {
+                                        span: 18..19,
+                                        val: OperatorSubtract,
+                                    },
+                                    Spanned {
+                                        span: 20..30,
+                                        val: Identifier,
+                                    },
+                                ],
+                                [
+                                    Spanned {
+                                        span: 31..33,
+                                        val: FormatWidth,
+                                    },
+                                    Spanned {
+                                        span: 33..35,
+                                        val: FormatPrecision,
+                                    },
+                                ],
+                            ),
+                        ),
+                    },
+                    Spanned {
+                        span: 36..47,
+                        val: Content,
+                    },
+                ],
+            ),
+        },
+    ],
+)

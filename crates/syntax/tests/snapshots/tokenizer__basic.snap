@@ -1,0 +1,12 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(\"1\")"
+---
+Ok(
+    [
+        Spanned {
+            span: 0..1,
+            val: LiteralInt,
+        },
+    ],
+)

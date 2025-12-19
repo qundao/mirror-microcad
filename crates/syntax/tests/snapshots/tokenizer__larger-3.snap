@@ -1,0 +1,44 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: "lex(r#\"a = 1; /** multi\n    line\n    comment\n    */\n    b = 2;\"#)"
+---
+Ok(
+    [
+        Spanned {
+            span: 0..1,
+            val: Identifier,
+        },
+        Spanned {
+            span: 2..3,
+            val: OperatorAssignment,
+        },
+        Spanned {
+            span: 4..5,
+            val: LiteralInt,
+        },
+        Spanned {
+            span: 5..6,
+            val: SigilSemiColon,
+        },
+        Spanned {
+            span: 7..44,
+            val: MultiLineComment,
+        },
+        Spanned {
+            span: 49..50,
+            val: Identifier,
+        },
+        Spanned {
+            span: 51..52,
+            val: OperatorAssignment,
+        },
+        Spanned {
+            span: 53..54,
+            val: LiteralInt,
+        },
+        Spanned {
+            span: 54..55,
+            val: SigilSemiColon,
+        },
+    ],
+)
