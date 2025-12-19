@@ -179,7 +179,7 @@ pub enum EvalError {
     IfConditionIsNotBool(String),
 
     /// Workbench didn't find a initialization routine matching the given arguments
-    #[error("Workbench {name} cannot find initialization for those arguments")]
+    #[error("Workbench `{name}` cannot find initialization for those arguments")]
     #[diagnostic(help("Possible initializations: \n\t{}", possible_inits.join("\n\t")))]
     NoInitializationFound {
         /// Source code reference.
