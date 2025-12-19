@@ -12,12 +12,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 3:23: Workbench translate cannot find initialization for those arguments
+  × error: 3:23: Workbench `std::ops::translate` cannot find initialization for those arguments
     ╭─[../books/language/src/flow/calls/multiplicity.md:40:3]
  39 │ 
  40 │ r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
     ·   ────────────────────────────────────────────┬───────────────────────────────────────────
-    ·                                               ╰── Got: translate( [(x: Length, y: Length)] )
+    ·                                               ╰── Got: std::ops::translate( [(x: Length, y: Length)] )
     ╰────
   help: Possible initializations:
         	translate( x = 0mm, y = 0mm, z = 0mm)
