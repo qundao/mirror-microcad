@@ -3,13 +3,16 @@
 
 //! Evaluation error
 
+// Suppress warnings for unused `EvalError` variant's fields:
+// https://github.com/rust-lang/rust/issues/147648
+#![allow(unused_assignments)]
+
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
 use miette::Diagnostic;
 use thiserror::Error;
 
 /// Evaluation error.
 #[derive(Debug, Error, Diagnostic)]
-#[allow(missing_docs, unused)]
 pub enum EvalError {
     /// Can't find a project file by it's qualified name.
     #[error("Not implemented: {0}")]
