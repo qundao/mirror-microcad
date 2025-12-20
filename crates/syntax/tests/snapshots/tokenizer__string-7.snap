@@ -4,48 +4,60 @@ expression: "lex(r#\"\"string {formated - expression:03.5} expression\"\"#)"
 ---
 Ok(
     [
-        Spanned {
+        SpannedToken {
             span: 47..48,
-            val: LiteralString(
+            token: LiteralString(
                 [
-                    Spanned {
+                    SpannedToken {
                         span: 1..8,
-                        val: Content,
+                        token: Content(
+                            "string ",
+                        ),
                     },
-                    Spanned {
+                    SpannedToken {
                         span: 35..36,
-                        val: FormatStart(
+                        token: FormatStart(
                             (
                                 [
-                                    Spanned {
+                                    SpannedToken {
                                         span: 9..17,
-                                        val: Identifier,
+                                        token: Identifier(
+                                            "formated",
+                                        ),
                                     },
-                                    Spanned {
+                                    SpannedToken {
                                         span: 18..19,
-                                        val: OperatorSubtract,
+                                        token: OperatorSubtract,
                                     },
-                                    Spanned {
+                                    SpannedToken {
                                         span: 20..30,
-                                        val: Identifier,
+                                        token: Identifier(
+                                            "expression",
+                                        ),
                                     },
                                 ],
                                 [
-                                    Spanned {
+                                    SpannedToken {
                                         span: 31..33,
-                                        val: FormatWidth,
+                                        token: FormatWidth(
+                                            "03",
+                                        ),
                                     },
-                                    Spanned {
+                                    SpannedToken {
                                         span: 33..35,
-                                        val: FormatPrecision,
+                                        token: FormatPrecision(
+                                            ".5",
+                                        ),
                                     },
                                 ],
                             ),
                         ),
                     },
-                    Spanned {
+                    SpannedToken {
                         span: 36..47,
-                        val: Content,
+                        token: Content(
+                            " expression",
+                        ),
                     },
                 ],
             ),

@@ -4,29 +4,35 @@ expression: "lex(r#\"\"string {{ with }} escaped bracket\"\"#)"
 ---
 Ok(
     [
-        Spanned {
+        SpannedToken {
             span: 34..35,
-            val: LiteralString(
+            token: LiteralString(
                 [
-                    Spanned {
+                    SpannedToken {
                         span: 1..8,
-                        val: Content,
+                        token: Content(
+                            "string ",
+                        ),
                     },
-                    Spanned {
+                    SpannedToken {
                         span: 8..10,
-                        val: EscapedCurlyOpen,
+                        token: EscapedCurlyOpen,
                     },
-                    Spanned {
+                    SpannedToken {
                         span: 10..16,
-                        val: Content,
+                        token: Content(
+                            " with ",
+                        ),
                     },
-                    Spanned {
+                    SpannedToken {
                         span: 16..18,
-                        val: EscapedCurlyClose,
+                        token: EscapedCurlyClose,
                     },
-                    Spanned {
+                    SpannedToken {
                         span: 18..34,
-                        val: Content,
+                        token: Content(
+                            " escaped bracket",
+                        ),
                     },
                 ],
             ),

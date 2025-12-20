@@ -5366,6 +5366,8 @@ dependencies = [
 name = "microcad-syntax"
 version = "0.2.19"
 dependencies = [
+ "compact_str",
+ "indexmap",
  "insta",
  "logos",
 ]

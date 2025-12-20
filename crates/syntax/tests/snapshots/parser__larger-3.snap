@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/tokenizer.rs
+source: crates/syntax/tests/parser.rs
 expression: "lex(r#\"a = 1; /** multi\n    line\n    comment\n    */\n    b = 2;\"#)"
 ---
 Ok(

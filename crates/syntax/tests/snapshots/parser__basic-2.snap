@@ -1,6 +1,6 @@
 ---
-source: crates/syntax/tests/tokenizer.rs
-expression: "lex(\"1+ 1\")"
+source: crates/syntax/tests/parser.rs
+expression: "lex(\"1 + 1\")"
 ---
 Ok(
     [
@@ -11,11 +11,11 @@ Ok(
             ),
         },
         SpannedToken {
-            span: 1..2,
+            span: 2..3,
             token: OperatorAdd,
         },
         SpannedToken {
-            span: 3..4,
+            span: 4..5,
             token: LiteralInt(
                 "1",
             ),

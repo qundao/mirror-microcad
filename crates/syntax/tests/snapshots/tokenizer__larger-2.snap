@@ -4,21 +4,27 @@ expression: "lex(\"a = 1 // comment\")"
 ---
 Ok(
     [
-        Spanned {
+        SpannedToken {
             span: 0..1,
-            val: Identifier,
+            token: Identifier(
+                "a",
+            ),
         },
-        Spanned {
+        SpannedToken {
             span: 2..3,
-            val: OperatorAssignment,
+            token: OperatorAssignment,
         },
-        Spanned {
+        SpannedToken {
             span: 4..5,
-            val: LiteralInt,
+            token: LiteralInt(
+                "1",
+            ),
         },
-        Spanned {
+        SpannedToken {
             span: 6..16,
-            val: SingleLineComment,
+            token: SingleLineComment(
+                "// comment",
+            ),
         },
     ],
 )

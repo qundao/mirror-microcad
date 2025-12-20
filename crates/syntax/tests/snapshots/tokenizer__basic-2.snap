@@ -4,17 +4,21 @@ expression: "lex(\"1 + 1\")"
 ---
 Ok(
     [
-        Spanned {
+        SpannedToken {
             span: 0..1,
-            val: LiteralInt,
+            token: LiteralInt(
+                "1",
+            ),
         },
-        Spanned {
+        SpannedToken {
             span: 2..3,
-            val: OperatorAdd,
+            token: OperatorAdd,
         },
-        Spanned {
+        SpannedToken {
             span: 4..5,
-            val: LiteralInt,
+            token: LiteralInt(
+                "1",
+            ),
         },
     ],
 )

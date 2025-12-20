@@ -1,11 +1,11 @@
 ---
-source: crates/syntax/tests/tokenizer.rs
-expression: "lex(r#\"\"string {with} expression\"\"#)"
+source: crates/syntax/tests/parser.rs
+expression: "lex(r#\"\"string {more + complex} expression\"\"#)"
 ---
 Ok(
     [
         SpannedToken {
-            span: 25..26,
+            span: 35..36,
             token: LiteralString(
                 [
                     SpannedToken {
@@ -15,14 +15,24 @@ Ok(
                         ),
                     },
                     SpannedToken {
-                        span: 13..14,
+                        span: 23..24,
                         token: FormatStart(
                             (
                                 [
                                     SpannedToken {
                                         span: 9..13,
                                         token: Identifier(
-                                            "with",
+                                            "more",
+                                        ),
+                                    },
+                                    SpannedToken {
+                                        span: 14..15,
+                                        token: OperatorAdd,
+                                    },
+                                    SpannedToken {
+                                        span: 16..23,
+                                        token: Identifier(
+                                            "complex",
                                         ),
                                     },
                                 ],
@@ -31,7 +41,7 @@ Ok(
                         ),
                     },
                     SpannedToken {
-                        span: 14..25,
+                        span: 24..35,
                         token: Content(
                             " expression",
                         ),
