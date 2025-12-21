@@ -1,14 +1,12 @@
 -- Test --
-        Test name: function_expression
+        Test name: source_assignment_pub
   Expected result: ok
-      Source file: ../books/tests/src/statement_usage/function.md:102
+      Source file: ../books/tests/src/statement_usage/source.md:60
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
- 102:   fn f() {
- 103:     1 + 2;
- 104:   } f();
+  60:   pub p = 1;
 
 -- No Output --
 -- No Errors --

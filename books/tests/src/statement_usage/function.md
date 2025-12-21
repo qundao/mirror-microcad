@@ -72,6 +72,14 @@ fn f() {
 } f();
 ```
 
+[![test](.test/function_assignment_pub.svg)](.test/function_assignment_pub.log)
+
+```µcad,function_assignment_pub#fail
+fn f() {
+  pub p = 1; // error
+} f();
+```
+
 [![test](.test/function_assignment_var.svg)](.test/function_assignment_var.log)
 
 ```µcad,function_assignment_var
