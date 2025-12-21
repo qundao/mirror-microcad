@@ -2,25 +2,25 @@
 -- Test --
         Test name: pre_init_expression
   Expected result: fail
-      Source file: ../books/tests/src/statement_usage/pre-init.md:94
+      Source file: ../books/tests/src/statement_usage/pre-init.md:102
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  94:   sketch K() { 
-  95:     1 + 2; // error
-  96:   init(l:Length) {} } K();
+ 102:   sketch K() { 
+ 103:     1 + 2; // error
+ 104:   init(l:Length) {} } K();
 
 -- No Output --
 -- Errors --
   × error: 2:3: Statement not allowed prior initializers
-    ╭─[../books/tests/src/statement_usage/pre-init.md:95:3]
- 94 │ sketch K() { 
- 95 │   1 + 2; // error
-    ·   ───┬──
-    ·      ╰── error: 2:3: Statement not allowed prior initializers
- 96 │ init(l:Length) {} } K();
-    ╰────
+     ╭─[../books/tests/src/statement_usage/pre-init.md:103:3]
+ 102 │ sketch K() { 
+ 103 │   1 + 2; // error
+     ·   ───┬──
+     ·      ╰── error: 2:3: Statement not allowed prior initializers
+ 104 │ init(l:Length) {} } K();
+     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

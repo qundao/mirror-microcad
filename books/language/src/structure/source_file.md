@@ -6,17 +6,19 @@ Such files might have the extension `.µcad`, `.mcad` or `.ucad`.
 A source file can include the following types of *statements* which we will all
 discuss within this book:
 
-| Statement                              | Purpose                                     | Example        |
-| -------------------------------------- | ------------------------------------------- | -------------- |
-| [expression](../expressions/README.md) | calculate values                            | `x * 5;`       |
-| [assignment](../assignments/README.md) | store values                                | `y = x;`       |
-| [function](functions.md)               | separate calculations                       | `fn f() { }`   |
-| [workbench](workbenches/README.md)     | build or transform 2D sketches and 3D parts | `part P() { }` |
-| [module](modules/README.md)            | modularization of complex code              | `mod m { }`    |
-| [if](../flow/conditions.md)            | process conditions                          | `if x > 1 { }` |
-| [use](use.md)                          | use elements from other modules             | `use m;`       |
-| [call](../flow/calls)                  | use functions and workbenches               | `f();`         |
-| [comment](../doc/comments.md)          | for documentation                           | `// comment`   |
+| Statement                                   | Purpose                                     | Example        |
+| ------------------------------------------- | ------------------------------------------- | -------------- |
+| [expression](../expressions/README.md#)     | calculate values                            | `x * 5;`       |
+| [assignment](../assignments/values.md)      | store values                                | `y = x;`       |
+| [const assignment](../assignments/const.md) | naming constants                            | `const y = 1;` |
+| [pub assignment](../assignments/pub.md)     | exporting constants                         | `pub y = 1;`   |
+| [function](functions.md)                    | separate calculations                       | `fn f() { }`   |
+| [workbench](workbenches/README.md)          | build or transform 2D sketches and 3D parts | `part P() { }` |
+| [module](modules/README.md)                 | modularization of complex code              | `mod m { }`    |
+| [if](../flow/conditions.md)                 | process conditions                          | `if x > 1 { }` |
+| [use](use.md)                               | use elements from other modules             | `use m;`       |
+| [call](../flow/calls)                       | use functions and workbenches               | `f();`         |
+| [comment](../doc/comments.md)               | for documentation                           | `// comment`   |
 
 In its simplest form, a µcad program consists of a single file containing one
 or more of the above statements.

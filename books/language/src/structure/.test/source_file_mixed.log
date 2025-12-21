@@ -2,20 +2,20 @@
 -- Test --
         Test name: source_file_mixed
   Expected result: fail
-      Source file: ../books/language/src/structure/source_file.md:55
+      Source file: ../books/language/src/structure/source_file.md:57
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  55:   std::geo2d::Circle(radius = 1cm);
-  56:   std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
+  57:   std::geo2d::Circle(radius = 1cm);
+  58:   std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
 
 -- No Output --
 -- Errors --
   × error: 2:1: Cannot mix 2d and 3d geometries
-    ╭─[../books/language/src/structure/source_file.md:56:1]
- 55 │ std::geo2d::Circle(radius = 1cm);
- 56 │ std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
+    ╭─[../books/language/src/structure/source_file.md:58:1]
+ 57 │ std::geo2d::Circle(radius = 1cm);
+ 58 │ std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
     · ────────────────┬────────────────
     ·                 ╰── error: 2:1: Cannot mix 2d and 3d geometries
     ╰────

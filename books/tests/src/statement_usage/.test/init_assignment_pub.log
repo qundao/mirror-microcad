@@ -1,0 +1,33 @@
+﻿
+-- Test --
+        Test name: init_assignment_pub
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/init.md:78
+        Test path: ../books/tests/src/statement_usage/.test
+
+-- Code --
+
+  78:   sketch K() { init(l:Length) {
+  79:     pub a = l; // error
+  80:   } } K(1cm);
+
+-- No Output --
+-- Errors --
+  × error: 2:3: Assignment statement not available here
+    ╭─[../books/tests/src/statement_usage/init.md:79:3]
+ 78 │ sketch K() { init(l:Length) {
+ 79 │   pub a = l; // error
+    ·   ─────┬────
+    ·        ╰── error: 2:3: Assignment statement not available here
+ 80 │ } } K(1cm);
+    ╰────
+  × error: 2:3: Symbol a not found.
+    ╭─[../books/tests/src/statement_usage/init.md:79:3]
+ 78 │ sketch K() { init(l:Length) {
+ 79 │   pub a = l; // error
+    ·   ─────┬────
+    ·        ╰── error: 2:3: Symbol a not found.
+ 80 │ } } K(1cm);
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED

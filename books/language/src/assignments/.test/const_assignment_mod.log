@@ -10,17 +10,31 @@
   11:   const TEXT = "Hello";
   12:   
   13:   mod my_module {
-  14:       pub const TEXT = "Hello";
-  15:   }
+  14:       // (private) constant
+  15:       const TEXT = "Hello my_module";
   16:   
-  17:   std::print(TEXT);
-  18:   std::print(my_module::TEXT);
+  17:       // public function
+  18:       pub fn f() -> String{
+  19:           TEXT
+  20:       }
+  21:   
+  22:       // public workbench
+  23:       pub sketch MySketch(text: String) {
+  24:           std::debug::assert_eq([ TEXT, text ]);
+  25:       }
+  26:   }
+  27:   
+  28:   my_module::MySketch("Hello my_module");
+  29:   std::debug::assert_eq([ my_module::f(), "Hello my_module" ]);
+  30:   std::debug::assert_eq([ TEXT, "Hello" ]);
 
--- Output --
-Hello
-Hello
-
+-- No Output --
 -- No Errors --
--- No Model --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) const_assignment_mod::my_module::MySketch(text=Hello my_module) ->
+      - text = Hello my_module
+
+Export error: Render error: Nothing to render
 -- Test Result --
 OK

@@ -19,5 +19,8 @@ second::f();
 pub fn f() {}
 ```
 
-By using `mod second,` in the first source file, microcad searches for either a
+By using `mod second`, in the first source file, microcad searches for either a
 file called `second.µcad` or `second/mod.µcad` and loads it into a module.
+
+**Hint**: Because external modules are source files, they may contain statements that are not allowed in internal modules.
+These statements (such as calls, expressions, or value assignments) will not be processed when including an external module.

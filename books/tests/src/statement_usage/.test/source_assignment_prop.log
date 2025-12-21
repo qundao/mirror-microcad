@@ -2,24 +2,24 @@
 -- Test --
         Test name: source_assignment_prop
   Expected result: fail
-      Source file: ../books/tests/src/statement_usage/source.md:66
+      Source file: ../books/tests/src/statement_usage/source.md:72
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  66:   prop a = 1;  // error
+  72:   prop a = 1;  // error
 
 -- No Output --
 -- Errors --
   × error: 1:1: Assignment statement is not available within SourceFile
-    ╭─[../books/tests/src/statement_usage/source.md:66:1]
- 66 │ prop a = 1;  // error
+    ╭─[../books/tests/src/statement_usage/source.md:72:1]
+ 72 │ prop a = 1;  // error
     · ─────┬─────
     ·      ╰── error: 1:1: Assignment statement is not available within SourceFile
     ╰────
   × error: 1:1: Declaration of a not allowed within source_assignment_prop
-    ╭─[../books/tests/src/statement_usage/source.md:66:1]
- 66 │ prop a = 1;  // error
+    ╭─[../books/tests/src/statement_usage/source.md:72:1]
+ 72 │ prop a = 1;  // error
     · ─────┬─────
     ·      ╰── error: 1:1: Declaration of a not allowed within source_assignment_prop
     ╰────

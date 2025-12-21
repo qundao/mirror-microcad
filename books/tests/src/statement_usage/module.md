@@ -72,6 +72,14 @@ mod k {
 }
 ```
 
+[![test](.test/module_assignment_pub.svg)](.test/module_assignment_pub.log)
+
+```µcad,module_assignment_pub
+mod k {
+  pub p = 1;
+}
+```
+
 [![test](.test/module_assignment_var.svg)](.test/module_assignment_var.log)
 
 ```µcad,module_assignment_var#fail

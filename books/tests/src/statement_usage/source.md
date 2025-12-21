@@ -54,6 +54,12 @@ if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1mm); }
 const B = 1;
 ```
 
+[![test](.test/source_assignment_pub.svg)](.test/source_assignment_pub.log)
+
+```µcad,source_assignment_pub
+pub p = 1;
+```
+
 [![test](.test/source_assignment_var.svg)](.test/source_assignment_var.log)
 
 ```µcad,source_assignment_var

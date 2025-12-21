@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**127** tests have been evaluated with version **0.2.20** of microcad.
+**134** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -15,6 +15,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/auto_convert.svg)](.test/auto_convert.log) | [auto_convert](auto_convert.md) |
 | [![test](statement_usage/.test/body_assignment_const.svg)](statement_usage/.test/body_assignment_const.log) | [body_assignment_const](statement_usage/body.md) |
 | [![test](statement_usage/.test/body_assignment_prop.svg)](statement_usage/.test/body_assignment_prop.log) | [body_assignment_prop](statement_usage/body.md) |
+| [![test](statement_usage/.test/body_assignment_pub.svg)](statement_usage/.test/body_assignment_pub.log) | [body_assignment_pub](statement_usage/body.md) |
 | [![test](statement_usage/.test/body_assignment_var.svg)](statement_usage/.test/body_assignment_var.log) | [body_assignment_var](statement_usage/body.md) |
 | [![test](statement_usage/.test/body_expression.svg)](statement_usage/.test/body_expression.log) | [body_expression](statement_usage/body.md) |
 | [![test](statement_usage/.test/body_expression_model.svg)](statement_usage/.test/body_expression_model.log) | [body_expression_model](statement_usage/body.md) |
@@ -33,6 +34,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/function.svg)](.test/function.log) | [function](function.md) |
 | [![test](statement_usage/.test/function_assignment_const.svg)](statement_usage/.test/function_assignment_const.log) | [function_assignment_const](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_assignment_prop.svg)](statement_usage/.test/function_assignment_prop.log) | [function_assignment_prop](statement_usage/function.md) |
+| [![test](statement_usage/.test/function_assignment_pub.svg)](statement_usage/.test/function_assignment_pub.log) | [function_assignment_pub](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_assignment_var.svg)](statement_usage/.test/function_assignment_var.log) | [function_assignment_var](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_expression.svg)](statement_usage/.test/function_expression.log) | [function_expression](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_expression_model.svg)](statement_usage/.test/function_expression_model.log) | [function_expression_model](statement_usage/function.md) |
@@ -53,6 +55,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/group_assignment.svg)](.test/group_assignment.log) | [group_assignment](semicolon.md) |
 | [![test](statement_usage/.test/init_assignment_const.svg)](statement_usage/.test/init_assignment_const.log) | [init_assignment_const](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_assignment_prop.svg)](statement_usage/.test/init_assignment_prop.log) | [init_assignment_prop](statement_usage/init.md) |
+| [![test](statement_usage/.test/init_assignment_pub.svg)](statement_usage/.test/init_assignment_pub.log) | [init_assignment_pub](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_assignment_var.svg)](statement_usage/.test/init_assignment_var.log) | [init_assignment_var](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_expression.svg)](statement_usage/.test/init_expression.log) | [init_expression](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_expression_model.svg)](statement_usage/.test/init_expression_model.log) | [init_expression_model](statement_usage/init.md) |
@@ -70,6 +73,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/mod_external_root.svg)](.test/mod_external_root.log) | [mod_external_root](mod_external.md) |
 | [![test](statement_usage/.test/module_assignment_const.svg)](statement_usage/.test/module_assignment_const.log) | [module_assignment_const](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_assignment_prop.svg)](statement_usage/.test/module_assignment_prop.log) | [module_assignment_prop](statement_usage/module.md) |
+| [![test](statement_usage/.test/module_assignment_pub.svg)](statement_usage/.test/module_assignment_pub.log) | [module_assignment_pub](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_assignment_var.svg)](statement_usage/.test/module_assignment_var.log) | [module_assignment_var](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_expression.svg)](statement_usage/.test/module_expression.log) | [module_expression](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_expression_model.svg)](statement_usage/.test/module_expression_model.log) | [module_expression_model](statement_usage/module.md) |
@@ -85,6 +89,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/operation_with_body.svg)](.test/operation_with_body.log) | [operation_with_body](semicolon.md) |
 | [![test](statement_usage/.test/pre_init_assignment_const.svg)](statement_usage/.test/pre_init_assignment_const.log) | [pre_init_assignment_const](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_assignment_prop.svg)](statement_usage/.test/pre_init_assignment_prop.log) | [pre_init_assignment_prop](statement_usage/pre-init.md) |
+| [![test](statement_usage/.test/pre_init_assignment_pub.svg)](statement_usage/.test/pre_init_assignment_pub.log) | [pre_init_assignment_pub](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_assignment_var.svg)](statement_usage/.test/pre_init_assignment_var.log) | [pre_init_assignment_var](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_expression.svg)](statement_usage/.test/pre_init_expression.log) | [pre_init_expression](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_expression_model.svg)](statement_usage/.test/pre_init_expression_model.log) | [pre_init_expression_model](statement_usage/pre-init.md) |
@@ -102,6 +107,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/sketch_with_empty_body.svg)](.test/sketch_with_empty_body.log) | [sketch_with_empty_body](semicolon.md) |
 | [![test](statement_usage/.test/source_assignment_const.svg)](statement_usage/.test/source_assignment_const.log) | [source_assignment_const](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_assignment_prop.svg)](statement_usage/.test/source_assignment_prop.log) | [source_assignment_prop](statement_usage/source.md) |
+| [![test](statement_usage/.test/source_assignment_pub.svg)](statement_usage/.test/source_assignment_pub.log) | [source_assignment_pub](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_assignment_var.svg)](statement_usage/.test/source_assignment_var.log) | [source_assignment_var](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_expression.svg)](statement_usage/.test/source_expression.log) | [source_expression](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_expression_model.svg)](statement_usage/.test/source_expression_model.log) | [source_expression_model](statement_usage/source.md) |
@@ -123,6 +129,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/visibility.svg)](.test/visibility.log) | [visibility](visibility.md) |
 | [![test](statement_usage/.test/workbench_assignment_const.svg)](statement_usage/.test/workbench_assignment_const.log) | [workbench_assignment_const](statement_usage/workbench.md) |
 | [![test](statement_usage/.test/workbench_assignment_prop.svg)](statement_usage/.test/workbench_assignment_prop.log) | [workbench_assignment_prop](statement_usage/workbench.md) |
+| [![test](statement_usage/.test/workbench_assignment_pub.svg)](statement_usage/.test/workbench_assignment_pub.log) | [workbench_assignment_pub](statement_usage/workbench.md) |
 | [![test](statement_usage/.test/workbench_assignment_var.svg)](statement_usage/.test/workbench_assignment_var.log) | [workbench_assignment_var](statement_usage/workbench.md) |
 | [![test](statement_usage/.test/workbench_expression.svg)](statement_usage/.test/workbench_expression.log) | [workbench_expression](statement_usage/workbench.md) |
 | [![test](statement_usage/.test/workbench_expression_model.svg)](statement_usage/.test/workbench_expression_model.log) | [workbench_expression_model](statement_usage/workbench.md) |

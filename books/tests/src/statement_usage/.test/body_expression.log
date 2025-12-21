@@ -2,14 +2,14 @@
 -- Test --
         Test name: body_expression
   Expected result: ok
-      Source file: ../books/tests/src/statement_usage/body.md:102
+      Source file: ../books/tests/src/statement_usage/body.md:110
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
- 102:   {
- 103:     1 + 2;
- 104:   }
+ 110:   {
+ 111:     1 + 2;
+ 112:   }
 
 -- No Output --
 -- No Errors --

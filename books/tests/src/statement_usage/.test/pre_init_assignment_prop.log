@@ -2,24 +2,24 @@
 -- Test --
         Test name: pre_init_assignment_prop
   Expected result: fail
-      Source file: ../books/tests/src/statement_usage/pre-init.md:86
+      Source file: ../books/tests/src/statement_usage/pre-init.md:94
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  86:   sketch K() {
-  87:     prop a = 1; // error
-  88:   init(l:Length) {} } K();
+  94:   sketch K() {
+  95:     prop a = 1; // error
+  96:   init(l:Length) {} } K();
 
 -- No Output --
 -- Errors --
   × error: 2:3: Statement not allowed prior initializers
-    ╭─[../books/tests/src/statement_usage/pre-init.md:87:3]
- 86 │ sketch K() {
- 87 │   prop a = 1; // error
+    ╭─[../books/tests/src/statement_usage/pre-init.md:95:3]
+ 94 │ sketch K() {
+ 95 │   prop a = 1; // error
     ·   ─────┬─────
     ·        ╰── error: 2:3: Statement not allowed prior initializers
- 88 │ init(l:Length) {} } K();
+ 96 │ init(l:Length) {} } K();
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
