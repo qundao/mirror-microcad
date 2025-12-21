@@ -72,6 +72,14 @@ sketch K() {
 init(l:Length) {} } K();
 ```
 
+[![test](.test/pre_init_assignment_pub.svg)](.test/pre_init_assignment_pub.log)
+
+```µcad,pre_init_assignment_pub#fail
+sketch K() { 
+  pub p = 1;  // error
+init(l:Length) {} } K();
+```
+
 [![test](.test/pre_init_assignment_var.svg)](.test/pre_init_assignment_var.log)
 
 ```µcad,pre_init_assignment_var#fail

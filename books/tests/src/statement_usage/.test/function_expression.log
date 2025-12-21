@@ -2,14 +2,14 @@
 -- Test --
         Test name: function_expression
   Expected result: ok
-      Source file: ../books/tests/src/statement_usage/function.md:94
+      Source file: ../books/tests/src/statement_usage/function.md:102
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  94:   fn f() {
-  95:     1 + 2;
-  96:   } f();
+ 102:   fn f() {
+ 103:     1 + 2;
+ 104:   } f();
 
 -- No Output --
 -- No Errors --

@@ -2,32 +2,32 @@
 -- Test --
         Test name: function_assignment_prop
   Expected result: fail
-      Source file: ../books/tests/src/statement_usage/function.md:86
+      Source file: ../books/tests/src/statement_usage/function.md:94
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  86:   fn f() {
-  87:     prop a = 1; // error
-  88:   } f();
+  94:   fn f() {
+  95:     prop a = 1; // error
+  96:   } f();
 
 -- No Output --
 -- Errors --
   × error: 2:3: Assignment statement is not available within Function
-    ╭─[../books/tests/src/statement_usage/function.md:87:3]
- 86 │ fn f() {
- 87 │   prop a = 1; // error
+    ╭─[../books/tests/src/statement_usage/function.md:95:3]
+ 94 │ fn f() {
+ 95 │   prop a = 1; // error
     ·   ─────┬─────
     ·        ╰── error: 2:3: Assignment statement is not available within Function
- 88 │ } f();
+ 96 │ } f();
     ╰────
   × error: 2:3: Declaration of a not allowed within function_assignment_prop::f
-    ╭─[../books/tests/src/statement_usage/function.md:87:3]
- 86 │ fn f() {
- 87 │   prop a = 1; // error
+    ╭─[../books/tests/src/statement_usage/function.md:95:3]
+ 94 │ fn f() {
+ 95 │   prop a = 1; // error
     ·   ─────┬─────
     ·        ╰── error: 2:3: Declaration of a not allowed within function_assignment_prop::f
- 88 │ } f();
+ 96 │ } f();
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

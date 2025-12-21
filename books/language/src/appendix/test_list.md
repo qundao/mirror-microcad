@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**177** tests have been evaluated with version **0.2.20** of microcad.
+**178** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -58,7 +58,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/README.md) |
 | [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
-| [![test](../assignments/.test/const_assignment_workbench_pub.svg)](../assignments/.test/const_assignment_workbench_pub.log) | [const_assignment_workbench_pub](../assignments/const.md) |
 | [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |
@@ -109,6 +108,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/pre_init_code.svg)](../structure/workbenches/.test/pre_init_code.log) | [pre_init_code](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/property.svg)](../structure/workbenches/.test/property.log) | [property](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/property_wrong.svg)](../structure/workbenches/.test/property_wrong.log) | [property_wrong](../structure/workbenches/README.md) |
+| [![test](../assignments/.test/pub_assignment.svg)](../assignments/.test/pub_assignment.log) | [pub_assignment](../assignments/pub.md) |
+| [![test](../assignments/.test/pub_assignment_workbench.svg)](../assignments/.test/pub_assignment_workbench.log) | [pub_assignment_workbench](../assignments/pub.md) |
 | [![test](../expressions/.test/quantity_literal.svg)](../expressions/.test/quantity_literal.log) | [quantity_literal](../expressions/literals.md) |
 | [![test](../types/.test/quantity_types_number_literals.svg)](../types/.test/quantity_types_number_literals.log) | [quantity_types_number_literals](../types/quantities.md) |
 | [![test](../types/collections/.test/range_expressions.svg)](../types/collections/.test/range_expressions.log) | [range_expressions](../types/collections/arrays.md) |

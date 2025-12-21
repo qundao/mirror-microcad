@@ -20,6 +20,7 @@
 - [Assignments](./assignments/README.md)
   - [Value Assignments](./assignments/values.md)
   - [Constant Assignments](./assignments/const.md)
+  - [Public Assignments](./assignments/pub.md)
   - [Property Assignments](./assignments/property.md)
 - [Program Flow](./flow/README.md)
   - [Conditionals](./flow/conditions.md)

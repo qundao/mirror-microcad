@@ -2,34 +2,44 @@
 -- Test --
         Test name: use_statement_pub
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:93
+      Source file: ../books/language/src/structure/use.md:100
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  93:   mod my {
-  94:       pub use std::geo2d::*;
-  95:   }
-  96:   
-  97:   my::Circle(radius = 4mm);
-  98:   my::Rect(size = 40mm);
+ 100:   mod my {
+ 101:       pub use std::geo3d::Sphere;
+ 102:       pub use std::geo3d::Cube;
+ 103:   }
+ 104:   
+ 105:   my::Circle(radius = 4mm);
+ 106:   my::Rect(size = 40mm);
 
 -- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
-      - center = (x=0mm, y=0mm)
-      - radius = 4mm
-      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-        Primitive2D __builtin::geo2d::Circle(radius=4mm) ->
-    Workpiece(sketch) std::geo2d::Rect(size=40mm) ->
-      - height = 40mm
-      - width = 40mm
-      - x = -20mm
-      - y = -20mm
-      Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) ->
-
-Export of "../books/language/src/structure/.test/use_statement_pub-out.svg" successful.
+-- Errors --
+  × error: 6:1: Symbol my::Circle not found.
+     ╭─[../books/language/src/structure/use.md:105:1]
+ 104 │ 
+ 105 │ my::Circle(radius = 4mm);
+     · ────────────┬───────────
+     ·             ╰── error: 6:1: Symbol my::Circle not found.
+ 106 │ my::Rect(size = 40mm);
+     ╰────
+  × error: 7:1: Symbol my::Rect not found.
+     ╭─[../books/language/src/structure/use.md:106:1]
+ 105 │ my::Circle(radius = 4mm);
+ 106 │ my::Rect(size = 40mm);
+     · ──────────┬──────────
+     ·           ╰── error: 7:1: Symbol my::Rect not found.
+     ╰────
+  ⚠ warning: 1:5: Unused global symbol my.
+     ╭─[../books/language/src/structure/use.md:100:5]
+ 100 │ mod my {
+     ·     ─┬
+     ·      ╰── warning: 1:5: Unused global symbol my.
+ 101 │     pub use std::geo3d::Sphere;
+     ╰────
+Unexpected error(s) which did occur in line(s): 105, 106
+Unexpected warnings(s) which did occur in line(s): 100
 -- Test Result --
-OK
+FAILS

@@ -2,13 +2,13 @@
 -- Test --
         Test name: none
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:17
+      Source file: ../books/language/src/structure/use.md:16
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  17:   std::geo3d::Sphere(radius = 40mm);
-  18:   std::geo3d::Cube(size = 40mm);
+  16:   std::geo3d::Sphere(radius = 40mm);
+  17:   std::geo3d::Cube(size = 40mm);
 
 -- No Output --
 -- No Errors --
