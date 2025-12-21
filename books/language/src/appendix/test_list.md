@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**178** tests have been evaluated with version **0.2.20** of microcad.
+**180** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -56,12 +56,14 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/code.svg)](../structure/workbenches/.test/code.log) | [code](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/code_between_initializers.svg)](../structure/workbenches/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/README.md) |
+| [![test](../doc/.test/comment.svg)](../doc/.test/comment.log) | [comment](../doc/comments.md) |
 | [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
 | [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |
 | [![test](../libraries/std/ops/.test/distribute_grid_3d.svg)](../libraries/std/ops/.test/distribute_grid_3d.log) | [distribute_grid_3d](../libraries/std/ops/distribute_grid.md) |
+| [![test](../doc/.test/doc_comment.svg)](../doc/.test/doc_comment.log) | [doc_comment](../doc/comments.md) |
 | [![test](../structure/.test/example.svg)](../structure/.test/example.log) | [example](../structure/functions.md) |
 | [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
 | [![test](../expressions/.test/expression_literals.svg)](../expressions/.test/expression_literals.log) | [expression_literals](../expressions/README.md) |
