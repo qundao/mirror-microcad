@@ -74,12 +74,6 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
-                    if !env.todo()
-                        && env.report_wrong_errors(&context.error_lines(), &context.warning_lines())
-                    {
-                        env.result(TestResult::FailWrong);
-                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
-                    }
 
                     let _ = fs::remove_file(env.banner_file());
 
@@ -92,10 +86,28 @@ pub fn run_test(env: Option<TestEnv>) {
                         // evaluation had been aborted?
                         (Err(err), _, false) => {
                             env.log_ln(&err.to_string());
+                            if env.report_wrong_errors(
+                                &context.error_lines(),
+                                &context.warning_lines(),
+                            ) {
+                                env.result(TestResult::FailWrong);
+                                panic!(
+                                    "ERROR: test is marked to fail but with wrong errors/warnings"
+                                );
+                            }
                             env.result(TestResult::FailOk);
                         }
                         // evaluation produced errors?
                         (_, true, false) => {
+                            if env.report_wrong_errors(
+                                &context.error_lines(),
+                                &context.warning_lines(),
+                            ) {
+                                env.result(TestResult::FailWrong);
+                                panic!(
+                                    "ERROR: test is marked to fail but with wrong errors/warnings"
+                                );
+                            }
                             env.result(TestResult::FailOk);
                             log::debug!(
                                 "there were {error_count} errors (see {log:?})",
