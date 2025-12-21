@@ -1,1 +1,70 @@
 # Documentation
+
+## Code Comments
+
+By using `//` or `/*` and `*/` you may insert comments within the code.
+
+[![test](.test/comment.svg)](.test/comment.log)
+
+```µcad,comment
+// This is a line comment...
+
+/* This is a block comment */
+
+/* Block comments my have...
+   ...multiple lines.
+*/
+
+std::print("Hello, ");   // Line comments can be appended to a line
+std::print( /* Block comments can be placed almost anywhere */ "world!");
+```
+
+## Doc Comments
+
+You may also use comments to attribute your code with documentation.
+
+By placing a comment with `///` above a symbol definition you can attribute
+your code with documentation.
+Markdown may be used to shape sections or format text.
+
+
+[![test](.test/doc_comment.svg)](.test/doc_comment.log)
+
+```µcad,doc_comment
+/// A function which returns what it gets.
+///
+/// It simply returns the **same** value...
+///
+/// ...as it got from the *parameter*.
+///
+/// ## Arguments
+///
+/// - `n`: input value
+///
+/// ## Returns
+///
+/// Output value.
+fn f( n: Integer ) -> Integer { n }
+
+// usual comment for non-symbols
+f(1);
+```
+
+Till the first empty line text will be interpreted as a summary for documentation,
+all other lines will build the detailed description.
+
+The above function `f` will be documented with the following markdown output:
+
+> A function which returns what it gets.
+>
+> It simply returns the **same** value...
+>
+> ...as it got from the *parameter*.
+>
+> ## Arguments
+>
+> - `n`: input value
+>
+> ## Returns
+>
+> Output value.
