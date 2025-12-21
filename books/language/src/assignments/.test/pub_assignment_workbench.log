@@ -1,0 +1,29 @@
+﻿
+-- Test --
+        Test name: pub_assignment_workbench
+  Expected result: fail
+      Source file: ../books/language/src/assignments/pub.md:20
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  20:   sketch MySketch() {
+  21:       pub TEXT = "Hello";  // error
+  22:       std::print(TEXT);
+  23:   }
+  24:   
+  25:   MySketch();
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Assignment statement is not available within Sketch
+    ╭─[../books/language/src/assignments/pub.md:21:5]
+ 20 │ sketch MySketch() {
+ 21 │     pub TEXT = "Hello";  // error
+    ·     ─────────┬─────────
+    ·              ╰── error: 2:5: Assignment statement is not available within Sketch
+ 22 │     std::print(TEXT);
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

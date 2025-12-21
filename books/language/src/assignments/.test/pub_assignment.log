@@ -1,0 +1,23 @@
+﻿
+-- Test --
+        Test name: pub_assignment
+  Expected result: ok
+      Source file: ../books/language/src/assignments/pub.md:8
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+   8:   mod my_module {
+   9:       pub TEXT = "Hello";  // error
+  10:   }
+  11:   
+  12:   std::print(my_module::TEXT);
+
+-- Output --
+Hello
+
+-- No Errors --
+Expected error(s) which did not occur in line(s): 9
+-- No Model --
+-- Test Result --
+OK
