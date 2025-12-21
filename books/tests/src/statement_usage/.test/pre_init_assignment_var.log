@@ -2,24 +2,24 @@
 -- Test --
         Test name: pre_init_assignment_var
   Expected result: fail
-      Source file: ../books/tests/src/statement_usage/pre-init.md:78
+      Source file: ../books/tests/src/statement_usage/pre-init.md:86
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  78:   sketch K() { 
-  79:     a = 1; // error
-  80:   init(l:Length) {} } K();
+  86:   sketch K() { 
+  87:     a = 1; // error
+  88:   init(l:Length) {} } K();
 
 -- No Output --
 -- Errors --
   × error: 2:3: Statement not allowed prior initializers
-    ╭─[../books/tests/src/statement_usage/pre-init.md:79:3]
- 78 │ sketch K() { 
- 79 │   a = 1; // error
+    ╭─[../books/tests/src/statement_usage/pre-init.md:87:3]
+ 86 │ sketch K() { 
+ 87 │   a = 1; // error
     ·   ───┬──
     ·      ╰── error: 2:3: Statement not allowed prior initializers
- 80 │ init(l:Length) {} } K();
+ 88 │ init(l:Length) {} } K();
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

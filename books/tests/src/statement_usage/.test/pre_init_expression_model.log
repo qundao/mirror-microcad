@@ -2,24 +2,24 @@
 -- Test --
         Test name: pre_init_expression_model
   Expected result: fail
-      Source file: ../books/tests/src/statement_usage/pre-init.md:102
+      Source file: ../books/tests/src/statement_usage/pre-init.md:110
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
- 102:   sketch K() { 
- 103:     __builtin::geo2d::Circle(radius=1mm); // error
- 104:   init(l:Length) {} }
+ 110:   sketch K() { 
+ 111:     __builtin::geo2d::Circle(radius=1mm); // error
+ 112:   init(l:Length) {} }
 
 -- No Output --
 -- Errors --
   × error: 2:3: Statement not allowed prior initializers
-     ╭─[../books/tests/src/statement_usage/pre-init.md:103:3]
- 102 │ sketch K() { 
- 103 │   __builtin::geo2d::Circle(radius=1mm); // error
+     ╭─[../books/tests/src/statement_usage/pre-init.md:111:3]
+ 110 │ sketch K() { 
+ 111 │   __builtin::geo2d::Circle(radius=1mm); // error
      ·   ──────────────────┬──────────────────
      ·                     ╰── error: 2:3: Statement not allowed prior initializers
- 104 │ init(l:Length) {} }
+ 112 │ init(l:Length) {} }
      ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

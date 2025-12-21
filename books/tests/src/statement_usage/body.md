@@ -80,6 +80,14 @@
 }
 ```
 
+[![test](.test/body_assignment_pub.svg)](.test/body_assignment_pub.log)
+
+```µcad,body_assignment_pub#fail
+{
+  pub p = 1; // error
+}
+```
+
 [![test](.test/body_assignment_var.svg)](.test/body_assignment_var.log)
 
 ```µcad,body_assignment_var

@@ -2,12 +2,12 @@
 -- Test --
         Test name: source_expression_model
   Expected result: ok
-      Source file: ../books/tests/src/statement_usage/source.md:78
+      Source file: ../books/tests/src/statement_usage/source.md:84
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  78:   __builtin::geo2d::Circle(radius=1mm);
+  84:   __builtin::geo2d::Circle(radius=1mm);
 
 -- No Output --
 -- No Errors --
