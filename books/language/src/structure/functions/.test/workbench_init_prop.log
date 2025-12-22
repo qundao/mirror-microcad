@@ -1,0 +1,41 @@
+﻿
+-- Test --
+        Test name: workbench_init_prop
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions/workbench_functions.md:68
+        Test path: ../books/language/src/structure/functions/.test
+
+-- Code --
+
+  68:   part PunchedDisk(radius: Length) {
+  69:       init(diameter: Length) { 
+  70:           prop radius = diameter/2; // error: prop not allowed in init
+  71:       }
+  72:       init(d: Length) { 
+  73:           radius = d/2;
+  74:       }
+  75:   
+  76:       // right place to set additional properties
+  77:       prop hole = radius/2;
+  78:   
+  79:       fn inner() { 
+  80:           return hole;
+  81:       }
+  82:       inner();
+  83:   }
+  84:   
+  85:   PunchedDisk(diameter=1cm);
+  86:   PunchedDisk(d=1cm);
+
+-- No Output --
+-- Errors --
+  × error: 3:9: Assignment statement not available here
+    ╭─[../books/language/src/structure/functions/workbench_functions.md:70:9]
+ 69 │     init(diameter: Length) { 
+ 70 │         prop radius = diameter/2; // error: prop not allowed in init
+    ·         ────────────┬────────────
+    ·                     ╰── error: 3:9: Assignment statement not available here
+ 71 │     }
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
