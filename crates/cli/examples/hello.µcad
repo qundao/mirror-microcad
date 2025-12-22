@@ -2,7 +2,7 @@ use std::geo2d::*;
 use std::ops::*;
 
 sketch Hello(height = 42mm) {
-    RoundedRect(width = 4 * height, height, radius = 10mm) - Text(height, "Hello µcad!").align();
+    RoundedRect(width = 4 * height, height, radius = 10mm) - Text(height, "Hello µcad!").center();
 }
 
 // create a 3D text
