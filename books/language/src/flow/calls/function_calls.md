@@ -12,19 +12,6 @@ fn f() {}
 f();
 ```
 
-[![test](.test/function_return.svg)](.test/function_return.log)
-
-```µcad,function_return
-// function definition
-fn f() {
-    // return statement
-    return 1; 
-}
-
-// function call (and result check)
-std::debug::assert_eq([ f(), 1 ]);
-```
-
 [![test](.test/function_param_return.svg)](.test/function_param_return.log)
 
 ```µcad,function_param_return
