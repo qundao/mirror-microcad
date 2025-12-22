@@ -9,16 +9,16 @@
 
   69:   use std::geo3d as space;
   70:   
-  71:   geo::Circle(radius = 4mm);
+  71:   space::Circle(radius = 4mm);
 
 -- No Output --
 -- Errors --
-  × error: 3:1: Symbol geo::Circle not found.
+  × error: 3:1: Symbol space::Circle not found.
     ╭─[../books/language/src/structure/use.md:71:1]
  70 │ 
- 71 │ geo::Circle(radius = 4mm);
-    · ────────────┬────────────
-    ·             ╰── error: 3:1: Symbol geo::Circle not found.
+ 71 │ space::Circle(radius = 4mm);
+    · ─────────────┬─────────────
+    ·              ╰── error: 3:1: Symbol space::Circle not found.
     ╰────
   ⚠ warning: 1:5: Unused global symbol std::geo3d.
     ╭─[../books/language/src/structure/use.md:69:5]

@@ -68,7 +68,7 @@ Of course you can use `use as` with a whole *module*:
 ```µcad,use_as_module
 use std::geo3d as space;
 
-geo::Circle(radius = 4mm);
+space::Circle(radius = 4mm);
 ```
 
 ## Use All Statement

@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**180** tests have been evaluated with version **0.2.20** of microcad.
+**183** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -64,7 +64,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |
 | [![test](../libraries/std/ops/.test/distribute_grid_3d.svg)](../libraries/std/ops/.test/distribute_grid_3d.log) | [distribute_grid_3d](../libraries/std/ops/distribute_grid.md) |
 | [![test](../doc/.test/doc_comment.svg)](../doc/.test/doc_comment.log) | [doc_comment](../doc/comments.md) |
-| [![test](../structure/.test/example.svg)](../structure/.test/example.log) | [example](../structure/functions.md) |
+| [![test](../structure/functions/.test/example.svg)](../structure/functions/.test/example.log) | [example](../structure/functions/README.md) |
 | [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
 | [![test](../expressions/.test/expression_literals.svg)](../expressions/.test/expression_literals.log) | [expression_literals](../expressions/README.md) |
 | [![test](../expressions/.test/expression_model.svg)](../expressions/.test/expression_model.log) | [expression_model](../expressions/README.md) |
@@ -73,8 +73,11 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/modules/.test/external_modules_second.svg)](../structure/modules/.test/external_modules_second.log) | [external_modules_second](../structure/modules/external_modules.md) |
 | [![test](../libraries/std/ops/.test/extrude.svg)](../libraries/std/ops/.test/extrude.log) | [extrude](../libraries/std/ops/extrude.md) |
 | [![test](../flow/calls/.test/function_call.svg)](../flow/calls/.test/function_call.log) | [function_call](../flow/calls/function_calls.md) |
+| [![test](../structure/functions/.test/function_conditional_result.svg)](../structure/functions/.test/function_conditional_result.log) | [function_conditional_result](../structure/functions/result.md) |
+| [![test](../structure/functions/.test/function_default.svg)](../structure/functions/.test/function_default.log) | [function_default](../structure/functions/README.md) |
 | [![test](../flow/calls/.test/function_param_return.svg)](../flow/calls/.test/function_param_return.log) | [function_param_return](../flow/calls/function_calls.md) |
-| [![test](../flow/calls/.test/function_return.svg)](../flow/calls/.test/function_return.log) | [function_return](../flow/calls/function_calls.md) |
+| [![test](../structure/functions/.test/function_result.svg)](../structure/functions/.test/function_result.log) | [function_result](../structure/functions/result.md) |
+| [![test](../structure/functions/.test/function_return.svg)](../structure/functions/.test/function_return.log) | [function_return](../structure/functions/result.md) |
 | [![test](../libraries/std/ops/.test/hull_multiple.svg)](../libraries/std/ops/.test/hull_multiple.log) | [hull_multiple](../libraries/std/ops/hull.md) |
 | [![test](../libraries/std/ops/.test/hull_single.svg)](../libraries/std/ops/.test/hull_single.log) | [hull_single](../libraries/std/ops/hull.md) |
 | [![test](../expressions/.test/if_expression.svg)](../expressions/.test/if_expression.log) | [if_expression](../expressions/README.md) |
@@ -93,7 +96,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/models/.test/measure.svg)](../types/models/.test/measure.log) | [measure](../types/models/measures.md) |
 | [![test](../libraries/std/ops/.test/mirror_3d.svg)](../libraries/std/ops/.test/mirror_3d.log) | [mirror_3d](../libraries/std/ops/mirror.md) |
 | [![test](../structure/workbenches/.test/missed_property.svg)](../structure/workbenches/.test/missed_property.log) | [missed_property](../structure/workbenches/README.md) |
-| [![test](../structure/.test/mod.svg)](../structure/.test/mod.log) | [mod](../structure/functions.md) |
+| [![test](../structure/functions/.test/mod.svg)](../structure/functions/.test/mod.log) | [mod](../structure/functions/module_functions.md) |
 | [![test](../structure/modules/.test/mod_example.svg)](../structure/modules/.test/mod_example.log) | [mod_example](../structure/modules/README.md) |
 | [![test](../flow/argument_match/.test/multiplicity_arrays.svg)](../flow/argument_match/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/argument_match/multiplicity.md) |
 | [![test](../flow/argument_match/.test/multiplicity_tuple_array.svg)](../flow/argument_match/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/argument_match/multiplicity.md) |
@@ -117,8 +120,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/.test/range_expressions.svg)](../types/collections/.test/range_expressions.log) | [range_expressions](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/range_expressions_bad_order.svg)](../types/collections/.test/range_expressions_bad_order.log) | [range_expressions_bad_order](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/range_expressions_bad_type.svg)](../types/collections/.test/range_expressions_bad_type.log) | [range_expressions_bad_type](../types/collections/arrays.md) |
-| [![test](../structure/.test/return.svg)](../structure/.test/return.log) | [return](../structure/functions.md) |
-| [![test](../structure/.test/return_twice.svg)](../structure/.test/return_twice.log) | [return_twice](../structure/functions.md) |
+| [![test](../structure/functions/.test/return_twice.svg)](../structure/functions/.test/return_twice.log) | [return_twice](../structure/functions/result.md) |
 | [![test](../libraries/std/ops/.test/revolve.svg)](../libraries/std/ops/.test/revolve.log) | [revolve](../libraries/std/ops/revolve.md) |
 | [![test](../libraries/std/ops/.test/rotate_2d.svg)](../libraries/std/ops/.test/rotate_2d.log) | [rotate_2d](../libraries/std/ops/rotate.md) |
 | [![test](../libraries/std/ops/.test/rotate_3d.svg)](../libraries/std/ops/.test/rotate_3d.log) | [rotate_3d](../libraries/std/ops/rotate.md) |
@@ -185,6 +187,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../debugging/.test/verify_assert_fail.svg)](../debugging/.test/verify_assert_fail.log) | [verify_assert_fail](../debugging/verification.md) |
 | [![test](../debugging/.test/verify_error.svg)](../debugging/.test/verify_error.log) | [verify_error](../debugging/verification.md) |
 | [![test](../debugging/.test/verify_todo.svg)](../debugging/.test/verify_todo.log) | [verify_todo](../debugging/verification.md) |
-| [![test](../structure/.test/workbench_example.svg)](../structure/.test/workbench_example.log) | [workbench_example](../structure/functions.md) |
-| [![test](../structure/.test/workbench_fn_prop.svg)](../structure/.test/workbench_fn_prop.log) | [workbench_fn_prop](../structure/functions.md) |
-| [![test](../structure/.test/workbench_pub.svg)](../structure/.test/workbench_pub.log) | [workbench_pub](../structure/functions.md) |
+| [![test](../structure/functions/.test/workbench_example.svg)](../structure/functions/.test/workbench_example.log) | [workbench_example](../structure/functions/workbench_functions.md) |
+| [![test](../structure/functions/.test/workbench_fn_prop.svg)](../structure/functions/.test/workbench_fn_prop.log) | [workbench_fn_prop](../structure/functions/workbench_functions.md) |
+| [![test](../structure/functions/.test/workbench_init_prop.svg)](../structure/functions/.test/workbench_init_prop.log) | [workbench_init_prop](../structure/functions/workbench_functions.md) |
+| [![test](../structure/functions/.test/workbench_pub.svg)](../structure/functions/.test/workbench_pub.log) | [workbench_pub](../structure/functions/workbench_functions.md) |
