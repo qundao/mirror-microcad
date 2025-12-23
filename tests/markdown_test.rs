@@ -145,14 +145,22 @@ pub fn run_test(env: Option<TestEnv>) {
                     // check if test awaited to succeed but failed at evaluation
                     match (eval, context.has_errors(), env.todo()) {
                         // test expected to succeed and succeeds with no errors
-                        (Ok(model), false, false) => {
-                            report_model(&mut env, model);
-                            if context.has_warnings() {
-                                env.result(TestResult::OkWarn);
-                            } else {
-                                env.result(TestResult::Ok);
+                        (Ok(model), false, false) => match report_model(&mut env, model) {
+                            Ok(_) => {
+                                if context.has_warnings() {
+                                    env.result(TestResult::OkWarn);
+                                } else {
+                                    env.result(TestResult::Ok);
+                                }
                             }
-                        }
+                            Err(err) => {
+                                env.result(TestResult::Fail);
+                                panic!(
+                                    "ERROR: Export error: {err} (see {log:?}).",
+                                    log = env.log_file(),
+                                );
+                            }
+                        },
                         // test is todo but succeeds with no errors
                         (Ok(_), false, true) => {
                             env.result(TestResult::NotTodo);
@@ -201,7 +209,10 @@ fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
     context
 }
 
-fn report_model(env: &mut TestEnv, model: Option<Model>) {
+fn report_model(
+    env: &mut TestEnv,
+    model: Option<Model>,
+) -> Result<(), microcad_lang::builtin::ExportError> {
     use microcad_core::RenderResolution;
     use microcad_export::{stl::StlExporter, svg::SvgExporter};
     use microcad_lang::{
@@ -235,13 +246,15 @@ fn report_model(env: &mut TestEnv, model: Option<Model>) {
             _ => panic!("Invalid geometry output"),
         };
         match export {
-            Some(export) => match export.render_and_export(&model) {
-                Ok(_) => env.log_ln(&format!("Export of {:?} successful.", export.filename)),
-                Err(error) => env.log_ln(&format!("Export error: {error}")),
-            },
+            Some(export) => {
+                export.render_and_export(&model)?;
+                env.log_ln(&format!("Export of {:?} successful.", export.filename));
+            }
             None => env.log_ln("Nothing will be exported."),
         }
     } else {
         env.log_ln("-- No Model --");
     }
+
+    Ok(())
 }
