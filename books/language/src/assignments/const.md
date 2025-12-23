@@ -15,7 +15,7 @@ mod my_module {
     const TEXT = "Hello my_module";
 
     // public function
-    pub fn f() -> String{
+    pub fn f() -> String {
         TEXT
     }
 
