@@ -13,19 +13,23 @@
   31:           text = TEXT;
   32:       }
   33:   
-  34:       std::print(text);
+  34:       std::geo2d::Text(text,1cm);
   35:   }
   36:   
   37:   MySketch();
 
--- Output --
-Hello
-
+-- No Output --
 -- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(sketch) const_assignment_workbench::MySketch() ->
       - text = Hello
+      Workpiece(sketch) std::geo2d::Text(font_file=, height=10mm, text=Hello) ->
+        - font_file = 
+        - height = 10mm
+        - text = Hello
+        Primitive2D __builtin::geo2d::Text(font_file=, height=10mm, text=Hello) ->
 
+Export of "../books/language/src/assignments/.test/const_assignment_workbench-out.svg" successful.
 -- Test Result --
-FAILS
+OK

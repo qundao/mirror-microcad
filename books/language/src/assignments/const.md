@@ -31,7 +31,7 @@ sketch MySketch(text: String) {
         text = TEXT;
     }
 
-    std::print(text);
+    std::geo2d::Text(text, 1cm);
 }
 
 MySketch();
