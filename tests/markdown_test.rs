@@ -154,6 +154,7 @@ pub fn run_test(env: Option<TestEnv>) {
                                 }
                             }
                             Err(err) => {
+                                env.log_ln(&format!("Export failed: {err}."));
                                 env.result(TestResult::Fail);
                                 panic!(
                                     "ERROR: Export error: {err} (see {log:?}).",
