@@ -6,11 +6,11 @@
 mod a {
     pub mod b {
         pub mod c {
-            pub part M1() {}
+            pub part M1() { std::geo3d::Sphere(1cm) }
         }
     }
 
-    pub part M2() {}
+    pub part M2() { std::geo3d::Sphere(2cm) }
 }
 
 a::b::c::M1();
