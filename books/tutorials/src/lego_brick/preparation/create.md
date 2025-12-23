@@ -13,14 +13,15 @@ Let's open this file in VSCode:
 [![test](.test/create.svg)](.test/create.log)
 
 ```µcad,create
-// microcad generated file
+use std::geo2d::*;
+use std::ops::*;
 
-sketch YourSketch( /* your building plan */ ) {
-    // your code
+sketch Hello(height = 42mm) {
+    RoundedRect(width = 4 * height, height, radius = 10mm) - Text(height, "Hello µcad!").center();
 }
 
-// create YourSketch
-YourSketch();
+// create a 3D text
+Hello().extrude(23mm);
 ```
 
 We can export the file using the following command:
