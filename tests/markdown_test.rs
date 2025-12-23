@@ -56,8 +56,10 @@ pub fn run_test(env: Option<TestEnv>) {
         );
         let sources =
             Sources::load(source.clone(), &<Vec<&str>>::new()).expect("no externals to fail");
-        let mut render_options = DiagRenderOptions::default();
-        render_options.color = false;
+        let render_options = DiagRenderOptions {
+            color: false,
+            ..Default::default()
+        };
 
         match env.mode() {
             // test is expected to fail?
@@ -150,7 +152,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 }
             },
             // test is expected to succeed?
-            "ok" | "todo" | "warn" | "todo_warn" => match errors {
+            "ok" | "todo" | "warn" | "todo_warn" | "no_output" => match errors {
                 // test awaited to succeed and parsing failed?
                 Some(errors) => {
                     let first_err = errors[0].to_string();
@@ -187,25 +189,33 @@ pub fn run_test(env: Option<TestEnv>) {
                     // check if test awaited to succeed but failed at evaluation
                     match (eval, context.has_errors(), env.todo()) {
                         // test expected to succeed and succeeds with no errors
-                        (Ok(model), false, false) => {
-                            report_model(&mut env, model);
-                            if err_warn {
-                                match env.mode() {
-                                    "warn" => {
-                                        env.result(TestResult::OkWrong);
-                                        panic!(
-                                            "ERROR: test is marked to fail but with wrong errors/warnings"
-                                        );
+                        (Ok(model), false, false) => match report_model(&mut env, model) {
+                            Ok(_) => {
+                                if err_warn {
+                                    match env.mode() {
+                                        "warn" => {
+                                            env.result(TestResult::OkWrong);
+                                            panic!(
+                                                "ERROR: test is marked to fail but with wrong errors/warnings"
+                                            );
+                                        }
+                                        "todo_warn" => {
+                                            env.result(TestResult::TodoWarn);
+                                        }
+                                        _ => env.result(TestResult::OkWarn),
                                     }
-                                    "todo_warn" => {
-                                        env.result(TestResult::TodoWarn);
-                                    }
-                                    _ => env.result(TestResult::OkWarn),
+                                } else {
+                                    env.result(TestResult::Ok)
                                 }
-                            } else {
-                                env.result(TestResult::Ok)
                             }
-                        }
+                            Err(err) => {
+                                env.result(TestResult::Fail);
+                                panic!(
+                                    "ERROR: Export error: {err} (see {log:?}).",
+                                    log = env.log_file(),
+                                );
+                            }
+                        },
                         // test is todo but succeeds with no errors
                         (Ok(_), false, true) => {
                             env.result(TestResult::NotTodo);
@@ -254,7 +264,10 @@ fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
     context
 }
 
-fn report_model(env: &mut TestEnv, model: Option<Model>) {
+fn report_model(
+    env: &mut TestEnv,
+    model: Option<Model>,
+) -> Result<(), microcad_lang::builtin::ExportError> {
     use microcad_core::RenderResolution;
     use microcad_export::{stl::StlExporter, svg::SvgExporter};
     use microcad_lang::{
@@ -288,13 +301,15 @@ fn report_model(env: &mut TestEnv, model: Option<Model>) {
             _ => panic!("Invalid geometry output"),
         };
         match export {
-            Some(export) => match export.render_and_export(&model) {
-                Ok(_) => env.log_ln(&format!("Export of {:?} successful.", export.filename)),
-                Err(error) => env.log_ln(&format!("Export error: {error}")),
-            },
+            Some(export) => {
+                export.render_and_export(&model)?;
+                env.log_ln(&format!("Export of {:?} successful.", export.filename));
+            }
             None => env.log_ln("Nothing will be exported."),
         }
     } else {
         env.log_ln("-- No Model --");
     }
+
+    Ok(())
 }
