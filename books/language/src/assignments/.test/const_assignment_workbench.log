@@ -13,7 +13,7 @@
   31:           text = TEXT;
   32:       }
   33:   
-  34:       std::geo2d::Text(text,1cm);
+  34:       std::geo2d::Text(text, 1cm);
   35:   }
   36:   
   37:   MySketch();

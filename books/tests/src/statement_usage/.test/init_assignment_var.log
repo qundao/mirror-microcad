@@ -25,5 +25,6 @@ Unexpected warnings(s) which did occur in line(s): 79
   Group (root) ->
     Workpiece(sketch) init_assignment_var::K(l=10mm) ->
 
+Export failed: Render error: Nothing to render.
 -- Test Result --
 FAILS
