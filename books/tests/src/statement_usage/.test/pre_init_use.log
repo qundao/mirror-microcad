@@ -17,6 +17,5 @@
   Group (root) ->
     Workpiece(sketch) pre_init_use::K() ->
 
-Export error: Render error: Nothing to render
 -- Test Result --
-OK
+FAILS

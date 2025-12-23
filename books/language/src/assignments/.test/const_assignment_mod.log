@@ -36,6 +36,5 @@
     Workpiece(sketch) const_assignment_mod::my_module::MySketch(text=Hello my_module) ->
       - text = Hello my_module
 
-Export error: Render error: Nothing to render
 -- Test Result --
-OK
+FAILS

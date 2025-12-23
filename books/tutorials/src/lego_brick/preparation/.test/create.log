@@ -22,6 +22,5 @@
   Group (root) ->
     Workpiece(sketch) create::YourSketch() ->
 
-Export error: Render error: Nothing to render
 -- Test Result --
-OK
+FAILS

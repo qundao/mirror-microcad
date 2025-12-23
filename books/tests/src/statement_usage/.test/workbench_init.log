@@ -18,6 +18,5 @@
     Workpiece(sketch) workbench_init::K() ->
       - x = 1
 
-Export error: Render error: Nothing to render
 -- Test Result --
-OK
+FAILS
