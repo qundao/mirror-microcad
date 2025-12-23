@@ -81,6 +81,5 @@
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
               Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
 
-Export error: Render error: Nothing to render
 -- Test Result --
-OK
+FAILS

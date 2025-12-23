@@ -16,6 +16,5 @@
   Group (root) ->
     Workpiece(sketch) workbench_assignment_const::K() ->
 
-Export error: Render error: Nothing to render
 -- Test Result --
-OK
+FAILS
