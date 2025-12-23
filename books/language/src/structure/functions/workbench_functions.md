@@ -1,7 +1,7 @@
 # Workbench Functions
 
-A [workbench](../workbenches/README.md) can contain functions that are accessible
-within the module only.
+A [workbench](../workbenches/README.md) can contain functions.
+These functions can be used within the workbench, but **not** from outside it.
 
 Here is an example which generates a punched disk of a given radius using a
 function `inner()`:
@@ -12,14 +12,14 @@ function `inner()`:
 sketch PunchedDisk(radius: Length) {
     use std::geo2d::Circle;
 
-    // calculate inner from radius in a method
-    fn inner() { return radius/2; }
+    // function to calculate inner from radius
+    fn inner() { radius/2 }
 
     // generate donut (and call inner)
     Circle(radius) - Circle(radius = inner());
 }
 
-PunchedDisk(radius = 1cm);
+PunchedDisk(1cm);
 ```
 
 ## Restrictions
@@ -33,11 +33,15 @@ Trying to make them public with the keyword `pub` will result into an error:
 [![test](.test/workbench_pub.svg)](.test/workbench_pub.log)
 
 ```µcad,workbench_pub#fail
-part PunchedDisk(radius: Length) {
-    pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
+sketch PunchedDisk(radius: Length) {
+    use std::geo2d::Circle;
+
+    pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
+
+    Circle(radius) - Circle(inner());
 }
 
-PunchedDisk(4.0mm);
+PunchedDisk(1cm);
 ```
 
 ### No `prop` in workbench functions nor initializers
@@ -47,12 +51,17 @@ You cannot create *workbench properties* in *function bodies*.
 [![test](.test/workbench_fn_prop.svg)](.test/workbench_fn_prop.log)
 
 ```µcad,workbench_fn_prop#fail
-part PunchedDisk(radius: Length) {
+sketch PunchedDisk(radius: Length) {
+    use std::geo2d::Circle;
+
     fn inner() {
         prop hole = radius/2;  // error: prop not allowed in function
-        return hole;
+        hole
     }
-    inner();
+
+    prop hole = radius/2;      // correct prop definition
+
+    Circle(radius) - Circle(inner());
 }
 
 PunchedDisk(1cm);
@@ -65,21 +74,21 @@ using the `prop` keyword.
 [![test](.test/workbench_init_prop.svg)](.test/workbench_init_prop.log)
 
 ```µcad,workbench_init_prop#fail
-part PunchedDisk(radius: Length) {
+sketch PunchedDisk(radius: Length) {
+    use std::geo2d::Circle;
+
     init(diameter: Length) { 
         prop radius = diameter/2; // error: prop not allowed in init
     }
+    
     init(d: Length) { 
-        radius = d/2;
+        radius = d/2;             // correct way to set radius
     }
 
-    // right place to set additional properties
-    prop hole = radius/2;
+    // Accessing property in a function is ok
+    fn inner() { radius/2 }
 
-    fn inner() { 
-        return hole;
-    }
-    inner();
+    Circle(radius) - Circle(inner());
 }
 
 PunchedDisk(diameter=1cm);

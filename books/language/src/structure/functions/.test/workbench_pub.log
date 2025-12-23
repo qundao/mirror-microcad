@@ -7,21 +7,25 @@
 
 -- Code --
 
-  36:   part PunchedDisk(radius: Length) {
-  37:       pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
-  38:   }
-  39:   
-  40:   PunchedDisk(4.0mm);
+  36:   sketch PunchedDisk(radius: Length) {
+  37:       use std::geo2d::Circle;
+  38:   
+  39:       pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
+  40:   
+  41:       Circle(radius) - Circle(inner());
+  42:   }
+  43:   
+  44:   PunchedDisk(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 2:12: Function statement not available here
-    ╭─[../books/language/src/structure/functions/workbench_functions.md:37:12]
- 36 │ part PunchedDisk(radius: Length) {
- 37 │     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
+  × error: 4:12: Function statement not available here
+    ╭─[../books/language/src/structure/functions/workbench_functions.md:39:12]
+ 38 │ 
+ 39 │     pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
     ·            ──┬──
-    ·              ╰── error: 2:12: Function statement not available here
- 38 │ }
+    ·              ╰── error: 4:12: Function statement not available here
+ 40 │ 
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

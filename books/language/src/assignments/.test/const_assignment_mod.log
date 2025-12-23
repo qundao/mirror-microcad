@@ -14,7 +14,7 @@
   15:       const TEXT = "Hello my_module";
   16:   
   17:       // public function
-  18:       pub fn f() -> String{
+  18:       pub fn f() -> String {
   19:           TEXT
   20:       }
   21:   
