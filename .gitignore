@@ -1,6 +1,6 @@
 /target
 /tree/*.svg
 /tests/.test
-*.stl
+/*.stl
 /microcad-lsp.log
 node_modules

@@ -18,5 +18,6 @@
     Workpiece(sketch) pre_init_init::K() ->
       - x = 1
 
+Export failed: Render error: Nothing to render.
 -- Test Result --
 FAILS

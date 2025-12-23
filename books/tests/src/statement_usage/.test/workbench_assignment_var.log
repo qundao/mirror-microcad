@@ -26,5 +26,6 @@ Unexpected warnings(s) which did occur in line(s): 87
   Group (root) ->
     Workpiece(sketch) workbench_assignment_var::K() ->
 
+Export failed: Render error: Nothing to render.
 -- Test Result --
 FAILS

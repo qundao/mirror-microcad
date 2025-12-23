@@ -18,5 +18,6 @@
   Group (root) ->
     Workpiece(sketch) const_assignment_workbench_code::MySketch() ->
 
+Export failed: Render error: Nothing to render.
 -- Test Result --
 FAILS
