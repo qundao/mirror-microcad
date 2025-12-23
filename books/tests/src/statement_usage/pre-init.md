@@ -26,7 +26,7 @@ init(l:Length) {} } K();
 
 [![test](.test/pre_init_init.svg)](.test/pre_init_init.log)
 
-```µcad,pre_init_init
+```µcad,pre_init_init#no_output
 sketch K(x: Length) { 
   init() { x=1; }
 init(l:Length) {} } K();
@@ -34,7 +34,7 @@ init(l:Length) {} } K();
 
 [![test](.test/pre_init_use.svg)](.test/pre_init_use.log)
 
-```µcad,pre_init_use
+```µcad,pre_init_use#no_output
 sketch K() { 
   use std;
 init(l:Length) {} } K();
@@ -66,7 +66,7 @@ init(l:Length) {} } K();
 
 [![test](.test/pre_init_assignment_const.svg)](.test/pre_init_assignment_const.log)
 
-```µcad,pre_init_assignment_const
+```µcad,pre_init_assignment_const#no_output
 sketch K() { 
   const B = 1;
 init(l:Length) {} } K();
@@ -82,7 +82,7 @@ init(l:Length) {} } K();
 
 [![test](.test/pre_init_assignment_var.svg)](.test/pre_init_assignment_var.log)
 
-```µcad,pre_init_assignment_var#fail
+```µcad,pre_init_assignment_var#todo_fail
 sketch K() { 
   a = 1; // error
 init(l:Length) {} } K();

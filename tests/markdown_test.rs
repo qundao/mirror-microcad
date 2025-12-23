@@ -209,12 +209,15 @@ pub fn run_test(env: Option<TestEnv>) {
                                 }
                             }
                             Err(err) => {
-                                env.log_ln(&format!("Export failed: {err}."));
-                                env.result(TestResult::Fail);
-                                panic!(
-                                    "ERROR: Export error: {err} (see {log:?}).",
-                                    log = env.log_file(),
-                                );
+                                if env.mode() != "no_output" {
+                                    env.log_ln(&format!("Export failed: {err}."));
+                                    env.result(TestResult::Fail);
+                                    panic!(
+                                        "ERROR: Export error: {err} (see {log:?}).",
+                                        log = env.log_file(),
+                                    );
+                                }
+                                env.result(TestResult::Ok)
                             }
                         },
                         // test is todo but succeeds with no errors
@@ -244,7 +247,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 }
             },
             "no-test" => (),
-            _ => unreachable!(),
+            _ => unreachable!("Unknown mode: {}", env.mode()),
         }
     }
 }

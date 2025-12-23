@@ -34,7 +34,7 @@ sketch K() { init(l:Length) { // warning
 
 [![test](.test/init_use.svg)](.test/init_use.log)
 
-```µcad,init_use
+```µcad,init_use#no_output
 sketch K() { init(l:Length) {
   use std;
 } } K(1cm);
@@ -82,7 +82,7 @@ sketch K() { init(l:Length) {
 
 [![test](.test/init_assignment_var.svg)](.test/init_assignment_var.log)
 
-```µcad,init_assignment_var
+```µcad,init_assignment_var#no_output
 sketch K() { init(l:Length) {
   a = l;
 } } K(1cm);

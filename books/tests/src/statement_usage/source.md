@@ -2,7 +2,7 @@
 
 [![test](.test/source_workbench.svg)](.test/source_workbench.log)
 
-```µcad,source_workbench
+```µcad,source_workbench#no_output
 sketch F() {} F();
 ```
 

@@ -11,7 +11,7 @@ Constants can be placed in
 
 [![test](.test/const_assignment_mod.svg)](.test/const_assignment_mod.log)
 
-```µcad,const_assignment_mod
+```µcad,const_assignment_mod#no_output
 const TEXT = "Hello";
 
 mod my_module {
@@ -115,7 +115,7 @@ Constant assignments must be on top of the workbench code if initializers are no
 
 [![test](.test/const_assignment_workbench_code.svg)](.test/const_assignment_workbench_code.log)
 
-```µcad,const_assignment_workbench_code
+```µcad,const_assignment_workbench_code#no_output
 sketch MySketch() {
     const MY_CONST = 1;   // allowed if no initializers
 }

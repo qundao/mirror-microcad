@@ -18,7 +18,7 @@ sketch K() {
 
 [![test](.test/workbench_function.svg)](.test/workbench_function.log)
 
-```µcad,workbench_function
+```µcad,workbench_function#no_output
 sketch K() {
   fn f() {} f();
 } K();
@@ -26,7 +26,7 @@ sketch K() {
 
 [![test](.test/workbench_init.svg)](.test/workbench_init.log)
 
-```µcad,workbench_init
+```µcad,workbench_init#no_output
 sketch K(x: Scalar) {
   init() { x = 1; }
 } K();
@@ -34,7 +34,7 @@ sketch K(x: Scalar) {
 
 [![test](.test/workbench_use.svg)](.test/workbench_use.log)
 
-```µcad,workbench_use
+```µcad,workbench_use#no_output
 sketch K() {
   use std;
 } K();
@@ -58,7 +58,7 @@ sketch K() {
 
 [![test](.test/workbench_if.svg)](.test/workbench_if.log)
 
-```µcad,workbench_if
+```µcad,workbench_if#no_output
 sketch K() {
   if std::math::PI == 3 { }
 } K();
@@ -66,7 +66,7 @@ sketch K() {
 
 [![test](.test/workbench_marker.svg)](.test/workbench_marker.log)
 
-```µcad,workbench_marker
+```µcad,workbench_marker#no_output
 sketch K() {
   @input
 } K();
@@ -74,7 +74,7 @@ sketch K() {
 
 [![test](.test/workbench_assignment_const.svg)](.test/workbench_assignment_const.log)
 
-```µcad,workbench_assignment_const
+```µcad,workbench_assignment_const#no_output
 sketch K() {
   const B = 1;
 } K();
@@ -82,7 +82,7 @@ sketch K() {
 
 [![test](.test/workbench_assignment_var.svg)](.test/workbench_assignment_var.log)
 
-```µcad,workbench_assignment_var
+```µcad,workbench_assignment_var#no_output
 sketch K() {
   a = 1;
 } K();
@@ -90,7 +90,7 @@ sketch K() {
 
 [![test](.test/workbench_assignment_prop.svg)](.test/workbench_assignment_prop.log)
 
-```µcad,workbench_assignment_prop
+```µcad,workbench_assignment_prop#no_output
 sketch K() {
   prop a = 1;
 } K();
@@ -106,7 +106,7 @@ sketch K() {
 
 [![test](.test/workbench_expression.svg)](.test/workbench_expression.log)
 
-```µcad,workbench_expression
+```µcad,workbench_expression#no_output
 sketch K() {
   1 + 2;
 } K();
