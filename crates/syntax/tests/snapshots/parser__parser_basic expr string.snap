@@ -1,0 +1,40 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parser().parse(input).into_result()
+---
+Err(
+    [
+        found 'LiteralString(
+            [
+                SpannedToken {
+                    span: 1..8,
+                    token: Content(
+                        "string ",
+                    ),
+                },
+                SpannedToken {
+                    span: 13..14,
+                    token: FormatStart(
+                        (
+                            [
+                                SpannedToken {
+                                    span: 9..13,
+                                    token: Identifier(
+                                        "with",
+                                    ),
+                                },
+                            ],
+                            [],
+                        ),
+                    ),
+                },
+                SpannedToken {
+                    span: 14..25,
+                    token: Content(
+                        " expression",
+                    ),
+                },
+            ],
+        )' at 25..26 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+    ],
+)

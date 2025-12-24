@@ -1,0 +1,11 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parser().parse(input).into_result()
+---
+Err(
+    [
+        found 'Identifier(
+            "a",
+        )' at 0..1 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+    ],
+)

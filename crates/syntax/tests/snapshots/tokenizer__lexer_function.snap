@@ -1,6 +1,6 @@
 ---
-source: crates/syntax/tests/parser.rs
-expression: "lex(\"fn(a: Length) -> Length {a * 2}\")"
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
 ---
 Ok(
     [

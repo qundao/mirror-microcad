@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: "lex(r#\"/// Doc comment\n    part Foo() {\n        Cylinder(height = 10mm, radius = 5mm);\n    }\"#)"
+expression: lex(input)
 ---
 Ok(
     [

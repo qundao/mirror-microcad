@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: "lex(r#\"\"plain string\"\"#)"
+expression: lex(input)
 ---
 Ok(
     [

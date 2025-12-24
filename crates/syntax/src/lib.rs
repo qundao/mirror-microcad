@@ -3,5 +3,5 @@ use std::ops::Range;
 pub type Span = Range<usize>;
 
 pub mod tokens;
-mod ast;
-mod parser;
+pub mod ast;
+pub mod parser;

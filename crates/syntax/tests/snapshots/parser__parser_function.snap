@@ -1,0 +1,9 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parser().parse(input).into_result()
+---
+Err(
+    [
+        found 'KeywordFn' at 0..2 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+    ],
+)

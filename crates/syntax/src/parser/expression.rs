@@ -1,6 +1,5 @@
 use crate::Span;
 use crate::ast::{ArrayListExpression, ArrayRangeExpression, BinaryOperation, Expression, IntegerLiteral, Literal, Operator};
-use crate::parser::ParseError;
 use crate::parser::literal::literal_parser;
 use crate::tokens::Token;
 use chumsky::error::Rich;

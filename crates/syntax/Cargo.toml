@@ -19,3 +19,4 @@ thiserror = "2.0.17"
 
 [dev-dependencies]
 insta = { version = "1.45.0" }
+test-case = "3.3.1"

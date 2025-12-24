@@ -1,0 +1,11 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parser().parse(input).into_result()
+---
+Err(
+    [
+        found 'DocComment(
+            "/// Doc comment",
+        )' at 0..15 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+    ],
+)

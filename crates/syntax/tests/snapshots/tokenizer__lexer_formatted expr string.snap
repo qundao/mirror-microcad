@@ -1,11 +1,11 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: "lex(r#\"\"string {more + complex} expression\"\"#)"
+expression: lex(input)
 ---
 Ok(
     [
         SpannedToken {
-            span: 35..36,
+            span: 47..48,
             token: LiteralString(
                 [
                     SpannedToken {
@@ -15,33 +15,46 @@ Ok(
                         ),
                     },
                     SpannedToken {
-                        span: 23..24,
+                        span: 35..36,
                         token: FormatStart(
                             (
                                 [
                                     SpannedToken {
-                                        span: 9..13,
+                                        span: 9..17,
                                         token: Identifier(
-                                            "more",
+                                            "formated",
                                         ),
                                     },
                                     SpannedToken {
-                                        span: 14..15,
-                                        token: OperatorAdd,
+                                        span: 18..19,
+                                        token: OperatorSubtract,
                                     },
                                     SpannedToken {
-                                        span: 16..23,
+                                        span: 20..30,
                                         token: Identifier(
-                                            "complex",
+                                            "expression",
                                         ),
                                     },
                                 ],
-                                [],
+                                [
+                                    SpannedToken {
+                                        span: 31..33,
+                                        token: FormatWidth(
+                                            "03",
+                                        ),
+                                    },
+                                    SpannedToken {
+                                        span: 33..35,
+                                        token: FormatPrecision(
+                                            ".5",
+                                        ),
+                                    },
+                                ],
                             ),
                         ),
                     },
                     SpannedToken {
-                        span: 24..35,
+                        span: 36..47,
                         token: Content(
                             " expression",
                         ),

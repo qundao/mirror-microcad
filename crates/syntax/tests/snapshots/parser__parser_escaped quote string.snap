@@ -1,0 +1,52 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parser().parse(input).into_result()
+---
+Err(
+    [
+        found 'LiteralString(
+            [
+                SpannedToken {
+                    span: 1..8,
+                    token: Content(
+                        "string ",
+                    ),
+                },
+                SpannedToken {
+                    span: 8..10,
+                    token: Escaped(
+                        "\\\"",
+                    ),
+                },
+                SpannedToken {
+                    span: 10..16,
+                    token: Content(
+                        " with ",
+                    ),
+                },
+                SpannedToken {
+                    span: 16..18,
+                    token: Escaped(
+                        "\\\"",
+                    ),
+                },
+                SpannedToken {
+                    span: 18..27,
+                    token: Content(
+                        " escaped ",
+                    ),
+                },
+                SpannedToken {
+                    span: 27..28,
+                    token: BackSlash,
+                },
+                SpannedToken {
+                    span: 28..35,
+                    token: Content(
+                        " quotes",
+                    ),
+                },
+            ],
+        )' at 35..36 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+    ],
+)

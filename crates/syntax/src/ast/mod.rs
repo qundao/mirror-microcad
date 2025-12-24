@@ -17,7 +17,8 @@ pub struct Identifier {
     pub name: CompactString,
 }
 
+#[derive(Debug)]
 pub struct SourceFile {
-    span: Span,
-    statements: Vec<Statement>,
+    pub span: Span,
+    pub statements: Vec<Statement>,
 }

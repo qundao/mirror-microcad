@@ -1,6 +1,6 @@
 ---
-source: crates/syntax/tests/parser.rs
-expression: "lex(\"1 + 1\")"
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
 ---
 Ok(
     [
