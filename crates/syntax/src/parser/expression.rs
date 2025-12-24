@@ -9,34 +9,34 @@ use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
 
 pub fn expression_parser<'tokens, 'src: 'tokens, I>()
--> impl Parser<'tokens, I, Result<Expression, ParseError>, extra::Err<Rich<'tokens, Token<'src>, Span>>>
+-> impl Parser<'tokens, I, Expression, extra::Err<Rich<'tokens, Token<'src>, Span>>>
 + Clone
 where
     I: BorrowInput<'tokens, Token = Token<'src>, Span = Span>,
 {
     recursive(|exp_parser| {
-        let literal = literal_parser().map(|lit| lit.map(Expression::Literal));
+        let literal = literal_parser().map(Expression::Literal);
         let bracketed = exp_parser.clone().delimited_by(just(Token::SigilOpenBracket), just(Token::SigilCloseBracket));
 
         let array_range = exp_parser.clone()
             .then_ignore(just(Token::SigilDoubleDot))
             .then(exp_parser.clone())
             .delimited_by(just(Token::SigilOpenSquareBracket), just(Token::SigilCloseSquareBracket))
-            .map_with(|(start, end), e| Ok::<_, ParseError>(Expression::ArrayRange(ArrayRangeExpression {
+            .map_with(|(start, end), e| Expression::ArrayRange(ArrayRangeExpression {
                 span: e.span(),
-                start: Box::new(start?),
-                end: Box::new(end?),
-            })));
+                start: Box::new(start),
+                end: Box::new(end),
+            }));
 
         let array_list = exp_parser.clone()
             .separated_by(just(Token::SigilComma))
             .allow_trailing()
-            .collect::<Vec<Result<_, _>>>()
+            .collect::<Vec<_>>()
             .delimited_by(just(Token::SigilOpenSquareBracket), just(Token::SigilCloseSquareBracket))
-            .map_with(|items, e| Ok::<_, ParseError>(Expression::ArrayList(ArrayListExpression {
+            .map_with(|items, e| Expression::ArrayList(ArrayListExpression {
                 span: e.span(),
-                items: items.into_iter().collect::<Result<_, _>>()?,
-            })));
+                items,
+            }));
 
         let base = literal
             .or(bracketed)
@@ -46,12 +46,12 @@ where
         let binary_expression = base.clone().foldl_with(
             binary_operator_parser().then(base).repeated(),
             |lhs, (op, rhs), e| {
-                Ok(Expression::BinaryOperation(BinaryOperation {
+                Expression::BinaryOperation(BinaryOperation {
                     span: e.span(),
-                    lhs: lhs?.into(),
+                    lhs: lhs.into(),
                     operation: op,
-                    rhs: rhs?.into(),
-                }))
+                    rhs: rhs.into(),
+                })
             },
         );
 
@@ -97,7 +97,7 @@ fn test_parser() {
         });
     assert_eq!(
         expression_parser().parse(input).into_result(),
-        Ok(Ok(Expression::BinaryOperation(BinaryOperation {
+        Ok(Expression::BinaryOperation(BinaryOperation {
             span: 0..6,
             lhs: Box::new(Expression::Literal(Literal::Integer(IntegerLiteral {
                 value: 10,
@@ -108,6 +108,6 @@ fn test_parser() {
                 value: 1,
                 span: 5..6,
             })))
-        })))
+        }))
     );
 }

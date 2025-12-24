@@ -1,9 +1,12 @@
+use std::num::{ParseFloatError, ParseIntError};
 use indexmap::IndexMap;
+use thiserror::Error;
 use crate::ast::{Expression, Identifier, Type};
 use crate::Span;
 
 #[derive(Debug, PartialEq)]
 pub enum Literal {
+    Error(LiteralError),
     String(StringContent),
     FormatString(FormatString),
     Bool(BoolLiteral),
@@ -16,6 +19,7 @@ pub enum Literal {
 impl Literal {
     pub fn span(&self) -> Span {
         match self {
+            Literal::Error(lit) => lit.span.clone(),
             Literal::String(lit) => lit.span.clone(),
             Literal::FormatString(lit) => lit.span.clone(),
             Literal::Bool(lit) => lit.span.clone(),
@@ -82,4 +86,18 @@ pub struct TupleLiteral {
 pub struct NamedTupleLiteral {
     pub span: Span,
     pub values: IndexMap<Identifier, Literal>,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct LiteralError {
+    pub span: Span,
+    pub kind: LiteralErrorKin,
+}
+
+#[derive(Debug, Error, PartialEq)]
+pub enum LiteralErrorKin {
+    #[error(transparent)]
+    Float(#[from] ParseFloatError),
+    #[error(transparent)]
+    Int(#[from] ParseIntError)
 }
