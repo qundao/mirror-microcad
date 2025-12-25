@@ -45,6 +45,6 @@ Err(
                     ),
                 },
             ],
-        )' at 35..36 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+        )' at 35..36 expected statement, expression, or end of input,
     ],
 )

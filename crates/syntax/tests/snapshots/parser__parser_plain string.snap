@@ -13,6 +13,6 @@ Err(
                     ),
                 },
             ],
-        )' at 13..14 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+        )' at 13..14 expected statement, expression, or end of input,
     ],
 )

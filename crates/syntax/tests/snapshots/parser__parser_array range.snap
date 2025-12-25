@@ -4,28 +4,27 @@ expression: parser().parse(input).into_result()
 ---
 Ok(
     SourceFile {
-        span: 0..5,
+        span: 0..7,
         statements: StatementList {
-            span: 0..5,
+            span: 0..7,
             statements: [],
             tail: Some(
-                BinaryOperation(
-                    BinaryOperation {
-                        span: 0..5,
-                        lhs: Literal(
+                ArrayRange(
+                    ArrayRangeExpression {
+                        span: 0..7,
+                        start: Literal(
                             Integer(
                                 IntegerLiteral {
-                                    span: 0..1,
+                                    span: 1..2,
                                     value: 1,
                                 },
                             ),
                         ),
-                        operation: Add,
-                        rhs: Literal(
+                        end: Literal(
                             Integer(
                                 IntegerLiteral {
-                                    span: 4..5,
-                                    value: 1,
+                                    span: 4..6,
+                                    value: 10,
                                 },
                             ),
                         ),

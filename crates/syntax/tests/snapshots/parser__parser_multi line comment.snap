@@ -2,10 +2,56 @@
 source: crates/syntax/tests/parser.rs
 expression: parser().parse(input).into_result()
 ---
-Err(
-    [
-        found 'Identifier(
-            "a",
-        )' at 0..1 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
-    ],
+Ok(
+    SourceFile {
+        span: 0..55,
+        statements: StatementList {
+            span: 0..55,
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..5,
+                        name: Identifier {
+                            span: 0..1,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: Literal(
+                            Integer(
+                                IntegerLiteral {
+                                    span: 4..5,
+                                    value: 1,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+                Comment(
+                    Comment {
+                        span: 7..44,
+                        comment: "/** multi\n    line\n    comment\n    */",
+                    },
+                ),
+                Assignment(
+                    Assignment {
+                        span: 49..54,
+                        name: Identifier {
+                            span: 49..50,
+                            name: "b",
+                        },
+                        ty: None,
+                        value: Literal(
+                            Integer(
+                                IntegerLiteral {
+                                    span: 53..54,
+                                    value: 2,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
 )

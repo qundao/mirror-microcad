@@ -1,0 +1,54 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parser().parse(input).into_result()
+---
+Ok(
+    SourceFile {
+        span: 0..9,
+        statements: StatementList {
+            span: 0..9,
+            statements: [],
+            tail: Some(
+                ArrayList(
+                    ArrayListExpression {
+                        span: 0..9,
+                        items: [
+                            Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 1..2,
+                                        value: 1,
+                                    },
+                                ),
+                            ),
+                            Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 3..4,
+                                        value: 2,
+                                    },
+                                ),
+                            ),
+                            Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 5..6,
+                                        value: 3,
+                                    },
+                                ),
+                            ),
+                            Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 7..8,
+                                        value: 4,
+                                    },
+                                ),
+                            ),
+                        ],
+                    },
+                ),
+            ),
+        },
+    },
+)

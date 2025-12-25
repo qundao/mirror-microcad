@@ -1,46 +1,91 @@
 use crate::Span;
-use crate::ast::{ArrayListExpression, ArrayRangeExpression, BinaryOperation, Expression, IntegerLiteral, Literal, Operator};
+use crate::ast::{ArrayListExpression, ArrayRangeExpression, BinaryOperation, Expression, Identifier, IntegerLiteral, Literal, Operator, StatementList};
 use crate::parser::literal::literal_parser;
+use crate::parser::statement::statement_list_parser;
 use crate::tokens::Token;
 use chumsky::error::Rich;
 use chumsky::input::BorrowInput;
 use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
 
-pub fn expression_parser<'tokens, 'src: 'tokens, I>()
--> impl Parser<'tokens, I, Expression, extra::Err<Rich<'tokens, Token<'src>, Span>>>
-+ Clone
+pub fn identifier_parser<'tokens, 'src: 'tokens, I>()
+-> impl Parser<'tokens, I, Identifier, extra::Err<Rich<'tokens, Token<'src>, Span>>> + Clone
+where
+    I: BorrowInput<'tokens, Token = Token<'src>, Span = Span>,
+{
+    select_ref! { Token::Identifier(ident) = e => Identifier {
+        span: e.span(),
+        name: (*ident).into()
+    } }
+    .labelled("identifier")
+}
+
+pub fn expression_parser<'tokens, 'src: 'tokens, I>(
+    statement_list_parser: impl Parser<'tokens, I, StatementList, extra::Err<Rich<'tokens, Token<'src>, Span>>> + Clone + 'tokens
+)
+-> impl Parser<'tokens, I, Expression, extra::Err<Rich<'tokens, Token<'src>, Span>>> + Clone
 where
     I: BorrowInput<'tokens, Token = Token<'src>, Span = Span>,
 {
     recursive(|exp_parser| {
-        let literal = literal_parser().map(Expression::Literal);
-        let bracketed = exp_parser.clone().delimited_by(just(Token::SigilOpenBracket), just(Token::SigilCloseBracket));
+        let literal = literal_parser()
+            .map(Expression::Literal)
+            .labelled("literal");
+        let ident = identifier_parser().map(Expression::Identifier);
 
-        let array_range = exp_parser.clone()
+        let bracketed = exp_parser.clone().delimited_by(
+            just(Token::SigilOpenBracket),
+            just(Token::SigilCloseBracket),
+        );
+
+        let array_range = exp_parser
+            .clone()
             .then_ignore(just(Token::SigilDoubleDot))
             .then(exp_parser.clone())
-            .delimited_by(just(Token::SigilOpenSquareBracket), just(Token::SigilCloseSquareBracket))
-            .map_with(|(start, end), e| Expression::ArrayRange(ArrayRangeExpression {
-                span: e.span(),
-                start: Box::new(start),
-                end: Box::new(end),
-            }));
+            .delimited_by(
+                just(Token::SigilOpenSquareBracket),
+                just(Token::SigilCloseSquareBracket),
+            )
+            .map_with(|(start, end), e| {
+                Expression::ArrayRange(ArrayRangeExpression {
+                    span: e.span(),
+                    start: Box::new(start),
+                    end: Box::new(end),
+                })
+            })
+            .labelled("array range");
 
-        let array_list = exp_parser.clone()
+        let array_list = exp_parser
+            .clone()
             .separated_by(just(Token::SigilComma))
             .allow_trailing()
             .collect::<Vec<_>>()
-            .delimited_by(just(Token::SigilOpenSquareBracket), just(Token::SigilCloseSquareBracket))
-            .map_with(|items, e| Expression::ArrayList(ArrayListExpression {
-                span: e.span(),
-                items,
-            }));
+            .delimited_by(
+                just(Token::SigilOpenSquareBracket),
+                just(Token::SigilCloseSquareBracket),
+            )
+            .map_with(|items, e| {
+                Expression::ArrayList(ArrayListExpression {
+                    span: e.span(),
+                    items,
+                })
+            })
+            .labelled("array");
+
+        let block = statement_list_parser
+            .delimited_by(
+                just(Token::SigilOpenCurlyBracket),
+                just(Token::SigilCloseCurlyBracket),
+            )
+            .map(Expression::Block)
+            .labelled("block expression");
 
         let base = literal
+            .or(ident)
             .or(bracketed)
             .or(array_range)
-            .or(array_list);
+            .or(array_list)
+            .or(block);
 
         let binary_expression = base.clone().foldl_with(
             binary_operator_parser().then(base).repeated(),
@@ -54,7 +99,7 @@ where
             },
         );
 
-        binary_expression
+        binary_expression.labelled("expression")
     })
 }
 
@@ -82,31 +127,5 @@ where
         Token::OperatorOr => Operator::Or,
         Token::OperatorXor => Operator::Xor,
     }
-}
-
-#[test]
-fn test_parser() {
-    use crate::tokens::{SpannedToken, lex};
-
-    let tokens = lex("10 + 1").unwrap();
-    let input = tokens
-        .as_slice()
-        .map(2..2, |spanned: &SpannedToken<Token>| {
-            (&spanned.token, &spanned.span)
-        });
-    assert_eq!(
-        expression_parser().parse(input).into_result(),
-        Ok(Expression::BinaryOperation(BinaryOperation {
-            span: 0..6,
-            lhs: Box::new(Expression::Literal(Literal::Integer(IntegerLiteral {
-                value: 10,
-                span: 0..2,
-            }))),
-            operation: Operator::Add,
-            rhs: Box::new(Expression::Literal(Literal::Integer(IntegerLiteral {
-                value: 1,
-                span: 5..6,
-            })))
-        }))
-    );
+    .labelled("binary operator")
 }

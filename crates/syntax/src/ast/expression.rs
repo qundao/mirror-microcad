@@ -117,7 +117,7 @@ pub struct If {
 pub struct StatementList {
     pub span: Span,
     pub statements: Vec<Statement>,
-    pub tail: Option<Box<Statement>>,
+    pub tail: Option<Box<Expression>>,
 }
 
 #[derive(Debug, PartialEq)]

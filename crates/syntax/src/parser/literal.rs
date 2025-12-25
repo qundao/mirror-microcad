@@ -52,7 +52,7 @@ where
         },
     };
 
-    single_value
+    single_value.labelled("literal")
 }
 
 #[test]

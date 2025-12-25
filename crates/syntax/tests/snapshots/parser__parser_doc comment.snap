@@ -6,6 +6,6 @@ Err(
     [
         found 'DocComment(
             "/// Doc comment",
-        )' at 0..15 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+        )' at 0..15 expected statement, expression, or end of input,
     ],
 )

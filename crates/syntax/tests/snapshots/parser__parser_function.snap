@@ -4,6 +4,6 @@ expression: parser().parse(input).into_result()
 ---
 Err(
     [
-        found 'KeywordFn' at 0..2 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+        found 'KeywordFn' at 0..2 expected statement, expression, or end of input,
     ],
 )

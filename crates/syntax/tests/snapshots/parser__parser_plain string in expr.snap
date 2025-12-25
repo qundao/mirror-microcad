@@ -4,8 +4,15 @@ expression: parser().parse(input).into_result()
 ---
 Err(
     [
-        found 'Identifier(
-            "a",
-        )' at 0..1 expected something else, 'SigilOpenBracket', or 'SigilOpenSquareBracket',
+        found 'LiteralString(
+            [
+                SpannedToken {
+                    span: 5..32,
+                    token: Content(
+                        "plain string int expression",
+                    ),
+                },
+            ],
+        )' at 32..33 expected expression,
     ],
 )

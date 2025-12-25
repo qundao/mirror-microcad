@@ -5,8 +5,10 @@ expression: parser().parse(input).into_result()
 Ok(
     SourceFile {
         span: 0..3,
-        statements: [
-            Expression(
+        statements: StatementList {
+            span: 0..3,
+            statements: [],
+            tail: Some(
                 BinaryOperation(
                     BinaryOperation {
                         span: 0..3,
@@ -30,6 +32,6 @@ Ok(
                     },
                 ),
             ),
-        ],
+        },
     },
 )

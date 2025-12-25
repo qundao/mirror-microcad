@@ -1,12 +1,13 @@
 mod literal;
 mod expression;
+mod statement;
 
 use std::num::{ParseFloatError, ParseIntError};
 use chumsky::error::Rich;
-use chumsky::{extra, Parser};
+use chumsky::{extra, IterParser, Parser};
 use chumsky::input::BorrowInput;
 use crate::ast::{SourceFile, Statement};
-use crate::parser::expression::expression_parser;
+use crate::parser::statement::{statement_list_parser, statement_parser};
 use crate::Span;
 use crate::tokens::Token;
 
@@ -16,9 +17,9 @@ pub fn parser<'tokens, 'src: 'tokens, I>()
 where
     I: BorrowInput<'tokens, Token = Token<'src>, Span = Span>,
 {
-    expression_parser().map(|ex| SourceFile {
+    statement_list_parser().map_with(|statements, ex| SourceFile {
         span: ex.span(),
-        statements: vec![Statement::Expression(ex)],
+        statements,
     })
 }
 

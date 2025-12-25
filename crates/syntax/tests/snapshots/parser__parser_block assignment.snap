@@ -1,0 +1,86 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parser().parse(input).into_result()
+---
+Ok(
+    SourceFile {
+        span: 0..23,
+        statements: StatementList {
+            span: 0..23,
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..22,
+                        name: Identifier {
+                            span: 0..1,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: Block(
+                            StatementList {
+                                span: 5..21,
+                                statements: [
+                                    Assignment(
+                                        Assignment {
+                                            span: 5..14,
+                                            name: Identifier {
+                                                span: 5..6,
+                                                name: "a",
+                                            },
+                                            ty: None,
+                                            value: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 9..14,
+                                                    lhs: Literal(
+                                                        Integer(
+                                                            IntegerLiteral {
+                                                                span: 9..10,
+                                                                value: 1,
+                                                            },
+                                                        ),
+                                                    ),
+                                                    operation: Add,
+                                                    rhs: Literal(
+                                                        Integer(
+                                                            IntegerLiteral {
+                                                                span: 13..14,
+                                                                value: 2,
+                                                            },
+                                                        ),
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                ],
+                                tail: Some(
+                                    BinaryOperation(
+                                        BinaryOperation {
+                                            span: 16..21,
+                                            lhs: Identifier(
+                                                Identifier {
+                                                    span: 16..17,
+                                                    name: "a",
+                                                },
+                                            ),
+                                            operation: Multiply,
+                                            rhs: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 20..21,
+                                                        value: 3,
+                                                    },
+                                                ),
+                                            ),
+                                        },
+                                    ),
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)
