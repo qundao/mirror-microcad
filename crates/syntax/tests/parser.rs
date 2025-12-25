@@ -14,7 +14,7 @@ use chumsky::prelude::*;
 #[test_case("assignment", "a = b * 2;")]
 #[test_case("block assignment", "a = {a = 1 + 2; a * 3};")]
 #[test_case("plain string", r#""plain string""#)]
-#[test_case("plain string in expr", r#"a = "plain string int expression" + 1"#)]
+#[test_case("plain string in expr", r#"a = "plain string int expression" + 1;"#)]
 #[test_case("escaped bracket string", r#""string {{ with }} escaped bracket""#)]
 #[test_case("escaped quote string", r#""string \" with \" escaped \ quotes""#)]
 #[test_case("basic expr string", r#""string {with} expression""#)]

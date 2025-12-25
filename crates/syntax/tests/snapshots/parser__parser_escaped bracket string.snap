@@ -2,37 +2,22 @@
 source: crates/syntax/tests/parser.rs
 expression: parser().parse(input).into_result()
 ---
-Err(
-    [
-        found 'LiteralString(
-            [
-                SpannedToken {
-                    span: 1..8,
-                    token: Content(
-                        "string ",
+Ok(
+    SourceFile {
+        span: 34..35,
+        statements: StatementList {
+            span: 34..35,
+            statements: [],
+            tail: Some(
+                Literal(
+                    String(
+                        StringContent {
+                            span: 34..35,
+                            content: "string { with } escaped bracket",
+                        },
                     ),
-                },
-                SpannedToken {
-                    span: 8..10,
-                    token: EscapedCurlyOpen,
-                },
-                SpannedToken {
-                    span: 10..16,
-                    token: Content(
-                        " with ",
-                    ),
-                },
-                SpannedToken {
-                    span: 16..18,
-                    token: EscapedCurlyClose,
-                },
-                SpannedToken {
-                    span: 18..34,
-                    token: Content(
-                        " escaped bracket",
-                    ),
-                },
-            ],
-        )' at 34..35 expected statement, expression, or end of input,
-    ],
+                ),
+            ),
+        },
+    },
 )

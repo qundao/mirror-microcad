@@ -1,5 +1,5 @@
-use logos::{Lexer, Logos};
 use crate::Span;
+use logos::{Lexer, Logos};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct SpannedToken<T> {
@@ -59,7 +59,7 @@ pub enum Token<'a> {
     #[regex(r#"-?(0|[1-9]\d*)?\.(\d+)((e|E)(-|\+)?(\d+))?"#)]
     LiteralFloat(&'a str),
     #[token(r#"""#, string_token_callback)]
-    LiteralString(Vec<SpannedToken<StringToken<'a>>>),
+    String(Vec<SpannedToken<StringToken<'a>>>),
     #[token("true")]
     LiteralBoolTrue,
     #[token("false")]
@@ -136,7 +136,9 @@ pub enum Token<'a> {
     OperatorAssignment,
 }
 
-fn string_token_callback<'a>(lex: &mut Lexer<'a, Token<'a>>) -> Option<Vec<SpannedToken<StringToken<'a>>>> {
+fn string_token_callback<'a>(
+    lex: &mut Lexer<'a, Token<'a>>,
+) -> Option<Vec<SpannedToken<StringToken<'a>>>> {
     let mut string_lexer = lex.clone().morph::<StringToken>();
     let mut tokens = Vec::new();
     while let Some(token) = string_lexer.next() {
@@ -145,7 +147,7 @@ fn string_token_callback<'a>(lex: &mut Lexer<'a, Token<'a>>) -> Option<Vec<Spann
             Err(_) => return None,
             Ok(tok) => tokens.push(SpannedToken {
                 span: string_lexer.span(),
-                token: tok
+                token: tok,
             }),
         }
     }
@@ -166,12 +168,46 @@ pub enum StringToken<'a> {
     #[token(r#"}}"#)]
     EscapedCurlyClose,
     #[token("{", format_token_callback)]
-    FormatStart((Vec<SpannedToken<Token<'a>>>, Vec<SpannedToken<StringFormatToken<'a>>>)),
+    FormatStart(
+        (
+            Vec<SpannedToken<Token<'a>>>,
+            Vec<SpannedToken<StringFormatToken<'a>>>,
+        ),
+    ),
     #[token(r#"""#)]
     Quote,
 }
 
-fn format_token_callback<'a>(lex: &mut Lexer<'a, StringToken<'a>>) -> Option<(Vec<SpannedToken<Token<'a>>>, Vec<SpannedToken<StringFormatToken<'a>>>)> {
+/// Check if the string is just a literal without formating
+pub fn is_literal_string(string_tokens: &[SpannedToken<StringToken>]) -> bool {
+    !string_tokens
+        .iter()
+        .any(|token| matches!(token.token, StringToken::FormatStart(_)))
+}
+
+/// Get the literal value of string tokens, if the string is a literal
+pub fn get_literal_string(string_tokens: &[SpannedToken<StringToken>]) -> Option<String> {
+    let mut result = String::new();
+    for token in string_tokens {
+        match token.token {
+            StringToken::Content(s) => result.push_str(s),
+            StringToken::Escaped(s) => result.push_str(&s[1..]),
+            StringToken::BackSlash => result.push('\\'),
+            StringToken::EscapedCurlyOpen => result.push('{'),
+            StringToken::EscapedCurlyClose => result.push('}'),
+            _ => return None,
+        }
+    }
+
+    Some(result)
+}
+
+fn format_token_callback<'a>(
+    lex: &mut Lexer<'a, StringToken<'a>>,
+) -> Option<(
+    Vec<SpannedToken<Token<'a>>>,
+    Vec<SpannedToken<StringFormatToken<'a>>>,
+)> {
     let mut expression_lexer = lex.clone().morph::<Token>();
     let mut expression_tokens = Vec::new();
     let mut with_format = false;
@@ -180,8 +216,8 @@ fn format_token_callback<'a>(lex: &mut Lexer<'a, StringToken<'a>>) -> Option<(Ve
             Ok(Token::SigilCloseCurlyBracket) => break,
             Ok(Token::SigilColon) => {
                 with_format = true;
-                break
-            },
+                break;
+            }
             Err(_) => return None,
             Ok(tok) => expression_tokens.push(SpannedToken {
                 span: expression_lexer.span(),
@@ -229,9 +265,7 @@ pub fn lex<'a>(input: &'a str) -> Result<Vec<SpannedToken<Token<'a>>>, SpannedTo
     Lexer::<Token>::new(input)
         .spanned()
         .map(|(token, span)| match token {
-            Ok(token) => {
-                Ok(SpannedToken { span, token: token })
-            },
+            Ok(token) => Ok(SpannedToken { span, token: token }),
             Err(error) => Err(SpannedToken { span, token: error }),
         })
         .collect()

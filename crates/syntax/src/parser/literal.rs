@@ -1,6 +1,6 @@
 use crate::Span;
-use crate::ast::{BoolLiteral, IntegerLiteral, Literal, LiteralError, QuantityLiteral};
-use crate::tokens::Token;
+use crate::ast::{BoolLiteral, IntegerLiteral, Literal, LiteralError, QuantityLiteral, StringContent};
+use crate::tokens::{get_literal_string, is_literal_string, Token};
 use chumsky::error::Rich;
 use chumsky::input::BorrowInput;
 use chumsky::prelude::*;
@@ -13,6 +13,12 @@ where
     I: BorrowInput<'tokens, Token = Token<'src>, Span = Span>,
 {
     let single_value = select_ref! {
+        Token::String(str_tokens) = e if is_literal_string(str_tokens) => {
+            Literal::String(StringContent {
+                span: e.span(),
+                content: get_literal_string(str_tokens).expect("non literal string"),
+            })
+        },
         Token::LiteralFloat(x) = e => {
             match f64::from_str(x) {
                 Ok(value) => Literal::Quantity(QuantityLiteral {

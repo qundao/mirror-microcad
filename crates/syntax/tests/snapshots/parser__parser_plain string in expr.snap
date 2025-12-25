@@ -2,17 +2,46 @@
 source: crates/syntax/tests/parser.rs
 expression: parser().parse(input).into_result()
 ---
-Err(
-    [
-        found 'LiteralString(
-            [
-                SpannedToken {
-                    span: 5..32,
-                    token: Content(
-                        "plain string int expression",
-                    ),
-                },
+Ok(
+    SourceFile {
+        span: 0..38,
+        statements: StatementList {
+            span: 0..38,
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..37,
+                        name: Identifier {
+                            span: 0..1,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: BinaryOperation(
+                            BinaryOperation {
+                                span: 32..37,
+                                lhs: Literal(
+                                    String(
+                                        StringContent {
+                                            span: 32..33,
+                                            content: "plain string int expression",
+                                        },
+                                    ),
+                                ),
+                                operation: Add,
+                                rhs: Literal(
+                                    Integer(
+                                        IntegerLiteral {
+                                            span: 36..37,
+                                            value: 1,
+                                        },
+                                    ),
+                                ),
+                            },
+                        ),
+                    },
+                ),
             ],
-        )' at 32..33 expected expression,
-    ],
+            tail: None,
+        },
+    },
 )
