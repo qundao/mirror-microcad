@@ -76,6 +76,14 @@ To install the latest release of *µcad* via *cargo*, type:
 cargo install microcad
 ```
 
+On first use, µCad requires its standard library.  
+If it is not yet installed, you can install it with:
+
+```sh
+microcad install std
+```
+
+
 ## Command line usage
 
 After installing, you can run a basic example by typing:

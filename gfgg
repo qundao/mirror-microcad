@@ -1,0 +1,19 @@
+[1mdiff --git a/README.md b/README.md[m
+[1mindex 0575d033f..7fcdcc267 100644[m
+[1m--- a/README.md[m
+[1m+++ b/README.md[m
+[36m@@ -76,6 +76,14 @@[m [mTo install the latest release of *µcad* via *cargo*, type:[m
+ cargo install microcad[m
+ ```[m
+ [m
+[32m+[m[32mOn first use, µCad requires its standard library.[m[41m  [m
+[32m+[m[32mIf it is not yet installed, you can install it with:[m
+[32m+[m
+[32m+[m[32m```sh[m
+[32m+[m[32mmicrocad install std[m
+[32m+[m[32m```[m
+[32m+[m
+[32m+[m
+ ## Command line usage[m
+ [m
+ After installing, you can run a basic example by typing:[m
