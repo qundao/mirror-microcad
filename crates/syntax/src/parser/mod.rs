@@ -218,7 +218,7 @@ fn parser<'tokens>()
             })
             .map(Expression::String);
 
-        let tuple = identifier_parser
+        let tuple_body = identifier_parser
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
             .or_not()
             .then(expression_parser.clone())
@@ -228,7 +228,10 @@ fn parser<'tokens>()
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenBracket)),
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
-            )
+            );
+
+        let tuple = tuple_body
+            .clone()
             .map_with(|values, e| {
                 Expression::Tuple(TupleExpression {
                     span: e.span(),
@@ -284,8 +287,28 @@ fn parser<'tokens>()
             .map(Expression::Block)
             .labelled("block expression");
 
+        let call = identifier_parser.then(tuple_body)
+            .map_with(|(name, args), e| {
+                Expression::Call(Call {
+                    span: e.span(),
+                    name,
+                    arguments: args.into_iter().map(|(name, value)| match name {
+                        Some(name) => Argument::Named(NamedArgument {
+                            span: name.span.start .. value.span().end,
+                            name,
+                            value
+                        }),
+                        None => Argument::Positional(PositionArgument {
+                            span: value.span(),
+                            value
+                        }),
+                    }).collect()
+                })
+            });
+
         let base = literal
             .or(string_format)
+            .or(call)
             .or(qualified_name)
             .or(ident)
             .or(marker)

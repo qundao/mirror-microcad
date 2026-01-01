@@ -160,13 +160,13 @@ pub enum Argument {
 
 #[derive(Debug, PartialEq)]
 pub struct PositionArgument {
-    span: Span,
-    value: Expression,
+    pub span: Span,
+    pub value: Expression,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct NamedArgument {
-    span: Span,
-    name: Identifier,
-    value: Expression,
+    pub span: Span,
+    pub name: Identifier,
+    pub value: Expression,
 }

@@ -31,7 +31,11 @@ use test_case::test_case;
     "formatted expr string both",
     r#""string {formated - expression:03.5} expression""#
 )]
-#[test_case("function", "fn(a: Length) -> Length {a * 2}")]
+#[test_case("function", "fn foo(a: Length) -> Length {a * 2}")]
+#[test_case("call empty args", "foo()")]
+#[test_case("call positional args", "foo(1, 2)")]
+#[test_case("call named args", "foo(a = 1, b = 2)")]
+#[test_case("call partially named args", "foo(a, b = 2, 3)")]
 #[test_case("comment", "a = 1; // comment")]
 #[test_case(
     "multi line comment",
@@ -55,6 +59,7 @@ use test_case::test_case;
 #[test_case("named one-tuple, trailing", "(length = 1,)")]
 #[test_case("named one-tuple", "(length = 1)")]
 #[test_case("partially named tuple", "(\"a\", length = 1)")]
+#[test_case("empty tuple", "()")]
 #[test_case("qualified name", "foo::bar")]
 #[test_case("marker", "@input")]
 #[test_case("uname", "!input")]

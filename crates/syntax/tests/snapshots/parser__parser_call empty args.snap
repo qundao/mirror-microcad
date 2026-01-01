@@ -1,0 +1,25 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..5,
+        statements: StatementList {
+            span: 0..5,
+            statements: [],
+            tail: Some(
+                Call(
+                    Call {
+                        span: 0..5,
+                        name: Identifier {
+                            span: 0..3,
+                            name: "foo",
+                        },
+                        arguments: [],
+                    },
+                ),
+            ),
+        },
+    },
+)

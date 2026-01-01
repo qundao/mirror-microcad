@@ -1,0 +1,60 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..17,
+        statements: StatementList {
+            span: 0..17,
+            statements: [],
+            tail: Some(
+                Call(
+                    Call {
+                        span: 0..17,
+                        name: Identifier {
+                            span: 0..3,
+                            name: "foo",
+                        },
+                        arguments: [
+                            Named(
+                                NamedArgument {
+                                    span: 4..9,
+                                    name: Identifier {
+                                        span: 4..5,
+                                        name: "a",
+                                    },
+                                    value: Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 8..9,
+                                                value: 1,
+                                            },
+                                        ),
+                                    ),
+                                },
+                            ),
+                            Named(
+                                NamedArgument {
+                                    span: 11..16,
+                                    name: Identifier {
+                                        span: 11..12,
+                                        name: "b",
+                                    },
+                                    value: Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 15..16,
+                                                value: 2,
+                                            },
+                                        ),
+                                    ),
+                                },
+                            ),
+                        ],
+                    },
+                ),
+            ),
+        },
+    },
+)
