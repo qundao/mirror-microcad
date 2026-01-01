@@ -283,14 +283,27 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             }
         );
 
+        let format_accuracy = select_ref!(
+            Token::StringFormat(StringFormatToken::FormatPrecision(precision)) = e => {
+                usize::from_str(&precision[1..]).map_err(|err| (err, e.span()))
+            }
+        );
+        let format_width = select_ref!(
+            Token::StringFormat(StringFormatToken::FormatWidth(width)) = e => {
+                usize::from_str(&width[1..]).map_err(|err| (err, e.span()))
+            }
+        );
+
         let format_expr = expression_parser
+            .then(format_width.or_not())
+            .then(format_accuracy.or_not())
             .nested_in(format_tokens)
-            .map_with(|expr, e| {
+            .map_with(|((expr, width), accuracy), e| {
                 StringPart::Expression(StringExpression {
                     span: e.span(),
                     expression: expr,
-                    accuracy: None,
-                    width: None,
+                    accuracy,
+                    width,
                 })
             });
 

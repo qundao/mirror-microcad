@@ -1,3 +1,4 @@
+use std::num::ParseIntError;
 use crate::Span;
 use crate::ast::{Identifier, Literal, Statement, StringContent};
 use indexmap::IndexMap;
@@ -88,8 +89,8 @@ pub enum StringPart {
 pub struct StringExpression {
     pub span: Span,
     pub expression: Expression,
-    pub accuracy: Option<usize>,
-    pub width: Option<usize>,
+    pub accuracy: Option<Result<usize, (ParseIntError, Span)>>,
+    pub width: Option<Result<usize, (ParseIntError, Span)>>,
 }
 
 #[derive(Debug, PartialEq)]

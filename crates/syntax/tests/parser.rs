@@ -20,7 +20,15 @@ use test_case::test_case;
 #[test_case("basic expr string", r#""string {with} expression""#)]
 #[test_case("expr string", r#""string {more + complex} expression""#)]
 #[test_case(
-    "formatted expr string",
+    "formatted expr string width",
+    r#""string {formated - expression:03} expression""#
+)]
+#[test_case(
+    "formatted expr string accuracy",
+    r#""string {formated - expression:.5} expression""#
+)]
+#[test_case(
+    "formatted expr string both",
     r#""string {formated - expression:03.5} expression""#
 )]
 #[test_case("function", "fn(a: Length) -> Length {a * 2}")]

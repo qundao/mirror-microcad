@@ -4,14 +4,14 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 47..48,
+        span: 45..46,
         statements: StatementList {
-            span: 47..48,
+            span: 45..46,
             statements: [],
             tail: Some(
                 String(
                     FormatString {
-                        span: 47..48,
+                        span: 45..46,
                         parts: [
                             Content(
                                 StringContent {
@@ -21,7 +21,7 @@ Ok(
                             ),
                             Expression(
                                 StringExpression {
-                                    span: 35..36,
+                                    span: 33..34,
                                     expression: BinaryOperation(
                                         BinaryOperation {
                                             span: 9..30,
@@ -40,11 +40,7 @@ Ok(
                                             ),
                                         },
                                     ),
-                                    accuracy: Some(
-                                        Ok(
-                                            5,
-                                        ),
-                                    ),
+                                    accuracy: None,
                                     width: Some(
                                         Ok(
                                             3,
@@ -54,7 +50,7 @@ Ok(
                             ),
                             Content(
                                 StringContent {
-                                    span: 36..47,
+                                    span: 34..45,
                                     content: " expression",
                                 },
                             ),
