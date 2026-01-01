@@ -1,11 +1,13 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Err(
     [
-        found 'DocComment(
-            "/// Doc comment",
+        found 'Normal(
+            DocComment(
+                "/// Doc comment",
+            ),
         )' at 0..15 expected statement, expression, or end of input,
     ],
 )

@@ -6,37 +6,44 @@ Ok(
     [
         SpannedToken {
             span: 25..26,
-            token: LiteralString(
-                [
-                    SpannedToken {
-                        span: 1..8,
-                        token: Content(
-                            "string ",
-                        ),
-                    },
-                    SpannedToken {
-                        span: 13..14,
-                        token: FormatStart(
-                            (
-                                [
-                                    SpannedToken {
-                                        span: 9..13,
-                                        token: Identifier(
-                                            "with",
-                                        ),
-                                    },
-                                ],
-                                [],
+            token: Normal(
+                String(
+                    [
+                        SpannedToken {
+                            span: 1..8,
+                            token: String(
+                                Content(
+                                    "string ",
+                                ),
                             ),
-                        ),
-                    },
-                    SpannedToken {
-                        span: 14..25,
-                        token: Content(
-                            " expression",
-                        ),
-                    },
-                ],
+                        },
+                        SpannedToken {
+                            span: 13..14,
+                            token: String(
+                                FormatStart(
+                                    [
+                                        SpannedToken {
+                                            span: 9..13,
+                                            token: Normal(
+                                                Identifier(
+                                                    "with",
+                                                ),
+                                            ),
+                                        },
+                                    ],
+                                ),
+                            ),
+                        },
+                        SpannedToken {
+                            span: 14..25,
+                            token: String(
+                                Content(
+                                    " expression",
+                                ),
+                            ),
+                        },
+                    ],
+                ),
             ),
         },
     ],

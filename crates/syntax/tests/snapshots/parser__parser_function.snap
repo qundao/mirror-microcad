@@ -1,9 +1,11 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Err(
     [
-        found 'KeywordFn' at 0..2 expected statement, expression, or end of input,
+        found 'Normal(
+            KeywordFn,
+        )' at 0..2 expected statement, expression, or end of input,
     ],
 )

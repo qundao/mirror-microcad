@@ -6,28 +6,38 @@ Ok(
     [
         SpannedToken {
             span: 0..1,
-            token: Identifier(
-                "a",
+            token: Normal(
+                Identifier(
+                    "a",
+                ),
             ),
         },
         SpannedToken {
             span: 2..3,
-            token: OperatorAssignment,
+            token: Normal(
+                OperatorAssignment,
+            ),
         },
         SpannedToken {
             span: 4..5,
-            token: Identifier(
-                "b",
+            token: Normal(
+                Identifier(
+                    "b",
+                ),
             ),
         },
         SpannedToken {
             span: 6..7,
-            token: OperatorMultiply,
+            token: Normal(
+                OperatorMultiply,
+            ),
         },
         SpannedToken {
             span: 8..9,
-            token: LiteralInt(
-                "2",
+            token: Normal(
+                LiteralInt(
+                    "2",
+                ),
             ),
         },
     ],

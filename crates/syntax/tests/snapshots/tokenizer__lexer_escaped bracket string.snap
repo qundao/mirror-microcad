@@ -6,35 +6,47 @@ Ok(
     [
         SpannedToken {
             span: 34..35,
-            token: LiteralString(
-                [
-                    SpannedToken {
-                        span: 1..8,
-                        token: Content(
-                            "string ",
-                        ),
-                    },
-                    SpannedToken {
-                        span: 8..10,
-                        token: EscapedCurlyOpen,
-                    },
-                    SpannedToken {
-                        span: 10..16,
-                        token: Content(
-                            " with ",
-                        ),
-                    },
-                    SpannedToken {
-                        span: 16..18,
-                        token: EscapedCurlyClose,
-                    },
-                    SpannedToken {
-                        span: 18..34,
-                        token: Content(
-                            " escaped bracket",
-                        ),
-                    },
-                ],
+            token: Normal(
+                String(
+                    [
+                        SpannedToken {
+                            span: 1..8,
+                            token: String(
+                                Content(
+                                    "string ",
+                                ),
+                            ),
+                        },
+                        SpannedToken {
+                            span: 8..10,
+                            token: String(
+                                EscapedCurlyOpen,
+                            ),
+                        },
+                        SpannedToken {
+                            span: 10..16,
+                            token: String(
+                                Content(
+                                    " with ",
+                                ),
+                            ),
+                        },
+                        SpannedToken {
+                            span: 16..18,
+                            token: String(
+                                EscapedCurlyClose,
+                            ),
+                        },
+                        SpannedToken {
+                            span: 18..34,
+                            token: String(
+                                Content(
+                                    " escaped bracket",
+                                ),
+                            ),
+                        },
+                    ],
+                ),
             ),
         },
     ],

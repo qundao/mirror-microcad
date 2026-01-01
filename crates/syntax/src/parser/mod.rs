@@ -2,23 +2,35 @@ use crate::Span;
 use crate::ast::*;
 use crate::tokens::*;
 use chumsky::error::Rich;
-use chumsky::input::BorrowInput;
+use chumsky::input::{MappedInput, Input};
 use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
-use std::num::{ParseFloatError, ParseIntError};
 use std::str::FromStr;
 
-type Extra<'tokens, 'src> = extra::Err<Rich<'tokens, Token<'src>, Span>>;
+type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
 
-pub fn parser<'tokens, 'src: 'tokens, I>()
--> impl Parser<'tokens, I, SourceFile, Extra<'tokens, 'src>> + Clone
-where
-    I: BorrowInput<'tokens, Token = Token<'src>, Span = Span>,
-{
+pub fn map_token_input<'a, 'token>(spanned: &'a SpannedToken<Token<'token>>) -> (&'a Token<'token>, &'a Span) {
+    (&spanned.token, &spanned.span)
+}
+
+type InputMap<'input, 'token> = fn(&'input SpannedToken<Token<'token>>) -> (&'input Token<'token>, &'input Span);
+
+type ParserInput<'input, 'token> = MappedInput<Token<'token>, Span, &'input[SpannedToken<Token<'token>>], InputMap<'input, 'token>>;
+
+pub fn input<'input, 'tokens>(input: &'input[SpannedToken<Token<'tokens>>]) -> ParserInput<'input, 'tokens> {
+    let end = input.last().map(|t| t.span.end).unwrap_or_default();
+    Input::map(input, end..end, map_token_input)
+}
+
+pub fn parse<'tokens>(tokens: &'tokens[SpannedToken<Token<'tokens>>]) -> Result<SourceFile, Vec<Rich<'tokens, Token<'tokens>, std::ops::Range<usize>>>> {
+    parser().parse(input(tokens)).into_result()
+}
+
+fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
-    // let mut format_string_parser = Recursive::declare();
+    let mut format_string_part_parser = Recursive::declare();
 
     let identifier_parser =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => Identifier {
@@ -155,14 +167,22 @@ where
             .labelled("literal");
         let ident = identifier_parser.map(Expression::Identifier);
 
-        // let string_format = select_ref!(
-        //         Token::Normal(NormalToken::String(str_tokens)) = e if !is_literal_string(str_tokens) => {
-        //             FormatString {
-        //                 span: e.span(),
-        //                 parts: todo!(),
-        //             }
-        //         },
-        //     ).map(Expression::String);
+        let string_format_tokens = select_ref!(
+            Token::Normal(NormalToken::String(str_tokens)) if !is_literal_string(str_tokens) => {
+                input(&str_tokens)
+            }
+        );
+
+        let string_format = format_string_part_parser
+            .clone()
+            .repeated()
+            .collect::<Vec<_>>()
+            .nested_in(string_format_tokens)
+            .map_with(|parts, e| FormatString {
+                span: e.span(),
+                parts,
+            })
+            .map(Expression::String);
 
         let bracketed = expression_parser.clone().delimited_by(
             just(Token::Normal(NormalToken::SigilOpenBracket)),
@@ -213,7 +233,7 @@ where
             .labelled("block expression");
 
         let base = literal
-            // .or(string_format)
+            .or(string_format)
             .or(ident)
             .or(bracketed)
             .or(array_range)
@@ -235,65 +255,50 @@ where
         binary_expression.labelled("expression")
     });
 
-    // format_string_parser.define({
-    //     let content = select_ref!(
-    //         Token::String(StringToken::Content(str)) = e => {
-    //             StringPart::Content(StringContent {
-    //                 span: e.span(),
-    //                 content: (*str).into(),
-    //             })
-    //         },
-    //         Token::String(StringToken::Escaped(str)) => {
-    //             StringPart::Char(str.chars().nth(2).expect("invalid escaped token"))
-    //         },
-    //         Token::String(StringToken::EscapedCurlyOpen ) => {
-    //             StringPart::Char('{')
-    //         },
-    //         Token::String(StringToken::EscapedCurlyClose) => {
-    //             StringPart::Char('}')
-    //         },
-    //         Token::String(StringToken::BackSlash) => {
-    //             StringPart::Char('\\')
-    //         },
-    //     );
-    //
-    //     let format_tokens = select_ref!(
-    //         Token::String(StringToken::FormatStart(args)) => args
-    //             .as_slice()
-    //             .map(1..1, |spanned: &SpannedToken<Token>| {
-    //                 (&spanned.token, &spanned.span)
-    //             })
-    //     );
-    //     let format_expr = expression_parser.nested_in(format_tokens);
-    //     let format_expr = format_expr.map_with(|expr, e| {
-    //         StringPart::Expression(StringExpression {
-    //             span: e.span(),
-    //             expression: expr,
-    //             accuracy: None,
-    //             width: None,
-    //         })
-    //     });
-    //
-    //     let part = content.or(format_expr);
-    //
-    //     part.repeated()
-    //         .collect::<Vec<_>>()
-    //         .map_with(|parts, e| FormatString {
-    //             span: e.span(),
-    //             parts,
-    //         })
-    //         .labelled("format string")
-    // });
+    format_string_part_parser.define({
+        let content = select_ref!(
+            Token::String(StringToken::Content(str)) = e => {
+                StringPart::Content(StringContent {
+                    span: e.span(),
+                    content: (*str).into(),
+                })
+            },
+            Token::String(StringToken::Escaped(str)) => {
+                StringPart::Char(str.chars().nth(2).expect("invalid escaped token"))
+            },
+            Token::String(StringToken::EscapedCurlyOpen ) => {
+                StringPart::Char('{')
+            },
+            Token::String(StringToken::EscapedCurlyClose) => {
+                StringPart::Char('}')
+            },
+            Token::String(StringToken::BackSlash) => {
+                StringPart::Char('\\')
+            },
+        );
 
-    statement_list_parser.map_with(|statements, ex| SourceFile {
+        let format_tokens = select_ref!(
+            Token::String(StringToken::FormatStart(args)) => {
+                input(&args)
+            }
+        );
+
+        let format_expr = expression_parser
+            .nested_in(format_tokens)
+            .map_with(|expr, e| {
+                StringPart::Expression(StringExpression {
+                    span: e.span(),
+                    expression: expr,
+                    accuracy: None,
+                    width: None,
+                })
+            });
+
+        content.or(format_expr)
+    });
+
+    statement_list_parser.map_with(move |statements, ex| SourceFile {
         span: ex.span(),
         statements,
     })
-}
-
-#[derive(Debug, PartialEq)]
-pub enum ParseError {
-    InvalidFloat(ParseFloatError),
-    InvalidInt(ParseIntError),
-    Unknown,
 }

@@ -1,5 +1,6 @@
-use crate::ast::{FormatString, Identifier, Literal, Statement};
 use crate::Span;
+use crate::ast::{Identifier, Literal, Statement, StringContent};
+use indexmap::IndexMap;
 
 #[derive(Debug, PartialEq)]
 pub enum Operator {
@@ -32,6 +33,9 @@ pub enum UnaryOperator {
 #[derive(Debug, PartialEq)]
 pub enum Expression {
     Literal(Literal),
+    FormatString(FormatString),
+    Tuple(TupleExpression),
+    NamedTuple(NamedTupleExpression),
     ArrayRange(ArrayRangeExpression),
     ArrayList(ArrayListExpression),
     String(FormatString),
@@ -49,6 +53,9 @@ impl Expression {
     pub fn span(&self) -> Span {
         match self {
             Expression::Literal(ex) => ex.span(),
+            Expression::FormatString(ex) => ex.span.clone(),
+            Expression::Tuple(ex) => ex.span.clone(),
+            Expression::NamedTuple(ex) => ex.span.clone(),
             Expression::ArrayRange(ex) => ex.span.clone(),
             Expression::ArrayList(ex) => ex.span.clone(),
             Expression::String(ex) => ex.span.clone(),
@@ -62,6 +69,39 @@ impl Expression {
             Expression::If(ex) => ex.span.clone(),
         }
     }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct FormatString {
+    pub span: Span,
+    pub parts: Vec<StringPart>,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum StringPart {
+    Char(char),
+    Content(StringContent),
+    Expression(StringExpression),
+}
+
+#[derive(Debug, PartialEq)]
+pub struct StringExpression {
+    pub span: Span,
+    pub expression: Expression,
+    pub accuracy: Option<usize>,
+    pub width: Option<usize>,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct TupleExpression {
+    pub span: Span,
+    pub values: Vec<Expression>,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct NamedTupleExpression {
+    pub span: Span,
+    pub values: IndexMap<Identifier, Expression>,
 }
 
 #[derive(Debug, PartialEq)]

@@ -6,15 +6,19 @@ Ok(
     [
         SpannedToken {
             span: 13..14,
-            token: LiteralString(
-                [
-                    SpannedToken {
-                        span: 1..13,
-                        token: Content(
-                            "plain string",
-                        ),
-                    },
-                ],
+            token: Normal(
+                String(
+                    [
+                        SpannedToken {
+                            span: 1..13,
+                            token: String(
+                                Content(
+                                    "plain string",
+                                ),
+                            ),
+                        },
+                    ],
+                ),
             ),
         },
     ],

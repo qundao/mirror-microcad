@@ -1,8 +1,8 @@
-use insta::assert_debug_snapshot;
-use microcad_syntax::parser::parser;
-use microcad_syntax::tokens::{lex, SpannedToken, Token};
-use test_case::test_case;
 use chumsky::prelude::*;
+use insta::assert_debug_snapshot;
+use microcad_syntax::parser::{map_token_input, parse};
+use microcad_syntax::tokens::{NormalToken, SpannedToken, lex};
+use test_case::test_case;
 
 #[test_case("single int", "1")]
 #[test_case("basic addition", "1 + 1")]
@@ -19,24 +19,31 @@ use chumsky::prelude::*;
 #[test_case("escaped quote string", r#""string \" with \" escaped \ quotes""#)]
 #[test_case("basic expr string", r#""string {with} expression""#)]
 #[test_case("expr string", r#""string {more + complex} expression""#)]
-#[test_case("formatted expr string", r#""string {formated - expression:03.5} expression""#)]
+#[test_case(
+    "formatted expr string",
+    r#""string {formated - expression:03.5} expression""#
+)]
 #[test_case("function", "fn(a: Length) -> Length {a * 2}")]
 #[test_case("comment", "a = 1; // comment")]
-#[test_case("multi line comment", r#"a = 1; /** multi
+#[test_case(
+    "multi line comment",
+    r#"a = 1; /** multi
     line
     comment
     */
-    b = 2;"#)]
-#[test_case("doc comment", r#"/// Doc comment
+    b = 2;"#
+)]
+#[test_case(
+    "doc comment",
+    r#"/// Doc comment
     part Foo() {
         Cylinder(height = 10mm, radius = 5mm);
-    }"#)]
+    }"#
+)]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input).unwrap();
-    let input = tokens
-        .as_slice()
-        .map(2..2, |spanned: &SpannedToken<Token>| {
-            (&spanned.token, &spanned.span)
-        });
-    assert_debug_snapshot!(format!("parser_{name}"), parser().parse(input).into_result());
+    assert_debug_snapshot!(
+        format!("parser_{name}"),
+        parse(tokens.as_slice())
+    );
 }

@@ -6,49 +6,67 @@ Ok(
     [
         SpannedToken {
             span: 0..1,
-            token: Identifier(
-                "a",
+            token: Normal(
+                Identifier(
+                    "a",
+                ),
             ),
         },
         SpannedToken {
             span: 2..3,
-            token: OperatorAssignment,
+            token: Normal(
+                OperatorAssignment,
+            ),
         },
         SpannedToken {
             span: 4..5,
-            token: LiteralInt(
-                "1",
+            token: Normal(
+                LiteralInt(
+                    "1",
+                ),
             ),
         },
         SpannedToken {
             span: 5..6,
-            token: SigilSemiColon,
+            token: Normal(
+                SigilSemiColon,
+            ),
         },
         SpannedToken {
             span: 7..44,
-            token: MultiLineComment(
-                "/** multi\n    line\n    comment\n    */",
+            token: Normal(
+                MultiLineComment(
+                    "/** multi\n    line\n    comment\n    */",
+                ),
             ),
         },
         SpannedToken {
             span: 49..50,
-            token: Identifier(
-                "b",
+            token: Normal(
+                Identifier(
+                    "b",
+                ),
             ),
         },
         SpannedToken {
             span: 51..52,
-            token: OperatorAssignment,
+            token: Normal(
+                OperatorAssignment,
+            ),
         },
         SpannedToken {
             span: 53..54,
-            token: LiteralInt(
-                "2",
+            token: Normal(
+                LiteralInt(
+                    "2",
+                ),
             ),
         },
         SpannedToken {
             span: 54..55,
-            token: SigilSemiColon,
+            token: Normal(
+                SigilSemiColon,
+            ),
         },
     ],
 )

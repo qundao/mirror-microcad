@@ -6,18 +6,24 @@ Ok(
     [
         SpannedToken {
             span: 0..1,
-            token: LiteralInt(
-                "1",
+            token: Normal(
+                LiteralInt(
+                    "1",
+                ),
             ),
         },
         SpannedToken {
             span: 2..3,
-            token: OperatorAdd,
+            token: Normal(
+                OperatorAdd,
+            ),
         },
         SpannedToken {
             span: 4..5,
-            token: LiteralInt(
-                "1",
+            token: Normal(
+                LiteralInt(
+                    "1",
+                ),
             ),
         },
     ],

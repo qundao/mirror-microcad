@@ -6,24 +6,32 @@ Ok(
     [
         SpannedToken {
             span: 0..1,
-            token: Identifier(
-                "a",
+            token: Normal(
+                Identifier(
+                    "a",
+                ),
             ),
         },
         SpannedToken {
             span: 2..3,
-            token: OperatorAssignment,
+            token: Normal(
+                OperatorAssignment,
+            ),
         },
         SpannedToken {
             span: 4..5,
-            token: LiteralInt(
-                "1",
+            token: Normal(
+                LiteralInt(
+                    "1",
+                ),
             ),
         },
         SpannedToken {
             span: 6..16,
-            token: SingleLineComment(
-                "// comment",
+            token: Normal(
+                SingleLineComment(
+                    "// comment",
+                ),
             ),
         },
     ],

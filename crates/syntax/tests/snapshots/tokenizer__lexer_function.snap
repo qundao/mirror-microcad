@@ -6,65 +6,91 @@ Ok(
     [
         SpannedToken {
             span: 0..2,
-            token: KeywordFn,
+            token: Normal(
+                KeywordFn,
+            ),
         },
         SpannedToken {
             span: 2..3,
-            token: SigilOpenBracket,
+            token: Normal(
+                SigilOpenBracket,
+            ),
         },
         SpannedToken {
             span: 3..4,
-            token: Identifier(
-                "a",
+            token: Normal(
+                Identifier(
+                    "a",
+                ),
             ),
         },
         SpannedToken {
             span: 4..5,
-            token: SigilColon,
+            token: Normal(
+                SigilColon,
+            ),
         },
         SpannedToken {
             span: 6..12,
-            token: Identifier(
-                "Length",
+            token: Normal(
+                Identifier(
+                    "Length",
+                ),
             ),
         },
         SpannedToken {
             span: 12..13,
-            token: SigilCloseBracket,
+            token: Normal(
+                SigilCloseBracket,
+            ),
         },
         SpannedToken {
             span: 14..16,
-            token: SigilSingleArrow,
+            token: Normal(
+                SigilSingleArrow,
+            ),
         },
         SpannedToken {
             span: 17..23,
-            token: Identifier(
-                "Length",
+            token: Normal(
+                Identifier(
+                    "Length",
+                ),
             ),
         },
         SpannedToken {
             span: 24..25,
-            token: SigilOpenCurlyBracket,
+            token: Normal(
+                SigilOpenCurlyBracket,
+            ),
         },
         SpannedToken {
             span: 25..26,
-            token: Identifier(
-                "a",
+            token: Normal(
+                Identifier(
+                    "a",
+                ),
             ),
         },
         SpannedToken {
             span: 27..28,
-            token: OperatorMultiply,
+            token: Normal(
+                OperatorMultiply,
+            ),
         },
         SpannedToken {
             span: 29..30,
-            token: LiteralInt(
-                "2",
+            token: Normal(
+                LiteralInt(
+                    "2",
+                ),
             ),
         },
         SpannedToken {
             span: 30..31,
-            token: SigilCloseCurlyBracket,
+            token: Normal(
+                SigilCloseCurlyBracket,
+            ),
         },
     ],
 )

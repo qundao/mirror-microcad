@@ -1,50 +1,59 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
-Err(
-    [
-        found 'String(
-            [
-                SpannedToken {
-                    span: 1..8,
-                    token: Content(
-                        "string ",
-                    ),
-                },
-                SpannedToken {
-                    span: 23..24,
-                    token: FormatStart(
-                        (
-                            [
-                                SpannedToken {
-                                    span: 9..13,
-                                    token: Identifier(
-                                        "more",
+Ok(
+    SourceFile {
+        span: 35..36,
+        statements: StatementList {
+            span: 35..36,
+            statements: [],
+            tail: Some(
+                String(
+                    FormatString {
+                        span: 35..36,
+                        parts: [
+                            Content(
+                                StringContent {
+                                    span: 1..8,
+                                    content: "string ",
+                                },
+                            ),
+                            Expression(
+                                StringExpression {
+                                    span: 23..24,
+                                    expression: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 9..23,
+                                            lhs: Identifier(
+                                                Identifier {
+                                                    span: 9..13,
+                                                    name: "more",
+                                                },
+                                            ),
+                                            operation: Add,
+                                            rhs: Identifier(
+                                                Identifier {
+                                                    span: 16..23,
+                                                    name: "complex",
+                                                },
+                                            ),
+                                        },
                                     ),
+                                    accuracy: None,
+                                    width: None,
                                 },
-                                SpannedToken {
-                                    span: 14..15,
-                                    token: OperatorAdd,
+                            ),
+                            Content(
+                                StringContent {
+                                    span: 24..35,
+                                    content: " expression",
                                 },
-                                SpannedToken {
-                                    span: 16..23,
-                                    token: Identifier(
-                                        "complex",
-                                    ),
-                                },
-                            ],
-                            [],
-                        ),
-                    ),
-                },
-                SpannedToken {
-                    span: 24..35,
-                    token: Content(
-                        " expression",
-                    ),
-                },
-            ],
-        )' at 35..36 expected statement, expression, or end of input,
-    ],
+                            ),
+                        ],
+                    },
+                ),
+            ),
+        },
+    },
 )

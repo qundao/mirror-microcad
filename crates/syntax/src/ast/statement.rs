@@ -1,5 +1,5 @@
-use crate::ast::{Expression, Identifier, Literal, QualifiedName, StatementList, Type};
 use crate::Span;
+use crate::ast::{Expression, Identifier, Literal, QualifiedName, StatementList, Type};
 
 #[derive(Debug, PartialEq)]
 pub enum Statement {

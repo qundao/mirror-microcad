@@ -1,7 +1,7 @@
+use crate::Span;
+use crate::ast::Identifier;
 use compact_str::CompactString;
 use indexmap::IndexMap;
-use crate::ast::Identifier;
-use crate::Span;
 
 #[derive(Debug, PartialEq)]
 pub enum Type {
