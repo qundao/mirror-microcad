@@ -48,6 +48,12 @@ use test_case::test_case;
         Cylinder(height = 10mm, radius = 5mm);
     }"#
 )]
+#[test_case("tuple", "(1, 1 + 1)")]
+#[test_case("one-tuple", "(1,)")]
+#[test_case("one-bracketed", "(1)")]
+#[test_case("named tuple", "(length = 1, width = 1 + 1)")]
+#[test_case("named one-tuple, trailing", "(length = 1,)")]
+#[test_case("named one-tuple", "(length = 1)")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input).unwrap();
     assert_debug_snapshot!(

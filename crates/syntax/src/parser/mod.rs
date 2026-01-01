@@ -2,31 +2,44 @@ use crate::Span;
 use crate::ast::*;
 use crate::tokens::*;
 use chumsky::error::Rich;
-use chumsky::input::{MappedInput, Input};
+use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
 use std::str::FromStr;
 
 type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
 
-pub fn map_token_input<'a, 'token>(spanned: &'a SpannedToken<Token<'token>>) -> (&'a Token<'token>, &'a Span) {
+pub fn map_token_input<'a, 'token>(
+    spanned: &'a SpannedToken<Token<'token>>,
+) -> (&'a Token<'token>, &'a Span) {
     (&spanned.token, &spanned.span)
 }
 
-type InputMap<'input, 'token> = fn(&'input SpannedToken<Token<'token>>) -> (&'input Token<'token>, &'input Span);
+type InputMap<'input, 'token> =
+    fn(&'input SpannedToken<Token<'token>>) -> (&'input Token<'token>, &'input Span);
 
-type ParserInput<'input, 'token> = MappedInput<Token<'token>, Span, &'input[SpannedToken<Token<'token>>], InputMap<'input, 'token>>;
+type ParserInput<'input, 'token> = MappedInput<
+    Token<'token>,
+    Span,
+    &'input [SpannedToken<Token<'token>>],
+    InputMap<'input, 'token>,
+>;
 
-pub fn input<'input, 'tokens>(input: &'input[SpannedToken<Token<'tokens>>]) -> ParserInput<'input, 'tokens> {
+pub fn input<'input, 'tokens>(
+    input: &'input [SpannedToken<Token<'tokens>>],
+) -> ParserInput<'input, 'tokens> {
     let end = input.last().map(|t| t.span.end).unwrap_or_default();
     Input::map(input, end..end, map_token_input)
 }
 
-pub fn parse<'tokens>(tokens: &'tokens[SpannedToken<Token<'tokens>>]) -> Result<SourceFile, Vec<Rich<'tokens, Token<'tokens>, std::ops::Range<usize>>>> {
+pub fn parse<'tokens>(
+    tokens: &'tokens [SpannedToken<Token<'tokens>>],
+) -> Result<SourceFile, Vec<Rich<'tokens, Token<'tokens>, std::ops::Range<usize>>>> {
     parser().parse(input(tokens)).into_result()
 }
 
-fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
+fn parser<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
@@ -162,9 +175,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
     });
 
     expression_parser.define({
-        let literal = literal_parser
-            .map(Expression::Literal)
-            .labelled("literal");
+        let literal = literal_parser.map(Expression::Literal).labelled("literal");
         let ident = identifier_parser.map(Expression::Identifier);
 
         let string_format_tokens = select_ref!(
@@ -183,6 +194,39 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 parts,
             })
             .map(Expression::String);
+
+        let tuple = expression_parser
+            .clone()
+            .separated_by(just(Token::Normal(NormalToken::SigilComma)))
+            .allow_trailing()
+            .collect::<Vec<_>>()
+            .delimited_by(
+                just(Token::Normal(NormalToken::SigilOpenBracket)),
+                just(Token::Normal(NormalToken::SigilCloseBracket)),
+            )
+            .map_with(|values, e| {
+                Expression::Tuple(TupleExpression {
+                    span: e.span(),
+                    values,
+                })
+            });
+
+        let named_tuple = identifier_parser
+            .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
+            .then(expression_parser.clone())
+            .separated_by(just(Token::Normal(NormalToken::SigilComma)))
+            .allow_trailing()
+            .collect::<Vec<_>>()
+            .delimited_by(
+                just(Token::Normal(NormalToken::SigilOpenBracket)),
+                just(Token::Normal(NormalToken::SigilCloseBracket)),
+            )
+            .map_with(|values, e| {
+                Expression::NamedTuple(NamedTupleExpression {
+                    span: e.span(),
+                    values: values.into_iter().collect(),
+                })
+            });
 
         let bracketed = expression_parser.clone().delimited_by(
             just(Token::Normal(NormalToken::SigilOpenBracket)),
@@ -236,6 +280,8 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .or(string_format)
             .or(ident)
             .or(bracketed)
+            .or(tuple)
+            .or(named_tuple)
             .or(array_range)
             .or(array_list)
             .or(block);
