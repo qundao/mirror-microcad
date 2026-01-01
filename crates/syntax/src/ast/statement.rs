@@ -92,7 +92,7 @@ pub struct Return {
 pub struct ArgumentDefinition {
     pub span: Span,
     pub name: Identifier,
-    pub ty: Option<Identifier>,
+    pub ty: Option<Type>,
     pub default: Option<Literal>,
 }
 
@@ -119,5 +119,4 @@ pub struct Comment {
 #[derive(Debug, PartialEq)]
 pub enum Visibility {
     Public,
-    Private,
 }

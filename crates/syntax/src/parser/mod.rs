@@ -46,6 +46,13 @@ fn parser<'tokens>()
     let mut format_string_part_parser = Recursive::declare();
     let mut type_parser = Recursive::declare();
 
+    let block = statement_list_parser
+        .clone()
+        .delimited_by(
+            just(Token::Normal(NormalToken::SigilOpenCurlyBracket)),
+            just(Token::Normal(NormalToken::SigilCloseCurlyBracket)),
+        );
+
     let identifier_parser =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => Identifier {
             span: e.span(),
@@ -194,7 +201,7 @@ fn parser<'tokens>()
         let expression = expression_parser.clone().map(Statement::Expression);
 
         let assigment = identifier_parser
-            .then(just(Token::Normal(NormalToken::SigilColon)).ignore_then(type_parser).or_not())
+            .then(just(Token::Normal(NormalToken::SigilColon)).ignore_then(type_parser.clone()).or_not())
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
             .then(expression_parser.clone())
             .map_with(|((name, ty), value), e| {
@@ -220,11 +227,50 @@ fn parser<'tokens>()
         .map(Statement::Comment)
         .labelled("comment");
 
-        let statement = assigment.or(expression);
+        let arguments = identifier_parser
+            .then(just(Token::Normal(NormalToken::SigilColon)).ignore_then(type_parser.clone()).or_not())
+            .then(just(Token::Normal(NormalToken::OperatorAssignment)).ignore_then(literal_parser.clone()).or_not())
+            .map_with(|((name, ty), default), e| ArgumentDefinition {
+                span: e.span(),
+                name,
+                ty,
+                default,
+            })
+            .separated_by(just(Token::Normal(NormalToken::SigilComma)))
+            .allow_trailing()
+            .collect::<Vec<_>>()
+            .delimited_by(
+                just(Token::Normal(NormalToken::SigilOpenBracket)),
+                just(Token::Normal(NormalToken::SigilCloseBracket)),
+            );
 
-        statement
+        let visibility = select_ref! {
+            Token::Normal(NormalToken::KeywordPub) => Visibility::Public,
+        }.labelled("visibility");
+
+        let function = visibility.or_not()
+            .then_ignore(just(Token::Normal(NormalToken::KeywordFn)))
+            .then(identifier_parser)
+            .then(arguments.clone())
+            .then(just(Token::Normal(NormalToken::SigilSingleArrow)).ignore_then(type_parser.clone()).or_not())
+            .then(block.clone())
+            .map_with(|((((visibility, name), arguments), return_type), body), e| Statement::Function(FunctionDefinition {
+                span: e.span(),
+                visibility,
+                name,
+                arguments,
+                return_type,
+                body
+            }));
+
+        let with_semi = assigment
+            .or(expression);
+
+        let without_semi = function.or(comment);
+
+        with_semi
             .then_ignore(just(Token::Normal(NormalToken::SigilSemiColon)).labelled("semicolon"))
-            .or(comment)
+            .or(without_semi)
             .labelled("statement")
     });
 
@@ -339,15 +385,6 @@ fn parser<'tokens>()
             })
             .labelled("array");
 
-        let block = statement_list_parser
-            .clone()
-            .delimited_by(
-                just(Token::Normal(NormalToken::SigilOpenCurlyBracket)),
-                just(Token::Normal(NormalToken::SigilCloseCurlyBracket)),
-            )
-            .map(Expression::Block)
-            .labelled("block expression");
-
         let call = identifier_parser
             .then(tuple_body)
             .map_with(|(name, args), e| {
@@ -371,6 +408,10 @@ fn parser<'tokens>()
                 })
             });
 
+        let block_expression = block.clone()
+            .map(Expression::Block)
+            .labelled("block expression");
+
         let base = literal
             .or(string_format)
             .or(call)
@@ -381,7 +422,7 @@ fn parser<'tokens>()
             .or(tuple)
             .or(array_range)
             .or(array_list)
-            .or(block);
+            .or(block_expression);
 
         let binary_expression = base.clone().foldl_with(
             binary_operator_parser.then(base.clone()).repeated(),

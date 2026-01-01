@@ -4,13 +4,13 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..35,
+        span: 0..34,
         statements: StatementList {
-            span: 0..35,
+            span: 0..34,
             statements: [
                 Function(
                     FunctionDefinition {
-                        span: 0..35,
+                        span: 0..34,
                         visibility: None,
                         name: Identifier {
                             span: 3..6,
@@ -33,36 +33,47 @@ Ok(
                                 ),
                                 default: None,
                             },
-                        ],
-                        return_type: Some(
-                            Single(
-                                SingleType {
-                                    span: 21..27,
-                                    name: "Length",
+                            ArgumentDefinition {
+                                span: 18..25,
+                                name: Identifier {
+                                    span: 18..19,
+                                    name: "b",
                                 },
-                            ),
-                        ),
+                                ty: None,
+                                default: Some(
+                                    Quantity(
+                                        QuantityLiteral {
+                                            span: 22..25,
+                                            value: 3.0,
+                                            ty: SingleType {
+                                                span: 23..25,
+                                                name: "mm",
+                                            },
+                                        },
+                                    ),
+                                ),
+                            },
+                        ],
+                        return_type: None,
                         body: StatementList {
-                            span: 29..34,
+                            span: 28..33,
                             statements: [],
                             tail: Some(
                                 BinaryOperation(
                                     BinaryOperation {
-                                        span: 29..34,
+                                        span: 28..33,
                                         lhs: Identifier(
                                             Identifier {
-                                                span: 29..30,
-                                                name: "a",
+                                                span: 28..29,
+                                                name: "b",
                                             },
                                         ),
-                                        operation: Multiply,
-                                        rhs: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 33..34,
-                                                    value: 2,
-                                                },
-                                            ),
+                                        operation: Divide,
+                                        rhs: Identifier(
+                                            Identifier {
+                                                span: 32..33,
+                                                name: "a",
+                                            },
                                         ),
                                     },
                                 ),

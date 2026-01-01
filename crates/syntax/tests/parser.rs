@@ -36,6 +36,7 @@ use test_case::test_case;
     r#""string {formated - expression:03.5} expression""#
 )]
 #[test_case("function", "fn foo(a: Length) -> Length {a * 2}")]
+#[test_case("function with default", "fn foo(a: Length, b = 3mm) {b / a}")]
 #[test_case("call empty args", "foo()")]
 #[test_case("call positional args", "foo(1, 2)")]
 #[test_case("call named args", "foo(a = 1, b = 2)")]
