@@ -55,6 +55,7 @@ use test_case::test_case;
 #[test_case("named one-tuple, trailing", "(length = 1,)")]
 #[test_case("named one-tuple", "(length = 1)")]
 #[test_case("qualified name", "foo::bar")]
+#[test_case("marker", "@input")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input).unwrap();
     assert_debug_snapshot!(

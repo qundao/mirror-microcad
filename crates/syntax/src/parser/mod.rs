@@ -188,6 +188,10 @@ fn parser<'tokens>()
                 parts
             }));
 
+        let marker = just(Token::Normal(NormalToken::SigilAt))
+            .ignore_then(identifier_parser)
+            .map(Expression::Marker);
+
         let string_format_tokens = select_ref!(
             Token::Normal(NormalToken::String(str_tokens)) if !is_literal_string(str_tokens) => {
                 input(&str_tokens)
@@ -290,6 +294,7 @@ fn parser<'tokens>()
             .or(string_format)
             .or(qualified_name)
             .or(ident)
+            .or(marker)
             .or(bracketed)
             .or(tuple)
             .or(named_tuple)
