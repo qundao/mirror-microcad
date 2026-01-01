@@ -5,6 +5,9 @@ use microcad_syntax::tokens::{NormalToken, SpannedToken, lex};
 use test_case::test_case;
 
 #[test_case("single int", "1")]
+#[test_case("single float", "1.2")]
+#[test_case("quantity int", "1mm")]
+#[test_case("quantity float", ".2mm")]
 #[test_case("basic addition", "1 + 1")]
 #[test_case("basic addition, no space", "1+1")]
 #[test_case("addition identifier", "length + 1")]
@@ -12,6 +15,7 @@ use test_case::test_case;
 #[test_case("array list", "[1,2,3,4]")]
 #[test_case("multiple binary operator", "(1+2)*3+1")]
 #[test_case("assignment", "a = b * 2;")]
+#[test_case("typed assignment", "a: Length = b * 2mm;")]
 #[test_case("block assignment", "a = {a = 1 + 2; a * 3};")]
 #[test_case("plain string", r#""plain string""#)]
 #[test_case("plain string in expr", r#"a = "plain string int expression" + 1;"#)]

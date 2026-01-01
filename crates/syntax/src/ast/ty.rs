@@ -1,14 +1,12 @@
 use crate::Span;
 use crate::ast::Identifier;
 use compact_str::CompactString;
-use indexmap::IndexMap;
 
 #[derive(Debug, PartialEq)]
 pub enum Type {
     Single(SingleType),
     Array(ArrayType),
     Tuple(TupleType),
-    NamedTuple(NamedTupleType),
 }
 
 impl Type {
@@ -17,7 +15,6 @@ impl Type {
             Type::Single(ty) => ty.span.clone(),
             Type::Array(ty) => ty.span.clone(),
             Type::Tuple(ty) => ty.span.clone(),
-            Type::NamedTuple(ty) => ty.span.clone(),
         }
     }
 }
@@ -37,11 +34,5 @@ pub struct ArrayType {
 #[derive(Debug, PartialEq)]
 pub struct TupleType {
     pub span: Span,
-    pub inner: Vec<Type>,
-}
-
-#[derive(Debug, PartialEq)]
-pub struct NamedTupleType {
-    pub span: Span,
-    pub inner: IndexMap<Identifier, Type>,
+    pub inner: Vec<(Option<Identifier>, Type)>,
 }

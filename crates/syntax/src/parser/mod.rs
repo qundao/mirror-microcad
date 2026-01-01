@@ -44,6 +44,7 @@ fn parser<'tokens>()
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
     let mut format_string_part_parser = Recursive::declare();
+    let mut type_parser = Recursive::declare();
 
     let identifier_parser =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => Identifier {
@@ -51,6 +52,44 @@ fn parser<'tokens>()
             name: (*ident).into()
         } }
         .labelled("identifier");
+
+    let single_type = select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
+        span: e.span(),
+        name: (*ident).into()
+    }}.labelled("quantity type");
+
+    type_parser.define({
+        let single = single_type.clone().map(Type::Single);
+        let array = type_parser.clone().delimited_by(
+            just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
+            just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
+        ).map_with(|inner, e| Type::Array(ArrayType {
+            span: e.span(),
+            inner: Box::new(inner),
+        }));
+
+        let tuple = identifier_parser
+            .then_ignore(just(Token::Normal(NormalToken::SigilColon)))
+            .or_not()
+            .then(type_parser.clone())
+            .separated_by(just(Token::Normal(NormalToken::SigilComma)))
+            .allow_trailing()
+            .collect::<Vec<_>>()
+            .delimited_by(
+                just(Token::Normal(NormalToken::SigilOpenBracket)),
+                just(Token::Normal(NormalToken::SigilCloseBracket)),
+            )
+            .map_with(|inner, e| Type::Tuple(TupleType {
+                span: e.span(),
+                inner
+            }));
+
+        single
+            .clone()
+            .or(array)
+            .or(tuple)
+            .labelled("type")
+    });
 
     let literal_parser = {
         let single_value = select_ref! {
@@ -60,12 +99,11 @@ fn parser<'tokens>()
                     content: get_literal_string(str_tokens).expect("non literal string"),
                 })
             },
-            Token::Normal(NormalToken::LiteralFloat(x)) = e => {
-                match f64::from_str(x) {
-                    Ok(value) => Literal::Quantity(QuantityLiteral {
+            Token::Normal(NormalToken::LiteralInt(x)) = e => {
+                match i64::from_str(x) {
+                    Ok(value) => Literal::Integer(IntegerLiteral {
                     value,
                     span: e.span(),
-                    ty: None,
                 }),
                     Err(err) => Literal::Error(LiteralError {
                         span: e.span(),
@@ -73,9 +111,9 @@ fn parser<'tokens>()
                     })
                 }
             },
-            Token::Normal(NormalToken::LiteralInt(x)) = e => {
-                match i64::from_str(x) {
-                    Ok(value) => Literal::Integer(IntegerLiteral {
+            Token::Normal(NormalToken::LiteralFloat(x)) = e => {
+                match f64::from_str(x) {
+                    Ok(value) => Literal::Float(FloatLiteral {
                     value,
                     span: e.span(),
                 }),
@@ -99,7 +137,29 @@ fn parser<'tokens>()
             },
         };
 
-        single_value.labelled("literal")
+        let quantity = select_ref! {
+            Token::Normal(NormalToken::LiteralInt(x)) => x,
+            Token::Normal(NormalToken::LiteralFloat(x)) => x,
+        }
+        .then(single_type.clone())
+        .map_with(|(num, ty), e| {
+            let value = match f64::from_str(num) {
+                Ok(value) => value,
+                Err(err) => {
+                    return Literal::Error(LiteralError {
+                        span: e.span(),
+                        kind: err.into(),
+                    });
+                }
+            };
+            Literal::Quantity(QuantityLiteral {
+                span: e.span(),
+                value,
+                ty,
+            })
+        });
+
+        quantity.or(single_value).labelled("literal")
     };
 
     let binary_operator_parser = select_ref! {
@@ -128,20 +188,21 @@ fn parser<'tokens>()
         Token::Normal(NormalToken::OperatorAdd) => UnaryOperator::Plus,
         Token::Normal(NormalToken::OperatorNot) => UnaryOperator::Not,
     }
-        .labelled("unary operator");
+    .labelled("unary operator");
 
     statement_parser.define({
         let expression = expression_parser.clone().map(Statement::Expression);
 
         let assigment = identifier_parser
+            .then(just(Token::Normal(NormalToken::SigilColon)).ignore_then(type_parser).or_not())
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
             .then(expression_parser.clone())
-            .map_with(|(name, value), e| {
+            .map_with(|((name, ty), value), e| {
                 Statement::Assignment(Assignment {
                     span: e.span(),
                     name,
                     value,
-                    ty: None, // todo
+                    ty
                 })
             })
             .labelled("assignment");
@@ -190,10 +251,12 @@ fn parser<'tokens>()
             .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
             .at_least(2)
             .collect::<Vec<_>>()
-            .map_with(|parts, e| Expression::QualifiedName(QualifiedName {
-                span: e.span(),
-                parts
-            }))
+            .map_with(|parts, e| {
+                Expression::QualifiedName(QualifiedName {
+                    span: e.span(),
+                    parts,
+                })
+            })
             .labelled("qualified name");
 
         let marker = just(Token::Normal(NormalToken::SigilAt))
@@ -230,14 +293,12 @@ fn parser<'tokens>()
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
             );
 
-        let tuple = tuple_body
-            .clone()
-            .map_with(|values, e| {
-                Expression::Tuple(TupleExpression {
-                    span: e.span(),
-                    values,
-                })
-            });
+        let tuple = tuple_body.clone().map_with(|values, e| {
+            Expression::Tuple(TupleExpression {
+                span: e.span(),
+                values,
+            })
+        });
 
         let bracketed = expression_parser.clone().delimited_by(
             just(Token::Normal(NormalToken::SigilOpenBracket)),
@@ -287,22 +348,26 @@ fn parser<'tokens>()
             .map(Expression::Block)
             .labelled("block expression");
 
-        let call = identifier_parser.then(tuple_body)
+        let call = identifier_parser
+            .then(tuple_body)
             .map_with(|(name, args), e| {
                 Expression::Call(Call {
                     span: e.span(),
                     name,
-                    arguments: args.into_iter().map(|(name, value)| match name {
-                        Some(name) => Argument::Named(NamedArgument {
-                            span: name.span.start .. value.span().end,
-                            name,
-                            value
-                        }),
-                        None => Argument::Positional(PositionArgument {
-                            span: value.span(),
-                            value
-                        }),
-                    }).collect()
+                    arguments: args
+                        .into_iter()
+                        .map(|(name, value)| match name {
+                            Some(name) => Argument::Named(NamedArgument {
+                                span: name.span.start..value.span().end,
+                                name,
+                                value,
+                            }),
+                            None => Argument::Positional(PositionArgument {
+                                span: value.span(),
+                                value,
+                            }),
+                        })
+                        .collect(),
                 })
             });
 
@@ -330,14 +395,13 @@ fn parser<'tokens>()
             },
         );
 
-        let unary_expression = unary_operator_parser.then(base)
-            .map_with(|(op, rhs), e|
-                Expression::UnaryOperation(UnaryOperation {
-                    span: e.span(),
-                    operation: op,
-                    rhs: rhs.into(),
-                })
-            );
+        let unary_expression = unary_operator_parser.then(base).map_with(|(op, rhs), e| {
+            Expression::UnaryOperation(UnaryOperation {
+                span: e.span(),
+                operation: op,
+                rhs: rhs.into(),
+            })
+        });
 
         unary_expression
             .or(binary_expression)

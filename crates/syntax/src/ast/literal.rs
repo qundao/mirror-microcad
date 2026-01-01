@@ -1,5 +1,5 @@
 use crate::Span;
-use crate::ast::Type;
+use crate::ast::SingleType;
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 
@@ -9,6 +9,7 @@ pub enum Literal {
     String(StringContent),
     Bool(BoolLiteral),
     Integer(IntegerLiteral),
+    Float(FloatLiteral),
     Quantity(QuantityLiteral),
 }
 
@@ -19,6 +20,7 @@ impl Literal {
             Literal::String(lit) => lit.span.clone(),
             Literal::Bool(lit) => lit.span.clone(),
             Literal::Integer(lit) => lit.span.clone(),
+            Literal::Float(lit) => lit.span.clone(),
             Literal::Quantity(lit) => lit.span.clone(),
         }
     }
@@ -43,10 +45,16 @@ pub struct IntegerLiteral {
 }
 
 #[derive(Debug, PartialEq)]
+pub struct FloatLiteral {
+    pub span: Span,
+    pub value: f64,
+}
+
+#[derive(Debug, PartialEq)]
 pub struct QuantityLiteral {
     pub span: Span,
     pub value: f64,
-    pub ty: Option<Type>,
+    pub ty: SingleType,
 }
 
 #[derive(Debug, PartialEq)]

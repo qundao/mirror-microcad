@@ -1,0 +1,27 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..3,
+        statements: StatementList {
+            span: 0..3,
+            statements: [],
+            tail: Some(
+                Literal(
+                    Quantity(
+                        QuantityLiteral {
+                            span: 0..3,
+                            value: 1.0,
+                            ty: SingleType {
+                                span: 1..3,
+                                name: "mm",
+                            },
+                        },
+                    ),
+                ),
+            ),
+        },
+    },
+)
