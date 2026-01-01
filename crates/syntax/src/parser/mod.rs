@@ -136,7 +136,8 @@ fn parser<'tokens>()
                     value,
                     ty: None, // todo
                 })
-            });
+            })
+            .labelled("assignment");
 
         let comment = select_ref! {
             Token::Normal(NormalToken::SingleLineComment(comment) )= e => Comment {
@@ -177,6 +178,15 @@ fn parser<'tokens>()
     expression_parser.define({
         let literal = literal_parser.map(Expression::Literal).labelled("literal");
         let ident = identifier_parser.map(Expression::Identifier);
+
+        let qualified_name = identifier_parser
+            .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
+            .at_least(2)
+            .collect::<Vec<_>>()
+            .map_with(|parts, e| Expression::QualifiedName(QualifiedName {
+                span: e.span(),
+                parts
+            }));
 
         let string_format_tokens = select_ref!(
             Token::Normal(NormalToken::String(str_tokens)) if !is_literal_string(str_tokens) => {
@@ -278,6 +288,7 @@ fn parser<'tokens>()
 
         let base = literal
             .or(string_format)
+            .or(qualified_name)
             .or(ident)
             .or(bracketed)
             .or(tuple)
