@@ -123,6 +123,13 @@ fn parser<'tokens>()
     }
     .labelled("binary operator");
 
+    let unary_operator_parser = select_ref! {
+        Token::Normal(NormalToken::OperatorSubtract) => UnaryOperator::Minus,
+        Token::Normal(NormalToken::OperatorAdd) => UnaryOperator::Plus,
+        Token::Normal(NormalToken::OperatorNot) => UnaryOperator::Not,
+    }
+        .labelled("unary operator");
+
     statement_parser.define({
         let expression = expression_parser.clone().map(Statement::Expression);
 
@@ -186,11 +193,13 @@ fn parser<'tokens>()
             .map_with(|parts, e| Expression::QualifiedName(QualifiedName {
                 span: e.span(),
                 parts
-            }));
+            }))
+            .labelled("qualified name");
 
         let marker = just(Token::Normal(NormalToken::SigilAt))
             .ignore_then(identifier_parser)
-            .map(Expression::Marker);
+            .map(Expression::Marker)
+            .labelled("marker");
 
         let string_format_tokens = select_ref!(
             Token::Normal(NormalToken::String(str_tokens)) if !is_literal_string(str_tokens) => {
@@ -303,7 +312,7 @@ fn parser<'tokens>()
             .or(block);
 
         let binary_expression = base.clone().foldl_with(
-            binary_operator_parser.then(base).repeated(),
+            binary_operator_parser.then(base.clone()).repeated(),
             |lhs, (op, rhs), e| {
                 Expression::BinaryOperation(BinaryOperation {
                     span: e.span(),
@@ -314,7 +323,18 @@ fn parser<'tokens>()
             },
         );
 
-        binary_expression.labelled("expression")
+        let unary_expression = unary_operator_parser.then(base)
+            .map_with(|(op, rhs), e|
+                Expression::UnaryOperation(UnaryOperation {
+                    span: e.span(),
+                    operation: op,
+                    rhs: rhs.into(),
+                })
+            );
+
+        unary_expression
+            .or(binary_expression)
+            .labelled("expression")
     });
 
     format_string_part_parser.define({

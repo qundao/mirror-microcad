@@ -135,7 +135,7 @@ pub struct BinaryOperation {
 #[derive(Debug, PartialEq)]
 pub struct UnaryOperation {
     pub span: Span,
-    pub operation: Operator,
+    pub operation: UnaryOperator,
     pub rhs: Box<Expression>,
 }
 
