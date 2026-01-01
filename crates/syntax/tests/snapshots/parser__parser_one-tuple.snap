@@ -13,12 +13,15 @@ Ok(
                     TupleExpression {
                         span: 0..4,
                         values: [
-                            Literal(
-                                Integer(
-                                    IntegerLiteral {
-                                        span: 1..2,
-                                        value: 1,
-                                    },
+                            (
+                                None,
+                                Literal(
+                                    Integer(
+                                        IntegerLiteral {
+                                            span: 1..2,
+                                            value: 1,
+                                        },
+                                    ),
                                 ),
                             ),
                         ],

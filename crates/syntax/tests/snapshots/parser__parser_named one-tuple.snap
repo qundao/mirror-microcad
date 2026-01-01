@@ -9,22 +9,27 @@ Ok(
             span: 0..12,
             statements: [],
             tail: Some(
-                NamedTuple(
-                    NamedTupleExpression {
+                Tuple(
+                    TupleExpression {
                         span: 0..12,
-                        values: {
-                            Identifier {
-                                span: 1..7,
-                                name: "length",
-                            }: Literal(
-                                Integer(
-                                    IntegerLiteral {
-                                        span: 10..11,
-                                        value: 1,
+                        values: [
+                            (
+                                Some(
+                                    Identifier {
+                                        span: 1..7,
+                                        name: "length",
                                     },
                                 ),
+                                Literal(
+                                    Integer(
+                                        IntegerLiteral {
+                                            span: 10..11,
+                                            value: 1,
+                                        },
+                                    ),
+                                ),
                             ),
-                        },
+                        ],
                     },
                 ),
             ),

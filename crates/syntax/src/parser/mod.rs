@@ -218,8 +218,10 @@ fn parser<'tokens>()
             })
             .map(Expression::String);
 
-        let tuple = expression_parser
-            .clone()
+        let tuple = identifier_parser
+            .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
+            .or_not()
+            .then(expression_parser.clone())
             .separated_by(just(Token::Normal(NormalToken::SigilComma)))
             .allow_trailing()
             .collect::<Vec<_>>()
@@ -231,23 +233,6 @@ fn parser<'tokens>()
                 Expression::Tuple(TupleExpression {
                     span: e.span(),
                     values,
-                })
-            });
-
-        let named_tuple = identifier_parser
-            .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
-            .then(expression_parser.clone())
-            .separated_by(just(Token::Normal(NormalToken::SigilComma)))
-            .allow_trailing()
-            .collect::<Vec<_>>()
-            .delimited_by(
-                just(Token::Normal(NormalToken::SigilOpenBracket)),
-                just(Token::Normal(NormalToken::SigilCloseBracket)),
-            )
-            .map_with(|values, e| {
-                Expression::NamedTuple(NamedTupleExpression {
-                    span: e.span(),
-                    values: values.into_iter().collect(),
                 })
             });
 
@@ -306,7 +291,6 @@ fn parser<'tokens>()
             .or(marker)
             .or(bracketed)
             .or(tuple)
-            .or(named_tuple)
             .or(array_range)
             .or(array_list)
             .or(block);

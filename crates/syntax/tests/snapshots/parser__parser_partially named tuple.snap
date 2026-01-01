@@ -4,26 +4,37 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..13,
+        span: 0..17,
         statements: StatementList {
-            span: 0..13,
+            span: 0..17,
             statements: [],
             tail: Some(
                 Tuple(
                     TupleExpression {
-                        span: 0..13,
+                        span: 0..17,
                         values: [
+                            (
+                                None,
+                                Literal(
+                                    String(
+                                        StringContent {
+                                            span: 3..4,
+                                            content: "a",
+                                        },
+                                    ),
+                                ),
+                            ),
                             (
                                 Some(
                                     Identifier {
-                                        span: 1..7,
+                                        span: 6..12,
                                         name: "length",
                                     },
                                 ),
                                 Literal(
                                     Integer(
                                         IntegerLiteral {
-                                            span: 10..11,
+                                            span: 15..16,
                                             value: 1,
                                         },
                                     ),

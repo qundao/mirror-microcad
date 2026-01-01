@@ -13,35 +13,41 @@ Ok(
                     TupleExpression {
                         span: 0..10,
                         values: [
-                            Literal(
-                                Integer(
-                                    IntegerLiteral {
-                                        span: 1..2,
-                                        value: 1,
-                                    },
+                            (
+                                None,
+                                Literal(
+                                    Integer(
+                                        IntegerLiteral {
+                                            span: 1..2,
+                                            value: 1,
+                                        },
+                                    ),
                                 ),
                             ),
-                            BinaryOperation(
-                                BinaryOperation {
-                                    span: 4..9,
-                                    lhs: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 4..5,
-                                                value: 1,
-                                            },
+                            (
+                                None,
+                                BinaryOperation(
+                                    BinaryOperation {
+                                        span: 4..9,
+                                        lhs: Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 4..5,
+                                                    value: 1,
+                                                },
+                                            ),
                                         ),
-                                    ),
-                                    operation: Add,
-                                    rhs: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 8..9,
-                                                value: 1,
-                                            },
+                                        operation: Add,
+                                        rhs: Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 8..9,
+                                                    value: 1,
+                                                },
+                                            ),
                                         ),
-                                    ),
-                                },
+                                    },
+                                ),
                             ),
                         ],
                     },
