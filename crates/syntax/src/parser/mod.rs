@@ -46,12 +46,10 @@ fn parser<'tokens>()
     let mut format_string_part_parser = Recursive::declare();
     let mut type_parser = Recursive::declare();
 
-    let block = statement_list_parser
-        .clone()
-        .delimited_by(
-            just(Token::Normal(NormalToken::SigilOpenCurlyBracket)),
-            just(Token::Normal(NormalToken::SigilCloseCurlyBracket)),
-        );
+    let block = statement_list_parser.clone().delimited_by(
+        just(Token::Normal(NormalToken::SigilOpenCurlyBracket)),
+        just(Token::Normal(NormalToken::SigilCloseCurlyBracket)),
+    );
 
     let identifier_parser =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => Identifier {
@@ -60,20 +58,27 @@ fn parser<'tokens>()
         } }
         .labelled("identifier");
 
-    let single_type = select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
-        span: e.span(),
-        name: (*ident).into()
-    }}.labelled("quantity type");
+    let single_type =
+        select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
+            span: e.span(),
+            name: (*ident).into()
+        }}
+        .labelled("quantity type");
 
     type_parser.define({
         let single = single_type.clone().map(Type::Single);
-        let array = type_parser.clone().delimited_by(
-            just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
-            just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
-        ).map_with(|inner, e| Type::Array(ArrayType {
-            span: e.span(),
-            inner: Box::new(inner),
-        }));
+        let array = type_parser
+            .clone()
+            .delimited_by(
+                just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
+                just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
+            )
+            .map_with(|inner, e| {
+                Type::Array(ArrayType {
+                    span: e.span(),
+                    inner: Box::new(inner),
+                })
+            });
 
         let tuple = identifier_parser
             .then_ignore(just(Token::Normal(NormalToken::SigilColon)))
@@ -86,16 +91,14 @@ fn parser<'tokens>()
                 just(Token::Normal(NormalToken::SigilOpenBracket)),
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
             )
-            .map_with(|inner, e| Type::Tuple(TupleType {
-                span: e.span(),
-                inner
-            }));
+            .map_with(|inner, e| {
+                Type::Tuple(TupleType {
+                    span: e.span(),
+                    inner,
+                })
+            });
 
-        single
-            .clone()
-            .or(array)
-            .or(tuple)
-            .labelled("type")
+        single.clone().or(array).or(tuple).labelled("type")
     });
 
     let literal_parser = {
@@ -201,7 +204,11 @@ fn parser<'tokens>()
         let expression = expression_parser.clone().map(Statement::Expression);
 
         let assigment = identifier_parser
-            .then(just(Token::Normal(NormalToken::SigilColon)).ignore_then(type_parser.clone()).or_not())
+            .then(
+                just(Token::Normal(NormalToken::SigilColon))
+                    .ignore_then(type_parser.clone())
+                    .or_not(),
+            )
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
             .then(expression_parser.clone())
             .map_with(|((name, ty), value), e| {
@@ -209,7 +216,7 @@ fn parser<'tokens>()
                     span: e.span(),
                     name,
                     value,
-                    ty
+                    ty,
                 })
             })
             .labelled("assignment");
@@ -228,8 +235,16 @@ fn parser<'tokens>()
         .labelled("comment");
 
         let arguments = identifier_parser
-            .then(just(Token::Normal(NormalToken::SigilColon)).ignore_then(type_parser.clone()).or_not())
-            .then(just(Token::Normal(NormalToken::OperatorAssignment)).ignore_then(literal_parser.clone()).or_not())
+            .then(
+                just(Token::Normal(NormalToken::SigilColon))
+                    .ignore_then(type_parser.clone())
+                    .or_not(),
+            )
+            .then(
+                just(Token::Normal(NormalToken::OperatorAssignment))
+                    .ignore_then(literal_parser.clone())
+                    .or_not(),
+            )
             .map_with(|((name, ty), default), e| ArgumentDefinition {
                 span: e.span(),
                 name,
@@ -246,25 +261,34 @@ fn parser<'tokens>()
 
         let visibility = select_ref! {
             Token::Normal(NormalToken::KeywordPub) => Visibility::Public,
-        }.labelled("visibility");
+        }
+        .labelled("visibility");
 
-        let function = visibility.or_not()
+        let function = visibility
+            .or_not()
             .then_ignore(just(Token::Normal(NormalToken::KeywordFn)))
             .then(identifier_parser)
             .then(arguments.clone())
-            .then(just(Token::Normal(NormalToken::SigilSingleArrow)).ignore_then(type_parser.clone()).or_not())
+            .then(
+                just(Token::Normal(NormalToken::SigilSingleArrow))
+                    .ignore_then(type_parser.clone())
+                    .or_not(),
+            )
             .then(block.clone())
-            .map_with(|((((visibility, name), arguments), return_type), body), e| Statement::Function(FunctionDefinition {
-                span: e.span(),
-                visibility,
-                name,
-                arguments,
-                return_type,
-                body
-            }));
+            .map_with(
+                |((((visibility, name), arguments), return_type), body), e| {
+                    Statement::Function(FunctionDefinition {
+                        span: e.span(),
+                        visibility,
+                        name,
+                        arguments,
+                        return_type,
+                        body,
+                    })
+                },
+            );
 
-        let with_semi = assigment
-            .or(expression);
+        let with_semi = assigment.or(expression);
 
         let without_semi = function.or(comment);
 
@@ -408,9 +432,37 @@ fn parser<'tokens>()
                 })
             });
 
-        let block_expression = block.clone()
+        let block_expression = block
+            .clone()
             .map(Expression::Block)
             .labelled("block expression");
+
+        let mut if_inner = Recursive::declare();
+
+        if_inner.define(
+            just(Token::Normal(NormalToken::KeywordIf))
+                .ignore_then(expression_parser.clone())
+                .then(block.clone())
+                .then(
+                    just(Token::Normal(NormalToken::KeywordElse))
+                        .ignore_then(if_inner.clone())
+                        .map(Box::new)
+                        .or_not(),
+                )
+                .then(
+                    just(Token::Normal(NormalToken::KeywordElse))
+                        .ignore_then(block.clone())
+                        .or_not(),
+                )
+                .map_with(|(((condition, body), next_if), else_body), e| If {
+                    span: e.span(),
+                    condition: Box::new(condition),
+                    body,
+                    next_if,
+                    else_body,
+                }),
+        );
+        let if_expression = if_inner.map(Expression::If).labelled("if expression");
 
         let base = literal
             .or(string_format)
@@ -422,7 +474,8 @@ fn parser<'tokens>()
             .or(tuple)
             .or(array_range)
             .or(array_list)
-            .or(block_expression);
+            .or(block_expression)
+            .or(if_expression);
 
         let binary_expression = base.clone().foldl_with(
             binary_operator_parser.then(base.clone()).repeated(),

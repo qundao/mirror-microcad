@@ -1,0 +1,60 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..19,
+        statements: StatementList {
+            span: 0..19,
+            statements: [],
+            tail: Some(
+                If(
+                    If {
+                        span: 0..19,
+                        condition: BinaryOperation(
+                            BinaryOperation {
+                                span: 3..8,
+                                lhs: Identifier(
+                                    Identifier {
+                                        span: 3..4,
+                                        name: "a",
+                                    },
+                                ),
+                                operation: GreaterThan,
+                                rhs: Literal(
+                                    Integer(
+                                        IntegerLiteral {
+                                            span: 7..8,
+                                            value: 1,
+                                        },
+                                    ),
+                                ),
+                            },
+                        ),
+                        body: StatementList {
+                            span: 11..17,
+                            statements: [
+                                Expression(
+                                    Call(
+                                        Call {
+                                            span: 11..16,
+                                            name: Identifier {
+                                                span: 11..14,
+                                                name: "foo",
+                                            },
+                                            arguments: [],
+                                        },
+                                    ),
+                                ),
+                            ],
+                            tail: None,
+                        },
+                        next_if: None,
+                        else_body: None,
+                    },
+                ),
+            ),
+        },
+    },
+)

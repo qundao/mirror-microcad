@@ -5,6 +5,7 @@ use microcad_syntax::tokens::{NormalToken, SpannedToken, lex};
 use test_case::test_case;
 
 #[test_case("single int", "1")]
+#[test_case("int overflow", "9999999999999999999")]
 #[test_case("single float", "1.2")]
 #[test_case("quantity int", "1mm")]
 #[test_case("quantity float", ".2mm")]
@@ -67,7 +68,11 @@ use test_case::test_case;
 #[test_case("empty tuple", "()")]
 #[test_case("qualified name", "foo::bar")]
 #[test_case("marker", "@input")]
-#[test_case("uname", "!input")]
+#[test_case("unary", "!input")]
+#[test_case("if", "if a > 1 { foo(); }")]
+#[test_case("if-else", "if a > 1 { 3 } else { 4 }")]
+#[test_case("else-if", "if a > 1 { 3 } else if a < -1 { 1 }")]
+#[test_case("else-if-else", "if a > 1 { 3 } else if a < -1 { 1 } else { 0 }")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input).unwrap();
     assert_debug_snapshot!(

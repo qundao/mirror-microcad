@@ -45,7 +45,7 @@ pub enum Expression {
     UnaryOperation(UnaryOperation),
     Block(StatementList),
     Call(Call),
-    If(Box<If>),
+    If(If),
 }
 
 impl Expression {
@@ -140,9 +140,10 @@ pub struct Call {
 #[derive(Debug, PartialEq)]
 pub struct If {
     pub span: Span,
-    pub condition: Expression,
-    pub body: Expression,
-    pub else_body: Option<Expression>,
+    pub condition: Box<Expression>,
+    pub body: StatementList,
+    pub next_if: Option<Box<If>>,
+    pub else_body: Option<StatementList>,
 }
 
 #[derive(Debug, PartialEq)]
