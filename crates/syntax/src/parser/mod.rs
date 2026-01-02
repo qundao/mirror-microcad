@@ -301,6 +301,15 @@ fn parser<'tokens>()
                 },
             );
 
+        let return_statement = just(Token::Normal(NormalToken::KeywordReturn))
+            .ignore_then(expression_parser.clone())
+            .map_with(|value, e| {
+                Statement::Return(Return {
+                    span: e.span(),
+                    value,
+                })
+            });
+
         let function = visibility
             .or_not()
             .then_ignore(just(Token::Normal(NormalToken::KeywordFn)))
@@ -325,7 +334,9 @@ fn parser<'tokens>()
                 },
             );
 
-        let with_semi = assigment.or(expression);
+        let with_semi = assigment
+            .or(return_statement)
+            .or(expression);
 
         let without_semi = function
             .or(init)
