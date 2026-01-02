@@ -1,0 +1,157 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..124,
+        statements: StatementList {
+            span: 0..124,
+            statements: [
+                Workspace(
+                    WorkspaceDefinition {
+                        span: 0..124,
+                        kind: Sketch,
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 7..12,
+                            name: "Wheel",
+                        },
+                        arguments: [
+                            ArgumentDefinition {
+                                span: 13..27,
+                                name: Identifier {
+                                    span: 13..19,
+                                    name: "radius",
+                                },
+                                ty: Some(
+                                    Single(
+                                        SingleType {
+                                            span: 21..27,
+                                            name: "Length",
+                                        },
+                                    ),
+                                ),
+                                default: None,
+                            },
+                        ],
+                        body: StatementList {
+                            span: 30..123,
+                            statements: [
+                                Init(
+                                    InitDefinition {
+                                        span: 30..91,
+                                        arguments: [
+                                            ArgumentDefinition {
+                                                span: 35..51,
+                                                name: Identifier {
+                                                    span: 35..43,
+                                                    name: "diameter",
+                                                },
+                                                ty: Some(
+                                                    Single(
+                                                        SingleType {
+                                                            span: 45..51,
+                                                            name: "Length",
+                                                        },
+                                                    ),
+                                                ),
+                                                default: None,
+                                            },
+                                        ],
+                                        body: StatementList {
+                                            span: 63..85,
+                                            statements: [
+                                                Assignment(
+                                                    Assignment {
+                                                        span: 63..84,
+                                                        name: Identifier {
+                                                            span: 63..69,
+                                                            name: "radius",
+                                                        },
+                                                        ty: None,
+                                                        value: BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 72..84,
+                                                                lhs: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 72..80,
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 72..80,
+                                                                                name: "diameter",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                                operation: Divide,
+                                                                rhs: Literal(
+                                                                    Integer(
+                                                                        IntegerLiteral {
+                                                                            span: 83..84,
+                                                                            value: 2,
+                                                                        },
+                                                                    ),
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            ],
+                                            tail: None,
+                                        },
+                                    },
+                                ),
+                                Expression(
+                                    Call(
+                                        Call {
+                                            span: 96..122,
+                                            name: QualifiedName {
+                                                span: 96..114,
+                                                parts: [
+                                                    Identifier {
+                                                        span: 96..99,
+                                                        name: "std",
+                                                    },
+                                                    Identifier {
+                                                        span: 101..106,
+                                                        name: "geo2d",
+                                                    },
+                                                    Identifier {
+                                                        span: 108..114,
+                                                        name: "Circle",
+                                                    },
+                                                ],
+                                            },
+                                            arguments: [
+                                                Positional(
+                                                    PositionArgument {
+                                                        span: 115..121,
+                                                        value: QualifiedName(
+                                                            QualifiedName {
+                                                                span: 115..121,
+                                                                parts: [
+                                                                    Identifier {
+                                                                        span: 115..121,
+                                                                        name: "radius",
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            ],
+                                        },
+                                    ),
+                                ),
+                            ],
+                            tail: None,
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

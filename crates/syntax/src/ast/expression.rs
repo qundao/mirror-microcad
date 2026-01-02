@@ -39,7 +39,6 @@ pub enum Expression {
     ArrayList(ArrayListExpression),
     String(FormatString),
     QualifiedName(QualifiedName),
-    Identifier(Identifier),
     Marker(Identifier),
     BinaryOperation(BinaryOperation),
     UnaryOperation(UnaryOperation),
@@ -58,7 +57,6 @@ impl Expression {
             Expression::ArrayList(ex) => ex.span.clone(),
             Expression::String(ex) => ex.span.clone(),
             Expression::QualifiedName(ex) => ex.span.clone(),
-            Expression::Identifier(ex) => ex.span.clone(),
             Expression::Marker(ex) => ex.span.clone(),
             Expression::BinaryOperation(ex) => ex.span.clone(),
             Expression::UnaryOperation(ex) => ex.span.clone(),
@@ -133,7 +131,7 @@ pub struct UnaryOperation {
 #[derive(Debug, PartialEq)]
 pub struct Call {
     pub span: Span,
-    pub name: Identifier,
+    pub name: QualifiedName,
     pub arguments: Vec<Argument>,
 }
 

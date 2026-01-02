@@ -62,17 +62,27 @@ Ok(
                                 BinaryOperation(
                                     BinaryOperation {
                                         span: 28..33,
-                                        lhs: Identifier(
-                                            Identifier {
+                                        lhs: QualifiedName(
+                                            QualifiedName {
                                                 span: 28..29,
-                                                name: "b",
+                                                parts: [
+                                                    Identifier {
+                                                        span: 28..29,
+                                                        name: "b",
+                                                    },
+                                                ],
                                             },
                                         ),
                                         operation: Divide,
-                                        rhs: Identifier(
-                                            Identifier {
+                                        rhs: QualifiedName(
+                                            QualifiedName {
                                                 span: 32..33,
-                                                name: "a",
+                                                parts: [
+                                                    Identifier {
+                                                        span: 32..33,
+                                                        name: "a",
+                                                    },
+                                                ],
                                             },
                                         ),
                                     },

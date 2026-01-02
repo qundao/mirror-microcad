@@ -26,10 +26,15 @@ Ok(
                         value: BinaryOperation(
                             BinaryOperation {
                                 span: 12..19,
-                                lhs: Identifier(
-                                    Identifier {
+                                lhs: QualifiedName(
+                                    QualifiedName {
                                         span: 12..13,
-                                        name: "b",
+                                        parts: [
+                                            Identifier {
+                                                span: 12..13,
+                                                name: "b",
+                                            },
+                                        ],
                                     },
                                 ),
                                 operation: Multiply,

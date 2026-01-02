@@ -25,17 +25,27 @@ Ok(
                                     expression: BinaryOperation(
                                         BinaryOperation {
                                             span: 9..23,
-                                            lhs: Identifier(
-                                                Identifier {
+                                            lhs: QualifiedName(
+                                                QualifiedName {
                                                     span: 9..13,
-                                                    name: "more",
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 9..13,
+                                                            name: "more",
+                                                        },
+                                                    ],
                                                 },
                                             ),
                                             operation: Add,
-                                            rhs: Identifier(
-                                                Identifier {
+                                            rhs: QualifiedName(
+                                                QualifiedName {
                                                     span: 16..23,
-                                                    name: "complex",
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 16..23,
+                                                            name: "complex",
+                                                        },
+                                                    ],
                                                 },
                                             ),
                                         },

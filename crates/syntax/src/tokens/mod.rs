@@ -57,6 +57,8 @@ pub enum NormalToken<'a> {
     KeywordConst,
     #[token("prop")]
     KeywordProp,
+    #[token("init")]
+    KeywordInit,
 
     #[regex("_*[a-zA-Z][_a-zA-Z0-9-']*")]
     Identifier(&'a str),

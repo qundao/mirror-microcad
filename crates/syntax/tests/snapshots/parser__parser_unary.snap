@@ -13,10 +13,15 @@ Ok(
                     UnaryOperation {
                         span: 0..6,
                         operation: Not,
-                        rhs: Identifier(
-                            Identifier {
+                        rhs: QualifiedName(
+                            QualifiedName {
                                 span: 1..6,
-                                name: "input",
+                                parts: [
+                                    Identifier {
+                                        span: 1..6,
+                                        name: "input",
+                                    },
+                                ],
                             },
                         ),
                     },

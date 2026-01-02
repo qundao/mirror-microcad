@@ -264,6 +264,43 @@ fn parser<'tokens>()
         }
         .labelled("visibility");
 
+        let workspace_kind = select_ref! {
+            Token::Normal(NormalToken::KeywordSketch) => WorkspaceKind::Sketch,
+            Token::Normal(NormalToken::KeywordPart) => WorkspaceKind::Part,
+            Token::Normal(NormalToken::KeywordOp) => WorkspaceKind::Op,
+        };
+
+        let init = just(Token::Normal(NormalToken::KeywordInit))
+            .ignore_then(arguments.clone())
+            .then(block.clone())
+            .map_with(|(arguments, body), e| {
+                Statement::Init(InitDefinition {
+                    span: e.span(),
+                    arguments,
+                    body,
+                })
+            });
+
+        let workspace = visibility.clone()
+            .or_not()
+            .then(workspace_kind)
+            .then(identifier_parser)
+            .then(arguments.clone())
+            .then(block.clone())
+            .map_with(
+                |((((visibility, kind), name), arguments), body), e| {
+                    Statement::Workspace(WorkspaceDefinition {
+                        span: e.span(),
+                        kind,
+                        attributes: Vec::new(), // todo
+                        visibility,
+                        name,
+                        arguments,
+                        body
+                    })
+                },
+            );
+
         let function = visibility
             .or_not()
             .then_ignore(just(Token::Normal(NormalToken::KeywordFn)))
@@ -290,7 +327,10 @@ fn parser<'tokens>()
 
         let with_semi = assigment.or(expression);
 
-        let without_semi = function.or(comment);
+        let without_semi = function
+            .or(init)
+            .or(workspace)
+            .or(comment);
 
         with_semi
             .then_ignore(just(Token::Normal(NormalToken::SigilSemiColon)).labelled("semicolon"))
@@ -315,17 +355,16 @@ fn parser<'tokens>()
 
     expression_parser.define({
         let literal = literal_parser.map(Expression::Literal).labelled("literal");
-        let ident = identifier_parser.map(Expression::Identifier);
 
         let qualified_name = identifier_parser
             .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
-            .at_least(2)
+            .at_least(1)
             .collect::<Vec<_>>()
             .map_with(|parts, e| {
-                Expression::QualifiedName(QualifiedName {
+                QualifiedName {
                     span: e.span(),
                     parts,
-                })
+                }
             })
             .labelled("qualified name");
 
@@ -409,7 +448,7 @@ fn parser<'tokens>()
             })
             .labelled("array");
 
-        let call = identifier_parser
+        let call = qualified_name.clone()
             .then(tuple_body)
             .map_with(|(name, args), e| {
                 Expression::Call(Call {
@@ -464,11 +503,25 @@ fn parser<'tokens>()
         );
         let if_expression = if_inner.map(Expression::If).labelled("if expression");
 
+        let qualified_name_expr = identifier_parser.clone()
+            .map_with(|ident, e| QualifiedName {
+                span: e.span(),
+                parts: vec![ident],
+            })
+            .foldl_with(
+                just(Token::Normal(NormalToken::SigilDoubleColon)).ignore_then(identifier_parser.clone()).repeated(),
+                |mut acc, part, _| {
+                    acc.span.end = part.span.end;
+                    acc.parts.push(part);
+                    acc
+                }
+            )
+            .map(Expression::QualifiedName);
+
         let base = literal
             .or(string_format)
             .or(call)
-            .or(qualified_name)
-            .or(ident)
+            .or(qualified_name_expr)
             .or(marker)
             .or(bracketed)
             .or(tuple)

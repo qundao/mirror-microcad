@@ -1,0 +1,93 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..58,
+        statements: StatementList {
+            span: 0..58,
+            statements: [
+                Workspace(
+                    WorkspaceDefinition {
+                        span: 0..58,
+                        kind: Sketch,
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 7..12,
+                            name: "Wheel",
+                        },
+                        arguments: [
+                            ArgumentDefinition {
+                                span: 13..27,
+                                name: Identifier {
+                                    span: 13..19,
+                                    name: "radius",
+                                },
+                                ty: Some(
+                                    Single(
+                                        SingleType {
+                                            span: 21..27,
+                                            name: "Length",
+                                        },
+                                    ),
+                                ),
+                                default: None,
+                            },
+                        ],
+                        body: StatementList {
+                            span: 30..57,
+                            statements: [
+                                Expression(
+                                    Call(
+                                        Call {
+                                            span: 30..56,
+                                            name: QualifiedName {
+                                                span: 30..48,
+                                                parts: [
+                                                    Identifier {
+                                                        span: 30..33,
+                                                        name: "std",
+                                                    },
+                                                    Identifier {
+                                                        span: 35..40,
+                                                        name: "geo2d",
+                                                    },
+                                                    Identifier {
+                                                        span: 42..48,
+                                                        name: "Circle",
+                                                    },
+                                                ],
+                                            },
+                                            arguments: [
+                                                Positional(
+                                                    PositionArgument {
+                                                        span: 49..55,
+                                                        value: QualifiedName(
+                                                            QualifiedName {
+                                                                span: 49..55,
+                                                                parts: [
+                                                                    Identifier {
+                                                                        span: 49..55,
+                                                                        name: "radius",
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            ],
+                                        },
+                                    ),
+                                ),
+                            ],
+                            tail: None,
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

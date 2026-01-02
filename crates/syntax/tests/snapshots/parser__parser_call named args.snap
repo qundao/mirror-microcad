@@ -12,9 +12,14 @@ Ok(
                 Call(
                     Call {
                         span: 0..17,
-                        name: Identifier {
+                        name: QualifiedName {
                             span: 0..3,
-                            name: "foo",
+                            parts: [
+                                Identifier {
+                                    span: 0..3,
+                                    name: "foo",
+                                },
+                            ],
                         },
                         arguments: [
                             Named(

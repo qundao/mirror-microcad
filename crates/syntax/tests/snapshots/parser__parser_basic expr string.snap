@@ -22,10 +22,15 @@ Ok(
                             Expression(
                                 StringExpression {
                                     span: 13..14,
-                                    expression: Identifier(
-                                        Identifier {
+                                    expression: QualifiedName(
+                                        QualifiedName {
                                             span: 9..13,
-                                            name: "with",
+                                            parts: [
+                                                Identifier {
+                                                    span: 9..13,
+                                                    name: "with",
+                                                },
+                                            ],
                                         },
                                     ),
                                     accuracy: None,

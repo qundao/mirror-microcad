@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
@@ -57,10 +57,15 @@ Ok(
                                     BinaryOperation(
                                         BinaryOperation {
                                             span: 16..21,
-                                            lhs: Identifier(
-                                                Identifier {
+                                            lhs: QualifiedName(
+                                                QualifiedName {
                                                     span: 16..17,
-                                                    name: "a",
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 16..17,
+                                                            name: "a",
+                                                        },
+                                                    ],
                                                 },
                                             ),
                                             operation: Multiply,

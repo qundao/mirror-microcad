@@ -12,18 +12,28 @@ Ok(
                 Call(
                     Call {
                         span: 0..16,
-                        name: Identifier {
+                        name: QualifiedName {
                             span: 0..3,
-                            name: "foo",
+                            parts: [
+                                Identifier {
+                                    span: 0..3,
+                                    name: "foo",
+                                },
+                            ],
                         },
                         arguments: [
                             Positional(
                                 PositionArgument {
                                     span: 4..5,
-                                    value: Identifier(
-                                        Identifier {
+                                    value: QualifiedName(
+                                        QualifiedName {
                                             span: 4..5,
-                                            name: "a",
+                                            parts: [
+                                                Identifier {
+                                                    span: 4..5,
+                                                    name: "a",
+                                                },
+                                            ],
                                         },
                                     ),
                                 },

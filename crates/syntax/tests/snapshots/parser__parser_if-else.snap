@@ -15,10 +15,15 @@ Ok(
                         condition: BinaryOperation(
                             BinaryOperation {
                                 span: 3..8,
-                                lhs: Identifier(
-                                    Identifier {
+                                lhs: QualifiedName(
+                                    QualifiedName {
                                         span: 3..4,
-                                        name: "a",
+                                        parts: [
+                                            Identifier {
+                                                span: 3..4,
+                                                name: "a",
+                                            },
+                                        ],
                                     },
                                 ),
                                 operation: GreaterThan,
