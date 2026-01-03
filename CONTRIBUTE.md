@@ -54,7 +54,7 @@ cargo build
 ### Install µcad locally from source
 
 ```sh
-cargo install --path tools/cli
+cargo install --path crates/cli
 ```
 
 ### Contributing to User Manual
