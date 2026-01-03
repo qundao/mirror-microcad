@@ -5,36 +5,15 @@ Provides the syntax highlighting and LSP integration for microcad language plugi
 ## Manual installation
 
 ```sh
-sudo npm install -g vsce # Install Visual Studio Code Extension via `npm`
-sudo npm install -g typescript --save-dev # Install type script
+cd editors/vscode
+npm install
+npm run package
 ```
 
-Assuming the current directory is the `microcad` repository root, install this plugin manually with:
-
-```sh
-ln -s editors/vscode ~/.vscode/extensions/
+Open VS Code Command Palette (F1, Ctrl+Shift+P or Cmd+Shift+P) and select
+```
+> Developer: Install Extension from Location…
 ```
 
-### Build VSIX package
-
-```sh
-sudo npm install -g @vscode/vsce
-npm install vscode-languageclient 
-vsce package
-```
-
-This will produce a package `microcad-0.0.1.vsix`.
-
-### Install VSIX in VSCode
-
-```sh
-code --install-extension microcad-0.0.1.vsix 
-```
-
-This will install Extension `microcad-0.0.1.vsix` was successfully installed.
-
-## Release Notes
-
-### 0.0.1
-
-Initial release of microcad-syntax.
+Select the this folder `<root>/editors/vscode` to install the extension.
+Future builds (e.g. after running `npm run package`) from this folder will be picked up by VS Code on extenstion reload.
