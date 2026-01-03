@@ -2,6 +2,14 @@
 
 This crate provides the viewer to view µcad files.
 
+## Requirements
+
+On Debian systems using wayland, install the wayland libraries first before compiling:
+
+```µcad
+sudo apt install libwayland-dev
+```
+
 ## Run
 
 Start the microcad viewer by typing `microcad-viewer` into your console.
