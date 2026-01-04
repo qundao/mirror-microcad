@@ -83,6 +83,13 @@ If it is not yet installed, you can install it with:
 microcad install std
 ```
 
+On first use, µcad requires its standard library.  
+If it is not yet installed, you can install it with:
+
+```sh
+microcad install std
+```
+
 
 ## Command line usage
 
