@@ -32,6 +32,8 @@ pub fn run_test(env: Option<TestEnv>) {
         let _ = fs::hard_link("images/parse_fail.svg", env.banner_file());
 
         env.start_log();
+        // insert UTF-8 Byte Order Mark (BOM)
+        env.log_ln(std::str::from_utf8(&[0xEF_u8, 0xBB_u8, 0xBF_u8]).expect("test error"));
 
         env.log_ln(&format!("-- Test --\n{env:?}"));
         env.log_ln(&format!(
