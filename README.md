@@ -20,6 +20,7 @@ Feel free to [contribute](CONTRIBUTE.md) by opening issues or pull requests.
 - [First Example](#first-example)
 - [Installation](#installation)
 - [Command line usage](#command-line-usage)
+- [Using the viewer](#using-the-viewer)
 - [Documentation](#documentation)
 - [💚 Funded by](#-funded-by)
 
@@ -41,7 +42,7 @@ it are with [`cargo install`](#installation) or from the source code (see sectio
 
 ## First Example
 
-The following µcad source code defines a *part* called `csg_cube`, which has a body of a cube with
+The following µcad source code defines a *part* called `CsgCube`, which has a body of a cube with
 rounded corners and three cylinders as holes:
 
 ![csg_cube](examples/csg_cube.png)
@@ -67,7 +68,7 @@ the [manifold geometry library](https://github.com/elalish/manifold).
 For example, *Debian* based *Linux* distributions use the following line:
 
 ```sh
-sudo apt install ninja-build
+sudo apt install ninja-build cmake
 ```
 
 To install the latest release of *µcad* via *cargo*, type:
@@ -88,7 +89,7 @@ microcad install std
 After installing, you can run a basic example by typing:
 
 ```sh
-microcad eval ./examples/bricks/brick.µcad
+microcad eval ./examples/bricks/brick
 ```
 
 This will *evaluate* the input file and will output the model tree.
@@ -97,7 +98,7 @@ The *evaluate* command will not export the output geometry.
 To generate an STL model file use the `export` command with an additional output file name:
 
 ```sh
-microcad export ./examples/bricks/brick.µcad
+microcad export ./examples/bricks/brick
 ```
 
 The file [`brick.µcad`](examples/bricks/brick.µcad) generate a file called`brick.stl`
@@ -106,6 +107,20 @@ which can be displayed e.g. with [MeshLab](https://www.meshlab.net/).
 The resulting STL mesh looks like this:
 
 ![Parametric Bricks](examples/bricks/bricks.png)
+
+## Using the viewer
+
+To install the latest release of the µcad viewer via *cargo*, type:
+
+```sh
+cargo install microcad-viewer
+```
+
+You can run the viewer with a file:
+
+```sh
+microcad-viewer ./examples/bricks/brick
+```
 
 ## Documentation
 

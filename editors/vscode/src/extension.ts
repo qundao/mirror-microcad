@@ -89,24 +89,25 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     );
 
-    const hidePreviewCmd = vscode.commands.registerCommand(
-        "microcad.hidePreview",
+    const minimizePreviewCmd = vscode.commands.registerCommand(
+        "microcad.minimizePreview",
         async () => {
             if (!client) { return; }
             try {
                 const result = await client.sendRequest("workspace/executeCommand", {
-                    command: "microcad.hidePreview",
+                    command: "microcad.minimizePreview",
                     arguments: []
                 });
 
-                vscode.window.showInformationMessage("Hide Preview requested.");
+                vscode.window.showInformationMessage("Minimize Preview requested.");
             } catch (err) {
-                vscode.window.showErrorMessage("Hide Preview failed: " + err);
+                vscode.window.showErrorMessage("Minimize Preview failed: " + err);
             }
         }
     );
 
     context.subscriptions.push(showPreviewCmd);
+    context.subscriptions.push(minimizePreviewCmd);
     context.subscriptions.push(client);
 
     vscode.window.onDidChangeActiveTextEditor((editor) => {

@@ -101,22 +101,25 @@ pub fn handle_stdin_messages(
                 Exit => {
                     exit.write(AppExit::Success);
                 }
-                ViewerRequest::Show => {
-                    let mut window = windows.single_mut().expect("A window");
-                    window.visible = true;
-                }
-                ViewerRequest::Hide => {
-                    let mut window = windows.single_mut().expect("A window");
-                    window.visible = false;
-                }
+                Restore => match windows.single_mut() {
+                    Ok(mut window) => {
+                        window.set_minimized(false);
+                    }
+                    Err(e) => log::error!("{e}"),
+                },
+                Minimize => match windows.single_mut() {
+                    Ok(mut window) => window.set_minimized(true),
+                    Err(e) => log::error!("{e}"),
+                },
             }
         }
+    }
+
+    if let Ok(mut window) = windows.single_mut() {
+        state.update_window_settings(&mut window);
     }
 
     for request in requests {
         state.processor.send_request(request).expect("No error");
     }
-
-    let mut window = windows.single_mut().expect("Some window");
-    state.update_window_settings(&mut window);
 }

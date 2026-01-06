@@ -3,9 +3,9 @@
 
 //! Viewer IPC interface
 
-use std::path::PathBuf;
 use miette::IntoDiagnostic;
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 /// The cursor position to be sent.
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -39,9 +39,9 @@ pub enum ViewerRequest {
         end: Option<CursorPosition>,
     },
     /// Hide window.
-    Show,
+    Restore,
     /// Hide window.
-    Hide,
+    Minimize,
     /// Set zoom level to 100%, so we can see the entire model.
     ZoomToFit,
     /// Exit viewer process.
@@ -99,6 +99,7 @@ impl ViewerProcessInterface {
             }
             let mut child = command
                 .arg("--stay-on-top")
+                .arg("-v")
                 .arg("stdin://") // run the viewer as slave via stdin.
                 .current_dir(std::env::current_dir().expect("current dir"))
                 .stdin(std::process::Stdio::piped())
@@ -123,19 +124,17 @@ impl ViewerProcessInterface {
             });
 
             // Thread to write requests
-            std::thread::spawn(move || {
-                loop {
-                    for req in &rx {
-                        use std::io::Write;
-                        match serde_json::to_string(&req) {
-                            Ok(json) => {
-                                log::debug!("Write request as json: {json}");
-                                writeln!(stdin, "{}", json).expect("io error");
-                                stdin.flush().expect("io error");
-                            }
-                            Err(_) => todo!(),
-                        };
-                    }
+            std::thread::spawn(move || loop {
+                for req in &rx {
+                    use std::io::Write;
+                    match serde_json::to_string(&req) {
+                        Ok(json) => {
+                            log::debug!("Write request as json: {json}");
+                            writeln!(stdin, "{}", json).expect("io error");
+                            stdin.flush().expect("io error");
+                        }
+                        Err(_) => todo!(),
+                    };
                 }
             });
 

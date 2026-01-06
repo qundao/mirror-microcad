@@ -3,13 +3,16 @@
 
 //! µcad viewer
 
+use std::time::Duration;
+
 use bevy::{
-    DefaultPlugins,
     app::App,
     render::{
-        RenderApp,
         batching::gpu_preprocessing::{GpuPreprocessingMode, GpuPreprocessingSupport},
+        RenderApp,
     },
+    winit::UpdateMode,
+    DefaultPlugins,
 };
 use clap::Parser;
 use miette::IntoDiagnostic;
@@ -72,7 +75,8 @@ impl Args {
                         };
 
                         // Canonicalize the path if relative
-                        let path = Path::new(path_part);
+                        let path = microcad_lang::resolve::microcad_file_path(path_part)
+                            .map_err(|err| miette::miette!("{err}"))?;
                         let canonical_path: PathBuf = if path.is_absolute() {
                             path.to_path_buf()
                         } else {
@@ -124,6 +128,19 @@ fn main() {
         .init();
 
     let url = args.input_as_url();
+    let url = match &url {
+        Ok(url) => url.clone(),
+        Err(err) => {
+            log::error!(
+                "{err} ({input})",
+                input = match &args.input {
+                    Some(input) => format!("({input})"),
+                    None => String::new(),
+                }
+            );
+            None
+        }
+    };
 
     let mut config = Config {
         search_paths: args.search_paths,
@@ -142,12 +159,13 @@ fn main() {
     let mut app = App::new();
     app
         // Power-saving reactive rendering for applications.
-        .insert_resource(bevy::winit::WinitSettings::desktop_app())
+        .insert_resource(bevy::winit::WinitSettings {
+            focused_mode: UpdateMode::reactive(Duration::from_millis(1000 / 60)),
+            unfocused_mode: UpdateMode::reactive_low_power(Duration::from_millis(1000 / 10)),
+        })
         .add_plugins(DefaultPlugins)
         .add_plugins(MicrocadPlugin {
-            input: url
-                .expect("A valid URL")
-                .map(|url| MicrocadPluginInput::from_url(url).expect("Valid URL")),
+            input: url.map(|url| MicrocadPluginInput::from_url(url).expect("Valid URL")),
             config,
         });
 

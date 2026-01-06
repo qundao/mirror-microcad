@@ -125,7 +125,6 @@ impl MicrocadPluginInput {
             s.push_str(frag);
         }
 
-        log::error!("Input URL: {s}");
         s
     }
 }
@@ -160,7 +159,9 @@ impl Plugin for MicrocadPlugin {
     }
 }
 
-fn apply_window_settings(view_model: Res<ViewModel>, mut windows: Query<&mut Window>) {
-    let mut window = windows.single_mut().expect("Some window");
-    view_model.update_window_settings(&mut window);
+fn apply_window_settings(state: Res<ViewModel>, mut windows: Query<&mut Window>) {
+    match windows.single_mut() {
+        Ok(mut window) => state.update_window_settings(&mut window),
+        Err(e) => log::error!("{e}"),
+    }
 }

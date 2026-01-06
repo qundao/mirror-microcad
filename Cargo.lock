@@ -5345,6 +5345,7 @@ name = "microcad-viewer-ipc"
 version = "0.2.19"
 dependencies = [
  "crossbeam",
+ "env_logger",
  "log",
  "microcad-builtin",
  "microcad-core",
