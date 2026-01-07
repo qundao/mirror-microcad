@@ -30,8 +30,8 @@ more often this would shorten things quite a lot:
 use std::geo3d::Sphere;
 use std::geo3d::Cube;
 
-Circle(radius = 4mm);
-Rect(size = 40mm);
+Sphere(radius = 4mm);
+Cube(size = 40mm);
 ```
 
 Alternatively you can use the whole *module* `geo3d` at once and would get rid
@@ -42,7 +42,7 @@ of the `std::` part within the names:
 ```µcad,use_module
 use std::geo3d;
 
-geo2d::Circle(radius = 40mm);
+geo3d::Sphere(radius = 40mm);
 ```
 
 ## Use As Statement
@@ -56,7 +56,7 @@ If name conflicts occur a way to deal with this is to explicitly name the
 [![test](.test/use_as.svg)](.test/use_as.log)
 
 ```µcad,use_as
-use std::geo2d::Circle as Disk;
+use std::geo3d::Sphere as Disk;
 
 Disk(radius = 4mm);
 ```
@@ -68,7 +68,7 @@ Of course you can use `use as` with a whole *module*:
 ```µcad,use_as_module
 use std::geo3d as space;
 
-space::Circle(radius = 4mm);
+space::Sphere(radius = 4mm);
 ```
 
 ## Use All Statement
@@ -102,6 +102,6 @@ mod my {
     pub use std::geo3d::Cube;
 }
 
-my::Circle(radius = 4mm);
-my::Rect(size = 40mm);
+my::Sphere(radius = 4mm);
+my::Cube(size = 40mm);
 ```

@@ -10,42 +10,37 @@
   30:   use std::geo3d::Sphere;
   31:   use std::geo3d::Cube;
   32:   
-  33:   Circle(radius = 4mm);
-  34:   Rect(size = 40mm);
+  33:   Sphere(radius = 4mm);
+  34:   Cube(size = 40mm);
 
 -- No Output --
--- Errors --
-  × error: 4:1: Symbol Circle not found.
-    ╭─[../books/language/src/structure/use.md:33:1]
- 32 │ 
- 33 │ Circle(radius = 4mm);
-    · ──────────┬─────────
-    ·           ╰── error: 4:1: Symbol Circle not found.
- 34 │ Rect(size = 40mm);
-    ╰────
-  × error: 5:1: Symbol Rect not found.
-    ╭─[../books/language/src/structure/use.md:34:1]
- 33 │ Circle(radius = 4mm);
- 34 │ Rect(size = 40mm);
-    · ────────┬────────
-    ·         ╰── error: 5:1: Symbol Rect not found.
-    ╰────
-  ⚠ warning: 2:5: Unused global symbol std::geo3d::Cube.
-    ╭─[../books/language/src/structure/use.md:31:5]
- 30 │ use std::geo3d::Sphere;
- 31 │ use std::geo3d::Cube;
-    ·     ────────┬───────
-    ·             ╰── warning: 2:5: Unused global symbol std::geo3d::Cube.
- 32 │ 
-    ╰────
-  ⚠ warning: 1:5: Unused global symbol std::geo3d::Sphere.
-    ╭─[../books/language/src/structure/use.md:30:5]
- 30 │ use std::geo3d::Sphere;
-    ·     ─────────┬────────
-    ·              ╰── warning: 1:5: Unused global symbol std::geo3d::Sphere.
- 31 │ use std::geo3d::Cube;
-    ╰────
-Unexpected error(s) which did occur in line(s): 33, 34
-Unexpected warnings(s) which did occur in line(s): 30, 31
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(part) std::geo3d::Sphere(radius=4mm) ->
+      - radius = 4mm
+      Primitive3D __builtin::geo3d::Sphere(radius=4mm) ->
+    Workpiece(part) std::geo3d::Cube(size=40mm) ->
+      - size_x = 40mm
+      - size_y = 40mm
+      - size_z = 40mm
+      Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20mm) ->
+        - x = 0mm
+        - y = 0mm
+        - z = -20mm
+        Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20mm) ->
+          Workpiece(op) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) ->
+            - height = 40mm
+            - scale = (x=1, y=1)
+            - twist = 0rad
+            Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) ->
+              Workpiece(sketch) std::geo2d::Rect(height=40mm, width=40mm) ->
+                - height = 40mm
+                - width = 40mm
+                - x = -20mm
+                - y = -20mm
+                Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) ->
+
+Export of "../books/language/src/structure/.test/use-out.stl" successful.
 -- Test Result --
-FAILS
+OK

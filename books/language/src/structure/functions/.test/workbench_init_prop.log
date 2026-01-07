@@ -21,7 +21,7 @@
   88:       // Accessing property in a function is ok
   89:       fn inner() { radius/2 }
   90:   
-  91:       Circle(radius) - Circle(inner());
+  91:       Circle(radius) - Circle(radius = inner());
   92:   }
   93:   
   94:   PunchedDisk(diameter=1cm);

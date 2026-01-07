@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**183** tests have been evaluated with version **0.2.20** of microcad.
+**187** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -39,7 +39,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../.test/attributes_simple_example.svg)](../.test/attributes_simple_example.log) | [attributes_simple_example](../attributes.md) |
 | [![test](../types/.test/boolean.svg)](../types/.test/boolean.log) | [boolean](../types/primitives.md) |
 | [![test](../expressions/.test/boolean_literal.svg)](../expressions/.test/boolean_literal.log) | [boolean_literal](../expressions/literals.md) |
-| [![test](../structure/workbenches/.test/building_plan.svg)](../structure/workbenches/.test/building_plan.log) | [building_plan](../structure/workbenches/README.md) |
+| [![test](../structure/workbenches/.test/building_plan.svg)](../structure/workbenches/.test/building_plan.log) | [building_plan](../structure/workbenches/building_plan.md) |
 | [![test](../libraries/builtin/.test/builtin_debug_assert_false.svg)](../libraries/builtin/.test/builtin_debug_assert_false.log) | [builtin_debug_assert_false](../libraries/builtin/debug.md) |
 | [![test](../libraries/builtin/.test/builtin_debug_assert_true.svg)](../libraries/builtin/.test/builtin_debug_assert_true.log) | [builtin_debug_assert_true](../libraries/builtin/debug.md) |
 | [![test](../libraries/builtin/.test/builtin_extrude.svg)](../libraries/builtin/.test/builtin_extrude.log) | [builtin_extrude](../libraries/builtin/ops.md) |
@@ -53,9 +53,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/argument_match/.test/call_match.svg)](../flow/argument_match/.test/call_match.log) | [call_match](../flow/argument_match/README.md) |
 | [![test](../flow/calls/.test/call_workbench.svg)](../flow/calls/.test/call_workbench.log) | [call_workbench](../flow/calls/README.md) |
 | [![test](../flow/.test/chained_if_statement.svg)](../flow/.test/chained_if_statement.log) | [chained_if_statement](../flow/conditions.md) |
-| [![test](../structure/workbenches/.test/code.svg)](../structure/workbenches/.test/code.log) | [code](../structure/workbenches/README.md) |
-| [![test](../structure/workbenches/.test/code_between_initializers.svg)](../structure/workbenches/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/README.md) |
-| [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/README.md) |
+| [![test](../structure/workbenches/.test/code.svg)](../structure/workbenches/.test/code.log) | [code](../structure/workbenches/building_code.md) |
+| [![test](../structure/workbenches/.test/code_between_initializers.svg)](../structure/workbenches/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/init_code.md) |
+| [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/building_code.md) |
 | [![test](../doc/.test/comment.svg)](../doc/.test/comment.log) | [comment](../doc/comments.md) |
 | [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
@@ -83,9 +83,10 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/if_expression.svg)](../expressions/.test/if_expression.log) | [if_expression](../expressions/README.md) |
 | [![test](../flow/.test/if_functions.svg)](../flow/.test/if_functions.log) | [if_functions](../flow/conditions.md) |
 | [![test](../flow/.test/if_statement.svg)](../flow/.test/if_statement.log) | [if_statement](../flow/conditions.md) |
-| [![test](../structure/workbenches/.test/illegal_workbench_statement.svg)](../structure/workbenches/.test/illegal_workbench_statement.log) | [illegal_workbench_statement](../structure/workbenches/README.md) |
-| [![test](../structure/workbenches/.test/init_property.svg)](../structure/workbenches/.test/init_property.log) | [init_property](../structure/workbenches/README.md) |
-| [![test](../structure/workbenches/.test/initializers.svg)](../structure/workbenches/.test/initializers.log) | [initializers](../structure/workbenches/README.md) |
+| [![test](../structure/workbenches/.test/illegal_workbench_statement_mod.svg)](../structure/workbenches/.test/illegal_workbench_statement_mod.log) | [illegal_workbench_statement_mod](../structure/workbenches/building_code.md) |
+| [![test](../structure/workbenches/.test/illegal_workbench_statement_return.svg)](../structure/workbenches/.test/illegal_workbench_statement_return.log) | [illegal_workbench_statement_return](../structure/workbenches/building_code.md) |
+| [![test](../structure/workbenches/.test/illegal_workbench_statement_sketch.svg)](../structure/workbenches/.test/illegal_workbench_statement_sketch.log) | [illegal_workbench_statement_sketch](../structure/workbenches/building_code.md) |
+| [![test](../structure/workbenches/.test/init_property.svg)](../structure/workbenches/.test/init_property.log) | [init_property](../structure/workbenches/initializers.md) |
 | [![test](../structure/workbenches/.test/input.svg)](../structure/workbenches/.test/input.log) | [input](../structure/workbenches/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../structure/modules/.test/internal_mod.svg)](../structure/modules/.test/internal_mod.log) | [internal_mod](../structure/modules/internal_modules.md) |
@@ -95,12 +96,13 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/math/.test/math_trigonometric.svg)](../libraries/std/math/.test/math_trigonometric.log) | [math_trigonometric](../libraries/std/math/README.md) |
 | [![test](../types/models/.test/measure.svg)](../types/models/.test/measure.log) | [measure](../types/models/measures.md) |
 | [![test](../libraries/std/ops/.test/mirror_3d.svg)](../libraries/std/ops/.test/mirror_3d.log) | [mirror_3d](../libraries/std/ops/mirror.md) |
-| [![test](../structure/workbenches/.test/missed_property.svg)](../structure/workbenches/.test/missed_property.log) | [missed_property](../structure/workbenches/README.md) |
+| [![test](../structure/workbenches/.test/missed_property.svg)](../structure/workbenches/.test/missed_property.log) | [missed_property](../structure/workbenches/initializers.md) |
 | [![test](../structure/functions/.test/mod.svg)](../structure/functions/.test/mod.log) | [mod](../structure/functions/module_functions.md) |
 | [![test](../structure/modules/.test/mod_example.svg)](../structure/modules/.test/mod_example.log) | [mod_example](../structure/modules/README.md) |
 | [![test](../flow/argument_match/.test/multiplicity_arrays.svg)](../flow/argument_match/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/argument_match/multiplicity.md) |
 | [![test](../flow/argument_match/.test/multiplicity_tuple_array.svg)](../flow/argument_match/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/argument_match/multiplicity.md) |
 | [![test](../types/collections/tuples/.test/named_tuple_access.svg)](../types/collections/tuples/.test/named_tuple_access.log) | [named_tuple_access](../types/collections/tuples/README.md) |
+| [![test](../structure/workbenches/.test/no_building_plan_in_initializers.svg)](../structure/workbenches/.test/no_building_plan_in_initializers.log) | [no_building_plan_in_initializers](../structure/workbenches/init_code.md) |
 | [![test](../flow/argument_match/.test/no_multiplicity.svg)](../flow/argument_match/.test/no_multiplicity.log) | [no_multiplicity](../flow/argument_match/multiplicity.md) |
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
 | [![test](../structure/workbenches/.test/op_example.svg)](../structure/workbenches/.test/op_example.log) | [op_example](../structure/workbenches/operations.md) |
@@ -109,10 +111,12 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/orient_3d.svg)](../libraries/std/ops/.test/orient_3d.log) | [orient_3d](../libraries/std/ops/orient.md) |
 | [![test](../structure/workbenches/.test/parameters.svg)](../structure/workbenches/.test/parameters.log) | [parameters](../structure/workbenches/operations.md) |
 | [![test](../structure/workbenches/.test/part_basic.svg)](../structure/workbenches/.test/part_basic.log) | [part_basic](../structure/workbenches/parts.md) |
-| [![test](../structure/workbenches/.test/part_declaration.svg)](../structure/workbenches/.test/part_declaration.log) | [part_declaration](../structure/workbenches/README.md) |
-| [![test](../structure/workbenches/.test/pre_init_code.svg)](../structure/workbenches/.test/pre_init_code.log) | [pre_init_code](../structure/workbenches/README.md) |
-| [![test](../structure/workbenches/.test/property.svg)](../structure/workbenches/.test/property.log) | [property](../structure/workbenches/README.md) |
-| [![test](../structure/workbenches/.test/property_wrong.svg)](../structure/workbenches/.test/property_wrong.log) | [property_wrong](../structure/workbenches/README.md) |
+| [![test](../structure/workbenches/.test/part_declaration.svg)](../structure/workbenches/.test/part_declaration.log) | [part_declaration](../structure/workbenches/elements.md) |
+| [![test](../structure/workbenches/.test/pre_init_code.svg)](../structure/workbenches/.test/pre_init_code.log) | [pre_init_code](../structure/workbenches/init_code.md) |
+| [![test](../structure/workbenches/.test/property.svg)](../structure/workbenches/.test/property.log) | [property](../structure/workbenches/properties.md) |
+| [![test](../structure/workbenches/.test/property_no_prop_in_init_code.svg)](../structure/workbenches/.test/property_no_prop_in_init_code.log) | [property_no_prop_in_init_code](../structure/workbenches/properties.md) |
+| [![test](../structure/workbenches/.test/property_no_prop_in_initializer.svg)](../structure/workbenches/.test/property_no_prop_in_initializer.log) | [property_no_prop_in_initializer](../structure/workbenches/properties.md) |
+| [![test](../structure/workbenches/.test/property_wrong.svg)](../structure/workbenches/.test/property_wrong.log) | [property_wrong](../structure/workbenches/properties.md) |
 | [![test](../assignments/.test/pub_assignment.svg)](../assignments/.test/pub_assignment.log) | [pub_assignment](../assignments/pub.md) |
 | [![test](../assignments/.test/pub_assignment_workbench.svg)](../assignments/.test/pub_assignment_workbench.log) | [pub_assignment_workbench](../assignments/pub.md) |
 | [![test](../expressions/.test/quantity_literal.svg)](../expressions/.test/quantity_literal.log) | [quantity_literal](../expressions/literals.md) |

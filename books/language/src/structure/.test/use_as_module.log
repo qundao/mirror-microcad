@@ -9,25 +9,16 @@
 
   69:   use std::geo3d as space;
   70:   
-  71:   space::Circle(radius = 4mm);
+  71:   space::Sphere(radius = 4mm);
 
 -- No Output --
--- Errors --
-  × error: 3:1: Symbol space::Circle not found.
-    ╭─[../books/language/src/structure/use.md:71:1]
- 70 │ 
- 71 │ space::Circle(radius = 4mm);
-    · ─────────────┬─────────────
-    ·              ╰── error: 3:1: Symbol space::Circle not found.
-    ╰────
-  ⚠ warning: 1:5: Unused global symbol std::geo3d.
-    ╭─[../books/language/src/structure/use.md:69:5]
- 69 │ use std::geo3d as space;
-    ·     ─────┬────
-    ·          ╰── warning: 1:5: Unused global symbol std::geo3d.
- 70 │ 
-    ╰────
-Unexpected error(s) which did occur in line(s): 71
-Unexpected warnings(s) which did occur in line(s): 69
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(part) std::geo3d::Sphere(radius=4mm) ->
+      - radius = 4mm
+      Primitive3D __builtin::geo3d::Sphere(radius=4mm) ->
+
+Export of "../books/language/src/structure/.test/use_as_module-out.stl" successful.
 -- Test Result --
-FAILS
+OK

@@ -2,27 +2,27 @@
 -- Test --
         Test name: property_wrong
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/README.md:302
+      Source file: ../books/language/src/structure/workbenches/properties.md:39
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 302:   sketch Wheel(outer: Length) {
- 303:       use std::geo2d::Circle;
- 304:   
- 305:       // `inner` is declared as variable and may not be read
- 306:       // from outside this workbench
- 307:       inner = outer / 2;
- 308:   
- 309:       Circle(r = outer) - Circle(r = inner);
- 310:   }
- 311:   
- 312:   t = Wheel(1cm);
- 313:   
- 314:   // you can still extract and display `outer`
- 315:   std::print("outer: {t.outer}");
- 316:   // but you cannot access `inner` anymore
- 317:   std::print("inner: {t.inner}"); // error
+  39:   sketch Wheel(outer: Length) {
+  40:       use std::geo2d::Circle;
+  41:   
+  42:       // `inner` is declared as variable and may not be read
+  43:       // from outside this workbench
+  44:       inner = outer / 2;
+  45:   
+  46:       Circle(radius = outer) - Circle(radius = inner);
+  47:   }
+  48:   
+  49:   t = Wheel(outer = 1cm);
+  50:   
+  51:   // you can still extract and display `outer`
+  52:   std::print("outer: {t.outer}");
+  53:   // but you cannot access `inner` anymore
+  54:   std::print("inner: {t.inner}"); // error
 
 -- Output --
 outer: 10mm
@@ -30,11 +30,11 @@ inner: <NO VALUE>
 
 -- Errors --
   × error: 16:21: Property not found: inner
-     ╭─[../books/language/src/structure/workbenches/README.md:317:21]
- 316 │ // but you cannot access `inner` anymore
- 317 │ std::print("inner: {t.inner}"); // error
-     ·                     ───┬───
-     ·                        ╰── error: 16:21: Property not found: inner
-     ╰────
+    ╭─[../books/language/src/structure/workbenches/properties.md:54:21]
+ 53 │ // but you cannot access `inner` anymore
+ 54 │ std::print("inner: {t.inner}"); // error
+    ·                     ───┬───
+    ·                        ╰── error: 16:21: Property not found: inner
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED
