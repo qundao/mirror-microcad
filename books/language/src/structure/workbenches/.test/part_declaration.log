@@ -2,62 +2,62 @@
 -- Test --
         Test name: part_declaration
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/README.md:33
+      Source file: ../books/language/src/structure/workbenches/elements.md:19
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
-  33:   // Sketch with a `radius` as building plan.
-  34:   // Which will automatically become a property.
-  35:   sketch Wheel(radius: Length) {
-  36:       
-  37:       // Init code...
-  38:       const FACTOR = 2;
+  19:   // Sketch with a `radius` as building plan.
+  20:   // Which will automatically become a property.
+  21:   sketch Wheel(radius: Length) {
+  22:       
+  23:       // Initialization code...
+  24:       const FACTOR = 2;
+  25:   
+  26:       // Initializer #1
+  27:       init(diameter: Length) {
+  28:           // must set `radius`
+  29:           radius = diameter / FACTOR;
+  30:       }
+  31:   
+  32:       // No code in between!
+  33:   
+  34:       // Initializer #2
+  35:       init(r: Length) {
+  36:           // must set `radius`
+  37:           radius = r;
+  38:       }
   39:   
-  40:       // Initializer #1
-  41:       init(diameter: Length) {
-  42:           // must set `radius`
-  43:           radius = diameter / FACTOR;
-  44:       }
-  45:   
-  46:       // No code in between!
-  47:   
-  48:       // Initializer #2
-  49:       init(r: Length) {
-  50:           // must set `radius`
-  51:           radius = r;
-  52:       }
-  53:   
-  54:       // Function (sub routine)
-  55:       fn into_diameter(r: Length) {
-  56:           return r * FACTOR;
-  57:       }
+  40:       // Function (sub routine)
+  41:       fn into_diameter(r: Length) {
+  42:           return r * FACTOR;
+  43:       }
+  44:   
+  45:       // Building code...
+  46:   
+  47:       // Set a property which can be seen from outside.
+  48:       prop diameter = into_diameter(radius);
+  49:       
+  50:       // Local variable `r`
+  51:       r = radius;
+  52:       
+  53:       // Create a circle.
+  54:       std::geo2d::Circle(r);
+  55:   }
+  56:   
+  57:   use std::debug::*;
   58:   
-  59:       // Building code...
-  60:   
-  61:       // Set a property which can be seen from outside.
-  62:       prop diameter = into_diameter(radius);
-  63:       
-  64:       // Local variable `r`
-  65:       r = radius;
-  66:       
-  67:       // Create a circle.
-  68:       std::geo2d::Circle(r);
-  69:   }
-  70:   
-  71:   use std::debug::*;
-  72:   
-  73:   // Call sketch with diameter.
-  74:   d = Wheel(diameter = 2cm);
-  75:   // Check radius property.
-  76:   assert_eq([d.radius, 1cm]);
-  77:   
-  78:   // Call sketch with radius.
-  79:   r = Wheel(radius = 2cm);
-  80:   // Check diameter property.
-  81:   assert_eq([r.diameter, 4cm]);
-  82:   
-  83:   d - r;
+  59:   // Call sketch with diameter.
+  60:   d = Wheel(diameter = 2cm);
+  61:   // Check radius property.
+  62:   assert_eq([d.radius, 1cm]);
+  63:   
+  64:   // Call sketch with radius.
+  65:   r = Wheel(radius = 2cm);
+  66:   // Check diameter property.
+  67:   assert_eq([r.diameter, 4cm]);
+  68:   
+  69:   d - r;
 
 -- No Output --
 -- No Errors --

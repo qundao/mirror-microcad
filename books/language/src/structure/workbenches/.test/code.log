@@ -2,17 +2,17 @@
 -- Test --
         Test name: code
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/README.md:227
+      Source file: ../books/language/src/structure/workbenches/building_code.md:10
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 227:   sketch Wheel(radius: Length) {
- 228:       // building code starts here
- 229:       std::geo2d::Circle(radius);
- 230:   }
- 231:   
- 232:   Wheel(radius = 1.0mm)
+  10:   sketch Wheel(radius: Length) {
+  11:       // building code starts here
+  12:       std::geo2d::Circle(radius);
+  13:   }
+  14:   
+  15:   Wheel(radius = 1.0mm)
 
 -- No Output --
 -- No Errors --

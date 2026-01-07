@@ -38,7 +38,7 @@ sketch PunchedDisk(radius: Length) {
 
     pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
 
-    Circle(radius) - Circle(inner());
+    Circle(radius) - Circle(radius = inner());
 }
 
 PunchedDisk(1cm);
@@ -61,7 +61,7 @@ sketch PunchedDisk(radius: Length) {
 
     prop hole = radius/2;      // correct prop definition
 
-    Circle(radius) - Circle(inner());
+    Circle(radius) - Circle(radius = inner());
 }
 
 PunchedDisk(1cm);
@@ -88,7 +88,7 @@ sketch PunchedDisk(radius: Length) {
     // Accessing property in a function is ok
     fn inner() { radius/2 }
 
-    Circle(radius) - Circle(inner());
+    Circle(radius) - Circle(radius = inner());
 }
 
 PunchedDisk(diameter=1cm);

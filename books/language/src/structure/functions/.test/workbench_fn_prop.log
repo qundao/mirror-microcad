@@ -17,7 +17,7 @@
   61:   
   62:       prop hole = radius/2;      // correct prop definition
   63:   
-  64:       Circle(radius) - Circle(inner());
+  64:       Circle(radius) - Circle(radius = inner());
   65:   }
   66:   
   67:   PunchedDisk(1cm);

@@ -2,30 +2,30 @@
 -- Test --
         Test name: property
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/README.md:276
+      Source file: ../books/language/src/structure/workbenches/properties.md:13
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 276:   // `outer` will automatically become a property because
- 277:   // it is declared in the building plan:
- 278:   sketch Wheel(outer: Length) {
- 279:       use std::geo2d::Circle;
- 280:   
- 281:       // `inner` is declared as property and maybe read from 
- 282:       // outside this workbench
- 283:       prop inner = outer / 2;
- 284:   
- 285:       // generate wheel (and use property inner)
- 286:       Circle(r = outer) - Circle(r = inner);
- 287:   }
- 288:   
- 289:   // evaluate wheel
- 290:   t = Wheel(1cm);
- 291:   
- 292:   // extract and display `outer` and `inner` from generated wheel
- 293:   std::print("outer: {t.outer}");
- 294:   std::print("inner: {t.inner}");
+  13:   // `outer` will automatically become a property because
+  14:   // it is declared in the building plan:
+  15:   sketch Wheel(outer: Length) {
+  16:       use std::geo2d::Circle;
+  17:   
+  18:       // `inner` is declared as property and maybe read from 
+  19:       // outside this workbench
+  20:       prop inner = outer / 2;
+  21:   
+  22:       // generate wheel (and use property inner)
+  23:       Circle(radius = outer) - Circle(radius = inner);
+  24:   }
+  25:   
+  26:   // evaluate wheel
+  27:   t = Wheel(1cm);
+  28:   
+  29:   // extract and display `outer` and `inner` from generated wheel
+  30:   std::print("outer: {t.outer}");
+  31:   std::print("inner: {t.inner}");
 
 -- Output --
 outer: 10mm
