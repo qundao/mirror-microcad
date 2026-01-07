@@ -398,7 +398,7 @@ function_signature = { parameter_list ~ (ws* ~ "->" ~ ws* ~ type)? }
 function_definition = { doc_block? ~ (visibility ~ ws+)? ~ "fn" ~ ws+ ~ identifier ~ ws* ~ function_signature ~ ws* ~ body }
 
 // `return 5.0mm;`: ok
-return_statement = { "return" ~ ws* ~ expression ~ ws* ~ ";" }
+return_statement = { "return" ~ (ws* ~ expression)? ~ ws* ~ ";" }
 
 // `if a > 5.0mm { return 5.0mm; }`: ok
 // `if a > 5.0mm { return 5.0mm; } else { return 4.0mm; }`: ok
