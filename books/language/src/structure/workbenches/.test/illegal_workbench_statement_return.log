@@ -1,0 +1,18 @@
+﻿
+-- Test --
+        Test name: illegal_workbench_statement_return
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/building_code.md:59
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  59:   sketch Wheel(radius: Length) {
+  60:       return;                         // error
+  61:   }
+  62:   Wheel(radius = 1.0mm);
+
+-- Parse Error --
+Parser error: expected single_line_comment, identifier_part, or expression
+-- Test Result --
+FAILS WITH WRONG ERRORS
