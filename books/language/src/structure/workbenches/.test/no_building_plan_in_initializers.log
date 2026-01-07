@@ -1,0 +1,22 @@
+﻿
+-- Test --
+        Test name: no_building_plan_in_initializers
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/init_code.md:62
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  62:   sketch Wheel(radius: Length) {
+  63:       init( width:Length ) { 
+  64:           _ = radius;         // error: cannot be access radius here
+  65:           radius = width / 2;
+  66:       }
+  67:   }
+  68:   
+  69:   Wheel(width = 1.0mm);
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+OK BUT SHOULD FAIL
