@@ -19,11 +19,6 @@ pub struct ArgumentValueList {
 }
 
 impl ArgumentValueList {
-    /// Create new [`ArgumentValueList`]
-    pub fn new(map: Vec<(Identifier, ArgumentValue)>, src_ref: SrcRef) -> Self {
-        Self { map, src_ref }
-    }
-
     /// Return a single argument.
     ///
     /// Returns error if there is no or more than one argument available.
@@ -73,7 +68,7 @@ impl std::fmt::Display for ArgumentValueList {
             let mut v = self
                 .map
                 .iter()
-                .map(|(id, p)| format!("{id}{p}"))
+                .map(|(id, p)| format!("{id} = {p}"))
                 .collect::<Vec<_>>();
             v.sort();
             v.join(", ")
@@ -87,7 +82,7 @@ impl std::fmt::Debug for ArgumentValueList {
             let mut v = self
                 .map
                 .iter()
-                .map(|(id, av)| format!("{id:?}{av:?}"))
+                .map(|(id, av)| format!("{id:?} = {av:?}"))
                 .collect::<Vec<_>>();
             v.sort();
             v.join(", ")
