@@ -66,5 +66,9 @@ r = Wheel(radius = 2cm);
 // Check diameter property.
 assert_eq([r.diameter, 4cm]);
 
-d - r;
+r - d;
 ```
+
+## Output
+
+![test](.test/part_declaration-out.svg)

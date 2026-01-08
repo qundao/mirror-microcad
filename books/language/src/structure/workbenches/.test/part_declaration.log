@@ -57,7 +57,7 @@
   66:   // Check diameter property.
   67:   assert_eq([r.diameter, 4cm]);
   68:   
-  69:   d - r;
+  69:   r - d;
 
 -- No Output --
 -- No Errors --
@@ -65,14 +65,6 @@
   Group (root) ->
     Operation subtract() ->
       Group ->
-        d: Workpiece(sketch) part_declaration::Wheel(diameter=20mm) ->
-          - diameter = 20mm
-          - radius = 10mm
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
-            - center = (x=0mm, y=0mm)
-            - radius = 10mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
         r: Workpiece(sketch) part_declaration::Wheel(radius=20mm) ->
           - diameter = 40mm
           - radius = 20mm
@@ -81,7 +73,15 @@
             - radius = 20mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
               Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
+        d: Workpiece(sketch) part_declaration::Wheel(diameter=20mm) ->
+          - diameter = 20mm
+          - radius = 10mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
 
-Export error: Render error: Nothing to render
+Export of "../books/language/src/structure/workbenches/.test/part_declaration-out.svg" successful.
 -- Test Result --
 OK
