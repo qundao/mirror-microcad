@@ -1,0 +1,47 @@
+﻿
+-- Test --
+        Test name: no_building_plan_same_name
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/initializers.md:80
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  80:   sketch Wheel(radius: Length, inner: Length) {
+  81:       init( radius: Length ) {
+  82:           // radius is seta property already by building plan
+  83:   
+  84:           radius = radius * 2;  // error: it cannot be set a second time
+  85:           inner = radius / 2;        
+  86:       }
+  87:   
+  88:       use std::geo2d::Circle;
+  89:       Circle(radius) - Circle(radius = inner)
+  90:   }
+  91:   // Use initializer
+  92:   Wheel(radius = 1.0mm);
+
+-- No Output --
+-- Errors --
+  × error: 5:9: Value radius already in defined: 1mm
+    ╭─[../books/language/src/structure/workbenches/initializers.md:84:9]
+ 83 │ 
+ 84 │         radius = radius * 2;  // error: it cannot be set a second time
+    ·         ─────────┬─────────┬
+    ·                  │         ╰── Previously defined here
+    ·                  ╰── radius is already defined
+ 85 │         inner = radius / 2;        
+    ╰────
+  help: Values in microcad are immutable
+  × error: 5:9: Value radius already in defined: 1mm
+    ╭─[../books/language/src/structure/workbenches/initializers.md:84:9]
+ 83 │ 
+ 84 │         radius = radius * 2;  // error: it cannot be set a second time
+    ·         ───┬──┬
+    ·            │  ╰── Previously defined here
+    ·            ╰── radius is already defined
+ 85 │         inner = radius / 2;        
+    ╰────
+  help: Values in microcad are immutable
+-- Test Result --
+FAILS AS EXPECTED

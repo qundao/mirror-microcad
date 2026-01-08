@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**187** tests have been evaluated with version **0.2.20** of microcad.
+**189** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -102,7 +102,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/argument_match/.test/multiplicity_arrays.svg)](../flow/argument_match/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/argument_match/multiplicity.md) |
 | [![test](../flow/argument_match/.test/multiplicity_tuple_array.svg)](../flow/argument_match/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/argument_match/multiplicity.md) |
 | [![test](../types/collections/tuples/.test/named_tuple_access.svg)](../types/collections/tuples/.test/named_tuple_access.log) | [named_tuple_access](../types/collections/tuples/README.md) |
-| [![test](../structure/workbenches/.test/no_building_plan_in_initializers.svg)](../structure/workbenches/.test/no_building_plan_in_initializers.log) | [no_building_plan_in_initializers](../structure/workbenches/init_code.md) |
+| [![test](../structure/workbenches/.test/no_building_plan_in_initializers.svg)](../structure/workbenches/.test/no_building_plan_in_initializers.log) | [no_building_plan_in_initializers](../structure/workbenches/initializers.md) |
+| [![test](../structure/workbenches/.test/no_building_plan_same_name.svg)](../structure/workbenches/.test/no_building_plan_same_name.log) | [no_building_plan_same_name](../structure/workbenches/initializers.md) |
+| [![test](../structure/workbenches/.test/no_building_plan_same_name_different_type.svg)](../structure/workbenches/.test/no_building_plan_same_name_different_type.log) | [no_building_plan_same_name_different_type](../structure/workbenches/initializers.md) |
 | [![test](../flow/argument_match/.test/no_multiplicity.svg)](../flow/argument_match/.test/no_multiplicity.log) | [no_multiplicity](../flow/argument_match/multiplicity.md) |
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
 | [![test](../structure/workbenches/.test/op_example.svg)](../structure/workbenches/.test/op_example.log) | [op_example](../structure/workbenches/operations.md) |

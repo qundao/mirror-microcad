@@ -53,18 +53,3 @@ sketch Wheel(radius: Length) {
 
 Wheel(radius = 1.0mm);
 ```
-
-### Building plan cannot be accessed within initializers
-
-[![test](.test/no_building_plan_in_initializers.svg)](.test/no_building_plan_in_initializers.log)
-
-```µcad,no_building_plan_in_initializers#fail
-sketch Wheel(radius: Length) {
-    init( width:Length ) { 
-        _ = radius;         // error: cannot be access radius here
-        radius = width / 2;
-    }
-}
-
-Wheel(width = 1.0mm);
-```
