@@ -19,11 +19,6 @@ pub struct ArgumentValueList {
 }
 
 impl ArgumentValueList {
-    /// Create new [`ArgumentValueList`]
-    pub fn new(map: Vec<(Identifier, ArgumentValue)>, src_ref: SrcRef) -> Self {
-        Self { map, src_ref }
-    }
-
     /// Return a single argument.
     ///
     /// Returns error if there is no or more than one argument available.
