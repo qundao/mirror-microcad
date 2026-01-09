@@ -1,0 +1,23 @@
+﻿
+-- Test --
+        Test name: init_code_no_building_plan
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/init_code.md:47
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  47:   sketch Wheel(radius: Length) {
+  48:       const P = radius * 2;   // error: cannot use `radius` from building plan
+  49:   
+  50:       init( diameter: Length ) { radius = diameter / 2; }
+  51:       
+  52:       std::geo2d::Circle(radius);
+  53:   }
+  54:   
+  55:   Wheel(radius = 1.0mm);
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+TODO (SHALL FAIL)

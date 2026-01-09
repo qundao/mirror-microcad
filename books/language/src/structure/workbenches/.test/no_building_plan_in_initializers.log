@@ -2,19 +2,19 @@
 -- Test --
         Test name: no_building_plan_in_initializers
   Expected result: todo_fail
-      Source file: ../books/language/src/structure/workbenches/initializers.md:61
+      Source file: ../books/language/src/structure/workbenches/initializers.md:81
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
-  61:   sketch Wheel(radius: Length) {
-  62:       init( width: Length ) { 
-  63:           _ = radius;         // error: cannot read radius here
-  64:           radius = width / 2; // instead you need to set it
-  65:       }
-  66:   }
-  67:   
-  68:   Wheel(width = 1.0mm);
+  81:   sketch Wheel(radius: Length) {
+  82:       init( width: Length ) { 
+  83:           _ = radius;         // error: cannot read radius here
+  84:           radius = width / 2; // instead you need to set it
+  85:       }
+  86:   }
+  87:   
+  88:   Wheel(width = 1.0mm);
 
 -- No Output --
 -- No Errors --

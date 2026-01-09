@@ -34,21 +34,22 @@ std::debug::assert_eq([ Wheel(radius = 5cm).radius, 5cm ]);
 std::debug::assert_eq([ Wheel(radius = 5cm).diameter, 10cm ]);
 ```
 
+If there are no initializers, the initialization code is just part of the
+[building code](building_code.md).
+
 ## Rules
 
-### No code between initializers
+### Cannot access building plan in initialization code
 
-It's **not allowed** to write any code between *initializers*.
+[![test](.test/init_code_no_building_plan.svg)](.test/init_code_no_building_plan.log)
 
-[![test](.test/code_between_initializers.svg)](.test/code_between_initializers.log)
-
-```µcad,code_between_initializers#fail
+```µcad,init_code_no_building_plan#todo_fail
 sketch Wheel(radius: Length) {
-    init( width:Length ) { radius = width / 2; }
-    
-    radius = 1; // error: code between initializers not allowed
+    const P = radius * 2;   // error: cannot use `radius` from building plan
 
-    init( height:Length ) { radius = height / 2; }
+    init( diameter: Length ) { radius = diameter / 2; }
+    
+    std::geo2d::Circle(radius);
 }
 
 Wheel(radius = 1.0mm);

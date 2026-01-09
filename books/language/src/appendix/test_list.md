@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**189** tests have been evaluated with version **0.2.20** of microcad.
+**191** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -40,6 +40,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/.test/boolean.svg)](../types/.test/boolean.log) | [boolean](../types/primitives.md) |
 | [![test](../expressions/.test/boolean_literal.svg)](../expressions/.test/boolean_literal.log) | [boolean_literal](../expressions/literals.md) |
 | [![test](../structure/workbenches/.test/building_plan.svg)](../structure/workbenches/.test/building_plan.log) | [building_plan](../structure/workbenches/building_plan.md) |
+| [![test](../structure/workbenches/.test/building_plan_defaults.svg)](../structure/workbenches/.test/building_plan_defaults.log) | [building_plan_defaults](../structure/workbenches/initializers.md) |
 | [![test](../libraries/builtin/.test/builtin_debug_assert_false.svg)](../libraries/builtin/.test/builtin_debug_assert_false.log) | [builtin_debug_assert_false](../libraries/builtin/debug.md) |
 | [![test](../libraries/builtin/.test/builtin_debug_assert_true.svg)](../libraries/builtin/.test/builtin_debug_assert_true.log) | [builtin_debug_assert_true](../libraries/builtin/debug.md) |
 | [![test](../libraries/builtin/.test/builtin_extrude.svg)](../libraries/builtin/.test/builtin_extrude.log) | [builtin_extrude](../libraries/builtin/ops.md) |
@@ -54,7 +55,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/calls/.test/call_workbench.svg)](../flow/calls/.test/call_workbench.log) | [call_workbench](../flow/calls/README.md) |
 | [![test](../flow/.test/chained_if_statement.svg)](../flow/.test/chained_if_statement.log) | [chained_if_statement](../flow/conditions.md) |
 | [![test](../structure/workbenches/.test/code.svg)](../structure/workbenches/.test/code.log) | [code](../structure/workbenches/building_code.md) |
-| [![test](../structure/workbenches/.test/code_between_initializers.svg)](../structure/workbenches/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/init_code.md) |
+| [![test](../structure/workbenches/.test/code_between_initializers.svg)](../structure/workbenches/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/initializers.md) |
 | [![test](../structure/workbenches/.test/code_post_init.svg)](../structure/workbenches/.test/code_post_init.log) | [code_post_init](../structure/workbenches/building_code.md) |
 | [![test](../doc/.test/comment.svg)](../doc/.test/comment.log) | [comment](../doc/comments.md) |
 | [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
@@ -86,6 +87,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/illegal_workbench_statement_mod.svg)](../structure/workbenches/.test/illegal_workbench_statement_mod.log) | [illegal_workbench_statement_mod](../structure/workbenches/building_code.md) |
 | [![test](../structure/workbenches/.test/illegal_workbench_statement_return.svg)](../structure/workbenches/.test/illegal_workbench_statement_return.log) | [illegal_workbench_statement_return](../structure/workbenches/building_code.md) |
 | [![test](../structure/workbenches/.test/illegal_workbench_statement_sketch.svg)](../structure/workbenches/.test/illegal_workbench_statement_sketch.log) | [illegal_workbench_statement_sketch](../structure/workbenches/building_code.md) |
+| [![test](../structure/workbenches/.test/init_code_no_building_plan.svg)](../structure/workbenches/.test/init_code_no_building_plan.log) | [init_code_no_building_plan](../structure/workbenches/init_code.md) |
 | [![test](../structure/workbenches/.test/init_property.svg)](../structure/workbenches/.test/init_property.log) | [init_property](../structure/workbenches/initializers.md) |
 | [![test](../structure/workbenches/.test/input.svg)](../structure/workbenches/.test/input.log) | [input](../structure/workbenches/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |

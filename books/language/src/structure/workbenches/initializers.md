@@ -1,7 +1,7 @@
 # Initializers
 
 *Initializers* are a way to define alternative parameters to create the
-building plan.
+[*building plan*](building_plan.md).
 An Initializer is defined with the keyword `init` and a following *parameter list*.
 One may define multiple initializers which must have different parameter lists.
 
@@ -38,6 +38,8 @@ The output of this code shows the two concentric wheels:
 
 ## Rules
 
+### Building plan must be initialized
+
 If the *building plan* is not fully initialized by an initializer
 you will get an error:
 
@@ -49,6 +51,24 @@ sketch Wheel(radius: Length) {
 }
 
 Wheel(width = 1.0mm);
+```
+
+### Building plan properties with default values
+
+Parameters of a workbench's building plan which have a *default value* do not
+need to be set in the initializers.
+
+[![test](.test/building_plan_defaults.svg)](.test/building_plan_defaults.log)
+
+```µcad,building_plan_defaults#todo
+sketch Wheel(outer = 5cm, inner: Length) {
+    init(i: Length) { 
+        inner = i;
+        // outer has been set automatically by the default in the building plan 
+    }
+}
+
+Wheel(i = 1.0mm);
 ```
 
 ### Building plan cannot be accessed within initializers
@@ -68,7 +88,7 @@ sketch Wheel(radius: Length) {
 Wheel(width = 1.0mm);
 ```
 
-### Initializer parameters with name from building plan
+### Initializers with parameters from building plan
 
 If you use parameter names in an initializer which already are used in the
 building plan, they will automatically become properties and cannot be set
@@ -92,7 +112,7 @@ sketch Wheel(radius: Length, inner: Length) {
 Wheel(radius = 1.0mm);
 ```
 
-Types must match when using a name from building plan in initializer parameters. 
+Types must match when using a name from building plan in initializer parameters.
 
 [![test](.test/no_building_plan_same_name_different_type.svg)](.test/no_building_plan_same_name_different_type.log)
 
@@ -107,4 +127,22 @@ sketch Wheel(radius: Length, inner: Length) {
 }
 // Use initializer
 Wheel(radius = 1.0);
+```
+
+### No code between initializers
+
+It's not allowed to write any code between *initializers*.
+
+[![test](.test/code_between_initializers.svg)](.test/code_between_initializers.log)
+
+```µcad,code_between_initializers#fail
+sketch Wheel(radius: Length) {
+    init( width:Length ) { radius = width / 2; }
+    
+    radius = 1; // error: code between initializers not allowed
+
+    init( height:Length ) { radius = height / 2; }
+}
+
+Wheel(radius = 1.0mm);
 ```
