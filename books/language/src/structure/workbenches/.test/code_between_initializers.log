@@ -2,39 +2,39 @@
 -- Test --
         Test name: code_between_initializers
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/init_code.md:46
+      Source file: ../books/language/src/structure/workbenches/initializers.md:139
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
-  46:   sketch Wheel(radius: Length) {
-  47:       init( width:Length ) { radius = width / 2; }
-  48:       
-  49:       radius = 1; // error: code between initializers not allowed
-  50:   
-  51:       init( height:Length ) { radius = height / 2; }
-  52:   }
-  53:   
-  54:   Wheel(radius = 1.0mm);
+ 139:   sketch Wheel(radius: Length) {
+ 140:       init( width:Length ) { radius = width / 2; }
+ 141:       
+ 142:       radius = 1; // error: code between initializers not allowed
+ 143:   
+ 144:       init( height:Length ) { radius = height / 2; }
+ 145:   }
+ 146:   
+ 147:   Wheel(radius = 1.0mm);
 
 -- No Output --
 -- Errors --
   × error: 4:5: Code between initializers is not allowed
-    ╭─[../books/language/src/structure/workbenches/init_code.md:49:5]
- 48 │     
- 49 │     radius = 1; // error: code between initializers not allowed
-    ·     ─────┬─────
-    ·          ╰── error: 4:5: Code between initializers is not allowed
- 50 │ 
-    ╰────
+     ╭─[../books/language/src/structure/workbenches/initializers.md:142:5]
+ 141 │     
+ 142 │     radius = 1; // error: code between initializers not allowed
+     ·     ─────┬─────
+     ·          ╰── error: 4:5: Code between initializers is not allowed
+ 143 │ 
+     ╰────
   × error: 4:5: Statement not allowed prior initializers
-    ╭─[../books/language/src/structure/workbenches/init_code.md:49:5]
- 48 │     
- 49 │     radius = 1; // error: code between initializers not allowed
-    ·     ─────┬─────
-    ·          ╰── error: 4:5: Statement not allowed prior initializers
- 50 │ 
-    ╰────
+     ╭─[../books/language/src/structure/workbenches/initializers.md:142:5]
+ 141 │     
+ 142 │     radius = 1; // error: code between initializers not allowed
+     ·     ─────┬─────
+     ·          ╰── error: 4:5: Statement not allowed prior initializers
+ 143 │ 
+     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
