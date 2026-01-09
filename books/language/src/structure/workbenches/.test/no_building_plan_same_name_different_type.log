@@ -2,21 +2,21 @@
 -- Test --
         Test name: no_building_plan_same_name_different_type
   Expected result: todo_fail
-      Source file: ../books/language/src/structure/workbenches/initializers.md:100
+      Source file: ../books/language/src/structure/workbenches/initializers.md:120
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 100:   sketch Wheel(radius: Length, inner: Length) {
- 101:       init( radius: Scalar ) {  // error: radius is already a `Length` in building plan
- 102:           inner = radius / 2 * 1mm;
- 103:       }
- 104:   
- 105:       use std::geo2d::Circle;
- 106:       Circle(radius * 1mm) - Circle(radius = inner)
- 107:   }
- 108:   // Use initializer
- 109:   Wheel(radius = 1.0);
+ 120:   sketch Wheel(radius: Length, inner: Length) {
+ 121:       init( radius: Scalar ) {  // error: radius is already a `Length` in building plan
+ 122:           inner = radius / 2 * 1mm;
+ 123:       }
+ 124:   
+ 125:       use std::geo2d::Circle;
+ 126:       Circle(radius * 1mm) - Circle(radius = inner)
+ 127:   }
+ 128:   // Use initializer
+ 129:   Wheel(radius = 1.0);
 
 -- No Output --
 -- No Errors --

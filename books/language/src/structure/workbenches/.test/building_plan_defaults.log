@@ -1,0 +1,33 @@
+﻿
+-- Test --
+        Test name: building_plan_defaults
+  Expected result: todo
+      Source file: ../books/language/src/structure/workbenches/initializers.md:64
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  64:   sketch Wheel(outer = 5cm, inner: Length) {
+  65:       init(i: Length) { 
+  66:           inner = i;
+  67:           // outer has been set automatically by the default in the building plan 
+  68:       }
+  69:   }
+  70:   
+  71:   Wheel(i = 1.0mm);
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Workbench plan incomplete. Missing properties: outer
+    ╭─[../books/language/src/structure/workbenches/initializers.md:65:5]
+ 64 │     sketch Wheel(outer = 5cm, inner: Length) {
+ 65 │ ╭─▶     init(i: Length) { 
+ 66 │ │           inner = i;
+ 67 │ │           // outer has been set automatically by the default in the building plan 
+ 68 │ ├─▶     }
+    · ╰──── error: 2:5: Workbench plan incomplete. Missing properties: outer
+ 69 │     }
+    ╰────
+Unexpected error(s) which did occur in line(s): 65
+-- Test Result --
+TODO

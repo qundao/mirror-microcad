@@ -13,11 +13,15 @@ in the building plan, called `radius`, of type `Length`:
 [![test](.test/building_plan.svg)](.test/building_plan.log)
 
 ```µcad,building_plan
-// sketch with a `radius` as building plan
+// sketch with a radius as building plan
 sketch Wheel(radius: Length) {
-    // access property `radius` from the building plan
+    // access property radius from the building plan
     std::geo2d::Circle(radius);
 }
 
-std::debug::assert_eq([Wheel(5cm).radius, 5cm]);
+// access property radius of a Wheel
+r = Wheel(5cm).radius;
+
+// check if r is 5cm
+std::debug::assert_eq( [r, 5cm] );
 ```
