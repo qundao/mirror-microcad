@@ -2,8 +2,8 @@
 -- Test --
         Test name: sketch_3d
   Expected result: todo_fail
-      Source file: ../books/language/src/structure/workbenches/sketches.md:26
-        Test path: ../books/language/src/structure/workbenches/.test
+      Source file: ../books/language/src/structure/workbenches/types/sketches.md:26
+        Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
