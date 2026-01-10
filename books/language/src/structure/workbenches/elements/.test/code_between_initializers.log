@@ -1,0 +1,41 @@
+﻿
+-- Test --
+        Test name: code_between_initializers
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/elements/initializers.md:152
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+ 152:   sketch Wheel(radius: Length, thickness = 5mm) {
+ 153:       use std::geo2d::Circle;
+ 154:   
+ 155:       init( width: Length, thickness = 5mm ) { radius = width / 2; }
+ 156:       radius = 1; // error: code between initializers not allowed
+ 157:       init( height: Length, thickness = 5mm ) { radius = height / 2; }
+ 158:   
+ 159:       Circle(radius = radius + thickness) - Circle(radius)
+ 160:   }
+ 161:   Wheel(radius = 1cm);
+
+-- No Output --
+-- Errors --
+  × error: 5:5: Code between initializers is not allowed
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:156:5]
+ 155 │     init( width: Length, thickness = 5mm ) { radius = width / 2; }
+ 156 │     radius = 1; // error: code between initializers not allowed
+     ·     ─────┬─────
+     ·          ╰── error: 5:5: Code between initializers is not allowed
+ 157 │     init( height: Length, thickness = 5mm ) { radius = height / 2; }
+     ╰────
+  × error: 5:5: Statement not allowed prior initializers
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:156:5]
+ 155 │     init( width: Length, thickness = 5mm ) { radius = width / 2; }
+ 156 │     radius = 1; // error: code between initializers not allowed
+     ·     ─────┬─────
+     ·          ╰── error: 5:5: Statement not allowed prior initializers
+ 157 │     init( height: Length, thickness = 5mm ) { radius = height / 2; }
+     ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

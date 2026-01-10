@@ -1,0 +1,56 @@
+﻿
+-- Test --
+        Test name: no_building_plan_same_name_different_type
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/elements/initializers.md:132
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+ 132:   sketch Wheel(radius: Length, thickness: Length) {
+ 133:       use std::geo2d::Circle;
+ 134:   
+ 135:       init( radius: Scalar, outer: Length ) { // error: radius is already a Length in building plan
+ 136:           thickness = outer - (radius * 1mm);
+ 137:       }  
+ 138:   
+ 139:       Circle(radius = radius + thickness) - Circle(radius)
+ 140:   }
+ 141:   // Use initializer
+ 142:   Wheel(radius = 1.0, outer = 1cm);
+
+-- No Output --
+-- Errors --
+  × error: 8:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
+  ╰─▶ Invalid operation: `1` + `9mm` (try `9mm` + `1`)
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:21]
+ 138 │ 
+ 139 │     Circle(radius = radius + thickness) - Circle(radius)
+     ·                     ─────────┬────────
+     ·                              ╰── error: 8:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
+ 140 │ }
+     ╰────
+  × error: 8:12: Workbench Circle cannot find initialization for those arguments
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:5]
+ 138 │ 
+ 139 │     Circle(radius = radius + thickness) - Circle(radius)
+     ·     ─────────────────┬─────────────────
+     ·                      ╰── Got: Circle( radius = <NO VALUE> )
+ 140 │ }
+     ╰────
+  help: Possible initializations:
+        	Circle( radius: Length, center = (x = 0mm, y = 0mm))
+        	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 8:50: Workbench Circle cannot find initialization for those arguments
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:43]
+ 138 │ 
+ 139 │     Circle(radius = radius + thickness) - Circle(radius)
+     ·                                           ───────┬──────
+     ·                                                  ╰── Got: Circle( radius = 1 )
+ 140 │ }
+     ╰────
+  help: Possible initializations:
+        	Circle( radius: Length, center = (x = 0mm, y = 0mm))
+        	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+-- Test Result --
+FAILS AS EXPECTED (BUT IS TODO)

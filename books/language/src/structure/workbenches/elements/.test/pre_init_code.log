@@ -1,0 +1,46 @@
+﻿
+-- Test --
+        Test name: pre_init_code
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/elements/init_code.md:13
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  13:   sketch Wheel(radius: Length) {
+  14:       // init code
+  15:       const FACTOR = 2.0;
+  16:   
+  17:       // initializer
+  18:       init(diameter: Length) { into_radius(diameter) }
+  19:   
+  20:       // function
+  21:       fn into_radius( diameter: Length ) {
+  22:           // use constant FACTOR from init code
+  23:           diameter / FACTOR
+  24:       }
+  25:   
+  26:       // set property diameter and use FACTOR from init code
+  27:       prop diameter = radius * FACTOR;
+  28:       
+  29:       // code body
+  30:       std::geo2d::Circle(radius);
+  31:   }
+  32:   
+  33:   std::debug::assert_eq([ Wheel(radius = 5cm).radius, 5cm ]);
+  34:   std::debug::assert_eq([ Wheel(radius = 5cm).diameter, 10cm ]);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 9:8: Unused global symbol into_radius.
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:21:8]
+ 20 │     // function
+ 21 │     fn into_radius( diameter: Length ) {
+    ·        ─────┬─────
+    ·             ╰── warning: 9:8: Unused global symbol into_radius.
+ 22 │         // use constant FACTOR from init code
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 21
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)

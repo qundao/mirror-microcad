@@ -1,0 +1,68 @@
+﻿
+-- Test --
+        Test name: init_property
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/elements/initializers.md:14
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  14:   sketch Wheel(radius: Length, thickness = 5mm) {
+  15:       use std::geo2d::Circle;
+  16:   
+  17:       // initializer with diameter
+  18:       init( diameter: Length, thickness = 5mm ) {
+  19:           // must set property `radius` from building plan
+  20:           radius = diameter / 2;
+  21:   
+  22:           // thickness (from the building plan) does not need 
+  23:           // to be set, because it was automatically set by 
+  24:           // parameter of this initializer
+  25:       }
+  26:   
+  27:       // Now radius and thickness can be used
+  28:       Circle(radius = radius + thickness) - Circle(radius)
+  29:   }
+  30:   // call with building plan
+  31:   Wheel(radius=1.5cm, thickness=2mm);
+  32:   // call with initializer and use default thickness
+  33:   Wheel(diameter=1.5cm);
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) init_property::Wheel(radius=15mm, thickness=2mm) ->
+      - radius = 15mm
+      - thickness = 2mm
+      Operation subtract() ->
+        Group ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=17mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 17mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=17mm) ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 15mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
+    Workpiece(sketch) init_property::Wheel(diameter=15mm, thickness=5mm) ->
+      - radius = 7.5mm
+      - thickness = 5mm
+      Operation subtract() ->
+        Group ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=12.5mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 12.5mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=12.5mm) ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=7.5mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 7.5mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=7.5mm) ->
+
+Export of "../books/language/src/structure/workbenches/elements/.test/init_property-out.svg" successful.
+-- Test Result --
+OK

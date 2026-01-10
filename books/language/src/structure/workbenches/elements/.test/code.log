@@ -1,0 +1,39 @@
+﻿
+-- Test --
+        Test name: code
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:10
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  10:   sketch Wheel(radius: Length, thickness = 5mm) {
+  11:       // building code starts here
+  12:       use std::geo2d::Circle;
+  13:       Circle(radius = radius + thickness) - Circle(radius)
+  14:   }
+  15:   Wheel(radius = 1cm);
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) code::Wheel(radius=10mm, thickness=5mm) ->
+      - radius = 10mm
+      - thickness = 5mm
+      Operation subtract() ->
+        Group ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 15mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+
+Export of "../books/language/src/structure/workbenches/elements/.test/code-out.svg" successful.
+-- Test Result --
+OK

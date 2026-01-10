@@ -1,0 +1,87 @@
+﻿
+-- Test --
+        Test name: part_declaration
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/elements/README.md:19
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  19:   // Sketch with a `radius` as building plan.
+  20:   // Which will automatically become a property.
+  21:   sketch Wheel(radius: Length) {
+  22:       
+  23:       // Initialization code...
+  24:       const FACTOR = 2;
+  25:   
+  26:       // Initializer #1
+  27:       init(diameter: Length) {
+  28:           // must set `radius`
+  29:           radius = diameter / FACTOR;
+  30:       }
+  31:   
+  32:       // No code in between!
+  33:   
+  34:       // Initializer #2
+  35:       init(r: Length) {
+  36:           // must set `radius`
+  37:           radius = r;
+  38:       }
+  39:   
+  40:       // Function (sub routine)
+  41:       fn into_diameter(r: Length) {
+  42:           return r * FACTOR;
+  43:       }
+  44:   
+  45:       // Building code...
+  46:   
+  47:       // Set a property which can be seen from outside.
+  48:       prop diameter = into_diameter(radius);
+  49:       
+  50:       // Local variable `r`
+  51:       r = radius;
+  52:       
+  53:       // Create a circle.
+  54:       std::geo2d::Circle(r);
+  55:   }
+  56:   
+  57:   use std::debug::*;
+  58:   
+  59:   // Call sketch with diameter.
+  60:   d = Wheel(diameter = 2cm);
+  61:   // Check radius property.
+  62:   assert_eq([d.radius, 1cm]);
+  63:   
+  64:   // Call sketch with radius.
+  65:   r = Wheel(radius = 2cm);
+  66:   // Check diameter property.
+  67:   assert_eq([r.diameter, 4cm]);
+  68:   
+  69:   r - d;
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Operation subtract() ->
+      Group ->
+        r: Workpiece(sketch) part_declaration::Wheel(radius=20mm) ->
+          - diameter = 40mm
+          - radius = 20mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 20mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
+        d: Workpiece(sketch) part_declaration::Wheel(diameter=20mm) ->
+          - diameter = 20mm
+          - radius = 10mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+
+Export of "../books/language/src/structure/workbenches/elements/.test/part_declaration-out.svg" successful.
+-- Test Result --
+OK
