@@ -19,29 +19,31 @@ Ok(
                             span: 8..11,
                             name: "foo",
                         },
-                        body: StatementList {
-                            span: 14..24,
-                            statements: [
-                                Function(
-                                    FunctionDefinition {
-                                        span: 14..24,
-                                        visibility: None,
-                                        name: Identifier {
-                                            span: 17..20,
-                                            name: "bar",
+                        body: Some(
+                            StatementList {
+                                span: 14..24,
+                                statements: [
+                                    Function(
+                                        FunctionDefinition {
+                                            span: 14..24,
+                                            visibility: None,
+                                            name: Identifier {
+                                                span: 17..20,
+                                                name: "bar",
+                                            },
+                                            arguments: [],
+                                            return_type: None,
+                                            body: StatementList {
+                                                span: 23..23,
+                                                statements: [],
+                                                tail: None,
+                                            },
                                         },
-                                        arguments: [],
-                                        return_type: None,
-                                        body: StatementList {
-                                            span: 23..23,
-                                            statements: [],
-                                            tail: None,
-                                        },
-                                    },
-                                ),
-                            ],
-                            tail: None,
-                        },
+                                    ),
+                                ],
+                                tail: None,
+                            },
+                        ),
                     },
                 ),
             ],

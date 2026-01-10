@@ -1,10 +1,10 @@
-use crate::Span;
 use crate::ast::*;
 use crate::tokens::*;
+use crate::Span;
 use chumsky::error::Rich;
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
-use chumsky::{Parser, extra, select_ref};
+use chumsky::{extra, select_ref, Parser};
 use std::str::FromStr;
 
 type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
@@ -38,8 +38,8 @@ pub fn parse<'tokens>(
     parser().parse(input(tokens)).into_result()
 }
 
-fn parser<'tokens>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
+fn parser<'tokens>(
+) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
@@ -264,22 +264,26 @@ fn parser<'tokens>()
         }
         .labelled("visibility");
 
-        let module = visibility.clone()
+        let module = visibility
+            .clone()
             .or_not()
             .then_ignore(just(Token::Normal(NormalToken::KeywordMod)))
             .then(identifier_parser)
-            .then(block.clone())
-            .map_with(
-                |((visibility, name), body), e| {
-                    Statement::Module(ModuleDefinition {
-                        span: e.span(),
-                        attributes: Vec::new(), // todo
-                        visibility,
-                        name,
-                        body
-                    })
-                },
-            );
+            .then(
+                block
+                    .clone()
+                    .map(Some)
+                    .or(just(Token::Normal(NormalToken::SigilSemiColon)).map(|_| None)),
+            )
+            .map_with(|((visibility, name), body), e| {
+                Statement::Module(ModuleDefinition {
+                    span: e.span(),
+                    attributes: Vec::new(), // todo
+                    visibility,
+                    name,
+                    body,
+                })
+            });
 
         let workspace_kind = select_ref! {
             Token::Normal(NormalToken::KeywordSketch) => WorkspaceKind::Sketch,
@@ -298,25 +302,24 @@ fn parser<'tokens>()
                 })
             });
 
-        let workspace = visibility.clone()
+        let workspace = visibility
+            .clone()
             .or_not()
             .then(workspace_kind)
             .then(identifier_parser)
             .then(arguments.clone())
             .then(block.clone())
-            .map_with(
-                |((((visibility, kind), name), arguments), body), e| {
-                    Statement::Workspace(WorkspaceDefinition {
-                        span: e.span(),
-                        kind,
-                        attributes: Vec::new(), // todo
-                        visibility,
-                        name,
-                        arguments,
-                        body
-                    })
-                },
-            );
+            .map_with(|((((visibility, kind), name), arguments), body), e| {
+                Statement::Workspace(WorkspaceDefinition {
+                    span: e.span(),
+                    kind,
+                    attributes: Vec::new(), // todo
+                    visibility,
+                    name,
+                    arguments,
+                    body,
+                })
+            });
 
         let return_statement = just(Token::Normal(NormalToken::KeywordReturn))
             .ignore_then(expression_parser.clone())
@@ -351,15 +354,9 @@ fn parser<'tokens>()
                 },
             );
 
-        let with_semi = assigment
-            .or(return_statement)
-            .or(expression);
+        let with_semi = assigment.or(return_statement).or(expression);
 
-        let without_semi = function
-            .or(init)
-            .or(workspace)
-            .or(module)
-            .or(comment);
+        let without_semi = function.or(init).or(workspace).or(module).or(comment);
 
         with_semi
             .then_ignore(just(Token::Normal(NormalToken::SigilSemiColon)).labelled("semicolon"))
@@ -389,11 +386,9 @@ fn parser<'tokens>()
             .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
             .at_least(1)
             .collect::<Vec<_>>()
-            .map_with(|parts, e| {
-                QualifiedName {
-                    span: e.span(),
-                    parts,
-                }
+            .map_with(|parts, e| QualifiedName {
+                span: e.span(),
+                parts,
             })
             .labelled("qualified name");
 
@@ -477,7 +472,8 @@ fn parser<'tokens>()
             })
             .labelled("array");
 
-        let call = qualified_name.clone()
+        let call = qualified_name
+            .clone()
             .then(tuple_body)
             .map_with(|(name, args), e| {
                 Expression::Call(Call {
@@ -532,18 +528,21 @@ fn parser<'tokens>()
         );
         let if_expression = if_inner.map(Expression::If).labelled("if expression");
 
-        let qualified_name_expr = identifier_parser.clone()
+        let qualified_name_expr = identifier_parser
+            .clone()
             .map_with(|ident, e| QualifiedName {
                 span: e.span(),
                 parts: vec![ident],
             })
             .foldl_with(
-                just(Token::Normal(NormalToken::SigilDoubleColon)).ignore_then(identifier_parser.clone()).repeated(),
+                just(Token::Normal(NormalToken::SigilDoubleColon))
+                    .ignore_then(identifier_parser.clone())
+                    .repeated(),
                 |mut acc, part, _| {
                     acc.span.end = part.span.end;
                     acc.parts.push(part);
                     acc
-                }
+                },
             )
             .map(Expression::QualifiedName);
 

@@ -56,7 +56,7 @@ pub struct ModuleDefinition {
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
-    pub body: StatementList,
+    pub body: Option<StatementList>,
 }
 
 #[derive(Debug, PartialEq)]
