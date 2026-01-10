@@ -1,0 +1,49 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..22,
+        statements: StatementList {
+            span: 0..22,
+            statements: [
+                Module(
+                    ModuleDefinition {
+                        span: 0..22,
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 4..7,
+                            name: "foo",
+                        },
+                        body: StatementList {
+                            span: 10..20,
+                            statements: [
+                                Function(
+                                    FunctionDefinition {
+                                        span: 10..20,
+                                        visibility: None,
+                                        name: Identifier {
+                                            span: 13..16,
+                                            name: "bar",
+                                        },
+                                        arguments: [],
+                                        return_type: None,
+                                        body: StatementList {
+                                            span: 19..19,
+                                            statements: [],
+                                            tail: None,
+                                        },
+                                    },
+                                ),
+                            ],
+                            tail: None,
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

@@ -264,6 +264,23 @@ fn parser<'tokens>()
         }
         .labelled("visibility");
 
+        let module = visibility.clone()
+            .or_not()
+            .then_ignore(just(Token::Normal(NormalToken::KeywordMod)))
+            .then(identifier_parser)
+            .then(block.clone())
+            .map_with(
+                |((visibility, name), body), e| {
+                    Statement::Module(ModuleDefinition {
+                        span: e.span(),
+                        attributes: Vec::new(), // todo
+                        visibility,
+                        name,
+                        body
+                    })
+                },
+            );
+
         let workspace_kind = select_ref! {
             Token::Normal(NormalToken::KeywordSketch) => WorkspaceKind::Sketch,
             Token::Normal(NormalToken::KeywordPart) => WorkspaceKind::Part,
@@ -341,6 +358,7 @@ fn parser<'tokens>()
         let without_semi = function
             .or(init)
             .or(workspace)
+            .or(module)
             .or(comment);
 
         with_semi

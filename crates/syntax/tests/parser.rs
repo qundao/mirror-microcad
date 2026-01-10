@@ -82,6 +82,8 @@ use test_case::test_case;
     }
     std::geo2d::Circle(radius);\
 }")]
+#[test_case("mod", "mod foo { fn bar(){} }")]
+#[test_case("mod pub", "pub mod foo { fn bar(){} }")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input).unwrap();
     assert_debug_snapshot!(

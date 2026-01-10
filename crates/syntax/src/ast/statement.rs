@@ -1,5 +1,5 @@
 use crate::Span;
-use crate::ast::{Expression, Identifier, Literal, QualifiedName, StatementList, Type};
+use crate::ast::{Call, Expression, Identifier, Literal, QualifiedName, StatementList, Type};
 
 #[derive(Debug, PartialEq)]
 pub enum Statement {
@@ -99,7 +99,15 @@ pub struct ArgumentDefinition {
 #[derive(Debug, PartialEq)]
 pub struct Attribute {
     pub span: Span,
-    pub items: Vec<Statement>,
+    pub name: Identifier,
+    pub command: AttributeCommand,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum AttributeCommand {
+    Ident(QualifiedName),
+    Assignment(Assignment),
+    Call(Call),
 }
 
 #[derive(Debug, PartialEq)]
