@@ -2,8 +2,8 @@
 -- Test --
         Test name: part_basic
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/parts.md:9
-        Test path: ../books/language/src/structure/workbenches/.test
+      Source file: ../books/language/src/structure/workbenches/types/parts.md:9
+        Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
@@ -12,7 +12,7 @@
 -- No Output --
 -- Errors --
   ⚠ warning: 1:6: Unused global symbol MyPart.
-   ╭─[../books/language/src/structure/workbenches/parts.md:9:6]
+   ╭─[../books/language/src/structure/workbenches/types/parts.md:9:6]
  9 │ part MyPart() {}
    ·      ───┬──
    ·         ╰── warning: 1:6: Unused global symbol MyPart.

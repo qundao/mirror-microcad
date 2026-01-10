@@ -2,8 +2,8 @@
 -- Test --
         Test name: parameters
   Expected result: todo
-      Source file: ../books/language/src/structure/workbenches/operations.md:54
-        Test path: ../books/language/src/structure/workbenches/.test
+      Source file: ../books/language/src/structure/workbenches/types/operations.md:54
+        Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
@@ -27,7 +27,7 @@
 -- No Output --
 -- Errors --
   × error: 3:15: Symbol count not found.
-    ╭─[../books/language/src/structure/workbenches/operations.md:56:15]
+    ╭─[../books/language/src/structure/workbenches/types/operations.md:56:15]
  55 │ op punch_disk(radius: Length) {
  56 │     if @input.count() == 1 {
     ·               ──┬──
@@ -35,7 +35,7 @@
  57 │         { 
     ╰────
   × error: 3:5: If condition is not a boolean: <NO VALUE>
-    ╭─[../books/language/src/structure/workbenches/operations.md:56:5]
+    ╭─[../books/language/src/structure/workbenches/types/operations.md:56:5]
  55 │     op punch_disk(radius: Length) {
  56 │ ╭─▶     if @input.count() == 1 {
  57 │ │           { 
