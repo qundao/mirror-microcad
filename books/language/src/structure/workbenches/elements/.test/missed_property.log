@@ -1,0 +1,52 @@
+﻿
+-- Test --
+        Test name: missed_property
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/elements/initializers.md:49
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  49:   sketch Wheel(radius: Length, thickness = 5mm) {
+  50:       use std::geo2d::Circle;
+  51:   
+  52:       init( thickness: Length ) { } // error: misses to set radius from building plan
+  53:   
+  54:       Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
+  55:   }
+  56:   Wheel(thickness = 1cm);
+
+-- No Output --
+-- Errors --
+  × error: 4:5: Workbench plan incomplete. Missing properties: radius
+    ╭─[../books/language/src/structure/workbenches/elements/initializers.md:52:5]
+ 51 │ 
+ 52 │     init( thickness: Length ) { } // error: misses to set radius from building plan
+    ·     ──────────────┬──────────────
+    ·                   ╰── error: 4:5: Workbench plan incomplete. Missing properties: radius
+ 53 │ 
+    ╰────
+  × error: 6:12: Workbench Circle cannot find initialization for those arguments
+    ╭─[../books/language/src/structure/workbenches/elements/initializers.md:54:5]
+ 53 │ 
+ 54 │     Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
+    ·     ─────────────────┬─────────────────
+    ·                      ╰── Got: Circle( radius = <NO VALUE> )
+ 55 │ }
+    ╰────
+  help: Possible initializations:
+        	Circle( radius: Length, center = (x = 0mm, y = 0mm))
+        	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 6:50: Workbench Circle cannot find initialization for those arguments
+    ╭─[../books/language/src/structure/workbenches/elements/initializers.md:54:43]
+ 53 │ 
+ 54 │     Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
+    ·                                           ───────┬──────
+    ·                                                  ╰── Got: Circle( radius = <NO VALUE> )
+ 55 │ }
+    ╰────
+  help: Possible initializations:
+        	Circle( radius: Length, center = (x = 0mm, y = 0mm))
+        	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+-- Test Result --
+FAILS AS EXPECTED

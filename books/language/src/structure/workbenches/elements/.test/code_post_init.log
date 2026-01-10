@@ -1,0 +1,32 @@
+﻿
+-- Test --
+        Test name: code_post_init
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:23
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  23:   sketch Wheel(radius: Length, thickness = 5mm) {
+  24:       // initializer code
+  25:       use std::geo2d::Circle;
+  26:       // initializer
+  27:       init( diameter: Length ) { radius = diameter / 2; }
+  28:   
+  29:       // building code starts here
+  30:       std::geo2d::Circle(radius);
+  31:   }
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:8: Unused global symbol Wheel.
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:23:8]
+ 23 │ sketch Wheel(radius: Length, thickness = 5mm) {
+    ·        ──┬──
+    ·          ╰── warning: 1:8: Unused global symbol Wheel.
+ 24 │     // initializer code
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 23
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
