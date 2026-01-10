@@ -2,8 +2,8 @@
 -- Test --
         Test name: op_example
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/operations.md:13
-        Test path: ../books/language/src/structure/workbenches/.test
+      Source file: ../books/language/src/structure/workbenches/types/operations.md:13
+        Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
@@ -24,6 +24,6 @@
         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
           Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
 
-Export of "../books/language/src/structure/workbenches/.test/op_example-out.svg" successful.
+Export of "../books/language/src/structure/workbenches/types/.test/op_example-out.svg" successful.
 -- Test Result --
 OK
