@@ -1,0 +1,53 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..26,
+        statements: StatementList {
+            span: 0..26,
+            statements: [
+                Module(
+                    ModuleDefinition {
+                        span: 0..26,
+                        attributes: [],
+                        visibility: Some(
+                            Public,
+                        ),
+                        name: Identifier {
+                            span: 8..11,
+                            name: "foo",
+                        },
+                        body: Some(
+                            StatementList {
+                                span: 14..24,
+                                statements: [
+                                    Function(
+                                        FunctionDefinition {
+                                            span: 14..24,
+                                            visibility: None,
+                                            name: Identifier {
+                                                span: 17..20,
+                                                name: "bar",
+                                            },
+                                            arguments: [],
+                                            return_type: None,
+                                            body: StatementList {
+                                                span: 23..23,
+                                                statements: [],
+                                                tail: None,
+                                            },
+                                        },
+                                    ),
+                                ],
+                                tail: None,
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)
