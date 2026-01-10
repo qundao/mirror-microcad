@@ -2,8 +2,8 @@
 -- Test --
         Test name: property
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/properties.md:13
-        Test path: ../books/language/src/structure/workbenches/.test
+      Source file: ../books/language/src/structure/workbenches/elements/properties.md:13
+        Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 

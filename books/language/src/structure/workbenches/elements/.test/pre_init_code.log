@@ -2,8 +2,8 @@
 -- Test --
         Test name: pre_init_code
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/init_code.md:13
-        Test path: ../books/language/src/structure/workbenches/.test
+      Source file: ../books/language/src/structure/workbenches/elements/init_code.md:13
+        Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
@@ -33,7 +33,7 @@
 -- No Output --
 -- Errors --
   ⚠ warning: 9:8: Unused global symbol into_radius.
-    ╭─[../books/language/src/structure/workbenches/init_code.md:21:8]
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:21:8]
  20 │     // function
  21 │     fn into_radius( diameter: Length ) {
     ·        ─────┬─────

@@ -31,6 +31,13 @@ std::print("outer: {t.outer}");
 std::print("inner: {t.inner}");
 ```
 
+Output
+  : ```
+    outer: 10mm
+    inner: 5mm
+    ```
+
+
 If you remove the `prop` keyword you will fail at accessing `inner`:
 
 [![test](.test/property_wrong.svg)](.test/property_wrong.log)

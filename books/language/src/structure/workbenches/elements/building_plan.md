@@ -14,14 +14,22 @@ in the building plan, called `radius`, of type `Length`:
 
 ```µcad,building_plan
 // sketch with a radius as building plan
-sketch Wheel(radius: Length) {
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
     // access property radius from the building plan
-    std::geo2d::Circle(radius);
+    Circle(radius + thickness) - Circle(radius)
 }
 
 // access property radius of a Wheel
-r = Wheel(5cm).radius;
+w = Wheel(1cm);
+// render Wheel
+w;
 
-// check if r is 5cm
-std::debug::assert_eq( [r, 5cm] );
+// check if r is 5cm an thickness equals the default (1cm)
+std::debug::assert_eq( [w.radius, 1cm] );
+std::debug::assert_eq( [w.thickness, 5mm] );
 ```
+
+Output
+  :![output](.test/building_plan-out.svg)

@@ -1,0 +1,68 @@
+﻿
+-- Test --
+        Test name: illegal_workbench_statement_sketch
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:43
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  43:   sketch Wheel(radius: Length) {
+  44:       sketch A() {}   // error
+  45:       part B() {}     // error
+  46:       op C() {}       // error
+  47:   }
+
+-- No Output --
+-- Errors --
+  × error: 2:12: Statement is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:44:12]
+ 43 │ sketch Wheel(radius: Length) {
+ 44 │     sketch A() {}   // error
+    ·            ┬
+    ·            ╰── error: 2:12: Statement is not available within Sketch
+ 45 │     part B() {}     // error
+    ╰────
+  × error: 2:12: Sketch is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:44:12]
+ 43 │ sketch Wheel(radius: Length) {
+ 44 │     sketch A() {}   // error
+    ·            ┬
+    ·            ╰── error: 2:12: Sketch is not available within Sketch
+ 45 │     part B() {}     // error
+    ╰────
+  × error: 3:10: Statement is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:45:10]
+ 44 │     sketch A() {}   // error
+ 45 │     part B() {}     // error
+    ·          ┬
+    ·          ╰── error: 3:10: Statement is not available within Sketch
+ 46 │     op C() {}       // error
+    ╰────
+  × error: 3:10: Part is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:45:10]
+ 44 │     sketch A() {}   // error
+ 45 │     part B() {}     // error
+    ·          ┬
+    ·          ╰── error: 3:10: Part is not available within Sketch
+ 46 │     op C() {}       // error
+    ╰────
+  × error: 4:8: Statement is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:46:8]
+ 45 │     part B() {}     // error
+ 46 │     op C() {}       // error
+    ·        ┬
+    ·        ╰── error: 4:8: Statement is not available within Sketch
+ 47 │ }
+    ╰────
+  × error: 4:8: Operation is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:46:8]
+ 45 │     part B() {}     // error
+ 46 │     op C() {}       // error
+    ·        ┬
+    ·        ╰── error: 4:8: Operation is not available within Sketch
+ 47 │ }
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

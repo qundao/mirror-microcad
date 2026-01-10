@@ -7,12 +7,12 @@ Usually it produces one or many 2D or 3D objects on base of the given
 [![test](.test/code.svg)](.test/code.log)
 
 ```µcad,code
-sketch Wheel(radius: Length) {
+sketch Wheel(radius: Length, thickness = 5mm) {
     // building code starts here
-    std::geo2d::Circle(radius);
+    use std::geo2d::Circle;
+    Circle(radius + thickness) - Circle(radius)
 }
-
-Wheel(radius = 1.0mm)
+Wheel(radius = 1cm);
 ```
 
 If *initializers* were defined the *building code* starts below them.
@@ -20,7 +20,9 @@ If *initializers* were defined the *building code* starts below them.
 [![test](.test/code_post_init.svg)](.test/code_post_init.log)
 
 ```µcad,code_post_init
-sketch Wheel(radius: Length) {
+sketch Wheel(radius: Length, thickness = 5mm) {
+    // initializer code
+    use std::geo2d::Circle;
     // initializer
     init( diameter: Length ) { radius = diameter / 2; }
 
@@ -39,25 +41,24 @@ It's **not allowed** to use the `sketch`, `part`, `op`, `return` nor `mod` state
 
 ```µcad,illegal_workbench_statement_sketch#fail
 sketch Wheel(radius: Length) {
-    sketch Axis(length: Length) {}  // error
+    sketch A() {}   // error
+    part B() {}     // error
+    op C() {}       // error
 }
-Wheel(radius = 1.0mm);
 ```
 
 [![test](.test/illegal_workbench_statement_mod.svg)](.test/illegal_workbench_statement_mod.log)
 
 ```µcad,illegal_workbench_statement_mod#fail
 sketch Wheel(radius: Length) {
-    mod m {}                        // error
+    mod m {}        // error
 }
-Wheel(radius = 1.0mm);
 ```
 
 [![test](.test/illegal_workbench_statement_return.svg)](.test/illegal_workbench_statement_return.log)
 
 ```µcad,illegal_workbench_statement_return#fail
 sketch Wheel(radius: Length) {
-    return;                         // error
+    return;         // error
 }
-Wheel(radius = 1.0mm);
 ```
