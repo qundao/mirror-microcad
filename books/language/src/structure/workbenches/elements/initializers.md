@@ -11,9 +11,11 @@ be initialized (except those with *default values*).
 [![test](.test/init_property.svg)](.test/init_property.log)
 
 ```µcad,init_property
-sketch Wheel(radius: Length, thickness: Length) {
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
     // initializer with diameter
-    init( diameter: Length, thickness: Length ) {
+    init( diameter: Length, thickness = 5mm ) {
         // must set property `radius` from building plan
         radius = diameter / 2;
 
@@ -23,18 +25,16 @@ sketch Wheel(radius: Length, thickness: Length) {
     }
 
     // Now radius and thickness can be used
-    std::geo2d::Circle(radius) - std::geo2d::Circle(radius - thickness);
+    Circle(radius + thickness) - Circle(radius)
 }
-
 // call with building plan
 Wheel(radius=1.5cm, thickness=2mm);
-// call with initializer
-Wheel(diameter=1.5cm, thickness=5mm);
+// call with initializer and use default thickness
+Wheel(diameter=1.5cm);
 ```
 
-The output of this code shows the two concentric wheels:
-
-![test](.test/init_property-out.svg)
+Output
+  :![output](.test/init_property-out.svg)
 
 ## Rules
 
@@ -46,11 +46,14 @@ you will get an error:
 [![test](.test/missed_property.svg)](.test/missed_property.log)
 
 ```µcad,missed_property#fail
-sketch Wheel(radius: Length) {
-    init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
-}
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
 
-Wheel(width = 1.0mm);
+    init( thickness: Length ) { } // error: misses to set radius from building plan
+
+    Circle(radius + thickness) - Circle(radius)  // error: radius is missing
+}
+Wheel(thickness = 1cm);
 ```
 
 ### Building plan properties with default values
@@ -61,15 +64,22 @@ need to be set in the initializers.
 [![test](.test/building_plan_defaults.svg)](.test/building_plan_defaults.log)
 
 ```µcad,building_plan_defaults#todo
-sketch Wheel(outer = 5cm, inner: Length) {
-    init(i: Length) { 
-        inner = i;
-        // outer has been set automatically by the default in the building plan 
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+    
+    init(diameter: Length) { 
+        radius = diameter / 2;
+        // thickness has been set automatically by the default in the building plan 
     }
+    
+    Circle(radius + thickness) - Circle(radius)
 }
 
-Wheel(i = 1.0mm);
+Wheel(r = 1cm);
 ```
+
+Output
+  :![output](.test/building_plan_defaults-out.svg)
 
 ### Building plan cannot be accessed within initializers
 
@@ -78,14 +88,17 @@ You cannot read building plan items from within initializers.
 [![test](.test/no_building_plan_in_initializers.svg)](.test/no_building_plan_in_initializers.log)
 
 ```µcad,no_building_plan_in_initializers#todo_fail
-sketch Wheel(radius: Length) {
-    init( width: Length ) { 
-        _ = radius;         // error: cannot read radius here
-        radius = width / 2; // instead you need to set it
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+    
+    init( diameter: Length, thickness = 5mm ) { 
+        _ = radius;            // error: cannot read radius here
+        radius = diameter / 2; // instead you need to set it
     }
+    
+    Circle(radius + thickness) - Circle(radius)
 }
-
-Wheel(width = 1.0mm);
+Wheel(diameter = 1cm);
 ```
 
 ### Initializers with parameters from building plan
@@ -97,19 +110,18 @@ second time.
 [![test](.test/no_building_plan_same_name.svg)](.test/no_building_plan_same_name.log)
 
 ```µcad,no_building_plan_same_name#fail
-sketch Wheel(radius: Length, inner: Length) {
-    init( radius: Length ) {
-        // radius is seta property already by building plan
-
-        radius = radius * 2;  // error: it cannot be set a second time
-        inner = radius / 2;        
-    }
-
+sketch Wheel(radius: Length, thickness: Length) {
     use std::geo2d::Circle;
-    Circle(radius) - Circle(inner)
+
+    init( radius: Length ) {
+        // radius property has already been set by building plan
+        radius = radius * 2;  // error: it cannot be set a second time
+        thickness = 5mm;
+    }
+    Circle(radius + thickness) - Circle(radius)
 }
 // Use initializer
-Wheel(radius = 1.0mm);
+Wheel(radius = 1cm);
 ```
 
 Types must match when using a name from building plan in initializer parameters.
@@ -117,16 +129,17 @@ Types must match when using a name from building plan in initializer parameters.
 [![test](.test/no_building_plan_same_name_different_type.svg)](.test/no_building_plan_same_name_different_type.log)
 
 ```µcad,no_building_plan_same_name_different_type#todo_fail
-sketch Wheel(radius: Length, inner: Length) {
-    init( radius: Scalar ) {  // error: radius is already a `Length` in building plan
-        inner = radius / 2 * 1mm;
-    }
-
+sketch Wheel(radius: Length, thickness: Length) {
     use std::geo2d::Circle;
-    Circle(radius * 1mm) - Circle(inner)
+
+    init( radius: Scalar, outer: Length ) { // error: radius is already a Length in building plan
+        thickness = outer - (radius * 1mm);
+    }  
+
+    Circle(radius + thickness) - Circle(radius)
 }
 // Use initializer
-Wheel(radius = 1.0);
+Wheel(radius = 1.0, outer = 1cm);
 ```
 
 ### No code between initializers
@@ -136,13 +149,14 @@ It's not allowed to write any code between *initializers*.
 [![test](.test/code_between_initializers.svg)](.test/code_between_initializers.log)
 
 ```µcad,code_between_initializers#fail
-sketch Wheel(radius: Length) {
-    init( width:Length ) { radius = width / 2; }
-    
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
+    init( width: Length, thickness = 5mm ) { radius = width / 2; }
     radius = 1; // error: code between initializers not allowed
+    init( height: Length, thickness = 5mm ) { radius = height / 2; }
 
-    init( height:Length ) { radius = height / 2; }
+    Circle(radius + thickness) - Circle(radius)
 }
-
-Wheel(radius = 1.0mm);
+Wheel(radius = 1cm);
 ```

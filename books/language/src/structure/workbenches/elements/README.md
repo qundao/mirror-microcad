@@ -69,6 +69,5 @@ assert_eq([r.diameter, 4cm]);
 r - d;
 ```
 
-## Output
-
-![test](.test/part_declaration-out.svg)
+Output
+  :![output](.test/part_declaration-out.svg)

@@ -1,0 +1,37 @@
+﻿
+-- Test --
+        Test name: building_plan_defaults
+  Expected result: todo
+      Source file: ../books/language/src/structure/workbenches/elements/initializers.md:67
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  67:   sketch Wheel(radius: Length, thickness = 5mm) {
+  68:       use std::geo2d::Circle;
+  69:       
+  70:       init(diameter: Length) { 
+  71:           radius = diameter / 2;
+  72:           // thickness has been set automatically by the default in the building plan 
+  73:       }
+  74:       
+  75:       Circle(radius + thickness) - Circle(radius)
+  76:   }
+  77:   
+  78:   Wheel(r = 1cm);
+
+-- No Output --
+-- Errors --
+  × error: 12:7: Workbench Wheel cannot find initialization for those arguments
+    ╭─[../books/language/src/structure/workbenches/elements/initializers.md:78:1]
+ 77 │ 
+ 78 │ Wheel(r = 1cm);
+    · ───────┬──────
+    ·        ╰── Got: Wheel( r: Length )
+    ╰────
+  help: Possible initializations:
+        	Wheel( radius: Length, thickness = 5mm)
+        	Wheel( diameter: Length)
+Unexpected error(s) which did occur in line(s): 78
+-- Test Result --
+TODO
