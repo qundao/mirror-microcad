@@ -89,7 +89,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/illegal_workbench_statement_sketch.svg)](../structure/workbenches/elements/.test/illegal_workbench_statement_sketch.log) | [illegal_workbench_statement_sketch](../structure/workbenches/elements/building_code.md) |
 | [![test](../structure/workbenches/elements/.test/init_code_no_building_plan.svg)](../structure/workbenches/elements/.test/init_code_no_building_plan.log) | [init_code_no_building_plan](../structure/workbenches/elements/init_code.md) |
 | [![test](../structure/workbenches/elements/.test/init_property.svg)](../structure/workbenches/elements/.test/init_property.log) | [init_property](../structure/workbenches/elements/initializers.md) |
-| [![test](../structure/workbenches/.test/input.svg)](../structure/workbenches/.test/input.log) | [input](../structure/workbenches/operations.md) |
+| [![test](../structure/workbenches/types/.test/input.svg)](../structure/workbenches/types/.test/input.log) | [input](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../structure/modules/.test/internal_mod.svg)](../structure/modules/.test/internal_mod.log) | [internal_mod](../structure/modules/internal_modules.md) |
 | [![test](../libraries/std/ops/.test/intersection_alt_operator.svg)](../libraries/std/ops/.test/intersection_alt_operator.log) | [intersection_alt_operator](../libraries/std/ops/intersect.md) |
@@ -109,12 +109,12 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/no_building_plan_same_name_different_type.svg)](../structure/workbenches/elements/.test/no_building_plan_same_name_different_type.log) | [no_building_plan_same_name_different_type](../structure/workbenches/elements/initializers.md) |
 | [![test](../flow/argument_match/.test/no_multiplicity.svg)](../flow/argument_match/.test/no_multiplicity.log) | [no_multiplicity](../flow/argument_match/multiplicity.md) |
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
-| [![test](../structure/workbenches/.test/op_example.svg)](../structure/workbenches/.test/op_example.log) | [op_example](../structure/workbenches/operations.md) |
+| [![test](../structure/workbenches/types/.test/op_example.svg)](../structure/workbenches/types/.test/op_example.log) | [op_example](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/operator_array.svg)](../expressions/.test/operator_array.log) | [operator_array](../expressions/operators.md) |
 | [![test](../expressions/.test/operator_examples.svg)](../expressions/.test/operator_examples.log) | [operator_examples](../expressions/operators.md) |
 | [![test](../libraries/std/ops/.test/orient_3d.svg)](../libraries/std/ops/.test/orient_3d.log) | [orient_3d](../libraries/std/ops/orient.md) |
-| [![test](../structure/workbenches/.test/parameters.svg)](../structure/workbenches/.test/parameters.log) | [parameters](../structure/workbenches/operations.md) |
-| [![test](../structure/workbenches/.test/part_basic.svg)](../structure/workbenches/.test/part_basic.log) | [part_basic](../structure/workbenches/parts.md) |
+| [![test](../structure/workbenches/types/.test/parameters.svg)](../structure/workbenches/types/.test/parameters.log) | [parameters](../structure/workbenches/types/operations.md) |
+| [![test](../structure/workbenches/types/.test/part_basic.svg)](../structure/workbenches/types/.test/part_basic.log) | [part_basic](../structure/workbenches/types/parts.md) |
 | [![test](../structure/workbenches/elements/.test/part_declaration.svg)](../structure/workbenches/elements/.test/part_declaration.log) | [part_declaration](../structure/workbenches/elements/README.md) |
 | [![test](../structure/workbenches/elements/.test/pre_init_code.svg)](../structure/workbenches/elements/.test/pre_init_code.log) | [pre_init_code](../structure/workbenches/elements/init_code.md) |
 | [![test](../structure/workbenches/elements/.test/property.svg)](../structure/workbenches/elements/.test/property.log) | [property](../structure/workbenches/elements/properties.md) |
@@ -136,8 +136,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/scale_3d.svg)](../libraries/std/ops/.test/scale_3d.log) | [scale_3d](../libraries/std/ops/scale.md) |
 | [![test](../libraries/std/ops/.test/scale_uniform.svg)](../libraries/std/ops/.test/scale_uniform.log) | [scale_uniform](../libraries/std/ops/scale.md) |
 | [![test](../libraries/builtin/.test/sector.svg)](../libraries/builtin/.test/sector.log) | [sector](../libraries/builtin/geo2d.md) |
-| [![test](../structure/workbenches/.test/sketch_3d.svg)](../structure/workbenches/.test/sketch_3d.log) | [sketch_3d](../structure/workbenches/sketches.md) |
-| [![test](../structure/workbenches/.test/sketch_basic.svg)](../structure/workbenches/.test/sketch_basic.log) | [sketch_basic](../structure/workbenches/sketches.md) |
+| [![test](../structure/workbenches/types/.test/sketch_3d.svg)](../structure/workbenches/types/.test/sketch_3d.log) | [sketch_3d](../structure/workbenches/types/sketches.md) |
+| [![test](../structure/workbenches/types/.test/sketch_basic.svg)](../structure/workbenches/types/.test/sketch_basic.log) | [sketch_basic](../structure/workbenches/types/sketches.md) |
 | [![test](../structure/.test/source_file_2D.svg)](../structure/.test/source_file_2D.log) | [source_file_2D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_3D.svg)](../structure/.test/source_file_3D.log) | [source_file_3D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_mixed.svg)](../structure/.test/source_file_mixed.log) | [source_file_mixed](../structure/source_file.md) |
