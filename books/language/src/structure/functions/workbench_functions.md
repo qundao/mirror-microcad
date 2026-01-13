@@ -1,6 +1,6 @@
 # Workbench Functions
 
-A [workbench](../workbenches/README.md) can contain functions.
+A [workbench](../workbenches/) can contain functions.
 These functions can be used within the workbench, but **not** from outside it.
 
 Here is an example which generates a punched disk of a given radius using a

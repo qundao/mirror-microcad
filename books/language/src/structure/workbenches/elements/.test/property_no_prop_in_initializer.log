@@ -16,7 +16,9 @@
   77:       
   78:       prop center = radius - thickness / 2;   // here it's ok
   79:   }
-  80:   Wheel(radius = 1cm, inner = 0.5cm);
+  80:   center = Wheel(radius = 1cm, inner = 0.5cm).center;
+  81:   
+  82:   std::debug::assert_eq([ center, 1.75cm ] );
 
 -- No Output --
 -- Errors --
@@ -48,5 +50,12 @@
  79 │ }
     ╰────
   help: Values in microcad are immutable
+  × error: 12:23: Assertion failed: Values differ: [7.5mm, 17.5mm]
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:82:23]
+ 81 │ 
+ 82 │ std::debug::assert_eq([ center, 1.75cm ] );
+    ·                       ─────────┬─────────
+    ·                                ╰── error: 12:23: Assertion failed: Values differ: [7.5mm, 17.5mm]
+    ╰────
 -- Test Result --
 FAILS AS EXPECTED (BUT IS TODO)

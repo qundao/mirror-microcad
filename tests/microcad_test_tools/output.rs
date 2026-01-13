@@ -82,6 +82,11 @@ impl Output {
         let input = input.to_str().expect(e);
         let log = log.to_str().expect(e);
 
+        let input = match input.strip_suffix("README.md") {
+            Some(input) => input,
+            None => input,
+        };
+
         format!(
             "| [![test]({banner})]({log}) | [{name}]({input}) |\n",
             name = self.name,

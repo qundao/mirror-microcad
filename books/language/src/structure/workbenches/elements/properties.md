@@ -77,7 +77,9 @@ sketch Wheel(radius: Length, thickness = 5cm) {
     
     prop center = radius - thickness / 2;   // here it's ok
 }
-Wheel(radius = 1cm, inner = 0.5cm);
+center = Wheel(radius = 1cm, inner = 0.5cm).center;
+
+std::debug::assert_eq([ center, 1.75cm ] );
 ```
 
 Output

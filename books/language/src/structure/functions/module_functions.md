@@ -1,6 +1,6 @@
 # Module Functions
 
-A [module](../modules/README.md) can contain functions that are accessible within
+A [module](../modules/) can contain functions that are accessible within
 the module.
 By declaring a function as *public* using the keyword `pub`, it becomes
 available for use outside the module.

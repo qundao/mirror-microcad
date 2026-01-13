@@ -2,30 +2,30 @@
 -- Test --
         Test name: property_no_prop_in_init_code
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/elements/properties.md:93
+      Source file: ../books/language/src/structure/workbenches/elements/properties.md:95
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
-  93:   sketch Wheel(outer: Length) {
-  94:   
-  95:       prop max = 100;     // error: do not use prop here
+  95:   sketch Wheel(outer: Length) {
   96:   
-  97:       init(inner: Length) {
-  98:           outer = inner * 2;
-  99:       }
- 100:   }
- 101:   Wheel(inner = 0.5cm);
+  97:       prop max = 100;     // error: do not use prop here
+  98:   
+  99:       init(inner: Length) {
+ 100:           outer = inner * 2;
+ 101:       }
+ 102:   }
+ 103:   Wheel(inner = 0.5cm);
 
 -- No Output --
 -- Errors --
   × error: 3:5: Statement not allowed prior initializers
-    ╭─[../books/language/src/structure/workbenches/elements/properties.md:95:5]
- 94 │ 
- 95 │     prop max = 100;     // error: do not use prop here
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:97:5]
+ 96 │ 
+ 97 │     prop max = 100;     // error: do not use prop here
     ·     ───────┬───────
     ·            ╰── error: 3:5: Statement not allowed prior initializers
- 96 │ 
+ 98 │ 
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

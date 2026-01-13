@@ -13,8 +13,8 @@ discuss within this book:
 | [const assignment](../assignments/const.md) | naming constants                            | `const y = 1;` |
 | [pub assignment](../assignments/pub.md)     | exporting constants                         | `pub y = 1;`   |
 | [function](functions.md)                    | separate calculations                       | `fn f() { }`   |
-| [workbench](workbenches/README.md)          | build or transform 2D sketches and 3D parts | `part P() { }` |
-| [module](modules/README.md)                 | modularization of complex code              | `mod m { }`    |
+| [workbench](workbenches/)                   | build or transform 2D sketches and 3D parts | `part P() { }` |
+| [module](modules/)                          | modularization of complex code              | `mod m { }`    |
 | [if](../flow/conditions.md)                 | process conditions                          | `if x > 1 { }` |
 | [use](use.md)                               | use elements from other modules             | `use m;`       |
 | [call](../flow/calls)                       | use functions and workbenches               | `f();`         |
