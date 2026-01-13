@@ -2,22 +2,67 @@
 -- Test --
         Test name: part_basic
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/types/parts.md:9
+      Source file: ../books/language/src/structure/workbenches/types/parts.md:8
         Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
-   9:   part MyPart() {}
+   8:   part MyPart( radius: Length ) {
+   9:       use std::geo3d::*;
+  10:       Sphere(radius) - Cube(radius)
+  11:   }
+  12:   
+  13:   MyPart(1cm);
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:6: Unused global symbol MyPart.
-   ╭─[../books/language/src/structure/workbenches/types/parts.md:9:6]
- 9 │ part MyPart() {}
-   ·      ───┬──
-   ·         ╰── warning: 1:6: Unused global symbol MyPart.
-   ╰────
-Unexpected warnings(s) which did occur in line(s): 9
--- No Model --
+  ⚠ warning: 37:10: Unused local Cylinder.
+    ╭─[../crates/std/lib/std/geo3d.µcad:44:10]
+ 43 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
+ 44 │ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
+    ·          ────┬───
+    ·              ╰── warning: 37:10: Unused local Cylinder.
+ 45 │     /// Initialize by `radius` and `height`. Cylinder will be centered.
+    ╰────
+  ⚠ warning: 77:10: Unused local Torus.
+    ╭─[../crates/std/lib/std/geo3d.µcad:84:10]
+ 83 │ /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
+ 84 │ pub part Torus(major_radius: Length, minor_radius: Length) {
+    ·          ──┬──
+    ·            ╰── warning: 77:10: Unused local Torus.
+ 85 │     std::geo2d::Circle(radius = minor_radius)
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 44, 84
+-- Model --
+  Group (root) ->
+    Workpiece(part) part_basic::MyPart(radius=10mm) ->
+      - radius = 10mm
+      Operation subtract() ->
+        Group ->
+          Workpiece(part) std::geo3d::Sphere(radius=10mm) ->
+            - radius = 10mm
+            Primitive3D __builtin::geo3d::Sphere(radius=10mm) ->
+          Workpiece(part) std::geo3d::Cube(size=10mm) ->
+            - size_x = 10mm
+            - size_y = 10mm
+            - size_z = 10mm
+            Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-5mm) ->
+              - x = 0mm
+              - y = 0mm
+              - z = -5mm
+              Transform __builtin::ops::translate(x=0mm, y=0mm, z=-5mm) ->
+                Workpiece(op) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
+                  - height = 10mm
+                  - scale = (x=1, y=1)
+                  - twist = 0rad
+                  Operation __builtin::ops::extrude(height=10mm, scale_x=1, scale_y=1, twist=0rad) ->
+                    Workpiece(sketch) std::geo2d::Rect(height=10mm, width=10mm) ->
+                      - height = 10mm
+                      - width = 10mm
+                      - x = -5mm
+                      - y = -5mm
+                      Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
+
+Export of "../books/language/src/structure/workbenches/types/.test/part_basic-out.stl" successful.
 -- Test Result --
 OK (BUT WARNINGS)
