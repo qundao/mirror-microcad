@@ -18,12 +18,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 4:5: Workbench plan incomplete. Missing properties: radius
+  × error: 4:5: Building plan incomplete. Missing properties: radius
     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:52:5]
  51 │ 
  52 │     init( thickness: Length ) { } // error: misses to set radius from building plan
     ·     ──────────────┬──────────────
-    ·                   ╰── error: 4:5: Workbench plan incomplete. Missing properties: radius
+    ·                   ╰── error: 4:5: Building plan incomplete. Missing properties: radius
  53 │ 
     ╰────
   × error: 6:12: Workbench Circle cannot find initialization for those arguments

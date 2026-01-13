@@ -75,7 +75,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
     Circle(radius = radius + thickness) - Circle(radius)
 }
 
-Wheel(r = 1cm);
+Wheel(diameter = 1cm);
 ```
 
 Output
