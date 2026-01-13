@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**191** tests have been evaluated with version **0.2.20** of microcad.
+**192** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -114,6 +114,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/operator_examples.svg)](../expressions/.test/operator_examples.log) | [operator_examples](../expressions/operators.md) |
 | [![test](../libraries/std/ops/.test/orient_3d.svg)](../libraries/std/ops/.test/orient_3d.log) | [orient_3d](../libraries/std/ops/orient.md) |
 | [![test](../structure/workbenches/types/.test/parameters.svg)](../structure/workbenches/types/.test/parameters.log) | [parameters](../structure/workbenches/types/operations.md) |
+| [![test](../structure/workbenches/types/.test/part_2d.svg)](../structure/workbenches/types/.test/part_2d.log) | [part_2d](../structure/workbenches/types/parts.md) |
 | [![test](../structure/workbenches/types/.test/part_basic.svg)](../structure/workbenches/types/.test/part_basic.log) | [part_basic](../structure/workbenches/types/parts.md) |
 | [![test](../structure/workbenches/elements/.test/part_declaration.svg)](../structure/workbenches/elements/.test/part_declaration.log) | [part_declaration](../structure/workbenches/elements/) |
 | [![test](../structure/workbenches/elements/.test/pre_init_code.svg)](../structure/workbenches/elements/.test/pre_init_code.log) | [pre_init_code](../structure/workbenches/elements/init_code.md) |
