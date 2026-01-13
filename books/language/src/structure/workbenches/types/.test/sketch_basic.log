@@ -7,15 +7,96 @@
 
 -- Code --
 
-   9:   use std::geo2d::*;
-  10:   sketch MySketch( radius: Length) {
+   9:   sketch MySketch( radius: Length) {
+  10:       use std::geo2d::*;
   11:       Circle(radius) - Rect(size = radius);
   12:   }
   13:   
   14:   MySketch(1cm);
 
 -- No Output --
--- No Errors --
+-- Errors --
+  ⚠ warning: 19:12: Unused local Frame.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:27:12]
+ 26 │ /// A frame with a thickness.
+ 27 │ pub sketch Frame(width: Length, height: Length, thickness: Length) {
+    ·            ──┬──
+    ·              ╰── warning: 19:12: Unused local Frame.
+ 28 │     std::debug::assert(thickness > 0.0mm, "Thickness must be a positive number (thickness = {thickness})");
+    ╰────
+  ⚠ warning: 25:12: Unused local Hexagon.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:33:12]
+ 32 │ /// A regular hexagon.
+ 33 │ pub sketch Hexagon(radius: Length) {
+    ·            ───┬───
+    ·               ╰── warning: 25:12: Unused local Hexagon.
+ 34 │     Ngon(6, radius);
+    ╰────
+  ⚠ warning: 30:12: Unused local InvoluteGearProfile.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:38:12]
+ 37 │ 
+ 38 │ pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
+    ·            ─────────┬─────────
+    ·                     ╰── warning: 30:12: Unused local InvoluteGearProfile.
+ 39 │     prop pitch_radius = module * teeth / 2.0;
+    ╰────
+  ⚠ warning: 40:12: Unused local Line.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:48:12]
+ 47 │ 
+ 48 │ pub sketch Line(p0: Vec2, p1: Vec2) {
+    ·            ──┬─
+    ·              ╰── warning: 40:12: Unused local Line.
+ 49 │     init(width: Length, y = 0.0mm) {
+    ╰────
+  ⚠ warning: 60:12: Unused local Ngon.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:68:12]
+ 67 │ /// A regular convex polygon with `n` corners.
+ 68 │ pub sketch Ngon(n: Integer, radius: Length) {
+    ·            ──┬─
+    ·              ╰── warning: 60:12: Unused local Ngon.
+ 69 │     std::debug::assert(n > 2, "N must be at least 3.");
+    ╰────
+  ⚠ warning: 85:12: Unused local Ring.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:93:12]
+ 92 │ 
+ 93 │ pub sketch Ring(outer_radius: Length, inner_radius: Length ) {
+    ·            ──┬─
+    ·              ╰── warning: 85:12: Unused local Ring.
+ 94 │      init(outer_radius: Length, thickness: Length) {
+    ╰────
+  ⚠ warning: 107:12: Unused local RoundedRect.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:115:12]
+ 114 │ /// * Centered rect with width and height: `RoundedRect(width = 10.0mm, height = 5.0mm);`
+ 115 │ pub sketch RoundedRect(
+     ·            ─────┬─────
+     ·                 ╰── warning: 107:12: Unused local RoundedRect.
+ 116 │     width: Length,
+     ╰────
+  ⚠ warning: 147:12: Unused local Sector.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:155:12]
+ 154 │ /// Circle sector definition.
+ 155 │ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
+     ·            ───┬──
+     ·               ╰── warning: 147:12: Unused local Sector.
+ 156 │     init(radius: Length, angle: Angle, offset = 0°) {
+     ╰────
+  ⚠ warning: 156:12: Unused local SinusoidalGearProfile.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:164:12]
+ 163 │ 
+ 164 │ pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5, stretch = 0.5) {
+     ·            ──────────┬──────────
+     ·                      ╰── warning: 156:12: Unused local SinusoidalGearProfile.
+ 165 │     prop pitch_radius = module * teeth;
+     ╰────
+  ⚠ warning: 166:12: Unused local Text.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:174:12]
+ 173 │ /// Text definition.
+ 174 │ pub sketch Text(height: Length, text: String, font_file = "") {
+     ·            ──┬─
+     ·              ╰── warning: 166:12: Unused local Text.
+ 175 │     __builtin::geo2d::Text(height, text, font_file);
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 27, 33, 38, 48, 68, 93, 115, 155, 164, 174
 -- Model --
   Group (root) ->
     Workpiece(sketch) sketch_basic::MySketch(radius=10mm) ->
@@ -36,4 +117,4 @@
 
 Export of "../books/language/src/structure/workbenches/types/.test/sketch_basic-out.svg" successful.
 -- Test Result --
-OK
+OK (BUT WARNINGS)
