@@ -203,7 +203,7 @@ pub enum EvalError {
     },
 
     /// Initializer missed to set a property from plan
-    #[error("Workbench plan incomplete. Missing properties: {0}")]
+    #[error("Building plan incomplete. Missing properties: {0}")]
     BuildingPlanIncomplete(IdentifierList),
 
     /// This errors happens if the expression is supposed to produce models but did not.
