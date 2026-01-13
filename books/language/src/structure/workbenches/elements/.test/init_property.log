@@ -15,7 +15,7 @@
   19:           // must set property `radius` from building plan
   20:           radius = diameter / 2;
   21:   
-  22:           // thickness (from the building plan) does not need 
+  22:           // `thickness` (from the building plan) does not need 
   23:           // to be set, because it was automatically set by 
   24:           // parameter of this initializer
   25:       }

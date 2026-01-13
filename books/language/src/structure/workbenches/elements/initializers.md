@@ -19,7 +19,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
         // must set property `radius` from building plan
         radius = diameter / 2;
 
-        // thickness (from the building plan) does not need 
+        // `thickness` (from the building plan) does not need 
         // to be set, because it was automatically set by 
         // parameter of this initializer
     }

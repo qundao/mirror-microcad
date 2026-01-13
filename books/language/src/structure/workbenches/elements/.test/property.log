@@ -12,20 +12,19 @@
   15:   sketch Wheel(outer: Length) {
   16:       use std::geo2d::Circle;
   17:   
-  18:       // `inner` is declared as property and maybe read from 
-  19:       // outside this workbench
-  20:       prop inner = outer / 2;
-  21:   
-  22:       // generate wheel (and use property inner)
-  23:       Circle(radius = outer) - Circle(radius = inner);
-  24:   }
-  25:   
-  26:   // evaluate wheel
-  27:   t = Wheel(1cm);
-  28:   
-  29:   // extract and display `outer` and `inner` from generated wheel
-  30:   std::print("outer: {t.outer}");
-  31:   std::print("inner: {t.inner}");
+  18:       // `inner` is declared as property
+  19:       prop inner = outer / 2;
+  20:   
+  21:       // generate wheel (and use property `outer` and `inner`)
+  22:       Circle(radius = outer) - Circle(radius = inner);
+  23:   }
+  24:   
+  25:   // evaluate wheel
+  26:   t = Wheel(1cm);
+  27:   
+  28:   // extract and display `outer` and `inner` from generated wheel
+  29:   std::print("outer: {t.outer}");
+  30:   std::print("inner: {t.inner}");
 
 -- Output --
 outer: 10mm
