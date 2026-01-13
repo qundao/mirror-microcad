@@ -47,4 +47,4 @@ std::debug::assert_eq([ f(2, 2mm), 4mm ]);
 ```
 
 Functions may be declared within [source files](../source_file.md),
-[modules](../modules/README.md) or [workbenches](../workbenches/README.md).
+[modules](../modules/) or [workbenches](../workbenches/).
