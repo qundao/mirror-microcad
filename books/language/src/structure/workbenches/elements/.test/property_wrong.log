@@ -2,27 +2,27 @@
 -- Test --
         Test name: property_wrong
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/elements/properties.md:46
+      Source file: ../books/language/src/structure/workbenches/elements/properties.md:45
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
-  46:   sketch Wheel(outer: Length) {
-  47:       use std::geo2d::Circle;
-  48:   
-  49:       // `inner` is declared as variable and may not be read
-  50:       // from outside this workbench
-  51:       inner = outer / 2;
-  52:   
-  53:       Circle(outer) - Circle(inner);
-  54:   }
-  55:   
-  56:   t = Wheel(outer = 1cm);
-  57:   
-  58:   // you can still extract and display `outer`
-  59:   std::print("outer: {t.outer}");
-  60:   // but you cannot access `inner` anymore
-  61:   std::print("inner: {t.inner}"); // error
+  45:   sketch Wheel(outer: Length) {
+  46:       use std::geo2d::Circle;
+  47:   
+  48:       // `inner` is declared as variable and may not be read
+  49:       // from outside this workbench
+  50:       inner = outer / 2;
+  51:   
+  52:       Circle(outer) - Circle(inner);
+  53:   }
+  54:   
+  55:   t = Wheel(outer = 1cm);
+  56:   
+  57:   // you can still extract and display `outer`
+  58:   std::print("outer: {t.outer}");
+  59:   // but you cannot access `inner` anymore
+  60:   std::print("inner: {t.inner}"); // error
 
 -- Output --
 outer: 10mm
@@ -30,9 +30,9 @@ inner: <NO VALUE>
 
 -- Errors --
   × error: 16:21: Property not found: inner
-    ╭─[../books/language/src/structure/workbenches/elements/properties.md:61:21]
- 60 │ // but you cannot access `inner` anymore
- 61 │ std::print("inner: {t.inner}"); // error
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:60:21]
+ 59 │ // but you cannot access `inner` anymore
+ 60 │ std::print("inner: {t.inner}"); // error
     ·                     ───┬───
     ·                        ╰── error: 16:21: Property not found: inner
     ╰────
