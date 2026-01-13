@@ -2,10 +2,9 @@
 
 *Operations* process 2D or 3D geometries into 2D or 3D geometries.
 
-Actual operations are workbenches that process or transform their child *object
-nodes* to generate a new geometry.
+Actual operations are workbenches that process input models into output models.
 
-So this would be a neutral operation:
+So the following `nop` operation would be a neutral operation:
 
 [![test](.test/op_example.svg)](.test/op_example.log)
 
@@ -19,9 +18,8 @@ std::geo2d::Circle(radius = 1cm).nop();
 
 ## `@input`
 
-`@input` is a placeholder to tell where child nodes are nested.
-It can also be used to retrieve information about the tree structure
-In the above example `@input` will result in a `std::geo2d::Circle(radius = 1cm)`.
+`@input` is a placeholder to tell where the input nodes of the operation shall
+be inserted.
 
 An operation can have multiple children like in this example:
 
@@ -30,12 +28,12 @@ An operation can have multiple children like in this example:
 ```µcad,input#todo
 // define operation which takes multiple items
 op punched_disk() { 
-    // check number of children
+    // check number of input models
     if @input.count() == 2 {
-        // make hole
+        // make hole by subtracting both inputs
         @input.subtract(); 
     } else {
-        std::error("punched_disk must get two objects");
+        std::error("punched_disk must get exactly two objects");
     }
 }
 
