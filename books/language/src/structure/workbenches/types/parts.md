@@ -13,4 +13,21 @@ part MyPart( radius: Length ) {
 MyPart(1cm);
 ```
 
-Like all workbenches a part can have several [workbench elements](../elements/).
+Like all workbenches parts can have several [workbench elements](../elements/).
+
+## Rules
+
+### Parts cannot generate 2D models
+
+You will get an error if you generate a 2D model with a part:
+
+[![test](.test/part_2d.svg)](.test/part_2d.log)
+
+```µcad,part_2d#todo_fail
+sketch MyPart( radius: Length) {
+    use std::geo2d::*;
+    Circle(radius) - Rect(radius);  // error: Circle and Rect are 2D
+}
+
+MyPart(1cm);
+```
