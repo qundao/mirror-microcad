@@ -7,14 +7,30 @@
 
 -- Code --
 
-  26:   use std::geo3d::*;
-  27:   sketch MySketch( radius: Length) {
+  26:   sketch MySketch( radius: Length) {
+  27:       use std::geo3d::*;
   28:       Sphere(radius) - Cube(radius);  // error
   29:   }
   30:   
   31:   MySketch(1cm);
 
 -- No Output --
--- No Errors --
+-- Errors --
+  ⚠ warning: 45:10: Unused local Cylinder.
+    ╭─[../crates/std/lib/std/geo3d.µcad:70:10]
+ 69 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
+ 70 │ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
+    ·          ────┬───
+    ·              ╰── warning: 45:10: Unused local Cylinder.
+ 71 │     /// Initialize by `radius` and `height`. Cylinder will be centered.
+    ╰────
+  ⚠ warning: 94:10: Unused local Torus.
+     ╭─[../crates/std/lib/std/geo3d.µcad:119:10]
+ 118 │ /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
+ 119 │ pub part Torus(major_radius: Length, minor_radius: Length) {
+     ·          ──┬──
+     ·            ╰── warning: 94:10: Unused local Torus.
+ 120 │     std::geo2d::Circle(minor_radius)
+     ╰────
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED (BUT IS TODO)
