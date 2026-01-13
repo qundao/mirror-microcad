@@ -2,24 +2,24 @@
 -- Test --
         Test name: illegal_workbench_statement_return
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:61
+      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:62
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
-  61:   sketch Wheel(radius: Length) {
-  62:       return;         // error
-  63:   }
+  62:   sketch Wheel(radius: Length) {
+  63:       return;         // error
+  64:   }
 
 -- No Output --
 -- Errors --
   × error: 2:5: Statement is not available within Sketch
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:62:5]
- 61 │ sketch Wheel(radius: Length) {
- 62 │     return;         // error
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:63:5]
+ 62 │ sketch Wheel(radius: Length) {
+ 63 │     return;         // error
     ·     ───┬───
     ·        ╰── error: 2:5: Statement is not available within Sketch
- 63 │ }
+ 64 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

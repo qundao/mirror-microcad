@@ -1,28 +1,52 @@
 ﻿
 -- Test --
         Test name: property_no_prop_in_initializer
-  Expected result: fail
+  Expected result: todo_fail
       Source file: ../books/language/src/structure/workbenches/elements/properties.md:71
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
-  71:   sketch Wheel(outer: Length) {
-  72:       init(inner: Length) {
-  73:           prop outer = inner * 2;     // error: do not use prop here
-  74:       }
-  75:   }
-  76:   Wheel(inner = 0.5cm);
+  71:   sketch Wheel(radius: Length, thickness = 5cm) {
+  72:       init(radius: Length, inner: Length) {
+  73:           thickness = radius - inner;
+  74:   
+  75:           prop center = radius - inner;       // error: do not use prop here
+  76:       }
+  77:       
+  78:       prop center = radius - thickness / 2;   // here it's ok
+  79:   }
+  80:   Wheel(radius = 1cm, inner = 0.5cm);
 
 -- No Output --
 -- Errors --
-  × error: 3:9: Assignment statement not available here
-    ╭─[../books/language/src/structure/workbenches/elements/properties.md:73:9]
- 72 │     init(inner: Length) {
- 73 │         prop outer = inner * 2;     // error: do not use prop here
-    ·         ───────────┬───────────
-    ·                    ╰── error: 3:9: Assignment statement not available here
- 74 │     }
+  × error: 5:9: Assignment statement not available here
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:75:9]
+ 74 │ 
+ 75 │         prop center = radius - inner;       // error: do not use prop here
+    ·         ──────────────┬──────────────
+    ·                       ╰── error: 5:9: Assignment statement not available here
+ 76 │     }
     ╰────
+  × error: 8:10: Value center already in defined: 5mm
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:78:5]
+ 77 │     
+ 78 │     prop center = radius - thickness / 2;   // here it's ok
+    ·     ──────────────────┬─────────────────┬
+    ·                       │                 ╰── Previously defined here
+    ·                       ╰── center is already defined
+ 79 │ }
+    ╰────
+  help: Values in microcad are immutable
+  × error: 8:5: Value center already in defined: 5mm
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:78:10]
+ 77 │     
+ 78 │     prop center = radius - thickness / 2;   // here it's ok
+    ·          ───┬──┬
+    ·             │  ╰── Previously defined here
+    ·             ╰── center is already defined
+ 79 │ }
+    ╰────
+  help: Values in microcad are immutable
 -- Test Result --
-FAILS AS EXPECTED
+FAILS AS EXPECTED (BUT IS TODO)

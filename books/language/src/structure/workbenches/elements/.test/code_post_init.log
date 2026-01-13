@@ -16,17 +16,21 @@
   29:       // building code starts here
   30:       std::geo2d::Circle(radius);
   31:   }
+  32:   Wheel(radius = 1cm);
 
 -- No Output --
--- Errors --
-  ⚠ warning: 1:8: Unused global symbol Wheel.
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:23:8]
- 23 │ sketch Wheel(radius: Length, thickness = 5mm) {
-    ·        ──┬──
-    ·          ╰── warning: 1:8: Unused global symbol Wheel.
- 24 │     // initializer code
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 23
--- No Model --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) code_post_init::Wheel(radius=10mm, thickness=5mm) ->
+      - radius = 10mm
+      - thickness = 5mm
+      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+        - center = (x=0mm, y=0mm)
+        - radius = 10mm
+        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+          Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+
+Export of "../books/language/src/structure/workbenches/elements/.test/code_post_init-out.svg" successful.
 -- Test Result --
-OK (BUT WARNINGS)
+OK
