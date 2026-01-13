@@ -1,0 +1,100 @@
+﻿
+-- Test --
+        Test name: part_2d
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/types/parts.md:27
+        Test path: ../books/language/src/structure/workbenches/types/.test
+
+-- Code --
+
+  27:   sketch MyPart( radius: Length) {
+  28:       use std::geo2d::*;
+  29:       Circle(radius) - Rect(radius);  // error: Circle and Rect are 2D
+  30:   }
+  31:   
+  32:   MyPart(1cm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 29:12: Unused local Frame.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:55:12]
+ 54 │ /// A frame with a thickness.
+ 55 │ pub sketch Frame(width: Length, height: Length, thickness: Length) {
+    ·            ──┬──
+    ·              ╰── warning: 29:12: Unused local Frame.
+ 56 │     std::debug::assert(thickness > 0.0mm, "Thickness must be a positive number (thickness = {thickness})");
+    ╰────
+  ⚠ warning: 35:12: Unused local Hexagon.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:61:12]
+ 60 │ /// A regular hexagon.
+ 61 │ pub sketch Hexagon(radius: Length) {
+    ·            ───┬───
+    ·               ╰── warning: 35:12: Unused local Hexagon.
+ 62 │     Ngon(6, radius);
+    ╰────
+  ⚠ warning: 40:12: Unused local InvoluteGearProfile.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:66:12]
+ 65 │ 
+ 66 │ pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
+    ·            ─────────┬─────────
+    ·                     ╰── warning: 40:12: Unused local InvoluteGearProfile.
+ 67 │     prop pitch_radius = module * teeth / 2.0;
+    ╰────
+  ⚠ warning: 50:12: Unused local Line.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:76:12]
+ 75 │ 
+ 76 │ pub sketch Line(p0: Vec2, p1: Vec2) {
+    ·            ──┬─
+    ·              ╰── warning: 50:12: Unused local Line.
+ 77 │     init(width: Length, y = 0.0mm) {
+    ╰────
+  ⚠ warning: 70:12: Unused local Ngon.
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:96:12]
+ 95 │ /// A regular convex polygon with `n` corners.
+ 96 │ pub sketch Ngon(n: Integer, radius: Length) {
+    ·            ──┬─
+    ·              ╰── warning: 70:12: Unused local Ngon.
+ 97 │     std::debug::assert(n > 2, "N must be at least 3.");
+    ╰────
+  ⚠ warning: 102:12: Unused local Ring.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:128:12]
+ 127 │ 
+ 128 │ pub sketch Ring(outer_r: Length, inner_r: Length ) {
+     ·            ──┬─
+     ·              ╰── warning: 102:12: Unused local Ring.
+ 129 │      init(outer_r: Length, thickness: Length) {
+     ╰────
+  ⚠ warning: 123:12: Unused local RoundedRect.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:149:12]
+ 148 │ /// * Centered rect with width and height: `RoundedRect(width = 10.0mm, height = 5.0mm);`
+ 149 │ pub sketch RoundedRect(
+     ·            ─────┬─────
+     ·                 ╰── warning: 123:12: Unused local RoundedRect.
+ 150 │     width: Length,
+     ╰────
+  ⚠ warning: 163:12: Unused local Sector.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:189:12]
+ 188 │ /// Circle sector definition.
+ 189 │ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
+     ·            ───┬──
+     ·               ╰── warning: 163:12: Unused local Sector.
+ 190 │     init(radius: Length, angle: Angle, offset = 0°) {
+     ╰────
+  ⚠ warning: 172:12: Unused local SinusoidalGearProfile.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:198:12]
+ 197 │ 
+ 198 │ pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5, stretch = 0.5) {
+     ·            ──────────┬──────────
+     ·                      ╰── warning: 172:12: Unused local SinusoidalGearProfile.
+ 199 │     prop pitch_radius = module * teeth;
+     ╰────
+  ⚠ warning: 182:12: Unused local Text.
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:208:12]
+ 207 │ /// Text definition.
+ 208 │ pub sketch Text(height: Length, text: String, font_file = "") {
+     ·            ──┬─
+     ·              ╰── warning: 182:12: Unused local Text.
+ 209 │     __builtin::geo2d::Text(height, text, font_file);
+     ╰────
+-- Test Result --
+FAILS AS EXPECTED (BUT IS TODO)
