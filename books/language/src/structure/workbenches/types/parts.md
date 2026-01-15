@@ -1,6 +1,7 @@
 # Parts
 
 Parts are *workbenches* that are used to create 3D *models*.
+They are named in `PascalCase`:
 
 [![test](.test/part_basic.svg)](.test/part_basic.log)
 
