@@ -2,12 +2,14 @@
 -- Test --
         Test name: expression_multiply
   Expected result: ok
-      Source file: ../books/language/src/expressions/README.md:21
+      Source file: ../books/language/src/expressions/README.md:11
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-  21:   5 * 4.0mm;
+  11:   v = 5 * 4.0mm;
+  12:   
+  13:   std::debug::assert_eq([ v, 20mm ]);
 
 -- No Output --
 -- No Errors --

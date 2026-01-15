@@ -17,7 +17,7 @@ The following quantity types are supported:
 
 **Note**: More units [may be implemented](https://codeberg.org/microcad/microcad/issues/76).
 
-## Literals
+## Quantity Literals
 
 Quantities can be declared by *literals*.
 This means that your will automatically get the following type if you use the beside units:
@@ -36,7 +36,7 @@ fn f( height = 1m ) {}
 width = height * 2 + 10cm;
 ```
 
-## Examples
+## Quantity Types
 
 ### Scalar
 
@@ -62,7 +62,7 @@ centimeters = 100cm;
 meters = 1m;
 inches = 39.37007874015748in;
 
-std::debug::assert( [millimeters, centimeters, meters, inches].all_equal() );
+std::debug::assert_eq([ millimeters, centimeters, meters, inches ]);
 ```
 
 ### Angle
@@ -79,7 +79,7 @@ degree_ = 180deg;
 grad = 200grad;
 turn = 0.5turns;
 
-std::debug::assert( [degree, degree_, grad, turn, radian].all_equal() );
+std::debug::assert_eq([ degree, degree_, grad, turn, radian ]);
 ```
 
 ### Area
@@ -101,12 +101,11 @@ Here is an example of how to use different areal units:
 
 ```µcad,types_quantity_area_units
 square_millimeter = 100000mm²;
-square_centimeter = 1000cm²;
+square_centimeter = 1000cm2;
 square_meter = 0.1m²;
 square_inch = 155in²;
 
-std::debug::assert(square_millimeter == 0.1m²);
-std::debug::assert(square_centimeter == 0.1m²);
+std::debug::assert_eq([ square_millimeter, square_centimeter ]);
 ```
 
 ### Volume
@@ -132,22 +131,29 @@ Here is an example for units:
 ```µcad,types_quantity_volume_units
 cubic_millimeter = 1000000.0mm³;
 cubic_centimeter = 100.0cl;
-cubic_meter = 0.001m³;
+cubic_meter = 0.001m3;
 cubic_inch = 61.0237in³;
 liter = 1.0l;
 centiliter = 100.0cl;
 milliliter = 1000.0ml;
 
-std::debug::assert(cubic_millimeter == 1.0l);
-std::debug::assert(cubic_centimeter == 1.0l);
-std::debug::assert(cubic_meter == 1.0l);
-std::debug::assert(centiliter == 1.0l);
-std::debug::assert(milliliter == 1.0l);
+std::debug::assert_eq([ cubic_millimeter,
+                        cubic_centimeter,
+                        cubic_meter,
+                        centiliter,
+                        milliliter
+                        ]);
 ```
 
 ### Density
 
-TODO
+Currently `Density` has not specific use in µcad and only can use unit `g/mm³`.
+
+[![test](.test/types_quantity_density_units.svg)](.test/types_quantity_density_units.log)
+
+```µcad,types_quantity_density_units
+gramm_per_square_centimeters = 19.302g/mm³;
+```
 
 ### Weight
 
@@ -160,7 +166,7 @@ gram = 1000.0g;
 kilogram = 1.0kg;
 pound = 2.204623lb;
 
-std::debug::assert([gram, kilogram].all_equal());
+std::debug::assert_eq([ gram, kilogram ]);
 ```
 
 ## Arithmetic
@@ -169,17 +175,13 @@ Quantity types can use operators:
 
 [![test](.test/types_quantity_arithmetic.svg)](.test/types_quantity_arithmetic.log)
 
-```µcad,types_quantity_arithmetic
-use std::debug::assert;
+```µcad,types_quantity_arithmetic#todo
+use std::debug::assert_eq;
 
-a = 2.0mm;
-assert([a, 2mm, 2.0mm].all_equal());
-b = 2 * a;
-assert([b, 4mm, 4.0mm].all_equal());
-c = a / 2;
-assert([c, 1mm, 1.0mm].all_equal());
-d = a + 2.0mm;
-assert([d, 4mm, 4.0mm].all_equal());
-e = a - 2.0mm;
-assert([e, 0mm, 0.0mm].all_equal());
+a = 6cm²;
+b = 2cm;
+assert_eq([ a * b, 12cm³, 12l  ]);
+assert_eq([ a / b, 3cm ]);
+assert_eq([ a + b, 4mm ]);
+assert_eq([ a - b, 0mm ]);
 ```
