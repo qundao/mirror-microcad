@@ -2,37 +2,37 @@
 -- Test --
         Test name: part_basic
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/types/parts.md:8
+      Source file: ../books/language/src/structure/workbenches/types/parts.md:9
         Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
-   8:   part MyPart( radius: Length ) {
-   9:       use std::geo3d::*;
-  10:       Sphere(radius) - Cube(radius)
-  11:   }
-  12:   
-  13:   MyPart(1cm);
+   9:   part MyPart( radius: Length ) {
+  10:       use std::geo3d::*;
+  11:       Sphere(radius) - Cube(radius)
+  12:   }
+  13:   
+  14:   MyPart(1cm);
 
 -- No Output --
 -- Errors --
   ⚠ warning: 37:10: Unused local Cylinder.
-    ╭─[../crates/std/lib/std/geo3d.µcad:44:10]
- 43 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
- 44 │ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
+    ╭─[../crates/std/lib/std/geo3d.µcad:45:10]
+ 44 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
+ 45 │ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
     ·          ────┬───
     ·              ╰── warning: 37:10: Unused local Cylinder.
- 45 │     /// Initialize by `radius` and `height`. Cylinder will be centered.
+ 46 │     /// Initialize by `radius` and `height`. Cylinder will be centered.
     ╰────
   ⚠ warning: 77:10: Unused local Torus.
-    ╭─[../crates/std/lib/std/geo3d.µcad:84:10]
- 83 │ /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
- 84 │ pub part Torus(major_radius: Length, minor_radius: Length) {
+    ╭─[../crates/std/lib/std/geo3d.µcad:85:10]
+ 84 │ /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
+ 85 │ pub part Torus(major_radius: Length, minor_radius: Length) {
     ·          ──┬──
     ·            ╰── warning: 77:10: Unused local Torus.
- 85 │     std::geo2d::Circle(radius = minor_radius)
+ 86 │     std::geo2d::Circle(radius = minor_radius)
     ╰────
-Unexpected warnings(s) which did occur in line(s): 44, 84
+Unexpected warnings(s) which did occur in line(s): 45, 85
 -- Model --
   Group (root) ->
     Workpiece(part) part_basic::MyPart(radius=10mm) ->

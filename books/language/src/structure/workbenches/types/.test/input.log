@@ -2,50 +2,50 @@
 -- Test --
         Test name: input
   Expected result: todo
-      Source file: ../books/language/src/structure/workbenches/types/operations.md:29
+      Source file: ../books/language/src/structure/workbenches/types/operations.md:35
         Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
-  29:   // define operation which takes multiple items
-  30:   op punched_disk() { 
-  31:       // check number of input models
-  32:       if @input.count() == 2 {
-  33:           // make hole by subtracting both inputs
-  34:           @input.subtract(); 
-  35:       } else {
-  36:           std::error("punched_disk must get exactly two objects");
-  37:       }
-  38:   }
-  39:   
-  40:   // use operation punch_disk with two circles
-  41:   {
-  42:       std::geo2d::Circle(radius = 1cm);
-  43:       std::geo2d::Circle(radius = 2cm);
-  44:   }.punched_disk();
+  35:   // define operation which takes multiple items
+  36:   op punched_disk() { 
+  37:       // check number of input models
+  38:       if @input.count() == 2 {
+  39:           // make hole by subtracting both inputs
+  40:           @input.subtract(); 
+  41:       } else {
+  42:           std::error("punched_disk must get exactly two objects");
+  43:       }
+  44:   }
+  45:   
+  46:   // use operation punch_disk with two circles
+  47:   {
+  48:       std::geo2d::Circle(radius = 1cm);
+  49:       std::geo2d::Circle(radius = 2cm);
+  50:   }.punched_disk();
 
 -- No Output --
 -- Errors --
   × error: 4:15: Symbol count not found.
-    ╭─[../books/language/src/structure/workbenches/types/operations.md:32:15]
- 31 │     // check number of input models
- 32 │     if @input.count() == 2 {
+    ╭─[../books/language/src/structure/workbenches/types/operations.md:38:15]
+ 37 │     // check number of input models
+ 38 │     if @input.count() == 2 {
     ·               ──┬──
     ·                 ╰── error: 4:15: Symbol count not found.
- 33 │         // make hole by subtracting both inputs
+ 39 │         // make hole by subtracting both inputs
     ╰────
   × error: 4:5: If condition is not a boolean: <NO VALUE>
-    ╭─[../books/language/src/structure/workbenches/types/operations.md:32:5]
- 31 │         // check number of input models
- 32 │ ╭─▶     if @input.count() == 2 {
- 33 │ │           // make hole by subtracting both inputs
- 34 │ │           @input.subtract(); 
- 35 │ │       } else {
- 36 │ │           std::error("punched_disk must get exactly two objects");
- 37 │ ├─▶     }
+    ╭─[../books/language/src/structure/workbenches/types/operations.md:38:5]
+ 37 │         // check number of input models
+ 38 │ ╭─▶     if @input.count() == 2 {
+ 39 │ │           // make hole by subtracting both inputs
+ 40 │ │           @input.subtract(); 
+ 41 │ │       } else {
+ 42 │ │           std::error("punched_disk must get exactly two objects");
+ 43 │ ├─▶     }
     · ╰──── error: 4:5: If condition is not a boolean: <NO VALUE>
- 38 │     }
+ 44 │     }
     ╰────
-Unexpected error(s) which did occur in line(s): 32
+Unexpected error(s) which did occur in line(s): 38
 -- Test Result --
 TODO
