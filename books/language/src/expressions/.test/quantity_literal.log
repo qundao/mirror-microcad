@@ -2,17 +2,17 @@
 -- Test --
         Test name: quantity_literal
   Expected result: ok
-      Source file: ../books/language/src/expressions/literals.md:66
+      Source file: ../books/language/src/expressions/literals.md:84
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-  66:   4.0mm;   // 4 millimeters
-  67:   5l;      // 5 liters
-  68:   4m²;     // 4 square meters
-  69:   4m2;     // also 4 square meters
-  70:   10°;     // 10 degree angle
-  71:   10deg    // also 10 degree angle
+  84:   4.0mm;   // 4 millimeters
+  85:   5l;      // 5 liters
+  86:   4m²;     // 4 square meters
+  87:   4m2;     // also 4 square meters
+  88:   10°;     // 10 degree angle
+  89:   10deg    // also 10 degree angle
 
 -- No Output --
 -- No Errors --
