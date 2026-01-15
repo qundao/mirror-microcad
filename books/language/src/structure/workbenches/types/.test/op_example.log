@@ -10,7 +10,7 @@
   13:   // define operation nop without parameters
   14:   op nop() { @input }
   15:   
-  16:   // use operation nop on a circle
+  16:   // use operation `nop` on a circle results in the same circle
   17:   std::geo2d::Circle(radius = 1cm).nop();
 
 -- No Output --
