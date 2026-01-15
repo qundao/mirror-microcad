@@ -3,7 +3,7 @@
 Literals are the simplest form of expressions.
 In this section, we will look at some literals.
 
-[![test](.test/literal.svg)](.test/literal.log)
+[![test](.test/expression_literals.svg)](.test/expression_literals.log)
 
 ```µcad,expression_literals
 5;        // Scalar literal
