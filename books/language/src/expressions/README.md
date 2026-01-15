@@ -3,7 +3,7 @@
 An *expression* defines a value simply by a [literal](literals.md) or by
 combining multiple other expressions.
 For example, we can multiply a quantity of 4 millimeters with a factor 5 and
-assign it to a constant `v`:
+assign it to a constant `v` with the following code:
 
 [![test](.test/expression_multiply.svg)](.test/expression_multiply.log)
 

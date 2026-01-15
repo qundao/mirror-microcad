@@ -2,16 +2,16 @@
 -- Test --
         Test name: op_example
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/types/operations.md:13
+      Source file: ../books/language/src/structure/workbenches/types/operations.md:16
         Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
-  13:   // define operation nop without parameters
-  14:   op nop() { @input }
-  15:   
-  16:   // use operation `nop` on a circle results in the same circle
-  17:   std::geo2d::Circle(radius = 1cm).nop();
+  16:   // define operation nop without parameters
+  17:   op nop() { @input }
+  18:   
+  19:   // use operation `nop` on a circle results in the same circle
+  20:   std::geo2d::Circle(radius = 1cm).nop();
 
 -- No Output --
 -- No Errors --
