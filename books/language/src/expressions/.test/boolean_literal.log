@@ -2,13 +2,13 @@
 -- Test --
         Test name: boolean_literal
   Expected result: ok
-      Source file: ../books/language/src/expressions/literals.md:62
+      Source file: ../books/language/src/expressions/literals.md:64
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-  62:   true;
-  63:   false
+  64:   true;
+  65:   false
 
 -- No Output --
 -- No Errors --

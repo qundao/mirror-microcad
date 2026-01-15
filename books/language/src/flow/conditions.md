@@ -70,3 +70,31 @@ f(1);  // prints "no match"
 f(-1); // prints "invalid"
 f(6);  // prints "invalid"
 ```
+
+If statements can also be used as an expression, evaluating to the value from
+the chosen branch.
+
+[![test](.test/if_expression.svg)](.test/if_expression.log)
+
+```µcad,if_expression
+use std::ops::*;
+use std::math::*;
+use std::geo2d::*;
+
+sketch MySketch(a: Integer) {
+    outer = if a == 1 {
+        Circle(radius = 1cm)
+    } else if a == 2 {
+        Rect(1cm)
+    } else {
+        Hexagon(1cm)
+    };
+
+    outer - Circle(radius = 3mm)
+}
+
+MySketch([1,2,3]).align(X, 1cm);
+```
+
+Output
+  :![output](.test/if_expression-out.svg)

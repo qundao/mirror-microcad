@@ -1,5 +1,8 @@
 # Operations
 
+> [!NOTE]
+> Do not confuse *operations* with [*operators*](../../../expressions/operators.md)
+
 *Operations* process 2D or 3D geometries into 2D or 3D geometries.
 Unlike *sketches* or *parts* they are named in `snake_case`.
 

@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**193** tests have been evaluated with version **0.2.20** of microcad.
+**194** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -69,6 +69,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
 | [![test](../expressions/.test/expression_literals.svg)](../expressions/.test/expression_literals.log) | [expression_literals](../expressions/literals.md) |
 | [![test](../expressions/.test/expression_model.svg)](../expressions/.test/expression_model.log) | [expression_model](../expressions/model_expression.md) |
+| [![test](../expressions/.test/expression_model_builtin.svg)](../expressions/.test/expression_model_builtin.log) | [expression_model_builtin](../expressions/model_expression.md) |
 | [![test](../expressions/.test/expression_multiply.svg)](../expressions/.test/expression_multiply.log) | [expression_multiply](../expressions/) |
 | [![test](../structure/modules/.test/external_modules_main.svg)](../structure/modules/.test/external_modules_main.log) | [external_modules_main](../structure/modules/external_modules.md) |
 | [![test](../structure/modules/.test/external_modules_second.svg)](../structure/modules/.test/external_modules_second.log) | [external_modules_second](../structure/modules/external_modules.md) |
@@ -81,7 +82,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/functions/.test/function_return.svg)](../structure/functions/.test/function_return.log) | [function_return](../structure/functions/result.md) |
 | [![test](../libraries/std/ops/.test/hull_multiple.svg)](../libraries/std/ops/.test/hull_multiple.log) | [hull_multiple](../libraries/std/ops/hull.md) |
 | [![test](../libraries/std/ops/.test/hull_single.svg)](../libraries/std/ops/.test/hull_single.log) | [hull_single](../libraries/std/ops/hull.md) |
-| [![test](../expressions/.test/if_expression.svg)](../expressions/.test/if_expression.log) | [if_expression](../expressions/model_expression.md) |
+| [![test](../flow/.test/if_expression.svg)](../flow/.test/if_expression.log) | [if_expression](../flow/conditions.md) |
 | [![test](../flow/.test/if_functions.svg)](../flow/.test/if_functions.log) | [if_functions](../flow/conditions.md) |
 | [![test](../flow/.test/if_statement.svg)](../flow/.test/if_statement.log) | [if_statement](../flow/conditions.md) |
 | [![test](../structure/workbenches/elements/.test/illegal_workbench_statement_mod.svg)](../structure/workbenches/elements/.test/illegal_workbench_statement_mod.log) | [illegal_workbench_statement_mod](../structure/workbenches/elements/building_code.md) |
