@@ -2,27 +2,27 @@
 -- Test --
         Test name: operator_examples
   Expected result: ok
-      Source file: ../books/language/src/expressions/operators.md:28
+      Source file: ../books/language/src/expressions/operators.md:31
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-  28:   use std::debug::assert; // used for testing
-  29:   
-  30:   -5;                                             // Negation
-  31:   assert(  5 + 6        == 11                  ); // Addition
-  32:   assert(  5 - 6        == -1                  ); // Subtraction
-  33:   assert(  5 * 6        == 30                  ); // Multiplication
-  34:   assert(  5 / 6        == 0.83333333333333333 ); // Division
-  35:   assert(  5 ^ 6        == 15625               ); // Power
-  36:   assert(  true & false == false               ); // Logical AND
-  37:   assert(  true | false == true                ); // Logical OR
-  38:   assert(  5 > 6        == false               ); // Greater than
-  39:   assert(  5 >= 6       == false               ); // Greater or equal
-  40:   assert(  5 < 6        == true                ); // Less than
-  41:   assert(  5 <= 6       == true                ); // Less or equal
-  42:   assert(  5 == 6       == false               ); // Equal
-  43:   assert(  5 != 6       == true                ); // Not equal
+  31:   use std::debug::assert_eq; // used for testing
+  32:   
+  33:   assert_eq([ -5,     0 - 5               ]); // Negation
+  34:   assert_eq([ 5 + 6,  11                  ]); // Addition
+  35:   assert_eq([ 5 - 6,  -1                  ]); // Subtraction
+  36:   assert_eq([ 5 * 6,  30                  ]); // Multiplication
+  37:   assert_eq([ 5 / 6,  0.83333333333333333 ]); // Division
+  38:   assert_eq([ 5 ^ 6,  15625               ]); // Power
+  39:   assert_eq([ true &  false, false        ]); // Logical AND
+  40:   assert_eq([ true |  false, true         ]); // Logical OR
+  41:   assert_eq([ 5 > 6,  false               ]); // Greater than
+  42:   assert_eq([ 5 >= 6, false               ]); // Greater or equal
+  43:   assert_eq([ 5 < 6,  true                ]); // Less than
+  44:   assert_eq([ 5 <= 6, true                ]); // Less or equal
+  45:   assert_eq([ 5 == 6, false               ]); // Equal
+  46:   assert_eq([ 5 != 6, true                ]); // Not equal
 
 -- No Output --
 -- No Errors --
