@@ -26,6 +26,7 @@
       - [Operations](./structure/workbenches/types/operations.md)
 - [Expressions](./expressions/README.md)
   - [Literals](./expressions/literals.md)
+  - [Model Expressions](./expressions/model_expression.md)
   - [Operators](./expressions/operators.md)
 - [Assignments](./assignments/README.md)
   - [Value Assignments](./assignments/values.md)

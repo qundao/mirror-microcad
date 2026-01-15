@@ -1,0 +1,23 @@
+﻿
+-- Test --
+        Test name: types_quantity_density_units
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:155
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+ 155:   gramm_per_square_centimeters = 19.302g/mm³;
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:1: Unused local gramm_per_square_centimeters.
+     ╭─[../books/language/src/types/quantities.md:155:1]
+ 155 │ gramm_per_square_centimeters = 19.302g/mm³;
+     · ──────────────┬─────────────
+     ·               ╰── warning: 1:1: Unused local gramm_per_square_centimeters.
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 155
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)

@@ -2,7 +2,7 @@
 -- Test --
         Test name: expression_literals
   Expected result: ok
-      Source file: ../books/language/src/expressions/README.md:9
+      Source file: ../books/language/src/expressions/literals.md:9
         Test path: ../books/language/src/expressions/.test
 
 -- Code --

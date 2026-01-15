@@ -2,85 +2,75 @@
 -- Test --
         Test name: if_expression
   Expected result: ok
-      Source file: ../books/language/src/expressions/README.md:49
+      Source file: ../books/language/src/expressions/model_expression.md:25
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-  49:   use std::ops::*;
-  50:   use std::math::*;
-  51:   use std::geo2d::*;
-  52:   
-  53:   sketch MySketch(a: Integer) {
-  54:       outer = if a == 1 {
-  55:           Circle(r = 1cm)
-  56:       } else if a == 2 {
-  57:           Rect(1cm)
-  58:       } else {
-  59:           Hexagon(1cm)
-  60:       };
-  61:       outer - Circle(r = 3mm)
-  62:   }
-  63:   
-  64:   MySketch([1,2,3]).align(X, 1cm);
+  25:   use std::ops::*;
+  26:   use std::math::*;
+  27:   use std::geo2d::*;
+  28:   
+  29:   sketch MySketch(a: Integer) {
+  30:       outer = if a == 1 {
+  31:           Circle(1cm)
+  32:       } else if a == 2 {
+  33:           Rect(1cm)
+  34:       } else {
+  35:           Hexagon(1cm)
+  36:       };
+  37:   
+  38:       outer - Circle(3mm)
+  39:   }
+  40:   
+  41:   MySketch([1,2,3]).align(X, 1cm);
 
 -- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=10mm) ->
-      - direction = (x=1, y=0, z=0)
-      - spacing = 10mm
-      Operation __builtin::ops::align(spacing=10mm, x=1, y=0, z=0) ->
-        Multiplicity ->
-          Workpiece(sketch) if_expression::MySketch(a=1) ->
-            - a = 1
-            Operation subtract() ->
-              Group ->
-                outer: Group ->
-                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
-                    - center = (x=0mm, y=0mm)
-                    - radius = 10mm
-                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
-                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
-                  - center = (x=0mm, y=0mm)
-                  - radius = 3mm
-                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-          Workpiece(sketch) if_expression::MySketch(a=2) ->
-            - a = 2
-            Operation subtract() ->
-              Group ->
-                outer: Group ->
-                  Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
-                    - height = 10mm
-                    - width = 10mm
-                    - x = -5mm
-                    - y = -5mm
-                    Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
-                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
-                  - center = (x=0mm, y=0mm)
-                  - radius = 3mm
-                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-          Workpiece(sketch) if_expression::MySketch(a=3) ->
-            - a = 3
-            Operation subtract() ->
-              Group ->
-                outer: Group ->
-                  Workpiece(sketch) std::geo2d::Hexagon(radius=10mm) ->
-                    - radius = 10mm
-                    Workpiece(sketch) std::geo2d::Ngon(n=6, radius=10mm) ->
-                      - n = 6
-                      - radius = 10mm
-                      Primitive2D __builtin::geo2d::Ngon(n=6, radius=10mm) ->
-                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
-                  - center = (x=0mm, y=0mm)
-                  - radius = 3mm
-                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-
-Export of "../books/language/src/expressions/.test/if_expression-out.svg" successful.
+-- Errors --
+  × error: 7:16: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/expressions/model_expression.md:31:9]
+ 30 │     outer = if a == 1 {
+ 31 │         Circle(1cm)
+    ·         ─────┬─────
+    ·              ╰── Got: Circle( 10mm )
+ 32 │     } else if a == 2 {
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 14:20: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/expressions/model_expression.md:38:13]
+ 37 │ 
+ 38 │     outer - Circle(3mm)
+    ·             ─────┬─────
+    ·                  ╰── Got: Circle( 3mm )
+ 39 │ }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 14:20: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/expressions/model_expression.md:38:13]
+ 37 │ 
+ 38 │     outer - Circle(3mm)
+    ·             ─────┬─────
+    ·                  ╰── Got: Circle( 3mm )
+ 39 │ }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 14:20: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/expressions/model_expression.md:38:13]
+ 37 │ 
+ 38 │     outer - Circle(3mm)
+    ·             ─────┬─────
+    ·                  ╰── Got: Circle( 3mm )
+ 39 │ }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+Unexpected error(s) which did occur in line(s): 31, 38
 -- Test Result --
-OK
+FAILS
