@@ -3,6 +3,24 @@
 Literals are the simplest form of expressions.
 In this section, we will look at some literals.
 
+[![test](.test/literal.svg)](.test/literal.log)
+
+```µcad,expression_literals
+5;        // Scalar literal
+4.0mm;    // Quantity literal
+"Hello";  // String literal
+```
+
+There are several types of literals:
+
+| Name                               | Encoding       | Description                            |
+| ---------------------------------- | -------------- | -------------------------------------- |
+| [*Integer*](#integer-literals)     | 64 bit integer | signed integer                         |
+| [*Scalar*](#scalar-literals)       | 64 bit float   | signed floating point                  |
+| [*Boolean*](#boolean-literals)     | 1 bit bool     | boolean                                |
+| [*String*](#string-literals)       | UTF-8          | Text                                   |
+| [*Quantities*](#quantity-literals) | 64 bit float   | signed floating point (including type) |
+
 ## Integer Literals
 
 Integer literals contain a whole number with a sign (but without a unit).
@@ -71,4 +89,4 @@ you wanna draw something.
 10deg    // also 10 degree angle
 ```
 
-You will find more details about quantities and units in [this section](../../types/quantities.md).
+You will find more details about quantities and units in [this section](../../types/quantities.md#quantity-literals).

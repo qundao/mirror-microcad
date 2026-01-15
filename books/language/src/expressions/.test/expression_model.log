@@ -2,24 +2,24 @@
 -- Test --
         Test name: expression_model
   Expected result: ok
-      Source file: ../books/language/src/expressions/README.md:34
+      Source file: ../books/language/src/expressions/model_expression.md:9
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-  34:   std::geo2d::Rect(1cm);
+   9:   std::geo2d::Rect(1cm) - std::geo2d::Circle(3mm);
 
 -- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
-      - height = 10mm
-      - width = 10mm
-      - x = -5mm
-      - y = -5mm
-      Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
-
-Export of "../books/language/src/expressions/.test/expression_model-out.svg" successful.
+-- Errors --
+  × error: 1:44: Workbench Circle has ambiguous initialization for those arguments
+   ╭─[../books/language/src/expressions/model_expression.md:9:25]
+ 9 │ std::geo2d::Rect(1cm) - std::geo2d::Circle(3mm);
+   ·                         ───────────┬───────────
+   ·                                    ╰── Got: Circle( 3mm )
+   ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+Unexpected error(s) which did occur in line(s): 9
 -- Test Result --
-OK
+FAILS
