@@ -6,40 +6,37 @@ We call this a *model expression*:
 [![test](.test/expression_model.svg)](.test/expression_model.log)
 
 ```µcad,expression_model
-std::geo2d::Rect(1cm) - std::geo2d::Circle(3mm);
+std::geo2d::Rect(1cm) - std::geo2d::Circle(radius = 3mm);
 ```
 
-This is an expression too — one that contains an element, specifically a
-[call](../../flow/calls/workbench_calls.md) to `Rect`, which draws a rectangle
-that will actually be rendered into this:
+In this expression which consists of a subtraction operation of the results of
+two [calls](../../flow/calls/workbench_calls.md) to `Rect` and `Circle`.
 
 Output
   :![output](.test/expression_model-out.svg)
 
-If statements can also be used as an expression, evaluating to the value from
-the chosen branch.
+Building a *group* (using curly braces) of both operands and applying the
+builtin method `subtract` to it is equivalent to the above code:
 
-[![test](.test/if_expression.svg)](.test/if_expression.log)
+[![test](.test/expression_model_builtin.svg)](.test/expression_model_builtin.log)
 
-```µcad,if_expression
-use std::ops::*;
-use std::math::*;
-use std::geo2d::*;
+```µcad,expression_model_builtin
+use __builtin::ops::subtract;
 
-sketch MySketch(a: Integer) {
-    outer = if a == 1 {
-        Circle(1cm)
-    } else if a == 2 {
-        Rect(1cm)
-    } else {
-        Hexagon(1cm)
-    };
-
-    outer - Circle(3mm)
-}
-
-MySketch([1,2,3]).align(X, 1cm);
+{
+    std::geo2d::Rect(1cm);
+    std::geo2d::Circle(radius = 3mm);
+}.subtract();
 ```
 
 Output
-  :![output](.test/if_expression-out.svg)
+  :![output](.test/expression_model_builtin-out.svg)
+
+The following operations can be applied to 2D or 3D models:
+
+| Operator | Builtin Operation           | Description              |
+| :------: | --------------------------- | ------------------------ |
+|   `-`    | `__builtin::ops::subtract`  | Geometrical difference   |
+|   `\|`   | `__builtin::ops::union`     | Geometrical union        |
+|   `&`    | `__builtin::ops::intersect` | Geometrical intersection |
+
