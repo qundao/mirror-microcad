@@ -3,6 +3,7 @@
 Sketches are similar to *parts* but in two dimensions only.
 They may be extruded into three-dimensional [parts](parts.md) by using
 [operations](operations.md).
+Sketches are named in `PascalCase`:
 
 [![test](.test/sketch_basic.svg)](.test/sketch_basic.log)
 

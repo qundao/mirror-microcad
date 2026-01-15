@@ -2,101 +2,101 @@
 -- Test --
         Test name: sketch_basic
   Expected result: ok
-      Source file: ../books/language/src/structure/workbenches/types/sketches.md:10
+      Source file: ../books/language/src/structure/workbenches/types/sketches.md:11
         Test path: ../books/language/src/structure/workbenches/types/.test
 
 -- Code --
 
-  10:   sketch MySketch( radius: Length) {
-  11:       use std::geo2d::*;
-  12:       Circle(radius) - Rect(radius);
-  13:   }
-  14:   
-  15:   MySketch(1cm);
+  11:   sketch MySketch( radius: Length) {
+  12:       use std::geo2d::*;
+  13:       Circle(radius) - Rect(radius);
+  14:   }
+  15:   
+  16:   MySketch(1cm);
 
 -- No Output --
 -- Errors --
   ⚠ warning: 29:12: Unused local Frame.
-    ╭─[../crates/std/lib/std/geo2d/mod.µcad:38:12]
- 37 │ /// A frame with a thickness.
- 38 │ pub sketch Frame(width: Length, height: Length, thickness: Length) {
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:39:12]
+ 38 │ /// A frame with a thickness.
+ 39 │ pub sketch Frame(width: Length, height: Length, thickness: Length) {
     ·            ──┬──
     ·              ╰── warning: 29:12: Unused local Frame.
- 39 │     std::debug::assert(thickness > 0.0mm, "Thickness must be a positive number (thickness = {thickness})");
+ 40 │     std::debug::assert(thickness > 0.0mm, "Thickness must be a positive number (thickness = {thickness})");
     ╰────
   ⚠ warning: 35:12: Unused local Hexagon.
-    ╭─[../crates/std/lib/std/geo2d/mod.µcad:44:12]
- 43 │ /// A regular hexagon.
- 44 │ pub sketch Hexagon(radius: Length) {
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:45:12]
+ 44 │ /// A regular hexagon.
+ 45 │ pub sketch Hexagon(radius: Length) {
     ·            ───┬───
     ·               ╰── warning: 35:12: Unused local Hexagon.
- 45 │     Ngon(6, radius);
+ 46 │     Ngon(6, radius);
     ╰────
   ⚠ warning: 40:12: Unused local InvoluteGearProfile.
-    ╭─[../crates/std/lib/std/geo2d/mod.µcad:49:12]
- 48 │ 
- 49 │ pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:50:12]
+ 49 │ 
+ 50 │ pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
     ·            ─────────┬─────────
     ·                     ╰── warning: 40:12: Unused local InvoluteGearProfile.
- 50 │     prop pitch_radius = module * teeth / 2.0;
+ 51 │     prop pitch_radius = module * teeth / 2.0;
     ╰────
   ⚠ warning: 50:12: Unused local Line.
-    ╭─[../crates/std/lib/std/geo2d/mod.µcad:59:12]
- 58 │ 
- 59 │ pub sketch Line(p0: Vec2, p1: Vec2) {
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:60:12]
+ 59 │ 
+ 60 │ pub sketch Line(p0: Vec2, p1: Vec2) {
     ·            ──┬─
     ·              ╰── warning: 50:12: Unused local Line.
- 60 │     init(width: Length, y = 0.0mm) {
+ 61 │     init(width: Length, y = 0.0mm) {
     ╰────
   ⚠ warning: 70:12: Unused local Ngon.
-    ╭─[../crates/std/lib/std/geo2d/mod.µcad:79:12]
- 78 │ /// A regular convex polygon with `n` corners.
- 79 │ pub sketch Ngon(n: Integer, radius: Length) {
+    ╭─[../crates/std/lib/std/geo2d/mod.µcad:80:12]
+ 79 │ /// A regular convex polygon with `n` corners.
+ 80 │ pub sketch Ngon(n: Integer, radius: Length) {
     ·            ──┬─
     ·              ╰── warning: 70:12: Unused local Ngon.
- 80 │     std::debug::assert(n > 2, "N must be at least 3.");
+ 81 │     std::debug::assert(n > 2, "N must be at least 3.");
     ╰────
   ⚠ warning: 102:12: Unused local Ring.
-     ╭─[../crates/std/lib/std/geo2d/mod.µcad:111:12]
- 110 │ 
- 111 │ pub sketch Ring(outer_r: Length, inner_r: Length ) {
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:112:12]
+ 111 │ 
+ 112 │ pub sketch Ring(outer_r: Length, inner_r: Length ) {
      ·            ──┬─
      ·              ╰── warning: 102:12: Unused local Ring.
- 112 │      init(outer_r: Length, thickness: Length) {
+ 113 │      init(outer_r: Length, thickness: Length) {
      ╰────
   ⚠ warning: 123:12: Unused local RoundedRect.
-     ╭─[../crates/std/lib/std/geo2d/mod.µcad:132:12]
- 131 │ /// * Centered rect with width and height: `RoundedRect(width = 10.0mm, height = 5.0mm);`
- 132 │ pub sketch RoundedRect(
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:133:12]
+ 132 │ /// * Centered rect with width and height: `RoundedRect(width = 10.0mm, height = 5.0mm);`
+ 133 │ pub sketch RoundedRect(
      ·            ─────┬─────
      ·                 ╰── warning: 123:12: Unused local RoundedRect.
- 133 │     width: Length,
+ 134 │     width: Length,
      ╰────
   ⚠ warning: 163:12: Unused local Sector.
-     ╭─[../crates/std/lib/std/geo2d/mod.µcad:172:12]
- 171 │ /// Circle sector definition.
- 172 │ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:173:12]
+ 172 │ /// Circle sector definition.
+ 173 │ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
      ·            ───┬──
      ·               ╰── warning: 163:12: Unused local Sector.
- 173 │     init(radius: Length, angle: Angle, offset = 0°) {
+ 174 │     init(radius: Length, angle: Angle, offset = 0°) {
      ╰────
   ⚠ warning: 172:12: Unused local SinusoidalGearProfile.
-     ╭─[../crates/std/lib/std/geo2d/mod.µcad:181:12]
- 180 │ 
- 181 │ pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5, stretch = 0.5) {
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:182:12]
+ 181 │ 
+ 182 │ pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5, stretch = 0.5) {
      ·            ──────────┬──────────
      ·                      ╰── warning: 172:12: Unused local SinusoidalGearProfile.
- 182 │     prop pitch_radius = module * teeth;
+ 183 │     prop pitch_radius = module * teeth;
      ╰────
   ⚠ warning: 182:12: Unused local Text.
-     ╭─[../crates/std/lib/std/geo2d/mod.µcad:191:12]
- 190 │ /// Text definition.
- 191 │ pub sketch Text(height: Length, text: String, font_file = "") {
+     ╭─[../crates/std/lib/std/geo2d/mod.µcad:192:12]
+ 191 │ /// Text definition.
+ 192 │ pub sketch Text(height: Length, text: String, font_file = "") {
      ·            ──┬─
      ·              ╰── warning: 182:12: Unused local Text.
- 192 │     __builtin::geo2d::Text(height, text, font_file);
+ 193 │     __builtin::geo2d::Text(height, text, font_file);
      ╰────
-Unexpected warnings(s) which did occur in line(s): 38, 44, 49, 59, 79, 111, 132, 172, 181, 191
+Unexpected warnings(s) which did occur in line(s): 39, 45, 50, 60, 80, 112, 133, 173, 182, 192
 -- Model --
   Group (root) ->
     Workpiece(sketch) sketch_basic::MySketch(radius=10mm) ->
