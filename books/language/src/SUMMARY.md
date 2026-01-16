@@ -33,6 +33,7 @@
   - [Constant Assignments](./assignments/const.md)
   - [Public Assignments](./assignments/pub.md)
   - [Property Assignments](./assignments/property.md)
+  - [Model Assignments](./assignments/model.md)
 - [Program Flow](./flow/README.md)
   - [Conditionals](./flow/conditions.md)
   - [Calls](./flow/calls/README.md)

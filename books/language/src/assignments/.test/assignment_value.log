@@ -1,0 +1,19 @@
+﻿
+-- Test --
+        Test name: assignment_value
+  Expected result: ok
+      Source file: ../books/language/src/assignments/values.md:11
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  11:   a = 5;
+  12:   b = a * 2;
+  13:   std::debug::assert_eq([a,5]);
+  14:   std::debug::assert_eq([b,10]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
