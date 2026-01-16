@@ -1,0 +1,26 @@
+﻿
+-- Test --
+        Test name: assignment_value_scope
+  Expected result: todo
+      Source file: ../books/language/src/assignments/values.md:29
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  29:   use std::debug::*;
+  30:   
+  31:   a = 5;
+  32:   assert_eq([ a, 5 ]);
+  33:   
+  34:   {
+  35:       b = a * 2;
+  36:       assert_eq([ b, 10 ]);
+  37:   }
+  38:   
+  39:   assert_valid(a);   // a is still available
+  40:   assert_invalid(b); // b not known here anymore
+
+-- Parse Error --
+Parser error: expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+TODO

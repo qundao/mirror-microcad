@@ -2,18 +2,18 @@
 -- Test --
         Test name: assignment
   Expected result: ok
-      Source file: ../books/language/src/assignments/README.md:11
+      Source file: ../books/language/src/assignments/README.md:13
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  11:   use std::math::sqrt;
-  12:   
-  13:   a = 2cm;
-  14:   b = 5cm; 
-  15:   c = sqrt(a*a + b*b);
-  16:   
-  17:   std::print("{c}");
+  13:   use std::math::sqrt;
+  14:   
+  15:   a = 2cm;
+  16:   b = 5cm; 
+  17:   c = sqrt(a*a + b*b);
+  18:   
+  19:   std::print("{c}");
 
 -- Output --
 53.85164807134504mm²
