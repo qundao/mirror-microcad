@@ -1,18 +1,13 @@
-# Assignments
-
-Whenever you use a more complex *expression*, it is often worthwhile to store it in a variable so that it can
-be used once or multiple times elsewhere.
-In µcad, variables are always immutable which means that once they are set, their value cannot be reset in the same context.
-Therefore, they differ from the variables known in other programming languages.
+# Value Assignments
 
 A *value assignment* stores a value by a name on the *evaluation stack*.
 
 The following example defines the variable `a` which from then is a reserved
 name within the scope in which it was defined.
 
-[![test](.test/assignment.svg)](.test/assignment.log)
+[![test](.test/assignment_value.svg)](.test/assignment_value.log)
 
-```µcad,assignment
+```µcad,assignment_value
 a = 5;
 b = a * 2;
 std::debug::assert_eq([a,5]);
