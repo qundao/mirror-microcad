@@ -7,10 +7,12 @@
 
 -- Code --
 
-  11:   a = 5;
-  12:   b = a * 2;
-  13:   std::debug::assert_eq([a,5]);
-  14:   std::debug::assert_eq([b,10]);
+  11:   use std::debug::*;
+  12:   
+  13:   a = 5;
+  14:   b = a * 2;
+  15:   assert_eq([ a, 5  ]);
+  16:   assert_eq([ b, 10 ]);
 
 -- No Output --
 -- No Errors --
