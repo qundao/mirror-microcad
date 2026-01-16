@@ -2,7 +2,7 @@
 
 The following table shows which elements (rows) may occur in which Context (columns):
 
-| Context/Element        | Source File       | Module            | Pre-Init            | Init            | Work-bench           | Body            | Func-tion           |
+| Context/Element        | Source File       | Module            | Initialization Code | Initializer     | Workbench            | Building code   | Function code       |
 | ---------------------- | ----------------- | ----------------- | ------------------- | --------------- | -------------------- | --------------- | ------------------- |
 | `sketch`, `part`, `op` | yes               | yes               | -                   | -               | -                    | -               | -                   |
 | `mod`                  | yes               | yes               | -                   | -               | -                    | -               | -                   |
