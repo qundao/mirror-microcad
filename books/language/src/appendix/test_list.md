@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**194** tests have been evaluated with version **0.2.20** of microcad.
+**195** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -30,9 +30,10 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/.test/array_sub.svg)](../types/collections/.test/array_sub.log) | [array_sub](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_unit_bundling.svg)](../types/collections/.test/array_unit_bundling.log) | [array_unit_bundling](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/arrays_and_comments.svg)](../types/collections/.test/arrays_and_comments.log) | [arrays_and_comments](../types/collections/arrays.md) |
-| [![test](../assignments/.test/assignment.svg)](../assignments/.test/assignment.log) | [assignment](../assignments/values.md) |
+| [![test](../assignments/.test/assignment.svg)](../assignments/.test/assignment.log) | [assignment](../assignments/) |
 | [![test](../assignments/.test/assignment_immutable.svg)](../assignments/.test/assignment_immutable.log) | [assignment_immutable](../assignments/values.md) |
 | [![test](../assignments/.test/assignment_module.svg)](../assignments/.test/assignment_module.log) | [assignment_module](../assignments/values.md) |
+| [![test](../assignments/.test/assignment_value.svg)](../assignments/.test/assignment_value.log) | [assignment_value](../assignments/values.md) |
 | [![test](../.test/attributes_color.svg)](../.test/attributes_color.log) | [attributes_color](../attributes.md) |
 | [![test](../.test/attributes_export.svg)](../.test/attributes_export.log) | [attributes_export](../attributes.md) |
 | [![test](../.test/attributes_precision.svg)](../.test/attributes_precision.log) | [attributes_precision](../attributes.md) |
