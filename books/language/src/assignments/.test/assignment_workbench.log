@@ -1,0 +1,29 @@
+﻿
+-- Test --
+        Test name: assignment_workbench
+  Expected result: fail
+      Source file: ../books/language/src/assignments/values.md:73
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  73:   sketch MySketch() {
+  74:       a = 1;   // error
+  75:       init(_x : Scalar) {}
+  76:   }
+  77:   
+  78:   MySketch();
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Statement not allowed prior initializers
+    ╭─[../books/language/src/assignments/values.md:74:5]
+ 73 │ sketch MySketch() {
+ 74 │     a = 1;   // error
+    ·     ───┬──
+    ·        ╰── error: 2:5: Statement not allowed prior initializers
+ 75 │     init(_x : Scalar) {}
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
