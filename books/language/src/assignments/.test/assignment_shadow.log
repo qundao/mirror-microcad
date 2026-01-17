@@ -1,0 +1,33 @@
+﻿
+-- Test --
+        Test name: assignment_shadow
+  Expected result: fail
+      Source file: ../books/language/src/assignments/values.md:90
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  90:   a = 5;      // warning: unused local
+  91:   a = a * 2;  // error: a already defined in this scope
+
+-- No Output --
+-- Errors --
+  × error: 2:1: Value a already in defined: 5
+    ╭─[../books/language/src/assignments/values.md:91:1]
+ 90 │ a = 5;      // warning: unused local
+    · ┬
+    · ╰── Previously defined here
+ 91 │ a = a * 2;  // error: a already defined in this scope
+    · ────┬────
+    ·     ╰── a is already defined
+    ╰────
+  help: Values in microcad are immutable
+  ⚠ warning: 1:1: Unused local a.
+    ╭─[../books/language/src/assignments/values.md:90:1]
+ 90 │ a = 5;      // warning: unused local
+    · ┬
+    · ╰── warning: 1:1: Unused local a.
+ 91 │ a = a * 2;  // error: a already defined in this scope
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED

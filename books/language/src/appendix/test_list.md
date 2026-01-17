@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**197** tests have been evaluated with version **0.2.20** of microcad.
+**199** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -31,8 +31,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/.test/array_unit_bundling.svg)](../types/collections/.test/array_unit_bundling.log) | [array_unit_bundling](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/arrays_and_comments.svg)](../types/collections/.test/arrays_and_comments.log) | [arrays_and_comments](../types/collections/arrays.md) |
 | [![test](../assignments/.test/assignment.svg)](../assignments/.test/assignment.log) | [assignment](../assignments/) |
-| [![test](../assignments/.test/assignment_immutable.svg)](../assignments/.test/assignment_immutable.log) | [assignment_immutable](../assignments/values.md) |
 | [![test](../assignments/.test/assignment_module.svg)](../assignments/.test/assignment_module.log) | [assignment_module](../assignments/values.md) |
+| [![test](../assignments/.test/assignment_shadow.svg)](../assignments/.test/assignment_shadow.log) | [assignment_shadow](../assignments/values.md) |
+| [![test](../assignments/.test/assignment_shadow_scope.svg)](../assignments/.test/assignment_shadow_scope.log) | [assignment_shadow_scope](../assignments/values.md) |
 | [![test](../assignments/.test/assignment_value.svg)](../assignments/.test/assignment_value.log) | [assignment_value](../assignments/values.md) |
 | [![test](../assignments/.test/assignment_value_scope.svg)](../assignments/.test/assignment_value_scope.log) | [assignment_value_scope](../assignments/values.md) |
 | [![test](../assignments/.test/assignment_workbench.svg)](../assignments/.test/assignment_workbench.log) | [assignment_workbench](../assignments/values.md) |
@@ -62,6 +63,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/code_post_init.svg)](../structure/workbenches/elements/.test/code_post_init.log) | [code_post_init](../structure/workbenches/elements/building_code.md) |
 | [![test](../doc/.test/comment.svg)](../doc/.test/comment.log) | [comment](../doc/comments.md) |
 | [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_shadow.svg)](../assignments/.test/const_assignment_shadow.log) | [const_assignment_shadow](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
 | [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
