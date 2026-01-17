@@ -2,40 +2,28 @@
 -- Test --
         Test name: assignment_workbench
   Expected result: fail
-      Source file: ../books/language/src/assignments/values.md:73
+      Source file: ../books/language/src/assignments/values.md:109
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  73:   mod my_module {
-  74:       a = 1; // error
-  75:   }
-  76:   
-  77:   sketch MySketch() {
-  78:       a = 1;   // error
-  79:       init(_x : Scalar) {}
-  80:   }
-  81:   
-  82:   MySketch();
+ 109:   sketch MySketch() {
+ 110:       a = 1;   // error
+ 111:       init(_x : Scalar) {}
+ 112:   }
+ 113:   
+ 114:   MySketch();
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Declaration of a not allowed within assignment_workbench::my_module
-    ╭─[../books/language/src/assignments/values.md:74:5]
- 73 │ mod my_module {
- 74 │     a = 1; // error
-    ·     ───┬──
-    ·        ╰── error: 2:5: Declaration of a not allowed within assignment_workbench::my_module
- 75 │ }
-    ╰────
-  × error: 6:5: Statement not allowed prior initializers
-    ╭─[../books/language/src/assignments/values.md:78:5]
- 77 │ sketch MySketch() {
- 78 │     a = 1;   // error
-    ·     ───┬──
-    ·        ╰── error: 6:5: Statement not allowed prior initializers
- 79 │     init(_x : Scalar) {}
-    ╰────
+  × error: 2:5: Statement not allowed prior initializers
+     ╭─[../books/language/src/assignments/values.md:110:5]
+ 109 │ sketch MySketch() {
+ 110 │     a = 1;   // error
+     ·     ───┬──
+     ·        ╰── error: 2:5: Statement not allowed prior initializers
+ 111 │     init(_x : Scalar) {}
+     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
