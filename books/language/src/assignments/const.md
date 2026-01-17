@@ -1,9 +1,15 @@
 # Constant Assignments
 
-Unlike *value assignments*, constant assignments are not stored on the *evaluation
-stack* but in the *symbol table*.
-Constant assignments can be placed directly within a module — which is not allowed
-for value assignments — and they can also be declared as public.
+Unlike *variable assignments*, constants are not stored on the *stack* but in
+the *symbol table*.
+For example this allows them to be accessed from within functions or workbenches
+in the same module where the constant is defined.
+Constants can be placed in
+[source files](../structure/source_file.md),
+[modules](../structure/modules/) or
+[initialization code](../structure/workbenches/elements/init_code.md).
+
+Constants are always written in `UPPER_CASE`.
 
 [![test](.test/const_assignment_mod.svg)](.test/const_assignment_mod.log)
 
@@ -11,7 +17,8 @@ for value assignments — and they can also be declared as public.
 const TEXT = "Hello";
 
 mod my_module {
-    // (private) constant
+    
+    // constant assignment
     const TEXT = "Hello my_module";
 
     // public function
@@ -37,6 +44,7 @@ Additionally, constant assignments are permitted in the *init code* of a
 
 ```µcad,const_assignment_workbench
 sketch MySketch(text: String) {
+    // constant assignment in initialization code
     const TEXT = "Hello";
 
     init() {
@@ -47,4 +55,33 @@ sketch MySketch(text: String) {
 }
 
 MySketch();
+```
+
+## Rules
+
+### Ambiguous Names
+
+A constant cannot be defined within the same module or workbench twice.
+
+[![test](.test/const_assignment_shadow.svg)](.test/const_assignment_shadow.log)
+
+```µcad,const_assignment_shadow#todo_fail
+mod module {
+    const A = 5;
+    const A = 1;  // error: A already defined in this module
+
+    pub mod another_module {
+        const A = 5;   // ok
+
+        pub fn a() -> Integer { A }
+    }
+
+    pub sketch Sketch() {
+        const A = 5;   // error: A is ambiguous
+        const A = 5;   // error: A already defined in this workbench
+    }
+}
+
+std::debug::assert_eq([ module::another_module::a(), 5 ]);
+module::Sketch();
 ```
