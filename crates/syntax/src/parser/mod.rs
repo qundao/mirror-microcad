@@ -58,6 +58,16 @@ fn parser<'tokens>(
         } }
         .labelled("identifier");
 
+    let qualified_name = identifier_parser
+        .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
+        .at_least(1)
+        .collect::<Vec<_>>()
+        .map_with(|parts, e| QualifiedName {
+            span: e.span(),
+            parts,
+        })
+        .labelled("qualified name");
+
     let single_type =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
             span: e.span(),
@@ -268,7 +278,7 @@ fn parser<'tokens>(
             .clone()
             .or_not()
             .then_ignore(just(Token::Normal(NormalToken::KeywordMod)))
-            .then(identifier_parser)
+            .then(identifier_parser.clone())
             .then(
                 block
                     .clone()
@@ -282,6 +292,37 @@ fn parser<'tokens>(
                     visibility,
                     name,
                     body,
+                })
+            });
+
+        let use_parts = identifier_parser
+            .map(UseStatementPart::Identifier)
+            .or(just(Token::Normal(NormalToken::OperatorMultiply))
+                .map_with(|_, e| UseStatementPart::Glob(e.span())))
+            .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
+            .at_least(1)
+            .collect::<Vec<_>>()
+            .map_with(|parts, e| UseName {
+                span: e.span(),
+                parts,
+            });
+
+        let use_statement = visibility
+            .clone()
+            .or_not()
+            .then_ignore(just(Token::Normal(NormalToken::KeywordUse)))
+            .then(use_parts)
+            .then(
+                just(Token::Normal(NormalToken::KeywordAs))
+                    .ignore_then(identifier_parser.clone())
+                    .or_not(),
+            )
+            .map_with(|((visibility, name), use_as), e| {
+                Statement::Use(UseStatement {
+                    span: e.span(),
+                    visibility,
+                    name,
+                    use_as,
                 })
             });
 
@@ -354,7 +395,10 @@ fn parser<'tokens>(
                 },
             );
 
-        let with_semi = assigment.or(return_statement).or(expression);
+        let with_semi = assigment
+            .or(return_statement)
+            .or(use_statement)
+            .or(expression);
 
         let without_semi = function.or(init).or(workspace).or(module).or(comment);
 
@@ -381,16 +425,6 @@ fn parser<'tokens>(
 
     expression_parser.define({
         let literal = literal_parser.map(Expression::Literal).labelled("literal");
-
-        let qualified_name = identifier_parser
-            .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
-            .at_least(1)
-            .collect::<Vec<_>>()
-            .map_with(|parts, e| QualifiedName {
-                span: e.span(),
-                parts,
-            })
-            .labelled("qualified name");
 
         let marker = just(Token::Normal(NormalToken::SigilAt))
             .ignore_then(identifier_parser)
