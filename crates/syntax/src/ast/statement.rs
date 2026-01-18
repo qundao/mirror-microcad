@@ -79,7 +79,21 @@ pub struct InitDefinition {
 #[derive(Debug, PartialEq)]
 pub struct UseStatement {
     pub span: Span,
-    pub name: QualifiedName,
+    pub visibility: Option<Visibility>,
+    pub name: UseName,
+    pub use_as: Option<Identifier>,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct UseName {
+    pub span: Span,
+    pub parts: Vec<UseStatementPart>,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum UseStatementPart {
+    Identifier(Identifier),
+    Glob(Span),
 }
 
 #[derive(Debug, PartialEq)]
