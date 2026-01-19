@@ -1,7 +1,6 @@
-use chumsky::prelude::*;
 use insta::assert_debug_snapshot;
-use microcad_syntax::parser::{map_token_input, parse};
-use microcad_syntax::tokens::{NormalToken, SpannedToken, lex};
+use microcad_syntax::parser::parse;
+use microcad_syntax::tokens::lex;
 use test_case::test_case;
 
 #[test_case("single int", "1")]
@@ -26,15 +25,15 @@ use test_case::test_case;
 #[test_case("expr string", r#""string {more + complex} expression""#)]
 #[test_case(
     "formatted expr string width",
-    r#""string {formated - expression:03} expression""#
+    r#""string {formatted - expression:03} expression""#
 )]
 #[test_case(
     "formatted expr string accuracy",
-    r#""string {formated - expression:.5} expression""#
+    r#""string {formatted - expression:.5} expression""#
 )]
 #[test_case(
     "formatted expr string both",
-    r#""string {formated - expression:03.5} expression""#
+    r#""string {formatted - expression:03.5} expression""#
 )]
 #[test_case("function", "fn foo(a: Length) -> Length {a * 2}")]
 #[test_case("function with return", "fn foo(a: Length) -> Length {return a * 2;}")]
@@ -75,13 +74,19 @@ use test_case::test_case;
 #[test_case("else-if", "if a > 1 { 3 } else if a < -1 { 1 }")]
 #[test_case("else-if-else", "if a > 1 { 3 } else if a < -1 { 1 } else { 0 }")]
 #[test_case("sketch", "sketch Wheel(radius: Length) {std::geo2d::Circle(radius);}")]
-#[test_case("pub-part", "pub part Wheel(radius: Length, height = 1mm) {std::geo3d::Cylinder(radius, height);}")]
-#[test_case("sketch-with-init", "sketch Wheel(radius: Length) {
+#[test_case(
+    "pub-part",
+    "pub part Wheel(radius: Length, height = 1mm) {std::geo3d::Cylinder(radius, height);}"
+)]
+#[test_case(
+    "sketch-with-init",
+    "sketch Wheel(radius: Length) {
     init(diameter: Length) {
         radius = diameter / 2;
     }
     std::geo2d::Circle(radius);
-}")]
+}"
+)]
 #[test_case("mod", "mod foo { fn bar(){} }")]
 #[test_case("mod pub", "pub mod foo { fn bar(){} }")]
 #[test_case("mod extern", "mod foo;")]
@@ -90,8 +95,5 @@ use test_case::test_case;
 #[test_case("use as", "pub use foo::bar as foobar;")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input).unwrap();
-    assert_debug_snapshot!(
-        format!("parser_{name}"),
-        parse(tokens.as_slice())
-    );
+    assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));
 }
