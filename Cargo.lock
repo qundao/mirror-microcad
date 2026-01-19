@@ -5342,6 +5342,7 @@ dependencies = [
  "lazy_static",
  "log",
  "microcad-core",
+ "microcad-syntax",
  "miette",
  "pathdiff",
  "pest",

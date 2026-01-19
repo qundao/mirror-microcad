@@ -129,7 +129,14 @@ pub enum ParseError {
 
     /// If expression is missing an `else`
     #[error("If expression must return a value in all cases")]
-    IncompleteIfExpression(SrcRef)
+    IncompleteIfExpression(SrcRef),
+
+    /// Invalid glob pattern
+    #[error("Invalid glob pattern, wildcard must be at the end of the pattern")]
+    InvalidGlobPattern(SrcRef),
+
+    #[error("Glob imports can't be given an alias")]
+    UseGlobAlias(SrcRef),
 }
 
 /// Result with parse error
@@ -174,7 +181,9 @@ impl SrcReferrer for ParseError {
             | ParseError::StatementBetweenInit(src_ref)
             | ParseError::NotAvailable(src_ref)
             | ParseError::IncompleteIfExpression(src_ref)
-            | ParseError::LoadSource(src_ref , ..) => src_ref.clone(),
+            | ParseError::LoadSource(src_ref , ..)
+            | ParseError::InvalidGlobPattern(src_ref)
+            | ParseError::UseGlobAlias(src_ref) => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             ParseError::RuleNotFoundError(_) => SrcRef(None),
