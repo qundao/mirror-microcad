@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, rc::*, tree_display::*};
+use microcad_syntax::ast;
 use std::fs::read_to_string;
 
 impl SourceFile {
@@ -94,6 +95,19 @@ impl Parse for SourceFile {
             crate::find_rule!(pair, statement_list)?,
             pair.as_span().as_str().to_string(),
             hash,
+        ))
+    }
+}
+
+impl FromAst for SourceFile {
+    type AstNode = ast::SourceFile;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(SourceFile::new(
+            None, // todo
+            StatementList::from_ast(&node.statements, context)?,
+            context.source.into(),
+            context.source_file_hash,
         ))
     }
 }

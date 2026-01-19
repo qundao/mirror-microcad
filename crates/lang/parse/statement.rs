@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, rc::*, syntax::*};
+use microcad_syntax::ast;
 
 impl Parse for Assignment {
     fn parse(pair: Pair) -> ParseResult<Self> {
@@ -110,6 +111,17 @@ impl Parse for Statement {
     }
 }
 
+impl FromAst for Statement {
+    type AstNode = ast::Statement;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(match node {
+            ast::Statement::Module(module) => Statement::Module(Rc::new(ModuleDefinition::from_ast(module, context)?)),
+            _ => todo!(),
+        })
+    }
+}
+
 impl Parse for ReturnStatement {
     fn parse(pair: Pair) -> ParseResult<Self> {
         let mut result = None;
@@ -145,6 +157,19 @@ impl Parse for StatementList {
         }
 
         Ok(Self(statements))
+    }
+}
+
+impl FromAst for StatementList {
+    type AstNode = ast::StatementList;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(StatementList(
+            node.statements
+                .iter()
+                .map(|statement| Statement::from_ast(statement, context))
+                .collect::<Result<Vec<_>, _>>()?,
+        ))
     }
 }
 
