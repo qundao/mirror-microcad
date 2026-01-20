@@ -19,8 +19,5 @@
  183:   e = a - 2.0mm;
  184:   assert([e, 0mm, 0.0mm].all_equal());
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -10,21 +10,5 @@
   79:     a = l;
   80:   } } K(1cm);
 
--- No Output --
--- Errors --
-  ⚠ warning: 2:3: Unused local a.
-    ╭─[../books/tests/src/statement_usage/init.md:79:3]
- 78 │ sketch K() { init(l:Length) {
- 79 │   a = l;
-    ·   ┬
-    ·   ╰── warning: 2:3: Unused local a.
- 80 │ } } K(1cm);
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 79
--- Model --
-  Group (root) ->
-    Workpiece(sketch) init_assignment_var::K(l=10mm) ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
-OK (BUT WARNINGS)
+OK

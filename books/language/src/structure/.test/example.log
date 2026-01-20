@@ -15,11 +15,5 @@
   17:   print_error("first");
   18:   print_error("second");
 
--- Output --
-ERROR: first
-ERROR: second
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

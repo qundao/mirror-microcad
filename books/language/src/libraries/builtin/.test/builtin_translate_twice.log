@@ -13,15 +13,5 @@
   97:       .ops::translate(x = 0.0mm, y = 15.0mm, z = 0.0mm)
   98:       .ops::translate(x = 15.0mm, y = 0.0mm, z = 0.0mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Transform __builtin::ops::translate(x=15mm, y=0mm, z=0mm) ->
-      #[color = rgba(1, 0, 0, 1)]
-      Transform __builtin::ops::translate(x=0mm, y=15mm, z=0mm) ->
-        Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=0mm, y=0mm) ->
-
-Export of "../books/language/src/libraries/builtin/.test/builtin_translate_twice-out.svg" successful.
 -- Test Result --
 OK

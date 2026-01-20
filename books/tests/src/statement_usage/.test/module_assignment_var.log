@@ -10,16 +10,5 @@
   79:     a = 1; // error
   80:   }
 
--- No Output --
--- Errors --
-  × error: 2:3: Declaration of a not allowed within module_assignment_var::k
-    ╭─[../books/tests/src/statement_usage/module.md:79:3]
- 78 │ mod k {
- 79 │   a = 1; // error
-    ·   ───┬──
-    ·      ╰── error: 2:3: Declaration of a not allowed within module_assignment_var::k
- 80 │ }
-    ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+OK

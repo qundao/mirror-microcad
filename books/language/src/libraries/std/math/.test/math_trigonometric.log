@@ -17,8 +17,5 @@
   28:   
   29:   assert_eq([sin(asin(x)), x]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

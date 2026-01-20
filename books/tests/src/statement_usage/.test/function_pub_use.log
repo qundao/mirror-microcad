@@ -10,16 +10,5 @@
   47:     pub use std; // error
   48:   } f();
 
--- No Output --
--- Errors --
-  × error: 2:3: Use statement is not available within Function
-    ╭─[../books/tests/src/statement_usage/function.md:47:3]
- 46 │ fn f() {
- 47 │   pub use std; // error
-    ·   ──────┬─────
-    ·         ╰── error: 2:3: Use statement is not available within Function
- 48 │ } f();
-    ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+OK

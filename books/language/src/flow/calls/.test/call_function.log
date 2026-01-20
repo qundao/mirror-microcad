@@ -15,8 +15,5 @@
   17:   // check value
   18:   std::debug::assert_eq( [s, 4] );
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

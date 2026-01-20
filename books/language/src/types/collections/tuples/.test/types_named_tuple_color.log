@@ -10,6 +10,9 @@
   15:   
   16:   std::debug::assert(color.r == 100%);
 
+error at 23..24
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- No Model --

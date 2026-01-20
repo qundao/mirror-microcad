@@ -8,16 +8,5 @@
 
   46:   std::geo2d::Text(height = 20mm, text = "Hello µcad!");
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=Hello µcad!) ->
-      - font_file = 
-      - height = 20mm
-      - text = Hello µcad!
-      Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=Hello µcad!) ->
-
-Export of "../books/language/src/libraries/std/geo2d/.test/std_geo2d_text-out.svg" successful.
 -- Test Result --
 OK

@@ -8,15 +8,5 @@
 
    9:   part MyPart() {}
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:6: Unused global symbol MyPart.
-   ╭─[../books/language/src/structure/workbenches/parts.md:9:6]
- 9 │ part MyPart() {}
-   ·      ───┬──
-   ·         ╰── warning: 1:6: Unused global symbol MyPart.
-   ╰────
-Unexpected warnings(s) which did occur in line(s): 9
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

@@ -18,10 +18,5 @@
   15:   
   16:   std::print(f(5));  // prints "match"
 
--- Output --
-match
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

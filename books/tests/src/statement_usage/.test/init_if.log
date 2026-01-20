@@ -10,15 +10,5 @@
   63:     if std::math::PI == l { } // error
   64:   } } K(1cm);
 
--- No Output --
--- Errors --
-  × error: 2:3: If statement not available here
-    ╭─[../books/tests/src/statement_usage/init.md:63:3]
- 62 │ sketch K() { init(l:Length) {
- 63 │   if std::math::PI == l { } // error
-    ·   ────────────┬────────────
-    ·               ╰── error: 2:3: If statement not available here
- 64 │ } } K(1cm);
-    ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

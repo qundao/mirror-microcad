@@ -8,12 +8,5 @@
 
    6:   sketch F() {} F();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) source_workbench::F() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

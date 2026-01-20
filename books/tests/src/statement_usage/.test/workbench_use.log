@@ -10,12 +10,5 @@
   39:     use std;
   40:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_use::K() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

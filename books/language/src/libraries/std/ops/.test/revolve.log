@@ -11,6 +11,9 @@
   10:       .std::ops::translate(x = 40mm)
   11:       .std::ops::revolve(180°);
 
+error at 126..128
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

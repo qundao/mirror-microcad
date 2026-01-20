@@ -8,8 +8,5 @@
 
   18:   __builtin::debug::assert(true);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

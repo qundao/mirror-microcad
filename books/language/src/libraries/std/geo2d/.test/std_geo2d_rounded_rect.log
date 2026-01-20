@@ -8,21 +8,5 @@
 
   31:   std::geo2d::RoundedRect(20mm, radius = 5mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::RoundedRect(radius=5mm, size=20mm) ->
-      - height = 20mm
-      - radius_bottom_left = 5mm
-      - radius_bottom_right = 5mm
-      - radius_top_left = 5mm
-      - radius_top_right = 5mm
-      - width = 20mm
-      - x = -10mm
-      - y = -10mm
-      Primitive2D __builtin::geo2d::RoundedRect(height=20mm, radius_bottom_left=5mm, radius_bottom_right=5mm, radius_top_left=5mm, radius_top_right=5mm, width=20mm, x=-10mm, y=-10mm) ->
-
-Export of "../books/language/src/libraries/std/geo2d/.test/std_geo2d_rounded_rect-out.svg" successful.
 -- Test Result --
 OK

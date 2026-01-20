@@ -10,24 +10,5 @@
    7:     sketch F() {} F(); // error
    8:   } K();
 
--- No Output --
--- Errors --
-  × error: 2:10: Statement is not available within Sketch
-   ╭─[../books/tests/src/statement_usage/workbench.md:7:10]
- 6 │ sketch K() {
- 7 │   sketch F() {} F(); // error
-   ·          ┬
-   ·          ╰── error: 2:10: Statement is not available within Sketch
- 8 │ } K();
-   ╰────
-  × error: 2:10: Sketch is not available within Sketch
-   ╭─[../books/tests/src/statement_usage/workbench.md:7:10]
- 6 │ sketch K() {
- 7 │   sketch F() {} F(); // error
-   ·          ┬
-   ·          ╰── error: 2:10: Sketch is not available within Sketch
- 8 │ } K();
-   ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+OK

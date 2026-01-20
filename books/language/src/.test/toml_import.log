@@ -11,8 +11,5 @@
   29:   std::debug::assert_eq([data.M10.diameter, 10.0]);
   30:   std::debug::assert_eq([data.M6.pitch, 1.0]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

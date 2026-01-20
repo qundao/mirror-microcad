@@ -10,16 +10,5 @@
   55:     return 1; // error
   56:   } K();
 
--- No Output --
--- Errors --
-  × error: 2:3: Statement is not available within Sketch
-    ╭─[../books/tests/src/statement_usage/workbench.md:55:3]
- 54 │ sketch K() {
- 55 │   return 1; // error
-    ·   ────┬────
-    ·       ╰── error: 2:3: Statement is not available within Sketch
- 56 │ } K();
-    ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+OK

@@ -10,20 +10,5 @@
   39:     use std;
   40:   } } K(1cm);
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:38:19]
- 38 │ sketch K() { init(l:Length) {
-    ·                   ┬
-    ·                   ╰── warning: 1:19: Unused local l.
- 39 │   use std;
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 38
--- Model --
-  Group (root) ->
-    Workpiece(sketch) init_use::K(l=10mm) ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
-OK (BUT WARNINGS)
+OK

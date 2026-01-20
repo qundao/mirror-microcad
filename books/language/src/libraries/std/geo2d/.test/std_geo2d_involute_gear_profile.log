@@ -8,6 +8,9 @@
 
   11:   std::geo2d::InvoluteGearProfile(module = 4.0mm, teeth = 20, pressure_angle = 0°);
 
+error at 78..80
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

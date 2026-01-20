@@ -13,7 +13,5 @@
  120:   
  121:   Wheel(radius = 1.0mm);
 
--- No Output --
--- No Errors --
 -- Test Result --
-TODO (SHALL FAIL)
+OK

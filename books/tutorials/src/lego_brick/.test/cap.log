@@ -11,17 +11,5 @@
   16:   
   17:   Cap(width = 31.8mm, height = 15.8mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
-      - height = 15.8mm
-      - width = 31.8mm
-      - x = -15.9mm
-      - y = -7.9mm
-      Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) ->
-
-Export of "../books/tutorials/src/lego_brick/.test/cap-out.svg" successful.
 -- Test Result --
 OK

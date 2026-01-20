@@ -8,12 +8,5 @@
 
   24:   __builtin::geo2d::Text(height = 20mm, text = "Hello World");
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=Hello World) ->
-
-Export of "../books/language/src/libraries/builtin/.test/text-out.svg" successful.
 -- Test Result --
 OK

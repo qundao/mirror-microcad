@@ -26,41 +26,5 @@
  147:   // call with initializer
  148:   Wheel(diameter=10cm, thickness=1cm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) init_property::Wheel(radius=50mm, thickness=10mm) ->
-      - radius = 50mm
-      - thickness = 10mm
-      Operation subtract() ->
-        Group ->
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=50mm) ->
-            - center = (x=0mm, y=0mm)
-            - radius = 50mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=50mm) ->
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=40mm) ->
-            - center = (x=0mm, y=0mm)
-            - radius = 40mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=40mm) ->
-    Workpiece(sketch) init_property::Wheel(diameter=100mm, thickness=10mm) ->
-      - radius = 50mm
-      - thickness = 10mm
-      Operation subtract() ->
-        Group ->
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=50mm) ->
-            - center = (x=0mm, y=0mm)
-            - radius = 50mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=50mm) ->
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=40mm) ->
-            - center = (x=0mm, y=0mm)
-            - radius = 40mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=40mm) ->
-
-Export of "../books/language/src/structure/workbenches/.test/init_property-out.svg" successful.
 -- Test Result --
 OK

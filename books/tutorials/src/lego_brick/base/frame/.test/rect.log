@@ -8,17 +8,5 @@
 
   11:   std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
-      - height = 15.8mm
-      - width = 31.8mm
-      - x = -15.9mm
-      - y = -7.9mm
-      Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) ->
-
-Export of "../books/tutorials/src/lego_brick/base/frame/.test/rect-out.svg" successful.
 -- Test Result --
 OK

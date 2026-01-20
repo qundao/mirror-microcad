@@ -10,6 +10,9 @@
   49:   pi =  3.1415;
   50:   percent = 55%;
 
+error at 36..37
+-- Test Result --
+FAILS
 -- No Output --
 -- Errors --
   ⚠ warning: 3:1: Unused local percent.

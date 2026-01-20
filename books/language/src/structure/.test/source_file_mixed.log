@@ -9,14 +9,5 @@
   55:   std::geo2d::Circle(radius = 1cm);
   56:   std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
 
--- No Output --
--- Errors --
-  × error: 2:1: Cannot mix 2d and 3d geometries
-    ╭─[../books/language/src/structure/source_file.md:56:1]
- 55 │ std::geo2d::Circle(radius = 1cm);
- 56 │ std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
-    · ────────────────┬────────────────
-    ·                 ╰── error: 2:1: Cannot mix 2d and 3d geometries
-    ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

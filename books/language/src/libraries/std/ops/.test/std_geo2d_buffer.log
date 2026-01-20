@@ -9,20 +9,5 @@
    9:   std::geo2d::Rect(20mm)
   10:       .std::ops::buffer(distance = 20mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::buffer(distance=20mm) ->
-      - distance = 20mm
-      Operation __builtin::ops::buffer(distance=20mm) ->
-        Workpiece(sketch) std::geo2d::Rect(size=20mm) ->
-          - height = 20mm
-          - width = 20mm
-          - x = -10mm
-          - y = -10mm
-          Primitive2D __builtin::geo2d::Rect(height=20mm, width=20mm, x=-10mm, y=-10mm) ->
-
-Export of "../books/language/src/libraries/std/ops/.test/std_geo2d_buffer-out.svg" successful.
 -- Test Result --
 OK

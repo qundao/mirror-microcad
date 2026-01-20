@@ -22,32 +22,5 @@
   19:   __builtin::debug::assert_invalid(my::mod_private::const_public);
   20:   __builtin::debug::assert_invalid(my::mod_private::const_private);
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:5: Unused global symbol my.
-   ╭─[../books/tests/src/visibility.md:6:5]
- 6 │ mod my {
-   ·     ─┬
-   ·      ╰── warning: 1:5: Unused global symbol my.
- 7 │     mod mod_private {
-   ╰────
-  ⚠ warning: 2:9: Unused global symbol mod_private.
-   ╭─[../books/tests/src/visibility.md:7:9]
- 6 │ mod my {
- 7 │     mod mod_private {
-   ·         ─────┬─────
-   ·              ╰── warning: 2:9: Unused global symbol mod_private.
- 8 │         pub const_public = 1;
-   ╰────
-  ⚠ warning: 8:9: Unused global symbol const const_private = 1.
-    ╭─[../books/tests/src/visibility.md:13:9]
- 12 │         pub const_public = 1;
- 13 │         const const_private = 1;
-    ·         ───────────┬───────────
-    ·                    ╰── warning: 8:9: Unused global symbol const const_private = 1.
- 14 │     }
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 6, 7, 13
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

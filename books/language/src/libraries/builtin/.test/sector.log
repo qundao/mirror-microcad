@@ -8,6 +8,9 @@
 
   14:   __builtin::geo2d::Sector(radius = 20mm, start = 45°, end = 135°);
 
+error at 50..52
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

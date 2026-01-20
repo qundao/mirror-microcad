@@ -13,16 +13,5 @@
   26:       geo3d::Sphere(radius = 2.0mm).__builtin::ops::translate(x = 3.0mm);    
   27:   }.ops::subtract();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Operation __builtin::ops::subtract() ->
-      Group ->
-        Primitive3D __builtin::geo3d::Sphere(radius=3mm) ->
-        Transform __builtin::ops::translate(x=3mm, y=0mm, z=0mm) ->
-          Primitive3D __builtin::geo3d::Sphere(radius=2mm) ->
-
-Export of "../books/language/src/libraries/builtin/.test/builtin_subtract_3d-out.stl" successful.
 -- Test Result --
 OK

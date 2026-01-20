@@ -8,8 +8,5 @@
 
  105:   std::debug::assert_eq([ [-0.5mm,0.5mm]*2, [-1,1]mm ]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

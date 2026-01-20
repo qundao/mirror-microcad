@@ -9,21 +9,5 @@
    8:   std::geo2d::Circle(radius = 20mm)
    9:       .std::ops::extrude(height = 20mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
-      - height = 20mm
-      - scale = (x=1, y=1)
-      - twist = 0rad
-      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
-          - center = (x=0mm, y=0mm)
-          - radius = 20mm
-          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-            Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-
-Export of "../books/language/src/libraries/std/ops/.test/extrude-out.stl" successful.
 -- Test Result --
 OK

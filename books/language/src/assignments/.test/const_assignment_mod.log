@@ -15,11 +15,5 @@
   17:   std::print(TEXT);
   18:   std::print(my_module::TEXT);
 
--- Output --
-Hello
-Hello
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -20,6 +20,9 @@
  144:   std::debug::assert(centiliter == 1.0l);
  145:   std::debug::assert(milliliter == 1.0l);
 
+error at 30..32
+-- Test Result --
+FAILS
 -- No Output --
 -- Errors --
   ⚠ warning: 4:1: Unused local cubic_inch.

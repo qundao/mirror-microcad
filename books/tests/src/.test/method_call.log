@@ -10,27 +10,5 @@
    7:   sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
    8:   Sketch(4.0);
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:4: Unused global symbol scale.
-   ╭─[../books/tests/src/method_call.md:6:4]
- 6 │ op scale() {}
-   ·    ──┬──
-   ·      ╰── warning: 1:4: Unused global symbol scale.
- 7 │ sketch Sketch(scale: Scalar) { std::geo2d::Rect(size = scale * 40mm) }
-   ╰────
-Unexpected warnings(s) which did occur in line(s): 6
--- Model --
-  Group (root) ->
-    Workpiece(sketch) method_call::Sketch(scale=4) ->
-      - scale = 4
-      Workpiece(sketch) std::geo2d::Rect(size=160mm) ->
-        - height = 160mm
-        - width = 160mm
-        - x = -80mm
-        - y = -80mm
-        Primitive2D __builtin::geo2d::Rect(height=160mm, width=160mm, x=-80mm, y=-80mm) ->
-
-Export of "../books/tests/src/.test/method_call-out.svg" successful.
 -- Test Result --
-OK (BUT WARNINGS)
+OK

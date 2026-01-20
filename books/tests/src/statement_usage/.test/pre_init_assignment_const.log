@@ -10,12 +10,5 @@
   71:     const B = 1;
   72:   init(l:Length) {} } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) pre_init_assignment_const::K() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

@@ -10,12 +10,5 @@
   23:     fn f() {} f();
   24:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_function::K() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

@@ -17,24 +17,5 @@
   37:   // translate object s
   38:   s.std::ops::translate(x = 1cm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
-      - x = 10mm
-      - y = 0mm
-      - z = 0mm
-      Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
-        s: Workpiece(sketch) call_workbench::Square(size=20mm) ->
-          - size = 20mm
-          Workpiece(sketch) std::geo2d::Rect(size=20mm) ->
-            - height = 20mm
-            - width = 20mm
-            - x = -10mm
-            - y = -10mm
-            Primitive2D __builtin::geo2d::Rect(height=20mm, width=20mm, x=-10mm, y=-10mm) ->
-
-Export of "../books/language/src/flow/calls/.test/call_workbench-out.svg" successful.
 -- Test Result --
 OK

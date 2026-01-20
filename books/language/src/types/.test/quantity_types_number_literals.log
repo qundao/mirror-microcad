@@ -16,24 +16,5 @@
   35:   // `height` with `Scalar` `2` and add ten centimeters
   36:   width = height * 2 + 10cm;
 
--- No Output --
--- Errors --
-  ⚠ warning: 9:1: Unused local width.
-    ╭─[../books/language/src/types/quantities.md:36:1]
- 35 │ // `height` with `Scalar` `2` and add ten centimeters
- 36 │ width = height * 2 + 10cm;
-    · ──┬──
-    ·   ╰── warning: 9:1: Unused local width.
-    ╰────
-  ⚠ warning: 5:4: Unused global symbol f.
-    ╭─[../books/language/src/types/quantities.md:32:4]
- 31 │ // use as *default* value in parameter list
- 32 │ fn f( height = 1m ) {}
-    ·    ┬
-    ·    ╰── warning: 5:4: Unused global symbol f.
- 33 │ 
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 32, 36
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

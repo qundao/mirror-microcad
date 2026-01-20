@@ -8,6 +8,9 @@
 
   21:   std::geo2d::Sector(radius = 20mm, start = 45°, end = 135°);
 
+error at 44..46
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

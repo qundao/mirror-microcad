@@ -10,17 +10,5 @@
   53:   height = 2mm;
   54:   std::geo2d::Rect(width, height);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
-      - height = 2mm
-      - width = 2mm
-      - x = -1mm
-      - y = -1mm
-      Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
-
-Export of "../books/language/src/flow/calls/.test/inline_identifiers-out.svg" successful.
 -- Test Result --
 OK

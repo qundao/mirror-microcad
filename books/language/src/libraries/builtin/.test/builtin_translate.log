@@ -24,39 +24,5 @@
   86:   #[color = "gray"]
   87:   r.translate(x = 4.0mm, y = 4.0mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(op) builtin_translate::translate(x=0mm, y=0mm, z=0mm) ->
-      - x = 0mm
-      - y = 0mm
-      - z = 0mm
-      #[color = rgba(1, 0, 0, 1)]
-      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
-    Workpiece(op) builtin_translate::translate(x=4mm, y=0mm, z=0mm) ->
-      - x = 4mm
-      - y = 0mm
-      - z = 0mm
-      #[color = rgba(0, 0, 1, 1)]
-      Transform __builtin::ops::translate(x=4mm, y=0mm, z=0mm) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
-    Workpiece(op) builtin_translate::translate(x=0mm, y=4mm, z=0mm) ->
-      - x = 0mm
-      - y = 4mm
-      - z = 0mm
-      #[color = rgba(0, 1, 0, 1)]
-      Transform __builtin::ops::translate(x=0mm, y=4mm, z=0mm) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
-    Workpiece(op) builtin_translate::translate(x=4mm, y=4mm, z=0mm) ->
-      - x = 4mm
-      - y = 4mm
-      - z = 0mm
-      #[color = rgba(0.5, 0.5, 0.5, 1)]
-      Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) ->
-        r: Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
-
-Export of "../books/language/src/libraries/builtin/.test/builtin_translate-out.svg" successful.
 -- Test Result --
 OK

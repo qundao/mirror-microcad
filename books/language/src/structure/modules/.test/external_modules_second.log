@@ -9,8 +9,5 @@
   18:   // file: second.µcad
   19:   pub fn f() {}
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

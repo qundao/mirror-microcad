@@ -16,24 +16,5 @@
  213:   
  214:   Wheel(radius = 1.0mm);
 
--- No Output --
--- Errors --
-  × error: 4:5: Code between initializers is not allowed
-     ╭─[../books/language/src/structure/workbenches/README.md:209:5]
- 208 │     
- 209 │     radius = 1; // error: code between initializers not allowed
-     ·     ─────┬─────
-     ·          ╰── error: 4:5: Code between initializers is not allowed
- 210 │ 
-     ╰────
-  × error: 4:5: Statement not allowed prior initializers
-     ╭─[../books/language/src/structure/workbenches/README.md:209:5]
- 208 │     
- 209 │     radius = 1; // error: code between initializers not allowed
-     ·     ─────┬─────
-     ·          ╰── error: 4:5: Statement not allowed prior initializers
- 210 │ 
-     ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+OK

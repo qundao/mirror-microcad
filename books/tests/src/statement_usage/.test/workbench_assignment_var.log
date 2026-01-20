@@ -10,21 +10,5 @@
   87:     a = 1;
   88:   } K();
 
--- No Output --
--- Errors --
-  ⚠ warning: 2:3: Unused local a.
-    ╭─[../books/tests/src/statement_usage/workbench.md:87:3]
- 86 │ sketch K() {
- 87 │   a = 1;
-    ·   ┬
-    ·   ╰── warning: 2:3: Unused local a.
- 88 │ } K();
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 87
--- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_assignment_var::K() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
-OK (BUT WARNINGS)
+OK

@@ -29,17 +29,5 @@
  195:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
  196:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
 
--- No Output --
--- Errors --
-  ⚠ warning: 9:8: Unused global symbol into_radius.
-     ╭─[../books/language/src/structure/workbenches/README.md:183:8]
- 182 │     // function
- 183 │     fn into_radius( diameter: Length ) {
-     ·        ─────┬─────
-     ·             ╰── warning: 9:8: Unused global symbol into_radius.
- 184 │         // use constant FACTOR from init code
-     ╰────
-Unexpected warnings(s) which did occur in line(s): 183
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

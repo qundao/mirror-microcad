@@ -8,8 +8,5 @@
 
   10:   std::debug::assert(true != false);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

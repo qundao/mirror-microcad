@@ -14,6 +14,9 @@
  108:   std::debug::assert(square_millimeter == 0.1m²);
  109:   std::debug::assert(square_centimeter == 0.1m²);
 
+error at 28..30
+-- Test Result --
+FAILS
 -- No Output --
 -- Errors --
   ⚠ warning: 4:1: Unused local square_inch.

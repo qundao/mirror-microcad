@@ -11,8 +11,5 @@
  137:   y = 2;
  138:   f(x * 2, y * y); // matches because `x` and `y` match parameter names `x` and `y`
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

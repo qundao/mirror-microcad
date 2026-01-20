@@ -10,13 +10,5 @@
   71:     @input
   72:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_marker::K() ->
-      InputPlaceholder ->
-
-Export error: Render error: Invalid output type: Undetermined
 -- Test Result --
 OK

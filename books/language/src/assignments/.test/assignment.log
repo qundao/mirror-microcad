@@ -11,8 +11,5 @@
   18:   std::debug::assert_eq([a,5]);
   19:   std::debug::assert_eq([b,10]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

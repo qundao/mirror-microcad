@@ -10,16 +10,5 @@
   47:     pub use std; // error
   48:   init(l:Length) {} } K();
 
--- No Output --
--- Errors --
-  × error: 2:3: Use statement is not available within Sketch
-    ╭─[../books/tests/src/statement_usage/pre-init.md:47:3]
- 46 │ sketch K() { 
- 47 │   pub use std; // error
-    ·   ──────┬─────
-    ·         ╰── error: 2:3: Use statement is not available within Sketch
- 48 │ init(l:Length) {} } K();
-    ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+OK

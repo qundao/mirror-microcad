@@ -13,6 +13,9 @@
   70:   10°;     // 10 degree angle
   71:   10deg    // also 10 degree angle
 
+error at 49..51
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- No Model --

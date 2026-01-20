@@ -12,17 +12,5 @@
   16:   // use operation nop on a circle
   17:   std::geo2d::Circle(radius = 1cm).nop();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(op) op_example::nop() ->
-      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
-        - center = (x=0mm, y=0mm)
-        - radius = 10mm
-        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
-
-Export of "../books/language/src/structure/workbenches/.test/op_example-out.svg" successful.
 -- Test Result --
 OK

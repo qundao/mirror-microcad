@@ -14,6 +14,9 @@
   33:   12.0E+12;
   34:   50%    // = 0.5
 
+error at 46..47
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- No Model --

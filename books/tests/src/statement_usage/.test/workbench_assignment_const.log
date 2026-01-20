@@ -10,12 +10,5 @@
   79:     const B = 1;
   80:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_assignment_const::K() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

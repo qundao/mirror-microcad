@@ -15,31 +15,5 @@
   66:       Circle(radius = 2mm); 
   67:   }
 
--- No Output --
--- Errors --
-  ⚠ warning: 2:5: Unused global symbol std::ops::translate.
-    ╭─[../books/tests/src/semicolon.md:61:5]
- 60 │ use std::geo2d::Circle;
- 61 │ use std::ops::translate;
-    ·     ─────────┬─────────
-    ·              ╰── warning: 2:5: Unused global symbol std::ops::translate.
- 62 │ 
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 61
--- Model --
-  Group (root) ->
-    Group ->
-      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
-        - center = (x=0mm, y=0mm)
-        - radius = 1mm
-        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
-      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2mm) ->
-        - center = (x=0mm, y=0mm)
-        - radius = 2mm
-        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2mm) ->
-
-Export of "../books/tests/src/.test/group-out.svg" successful.
 -- Test Result --
-OK (BUT WARNINGS)
+OK

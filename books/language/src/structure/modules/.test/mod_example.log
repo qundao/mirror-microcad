@@ -23,16 +23,5 @@
   37:   // use the function and the constant
   38:   x = my::math::abs(-1.0) * my::math::PI;
 
--- No Output --
--- Errors --
-  ⚠ warning: 16:1: Unused local x.
-    ╭─[../books/language/src/structure/modules/README.md:38:1]
- 37 │ // use the function and the constant
- 38 │ x = my::math::abs(-1.0) * my::math::PI;
-    · ┬
-    · ╰── warning: 16:1: Unused local x.
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 38
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

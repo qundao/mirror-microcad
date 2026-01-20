@@ -15,8 +15,5 @@
   37:   std::debug::assert_eq([ f(1), 2 ]);
   38:   std::debug::assert_eq([ f(2), 4 ]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

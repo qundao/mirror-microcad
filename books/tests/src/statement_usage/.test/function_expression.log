@@ -10,8 +10,5 @@
   95:     1 + 2;
   96:   } f();
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

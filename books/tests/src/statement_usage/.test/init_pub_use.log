@@ -10,22 +10,5 @@
   47:     pub use std; // error
   48:   } } K(1cm);
 
--- No Output --
--- Errors --
-  × error: 2:3: Public use statement not available here
-    ╭─[../books/tests/src/statement_usage/init.md:47:3]
- 46 │ sketch K() { init(l:Length) { // warning
- 47 │   pub use std; // error
-    ·   ──────┬─────
-    ·         ╰── error: 2:3: Public use statement not available here
- 48 │ } } K(1cm);
-    ╰────
-  ⚠ warning: 1:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:46:19]
- 46 │ sketch K() { init(l:Length) { // warning
-    ·                   ┬
-    ·                   ╰── warning: 1:19: Unused local l.
- 47 │   pub use std; // error
-    ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

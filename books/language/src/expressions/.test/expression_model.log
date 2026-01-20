@@ -8,17 +8,5 @@
 
   34:   std::geo2d::Rect(1cm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
-      - height = 10mm
-      - width = 10mm
-      - x = -5mm
-      - y = -5mm
-      Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
-
-Export of "../books/language/src/expressions/.test/expression_model-out.svg" successful.
 -- Test Result --
 OK

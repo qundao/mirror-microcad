@@ -23,8 +23,5 @@
   42:   assert(  5 == 6       == false               ); // Equal
   43:   assert(  5 != 6       == true                ); // Not equal
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

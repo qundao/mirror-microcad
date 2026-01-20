@@ -16,24 +16,5 @@
   18:           .center()
   19:   }
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:5: Unused global symbol std::ops.
-    ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:11:5]
- 11 │ use std::ops::*;
-    ·     ────┬───
-    ·         ╰── warning: 1:5: Unused global symbol std::ops.
- 12 │ 
-    ╰────
-  ⚠ warning: 5:4: Unused global symbol grid.
-    ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:15:4]
- 14 │ 
- 15 │ op grid(columns: Integer, rows: Integer) {
-    ·    ──┬─
-    ·      ╰── warning: 5:4: Unused global symbol grid.
- 16 │     @input
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 11, 15
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

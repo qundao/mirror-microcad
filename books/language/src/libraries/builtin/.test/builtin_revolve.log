@@ -12,6 +12,9 @@
   58:       .ops::translate(x = 20.0mm, y = 0.0mm, z = 0.0mm)
   59:       .ops::revolve(angle = 360.0°);
 
+error at 129..131
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

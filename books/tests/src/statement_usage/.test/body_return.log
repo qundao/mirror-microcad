@@ -10,15 +10,5 @@
   55:     return 1; // error
   56:   }
 
--- No Output --
--- Errors --
-  × error: 2:3: Return statement not available here
-    ╭─[../books/tests/src/statement_usage/body.md:55:3]
- 54 │ {
- 55 │   return 1; // error
-    ·   ────┬────
-    ·       ╰── error: 2:3: Return statement not available here
- 56 │ }
-    ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

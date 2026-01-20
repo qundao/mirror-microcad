@@ -10,15 +10,5 @@
    7:     sketch F() {} // error
    8:   }
 
--- No Output --
--- Errors --
-  × error: 2:10: sketch statement not available here
-   ╭─[../books/tests/src/statement_usage/body.md:7:10]
- 6 │ {
- 7 │   sketch F() {} // error
-   ·          ┬
-   ·          ╰── error: 2:10: sketch statement not available here
- 8 │ }
-   ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

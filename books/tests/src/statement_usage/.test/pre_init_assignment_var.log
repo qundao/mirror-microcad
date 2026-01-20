@@ -10,16 +10,5 @@
   79:     a = 1; // error
   80:   init(l:Length) {} } K();
 
--- No Output --
--- Errors --
-  × error: 2:3: Statement not allowed prior initializers
-    ╭─[../books/tests/src/statement_usage/pre-init.md:79:3]
- 78 │ sketch K() { 
- 79 │   a = 1; // error
-    ·   ───┬──
-    ·      ╰── error: 2:3: Statement not allowed prior initializers
- 80 │ init(l:Length) {} } K();
-    ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+OK

@@ -12,6 +12,9 @@
   44:   
   45:   a.ops::extrude(height = 4.0mm, scale_x = 100%, scale_y = 100%, twist = 0°);
 
+error at 184..185
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

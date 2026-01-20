@@ -10,16 +10,5 @@
   10:       // statements
   11:   }
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:5: Unused global symbol my_module.
-    ╭─[../books/language/src/structure/modules/internal_modules.md:9:5]
-  9 │ mod my_module {
-    ·     ────┬────
-    ·         ╰── warning: 1:5: Unused global symbol my_module.
- 10 │     // statements
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 9
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

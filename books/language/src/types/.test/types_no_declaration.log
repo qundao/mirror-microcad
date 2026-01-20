@@ -8,7 +8,5 @@
 
   39:   x: Length;         // parse_error
 
--- Parse Error --
-Parser error: expected single_line_comment
 -- Test Result --
-FAILS AS EXPECTED
+OK

@@ -26,11 +26,5 @@
  292:   std::print("outer: {t.outer}");
  293:   std::print("inner: {t.inner}");
 
--- Output --
-outer: 10mm
-inner: 5mm
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

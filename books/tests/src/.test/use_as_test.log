@@ -11,17 +11,5 @@
   49:   
   50:   Cap(width=1mm,height=1mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(height=1mm, width=1mm) ->
-      - height = 1mm
-      - width = 1mm
-      - x = -0.5mm
-      - y = -0.5mm
-      Primitive2D __builtin::geo2d::Rect(height=1mm, width=1mm, x=-0.5mm, y=-0.5mm) ->
-
-Export of "../books/tests/src/.test/use_as_test-out.svg" successful.
 -- Test Result --
 OK

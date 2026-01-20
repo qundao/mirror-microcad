@@ -14,16 +14,5 @@
  244:       std::geo2d::Circle(radius);
  245:   }
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:8: Unused global symbol Wheel.
-     ╭─[../books/language/src/structure/workbenches/README.md:239:8]
- 239 │ sketch Wheel(radius: Length) {
-     ·        ──┬──
-     ·          ╰── warning: 1:8: Unused global symbol Wheel.
- 240 │     // initializer
-     ╰────
-Unexpected warnings(s) which did occur in line(s): 239
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

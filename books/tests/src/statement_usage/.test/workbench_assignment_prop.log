@@ -10,13 +10,5 @@
   95:     prop a = 1;
   96:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_assignment_prop::K() ->
-      - a = 1
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

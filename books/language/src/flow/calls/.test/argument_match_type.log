@@ -10,6 +10,9 @@
   30:   // Who needs names?
   31:   f(1.0, 2cm, 3cm²);
 
+error at 76..78
+-- Test Result --
+FAILS
 -- No Output --
 -- Errors --
   ⚠ warning: 1:7: Unused local a.

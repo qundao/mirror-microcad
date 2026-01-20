@@ -8,8 +8,5 @@
 
   18:   fn f() {} f();
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

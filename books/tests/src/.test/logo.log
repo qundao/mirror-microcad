@@ -47,6 +47,9 @@
   44:   microcad::Micro(radius, thickness).translate(x=radius*2+icon.gap, y=-radius/2);
   45:   
 
+error at 563..565
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

@@ -12,23 +12,5 @@
   28:   std::geo2d::Rect(width, height);
   29:   std::geo2d::Rect(width = width - 2 * thickness, height = height - 2 * thickness);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
-      - height = 15.8mm
-      - width = 31.8mm
-      - x = -15.9mm
-      - y = -7.9mm
-      Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) ->
-    Workpiece(sketch) std::geo2d::Rect(height=13.4mm, width=29.4mm) ->
-      - height = 13.4mm
-      - width = 29.4mm
-      - x = -14.7mm
-      - y = -6.7mm
-      Primitive2D __builtin::geo2d::Rect(height=13.4mm, width=29.4mm, x=-14.7mm, y=-6.7mm) ->
-
-Export of "../books/tutorials/src/lego_brick/base/frame/.test/inner_outer-out.svg" successful.
 -- Test Result --
 OK

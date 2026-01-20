@@ -21,13 +21,5 @@
   70:   f(-1); // prints "invalid"
   71:   f(6);  // prints "invalid"
 
--- Output --
-match
-no match
-invalid
-invalid
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

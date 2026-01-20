@@ -10,12 +10,5 @@
   31:     init() {}
   32:   init(l:Length) {} } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) pre_init_init::K() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

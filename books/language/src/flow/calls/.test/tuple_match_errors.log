@@ -9,14 +9,5 @@
  103:   fn f( x: Length, y: Length, z: Length ) {}
  104:   f( (x=1cm, v=2cm), z=3cm); // error: y is missing here
 
--- No Output --
--- Errors --
-  × error: 2:4: Missing arguments: x,y
-     ╭─[../books/language/src/flow/calls/arguments.md:104:4]
- 103 │ fn f( x: Length, y: Length, z: Length ) {}
- 104 │ f( (x=1cm, v=2cm), z=3cm); // error: y is missing here
-     ·    ──────────┬──────────
-     ·              ╰── error: 2:4: Missing arguments: x,y
-     ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

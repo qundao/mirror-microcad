@@ -9,8 +9,5 @@
   11:   mod second;
   12:   second::f(); 
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

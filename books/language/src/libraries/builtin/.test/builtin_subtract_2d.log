@@ -14,17 +14,5 @@
   15:       geo2d::Rect(x = 0.0mm, y = 0.0mm, width = 3.0mm, height = 3.0mm);
   16:   }.ops::subtract();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Operation __builtin::ops::subtract() ->
-      #[color = rgba(1, 0, 0, 1)]
-      Group ->
-        Transform __builtin::ops::translate(x=1mm, y=1mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-        Primitive2D __builtin::geo2d::Rect(height=3mm, width=3mm, x=0mm, y=0mm) ->
-
-Export of "../books/language/src/libraries/builtin/.test/builtin_subtract_2d-out.svg" successful.
 -- Test Result --
 OK

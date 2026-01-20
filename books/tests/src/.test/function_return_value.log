@@ -13,8 +13,5 @@
   32:   assert_eq([ f(1), 2 ]);
   33:   assert_eq([ f(4), 5 ]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

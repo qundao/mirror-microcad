@@ -9,6 +9,9 @@
   38:   // these tuples are equal
   39:   std::debug::assert_eq([(1l, 10cm, 10cm²), (10cm, 10cm², 1l)]);
 
+error at 64..66
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- No Model --

@@ -10,22 +10,5 @@
   87:     a = 1;
   88:   }
 
--- No Output --
--- Errors --
-  ⚠ warning: 2:3: Unused local a.
-    ╭─[../books/tests/src/statement_usage/body.md:87:3]
- 86 │ {
- 87 │   a = 1;
-    ·   ┬
-    ·   ╰── warning: 2:3: Unused local a.
- 88 │ }
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 87
--- Model --
-  Group (root) ->
-    Group ->
-
-Could not determine output type.
-Nothing will be exported.
 -- Test Result --
-OK (BUT WARNINGS)
+OK

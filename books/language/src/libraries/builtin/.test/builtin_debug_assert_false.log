@@ -8,13 +8,5 @@
 
   24:   __builtin::debug::assert(false); // error: Assertion failed: false
 
--- No Output --
--- Errors --
-  × error: 1:26: Assertion failed: false
-    ╭─[../books/language/src/libraries/builtin/debug.md:24:26]
- 24 │ __builtin::debug::assert(false); // error: Assertion failed: false
-    ·                          ──┬──
-    ·                            ╰── error: 1:26: Assertion failed: false
-    ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

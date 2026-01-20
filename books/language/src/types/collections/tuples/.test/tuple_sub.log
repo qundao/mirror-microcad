@@ -10,8 +10,5 @@
   32:   b = (x = 1.0mm, y = 4.0mm);
   33:   std::debug::assert_eq([a - b, (x = 1.0mm, y = -1.0mm)]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

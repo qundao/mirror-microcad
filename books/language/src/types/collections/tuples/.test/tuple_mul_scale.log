@@ -9,8 +9,5 @@
   43:   v = (x = 1.0mm, y = 2.0mm);
   44:   std::debug::assert_eq([v*2, (x = 2.0mm, y = 4.0mm)]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -8,8 +8,5 @@
 
   12:   std::debug::assert(std::math::abs(-1) == 1);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

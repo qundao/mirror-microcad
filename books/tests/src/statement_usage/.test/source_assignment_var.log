@@ -8,15 +8,5 @@
 
   60:   a = 1;
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:1: Unused local a.
-    ╭─[../books/tests/src/statement_usage/source.md:60:1]
- 60 │ a = 1;
-    · ┬
-    · ╰── warning: 1:1: Unused local a.
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 60
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

@@ -8,12 +8,5 @@
 
   78:   __builtin::geo2d::Circle(radius=1mm);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
-
-Export of "../books/tests/src/statement_usage/.test/source_expression_model-out.svg" successful.
 -- Test Result --
 OK

@@ -9,8 +9,5 @@
   63:   v = (x = 1.0mm, y = 2.0mm);
   64:   std::debug::assert_eq([-v, (x = -1.0mm, y = -2.0mm)]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

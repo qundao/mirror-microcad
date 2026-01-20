@@ -9,8 +9,5 @@
   45:   std::debug::assert_eq([[1..5], [1,2,3,4,5]]);
   46:   std::debug::assert_eq([[-2..2], [-2,-1,0,1,2]]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -12,6 +12,9 @@
   19:   cylinder.std::ops::rotate(y = 90°);
   20:   cylinder.std::ops::rotate(z = 90°);
 
+error at 86..88
+-- Test Result --
+FAILS
 -- No Output --
 -- No Errors --
 -- Model --

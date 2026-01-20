@@ -10,22 +10,5 @@
   15:     mod m {} // error
   16:   } } K(1cm);
 
--- No Output --
--- Errors --
-  × error: 2:7: Module statement not available here
-    ╭─[../books/tests/src/statement_usage/init.md:15:7]
- 14 │ sketch K() { init(l:Length) { // warning
- 15 │   mod m {} // error
-    ·       ┬
-    ·       ╰── error: 2:7: Module statement not available here
- 16 │ } } K(1cm);
-    ╰────
-  ⚠ warning: 1:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:14:19]
- 14 │ sketch K() { init(l:Length) { // warning
-    ·                   ┬
-    ·                   ╰── warning: 1:19: Unused local l.
- 15 │   mod m {} // error
-    ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK

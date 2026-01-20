@@ -15,12 +15,5 @@
   22:   // create YourSketch
   23:   YourSketch();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) create::YourSketch() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

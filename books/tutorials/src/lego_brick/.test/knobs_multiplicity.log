@@ -11,31 +11,5 @@
   34:           y = ([0..1] - 0.5) * 8mm)
   35:       );
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Circle(c=(x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm]), d=4.8mm) ->
-      - center = (x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm])
-      - radius = 2.4mm
-      Multiplicity ->
-        Transform __builtin::ops::translate(x=-12mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=-4mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=4mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=12mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=-12mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=-4mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=12mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-
-Export of "../books/tutorials/src/lego_brick/.test/knobs_multiplicity-out.svg" successful.
 -- Test Result --
 OK

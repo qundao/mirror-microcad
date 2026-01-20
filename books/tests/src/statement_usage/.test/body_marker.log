@@ -10,14 +10,5 @@
   71:     @input
   72:   }
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Group ->
-      InputPlaceholder ->
-
-Could not determine output type.
-Nothing will be exported.
 -- Test Result --
 OK

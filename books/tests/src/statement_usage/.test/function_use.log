@@ -10,8 +10,5 @@
   39:     use std;
   40:   } f();
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -15,8 +15,5 @@
   24:   // function call (and result check)
   25:   std::debug::assert_eq([ f(), 1 ]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

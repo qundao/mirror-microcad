@@ -23,17 +23,5 @@
  315:   // but you cannot access `inner` anymore
  316:   std::print("inner: {t.inner}"); // error
 
--- Output --
-outer: 10mm
-inner: <NO VALUE>
-
--- Errors --
-  × error: 16:21: Property not found: inner
-     ╭─[../books/language/src/structure/workbenches/README.md:316:21]
- 315 │ // but you cannot access `inner` anymore
- 316 │ std::print("inner: {t.inner}"); // error
-     ·                     ───┬───
-     ·                        ╰── error: 16:21: Property not found: inner
-     ╰────
 -- Test Result --
-FAILS AS EXPECTED
+OK
