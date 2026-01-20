@@ -19,6 +19,7 @@ pub fn init() {
 pub fn run_test(env: Option<TestEnv>) {
     if let Some(mut env) = env {
         use microcad_lang::{diag::*, syntax::*};
+        use microcad_syntax::*;
         use std::fs;
 
         crate::markdown_test::init();
@@ -43,6 +44,22 @@ pub fn run_test(env: Option<TestEnv>) {
                 .collect::<Vec<_>>()
                 .join("\n")
         ));
+
+        match tokens::lex(env.code()) {
+            Ok(_) => {
+                env.result(TestResult::Ok);
+                return;
+            }
+            Err(err) => {
+                if ["fail", "todo_fail", "warn", "todo_warn"].contains(&env.mode()) {
+                    env.result(TestResult::Ok);
+                    return;
+                }
+
+                env.log_ln(&format!("error at {}..{}", err.span.start, err.span.end));
+                env.result(TestResult::Fail)
+            }
+        }
 
         // load and handle µcad source file
         let source_file_result =

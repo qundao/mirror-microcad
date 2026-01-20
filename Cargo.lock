@@ -5411,6 +5411,7 @@ dependencies = [
  "microcad-core",
  "microcad-export",
  "microcad-lang",
+ "microcad-syntax",
  "microcad_markdown_test",
  "microcad_pest_test",
  "microcad_test_tools",
@@ -5470,6 +5471,7 @@ version = "0.2.19"
 dependencies = [
  "env_logger",
  "log",
+ "microcad-lang",
  "microcad_test_tools",
  "miette",
  "regex",
