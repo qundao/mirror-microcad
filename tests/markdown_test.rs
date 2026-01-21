@@ -45,9 +45,32 @@ pub fn run_test(env: Option<TestEnv>) {
                 .join("\n")
         ));
 
-        match tokens::lex(env.code()) {
-            Ok(_) => {
-                env.result(TestResult::Ok);
+        let code = String::from(env.code());
+        match tokens::lex(&code) {
+            Ok(tokens) => {
+                match microcad_syntax::parser::parse(&tokens) {
+                    Ok(source_file) => {
+                        env.result(TestResult::Ok);
+                        return;
+                    }
+                    Err(errors) => {
+                        if ["fail", "todo_fail", "warn", "todo_warn"].contains(&env.mode()) {
+                            env.result(TestResult::Ok);
+                            return;
+                        }
+
+                        if !errors.is_empty() {
+                            for err in errors {
+                                env.report_errors(format!("{err:?}"));
+                            }
+                            panic!("Test failed because of parse errors");
+                        }
+
+                        env.result(TestResult::Fail);
+                        return;
+                    }
+                }
+
                 return;
             }
             Err(err) => {
