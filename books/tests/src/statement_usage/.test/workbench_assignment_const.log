@@ -10,5 +10,5 @@
   79:     const B = 1;
   80:   } K();
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordConst)' at 15..20 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'

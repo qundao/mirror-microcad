@@ -9,5 +9,5 @@
    6:   mod external;
    7:   std::debug::assert_valid(external::a);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SigilSemiColon)' at 12..13 expected 'Normal(SigilOpenCurlyBracket)'

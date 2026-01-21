@@ -14,5 +14,5 @@
   13:       Circle(10mm).translate(x =  0mm, y = 10mm);
   14:   }.hull();
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

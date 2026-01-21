@@ -23,5 +23,5 @@
   37:   // use the function and the constant
   38:   x = my::math::abs(-1.0) * my::math::PI;
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordConst)' at 141..146 expected 'Normal(KeywordFn)', something else, or 'Normal(KeywordMod)'

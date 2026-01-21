@@ -8,5 +8,5 @@
 
   54:   const B = 1;
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordConst)' at 0..5 expected statement, expression, or end of input

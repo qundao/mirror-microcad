@@ -16,5 +16,5 @@
   17:       Circle(10mm);
   18:   }.distribute_grid(30mm, rows = 2, columns = 2);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

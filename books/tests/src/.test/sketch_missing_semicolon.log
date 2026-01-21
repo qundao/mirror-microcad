@@ -13,5 +13,5 @@
   32:       Circle(radius = 5mm) // missing semicolon is ok.
   33:   }.translate(y=[-34mm/2 , 34mm/2]);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

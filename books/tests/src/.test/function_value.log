@@ -15,5 +15,5 @@
   21:   assert_eq([ f(1), 2 ]);
   22:   assert_eq([ f(4), 5 ]);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 61..64 expected statement, expression, or end of input

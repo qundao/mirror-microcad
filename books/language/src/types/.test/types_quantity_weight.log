@@ -12,5 +12,5 @@
  162:   
  163:   std::debug::assert([gram, kilogram].all_equal());
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SigilDot)' at 90..91 expected binary operator, 'Normal(SigilComma)', or 'Normal(SigilCloseBracket)'

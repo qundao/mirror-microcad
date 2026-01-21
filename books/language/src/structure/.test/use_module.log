@@ -10,5 +10,5 @@
   42:   
   43:   geo2d::Circle(r = 40mm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

@@ -22,5 +22,5 @@
   19:   __builtin::debug::assert_invalid(my::mod_private::const_public);
   20:   __builtin::debug::assert_invalid(my::mod_private::const_private);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(Identifier("const_public"))' at 43..55 expected 'Normal(KeywordFn)', something else, or 'Normal(KeywordMod)'

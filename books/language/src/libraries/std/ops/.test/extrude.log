@@ -9,5 +9,5 @@
    8:   std::geo2d::Circle(radius = 20mm)
    9:       .std::ops::extrude(height = 20mm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SigilDot)' at 38..39 expected binary operator, semicolon, or end of input

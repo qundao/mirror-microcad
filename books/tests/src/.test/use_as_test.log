@@ -11,5 +11,5 @@
   49:   
   50:   Cap(width=1mm,height=1mm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

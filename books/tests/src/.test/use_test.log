@@ -43,5 +43,5 @@
   40:   
   41:   assert_valid(MyPart);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 37..40 expected statement, expression, or end of input

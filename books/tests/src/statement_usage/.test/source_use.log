@@ -8,5 +8,5 @@
 
   30:   use std;
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

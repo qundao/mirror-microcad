@@ -14,5 +14,5 @@
   15:       10mm * 10mm * std::math::PI
   16:   ]);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SingleLineComment("// use measure area() on a circle"))' at 34..67 expected expression, or 'Normal(SigilCloseSquareBracket)'

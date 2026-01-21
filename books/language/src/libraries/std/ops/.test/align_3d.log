@@ -17,5 +17,5 @@
   47:       Cube(10mm);
   48:   }.align(Z, 4mm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

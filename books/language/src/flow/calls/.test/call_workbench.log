@@ -17,5 +17,5 @@
   37:   // translate object s
   38:   s.std::ops::translate(x = 1cm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SigilDot)' at 198..199 expected 'Normal(SigilDoubleColon)', 'Normal(SigilOpenBracket)', binary operator, 'Normal(SigilColon)', 'Normal(OperatorAssignment)', semicolon, or end of input

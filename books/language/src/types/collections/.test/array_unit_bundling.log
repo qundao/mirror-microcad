@@ -8,5 +8,5 @@
 
   75:   std::debug::assert_eq([ [1mm, 2mm, 3mm], [1, 2, 3]mm ]);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(Identifier("mm"))' at 50..52 expected binary operator, 'Normal(SigilComma)', or 'Normal(SigilCloseSquareBracket)'

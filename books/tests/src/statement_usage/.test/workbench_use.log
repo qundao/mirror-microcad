@@ -10,5 +10,5 @@
   39:     use std;
   40:   } K();
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 15..18 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'

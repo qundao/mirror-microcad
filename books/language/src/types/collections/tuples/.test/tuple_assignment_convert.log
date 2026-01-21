@@ -14,5 +14,5 @@
   36:   assert_eq([tuple.width,1m]);
   37:   assert_eq([tuple.height,2m]);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(Identifier("m"))' at 13..14 expected binary operator, or semicolon

@@ -14,5 +14,5 @@
   15:       2
   16:   ];
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SingleLineComment("// First element"))' at 6..22 expected expression, or 'Normal(SigilCloseSquareBracket)'

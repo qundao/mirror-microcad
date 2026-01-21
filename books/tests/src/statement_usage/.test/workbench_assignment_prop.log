@@ -10,5 +10,5 @@
   95:     prop a = 1;
   96:   } K();
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordProp)' at 15..19 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'

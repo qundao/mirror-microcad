@@ -14,5 +14,5 @@
   27:   r.translate(x = 4mm, y = -4mm);
   28:   r.translate(x = 4mm, y = 4mm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 50..53 expected statement, expression, or end of input

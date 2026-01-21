@@ -46,5 +46,5 @@
   72:   Cap(width, height);
   73:   Knobs(rows, columns);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

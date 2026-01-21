@@ -9,5 +9,5 @@
   11:   mod second;
   12:   second::f(); 
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SigilSemiColon)' at 10..11 expected 'Normal(SigilOpenCurlyBracket)'

@@ -10,5 +10,5 @@
   39:     use std::geo2d;
   40:   }
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 10..13 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'

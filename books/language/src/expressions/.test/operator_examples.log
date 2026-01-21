@@ -23,5 +23,5 @@
   42:   assert(  5 == 6       == false               ); // Equal
   43:   assert(  5 != 6       == true                ); // Not equal
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

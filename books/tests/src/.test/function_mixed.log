@@ -16,5 +16,5 @@
   61:   assert_eq([ f(1), 2 ]);
   62:   assert_eq([ f(4), 3 ]);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(Identifier("n"))' at 63..64 expected 'Normal(KeywordElse)', binary operator, semicolon, or 'Normal(SigilCloseCurlyBracket)'

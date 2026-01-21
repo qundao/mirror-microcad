@@ -10,5 +10,5 @@
   39:     use std;
   40:   init(l:Length) {} } K();
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 16..19 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'

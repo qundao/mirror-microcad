@@ -50,5 +50,5 @@
   51:   
   52:   LegoBrick();
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

@@ -18,5 +18,5 @@
   21:   
   22:   frame | struts; // We could also write `{ frame; struts; }.union()` but the `|` operator is more elegant. 
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

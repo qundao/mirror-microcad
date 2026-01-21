@@ -28,5 +28,5 @@
   75:   y = my_part3d();
   76:   z = baz(-1.0);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 45..48 expected statement, expression, or end of input

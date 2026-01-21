@@ -18,5 +18,5 @@
   29:   
   30:   Base(width = 31.8mm, height = 15.8mm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input

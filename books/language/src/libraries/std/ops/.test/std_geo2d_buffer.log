@@ -9,5 +9,5 @@
    9:   std::geo2d::Rect(20mm)
   10:       .std::ops::buffer(distance = 20mm);
 
--- Test Result --
-OK
+-- Errors --
+found 'Normal(SigilDot)' at 27..28 expected binary operator, semicolon, or end of input
