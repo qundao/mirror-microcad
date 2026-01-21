@@ -201,7 +201,9 @@ fn parser<'tokens>(
     .labelled("unary operator");
 
     statement_parser.define({
-        let expression = expression_parser.clone().map(Statement::Expression);
+        let expression = expression_parser
+            .clone()
+            .map(ExpressionStatement::Expression);
 
         let assignment = identifier_parser
             .then(
@@ -212,7 +214,7 @@ fn parser<'tokens>(
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
             .then(expression_parser.clone())
             .map_with(|((name, ty), value), e| {
-                Statement::Assignment(Assignment {
+                ExpressionStatement::Assignment(Assignment {
                     span: e.span(),
                     name,
                     value,
@@ -280,9 +282,9 @@ fn parser<'tokens>(
             });
 
         let workspace_kind = select_ref! {
-            Token::Normal(NormalToken::KeywordSketch) => WorkspaceKind::Sketch,
-            Token::Normal(NormalToken::KeywordPart) => WorkspaceKind::Part,
-            Token::Normal(NormalToken::KeywordOp) => WorkspaceKind::Op,
+            Token::Normal(NormalToken::KeywordSketch) => WorkbenchKind::Sketch,
+            Token::Normal(NormalToken::KeywordPart) => WorkbenchKind::Part,
+            Token::Normal(NormalToken::KeywordOp) => WorkbenchKind::Op,
         };
 
         let init = just(Token::Normal(NormalToken::KeywordInit))
@@ -303,7 +305,7 @@ fn parser<'tokens>(
             .then(arguments.clone())
             .then(block.clone())
             .map_with(|((((visibility, kind), name), arguments), body), e| {
-                Statement::Workspace(WorkspaceDefinition {
+                Statement::Workbench(WorkbenchDefinition {
                     span: e.span(),
                     kind,
                     attributes: Vec::new(), // todo

@@ -20,5 +20,5 @@ pub struct Identifier {
 #[derive(Debug)]
 pub struct SourceFile {
     pub span: Span,
-    pub statements: StatementList,
+    pub statements: StatementList<SourceFileStatement>,
 }

@@ -1,6 +1,6 @@
-use std::num::ParseIntError;
+use crate::ast::*;
 use crate::Span;
-use crate::ast::{Identifier, Literal, Statement, StringContent};
+use std::num::ParseIntError;
 
 #[derive(Debug, PartialEq)]
 pub enum Operator {
@@ -42,7 +42,7 @@ pub enum Expression {
     Marker(Identifier),
     BinaryOperation(BinaryOperation),
     UnaryOperation(UnaryOperation),
-    Block(StatementList),
+    Block(StatementList<ExpressionStatement>),
     Call(Call),
     If(If),
 }
@@ -139,15 +139,15 @@ pub struct Call {
 pub struct If {
     pub span: Span,
     pub condition: Box<Expression>,
-    pub body: StatementList,
+    pub body: Box<StatementList<IfElseStatement>>,
     pub next_if: Option<Box<If>>,
-    pub else_body: Option<StatementList>,
+    pub else_body: Box<Option<IfElseStatement>>,
 }
 
 #[derive(Debug, PartialEq)]
-pub struct StatementList {
+pub struct StatementList<S> {
     pub span: Span,
-    pub statements: Vec<Statement>,
+    pub statements: Vec<S>,
     pub tail: Option<Box<Expression>>,
 }
 
