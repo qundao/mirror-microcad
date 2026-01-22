@@ -1,7 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{diag::*, resolve::*, syntax::*, value::*};
+use crate::{diag::*, resolve::*, syntax::*, tree_display::TreeState, value::*};
 use derive_more::{Deref, DerefMut};
 use indexmap::IndexMap;
 
@@ -86,16 +86,18 @@ impl SymbolMap {
 
 impl std::fmt::Display for SymbolMap {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let tree_state = TreeState::new_display();
         self.0
             .iter()
-            .try_for_each(|(id, symbol)| symbol.print_symbol(f, Some(id), 0, false, true))
+            .try_for_each(|(id, symbol)| symbol.print_symbol(f, Some(id), tree_state, true))
     }
 }
 
 impl std::fmt::Debug for SymbolMap {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let tree_state = TreeState::new_debug(0);
         self.0
             .iter()
-            .try_for_each(|(id, symbol)| symbol.print_symbol(f, Some(id), 0, true, true))
+            .try_for_each(|(id, symbol)| symbol.print_symbol(f, Some(id), tree_state, true))
     }
 }
