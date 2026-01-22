@@ -15,7 +15,7 @@ pub(crate) use symbols::*;
 use symbol_inner::*;
 
 use crate::{
-    builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::TreeState, ty::*, value::*,
+    builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*, ty::*, value::*,
 };
 
 /// Symbol
@@ -615,7 +615,7 @@ impl Symbol {
     /// # Arguments
     /// - `f`: Output formatter
     /// - `id`: Overwrite symbol's internal `id` with this one if given (e.g. when using in a map).
-    /// - `depth`: Indention depth to use
+    /// - `state`: TreeState
     pub(super) fn print_symbol(
         &self,
         f: &mut impl std::fmt::Write,
@@ -723,6 +723,12 @@ impl std::fmt::Debug for Symbol {
 impl Info for Symbol {
     fn info(&self) -> SymbolInfo {
         self.with_def(|def| def.info())
+    }
+}
+
+impl TreeDisplay for Symbol {
+    fn tree_print(&self, f: &mut std::fmt::Formatter, state: TreeState) -> std::fmt::Result {
+        self.print_symbol(f, Some(&self.id()), state, true)
     }
 }
 
