@@ -198,19 +198,6 @@ impl Symbol {
             .for_each(|symbol| symbol.recursive_collect(f, result));
     }
 
-    #[allow(dead_code)]
-    pub(crate) fn recursive_for_each<F>(&self, id: &Identifier, f: &F)
-    where
-        F: Fn(&Identifier, &Symbol),
-    {
-        f(id, self);
-        self.inner
-            .borrow()
-            .children
-            .iter()
-            .for_each(|(id, symbol)| symbol.recursive_for_each(id, f));
-    }
-
     pub(crate) fn recursive_for_each_mut<F>(&mut self, id: &Identifier, f: &F)
     where
         F: Fn(&Identifier, &mut Symbol),

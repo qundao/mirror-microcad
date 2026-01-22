@@ -79,16 +79,6 @@ impl SymbolTable {
         result.into()
     }
 
-    #[allow(dead_code)]
-    pub(super) fn recursive_for_each<F>(&self, f: F)
-    where
-        F: Fn(&Identifier, &Symbol),
-    {
-        self.iter().for_each(|(id, symbol)| {
-            symbol.recursive_for_each(id, &f);
-        });
-    }
-
     pub(super) fn recursive_for_each_mut<F>(&mut self, f: F)
     where
         F: Fn(&Identifier, &mut Symbol),
