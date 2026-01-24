@@ -1,9 +1,10 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_core::Integer;
-
 use crate::{parse::*, parser::*, syntax::*};
+use microcad_core::Integer;
+use microcad_syntax::ast;
+use std::str::FromStr;
 
 impl Parse for Refer<Integer> {
     fn parse(pair: Pair) -> ParseResult<Self> {
@@ -35,11 +36,42 @@ impl Parse for Literal {
     }
 }
 
+impl FromAst for Literal {
+    type AstNode = ast::Literal;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(match node {
+            ast::Literal::Bool(lit) => {
+                Literal::Bool(Refer::new(lit.value, context.src_ref(&lit.span)))
+            }
+            ast::Literal::Integer(lit) => {
+                Literal::Integer(Refer::new(lit.value, context.src_ref(&lit.span)))
+            }
+            ast::Literal::Quantity(lit) => {
+                Literal::Number(NumberLiteral::from_ast(lit, context)?)
+            },
+            _ => todo!("unimplemented literal"),
+        })
+    }
+}
+
 impl std::str::FromStr for Literal {
     type Err = ParseError;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         Parser::parse_rule::<Self>(Rule::literal, s, 0)
+    }
+}
+
+impl FromAst for NumberLiteral {
+    type AstNode = ast::QuantityLiteral;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(NumberLiteral(
+            node.value,
+            Unit::from_ast(&node.ty, context)?,
+            context.src_ref(&node.span),
+        ))
     }
 }
 
@@ -87,6 +119,19 @@ impl Parse for Unit {
                 pair.into(),
             ))),
         }
+    }
+}
+
+impl FromAst for Unit {
+    type AstNode = ast::SingleType;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Unit::from_str(node.name.as_str()).map_err(|_| {
+            ParseError::UnknownUnit(Refer::new(
+                node.name.to_string(),
+                context.src_ref(&node.span),
+            ))
+        })
     }
 }
 

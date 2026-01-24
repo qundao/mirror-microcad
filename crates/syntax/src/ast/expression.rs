@@ -132,7 +132,7 @@ pub struct UnaryOperation {
 pub struct Call {
     pub span: Span,
     pub name: QualifiedName,
-    pub arguments: Vec<Argument>,
+    pub arguments: ArgumentList,
 }
 
 #[derive(Debug, PartialEq)]
@@ -152,9 +152,38 @@ pub struct StatementList {
 }
 
 #[derive(Debug, PartialEq)]
+pub struct ArgumentList {
+    pub span: Span,
+    pub arguments: Vec<Argument>,
+}
+
+#[derive(Debug, PartialEq)]
 pub enum Argument {
     Unnamed(UnnamedArgument),
     Named(NamedArgument),
+}
+
+impl Argument {
+    pub fn name(&self) -> Option<&Identifier> {
+        match self {
+            Argument::Unnamed(_) => None,
+            Argument::Named(arg) => Some(&arg.name),
+        }
+    }
+
+    pub fn value(&self) -> &Expression {
+        match self {
+            Argument::Unnamed(arg) => &arg.value,
+            Argument::Named(arg) => &arg.value,
+        }
+    }
+
+    pub fn span(&self) -> &Span {
+        match self {
+            Argument::Unnamed(arg) => &arg.span,
+            Argument::Named(arg) => &arg.span,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq)]

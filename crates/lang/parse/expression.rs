@@ -1,6 +1,7 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_syntax::ast;
 use crate::{parse::*, parser::*, rc::*, syntax::*};
 
 impl Parse for RangeFirst {
@@ -244,6 +245,18 @@ impl Parse for Expression {
                     .into_inner()
                     .filter(|pair| pair.as_rule() != Rule::COMMENT), // Filter comments
             )
+    }
+}
+
+impl FromAst for Expression {
+    type AstNode = ast::Expression;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(match node {
+            ast::Expression::Call(expr) => Expression::Call(Call::from_ast(expr, context)?),
+            ast::Expression::Literal(expr) => Expression::Literal(Literal::from_ast(expr, context)?),
+            _ => todo!("unimplemented expression"),
+        })
     }
 }
 

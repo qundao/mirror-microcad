@@ -524,12 +524,10 @@ fn parser<'tokens>(
 
         let call = qualified_name
             .clone()
-            .then(tuple_body)
-            .map_with(|(name, args), e| {
-                Expression::Call(Call {
+            .then(tuple_body.map_with(|arguments, e| {
+                ArgumentList {
                     span: e.span(),
-                    name,
-                    arguments: args
+                    arguments: arguments
                         .into_iter()
                         .map(|(name, value)| match name {
                             Some(name) => Argument::Named(NamedArgument {
@@ -542,7 +540,14 @@ fn parser<'tokens>(
                                 value,
                             }),
                         })
-                        .collect(),
+                        .collect::<Vec<_>>(),
+                }
+            }))
+            .map_with(|(name, arguments), e| {
+                Expression::Call(Call {
+                    span: e.span(),
+                    name,
+                    arguments,
                 })
             });
 

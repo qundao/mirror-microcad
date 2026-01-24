@@ -87,6 +87,19 @@ impl Parse for ExpressionStatement {
     }
 }
 
+impl FromAst for ExpressionStatement {
+
+    type AstNode = ast::Expression;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(ExpressionStatement {
+            src_ref: context.src_ref(&node.span()),
+            attribute_list: AttributeList::default(), // todo
+            expression: Expression::from_ast(node, context)?,
+        })
+    }
+}
+
 impl Parse for Statement {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Parser::ensure_rule(&pair, Rule::statement);
@@ -117,7 +130,11 @@ impl FromAst for Statement {
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(match node {
             ast::Statement::Module(module) => Statement::Module(Rc::new(ModuleDefinition::from_ast(module, context)?)),
-            _ => todo!(),
+            ast::Statement::Use(statement) => Statement::Use(UseStatement::from_ast(statement, context)?),
+            ast::Statement::Expression(statement) => Statement::Expression(ExpressionStatement::from_ast(statement, context)?),
+            s => {
+                todo!("unimplemented expression: {s:?}")
+            },
         })
     }
 }
