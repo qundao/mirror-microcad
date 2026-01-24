@@ -3,9 +3,9 @@
 
 //! Parser errors
 
-use std::iter::once;
-use miette::{Diagnostic, LabeledSpan, SourceCode};
 use crate::{parse::*, ty::*};
+use miette::{Diagnostic, LabeledSpan, SourceCode};
+use std::iter::once;
 use thiserror::Error;
 
 /// Parsing errors
@@ -137,6 +137,20 @@ pub enum ParseError {
 
     #[error("Glob imports can't be given an alias")]
     UseGlobAlias(SrcRef),
+
+    // todo
+    #[error("{error:?}")]
+    Lexer {
+        src_ref: SrcRef,
+        error: microcad_syntax::tokens::LexerError,
+    },
+
+    // todo
+    #[error("{error}")]
+    AstParser {
+        src_ref: SrcRef,
+        error: microcad_syntax::parser::ParseError,
+    },
 }
 
 /// Result with parse error
@@ -181,9 +195,11 @@ impl SrcReferrer for ParseError {
             | ParseError::StatementBetweenInit(src_ref)
             | ParseError::NotAvailable(src_ref)
             | ParseError::IncompleteIfExpression(src_ref)
-            | ParseError::LoadSource(src_ref , ..)
+            | ParseError::LoadSource(src_ref, ..)
             | ParseError::InvalidGlobPattern(src_ref)
-            | ParseError::UseGlobAlias(src_ref) => src_ref.clone(),
+            | ParseError::UseGlobAlias(src_ref)
+            | ParseError::Lexer { src_ref, .. }
+            | ParseError::AstParser { src_ref, .. } => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             ParseError::RuleNotFoundError(_) => SrcRef(None),
@@ -202,61 +218,67 @@ impl SrcReferrer for ParseError {
 
 impl ParseError {
     /// Add source code to the error
-    pub fn with_source(self, source: String) -> ParseErrorWithSource {
-        ParseErrorWithSource {
-            error: self,
+    pub fn with_source(self, source: String) -> ParseErrorsWithSource {
+        ParseErrorsWithSource {
+            errors: vec![self],
             source_code: Some(source),
         }
     }
 }
 
 impl Diagnostic for ParseError {
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         let src_ref = self.src_ref().0?;
         let message = match self {
-            ParseError::Parser(err) => {
-                err.variant.message().to_string()
-            }
-            _ => self.to_string()
+            ParseError::Parser(err) => err.variant.message().to_string(),
+            _ => self.to_string(),
         };
-        let label = LabeledSpan::new(
-            Some(message),
-            src_ref.range.start,
-            src_ref.range.len(),
-        );
+        let label = LabeledSpan::new(Some(message), src_ref.range.start, src_ref.range.len());
         Some(Box::new(once(label)))
     }
 }
 
-/// Parse error, possibly with source code
+/// Parse errors, possibly with source code
 #[derive(Debug, Error)]
-#[error("{error}")]
-pub struct ParseErrorWithSource {
-    error: ParseError,
-    source_code: Option<String>,
+#[error("{}", errors[0])] // todo
+pub struct ParseErrorsWithSource {
+    pub errors: Vec<ParseError>,
+    pub source_code: Option<String>,
 }
 
-impl From<ParseError> for ParseErrorWithSource {
+impl From<ParseError> for ParseErrorsWithSource {
     fn from(value: ParseError) -> Self {
-        ParseErrorWithSource {
-            error: value,
+        ParseErrorsWithSource {
+            errors: vec![value],
             source_code: None,
         }
     }
 }
 
-impl Diagnostic for ParseErrorWithSource {
-    fn source_code(&self) -> Option<&dyn SourceCode> {
-        self.source_code.as_ref().map(|source| source as &dyn SourceCode)
-    }
-
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
-        self.error.labels()
+impl From<Vec<ParseError>> for ParseErrorsWithSource {
+    fn from(value: Vec<ParseError>) -> Self {
+        ParseErrorsWithSource {
+            errors: value,
+            source_code: None,
+        }
     }
 }
 
-impl SrcReferrer for ParseErrorWithSource {
+impl Diagnostic for ParseErrorsWithSource {
+    fn source_code(&self) -> Option<&dyn SourceCode> {
+        self.source_code
+            .as_ref()
+            .map(|source| source as &dyn SourceCode)
+    }
+
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
+        let labels = self.errors.iter().filter_map(|e| e.labels()).flatten();
+        Some(Box::new(labels))
+    }
+}
+
+impl SrcReferrer for ParseErrorsWithSource {
     fn src_ref(&self) -> SrcRef {
-        self.error.src_ref()
+        self.errors[0].src_ref()
     }
 }

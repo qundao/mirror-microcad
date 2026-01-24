@@ -9,6 +9,28 @@ use std::str::FromStr;
 
 type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
 
+// todo a proper way to expose these errors
+#[derive(Debug)]
+pub struct ParseError {
+    pub span: Span,
+    error: String
+}
+
+impl ParseError {
+    pub fn new<'tokens>(error: Rich<'tokens, Token<'tokens>, Span>) -> Self {
+        Self {
+            span: error.span().clone(),
+            error: format!("{error:?}"),
+        }
+    }
+}
+
+impl std::fmt::Display for ParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.error)
+    }
+}
+
 pub fn map_token_input<'a, 'token>(
     spanned: &'a SpannedToken<Token<'token>>,
 ) -> (&'a Token<'token>, &'a Span) {
@@ -34,8 +56,8 @@ pub fn input<'input, 'tokens>(
 
 pub fn parse<'tokens>(
     tokens: &'tokens [SpannedToken<Token<'tokens>>],
-) -> Result<SourceFile, Vec<Rich<'tokens, Token<'tokens>, std::ops::Range<usize>>>> {
-    parser().parse(input(tokens)).into_result()
+) -> Result<SourceFile, Vec<ParseError>> {
+    parser().parse(input(tokens)).into_result().map_err(|errors| errors.into_iter().map(ParseError::new).collect())
 }
 
 fn parser<'tokens>(

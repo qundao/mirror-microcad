@@ -14,7 +14,7 @@ use crate::src_ref::{SrcRef, SrcReferrer};
 pub enum ResolveError {
     /// Parse Error.
     #[error("Parse Error: {0}")]
-    ParseError(#[from] ParseErrorWithSource),
+    ParseError(#[from] ParseErrorsWithSource),
 
     /// Can't find a project file by hash.
     #[error("Could not find a file with hash {0}")]

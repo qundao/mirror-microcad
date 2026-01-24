@@ -171,13 +171,15 @@ impl Processor {
                 Err(_) => todo!(),
             },
 
-            Err(err) => {
+            Err(errors) => {
                 let mut diag = diag::DiagHandler::default();
-                let src_ref = err.src_ref();
-                diag.push_diag(diag::Diagnostic::Error(src_ref::Refer::new(
-                    err.into(),
-                    src_ref,
-                )))?;
+                for err in errors {
+                    let src_ref = err.src_ref();
+                    diag.push_diag(diag::Diagnostic::Error(src_ref::Refer::new(
+                        err.into(),
+                        src_ref,
+                    )))?;
+                }
                 Context::Parse(diag.into())
             }
         };

@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, rc::*, tree_display::*};
-use microcad_syntax::ast;
+use microcad_syntax::{ast, parser, tokens};
 use std::fs::read_to_string;
 
 impl SourceFile {
     /// Load µcad source file from given `path`
     pub fn load(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
-    ) -> Result<Rc<Self>, ParseErrorWithSource> {
+    ) -> Result<Rc<Self>, ParseErrorsWithSource> {
         Self::load_with_name(&path, Self::name_from_path(&path))
     }
 
@@ -17,7 +17,7 @@ impl SourceFile {
     pub fn load_with_name(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
         name: QualifiedName,
-    ) -> Result<Rc<Self>, ParseErrorWithSource> {
+    ) -> Result<Rc<Self>, ParseErrorsWithSource> {
         let path = path.as_ref();
         log::trace!(
             "{load} file {path} [{name}]",
@@ -29,17 +29,17 @@ impl SourceFile {
             ParseError::LoadSource(name.src_ref(), path.into(), error)
         })?;
 
-        let mut source_file: Self = Parser::parse_rule(Rule::source_file, &buf, 0)
-            .map_err(|error| error.with_source(buf))?;
-        assert_ne!(source_file.hash, 0);
-        source_file.set_filename(path);
+        let mut source_file = Self::load_inner(None, path, &buf)
+            .map_err(|errors| ParseErrorsWithSource {
+                errors,
+                source_code: Some(buf)
+            })?;
         source_file.name = name;
         log::debug!(
             "Successfully loaded external file {} to {}",
             path.display(),
             source_file.name
         );
-        log::trace!("Syntax tree:\n{}", FormatTree(&source_file));
 
         Ok(Rc::new(source_file))
     }
@@ -50,10 +50,30 @@ impl SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
-    ) -> ParseResult<Rc<Self>> {
+    ) -> Result<Rc<Self>, Vec<ParseError>> {
+        Self::load_inner(name, path, source_str).map(Rc::new)
+    }
+
+    fn load_inner(
+        name: Option<&str>,
+        path: impl AsRef<std::path::Path>,
+        source_str: &str,
+    ) -> Result<Self, Vec<ParseError>> {
         log::trace!("{load} source from string", load = crate::mark!(LOAD));
-        let mut source_file: Self =
-            Parser::parse_rule(crate::parser::Rule::source_file, source_str, 0)?;
+        let parse_context = ParseContext::new(source_str);
+
+        let tokens = tokens::lex(source_str)
+            .map_err(|error| vec![ParseError::Lexer {
+                src_ref: parse_context.src_ref(&error.span),
+                error: error.token,
+            }])?;
+        let ast = parser::parse(tokens.as_slice())
+            .map_err(|errors| errors.into_iter().map(|error| ParseError::AstParser {
+                src_ref: parse_context.src_ref(&error.span),
+                error
+            }).collect::<Vec<_>>())?;
+
+        let mut source_file = Self::from_ast(&ast, &parse_context).map_err(|error| vec![error])?;
         if let Some(name) = name {
             source_file.set_name(QualifiedName::from_id(Identifier::no_ref(name)));
         } else {
@@ -62,7 +82,7 @@ impl SourceFile {
         source_file.set_filename(path);
         log::debug!("Successfully loaded source from string");
         log::trace!("Syntax tree:\n{}", FormatTree(&source_file));
-        Ok(Rc::new(source_file))
+        Ok(source_file)
     }
 
     fn calculate_hash(value: &str) -> u64 {

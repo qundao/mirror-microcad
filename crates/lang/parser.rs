@@ -117,6 +117,20 @@ pub struct ParseContext<'source> {
 }
 
 impl<'source> ParseContext<'source> {
+    pub fn new(source: &'source str) -> Self {
+        let source_file_hash = {
+            use std::hash::{Hash, Hasher};
+            let mut hasher = rustc_hash::FxHasher::default();
+            source.hash(&mut hasher);
+            hasher.finish()
+        };
+        ParseContext {
+            source,
+            source_file_hash,
+            line_index: LineIndex::new(source),
+        }
+    }
+
     pub fn src_ref(&self, span: &Span) -> SrcRef {
         let (line, col) = self.line_index.line_col(self.source, span.start);
         SrcRef::new(span.clone(), line, col, self.source_file_hash)

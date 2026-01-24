@@ -61,7 +61,7 @@ impl Sources {
         // load all external source files into cache
         externals
             .iter()
-            .try_for_each(|(name, path)| -> Result<(), ParseErrorWithSource> {
+            .try_for_each(|(name, path)| -> Result<(), ParseErrorsWithSource> {
                 let source_file = SourceFile::load_with_name(path.clone(), name.clone())?;
                 let index = source_files.len();
                 by_hash.insert(source_file.hash, index);
