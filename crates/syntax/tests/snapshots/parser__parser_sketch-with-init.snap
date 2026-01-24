@@ -4,13 +4,13 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..124,
+        span: 0..130,
         statements: StatementList {
-            span: 0..124,
+            span: 0..130,
             statements: [
-                Workspace(
-                    WorkspaceDefinition {
-                        span: 0..124,
+                Workbench(
+                    WorkbenchDefinition {
+                        span: 0..130,
                         kind: Sketch,
                         attributes: [],
                         visibility: None,
@@ -37,22 +37,22 @@ Ok(
                             },
                         ],
                         body: StatementList {
-                            span: 30..123,
+                            span: 35..128,
                             statements: [
                                 Init(
                                     InitDefinition {
-                                        span: 30..91,
+                                        span: 35..96,
                                         arguments: [
                                             ArgumentDefinition {
-                                                span: 35..51,
+                                                span: 40..56,
                                                 name: Identifier {
-                                                    span: 35..43,
+                                                    span: 40..48,
                                                     name: "diameter",
                                                 },
                                                 ty: Some(
                                                     Single(
                                                         SingleType {
-                                                            span: 45..51,
+                                                            span: 50..56,
                                                             name: "Length",
                                                         },
                                                     ),
@@ -61,25 +61,25 @@ Ok(
                                             },
                                         ],
                                         body: StatementList {
-                                            span: 63..85,
+                                            span: 68..90,
                                             statements: [
                                                 Assignment(
                                                     Assignment {
-                                                        span: 63..84,
+                                                        span: 68..89,
                                                         name: Identifier {
-                                                            span: 63..69,
+                                                            span: 68..74,
                                                             name: "radius",
                                                         },
                                                         ty: None,
                                                         value: BinaryOperation(
                                                             BinaryOperation {
-                                                                span: 72..84,
+                                                                span: 77..89,
                                                                 lhs: QualifiedName(
                                                                     QualifiedName {
-                                                                        span: 72..80,
+                                                                        span: 77..85,
                                                                         parts: [
                                                                             Identifier {
-                                                                                span: 72..80,
+                                                                                span: 77..85,
                                                                                 name: "diameter",
                                                                             },
                                                                         ],
@@ -89,7 +89,7 @@ Ok(
                                                                 rhs: Literal(
                                                                     Integer(
                                                                         IntegerLiteral {
-                                                                            span: 83..84,
+                                                                            span: 88..89,
                                                                             value: 2,
                                                                         },
                                                                     ),
@@ -106,34 +106,34 @@ Ok(
                                 Expression(
                                     Call(
                                         Call {
-                                            span: 96..122,
+                                            span: 101..127,
                                             name: QualifiedName {
-                                                span: 96..114,
+                                                span: 101..119,
                                                 parts: [
                                                     Identifier {
-                                                        span: 96..99,
+                                                        span: 101..104,
                                                         name: "std",
                                                     },
                                                     Identifier {
-                                                        span: 101..106,
+                                                        span: 106..111,
                                                         name: "geo2d",
                                                     },
                                                     Identifier {
-                                                        span: 108..114,
+                                                        span: 113..119,
                                                         name: "Circle",
                                                     },
                                                 ],
                                             },
                                             arguments: [
-                                                Positional(
-                                                    PositionArgument {
-                                                        span: 115..121,
+                                                Unnamed(
+                                                    UnnamedArgument {
+                                                        span: 120..126,
                                                         value: QualifiedName(
                                                             QualifiedName {
-                                                                span: 115..121,
+                                                                span: 120..126,
                                                                 parts: [
                                                                     Identifier {
-                                                                        span: 115..121,
+                                                                        span: 120..126,
                                                                         name: "radius",
                                                                     },
                                                                 ],

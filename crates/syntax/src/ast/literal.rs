@@ -6,7 +6,7 @@ use thiserror::Error;
 #[derive(Debug, PartialEq)]
 pub enum Literal {
     Error(LiteralError),
-    String(StringContent),
+    String(StringLiteral),
     Bool(BoolLiteral),
     Integer(IntegerLiteral),
     Float(FloatLiteral),
@@ -27,7 +27,7 @@ impl Literal {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct StringContent {
+pub struct StringLiteral {
     pub span: Span,
     pub content: String,
 }
@@ -60,11 +60,11 @@ pub struct QuantityLiteral {
 #[derive(Debug, PartialEq)]
 pub struct LiteralError {
     pub span: Span,
-    pub kind: LiteralErrorKin,
+    pub kind: LiteralErrorKind,
 }
 
 #[derive(Debug, Error, PartialEq)]
-pub enum LiteralErrorKin {
+pub enum LiteralErrorKind {
     #[error(transparent)]
     Float(#[from] ParseFloatError),
     #[error(transparent)]

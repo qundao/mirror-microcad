@@ -76,11 +76,11 @@ use test_case::test_case;
 #[test_case("else-if-else", "if a > 1 { 3 } else if a < -1 { 1 } else { 0 }")]
 #[test_case("sketch", "sketch Wheel(radius: Length) {std::geo2d::Circle(radius);}")]
 #[test_case("pub-part", "pub part Wheel(radius: Length, height = 1mm) {std::geo3d::Cylinder(radius, height);}")]
-#[test_case("sketch-with-init", "sketch Wheel(radius: Length) {\
+#[test_case("sketch-with-init", "sketch Wheel(radius: Length) {
     init(diameter: Length) {
         radius = diameter / 2;
     }
-    std::geo2d::Circle(radius);\
+    std::geo2d::Circle(radius);
 }")]
 #[test_case("mod", "mod foo { fn bar(){} }")]
 #[test_case("mod pub", "pub mod foo { fn bar(){} }")]

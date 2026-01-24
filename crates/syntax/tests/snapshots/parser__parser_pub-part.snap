@@ -8,8 +8,8 @@ Ok(
         statements: StatementList {
             span: 0..84,
             statements: [
-                Workspace(
-                    WorkspaceDefinition {
+                Workbench(
+                    WorkbenchDefinition {
                         span: 0..84,
                         kind: Part,
                         attributes: [],
@@ -83,8 +83,8 @@ Ok(
                                                 ],
                                             },
                                             arguments: [
-                                                Positional(
-                                                    PositionArgument {
+                                                Unnamed(
+                                                    UnnamedArgument {
                                                         span: 67..73,
                                                         value: QualifiedName(
                                                             QualifiedName {
@@ -99,8 +99,8 @@ Ok(
                                                         ),
                                                     },
                                                 ),
-                                                Positional(
-                                                    PositionArgument {
+                                                Unnamed(
+                                                    UnnamedArgument {
                                                         span: 75..81,
                                                         value: QualifiedName(
                                                             QualifiedName {

@@ -8,8 +8,8 @@ Ok(
         statements: StatementList {
             span: 0..58,
             statements: [
-                Workspace(
-                    WorkspaceDefinition {
+                Workbench(
+                    WorkbenchDefinition {
                         span: 0..58,
                         kind: Sketch,
                         attributes: [],
@@ -61,8 +61,8 @@ Ok(
                                                 ],
                                             },
                                             arguments: [
-                                                Positional(
-                                                    PositionArgument {
+                                                Unnamed(
+                                                    UnnamedArgument {
                                                         span: 49..55,
                                                         value: QualifiedName(
                                                             QualifiedName {

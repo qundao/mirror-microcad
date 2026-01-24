@@ -116,7 +116,7 @@ fn parser<'tokens>()
     let literal_parser = {
         let single_value = select_ref! {
             Token::Normal(NormalToken::String(str_tokens)) = e if is_literal_string(str_tokens) => {
-                Literal::String(StringContent {
+                Literal::String(StringLiteral {
                     span: e.span(),
                     content: get_literal_string(str_tokens).expect("non literal string"),
                 })
@@ -352,7 +352,7 @@ fn parser<'tokens>()
             .then(block.clone())
             .map_with(
                 |((((visibility, kind), name), arguments), body), e| {
-                    Statement::Workspace(WorkspaceDefinition {
+                    Statement::Workbench(WorkbenchDefinition {
                         span: e.span(),
                         kind,
                         attributes: Vec::new(), // todo
@@ -526,7 +526,7 @@ fn parser<'tokens>()
                                 name,
                                 value,
                             }),
-                            None => Argument::Positional(PositionArgument {
+                            None => Argument::Unnamed(UnnamedArgument {
                                 span: value.span(),
                                 value,
                             }),
@@ -622,7 +622,7 @@ fn parser<'tokens>()
     format_string_part_parser.define({
         let content = select_ref!(
             Token::String(StringToken::Content(str)) = e => {
-                StringPart::Content(StringContent {
+                StringPart::Content(StringLiteral {
                     span: e.span(),
                     content: (*str).into(),
                 })

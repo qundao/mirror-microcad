@@ -14,7 +14,7 @@ Ok(
                         span: 35..36,
                         parts: [
                             Content(
-                                StringContent {
+                                StringLiteral {
                                     span: 1..8,
                                     content: "string ",
                                 },
@@ -55,7 +55,7 @@ Ok(
                                 },
                             ),
                             Content(
-                                StringContent {
+                                StringLiteral {
                                     span: 24..35,
                                     content: " expression",
                                 },

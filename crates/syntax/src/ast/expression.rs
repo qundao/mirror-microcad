@@ -1,6 +1,6 @@
 use std::num::ParseIntError;
 use crate::Span;
-use crate::ast::{Identifier, Literal, Statement, StringContent};
+use crate::ast::{Identifier, Literal, Statement, StringLiteral};
 
 #[derive(Debug, PartialEq)]
 pub enum Operator {
@@ -76,7 +76,7 @@ pub struct FormatString {
 #[derive(Debug, PartialEq)]
 pub enum StringPart {
     Char(char),
-    Content(StringContent),
+    Content(StringLiteral),
     Expression(StringExpression),
 }
 
@@ -153,12 +153,12 @@ pub struct StatementList {
 
 #[derive(Debug, PartialEq)]
 pub enum Argument {
-    Positional(PositionArgument),
+    Unnamed(UnnamedArgument),
     Named(NamedArgument),
 }
 
 #[derive(Debug, PartialEq)]
-pub struct PositionArgument {
+pub struct UnnamedArgument {
     pub span: Span,
     pub value: Expression,
 }

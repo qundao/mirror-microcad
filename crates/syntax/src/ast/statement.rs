@@ -3,7 +3,7 @@ use crate::ast::{Call, Expression, Identifier, Literal, QualifiedName, Statement
 
 #[derive(Debug, PartialEq)]
 pub enum Statement {
-    Workspace(WorkspaceDefinition),
+    Workbench(WorkbenchDefinition),
     Module(ModuleDefinition),
     Function(FunctionDefinition),
     Init(InitDefinition),
@@ -18,7 +18,7 @@ pub enum Statement {
 impl Statement {
     pub fn span(&self) -> Span {
         match self {
-            Statement::Workspace(st) => st.span.clone(),
+            Statement::Workbench(st) => st.span.clone(),
             Statement::Module(st) => st.span.clone(),
             Statement::Function(st) => st.span.clone(),
             Statement::Init(st) => st.span.clone(),
@@ -40,7 +40,7 @@ pub enum WorkspaceKind {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct WorkspaceDefinition {
+pub struct WorkbenchDefinition {
     pub span: Span,
     pub kind: WorkspaceKind,
     pub attributes: Vec<Attribute>,

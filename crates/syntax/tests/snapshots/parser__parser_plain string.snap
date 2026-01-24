@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
@@ -11,7 +11,7 @@ Ok(
             tail: Some(
                 Literal(
                     String(
-                        StringContent {
+                        StringLiteral {
                             span: 13..14,
                             content: "plain string",
                         },

@@ -4,34 +4,34 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 45..46,
+        span: 46..47,
         statements: StatementList {
-            span: 45..46,
+            span: 46..47,
             statements: [],
             tail: Some(
                 String(
                     FormatString {
-                        span: 45..46,
+                        span: 46..47,
                         parts: [
                             Content(
-                                StringContent {
+                                StringLiteral {
                                     span: 1..8,
                                     content: "string ",
                                 },
                             ),
                             Expression(
                                 StringExpression {
-                                    span: 33..34,
+                                    span: 34..35,
                                     expression: BinaryOperation(
                                         BinaryOperation {
-                                            span: 9..30,
+                                            span: 9..31,
                                             lhs: QualifiedName(
                                                 QualifiedName {
-                                                    span: 9..17,
+                                                    span: 9..18,
                                                     parts: [
                                                         Identifier {
-                                                            span: 9..17,
-                                                            name: "formated",
+                                                            span: 9..18,
+                                                            name: "formatted",
                                                         },
                                                     ],
                                                 },
@@ -39,10 +39,10 @@ Ok(
                                             operation: Subtract,
                                             rhs: QualifiedName(
                                                 QualifiedName {
-                                                    span: 20..30,
+                                                    span: 21..31,
                                                     parts: [
                                                         Identifier {
-                                                            span: 20..30,
+                                                            span: 21..31,
                                                             name: "expression",
                                                         },
                                                     ],
@@ -59,8 +59,8 @@ Ok(
                                 },
                             ),
                             Content(
-                                StringContent {
-                                    span: 34..45,
+                                StringLiteral {
+                                    span: 35..46,
                                     content: " expression",
                                 },
                             ),
