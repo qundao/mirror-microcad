@@ -75,16 +75,19 @@ fn parser<'tokens>()
             just(Token::Normal(NormalToken::SigilOpenCurlyBracket)),
             just(Token::Normal(NormalToken::SigilCloseCurlyBracket)),
         )
-        .recover_with(via_parser(block_recovery));
+        .recover_with(via_parser(block_recovery))
+        .boxed();
 
     let identifier_parser =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => Identifier {
             span: e.span(),
             name: ident.as_ref().into(),
         } }
-        .labelled("identifier");
+        .labelled("identifier")
+        .boxed();
 
     let qualified_name = identifier_parser
+        .clone()
         .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
         .at_least(1)
         .collect::<Vec<_>>()
@@ -92,17 +95,19 @@ fn parser<'tokens>()
             span: e.span(),
             parts,
         })
-        .labelled("qualified name");
+        .labelled("qualified name")
+        .boxed();
 
     let single_type =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
             span: e.span(),
             name: ident.as_ref().into()
         }}
-        .labelled("quantity type");
+        .labelled("quantity type")
+        .boxed();
 
     type_parser.define({
-        let single = single_type.map(Type::Single);
+        let single = single_type.clone().map(Type::Single);
         let array = type_parser
             .clone()
             .delimited_by(
@@ -114,9 +119,11 @@ fn parser<'tokens>()
                     span: e.span(),
                     inner: Box::new(inner),
                 })
-            });
+            })
+            .boxed();
 
         let tuple = identifier_parser
+            .clone()
             .then_ignore(just(Token::Normal(NormalToken::SigilColon)))
             .or_not()
             .then(type_parser.clone())
@@ -132,9 +139,10 @@ fn parser<'tokens>()
                     span: e.span(),
                     inner,
                 })
-            });
+            })
+            .boxed();
 
-        single.or(array).or(tuple).labelled("type")
+        single.or(array).or(tuple).labelled("type").boxed()
     });
 
     let literal_parser = {
@@ -205,7 +213,7 @@ fn parser<'tokens>()
             })
         });
 
-        quantity.or(single_value).labelled("literal")
+        quantity.or(single_value).labelled("literal").boxed()
     };
 
     let binary_operator_parser = select_ref! {
@@ -227,27 +235,33 @@ fn parser<'tokens>()
         Token::Normal(NormalToken::OperatorOr) => Operator::Or,
         Token::Normal(NormalToken::OperatorXor) => Operator::Xor,
     }
-    .labelled("binary operator");
+    .labelled("binary operator")
+    .boxed();
 
     let unary_operator_parser = select_ref! {
         Token::Normal(NormalToken::OperatorSubtract) => UnaryOperator::Minus,
         Token::Normal(NormalToken::OperatorAdd) => UnaryOperator::Plus,
         Token::Normal(NormalToken::OperatorNot) => UnaryOperator::Not,
     }
-    .labelled("unary operator");
+    .labelled("unary operator")
+    .boxed();
 
     statement_parser.define({
         let expression = expression_parser.clone().map(Statement::Expression);
 
         let assignment = identifier_parser
+            .clone()
             .then(
                 just(Token::Normal(NormalToken::SigilColon))
                     .ignore_then(type_parser.clone())
                     .or_not(),
             )
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
-            .then(expression_parser.clone()
-                .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))))
+            .then(
+                expression_parser
+                    .clone()
+                    .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))),
+            )
             .map_with(|((name, ty), value), e| {
                 Statement::Assignment(Assignment {
                     span: e.span(),
@@ -256,7 +270,8 @@ fn parser<'tokens>()
                     ty,
                 })
             })
-            .labelled("assignment");
+            .labelled("assignment")
+            .boxed();
 
         let comment = select_ref! {
             Token::Normal(NormalToken::SingleLineComment(comment) )= e => Comment {
@@ -269,9 +284,11 @@ fn parser<'tokens>()
             }
         }
         .map(Statement::Comment)
-        .labelled("comment");
+        .labelled("comment")
+        .boxed();
 
         let arguments = identifier_parser
+            .clone()
             .then(
                 just(Token::Normal(NormalToken::SigilColon))
                     .ignore_then(type_parser.clone())
@@ -279,7 +296,7 @@ fn parser<'tokens>()
             )
             .then(
                 just(Token::Normal(NormalToken::OperatorAssignment))
-                    .ignore_then(literal_parser)
+                    .ignore_then(literal_parser.clone())
                     .or_not(),
             )
             .map_with(|((name, ty), default), e| ArgumentDefinition {
@@ -294,7 +311,8 @@ fn parser<'tokens>()
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenBracket)),
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
-            );
+            )
+            .boxed();
 
         let visibility = select_ref! {
             Token::Normal(NormalToken::KeywordPub) => Visibility::Public,
@@ -319,9 +337,11 @@ fn parser<'tokens>()
                     name,
                     body,
                 })
-            });
+            })
+            .boxed();
 
         let use_parts = identifier_parser
+            .clone()
             .map(UseStatementPart::Identifier)
             .or(just(Token::Normal(NormalToken::OperatorMultiply))
                 .map_with(|_, e| UseStatementPart::Glob(e.span())))
@@ -331,7 +351,8 @@ fn parser<'tokens>()
             .map_with(|parts, e| UseName {
                 span: e.span(),
                 parts,
-            });
+            })
+            .boxed();
 
         let use_statement = visibility
             .clone()
@@ -350,13 +371,15 @@ fn parser<'tokens>()
                     name,
                     use_as,
                 })
-            });
+            })
+            .boxed();
 
         let workspace_kind = select_ref! {
             Token::Normal(NormalToken::KeywordSketch) => WorkspaceKind::Sketch,
             Token::Normal(NormalToken::KeywordPart) => WorkspaceKind::Part,
             Token::Normal(NormalToken::KeywordOp) => WorkspaceKind::Op,
-        };
+        }
+        .boxed();
 
         let init = just(Token::Normal(NormalToken::KeywordInit))
             .ignore_then(arguments.clone())
@@ -367,12 +390,13 @@ fn parser<'tokens>()
                     arguments,
                     body,
                 })
-            });
+            })
+            .boxed();
 
         let workspace = visibility
             .or_not()
             .then(workspace_kind)
-            .then(identifier_parser)
+            .then(identifier_parser.clone())
             .then(arguments.clone())
             .then(block.clone())
             .map_with(|((((visibility, kind), name), arguments), body), e| {
@@ -385,7 +409,8 @@ fn parser<'tokens>()
                     arguments,
                     body,
                 })
-            });
+            })
+            .boxed();
 
         let return_statement = just(Token::Normal(NormalToken::KeywordReturn))
             .ignore_then(expression_parser.clone())
@@ -394,12 +419,13 @@ fn parser<'tokens>()
                     span: e.span(),
                     value,
                 })
-            });
+            })
+            .boxed();
 
         let function = visibility
             .or_not()
             .then_ignore(just(Token::Normal(NormalToken::KeywordFn)))
-            .then(identifier_parser)
+            .then(identifier_parser.clone())
             .then(arguments.clone())
             .then(
                 just(Token::Normal(NormalToken::SigilSingleArrow))
@@ -418,14 +444,21 @@ fn parser<'tokens>()
                         body,
                     })
                 },
-            );
+            )
+            .boxed();
 
         let with_semi = assignment
             .or(return_statement)
             .or(use_statement)
-            .or(expression);
+            .or(expression)
+            .boxed();
 
-        let without_semi = function.or(init).or(workspace).or(module).or(comment);
+        let without_semi = function
+            .or(init)
+            .or(workspace)
+            .or(module)
+            .or(comment)
+            .boxed();
 
         without_semi
             .or(with_semi.then_ignore(
@@ -448,12 +481,16 @@ fn parser<'tokens>()
     });
 
     expression_parser.define({
-        let literal = literal_parser.map(Expression::Literal).labelled("literal");
+        let literal = literal_parser
+            .map(Expression::Literal)
+            .labelled("literal")
+            .boxed();
 
         let marker = just(Token::Normal(NormalToken::SigilAt))
-            .ignore_then(identifier_parser)
+            .ignore_then(identifier_parser.clone())
             .map(Expression::Marker)
-            .labelled("marker");
+            .labelled("marker")
+            .boxed();
 
         let string_format_tokens = select_ref!(
             Token::Normal(NormalToken::String(str_tokens)) if !is_literal_string(str_tokens) => {
@@ -480,7 +517,8 @@ fn parser<'tokens>()
             .map_err(|e: Rich<'tokens, Token<'tokens>, Span>| {
                 Rich::custom(e.span().clone(), "Invalid format string")
             })
-            .recover_with(via_parser(string_format_recovery));
+            .recover_with(via_parser(string_format_recovery))
+            .boxed();
 
         let tuple_recovery = just(Token::Normal(NormalToken::SigilOpenBracket))
             .then(
@@ -491,6 +529,7 @@ fn parser<'tokens>()
             .map(|_| vec![(None, Expression::Error)]);
 
         let tuple_body = identifier_parser
+            .clone()
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
             .or_not()
             .then(expression_parser.clone())
@@ -501,7 +540,8 @@ fn parser<'tokens>()
                 just(Token::Normal(NormalToken::SigilOpenBracket)),
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
             )
-            .recover_with(via_parser(tuple_recovery));
+            .recover_with(via_parser(tuple_recovery))
+            .boxed();
 
         let tuple = tuple_body.clone().map_with(|values, e| {
             Expression::Tuple(TupleExpression {
@@ -530,7 +570,8 @@ fn parser<'tokens>()
                     end: Box::new(end),
                 })
             })
-            .labelled("array range");
+            .labelled("array range")
+            .boxed();
 
         let array_list = expression_parser
             .clone()
@@ -547,7 +588,8 @@ fn parser<'tokens>()
                     items,
                 })
             })
-            .labelled("array");
+            .labelled("array")
+            .boxed();
 
         let call = qualified_name
             .clone()
@@ -576,12 +618,14 @@ fn parser<'tokens>()
                     name,
                     arguments,
                 })
-            });
+            })
+            .boxed();
 
         let block_expression = block
             .clone()
             .map(Expression::Block)
-            .labelled("block expression");
+            .labelled("block expression")
+            .boxed();
 
         let mut if_inner = Recursive::declare();
 
@@ -608,16 +652,20 @@ fn parser<'tokens>()
                     else_body,
                 }),
         );
-        let if_expression = if_inner.map(Expression::If).labelled("if expression");
+        let if_expression = if_inner
+            .map(Expression::If)
+            .labelled("if expression")
+            .boxed();
 
         let qualified_name_expr = identifier_parser
+            .clone()
             .map_with(|ident, e| QualifiedName {
                 span: e.span(),
                 parts: vec![ident],
             })
             .foldl_with(
                 just(Token::Normal(NormalToken::SigilDoubleColon))
-                    .ignore_then(identifier_parser)
+                    .ignore_then(identifier_parser.clone())
                     .repeated(),
                 |mut acc, part, _| {
                     acc.span.end = part.span.end;
@@ -625,7 +673,8 @@ fn parser<'tokens>()
                     acc
                 },
             )
-            .map(Expression::QualifiedName);
+            .map(Expression::QualifiedName)
+            .boxed();
 
         let base = literal
             .or(string_format)
@@ -637,31 +686,39 @@ fn parser<'tokens>()
             .or(array_range)
             .or(array_list)
             .or(block_expression)
-            .or(if_expression);
+            .or(if_expression)
+            .boxed();
 
-        let binary_expression = base.clone().foldl_with(
-            binary_operator_parser.then(base.clone()).repeated(),
-            |lhs, (op, rhs), e| {
-                Expression::BinaryOperation(BinaryOperation {
+        let binary_expression = base
+            .clone()
+            .foldl_with(
+                binary_operator_parser.then(base.clone()).repeated(),
+                |lhs, (op, rhs), e| {
+                    Expression::BinaryOperation(BinaryOperation {
+                        span: e.span(),
+                        lhs: lhs.into(),
+                        operation: op,
+                        rhs: rhs.into(),
+                    })
+                },
+            )
+            .boxed();
+
+        let unary_expression = unary_operator_parser
+            .then(base)
+            .map_with(|(op, rhs), e| {
+                Expression::UnaryOperation(UnaryOperation {
                     span: e.span(),
-                    lhs: lhs.into(),
                     operation: op,
                     rhs: rhs.into(),
                 })
-            },
-        );
-
-        let unary_expression = unary_operator_parser.then(base).map_with(|(op, rhs), e| {
-            Expression::UnaryOperation(UnaryOperation {
-                span: e.span(),
-                operation: op,
-                rhs: rhs.into(),
             })
-        });
+            .boxed();
 
         unary_expression
             .or(binary_expression)
             .labelled("expression")
+            .boxed()
     });
 
     format_string_part_parser.define({
@@ -714,7 +771,8 @@ fn parser<'tokens>()
                     accuracy,
                     width,
                 })
-            });
+            })
+            .boxed();
 
         content.or(format_expr)
     });
