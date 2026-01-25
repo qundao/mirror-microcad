@@ -1,3 +1,5 @@
+mod error;
+
 use crate::ast::*;
 use crate::tokens::*;
 use crate::Span;
@@ -6,30 +8,9 @@ use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
 use chumsky::{extra, select_ref, Parser};
 use std::str::FromStr;
+pub use error::ParseError;
 
 type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
-
-// todo a proper way to expose these errors
-#[derive(Debug)]
-pub struct ParseError {
-    pub span: Span,
-    error: String
-}
-
-impl ParseError {
-    pub fn new<'tokens>(error: Rich<'tokens, Token<'tokens>, Span>) -> Self {
-        Self {
-            span: error.span().clone(),
-            error: format!("{error:?}"),
-        }
-    }
-}
-
-impl std::fmt::Display for ParseError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.error)
-    }
-}
 
 pub fn map_token_input<'a, 'token>(
     spanned: &'a SpannedToken<Token<'token>>,

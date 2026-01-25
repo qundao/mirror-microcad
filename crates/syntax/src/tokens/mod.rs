@@ -1,6 +1,7 @@
 use crate::Span;
 use logos::{Lexer, Logos};
 use std::borrow::Cow;
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct SpannedToken<T> {
@@ -17,7 +18,6 @@ impl SpannedToken<Token<'_>> {
     }
 }
 
-
 impl<T: PartialEq> PartialEq<T> for SpannedToken<T> {
     fn eq(&self, other: &T) -> bool {
         self.token.eq(other)
@@ -31,12 +31,26 @@ pub enum Token<'a> {
     StringFormat(StringFormatToken<'a>),
 }
 
+impl Display for Token<'_> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.kind())
+    }
+}
+
 impl Token<'_> {
     pub fn into_owned(self) -> Token<'static> {
         match self {
             Token::Normal(t) => Token::Normal(t.into_owned()),
             Token::String(t) => Token::String(t.into_owned()),
             Token::StringFormat(t) => Token::StringFormat(t.into_owned()),
+        }
+    }
+
+    pub fn kind(&self) -> &'static str {
+        match self {
+            Token::Normal(token) => token.kind(),
+            Token::String(token) => token.kind(),
+            Token::StringFormat(token) => token.kind(),
         }
     }
 }
@@ -179,7 +193,9 @@ impl NormalToken<'_> {
             NormalToken::Identifier(s) => NormalToken::Identifier(s.into_owned().into()),
             NormalToken::LiteralInt(s) => NormalToken::LiteralInt(s.into_owned().into()),
             NormalToken::LiteralFloat(s) => NormalToken::LiteralFloat(s.into_owned().into()),
-            NormalToken::String(s) => NormalToken::String(s.into_iter().map(SpannedToken::into_owned).collect()),
+            NormalToken::String(s) => {
+                NormalToken::String(s.into_iter().map(SpannedToken::into_owned).collect())
+            }
             NormalToken::KeywordMod => NormalToken::KeywordMod,
             NormalToken::KeywordPart => NormalToken::KeywordPart,
             NormalToken::KeywordSketch => NormalToken::KeywordSketch,
@@ -232,6 +248,68 @@ impl NormalToken<'_> {
             NormalToken::OperatorAssignment => NormalToken::OperatorAssignment,
         }
     }
+
+    pub fn kind(&self) -> &'static str {
+        match self {
+            NormalToken::SingleLineComment(_) => "single-line comment",
+            NormalToken::MultiLineComment(_) => "multi-line comment",
+            NormalToken::DocComment(_) => "doc comment",
+            NormalToken::KeywordMod => "mod",
+            NormalToken::KeywordPart => "part",
+            NormalToken::KeywordSketch => "sketch",
+            NormalToken::KeywordOp => "op",
+            NormalToken::KeywordFn => "fn",
+            NormalToken::KeywordIf => "if",
+            NormalToken::KeywordElse => "else",
+            NormalToken::KeywordUse => "use",
+            NormalToken::KeywordAs => "as",
+            NormalToken::KeywordReturn => "return",
+            NormalToken::KeywordPub => "pub",
+            NormalToken::KeywordConst => "const",
+            NormalToken::KeywordProp => "prop",
+            NormalToken::KeywordInit => "init",
+            NormalToken::Identifier(_) => "identifier",
+            NormalToken::LiteralInt(_) => "integer",
+            NormalToken::LiteralFloat(_) => "float",
+            NormalToken::String(_) => "string",
+            NormalToken::LiteralBoolTrue => "boolean",
+            NormalToken::LiteralBoolFalse => "boolean",
+            NormalToken::SigilColon => ":",
+            NormalToken::SigilSemiColon => ";",
+            NormalToken::SigilDoubleColon => "::",
+            NormalToken::SigilOpenBracket => "(",
+            NormalToken::SigilCloseBracket => ")",
+            NormalToken::SigilOpenSquareBracket => "[",
+            NormalToken::SigilCloseSquareBracket => "]",
+            NormalToken::SigilOpenCurlyBracket => "{",
+            NormalToken::SigilCloseCurlyBracket => "}",
+            NormalToken::SigilHash => "#",
+            NormalToken::SigilDot => ".",
+            NormalToken::SigilComma => ",",
+            NormalToken::SigilDoubleDot => "..",
+            NormalToken::SigilAt => "@",
+            NormalToken::SigilSingleArrow => "->",
+            NormalToken::OperatorAdd => "+",
+            NormalToken::OperatorSubtract => "-",
+            NormalToken::OperatorMultiply => "*",
+            NormalToken::OperatorDivide => "/",
+            NormalToken::OperatorUnion => "|",
+            NormalToken::OperatorIntersect => "&",
+            NormalToken::OperatorPowerXor => "^",
+            NormalToken::OperatorGreaterThan => ">",
+            NormalToken::OperatorLessThan => "<",
+            NormalToken::OperatorGreaterEqual => ">=",
+            NormalToken::OperatorLessEqual => "<=",
+            NormalToken::OperatorNear => "!",
+            NormalToken::OperatorEqual => "==",
+            NormalToken::OperatorNotEqual => "!=",
+            NormalToken::OperatorAnd => "and",
+            NormalToken::OperatorOr => "or",
+            NormalToken::OperatorXor => "xor",
+            NormalToken::OperatorNot => "not",
+            NormalToken::OperatorAssignment => "=",
+        }
+    }
 }
 
 fn string_token_callback<'a>(
@@ -277,14 +355,24 @@ impl StringToken<'_> {
             StringToken::Content(s) => StringToken::Content(s.into_owned().into()),
             StringToken::Escaped(s) => StringToken::Escaped(s.into_owned().into()),
             StringToken::FormatStart(f) => {
-                StringToken::FormatStart(f.into_iter()
-                    .map(SpannedToken::into_owned)
-                    .collect())
+                StringToken::FormatStart(f.into_iter().map(SpannedToken::into_owned).collect())
             }
             StringToken::BackSlash => StringToken::BackSlash,
             StringToken::EscapedCurlyOpen => StringToken::EscapedCurlyOpen,
             StringToken::EscapedCurlyClose => StringToken::EscapedCurlyClose,
             StringToken::Quote => StringToken::Quote,
+        }
+    }
+
+    pub fn kind(&self) -> &'static str {
+        match self {
+            StringToken::Content(_) => "string literal",
+            StringToken::Escaped(_) => "escaped character",
+            StringToken::BackSlash => "\\",
+            StringToken::EscapedCurlyOpen => "{",
+            StringToken::EscapedCurlyClose => "}",
+            StringToken::FormatStart(_) => "string format",
+            StringToken::Quote => "\"",
         }
     }
 }
@@ -373,6 +461,14 @@ impl StringFormatToken<'_> {
                 StringFormatToken::FormatWidth(s.into_owned().into())
             }
             StringFormatToken::FormatEnd => StringFormatToken::FormatEnd,
+        }
+    }
+
+    pub fn kind(&self) -> &'static str {
+        match self {
+            StringFormatToken::FormatEnd => "}",
+            StringFormatToken::FormatPrecision(_) => "format precision",
+            StringFormatToken::FormatWidth(_) => "format width",
         }
     }
 }

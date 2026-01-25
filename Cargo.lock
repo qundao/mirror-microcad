@@ -5392,9 +5392,9 @@ version = "0.2.19"
 dependencies = [
  "chumsky",
  "compact_str",
- "indexmap",
  "insta",
  "logos",
+ "miette",
  "test-case",
  "thiserror 2.0.17",
 ]

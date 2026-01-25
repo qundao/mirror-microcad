@@ -145,7 +145,6 @@ pub enum ParseError {
         error: microcad_syntax::tokens::LexerError,
     },
 
-    // todo
     #[error("{error}")]
     AstParser {
         src_ref: SrcRef,
@@ -231,6 +230,9 @@ impl Diagnostic for ParseError {
         let src_ref = self.src_ref().0?;
         let message = match self {
             ParseError::Parser(err) => err.variant.message().to_string(),
+            ParseError::AstParser {error, ..} => {
+                return error.labels();
+            },
             _ => self.to_string(),
         };
         let label = LabeledSpan::new(Some(message), src_ref.range.start, src_ref.range.len());
