@@ -2,6 +2,7 @@ use crate::Span;
 use logos::{Lexer, Logos};
 use std::borrow::Cow;
 use std::fmt::{Display, Formatter};
+use thiserror::Error;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct SpannedToken<T> {
@@ -314,13 +315,20 @@ impl NormalToken<'_> {
 
 fn string_token_callback<'a>(
     lex: &mut Lexer<'a, NormalToken<'a>>,
-) -> Option<Vec<SpannedToken<Token<'a>>>> {
+) -> Result<Vec<SpannedToken<Token<'a>>>, LexerError> {
     let mut string_lexer = lex.clone().morph::<StringToken>();
     let mut tokens = Vec::new();
     while let Some(token) = string_lexer.next() {
         match token {
             Ok(StringToken::Quote) => break,
-            Err(_) => return None,
+            Err(e) => {
+                let start = lex.span().start;
+                *lex = string_lexer.morph();
+                return Err(match e {
+                    LexerError::UnclosedStringFormat(span) => LexerError::UnclosedStringFormat(start..span.end),
+                    e => e
+                })
+            },
             Ok(tok) => tokens.push(SpannedToken {
                 span: string_lexer.span(),
                 token: Token::String(tok),
@@ -328,10 +336,11 @@ fn string_token_callback<'a>(
         }
     }
     *lex = string_lexer.morph();
-    Some(tokens)
+    Ok(tokens)
 }
 
 #[derive(Logos, Debug, PartialEq, Clone)]
+#[logos(error(LexerError))]
 pub enum StringToken<'a> {
     #[regex(r#"[^"{}\\]+"#, callback = token_cow)]
     Content(Cow<'a, str>),
@@ -403,7 +412,7 @@ pub fn get_literal_string(string_tokens: &[SpannedToken<Token>]) -> Option<Strin
 
 fn format_token_callback<'a>(
     lex: &mut Lexer<'a, StringToken<'a>>,
-) -> Option<Vec<SpannedToken<Token<'a>>>> {
+) -> Result<Vec<SpannedToken<Token<'a>>>, LexerError> {
     let mut expression_lexer = lex.clone().morph::<NormalToken>();
     let mut tokens = Vec::new();
 
@@ -415,7 +424,12 @@ fn format_token_callback<'a>(
                 with_format = true;
                 break;
             }
-            Err(_) => return None,
+            Ok(NormalToken::String(content)) => {
+                let start = lex.span().start;
+                let end = content.first().map(|t| t.span.start).unwrap_or_else(|| expression_lexer.span().start);
+                return Err(LexerError::UnclosedStringFormat(start..end))
+            },
+            Err(e) => return Err(e),
             Ok(tok) => tokens.push(SpannedToken {
                 span: expression_lexer.span(),
                 token: Token::Normal(tok),
@@ -428,7 +442,15 @@ fn format_token_callback<'a>(
         while let Some(token) = format_lexer.next() {
             match token {
                 Ok(StringFormatToken::FormatEnd) => break,
-                Err(_) => return None,
+                Err(e) => {
+                    *lex = format_lexer.morph();
+                    return Err(e)
+                },
+                Ok(StringFormatToken::StringEnd) => {
+                    let start = lex.span().start;
+                    let end = format_lexer.span().end;
+                    return Err(LexerError::UnclosedStringFormat(start..end))
+                },
                 Ok(tok) => tokens.push(SpannedToken {
                     span: format_lexer.span(),
                     token: Token::StringFormat(tok),
@@ -437,11 +459,13 @@ fn format_token_callback<'a>(
         }
     }
 
+
     *lex = format_lexer.morph();
-    Some(tokens)
+    Ok(tokens)
 }
 
 #[derive(Logos, Debug, PartialEq, Clone)]
+#[logos(error(LexerError))]
 pub enum StringFormatToken<'a> {
     #[token("}")]
     FormatEnd,
@@ -449,6 +473,8 @@ pub enum StringFormatToken<'a> {
     FormatPrecision(Cow<'a, str>),
     #[regex(r#"0[\d]+"#, callback = token_cow)]
     FormatWidth(Cow<'a, str>),
+    #[token("\"")]
+    StringEnd,
 }
 
 impl StringFormatToken<'_> {
@@ -461,6 +487,7 @@ impl StringFormatToken<'_> {
                 StringFormatToken::FormatWidth(s.into_owned().into())
             }
             StringFormatToken::FormatEnd => StringFormatToken::FormatEnd,
+            StringFormatToken::StringEnd => StringFormatToken::StringEnd,
         }
     }
 
@@ -469,14 +496,27 @@ impl StringFormatToken<'_> {
             StringFormatToken::FormatEnd => "}",
             StringFormatToken::FormatPrecision(_) => "format precision",
             StringFormatToken::FormatWidth(_) => "format width",
+            StringFormatToken::StringEnd => "\"",
         }
     }
 }
 
-#[derive(Debug, Default, Clone, PartialEq)]
+#[derive(Debug, Default, Clone, PartialEq, Error)]
 pub enum LexerError {
     #[default]
+    #[error("No valid token")]
     NoValidToken,
+    #[error("Unclosed format string")]
+    UnclosedStringFormat(Span),
+}
+
+impl LexerError {
+    pub fn span(&self) -> Option<Span> {
+        match self {
+            LexerError::UnclosedStringFormat(span) => Some(span.clone()),
+            _ => None,
+        }
+    }
 }
 
 pub fn lex<'a>(input: &'a str) -> Result<Vec<SpannedToken<Token<'a>>>, SpannedToken<LexerError>> {
@@ -487,7 +527,7 @@ pub fn lex<'a>(input: &'a str) -> Result<Vec<SpannedToken<Token<'a>>>, SpannedTo
                 span,
                 token: Token::Normal(token),
             }),
-            Err(error) => Err(SpannedToken { span, token: error }),
+            Err(error) => Err(SpannedToken { span: error.span().unwrap_or(span), token: error }),
         })
         .collect()
 }
