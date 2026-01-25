@@ -56,6 +56,9 @@ impl Diagnostic for ParseError {
             RichReason::Custom(error) => error.clone(),
             RichReason::ExpectedFound {
                 found: Some(found), ..
+            } if found.is_error() => format!("{}", found.kind()),
+            RichReason::ExpectedFound {
+                found: Some(found), ..
             } => format!("unexpected {}", found.kind()),
             RichReason::ExpectedFound { found: None, .. } => "unexpected token".into(),
         };

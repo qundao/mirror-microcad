@@ -2,37 +2,35 @@
 source: crates/syntax/tests/tokenizer.rs
 expression: lex(input)
 ---
-Ok(
-    [
-        SpannedToken {
-            span: 0..1,
-            token: Normal(
-                Identifier(
-                    "a",
-                ),
+[
+    SpannedToken {
+        span: 0..1,
+        token: Normal(
+            Identifier(
+                "a",
             ),
-        },
-        SpannedToken {
-            span: 2..3,
-            token: Normal(
-                OperatorAssignment,
+        ),
+    },
+    SpannedToken {
+        span: 2..3,
+        token: Normal(
+            OperatorAssignment,
+        ),
+    },
+    SpannedToken {
+        span: 4..5,
+        token: Normal(
+            LiteralInt(
+                "1",
             ),
-        },
-        SpannedToken {
-            span: 4..5,
-            token: Normal(
-                LiteralInt(
-                    "1",
-                ),
+        ),
+    },
+    SpannedToken {
+        span: 6..16,
+        token: Normal(
+            SingleLineComment(
+                "// comment",
             ),
-        },
-        SpannedToken {
-            span: 6..16,
-            token: Normal(
-                SingleLineComment(
-                    "// comment",
-                ),
-            ),
-        },
-    ],
-)
+        ),
+    },
+]

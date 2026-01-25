@@ -2,11 +2,55 @@
 source: crates/syntax/tests/tokenizer.rs
 expression: lex(input)
 ---
-Err(
+[
     SpannedToken {
-        span: 4..20,
-        token: UnclosedStringFormat(
-            4..20,
+        span: 0..1,
+        token: Normal(
+            Identifier(
+                "a",
+            ),
         ),
     },
-)
+    SpannedToken {
+        span: 2..3,
+        token: Normal(
+            OperatorAssignment,
+        ),
+    },
+    SpannedToken {
+        span: 4..20,
+        token: Error(
+            UnclosedStringFormat(
+                4..20,
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 20..21,
+        token: Normal(
+            SigilSemiColon,
+        ),
+    },
+    SpannedToken {
+        span: 22..23,
+        token: Normal(
+            Identifier(
+                "b",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 24..25,
+        token: Normal(
+            OperatorAssignment,
+        ),
+    },
+    SpannedToken {
+        span: 26..27,
+        token: Normal(
+            LiteralInt(
+                "1",
+            ),
+        ),
+    },
+]

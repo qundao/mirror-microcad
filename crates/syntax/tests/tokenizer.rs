@@ -33,8 +33,8 @@ use test_case::test_case;
         Cylinder(height = 10mm, radius = 5mm);
     }"#
 )]
-#[test_case("invalid expr string", r#"a = "string {broken""#)]
-#[test_case("invalid expr string format", r#"a = "string {broken:""#)]
+#[test_case("invalid expr string", r#"a = "string {broken"; b = 1"#)]
+#[test_case("invalid expr string format", r#"a = "string {broken:"; b = 1"#)]
 fn test_lexer(name: &str, input: &str) {
     assert_debug_snapshot!(format!("lexer_{name}"), lex(input));
 }

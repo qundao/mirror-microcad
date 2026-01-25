@@ -2,6 +2,7 @@ use crate::Span;
 use logos::{Lexer, Logos};
 use std::borrow::Cow;
 use std::fmt::{Display, Formatter};
+use logos::internal::LexerInternal;
 use thiserror::Error;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -30,6 +31,7 @@ pub enum Token<'a> {
     Normal(NormalToken<'a>),
     String(StringToken<'a>),
     StringFormat(StringFormatToken<'a>),
+    Error(LexerError),
 }
 
 impl Display for Token<'_> {
@@ -44,6 +46,7 @@ impl Token<'_> {
             Token::Normal(t) => Token::Normal(t.into_owned()),
             Token::String(t) => Token::String(t.into_owned()),
             Token::StringFormat(t) => Token::StringFormat(t.into_owned()),
+            Token::Error(err) => Token::Error(err),
         }
     }
 
@@ -52,6 +55,14 @@ impl Token<'_> {
             Token::Normal(token) => token.kind(),
             Token::String(token) => token.kind(),
             Token::StringFormat(token) => token.kind(),
+            Token::Error(err) => err.kind(),
+        }
+    }
+
+    pub fn is_error(&self) -> bool {
+        match self {
+            Token::Error(_) => true,
+            _ => false,
         }
     }
 }
@@ -427,6 +438,7 @@ fn format_token_callback<'a>(
             Ok(NormalToken::String(content)) => {
                 let start = lex.span().start;
                 let end = content.first().map(|t| t.span.start).unwrap_or_else(|| expression_lexer.span().start);
+                lex.end(end);
                 return Err(LexerError::UnclosedStringFormat(start..end))
             },
             Err(e) => return Err(e),
@@ -449,6 +461,7 @@ fn format_token_callback<'a>(
                 Ok(StringFormatToken::StringEnd) => {
                     let start = lex.span().start;
                     let end = format_lexer.span().end;
+                    lex.end(end);
                     return Err(LexerError::UnclosedStringFormat(start..end))
                 },
                 Ok(tok) => tokens.push(SpannedToken {
@@ -511,6 +524,15 @@ pub enum LexerError {
 }
 
 impl LexerError {
+    pub fn kind(&self) -> &'static str {
+        match self {
+            LexerError::NoValidToken => "no valid token",
+            LexerError::UnclosedStringFormat(_) => "unclosed format string",
+        }
+    }
+}
+
+impl LexerError {
     pub fn span(&self) -> Option<Span> {
         match self {
             LexerError::UnclosedStringFormat(span) => Some(span.clone()),
@@ -519,15 +541,15 @@ impl LexerError {
     }
 }
 
-pub fn lex<'a>(input: &'a str) -> Result<Vec<SpannedToken<Token<'a>>>, SpannedToken<LexerError>> {
+pub fn lex<'a>(input: &'a str) -> Vec<SpannedToken<Token<'a>>> {
     Lexer::<NormalToken>::new(input)
         .spanned()
         .map(|(token, span)| match token {
-            Ok(token) => Ok(SpannedToken {
+            Ok(token) => SpannedToken {
                 span,
                 token: Token::Normal(token),
-            }),
-            Err(error) => Err(SpannedToken { span: error.span().unwrap_or(span), token: error }),
+            },
+            Err(error) => SpannedToken { span: error.span().unwrap_or(span), token: Token::Error(error) },
         })
         .collect()
 }

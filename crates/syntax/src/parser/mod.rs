@@ -456,6 +456,12 @@ fn parser<'tokens>()
             }
         );
 
+        let string_format_recovery = select_ref!(
+            Token::Error(LexerError::UnclosedStringFormat(_span)) => {
+                Expression::Error
+            }
+        );
+
         let string_format = format_string_part_parser
             .clone()
             .repeated()
@@ -465,7 +471,11 @@ fn parser<'tokens>()
                 span: e.span(),
                 parts,
             })
-            .map(Expression::String);
+            .map(Expression::String)
+            .map_err(|e: Rich<'tokens, Token<'tokens>, Span>| {
+                Rich::custom(e.span().clone(), "Invalid format string")
+            })
+            .recover_with(via_parser(string_format_recovery));
 
         let tuple_recovery = just(Token::Normal(NormalToken::SigilOpenBracket))
             .then(

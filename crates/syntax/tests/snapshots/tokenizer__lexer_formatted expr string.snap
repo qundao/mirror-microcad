@@ -2,79 +2,77 @@
 source: crates/syntax/tests/tokenizer.rs
 expression: lex(input)
 ---
-Ok(
-    [
-        SpannedToken {
-            span: 47..48,
-            token: Normal(
-                String(
-                    [
-                        SpannedToken {
-                            span: 1..8,
-                            token: String(
-                                Content(
-                                    "string ",
-                                ),
+[
+    SpannedToken {
+        span: 47..48,
+        token: Normal(
+            String(
+                [
+                    SpannedToken {
+                        span: 1..8,
+                        token: String(
+                            Content(
+                                "string ",
                             ),
-                        },
-                        SpannedToken {
-                            span: 35..36,
-                            token: String(
-                                FormatStart(
-                                    [
-                                        SpannedToken {
-                                            span: 9..17,
-                                            token: Normal(
-                                                Identifier(
-                                                    "formated",
-                                                ),
+                        ),
+                    },
+                    SpannedToken {
+                        span: 35..36,
+                        token: String(
+                            FormatStart(
+                                [
+                                    SpannedToken {
+                                        span: 9..17,
+                                        token: Normal(
+                                            Identifier(
+                                                "formated",
                                             ),
-                                        },
-                                        SpannedToken {
-                                            span: 18..19,
-                                            token: Normal(
-                                                OperatorSubtract,
+                                        ),
+                                    },
+                                    SpannedToken {
+                                        span: 18..19,
+                                        token: Normal(
+                                            OperatorSubtract,
+                                        ),
+                                    },
+                                    SpannedToken {
+                                        span: 20..30,
+                                        token: Normal(
+                                            Identifier(
+                                                "expression",
                                             ),
-                                        },
-                                        SpannedToken {
-                                            span: 20..30,
-                                            token: Normal(
-                                                Identifier(
-                                                    "expression",
-                                                ),
+                                        ),
+                                    },
+                                    SpannedToken {
+                                        span: 31..33,
+                                        token: StringFormat(
+                                            FormatWidth(
+                                                "03",
                                             ),
-                                        },
-                                        SpannedToken {
-                                            span: 31..33,
-                                            token: StringFormat(
-                                                FormatWidth(
-                                                    "03",
-                                                ),
+                                        ),
+                                    },
+                                    SpannedToken {
+                                        span: 33..35,
+                                        token: StringFormat(
+                                            FormatPrecision(
+                                                ".5",
                                             ),
-                                        },
-                                        SpannedToken {
-                                            span: 33..35,
-                                            token: StringFormat(
-                                                FormatPrecision(
-                                                    ".5",
-                                                ),
-                                            ),
-                                        },
-                                    ],
-                                ),
+                                        ),
+                                    },
+                                ],
                             ),
-                        },
-                        SpannedToken {
-                            span: 36..47,
-                            token: String(
-                                Content(
-                                    " expression",
-                                ),
+                        ),
+                    },
+                    SpannedToken {
+                        span: 36..47,
+                        token: String(
+                            Content(
+                                " expression",
                             ),
-                        },
-                    ],
-                ),
+                        ),
+                    },
+                ],
             ),
-        },
-    ],
-)
+        ),
+    },
+]

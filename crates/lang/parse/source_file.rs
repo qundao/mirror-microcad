@@ -62,11 +62,7 @@ impl SourceFile {
         log::trace!("{load} source from string", load = crate::mark!(LOAD));
         let parse_context = ParseContext::new(source_str);
 
-        let tokens = tokens::lex(source_str)
-            .map_err(|error| vec![ParseError::Lexer {
-                src_ref: parse_context.src_ref(&error.span),
-                error: error.token,
-            }])?;
+        let tokens = tokens::lex(source_str);
         let ast = parser::parse(tokens.as_slice())
             .map_err(|errors| errors.into_iter().map(|error| ParseError::AstParser {
                 src_ref: parse_context.src_ref(&error.span),

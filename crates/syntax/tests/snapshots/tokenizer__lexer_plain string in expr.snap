@@ -2,52 +2,50 @@
 source: crates/syntax/tests/tokenizer.rs
 expression: lex(input)
 ---
-Ok(
-    [
-        SpannedToken {
-            span: 0..1,
-            token: Normal(
-                Identifier(
-                    "a",
-                ),
+[
+    SpannedToken {
+        span: 0..1,
+        token: Normal(
+            Identifier(
+                "a",
             ),
-        },
-        SpannedToken {
-            span: 2..3,
-            token: Normal(
-                OperatorAssignment,
-            ),
-        },
-        SpannedToken {
-            span: 32..33,
-            token: Normal(
-                String(
-                    [
-                        SpannedToken {
-                            span: 5..32,
-                            token: String(
-                                Content(
-                                    "plain string int expression",
-                                ),
+        ),
+    },
+    SpannedToken {
+        span: 2..3,
+        token: Normal(
+            OperatorAssignment,
+        ),
+    },
+    SpannedToken {
+        span: 32..33,
+        token: Normal(
+            String(
+                [
+                    SpannedToken {
+                        span: 5..32,
+                        token: String(
+                            Content(
+                                "plain string int expression",
                             ),
-                        },
-                    ],
-                ),
+                        ),
+                    },
+                ],
             ),
-        },
-        SpannedToken {
-            span: 34..35,
-            token: Normal(
-                OperatorAdd,
+        ),
+    },
+    SpannedToken {
+        span: 34..35,
+        token: Normal(
+            OperatorAdd,
+        ),
+    },
+    SpannedToken {
+        span: 36..37,
+        token: Normal(
+            LiteralInt(
+                "1",
             ),
-        },
-        SpannedToken {
-            span: 36..37,
-            token: Normal(
-                LiteralInt(
-                    "1",
-                ),
-            ),
-        },
-    ],
-)
+        ),
+    },
+]

@@ -2,29 +2,27 @@
 source: crates/syntax/tests/tokenizer.rs
 expression: lex(input)
 ---
-Ok(
-    [
-        SpannedToken {
-            span: 0..1,
-            token: Normal(
-                LiteralInt(
-                    "1",
-                ),
+[
+    SpannedToken {
+        span: 0..1,
+        token: Normal(
+            LiteralInt(
+                "1",
             ),
-        },
-        SpannedToken {
-            span: 1..2,
-            token: Normal(
-                OperatorAdd,
+        ),
+    },
+    SpannedToken {
+        span: 1..2,
+        token: Normal(
+            OperatorAdd,
+        ),
+    },
+    SpannedToken {
+        span: 2..3,
+        token: Normal(
+            LiteralInt(
+                "1",
             ),
-        },
-        SpannedToken {
-            span: 2..3,
-            token: Normal(
-                LiteralInt(
-                    "1",
-                ),
-            ),
-        },
-    ],
-)
+        ),
+    },
+]

@@ -138,13 +138,6 @@ pub enum ParseError {
     #[error("Glob imports can't be given an alias")]
     UseGlobAlias(SrcRef),
 
-    // todo
-    #[error("{error:?}")]
-    Lexer {
-        src_ref: SrcRef,
-        error: microcad_syntax::tokens::LexerError,
-    },
-
     #[error("{error}")]
     AstParser {
         src_ref: SrcRef,
@@ -197,7 +190,6 @@ impl SrcReferrer for ParseError {
             | ParseError::LoadSource(src_ref, ..)
             | ParseError::InvalidGlobPattern(src_ref)
             | ParseError::UseGlobAlias(src_ref)
-            | ParseError::Lexer { src_ref, .. }
             | ParseError::AstParser { src_ref, .. } => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
@@ -242,7 +234,7 @@ impl Diagnostic for ParseError {
 
 /// Parse errors, possibly with source code
 #[derive(Debug, Error)]
-#[error("{}", errors[0])] // todo
+#[error("Failed to parse")] // todo
 pub struct ParseErrorsWithSource {
     pub errors: Vec<ParseError>,
     pub source_code: Option<String>,
@@ -273,9 +265,10 @@ impl Diagnostic for ParseErrorsWithSource {
             .map(|source| source as &dyn SourceCode)
     }
 
-    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
-        let labels = self.errors.iter().filter_map(|e| e.labels()).flatten();
-        Some(Box::new(labels))
+    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item=&'a dyn Diagnostic> + 'a>> {
+        Some(Box::new(self.errors.iter().map(|e| -> &dyn Diagnostic {
+            &*e
+        })))
     }
 }
 

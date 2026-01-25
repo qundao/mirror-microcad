@@ -94,6 +94,6 @@ use test_case::test_case;
 #[test_case("use glob", "use foo::bar::*;")]
 #[test_case("use as", "pub use foo::bar as foobar;")]
 fn test_parser(name: &str, input: &str) {
-    let tokens = lex(input).unwrap();
+    let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));
 }
