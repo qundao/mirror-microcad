@@ -53,7 +53,10 @@ Ok(
                                                     },
                                                 ],
                                             },
-                                            arguments: [],
+                                            arguments: ArgumentList {
+                                                span: 14..16,
+                                                arguments: [],
+                                            },
                                         },
                                     ),
                                 ),

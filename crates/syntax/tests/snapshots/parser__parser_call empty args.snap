@@ -21,7 +21,10 @@ Ok(
                                 },
                             ],
                         },
-                        arguments: [],
+                        arguments: ArgumentList {
+                            span: 3..5,
+                            arguments: [],
+                        },
                     },
                 ),
             ),

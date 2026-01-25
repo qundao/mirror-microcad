@@ -124,24 +124,27 @@ Ok(
                                                     },
                                                 ],
                                             },
-                                            arguments: [
-                                                Unnamed(
-                                                    UnnamedArgument {
-                                                        span: 120..126,
-                                                        value: QualifiedName(
-                                                            QualifiedName {
-                                                                span: 120..126,
-                                                                parts: [
-                                                                    Identifier {
-                                                                        span: 120..126,
-                                                                        name: "radius",
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            ],
+                                            arguments: ArgumentList {
+                                                span: 119..127,
+                                                arguments: [
+                                                    Unnamed(
+                                                        UnnamedArgument {
+                                                            span: 120..126,
+                                                            value: QualifiedName(
+                                                                QualifiedName {
+                                                                    span: 120..126,
+                                                                    parts: [
+                                                                        Identifier {
+                                                                            span: 120..126,
+                                                                            name: "radius",
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                ],
+                                            },
                                         },
                                     ),
                                 ),

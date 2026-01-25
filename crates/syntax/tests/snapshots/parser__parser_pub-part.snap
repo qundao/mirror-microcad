@@ -82,40 +82,43 @@ Ok(
                                                     },
                                                 ],
                                             },
-                                            arguments: [
-                                                Unnamed(
-                                                    UnnamedArgument {
-                                                        span: 67..73,
-                                                        value: QualifiedName(
-                                                            QualifiedName {
-                                                                span: 67..73,
-                                                                parts: [
-                                                                    Identifier {
-                                                                        span: 67..73,
-                                                                        name: "radius",
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                                Unnamed(
-                                                    UnnamedArgument {
-                                                        span: 75..81,
-                                                        value: QualifiedName(
-                                                            QualifiedName {
-                                                                span: 75..81,
-                                                                parts: [
-                                                                    Identifier {
-                                                                        span: 75..81,
-                                                                        name: "height",
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            ],
+                                            arguments: ArgumentList {
+                                                span: 66..82,
+                                                arguments: [
+                                                    Unnamed(
+                                                        UnnamedArgument {
+                                                            span: 67..73,
+                                                            value: QualifiedName(
+                                                                QualifiedName {
+                                                                    span: 67..73,
+                                                                    parts: [
+                                                                        Identifier {
+                                                                            span: 67..73,
+                                                                            name: "radius",
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                    Unnamed(
+                                                        UnnamedArgument {
+                                                            span: 75..81,
+                                                            value: QualifiedName(
+                                                                QualifiedName {
+                                                                    span: 75..81,
+                                                                    parts: [
+                                                                        Identifier {
+                                                                            span: 75..81,
+                                                                            name: "height",
+                                                                        },
+                                                                    ],
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                ],
+                                            },
                                         },
                                     ),
                                 ),

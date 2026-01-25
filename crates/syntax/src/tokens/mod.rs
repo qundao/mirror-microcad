@@ -1,11 +1,22 @@
 use crate::Span;
 use logos::{Lexer, Logos};
+use std::borrow::Cow;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct SpannedToken<T> {
     pub span: Span,
     pub token: T,
 }
+
+impl SpannedToken<Token<'_>> {
+    pub fn into_owned(self) -> SpannedToken<Token<'static>> {
+        SpannedToken {
+            span: self.span,
+            token: self.token.into_owned(),
+        }
+    }
+}
+
 
 impl<T: PartialEq> PartialEq<T> for SpannedToken<T> {
     fn eq(&self, other: &T) -> bool {
@@ -20,16 +31,26 @@ pub enum Token<'a> {
     StringFormat(StringFormatToken<'a>),
 }
 
+impl Token<'_> {
+    pub fn into_owned(self) -> Token<'static> {
+        match self {
+            Token::Normal(t) => Token::Normal(t.into_owned()),
+            Token::String(t) => Token::String(t.into_owned()),
+            Token::StringFormat(t) => Token::StringFormat(t.into_owned()),
+        }
+    }
+}
+
 #[derive(Logos, Debug, PartialEq, Clone)]
 #[logos(error(LexerError))]
 #[logos(skip r"[ \t\n\f]+")]
 pub enum NormalToken<'a> {
-    #[regex(r#"\/\/[^\n]*"#, allow_greedy = true)]
-    SingleLineComment(&'a str),
-    #[regex(r#"(?m)/\*(.|\n)+?\*/"#)]
-    MultiLineComment(&'a str),
-    #[regex(r#"\/\/\/[^\n]*"#, allow_greedy = true)]
-    DocComment(&'a str),
+    #[regex(r#"\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
+    SingleLineComment(Cow<'a, str>),
+    #[regex(r#"(?m)/\*(.|\n)+?\*/"#, callback = token_cow)]
+    MultiLineComment(Cow<'a, str>),
+    #[regex(r#"\/\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
+    DocComment(Cow<'a, str>),
 
     #[token("mod")]
     KeywordMod,
@@ -60,13 +81,13 @@ pub enum NormalToken<'a> {
     #[token("init")]
     KeywordInit,
 
-    #[regex("_*[a-zA-Z][_a-zA-Z0-9-']*")]
-    Identifier(&'a str),
+    #[regex("_*[a-zA-Z][_a-zA-Z0-9-']*", callback = token_cow)]
+    Identifier(Cow<'a, str>),
 
-    #[regex(r#"-?(0|[1-9]\d*)"#)]
-    LiteralInt(&'a str),
-    #[regex(r#"-?(0|[1-9]\d*)?\.(\d+)((e|E)(-|\+)?(\d+))?"#)]
-    LiteralFloat(&'a str),
+    #[regex(r#"-?(0|[1-9]\d*)"#, callback = token_cow)]
+    LiteralInt(Cow<'a, str>),
+    #[regex(r#"-?(0|[1-9]\d*)?\.(\d+)((e|E)(-|\+)?(\d+))?"#, callback = token_cow)]
+    LiteralFloat(Cow<'a, str>),
     #[token(r#"""#, string_token_callback)]
     String(Vec<SpannedToken<Token<'a>>>),
     #[token("true")]
@@ -145,6 +166,74 @@ pub enum NormalToken<'a> {
     OperatorAssignment,
 }
 
+impl NormalToken<'_> {
+    pub fn into_owned(self) -> NormalToken<'static> {
+        match self {
+            NormalToken::SingleLineComment(c) => {
+                NormalToken::SingleLineComment(c.into_owned().into())
+            }
+            NormalToken::MultiLineComment(c) => {
+                NormalToken::MultiLineComment(c.into_owned().into())
+            }
+            NormalToken::DocComment(c) => NormalToken::DocComment(c.into_owned().into()),
+            NormalToken::Identifier(s) => NormalToken::Identifier(s.into_owned().into()),
+            NormalToken::LiteralInt(s) => NormalToken::LiteralInt(s.into_owned().into()),
+            NormalToken::LiteralFloat(s) => NormalToken::LiteralFloat(s.into_owned().into()),
+            NormalToken::String(s) => NormalToken::String(s.into_iter().map(SpannedToken::into_owned).collect()),
+            NormalToken::KeywordMod => NormalToken::KeywordMod,
+            NormalToken::KeywordPart => NormalToken::KeywordPart,
+            NormalToken::KeywordSketch => NormalToken::KeywordSketch,
+            NormalToken::KeywordOp => NormalToken::KeywordOp,
+            NormalToken::KeywordFn => NormalToken::KeywordFn,
+            NormalToken::KeywordIf => NormalToken::KeywordIf,
+            NormalToken::KeywordElse => NormalToken::KeywordElse,
+            NormalToken::KeywordUse => NormalToken::KeywordUse,
+            NormalToken::KeywordAs => NormalToken::KeywordAs,
+            NormalToken::KeywordReturn => NormalToken::KeywordReturn,
+            NormalToken::KeywordPub => NormalToken::KeywordPub,
+            NormalToken::KeywordConst => NormalToken::KeywordConst,
+            NormalToken::KeywordProp => NormalToken::KeywordProp,
+            NormalToken::KeywordInit => NormalToken::KeywordInit,
+            NormalToken::LiteralBoolTrue => NormalToken::LiteralBoolTrue,
+            NormalToken::LiteralBoolFalse => NormalToken::LiteralBoolFalse,
+            NormalToken::SigilColon => NormalToken::SigilColon,
+            NormalToken::SigilSemiColon => NormalToken::SigilSemiColon,
+            NormalToken::SigilDoubleColon => NormalToken::SigilDoubleColon,
+            NormalToken::SigilOpenBracket => NormalToken::SigilOpenBracket,
+            NormalToken::SigilCloseBracket => NormalToken::SigilCloseBracket,
+            NormalToken::SigilOpenSquareBracket => NormalToken::SigilOpenSquareBracket,
+            NormalToken::SigilCloseSquareBracket => NormalToken::SigilCloseSquareBracket,
+            NormalToken::SigilOpenCurlyBracket => NormalToken::SigilOpenCurlyBracket,
+            NormalToken::SigilCloseCurlyBracket => NormalToken::SigilCloseCurlyBracket,
+            NormalToken::SigilHash => NormalToken::SigilHash,
+            NormalToken::SigilDot => NormalToken::SigilDot,
+            NormalToken::SigilComma => NormalToken::SigilComma,
+            NormalToken::SigilDoubleDot => NormalToken::SigilDoubleDot,
+            NormalToken::SigilAt => NormalToken::SigilAt,
+            NormalToken::SigilSingleArrow => NormalToken::SigilSingleArrow,
+            NormalToken::OperatorAdd => NormalToken::OperatorAdd,
+            NormalToken::OperatorSubtract => NormalToken::OperatorSubtract,
+            NormalToken::OperatorMultiply => NormalToken::OperatorMultiply,
+            NormalToken::OperatorDivide => NormalToken::OperatorDivide,
+            NormalToken::OperatorUnion => NormalToken::OperatorUnion,
+            NormalToken::OperatorIntersect => NormalToken::OperatorIntersect,
+            NormalToken::OperatorPowerXor => NormalToken::OperatorPowerXor,
+            NormalToken::OperatorGreaterThan => NormalToken::OperatorGreaterThan,
+            NormalToken::OperatorLessThan => NormalToken::OperatorLessThan,
+            NormalToken::OperatorGreaterEqual => NormalToken::OperatorGreaterEqual,
+            NormalToken::OperatorLessEqual => NormalToken::OperatorLessEqual,
+            NormalToken::OperatorNear => NormalToken::OperatorNear,
+            NormalToken::OperatorEqual => NormalToken::OperatorEqual,
+            NormalToken::OperatorNotEqual => NormalToken::OperatorNotEqual,
+            NormalToken::OperatorAnd => NormalToken::OperatorAnd,
+            NormalToken::OperatorOr => NormalToken::OperatorOr,
+            NormalToken::OperatorXor => NormalToken::OperatorXor,
+            NormalToken::OperatorNot => NormalToken::OperatorNot,
+            NormalToken::OperatorAssignment => NormalToken::OperatorAssignment,
+        }
+    }
+}
+
 fn string_token_callback<'a>(
     lex: &mut Lexer<'a, NormalToken<'a>>,
 ) -> Option<Vec<SpannedToken<Token<'a>>>> {
@@ -166,10 +255,10 @@ fn string_token_callback<'a>(
 
 #[derive(Logos, Debug, PartialEq, Clone)]
 pub enum StringToken<'a> {
-    #[regex(r#"[^"{}\\]+"#)]
-    Content(&'a str),
-    #[regex(r#"\\["\\/bfnrt]"#)]
-    Escaped(&'a str),
+    #[regex(r#"[^"{}\\]+"#, callback = token_cow)]
+    Content(Cow<'a, str>),
+    #[regex(r#"\\["\\/bfnrt]"#, callback = token_cow)]
+    Escaped(Cow<'a, str>),
     #[token(r#"\"#)]
     BackSlash,
     #[token(r#"{{"#)]
@@ -180,6 +269,24 @@ pub enum StringToken<'a> {
     FormatStart(Vec<SpannedToken<Token<'a>>>),
     #[token(r#"""#)]
     Quote,
+}
+
+impl StringToken<'_> {
+    pub fn into_owned(self) -> StringToken<'static> {
+        match self {
+            StringToken::Content(s) => StringToken::Content(s.into_owned().into()),
+            StringToken::Escaped(s) => StringToken::Escaped(s.into_owned().into()),
+            StringToken::FormatStart(f) => {
+                StringToken::FormatStart(f.into_iter()
+                    .map(SpannedToken::into_owned)
+                    .collect())
+            }
+            StringToken::BackSlash => StringToken::BackSlash,
+            StringToken::EscapedCurlyOpen => StringToken::EscapedCurlyOpen,
+            StringToken::EscapedCurlyClose => StringToken::EscapedCurlyClose,
+            StringToken::Quote => StringToken::Quote,
+        }
+    }
 }
 
 /// Check if the string is just a literal without formating
@@ -193,8 +300,8 @@ pub fn is_literal_string(string_tokens: &[SpannedToken<Token>]) -> bool {
 pub fn get_literal_string(string_tokens: &[SpannedToken<Token>]) -> Option<String> {
     let mut result = String::new();
     for token in string_tokens {
-        match token.token {
-            Token::String(StringToken::Content(s)) => result.push_str(s),
+        match &token.token {
+            Token::String(StringToken::Content(s)) => result.push_str(s.as_ref()),
             Token::String(StringToken::Escaped(s)) => result.push_str(&s[1..]),
             Token::String(StringToken::BackSlash) => result.push('\\'),
             Token::String(StringToken::EscapedCurlyOpen) => result.push('{'),
@@ -250,10 +357,24 @@ fn format_token_callback<'a>(
 pub enum StringFormatToken<'a> {
     #[token("}")]
     FormatEnd,
-    #[regex(r#"\.[\d]+"#)]
-    FormatPrecision(&'a str),
-    #[regex(r#"0[\d]+"#)]
-    FormatWidth(&'a str),
+    #[regex(r#"\.[\d]+"#, callback = token_cow)]
+    FormatPrecision(Cow<'a, str>),
+    #[regex(r#"0[\d]+"#, callback = token_cow)]
+    FormatWidth(Cow<'a, str>),
+}
+
+impl StringFormatToken<'_> {
+    pub fn into_owned(self) -> StringFormatToken<'static> {
+        match self {
+            StringFormatToken::FormatPrecision(s) => {
+                StringFormatToken::FormatPrecision(s.into_owned().into())
+            }
+            StringFormatToken::FormatWidth(s) => {
+                StringFormatToken::FormatWidth(s.into_owned().into())
+            }
+            StringFormatToken::FormatEnd => StringFormatToken::FormatEnd,
+        }
+    }
 }
 
 #[derive(Debug, Default, Clone, PartialEq)]
@@ -262,14 +383,19 @@ pub enum LexerError {
     NoValidToken,
 }
 
-pub fn lex<'a>(
-    input: &'a str,
-) -> Result<Vec<SpannedToken<Token<'a>>>, SpannedToken<LexerError>> {
+pub fn lex<'a>(input: &'a str) -> Result<Vec<SpannedToken<Token<'a>>>, SpannedToken<LexerError>> {
     Lexer::<NormalToken>::new(input)
         .spanned()
         .map(|(token, span)| match token {
-            Ok(token) => Ok(SpannedToken { span, token: Token::Normal(token) }),
+            Ok(token) => Ok(SpannedToken {
+                span,
+                token: Token::Normal(token),
+            }),
             Err(error) => Err(SpannedToken { span, token: error }),
         })
         .collect()
+}
+
+fn token_cow<'a, Token: Logos<'a, Source = str>>(lex: &mut Lexer<'a, Token>) -> Cow<'a, str> {
+    Cow::Borrowed(lex.slice())
 }

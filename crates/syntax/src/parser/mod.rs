@@ -76,7 +76,7 @@ fn parser<'tokens>(
     let identifier_parser =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => Identifier {
             span: e.span(),
-            name: (*ident).into()
+            name: ident.as_ref().into(),
         } }
         .labelled("identifier");
 
@@ -95,7 +95,7 @@ fn parser<'tokens>(
     let single_type =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
             span: e.span(),
-            name: (*ident).into()
+            name: ident.as_ref().into()
         }}
         .labelled("quantity type");
 
@@ -258,11 +258,11 @@ fn parser<'tokens>(
         let comment = select_ref! {
             Token::Normal(NormalToken::SingleLineComment(comment) )= e => Comment {
                 span: e.span(),
-                comment: (*comment).into()
+                comment: comment.as_ref().into()
             },
             Token::Normal(NormalToken::MultiLineComment(comment)) = e => Comment {
                 span: e.span(),
-                comment: (*comment).into()
+                comment: comment.as_ref().into()
             }
         }
         .map(Statement::Comment)
@@ -642,7 +642,7 @@ fn parser<'tokens>(
             Token::String(StringToken::Content(str)) = e => {
                 StringPart::Content(StringLiteral {
                     span: e.span(),
-                    content: (*str).into(),
+                    content: str.as_ref().into(),
                 })
             },
             Token::String(StringToken::Escaped(str)) => {

@@ -4,10 +4,9 @@ expression: parse(tokens.as_slice())
 ---
 Err(
     [
-        found 'Normal(
-            DocComment(
-                "/// Doc comment",
-            ),
-        )' at 0..15 expected statement, expression, or end of input,
+        ParseError {
+            span: 0..15,
+            error: "found 'Normal(DocComment(\"/// Doc comment\"))' at 0..15 expected statement, expression, or end of input",
+        },
     ],
 )

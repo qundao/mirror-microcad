@@ -21,54 +21,57 @@ Ok(
                                 },
                             ],
                         },
-                        arguments: [
-                            Unnamed(
-                                UnnamedArgument {
-                                    span: 4..5,
-                                    value: QualifiedName(
-                                        QualifiedName {
-                                            span: 4..5,
-                                            parts: [
-                                                Identifier {
-                                                    span: 4..5,
-                                                    name: "a",
-                                                },
-                                            ],
-                                        },
-                                    ),
-                                },
-                            ),
-                            Named(
-                                NamedArgument {
-                                    span: 7..12,
-                                    name: Identifier {
-                                        span: 7..8,
-                                        name: "b",
+                        arguments: ArgumentList {
+                            span: 3..16,
+                            arguments: [
+                                Unnamed(
+                                    UnnamedArgument {
+                                        span: 4..5,
+                                        value: QualifiedName(
+                                            QualifiedName {
+                                                span: 4..5,
+                                                parts: [
+                                                    Identifier {
+                                                        span: 4..5,
+                                                        name: "a",
+                                                    },
+                                                ],
+                                            },
+                                        ),
                                     },
-                                    value: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 11..12,
-                                                value: 2,
-                                            },
+                                ),
+                                Named(
+                                    NamedArgument {
+                                        span: 7..12,
+                                        name: Identifier {
+                                            span: 7..8,
+                                            name: "b",
+                                        },
+                                        value: Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 11..12,
+                                                    value: 2,
+                                                },
+                                            ),
                                         ),
-                                    ),
-                                },
-                            ),
-                            Unnamed(
-                                UnnamedArgument {
-                                    span: 14..15,
-                                    value: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 14..15,
-                                                value: 3,
-                                            },
+                                    },
+                                ),
+                                Unnamed(
+                                    UnnamedArgument {
+                                        span: 14..15,
+                                        value: Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 14..15,
+                                                    value: 3,
+                                                },
+                                            ),
                                         ),
-                                    ),
-                                },
-                            ),
-                        ],
+                                    },
+                                ),
+                            ],
+                        },
                     },
                 ),
             ),

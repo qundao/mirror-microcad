@@ -21,42 +21,45 @@ Ok(
                                 },
                             ],
                         },
-                        arguments: [
-                            Named(
-                                NamedArgument {
-                                    span: 4..9,
-                                    name: Identifier {
-                                        span: 4..5,
-                                        name: "a",
-                                    },
-                                    value: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 8..9,
-                                                value: 1,
-                                            },
+                        arguments: ArgumentList {
+                            span: 3..17,
+                            arguments: [
+                                Named(
+                                    NamedArgument {
+                                        span: 4..9,
+                                        name: Identifier {
+                                            span: 4..5,
+                                            name: "a",
+                                        },
+                                        value: Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 8..9,
+                                                    value: 1,
+                                                },
+                                            ),
                                         ),
-                                    ),
-                                },
-                            ),
-                            Named(
-                                NamedArgument {
-                                    span: 11..16,
-                                    name: Identifier {
-                                        span: 11..12,
-                                        name: "b",
                                     },
-                                    value: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 15..16,
-                                                value: 2,
-                                            },
+                                ),
+                                Named(
+                                    NamedArgument {
+                                        span: 11..16,
+                                        name: Identifier {
+                                            span: 11..12,
+                                            name: "b",
+                                        },
+                                        value: Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 15..16,
+                                                    value: 2,
+                                                },
+                                            ),
                                         ),
-                                    ),
-                                },
-                            ),
-                        ],
+                                    },
+                                ),
+                            ],
+                        },
                     },
                 ),
             ),
