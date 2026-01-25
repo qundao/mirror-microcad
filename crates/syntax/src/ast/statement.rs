@@ -13,6 +13,7 @@ pub enum Statement {
     Assignment(Assignment),
     Expression(Expression),
     Comment(Comment),
+    Error,
 }
 
 impl Statement {
@@ -28,6 +29,7 @@ impl Statement {
             Statement::Assignment(st) => st.span.clone(),
             Statement::Expression(st) => st.span(),
             Statement::Comment(st) => st.span.clone(),
+            Statement::Error => 0..0,
         }
     }
 }

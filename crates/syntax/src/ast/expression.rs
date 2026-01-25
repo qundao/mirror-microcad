@@ -45,6 +45,7 @@ pub enum Expression {
     Block(StatementList),
     Call(Call),
     If(If),
+    Error,
 }
 
 impl Expression {
@@ -63,6 +64,7 @@ impl Expression {
             Expression::Block(ex) => ex.span.clone(),
             Expression::Call(ex) => ex.span.clone(),
             Expression::If(ex) => ex.span.clone(),
+            Expression::Error => 0..0,
         }
     }
 }

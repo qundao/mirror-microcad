@@ -1,14 +1,14 @@
 mod error;
 
+use crate::Span;
 use crate::ast::*;
 use crate::tokens::*;
-use crate::Span;
 use chumsky::error::Rich;
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
-use chumsky::{extra, select_ref, Parser};
-use std::str::FromStr;
+use chumsky::{Parser, extra, select_ref};
 pub use error::ParseError;
+use std::str::FromStr;
 
 type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
 
@@ -39,21 +39,39 @@ pub fn input<'input, 'tokens>(
 pub fn parse<'tokens>(
     tokens: &'tokens [SpannedToken<Token<'tokens>>],
 ) -> Result<SourceFile, Vec<ParseError>> {
-    parser().parse(input(tokens)).into_result().map_err(|errors| errors.into_iter().map(ParseError::new).collect())
+    parser()
+        .parse(input(tokens))
+        .into_result()
+        .map_err(|errors| errors.into_iter().map(ParseError::new).collect())
 }
 
-fn parser<'tokens>(
-) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
+fn parser<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
     let mut format_string_part_parser = Recursive::declare();
     let mut type_parser = Recursive::declare();
 
-    let block = statement_list_parser.clone().delimited_by(
-        just(Token::Normal(NormalToken::SigilOpenCurlyBracket)),
-        just(Token::Normal(NormalToken::SigilCloseCurlyBracket)),
-    );
+    let block_recovery = just(Token::Normal(NormalToken::SigilOpenCurlyBracket))
+        .then(
+            none_of(Token::Normal(NormalToken::SigilCloseCurlyBracket))
+                .repeated()
+                .then(just(Token::Normal(NormalToken::SigilCloseCurlyBracket))),
+        )
+        .map(|_| StatementList {
+            span: 0..0,
+            statements: vec![Statement::Error],
+            tail: None,
+        });
+
+    let block = statement_list_parser
+        .clone()
+        .delimited_by(
+            just(Token::Normal(NormalToken::SigilOpenCurlyBracket)),
+            just(Token::Normal(NormalToken::SigilCloseCurlyBracket)),
+        )
+        .recover_with(via_parser(block_recovery));
 
     let identifier_parser =
         select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => Identifier {
@@ -66,11 +84,9 @@ fn parser<'tokens>(
         .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
         .at_least(1)
         .collect::<Vec<_>>()
-        .map_with(|parts, e| {
-            QualifiedName {
-                span: e.span(),
-                parts,
-            }
+        .map_with(|parts, e| QualifiedName {
+            span: e.span(),
+            parts,
         })
         .labelled("qualified name");
 
@@ -285,8 +301,10 @@ fn parser<'tokens>(
             .then_ignore(just(Token::Normal(NormalToken::KeywordMod)))
             .then(identifier_parser.clone())
             .then(
-                block.clone().map(Some)
-                    .or(just(Token::Normal(NormalToken::SigilSemiColon)).map(|_| None))
+                block
+                    .clone()
+                    .map(Some)
+                    .or(just(Token::Normal(NormalToken::SigilSemiColon)).map(|_| None)),
             )
             .map_with(|((visibility, name), body), e| {
                 Statement::Module(ModuleDefinition {
@@ -300,7 +318,8 @@ fn parser<'tokens>(
 
         let use_parts = identifier_parser
             .map(UseStatementPart::Identifier)
-            .or(just(Token::Normal(NormalToken::OperatorMultiply)).map_with(|_, e| UseStatementPart::Glob(e.span())))
+            .or(just(Token::Normal(NormalToken::OperatorMultiply))
+                .map_with(|_, e| UseStatementPart::Glob(e.span())))
             .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
             .at_least(1)
             .collect::<Vec<_>>()
@@ -309,25 +328,24 @@ fn parser<'tokens>(
                 parts,
             });
 
-        let use_statement = visibility.clone()
+        let use_statement = visibility
+            .clone()
             .or_not()
             .then_ignore(just(Token::Normal(NormalToken::KeywordUse)))
             .then(use_parts)
             .then(
                 just(Token::Normal(NormalToken::KeywordAs))
                     .ignore_then(identifier_parser.clone())
-                    .or_not()
+                    .or_not(),
             )
-            .map_with(
-                |((visibility, name), use_as), e| {
-                    Statement::Use(UseStatement {
-                        span: e.span(),
-                        visibility,
-                        name,
-                        use_as,
-                    })
-                },
-            );
+            .map_with(|((visibility, name), use_as), e| {
+                Statement::Use(UseStatement {
+                    span: e.span(),
+                    visibility,
+                    name,
+                    use_as,
+                })
+            });
 
         let workspace_kind = select_ref! {
             Token::Normal(NormalToken::KeywordSketch) => WorkspaceKind::Sketch,
@@ -397,14 +415,17 @@ fn parser<'tokens>(
                 },
             );
 
-        let with_semi = assignment.or(return_statement).or(use_statement)
+        let with_semi = assignment
+            .or(return_statement)
+            .or(use_statement)
             .or(expression);
 
         let without_semi = function.or(init).or(workspace).or(module).or(comment);
 
-        with_semi
-            .then_ignore(just(Token::Normal(NormalToken::SigilSemiColon)).labelled("semicolon"))
-            .or(without_semi)
+        without_semi
+            .or(with_semi.then_ignore(
+                just(Token::Normal(NormalToken::SigilSemiColon)).labelled("semicolon"),
+            ))
             .labelled("statement")
     });
 
@@ -446,6 +467,14 @@ fn parser<'tokens>(
             })
             .map(Expression::String);
 
+        let tuple_recovery = just(Token::Normal(NormalToken::SigilOpenBracket))
+            .then(
+                none_of(Token::Normal(NormalToken::SigilCloseBracket))
+                    .repeated()
+                    .then(just(Token::Normal(NormalToken::SigilCloseBracket))),
+            )
+            .map(|_| vec![(None, Expression::Error)]);
+
         let tuple_body = identifier_parser
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
             .or_not()
@@ -456,7 +485,8 @@ fn parser<'tokens>(
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenBracket)),
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
-            );
+            )
+            .recover_with(via_parser(tuple_recovery));
 
         let tuple = tuple_body.clone().map_with(|values, e| {
             Expression::Tuple(TupleExpression {
