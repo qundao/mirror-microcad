@@ -22,6 +22,7 @@ type InputMap<'input, 'token> =
     fn(&'input SpannedToken<Token<'token>>) -> (&'input Token<'token>, &'input Span);
 
 type ParserInput<'input, 'token> = MappedInput<
+    'input,
     Token<'token>,
     Span,
     &'input [SpannedToken<Token<'token>>],
