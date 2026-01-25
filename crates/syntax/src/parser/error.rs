@@ -30,10 +30,10 @@ impl Display for ParseError {
             } => {
                 write!(f, "Expected ")?;
                 let mut expected = expected.iter();
-                let last = expected.next_back();
                 if let Some(pattern) = expected.next() {
                     write!(f, "{pattern}")?;
                 }
+                let last = expected.next_back();
                 for pattern in expected {
                     write!(f, ", {pattern}")?;
                 };

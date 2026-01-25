@@ -53,6 +53,10 @@ fn parser<'tokens>()
     let mut format_string_part_parser = Recursive::declare();
     let mut type_parser = Recursive::declare();
 
+    let semi_recovery = none_of(Token::Normal(NormalToken::SigilSemiColon))
+        .repeated()
+        .ignored();
+
     let block_recovery = just(Token::Normal(NormalToken::SigilOpenCurlyBracket))
         .then(
             none_of(Token::Normal(NormalToken::SigilCloseCurlyBracket))
@@ -242,7 +246,8 @@ fn parser<'tokens>()
                     .or_not(),
             )
             .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
-            .then(expression_parser.clone())
+            .then(expression_parser.clone()
+                .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))))
             .map_with(|((name, ty), value), e| {
                 Statement::Assignment(Assignment {
                     span: e.span(),
