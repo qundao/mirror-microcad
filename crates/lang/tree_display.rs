@@ -67,8 +67,9 @@ const INDENT: usize = 2;
 /// Indention depth counter
 #[derive(derive_more::Deref, Clone, Copy)]
 pub struct TreeState {
+    /// Current depth.
     #[deref]
-    depth: usize,
+    pub depth: usize,
     /// Print in debug mode
     pub debug: bool,
 }

@@ -14,7 +14,9 @@ pub(crate) use symbols::*;
 
 use symbol_inner::*;
 
-use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, ty::*, value::*};
+use crate::{
+    builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*, ty::*, value::*,
+};
 
 /// Symbol
 ///
@@ -194,19 +196,6 @@ impl Symbol {
             .children
             .values()
             .for_each(|symbol| symbol.recursive_collect(f, result));
-    }
-
-    #[allow(dead_code)]
-    pub(crate) fn recursive_for_each<F>(&self, id: &Identifier, f: &F)
-    where
-        F: Fn(&Identifier, &Symbol),
-    {
-        f(id, self);
-        self.inner
-            .borrow()
-            .children
-            .iter()
-            .for_each(|(id, symbol)| symbol.recursive_for_each(id, f));
     }
 
     pub(crate) fn recursive_for_each_mut<F>(&mut self, id: &Identifier, f: &F)
@@ -626,13 +615,12 @@ impl Symbol {
     /// # Arguments
     /// - `f`: Output formatter
     /// - `id`: Overwrite symbol's internal `id` with this one if given (e.g. when using in a map).
-    /// - `depth`: Indention depth to use
+    /// - `state`: TreeState
     pub(super) fn print_symbol(
         &self,
         f: &mut impl std::fmt::Write,
         id: Option<&Identifier>,
-        depth: usize,
-        debug: bool,
+        state: TreeState,
         children: bool,
     ) -> std::fmt::Result {
         let self_id = &self.id();
@@ -641,7 +629,8 @@ impl Symbol {
         let full_name = self.full_name();
         let visibility = self.visibility();
         let hash = self.source_hash();
-        if debug && cfg!(feature = "ansi-color") {
+        let depth = state.depth;
+        if state.debug && cfg!(feature = "ansi-color") {
             let checked = if self.is_checked() { " ✓" } else { "" };
             if self.is_used() {
                 write!(
@@ -651,20 +640,18 @@ impl Symbol {
                 )?;
             } else {
                 color_print::cwrite!(
-                f,
-                "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>{checked}",
-                "",
-            )?;
+                    f,
+                    "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>{checked}",
+                    "",
+                )?;
             }
         } else {
             write!(f, "{:depth$}{id} {def} [{full_name}]", "",)?;
         }
         if children {
             writeln!(f)?;
-            let indent = 4;
-
             self.try_children(|(id, child)| {
-                child.print_symbol(f, Some(id), depth + indent, debug, true)
+                child.print_symbol(f, Some(id), state.indented(), true)
             })?;
         }
         Ok(())
@@ -723,19 +710,25 @@ impl PartialEq for Symbol {
 
 impl std::fmt::Display for Symbol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.print_symbol(f, None, 0, false, false)
+        self.print_symbol(f, None, TreeState::new_display(), false)
     }
 }
 
 impl std::fmt::Debug for Symbol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.print_symbol(f, None, 0, true, false)
+        self.print_symbol(f, None, TreeState::new_debug(0), false)
     }
 }
 
 impl Info for Symbol {
     fn info(&self) -> SymbolInfo {
         self.with_def(|def| def.info())
+    }
+}
+
+impl TreeDisplay for Symbol {
+    fn tree_print(&self, f: &mut std::fmt::Formatter, state: TreeState) -> std::fmt::Result {
+        self.print_symbol(f, Some(&self.id()), state, true)
     }
 }
 
