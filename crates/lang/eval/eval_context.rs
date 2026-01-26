@@ -551,7 +551,9 @@ impl std::fmt::Debug for EvalContext {
         writeln!(f, "\nSources:\n")?;
         write!(f, "{:?}", &self.sources)?;
 
-        write!(f, "\nSymbol Table:\n{:?}", self.root)?;
+        write!(f, "\nSymbol Table:\n")?;
+        self.root.tree_print(f, TreeState::new_debug(0))?;
+
         match self.error_count() {
             0 => write!(f, "No errors")?,
             1 => write!(f, "1 error")?,

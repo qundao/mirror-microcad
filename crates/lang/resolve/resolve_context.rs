@@ -3,7 +3,7 @@
 
 //! Resolve Context
 
-use crate::{diag::*, rc::*, resolve::*, src_ref::*, syntax::*};
+use crate::{diag::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*};
 
 /// Resolve Context
 #[derive(Default)]
@@ -426,7 +426,7 @@ impl std::fmt::Debug for ResolveContext {
         writeln!(f, "Sources:\n")?;
         write!(f, "{:?}", &self.sources)?;
         writeln!(f, "\nSymbols:\n")?;
-        write!(f, "{:?}", &self.root)?;
+        self.root.tree_print(f, TreeState::new_debug(0))?;
         let err_count = self.diag.error_count();
         if err_count == 0 {
             writeln!(f, "No errors.")?;
