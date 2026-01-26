@@ -3,6 +3,8 @@
 
 //! Evaluation error
 
+#![allow(unused, unused_assignments)]
+
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
 use miette::Diagnostic;
 use thiserror::Error;
@@ -178,7 +180,6 @@ pub enum EvalError {
     /// Workbench didn't find a initialization routine matching the given arguments
     #[error("Workbench {name} cannot find initialization for those arguments")]
     #[diagnostic(help("Possible initializations: \n\t{}", possible_params.join("\n\t")))]
-    #[allow(unused)]
     NoInitializationFound {
         #[label("Got: {name}( {actual_params} )")]
         src_ref: SrcRef,
