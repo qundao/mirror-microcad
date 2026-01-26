@@ -46,43 +46,31 @@ pub fn run_test(env: Option<TestEnv>) {
         ));
 
         let code = String::from(env.code());
-        match tokens::lex(&code) {
-            Ok(tokens) => {
-                match microcad_syntax::parser::parse(&tokens) {
-                    Ok(source_file) => {
-                        env.result(TestResult::Ok);
-                        return;
-                    }
-                    Err(errors) => {
-                        if ["fail", "todo_fail", "warn", "todo_warn"].contains(&env.mode()) {
-                            env.result(TestResult::Ok);
-                            return;
-                        }
-
-                        if !errors.is_empty() {
-                            for err in errors {
-                                env.report_errors(format!("{err:?}"));
-                            }
-                            panic!("Test failed because of parse errors");
-                        }
-
-                        env.result(TestResult::Fail);
-                        return;
-                    }
-                }
-
+        let tokens = tokens::lex(&code);
+        match microcad_syntax::parser::parse(&tokens) {
+            Ok(source_file) => {
+                env.result(TestResult::Ok);
                 return;
             }
-            Err(err) => {
+            Err(errors) => {
                 if ["fail", "todo_fail", "warn", "todo_warn"].contains(&env.mode()) {
                     env.result(TestResult::Ok);
                     return;
                 }
 
-                env.log_ln(&format!("error at {}..{}", err.span.start, err.span.end));
-                env.result(TestResult::Fail)
+                if !errors.is_empty() {
+                    for err in errors {
+                        env.report_errors(format!("{err:?}"));
+                    }
+                    panic!("Test failed because of parse errors");
+                }
+
+                env.result(TestResult::Fail);
+                return;
             }
         }
+
+        return;
 
         // load and handle µcad source file
         let source_file_result =
