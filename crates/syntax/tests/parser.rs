@@ -152,6 +152,26 @@ use test_case::test_case;
     r##"#[export]
     a = 1;"##
 )]
+#[test_case(
+    "attribute access",
+    r##"foo#bar"##
+)]
+#[test_case(
+    "array access",
+    r##"foo[1]"##
+)]
+#[test_case(
+    "tuple access",
+    r##"foo.bar"##
+)]
+#[test_case(
+    "method call",
+    r##"foo.bar()"##
+)]
+#[test_case(
+    "multiple element access",
+    r##"foo[1]#bar.asd.call(1)"##
+)]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));

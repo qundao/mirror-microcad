@@ -44,6 +44,7 @@ pub enum Expression {
     UnaryOperation(UnaryOperation),
     Block(StatementList),
     Call(Call),
+    ElementAccess(ElementAccess),
     If(If),
     Error,
 }
@@ -63,6 +64,7 @@ impl Expression {
             Expression::UnaryOperation(ex) => ex.span.clone(),
             Expression::Block(ex) => ex.span.clone(),
             Expression::Call(ex) => ex.span.clone(),
+            Expression::ElementAccess(ex) => ex.span.clone(),
             Expression::If(ex) => ex.span.clone(),
             Expression::Error => 0..0,
         }
@@ -137,6 +139,21 @@ pub struct Call {
     pub span: Span,
     pub name: QualifiedName,
     pub arguments: ArgumentList,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct ElementAccess {
+    pub span: Span,
+    pub value: Box<Expression>,
+    pub element: Element,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum Element {
+    Attribute(Identifier),
+    Tuple(Identifier),
+    Method(Call),
+    ArrayElement(Box<Expression>),
 }
 
 #[derive(Debug, PartialEq)]

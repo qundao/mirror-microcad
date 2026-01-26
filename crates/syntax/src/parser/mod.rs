@@ -759,7 +759,7 @@ fn parser<'tokens>()
             .map(Expression::QualifiedName)
             .boxed();
 
-        let call = call_inner.map(Expression::Call).labelled("method call");
+        let call = call_inner.clone().map(Expression::Call).labelled("method call");
 
         let base = literal
             .or(string_format)
@@ -789,6 +789,50 @@ fn parser<'tokens>()
             )
             .boxed();
 
+        let access_attribute = just(Token::Normal(NormalToken::SigilHash))
+            .ignore_then(identifier_parser.clone())
+            .map(Element::Attribute)
+            .boxed();
+
+        let access_tuple = just(Token::Normal(NormalToken::SigilDot))
+            .ignore_then(identifier_parser.clone())
+            .map(Element::Tuple)
+            .boxed();
+
+        let access_method = just(Token::Normal(NormalToken::SigilDot))
+            .ignore_then(call_inner)
+            .map(Element::Method)
+            .boxed();
+
+        let access_array = expression_parser.clone()
+            .delimited_by(
+                just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
+                just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
+            )
+            .map(Box::new)
+            .map(Element::ArrayElement)
+            .boxed();
+
+        let access_item = access_attribute
+            .or(access_method)
+            .or(access_tuple)
+            .or(access_array);
+
+        let element_access = binary_expression
+            .clone()
+            .foldl_with(
+                access_item.repeated(),
+                |value, element, e| {
+                    Expression::ElementAccess(ElementAccess {
+                        span: e.span(),
+                        value: value.into(),
+                        element,
+                    })
+                },
+            )
+            .labelled("element access")
+            .boxed();
+
         let unary_expression = unary_operator_parser
             .then(base)
             .map_with(|(op, rhs), e| {
@@ -801,7 +845,7 @@ fn parser<'tokens>()
             .boxed();
 
         unary_expression
-            .or(binary_expression)
+            .or(element_access)
             .labelled("expression")
             .boxed()
     });
