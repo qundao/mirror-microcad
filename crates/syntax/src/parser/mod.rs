@@ -195,7 +195,7 @@ fn parser<'tokens>()
             Token::Normal(NormalToken::LiteralInt(x)) => x,
             Token::Normal(NormalToken::LiteralFloat(x)) => x,
         }
-        .then(single_type)
+        .then(single_type.clone())
         .map_with(|(num, ty), e| {
             let value = match f64::from_str(num) {
                 Ok(value) => value,
@@ -232,6 +232,7 @@ fn parser<'tokens>()
         Token::Normal(NormalToken::OperatorEqual) => Operator::Equal,
         Token::Normal(NormalToken::OperatorNotEqual) => Operator::NotEqual,
         Token::Normal(NormalToken::OperatorAdd) => Operator::Add,
+        Token::Normal(NormalToken::OperatorAnd) => Operator::And,
         Token::Normal(NormalToken::OperatorOr) => Operator::Or,
         Token::Normal(NormalToken::OperatorXor) => Operator::Xor,
     }
@@ -563,11 +564,13 @@ fn parser<'tokens>()
                 just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
                 just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
             )
-            .map_with(|(start, end), e| {
+            .then(single_type.clone().or_not())
+            .map_with(|((start, end), ty), e| {
                 Expression::ArrayRange(ArrayRangeExpression {
                     span: e.span(),
                     start: Box::new(start),
                     end: Box::new(end),
+                    ty,
                 })
             })
             .labelled("array range")
@@ -582,10 +585,12 @@ fn parser<'tokens>()
                 just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
                 just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
             )
-            .map_with(|items, e| {
+            .then(single_type.clone().or_not())
+            .map_with(|(items, ty), e| {
                 Expression::ArrayList(ArrayListExpression {
                     span: e.span(),
                     items,
+                    ty,
                 })
             })
             .labelled("array")

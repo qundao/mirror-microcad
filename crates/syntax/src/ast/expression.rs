@@ -1,6 +1,6 @@
 use std::num::ParseIntError;
 use crate::Span;
-use crate::ast::{Identifier, Literal, Statement, StringLiteral};
+use crate::ast::{Identifier, Literal, SingleType, Statement, StringLiteral};
 
 #[derive(Debug, PartialEq)]
 pub enum Operator {
@@ -101,12 +101,14 @@ pub struct ArrayRangeExpression {
     pub span: Span,
     pub start: Box<Expression>,
     pub end: Box<Expression>,
+    pub ty: Option<SingleType>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct ArrayListExpression {
     pub span: Span,
     pub items: Vec<Expression>,
+    pub ty: Option<SingleType>,
 }
 
 #[derive(Debug, PartialEq)]
