@@ -38,7 +38,7 @@ cgmath = { version = "0.18", features = ["serde"] }
 crossbeam = "0.8"
 dirs = "6"
 env_logger = "0.11"
-geo = "0.31"
+geo = "0.32"
 log = "0.4"
 miette = { version = "7.6.0", features = ["fancy"] }
 notify = "8"

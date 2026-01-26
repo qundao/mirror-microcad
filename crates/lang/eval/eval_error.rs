@@ -3,8 +3,8 @@
 
 //! Evaluation error
 
-use miette::Diagnostic;
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
+use miette::Diagnostic;
 use thiserror::Error;
 
 /// Evaluation error.
@@ -178,12 +178,13 @@ pub enum EvalError {
     /// Workbench didn't find a initialization routine matching the given arguments
     #[error("Workbench {name} cannot find initialization for those arguments")]
     #[diagnostic(help("Possible initializations: \n\t{}", possible_params.join("\n\t")))]
+    #[allow(unused)]
     NoInitializationFound {
         #[label("Got: {name}( {actual_params} )")]
         src_ref: SrcRef,
         name: Identifier,
         actual_params: String,
-        possible_params: Vec<String>
+        possible_params: Vec<String>,
     },
 
     /// Initializer missed to set a property from plan
