@@ -42,32 +42,11 @@ impl FromIterator<(Identifier, Symbol)> for SymbolMap {
 impl WriteToFile for SymbolMap {}
 
 impl SymbolMap {
-    /// Insert a not by it's own id.
-    pub fn add_node(&mut self, symbol: Symbol) {
-        self.0.insert(symbol.id(), symbol);
-    }
-
     pub fn get<'a>(&'a self, id: &Identifier) -> Option<&'a Symbol> {
         self.iter()
             .filter(|(_, symbol)| !symbol.is_deleted())
             .find(|(i, _)| *i == id)
             .map(|(_, symbol)| symbol)
-    }
-
-    /// Search for a symbol in symbol map.
-    pub(crate) fn search(&self, name: &QualifiedName, respect: bool) -> ResolveResult<Symbol> {
-        log::trace!("Searching {name:?} in symbol map");
-        let (id, leftover) = name.split_first();
-        if let Some(symbol) = self.get(&id) {
-            if leftover.is_empty() {
-                log::trace!("Fetched {name:?} from symbol map");
-                Ok(symbol.clone())
-            } else {
-                symbol.search(&leftover, respect)
-            }
-        } else {
-            Err(ResolveError::SymbolNotFound(name.clone()))
-        }
     }
 
     pub(super) fn resolve_all(&self, context: &mut ResolveContext) -> ResolveResult<SymbolMap> {
@@ -77,10 +56,6 @@ impl SymbolMap {
             .flat_map(|child| child.resolve(context))
             .for_each(|map| from_children.extend(map.iter().map(|(k, v)| (k.clone(), v.clone()))));
         Ok(from_children)
-    }
-
-    pub(crate) fn find_file(&self, hash: u64) -> Option<Symbol> {
-        self.iter().find_map(|(_, symbol)| symbol.find_file(hash))
     }
 }
 

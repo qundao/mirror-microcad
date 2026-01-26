@@ -9,7 +9,7 @@ use crate::{diag::*, rc::*, resolve::*, src_ref::*, syntax::*};
 #[derive(Default)]
 pub struct ResolveContext {
     /// Symbol table.
-    pub(crate) symbol_table: SymbolTable,
+    pub root: Symbol,
     /// Source file cache.
     pub(crate) sources: Sources,
     /// Diagnostic handler.
@@ -61,7 +61,13 @@ impl ResolveContext {
         builtin: Option<Symbol>,
         diag: DiagHandler,
     ) -> ResolveResult<Self> {
-        match Self::create_ex(root.clone(), search_paths, builtin, diag, ResolveMode::Checked) {
+        match Self::create_ex(
+            root.clone(),
+            search_paths,
+            builtin,
+            diag,
+            ResolveMode::Checked,
+        ) {
             Ok(context) => Ok(context),
             Err(err) => {
                 // create empty context which might be given to following stages like export.
@@ -88,7 +94,7 @@ impl ResolveContext {
         log::trace!("Symbolized Context:\n{context:?}");
         if let Some(builtin) = builtin {
             log::trace!("Added builtin library {id}.", id = builtin.id());
-            context.symbol_table.add_symbol(builtin)?;
+            context.root.add_symbol(builtin)?;
         }
         if matches!(mode, ResolveMode::Resolved | ResolveMode::Checked) {
             context.resolve()?;
@@ -115,9 +121,7 @@ impl ResolveContext {
         let symbol = file
             .symbolize(Visibility::Private, self)
             .expect("symbolize");
-        self.symbol_table
-            .add_symbol(symbol)
-            .expect("symbolize error");
+        self.root.add_symbol(symbol).expect("symbolize error");
     }
 
     pub(crate) fn symbolize(&mut self) -> ResolveResult<()> {
@@ -141,7 +145,7 @@ impl ResolveContext {
 
         for (name, symbol) in named_symbols {
             if let Some(id) = name.single_identifier() {
-                self.symbol_table.insert_symbol(id.clone(), symbol)?;
+                self.root.insert_symbol(id.clone(), symbol)?;
             } else {
                 unreachable!("name is not an id")
             }
@@ -157,7 +161,7 @@ impl ResolveContext {
         self.mode = ResolveMode::Failed;
 
         // resolve std as first
-        if let Some(std) = self.symbol_table.get(&Identifier::no_ref("std")).cloned() {
+        if let Some(std) = self.root.get_child(&Identifier::no_ref("std")) {
             std.resolve(self)?;
         }
 
@@ -166,8 +170,7 @@ impl ResolveContext {
         let mut passes_needed = 0;
         let mut resolved = false;
         for _ in 0..MAX_PASSES {
-            self.symbol_table
-                .symbols()
+            self.root
                 .iter()
                 .filter(|child| child.is_resolvable())
                 .map(|child| child.resolve(self))
@@ -193,8 +196,7 @@ impl ResolveContext {
     }
 
     fn has_links(&self) -> bool {
-        self.symbol_table
-            .symbols()
+        self.root
             .iter()
             .filter(|symbol| !symbol.is_deleted())
             .any(|symbol| symbol.has_links())
@@ -205,13 +207,12 @@ impl ResolveContext {
         log::trace!("Checking symbol table");
         self.mode = ResolveMode::Failed;
 
-        let exclude_ids = self.symbol_table.search_target_mode_ids();
+        let exclude_ids = self.root.search_target_mode_ids();
         log::trace!("Excluding target mode ids: {exclude_ids}");
 
         if let Err(err) = self
-            .symbol_table
-            .symbols()
-            .iter_mut()
+            .root
+            .iter()
             .try_for_each(|symbol| symbol.check(self, &exclude_ids))
         {
             self.error(&crate::src_ref::SrcRef::default(), err)?;
@@ -221,7 +222,12 @@ impl ResolveContext {
 
         log::info!("Symbol table OK!");
 
-        let unchecked = self.symbol_table.unchecked();
+        let unchecked = self
+            .root
+            .riter()
+            .filter(|symbol| symbol.is_checked())
+            .collect::<Symbols>();
+
         log::trace!(
             "Symbols never used in ANY code:\n{}",
             unchecked
@@ -269,8 +275,10 @@ impl ResolveContext {
 
         // replace the source file within the symbol table
         replaced.iter().try_for_each(|rep| {
-            self.symbol_table
-                .find_file(rep.old.hash)
+            self.root
+                .riter()
+                .filter(|symbol| symbol.is_source())
+                .find(|symbol| symbol.source_hash() == rep.old.hash)
                 .map(|mut symbol| -> ResolveResult<()> {
                     symbol.replace(rep.new.symbolize(Visibility::Public, self)?);
                     Ok(())
@@ -280,7 +288,7 @@ impl ResolveContext {
 
         // search for aliases and symbols from the replaced file
         replaced.iter().for_each(|rep| {
-            self.symbol_table.recursive_for_each_mut(|_, symbol| {
+            self.root.riter().for_each(|symbol| {
                 // check for alias or use-all (from use statements)
                 if let Some(link) = symbol.get_link() {
                     // check if it points into the old source file
@@ -298,11 +306,6 @@ impl ResolveContext {
         // re-resolve
         self.mode = ResolveMode::Symbolized;
         self.resolve()
-    }
-
-    /// Symbol table accessor.
-    pub fn symbol_table(&self) -> &SymbolTable {
-        &self.symbol_table
     }
 }
 
@@ -423,7 +426,7 @@ impl std::fmt::Debug for ResolveContext {
         writeln!(f, "Sources:\n")?;
         write!(f, "{:?}", &self.sources)?;
         writeln!(f, "\nSymbols:\n")?;
-        write!(f, "{:?}", &self.symbol_table)?;
+        write!(f, "{:?}", &self.root)?;
         let err_count = self.diag.error_count();
         if err_count == 0 {
             writeln!(f, "No errors.")?;
@@ -441,9 +444,9 @@ impl std::fmt::Debug for ResolveContext {
 impl std::fmt::Display for ResolveContext {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if let Some(unchecked) = &self.unchecked {
-            writeln!(f, "Resolved & checked symbols:\n{}", self.symbol_table)?;
+            writeln!(f, "Resolved & checked symbols:\n{}", self.root)?;
             if unchecked.is_empty() {
-                writeln!(f, "All symbols are referenced.\n{}", self.symbol_table)?;
+                writeln!(f, "All symbols are referenced.\n{}", self.root)?;
             } else {
                 writeln!(
                     f,
@@ -457,7 +460,7 @@ impl std::fmt::Display for ResolveContext {
                 )?;
             }
         } else {
-            writeln!(f, "Resolved symbols:\n{}", self.symbol_table)?;
+            writeln!(f, "Resolved symbols:\n{}", self.root)?;
         }
         if self.has_errors() {
             writeln!(

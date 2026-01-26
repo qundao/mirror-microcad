@@ -36,6 +36,7 @@
         "recv",
         "renderable",
         "Renderable",
+        "riter",
         "rsplit",
         "rustc",
         "rustdoc",
