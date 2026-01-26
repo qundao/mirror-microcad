@@ -89,13 +89,13 @@ impl Parse for ExpressionStatement {
 
 impl FromAst for ExpressionStatement {
 
-    type AstNode = ast::Expression;
+    type AstNode = ast::ExpressionStatement;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(ExpressionStatement {
-            src_ref: context.src_ref(&node.span()),
+            src_ref: context.src_ref(&node.span),
             attribute_list: AttributeList::default(), // todo
-            expression: Expression::from_ast(node, context)?,
+            expression: Expression::from_ast(&node.expression, context)?,
         })
     }
 }
