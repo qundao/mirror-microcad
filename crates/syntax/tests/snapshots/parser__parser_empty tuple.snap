@@ -9,12 +9,16 @@ Ok(
             span: 0..2,
             statements: [],
             tail: Some(
-                Tuple(
-                    TupleExpression {
-                        span: 0..2,
-                        values: [],
-                    },
-                ),
+                ExpressionStatement {
+                    span: 0..2,
+                    attributes: [],
+                    expression: Tuple(
+                        TupleExpression {
+                            span: 0..2,
+                            values: [],
+                        },
+                    ),
+                },
             ),
         },
     },

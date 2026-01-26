@@ -63,65 +63,69 @@ Ok(
                             span: 46..83,
                             statements: [
                                 Expression(
-                                    Call(
-                                        Call {
-                                            span: 46..82,
-                                            name: QualifiedName {
-                                                span: 46..66,
-                                                parts: [
-                                                    Identifier {
-                                                        span: 46..49,
-                                                        name: "std",
-                                                    },
-                                                    Identifier {
-                                                        span: 51..56,
-                                                        name: "geo3d",
-                                                    },
-                                                    Identifier {
-                                                        span: 58..66,
-                                                        name: "Cylinder",
-                                                    },
-                                                ],
-                                            },
-                                            arguments: ArgumentList {
-                                                span: 66..82,
-                                                arguments: [
-                                                    Unnamed(
-                                                        UnnamedArgument {
-                                                            span: 67..73,
-                                                            value: QualifiedName(
-                                                                QualifiedName {
-                                                                    span: 67..73,
-                                                                    parts: [
-                                                                        Identifier {
-                                                                            span: 67..73,
-                                                                            name: "radius",
-                                                                        },
-                                                                    ],
-                                                                },
-                                                            ),
+                                    ExpressionStatement {
+                                        span: 46..82,
+                                        attributes: [],
+                                        expression: Call(
+                                            Call {
+                                                span: 46..82,
+                                                name: QualifiedName {
+                                                    span: 46..66,
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 46..49,
+                                                            name: "std",
                                                         },
-                                                    ),
-                                                    Unnamed(
-                                                        UnnamedArgument {
-                                                            span: 75..81,
-                                                            value: QualifiedName(
-                                                                QualifiedName {
-                                                                    span: 75..81,
-                                                                    parts: [
-                                                                        Identifier {
-                                                                            span: 75..81,
-                                                                            name: "height",
-                                                                        },
-                                                                    ],
-                                                                },
-                                                            ),
+                                                        Identifier {
+                                                            span: 51..56,
+                                                            name: "geo3d",
                                                         },
-                                                    ),
-                                                ],
+                                                        Identifier {
+                                                            span: 58..66,
+                                                            name: "Cylinder",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 66..82,
+                                                    arguments: [
+                                                        Unnamed(
+                                                            UnnamedArgument {
+                                                                span: 67..73,
+                                                                value: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 67..73,
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 67..73,
+                                                                                name: "radius",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                        Unnamed(
+                                                            UnnamedArgument {
+                                                                span: 75..81,
+                                                                value: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 75..81,
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 75..81,
+                                                                                name: "height",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
                                             },
-                                        },
-                                    ),
+                                        ),
+                                    },
                                 ),
                             ],
                             tail: None,

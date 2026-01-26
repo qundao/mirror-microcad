@@ -9,14 +9,18 @@ Ok(
             span: 0..3,
             statements: [],
             tail: Some(
-                Literal(
-                    Integer(
-                        IntegerLiteral {
-                            span: 1..2,
-                            value: 1,
-                        },
+                ExpressionStatement {
+                    span: 0..3,
+                    attributes: [],
+                    expression: Literal(
+                        Integer(
+                            IntegerLiteral {
+                                span: 1..2,
+                                value: 1,
+                            },
+                        ),
                     ),
-                ),
+                },
             ),
         },
     },

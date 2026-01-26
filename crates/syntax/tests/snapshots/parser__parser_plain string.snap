@@ -9,14 +9,18 @@ Ok(
             span: 13..14,
             statements: [],
             tail: Some(
-                Literal(
-                    String(
-                        StringLiteral {
-                            span: 13..14,
-                            content: "plain string",
-                        },
+                ExpressionStatement {
+                    span: 13..14,
+                    attributes: [],
+                    expression: Literal(
+                        String(
+                            StringLiteral {
+                                span: 13..14,
+                                content: "plain string",
+                            },
+                        ),
                     ),
-                ),
+                },
             ),
         },
     },

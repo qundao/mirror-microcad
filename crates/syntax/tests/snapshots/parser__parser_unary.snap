@@ -9,23 +9,27 @@ Ok(
             span: 0..6,
             statements: [],
             tail: Some(
-                UnaryOperation(
-                    UnaryOperation {
-                        span: 0..6,
-                        operation: Not,
-                        rhs: QualifiedName(
-                            QualifiedName {
-                                span: 1..6,
-                                parts: [
-                                    Identifier {
-                                        span: 1..6,
-                                        name: "input",
-                                    },
-                                ],
-                            },
-                        ),
-                    },
-                ),
+                ExpressionStatement {
+                    span: 0..6,
+                    attributes: [],
+                    expression: UnaryOperation(
+                        UnaryOperation {
+                            span: 0..6,
+                            operation: Not,
+                            rhs: QualifiedName(
+                                QualifiedName {
+                                    span: 1..6,
+                                    parts: [
+                                        Identifier {
+                                            span: 1..6,
+                                            name: "input",
+                                        },
+                                    ],
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

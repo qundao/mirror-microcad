@@ -9,51 +9,55 @@ Ok(
             span: 0..9,
             statements: [],
             tail: Some(
-                Call(
-                    Call {
-                        span: 0..9,
-                        name: QualifiedName {
-                            span: 0..3,
-                            parts: [
-                                Identifier {
-                                    span: 0..3,
-                                    name: "foo",
-                                },
-                            ],
-                        },
-                        arguments: ArgumentList {
-                            span: 3..9,
-                            arguments: [
-                                Unnamed(
-                                    UnnamedArgument {
-                                        span: 4..5,
-                                        value: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 4..5,
-                                                    value: 1,
-                                                },
-                                            ),
-                                        ),
+                ExpressionStatement {
+                    span: 0..9,
+                    attributes: [],
+                    expression: Call(
+                        Call {
+                            span: 0..9,
+                            name: QualifiedName {
+                                span: 0..3,
+                                parts: [
+                                    Identifier {
+                                        span: 0..3,
+                                        name: "foo",
                                     },
-                                ),
-                                Unnamed(
-                                    UnnamedArgument {
-                                        span: 7..8,
-                                        value: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 7..8,
-                                                    value: 2,
-                                                },
+                                ],
+                            },
+                            arguments: ArgumentList {
+                                span: 3..9,
+                                arguments: [
+                                    Unnamed(
+                                        UnnamedArgument {
+                                            span: 4..5,
+                                            value: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 4..5,
+                                                        value: 1,
+                                                    },
+                                                ),
                                             ),
-                                        ),
-                                    },
-                                ),
-                            ],
+                                        },
+                                    ),
+                                    Unnamed(
+                                        UnnamedArgument {
+                                            span: 7..8,
+                                            value: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 7..8,
+                                                        value: 2,
+                                                    },
+                                                ),
+                                            ),
+                                        },
+                                    ),
+                                ],
+                            },
                         },
-                    },
-                ),
+                    ),
+                },
             ),
         },
     },

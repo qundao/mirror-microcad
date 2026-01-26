@@ -120,6 +120,38 @@ use test_case::test_case;
 #[test_case("array list units", "a = [1, 2]mm;")]
 #[test_case("array range units", "a = [1..3]mm;")]
 #[test_case("const", "const FOO = 1;")]
+#[test_case(
+    "attribute assigment",
+    r##"#[color = "#FF00FF"]
+    a = 1;"##
+)]
+#[test_case(
+    "attribute expression",
+    r##"#[color = "#FF00FF"]
+    1;"##
+)]
+#[test_case(
+    "attribute trailing expression",
+    r##"#[color = "#FF00FF"]
+    1"##
+)]
+#[test_case(
+    "attribute workbench",
+    r##"#[color = "#FF00FF"]
+    part Foo() {
+        Cylinder(height = 10mm, radius = 5mm);
+    }"##
+)]
+#[test_case(
+    "attribute call",
+    r##"#[svg(style = "fill:none")]
+    a = 1;"##
+)]
+#[test_case(
+    "attribute ident",
+    r##"#[export]
+    a = 1;"##
+)]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));

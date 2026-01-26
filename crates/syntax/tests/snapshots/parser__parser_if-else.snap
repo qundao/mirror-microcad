@@ -9,67 +9,79 @@ Ok(
             span: 0..25,
             statements: [],
             tail: Some(
-                If(
-                    If {
-                        span: 0..25,
-                        condition: BinaryOperation(
-                            BinaryOperation {
-                                span: 3..8,
-                                lhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 3..4,
-                                        parts: [
-                                            Identifier {
-                                                span: 3..4,
-                                                name: "a",
-                                            },
-                                        ],
-                                    },
-                                ),
-                                operation: GreaterThan,
-                                rhs: Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 7..8,
-                                            value: 1,
+                ExpressionStatement {
+                    span: 0..25,
+                    attributes: [],
+                    expression: If(
+                        If {
+                            span: 0..25,
+                            condition: BinaryOperation(
+                                BinaryOperation {
+                                    span: 3..8,
+                                    lhs: QualifiedName(
+                                        QualifiedName {
+                                            span: 3..4,
+                                            parts: [
+                                                Identifier {
+                                                    span: 3..4,
+                                                    name: "a",
+                                                },
+                                            ],
                                         },
                                     ),
-                                ),
-                            },
-                        ),
-                        body: StatementList {
-                            span: 11..12,
-                            statements: [],
-                            tail: Some(
-                                Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 11..12,
-                                            value: 3,
-                                        },
-                                    ),
-                                ),
-                            ),
-                        },
-                        next_if: None,
-                        else_body: Some(
-                            StatementList {
-                                span: 22..23,
-                                statements: [],
-                                tail: Some(
-                                    Literal(
+                                    operation: GreaterThan,
+                                    rhs: Literal(
                                         Integer(
                                             IntegerLiteral {
-                                                span: 22..23,
-                                                value: 4,
+                                                span: 7..8,
+                                                value: 1,
                                             },
                                         ),
                                     ),
+                                },
+                            ),
+                            body: StatementList {
+                                span: 11..12,
+                                statements: [],
+                                tail: Some(
+                                    ExpressionStatement {
+                                        span: 11..12,
+                                        attributes: [],
+                                        expression: Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 11..12,
+                                                    value: 3,
+                                                },
+                                            ),
+                                        ),
+                                    },
                                 ),
                             },
-                        ),
-                    },
-                ),
+                            next_if: None,
+                            else_body: Some(
+                                StatementList {
+                                    span: 22..23,
+                                    statements: [],
+                                    tail: Some(
+                                        ExpressionStatement {
+                                            span: 22..23,
+                                            attributes: [],
+                                            expression: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 22..23,
+                                                        value: 4,
+                                                    },
+                                                ),
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

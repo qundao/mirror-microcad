@@ -11,7 +11,7 @@ pub enum Statement {
     Return(Return),
     InnerAttribute(Attribute),
     Assignment(Assignment),
-    Expression(Expression),
+    Expression(ExpressionStatement),
     Comment(Comment),
     Error,
 }
@@ -27,7 +27,7 @@ impl Statement {
             Statement::Return(st) => st.span.clone(),
             Statement::InnerAttribute(st) => st.span.clone(),
             Statement::Assignment(st) => st.span.clone(),
-            Statement::Expression(st) => st.span(),
+            Statement::Expression(st) => st.span.clone(),
             Statement::Comment(st) => st.span.clone(),
             Statement::Error => 0..0,
         }
@@ -119,7 +119,6 @@ pub struct ArgumentDefinition {
 #[derive(Debug, PartialEq)]
 pub struct Attribute {
     pub span: Span,
-    pub name: Identifier,
     pub command: AttributeCommand,
 }
 
@@ -140,6 +139,7 @@ pub enum AssigmentQualifier {
 pub struct Assignment {
     pub span: Span,
     pub doc: Option<Comment>,
+    pub attributes: Vec<Attribute>,
     pub qualifier: Option<AssigmentQualifier>,
     pub name: Identifier,
     pub ty: Option<Type>,
@@ -155,4 +155,11 @@ pub struct Comment {
 #[derive(Debug, PartialEq)]
 pub enum Visibility {
     Public,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct ExpressionStatement {
+    pub span: Span,
+    pub attributes: Vec<Attribute>,
+    pub expression: Expression,
 }

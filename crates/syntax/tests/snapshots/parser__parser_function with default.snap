@@ -60,34 +60,38 @@ Ok(
                             span: 28..33,
                             statements: [],
                             tail: Some(
-                                BinaryOperation(
-                                    BinaryOperation {
-                                        span: 28..33,
-                                        lhs: QualifiedName(
-                                            QualifiedName {
-                                                span: 28..29,
-                                                parts: [
-                                                    Identifier {
-                                                        span: 28..29,
-                                                        name: "b",
-                                                    },
-                                                ],
-                                            },
-                                        ),
-                                        operation: Divide,
-                                        rhs: QualifiedName(
-                                            QualifiedName {
-                                                span: 32..33,
-                                                parts: [
-                                                    Identifier {
-                                                        span: 32..33,
-                                                        name: "a",
-                                                    },
-                                                ],
-                                            },
-                                        ),
-                                    },
-                                ),
+                                ExpressionStatement {
+                                    span: 28..33,
+                                    attributes: [],
+                                    expression: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 28..33,
+                                            lhs: QualifiedName(
+                                                QualifiedName {
+                                                    span: 28..29,
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 28..29,
+                                                            name: "b",
+                                                        },
+                                                    ],
+                                                },
+                                            ),
+                                            operation: Divide,
+                                            rhs: QualifiedName(
+                                                QualifiedName {
+                                                    span: 32..33,
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 32..33,
+                                                            name: "a",
+                                                        },
+                                                    ],
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
                             ),
                         },
                     },

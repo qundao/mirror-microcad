@@ -17,6 +17,7 @@ Ok(
                                 comment: "/// Doc comment",
                             },
                         ),
+                        attributes: [],
                         qualifier: None,
                         name: Identifier {
                             span: 20..21,

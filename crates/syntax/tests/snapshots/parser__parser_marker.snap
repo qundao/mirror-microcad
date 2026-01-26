@@ -9,12 +9,16 @@ Ok(
             span: 0..6,
             statements: [],
             tail: Some(
-                Marker(
-                    Identifier {
-                        span: 1..6,
-                        name: "input",
-                    },
-                ),
+                ExpressionStatement {
+                    span: 0..6,
+                    attributes: [],
+                    expression: Marker(
+                        Identifier {
+                            span: 1..6,
+                            name: "input",
+                        },
+                    ),
+                },
             ),
         },
     },

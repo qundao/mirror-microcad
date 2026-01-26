@@ -9,18 +9,22 @@ Ok(
             span: 0..19,
             statements: [],
             tail: Some(
-                Literal(
-                    Error(
-                        LiteralError {
-                            span: 0..19,
-                            kind: Int(
-                                ParseIntError {
-                                    kind: PosOverflow,
-                                },
-                            ),
-                        },
+                ExpressionStatement {
+                    span: 0..19,
+                    attributes: [],
+                    expression: Literal(
+                        Error(
+                            LiteralError {
+                                span: 0..19,
+                                kind: Int(
+                                    ParseIntError {
+                                        kind: PosOverflow,
+                                    },
+                                ),
+                            },
+                        ),
                     ),
-                ),
+                },
             ),
         },
     },

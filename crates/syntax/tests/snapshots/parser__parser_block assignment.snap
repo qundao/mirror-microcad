@@ -12,6 +12,7 @@ Ok(
                     Assignment {
                         span: 0..22,
                         doc: None,
+                        attributes: [],
                         qualifier: None,
                         name: Identifier {
                             span: 0..1,
@@ -26,6 +27,7 @@ Ok(
                                         Assignment {
                                             span: 5..14,
                                             doc: None,
+                                            attributes: [],
                                             qualifier: None,
                                             name: Identifier {
                                                 span: 5..6,
@@ -58,31 +60,35 @@ Ok(
                                     ),
                                 ],
                                 tail: Some(
-                                    BinaryOperation(
-                                        BinaryOperation {
-                                            span: 16..21,
-                                            lhs: QualifiedName(
-                                                QualifiedName {
-                                                    span: 16..17,
-                                                    parts: [
-                                                        Identifier {
-                                                            span: 16..17,
-                                                            name: "a",
-                                                        },
-                                                    ],
-                                                },
-                                            ),
-                                            operation: Multiply,
-                                            rhs: Literal(
-                                                Integer(
-                                                    IntegerLiteral {
-                                                        span: 20..21,
-                                                        value: 3,
+                                    ExpressionStatement {
+                                        span: 16..21,
+                                        attributes: [],
+                                        expression: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 16..21,
+                                                lhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 16..17,
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 16..17,
+                                                                name: "a",
+                                                            },
+                                                        ],
                                                     },
                                                 ),
-                                            ),
-                                        },
-                                    ),
+                                                operation: Multiply,
+                                                rhs: Literal(
+                                                    Integer(
+                                                        IntegerLiteral {
+                                                            span: 20..21,
+                                                            value: 3,
+                                                        },
+                                                    ),
+                                                ),
+                                            },
+                                        ),
+                                    },
                                 ),
                             },
                         ),

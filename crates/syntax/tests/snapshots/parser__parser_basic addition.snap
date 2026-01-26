@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
@@ -9,28 +9,32 @@ Ok(
             span: 0..5,
             statements: [],
             tail: Some(
-                BinaryOperation(
-                    BinaryOperation {
-                        span: 0..5,
-                        lhs: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 0..1,
-                                    value: 1,
-                                },
+                ExpressionStatement {
+                    span: 0..5,
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..5,
+                            lhs: Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 0..1,
+                                        value: 1,
+                                    },
+                                ),
                             ),
-                        ),
-                        operation: Add,
-                        rhs: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 4..5,
-                                    value: 1,
-                                },
+                            operation: Add,
+                            rhs: Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 4..5,
+                                        value: 1,
+                                    },
+                                ),
                             ),
-                        ),
-                    },
-                ),
+                        },
+                    ),
+                },
             ),
         },
     },

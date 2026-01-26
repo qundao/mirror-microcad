@@ -1,0 +1,76 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..38,
+        statements: StatementList {
+            span: 0..38,
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..37,
+                        doc: None,
+                        attributes: [
+                            Attribute {
+                                span: 2..26,
+                                command: Call(
+                                    Call {
+                                        span: 2..26,
+                                        name: QualifiedName {
+                                            span: 2..5,
+                                            parts: [
+                                                Identifier {
+                                                    span: 2..5,
+                                                    name: "svg",
+                                                },
+                                            ],
+                                        },
+                                        arguments: ArgumentList {
+                                            span: 5..26,
+                                            arguments: [
+                                                Named(
+                                                    NamedArgument {
+                                                        span: 6..25,
+                                                        name: Identifier {
+                                                            span: 6..11,
+                                                            name: "style",
+                                                        },
+                                                        value: Literal(
+                                                            String(
+                                                                StringLiteral {
+                                                                    span: 24..25,
+                                                                    content: "fill:none",
+                                                                },
+                                                            ),
+                                                        ),
+                                                    },
+                                                ),
+                                            ],
+                                        },
+                                    },
+                                ),
+                            },
+                        ],
+                        qualifier: None,
+                        name: Identifier {
+                            span: 32..33,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: Literal(
+                            Integer(
+                                IntegerLiteral {
+                                    span: 36..37,
+                                    value: 1,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

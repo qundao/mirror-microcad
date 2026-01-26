@@ -9,24 +9,28 @@ Ok(
             span: 0..4,
             statements: [],
             tail: Some(
-                Tuple(
-                    TupleExpression {
-                        span: 0..4,
-                        values: [
-                            (
-                                None,
-                                Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 1..2,
-                                            value: 1,
-                                        },
+                ExpressionStatement {
+                    span: 0..4,
+                    attributes: [],
+                    expression: Tuple(
+                        TupleExpression {
+                            span: 0..4,
+                            values: [
+                                (
+                                    None,
+                                    Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 1..2,
+                                                value: 1,
+                                            },
+                                        ),
                                     ),
                                 ),
-                            ),
-                        ],
-                    },
-                ),
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

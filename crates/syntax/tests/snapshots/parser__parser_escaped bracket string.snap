@@ -9,14 +9,18 @@ Ok(
             span: 34..35,
             statements: [],
             tail: Some(
-                Literal(
-                    String(
-                        StringLiteral {
-                            span: 34..35,
-                            content: "string { with } escaped bracket",
-                        },
+                ExpressionStatement {
+                    span: 34..35,
+                    attributes: [],
+                    expression: Literal(
+                        String(
+                            StringLiteral {
+                                span: 34..35,
+                                content: "string { with } escaped bracket",
+                            },
+                        ),
                     ),
-                ),
+                },
             ),
         },
     },

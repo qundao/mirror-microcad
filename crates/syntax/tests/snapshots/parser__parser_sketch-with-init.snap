@@ -69,6 +69,7 @@ Ok(
                                                     Assignment {
                                                         span: 68..89,
                                                         doc: None,
+                                                        attributes: [],
                                                         qualifier: None,
                                                         name: Identifier {
                                                             span: 68..74,
@@ -108,49 +109,53 @@ Ok(
                                     },
                                 ),
                                 Expression(
-                                    Call(
-                                        Call {
-                                            span: 101..127,
-                                            name: QualifiedName {
-                                                span: 101..119,
-                                                parts: [
-                                                    Identifier {
-                                                        span: 101..104,
-                                                        name: "std",
-                                                    },
-                                                    Identifier {
-                                                        span: 106..111,
-                                                        name: "geo2d",
-                                                    },
-                                                    Identifier {
-                                                        span: 113..119,
-                                                        name: "Circle",
-                                                    },
-                                                ],
-                                            },
-                                            arguments: ArgumentList {
-                                                span: 119..127,
-                                                arguments: [
-                                                    Unnamed(
-                                                        UnnamedArgument {
-                                                            span: 120..126,
-                                                            value: QualifiedName(
-                                                                QualifiedName {
-                                                                    span: 120..126,
-                                                                    parts: [
-                                                                        Identifier {
-                                                                            span: 120..126,
-                                                                            name: "radius",
-                                                                        },
-                                                                    ],
-                                                                },
-                                                            ),
+                                    ExpressionStatement {
+                                        span: 101..127,
+                                        attributes: [],
+                                        expression: Call(
+                                            Call {
+                                                span: 101..127,
+                                                name: QualifiedName {
+                                                    span: 101..119,
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 101..104,
+                                                            name: "std",
                                                         },
-                                                    ),
-                                                ],
+                                                        Identifier {
+                                                            span: 106..111,
+                                                            name: "geo2d",
+                                                        },
+                                                        Identifier {
+                                                            span: 113..119,
+                                                            name: "Circle",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 119..127,
+                                                    arguments: [
+                                                        Unnamed(
+                                                            UnnamedArgument {
+                                                                span: 120..126,
+                                                                value: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 120..126,
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 120..126,
+                                                                                name: "radius",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
                                             },
-                                        },
-                                    ),
+                                        ),
+                                    },
                                 ),
                             ],
                             tail: None,

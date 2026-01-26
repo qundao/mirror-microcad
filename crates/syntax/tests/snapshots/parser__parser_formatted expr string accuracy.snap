@@ -9,64 +9,68 @@ Ok(
             span: 46..47,
             statements: [],
             tail: Some(
-                String(
-                    FormatString {
-                        span: 46..47,
-                        parts: [
-                            Content(
-                                StringLiteral {
-                                    span: 1..8,
-                                    content: "string ",
-                                },
-                            ),
-                            Expression(
-                                StringExpression {
-                                    span: 34..35,
-                                    expression: BinaryOperation(
-                                        BinaryOperation {
-                                            span: 9..31,
-                                            lhs: QualifiedName(
-                                                QualifiedName {
-                                                    span: 9..18,
-                                                    parts: [
-                                                        Identifier {
-                                                            span: 9..18,
-                                                            name: "formatted",
-                                                        },
-                                                    ],
-                                                },
-                                            ),
-                                            operation: Subtract,
-                                            rhs: QualifiedName(
-                                                QualifiedName {
-                                                    span: 21..31,
-                                                    parts: [
-                                                        Identifier {
-                                                            span: 21..31,
-                                                            name: "expression",
-                                                        },
-                                                    ],
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                    accuracy: Some(
-                                        Ok(
-                                            5,
+                ExpressionStatement {
+                    span: 46..47,
+                    attributes: [],
+                    expression: String(
+                        FormatString {
+                            span: 46..47,
+                            parts: [
+                                Content(
+                                    StringLiteral {
+                                        span: 1..8,
+                                        content: "string ",
+                                    },
+                                ),
+                                Expression(
+                                    StringExpression {
+                                        span: 34..35,
+                                        expression: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 9..31,
+                                                lhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 9..18,
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 9..18,
+                                                                name: "formatted",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                                operation: Subtract,
+                                                rhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 21..31,
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 21..31,
+                                                                name: "expression",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                            },
                                         ),
-                                    ),
-                                    width: None,
-                                },
-                            ),
-                            Content(
-                                StringLiteral {
-                                    span: 35..46,
-                                    content: " expression",
-                                },
-                            ),
-                        ],
-                    },
-                ),
+                                        accuracy: Some(
+                                            Ok(
+                                                5,
+                                            ),
+                                        ),
+                                        width: None,
+                                    },
+                                ),
+                                Content(
+                                    StringLiteral {
+                                        span: 35..46,
+                                        content: " expression",
+                                    },
+                                ),
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

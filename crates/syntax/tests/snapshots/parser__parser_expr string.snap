@@ -9,60 +9,64 @@ Ok(
             span: 35..36,
             statements: [],
             tail: Some(
-                String(
-                    FormatString {
-                        span: 35..36,
-                        parts: [
-                            Content(
-                                StringLiteral {
-                                    span: 1..8,
-                                    content: "string ",
-                                },
-                            ),
-                            Expression(
-                                StringExpression {
-                                    span: 23..24,
-                                    expression: BinaryOperation(
-                                        BinaryOperation {
-                                            span: 9..23,
-                                            lhs: QualifiedName(
-                                                QualifiedName {
-                                                    span: 9..13,
-                                                    parts: [
-                                                        Identifier {
-                                                            span: 9..13,
-                                                            name: "more",
-                                                        },
-                                                    ],
-                                                },
-                                            ),
-                                            operation: Add,
-                                            rhs: QualifiedName(
-                                                QualifiedName {
-                                                    span: 16..23,
-                                                    parts: [
-                                                        Identifier {
-                                                            span: 16..23,
-                                                            name: "complex",
-                                                        },
-                                                    ],
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                    accuracy: None,
-                                    width: None,
-                                },
-                            ),
-                            Content(
-                                StringLiteral {
-                                    span: 24..35,
-                                    content: " expression",
-                                },
-                            ),
-                        ],
-                    },
-                ),
+                ExpressionStatement {
+                    span: 35..36,
+                    attributes: [],
+                    expression: String(
+                        FormatString {
+                            span: 35..36,
+                            parts: [
+                                Content(
+                                    StringLiteral {
+                                        span: 1..8,
+                                        content: "string ",
+                                    },
+                                ),
+                                Expression(
+                                    StringExpression {
+                                        span: 23..24,
+                                        expression: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 9..23,
+                                                lhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 9..13,
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 9..13,
+                                                                name: "more",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                                operation: Add,
+                                                rhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 16..23,
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 16..23,
+                                                                name: "complex",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                        accuracy: None,
+                                        width: None,
+                                    },
+                                ),
+                                Content(
+                                    StringLiteral {
+                                        span: 24..35,
+                                        content: " expression",
+                                    },
+                                ),
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

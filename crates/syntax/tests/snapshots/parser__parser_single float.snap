@@ -9,14 +9,18 @@ Ok(
             span: 0..3,
             statements: [],
             tail: Some(
-                Literal(
-                    Float(
-                        FloatLiteral {
-                            span: 0..3,
-                            value: 1.2,
-                        },
+                ExpressionStatement {
+                    span: 0..3,
+                    attributes: [],
+                    expression: Literal(
+                        Float(
+                            FloatLiteral {
+                                span: 0..3,
+                                value: 1.2,
+                            },
+                        ),
                     ),
-                ),
+                },
             ),
         },
     },

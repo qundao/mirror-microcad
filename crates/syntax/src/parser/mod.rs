@@ -52,6 +52,7 @@ fn parser<'tokens>()
     let mut expression_parser = Recursive::declare();
     let mut format_string_part_parser = Recursive::declare();
     let mut type_parser = Recursive::declare();
+    let mut attribute_parser = Recursive::declare();
 
     let semi_recovery = none_of(Token::Normal(NormalToken::SigilSemiColon))
         .repeated()
@@ -257,8 +258,67 @@ fn parser<'tokens>()
     .or_not()
     .boxed();
 
+    let tuple_recovery = just(Token::Normal(NormalToken::SigilOpenBracket))
+        .then(
+            none_of(Token::Normal(NormalToken::SigilCloseBracket))
+                .repeated()
+                .then(just(Token::Normal(NormalToken::SigilCloseBracket))),
+        )
+        .map(|_| vec![(None, Expression::Error)]);
+
+    let tuple_body = identifier_parser
+        .clone()
+        .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
+        .or_not()
+        .then(expression_parser.clone())
+        .separated_by(just(Token::Normal(NormalToken::SigilComma)))
+        .allow_trailing()
+        .collect::<Vec<_>>()
+        .delimited_by(
+            just(Token::Normal(NormalToken::SigilOpenBracket)),
+            just(Token::Normal(NormalToken::SigilCloseBracket)),
+        )
+        .recover_with(via_parser(tuple_recovery))
+        .boxed();
+
+    let call_inner = qualified_name
+        .clone()
+        .then(tuple_body.clone().map_with(|arguments, e| {
+            ArgumentList {
+                span: e.span(),
+                arguments: arguments
+                    .into_iter()
+                    .map(|(name, value)| match name {
+                        Some(name) => Argument::Named(NamedArgument {
+                            span: name.span.start..value.span().end,
+                            name,
+                            value,
+                        }),
+                        None => Argument::Unnamed(UnnamedArgument {
+                            span: value.span(),
+                            value,
+                        }),
+                    })
+                    .collect::<Vec<_>>(),
+            }
+        }))
+        .map_with(|(name, arguments), e| Call {
+            span: e.span(),
+            name,
+            arguments,
+        })
+        .boxed();
+
     statement_parser.define({
-        let expression = expression_parser.clone().map(Statement::Expression);
+        let expression = attribute_parser
+            .clone()
+            .then(expression_parser.clone())
+            .map_with(|(attributes, expression), e| ExpressionStatement {
+                span: e.span(),
+                attributes,
+                expression,
+            })
+            .map(Statement::Expression);
 
         let assignment_qualifier = select_ref! {
             Token::Normal(NormalToken::KeywordConst) => AssigmentQualifier::Const,
@@ -267,8 +327,9 @@ fn parser<'tokens>()
         .or_not()
         .boxed();
 
-        let assignment = doc_comment
+        let assignment_inner = doc_comment
             .clone()
+            .then(attribute_parser.clone())
             .then(assignment_qualifier)
             .then(identifier_parser.clone())
             .then(
@@ -282,18 +343,48 @@ fn parser<'tokens>()
                     .clone()
                     .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))),
             )
-            .map_with(|((((doc, qualifier), name), ty), value), e| {
-                Statement::Assignment(Assignment {
+            .map_with(
+                |(((((doc, attributes), qualifier), name), ty), value), e| Assignment {
                     span: e.span(),
                     doc,
+                    attributes,
                     qualifier,
                     name,
                     value,
                     ty,
-                })
-            })
-            .labelled("assignment")
+                },
+            )
             .boxed();
+
+        let assignment = assignment_inner
+            .clone()
+            .map(Statement::Assignment)
+            .labelled("assignment");
+
+        attribute_parser.define({
+            let attribute_command = assignment_inner
+                .clone()
+                .map(AttributeCommand::Assignment)
+                .or(call_inner.clone().map(AttributeCommand::Call))
+                .or(qualified_name.clone().map(AttributeCommand::Ident));
+
+            just(Token::Normal(NormalToken::SigilHash))
+                .ignore_then(
+                    attribute_command
+                        .map_with(|command, e| Attribute {
+                            span: e.span(),
+                            command,
+                        })
+                        .delimited_by(
+                            just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
+                            just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
+                        ),
+                )
+                .labelled("attribute")
+                .repeated()
+                .collect::<Vec<Attribute>>()
+                .boxed()
+        });
 
         let comment = select_ref! {
             Token::Normal(NormalToken::SingleLineComment(comment) )= e => Comment {
@@ -422,18 +513,19 @@ fn parser<'tokens>()
 
         let workspace = doc_comment
             .clone()
+            .then(attribute_parser.clone())
             .then(visibility.or_not())
             .then(workspace_kind)
             .then(identifier_parser.clone())
             .then(arguments.clone())
             .then(block.clone())
             .map_with(
-                |(((((doc, visibility), kind), name), arguments), body), e| {
+                |((((((doc, attributes), visibility), kind), name), arguments), body), e| {
                     Statement::Workbench(WorkbenchDefinition {
                         span: e.span(),
                         kind,
                         doc,
-                        attributes: Vec::new(), // todo
+                        attributes,
                         visibility,
                         name,
                         arguments,
@@ -501,7 +593,14 @@ fn parser<'tokens>()
     });
 
     statement_list_parser.define({
-        let trailing_expr = expression_parser.clone().map(Box::new).or_not();
+        let trailing_expr = attribute_parser
+            .clone()
+            .then(expression_parser.clone())
+            .map_with(|(attributes, expression), e| ExpressionStatement {
+                span: e.span(),
+                attributes,
+                expression,
+            }).map(Box::new).or_not();
         statement_parser
             .repeated()
             .collect::<Vec<_>>()
@@ -551,29 +650,6 @@ fn parser<'tokens>()
                 Rich::custom(e.span().clone(), "Invalid format string")
             })
             .recover_with(via_parser(string_format_recovery))
-            .boxed();
-
-        let tuple_recovery = just(Token::Normal(NormalToken::SigilOpenBracket))
-            .then(
-                none_of(Token::Normal(NormalToken::SigilCloseBracket))
-                    .repeated()
-                    .then(just(Token::Normal(NormalToken::SigilCloseBracket))),
-            )
-            .map(|_| vec![(None, Expression::Error)]);
-
-        let tuple_body = identifier_parser
-            .clone()
-            .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
-            .or_not()
-            .then(expression_parser.clone())
-            .separated_by(just(Token::Normal(NormalToken::SigilComma)))
-            .allow_trailing()
-            .collect::<Vec<_>>()
-            .delimited_by(
-                just(Token::Normal(NormalToken::SigilOpenBracket)),
-                just(Token::Normal(NormalToken::SigilCloseBracket)),
-            )
-            .recover_with(via_parser(tuple_recovery))
             .boxed();
 
         let tuple = tuple_body.clone().map_with(|values, e| {
@@ -626,36 +702,6 @@ fn parser<'tokens>()
                 })
             })
             .labelled("array")
-            .boxed();
-
-        let call = qualified_name
-            .clone()
-            .then(tuple_body.map_with(|arguments, e| {
-                ArgumentList {
-                    span: e.span(),
-                    arguments: arguments
-                        .into_iter()
-                        .map(|(name, value)| match name {
-                            Some(name) => Argument::Named(NamedArgument {
-                                span: name.span.start..value.span().end,
-                                name,
-                                value,
-                            }),
-                            None => Argument::Unnamed(UnnamedArgument {
-                                span: value.span(),
-                                value,
-                            }),
-                        })
-                        .collect::<Vec<_>>(),
-                }
-            }))
-            .map_with(|(name, arguments), e| {
-                Expression::Call(Call {
-                    span: e.span(),
-                    name,
-                    arguments,
-                })
-            })
             .boxed();
 
         let block_expression = block
@@ -712,6 +758,8 @@ fn parser<'tokens>()
             )
             .map(Expression::QualifiedName)
             .boxed();
+
+        let call = call_inner.map(Expression::Call).labelled("method call");
 
         let base = literal
             .or(string_format)

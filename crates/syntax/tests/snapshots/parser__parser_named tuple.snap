@@ -9,59 +9,63 @@ Ok(
             span: 0..27,
             statements: [],
             tail: Some(
-                Tuple(
-                    TupleExpression {
-                        span: 0..27,
-                        values: [
-                            (
-                                Some(
-                                    Identifier {
-                                        span: 1..7,
-                                        name: "length",
-                                    },
+                ExpressionStatement {
+                    span: 0..27,
+                    attributes: [],
+                    expression: Tuple(
+                        TupleExpression {
+                            span: 0..27,
+                            values: [
+                                (
+                                    Some(
+                                        Identifier {
+                                            span: 1..7,
+                                            name: "length",
+                                        },
+                                    ),
+                                    Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 10..11,
+                                                value: 1,
+                                            },
+                                        ),
+                                    ),
                                 ),
-                                Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 10..11,
-                                            value: 1,
+                                (
+                                    Some(
+                                        Identifier {
+                                            span: 13..18,
+                                            name: "width",
+                                        },
+                                    ),
+                                    BinaryOperation(
+                                        BinaryOperation {
+                                            span: 21..26,
+                                            lhs: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 21..22,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            ),
+                                            operation: Add,
+                                            rhs: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 25..26,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            ),
                                         },
                                     ),
                                 ),
-                            ),
-                            (
-                                Some(
-                                    Identifier {
-                                        span: 13..18,
-                                        name: "width",
-                                    },
-                                ),
-                                BinaryOperation(
-                                    BinaryOperation {
-                                        span: 21..26,
-                                        lhs: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 21..22,
-                                                    value: 1,
-                                                },
-                                            ),
-                                        ),
-                                        operation: Add,
-                                        rhs: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 25..26,
-                                                    value: 1,
-                                                },
-                                            ),
-                                        ),
-                                    },
-                                ),
-                            ),
-                        ],
-                    },
-                ),
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

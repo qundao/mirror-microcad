@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
@@ -9,56 +9,60 @@ Ok(
             span: 0..9,
             statements: [],
             tail: Some(
-                BinaryOperation(
-                    BinaryOperation {
-                        span: 0..9,
-                        lhs: BinaryOperation(
-                            BinaryOperation {
-                                span: 0..7,
-                                lhs: BinaryOperation(
-                                    BinaryOperation {
-                                        span: 1..4,
-                                        lhs: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 1..2,
-                                                    value: 1,
-                                                },
+                ExpressionStatement {
+                    span: 0..9,
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..9,
+                            lhs: BinaryOperation(
+                                BinaryOperation {
+                                    span: 0..7,
+                                    lhs: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 1..4,
+                                            lhs: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 1..2,
+                                                        value: 1,
+                                                    },
+                                                ),
                                             ),
-                                        ),
-                                        operation: Add,
-                                        rhs: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 3..4,
-                                                    value: 2,
-                                                },
+                                            operation: Add,
+                                            rhs: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 3..4,
+                                                        value: 2,
+                                                    },
+                                                ),
                                             ),
-                                        ),
-                                    },
-                                ),
-                                operation: Multiply,
-                                rhs: Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 6..7,
-                                            value: 3,
                                         },
                                     ),
-                                ),
-                            },
-                        ),
-                        operation: Add,
-                        rhs: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 8..9,
-                                    value: 1,
+                                    operation: Multiply,
+                                    rhs: Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 6..7,
+                                                value: 3,
+                                            },
+                                        ),
+                                    ),
                                 },
                             ),
-                        ),
-                    },
-                ),
+                            operation: Add,
+                            rhs: Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 8..9,
+                                        value: 1,
+                                    },
+                                ),
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

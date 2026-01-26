@@ -47,31 +47,35 @@ Ok(
                             span: 29..34,
                             statements: [],
                             tail: Some(
-                                BinaryOperation(
-                                    BinaryOperation {
-                                        span: 29..34,
-                                        lhs: QualifiedName(
-                                            QualifiedName {
-                                                span: 29..30,
-                                                parts: [
-                                                    Identifier {
-                                                        span: 29..30,
-                                                        name: "a",
-                                                    },
-                                                ],
-                                            },
-                                        ),
-                                        operation: Multiply,
-                                        rhs: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 33..34,
-                                                    value: 2,
+                                ExpressionStatement {
+                                    span: 29..34,
+                                    attributes: [],
+                                    expression: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 29..34,
+                                            lhs: QualifiedName(
+                                                QualifiedName {
+                                                    span: 29..30,
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 29..30,
+                                                            name: "a",
+                                                        },
+                                                    ],
                                                 },
                                             ),
-                                        ),
-                                    },
-                                ),
+                                            operation: Multiply,
+                                            rhs: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 33..34,
+                                                        value: 2,
+                                                    },
+                                                ),
+                                            ),
+                                        },
+                                    ),
+                                },
                             ),
                         },
                     },

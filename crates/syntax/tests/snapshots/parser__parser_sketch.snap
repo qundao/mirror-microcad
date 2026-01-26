@@ -41,49 +41,53 @@ Ok(
                             span: 30..57,
                             statements: [
                                 Expression(
-                                    Call(
-                                        Call {
-                                            span: 30..56,
-                                            name: QualifiedName {
-                                                span: 30..48,
-                                                parts: [
-                                                    Identifier {
-                                                        span: 30..33,
-                                                        name: "std",
-                                                    },
-                                                    Identifier {
-                                                        span: 35..40,
-                                                        name: "geo2d",
-                                                    },
-                                                    Identifier {
-                                                        span: 42..48,
-                                                        name: "Circle",
-                                                    },
-                                                ],
-                                            },
-                                            arguments: ArgumentList {
-                                                span: 48..56,
-                                                arguments: [
-                                                    Unnamed(
-                                                        UnnamedArgument {
-                                                            span: 49..55,
-                                                            value: QualifiedName(
-                                                                QualifiedName {
-                                                                    span: 49..55,
-                                                                    parts: [
-                                                                        Identifier {
-                                                                            span: 49..55,
-                                                                            name: "radius",
-                                                                        },
-                                                                    ],
-                                                                },
-                                                            ),
+                                    ExpressionStatement {
+                                        span: 30..56,
+                                        attributes: [],
+                                        expression: Call(
+                                            Call {
+                                                span: 30..56,
+                                                name: QualifiedName {
+                                                    span: 30..48,
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 30..33,
+                                                            name: "std",
                                                         },
-                                                    ),
-                                                ],
+                                                        Identifier {
+                                                            span: 35..40,
+                                                            name: "geo2d",
+                                                        },
+                                                        Identifier {
+                                                            span: 42..48,
+                                                            name: "Circle",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 48..56,
+                                                    arguments: [
+                                                        Unnamed(
+                                                            UnnamedArgument {
+                                                                span: 49..55,
+                                                                value: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 49..55,
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 49..55,
+                                                                                name: "radius",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
                                             },
-                                        },
-                                    ),
+                                        ),
+                                    },
                                 ),
                             ],
                             tail: None,

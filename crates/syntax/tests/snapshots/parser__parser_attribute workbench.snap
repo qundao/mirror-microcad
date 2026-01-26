@@ -4,63 +4,83 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..85,
+        span: 0..90,
         statements: StatementList {
-            span: 0..85,
+            span: 0..90,
             statements: [
                 Workbench(
                     WorkbenchDefinition {
-                        span: 0..85,
-                        doc: Some(
-                            Comment {
-                                span: 0..15,
-                                comment: "/// Doc comment",
-                            },
-                        ),
+                        span: 0..90,
+                        doc: None,
                         kind: Part,
-                        attributes: [],
+                        attributes: [
+                            Attribute {
+                                span: 2..19,
+                                command: Assignment(
+                                    Assignment {
+                                        span: 2..19,
+                                        doc: None,
+                                        attributes: [],
+                                        qualifier: None,
+                                        name: Identifier {
+                                            span: 2..7,
+                                            name: "color",
+                                        },
+                                        ty: None,
+                                        value: Literal(
+                                            String(
+                                                StringLiteral {
+                                                    span: 18..19,
+                                                    content: "#FF00FF",
+                                                },
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        ],
                         visibility: None,
                         name: Identifier {
-                            span: 25..28,
+                            span: 30..33,
                             name: "Foo",
                         },
                         arguments: [],
                         body: StatementList {
-                            span: 41..79,
+                            span: 46..84,
                             statements: [
                                 Expression(
                                     ExpressionStatement {
-                                        span: 41..78,
+                                        span: 46..83,
                                         attributes: [],
                                         expression: Call(
                                             Call {
-                                                span: 41..78,
+                                                span: 46..83,
                                                 name: QualifiedName {
-                                                    span: 41..49,
+                                                    span: 46..54,
                                                     parts: [
                                                         Identifier {
-                                                            span: 41..49,
+                                                            span: 46..54,
                                                             name: "Cylinder",
                                                         },
                                                     ],
                                                 },
                                                 arguments: ArgumentList {
-                                                    span: 49..78,
+                                                    span: 54..83,
                                                     arguments: [
                                                         Named(
                                                             NamedArgument {
-                                                                span: 50..63,
+                                                                span: 55..68,
                                                                 name: Identifier {
-                                                                    span: 50..56,
+                                                                    span: 55..61,
                                                                     name: "height",
                                                                 },
                                                                 value: Literal(
                                                                     Quantity(
                                                                         QuantityLiteral {
-                                                                            span: 59..63,
+                                                                            span: 64..68,
                                                                             value: 10.0,
                                                                             ty: SingleType {
-                                                                                span: 61..63,
+                                                                                span: 66..68,
                                                                                 name: "mm",
                                                                             },
                                                                         },
@@ -70,18 +90,18 @@ Ok(
                                                         ),
                                                         Named(
                                                             NamedArgument {
-                                                                span: 65..77,
+                                                                span: 70..82,
                                                                 name: Identifier {
-                                                                    span: 65..71,
+                                                                    span: 70..76,
                                                                     name: "radius",
                                                                 },
                                                                 value: Literal(
                                                                     Quantity(
                                                                         QuantityLiteral {
-                                                                            span: 74..77,
+                                                                            span: 79..82,
                                                                             value: 5.0,
                                                                             ty: SingleType {
-                                                                                span: 75..77,
+                                                                                span: 80..82,
                                                                                 name: "mm",
                                                                             },
                                                                         },

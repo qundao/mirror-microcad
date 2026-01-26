@@ -1,6 +1,6 @@
 use std::num::ParseIntError;
 use crate::Span;
-use crate::ast::{Identifier, Literal, SingleType, Statement, StringLiteral};
+use crate::ast::{ExpressionStatement, Identifier, Literal, SingleType, Statement, StringLiteral};
 
 #[derive(Debug, PartialEq)]
 pub enum Operator {
@@ -152,7 +152,7 @@ pub struct If {
 pub struct StatementList {
     pub span: Span,
     pub statements: Vec<Statement>,
-    pub tail: Option<Box<Expression>>,
+    pub tail: Option<Box<ExpressionStatement>>,
 }
 
 #[derive(Debug, PartialEq)]

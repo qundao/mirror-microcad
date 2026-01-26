@@ -9,21 +9,25 @@ Ok(
             span: 0..8,
             statements: [],
             tail: Some(
-                QualifiedName(
-                    QualifiedName {
-                        span: 0..8,
-                        parts: [
-                            Identifier {
-                                span: 0..3,
-                                name: "foo",
-                            },
-                            Identifier {
-                                span: 5..8,
-                                name: "bar",
-                            },
-                        ],
-                    },
-                ),
+                ExpressionStatement {
+                    span: 0..8,
+                    attributes: [],
+                    expression: QualifiedName(
+                        QualifiedName {
+                            span: 0..8,
+                            parts: [
+                                Identifier {
+                                    span: 0..3,
+                                    name: "foo",
+                                },
+                                Identifier {
+                                    span: 5..8,
+                                    name: "bar",
+                                },
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

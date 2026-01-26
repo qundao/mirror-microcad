@@ -12,6 +12,7 @@ Ok(
                     Assignment {
                         span: 0..13,
                         doc: None,
+                        attributes: [],
                         qualifier: Some(
                             Const,
                         ),

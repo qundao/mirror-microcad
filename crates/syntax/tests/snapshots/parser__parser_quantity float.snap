@@ -9,18 +9,22 @@ Ok(
             span: 0..4,
             statements: [],
             tail: Some(
-                Literal(
-                    Quantity(
-                        QuantityLiteral {
-                            span: 0..4,
-                            value: 0.2,
-                            ty: SingleType {
-                                span: 2..4,
-                                name: "mm",
+                ExpressionStatement {
+                    span: 0..4,
+                    attributes: [],
+                    expression: Literal(
+                        Quantity(
+                            QuantityLiteral {
+                                span: 0..4,
+                                value: 0.2,
+                                ty: SingleType {
+                                    span: 2..4,
+                                    name: "mm",
+                                },
                             },
-                        },
+                        ),
                     ),
-                ),
+                },
             ),
         },
     },

@@ -9,31 +9,35 @@ Ok(
             span: 0..10,
             statements: [],
             tail: Some(
-                BinaryOperation(
-                    BinaryOperation {
-                        span: 0..10,
-                        lhs: QualifiedName(
-                            QualifiedName {
-                                span: 0..6,
-                                parts: [
-                                    Identifier {
-                                        span: 0..6,
-                                        name: "length",
-                                    },
-                                ],
-                            },
-                        ),
-                        operation: Add,
-                        rhs: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 9..10,
-                                    value: 1,
+                ExpressionStatement {
+                    span: 0..10,
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..10,
+                            lhs: QualifiedName(
+                                QualifiedName {
+                                    span: 0..6,
+                                    parts: [
+                                        Identifier {
+                                            span: 0..6,
+                                            name: "length",
+                                        },
+                                    ],
                                 },
                             ),
-                        ),
-                    },
-                ),
+                            operation: Add,
+                            rhs: Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 9..10,
+                                        value: 1,
+                                    },
+                                ),
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

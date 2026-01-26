@@ -9,28 +9,32 @@ Ok(
             span: 0..7,
             statements: [],
             tail: Some(
-                ArrayRange(
-                    ArrayRangeExpression {
-                        span: 0..7,
-                        start: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 1..2,
-                                    value: 1,
-                                },
+                ExpressionStatement {
+                    span: 0..7,
+                    attributes: [],
+                    expression: ArrayRange(
+                        ArrayRangeExpression {
+                            span: 0..7,
+                            start: Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 1..2,
+                                        value: 1,
+                                    },
+                                ),
                             ),
-                        ),
-                        end: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 4..6,
-                                    value: 10,
-                                },
+                            end: Literal(
+                                Integer(
+                                    IntegerLiteral {
+                                        span: 4..6,
+                                        value: 10,
+                                    },
+                                ),
                             ),
-                        ),
-                        ty: None,
-                    },
-                ),
+                            ty: None,
+                        },
+                    ),
+                },
             ),
         },
     },

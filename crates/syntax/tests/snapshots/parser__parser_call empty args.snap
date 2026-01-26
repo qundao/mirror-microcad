@@ -9,24 +9,28 @@ Ok(
             span: 0..5,
             statements: [],
             tail: Some(
-                Call(
-                    Call {
-                        span: 0..5,
-                        name: QualifiedName {
-                            span: 0..3,
-                            parts: [
-                                Identifier {
-                                    span: 0..3,
-                                    name: "foo",
-                                },
-                            ],
+                ExpressionStatement {
+                    span: 0..5,
+                    attributes: [],
+                    expression: Call(
+                        Call {
+                            span: 0..5,
+                            name: QualifiedName {
+                                span: 0..3,
+                                parts: [
+                                    Identifier {
+                                        span: 0..3,
+                                        name: "foo",
+                                    },
+                                ],
+                            },
+                            arguments: ArgumentList {
+                                span: 3..5,
+                                arguments: [],
+                            },
                         },
-                        arguments: ArgumentList {
-                            span: 3..5,
-                            arguments: [],
-                        },
-                    },
-                ),
+                    ),
+                },
             ),
         },
     },

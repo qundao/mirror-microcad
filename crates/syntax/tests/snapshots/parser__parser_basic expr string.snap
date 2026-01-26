@@ -9,43 +9,47 @@ Ok(
             span: 25..26,
             statements: [],
             tail: Some(
-                String(
-                    FormatString {
-                        span: 25..26,
-                        parts: [
-                            Content(
-                                StringLiteral {
-                                    span: 1..8,
-                                    content: "string ",
-                                },
-                            ),
-                            Expression(
-                                StringExpression {
-                                    span: 13..14,
-                                    expression: QualifiedName(
-                                        QualifiedName {
-                                            span: 9..13,
-                                            parts: [
-                                                Identifier {
-                                                    span: 9..13,
-                                                    name: "with",
-                                                },
-                                            ],
-                                        },
-                                    ),
-                                    accuracy: None,
-                                    width: None,
-                                },
-                            ),
-                            Content(
-                                StringLiteral {
-                                    span: 14..25,
-                                    content: " expression",
-                                },
-                            ),
-                        ],
-                    },
-                ),
+                ExpressionStatement {
+                    span: 25..26,
+                    attributes: [],
+                    expression: String(
+                        FormatString {
+                            span: 25..26,
+                            parts: [
+                                Content(
+                                    StringLiteral {
+                                        span: 1..8,
+                                        content: "string ",
+                                    },
+                                ),
+                                Expression(
+                                    StringExpression {
+                                        span: 13..14,
+                                        expression: QualifiedName(
+                                            QualifiedName {
+                                                span: 9..13,
+                                                parts: [
+                                                    Identifier {
+                                                        span: 9..13,
+                                                        name: "with",
+                                                    },
+                                                ],
+                                            },
+                                        ),
+                                        accuracy: None,
+                                        width: None,
+                                    },
+                                ),
+                                Content(
+                                    StringLiteral {
+                                        span: 14..25,
+                                        content: " expression",
+                                    },
+                                ),
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

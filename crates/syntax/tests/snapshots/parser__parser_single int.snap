@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
@@ -9,14 +9,18 @@ Ok(
             span: 0..1,
             statements: [],
             tail: Some(
-                Literal(
-                    Integer(
-                        IntegerLiteral {
-                            span: 0..1,
-                            value: 1,
-                        },
+                ExpressionStatement {
+                    span: 0..1,
+                    attributes: [],
+                    expression: Literal(
+                        Integer(
+                            IntegerLiteral {
+                                span: 0..1,
+                                value: 1,
+                            },
+                        ),
                     ),
-                ),
+                },
             ),
         },
     },
