@@ -4,33 +4,29 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..17,
+        span: 0..14,
         statements: StatementList {
-            span: 0..17,
+            span: 0..14,
             statements: [
                 Assignment(
                     Assignment {
-                        span: 0..5,
-                        qualifier: None,
+                        span: 0..13,
+                        qualifier: Some(
+                            Const,
+                        ),
                         name: Identifier {
-                            span: 0..1,
-                            name: "a",
+                            span: 6..9,
+                            name: "FOO",
                         },
                         ty: None,
                         value: Literal(
                             Integer(
                                 IntegerLiteral {
-                                    span: 4..5,
+                                    span: 12..13,
                                     value: 1,
                                 },
                             ),
                         ),
-                    },
-                ),
-                Comment(
-                    Comment {
-                        span: 7..17,
-                        comment: "// comment",
                     },
                 ),
             ],

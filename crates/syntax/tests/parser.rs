@@ -95,6 +95,7 @@ use test_case::test_case;
 #[test_case("use as", "pub use foo::bar as foobar;")]
 #[test_case("array list units", "a = [1, 2]mm;")]
 #[test_case("array range units", "a = [1..3]mm;")]
+#[test_case("const", "const FOO = 1;")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));

@@ -127,8 +127,15 @@ pub enum AttributeCommand {
 }
 
 #[derive(Debug, PartialEq)]
+pub enum AssigmentQualifier {
+    Const,
+    Prop
+}
+
+#[derive(Debug, PartialEq)]
 pub struct Assignment {
     pub span: Span,
+    pub qualifier: Option<AssigmentQualifier>,
     pub name: Identifier,
     pub ty: Option<Type>,
     pub value: Expression,

@@ -250,8 +250,15 @@ fn parser<'tokens>()
     statement_parser.define({
         let expression = expression_parser.clone().map(Statement::Expression);
 
-        let assignment = identifier_parser
-            .clone()
+        let assignment_qualifier = select_ref! {
+            Token::Normal(NormalToken::KeywordConst) => AssigmentQualifier::Const,
+            Token::Normal(NormalToken::KeywordProp) => AssigmentQualifier::Prop,
+        }
+        .or_not()
+        .boxed();
+
+        let assignment = assignment_qualifier
+            .then(identifier_parser.clone())
             .then(
                 just(Token::Normal(NormalToken::SigilColon))
                     .ignore_then(type_parser.clone())
@@ -263,9 +270,10 @@ fn parser<'tokens>()
                     .clone()
                     .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))),
             )
-            .map_with(|((name, ty), value), e| {
+            .map_with(|(((qualifier, name), ty), value), e| {
                 Statement::Assignment(Assignment {
                     span: e.span(),
+                    qualifier,
                     name,
                     value,
                     ty,

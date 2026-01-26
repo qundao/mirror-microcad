@@ -66,6 +66,7 @@ Ok(
                                                 Assignment(
                                                     Assignment {
                                                         span: 68..89,
+                                                        qualifier: None,
                                                         name: Identifier {
                                                             span: 68..74,
                                                             name: "radius",

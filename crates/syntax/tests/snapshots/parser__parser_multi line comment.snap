@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parser().parse(input).into_result()
+expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
@@ -11,6 +11,7 @@ Ok(
                 Assignment(
                     Assignment {
                         span: 0..5,
+                        qualifier: None,
                         name: Identifier {
                             span: 0..1,
                             name: "a",
@@ -35,6 +36,7 @@ Ok(
                 Assignment(
                     Assignment {
                         span: 49..54,
+                        qualifier: None,
                         name: Identifier {
                             span: 49..50,
                             name: "b",
