@@ -151,6 +151,8 @@ pub enum NormalToken<'a> {
     SigilAt,
     #[token("->")]
     SigilSingleArrow,
+    #[token("%")]
+    SigilPercent,
 
     #[token("+")]
     OperatorAdd,
@@ -239,6 +241,7 @@ impl NormalToken<'_> {
             NormalToken::SigilDoubleDot => NormalToken::SigilDoubleDot,
             NormalToken::SigilAt => NormalToken::SigilAt,
             NormalToken::SigilSingleArrow => NormalToken::SigilSingleArrow,
+            NormalToken::SigilPercent => NormalToken::SigilPercent,
             NormalToken::OperatorAdd => NormalToken::OperatorAdd,
             NormalToken::OperatorSubtract => NormalToken::OperatorSubtract,
             NormalToken::OperatorMultiply => NormalToken::OperatorMultiply,
@@ -301,6 +304,7 @@ impl NormalToken<'_> {
             NormalToken::SigilDoubleDot => "..",
             NormalToken::SigilAt => "@",
             NormalToken::SigilSingleArrow => "->",
+            NormalToken::SigilPercent => "%",
             NormalToken::OperatorAdd => "+",
             NormalToken::OperatorSubtract => "-",
             NormalToken::OperatorMultiply => "*",

@@ -100,10 +100,16 @@ fn parser<'tokens>()
         .boxed();
 
     let single_type =
-        select_ref! { Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
-            span: e.span(),
-            name: ident.as_ref().into()
-        }}
+        select_ref! {
+            Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
+                span: e.span(),
+                name: ident.as_ref().into()
+            },
+            Token::Normal(NormalToken::SigilPercent) = e => SingleType {
+                span: e.span(),
+                name: "%".into()
+            }
+        }
         .labelled("quantity type")
         .boxed();
 

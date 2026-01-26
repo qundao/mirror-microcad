@@ -172,6 +172,7 @@ use test_case::test_case;
     "multiple element access",
     r##"foo[1]#bar.asd.call(1)"##
 )]
+#[test_case("percent unit", "1%")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));
