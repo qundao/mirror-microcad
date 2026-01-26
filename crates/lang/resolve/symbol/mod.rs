@@ -42,7 +42,7 @@ impl Symbol {
     /// - `visibility`: Visibility of the symbol
     /// - `def`: Symbol definition
     /// - `parent`: Symbol's parent symbol or none for root
-    pub fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
+    pub(crate) fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
         Symbol {
             visibility: std::cell::RefCell::new(def.visibility()),
             inner: RcMut::new(SymbolInner {
@@ -80,7 +80,7 @@ impl Symbol {
     /// - `id`: Name of the symbol
     /// - `parameters`: Optional parameter list
     /// - `f`: The builtin function
-    pub fn new_builtin(builtin: Builtin) -> Symbol {
+    pub(crate) fn new_builtin(builtin: Builtin) -> Symbol {
         Symbol::new(SymbolDef::Builtin(Rc::new(builtin)), None)
     }
 
@@ -101,7 +101,7 @@ impl Symbol {
     }
 
     /// Replace inner of a symbol with the inner of another.
-    pub fn replace(&mut self, replacement: Symbol) {
+    pub(super) fn replace(&mut self, replacement: Symbol) {
         replacement
             .inner
             .borrow()
@@ -124,7 +124,7 @@ impl Symbol {
     /// Return a list of unused private symbols
     ///
     /// Use this after eval for any useful result.
-    pub fn unused_private(&self) -> Symbols {
+    pub(crate) fn unused_private(&self) -> Symbols {
         let used_in_module = &mut IndexSet::new();
         let mut symbols: Symbols = self
             .riter()
@@ -177,12 +177,12 @@ impl Symbol {
     }
 
     /// Add a new symbol to children.
-    pub fn add_symbol(&mut self, symbol: Symbol) -> ResolveResult<()> {
+    pub(crate) fn add_symbol(&mut self, symbol: Symbol) -> ResolveResult<()> {
         self.insert_symbol(symbol.id(), symbol.clone())
     }
 
     /// Add a new symbol to children with specific id.
-    pub fn insert_symbol(&mut self, id: Identifier, symbol: Symbol) -> ResolveResult<()> {
+    pub(super) fn insert_symbol(&mut self, id: Identifier, symbol: Symbol) -> ResolveResult<()> {
         log::trace!("insert symbol: {id}");
         if let Some(symbol) = self.inner.borrow_mut().children.insert(id, symbol.clone()) {
             Err(ResolveError::SymbolAlreadyDefined(symbol.full_name()))
@@ -210,7 +210,7 @@ impl Symbol {
     }
 
     /// Try to apply a FnMut for each child.
-    pub fn try_children<E: std::error::Error>(
+    pub(crate) fn try_children<E: std::error::Error>(
         &self,
         f: impl FnMut((&Identifier, &Symbol)) -> Result<(), E>,
     ) -> Result<(), E> {
