@@ -11,6 +11,7 @@ Ok(
                 Module(
                     ModuleDefinition {
                         span: 0..26,
+                        doc: None,
                         attributes: [],
                         visibility: Some(
                             Public,
@@ -26,6 +27,7 @@ Ok(
                                     Function(
                                         FunctionDefinition {
                                             span: 14..24,
+                                            doc: None,
                                             visibility: None,
                                             name: Identifier {
                                                 span: 17..20,

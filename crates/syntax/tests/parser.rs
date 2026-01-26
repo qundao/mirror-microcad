@@ -58,6 +58,30 @@ use test_case::test_case;
         Cylinder(height = 10mm, radius = 5mm);
     }"#
 )]
+#[test_case(
+    "doc comment fn",
+    r#"/// Doc comment
+    fn Foo() {
+        1
+    }"#
+)]
+#[test_case(
+    "doc comment assigment",
+    r#"/// Doc comment
+    a = 1;"#
+)]
+#[test_case(
+    "doc comment mod",
+    r#"/// Doc comment
+    mod foo {
+        a = 1;
+    }"#
+)]
+#[test_case(
+    "doc comment init",
+    r#"/// Doc comment
+    init(){}"#
+)]
 #[test_case("tuple", "(1, 1 + 1)")]
 #[test_case("one-tuple", "(1,)")]
 #[test_case("one-bracketed", "(1)")]

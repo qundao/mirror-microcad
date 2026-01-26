@@ -11,6 +11,7 @@ Ok(
                 Function(
                     FunctionDefinition {
                         span: 0..43,
+                        doc: None,
                         visibility: None,
                         name: Identifier {
                             span: 3..6,

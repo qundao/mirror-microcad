@@ -11,6 +11,7 @@ Ok(
                 Assignment(
                     Assignment {
                         span: 0..22,
+                        doc: None,
                         qualifier: None,
                         name: Identifier {
                             span: 0..1,
@@ -24,6 +25,7 @@ Ok(
                                     Assignment(
                                         Assignment {
                                             span: 5..14,
+                                            doc: None,
                                             qualifier: None,
                                             name: Identifier {
                                                 span: 5..6,

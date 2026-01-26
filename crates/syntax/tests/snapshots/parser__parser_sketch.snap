@@ -11,6 +11,7 @@ Ok(
                 Workbench(
                     WorkbenchDefinition {
                         span: 0..58,
+                        doc: None,
                         kind: Sketch,
                         attributes: [],
                         visibility: None,

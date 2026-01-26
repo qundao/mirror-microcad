@@ -247,6 +247,16 @@ fn parser<'tokens>()
     .labelled("unary operator")
     .boxed();
 
+    let doc_comment = select_ref! {
+        Token::Normal(NormalToken::DocComment(comment) )= e => Comment {
+            span: e.span(),
+            comment: comment.as_ref().into()
+        },
+    }
+    .labelled("doc-comment")
+    .or_not()
+    .boxed();
+
     statement_parser.define({
         let expression = expression_parser.clone().map(Statement::Expression);
 
@@ -257,7 +267,9 @@ fn parser<'tokens>()
         .or_not()
         .boxed();
 
-        let assignment = assignment_qualifier
+        let assignment = doc_comment
+            .clone()
+            .then(assignment_qualifier)
             .then(identifier_parser.clone())
             .then(
                 just(Token::Normal(NormalToken::SigilColon))
@@ -270,9 +282,10 @@ fn parser<'tokens>()
                     .clone()
                     .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))),
             )
-            .map_with(|(((qualifier, name), ty), value), e| {
+            .map_with(|((((doc, qualifier), name), ty), value), e| {
                 Statement::Assignment(Assignment {
                     span: e.span(),
+                    doc,
                     qualifier,
                     name,
                     value,
@@ -328,8 +341,9 @@ fn parser<'tokens>()
         }
         .labelled("visibility");
 
-        let module = visibility
-            .or_not()
+        let module = doc_comment
+            .clone()
+            .then(visibility.or_not())
             .then_ignore(just(Token::Normal(NormalToken::KeywordMod)))
             .then(identifier_parser.clone())
             .then(
@@ -338,9 +352,10 @@ fn parser<'tokens>()
                     .map(Some)
                     .or(just(Token::Normal(NormalToken::SigilSemiColon)).map(|_| None)),
             )
-            .map_with(|((visibility, name), body), e| {
+            .map_with(|(((doc, visibility), name), body), e| {
                 Statement::Module(ModuleDefinition {
                     span: e.span(),
+                    doc,
                     attributes: Vec::new(), // todo
                     visibility,
                     name,
@@ -390,35 +405,42 @@ fn parser<'tokens>()
         }
         .boxed();
 
-        let init = just(Token::Normal(NormalToken::KeywordInit))
-            .ignore_then(arguments.clone())
+        let init = doc_comment
+            .clone()
+            .then_ignore(just(Token::Normal(NormalToken::KeywordInit)))
+            .then(arguments.clone())
             .then(block.clone())
-            .map_with(|(arguments, body), e| {
+            .map_with(|((doc, arguments), body), e| {
                 Statement::Init(InitDefinition {
                     span: e.span(),
+                    doc,
                     arguments,
                     body,
                 })
             })
             .boxed();
 
-        let workspace = visibility
-            .or_not()
+        let workspace = doc_comment
+            .clone()
+            .then(visibility.or_not())
             .then(workspace_kind)
             .then(identifier_parser.clone())
             .then(arguments.clone())
             .then(block.clone())
-            .map_with(|((((visibility, kind), name), arguments), body), e| {
-                Statement::Workbench(WorkbenchDefinition {
-                    span: e.span(),
-                    kind,
-                    attributes: Vec::new(), // todo
-                    visibility,
-                    name,
-                    arguments,
-                    body,
-                })
-            })
+            .map_with(
+                |(((((doc, visibility), kind), name), arguments), body), e| {
+                    Statement::Workbench(WorkbenchDefinition {
+                        span: e.span(),
+                        kind,
+                        doc,
+                        attributes: Vec::new(), // todo
+                        visibility,
+                        name,
+                        arguments,
+                        body,
+                    })
+                },
+            )
             .boxed();
 
         let return_statement = just(Token::Normal(NormalToken::KeywordReturn))
@@ -431,8 +453,9 @@ fn parser<'tokens>()
             })
             .boxed();
 
-        let function = visibility
-            .or_not()
+        let function = doc_comment
+            .clone()
+            .then(visibility.or_not())
             .then_ignore(just(Token::Normal(NormalToken::KeywordFn)))
             .then(identifier_parser.clone())
             .then(arguments.clone())
@@ -443,9 +466,10 @@ fn parser<'tokens>()
             )
             .then(block.clone())
             .map_with(
-                |((((visibility, name), arguments), return_type), body), e| {
+                |(((((doc, visibility), name), arguments), return_type), body), e| {
                     Statement::Function(FunctionDefinition {
                         span: e.span(),
+                        doc,
                         visibility,
                         name,
                         arguments,

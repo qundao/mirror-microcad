@@ -2,15 +2,102 @@
 source: crates/syntax/tests/parser.rs
 expression: parse(tokens.as_slice())
 ---
-Err(
-    [
-        ParseError {
-            span: 0..15,
-            error: found 'Normal(
-                DocComment(
-                    "/// Doc comment",
+Ok(
+    SourceFile {
+        span: 0..85,
+        statements: StatementList {
+            span: 0..85,
+            statements: [
+                Workbench(
+                    WorkbenchDefinition {
+                        span: 0..85,
+                        doc: Some(
+                            Comment {
+                                span: 0..15,
+                                comment: "/// Doc comment",
+                            },
+                        ),
+                        kind: Part,
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 25..28,
+                            name: "Foo",
+                        },
+                        arguments: [],
+                        body: StatementList {
+                            span: 41..79,
+                            statements: [
+                                Expression(
+                                    Call(
+                                        Call {
+                                            span: 41..78,
+                                            name: QualifiedName {
+                                                span: 41..49,
+                                                parts: [
+                                                    Identifier {
+                                                        span: 41..49,
+                                                        name: "Cylinder",
+                                                    },
+                                                ],
+                                            },
+                                            arguments: ArgumentList {
+                                                span: 49..78,
+                                                arguments: [
+                                                    Named(
+                                                        NamedArgument {
+                                                            span: 50..63,
+                                                            name: Identifier {
+                                                                span: 50..56,
+                                                                name: "height",
+                                                            },
+                                                            value: Literal(
+                                                                Quantity(
+                                                                    QuantityLiteral {
+                                                                        span: 59..63,
+                                                                        value: 10.0,
+                                                                        ty: SingleType {
+                                                                            span: 61..63,
+                                                                            name: "mm",
+                                                                        },
+                                                                    },
+                                                                ),
+                                                            ),
+                                                        },
+                                                    ),
+                                                    Named(
+                                                        NamedArgument {
+                                                            span: 65..77,
+                                                            name: Identifier {
+                                                                span: 65..71,
+                                                                name: "radius",
+                                                            },
+                                                            value: Literal(
+                                                                Quantity(
+                                                                    QuantityLiteral {
+                                                                        span: 74..77,
+                                                                        value: 5.0,
+                                                                        ty: SingleType {
+                                                                            span: 75..77,
+                                                                            name: "mm",
+                                                                        },
+                                                                    },
+                                                                ),
+                                                            ),
+                                                        },
+                                                    ),
+                                                ],
+                                            },
+                                        },
+                                    ),
+                                ),
+                            ],
+                            tail: None,
+                        },
+                    },
                 ),
-            )' at 0..15 expected statement, expression, or end of input,
+            ],
+            tail: None,
         },
-    ],
+    },
 )

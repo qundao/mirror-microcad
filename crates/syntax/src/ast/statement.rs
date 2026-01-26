@@ -44,6 +44,7 @@ pub enum WorkspaceKind {
 #[derive(Debug, PartialEq)]
 pub struct WorkbenchDefinition {
     pub span: Span,
+    pub doc: Option<Comment>,
     pub kind: WorkspaceKind,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
@@ -55,6 +56,7 @@ pub struct WorkbenchDefinition {
 #[derive(Debug, PartialEq)]
 pub struct ModuleDefinition {
     pub span: Span,
+    pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
@@ -64,6 +66,7 @@ pub struct ModuleDefinition {
 #[derive(Debug, PartialEq)]
 pub struct FunctionDefinition {
     pub span: Span,
+    pub doc: Option<Comment>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
     pub arguments: Vec<ArgumentDefinition>,
@@ -74,6 +77,7 @@ pub struct FunctionDefinition {
 #[derive(Debug, PartialEq)]
 pub struct InitDefinition {
     pub span: Span,
+    pub doc: Option<Comment>,
     pub arguments: Vec<ArgumentDefinition>,
     pub body: StatementList,
 }
@@ -135,6 +139,7 @@ pub enum AssigmentQualifier {
 #[derive(Debug, PartialEq)]
 pub struct Assignment {
     pub span: Span,
+    pub doc: Option<Comment>,
     pub qualifier: Option<AssigmentQualifier>,
     pub name: Identifier,
     pub ty: Option<Type>,

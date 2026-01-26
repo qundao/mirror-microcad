@@ -1,0 +1,60 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..50,
+        statements: StatementList {
+            span: 0..50,
+            statements: [
+                Module(
+                    ModuleDefinition {
+                        span: 0..50,
+                        doc: Some(
+                            Comment {
+                                span: 0..15,
+                                comment: "/// Doc comment",
+                            },
+                        ),
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 24..27,
+                            name: "foo",
+                        },
+                        body: Some(
+                            StatementList {
+                                span: 38..44,
+                                statements: [
+                                    Assignment(
+                                        Assignment {
+                                            span: 38..43,
+                                            doc: None,
+                                            qualifier: None,
+                                            name: Identifier {
+                                                span: 38..39,
+                                                name: "a",
+                                            },
+                                            ty: None,
+                                            value: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 42..43,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            ),
+                                        },
+                                    ),
+                                ],
+                                tail: None,
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

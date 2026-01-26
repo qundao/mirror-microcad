@@ -11,6 +11,7 @@ Ok(
                 Assignment(
                     Assignment {
                         span: 0..37,
+                        doc: None,
                         qualifier: None,
                         name: Identifier {
                             span: 0..1,

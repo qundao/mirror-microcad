@@ -1,0 +1,32 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..28,
+        statements: StatementList {
+            span: 0..28,
+            statements: [
+                Init(
+                    InitDefinition {
+                        span: 0..28,
+                        doc: Some(
+                            Comment {
+                                span: 0..15,
+                                comment: "/// Doc comment",
+                            },
+                        ),
+                        arguments: [],
+                        body: StatementList {
+                            span: 27..27,
+                            statements: [],
+                            tail: None,
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

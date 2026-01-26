@@ -11,6 +11,7 @@ Ok(
                 Assignment(
                     Assignment {
                         span: 0..13,
+                        doc: None,
                         qualifier: Some(
                             Const,
                         ),
