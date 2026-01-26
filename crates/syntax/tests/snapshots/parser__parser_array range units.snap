@@ -13,6 +13,7 @@ Ok(
                         span: 0..12,
                         doc: None,
                         attributes: [],
+                        visibility: None,
                         qualifier: None,
                         name: Identifier {
                             span: 0..1,

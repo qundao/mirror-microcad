@@ -13,6 +13,7 @@ Ok(
                         span: 0..13,
                         doc: None,
                         attributes: [],
+                        visibility: None,
                         qualifier: Some(
                             Const,
                         ),

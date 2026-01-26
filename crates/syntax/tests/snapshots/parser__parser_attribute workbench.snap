@@ -21,6 +21,7 @@ Ok(
                                         span: 2..19,
                                         doc: None,
                                         attributes: [],
+                                        visibility: None,
                                         qualifier: None,
                                         name: Identifier {
                                             span: 2..7,

@@ -28,6 +28,7 @@ Ok(
                                 ),
                             },
                         ],
+                        visibility: None,
                         qualifier: None,
                         name: Identifier {
                             span: 14..15,

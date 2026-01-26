@@ -120,6 +120,7 @@ use test_case::test_case;
 #[test_case("array list units", "a = [1, 2]mm;")]
 #[test_case("array range units", "a = [1..3]mm;")]
 #[test_case("const", "const FOO = 1;")]
+#[test_case("pub assigment", "pub foo = 1;")]
 #[test_case(
     "attribute assigment",
     r##"#[color = "#FF00FF"]

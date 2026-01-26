@@ -32,6 +32,7 @@ Ok(
                                             span: 38..43,
                                             doc: None,
                                             attributes: [],
+                                            visibility: None,
                                             qualifier: None,
                                             name: Identifier {
                                                 span: 38..39,

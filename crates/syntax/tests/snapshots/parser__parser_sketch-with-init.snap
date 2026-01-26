@@ -70,6 +70,7 @@ Ok(
                                                         span: 68..89,
                                                         doc: None,
                                                         attributes: [],
+                                                        visibility: None,
                                                         qualifier: None,
                                                         name: Identifier {
                                                             span: 68..74,

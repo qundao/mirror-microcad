@@ -140,6 +140,7 @@ pub struct Assignment {
     pub span: Span,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
+    pub visibility: Option<Visibility>,
     pub qualifier: Option<AssigmentQualifier>,
     pub name: Identifier,
     pub ty: Option<Type>,

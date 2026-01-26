@@ -316,6 +316,11 @@ fn parser<'tokens>()
         .boxed();
 
     statement_parser.define({
+        let visibility = select_ref! {
+            Token::Normal(NormalToken::KeywordPub) => Visibility::Public,
+        }
+        .labelled("visibility");
+
         let expression = attribute_parser
             .clone()
             .then(expression_parser.clone())
@@ -336,6 +341,7 @@ fn parser<'tokens>()
         let assignment_inner = doc_comment
             .clone()
             .then(attribute_parser.clone())
+            .then(visibility.or_not())
             .then(assignment_qualifier)
             .then(identifier_parser.clone())
             .then(
@@ -350,10 +356,11 @@ fn parser<'tokens>()
                     .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))),
             )
             .map_with(
-                |(((((doc, attributes), qualifier), name), ty), value), e| Assignment {
+                |((((((doc, attributes), visibility), qualifier), name), ty), value), e| Assignment {
                     span: e.span(),
                     doc,
                     attributes,
+                    visibility,
                     qualifier,
                     name,
                     value,
@@ -432,11 +439,6 @@ fn parser<'tokens>()
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
             )
             .boxed();
-
-        let visibility = select_ref! {
-            Token::Normal(NormalToken::KeywordPub) => Visibility::Public,
-        }
-        .labelled("visibility");
 
         let module = doc_comment
             .clone()
