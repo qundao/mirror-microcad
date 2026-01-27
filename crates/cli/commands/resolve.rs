@@ -42,6 +42,10 @@ impl RunCommand<ResolveContext> for Resolve {
         // Add default search paths path.
         if !self.omit_default_paths {
             search_paths.append(&mut microcad_builtin::dirs::default_search_paths());
+
+            if search_paths.is_empty() {
+                search_paths.push(microcad_std::get_user_stdlib_path());
+            }
         }
 
         // search for a usable std library
