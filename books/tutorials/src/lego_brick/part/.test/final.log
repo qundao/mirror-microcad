@@ -27,7 +27,7 @@
   25:   ) {
   26:       thickness = 1.2mm;
   27:       frame = Frame(width, height, thickness);
-  28:       struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+  28:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
   29:           .grid(columns = columns-1, rows = rows-1);
   30:       frame | struts;
   31:   }
@@ -35,7 +35,7 @@
   33:   use Rect as Cap;
   34:   
   35:   sketch Knobs(columns: Integer, rows: Integer) {
-  36:       Circle(d = 4.8mm)
+  36:       Circle(diameter = 4.8mm)
   37:           .grid(columns, rows);
   38:   }
   39:   
@@ -113,9 +113,9 @@
                                 - y = 8mm
                                 - z = 0mm
                                 Transform __builtin::ops::translate(x=8mm, y=8mm, z=0mm) ->
-                                  Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
-                                    - inner_r = 2.4mm
-                                    - outer_r = 3.255mm
+                                  Workpiece(sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) ->
+                                    - inner_radius = 2.4mm
+                                    - outer_radius = 3.255mm
                                     Operation subtract() ->
                                       Group ->
                                         Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
@@ -133,9 +133,9 @@
                                 - y = 8mm
                                 - z = 0mm
                                 Transform __builtin::ops::translate(x=16mm, y=8mm, z=0mm) ->
-                                  Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
-                                    - inner_r = 2.4mm
-                                    - outer_r = 3.255mm
+                                  Workpiece(sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) ->
+                                    - inner_radius = 2.4mm
+                                    - outer_radius = 3.255mm
                                     Operation subtract() ->
                                       Group ->
                                         Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
@@ -153,9 +153,9 @@
                                 - y = 8mm
                                 - z = 0mm
                                 Transform __builtin::ops::translate(x=24mm, y=8mm, z=0mm) ->
-                                  Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
-                                    - inner_r = 2.4mm
-                                    - outer_r = 3.255mm
+                                  Workpiece(sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) ->
+                                    - inner_radius = 2.4mm
+                                    - outer_radius = 3.255mm
                                     Operation subtract() ->
                                       Group ->
                                         Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
@@ -207,7 +207,7 @@
                             - y = 8mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=8mm, y=8mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -217,7 +217,7 @@
                             - y = 8mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=16mm, y=8mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -227,7 +227,7 @@
                             - y = 8mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=24mm, y=8mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -237,7 +237,7 @@
                             - y = 8mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=32mm, y=8mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -247,7 +247,7 @@
                             - y = 16mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=8mm, y=16mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -257,7 +257,7 @@
                             - y = 16mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=16mm, y=16mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -267,7 +267,7 @@
                             - y = 16mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=24mm, y=16mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -277,7 +277,7 @@
                             - y = 16mm
                             - z = 0mm
                             Transform __builtin::ops::translate(x=32mm, y=16mm, z=0mm) ->
-                              Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), d=4.8mm) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) ->
                                 - center = (x=0mm, y=0mm)
                                 - radius = 2.4mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->

@@ -14,7 +14,7 @@
   16:   width = 31.8mm;
   17:   height = 15.8mm;
   18:   frame = Frame(width, height, thickness);
-  19:   struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+  19:   struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
   20:                .translate(x = [-1..1] * 8mm);
   21:   
   22:   frame | struts; // We could also write `{ frame; struts; }.union()` but the `|` operator is more elegant. 
@@ -49,9 +49,9 @@
             - y = 0mm
             - z = 0mm
             Transform __builtin::ops::translate(x=-8mm, y=0mm, z=0mm) ->
-              Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
-                - inner_r = 2.4mm
-                - outer_r = 3.255mm
+              Workpiece(sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) ->
+                - inner_radius = 2.4mm
+                - outer_radius = 3.255mm
                 Operation subtract() ->
                   Group ->
                     Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
@@ -69,9 +69,9 @@
             - y = 0mm
             - z = 0mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
-                - inner_r = 2.4mm
-                - outer_r = 3.255mm
+              Workpiece(sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) ->
+                - inner_radius = 2.4mm
+                - outer_radius = 3.255mm
                 Operation subtract() ->
                   Group ->
                     Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
@@ -89,9 +89,9 @@
             - y = 0mm
             - z = 0mm
             Transform __builtin::ops::translate(x=8mm, y=0mm, z=0mm) ->
-              Workpiece(sketch) std::geo2d::Ring(inner_d=4.8mm, outer_d=6.51mm) ->
-                - inner_r = 2.4mm
-                - outer_r = 3.255mm
+              Workpiece(sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) ->
+                - inner_radius = 2.4mm
+                - outer_radius = 3.255mm
                 Operation subtract() ->
                   Group ->
                     Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) ->
