@@ -331,6 +331,10 @@ impl Symbol {
         matches!(self.inner.borrow().def, SymbolDef::Workbench(..))
     }
 
+    fn is_root(&self) -> bool {
+        matches!(self.inner.borrow().def, SymbolDef::Root)
+    }
+
     pub(crate) fn is_source(&self) -> bool {
         matches!(self.inner.borrow().def, SymbolDef::SourceFile(..))
     }
@@ -776,7 +780,11 @@ impl Info for Symbol {
 
 impl TreeDisplay for Symbol {
     fn tree_print(&self, f: &mut std::fmt::Formatter, state: TreeState) -> std::fmt::Result {
-        self.print_symbol(f, Some(&self.id()), state, true)
+        if self.is_root() {
+            self.try_children(|(_, symbol)| symbol.tree_print(f, TreeState::new_debug(1)))
+        } else {
+            self.print_symbol(f, Some(&self.id()), state, true)
+        }
     }
 }
 

@@ -16,13 +16,17 @@ pub struct Resolve {
     #[clap(long)]
     pub resolve: bool,
 
+    /// Do not complain about missing standard library.
+    #[clap(long)]
+    no_std: bool,
+
     /// Paths to search for files.
     ///
     /// By default, `./std/lib` (if it exists) and `~/.microcad/lib` are used.
     #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append)]
     pub search_paths: Vec<std::path::PathBuf>,
 
-    /// Load config from file.
+    /// Do not use default search paths if it is not defined explicitly  with --search-paths.
     #[arg(short, long)]
     omit_default_libs: bool,
 }
@@ -40,7 +44,9 @@ impl RunCommand<ResolveContext> for Resolve {
         };
 
         // search for a usable std library
-        if !search_paths.iter().any(|dir| {
+        if self.no_std {
+            eprintln!("Info: omitting standard library.");
+        } else if !search_paths.iter().any(|dir| {
             let file_path = dir.join("std/mod.µcad");
             file_path.exists() && file_path.is_file()
         }) {
