@@ -1,11 +1,11 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{resolve::*, src_ref::*, syntax::*};
+use crate::{resolve::*, src_ref::*};
 use custom_debug::Debug;
 
 /// Symbol content
-#[derive(Debug, Clone)]
+#[derive(Default, Debug, Clone)]
 pub(super) struct SymbolInner {
     /// Symbol definition
     pub(super) def: SymbolDef,
@@ -20,21 +20,10 @@ pub(super) struct SymbolInner {
     pub(super) used: std::cell::OnceCell<()>,
 }
 
-impl Default for SymbolInner {
-    fn default() -> Self {
-        Self {
-            def: SymbolDef::SourceFile(SourceFile::default().into()),
-            parent: Default::default(),
-            children: Default::default(),
-            checked: Default::default(),
-            used: Default::default(),
-        }
-    }
-}
-
 impl SrcReferrer for SymbolInner {
     fn src_ref(&self) -> SrcRef {
         match &self.def {
+            SymbolDef::Root => SrcRef(None),
             SymbolDef::SourceFile(sf) => sf.src_ref(),
             SymbolDef::Module(m) => m.src_ref(),
             SymbolDef::Workbench(wb) => wb.src_ref(),

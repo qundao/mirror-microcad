@@ -39,21 +39,6 @@ pub enum ResolveMode {
 }
 
 impl ResolveContext {
-    /// Create new context from source file.
-    ///
-    /// Just reads the syntax and does **not** create any symbols nor resolves anything.
-    pub fn new(
-        root: Rc<SourceFile>,
-        search_paths: &[impl AsRef<std::path::Path>],
-        diag: DiagHandler,
-    ) -> ResolveResult<Self> {
-        Ok(Self {
-            sources: Sources::load(root.clone(), search_paths)?,
-            diag,
-            ..Default::default()
-        })
-    }
-
     /// Load resolve and check a source file and referenced files.
     pub fn create(
         root: Rc<SourceFile>,
@@ -89,7 +74,11 @@ impl ResolveContext {
         diag: DiagHandler,
         mode: ResolveMode,
     ) -> ResolveResult<Self> {
-        let mut context = Self::new(root, search_paths, diag)?;
+        let mut context = Self {
+            sources: Sources::load(root.clone(), search_paths)?,
+            diag,
+            ..Default::default()
+        };
         context.symbolize()?;
         log::trace!("Symbolized Context:\n{context:?}");
         if let Some(builtin) = builtin {
@@ -142,7 +131,6 @@ impl ResolveContext {
                 }
             })
             .collect::<ResolveResult<Vec<_>>>()?;
-
         for (name, symbol) in named_symbols {
             if let Some(id) = name.single_identifier() {
                 self.root.insert_symbol(id.clone(), symbol)?;
@@ -382,6 +370,7 @@ fn test_update_top_mod() {
         Default::default(),
     );
     context.eval().expect("test error");
+    eprintln!("{}", context.diagnosis());
     assert!(!context.has_errors());
 }
 
@@ -426,7 +415,8 @@ impl std::fmt::Debug for ResolveContext {
         writeln!(f, "Sources:\n")?;
         write!(f, "{:?}", &self.sources)?;
         writeln!(f, "\nSymbols:\n")?;
-        self.root.tree_print(f, TreeState::new_debug(0))?;
+        self.root
+            .try_children(|(_, symbol)| symbol.tree_print(f, TreeState::new_debug(1)))?;
         let err_count = self.diag.error_count();
         if err_count == 0 {
             writeln!(f, "No errors.")?;

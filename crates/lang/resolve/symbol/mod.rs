@@ -764,7 +764,7 @@ impl std::fmt::Display for Symbol {
 
 impl std::fmt::Debug for Symbol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.print_symbol(f, None, TreeState::new_debug(0), false)
+        self.tree_print(f, TreeState::new_debug(0))
     }
 }
 

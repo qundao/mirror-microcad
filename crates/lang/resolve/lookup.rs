@@ -28,6 +28,7 @@ impl LookupTarget {
     pub(crate) fn matches(&self, symbol: &Symbol) -> bool {
         symbol.with_def(|def| -> bool {
             match &def {
+                SymbolDef::Root => unreachable!("<ROOT> cannot be matched"),
                 SymbolDef::SourceFile(..) | SymbolDef::Module(..) => {
                     matches!(self, Self::Any | Self::AnyButMethod | Self::Module)
                 }
