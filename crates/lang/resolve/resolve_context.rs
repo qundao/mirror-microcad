@@ -417,8 +417,7 @@ impl std::fmt::Debug for ResolveContext {
         writeln!(f, "Sources:\n")?;
         write!(f, "{:?}", &self.sources)?;
         writeln!(f, "\nSymbols:\n")?;
-        self.root
-            .try_children(|(_, symbol)| symbol.tree_print(f, TreeState::new_debug(1)))?;
+        self.root.tree_print(f, TreeState::new_debug(1))?;
         let err_count = self.diag.error_count();
         if err_count == 0 {
             writeln!(f, "No errors.")?;
