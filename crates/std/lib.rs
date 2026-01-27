@@ -17,28 +17,31 @@ pub fn get_user_stdlib_path() -> std::path::PathBuf {
     path
 }
 
-/// Extract the standard library into the standard library path.
-pub fn extract(overwrite: bool) -> std::io::Result<()> {
-    let dst = get_user_stdlib_path();
-    if dst.exists() {
+/// Check if there is a std library installed.
+pub fn is_installed(search_path: impl AsRef<std::path::Path>) -> bool {
+    let std = search_path.as_ref().join("std/mod.µcad");
+    std.exists() && std.is_file()
+}
+
+/// Install the standard library into the standard library path.
+pub fn install(search_path: impl AsRef<std::path::Path>, overwrite: bool) -> std::io::Result<()> {
+    let path = search_path.as_ref();
+    if path.exists() {
         if overwrite {
-            println!("Overwriting existing µcad standard library in {:?}", dst);
+            println!("Overwriting existing µcad standard library in {path:?}");
         } else {
-            println!(
-                "Found µcad standard library already in {:?} (use -f to force overwrite)",
-                dst
-            );
+            println!("Found µcad standard library already in {path:?} (use -f to force overwrite)");
             return Ok(());
         }
     }
 
-    println!("Installing µcad standard library into {:?}...", dst);
+    println!("Installing µcad standard library into {:?}...", path);
 
-    std::fs::create_dir_all(&dst)?;
+    std::fs::create_dir_all(&path)?;
 
     // Extract all embedded files.
     Lib::iter().try_for_each(|file| {
-        let file_path = dst.join(file.as_ref());
+        let file_path = path.join(file.as_ref());
         if let Some(parent) = file_path.parent() {
             std::fs::create_dir_all(parent)?;
         }

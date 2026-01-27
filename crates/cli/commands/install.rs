@@ -19,7 +19,10 @@ pub struct Install {
 impl RunCommand for Install {
     fn run(&self, _cli: &Cli) -> miette::Result<()> {
         if self.library == "std" {
-            Ok(microcad_std::extract(self.force).into_diagnostic()?)
+            Ok(
+                microcad_std::install(microcad_std::get_user_stdlib_path(), self.force)
+                    .into_diagnostic()?,
+            )
         } else {
             miette::bail!("Only `std` is supported as installable library at the moment.")
         }
