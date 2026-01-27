@@ -8,7 +8,7 @@
 -- Code --
 
   55:   // Function with three parameters: x, y, and z
-  56:   fn f( x: Length, y: Length, z: Length ) {}
+  56:   fn f( x: Length, y: Length, z: Length ) {}  // warning: unused x,y,z
   57:   
   58:   // Since we do not want to change x and y in the following statements,
   59:   // we prepare a tuple named plane:
@@ -45,5 +45,6 @@
     ·          ╰── error: 11:4: Missing arguments: x,y
     ╰────
 Unexpected error(s) which did occur in line(s): 63, 64, 65
+Expected warnings(s) which did not occur in line(s): 56
 -- Test Result --
 TODO

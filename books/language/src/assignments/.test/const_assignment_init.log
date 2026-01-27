@@ -2,19 +2,20 @@
 -- Test --
         Test name: const_assignment_init
   Expected result: todo_fail
-      Source file: ../books/language/src/assignments/const.md:154
+      Source file: ../books/language/src/assignments/const.md:165
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
- 154:   sketch MySketch() {
- 155:       init(_: Integer) {
- 156:           const MY_CONST = 1;   // error: not allowed in initializers
- 157:       }
- 158:   }
- 159:   MySketch();
+ 165:   sketch MySketch() {
+ 166:       init(_: Integer) {
+ 167:           const MY_CONST = 1;   // error: not allowed in initializers
+ 168:       }
+ 169:   }
+ 170:   MySketch();
 
 -- No Output --
 -- No Errors --
+Expected error(s) which did not occur in line(s): 167
 -- Test Result --
 TODO (SHALL FAIL)

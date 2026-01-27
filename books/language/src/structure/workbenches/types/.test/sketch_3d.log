@@ -32,5 +32,7 @@
      ·            ╰── warning: 94:10: Unused local Torus.
  126 │     std::geo2d::Circle(minor_radius)
      ╰────
+Expected error(s) which did not occur in line(s): 34
+Unexpected warnings(s) which did occur in line(s): 76, 125
 -- Test Result --
-FAILS AS EXPECTED (BUT IS TODO)
+TODO (SHALL FAIL)

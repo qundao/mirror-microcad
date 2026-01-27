@@ -2,32 +2,32 @@
 -- Test --
         Test name: const_assignment_mod
   Expected result: ok
-      Source file: ../books/language/src/assignments/const.md:17
+      Source file: ../books/language/src/assignments/const.md:15
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  17:   const TEXT = "Hello";
-  18:   
-  19:   mod my_module {
-  20:       
-  21:       // constant assignment
-  22:       const TEXT = "Hello my_module";
-  23:   
-  24:       // public function
-  25:       pub fn f() -> String {
-  26:           TEXT
-  27:       }
-  28:   
-  29:       // public workbench
-  30:       pub sketch MySketch(text: String) {
-  31:           std::debug::assert_eq([ TEXT, text ]);
-  32:       }
-  33:   }
-  34:   
-  35:   my_module::MySketch("Hello my_module");
-  36:   std::debug::assert_eq([ my_module::f(), "Hello my_module" ]);
-  37:   std::debug::assert_eq([ TEXT, "Hello" ]);
+  15:   const TEXT = "Hello";
+  16:   
+  17:   mod my_module {
+  18:       
+  19:       // constant assignment
+  20:       const TEXT = "Hello my_module";
+  21:   
+  22:       // public function
+  23:       pub fn f() -> String {
+  24:           TEXT
+  25:       }
+  26:   
+  27:       // public workbench
+  28:       pub sketch MySketch(text: String) {
+  29:           std::debug::assert_eq([ TEXT, text ]);
+  30:       }
+  31:   }
+  32:   
+  33:   my_module::MySketch("Hello my_module");
+  34:   std::debug::assert_eq([ my_module::f(), "Hello my_module" ]);
+  35:   std::debug::assert_eq([ TEXT, "Hello" ]);
 
 -- No Output --
 -- No Errors --

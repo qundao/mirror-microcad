@@ -17,5 +17,16 @@
     · ─┬
     ·  ╰── warning: 1:1: This expression statement did not produce any model
     ╰────
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::translate(x=5mm, y=0mm, z=0mm) ->
+      - x = 5mm
+      - y = 0mm
+      - z = 0mm
+      Transform __builtin::ops::translate(x=5mm, y=0mm, z=0mm) ->
+        Group ->
+
+Could not determine output type.
+Nothing will be exported.
 -- Test Result --
-FAILS AS EXPECTED
+OK
