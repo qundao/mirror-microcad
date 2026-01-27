@@ -339,6 +339,8 @@ fn test_update_sub_mod() {
 fn test_update_top_mod() {
     use crate::eval::*;
 
+    let _ = env_logger::try_init();
+
     std::fs::copy(
         "../../tests/test_files/update_files/top/top_0.µcad",
         "../../tests/test_files/update_files/top/top.µcad",
