@@ -3,17 +3,13 @@
 
 //! µcad CLI install command.
 
-use miette::IntoDiagnostic;
 use crate::*;
+use miette::IntoDiagnostic;
 
 #[derive(clap::Parser)]
 pub struct Install {
     /// Name of µcad library to install (currently only `std` is supported).
     pub library: String,
-
-    /// Directory to install libraries into.
-    /// If this command line option is not set, the library will be installed in ~/.microcad/lib/$LIBNAME
-    pub root: Option<std::path::PathBuf>,
 
     /// Force overwrite.
     #[arg(short = 'f', long, default_value = "false", action = clap::ArgAction::SetTrue)]
