@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**199** tests have been evaluated with version **0.2.20** of microcad.
+**204** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -62,9 +62,14 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/code_between_initializers.svg)](../structure/workbenches/elements/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/elements/initializers.md) |
 | [![test](../structure/workbenches/elements/.test/code_post_init.svg)](../structure/workbenches/elements/.test/code_post_init.log) | [code_post_init](../structure/workbenches/elements/building_code.md) |
 | [![test](../doc/.test/comment.svg)](../doc/.test/comment.log) | [comment](../doc/comments.md) |
+| [![test](../assignments/.test/const_assignment_building_code.svg)](../assignments/.test/const_assignment_building_code.log) | [const_assignment_building_code](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_fn.svg)](../assignments/.test/const_assignment_fn.log) | [const_assignment_fn](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_init.svg)](../assignments/.test/const_assignment_init.log) | [const_assignment_init](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_shadow.svg)](../assignments/.test/const_assignment_shadow.log) | [const_assignment_shadow](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_workbench_code.svg)](../assignments/.test/const_assignment_workbench_code.log) | [const_assignment_workbench_code](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_workbench_code_wrong.svg)](../assignments/.test/const_assignment_workbench_code_wrong.log) | [const_assignment_workbench_code_wrong](../assignments/const.md) |
 | [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
 | [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |

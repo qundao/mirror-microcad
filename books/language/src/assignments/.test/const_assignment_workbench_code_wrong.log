@@ -1,0 +1,19 @@
+﻿
+-- Test --
+        Test name: const_assignment_workbench_code_wrong
+  Expected result: todo_fail
+      Source file: ../books/language/src/assignments/const.md:119
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+ 119:   sketch MySketch() {
+ 120:       _i = 5;                 // any non const code
+ 121:       const MY_CONST = 1;     // error: const not allowed then
+ 122:   }
+ 123:   MySketch();
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+TODO (SHALL FAIL)

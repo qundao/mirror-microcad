@@ -85,3 +85,76 @@ mod module {
 std::debug::assert_eq([ module::another_module::a(), 5 ]);
 module::Sketch();
 ```
+
+### Not in building code
+
+Constant assignments cannot be used in building code (the code below any initializers).
+
+[![test](.test/const_assignment_building_code.svg)](.test/const_assignment_building_code.log)
+
+```µcad,const_assignment_building_code#todo_fail
+sketch MySketch() {
+    init(_: Integer) {}
+    const MY_CONST = 1;   // error: not allowed in building code
+}
+MySketch();
+```
+
+Constant assignments must be on top of the workbench code if initializers are not used.
+
+[![test](.test/const_assignment_workbench_code.svg)](.test/const_assignment_workbench_code.log)
+
+```µcad,const_assignment_workbench_code
+sketch MySketch() {
+    const MY_CONST = 1;   // allowed if no initializers
+}
+MySketch();
+```
+
+They cannot be placed below non constant assignments within in a workbench.
+
+[![test](.test/const_assignment_workbench_code_wrong.svg)](.test/const_assignment_workbench_code_wrong.log)
+
+```µcad,const_assignment_workbench_code_wrong#todo_fail
+sketch MySketch() {
+    _i = 5;                 // any non const code
+    const MY_CONST = 1;     // error: const not allowed then
+}
+MySketch();
+```
+
+### Not in function
+
+Constant assignments cannot be used in functions.
+
+[![test](.test/const_assignment_fn.svg)](.test/const_assignment_fn.log)
+
+```µcad,const_assignment_fn#fail
+fn f() {
+    const MY_CONST = 1;     // error: not allowed in functions
+}
+f();
+
+sketch MySketch() {
+    fn f() {
+        const MY_CONST = 1; // error: not allowed in workbench functions
+    }
+    f();
+}
+MySketch();
+```
+
+### Not in initializers
+
+Constant assignments cannot be used in initializers.
+
+[![test](.test/const_assignment_init.svg)](.test/const_assignment_init.log)
+
+```µcad,const_assignment_init#todo_fail
+sketch MySketch() {
+    init(_: Integer) {
+        const MY_CONST = 1;   // error: not allowed in initializers
+    }
+}
+MySketch();
+```

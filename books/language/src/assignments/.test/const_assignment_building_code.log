@@ -1,0 +1,19 @@
+﻿
+-- Test --
+        Test name: const_assignment_building_code
+  Expected result: todo_fail
+      Source file: ../books/language/src/assignments/const.md:96
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  96:   sketch MySketch() {
+  97:       init(_: Integer) {}
+  98:       const MY_CONST = 1;   // error: not allowed in building code
+  99:   }
+ 100:   MySketch();
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+TODO (SHALL FAIL)
