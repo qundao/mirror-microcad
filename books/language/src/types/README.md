@@ -44,6 +44,6 @@ However, for parameter lists in functions and workbenches, you can declare the t
 [![test](.test/types_bundles_functions.svg)](.test/types_bundles_functions.log)
 
 ```µcad,types_bundles_functions
-fn f(x = 4mm) {}        // use unit (with default)
+fn f(x = 4mm) {}       // use unit (with default)
 fn f(x: Length) {}     // use type (without default)
 ```

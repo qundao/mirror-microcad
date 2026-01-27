@@ -52,5 +52,6 @@
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+Expected error(s) which did not occur in line(s): 135
 -- Test Result --
-FAILS AS EXPECTED (BUT IS TODO)
+TODO (SHALL FAIL)

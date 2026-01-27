@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**210** tests have been evaluated with version **0.2.20** of microcad.
+**211** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -67,6 +67,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../assignments/.test/const_assignment_init.svg)](../assignments/.test/const_assignment_init.log) | [const_assignment_init](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_mod.svg)](../assignments/.test/const_assignment_mod.log) | [const_assignment_mod](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_shadow.svg)](../assignments/.test/const_assignment_shadow.log) | [const_assignment_shadow](../assignments/const.md) |
+| [![test](../assignments/.test/const_assignment_uppercase.svg)](../assignments/.test/const_assignment_uppercase.log) | [const_assignment_uppercase](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench_code.svg)](../assignments/.test/const_assignment_workbench_code.log) | [const_assignment_workbench_code](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench_code_wrong.svg)](../assignments/.test/const_assignment_workbench_code_wrong.log) | [const_assignment_workbench_code_wrong](../assignments/const.md) |

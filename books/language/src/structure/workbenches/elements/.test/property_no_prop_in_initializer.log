@@ -57,5 +57,6 @@
     ·                       ─────────┬─────────
     ·                                ╰── error: 12:23: Assertion failed: Values differ: [7.5mm, 17.5mm]
     ╰────
+Unexpected error(s) which did occur in line(s): 78, 82
 -- Test Result --
-FAILS AS EXPECTED (BUT IS TODO)
+TODO (SHALL FAIL)

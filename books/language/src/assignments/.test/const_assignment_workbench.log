@@ -2,23 +2,23 @@
 -- Test --
         Test name: const_assignment_workbench
   Expected result: ok
-      Source file: ../books/language/src/assignments/const.md:46
+      Source file: ../books/language/src/assignments/const.md:44
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  46:   sketch MySketch(text: String) {
-  47:       // constant assignment in initialization code
-  48:       const TEXT = "Hello";
-  49:   
-  50:       init() {
-  51:           text = TEXT;
-  52:       }
-  53:   
-  54:       std::print(text);
-  55:   }
-  56:   
-  57:   MySketch();
+  44:   sketch MySketch(text: String) {
+  45:       // constant assignment in initialization code
+  46:       const TEXT = "Hello";
+  47:   
+  48:       init() {
+  49:           text = TEXT;
+  50:       }
+  51:   
+  52:       std::print(text);
+  53:   }
+  54:   
+  55:   MySketch();
 
 -- Output --
 Hello

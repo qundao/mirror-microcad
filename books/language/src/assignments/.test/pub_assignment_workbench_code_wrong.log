@@ -16,5 +16,6 @@
 
 -- No Output --
 -- No Errors --
+Expected error(s) which did not occur in line(s): 64
 -- Test Result --
 TODO (SHALL FAIL)

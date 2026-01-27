@@ -34,5 +34,6 @@
     ·                ╰── error: 7:11: Assertion failed: Invalid: <NO VALUE>
  75 │ assert_eq([ f(4), 3 ]);
     ╰────
+Expected error(s) which did not occur in line(s): 68
 -- Test Result --
-FAILS AS EXPECTED (BUT IS TODO)
+TODO (SHALL FAIL)
