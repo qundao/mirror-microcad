@@ -1,0 +1,59 @@
+﻿
+-- Test --
+        Test name: const_assignment_fn
+  Expected result: fail
+      Source file: ../books/language/src/assignments/const.md:133
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+ 133:   fn f() {
+ 134:       const MY_CONST = 1;     // error: not allowed in functions
+ 135:   }
+ 136:   f();
+ 137:   
+ 138:   sketch MySketch() {
+ 139:       fn f() {
+ 140:           const MY_CONST = 1; // error: not allowed in workbench functions
+ 141:       }
+ 142:       f();
+ 143:   }
+ 144:   MySketch();
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Assignment statement is not available within Function
+     ╭─[../books/language/src/assignments/const.md:134:5]
+ 133 │ fn f() {
+ 134 │     const MY_CONST = 1;     // error: not allowed in functions
+     ·     ─────────┬─────────
+     ·              ╰── error: 2:5: Assignment statement is not available within Function
+ 135 │ }
+     ╰────
+  × error: 2:5: Declaration of MY_CONST not allowed within const_assignment_fn::f
+     ╭─[../books/language/src/assignments/const.md:134:5]
+ 133 │ fn f() {
+ 134 │     const MY_CONST = 1;     // error: not allowed in functions
+     ·     ─────────┬─────────
+     ·              ╰── error: 2:5: Declaration of MY_CONST not allowed within const_assignment_fn::f
+ 135 │ }
+     ╰────
+  × error: 8:9: Assignment statement is not available within Function
+     ╭─[../books/language/src/assignments/const.md:140:9]
+ 139 │     fn f() {
+ 140 │         const MY_CONST = 1; // error: not allowed in workbench functions
+     ·         ─────────┬─────────
+     ·                  ╰── error: 8:9: Assignment statement is not available within Function
+ 141 │     }
+     ╰────
+  × error: 8:9: Declaration of MY_CONST not allowed within const_assignment_fn::MySketch::f
+     ╭─[../books/language/src/assignments/const.md:140:9]
+ 139 │     fn f() {
+ 140 │         const MY_CONST = 1; // error: not allowed in workbench functions
+     ·         ─────────┬─────────
+     ·                  ╰── error: 8:9: Declaration of MY_CONST not allowed within const_assignment_fn::MySketch::f
+ 141 │     }
+     ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
