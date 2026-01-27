@@ -96,5 +96,7 @@
      ·              ╰── warning: 182:12: Unused local Text.
  210 │     __builtin::geo2d::Text(height, text, font_file);
      ╰────
+Expected error(s) which did not occur in line(s): 30
+Unexpected warnings(s) which did occur in line(s): 56, 62, 67, 77, 97, 129, 150, 190, 199, 209
 -- Test Result --
-FAILS AS EXPECTED (BUT IS TODO)
+TODO (SHALL FAIL)

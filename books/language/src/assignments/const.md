@@ -1,6 +1,6 @@
 # Constant Assignments
 
-Unlike *variable assignments*, constants are not stored on the *stack* but in
+Unlike *values*, constants are not stored on the *stack* but in
 the *symbol table*.
 For example this allows them to be accessed from within functions or workbenches
 in the same module where the constant is defined.
@@ -8,8 +8,6 @@ Constants can be placed in
 [source files](../structure/source_file.md),
 [modules](../structure/modules/) or
 [initialization code](../structure/workbenches/elements/init_code.md).
-
-Constants are always written in `UPPER_CASE`.
 
 [![test](.test/const_assignment_mod.svg)](.test/const_assignment_mod.log)
 
@@ -58,6 +56,19 @@ MySketch();
 ```
 
 ## Rules
+
+### Uppercase naming
+
+Constants are always written in `UPPER_CASE`.
+
+[![test](.test/const_assignment_uppercase.svg)](.test/const_assignment_uppercase.log)
+
+```µcad,const_assignment_uppercase#todo_warn
+const A = 1;        // ok
+const a = 1;        // warning
+const MyValue = 1;  // warning
+const MY_VALUE = 1; // ok
+```
 
 ### Ambiguous Names
 

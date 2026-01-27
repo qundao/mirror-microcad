@@ -68,7 +68,7 @@ If you have created a part or a sketch and want to export it to a specific file,
 
 ```µcad,attributes_export
 #[export = "circle.svg"]
-c = std::geo2d::Circle(42.0mm);
+c = std::geo2d::Circle(42.0mm);   // warning: unused c
 ```
 
 The exporter is detected automatically depending on the file extension.
