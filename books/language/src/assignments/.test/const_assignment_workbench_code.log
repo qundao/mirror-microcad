@@ -1,0 +1,23 @@
+﻿
+-- Test --
+        Test name: const_assignment_workbench_code
+  Expected result: ok
+      Source file: ../books/language/src/assignments/const.md:108
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+ 108:   sketch MySketch() {
+ 109:       const MY_CONST = 1;   // allowed if no initializers
+ 110:   }
+ 111:   MySketch();
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) const_assignment_workbench_code::MySketch() ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK
