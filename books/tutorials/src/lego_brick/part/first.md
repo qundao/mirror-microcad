@@ -16,7 +16,7 @@ const SPACING = 8mm;
 sketch Base(width: Length, height: Length) {
     thickness = 1.2mm;
     frame = Frame(width, height, thickness);
-    struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+    struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
         .translate(y = [0..2] * SPACING)
         .center();
     frame | struts;

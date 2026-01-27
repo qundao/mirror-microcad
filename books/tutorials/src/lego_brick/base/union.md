@@ -16,7 +16,7 @@ thickness = 1.2mm;
 width = 31.8mm;
 height = 15.8mm;
 frame = Frame(width, height, thickness);
-struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
              .translate(x = [-1..1] * 8mm);
 
 frame | struts; // We could also write `{ frame; struts; }.union()` but the `|` operator is more elegant. 

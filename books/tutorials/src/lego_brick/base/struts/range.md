@@ -8,7 +8,8 @@ The term `[-1, 0, 1]` can be replaced with a range expression `[-1..1]`, which y
 use std::geo2d::*;
 use std::ops::*;
 
-(Circle(d = 6.51mm) - Circle(d = 4.8mm)).translate(x = [-1..1] * 8mm);
+(Circle(diameter = 6.51mm) - Circle(diameter = 4.8mm))
+    .translate(x = [-1..1] * 8mm);
 ```
 
 ![Picture](.test/ranges-out.svg)

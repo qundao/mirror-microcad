@@ -110,6 +110,6 @@ mod my {
     pub use name::space::*;
 }
 
-my::Circle(r = 4mm);
+my::Circle(radius = 4mm);
 my::Rect(size = 40mm);
 ```
