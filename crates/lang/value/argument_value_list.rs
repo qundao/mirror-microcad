@@ -73,7 +73,15 @@ impl std::fmt::Display for ArgumentValueList {
             let mut v = self
                 .map
                 .iter()
-                .map(|(id, p)| format!("{id}{p}"))
+                .map(|(id, val)| {
+                    if !id.is_empty() {
+                        format!("{id}: {}", val.value.ty())
+                    } else if let Some(id) = &val.inline_id {
+                        format!("{id}: {}", val.value.ty())
+                    } else {
+                        format!("{}", val.value.ty())
+                    }
+                })
                 .collect::<Vec<_>>();
             v.sort();
             v.join(", ")
@@ -87,7 +95,15 @@ impl std::fmt::Debug for ArgumentValueList {
             let mut v = self
                 .map
                 .iter()
-                .map(|(id, av)| format!("{id:?}{av:?}"))
+                .map(|(id, val)| {
+                    if !id.is_empty() {
+                        format!("{id:?}: {:?}", val.value.ty())
+                    } else if let Some(id) = &val.inline_id {
+                        format!("{id:?}: {:?}", val.value.ty())
+                    } else {
+                        format!("{:?}", val.value.ty())
+                    }
+                })
                 .collect::<Vec<_>>();
             v.sort();
             v.join(", ")

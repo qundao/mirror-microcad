@@ -191,6 +191,16 @@ pub enum EvalError {
         actual_params: String,
         possible_params: Vec<String>,
     },
+    /// Workbench didn't find a initialization routine matching the given arguments
+    #[error("Workbench {name} has ambiguous initialization for those arguments")]
+    #[diagnostic(help("Ambiguous initializations: \n\t{}", ambiguous_params.join("\n\t")))]
+    AmbiguousInitialization {
+        #[label("Got: {name}( {actual_params} )")]
+        src_ref: SrcRef,
+        name: Identifier,
+        actual_params: String,
+        ambiguous_params: Vec<String>,
+    },
 
     /// Initializer missed to set a property from plan
     #[error("Workbench plan incomplete. Missing properties: {0}")]

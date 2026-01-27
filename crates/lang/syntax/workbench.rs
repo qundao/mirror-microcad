@@ -48,6 +48,15 @@ pub struct WorkbenchDefinition {
     pub body: Body,
 }
 
+impl WorkbenchDefinition {
+    pub(crate) fn possible_params(&self) -> Vec<String> {
+        std::iter::once(&self.plan)
+            .chain(self.inits().map(|init| &init.parameters))
+            .map(|params| format!("{}( {})", self.id, params))
+            .collect()
+    }
+}
+
 impl<'a> Initialized<'a> for WorkbenchDefinition {
     fn statements(&'a self) -> std::slice::Iter<'a, Statement> {
         self.body.statements.iter()
