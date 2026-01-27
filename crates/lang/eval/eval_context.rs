@@ -10,7 +10,7 @@ use crate::{
 /// The context is used to store the current state of the evaluation.
 pub struct EvalContext {
     /// Symbol table
-    symbol_table: SymbolTable,
+    root: Symbol,
     /// Source cache
     sources: Sources,
     /// Stack of currently opened scopes with symbols while evaluation.
@@ -36,7 +36,7 @@ impl EvalContext {
         log::debug!("Creating evaluation context");
 
         Self {
-            symbol_table: resolve_context.symbol_table,
+            root: resolve_context.root,
             sources: resolve_context.sources,
             diag: resolve_context.diag,
             output,
@@ -90,7 +90,7 @@ impl EvalContext {
         log::trace!("Evaluated Model:\n{}", FormatTree(&model));
 
         let unused = self
-            .symbol_table
+            .root
             .unused_private()
             .iter()
             .map(|symbol| {
@@ -212,7 +212,7 @@ impl EvalContext {
             "{lookup} for property {name:?}",
             lookup = crate::mark!(LOOKUP)
         );
-        self.symbol_table.deny_super(name)?;
+        self.root.deny_super(name)?;
 
         if self.stack.current_workbench_name().is_some() {
             if let Some(id) = name.single_identifier() {
@@ -249,10 +249,7 @@ impl EvalContext {
                 lookup = crate::mark!(LOOKUP)
             );
             self.deny_super(name)?;
-            match self
-                .symbol_table
-                .lookup_within_name(name, workbench, target)
-            {
+            match self.root.lookup_within_name(name, workbench, target) {
                 Ok(symbol) => {
                     log::trace!(
                         "{found} symbol in current module: {symbol:?}",
@@ -291,18 +288,16 @@ impl EvalContext {
     }
 
     fn lookup_within(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
-        self.symbol_table.lookup_within(
+        self.root.lookup_within(
             name,
-            &self
-                .symbol_table
-                .search(&self.stack.current_module_name(), false)?,
+            &self.root.search(&self.stack.current_module_name(), false)?,
             target,
         )
     }
 
     /// Symbol table accessor.
-    pub fn symbol_table(&self) -> &SymbolTable {
-        &self.symbol_table
+    pub fn root(&self) -> &Symbol {
+        &self.root
     }
 }
 
@@ -370,7 +365,7 @@ impl Locals for EvalContext {
 impl Default for EvalContext {
     fn default() -> Self {
         Self {
-            symbol_table: Default::default(),
+            root: Default::default(),
             sources: Default::default(),
             stack: Default::default(),
             output: Stdout::new(),
@@ -556,7 +551,9 @@ impl std::fmt::Debug for EvalContext {
         writeln!(f, "\nSources:\n")?;
         write!(f, "{:?}", &self.sources)?;
 
-        write!(f, "\nSymbol Table:\n{:?}", self.symbol_table)?;
+        write!(f, "\nSymbol Table:\n")?;
+        self.root.tree_print(f, TreeState::new_debug(0))?;
+
         match self.error_count() {
             0 => write!(f, "No errors")?,
             1 => write!(f, "1 error")?,

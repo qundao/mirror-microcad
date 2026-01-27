@@ -1,12 +1,15 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+mod iterators;
 mod symbol_definition;
 mod symbol_info;
 mod symbol_inner;
 mod symbol_map;
 mod symbols;
 
+use indexmap::IndexSet;
+pub use iterators::*;
 pub use symbol_definition::*;
 pub use symbol_info::*;
 pub(crate) use symbol_map::*;
@@ -39,7 +42,7 @@ impl Symbol {
     /// - `visibility`: Visibility of the symbol
     /// - `def`: Symbol definition
     /// - `parent`: Symbol's parent symbol or none for root
-    pub fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
+    pub(crate) fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
         Symbol {
             visibility: std::cell::RefCell::new(def.visibility()),
             inner: RcMut::new(SymbolInner {
@@ -77,7 +80,7 @@ impl Symbol {
     /// - `id`: Name of the symbol
     /// - `parameters`: Optional parameter list
     /// - `f`: The builtin function
-    pub fn new_builtin(builtin: Builtin) -> Symbol {
+    pub(crate) fn new_builtin(builtin: Builtin) -> Symbol {
         Symbol::new(SymbolDef::Builtin(Rc::new(builtin)), None)
     }
 
@@ -98,7 +101,7 @@ impl Symbol {
     }
 
     /// Replace inner of a symbol with the inner of another.
-    pub fn replace(&mut self, replacement: Symbol) {
+    pub(super) fn replace(&mut self, replacement: Symbol) {
         replacement
             .inner
             .borrow()
@@ -109,13 +112,83 @@ impl Symbol {
     }
 }
 
+impl Symbol {
+    /// Search all ids which require target mode (e.g. `assert_valid`)
+    pub(super) fn search_target_mode_ids(&self) -> IdentifierSet {
+        self.riter()
+            .filter(|symbol| symbol.is_target_mode())
+            .map(|symbol| symbol.id())
+            .collect()
+    }
+
+    /// Return a list of unused private symbols
+    ///
+    /// Use this after eval for any useful result.
+    pub(crate) fn unused_private(&self) -> Symbols {
+        let used_in_module = &mut IndexSet::new();
+        let mut symbols: Symbols = self
+            .riter()
+            .skip(1) // skip root
+            .filter(|symbol| {
+                if let Some(in_module) = symbol.in_module()
+                    && symbol.is_used()
+                {
+                    used_in_module.insert(in_module);
+                }
+                symbol.is_unused_private()
+            })
+            .collect();
+
+        symbols.retain(|symbol| {
+            if let Some(in_module) = symbol.in_module() {
+                !used_in_module.contains(&in_module)
+            } else {
+                true
+            }
+        });
+        symbols.sort_by_key(|s| s.full_name());
+        symbols
+    }
+
+    /// Search a *symbol* by it's *qualified name* **and** within a *symbol* given by name.
+    ///
+    /// If both are found
+    /// # Arguments
+    /// - `name`: *qualified name* to search for.
+    /// - `within`: Searches in the *symbol* with this name too.
+    /// - `target`: What to search for
+    pub(crate) fn lookup_within_name(
+        &self,
+        name: &QualifiedName,
+        within: &QualifiedName,
+        target: LookupTarget,
+    ) -> ResolveResult<Symbol> {
+        self.lookup_within(name, &self.search(within, false)?, target)
+    }
+}
+
 // tree structure
 impl Symbol {
     /// Get any child with the given `id`.
     /// # Arguments
     /// - `id`: Anticipated *id* of the possible child.
-    fn get_child(&self, id: &Identifier) -> Option<Symbol> {
+    pub(super) fn get_child(&self, id: &Identifier) -> Option<Symbol> {
         self.inner.borrow().children.get(id).cloned()
+    }
+
+    /// Add a new symbol to children.
+    pub(crate) fn add_symbol(&mut self, symbol: Symbol) -> ResolveResult<()> {
+        self.insert_symbol(symbol.id(), symbol.clone())
+    }
+
+    /// Add a new symbol to children with specific id.
+    pub(super) fn insert_symbol(&mut self, id: Identifier, symbol: Symbol) -> ResolveResult<()> {
+        log::trace!("insert symbol: {id}");
+        if let Some(symbol) = self.inner.borrow_mut().children.insert(id, symbol.clone()) {
+            Err(ResolveError::SymbolAlreadyDefined(symbol.full_name()))
+        } else {
+            Ok(())
+        }
     }
 
     /// Insert child and change parent of child to new parent.
@@ -137,7 +210,7 @@ impl Symbol {
     }
 
     /// Try to apply a FnMut for each child.
-    pub fn try_children<E: std::error::Error>(
+    pub(crate) fn try_children<E: std::error::Error>(
         &self,
         f: impl FnMut((&Identifier, &Symbol)) -> Result<(), E>,
     ) -> Result<(), E> {
@@ -184,38 +257,14 @@ impl Symbol {
         self.inner.borrow_mut().parent = Some(parent);
     }
 
-    pub(crate) fn recursive_collect<F>(&self, f: &mut F, result: &mut Vec<Symbol>)
-    where
-        F: FnMut(&Symbol) -> bool,
-    {
-        if f(self) {
-            result.push(self.clone());
-        }
-        self.inner
-            .borrow()
-            .children
-            .values()
-            .for_each(|symbol| symbol.recursive_collect(f, result));
+    /// Return iterator over symbol's children.
+    pub fn iter(&self) -> Children {
+        Children::new(self.clone())
     }
 
-    pub(crate) fn recursive_for_each_mut<F>(&mut self, id: &Identifier, f: &F)
-    where
-        F: Fn(&Identifier, &mut Symbol),
-    {
-        f(id, self);
-        self.inner
-            .borrow_mut()
-            .children
-            .iter_mut()
-            .for_each(|(id, symbol)| symbol.recursive_for_each_mut(id, f));
-    }
-
-    pub(super) fn find_file(&self, hash: u64) -> Option<Symbol> {
-        if self.source_hash() == hash && self.is_source() {
-            Some(self.clone())
-        } else {
-            self.inner.borrow().children.find_file(hash)
-        }
+    /// Iterate recursively
+    pub fn riter(&self) -> RecurseChildren {
+        RecurseChildren::new(self.clone())
     }
 }
 
@@ -418,21 +467,20 @@ impl Symbol {
                     })
                     // search in symbol table
                     .try_for_each(|name| {
-                        match context.symbol_table.lookup(name, LookupTarget::Any) {
+                        match context.root.lookup(name, LookupTarget::Any) {
                             Ok(_) => Ok::<_, ResolveError>(()),
                             Err(err) => {
                                 // get name of current module
-                                let module =
-                                    match context.symbol_table.search(&self.module_name(), false) {
-                                        Ok(module) => module,
-                                        Err(err) => {
-                                            context.error(&self.id(), err)?;
-                                            return Ok(());
-                                        }
-                                    };
+                                let module = match context.root.search(&self.module_name(), false) {
+                                    Ok(module) => module,
+                                    Err(err) => {
+                                        context.error(&self.id(), err)?;
+                                        return Ok(());
+                                    }
+                                };
                                 // search within current module
                                 if context
-                                    .symbol_table
+                                    .root
                                     .lookup_within(name, &module, LookupTarget::Module)
                                     .is_err()
                                 {
@@ -515,7 +563,7 @@ impl Symbol {
                 SymbolDef::Alias(visibility, id, name) => {
                     log::trace!("resolving use (as): {self} => {visibility}{id} ({name})");
                     let symbol = context
-                        .symbol_table
+                        .root
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
                         .clone_with(visibility.clone(), name.src_ref.clone());
                     self.delete();
@@ -529,7 +577,7 @@ impl Symbol {
                     };
                     log::trace!("resolving use all: {self} => {visibility}{name}");
                     let symbols = context
-                        .symbol_table
+                        .root
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
                         .public_children(visibility.clone(), name.src_ref.clone());
                     if !symbols.is_empty() {
@@ -716,7 +764,7 @@ impl std::fmt::Display for Symbol {
 
 impl std::fmt::Debug for Symbol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.print_symbol(f, None, TreeState::new_debug(0), false)
+        self.tree_print(f, TreeState::new_debug(0))
     }
 }
 
@@ -761,4 +809,46 @@ fn test_symbol_resolve() {
     context.test_add_file(my);
     log::trace!("{context:?}");
     context.resolve().expect("resolve error");
+}
+
+impl Lookup for Symbol {
+    /// Lookup a symbol from global symbols.
+    fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
+        log::trace!(
+            "{lookup} for global symbol '{name:?}'",
+            lookup = crate::mark!(LOOKUP)
+        );
+        self.deny_super(name)?;
+
+        let symbol = match self.search(name, true) {
+            Ok(symbol) => {
+                if target.matches(&symbol) {
+                    symbol
+                } else {
+                    log::trace!(
+                        "{not_found} global symbol: {name:?}",
+                        not_found = crate::mark!(NOT_FOUND_INTERIM),
+                    );
+                    return Err(ResolveError::WrongTarget);
+                }
+            }
+            Err(err) => {
+                log::trace!(
+                    "{not_found} global symbol: {name:?}",
+                    not_found = crate::mark!(NOT_FOUND_INTERIM),
+                );
+                return Err(err)?;
+            }
+        };
+        symbol.set_check();
+        log::trace!(
+            "{found} global symbol: {symbol:?}",
+            found = crate::mark!(FOUND_INTERIM),
+        );
+        Ok(symbol)
+    }
+
+    fn ambiguity_error(ambiguous: QualifiedName, others: QualifiedNames) -> ResolveError {
+        ResolveError::AmbiguousSymbol(ambiguous, others)
+    }
 }

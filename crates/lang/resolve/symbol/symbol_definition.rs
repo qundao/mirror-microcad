@@ -4,8 +4,11 @@
 use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, value::*};
 
 /// Symbol definition
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub enum SymbolDef {
+    /// Project's root symbol.
+    #[default]
+    Root,
     /// Source file symbol.
     SourceFile(Rc<SourceFile>),
     /// Module symbol.
@@ -35,6 +38,7 @@ impl SymbolDef {
     /// Returns ID of this definition.
     pub fn id(&self) -> Identifier {
         match &self {
+            Self::Root => Identifier::none(),
             Self::Workbench(w) => w.id.clone(),
             Self::Module(m) => m.id.clone(),
             Self::Function(f) => f.id.clone(),
@@ -51,6 +55,7 @@ impl SymbolDef {
     /// Return visibility of this symbol.
     pub fn visibility(&self) -> Visibility {
         match &self {
+            Self::Root => Visibility::Private,
             Self::SourceFile(..) | Self::Builtin(..) => Visibility::Public,
 
             Self::Argument(..) => Visibility::Private,
@@ -70,6 +75,7 @@ impl SymbolDef {
 
     pub(crate) fn kind_str(&self) -> String {
         match self {
+            Self::Root => "Root".to_string(),
             Self::Workbench(w) => format!("{}", w.kind),
             Self::Module(..) => "Module".to_string(),
             Self::Function(..) => "Function".to_string(),
@@ -87,6 +93,7 @@ impl SymbolDef {
 
     pub(crate) fn source_hash(&self) -> u64 {
         match self {
+            Self::Root => 0,
             Self::SourceFile(sf) => sf.hash,
             Self::Module(md) => md.src_ref().source_hash(),
             Self::Workbench(wd) => wd.src_ref().source_hash(),
@@ -107,6 +114,7 @@ impl std::fmt::Display for SymbolDef {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let kind = self.kind_str();
         match self {
+            Self::Root => write!(f, "<ROOT>"),
             Self::Workbench(..)
             | Self::Module(..)
             | Self::Function(..)
@@ -127,6 +135,7 @@ impl std::fmt::Debug for SymbolDef {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let kind = self.kind_str();
         match self {
+            Self::Root => unreachable!(),
             Self::Workbench(..)
             | Self::Module(..)
             | Self::Function(..)
@@ -146,10 +155,10 @@ impl std::fmt::Debug for SymbolDef {
 impl Doc for SymbolDef {
     fn doc(&self) -> Option<DocBlock> {
         match self {
-            SymbolDef::SourceFile(sf) => sf.doc(),
-            SymbolDef::Module(md) => md.doc(),
-            SymbolDef::Workbench(wd) => wd.doc(),
-            SymbolDef::Function(fd) => fd.doc(),
+            Self::SourceFile(sf) => sf.doc(),
+            Self::Module(md) => md.doc(),
+            Self::Workbench(wd) => wd.doc(),
+            Self::Function(fd) => fd.doc(),
             _ => None,
         }
     }
@@ -158,23 +167,24 @@ impl Doc for SymbolDef {
 impl Info for SymbolDef {
     fn info(&self) -> SymbolInfo {
         match self {
-            SymbolDef::SourceFile(sf) => sf.into(),
-            SymbolDef::Module(md) => md.into(),
-            SymbolDef::Workbench(wd) => wd.into(),
-            SymbolDef::Function(fd) => fd.into(),
-            SymbolDef::Builtin(bi) => bi.into(),
-            SymbolDef::Assignment(a) => a.into(),
+            Self::Root => unreachable!(),
+            Self::SourceFile(sf) => sf.into(),
+            Self::Module(md) => md.into(),
+            Self::Workbench(wd) => wd.into(),
+            Self::Function(fd) => fd.into(),
+            Self::Builtin(bi) => bi.into(),
+            Self::Assignment(a) => a.into(),
 
-            SymbolDef::Constant(visibility, id, value) => {
+            Self::Constant(visibility, id, value) => {
                 SymbolInfo::new_constant(visibility, id, value)
             }
-            SymbolDef::Argument(id, value) => SymbolInfo::new_arg(id, value),
+            Self::Argument(id, value) => SymbolInfo::new_arg(id, value),
 
-            SymbolDef::Alias(..) => unimplemented!(),
-            SymbolDef::UseAll(..) => unimplemented!(),
+            Self::Alias(..) => unimplemented!(),
+            Self::UseAll(..) => unimplemented!(),
 
             #[cfg(test)]
-            SymbolDef::Tester(_) => unreachable!(),
+            Self::Tester(_) => unreachable!(),
         }
     }
 }

@@ -116,6 +116,7 @@ impl Eval for QualifiedName {
         context
             .lookup(self, LookupTarget::AnyButMethod)?
             .with_def(|def| match def {
+                SymbolDef::Root => unreachable!("<ROOT> cannot be looked up"),
                 SymbolDef::Constant(.., value) | SymbolDef::Argument(_, value) => Ok(value.clone()),
                 SymbolDef::Assignment(a) => a.eval(context),
                 SymbolDef::SourceFile(_) => Ok(Value::None),

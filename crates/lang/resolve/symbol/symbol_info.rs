@@ -9,7 +9,7 @@ pub trait Info {
     fn info(&self) -> SymbolInfo;
 }
 
-/// Single parameter information ion human readable form.
+/// Single parameter information in human readable form.
 pub struct ParameterInfo {
     /// Parameter ID.
     pub id: String,

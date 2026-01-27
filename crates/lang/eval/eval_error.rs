@@ -3,8 +3,10 @@
 
 //! Evaluation error
 
-use miette::Diagnostic;
+#![allow(unused, unused_assignments)]
+
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
+use miette::Diagnostic;
 use thiserror::Error;
 
 /// Evaluation error.
@@ -183,7 +185,7 @@ pub enum EvalError {
         src_ref: SrcRef,
         name: Identifier,
         actual_params: String,
-        possible_params: Vec<String>
+        possible_params: Vec<String>,
     },
 
     /// Initializer missed to set a property from plan

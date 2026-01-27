@@ -26,7 +26,7 @@ wkt = "0.14"
 
 cgmath = "0.18"
 derive_more = { version = "2", features = ["deref", "deref_mut"] }
-geo = "0.31"
+geo = "0.32"
 thiserror = "2.0.12"
 
 [lints.rust]

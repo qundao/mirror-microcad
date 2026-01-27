@@ -138,6 +138,7 @@ impl StackFrame {
                 String::new()
             };
             let entry = symbol.with_def(|def| match def {
+                SymbolDef::Root => unreachable!("<ROOT> cannot be a local"),
                 SymbolDef::Constant(visibility, id, value) => {
                     format!("{visibility}{id:?} = {value:?}{full_name} (constant)",)
                 }

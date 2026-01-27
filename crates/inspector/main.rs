@@ -13,9 +13,9 @@ use microcad_lang::syntax::*;
 
 use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
+use miette::IntoDiagnostic;
 use std::sync::{Arc, RwLock};
 use std::thread;
-use miette::IntoDiagnostic;
 
 mod watcher;
 
@@ -111,15 +111,13 @@ impl Inspector {
                 tx.send(ViewModelRequest::SetSymbolTree({
                     let mut items = Vec::new();
 
-                    resolve_context
-                        .symbol_table()
-                        .iter()
-                        .for_each(|(_, symbol)| {
-                            use crate::to_slint::ItemsFromTree;
-                            items.append(&mut SymbolTreeModelItem::items_from_tree(symbol))
-                        });
+                    resolve_context.root.iter().for_each(|symbol| {
+                        use crate::to_slint::ItemsFromTree;
+                        items.append(&mut SymbolTreeModelItem::items_from_tree(&symbol))
+                    });
                     items
-                })).into_diagnostic()?;
+                }))
+                .into_diagnostic()?;
 
                 let mut eval_context = microcad_lang::eval::EvalContext::new(
                     resolve_context,
@@ -135,7 +133,8 @@ impl Inspector {
                     use crate::to_slint::ItemsFromTree;
                     tx.send(ViewModelRequest::SetModelTree(
                         ModelTreeModelItem::items_from_tree(&model),
-                    )).into_diagnostic()?;
+                    ))
+                    .into_diagnostic()?;
                 }
 
                 // Wait until anything relevant happens.
@@ -143,34 +142,32 @@ impl Inspector {
             }
         });
 
-        thread::spawn(move || {
-            loop {
-                if let Ok(request) = rx.recv() {
-                    weak.upgrade_in_event_loop(move |main_window| match request {
-                        ViewModelRequest::SetSourceCode { code, hash } => {
-                            let items = to_slint::split_source_code(&code);
-                            main_window.set_source_code_model(to_slint::model_rc_from_items(items));
+        thread::spawn(move || loop {
+            if let Ok(request) = rx.recv() {
+                weak.upgrade_in_event_loop(move |main_window| match request {
+                    ViewModelRequest::SetSourceCode { code, hash } => {
+                        let items = to_slint::split_source_code(&code);
+                        main_window.set_source_code_model(to_slint::model_rc_from_items(items));
 
-                            main_window.set_state(VM_State {
-                                current_source_hash: hash_to_shared_string(hash),
-                                current_line: 1,
-                            });
-                            main_window.set_source_code(code.into());
-                        }
-                        ViewModelRequest::SetSymbolTree(items) => {
-                            main_window.set_symbol_tree(to_slint::model_rc_from_items(items))
-                        }
-                        ViewModelRequest::SetModelTree(items) => {
-                            main_window.set_model_tree(to_slint::model_rc_from_items(items))
-                        }
-                        ViewModelRequest::SetCurrentLine(line) => {
-                            let mut state = main_window.get_state();
-                            state.current_line = line as i32;
-                            main_window.set_state(state);
-                        }
-                    })
-                    .expect("No error");
-                }
+                        main_window.set_state(VM_State {
+                            current_source_hash: hash_to_shared_string(hash),
+                            current_line: 1,
+                        });
+                        main_window.set_source_code(code.into());
+                    }
+                    ViewModelRequest::SetSymbolTree(items) => {
+                        main_window.set_symbol_tree(to_slint::model_rc_from_items(items))
+                    }
+                    ViewModelRequest::SetModelTree(items) => {
+                        main_window.set_model_tree(to_slint::model_rc_from_items(items))
+                    }
+                    ViewModelRequest::SetCurrentLine(line) => {
+                        let mut state = main_window.get_state();
+                        state.current_line = line as i32;
+                        main_window.set_state(state);
+                    }
+                })
+                .expect("No error");
             }
         });
 

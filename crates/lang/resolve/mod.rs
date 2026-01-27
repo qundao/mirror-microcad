@@ -26,7 +26,6 @@ mod resolve_context;
 mod resolve_error;
 mod sources;
 mod symbol;
-mod symbol_table;
 mod symbolize;
 
 use crate::{diag::*, syntax::*};
@@ -36,7 +35,6 @@ pub use resolve_context::*;
 pub use resolve_error::*;
 pub use sources::*;
 pub use symbol::*;
-pub use symbol_table::*;
 
 use grant::*;
 use names::*;
