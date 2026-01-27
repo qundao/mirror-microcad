@@ -13,9 +13,9 @@ and translate them using `std::ops::translate()`.
 use std::geo2d::*;
 use std::ops::*;
 
-Circle(d = 6.51mm) - Circle(d =  4.8mm);
-(Circle(d = 6.51mm) - Circle(d =  4.8mm)).translate(x = 8mm);
-(Circle(d = 6.51mm) - Circle(d =  4.8mm)).translate(x = -8mm);
+Circle(diameter = 6.51mm) - Circle(diameter = 4.8mm);
+(Circle(diameter = 6.51mm) - Circle(diameter = 4.8mm)).translate(x = 8mm);
+(Circle(diameter = 6.51mm) - Circle(diameter = 4.8mm)).translate(x = -8mm);
 ```
 
 ![Picture](.test/multiple-out.svg)

@@ -9,5 +9,5 @@ use std::math::*;
 use std::ops::*;
 use std::geo3d::*;
 
-Cylinder(h = 50mm, d = 35mm).orient([X,Y,Z]);
+Cylinder(height = 50mm, diameter = 35mm).orient([X,Y,Z]);
 ```

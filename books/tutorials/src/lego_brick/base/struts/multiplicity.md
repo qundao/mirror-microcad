@@ -13,7 +13,8 @@ This allows us to shorten the previous example significantly:
 use std::geo2d::*;
 use std::ops::*;
 
-(Circle(d = 6.51mm) - Circle(d = 4.8mm)).translate(x = [-8mm, 0mm, 8mm]);
+(Circle(diameter = 6.51mm) - Circle(diameter = 4.8mm))
+    .translate(x = [-8mm, 0mm, 8mm]);
 ```
 
 ![Picture](.test/multiplicity-out.svg)
@@ -30,7 +31,8 @@ But we still have to write `8mm` twice, but we can change this be multiplying th
 use std::geo2d::*;
 use std::ops::*;
 
-(Circle(d = 6.51mm) - Circle(d = 4.8mm)).translate(x = [-1, 0, 1] * 8mm);
+(Circle(diameter = 6.51mm) - Circle(diameter = 4.8mm))
+    .translate(x = [-1, 0, 1] * 8mm);
 ```
 
 ![test](.test/array_mul-out.svg)

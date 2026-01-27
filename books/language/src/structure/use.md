@@ -29,7 +29,7 @@ shorten things a lot:
 use std::geo2d::Circle;
 use std::geo2d::Rect;
 
-Circle(r = 4mm);
+Circle(radius = 4mm);
 Rect(size = 40mm);
 ```
 
@@ -40,7 +40,7 @@ You may also use whole the *module* if the names you are using already exist as 
 ```µcad,use_module
 use std::geo2d;
 
-geo2d::Circle(r = 40mm);
+geo2d::Circle(40mm);
 ```
 
 ## Use As Statement
@@ -51,9 +51,9 @@ locally rename the *target symbol*:
 [![test](.test/use_as.svg)](.test/use_as.log)
 
 ```µcad,use_as
-use std::geo2d::Circle as disk;
+use std::geo2d::Circle as Disk;
 
-disk(r = 4mm);
+Disk(4mm);
 ```
 
 Or you may use `use as` with a *module*:
@@ -63,7 +63,7 @@ Or you may use `use as` with a *module*:
 ```µcad,use_as_module
 use std::geo2d as geo;
 
-geo::Circle(r = 4mm);
+geo::Circle(4mm);
 ```
 
 ## Use All Statement
@@ -76,7 +76,7 @@ The following example aliases **all** symbols of `std::geo3d` into the current s
 ```µcad,use_all
 use std::geo3d::*;
 
-Sphere(r = 4mm);
+Sphere(radius = 4mm);
 Cube(size = 40mm);
 ```
 
@@ -94,6 +94,6 @@ mod my {
     pub use std::geo2d::*;
 }
 
-my::Circle(r = 4mm);
+my::Circle(radius = 4mm);
 my::Rect(size = 40mm);
 ```

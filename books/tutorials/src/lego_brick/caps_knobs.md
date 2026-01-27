@@ -29,7 +29,7 @@ We can easily construct a grid with circles via multiplicity:
 [![test](.test/knobs_multiplicity.svg)](.test/knobs_multiplicity.log)
 
 ```µcad,knobs_multiplicity
-std::geo2d::Circle(d = 4.8mm, c = (
+std::geo2d::Circle(diameter = 4.8mm, center = (
         x = ([-1..2] - 0.5) * 8mm, 
         y = ([0..1] - 0.5) * 8mm)
     );
@@ -48,7 +48,7 @@ By default, if we do not pass any arguments to operation, it will center the obj
 [![test](.test/knobs_center.svg)](.test/knobs_center.log)
 
 ```µcad,knobs_center
-std::geo2d::Circle(d = 4.8mm, c = (
+std::geo2d::Circle(diameter = 4.8mm, center = (
         x = [0..3] * 8mm, 
         y = [0..1] * 8mm)
     ).std::ops::center();
@@ -73,7 +73,7 @@ Let's create a sketch for the knobs:
 
 ```µcad,knobs
 sketch Knobs(diameter = 4.8mm) {
-    std::geo2d::Circle(d = 4.8mm, c = (x = [0..3] * 8mm, y = [0..1] * 8mm))
+    std::geo2d::Circle(diameter = 4.8mm, center = (x = [0..3] * 8mm, y = [0..1] * 8mm))
         .std::ops::center();
 }
 

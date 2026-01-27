@@ -13,7 +13,7 @@ const SPACING = 8mm;
 sketch Base(width: Length, height: Length) {
     thickness = 1.2mm;
     frame = Frame(width, height, thickness);
-    struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+    struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
         .translate(x = [0..2] * SPACING)
         .center();
     frame | struts;
@@ -22,7 +22,7 @@ sketch Base(width: Length, height: Length) {
 use Rect as Cap;
 
 sketch Knobs() {
-    Circle(d = 4.8mm, c = (x = [0..3] * SPACING, y = [0..1] * SPACING))
+    Circle(diameter = 4.8mm, center = (x = [0..3] * SPACING, y = [0..1] * SPACING))
         .center();
 }
 

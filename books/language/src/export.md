@@ -44,7 +44,7 @@ If you omit the file extension, the default export format will be picked automat
 std::geo2d::Rect(42mm);
 
 #[export = "circle.svg"]  // Will be exported to `circle.svg`
-std::geo2d::Circle(r = 42mm);
+std::geo2d::Circle(42mm);
 ```
 
 In the CLI, you can select the node specifically:
