@@ -8,6 +8,11 @@ use test_case::test_case;
 #[test_case("assignment", "a = b * 2")]
 #[test_case("plain string", r#""plain string""#)]
 #[test_case("plain string in expr", r#"a = "plain string int expression" + 1"#)]
+#[test_case(
+    "multie-line string",
+    r#""plain
+    string""#
+)]
 #[test_case("escaped bracket string", r#""string {{ with }} escaped bracket""#)]
 #[test_case("escaped quote string", r#""string \" with \" escaped \ quotes""#)]
 #[test_case("basic expr string", r#""string {with} expression""#)]
@@ -35,7 +40,13 @@ use test_case::test_case;
 )]
 #[test_case("invalid expr string", r#"a = "string {broken"; b = 1"#)]
 #[test_case("invalid expr string format", r#"a = "string {broken:"; b = 1"#)]
+#[test_case(
+    "unclosed string",
+    r#"a = "unclosed string;
+    b = 1"#
+)]
 #[test_case("percent unit", "1%")]
+#[test_case("units", r#"1% + 2mm / 3mm2 - 4mm³ * 1° + 1" - 2'"#; "units")]
 fn test_lexer(name: &str, input: &str) {
     assert_debug_snapshot!(format!("lexer_{name}"), lex(input));
 }

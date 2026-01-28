@@ -1,8 +1,8 @@
 use crate::Span;
+use logos::internal::LexerInternal;
 use logos::{Lexer, Logos};
 use std::borrow::Cow;
 use std::fmt::{Display, Formatter};
-use logos::internal::LexerInternal;
 use thiserror::Error;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -84,17 +84,17 @@ pub enum NormalToken<'a> {
     KeywordPart,
     #[token("sketch")]
     KeywordSketch,
-    #[token("op")]
+    #[token("op", priority = 5)]
     KeywordOp,
-    #[token("fn")]
+    #[token("fn", priority = 5)]
     KeywordFn,
-    #[token("if")]
+    #[token("if", priority = 5)]
     KeywordIf,
     #[token("else")]
     KeywordElse,
     #[token("use")]
     KeywordUse,
-    #[token("as")]
+    #[token("as", priority = 5)]
     KeywordAs,
     #[token("return")]
     KeywordReturn,
@@ -107,14 +107,16 @@ pub enum NormalToken<'a> {
     #[token("init")]
     KeywordInit,
 
-    #[regex("_*[a-zA-Z][_a-zA-Z0-9-']*", callback = token_cow)]
+    #[regex("_*[a-zA-Z][_a-zA-Z0-9-']*", callback = token_cow, priority = 4)]
     Identifier(Cow<'a, str>),
+    #[regex(r#"([a-z]+[²³23]?(/[a-z]+[²³23]?)?)|°|%|'"#, callback = token_cow, priority = 3)]
+    Unit(Cow<'a, str>),
 
     #[regex(r#"-?(0|[1-9]\d*)"#, callback = token_cow)]
     LiteralInt(Cow<'a, str>),
     #[regex(r#"-?(0|[1-9]\d*)?\.(\d+)((e|E)(-|\+)?(\d+))?"#, callback = token_cow)]
     LiteralFloat(Cow<'a, str>),
-    #[token(r#"""#, string_token_callback)]
+    #[regex(r#"""#, string_token_callback)]
     String(Vec<SpannedToken<Token<'a>>>),
     #[token("true")]
     LiteralBoolTrue,
@@ -151,8 +153,6 @@ pub enum NormalToken<'a> {
     SigilAt,
     #[token("->")]
     SigilSingleArrow,
-    #[token("%")]
-    SigilPercent,
 
     #[token("+")]
     OperatorAdd,
@@ -184,7 +184,7 @@ pub enum NormalToken<'a> {
     OperatorNotEqual,
     #[token("and")]
     OperatorAnd,
-    #[token("or")]
+    #[token("or", priority = 5)]
     OperatorOr,
     #[token("xor")]
     OperatorXor,
@@ -205,6 +205,7 @@ impl NormalToken<'_> {
             }
             NormalToken::DocComment(c) => NormalToken::DocComment(c.into_owned().into()),
             NormalToken::Identifier(s) => NormalToken::Identifier(s.into_owned().into()),
+            NormalToken::Unit(s) => NormalToken::Unit(s.into_owned().into()),
             NormalToken::LiteralInt(s) => NormalToken::LiteralInt(s.into_owned().into()),
             NormalToken::LiteralFloat(s) => NormalToken::LiteralFloat(s.into_owned().into()),
             NormalToken::String(s) => {
@@ -241,7 +242,6 @@ impl NormalToken<'_> {
             NormalToken::SigilDoubleDot => NormalToken::SigilDoubleDot,
             NormalToken::SigilAt => NormalToken::SigilAt,
             NormalToken::SigilSingleArrow => NormalToken::SigilSingleArrow,
-            NormalToken::SigilPercent => NormalToken::SigilPercent,
             NormalToken::OperatorAdd => NormalToken::OperatorAdd,
             NormalToken::OperatorSubtract => NormalToken::OperatorSubtract,
             NormalToken::OperatorMultiply => NormalToken::OperatorMultiply,
@@ -284,6 +284,7 @@ impl NormalToken<'_> {
             NormalToken::KeywordProp => "prop",
             NormalToken::KeywordInit => "init",
             NormalToken::Identifier(_) => "identifier",
+            NormalToken::Unit(_) => "unit",
             NormalToken::LiteralInt(_) => "integer",
             NormalToken::LiteralFloat(_) => "float",
             NormalToken::String(_) => "string",
@@ -304,7 +305,6 @@ impl NormalToken<'_> {
             NormalToken::SigilDoubleDot => "..",
             NormalToken::SigilAt => "@",
             NormalToken::SigilSingleArrow => "->",
-            NormalToken::SigilPercent => "%",
             NormalToken::OperatorAdd => "+",
             NormalToken::OperatorSubtract => "-",
             NormalToken::OperatorMultiply => "*",
@@ -335,23 +335,38 @@ fn string_token_callback<'a>(
     let mut tokens = Vec::new();
     while let Some(token) = string_lexer.next() {
         match token {
-            Ok(StringToken::Quote) => break,
+            Ok(StringToken::Quote) => {
+                *lex = string_lexer.morph();
+                return Ok(tokens);
+            }
             Err(e) => {
                 let start = lex.span().start;
                 *lex = string_lexer.morph();
+                dbg!(&e);
                 return Err(match e {
-                    LexerError::UnclosedStringFormat(span) => LexerError::UnclosedStringFormat(start..span.end),
-                    e => e
-                })
-            },
+                    LexerError::UnclosedStringFormat(span) => {
+                        LexerError::UnclosedStringFormat(start..span.end)
+                    }
+                    e => e,
+                });
+            }
             Ok(tok) => tokens.push(SpannedToken {
                 span: string_lexer.span(),
                 token: Token::String(tok),
             }),
         }
     }
-    *lex = string_lexer.morph();
-    Ok(tokens)
+
+    // don't advance the outer lexer, to handle the inch unit case
+    // the parser is responsible for distinguishing inch from an unclosed string
+    let start = lex.span().start;
+    let end = tokens
+        .iter()
+        .take_while(|t| !matches!(t.token, Token::Normal(NormalToken::SigilSemiColon)))
+        .last()
+        .map(|t| t.span.end)
+        .unwrap_or(lex.span().end);
+    Err(LexerError::UnclosedString(start..end))
 }
 
 #[derive(Logos, Debug, PartialEq, Clone)]
@@ -441,10 +456,19 @@ fn format_token_callback<'a>(
             }
             Ok(NormalToken::String(content)) => {
                 let start = lex.span().start;
-                let end = content.first().map(|t| t.span.start).unwrap_or_else(|| expression_lexer.span().start);
+                let end = content
+                    .first()
+                    .map(|t| t.span.start)
+                    .unwrap_or_else(|| expression_lexer.span().start);
                 lex.end(end);
-                return Err(LexerError::UnclosedStringFormat(start..end))
-            },
+                return Err(LexerError::UnclosedStringFormat(start..end));
+            }
+            Err(LexerError::UnclosedString(span)) => {
+                let start = lex.span().start;
+                let end = span.start + 1;
+                lex.end(end);
+                return Err(LexerError::UnclosedStringFormat(start..end));
+            }
             Err(e) => return Err(e),
             Ok(tok) => tokens.push(SpannedToken {
                 span: expression_lexer.span(),
@@ -460,14 +484,14 @@ fn format_token_callback<'a>(
                 Ok(StringFormatToken::FormatEnd) => break,
                 Err(e) => {
                     *lex = format_lexer.morph();
-                    return Err(e)
-                },
+                    return Err(e);
+                }
                 Ok(StringFormatToken::StringEnd) => {
                     let start = lex.span().start;
                     let end = format_lexer.span().end;
                     lex.end(end);
-                    return Err(LexerError::UnclosedStringFormat(start..end))
-                },
+                    return Err(LexerError::UnclosedStringFormat(start..end));
+                }
                 Ok(tok) => tokens.push(SpannedToken {
                     span: format_lexer.span(),
                     token: Token::StringFormat(tok),
@@ -475,7 +499,6 @@ fn format_token_callback<'a>(
             }
         }
     }
-
 
     *lex = format_lexer.morph();
     Ok(tokens)
@@ -525,6 +548,9 @@ pub enum LexerError {
     NoValidToken,
     #[error("Unclosed format string")]
     UnclosedStringFormat(Span),
+    // note that this can also be used as the inch unit
+    #[error("Unclosed string")]
+    UnclosedString(Span),
 }
 
 impl LexerError {
@@ -532,6 +558,7 @@ impl LexerError {
         match self {
             LexerError::NoValidToken => "no valid token",
             LexerError::UnclosedStringFormat(_) => "unclosed format string",
+            LexerError::UnclosedString(_) => "unclosed string",
         }
     }
 }
@@ -540,6 +567,7 @@ impl LexerError {
     pub fn span(&self) -> Option<Span> {
         match self {
             LexerError::UnclosedStringFormat(span) => Some(span.clone()),
+            LexerError::UnclosedString(span) => Some(span.clone()),
             _ => None,
         }
     }
@@ -553,7 +581,10 @@ pub fn lex<'a>(input: &'a str) -> Vec<SpannedToken<Token<'a>>> {
                 span,
                 token: Token::Normal(token),
             },
-            Err(error) => SpannedToken { span: error.span().unwrap_or(span), token: Token::Error(error) },
+            Err(error) => SpannedToken {
+                span: error.span().unwrap_or(span),
+                token: Token::Error(error),
+            },
         })
         .collect()
 }

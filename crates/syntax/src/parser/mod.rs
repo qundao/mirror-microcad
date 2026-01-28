@@ -99,19 +99,22 @@ fn parser<'tokens>()
         .labelled("qualified name")
         .boxed();
 
-    let single_type =
-        select_ref! {
-            Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
-                span: e.span(),
-                name: ident.as_ref().into()
-            },
-            Token::Normal(NormalToken::SigilPercent) = e => SingleType {
-                span: e.span(),
-                name: "%".into()
-            }
+    let single_type = select_ref! {
+        Token::Normal(NormalToken::Identifier(ident)) = e => SingleType {
+            span: e.span(),
+            name: ident.as_ref().into()
+        },
+        Token::Normal(NormalToken::Unit(unit)) = e => SingleType {
+            span: e.span(),
+            name: unit.as_ref().into()
+        },
+        Token::Error(LexerError::UnclosedString(_)) = e => SingleType {
+            span: e.span(),
+            name: r#"""#.into()
         }
-        .labelled("quantity type")
-        .boxed();
+    }
+    .labelled("quantity type")
+    .boxed();
 
     type_parser.define({
         let single = single_type.clone().map(Type::Single);
@@ -353,18 +356,20 @@ fn parser<'tokens>()
             .then(
                 expression_parser
                     .clone()
-                    .recover_with(via_parser(semi_recovery.map(|_| Expression::Error))),
+                    .recover_with(via_parser(semi_recovery.clone().map(|_| Expression::Error))),
             )
             .map_with(
-                |((((((doc, attributes), visibility), qualifier), name), ty), value), e| Assignment {
-                    span: e.span(),
-                    doc,
-                    attributes,
-                    visibility,
-                    qualifier,
-                    name,
-                    value,
-                    ty,
+                |((((((doc, attributes), visibility), qualifier), name), ty), value), e| {
+                    Assignment {
+                        span: e.span(),
+                        doc,
+                        attributes,
+                        visibility,
+                        qualifier,
+                        name,
+                        value,
+                        ty,
+                    }
                 },
             )
             .boxed();
@@ -608,7 +613,9 @@ fn parser<'tokens>()
                 span: e.span(),
                 attributes,
                 expression,
-            }).map(Box::new).or_not();
+            })
+            .map(Box::new)
+            .or_not();
         statement_parser
             .repeated()
             .collect::<Vec<_>>()
@@ -621,10 +628,26 @@ fn parser<'tokens>()
     });
 
     expression_parser.define({
+        let unclosed_string = select_ref! {
+            Token::Error(LexerError::UnclosedString(_)) => (),
+        }
+        .ignore_then(
+            semi_recovery
+                .clone()
+                .try_map_with(|_, e| {
+                    let span: Span = e.span();
+                    Err::<Expression, _>(Rich::custom((span.start - 1)..span.end, "unclosed string"))
+                })
+                .recover_with(via_parser(semi_recovery.clone().map(|_| Expression::Error))),
+        )
+        .labelled("unclosed string")
+        .boxed();
+
         let literal = literal_parser
             .map(Expression::Literal)
             .labelled("literal")
-            .boxed();
+            .boxed()
+            .or(unclosed_string);
 
         let marker = just(Token::Normal(NormalToken::SigilAt))
             .ignore_then(identifier_parser.clone())
@@ -767,7 +790,10 @@ fn parser<'tokens>()
             .map(Expression::QualifiedName)
             .boxed();
 
-        let call = call_inner.clone().map(Expression::Call).labelled("method call");
+        let call = call_inner
+            .clone()
+            .map(Expression::Call)
+            .labelled("method call");
 
         let base = literal
             .or(string_format)
@@ -812,7 +838,8 @@ fn parser<'tokens>()
             .map(Element::Method)
             .boxed();
 
-        let access_array = expression_parser.clone()
+        let access_array = expression_parser
+            .clone()
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
                 just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
@@ -828,16 +855,13 @@ fn parser<'tokens>()
 
         let element_access = binary_expression
             .clone()
-            .foldl_with(
-                access_item.repeated(),
-                |value, element, e| {
-                    Expression::ElementAccess(ElementAccess {
-                        span: e.span(),
-                        value: value.into(),
-                        element,
-                    })
-                },
-            )
+            .foldl_with(access_item.repeated(), |value, element, e| {
+                Expression::ElementAccess(ElementAccess {
+                    span: e.span(),
+                    value: value.into(),
+                    element,
+                })
+            })
             .labelled("element access")
             .boxed();
 

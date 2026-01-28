@@ -1,7 +1,9 @@
 use insta::assert_debug_snapshot;
-use microcad_syntax::parser::parse;
+use microcad_syntax::parser::{ParseError, parse};
 use microcad_syntax::tokens::lex;
+use miette::{Diagnostic, GraphicalTheme, IntoDiagnostic};
 use test_case::test_case;
+use thiserror::Error;
 
 #[test_case("single int", "1")]
 #[test_case("int overflow", "9999999999999999999")]
@@ -153,27 +155,18 @@ use test_case::test_case;
     r##"#[export]
     a = 1;"##
 )]
-#[test_case(
-    "attribute access",
-    r##"foo#bar"##
-)]
-#[test_case(
-    "array access",
-    r##"foo[1]"##
-)]
-#[test_case(
-    "tuple access",
-    r##"foo.bar"##
-)]
-#[test_case(
-    "method call",
-    r##"foo.bar()"##
-)]
-#[test_case(
-    "multiple element access",
-    r##"foo[1]#bar.asd.call(1)"##
-)]
+#[test_case("attribute access", r##"foo#bar"##)]
+#[test_case("array access", r##"foo[1]"##)]
+#[test_case("tuple access", r##"foo.bar"##)]
+#[test_case("method call", r##"foo.bar()"##)]
+#[test_case("multiple element access", r##"foo[1]#bar.asd.call(1)"##)]
 #[test_case("percent unit", "1%")]
+#[test_case(
+    "unclosed string",
+    r#"a = "unclosed string;
+    b = 1;"#
+)]
+#[test_case("units", r#"1% + 2mm / 3mm2 - 4mm³ * 1° + 1" - 2'"#; "units")]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));

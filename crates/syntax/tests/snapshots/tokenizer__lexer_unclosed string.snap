@@ -1,0 +1,72 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..1,
+        token: Normal(
+            Identifier(
+                "a",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 2..3,
+        token: Normal(
+            OperatorAssignment,
+        ),
+    },
+    SpannedToken {
+        span: 4..31,
+        token: Error(
+            UnclosedString(
+                4..31,
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 5..13,
+        token: Normal(
+            Identifier(
+                "unclosed",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 14..20,
+        token: Normal(
+            Identifier(
+                "string",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 20..21,
+        token: Normal(
+            SigilSemiColon,
+        ),
+    },
+    SpannedToken {
+        span: 26..27,
+        token: Normal(
+            Identifier(
+                "b",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 28..29,
+        token: Normal(
+            OperatorAssignment,
+        ),
+    },
+    SpannedToken {
+        span: 30..31,
+        token: Normal(
+            LiteralInt(
+                "1",
+            ),
+        ),
+    },
+]

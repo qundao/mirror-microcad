@@ -1,0 +1,154 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..1,
+        token: Normal(
+            LiteralInt(
+                "1",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 1..2,
+        token: Normal(
+            Unit(
+                "%",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 3..4,
+        token: Normal(
+            OperatorAdd,
+        ),
+    },
+    SpannedToken {
+        span: 5..6,
+        token: Normal(
+            LiteralInt(
+                "2",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 6..8,
+        token: Normal(
+            Identifier(
+                "mm",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 9..10,
+        token: Normal(
+            OperatorDivide,
+        ),
+    },
+    SpannedToken {
+        span: 11..12,
+        token: Normal(
+            LiteralInt(
+                "3",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 12..15,
+        token: Normal(
+            Identifier(
+                "mm2",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 16..17,
+        token: Normal(
+            OperatorSubtract,
+        ),
+    },
+    SpannedToken {
+        span: 18..19,
+        token: Normal(
+            LiteralInt(
+                "4",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 19..23,
+        token: Normal(
+            Unit(
+                "mm³",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 24..25,
+        token: Normal(
+            OperatorMultiply,
+        ),
+    },
+    SpannedToken {
+        span: 26..27,
+        token: Normal(
+            LiteralInt(
+                "1",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 27..29,
+        token: Normal(
+            Unit(
+                "°",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 30..31,
+        token: Normal(
+            OperatorAdd,
+        ),
+    },
+    SpannedToken {
+        span: 32..33,
+        token: Normal(
+            LiteralInt(
+                "1",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 33..39,
+        token: Error(
+            UnclosedString(
+                33..39,
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 35..36,
+        token: Normal(
+            OperatorSubtract,
+        ),
+    },
+    SpannedToken {
+        span: 37..38,
+        token: Normal(
+            LiteralInt(
+                "2",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 38..39,
+        token: Normal(
+            Unit(
+                "'",
+            ),
+        ),
+    },
+]

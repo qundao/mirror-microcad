@@ -14,7 +14,9 @@ expression: lex(input)
     SpannedToken {
         span: 1..2,
         token: Normal(
-            SigilPercent,
+            Unit(
+                "%",
+            ),
         ),
     },
 ]

@@ -69,4 +69,6 @@ pub enum LiteralErrorKind {
     Float(#[from] ParseFloatError),
     #[error(transparent)]
     Int(#[from] ParseIntError),
+    #[error("unclosed string literal")]
+    UnclosedString,
 }

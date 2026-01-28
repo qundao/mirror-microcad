@@ -1,0 +1,139 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..39,
+        statements: StatementList {
+            span: 0..39,
+            statements: [],
+            tail: Some(
+                ExpressionStatement {
+                    span: 0..39,
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..39,
+                            lhs: BinaryOperation(
+                                BinaryOperation {
+                                    span: 0..39,
+                                    lhs: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 0..29,
+                                            lhs: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 0..23,
+                                                    lhs: BinaryOperation(
+                                                        BinaryOperation {
+                                                            span: 0..15,
+                                                            lhs: BinaryOperation(
+                                                                BinaryOperation {
+                                                                    span: 0..8,
+                                                                    lhs: Literal(
+                                                                        Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 0..2,
+                                                                                value: 1.0,
+                                                                                ty: SingleType {
+                                                                                    span: 1..2,
+                                                                                    name: "%",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    ),
+                                                                    operation: Add,
+                                                                    rhs: Literal(
+                                                                        Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 5..8,
+                                                                                value: 2.0,
+                                                                                ty: SingleType {
+                                                                                    span: 6..8,
+                                                                                    name: "mm",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    ),
+                                                                },
+                                                            ),
+                                                            operation: Divide,
+                                                            rhs: Literal(
+                                                                Quantity(
+                                                                    QuantityLiteral {
+                                                                        span: 11..15,
+                                                                        value: 3.0,
+                                                                        ty: SingleType {
+                                                                            span: 12..15,
+                                                                            name: "mm2",
+                                                                        },
+                                                                    },
+                                                                ),
+                                                            ),
+                                                        },
+                                                    ),
+                                                    operation: Subtract,
+                                                    rhs: Literal(
+                                                        Quantity(
+                                                            QuantityLiteral {
+                                                                span: 18..23,
+                                                                value: 4.0,
+                                                                ty: SingleType {
+                                                                    span: 19..23,
+                                                                    name: "mm³",
+                                                                },
+                                                            },
+                                                        ),
+                                                    ),
+                                                },
+                                            ),
+                                            operation: Multiply,
+                                            rhs: Literal(
+                                                Quantity(
+                                                    QuantityLiteral {
+                                                        span: 26..29,
+                                                        value: 1.0,
+                                                        ty: SingleType {
+                                                            span: 27..29,
+                                                            name: "°",
+                                                        },
+                                                    },
+                                                ),
+                                            ),
+                                        },
+                                    ),
+                                    operation: Add,
+                                    rhs: Literal(
+                                        Quantity(
+                                            QuantityLiteral {
+                                                span: 32..39,
+                                                value: 1.0,
+                                                ty: SingleType {
+                                                    span: 33..39,
+                                                    name: "\"",
+                                                },
+                                            },
+                                        ),
+                                    ),
+                                },
+                            ),
+                            operation: Subtract,
+                            rhs: Literal(
+                                Quantity(
+                                    QuantityLiteral {
+                                        span: 37..39,
+                                        value: 2.0,
+                                        ty: SingleType {
+                                            span: 38..39,
+                                            name: "'",
+                                        },
+                                    },
+                                ),
+                            ),
+                        },
+                    ),
+                },
+            ),
+        },
+    },
+)

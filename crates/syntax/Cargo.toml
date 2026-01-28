@@ -20,3 +20,4 @@ miette = "7.6.0"
 [dev-dependencies]
 insta = { version = "1.45.0" }
 test-case = "3.3.1"
+miette = { version = "7.6.0", features = ["fancy"] }
