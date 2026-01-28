@@ -12,8 +12,8 @@
 //! If test IDs include `.` name will be split into several names which will be
 //! used to crates sub modules.
 
-use miette::{Context, IntoDiagnostic, Result};
 use microcad_test_tools::{output::*, test_env::*};
+use miette::{Context, IntoDiagnostic, Result};
 use std::{io::Write, path::Path};
 
 /// for debugging purpose
@@ -240,7 +240,7 @@ fn scan_for_tests(
     test_outputs: &mut Vec<Output>,
 ) -> Result<bool> {
     use regex::*;
-    use std::{fs::*};
+    use std::fs::*;
 
     // `true`` if we didn't found anything
     let mut result = true;
