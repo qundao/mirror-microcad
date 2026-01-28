@@ -1,0 +1,28 @@
+﻿
+-- Test --
+        Test name: prop_assignment_source
+  Expected result: fail
+      Source file: ../books/language/src/assignments/property.md:25
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  25:   prop diameter = radius * 2; // error: not in source file
+
+-- No Output --
+-- Errors --
+  × error: 1:1: Assignment statement is not available within SourceFile
+    ╭─[../books/language/src/assignments/property.md:25:1]
+ 25 │ prop diameter = radius * 2; // error: not in source file
+    · ─────────────┬─────────────
+    ·              ╰── error: 1:1: Assignment statement is not available within SourceFile
+    ╰────
+  × error: 1:1: Declaration of diameter not allowed within prop_assignment_source
+    ╭─[../books/language/src/assignments/property.md:25:1]
+ 25 │ prop diameter = radius * 2; // error: not in source file
+    · ─────────────┬─────────────
+    ·              ╰── error: 1:1: Declaration of diameter not allowed within prop_assignment_source
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
