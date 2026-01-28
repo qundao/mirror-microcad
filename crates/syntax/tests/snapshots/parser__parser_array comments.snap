@@ -1,0 +1,64 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..25,
+        statements: StatementList {
+            span: 0..25,
+            statements: [],
+            tail: Some(
+                ExpressionStatement {
+                    span: 0..25,
+                    attributes: [],
+                    expression: ArrayList(
+                        ArrayListExpression {
+                            span: 0..25,
+                            items: [
+                                ArrayItem {
+                                    span: 1..12,
+                                    leading_comment: None,
+                                    expression: Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 1..2,
+                                                value: 1,
+                                            },
+                                        ),
+                                    ),
+                                    trailing_comment: Some(
+                                        Comment {
+                                            span: 3..12,
+                                            comment: "/* foo */",
+                                        },
+                                    ),
+                                },
+                                ArrayItem {
+                                    span: 13..24,
+                                    leading_comment: None,
+                                    expression: Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 13..14,
+                                                value: 2,
+                                            },
+                                        ),
+                                    ),
+                                    trailing_comment: Some(
+                                        Comment {
+                                            span: 15..24,
+                                            comment: "/* bar */",
+                                        },
+                                    ),
+                                },
+                            ],
+                            ty: None,
+                        },
+                    ),
+                },
+            ),
+            tail_comment: None,
+        },
+    },
+)

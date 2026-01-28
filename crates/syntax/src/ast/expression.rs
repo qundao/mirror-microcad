@@ -101,16 +101,24 @@ pub struct TupleExpression {
 #[derive(Debug, PartialEq)]
 pub struct ArrayRangeExpression {
     pub span: Span,
-    pub start: Box<Expression>,
-    pub end: Box<Expression>,
+    pub start: Box<ArrayItem>,
+    pub end: Box<ArrayItem>,
     pub ty: Option<SingleType>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct ArrayListExpression {
     pub span: Span,
-    pub items: Vec<Expression>,
+    pub items: Vec<ArrayItem>,
     pub ty: Option<SingleType>,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct ArrayItem {
+    pub span: Span,
+    pub leading_comment: Option<Comment>,
+    pub expression: Expression,
+    pub trailing_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]

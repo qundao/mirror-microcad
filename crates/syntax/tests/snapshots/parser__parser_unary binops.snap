@@ -23,14 +23,19 @@ Ok(
                                         ArrayListExpression {
                                             span: 1..4,
                                             items: [
-                                                Literal(
-                                                    Integer(
-                                                        IntegerLiteral {
-                                                            span: 2..3,
-                                                            value: 1,
-                                                        },
+                                                ArrayItem {
+                                                    span: 2..3,
+                                                    leading_comment: None,
+                                                    expression: Literal(
+                                                        Integer(
+                                                            IntegerLiteral {
+                                                                span: 2..3,
+                                                                value: 1,
+                                                            },
+                                                        ),
                                                     ),
-                                                ),
+                                                    trailing_comment: None,
+                                                },
                                             ],
                                             ty: None,
                                         },
@@ -42,14 +47,19 @@ Ok(
                                 ArrayListExpression {
                                     span: 8..11,
                                     items: [
-                                        Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 9..10,
-                                                    value: 1,
-                                                },
+                                        ArrayItem {
+                                            span: 9..10,
+                                            leading_comment: None,
+                                            expression: Literal(
+                                                Integer(
+                                                    IntegerLiteral {
+                                                        span: 9..10,
+                                                        value: 1,
+                                                    },
+                                                ),
                                             ),
-                                        ),
+                                            trailing_comment: None,
+                                        },
                                     ],
                                     ty: None,
                                 },

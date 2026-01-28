@@ -23,22 +23,32 @@ Ok(
                         value: ArrayRange(
                             ArrayRangeExpression {
                                 span: 4..12,
-                                start: Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 5..6,
-                                            value: 1,
-                                        },
+                                start: ArrayItem {
+                                    span: 5..6,
+                                    leading_comment: None,
+                                    expression: Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 5..6,
+                                                value: 1,
+                                            },
+                                        ),
                                     ),
-                                ),
-                                end: Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 8..9,
-                                            value: 3,
-                                        },
+                                    trailing_comment: None,
+                                },
+                                end: ArrayItem {
+                                    span: 8..9,
+                                    leading_comment: None,
+                                    expression: Literal(
+                                        Integer(
+                                            IntegerLiteral {
+                                                span: 8..9,
+                                                value: 3,
+                                            },
+                                        ),
                                     ),
-                                ),
+                                    trailing_comment: None,
+                                },
                                 ty: Some(
                                     SingleType {
                                         span: 10..12,

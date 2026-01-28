@@ -738,10 +738,20 @@ fn parser<'tokens>()
             just(Token::Normal(NormalToken::SigilCloseBracket)),
         );
 
-        let array_range = expression_parser
+        let array_item = comment_inner.or_not().clone()
+            .then(expression_parser.clone())
+            .then(comment_inner.or_not().clone())
+            .map_with(|((leading_comment, expression), trailing_comment), e| ArrayItem {
+                span: e.span(),
+                leading_comment,
+                expression,
+                trailing_comment,
+            });
+
+        let array_range = array_item
             .clone()
             .then_ignore(just(Token::Normal(NormalToken::SigilDoubleDot)))
-            .then(expression_parser.clone())
+            .then(array_item.clone())
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
                 just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
@@ -758,7 +768,7 @@ fn parser<'tokens>()
             .labelled("array range")
             .boxed();
 
-        let array_list = expression_parser
+        let array_list = array_item
             .clone()
             .separated_by(just(Token::Normal(NormalToken::SigilComma)))
             .allow_trailing()
