@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**211** tests have been evaluated with version **0.2.20** of microcad.
+**216** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -130,6 +130,11 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/types/.test/part_basic.svg)](../structure/workbenches/types/.test/part_basic.log) | [part_basic](../structure/workbenches/types/parts.md) |
 | [![test](../structure/workbenches/elements/.test/part_declaration.svg)](../structure/workbenches/elements/.test/part_declaration.log) | [part_declaration](../structure/workbenches/elements/) |
 | [![test](../structure/workbenches/elements/.test/pre_init_code.svg)](../structure/workbenches/elements/.test/pre_init_code.log) | [pre_init_code](../structure/workbenches/elements/init_code.md) |
+| [![test](../assignments/.test/prop_assignment.svg)](../assignments/.test/prop_assignment.log) | [prop_assignment](../assignments/property.md) |
+| [![test](../assignments/.test/prop_assignment_fn.svg)](../assignments/.test/prop_assignment_fn.log) | [prop_assignment_fn](../assignments/property.md) |
+| [![test](../assignments/.test/prop_assignment_init.svg)](../assignments/.test/prop_assignment_init.log) | [prop_assignment_init](../assignments/property.md) |
+| [![test](../assignments/.test/prop_assignment_initializer.svg)](../assignments/.test/prop_assignment_initializer.log) | [prop_assignment_initializer](../assignments/property.md) |
+| [![test](../assignments/.test/prop_assignment_source.svg)](../assignments/.test/prop_assignment_source.log) | [prop_assignment_source](../assignments/property.md) |
 | [![test](../structure/workbenches/elements/.test/property.svg)](../structure/workbenches/elements/.test/property.log) | [property](../structure/workbenches/elements/properties.md) |
 | [![test](../structure/workbenches/elements/.test/property_no_prop_in_init_code.svg)](../structure/workbenches/elements/.test/property_no_prop_in_init_code.log) | [property_no_prop_in_init_code](../structure/workbenches/elements/properties.md) |
 | [![test](../structure/workbenches/elements/.test/property_no_prop_in_initializer.svg)](../structure/workbenches/elements/.test/property_no_prop_in_initializer.log) | [property_no_prop_in_initializer](../structure/workbenches/elements/properties.md) |
