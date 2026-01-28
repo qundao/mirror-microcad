@@ -53,6 +53,7 @@ fn parser<'tokens>()
     let mut format_string_part_parser = Recursive::declare();
     let mut type_parser = Recursive::declare();
     let mut attribute_parser = Recursive::declare();
+    let mut if_inner = Recursive::declare();
 
     let semi_recovery = none_of(Token::Normal(NormalToken::SigilSemiColon))
         .repeated()
@@ -589,6 +590,17 @@ fn parser<'tokens>()
             )
             .boxed();
 
+
+        let if_expression = attribute_parser.clone()
+            .then(if_inner.clone().map(Expression::If))
+            .map_with(|(attributes, expression), e| Statement::Expression(ExpressionStatement {
+                span: e.span(),
+                attributes,
+                expression
+            }))
+            .labelled("if statement")
+            .boxed();
+
         let with_semi = assignment
             .or(return_statement)
             .or(use_statement)
@@ -600,6 +612,7 @@ fn parser<'tokens>()
             .or(workspace)
             .or(module)
             .or(comment)
+            .or(if_expression)
             .boxed();
 
         without_semi
@@ -744,8 +757,6 @@ fn parser<'tokens>()
             .map(Expression::Block)
             .labelled("block expression")
             .boxed();
-
-        let mut if_inner = Recursive::declare();
 
         if_inner.define(
             just(Token::Normal(NormalToken::KeywordIf))

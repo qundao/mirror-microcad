@@ -7,112 +7,114 @@ Ok(
         span: 0..35,
         statements: StatementList {
             span: 0..35,
-            statements: [],
-            tail: Some(
-                ExpressionStatement {
-                    span: 0..35,
-                    attributes: [],
-                    expression: If(
-                        If {
-                            span: 0..35,
-                            condition: BinaryOperation(
-                                BinaryOperation {
-                                    span: 3..8,
-                                    lhs: QualifiedName(
-                                        QualifiedName {
-                                            span: 3..4,
-                                            parts: [
-                                                Identifier {
-                                                    span: 3..4,
-                                                    name: "a",
-                                                },
-                                            ],
-                                        },
-                                    ),
-                                    operation: GreaterThan,
-                                    rhs: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 7..8,
-                                                value: 1,
+            statements: [
+                Expression(
+                    ExpressionStatement {
+                        span: 0..35,
+                        attributes: [],
+                        expression: If(
+                            If {
+                                span: 0..35,
+                                condition: BinaryOperation(
+                                    BinaryOperation {
+                                        span: 3..8,
+                                        lhs: QualifiedName(
+                                            QualifiedName {
+                                                span: 3..4,
+                                                parts: [
+                                                    Identifier {
+                                                        span: 3..4,
+                                                        name: "a",
+                                                    },
+                                                ],
                                             },
                                         ),
-                                    ),
-                                },
-                            ),
-                            body: StatementList {
-                                span: 11..12,
-                                statements: [],
-                                tail: Some(
-                                    ExpressionStatement {
-                                        span: 11..12,
-                                        attributes: [],
-                                        expression: Literal(
+                                        operation: GreaterThan,
+                                        rhs: Literal(
                                             Integer(
                                                 IntegerLiteral {
-                                                    span: 11..12,
-                                                    value: 3,
+                                                    span: 7..8,
+                                                    value: 1,
                                                 },
                                             ),
                                         ),
                                     },
                                 ),
-                            },
-                            next_if: Some(
-                                If {
-                                    span: 20..35,
-                                    condition: BinaryOperation(
-                                        BinaryOperation {
-                                            span: 23..29,
-                                            lhs: QualifiedName(
-                                                QualifiedName {
-                                                    span: 23..24,
-                                                    parts: [
-                                                        Identifier {
-                                                            span: 23..24,
-                                                            name: "a",
-                                                        },
-                                                    ],
-                                                },
-                                            ),
-                                            operation: LessThan,
-                                            rhs: Literal(
+                                body: StatementList {
+                                    span: 11..12,
+                                    statements: [],
+                                    tail: Some(
+                                        ExpressionStatement {
+                                            span: 11..12,
+                                            attributes: [],
+                                            expression: Literal(
                                                 Integer(
                                                     IntegerLiteral {
-                                                        span: 27..29,
-                                                        value: -1,
+                                                        span: 11..12,
+                                                        value: 3,
                                                     },
                                                 ),
                                             ),
                                         },
                                     ),
-                                    body: StatementList {
-                                        span: 32..33,
-                                        statements: [],
-                                        tail: Some(
-                                            ExpressionStatement {
-                                                span: 32..33,
-                                                attributes: [],
-                                                expression: Literal(
+                                },
+                                next_if: Some(
+                                    If {
+                                        span: 20..35,
+                                        condition: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 23..29,
+                                                lhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 23..24,
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 23..24,
+                                                                name: "a",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                                operation: LessThan,
+                                                rhs: Literal(
                                                     Integer(
                                                         IntegerLiteral {
-                                                            span: 32..33,
-                                                            value: 1,
+                                                            span: 27..29,
+                                                            value: -1,
                                                         },
                                                     ),
                                                 ),
                                             },
                                         ),
+                                        body: StatementList {
+                                            span: 32..33,
+                                            statements: [],
+                                            tail: Some(
+                                                ExpressionStatement {
+                                                    span: 32..33,
+                                                    attributes: [],
+                                                    expression: Literal(
+                                                        Integer(
+                                                            IntegerLiteral {
+                                                                span: 32..33,
+                                                                value: 1,
+                                                            },
+                                                        ),
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                        next_if: None,
+                                        else_body: None,
                                     },
-                                    next_if: None,
-                                    else_body: None,
-                                },
-                            ),
-                            else_body: None,
-                        },
-                    ),
-                },
-            ),
+                                ),
+                                else_body: None,
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
         },
     },
 )
