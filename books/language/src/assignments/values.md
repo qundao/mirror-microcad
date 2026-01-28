@@ -14,7 +14,7 @@ In this case the source code file itself:
 [![test](.test/assignment_value.svg)](.test/assignment_value.log)
 
 ```µcad,assignment_value
-// source code file is the scope
+// source code file is the scope of a and b
 
 use std::debug::*;
 
@@ -81,7 +81,7 @@ a = 5;
 }
 ```
 
-Another assignment of a variable with the same name without an additional scope
+Another assignment of a variable with the same name without an additional scope is
 prohibited.
 
 [![test](.test/assignment_shadow.svg)](.test/assignment_shadow.log)
