@@ -3,9 +3,9 @@
 Things change when an expression consists of *models* instead of just *values*.
 We call this a *model expression*:
 
-[![test](.test/expression_model.svg)](.test/expression_model.log)
+[![test](.test/model_expression.svg)](.test/model_expression.log)
 
-```µcad,expression_model
+```µcad,model_expression
 std::geo2d::Rect(1cm) - std::geo2d::Circle(radius = 3mm);
 ```
 
@@ -13,14 +13,14 @@ In this expression which consists of a subtraction operation of the results of
 two [calls](../../flow/calls/workbench_calls.md) to `Rect` and `Circle`.
 
 Output
-  :![output](.test/expression_model-out.svg)
+  :![output](.test/model_expression-out.svg)
 
 Building a *group* (using curly braces) of both operands and applying the
 builtin method `subtract` to it is equivalent to the above code:
 
-[![test](.test/expression_model_builtin.svg)](.test/expression_model_builtin.log)
+[![test](.test/model_expression_builtin.svg)](.test/model_expression_builtin.log)
 
-```µcad,expression_model_builtin
+```µcad,model_expression_builtin
 use __builtin::ops::subtract;
 
 {
@@ -30,7 +30,7 @@ use __builtin::ops::subtract;
 ```
 
 Output
-  :![output](.test/expression_model_builtin-out.svg)
+  :![output](.test/model_expression_builtin-out.svg)
 
 The following operations can be applied to 2D or 3D models:
 
@@ -39,4 +39,3 @@ The following operations can be applied to 2D or 3D models:
 |   `-`    | `__builtin::ops::subtract`  | Geometrical difference   |
 |   `\|`   | `__builtin::ops::union`     | Geometrical union        |
 |   `&`    | `__builtin::ops::intersect` | Geometrical intersection |
-

@@ -1,75 +1,68 @@
 # Conditionals
 
+The *if statement* can control the program flow by the result of conditions.
+
+In general an id statement consists of the following elements in fixed order:
+
+1. an initial `if` followed by the condition in form of an [*boolean expression*](../expressions/#boolean-results)
+2. a block of code (in `{ .. }`) which is processed if the condition is true
+3. maybe one or more `else if` statements with alternative conditions and code blocks
+4. and last maybe an `else` statement followed by a code block which got executed when no other condition was `true`.
+
 Conditions lead to different executions paths for different cases.
 
-## If statements in workbenches
-
-Inside a workbench block, an if statement can be used to select different shapes or constructions depending on input parameters.
+Here is a simple example:
 
 [![test](.test/if_statement.svg)](.test/if_statement.log)
 
 ```µcad,if_statement
+use std::geo2d::*;
+
+x = 0;  // output changes if you change that value
+
+if x > 0 {
+    Circle(radius = 5mm);
+} else if x < 0 {
+    Rect(10mm);
+} else {
+    Hexagon(5mm);
+}
+```
+
+Output
+  :![test](.test/if_statement-out.svg)
+
+## `if` in workbenches
+
+Inside a workbench block, an if statement can be used to select different shapes
+or constructions depending on input parameters.
+So in the following example all possible geometries are generated with [*parameter multiplicity*](calls/multiplicity.md)
+and put side by side with the operation `std::ops::align`.
+
+[![test](.test/if_statement_sketch.svg)](.test/if_statement_sketch.log)
+
+```µcad,if_statement_sketch
 use std::ops::*;
 use std::math::*;
 use std::geo2d::*;
 
-sketch MySketch(a: Integer) {
-    if a == 1 {
-        Circle(r = 1cm)
+sketch MySketch(x: Integer) {
+    if x > 0 {
+        Circle(radius = 5mm)
+    } else if x < 0 {
+        Rect(10mm)
     } else {
-        Rect(s = 1cm)
+        Hexagon(5mm)
     }
 }
 
-MySketch([1,2]).align(X, 1cm);
+MySketch([-1,0,2]).align(X, 5mm);
 ```
 
-Multiple conditions can be chained, allowing more than two alternatives:
+Output
+  :![output](.test/if_statement_sketch-out.svg)
 
-![output](.test/if_statement-out.svg)
-
-[![test](.test/chained_if_statement.svg)](.test/chained_if_statement.log)
-
-```µcad,chained_if_statement
-use std::ops::*;
-use std::math::*;
-use std::geo2d::*;
-
-sketch MySketch(a: Integer) {
-    if a == 1 {
-        Circle(r = 1cm)
-    } else if a == 2 {
-        Rect(s = 1cm)
-    } else {
-        Hexagon(r = 1cm)
-    }
-}
-
-MySketch([1,2,3]).align(X, 1cm);
-```
-
-![output](.test/chained_if_statement-out.svg)
-
-## If Statement for functions
-
-[![test](.test/if_functions.svg)](.test/if_functions.log)
-
-```µcad,if_functions
-fn f(x: Integer) {
-    if x == 5 or x == 4 {
-        std::print("match");
-    } else if x > 0 and x < 4 {
-        std::print("no match");
-    } else {
-        std::print("invalid");
-    }
-}
-
-f(5);  // prints "match"
-f(1);  // prints "no match"
-f(-1); // prints "invalid"
-f(6);  // prints "invalid"
-```
+## `if` in expressions
 
 If statements can also be used as an expression, evaluating to the value from
 the chosen branch.
@@ -81,19 +74,19 @@ use std::ops::*;
 use std::math::*;
 use std::geo2d::*;
 
-sketch MySketch(a: Integer) {
-    outer = if a == 1 {
-        Circle(radius = 1cm)
-    } else if a == 2 {
-        Rect(1cm)
+sketch MySketch(x: Integer) {
+    outer = if x > 0 {
+        Circle(radius = 5mm)
+    } else if x < 0 {
+        Rect(10mm)
     } else {
-        Hexagon(1cm)
+        Hexagon(5mm)
     };
 
     outer - Circle(radius = 3mm)
 }
 
-MySketch([1,2,3]).align(X, 1cm);
+MySketch([-1,0,1]).align(X, 5mm);
 ```
 
 Output
