@@ -344,10 +344,11 @@ fn parser<'tokens>()
 
     let call_inner = qualified_name
         .clone()
-        .then(comment_inner
-                  .clone()
-                  .or_not()
-                  .then(tuple_body.clone())
+        .then(
+            comment_inner
+                .clone()
+                .or_not()
+                .then(tuple_body.clone())
                 .map_with(|(leading_comment, arguments), e| ArgumentList {
                     span: e.span(),
                     leading_comment,
@@ -481,8 +482,10 @@ fn parser<'tokens>()
             .labelled("comment")
             .boxed();
 
-        let arguments = identifier_parser
+        let arguments_inner = comment_inner
             .clone()
+            .or_not()
+            .then(identifier_parser.clone())
             .then(
                 just(Token::Normal(NormalToken::SigilColon))
                     .ignore_then(type_parser.clone())
@@ -493,15 +496,29 @@ fn parser<'tokens>()
                     .ignore_then(literal_parser.clone())
                     .or_not(),
             )
-            .map_with(|((name, ty), default), e| ArgumentDefinition {
-                span: e.span(),
-                name,
-                ty,
-                default,
-            })
+            .then(comment_inner.clone().or_not())
+            .map_with(
+                |((((leading_comment, name), ty), default), trailing_comment), e| {
+                    ArgumentDefinition {
+                        span: e.span(),
+                        leading_comment,
+                        name,
+                        ty,
+                        default,
+                        trailing_comment,
+                    }
+                },
+            )
             .separated_by(just(Token::Normal(NormalToken::SigilComma)))
             .allow_trailing()
             .collect::<Vec<_>>()
+            .boxed();
+        let arguments = comment_inner.clone().or_not().then(arguments_inner)
+            .map_with(|(leading_comment, arguments), e| ArgumentsDefinition {
+                span: e.span(),
+                leading_comment,
+                arguments,
+            })
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenBracket)),
                 just(Token::Normal(NormalToken::SigilCloseBracket)),

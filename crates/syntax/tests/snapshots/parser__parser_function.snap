@@ -4,61 +4,72 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..35,
+        span: 0..46,
         statements: StatementList {
-            span: 0..35,
+            span: 0..46,
             statements: [
                 Function(
                     FunctionDefinition {
-                        span: 0..35,
+                        span: 0..46,
                         doc: None,
                         visibility: None,
                         name: Identifier {
                             span: 3..6,
                             name: "foo",
                         },
-                        arguments: [
-                            ArgumentDefinition {
-                                span: 7..16,
-                                name: Identifier {
-                                    span: 7..8,
-                                    name: "a",
-                                },
-                                ty: Some(
-                                    Single(
-                                        SingleType {
-                                            span: 10..16,
-                                            name: "Length",
+                        arguments: ArgumentsDefinition {
+                            span: 7..27,
+                            leading_comment: None,
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 7..27,
+                                    leading_comment: None,
+                                    name: Identifier {
+                                        span: 7..8,
+                                        name: "a",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 10..16,
+                                                name: "Length",
+                                            },
+                                        ),
+                                    ),
+                                    default: None,
+                                    trailing_comment: Some(
+                                        Comment {
+                                            span: 17..27,
+                                            comment: "/* test */",
                                         },
                                     ),
-                                ),
-                                default: None,
-                            },
-                        ],
+                                },
+                            ],
+                        },
                         return_type: Some(
                             Single(
                                 SingleType {
-                                    span: 21..27,
+                                    span: 32..38,
                                     name: "Length",
                                 },
                             ),
                         ),
                         body: StatementList {
-                            span: 29..34,
+                            span: 40..45,
                             statements: [],
                             tail: Some(
                                 ExpressionStatement {
-                                    span: 29..34,
+                                    span: 40..45,
                                     attributes: [],
                                     expression: BinaryOperation(
                                         BinaryOperation {
-                                            span: 29..34,
+                                            span: 40..45,
                                             lhs: QualifiedName(
                                                 QualifiedName {
-                                                    span: 29..30,
+                                                    span: 40..41,
                                                     parts: [
                                                         Identifier {
-                                                            span: 29..30,
+                                                            span: 40..41,
                                                             name: "a",
                                                         },
                                                     ],
@@ -68,7 +79,7 @@ Ok(
                                             rhs: Literal(
                                                 Integer(
                                                     IntegerLiteral {
-                                                        span: 33..34,
+                                                        span: 44..45,
                                                         value: 2,
                                                     },
                                                 ),

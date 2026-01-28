@@ -49,7 +49,7 @@ pub struct WorkbenchDefinition {
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
-    pub arguments: Vec<ArgumentDefinition>,
+    pub arguments: ArgumentsDefinition,
     pub body: StatementList,
 }
 
@@ -69,7 +69,7 @@ pub struct FunctionDefinition {
     pub doc: Option<Comment>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
-    pub arguments: Vec<ArgumentDefinition>,
+    pub arguments: ArgumentsDefinition,
     pub return_type: Option<Type>,
     pub body: StatementList,
 }
@@ -78,7 +78,7 @@ pub struct FunctionDefinition {
 pub struct InitDefinition {
     pub span: Span,
     pub doc: Option<Comment>,
-    pub arguments: Vec<ArgumentDefinition>,
+    pub arguments: ArgumentsDefinition,
     pub body: StatementList,
 }
 
@@ -107,13 +107,21 @@ pub struct Return {
     pub span: Span,
     pub value: Expression,
 }
+#[derive(Debug, PartialEq)]
+pub struct ArgumentsDefinition {
+    pub span: Span,
+    pub leading_comment: Option<Comment>,
+    pub arguments: Vec<ArgumentDefinition>,
+}
 
 #[derive(Debug, PartialEq)]
 pub struct ArgumentDefinition {
     pub span: Span,
+    pub leading_comment: Option<Comment>,
     pub name: Identifier,
     pub ty: Option<Type>,
     pub default: Option<Literal>,
+    pub trailing_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]

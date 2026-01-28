@@ -17,44 +17,52 @@ Ok(
                             span: 3..6,
                             name: "foo",
                         },
-                        arguments: [
-                            ArgumentDefinition {
-                                span: 7..16,
-                                name: Identifier {
-                                    span: 7..8,
-                                    name: "a",
-                                },
-                                ty: Some(
-                                    Single(
-                                        SingleType {
-                                            span: 10..16,
-                                            name: "Length",
-                                        },
-                                    ),
-                                ),
-                                default: None,
-                            },
-                            ArgumentDefinition {
-                                span: 18..25,
-                                name: Identifier {
-                                    span: 18..19,
-                                    name: "b",
-                                },
-                                ty: None,
-                                default: Some(
-                                    Quantity(
-                                        QuantityLiteral {
-                                            span: 22..25,
-                                            value: 3.0,
-                                            ty: SingleType {
-                                                span: 23..25,
-                                                name: "mm",
+                        arguments: ArgumentsDefinition {
+                            span: 7..25,
+                            leading_comment: None,
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 7..16,
+                                    leading_comment: None,
+                                    name: Identifier {
+                                        span: 7..8,
+                                        name: "a",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 10..16,
+                                                name: "Length",
                                             },
-                                        },
+                                        ),
                                     ),
-                                ),
-                            },
-                        ],
+                                    default: None,
+                                    trailing_comment: None,
+                                },
+                                ArgumentDefinition {
+                                    span: 18..25,
+                                    leading_comment: None,
+                                    name: Identifier {
+                                        span: 18..19,
+                                        name: "b",
+                                    },
+                                    ty: None,
+                                    default: Some(
+                                        Quantity(
+                                            QuantityLiteral {
+                                                span: 22..25,
+                                                value: 3.0,
+                                                ty: SingleType {
+                                                    span: 23..25,
+                                                    name: "mm",
+                                                },
+                                            },
+                                        ),
+                                    ),
+                                    trailing_comment: None,
+                                },
+                            ],
+                        },
                         return_type: None,
                         body: StatementList {
                             span: 28..33,

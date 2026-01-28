@@ -17,7 +17,11 @@ Ok(
                                 comment: "/// Doc comment",
                             },
                         ),
-                        arguments: [],
+                        arguments: ArgumentsDefinition {
+                            span: 25..25,
+                            leading_comment: None,
+                            arguments: [],
+                        },
                         body: StatementList {
                             span: 27..27,
                             statements: [],

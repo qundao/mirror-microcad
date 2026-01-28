@@ -40,7 +40,8 @@ use thiserror::Error;
     "formatted expr string both",
     r#""string {formatted - expression:03.5} expression""#
 )]
-#[test_case("function", "fn foo(a: Length) -> Length {a * 2}")]
+#[test_case("function", "fn foo(a: Length /* test */) -> Length {a * 2}")]
+#[test_case("function empty args with comment", "fn foo(/* test */) {2}")]
 #[test_case("function with return", "fn foo(a: Length) -> Length {return a * 2;}")]
 #[test_case("function with default", "fn foo(a: Length, b = 3mm) {b / a}")]
 #[test_case("call empty args", "foo()")]

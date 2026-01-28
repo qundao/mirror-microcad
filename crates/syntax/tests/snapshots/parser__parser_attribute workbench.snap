@@ -46,7 +46,11 @@ Ok(
                             span: 30..33,
                             name: "Foo",
                         },
-                        arguments: [],
+                        arguments: ArgumentsDefinition {
+                            span: 34..34,
+                            leading_comment: None,
+                            arguments: [],
+                        },
                         body: StatementList {
                             span: 46..84,
                             statements: [

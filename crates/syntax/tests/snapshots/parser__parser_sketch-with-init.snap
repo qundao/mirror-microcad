@@ -19,24 +19,30 @@ Ok(
                             span: 7..12,
                             name: "Wheel",
                         },
-                        arguments: [
-                            ArgumentDefinition {
-                                span: 13..27,
-                                name: Identifier {
-                                    span: 13..19,
-                                    name: "radius",
-                                },
-                                ty: Some(
-                                    Single(
-                                        SingleType {
-                                            span: 21..27,
-                                            name: "Length",
-                                        },
+                        arguments: ArgumentsDefinition {
+                            span: 13..27,
+                            leading_comment: None,
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 13..27,
+                                    leading_comment: None,
+                                    name: Identifier {
+                                        span: 13..19,
+                                        name: "radius",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 21..27,
+                                                name: "Length",
+                                            },
+                                        ),
                                     ),
-                                ),
-                                default: None,
-                            },
-                        ],
+                                    default: None,
+                                    trailing_comment: None,
+                                },
+                            ],
+                        },
                         body: StatementList {
                             span: 35..128,
                             statements: [
@@ -44,24 +50,30 @@ Ok(
                                     InitDefinition {
                                         span: 35..96,
                                         doc: None,
-                                        arguments: [
-                                            ArgumentDefinition {
-                                                span: 40..56,
-                                                name: Identifier {
-                                                    span: 40..48,
-                                                    name: "diameter",
-                                                },
-                                                ty: Some(
-                                                    Single(
-                                                        SingleType {
-                                                            span: 50..56,
-                                                            name: "Length",
-                                                        },
+                                        arguments: ArgumentsDefinition {
+                                            span: 40..56,
+                                            leading_comment: None,
+                                            arguments: [
+                                                ArgumentDefinition {
+                                                    span: 40..56,
+                                                    leading_comment: None,
+                                                    name: Identifier {
+                                                        span: 40..48,
+                                                        name: "diameter",
+                                                    },
+                                                    ty: Some(
+                                                        Single(
+                                                            SingleType {
+                                                                span: 50..56,
+                                                                name: "Length",
+                                                            },
+                                                        ),
                                                     ),
-                                                ),
-                                                default: None,
-                                            },
-                                        ],
+                                                    default: None,
+                                                    trailing_comment: None,
+                                                },
+                                            ],
+                                        },
                                         body: StatementList {
                                             span: 68..90,
                                             statements: [

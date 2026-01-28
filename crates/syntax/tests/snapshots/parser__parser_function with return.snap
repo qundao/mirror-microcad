@@ -17,24 +17,30 @@ Ok(
                             span: 3..6,
                             name: "foo",
                         },
-                        arguments: [
-                            ArgumentDefinition {
-                                span: 7..16,
-                                name: Identifier {
-                                    span: 7..8,
-                                    name: "a",
-                                },
-                                ty: Some(
-                                    Single(
-                                        SingleType {
-                                            span: 10..16,
-                                            name: "Length",
-                                        },
+                        arguments: ArgumentsDefinition {
+                            span: 7..16,
+                            leading_comment: None,
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 7..16,
+                                    leading_comment: None,
+                                    name: Identifier {
+                                        span: 7..8,
+                                        name: "a",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 10..16,
+                                                name: "Length",
+                                            },
+                                        ),
                                     ),
-                                ),
-                                default: None,
-                            },
-                        ],
+                                    default: None,
+                                    trailing_comment: None,
+                                },
+                            ],
+                        },
                         return_type: Some(
                             Single(
                                 SingleType {

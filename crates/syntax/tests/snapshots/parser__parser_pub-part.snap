@@ -21,44 +21,52 @@ Ok(
                             span: 9..14,
                             name: "Wheel",
                         },
-                        arguments: [
-                            ArgumentDefinition {
-                                span: 15..29,
-                                name: Identifier {
-                                    span: 15..21,
-                                    name: "radius",
-                                },
-                                ty: Some(
-                                    Single(
-                                        SingleType {
-                                            span: 23..29,
-                                            name: "Length",
-                                        },
-                                    ),
-                                ),
-                                default: None,
-                            },
-                            ArgumentDefinition {
-                                span: 31..43,
-                                name: Identifier {
-                                    span: 31..37,
-                                    name: "height",
-                                },
-                                ty: None,
-                                default: Some(
-                                    Quantity(
-                                        QuantityLiteral {
-                                            span: 40..43,
-                                            value: 1.0,
-                                            ty: SingleType {
-                                                span: 41..43,
-                                                name: "mm",
+                        arguments: ArgumentsDefinition {
+                            span: 15..43,
+                            leading_comment: None,
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 15..29,
+                                    leading_comment: None,
+                                    name: Identifier {
+                                        span: 15..21,
+                                        name: "radius",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 23..29,
+                                                name: "Length",
                                             },
-                                        },
+                                        ),
                                     ),
-                                ),
-                            },
-                        ],
+                                    default: None,
+                                    trailing_comment: None,
+                                },
+                                ArgumentDefinition {
+                                    span: 31..43,
+                                    leading_comment: None,
+                                    name: Identifier {
+                                        span: 31..37,
+                                        name: "height",
+                                    },
+                                    ty: None,
+                                    default: Some(
+                                        Quantity(
+                                            QuantityLiteral {
+                                                span: 40..43,
+                                                value: 1.0,
+                                                ty: SingleType {
+                                                    span: 41..43,
+                                                    name: "mm",
+                                                },
+                                            },
+                                        ),
+                                    ),
+                                    trailing_comment: None,
+                                },
+                            ],
+                        },
                         body: StatementList {
                             span: 46..83,
                             statements: [

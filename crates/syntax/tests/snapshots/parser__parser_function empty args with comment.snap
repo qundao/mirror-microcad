@@ -4,42 +4,42 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..46,
+        span: 0..22,
         statements: StatementList {
-            span: 0..46,
+            span: 0..22,
             statements: [
                 Function(
                     FunctionDefinition {
-                        span: 0..46,
-                        doc: Some(
-                            Comment {
-                                span: 0..15,
-                                comment: "/// Doc comment",
-                            },
-                        ),
+                        span: 0..22,
+                        doc: None,
                         visibility: None,
                         name: Identifier {
-                            span: 23..26,
-                            name: "Foo",
+                            span: 3..6,
+                            name: "foo",
                         },
                         arguments: ArgumentsDefinition {
-                            span: 27..27,
-                            leading_comment: None,
+                            span: 7..17,
+                            leading_comment: Some(
+                                Comment {
+                                    span: 7..17,
+                                    comment: "/* test */",
+                                },
+                            ),
                             arguments: [],
                         },
                         return_type: None,
                         body: StatementList {
-                            span: 39..40,
+                            span: 20..21,
                             statements: [],
                             tail: Some(
                                 ExpressionStatement {
-                                    span: 39..40,
+                                    span: 20..21,
                                     attributes: [],
                                     expression: Literal(
                                         Integer(
                                             IntegerLiteral {
-                                                span: 39..40,
-                                                value: 1,
+                                                span: 20..21,
+                                                value: 2,
                                             },
                                         ),
                                     ),
