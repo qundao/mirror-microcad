@@ -35,6 +35,7 @@
   - [Property Assignments](./assignments/property.md)
   - [Model Assignments](./assignments/model.md)
 - [Program Flow](./flow/README.md)
+  - [Start Code](./flow/start_code.md)
   - [Conditionals](./flow/conditions.md)
   - [Calls](./flow/calls/README.md)
     - [Function Calls](./flow/calls/function_calls.md)
