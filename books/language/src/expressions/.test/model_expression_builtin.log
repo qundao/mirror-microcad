@@ -1,6 +1,6 @@
 ﻿
 -- Test --
-        Test name: expression_model_builtin
+        Test name: model_expression_builtin
   Expected result: ok
       Source file: ../books/language/src/expressions/model_expression.md:24
         Test path: ../books/language/src/expressions/.test
@@ -32,6 +32,6 @@
           Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
             Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
 
-Export of "../books/language/src/expressions/.test/expression_model_builtin-out.svg" successful.
+Export of "../books/language/src/expressions/.test/model_expression_builtin-out.svg" successful.
 -- Test Result --
 OK
