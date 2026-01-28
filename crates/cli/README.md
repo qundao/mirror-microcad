@@ -103,3 +103,11 @@ You're now ready to use µcad!
 - Language documentation:
 
   - <https://docs.microcad.xyz/language/book/index.html>
+
+## ❤️ Donate
+
+If you like this project you can help us spending more time with it by donating:
+
+<a href="https://opencollective.com/microcad/donate" target="_blank">
+<img src="https://opencollective.com/microcad/donate/button@2x.png?color=blue" width=300 />
+</a>

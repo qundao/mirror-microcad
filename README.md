@@ -22,6 +22,7 @@ Feel free to [contribute](CONTRIBUTE.md) by opening issues or pull requests.
 - [Command line usage](#command-line-usage)
 - [Using the viewer](#using-the-viewer)
 - [Documentation](#documentation)
+- [❤️ Donate](#️-donate)
 - [💚 Funded by](#-funded-by)
 
 ## Quick Start
@@ -129,6 +130,14 @@ microcad-viewer ./examples/bricks/brick
 - [Basic concepts](lang/doc/CONCEPTS.md)
 - [Glossary](lang/doc/GLOSSARY.md)
 - [Contribute Documentation](CONTRIBUTE.md#contribute-documentation)
+
+## ❤️ Donate
+
+If you like this project you can help us spending more time with it by donating:
+
+<a href="https://opencollective.com/microcad/donate" target="_blank">
+<img src="https://opencollective.com/microcad/donate/button@2x.png?color=blue" width=300 />
+</a>
 
 ## 💚 Funded by
 

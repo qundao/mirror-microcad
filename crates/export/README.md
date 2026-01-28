@@ -9,3 +9,11 @@ The following exporters are implemented at the moment:
 * `ply`: Export a 3D model as PLY.
 * `wkt`: Export a 2D model as Well-Known-Text (a simpler format than SVG to represent polygonal geometries).
 * `json`: Export any model as JSON.
+
+## ❤️ Donate
+
+If you like this project you can help us spending more time with it by donating:
+
+<a href="https://opencollective.com/microcad/donate" target="_blank">
+<img src="https://opencollective.com/microcad/donate/button@2x.png?color=blue" width=300 />
+</a>
