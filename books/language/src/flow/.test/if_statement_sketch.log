@@ -1,0 +1,64 @@
+﻿
+-- Test --
+        Test name: if_statement_sketch
+  Expected result: ok
+      Source file: ../books/language/src/flow/conditions.md:45
+        Test path: ../books/language/src/flow/.test
+
+-- Code --
+
+  45:   use std::ops::*;
+  46:   use std::math::*;
+  47:   use std::geo2d::*;
+  48:   
+  49:   sketch MySketch(x: Integer) {
+  50:       if x > 0 {
+  51:           Circle(radius = 5mm)
+  52:       } else if x < 0 {
+  53:           Rect(10mm)
+  54:       } else {
+  55:           Hexagon(5mm)
+  56:       }
+  57:   }
+  58:   
+  59:   MySketch([-1,0,2]).align(X, 5mm);
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=5mm) ->
+      - direction = (x=1, y=0, z=0)
+      - spacing = 5mm
+      Operation __builtin::ops::align(spacing=5mm, x=1, y=0, z=0) ->
+        Multiplicity ->
+          Workpiece(sketch) if_statement_sketch::MySketch(x=-1) ->
+            - x = -1
+            Group ->
+              Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
+                - height = 10mm
+                - width = 10mm
+                - x = -5mm
+                - y = -5mm
+                Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
+          Workpiece(sketch) if_statement_sketch::MySketch(x=0) ->
+            - x = 0
+            Group ->
+              Workpiece(sketch) std::geo2d::Hexagon(radius=5mm) ->
+                - radius = 5mm
+                Workpiece(sketch) std::geo2d::Ngon(n=6, radius=5mm) ->
+                  - n = 6
+                  - radius = 5mm
+                  Primitive2D __builtin::geo2d::Ngon(n=6, radius=5mm) ->
+          Workpiece(sketch) if_statement_sketch::MySketch(x=2) ->
+            - x = 2
+            Group ->
+              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) ->
+                - center = (x=0mm, y=0mm)
+                - radius = 5mm
+                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                  Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
+
+Export of "../books/language/src/flow/.test/if_statement_sketch-out.svg" successful.
+-- Test Result --
+OK

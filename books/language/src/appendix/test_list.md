@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**216** tests have been evaluated with version **0.2.20** of microcad.
+**218** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -59,7 +59,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/calls/.test/call_function.svg)](../flow/calls/.test/call_function.log) | [call_function](../flow/calls/) |
 | [![test](../flow/argument_match/.test/call_match.svg)](../flow/argument_match/.test/call_match.log) | [call_match](../flow/argument_match/) |
 | [![test](../flow/calls/.test/call_workbench.svg)](../flow/calls/.test/call_workbench.log) | [call_workbench](../flow/calls/) |
-| [![test](../flow/.test/chained_if_statement.svg)](../flow/.test/chained_if_statement.log) | [chained_if_statement](../flow/conditions.md) |
 | [![test](../structure/workbenches/elements/.test/code.svg)](../structure/workbenches/elements/.test/code.log) | [code](../structure/workbenches/elements/building_code.md) |
 | [![test](../structure/workbenches/elements/.test/code_between_initializers.svg)](../structure/workbenches/elements/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/elements/initializers.md) |
 | [![test](../structure/workbenches/elements/.test/code_post_init.svg)](../structure/workbenches/elements/.test/code_post_init.log) | [code_post_init](../structure/workbenches/elements/building_code.md) |
@@ -80,10 +79,11 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../doc/.test/doc_comment.svg)](../doc/.test/doc_comment.log) | [doc_comment](../doc/comments.md) |
 | [![test](../structure/functions/.test/example.svg)](../structure/functions/.test/example.log) | [example](../structure/functions/) |
 | [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
+| [![test](../expressions/.test/expression_boolean.svg)](../expressions/.test/expression_boolean.log) | [expression_boolean](../expressions/) |
 | [![test](../expressions/.test/expression_literals.svg)](../expressions/.test/expression_literals.log) | [expression_literals](../expressions/literals.md) |
-| [![test](../expressions/.test/expression_model.svg)](../expressions/.test/expression_model.log) | [expression_model](../expressions/model_expression.md) |
-| [![test](../expressions/.test/expression_model_builtin.svg)](../expressions/.test/expression_model_builtin.log) | [expression_model_builtin](../expressions/model_expression.md) |
+| [![test](../expressions/.test/expression_model.svg)](../expressions/.test/expression_model.log) | [expression_model](../expressions/) |
 | [![test](../expressions/.test/expression_multiply.svg)](../expressions/.test/expression_multiply.log) | [expression_multiply](../expressions/) |
+| [![test](../expressions/.test/expression_quantity.svg)](../expressions/.test/expression_quantity.log) | [expression_quantity](../expressions/) |
 | [![test](../structure/modules/.test/external_modules_main.svg)](../structure/modules/.test/external_modules_main.log) | [external_modules_main](../structure/modules/external_modules.md) |
 | [![test](../structure/modules/.test/external_modules_second.svg)](../structure/modules/.test/external_modules_second.log) | [external_modules_second](../structure/modules/external_modules.md) |
 | [![test](../libraries/std/ops/.test/extrude.svg)](../libraries/std/ops/.test/extrude.log) | [extrude](../libraries/std/ops/extrude.md) |
@@ -96,8 +96,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/hull_multiple.svg)](../libraries/std/ops/.test/hull_multiple.log) | [hull_multiple](../libraries/std/ops/hull.md) |
 | [![test](../libraries/std/ops/.test/hull_single.svg)](../libraries/std/ops/.test/hull_single.log) | [hull_single](../libraries/std/ops/hull.md) |
 | [![test](../flow/.test/if_expression.svg)](../flow/.test/if_expression.log) | [if_expression](../flow/conditions.md) |
-| [![test](../flow/.test/if_functions.svg)](../flow/.test/if_functions.log) | [if_functions](../flow/conditions.md) |
 | [![test](../flow/.test/if_statement.svg)](../flow/.test/if_statement.log) | [if_statement](../flow/conditions.md) |
+| [![test](../flow/.test/if_statement_sketch.svg)](../flow/.test/if_statement_sketch.log) | [if_statement_sketch](../flow/conditions.md) |
 | [![test](../structure/workbenches/elements/.test/illegal_workbench_statement_mod.svg)](../structure/workbenches/elements/.test/illegal_workbench_statement_mod.log) | [illegal_workbench_statement_mod](../structure/workbenches/elements/building_code.md) |
 | [![test](../structure/workbenches/elements/.test/illegal_workbench_statement_return.svg)](../structure/workbenches/elements/.test/illegal_workbench_statement_return.log) | [illegal_workbench_statement_return](../structure/workbenches/elements/building_code.md) |
 | [![test](../structure/workbenches/elements/.test/illegal_workbench_statement_sketch.svg)](../structure/workbenches/elements/.test/illegal_workbench_statement_sketch.log) | [illegal_workbench_statement_sketch](../structure/workbenches/elements/building_code.md) |
@@ -117,6 +117,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/modules/.test/mod_example.svg)](../structure/modules/.test/mod_example.log) | [mod_example](../structure/modules/) |
 | [![test](../assignments/.test/model_assignment.svg)](../assignments/.test/model_assignment.log) | [model_assignment](../assignments/model.md) |
 | [![test](../assignments/.test/model_assignment_cross.svg)](../assignments/.test/model_assignment_cross.log) | [model_assignment_cross](../assignments/model.md) |
+| [![test](../expressions/.test/model_expression.svg)](../expressions/.test/model_expression.log) | [model_expression](../expressions/model_expression.md) |
+| [![test](../expressions/.test/model_expression_builtin.svg)](../expressions/.test/model_expression_builtin.log) | [model_expression_builtin](../expressions/model_expression.md) |
 | [![test](../flow/argument_match/.test/multiplicity_arrays.svg)](../flow/argument_match/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/argument_match/multiplicity.md) |
 | [![test](../flow/argument_match/.test/multiplicity_tuple_array.svg)](../flow/argument_match/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/argument_match/multiplicity.md) |
 | [![test](../types/collections/tuples/.test/named_tuple_access.svg)](../types/collections/tuples/.test/named_tuple_access.log) | [named_tuple_access](../types/collections/tuples/) |

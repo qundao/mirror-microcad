@@ -1,32 +1,44 @@
 ﻿
 -- Test --
         Test name: expression_model
-  Expected result: ok
-      Source file: ../books/language/src/expressions/model_expression.md:9
+  Expected result: todo
+      Source file: ../books/language/src/expressions/README.md:70
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-   9:   std::geo2d::Rect(1cm) - std::geo2d::Circle(radius = 3mm);
+  70:   // Using logical operators between models too
+  71:   std::debug::assert_eq([ std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true ]);
 
 -- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Operation subtract() ->
-      Group ->
-        Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
-          - height = 10mm
-          - width = 10mm
-          - x = -5mm
-          - y = -5mm
-          Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
-        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
-          - center = (x=0mm, y=0mm)
-          - radius = 3mm
-          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-            Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-
-Export of "../books/language/src/expressions/.test/expression_model-out.svg" successful.
+-- Errors --
+  × error: 2:44: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/expressions/README.md:71:25]
+ 70 │ // Using logical operators between models too
+ 71 │ std::debug::assert_eq([ std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true ]);
+    ·                         ───────────┬───────────
+    ·                                    ╰── Got: Circle( 10mm )
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 2:71: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/expressions/README.md:71:52]
+ 70 │ // Using logical operators between models too
+ 71 │ std::debug::assert_eq([ std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true ]);
+    ·                                                    ────────────┬───────────
+    ·                                                                ╰── Got: Circle( 10mm )
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 2:23: Assertion failed: Values differ: [false, true]
+    ╭─[../books/language/src/expressions/README.md:71:23]
+ 70 │ // Using logical operators between models too
+ 71 │ std::debug::assert_eq([ std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true ]);
+    ·                       ──────────────────────────────┬──────────────────────────────
+    ·                                                     ╰── error: 2:23: Assertion failed: Values differ: [false, true]
+    ╰────
+Unexpected error(s) which did occur in line(s): 71
 -- Test Result --
-OK
+TODO
