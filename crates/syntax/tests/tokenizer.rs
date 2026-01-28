@@ -3,6 +3,10 @@ use microcad_syntax::tokens::lex;
 use test_case::test_case;
 
 #[test_case("single int", "1")]
+#[test_case("simple float", "1.1")]
+#[test_case("leading dot", ".1")]
+#[test_case("trailing dot", "1.")]
+#[test_case("exp", ".1e-3 .1e+3 .1e3")]
 #[test_case("basic addition", "1 + 1")]
 #[test_case("basic addition, no space", "1+1")]
 #[test_case("assignment", "a = b * 2")]

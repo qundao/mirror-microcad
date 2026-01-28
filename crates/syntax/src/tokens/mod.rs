@@ -112,9 +112,9 @@ pub enum NormalToken<'a> {
     #[regex(r#"([a-z]+[²³23]?(/[a-z]+[²³23]?)?)|°|%|'"#, callback = token_cow, priority = 3)]
     Unit(Cow<'a, str>),
 
-    #[regex(r#"-?(0|[1-9]\d*)"#, callback = token_cow)]
+    #[regex(r#"-?(0|[1-9]\d*)"#, callback = token_cow, priority = 2)]
     LiteralInt(Cow<'a, str>),
-    #[regex(r#"-?(0|[1-9]\d*)?\.(\d+)((e|E)(-|\+)?(\d+))?"#, callback = token_cow)]
+    #[regex(r#"(-?(0|[1-9]\d*)?\.(\d+)((e|E)(-|\+)?(\d+))?)|(-?(0|[1-9]\d*)?\.?((e|E)(-|\+)?(\d+)))"#, callback = token_cow, priority = 3)]
     LiteralFloat(Cow<'a, str>),
     #[regex(r#"""#, string_token_callback)]
     Quote(QuoteVariant<'a>),

@@ -1,0 +1,30 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..5,
+        token: Normal(
+            LiteralFloat(
+                ".1e-3",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 6..11,
+        token: Normal(
+            LiteralFloat(
+                ".1e+3",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 12..16,
+        token: Normal(
+            LiteralFloat(
+                ".1e3",
+            ),
+        ),
+    },
+]

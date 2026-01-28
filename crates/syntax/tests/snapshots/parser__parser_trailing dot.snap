@@ -1,0 +1,28 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..2,
+        statements: StatementList {
+            span: 0..2,
+            statements: [],
+            tail: Some(
+                ExpressionStatement {
+                    span: 0..2,
+                    attributes: [],
+                    expression: Literal(
+                        Float(
+                            FloatLiteral {
+                                span: 0..2,
+                                value: 1.0,
+                            },
+                        ),
+                    ),
+                },
+            ),
+            tail_comment: None,
+        },
+    },
+)

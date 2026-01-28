@@ -173,12 +173,18 @@ fn parser<'tokens>()
     });
 
     let literal_parser = {
-        let single_value = select_ref! {
-            Token::Normal(NormalToken::Quote(QuoteVariant::String(str_tokens))) = e if is_literal_string(str_tokens) => {
-                Literal::String(StringLiteral {
-                    span: e.span(),
-                    content: get_literal_string(str_tokens).expect("non literal string"),
-                })
+        let single_number = select_ref! {
+            Token::Normal(NormalToken::LiteralFloat(x)) = e => {
+                match f64::from_str(x) {
+                    Ok(value) => Literal::Float(FloatLiteral {
+                        value,
+                        span: e.span(),
+                    }),
+                    Err(err) => Literal::Error(LiteralError {
+                        span: e.span(),
+                        kind: err.into(),
+                    })
+                }
             },
             Token::Normal(NormalToken::LiteralInt(x)) = e => {
                 match i64::from_str(x) {
@@ -192,17 +198,30 @@ fn parser<'tokens>()
                     })
                 }
             },
-            Token::Normal(NormalToken::LiteralFloat(x)) = e => {
-                match f64::from_str(x) {
-                    Ok(value) => Literal::Float(FloatLiteral {
+        }
+        .then(just(Token::Normal(NormalToken::SigilDot)).or_not())
+        .map_with(|(literal, trailing), e| match (literal, trailing) {
+            (Literal::Integer(IntegerLiteral {value, ..}), Some(_)) => {
+                Literal::Float(FloatLiteral {
+                    value: value as f64,
+                    span: e.span(),
+                })
+            },
+            (Literal::Float(FloatLiteral {value, ..}), Some(_)) => {
+                Literal::Float(FloatLiteral {
                     value,
                     span: e.span(),
-                }),
-                    Err(err) => Literal::Error(LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    })
-                }
+                })
+            },
+            (lit, _) => lit,
+        });
+
+        let single_value = select_ref! {
+            Token::Normal(NormalToken::Quote(QuoteVariant::String(str_tokens))) = e if is_literal_string(str_tokens) => {
+                Literal::String(StringLiteral {
+                    span: e.span(),
+                    content: get_literal_string(str_tokens).expect("non literal string"),
+                })
             },
             Token::Normal(NormalToken::LiteralBoolTrue) = e => {
                 Literal::Bool(BoolLiteral {
@@ -216,7 +235,7 @@ fn parser<'tokens>()
                     value: false,
                 })
             },
-        };
+        }.or(single_number);
 
         let quantity = select_ref! {
             Token::Normal(NormalToken::LiteralInt(x)) => x,
@@ -833,16 +852,19 @@ fn parser<'tokens>()
         let access_attribute = just(Token::Normal(NormalToken::SigilHash))
             .ignore_then(identifier_parser.clone())
             .map(Element::Attribute)
+            .labelled("attribute access")
             .boxed();
 
         let access_tuple = just(Token::Normal(NormalToken::SigilDot))
             .ignore_then(identifier_parser.clone())
             .map(Element::Tuple)
+            .labelled("tuple access")
             .boxed();
 
         let access_method = just(Token::Normal(NormalToken::SigilDot))
             .ignore_then(call_inner)
             .map(Element::Method)
+            .labelled("method call")
             .boxed();
 
         let access_array = expression_parser
@@ -853,6 +875,7 @@ fn parser<'tokens>()
             )
             .map(Box::new)
             .map(Element::ArrayElement)
+            .labelled("array access")
             .boxed();
 
         let access_item = access_attribute

@@ -1,0 +1,99 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..36,
+        statements: StatementList {
+            span: 0..36,
+            statements: [
+                Expression(
+                    ExpressionStatement {
+                        span: 0..5,
+                        attributes: [],
+                        expression: Literal(
+                            Float(
+                                FloatLiteral {
+                                    span: 0..5,
+                                    value: 0.0001,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+                Expression(
+                    ExpressionStatement {
+                        span: 7..12,
+                        attributes: [],
+                        expression: Literal(
+                            Float(
+                                FloatLiteral {
+                                    span: 7..12,
+                                    value: 100.0,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+                Expression(
+                    ExpressionStatement {
+                        span: 14..18,
+                        attributes: [],
+                        expression: Literal(
+                            Float(
+                                FloatLiteral {
+                                    span: 14..18,
+                                    value: 100.0,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+                Expression(
+                    ExpressionStatement {
+                        span: 20..24,
+                        attributes: [],
+                        expression: Literal(
+                            Float(
+                                FloatLiteral {
+                                    span: 20..24,
+                                    value: 1000.0,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+                Expression(
+                    ExpressionStatement {
+                        span: 26..31,
+                        attributes: [],
+                        expression: Literal(
+                            Float(
+                                FloatLiteral {
+                                    span: 26..31,
+                                    value: 1200.0,
+                                },
+                            ),
+                        ),
+                    },
+                ),
+            ],
+            tail: Some(
+                ExpressionStatement {
+                    span: 33..36,
+                    attributes: [],
+                    expression: Literal(
+                        Float(
+                            FloatLiteral {
+                                span: 33..36,
+                                value: 1000.0,
+                            },
+                        ),
+                    ),
+                },
+            ),
+            tail_comment: None,
+        },
+    },
+)
