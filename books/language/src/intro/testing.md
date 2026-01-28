@@ -34,15 +34,17 @@ Either the **example may be wrong** or the **µcad interpreter might have a bug*
 | ![fail](./images/fail.svg)             | Fails with errors                   |
 | ![fail_wrong](./images/fail_wrong.svg) | Fails with wrong errors or warnings |
 | ![ok_fail](./images/ok_fail.svg)       | Is ok but was meant to fail         |
+| ![ok_wrong](./images/ok_wrong.svg)     | Is ok but with wrong warnings       |
 | ![parse_fail](./images/parse_fail.svg) | Fails early while parsing           |
 
 The following banners occur if tests are **marked as todo** and so are not running
 successful.
 
-| Banner                               | Meaning                        |
-| ------------------------------------ | ------------------------------ |
-| ![todo](./images/todo.svg)           | Work in progress               |
-| ![todo_fail](./images/todo_fail.svg) | Work in progress (should fail) |
+| Banner                                | Meaning                                      |
+| ------------------------------------- | -------------------------------------------- |
+| ![todo](./images/todo.svg)            | Work in progress                             |
+| ![todo_fail](./images/todo_fail.svg)  | Work in progress (should fail)               |
+| ![todo_wrong](./images/todo_warn.svg) | Work in progress (fails with wrong warnings) |
 
 ## Test list
 
