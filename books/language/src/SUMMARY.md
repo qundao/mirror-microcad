@@ -29,7 +29,7 @@
   - [Operators](./expressions/operators.md)
   - [Model Expressions](./expressions/model_expression.md)
 - [Assignments](./assignments/README.md)
-  - [Value Assignments](./assignments/values.md)
+  - [Value Assignments](./assignments/value.md)
   - [Constant Assignments](./assignments/const.md)
   - [Public Assignments](./assignments/pub.md)
   - [Property Assignments](./assignments/property.md)

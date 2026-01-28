@@ -2,7 +2,7 @@
 -- Test --
         Test name: assignment_workbench
   Expected result: fail
-      Source file: ../books/language/src/assignments/values.md:113
+      Source file: ../books/language/src/assignments/value.md:113
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
@@ -17,7 +17,7 @@
 -- No Output --
 -- Errors --
   × error: 2:5: Statement not allowed prior initializers
-     ╭─[../books/language/src/assignments/values.md:114:5]
+     ╭─[../books/language/src/assignments/value.md:114:5]
  113 │ sketch MySketch() {
  114 │     a = 1;   // error
      ·     ───┬──
