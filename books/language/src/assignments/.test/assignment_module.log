@@ -2,7 +2,7 @@
 -- Test --
         Test name: assignment_module
   Expected result: fail
-      Source file: ../books/language/src/assignments/values.md:101
+      Source file: ../books/language/src/assignments/value.md:101
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
@@ -14,7 +14,7 @@
 -- No Output --
 -- Errors --
   × error: 2:5: Declaration of a not allowed within assignment_module::my_module
-     ╭─[../books/language/src/assignments/values.md:102:5]
+     ╭─[../books/language/src/assignments/value.md:102:5]
  101 │ mod my_module {
  102 │     a = 1; // error
      ·     ───┬──

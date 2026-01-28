@@ -2,7 +2,7 @@
 -- Test --
         Test name: assignment_shadow
   Expected result: fail
-      Source file: ../books/language/src/assignments/values.md:90
+      Source file: ../books/language/src/assignments/value.md:90
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
@@ -13,7 +13,7 @@
 -- No Output --
 -- Errors --
   × error: 2:1: Value a already in defined: 5
-    ╭─[../books/language/src/assignments/values.md:91:1]
+    ╭─[../books/language/src/assignments/value.md:91:1]
  90 │ a = 5;      // warning: unused local
     · ┬
     · ╰── Previously defined here
@@ -23,7 +23,7 @@
     ╰────
   help: Values in microcad are immutable
   ⚠ warning: 1:1: Unused local a.
-    ╭─[../books/language/src/assignments/values.md:90:1]
+    ╭─[../books/language/src/assignments/value.md:90:1]
  90 │ a = 5;      // warning: unused local
     · ┬
     · ╰── warning: 1:1: Unused local a.

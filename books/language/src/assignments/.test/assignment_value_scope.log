@@ -2,7 +2,7 @@
 -- Test --
         Test name: assignment_value_scope
   Expected result: todo
-      Source file: ../books/language/src/assignments/values.md:35
+      Source file: ../books/language/src/assignments/value.md:35
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
