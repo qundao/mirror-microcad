@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**211** tests have been evaluated with version **0.2.20** of microcad.
+**215** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -31,12 +31,14 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/.test/array_unit_bundling.svg)](../types/collections/.test/array_unit_bundling.log) | [array_unit_bundling](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/arrays_and_comments.svg)](../types/collections/.test/arrays_and_comments.log) | [arrays_and_comments](../types/collections/arrays.md) |
 | [![test](../assignments/.test/assignment.svg)](../assignments/.test/assignment.log) | [assignment](../assignments/) |
-| [![test](../assignments/.test/assignment_module.svg)](../assignments/.test/assignment_module.log) | [assignment_module](../assignments/values.md) |
-| [![test](../assignments/.test/assignment_shadow.svg)](../assignments/.test/assignment_shadow.log) | [assignment_shadow](../assignments/values.md) |
-| [![test](../assignments/.test/assignment_shadow_scope.svg)](../assignments/.test/assignment_shadow_scope.log) | [assignment_shadow_scope](../assignments/values.md) |
-| [![test](../assignments/.test/assignment_value.svg)](../assignments/.test/assignment_value.log) | [assignment_value](../assignments/values.md) |
-| [![test](../assignments/.test/assignment_value_scope.svg)](../assignments/.test/assignment_value_scope.log) | [assignment_value_scope](../assignments/values.md) |
-| [![test](../assignments/.test/assignment_workbench.svg)](../assignments/.test/assignment_workbench.log) | [assignment_workbench](../assignments/values.md) |
+| [![test](../assignments/.test/assignment_model_module.svg)](../assignments/.test/assignment_model_module.log) | [assignment_model_module](../assignments/model.md) |
+| [![test](../assignments/.test/assignment_model_workbench.svg)](../assignments/.test/assignment_model_workbench.log) | [assignment_model_workbench](../assignments/model.md) |
+| [![test](../assignments/.test/assignment_module.svg)](../assignments/.test/assignment_module.log) | [assignment_module](../assignments/value.md) |
+| [![test](../assignments/.test/assignment_shadow.svg)](../assignments/.test/assignment_shadow.log) | [assignment_shadow](../assignments/value.md) |
+| [![test](../assignments/.test/assignment_shadow_scope.svg)](../assignments/.test/assignment_shadow_scope.log) | [assignment_shadow_scope](../assignments/value.md) |
+| [![test](../assignments/.test/assignment_value.svg)](../assignments/.test/assignment_value.log) | [assignment_value](../assignments/value.md) |
+| [![test](../assignments/.test/assignment_value_scope.svg)](../assignments/.test/assignment_value_scope.log) | [assignment_value_scope](../assignments/value.md) |
+| [![test](../assignments/.test/assignment_workbench.svg)](../assignments/.test/assignment_workbench.log) | [assignment_workbench](../assignments/value.md) |
 | [![test](../.test/attributes_color.svg)](../.test/attributes_color.log) | [attributes_color](../attributes.md) |
 | [![test](../.test/attributes_export.svg)](../.test/attributes_export.log) | [attributes_export](../attributes.md) |
 | [![test](../.test/attributes_precision.svg)](../.test/attributes_precision.log) | [attributes_precision](../attributes.md) |
@@ -113,6 +115,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/missed_property.svg)](../structure/workbenches/elements/.test/missed_property.log) | [missed_property](../structure/workbenches/elements/initializers.md) |
 | [![test](../structure/functions/.test/mod.svg)](../structure/functions/.test/mod.log) | [mod](../structure/functions/module_functions.md) |
 | [![test](../structure/modules/.test/mod_example.svg)](../structure/modules/.test/mod_example.log) | [mod_example](../structure/modules/) |
+| [![test](../assignments/.test/model_assignment.svg)](../assignments/.test/model_assignment.log) | [model_assignment](../assignments/model.md) |
+| [![test](../assignments/.test/model_assignment_cross.svg)](../assignments/.test/model_assignment_cross.log) | [model_assignment_cross](../assignments/model.md) |
 | [![test](../flow/argument_match/.test/multiplicity_arrays.svg)](../flow/argument_match/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/argument_match/multiplicity.md) |
 | [![test](../flow/argument_match/.test/multiplicity_tuple_array.svg)](../flow/argument_match/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/argument_match/multiplicity.md) |
 | [![test](../types/collections/tuples/.test/named_tuple_access.svg)](../types/collections/tuples/.test/named_tuple_access.log) | [named_tuple_access](../types/collections/tuples/) |

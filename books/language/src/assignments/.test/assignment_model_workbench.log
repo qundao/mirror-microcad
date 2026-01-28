@@ -1,0 +1,29 @@
+﻿
+-- Test --
+        Test name: assignment_model_workbench
+  Expected result: fail
+      Source file: ../books/language/src/assignments/model.md:50
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  50:   sketch MySketch() {
+  51:       a = std::geo2d::Circle(radius = 1mm);   // error
+  52:       init(_x : Scalar) {}
+  53:   }
+  54:   
+  55:   MySketch();
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Statement not allowed prior initializers
+    ╭─[../books/language/src/assignments/model.md:51:5]
+ 50 │ sketch MySketch() {
+ 51 │     a = std::geo2d::Circle(radius = 1mm);   // error
+    ·     ──────────────────┬──────────────────
+    ·                       ╰── error: 2:5: Statement not allowed prior initializers
+ 52 │     init(_x : Scalar) {}
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
