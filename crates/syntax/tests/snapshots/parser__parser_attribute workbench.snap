@@ -15,7 +15,8 @@ Ok(
                         kind: Part,
                         attributes: [
                             Attribute {
-                                span: 2..19,
+                                span: 0..20,
+                                comment: None,
                                 command: Assignment(
                                     Assignment {
                                         span: 2..19,

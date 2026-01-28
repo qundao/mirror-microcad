@@ -119,6 +119,7 @@ pub struct ArgumentDefinition {
 #[derive(Debug, PartialEq)]
 pub struct Attribute {
     pub span: Span,
+    pub comment: Option<Comment>,
     pub command: AttributeCommand,
 }
 

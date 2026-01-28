@@ -404,17 +404,16 @@ fn parser<'tokens>()
                 .or(qualified_name.clone().map(AttributeCommand::Ident));
 
             just(Token::Normal(NormalToken::SigilHash))
-                .ignore_then(
-                    attribute_command
-                        .map_with(|command, e| Attribute {
-                            span: e.span(),
-                            command,
-                        })
-                        .delimited_by(
-                            just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
-                            just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
-                        ),
-                )
+                .ignore_then(attribute_command.delimited_by(
+                    just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
+                    just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
+                ))
+                .then(comment_inner.clone().or_not())
+                .map_with(|(command, comment), e| Attribute {
+                    span: e.span(),
+                    comment,
+                    command,
+                })
                 .labelled("attribute")
                 .repeated()
                 .collect::<Vec<Attribute>>()

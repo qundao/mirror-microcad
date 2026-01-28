@@ -14,7 +14,8 @@ Ok(
                         doc: None,
                         attributes: [
                             Attribute {
-                                span: 2..8,
+                                span: 0..9,
+                                comment: None,
                                 command: Ident(
                                     QualifiedName {
                                         span: 2..8,
