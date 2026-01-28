@@ -2,57 +2,33 @@
 -- Test --
         Test name: pub_assignment_fn
   Expected result: fail
-      Source file: ../books/language/src/assignments/pub.md:89
+      Source file: ../books/language/src/assignments/pub.md:39
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  89:   fn f() {
-  90:       const MY_CONST = 1;     // error: not allowed in functions
-  91:   }
-  92:   f();
-  93:   
-  94:   sketch MySketch() {
-  95:       fn f() {
-  96:           const MY_CONST = 1; // error: not allowed in workbench functions
-  97:       }
-  98:       f();
-  99:   }
- 100:   MySketch();
+  39:   fn f() {
+  40:       const MY_CONST = 1;     // error: not allowed in functions
+  41:   }
+  42:   f();
 
 -- No Output --
 -- Errors --
   × error: 2:5: Assignment statement is not available within Function
-    ╭─[../books/language/src/assignments/pub.md:90:5]
- 89 │ fn f() {
- 90 │     const MY_CONST = 1;     // error: not allowed in functions
+    ╭─[../books/language/src/assignments/pub.md:40:5]
+ 39 │ fn f() {
+ 40 │     const MY_CONST = 1;     // error: not allowed in functions
     ·     ─────────┬─────────
     ·              ╰── error: 2:5: Assignment statement is not available within Function
- 91 │ }
+ 41 │ }
     ╰────
   × error: 2:5: Declaration of MY_CONST not allowed within pub_assignment_fn::f
-    ╭─[../books/language/src/assignments/pub.md:90:5]
- 89 │ fn f() {
- 90 │     const MY_CONST = 1;     // error: not allowed in functions
+    ╭─[../books/language/src/assignments/pub.md:40:5]
+ 39 │ fn f() {
+ 40 │     const MY_CONST = 1;     // error: not allowed in functions
     ·     ─────────┬─────────
     ·              ╰── error: 2:5: Declaration of MY_CONST not allowed within pub_assignment_fn::f
- 91 │ }
-    ╰────
-  × error: 8:9: Assignment statement is not available within Function
-    ╭─[../books/language/src/assignments/pub.md:96:9]
- 95 │     fn f() {
- 96 │         const MY_CONST = 1; // error: not allowed in workbench functions
-    ·         ─────────┬─────────
-    ·                  ╰── error: 8:9: Assignment statement is not available within Function
- 97 │     }
-    ╰────
-  × error: 8:9: Declaration of MY_CONST not allowed within pub_assignment_fn::MySketch::f
-    ╭─[../books/language/src/assignments/pub.md:96:9]
- 95 │     fn f() {
- 96 │         const MY_CONST = 1; // error: not allowed in workbench functions
-    ·         ─────────┬─────────
-    ·                  ╰── error: 8:9: Declaration of MY_CONST not allowed within pub_assignment_fn::MySketch::f
- 97 │     }
+ 41 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
