@@ -808,21 +808,6 @@ fn parser<'tokens>()
             .or(if_expression)
             .boxed();
 
-        let binary_expression = base
-            .clone()
-            .foldl_with(
-                binary_operator_parser.then(base.clone()).repeated(),
-                |lhs, (op, rhs), e| {
-                    Expression::BinaryOperation(BinaryOperation {
-                        span: e.span(),
-                        lhs: lhs.into(),
-                        operation: op,
-                        rhs: rhs.into(),
-                    })
-                },
-            )
-            .boxed();
-
         let access_attribute = just(Token::Normal(NormalToken::SigilHash))
             .ignore_then(identifier_parser.clone())
             .map(Element::Attribute)
@@ -853,7 +838,7 @@ fn parser<'tokens>()
             .or(access_tuple)
             .or(access_array);
 
-        let element_access = binary_expression
+        let element_access = base
             .clone()
             .foldl_with(access_item.repeated(), |value, element, e| {
                 Expression::ElementAccess(ElementAccess {
@@ -865,8 +850,23 @@ fn parser<'tokens>()
             .labelled("element access")
             .boxed();
 
+        let binary_expression = element_access
+            .clone()
+            .foldl_with(
+                binary_operator_parser.then(element_access.clone()).repeated(),
+                |lhs, (op, rhs), e| {
+                    Expression::BinaryOperation(BinaryOperation {
+                        span: e.span(),
+                        lhs: lhs.into(),
+                        operation: op,
+                        rhs: rhs.into(),
+                    })
+                },
+            )
+            .boxed();
+
         let unary_expression = unary_operator_parser
-            .then(base)
+            .then(element_access)
             .map_with(|(op, rhs), e| {
                 Expression::UnaryOperation(UnaryOperation {
                     span: e.span(),
@@ -877,7 +877,7 @@ fn parser<'tokens>()
             .boxed();
 
         unary_expression
-            .or(element_access)
+            .or(binary_expression)
             .labelled("expression")
             .boxed()
     });
