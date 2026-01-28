@@ -6,17 +6,19 @@ expression: lex(input)
     SpannedToken {
         span: 13..14,
         token: Normal(
-            String(
-                [
-                    SpannedToken {
-                        span: 1..13,
-                        token: String(
-                            Content(
-                                "plain string",
+            Quote(
+                String(
+                    [
+                        SpannedToken {
+                            span: 1..13,
+                            token: String(
+                                Content(
+                                    "plain string",
+                                ),
                             ),
-                        ),
-                    },
-                ],
+                        },
+                    ],
+                ),
             ),
         ),
     },

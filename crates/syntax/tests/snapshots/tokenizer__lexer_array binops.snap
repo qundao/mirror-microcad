@@ -1,0 +1,96 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..1,
+        token: Normal(
+            SigilOpenSquareBracket,
+        ),
+    },
+    SpannedToken {
+        span: 1..2,
+        token: Normal(
+            LiteralInt(
+                "1",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 2..3,
+        token: Normal(
+            SigilComma,
+        ),
+    },
+    SpannedToken {
+        span: 3..4,
+        token: Normal(
+            LiteralInt(
+                "2",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 4..5,
+        token: Normal(
+            SigilCloseSquareBracket,
+        ),
+    },
+    SpannedToken {
+        span: 5..6,
+        token: Normal(
+            Quote(
+                Unit,
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 7..9,
+        token: Normal(
+            OperatorEqual,
+        ),
+    },
+    SpannedToken {
+        span: 10..11,
+        token: Normal(
+            SigilOpenSquareBracket,
+        ),
+    },
+    SpannedToken {
+        span: 11..12,
+        token: Normal(
+            LiteralInt(
+                "1",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 12..13,
+        token: Normal(
+            SigilComma,
+        ),
+    },
+    SpannedToken {
+        span: 13..14,
+        token: Normal(
+            LiteralInt(
+                "2",
+            ),
+        ),
+    },
+    SpannedToken {
+        span: 14..15,
+        token: Normal(
+            SigilCloseSquareBracket,
+        ),
+    },
+    SpannedToken {
+        span: 15..17,
+        token: Normal(
+            Identifier(
+                "cm",
+            ),
+        ),
+    },
+]

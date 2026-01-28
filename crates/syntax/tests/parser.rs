@@ -166,7 +166,8 @@ use thiserror::Error;
     r#"a = "unclosed string;
     b = 1;"#
 )]
-#[test_case("units", r#"1% + 2mm / 3mm2 - 4mm³ * 1° + 1" - 2'"#; "units")]
+#[test_case("units", r#"0" + 1% + 2mm / 3mm2 - 4mm³ * 1° + 1" - 2'"#; "units")]
+#[test_case("array binops", r#"[1,2]" == [1,2]cm"#)]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));

@@ -108,6 +108,10 @@ fn parser<'tokens>()
             span: e.span(),
             name: unit.as_ref().into()
         },
+        Token::Normal(NormalToken::Quote(QuoteVariant::Unit)) = e => SingleType {
+            span: e.span(),
+            name: r#"""#.into()
+        },
         Token::Error(LexerError::UnclosedString(_)) = e => SingleType {
             span: e.span(),
             name: r#"""#.into()
@@ -157,7 +161,7 @@ fn parser<'tokens>()
 
     let literal_parser = {
         let single_value = select_ref! {
-            Token::Normal(NormalToken::String(str_tokens)) = e if is_literal_string(str_tokens) => {
+            Token::Normal(NormalToken::Quote(QuoteVariant::String(str_tokens))) = e if is_literal_string(str_tokens) => {
                 Literal::String(StringLiteral {
                     span: e.span(),
                     content: get_literal_string(str_tokens).expect("non literal string"),
@@ -656,7 +660,7 @@ fn parser<'tokens>()
             .boxed();
 
         let string_format_tokens = select_ref!(
-            Token::Normal(NormalToken::String(str_tokens)) if !is_literal_string(str_tokens) => {
+            Token::Normal(NormalToken::Quote(QuoteVariant::String(str_tokens))) if !is_literal_string(str_tokens) => {
                 input(str_tokens)
             }
         );

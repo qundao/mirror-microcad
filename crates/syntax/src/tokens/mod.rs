@@ -117,7 +117,7 @@ pub enum NormalToken<'a> {
     #[regex(r#"-?(0|[1-9]\d*)?\.(\d+)((e|E)(-|\+)?(\d+))?"#, callback = token_cow)]
     LiteralFloat(Cow<'a, str>),
     #[regex(r#"""#, string_token_callback)]
-    String(Vec<SpannedToken<Token<'a>>>),
+    Quote(QuoteVariant<'a>),
     #[token("true")]
     LiteralBoolTrue,
     #[token("false")]
@@ -194,6 +194,12 @@ pub enum NormalToken<'a> {
     OperatorAssignment,
 }
 
+#[derive(Debug, PartialEq, Clone)]
+pub enum QuoteVariant<'a> {
+    String(Vec<SpannedToken<Token<'a>>>),
+    Unit,
+}
+
 impl NormalToken<'_> {
     pub fn into_owned(self) -> NormalToken<'static> {
         match self {
@@ -208,9 +214,10 @@ impl NormalToken<'_> {
             NormalToken::Unit(s) => NormalToken::Unit(s.into_owned().into()),
             NormalToken::LiteralInt(s) => NormalToken::LiteralInt(s.into_owned().into()),
             NormalToken::LiteralFloat(s) => NormalToken::LiteralFloat(s.into_owned().into()),
-            NormalToken::String(s) => {
-                NormalToken::String(s.into_iter().map(SpannedToken::into_owned).collect())
-            }
+            NormalToken::Quote(QuoteVariant::String(s)) => NormalToken::Quote(
+                QuoteVariant::String(s.into_iter().map(SpannedToken::into_owned).collect()),
+            ),
+            NormalToken::Quote(QuoteVariant::Unit) => NormalToken::Quote(QuoteVariant::Unit),
             NormalToken::KeywordMod => NormalToken::KeywordMod,
             NormalToken::KeywordPart => NormalToken::KeywordPart,
             NormalToken::KeywordSketch => NormalToken::KeywordSketch,
@@ -287,7 +294,7 @@ impl NormalToken<'_> {
             NormalToken::Unit(_) => "unit",
             NormalToken::LiteralInt(_) => "integer",
             NormalToken::LiteralFloat(_) => "float",
-            NormalToken::String(_) => "string",
+            NormalToken::Quote(_) => "string",
             NormalToken::LiteralBoolTrue => "boolean",
             NormalToken::LiteralBoolFalse => "boolean",
             NormalToken::SigilColon => ":",
@@ -330,14 +337,26 @@ impl NormalToken<'_> {
 
 fn string_token_callback<'a>(
     lex: &mut Lexer<'a, NormalToken<'a>>,
-) -> Result<Vec<SpannedToken<Token<'a>>>, LexerError> {
+) -> Result<QuoteVariant<'a>, LexerError> {
+    // if we have a quote that follow then end of a number (digit or '.') or array, the token is an inch unit
+    // this is a massive hack, but the best I can think of to distinguish '"
+    let last_byte = lex
+        .source()
+        .as_bytes()
+        .get(lex.span().start.saturating_sub(1))
+        .copied()
+        .unwrap_or_default();
+    if last_byte == b']' || last_byte == b'.' || last_byte.is_ascii_digit() {
+        return Ok(QuoteVariant::Unit);
+    }
+
     let mut string_lexer = lex.clone().morph::<StringToken>();
     let mut tokens = Vec::new();
     while let Some(token) = string_lexer.next() {
         match token {
             Ok(StringToken::Quote) => {
                 *lex = string_lexer.morph();
-                return Ok(tokens);
+                return Ok(QuoteVariant::String(tokens));
             }
             Err(e) => {
                 let start = lex.span().start;
@@ -454,7 +473,7 @@ fn format_token_callback<'a>(
                 with_format = true;
                 break;
             }
-            Ok(NormalToken::String(content)) => {
+            Ok(NormalToken::Quote(QuoteVariant::String(content))) => {
                 let start = lex.span().start;
                 let end = content
                     .first()

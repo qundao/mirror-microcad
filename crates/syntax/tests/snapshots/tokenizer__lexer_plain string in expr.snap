@@ -20,17 +20,19 @@ expression: lex(input)
     SpannedToken {
         span: 32..33,
         token: Normal(
-            String(
-                [
-                    SpannedToken {
-                        span: 5..32,
-                        token: String(
-                            Content(
-                                "plain string int expression",
+            Quote(
+                String(
+                    [
+                        SpannedToken {
+                            span: 5..32,
+                            token: String(
+                                Content(
+                                    "plain string int expression",
+                                ),
                             ),
-                        ),
-                    },
-                ],
+                        },
+                    ],
+                ),
             ),
         ),
     },

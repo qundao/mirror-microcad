@@ -122,10 +122,10 @@ expression: lex(input)
         ),
     },
     SpannedToken {
-        span: 33..39,
-        token: Error(
-            UnclosedString(
-                33..39,
+        span: 33..34,
+        token: Normal(
+            Quote(
+                Unit,
             ),
         ),
     },

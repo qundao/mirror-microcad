@@ -4,52 +4,70 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..39,
+        span: 0..44,
         statements: StatementList {
-            span: 0..39,
+            span: 0..44,
             statements: [],
             tail: Some(
                 ExpressionStatement {
-                    span: 0..39,
+                    span: 0..44,
                     attributes: [],
                     expression: BinaryOperation(
                         BinaryOperation {
-                            span: 0..39,
+                            span: 0..44,
                             lhs: BinaryOperation(
                                 BinaryOperation {
                                     span: 0..39,
                                     lhs: BinaryOperation(
                                         BinaryOperation {
-                                            span: 0..29,
+                                            span: 0..34,
                                             lhs: BinaryOperation(
                                                 BinaryOperation {
-                                                    span: 0..23,
+                                                    span: 0..28,
                                                     lhs: BinaryOperation(
                                                         BinaryOperation {
-                                                            span: 0..15,
+                                                            span: 0..20,
                                                             lhs: BinaryOperation(
                                                                 BinaryOperation {
-                                                                    span: 0..8,
-                                                                    lhs: Literal(
-                                                                        Quantity(
-                                                                            QuantityLiteral {
-                                                                                span: 0..2,
-                                                                                value: 1.0,
-                                                                                ty: SingleType {
-                                                                                    span: 1..2,
-                                                                                    name: "%",
-                                                                                },
-                                                                            },
-                                                                        ),
+                                                                    span: 0..13,
+                                                                    lhs: BinaryOperation(
+                                                                        BinaryOperation {
+                                                                            span: 0..7,
+                                                                            lhs: Literal(
+                                                                                Quantity(
+                                                                                    QuantityLiteral {
+                                                                                        span: 0..2,
+                                                                                        value: 0.0,
+                                                                                        ty: SingleType {
+                                                                                            span: 1..2,
+                                                                                            name: "\"",
+                                                                                        },
+                                                                                    },
+                                                                                ),
+                                                                            ),
+                                                                            operation: Add,
+                                                                            rhs: Literal(
+                                                                                Quantity(
+                                                                                    QuantityLiteral {
+                                                                                        span: 5..7,
+                                                                                        value: 1.0,
+                                                                                        ty: SingleType {
+                                                                                            span: 6..7,
+                                                                                            name: "%",
+                                                                                        },
+                                                                                    },
+                                                                                ),
+                                                                            ),
+                                                                        },
                                                                     ),
                                                                     operation: Add,
                                                                     rhs: Literal(
                                                                         Quantity(
                                                                             QuantityLiteral {
-                                                                                span: 5..8,
+                                                                                span: 10..13,
                                                                                 value: 2.0,
                                                                                 ty: SingleType {
-                                                                                    span: 6..8,
+                                                                                    span: 11..13,
                                                                                     name: "mm",
                                                                                 },
                                                                             },
@@ -61,10 +79,10 @@ Ok(
                                                             rhs: Literal(
                                                                 Quantity(
                                                                     QuantityLiteral {
-                                                                        span: 11..15,
+                                                                        span: 16..20,
                                                                         value: 3.0,
                                                                         ty: SingleType {
-                                                                            span: 12..15,
+                                                                            span: 17..20,
                                                                             name: "mm2",
                                                                         },
                                                                     },
@@ -76,10 +94,10 @@ Ok(
                                                     rhs: Literal(
                                                         Quantity(
                                                             QuantityLiteral {
-                                                                span: 18..23,
+                                                                span: 23..28,
                                                                 value: 4.0,
                                                                 ty: SingleType {
-                                                                    span: 19..23,
+                                                                    span: 24..28,
                                                                     name: "mm³",
                                                                 },
                                                             },
@@ -91,10 +109,10 @@ Ok(
                                             rhs: Literal(
                                                 Quantity(
                                                     QuantityLiteral {
-                                                        span: 26..29,
+                                                        span: 31..34,
                                                         value: 1.0,
                                                         ty: SingleType {
-                                                            span: 27..29,
+                                                            span: 32..34,
                                                             name: "°",
                                                         },
                                                     },
@@ -106,10 +124,10 @@ Ok(
                                     rhs: Literal(
                                         Quantity(
                                             QuantityLiteral {
-                                                span: 32..39,
+                                                span: 37..39,
                                                 value: 1.0,
                                                 ty: SingleType {
-                                                    span: 33..39,
+                                                    span: 38..39,
                                                     name: "\"",
                                                 },
                                             },
@@ -121,10 +139,10 @@ Ok(
                             rhs: Literal(
                                 Quantity(
                                     QuantityLiteral {
-                                        span: 37..39,
+                                        span: 42..44,
                                         value: 2.0,
                                         ty: SingleType {
-                                            span: 38..39,
+                                            span: 43..44,
                                             name: "'",
                                         },
                                     },

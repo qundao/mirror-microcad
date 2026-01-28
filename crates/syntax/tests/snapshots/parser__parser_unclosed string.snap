@@ -5,8 +5,8 @@ expression: parse(tokens.as_slice())
 Err(
     [
         ParseError {
-            span: 5..20,
-            error: unclosed string at 5..20,
+            span: 4..20,
+            error: unclosed string at 4..20,
         },
     ],
 )
