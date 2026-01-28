@@ -872,10 +872,23 @@ fn parser<'tokens>()
             .labelled("element access")
             .boxed();
 
-        let binary_expression = element_access
+        let unary_expression = unary_operator_parser
+            .then(element_access.clone())
+            .map_with(|(op, rhs), e| {
+                Expression::UnaryOperation(UnaryOperation {
+                    span: e.span(),
+                    operation: op,
+                    rhs: rhs.into(),
+                })
+            })
+            .boxed();
+
+        let binary_param = element_access.or(unary_expression.clone());
+
+        let binary_expression = binary_param
             .clone()
             .foldl_with(
-                binary_operator_parser.then(element_access.clone()).repeated(),
+                binary_operator_parser.then(binary_param.clone()).repeated(),
                 |lhs, (op, rhs), e| {
                     Expression::BinaryOperation(BinaryOperation {
                         span: e.span(),
@@ -887,19 +900,7 @@ fn parser<'tokens>()
             )
             .boxed();
 
-        let unary_expression = unary_operator_parser
-            .then(element_access)
-            .map_with(|(op, rhs), e| {
-                Expression::UnaryOperation(UnaryOperation {
-                    span: e.span(),
-                    operation: op,
-                    rhs: rhs.into(),
-                })
-            })
-            .boxed();
-
-        unary_expression
-            .or(binary_expression)
+        binary_expression
             .labelled("expression")
             .boxed()
     });

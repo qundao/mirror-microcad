@@ -1,0 +1,64 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..11,
+        statements: StatementList {
+            span: 0..11,
+            statements: [],
+            tail: Some(
+                ExpressionStatement {
+                    span: 0..11,
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..11,
+                            lhs: UnaryOperation(
+                                UnaryOperation {
+                                    span: 0..4,
+                                    operation: Minus,
+                                    rhs: ArrayList(
+                                        ArrayListExpression {
+                                            span: 1..4,
+                                            items: [
+                                                Literal(
+                                                    Integer(
+                                                        IntegerLiteral {
+                                                            span: 2..3,
+                                                            value: 1,
+                                                        },
+                                                    ),
+                                                ),
+                                            ],
+                                            ty: None,
+                                        },
+                                    ),
+                                },
+                            ),
+                            operation: NotEqual,
+                            rhs: ArrayList(
+                                ArrayListExpression {
+                                    span: 8..11,
+                                    items: [
+                                        Literal(
+                                            Integer(
+                                                IntegerLiteral {
+                                                    span: 9..10,
+                                                    value: 1,
+                                                },
+                                            ),
+                                        ),
+                                    ],
+                                    ty: None,
+                                },
+                            ),
+                        },
+                    ),
+                },
+            ),
+            tail_comment: None,
+        },
+    },
+)
