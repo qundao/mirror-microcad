@@ -73,7 +73,7 @@ impl Token<'_> {
 pub enum NormalToken<'a> {
     #[regex(r#"\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
     SingleLineComment(Cow<'a, str>),
-    #[regex(r#"(?m)/\*(.|\n)+?\*/"#, callback = token_cow)]
+    #[token("/*", callback = multi_line_comment_callback)]
     MultiLineComment(Cow<'a, str>),
     #[regex(r#"\/\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
     DocComment(Cow<'a, str>),
@@ -333,6 +333,15 @@ impl NormalToken<'_> {
             NormalToken::OperatorAssignment => "=",
         }
     }
+}
+fn multi_line_comment_callback<'a>(
+    lex: &mut Lexer<'a, NormalToken<'a>>,
+) -> Option<Cow<'a, str>> {
+    let text = &lex.source()[lex.span().start..];
+    let end = text.find("*/")?;
+    let comment = &text[0..end + 2];
+    lex.bump(end);
+    Some(comment.into())
 }
 
 fn string_token_callback<'a>(
