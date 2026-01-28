@@ -13,22 +13,16 @@ pub struct Resolve {
     pub parse: Parse,
 
     /// Print resolve context.
-    #[clap(long)]
+    #[arg(long)]
     pub resolve: bool,
 
-    /// Do not complain about missing standard library.
-    #[clap(long, default_value_t = false)]
+    /// Do not load default standard library.
+    #[arg(long)]
     no_std: bool,
 
-    /// Paths to search for files.
-    ///
-    /// By default, `./std/lib` (if it exists) and the microcad user config folder are used.
-    #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append)]
-    pub search_paths: Vec<std::path::PathBuf>,
-
-    /// Do not use default search paths if it is not defined explicitly with --search-paths.
-    #[arg(short, long, default_value_t = false)]
-    omit_default_paths: bool,
+    /// Add path to search for additional libraries (may be used multiple times).
+    #[arg(short = 'L', action = clap::ArgAction::Append)]
+    pub lib_path: Vec<std::path::PathBuf>,
 }
 
 impl RunCommand<ResolveContext> for Resolve {
@@ -37,31 +31,23 @@ impl RunCommand<ResolveContext> for Resolve {
         let root = self.parse.run(cli)?;
 
         // add default paths or omit this step by option
-        let mut search_paths = self.search_paths.clone();
+        let mut search_paths = self.lib_path.clone();
 
         // Add default search paths path.
-        if !self.omit_default_paths {
-            search_paths.append(&mut microcad_builtin::dirs::default_search_paths());
-
-            if search_paths.is_empty() {
-                search_paths.push(microcad_std::get_user_stdlib_path());
-            }
+        if !self.no_std {
+            search_paths.push(microcad_std::global_std_path());
         }
 
         // search for a usable std library
         if self.no_std {
-            println!("Info: omitting standard library.");
+            eprintln!("Info: omitting standard library (--no-std).");
         } else if !search_paths
             .iter()
             .any(|search_path| microcad_std::is_installed(search_path))
         {
             eprintln!("Warning: No std library was found in given search paths: {search_paths:?}.");
-            if let Some(first_search_path) = search_paths.first() {
-                if let Err(err) = microcad_std::install(first_search_path, false) {
-                    return Err(miette::miette!("Could not install standard library: {err}"));
-                }
-            } else {
-                return Err(miette::miette!("No search paths given!"));
+            if let Err(err) = microcad_std::install(microcad_std::global_std_path(), false) {
+                return Err(miette::miette!("Could not install standard library: {err}"));
             }
         }
 

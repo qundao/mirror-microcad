@@ -20,7 +20,7 @@ impl RunCommand for Install {
     fn run(&self, _cli: &Cli) -> miette::Result<()> {
         if self.library == "std" {
             Ok(
-                microcad_std::install(microcad_std::get_user_stdlib_path(), self.force)
+                microcad_std::install(microcad_std::global_std_path(), self.force)
                     .into_diagnostic()?,
             )
         } else {
