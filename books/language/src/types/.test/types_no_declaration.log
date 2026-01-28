@@ -2,12 +2,12 @@
 -- Test --
         Test name: types_no_declaration
   Expected result: fail
-      Source file: ../books/language/src/types/README.md:39
+      Source file: ../books/language/src/types/README.md:38
         Test path: ../books/language/src/types/.test
 
 -- Code --
 
-  39:   x: Length;         // parse_error
+  38:   x: Length;         // parse_error
 
 -- Parse Error --
 Parser error: expected single_line_comment

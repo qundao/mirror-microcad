@@ -1,21 +1,20 @@
 # Types
 
-The µcad type system consists of a group built-in types.
-The type system is static, which means a declared variable has a fixed type that cannot be changed.
+The µcad type system consists of a group of builtin types.
+The type system is *static*, which means a declared variable has a fixed type that cannot be changed or [overwritten](../assignments/value.md#no-shadowing).
 
-These classes of built-in types are supported:
+Here is a complete list of the builtin types:
 
-| Built-in type                                       | Description                                             | Example                                          |
-| --------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------ |
-| [*Quantity*](quantities.md)                         | Numeric values with an optional unit.                   | `a: Length = 4mm`                                |
-| [*Bool*](primitives.md#bool)                        | A boolean value.                                        | `b: Bool = true`                                 |
-| [*Integer*](primitives.md#integer)                  | An integer value without a unit.                        | `c: Integer = 4`                                 |
-| [*String*](primitives.md#string)                    | A string.                                               | `d: String = "Hello World"`                      |
-| [*Matrix*](primitives.md#matrix)                    | Matrix types for affine transforms, for internal usage. | ---                                              |
-| [*Array*](collections/arrays.md)                    | A list of values with a *common type*.                  | `e: [Integer] = [1,2,3]`                         |
-| [*Tuple*](collections/tuples.md#tuples)             | A list of values with a *distinct types*.               | `f: (Length, Scalar) = (4mm, 4.0)`               |
-| [*Named tuple*](collections/tuples.md#named-tuples) | A sorted list of key-value pairs with *distinct types*. | `g: (x: Scalar, y: Length) = (x = 4.0, y = 4mm)` |
-| [*Models*](models.md)                               | Nodes in the model tree.                                | `h: Models = { Cube(2mm); }`                     |
+| Type                                    | Description                             | Type Declarations                                                  | Example Values                                   |
+| --------------------------------------- | --------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------ |
+| [*Bool*](primitives.md#bool)            | A boolean value                         | `Bool`                                                             | `true`, `false`                                  |
+| [*Integer*](primitives.md#integer)      | An integer value without unit           | `Integer`                                                          | `4`, `-1`                                        |
+| [*Scalar*](primitives.md#scalar)        | Floating point value without unit       | `Scalar`                                                           | `0.5`, `50%`, `-1.23e10`                         |
+| [*Quantity*](quantities.md)             | Floating point value with unit          | `Length`, `Area`, `Volume`, `Density`, `Angle`, `Weight`           | `-4mm`, `1.3m2`, `23.0e5deg`                     |
+| [*String*](primitives.md#string)        | A string                                | `String`                                                           | `"Hello, World!"`                                |
+| [*Array*](collections/arrays.md)        | List of values with *common type*       | `[Integer]`                                                        | `[1,2,3]`, `[1m,2cm,3µm]`                        |
+| [*Tuple*](collections/tuples.md#tuples) | List of named values or distinct types. | `(Length,Scalar,Bool)`, `(x:Scalar,y:Length)`, `(x:Scalar,Length)` | `(4mm,4.0,true)`, `(x=4.0,y=4mm)`, `(x=4.0,4mm)` |
+| [*Model*](models.md)                    | Geometric 2D or 3D model.               | `Model`                                                            | `std::geo3d::Cube(2mm)`                          |
 
 ## Declaration
 
