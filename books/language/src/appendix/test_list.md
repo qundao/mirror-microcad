@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**216** tests have been evaluated with version **0.2.20** of microcad.
+**211** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -140,13 +140,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/property_no_prop_in_initializer.svg)](../structure/workbenches/elements/.test/property_no_prop_in_initializer.log) | [property_no_prop_in_initializer](../structure/workbenches/elements/properties.md) |
 | [![test](../structure/workbenches/elements/.test/property_wrong.svg)](../structure/workbenches/elements/.test/property_wrong.log) | [property_wrong](../structure/workbenches/elements/properties.md) |
 | [![test](../assignments/.test/pub_assignment.svg)](../assignments/.test/pub_assignment.log) | [pub_assignment](../assignments/pub.md) |
-| [![test](../assignments/.test/pub_assignment_building_code.svg)](../assignments/.test/pub_assignment_building_code.log) | [pub_assignment_building_code](../assignments/pub.md) |
 | [![test](../assignments/.test/pub_assignment_fn.svg)](../assignments/.test/pub_assignment_fn.log) | [pub_assignment_fn](../assignments/pub.md) |
-| [![test](../assignments/.test/pub_assignment_init.svg)](../assignments/.test/pub_assignment_init.log) | [pub_assignment_init](../assignments/pub.md) |
-| [![test](../assignments/.test/pub_assignment_init_code.svg)](../assignments/.test/pub_assignment_init_code.log) | [pub_assignment_init_code](../assignments/pub.md) |
 | [![test](../assignments/.test/pub_assignment_workbench.svg)](../assignments/.test/pub_assignment_workbench.log) | [pub_assignment_workbench](../assignments/pub.md) |
-| [![test](../assignments/.test/pub_assignment_workbench_code.svg)](../assignments/.test/pub_assignment_workbench_code.log) | [pub_assignment_workbench_code](../assignments/pub.md) |
-| [![test](../assignments/.test/pub_assignment_workbench_code_wrong.svg)](../assignments/.test/pub_assignment_workbench_code_wrong.log) | [pub_assignment_workbench_code_wrong](../assignments/pub.md) |
 | [![test](../expressions/.test/quantity_literal.svg)](../expressions/.test/quantity_literal.log) | [quantity_literal](../expressions/literals.md) |
 | [![test](../types/.test/quantity_types_number_literals.svg)](../types/.test/quantity_types_number_literals.log) | [quantity_types_number_literals](../types/quantities.md) |
 | [![test](../types/collections/.test/range_expressions.svg)](../types/collections/.test/range_expressions.log) | [range_expressions](../types/collections/arrays.md) |
