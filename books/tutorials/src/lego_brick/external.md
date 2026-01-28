@@ -5,7 +5,7 @@ Let's assume we want to use the `LegoBrick` from an external file.
 Fortunately, this is simple!
 We just have to create a second file `my_brick.µcad`:
 
-```µcad
+```sh
 microcad create my_brick
 ```
 

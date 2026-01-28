@@ -1,0 +1,32 @@
+﻿
+-- Test --
+        Test name: start
+  Expected result: ok
+      Source file: ../books/language/src/flow/start_code.md:15
+        Test path: ../books/language/src/flow/.test
+
+-- Code --
+
+  15:   // start code begins here
+  16:   use std::geo2d::*;
+  17:   
+  18:   mod my_inner {
+  19:       pub RADIUS = 10mm;
+  20:   }
+  21:   
+  22:   Circle( radius = my_inner::RADIUS );
+  23:   // start ends begins here
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+      - center = (x=0mm, y=0mm)
+      - radius = 10mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+        Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+
+Export of "../books/language/src/flow/.test/start-out.svg" successful.
+-- Test Result --
+OK

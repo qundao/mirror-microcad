@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**215** tests have been evaluated with version **0.2.20** of microcad.
+**216** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -164,6 +164,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/.test/source_file_2D.svg)](../structure/.test/source_file_2D.log) | [source_file_2D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_3D.svg)](../structure/.test/source_file_3D.log) | [source_file_3D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_mixed.svg)](../structure/.test/source_file_mixed.log) | [source_file_mixed](../structure/source_file.md) |
+| [![test](../flow/.test/start.svg)](../flow/.test/start.log) | [start](../flow/start_code.md) |
 | [![test](../libraries/std/ops/.test/std_geo2d_buffer.svg)](../libraries/std/ops/.test/std_geo2d_buffer.log) | [std_geo2d_buffer](../libraries/std/ops/buffer.md) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.svg)](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.log) | [std_geo2d_involute_gear_profile](../libraries/std/geo2d/) |
 | [![test](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.svg)](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.log) | [std_geo2d_rounded_rect](../libraries/std/geo2d/) |
