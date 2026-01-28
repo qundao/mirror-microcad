@@ -39,7 +39,8 @@ Ok(
                                         ],
                                     },
                                     arguments: ArgumentList {
-                                        span: 7..9,
+                                        span: 8..8,
+                                        leading_comment: None,
                                         arguments: [],
                                     },
                                 },

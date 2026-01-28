@@ -93,9 +93,18 @@ pub struct StringExpression {
 }
 
 #[derive(Debug, PartialEq)]
+pub struct TupleItem {
+    pub span: Span,
+    pub leading_comment: Option<Comment>,
+    pub name: Option<Identifier>,
+    pub value: Expression,
+    pub trailing_comment: Option<Comment>,
+}
+
+#[derive(Debug, PartialEq)]
 pub struct TupleExpression {
     pub span: Span,
-    pub values: Vec<(Option<Identifier>, Expression)>,
+    pub values: Vec<TupleItem>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -184,6 +193,7 @@ pub struct StatementList {
 #[derive(Debug, PartialEq)]
 pub struct ArgumentList {
     pub span: Span,
+    pub leading_comment: Option<Comment>,
     pub arguments: Vec<Argument>,
 }
 
@@ -219,12 +229,16 @@ impl Argument {
 #[derive(Debug, PartialEq)]
 pub struct UnnamedArgument {
     pub span: Span,
+    pub leading_comment: Option<Comment>,
     pub value: Expression,
+    pub trailing_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct NamedArgument {
     pub span: Span,
+    pub leading_comment: Option<Comment>,
     pub name: Identifier,
     pub value: Expression,
+    pub trailing_comment: Option<Comment>,
 }

@@ -65,11 +65,13 @@ Ok(
                                                     ],
                                                 },
                                                 arguments: ArgumentList {
-                                                    span: 48..56,
+                                                    span: 49..55,
+                                                    leading_comment: None,
                                                     arguments: [
                                                         Unnamed(
                                                             UnnamedArgument {
                                                                 span: 49..55,
+                                                                leading_comment: None,
                                                                 value: QualifiedName(
                                                                     QualifiedName {
                                                                         span: 49..55,
@@ -81,6 +83,7 @@ Ok(
                                                                         ],
                                                                     },
                                                                 ),
+                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                     ],

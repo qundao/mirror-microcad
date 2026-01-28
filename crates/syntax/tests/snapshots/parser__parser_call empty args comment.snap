@@ -4,17 +4,17 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..5,
+        span: 0..17,
         statements: StatementList {
-            span: 0..5,
+            span: 0..17,
             statements: [],
             tail: Some(
                 ExpressionStatement {
-                    span: 0..5,
+                    span: 0..17,
                     attributes: [],
                     expression: Call(
                         Call {
-                            span: 0..5,
+                            span: 0..17,
                             name: QualifiedName {
                                 span: 0..3,
                                 parts: [
@@ -25,8 +25,13 @@ Ok(
                                 ],
                             },
                             arguments: ArgumentList {
-                                span: 4..4,
-                                leading_comment: None,
+                                span: 4..16,
+                                leading_comment: Some(
+                                    Comment {
+                                        span: 4..16,
+                                        comment: "/* foobar */",
+                                    },
+                                ),
                                 arguments: [],
                             },
                         },

@@ -4,17 +4,17 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..9,
+        span: 0..38,
         statements: StatementList {
-            span: 0..9,
+            span: 0..38,
             statements: [],
             tail: Some(
                 ExpressionStatement {
-                    span: 0..9,
+                    span: 0..38,
                     attributes: [],
                     expression: Call(
                         Call {
-                            span: 0..9,
+                            span: 0..38,
                             name: QualifiedName {
                                 span: 0..3,
                                 parts: [
@@ -25,32 +25,42 @@ Ok(
                                 ],
                             },
                             arguments: ArgumentList {
-                                span: 3..9,
+                                span: 13..32,
+                                leading_comment: None,
                                 arguments: [
                                     Unnamed(
                                         UnnamedArgument {
-                                            span: 4..5,
+                                            span: 13..14,
+                                            leading_comment: None,
                                             value: Literal(
                                                 Integer(
                                                     IntegerLiteral {
-                                                        span: 4..5,
+                                                        span: 13..14,
                                                         value: 1,
                                                     },
                                                 ),
                                             ),
+                                            trailing_comment: None,
                                         },
                                     ),
                                     Unnamed(
                                         UnnamedArgument {
-                                            span: 7..8,
+                                            span: 16..32,
+                                            leading_comment: Some(
+                                                Comment {
+                                                    span: 16..22,
+                                                    comment: "// foo",
+                                                },
+                                            ),
                                             value: Literal(
                                                 Integer(
                                                     IntegerLiteral {
-                                                        span: 7..8,
+                                                        span: 31..32,
                                                         value: 2,
                                                     },
                                                 ),
                                             ),
+                                            trailing_comment: None,
                                         },
                                     ),
                                 ],

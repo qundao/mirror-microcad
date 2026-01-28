@@ -76,11 +76,13 @@ Ok(
                                         ],
                                     },
                                     arguments: ArgumentList {
-                                        span: 19..22,
+                                        span: 20..21,
+                                        leading_comment: None,
                                         arguments: [
                                             Unnamed(
                                                 UnnamedArgument {
                                                     span: 20..21,
+                                                    leading_comment: None,
                                                     value: Literal(
                                                         Integer(
                                                             IntegerLiteral {
@@ -89,6 +91,7 @@ Ok(
                                                             },
                                                         ),
                                                     ),
+                                                    trailing_comment: None,
                                                 },
                                             ),
                                         ],

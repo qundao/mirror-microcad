@@ -87,11 +87,13 @@ Ok(
                                                     ],
                                                 },
                                                 arguments: ArgumentList {
-                                                    span: 66..82,
+                                                    span: 67..81,
+                                                    leading_comment: None,
                                                     arguments: [
                                                         Unnamed(
                                                             UnnamedArgument {
                                                                 span: 67..73,
+                                                                leading_comment: None,
                                                                 value: QualifiedName(
                                                                     QualifiedName {
                                                                         span: 67..73,
@@ -103,11 +105,13 @@ Ok(
                                                                         ],
                                                                     },
                                                                 ),
+                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                         Unnamed(
                                                             UnnamedArgument {
                                                                 span: 75..81,
+                                                                leading_comment: None,
                                                                 value: QualifiedName(
                                                                     QualifiedName {
                                                                         span: 75..81,
@@ -119,6 +123,7 @@ Ok(
                                                                         ],
                                                                     },
                                                                 ),
+                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                     ],

@@ -16,9 +16,11 @@ Ok(
                         TupleExpression {
                             span: 0..10,
                             values: [
-                                (
-                                    None,
-                                    Literal(
+                                TupleItem {
+                                    span: 1..2,
+                                    leading_comment: None,
+                                    name: None,
+                                    value: Literal(
                                         Integer(
                                             IntegerLiteral {
                                                 span: 1..2,
@@ -26,10 +28,13 @@ Ok(
                                             },
                                         ),
                                     ),
-                                ),
-                                (
-                                    None,
-                                    BinaryOperation(
+                                    trailing_comment: None,
+                                },
+                                TupleItem {
+                                    span: 4..9,
+                                    leading_comment: None,
+                                    name: None,
+                                    value: BinaryOperation(
                                         BinaryOperation {
                                             span: 4..9,
                                             lhs: Literal(
@@ -51,7 +56,8 @@ Ok(
                                             ),
                                         },
                                     ),
-                                ),
+                                    trailing_comment: None,
+                                },
                             ],
                         },
                     ),

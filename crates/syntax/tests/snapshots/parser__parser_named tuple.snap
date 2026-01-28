@@ -16,14 +16,16 @@ Ok(
                         TupleExpression {
                             span: 0..27,
                             values: [
-                                (
-                                    Some(
+                                TupleItem {
+                                    span: 1..11,
+                                    leading_comment: None,
+                                    name: Some(
                                         Identifier {
                                             span: 1..7,
                                             name: "length",
                                         },
                                     ),
-                                    Literal(
+                                    value: Literal(
                                         Integer(
                                             IntegerLiteral {
                                                 span: 10..11,
@@ -31,15 +33,18 @@ Ok(
                                             },
                                         ),
                                     ),
-                                ),
-                                (
-                                    Some(
+                                    trailing_comment: None,
+                                },
+                                TupleItem {
+                                    span: 13..26,
+                                    leading_comment: None,
+                                    name: Some(
                                         Identifier {
                                             span: 13..18,
                                             name: "width",
                                         },
                                     ),
-                                    BinaryOperation(
+                                    value: BinaryOperation(
                                         BinaryOperation {
                                             span: 21..26,
                                             lhs: Literal(
@@ -61,7 +66,8 @@ Ok(
                                             ),
                                         },
                                     ),
-                                ),
+                                    trailing_comment: None,
+                                },
                             ],
                         },
                     ),

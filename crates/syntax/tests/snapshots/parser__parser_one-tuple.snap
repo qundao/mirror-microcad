@@ -16,9 +16,11 @@ Ok(
                         TupleExpression {
                             span: 0..4,
                             values: [
-                                (
-                                    None,
-                                    Literal(
+                                TupleItem {
+                                    span: 1..2,
+                                    leading_comment: None,
+                                    name: None,
+                                    value: Literal(
                                         Integer(
                                             IntegerLiteral {
                                                 span: 1..2,
@@ -26,7 +28,8 @@ Ok(
                                             },
                                         ),
                                     ),
-                                ),
+                                    trailing_comment: None,
+                                },
                             ],
                         },
                     ),

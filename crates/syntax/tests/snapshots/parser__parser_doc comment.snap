@@ -45,11 +45,13 @@ Ok(
                                                     ],
                                                 },
                                                 arguments: ArgumentList {
-                                                    span: 49..78,
+                                                    span: 50..77,
+                                                    leading_comment: None,
                                                     arguments: [
                                                         Named(
                                                             NamedArgument {
                                                                 span: 50..63,
+                                                                leading_comment: None,
                                                                 name: Identifier {
                                                                     span: 50..56,
                                                                     name: "height",
@@ -66,11 +68,13 @@ Ok(
                                                                         },
                                                                     ),
                                                                 ),
+                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                         Named(
                                                             NamedArgument {
                                                                 span: 65..77,
+                                                                leading_comment: None,
                                                                 name: Identifier {
                                                                     span: 65..71,
                                                                     name: "radius",
@@ -87,6 +91,7 @@ Ok(
                                                                         },
                                                                     ),
                                                                 ),
+                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                     ],

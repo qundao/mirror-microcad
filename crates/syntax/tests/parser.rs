@@ -44,7 +44,14 @@ use thiserror::Error;
 #[test_case("function with return", "fn foo(a: Length) -> Length {return a * 2;}")]
 #[test_case("function with default", "fn foo(a: Length, b = 3mm) {b / a}")]
 #[test_case("call empty args", "foo()")]
-#[test_case("call positional args", "foo(1, 2)")]
+#[test_case("call empty args comment", "foo(/* foobar */)")]
+#[test_case(
+    "call positional args",
+    "foo(
+        1, // foo
+        2
+    )"
+)]
 #[test_case("call named args", "foo(a = 1, b = 2)")]
 #[test_case("call partially named args", "foo(a, b = 2, 3)")]
 #[test_case("comment", "a = 1; // comment")]

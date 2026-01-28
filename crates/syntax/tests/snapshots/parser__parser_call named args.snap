@@ -25,11 +25,13 @@ Ok(
                                 ],
                             },
                             arguments: ArgumentList {
-                                span: 3..17,
+                                span: 4..16,
+                                leading_comment: None,
                                 arguments: [
                                     Named(
                                         NamedArgument {
                                             span: 4..9,
+                                            leading_comment: None,
                                             name: Identifier {
                                                 span: 4..5,
                                                 name: "a",
@@ -42,11 +44,13 @@ Ok(
                                                     },
                                                 ),
                                             ),
+                                            trailing_comment: None,
                                         },
                                     ),
                                     Named(
                                         NamedArgument {
                                             span: 11..16,
+                                            leading_comment: None,
                                             name: Identifier {
                                                 span: 11..12,
                                                 name: "b",
@@ -59,6 +63,7 @@ Ok(
                                                     },
                                                 ),
                                             ),
+                                            trailing_comment: None,
                                         },
                                     ),
                                 ],

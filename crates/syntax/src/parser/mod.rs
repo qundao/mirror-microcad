@@ -201,18 +201,16 @@ fn parser<'tokens>()
         }
         .then(just(Token::Normal(NormalToken::SigilDot)).or_not())
         .map_with(|(literal, trailing), e| match (literal, trailing) {
-            (Literal::Integer(IntegerLiteral {value, ..}), Some(_)) => {
+            (Literal::Integer(IntegerLiteral { value, .. }), Some(_)) => {
                 Literal::Float(FloatLiteral {
                     value: value as f64,
                     span: e.span(),
                 })
-            },
-            (Literal::Float(FloatLiteral {value, ..}), Some(_)) => {
-                Literal::Float(FloatLiteral {
-                    value,
-                    span: e.span(),
-                })
-            },
+            }
+            (Literal::Float(FloatLiteral { value, .. }), Some(_)) => Literal::Float(FloatLiteral {
+                value,
+                span: e.span(),
+            }),
             (lit, _) => lit,
         });
 
@@ -309,44 +307,82 @@ fn parser<'tokens>()
                 .repeated()
                 .then(just(Token::Normal(NormalToken::SigilCloseBracket))),
         )
-        .map(|_| vec![(None, Expression::Error)]);
+        .map_with(|_, e| {
+            vec![TupleItem {
+                span: e.span(),
+                leading_comment: None,
+                name: None,
+                value: Expression::Error,
+                trailing_comment: None,
+            }]
+        });
 
-    let tuple_body = identifier_parser
+    let tuple_body = comment_inner
         .clone()
-        .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
         .or_not()
+        .then(
+            identifier_parser
+                .clone()
+                .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
+                .or_not(),
+        )
         .then(expression_parser.clone())
+        .then(comment_inner.clone().or_not())
+        .map_with(
+            |(((leading_comment, name), value), trailing_comment), e| TupleItem {
+                span: e.span(),
+                leading_comment,
+                name,
+                value,
+                trailing_comment,
+            },
+        )
         .separated_by(just(Token::Normal(NormalToken::SigilComma)))
         .allow_trailing()
         .collect::<Vec<_>>()
-        .delimited_by(
-            just(Token::Normal(NormalToken::SigilOpenBracket)),
-            just(Token::Normal(NormalToken::SigilCloseBracket)),
-        )
-        .recover_with(via_parser(tuple_recovery))
         .boxed();
 
     let call_inner = qualified_name
         .clone()
-        .then(tuple_body.clone().map_with(|arguments, e| {
-            ArgumentList {
-                span: e.span(),
-                arguments: arguments
-                    .into_iter()
-                    .map(|(name, value)| match name {
-                        Some(name) => Argument::Named(NamedArgument {
-                            span: name.span.start..value.span().end,
-                            name,
-                            value,
-                        }),
-                        None => Argument::Unnamed(UnnamedArgument {
-                            span: value.span(),
-                            value,
-                        }),
-                    })
-                    .collect::<Vec<_>>(),
-            }
-        }))
+        .then(comment_inner
+                  .clone()
+                  .or_not()
+                  .then(tuple_body.clone())
+                .map_with(|(leading_comment, arguments), e| ArgumentList {
+                    span: e.span(),
+                    leading_comment,
+                    arguments: arguments
+                        .into_iter()
+                        .map(|item| match item.name {
+                            Some(name) => Argument::Named(NamedArgument {
+                                span: item.span,
+                                leading_comment: item.leading_comment,
+                                name,
+                                value: item.value,
+                                trailing_comment: item.trailing_comment,
+                            }),
+                            None => Argument::Unnamed(UnnamedArgument {
+                                span: item.span,
+                                leading_comment: item.leading_comment,
+                                value: item.value,
+                                trailing_comment: item.trailing_comment,
+                            }),
+                        })
+                        .collect::<Vec<_>>(),
+                })
+                .labelled("function arguments")
+                .delimited_by(
+                    just(Token::Normal(NormalToken::SigilOpenBracket)),
+                    just(Token::Normal(NormalToken::SigilCloseBracket)),
+                )
+                .recover_with(via_parser(tuple_recovery.clone().map_with(|_, e| {
+                    ArgumentList {
+                        span: e.span(),
+                        leading_comment: None,
+                        arguments: Vec::new(),
+                    }
+                }))),
+        )
         .map_with(|(name, arguments), e| Call {
             span: e.span(),
             name,
@@ -726,12 +762,19 @@ fn parser<'tokens>()
             .recover_with(via_parser(string_format_recovery))
             .boxed();
 
-        let tuple = tuple_body.clone().map_with(|values, e| {
+        let tuple = tuple_body.clone()
+            .delimited_by(
+                just(Token::Normal(NormalToken::SigilOpenBracket)),
+                just(Token::Normal(NormalToken::SigilCloseBracket)),
+            )
+            .recover_with(via_parser(tuple_recovery))
+            .map_with(|values, e| {
             Expression::Tuple(TupleExpression {
                 span: e.span(),
                 values,
             })
-        });
+        })
+            .labelled("tuple");
 
         let bracketed = expression_parser.clone().delimited_by(
             just(Token::Normal(NormalToken::SigilOpenBracket)),
