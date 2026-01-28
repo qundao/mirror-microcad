@@ -69,6 +69,7 @@ fn parser<'tokens>()
             span: 0..0,
             statements: vec![Statement::Error],
             tail: None,
+            tail_comment: None,
         });
 
     let block = statement_list_parser
@@ -120,6 +121,17 @@ fn parser<'tokens>()
     }
     .labelled("quantity type")
     .boxed();
+
+    let comment_inner = select_ref! {
+        Token::Normal(NormalToken::SingleLineComment(comment) )= e => Comment {
+            span: e.span(),
+            comment: comment.as_ref().into()
+        },
+        Token::Normal(NormalToken::MultiLineComment(comment)) = e => Comment {
+            span: e.span(),
+            comment: comment.as_ref().into()
+        }
+    };
 
     type_parser.define({
         let single = single_type.clone().map(Type::Single);
@@ -409,19 +421,11 @@ fn parser<'tokens>()
                 .boxed()
         });
 
-        let comment = select_ref! {
-            Token::Normal(NormalToken::SingleLineComment(comment) )= e => Comment {
-                span: e.span(),
-                comment: comment.as_ref().into()
-            },
-            Token::Normal(NormalToken::MultiLineComment(comment)) = e => Comment {
-                span: e.span(),
-                comment: comment.as_ref().into()
-            }
-        }
-        .map(Statement::Comment)
-        .labelled("comment")
-        .boxed();
+        let comment = comment_inner
+            .clone()
+            .map(Statement::Comment)
+            .labelled("comment")
+            .boxed();
 
         let arguments = identifier_parser
             .clone()
@@ -590,14 +594,16 @@ fn parser<'tokens>()
             )
             .boxed();
 
-
-        let if_expression = attribute_parser.clone()
+        let if_expression = attribute_parser
+            .clone()
             .then(if_inner.clone().map(Expression::If))
-            .map_with(|(attributes, expression), e| Statement::Expression(ExpressionStatement {
-                span: e.span(),
-                attributes,
-                expression
-            }))
+            .map_with(|(attributes, expression), e| {
+                Statement::Expression(ExpressionStatement {
+                    span: e.span(),
+                    attributes,
+                    expression,
+                })
+            })
             .labelled("if statement")
             .boxed();
 
@@ -637,10 +643,12 @@ fn parser<'tokens>()
             .repeated()
             .collect::<Vec<_>>()
             .then(trailing_expr)
-            .map_with(|(statements, tail), e| StatementList {
+            .then(comment_inner.or_not())
+            .map_with(|((statements, tail), tail_comment), e| StatementList {
                 span: e.span(),
                 statements,
                 tail,
+                tail_comment,
             })
     });
 

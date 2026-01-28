@@ -57,6 +57,7 @@ Ok(
                                             ),
                                         },
                                     ),
+                                    tail_comment: None,
                                 },
                                 next_if: None,
                                 else_body: Some(
@@ -77,6 +78,7 @@ Ok(
                                                 ),
                                             },
                                         ),
+                                        tail_comment: None,
                                     },
                                 ),
                             },
@@ -85,6 +87,7 @@ Ok(
                 ),
             ],
             tail: None,
+            tail_comment: None,
         },
     },
 )

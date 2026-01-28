@@ -72,6 +72,7 @@ Ok(
                     ),
                 },
             ),
+            tail_comment: None,
         },
     },
 )

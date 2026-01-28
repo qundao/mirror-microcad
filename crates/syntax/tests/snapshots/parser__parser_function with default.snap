@@ -93,11 +93,13 @@ Ok(
                                     ),
                                 },
                             ),
+                            tail_comment: None,
                         },
                     },
                 ),
             ],
             tail: None,
+            tail_comment: None,
         },
     },
 )

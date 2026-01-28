@@ -22,11 +22,13 @@ Ok(
                             span: 27..27,
                             statements: [],
                             tail: None,
+                            tail_comment: None,
                         },
                     },
                 ),
             ],
             tail: None,
+            tail_comment: None,
         },
     },
 )

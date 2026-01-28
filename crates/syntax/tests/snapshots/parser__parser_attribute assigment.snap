@@ -58,6 +58,7 @@ Ok(
                 ),
             ],
             tail: None,
+            tail_comment: None,
         },
     },
 )
