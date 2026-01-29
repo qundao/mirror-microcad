@@ -22,7 +22,7 @@ pub struct Resolve {
 
     /// Paths to search for files.
     ///
-    /// By default, `./std/lib` (if it exists) and the microcad user config folder are are used.
+    /// By default, `./std/lib` (if it exists) and the microcad user config folder are used.
     #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append)]
     pub search_paths: Vec<std::path::PathBuf>,
 
