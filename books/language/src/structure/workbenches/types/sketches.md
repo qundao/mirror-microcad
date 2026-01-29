@@ -20,7 +20,7 @@ The output is a 2D sketch:
 
 ![test](.test/sketch_basic-out.svg)
 
-## Rules
+## Restrictions
 
 ### Sketches cannot generate 3D models
 

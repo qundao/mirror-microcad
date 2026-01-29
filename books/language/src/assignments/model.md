@@ -19,7 +19,7 @@ m = std::geo2d::Circle(radius = 10mm);   // assign the model of a circle into m
 std::geo2d::Circle(radius = m);   // error: cannot use m as value
 ```
 
-## Rules
+## Restrictions
 
 ### No Shadowing
 

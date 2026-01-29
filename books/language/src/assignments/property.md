@@ -15,7 +15,7 @@ sketch MySketch(radius: Length) {
 std::debug::assert_eq([ MySketch(5cm).diameter, 10cm ])
 ```
 
-## Rules
+## Restrictions
 
 ### Not in source files
 

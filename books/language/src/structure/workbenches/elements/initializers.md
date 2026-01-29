@@ -36,7 +36,7 @@ Wheel(diameter=1.5cm);
 Output
   :![output](.test/init_property-out.svg)
 
-## Rules
+## Restrictions
 
 ### Building plan must be initialized
 
