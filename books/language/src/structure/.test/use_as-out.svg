@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8.8 8.8' width='8.8mm' height='8.8mm'>
+
+  <defs>
+    <!-- A marker to be used as an arrowhead -->
+    <marker
+      id="arrow"
+      viewBox="0 0 16 16"
+      refX="8"
+      refY="8"
+      markerWidth="9"
+      markerHeight="9"
+      orient="auto-start-reverse">
+      <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
+    </marker>
+  </defs>
+            
+  <style>
+     
+        .background-fill {
+            fill: #FFFFFF;
+            stroke: none;
+        }
+         
+        .grid {
+            fill: #D8D8D8;
+            stroke: #D8D8D8;
+            stroke-width: 0.2;
+        }
+         
+        .grid-stroke {
+            fill: none;
+            stroke: #D8D8D8;
+            stroke-width: 0.2;
+        }
+         
+        .grid-fill {
+            fill: #D8D8D8;
+            stroke: none;
+        }
+         
+        .measure {
+            fill: #00CCCC;
+            stroke: #00CCCC;
+            stroke-width: 0.2;
+        }
+         
+        .measure-stroke {
+            fill: none;
+            stroke: #00CCCC;
+            stroke-width: 0.2;
+        }
+         
+        .measure-fill {
+            fill: #00CCCC;
+            stroke: none;
+        }
+         
+        .highlight {
+            fill: #FF9900;
+            stroke: #FF9900;
+            stroke-width: 0.2;
+        }
+         
+        .highlight-stroke {
+            fill: none;
+            stroke: #FF9900;
+            stroke-width: 0.2;
+        }
+         
+        .highlight-fill {
+            fill: #FF9900;
+            stroke: none;
+        }
+         
+        .entity {
+            fill: rgba(178, 178, 178, 0.70);
+            stroke: #191919;
+            stroke-width: 0.4;
+        }
+        
+            .active { fill-opacity: 1.0; stroke-opacity: 1.0; }
+            .inactive { fill-opacity: 0.3; stroke-opacity: 0.3; }
+        
+  </style>
+  <g class="entity">
+    <path d="M8.4,4.4L8.323141121612922,3.6196387119354876L8.095518130045146,2.869266270539641L7.725878449210182,2.1777190679215916L7.22842712474619,1.5715728752538105L6.622280932078409,1.0741215507898194L5.93073372946036,0.7044818699548534L5.180361288064514,0.47685887838707863L4.4,0.40000000000000036L3.6196387119354876,0.47685887838707863L2.8692662705396415,0.7044818699548534L2.1777190679215925,1.0741215507898185L1.5715728752538105,1.57157287525381L1.074121550789819,2.1777190679215916L0.7044818699548534,2.869266270539641L0.47685887838707863,3.619638711935486L0.40000000000000036,4.3999999999999995L0.47685887838707863,5.180361288064514L0.704481869954853,5.930733729460359L1.0741215507898185,6.622280932078408L1.5715728752538096,7.22842712474619L2.1777190679215916,7.725878449210182L2.8692662705396392,8.095518130045146L3.619638711935486,8.323141121612922L4.3999999999999995,8.4L5.180361288064514,8.323141121612922L5.9307337294603615,8.095518130045146L6.622280932078407,7.725878449210182L7.22842712474619,7.228427124746191L7.725878449210182,6.622280932078409L8.095518130045146,5.930733729460362L8.323141121612922,5.180361288064514L8.4,4.4 Z  "/>
+  </g>
+</svg>
