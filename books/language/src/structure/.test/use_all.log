@@ -9,14 +9,14 @@
 
   77:   use std::geo3d::*;
   78:   
-  79:   Sphere(r = 4mm);
+  79:   Sphere(radius = 4mm);
   80:   Cube(size = 40mm);
 
 -- No Output --
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(part) std::geo3d::Sphere(r=4mm) ->
+    Workpiece(part) std::geo3d::Sphere(radius=4mm) ->
       - radius = 4mm
       Primitive3D __builtin::geo3d::Sphere(radius=4mm) ->
     Workpiece(part) std::geo3d::Cube(size=40mm) ->

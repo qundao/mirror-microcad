@@ -6,14 +6,6 @@
 /// Examples:
 /// * with radius `r`: `Sphere(r = 10.0mm);`
 pub part Sphere(radius: Length) {
-    init(r: Length) {
-        radius = r;
-    }
-
-    init(d: Length) {
-        radius = d / 2;
-    }
-
     init(diameter: Length) {
         radius = diameter / 2;
     }
@@ -70,15 +62,6 @@ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, off
         radius_bottom = r;
         radius_top = r;
         offset = -height / 2;
-    }
-
-    /// Initialize by `diameter` and `height`. Cylinder will be centered.
-    init(d: Length, h: Length) {
-        r = d / 2.0;
-        radius_bottom = r;
-        radius_top = r;
-        offset = -h / 2;
-        height = h;
     }
 
     s = radius_top / radius_bottom;

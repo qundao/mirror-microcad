@@ -10,11 +10,15 @@ use rust_embed::RustEmbed;
 #[folder = "lib"]
 pub struct Lib;
 
-pub fn get_user_stdlib_path() -> std::path::PathBuf {
-    let mut path = dirs::config_dir().expect("config directory");
-    path.push("microcad");
-    path.push("lib");
-    path
+pub fn global_std_path() -> std::path::PathBuf {
+    #[cfg(not(debug_assertions))]
+    return dirs::config_dir()
+        .expect("config directory")
+        .join("microcad")
+        .join("lib");
+
+    #[cfg(debug_assertions)]
+    return std::path::PathBuf::from("./crates/std/lib");
 }
 
 /// Check if there is a std library installed.

@@ -20,7 +20,7 @@ use std::ops::*;
 use std::geo2d::*;
 use std::ops::*;
 
-Circle(r = 4mm)
+Circle(4mm)
     .translate(x = [-10, 10]mm, y = [-10, 10]mm)
     .hull();
 ```

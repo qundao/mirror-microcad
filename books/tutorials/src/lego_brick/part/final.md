@@ -25,7 +25,7 @@ sketch Base(
 ) {
     thickness = 1.2mm;
     frame = Frame(width, height, thickness);
-    struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+    struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
         .grid(columns = columns-1, rows = rows-1);
     frame | struts;
 }
@@ -33,7 +33,7 @@ sketch Base(
 use Rect as Cap;
 
 sketch Knobs(columns: Integer, rows: Integer) {
-    Circle(d = 4.8mm)
+    Circle(diameter = 4.8mm)
         .grid(columns, rows);
 }
 

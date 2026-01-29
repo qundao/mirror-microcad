@@ -10,7 +10,7 @@
   20:   use std::geo2d::*;
   21:   use std::ops::*;
   22:   
-  23:   Circle(r = 4mm)
+  23:   Circle(4mm)
   24:       .translate(x = [-10, 10]mm, y = [-10, 10]mm)
   25:       .hull();
 
@@ -25,7 +25,7 @@
           - y = -10mm
           - z = 0mm
           Transform __builtin::ops::translate(x=-10mm, y=-10mm, z=0mm) ->
-            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+            Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
               - center = (x=0mm, y=0mm)
               - radius = 4mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -35,7 +35,7 @@
           - y = -10mm
           - z = 0mm
           Transform __builtin::ops::translate(x=10mm, y=-10mm, z=0mm) ->
-            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+            Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
               - center = (x=0mm, y=0mm)
               - radius = 4mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -45,7 +45,7 @@
           - y = 10mm
           - z = 0mm
           Transform __builtin::ops::translate(x=-10mm, y=10mm, z=0mm) ->
-            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+            Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
               - center = (x=0mm, y=0mm)
               - radius = 4mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
@@ -55,7 +55,7 @@
           - y = 10mm
           - z = 0mm
           Transform __builtin::ops::translate(x=10mm, y=10mm, z=0mm) ->
-            Workpiece(sketch) std::geo2d::Circle(c=(x=0mm, y=0mm), r=4mm) ->
+            Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
               - center = (x=0mm, y=0mm)
               - radius = 4mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->

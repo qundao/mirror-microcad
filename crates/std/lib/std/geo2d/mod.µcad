@@ -7,18 +7,8 @@
 /// * With radius `r`: `Circle(r = 10.0mm);`
 /// * With diameter `d`: `Circle(d = 5.0mm);`
 pub sketch Circle(radius: Length, center = (x = 0.0mm, y = 0.0mm)) {
-    init(r: Length, c = (x = 0.0mm, y = 0.0mm)) {
-        radius = r;
-        center = c;
-    }
-
     init(diameter: Length, center = (x = 0.0mm, y = 0.0mm)) {
         radius = diameter / 2.0;
-    }
-
-    init(d: Length, c = (x = 0.0mm, y = 0.0mm)) {
-        radius = d / 2.0;
-        center = c;
     }
 
     __builtin::geo2d::Circle(radius)
@@ -82,13 +72,6 @@ pub sketch Rect(width: Length, height: Length, x: Length, y: Length) {
         y = -height / 2.0; // center y
     }
 
-    init(w: Length, h: Length) {
-        width = w;
-        height = h;
-        x = -w / 2.0; // center x
-        y = -h / 2.0; // center y
-    }
-
     init(size: Length) {
         width = size;
         height = size;
@@ -99,21 +82,22 @@ pub sketch Rect(width: Length, height: Length, x: Length, y: Length) {
     __builtin::geo2d::Rect(width, height, x, y);
 }
 
-pub sketch Ring(outer_r: Length, inner_r: Length ) {
-     init(outer_r: Length, thickness: Length) {
-         inner_r = outer_r - thickness;
+pub sketch Ring(outer_radius: Length, inner_radius: Length ) {
+     init(outer_radius: Length, thickness: Length) {
+         inner_radius = outer_radius - thickness;
      }
 
-     init(outer_d: Length, inner_d: Length ) {
-         outer_r = outer_d/2;
-         inner_r = inner_d/2;
+     init(outer_diameter: Length, inner_diameter: Length ) {
+         outer_radius = outer_diameter/2;
+         inner_radius = inner_diameter/2;
      }
-     init(outer_d: Length, thickness: Length) {
-         inner_r = outer_d/2 - thickness;
-         outer_r = outer_d/2;
+     
+     init(outer_diameter: Length, thickness: Length) {
+         inner_radius = outer_diameter/2 - thickness;
+         outer_radius = outer_diameter/2;
      }
 
-     Circle(radius = outer_r) - Circle(radius = inner_r) 
+     Circle(outer_radius) - Circle(inner_radius) 
 }
 
 /// A rounded rectangle.
