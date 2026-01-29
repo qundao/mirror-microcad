@@ -44,26 +44,40 @@ impl<'a> ArgumentMatch<'a> {
             result: Tuple::new_named(std::collections::HashMap::new(), arguments.src_ref()),
         };
 
-        fn match_exact(left: &Type, right: &Type) -> bool {
+        fn match_id_exact(left: &Identifier, right: &Identifier) -> bool {
             left == right
         }
 
-        fn match_auto(left: &Type, right: &Type) -> bool {
+        fn match_id_short(left: &Identifier, right: &Identifier) -> bool {
+            if let Some(short_id) = left.short_id() {
+                short_id == *right
+            } else {
+                false
+            }
+        }
+
+        fn match_type_exact(left: &Type, right: &Type) -> bool {
+            left == right
+        }
+
+        fn match_type_auto(left: &Type, right: &Type) -> bool {
             left.is_matching(right)
         }
 
-        am.match_ids();
-        am.match_types(true, match_exact);
-        am.match_types(false, match_auto);
+        am.match_ids(match_id_exact)?;
+        am.match_ids(match_id_short)?;
+        am.match_types(true, match_type_exact);
+        am.match_types(false, match_type_auto);
         am.match_defaults();
-        am.match_types(false, match_auto);
+        am.match_types(false, match_type_auto);
         am.check_missing()?;
 
         Ok(am)
     }
 
     /// Match arguments by id
-    fn match_ids(&mut self) {
+    fn match_ids(&mut self, match_fn: impl Fn(&Identifier, &Identifier) -> bool) -> EvalResult<()> {
+        let mut type_mismatch = IdentifierList::default();
         if !self.arguments.is_empty() {
             log::trace!("find id match for:\n{self:?}");
             self.arguments.retain(|(id, arg)| {
@@ -73,9 +87,10 @@ impl<'a> ArgumentMatch<'a> {
                 };
 
                 if !id.is_empty() {
-                    if let Some(n) = self.params.iter().position(|(i, _)| *i == id) {
+                    if let Some(n) = self.params.iter().position(|(i, _)| match_fn(i, id)) {
                         if let Some(ty) = &self.params[n].1.specified_type {
                             if !arg.ty().is_matching(ty) {
+                                type_mismatch.push(id.clone());
                                 return true;
                             }
                         }
@@ -90,6 +105,11 @@ impl<'a> ArgumentMatch<'a> {
                 }
                 true
             });
+        }
+        if type_mismatch.is_empty() {
+            Ok(())
+        } else {
+            Err(EvalError::IdMatchButNotType(type_mismatch.to_string()))
         }
     }
 

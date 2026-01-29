@@ -157,6 +157,10 @@ pub enum EvalError {
     #[error("Too many arguments: {0}")]
     TooManyArguments(IdentifierList),
 
+    /// Arguments match by identifier but have incompatible types
+    #[error("Arguments match by identifier but have incompatible types: {0}")]
+    IdMatchButNotType(String),
+
     /// Builtin error
     #[error("Builtin error: {0}")]
     BuiltinError(String),

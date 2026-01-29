@@ -2,12 +2,13 @@
 
 The following table lists all tests included in this documentation.
 
-**124** tests have been evaluated with version **0.2.20** of microcad.
+**125** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
 | Result | Source | Name |
 |-------:|--------|------|
+| [![test](.test/argument_match_short_id.svg)](.test/argument_match_short_id.log) | [argument_match_short_id](argument_match.md) |
 | [![test](.test/auto_convert.svg)](.test/auto_convert.log) | [auto_convert](auto_convert.md) |
 | [![test](statement_usage/.test/body_assignment_const.svg)](statement_usage/.test/body_assignment_const.log) | [body_assignment_const](statement_usage/body.md) |
 | [![test](statement_usage/.test/body_assignment_prop.svg)](statement_usage/.test/body_assignment_prop.log) | [body_assignment_prop](statement_usage/body.md) |
