@@ -1,7 +1,7 @@
 # Source Files
 
-*Source files* are simply files which contain µcad code.
-Such files might have the extension `.µcad`, `.mcad` or `.ucad`.
+*Source files* are files that contain µcad source code.
+Such files must either have the extension `.µcad`, `.mcad` or `.ucad`.
 
 A source file can include the following types of *statements* which we will all
 discuss within this book:
@@ -10,13 +10,13 @@ discuss within this book:
 | ------------------------------------------- | ------------------------------------------- | -------------- |
 | [expression](../expressions/README.md#)     | calculate values                            | `x * 5;`       |
 | [assignment](../assignments/values.md)      | store values                                | `y = x;`       |
-| [const assignment](../assignments/const.md) | naming constants                            | `const y = 1;` |
-| [pub assignment](../assignments/pub.md)     | exporting constants                         | `pub y = 1;`   |
+| [const assignment](../assignments/const.md) | naming constants                            | `const Y = 1;` |
+| [pub assignment](../assignments/pub.md)     | exporting constants                         | `pub Y = 1;`   |
 | [function](functions.md)                    | separate calculations                       | `fn f() { }`   |
 | [workbench](workbenches/)                   | build or transform 2D sketches and 3D parts | `part P() { }` |
 | [module](modules/)                          | modularization of complex code              | `mod m { }`    |
 | [if](../flow/conditions.md)                 | process conditions                          | `if x > 1 { }` |
-| [use](use.md)                               | use elements from other modules             | `use m;`       |
+| [use](use.md)                               | use symbols from other modules              | `use m;`       |
 | [call](../flow/calls)                       | use functions and workbenches               | `f();`         |
 | [comment](../doc/comments.md)               | for documentation                           | `// comment`   |
 
@@ -27,6 +27,7 @@ A source file can serve as both a module and a workbench.
 You can use it to provide structure (for example, by organizing submodules) or
 as a kind of workbench where you add statements to generate outputs—such as a
 2D graphic or a 3D model.
+
 The workbench section of the file is only evaluated if it is in the main file
 (the one that `microcad` was called with).
 
