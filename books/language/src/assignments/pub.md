@@ -14,7 +14,7 @@ mod my_module {
 std::print(my_module::sub_module::TEXT);
 ```
 
-## Rules
+## Restrictions
 
 ### Not in workbenches
 

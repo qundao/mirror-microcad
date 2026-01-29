@@ -2,19 +2,19 @@
 -- Test --
         Test name: example
   Expected result: ok
-      Source file: ../books/language/src/structure/functions/README.md:21
+      Source file: ../books/language/src/structure/functions/README.md:14
         Test path: ../books/language/src/structure/functions/.test
 
 -- Code --
 
-  21:   // define function print_error with text as parameter of type String
-  22:   fn print_error( text: String ) {
-  23:       // code body
-  24:       std::print("ERROR: {text}");
-  25:   }
-  26:   
-  27:   print_error("first");
-  28:   print_error("second");
+  14:   // define function print_error with text as parameter of type String
+  15:   fn print_error( text: String ) {
+  16:       // code body
+  17:       std::print("ERROR: {text}");
+  18:   }
+  19:   
+  20:   print_error("first");
+  21:   print_error("second");
 
 -- Output --
 ERROR: first
