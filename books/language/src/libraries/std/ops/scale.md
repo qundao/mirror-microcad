@@ -13,6 +13,6 @@ std::geo2d::Rect(30mm).std::ops::scale(200%);
 [![test](.test/scale_3d.svg)](.test/scale_3d.log)
 
 ```µcad,scale_3d
-std::geo3d::Cylinder(height = 50mm, diameter = 20mm)
+std::geo3d::Cylinder(50mm, diameter = 20mm)
     .std::ops::scale(x = 200%);
 ```
