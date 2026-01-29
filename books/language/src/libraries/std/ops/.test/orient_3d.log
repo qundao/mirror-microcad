@@ -11,7 +11,7 @@
    9:   use std::ops::*;
   10:   use std::geo3d::*;
   11:   
-  12:   Cylinder(height = 50mm, diameter = 35mm).orient([X,Y,Z]);
+  12:   Cylinder(50mm, diameter = 35mm).orient([X,Y,Z]);
 
 -- No Output --
 -- No Errors --
