@@ -11,13 +11,13 @@ use rust_embed::RustEmbed;
 pub struct Lib;
 
 pub fn global_std_path() -> std::path::PathBuf {
-    #[cfg(debug_assertions)]
+    #[cfg(not(debug_assertions))]
     return dirs::config_dir()
         .expect("config directory")
         .join("microcad")
         .join("lib");
 
-    #[cfg(not(debug_assertions))]
+    #[cfg(debug_assertions)]
     return std::path::PathBuf::from("./crates/std/lib");
 }
 
