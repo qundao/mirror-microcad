@@ -1,0 +1,20 @@
+﻿
+-- Test --
+        Test name: argument_match_collision
+  Expected result: fail
+      Source file: ../books/tests/src/argument_match.md:24
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  24:   sketch S( width: Length ) {
+  25:       init( width: Length ) { width=width; }  // error: same as building plan
+  26:   }
+  27:   
+  28:   S(width=10cm); // error: short form cannot be used here because of ambiguity
+
+-- No Output --
+-- No Errors --
+Expected error(s) which did not occur in line(s): 25, 28
+-- Test Result --
+FAILS WITH WRONG ERRORS

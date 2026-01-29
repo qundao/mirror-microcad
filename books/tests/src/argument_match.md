@@ -11,3 +11,28 @@ f( x_param=1m, y_param=2m, z_param=3m );
 f( x=1m, y=2m, z=3m );
 f( x=1m, y=2m );
 ```
+
+```µcad,argument_match_short_collision#fail
+sketch S( width: Length ) {
+    init( what: Length ) { width=what; }
+}
+
+S(w=10cm); // error: short form cannot be used here because of ambiguity
+```
+
+```µcad,argument_match_collision#fail
+sketch S( width: Length ) {
+    init( width: Length ) { width=width; }  // error: same as building plan
+}
+
+S(width=10cm); // error: short form cannot be used here because of ambiguity
+```
+
+```µcad,argument_match_collision_init#fail
+sketch S( width: Length, height: Length ) {
+    init( size: Length ) { width=size; height=size; }
+    init( size: Length ) { width=size; height=size; }  // error: same as other init
+}
+
+S(width=10cm); // error: short form cannot be used here because of ambiguity
+```
