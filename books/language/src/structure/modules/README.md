@@ -1,6 +1,8 @@
 # Modules
 
 A module is a way to organize and group code into logical units.
+Module are declared with the `mod` keyword.
+
 Modules help manage scope and control visibility (e.g., using `pub` to make
 items public available).
 
@@ -8,13 +10,12 @@ items public available).
 
 - Modules define a namespace for your code.
 - They can be nested to create hierarchies,
-- declared with the `mod` keyword (internal modules)
-- or in separate files (external modules).
+- or in separate files (file modules).
 - Control what is exposed to the outside world using `pub`.
 
 ## Example
 
-The following example shows two nested *internal modules* carrying a public constant and
+The following example shows two nested *inline modules* carrying a public constant and
 a public function which then are used from outside the modules:
 
 [![test](.test/mod_example.svg)](.test/mod_example.log)
