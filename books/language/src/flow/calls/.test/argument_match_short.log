@@ -1,0 +1,55 @@
+﻿
+-- Test --
+        Test name: argument_match_short
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/arguments.md:42
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  42:   // short identifiers of f's parameters are `w` and `i_r`
+  43:   fn f( width: Length, inner_radius: Length ) {}
+  44:   
+  45:   // use short identifiers
+  46:   f(w = 1cm, inner_radius = 2cm);
+  47:   // can be mixed
+  48:   f(w = 1cm, inner_radius = 2cm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 2:22: Unused local inner_radius.
+    ╭─[../books/language/src/flow/calls/arguments.md:43:22]
+ 42 │ // short identifiers of f's parameters are `w` and `i_r`
+ 43 │ fn f( width: Length, inner_radius: Length ) {}
+    ·                      ──────┬─────
+    ·                            ╰── warning: 2:22: Unused local inner_radius.
+ 44 │ 
+    ╰────
+  ⚠ warning: 2:7: Unused local width.
+    ╭─[../books/language/src/flow/calls/arguments.md:43:7]
+ 42 │ // short identifiers of f's parameters are `w` and `i_r`
+ 43 │ fn f( width: Length, inner_radius: Length ) {}
+    ·       ──┬──
+    ·         ╰── warning: 2:7: Unused local width.
+ 44 │ 
+    ╰────
+  ⚠ warning: 2:22: Unused local inner_radius.
+    ╭─[../books/language/src/flow/calls/arguments.md:43:22]
+ 42 │ // short identifiers of f's parameters are `w` and `i_r`
+ 43 │ fn f( width: Length, inner_radius: Length ) {}
+    ·                      ──────┬─────
+    ·                            ╰── warning: 2:22: Unused local inner_radius.
+ 44 │ 
+    ╰────
+  ⚠ warning: 2:7: Unused local width.
+    ╭─[../books/language/src/flow/calls/arguments.md:43:7]
+ 42 │ // short identifiers of f's parameters are `w` and `i_r`
+ 43 │ fn f( width: Length, inner_radius: Length ) {}
+    ·       ──┬──
+    ·         ╰── warning: 2:7: Unused local width.
+ 44 │ 
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 43
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)

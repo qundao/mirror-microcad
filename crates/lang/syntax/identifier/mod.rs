@@ -108,11 +108,11 @@ impl Identifier {
     }
 
     /// Return first character of the identifier.
-    pub(crate) fn short_id(&self) -> Option<ShortId> {
+    pub(crate) fn short_id(&self) -> ShortId {
         let parts = self
             .0
             .value
-            .split("=")
+            .split("_")
             .map(|part| {
                 part.chars()
                     .next()
@@ -122,11 +122,7 @@ impl Identifier {
             .collect::<Vec<_>>()
             .join("_");
 
-        if parts.chars().all(|c| c.is_lowercase()) {
-            Some(ShortId(parts))
-        } else {
-            None
-        }
+        ShortId(parts)
     }
 
     /// Return number of identifiers in name
@@ -341,4 +337,15 @@ fn identifier_case() {
     assert_eq!(detect_case("A_B"), Case::UpperSnake);
 
     println!("All tests passed.");
+}
+
+#[test]
+fn test_short_identifiers() {
+    fn test(id: &str) -> String {
+        Identifier::from(id).short_id().to_string()
+    }
+
+    assert_eq!(test("weather_thermal_function"), "w_t_f");
+    assert_eq!(test("width"), "w");
+    assert_eq!(test("WeatherThermal_Function"), "W_F");
 }

@@ -49,11 +49,7 @@ impl<'a> ArgumentMatch<'a> {
         }
 
         fn match_id_short(left: &Identifier, right: &Identifier) -> bool {
-            if let Some(short_id) = left.short_id() {
-                short_id == *right
-            } else {
-                false
-            }
+            left.short_id() == *right
         }
 
         fn match_type_exact(left: &Type, right: &Type) -> bool {

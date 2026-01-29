@@ -18,6 +18,36 @@ fn f( x: Length, y: Length, z: Length ) {}
 f(x = 1cm, y = 2cm, z = 3cm);
 ```
 
+### Match by Short Identifier
+
+Parameter names can also matched by their short identifier.
+
+The short form is every first letter of every word between any underscores (`_`).
+So the short form of `width` is `w` and from `inner_radius` it is `i_r`.
+
+Here are some examples:
+
+| Identifier                    | Short Identifier |
+| ----------------------------- | ---------------- |
+| `parameter`                   | `p`              |
+| `my_parameter`                | `m_p`            |
+| `my_very_long_parameter_name` | `m_v_l_p_n`      |
+| `my_Parameter`                | `m_P`            |
+| `MyParameter`                 | `M`              |
+| `myParameter`                 | `m`              |
+
+[![test](.test/argument_match_short.svg)](.test/argument_match_short.log)
+
+```µcad,argument_match_short
+// short identifiers of f's parameters are `w` and `i_r`
+fn f( width: Length, inner_radius: Length ) {}
+
+// use short identifiers
+f(w = 1cm, i_r = 2cm);
+// can be mixed
+f(w = 1cm, inner_radius = 2cm);
+```
+
 ### Match by Type
 
 It is possible to use nameless values if all the *parameter types* of a called

@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**173** tests have been evaluated with version **0.2.20** of microcad.
+**174** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -15,6 +15,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/calls/.test/argument_match_auto_err.svg)](../flow/calls/.test/argument_match_auto_err.log) | [argument_match_auto_err](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_mix.svg)](../flow/calls/.test/argument_match_mix.log) | [argument_match_mix](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_name.svg)](../flow/calls/.test/argument_match_name.log) | [argument_match_name](../flow/calls/arguments.md) |
+| [![test](../flow/calls/.test/argument_match_short.svg)](../flow/calls/.test/argument_match_short.log) | [argument_match_short](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_single_identifier.svg)](../flow/calls/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](../flow/calls/arguments.md) |
 | [![test](../flow/calls/.test/argument_match_type.svg)](../flow/calls/.test/argument_match_type.log) | [argument_match_type](../flow/calls/arguments.md) |
 | [![test](../types/collections/.test/array_add.svg)](../types/collections/.test/array_add.log) | [array_add](../types/collections/arrays.md) |
