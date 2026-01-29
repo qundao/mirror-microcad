@@ -59,7 +59,7 @@ std::print("outer: {t.outer}");
 std::print("inner: {t.inner}"); // error
 ```
 
-## Rules
+## Restrictions
 
 ### No prop within initializer
 

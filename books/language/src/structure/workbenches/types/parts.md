@@ -16,7 +16,7 @@ MyPart(1cm);
 
 Like all workbenches parts can have several [workbench elements](../elements/).
 
-## Rules
+## Restrictions
 
 ### Parts cannot generate 2D models
 

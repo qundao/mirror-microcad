@@ -32,7 +32,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
 Wheel(radius = 1cm);
 ```
 
-## Rules
+## Restrictions
 
 ### Illegal statements within workbenches
 

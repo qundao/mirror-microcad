@@ -11,7 +11,7 @@ available for use outside the module.
 // module math
 mod math {
     // pow cannot be called from outside math
-    fn pow( x: Scalar, n: Integer ) {
+    fn pow( x: Scalar, n: Integer ) -> Scalar {
         if n == 1 {
             x   // return x
         } else {
@@ -20,7 +20,7 @@ mod math {
     }
 
     // square is callable from outside math
-    pub fn square(x: Scalar) {
+    pub fn square(x: Scalar) -> Scalar {
         // call internal pow
         pow(x, 2)
     }

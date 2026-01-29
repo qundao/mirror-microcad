@@ -37,7 +37,7 @@ std::debug::assert_eq([ Wheel(radius = 5cm).diameter, 10cm ]);
 If there are no initializers, the initialization code is just part of the
 [building code](building_code.md).
 
-## Rules
+## Restrictions
 
 ### Cannot access building plan in initialization code
 

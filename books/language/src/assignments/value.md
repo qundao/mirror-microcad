@@ -60,7 +60,7 @@ assert_valid(a);
 assert_invalid(b);
 ```
 
-## Rules
+## Restrictions
 
 ### No Shadowing
 

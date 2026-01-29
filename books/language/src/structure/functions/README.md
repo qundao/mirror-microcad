@@ -5,13 +5,6 @@ These sub-routines can then be [called](../../flow/calls/function_calls.md) to
 execute their code with a specific set of
 [parameters](../../flow/calls/parameters.md).
 
-The following example will print these two lines of text:
-
-```txt
-ERROR: first
-ERROR: second
-```
-
 The function definition starts with the keyword `fn`, followed by an
 *identifier*, a *parameter list*, and a *function body*.
 
@@ -28,6 +21,12 @@ print_error("first");
 print_error("second");
 ```
 
+Output
+  :```txt
+   ERROR: first
+   ERROR: second
+   ```
+
 ## Default Parameters
 
 Parameters can include *default values*.
@@ -43,7 +42,6 @@ fn f(x: Scalar, y=1mm) -> Length {
 
 std::debug::assert_eq([ f(2), 2mm ]);
 std::debug::assert_eq([ f(2, 2mm), 4mm ]);
-
 ```
 
 Functions may be declared within [source files](../source_file.md),
