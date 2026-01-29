@@ -17,3 +17,11 @@ You might directly contribute your changes or new texts to this book via our
 git repository or if you are not so familiar with git, just leave an issue at
 [codeberg.org](https://codeberg.org/microcad/microcad/issues) so we can
 implement your ideas.
+
+## ❤️ Donate
+
+If you like this project, you can help us spend more time on it by donating:
+
+<a href="https://opencollective.com/microcad/donate" target="_blank">
+<img src="https://opencollective.com/microcad/donate/button@2x.png?color=blue" width=300 />
+</a>

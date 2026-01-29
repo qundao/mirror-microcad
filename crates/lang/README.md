@@ -8,3 +8,11 @@ This is the language module of microcad which includes parsing, resolving and ev
 To use this you need to install an application like the crate [microcad](https://crates.io/crates/microcad) which offers a command line interface to this library.
 
 An intro page about the microcad language can be found [here](https://codeberg.org/microcad/microcad/src/branch/main/README.md).
+
+## ❤️ Donate
+
+If you like this project, you can help us spend more time on it by donating:
+
+<a href="https://opencollective.com/microcad/donate" target="_blank">
+<img src="https://opencollective.com/microcad/donate/button@2x.png?color=blue" width=300 />
+</a>
