@@ -2,24 +2,24 @@
 -- Test --
         Test name: use_statement_pub
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:101
+      Source file: ../books/language/src/structure/use.md:100
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  93:   mod my {
-  94:       pub use std::geo2d::*;
-  95:   }
-  96:   
-  97:   my::Circle(radius = 4mm);
-  98:   my::Rect(size = 40mm);
+ 100:   mod my {
+ 101:       pub use std::geo3d::Sphere;
+ 102:       pub use std::geo3d::Cube;
+ 103:   }
+ 104:   
+ 105:   my::Sphere(radius = 4mm);
+ 106:   my::Cube(size = 40mm);
 
 -- No Output --
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
-      - center = (x=0mm, y=0mm)
+    Workpiece(part) std::geo3d::Sphere(radius=4mm) ->
       - radius = 4mm
       Primitive3D __builtin::geo3d::Sphere(radius=4mm) ->
     Workpiece(part) std::geo3d::Cube(size=40mm) ->

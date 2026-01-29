@@ -2,21 +2,20 @@
 -- Test --
         Test name: use_as_module
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:70
+      Source file: ../books/language/src/structure/use.md:69
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  64:   use std::geo2d as geo;
-  65:   
-  66:   geo::Circle(4mm);
+  69:   use std::geo3d as space;
+  70:   
+  71:   space::Sphere(4mm);
 
 -- No Output --
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
-      - center = (x=0mm, y=0mm)
+    Workpiece(part) std::geo3d::Sphere(radius=4mm) ->
       - radius = 4mm
       Primitive3D __builtin::geo3d::Sphere(radius=4mm) ->
 

@@ -7,18 +7,17 @@
 
 -- Code --
 
-  29:   use std::geo2d::Circle;
-  30:   use std::geo2d::Rect;
-  31:   
-  32:   Circle(radius = 4mm);
-  33:   Rect(size = 40mm);
+  30:   use std::geo3d::Sphere;
+  31:   use std::geo3d::Cube;
+  32:   
+  33:   Sphere(radius = 4mm);
+  34:   Cube(size = 40mm);
 
 -- No Output --
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
-      - center = (x=0mm, y=0mm)
+    Workpiece(part) std::geo3d::Sphere(radius=4mm) ->
       - radius = 4mm
       Primitive3D __builtin::geo3d::Sphere(radius=4mm) ->
     Workpiece(part) std::geo3d::Cube(size=40mm) ->

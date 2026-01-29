@@ -42,9 +42,7 @@
     ╰────
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
-        	Circle( r: Length, c = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-        	Circle( d: Length, c = (x = 0mm, y = 0mm))
 Unexpected error(s) which did occur in line(s): 70, 75
 -- Test Result --
 TODO

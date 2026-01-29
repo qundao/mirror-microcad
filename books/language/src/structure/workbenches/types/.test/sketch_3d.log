@@ -16,23 +16,23 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 45:10: Unused local Cylinder.
-    ╭─[../crates/std/lib/std/geo3d.µcad:76:10]
- 75 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
- 76 │ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
+  ⚠ warning: 37:10: Unused local Cylinder.
+    ╭─[../crates/std/lib/std/geo3d.µcad:68:10]
+ 67 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
+ 68 │ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
     ·          ────┬───
-    ·              ╰── warning: 45:10: Unused local Cylinder.
- 77 │     /// Initialize by `radius` and `height`. Cylinder will be centered.
+    ·              ╰── warning: 37:10: Unused local Cylinder.
+ 69 │     /// Initialize by `radius` and `height`. Cylinder will be centered.
     ╰────
-  ⚠ warning: 94:10: Unused local Torus.
-     ╭─[../crates/std/lib/std/geo3d.µcad:125:10]
- 124 │ /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
- 125 │ pub part Torus(major_radius: Length, minor_radius: Length) {
+  ⚠ warning: 77:10: Unused local Torus.
+     ╭─[../crates/std/lib/std/geo3d.µcad:108:10]
+ 107 │ /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
+ 108 │ pub part Torus(major_radius: Length, minor_radius: Length) {
      ·          ──┬──
-     ·            ╰── warning: 94:10: Unused local Torus.
- 126 │     std::geo2d::Circle(minor_radius)
+     ·            ╰── warning: 77:10: Unused local Torus.
+ 109 │     std::geo2d::Circle(minor_radius)
      ╰────
 Expected error(s) which did not occur in line(s): 34
-Unexpected warnings(s) which did occur in line(s): 76, 125
+Unexpected warnings(s) which did occur in line(s): 68, 108
 -- Test Result --
 TODO (SHALL FAIL)

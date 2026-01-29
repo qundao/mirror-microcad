@@ -36,9 +36,7 @@
     ╰────
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
-        	Circle( r: Length, c = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-        	Circle( d: Length, c = (x = 0mm, y = 0mm))
   × error: 6:41: Workbench Circle cannot find initialization for those arguments
     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:54:34]
  53 │ 
@@ -49,8 +47,6 @@
     ╰────
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
-        	Circle( r: Length, c = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-        	Circle( d: Length, c = (x = 0mm, y = 0mm))
 -- Test Result --
 FAILS AS EXPECTED
