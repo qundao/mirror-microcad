@@ -7,36 +7,55 @@ Ok(
         span: 0..5,
         statements: StatementList {
             span: 0..5,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..5,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: BinaryOperation(
                         BinaryOperation {
                             span: 0..5,
                             lhs: Literal(
-                                Integer(
-                                    IntegerLiteral {
-                                        span: 0..1,
-                                        value: 1,
+                                Literal {
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
                                     },
-                                ),
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 0..1,
+                                            value: 1,
+                                        },
+                                    ),
+                                },
                             ),
                             operation: Add,
                             rhs: Literal(
-                                Integer(
-                                    IntegerLiteral {
-                                        span: 4..5,
-                                        value: 1,
+                                Literal {
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
                                     },
-                                ),
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 4..5,
+                                            value: 1,
+                                        },
+                                    ),
+                                },
                             ),
                         },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

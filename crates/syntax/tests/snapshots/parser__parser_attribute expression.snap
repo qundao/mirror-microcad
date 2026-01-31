@@ -7,17 +7,32 @@ Ok(
         span: 0..27,
         statements: StatementList {
             span: 0..27,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Expression(
                     ExpressionStatement {
                         span: 0..26,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         attributes: [
                             Attribute {
                                 span: 0..20,
-                                comment: None,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
                                 command: Assignment(
                                     Assignment {
                                         span: 2..19,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         doc: None,
                                         attributes: [],
                                         visibility: None,
@@ -28,30 +43,41 @@ Ok(
                                         },
                                         ty: None,
                                         value: Literal(
-                                            String(
-                                                StringLiteral {
-                                                    span: 18..19,
-                                                    content: "#FF00FF",
+                                            Literal {
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
                                                 },
-                                            ),
+                                                literal: String(
+                                                    StringLiteral {
+                                                        span: 18..19,
+                                                        content: "#FF00FF",
+                                                    },
+                                                ),
+                                            },
                                         ),
                                     },
                                 ),
                             },
                         ],
                         expression: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 25..26,
-                                    value: 1,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 25..26,
+                                        value: 1,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

@@ -1,6 +1,6 @@
 use std::num::ParseIntError;
 use crate::Span;
-use crate::ast::{Comment, ExpressionStatement, Identifier, Literal, SingleType, Statement, StringLiteral};
+use crate::ast::{ExpressionStatement, Identifier, ItemExtras, Literal, SingleType, Statement, StringLiteral};
 
 #[derive(Debug, PartialEq)]
 pub enum Operator {
@@ -74,6 +74,7 @@ impl Expression {
 #[derive(Debug, PartialEq)]
 pub struct FormatString {
     pub span: Span,
+    pub extras: ItemExtras,
     pub parts: Vec<StringPart>,
 }
 
@@ -87,6 +88,7 @@ pub enum StringPart {
 #[derive(Debug, PartialEq)]
 pub struct StringExpression {
     pub span: Span,
+    pub extras: ItemExtras,
     pub expression: Expression,
     pub accuracy: Option<Result<usize, (ParseIntError, Span)>>,
     pub width: Option<Result<usize, (ParseIntError, Span)>>,
@@ -95,21 +97,22 @@ pub struct StringExpression {
 #[derive(Debug, PartialEq)]
 pub struct TupleItem {
     pub span: Span,
-    pub leading_comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub name: Option<Identifier>,
     pub value: Expression,
-    pub trailing_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct TupleExpression {
     pub span: Span,
+    pub extras: ItemExtras,
     pub values: Vec<TupleItem>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct ArrayRangeExpression {
     pub span: Span,
+    pub extras: ItemExtras,
     pub start: Box<ArrayItem>,
     pub end: Box<ArrayItem>,
     pub ty: Option<SingleType>,
@@ -118,6 +121,7 @@ pub struct ArrayRangeExpression {
 #[derive(Debug, PartialEq)]
 pub struct ArrayListExpression {
     pub span: Span,
+    pub extras: ItemExtras,
     pub items: Vec<ArrayItem>,
     pub ty: Option<SingleType>,
 }
@@ -125,14 +129,14 @@ pub struct ArrayListExpression {
 #[derive(Debug, PartialEq)]
 pub struct ArrayItem {
     pub span: Span,
-    pub leading_comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub expression: Expression,
-    pub trailing_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct QualifiedName {
     pub span: Span,
+    pub extras: ItemExtras,
     pub parts: Vec<Identifier>,
 }
 
@@ -147,6 +151,7 @@ pub struct BinaryOperation {
 #[derive(Debug, PartialEq)]
 pub struct UnaryOperation {
     pub span: Span,
+    pub extras: ItemExtras,
     pub operation: UnaryOperator,
     pub rhs: Box<Expression>,
 }
@@ -154,6 +159,7 @@ pub struct UnaryOperation {
 #[derive(Debug, PartialEq)]
 pub struct Call {
     pub span: Span,
+    pub extras: ItemExtras,
     pub name: QualifiedName,
     pub arguments: ArgumentList,
 }
@@ -176,6 +182,7 @@ pub enum Element {
 #[derive(Debug, PartialEq)]
 pub struct If {
     pub span: Span,
+    pub extras: ItemExtras,
     pub condition: Box<Expression>,
     pub body: StatementList,
     pub next_if: Option<Box<If>>,
@@ -185,15 +192,15 @@ pub struct If {
 #[derive(Debug, PartialEq)]
 pub struct StatementList {
     pub span: Span,
+    pub extras: ItemExtras,
     pub statements: Vec<Statement>,
     pub tail: Option<Box<ExpressionStatement>>,
-    pub tail_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct ArgumentList {
     pub span: Span,
-    pub leading_comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub arguments: Vec<Argument>,
 }
 
@@ -229,16 +236,14 @@ impl Argument {
 #[derive(Debug, PartialEq)]
 pub struct UnnamedArgument {
     pub span: Span,
-    pub leading_comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub value: Expression,
-    pub trailing_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct NamedArgument {
     pub span: Span,
-    pub leading_comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub name: Identifier,
     pub value: Expression,
-    pub trailing_comment: Option<Comment>,
 }

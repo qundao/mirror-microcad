@@ -7,18 +7,33 @@ Ok(
         span: 0..27,
         statements: StatementList {
             span: 0..27,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..27,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Tuple(
                         TupleExpression {
                             span: 0..27,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             values: [
                                 TupleItem {
                                     span: 1..11,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: Some(
                                         Identifier {
                                             span: 1..7,
@@ -26,18 +41,26 @@ Ok(
                                         },
                                     ),
                                     value: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 10..11,
-                                                value: 1,
+                                        Literal {
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
                                             },
-                                        ),
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 10..11,
+                                                    value: 1,
+                                                },
+                                            ),
+                                        },
                                     ),
-                                    trailing_comment: None,
                                 },
                                 TupleItem {
                                     span: 13..26,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: Some(
                                         Identifier {
                                             span: 13..18,
@@ -48,32 +71,42 @@ Ok(
                                         BinaryOperation {
                                             span: 21..26,
                                             lhs: Literal(
-                                                Integer(
-                                                    IntegerLiteral {
-                                                        span: 21..22,
-                                                        value: 1,
+                                                Literal {
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
                                                     },
-                                                ),
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 21..22,
+                                                            value: 1,
+                                                        },
+                                                    ),
+                                                },
                                             ),
                                             operation: Add,
                                             rhs: Literal(
-                                                Integer(
-                                                    IntegerLiteral {
-                                                        span: 25..26,
-                                                        value: 1,
+                                                Literal {
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
                                                     },
-                                                ),
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 25..26,
+                                                            value: 1,
+                                                        },
+                                                    ),
+                                                },
                                             ),
                                         },
                                     ),
-                                    trailing_comment: None,
                                 },
                             ],
                         },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

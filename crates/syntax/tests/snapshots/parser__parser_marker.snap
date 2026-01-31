@@ -7,10 +7,18 @@ Ok(
         span: 0..6,
         statements: StatementList {
             span: 0..6,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..6,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Marker(
                         Identifier {
@@ -20,7 +28,6 @@ Ok(
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

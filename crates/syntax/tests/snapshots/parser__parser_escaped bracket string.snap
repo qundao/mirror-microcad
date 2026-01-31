@@ -7,22 +7,35 @@ Ok(
         span: 34..35,
         statements: StatementList {
             span: 34..35,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 34..35,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Literal(
-                        String(
-                            StringLiteral {
-                                span: 34..35,
-                                content: "string { with } escaped bracket",
+                        Literal {
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
+                            literal: String(
+                                StringLiteral {
+                                    span: 34..35,
+                                    content: "string { with } escaped bracket",
+                                },
+                            ),
+                        },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

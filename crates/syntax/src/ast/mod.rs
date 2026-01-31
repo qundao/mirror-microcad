@@ -22,3 +22,14 @@ pub struct SourceFile {
     pub span: Span,
     pub statements: StatementList,
 }
+
+#[derive(Debug, PartialEq, Default)]
+pub struct ItemExtras {
+    pub leading: Vec<ItemExtra>,
+    pub trailing: Vec<ItemExtra>,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum ItemExtra {
+    Comment(Comment),
+}

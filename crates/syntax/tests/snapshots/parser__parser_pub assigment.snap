@@ -7,10 +7,18 @@ Ok(
         span: 0..12,
         statements: StatementList {
             span: 0..12,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Assignment(
                     Assignment {
                         span: 0..11,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: Some(
@@ -23,18 +31,23 @@ Ok(
                         },
                         ty: None,
                         value: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 10..11,
-                                    value: 1,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 10..11,
+                                        value: 1,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

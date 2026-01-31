@@ -7,26 +7,39 @@ Ok(
         span: 0..2,
         statements: StatementList {
             span: 0..2,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..2,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Literal(
-                        Quantity(
-                            QuantityLiteral {
-                                span: 0..2,
-                                value: 1.0,
-                                ty: SingleType {
-                                    span: 1..2,
-                                    name: "%",
-                                },
+                        Literal {
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
+                            literal: Quantity(
+                                QuantityLiteral {
+                                    span: 0..2,
+                                    value: 1.0,
+                                    ty: SingleType {
+                                        span: 1..2,
+                                        name: "%",
+                                    },
+                                },
+                            ),
+                        },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

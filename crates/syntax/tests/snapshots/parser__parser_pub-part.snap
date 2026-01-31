@@ -7,10 +7,18 @@ Ok(
         span: 0..84,
         statements: StatementList {
             span: 0..84,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Workbench(
                     WorkbenchDefinition {
                         span: 0..84,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         kind: Part,
                         attributes: [],
@@ -23,11 +31,17 @@ Ok(
                         },
                         arguments: ArgumentsDefinition {
                             span: 15..43,
-                            leading_comment: None,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             arguments: [
                                 ArgumentDefinition {
                                     span: 15..29,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: Identifier {
                                         span: 15..21,
                                         name: "radius",
@@ -41,44 +55,67 @@ Ok(
                                         ),
                                     ),
                                     default: None,
-                                    trailing_comment: None,
                                 },
                                 ArgumentDefinition {
                                     span: 31..43,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: Identifier {
                                         span: 31..37,
                                         name: "height",
                                     },
                                     ty: None,
                                     default: Some(
-                                        Quantity(
-                                            QuantityLiteral {
-                                                span: 40..43,
-                                                value: 1.0,
-                                                ty: SingleType {
-                                                    span: 41..43,
-                                                    name: "mm",
-                                                },
+                                        Literal {
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
                                             },
-                                        ),
+                                            literal: Quantity(
+                                                QuantityLiteral {
+                                                    span: 40..43,
+                                                    value: 1.0,
+                                                    ty: SingleType {
+                                                        span: 41..43,
+                                                        name: "mm",
+                                                    },
+                                                },
+                                            ),
+                                        },
                                     ),
-                                    trailing_comment: None,
                                 },
                             ],
                         },
                         body: StatementList {
                             span: 46..83,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             statements: [
                                 Expression(
                                     ExpressionStatement {
                                         span: 46..82,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         attributes: [],
                                         expression: Call(
                                             Call {
                                                 span: 46..82,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
                                                 name: QualifiedName {
                                                     span: 46..66,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
                                                     parts: [
                                                         Identifier {
                                                             span: 46..49,
@@ -96,15 +133,25 @@ Ok(
                                                 },
                                                 arguments: ArgumentList {
                                                     span: 67..81,
-                                                    leading_comment: None,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
                                                     arguments: [
                                                         Unnamed(
                                                             UnnamedArgument {
                                                                 span: 67..73,
-                                                                leading_comment: None,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
                                                                 value: QualifiedName(
                                                                     QualifiedName {
                                                                         span: 67..73,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
                                                                         parts: [
                                                                             Identifier {
                                                                                 span: 67..73,
@@ -113,16 +160,22 @@ Ok(
                                                                         ],
                                                                     },
                                                                 ),
-                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                         Unnamed(
                                                             UnnamedArgument {
                                                                 span: 75..81,
-                                                                leading_comment: None,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
                                                                 value: QualifiedName(
                                                                     QualifiedName {
                                                                         span: 75..81,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
                                                                         parts: [
                                                                             Identifier {
                                                                                 span: 75..81,
@@ -131,7 +184,6 @@ Ok(
                                                                         ],
                                                                     },
                                                                 ),
-                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                     ],
@@ -142,13 +194,11 @@ Ok(
                                 ),
                             ],
                             tail: None,
-                            tail_comment: None,
                         },
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

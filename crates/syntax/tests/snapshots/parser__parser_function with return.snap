@@ -7,10 +7,18 @@ Ok(
         span: 0..43,
         statements: StatementList {
             span: 0..43,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Function(
                     FunctionDefinition {
                         span: 0..43,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         visibility: None,
                         name: Identifier {
@@ -19,11 +27,17 @@ Ok(
                         },
                         arguments: ArgumentsDefinition {
                             span: 7..16,
-                            leading_comment: None,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             arguments: [
                                 ArgumentDefinition {
                                     span: 7..16,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: Identifier {
                                         span: 7..8,
                                         name: "a",
@@ -37,7 +51,6 @@ Ok(
                                         ),
                                     ),
                                     default: None,
-                                    trailing_comment: None,
                                 },
                             ],
                         },
@@ -51,16 +64,28 @@ Ok(
                         ),
                         body: StatementList {
                             span: 29..42,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             statements: [
                                 Return(
                                     Return {
                                         span: 29..41,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         value: BinaryOperation(
                                             BinaryOperation {
                                                 span: 36..41,
                                                 lhs: QualifiedName(
                                                     QualifiedName {
                                                         span: 36..37,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
                                                         parts: [
                                                             Identifier {
                                                                 span: 36..37,
@@ -71,12 +96,18 @@ Ok(
                                                 ),
                                                 operation: Multiply,
                                                 rhs: Literal(
-                                                    Integer(
-                                                        IntegerLiteral {
-                                                            span: 40..41,
-                                                            value: 2,
+                                                    Literal {
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
                                                         },
-                                                    ),
+                                                        literal: Integer(
+                                                            IntegerLiteral {
+                                                                span: 40..41,
+                                                                value: 2,
+                                                            },
+                                                        ),
+                                                    },
                                                 ),
                                             },
                                         ),
@@ -84,13 +115,11 @@ Ok(
                                 ),
                             ],
                             tail: None,
-                            tail_comment: None,
                         },
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

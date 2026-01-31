@@ -7,32 +7,55 @@ Ok(
         span: 0..17,
         statements: StatementList {
             span: 0..17,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..17,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Tuple(
                         TupleExpression {
                             span: 0..17,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             values: [
                                 TupleItem {
                                     span: 3..4,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: None,
                                     value: Literal(
-                                        String(
-                                            StringLiteral {
-                                                span: 3..4,
-                                                content: "a",
+                                        Literal {
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
                                             },
-                                        ),
+                                            literal: String(
+                                                StringLiteral {
+                                                    span: 3..4,
+                                                    content: "a",
+                                                },
+                                            ),
+                                        },
                                     ),
-                                    trailing_comment: None,
                                 },
                                 TupleItem {
                                     span: 6..16,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: Some(
                                         Identifier {
                                             span: 6..12,
@@ -40,21 +63,25 @@ Ok(
                                         },
                                     ),
                                     value: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 15..16,
-                                                value: 1,
+                                        Literal {
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
                                             },
-                                        ),
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 15..16,
+                                                    value: 1,
+                                                },
+                                            ),
+                                        },
                                     ),
-                                    trailing_comment: None,
                                 },
                             ],
                         },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

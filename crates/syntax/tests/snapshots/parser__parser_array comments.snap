@@ -7,48 +7,80 @@ Ok(
         span: 0..25,
         statements: StatementList {
             span: 0..25,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..25,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: ArrayList(
                         ArrayListExpression {
                             span: 0..25,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             items: [
                                 ArrayItem {
                                     span: 1..12,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     expression: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 1..2,
-                                                value: 1,
+                                        Literal {
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [
+                                                    Comment(
+                                                        Comment {
+                                                            span: 3..12,
+                                                            comment: "/* foo */",
+                                                        },
+                                                    ),
+                                                ],
                                             },
-                                        ),
-                                    ),
-                                    trailing_comment: Some(
-                                        Comment {
-                                            span: 3..12,
-                                            comment: "/* foo */",
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 1..2,
+                                                    value: 1,
+                                                },
+                                            ),
                                         },
                                     ),
                                 },
                                 ArrayItem {
                                     span: 13..24,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     expression: Literal(
-                                        Integer(
-                                            IntegerLiteral {
-                                                span: 13..14,
-                                                value: 2,
+                                        Literal {
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [
+                                                    Comment(
+                                                        Comment {
+                                                            span: 15..24,
+                                                            comment: "/* bar */",
+                                                        },
+                                                    ),
+                                                ],
                                             },
-                                        ),
-                                    ),
-                                    trailing_comment: Some(
-                                        Comment {
-                                            span: 15..24,
-                                            comment: "/* bar */",
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 13..14,
+                                                    value: 2,
+                                                },
+                                            ),
                                         },
                                     ),
                                 },
@@ -58,7 +90,6 @@ Ok(
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

@@ -7,22 +7,35 @@ Ok(
         span: 0..2,
         statements: StatementList {
             span: 0..2,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..2,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Literal(
-                        Float(
-                            FloatLiteral {
-                                span: 0..2,
-                                value: 1.0,
+                        Literal {
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
+                            literal: Float(
+                                FloatLiteral {
+                                    span: 0..2,
+                                    value: 1.0,
+                                },
+                            ),
+                        },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

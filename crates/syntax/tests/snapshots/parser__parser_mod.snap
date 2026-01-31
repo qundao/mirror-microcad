@@ -7,10 +7,18 @@ Ok(
         span: 0..22,
         statements: StatementList {
             span: 0..22,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Module(
                     ModuleDefinition {
                         span: 0..22,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: None,
@@ -21,10 +29,18 @@ Ok(
                         body: Some(
                             StatementList {
                                 span: 10..20,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
                                 statements: [
                                     Function(
                                         FunctionDefinition {
                                             span: 10..20,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
                                             doc: None,
                                             visibility: None,
                                             name: Identifier {
@@ -33,28 +49,32 @@ Ok(
                                             },
                                             arguments: ArgumentsDefinition {
                                                 span: 17..17,
-                                                leading_comment: None,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
                                                 arguments: [],
                                             },
                                             return_type: None,
                                             body: StatementList {
                                                 span: 19..19,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
                                                 statements: [],
                                                 tail: None,
-                                                tail_comment: None,
                                             },
                                         },
                                     ),
                                 ],
                                 tail: None,
-                                tail_comment: None,
                             },
                         ),
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

@@ -7,14 +7,26 @@ Ok(
         span: 46..47,
         statements: StatementList {
             span: 46..47,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 46..47,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: String(
                         FormatString {
                             span: 46..47,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             parts: [
                                 Content(
                                     StringLiteral {
@@ -25,12 +37,20 @@ Ok(
                                 Expression(
                                     StringExpression {
                                         span: 34..35,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         expression: BinaryOperation(
                                             BinaryOperation {
                                                 span: 9..31,
                                                 lhs: QualifiedName(
                                                     QualifiedName {
                                                         span: 9..18,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
                                                         parts: [
                                                             Identifier {
                                                                 span: 9..18,
@@ -43,6 +63,10 @@ Ok(
                                                 rhs: QualifiedName(
                                                     QualifiedName {
                                                         span: 21..31,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
                                                         parts: [
                                                             Identifier {
                                                                 span: 21..31,
@@ -72,7 +96,6 @@ Ok(
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

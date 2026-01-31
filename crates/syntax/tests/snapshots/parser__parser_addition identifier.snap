@@ -7,10 +7,18 @@ Ok(
         span: 0..10,
         statements: StatementList {
             span: 0..10,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..10,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: BinaryOperation(
                         BinaryOperation {
@@ -18,6 +26,10 @@ Ok(
                             lhs: QualifiedName(
                                 QualifiedName {
                                     span: 0..6,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     parts: [
                                         Identifier {
                                             span: 0..6,
@@ -28,18 +40,23 @@ Ok(
                             ),
                             operation: Add,
                             rhs: Literal(
-                                Integer(
-                                    IntegerLiteral {
-                                        span: 9..10,
-                                        value: 1,
+                                Literal {
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
                                     },
-                                ),
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 9..10,
+                                            value: 1,
+                                        },
+                                    ),
+                                },
                             ),
                         },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

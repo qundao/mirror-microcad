@@ -1,4 +1,5 @@
 mod error;
+mod helpers;
 
 use crate::Span;
 use crate::ast::*;
@@ -8,6 +9,7 @@ use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
 pub use error::ParseError;
+use helpers::ParserExt;
 use std::str::FromStr;
 
 type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
@@ -69,7 +71,7 @@ fn parser<'tokens>()
             span: 0..0,
             statements: vec![Statement::Error],
             tail: None,
-            tail_comment: None,
+            extras: ItemExtras::default(),
         });
 
     let block = statement_list_parser
@@ -94,9 +96,11 @@ fn parser<'tokens>()
         .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
         .at_least(1)
         .collect::<Vec<_>>()
-        .map_with(|parts, e| QualifiedName {
+        .with_extras()
+        .map_with(|(parts, extras), e| QualifiedName {
             span: e.span(),
             parts,
+            extras,
         })
         .labelled("qualified name")
         .boxed();
@@ -176,11 +180,11 @@ fn parser<'tokens>()
         let single_number = select_ref! {
             Token::Normal(NormalToken::LiteralFloat(x)) = e => {
                 match f64::from_str(x) {
-                    Ok(value) => Literal::Float(FloatLiteral {
+                    Ok(value) => LiteralKind::Float(FloatLiteral {
                         value,
                         span: e.span(),
                     }),
-                    Err(err) => Literal::Error(LiteralError {
+                    Err(err) => LiteralKind::Error(LiteralError {
                         span: e.span(),
                         kind: err.into(),
                     })
@@ -188,11 +192,11 @@ fn parser<'tokens>()
             },
             Token::Normal(NormalToken::LiteralInt(x)) = e => {
                 match i64::from_str(x) {
-                    Ok(value) => Literal::Integer(IntegerLiteral {
+                    Ok(value) => LiteralKind::Integer(IntegerLiteral {
                     value,
                     span: e.span(),
                 }),
-                    Err(err) => Literal::Error(LiteralError {
+                    Err(err) => LiteralKind::Error(LiteralError {
                         span: e.span(),
                         kind: err.into(),
                     })
@@ -201,61 +205,69 @@ fn parser<'tokens>()
         }
         .then(just(Token::Normal(NormalToken::SigilDot)).or_not())
         .map_with(|(literal, trailing), e| match (literal, trailing) {
-            (Literal::Integer(IntegerLiteral { value, .. }), Some(_)) => {
-                Literal::Float(FloatLiteral {
+            (LiteralKind::Integer(IntegerLiteral { value, .. }), Some(_)) => {
+                LiteralKind::Float(FloatLiteral {
                     value: value as f64,
                     span: e.span(),
                 })
             }
-            (Literal::Float(FloatLiteral { value, .. }), Some(_)) => Literal::Float(FloatLiteral {
-                value,
-                span: e.span(),
-            }),
+            (LiteralKind::Float(FloatLiteral { value, .. }), Some(_)) => {
+                LiteralKind::Float(FloatLiteral {
+                    value,
+                    span: e.span(),
+                })
+            }
             (lit, _) => lit,
         });
 
         let single_value = select_ref! {
             Token::Normal(NormalToken::Quote(QuoteVariant::String(str_tokens))) = e if is_literal_string(str_tokens) => {
-                Literal::String(StringLiteral {
+                LiteralKind::String(StringLiteral {
                     span: e.span(),
                     content: get_literal_string(str_tokens).expect("non literal string"),
                 })
             },
             Token::Normal(NormalToken::LiteralBoolTrue) = e => {
-                Literal::Bool(BoolLiteral {
+                LiteralKind::Bool(BoolLiteral {
                     span: e.span(),
                     value: true,
                 })
             },
             Token::Normal(NormalToken::LiteralBoolFalse) = e => {
-                Literal::Bool(BoolLiteral {
+                LiteralKind::Bool(BoolLiteral {
                     span: e.span(),
                     value: false,
                 })
             },
-        }.or(single_number);
+        }.or(single_number)
+            .with_extras()
+            .map(|(literal, extras)| Literal {
+                literal,
+                extras,
+            })
+            .boxed();
 
         let quantity = select_ref! {
             Token::Normal(NormalToken::LiteralInt(x)) => x,
             Token::Normal(NormalToken::LiteralFloat(x)) => x,
         }
         .then(single_type.clone())
-        .map_with(|(num, ty), e| {
-            let value = match f64::from_str(num) {
-                Ok(value) => value,
-                Err(err) => {
-                    return Literal::Error(LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    });
-                }
+        .with_extras()
+        .map_with(|((num, ty), extras), e| {
+            let literal = match f64::from_str(num) {
+                Ok(value) => LiteralKind::Quantity(QuantityLiteral {
+                    span: e.span(),
+                    value,
+                    ty,
+                }),
+                Err(err) => LiteralKind::Error(LiteralError {
+                    span: e.span(),
+                    kind: err.into(),
+                }),
             };
-            Literal::Quantity(QuantityLiteral {
-                span: e.span(),
-                value,
-                ty,
-            })
-        });
+            Literal { literal, extras }
+        })
+        .boxed();
 
         quantity.or(single_value).labelled("literal").boxed()
     };
@@ -308,35 +320,26 @@ fn parser<'tokens>()
                 .then(just(Token::Normal(NormalToken::SigilCloseBracket))),
         )
         .map_with(|_, e| {
-            vec![TupleItem {
+            (vec![TupleItem {
                 span: e.span(),
-                leading_comment: None,
                 name: None,
                 value: Expression::Error,
-                trailing_comment: None,
-            }]
+                extras: ItemExtras::default(),
+            }], ItemExtras::default())
         });
 
-    let tuple_body = comment_inner
+    let tuple_body = identifier_parser
         .clone()
+        .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
         .or_not()
-        .then(
-            identifier_parser
-                .clone()
-                .then_ignore(just(Token::Normal(NormalToken::OperatorAssignment)))
-                .or_not(),
-        )
         .then(expression_parser.clone())
-        .then(comment_inner.clone().or_not())
-        .map_with(
-            |(((leading_comment, name), value), trailing_comment), e| TupleItem {
-                span: e.span(),
-                leading_comment,
-                name,
-                value,
-                trailing_comment,
-            },
-        )
+        .with_extras()
+        .map_with(|((name, value), extras), e| TupleItem {
+            span: e.span(),
+            extras,
+            name,
+            value,
+        })
         .separated_by(just(Token::Normal(NormalToken::SigilComma)))
         .allow_trailing()
         .collect::<Vec<_>>()
@@ -345,28 +348,25 @@ fn parser<'tokens>()
     let call_inner = qualified_name
         .clone()
         .then(
-            comment_inner
+            tuple_body
                 .clone()
-                .or_not()
-                .then(tuple_body.clone())
-                .map_with(|(leading_comment, arguments), e| ArgumentList {
+                .with_extras()
+                .map_with(|(arguments, extras), e| ArgumentList {
                     span: e.span(),
-                    leading_comment,
+                    extras,
                     arguments: arguments
                         .into_iter()
                         .map(|item| match item.name {
                             Some(name) => Argument::Named(NamedArgument {
                                 span: item.span,
-                                leading_comment: item.leading_comment,
+                                extras: item.extras,
                                 name,
                                 value: item.value,
-                                trailing_comment: item.trailing_comment,
                             }),
                             None => Argument::Unnamed(UnnamedArgument {
                                 span: item.span,
-                                leading_comment: item.leading_comment,
+                                extras: item.extras,
                                 value: item.value,
-                                trailing_comment: item.trailing_comment,
                             }),
                         })
                         .collect::<Vec<_>>(),
@@ -379,13 +379,15 @@ fn parser<'tokens>()
                 .recover_with(via_parser(tuple_recovery.clone().map_with(|_, e| {
                     ArgumentList {
                         span: e.span(),
-                        leading_comment: None,
+                        extras: ItemExtras::default(),
                         arguments: Vec::new(),
                     }
                 }))),
         )
-        .map_with(|(name, arguments), e| Call {
+        .with_extras()
+        .map_with(|((name, arguments), extras), e| Call {
             span: e.span(),
+            extras,
             name,
             arguments,
         })
@@ -400,12 +402,17 @@ fn parser<'tokens>()
         let expression = attribute_parser
             .clone()
             .then(expression_parser.clone())
-            .map_with(|(attributes, expression), e| ExpressionStatement {
-                span: e.span(),
-                attributes,
-                expression,
-            })
-            .map(Statement::Expression);
+            .with_extras()
+            .map_with(
+                |((attributes, expression), extras), e| ExpressionStatement {
+                    span: e.span(),
+                    extras,
+                    attributes,
+                    expression,
+                },
+            )
+            .map(Statement::Expression)
+            .boxed();
 
         let assignment_qualifier = select_ref! {
             Token::Normal(NormalToken::KeywordConst) => AssigmentQualifier::Const,
@@ -431,10 +438,13 @@ fn parser<'tokens>()
                     .clone()
                     .recover_with(via_parser(semi_recovery.clone().map(|_| Expression::Error))),
             )
+            .with_extras()
             .map_with(
-                |((((((doc, attributes), visibility), qualifier), name), ty), value), e| {
+                |(((((((doc, attributes), visibility), qualifier), name), ty), value), extras),
+                 e| {
                     Assignment {
                         span: e.span(),
+                        extras,
                         doc,
                         attributes,
                         visibility,
@@ -464,10 +474,10 @@ fn parser<'tokens>()
                     just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
                     just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
                 ))
-                .then(comment_inner.clone().or_not())
-                .map_with(|(command, comment), e| Attribute {
+                .with_extras()
+                .map_with(|(command, extras), e| Attribute {
                     span: e.span(),
-                    comment,
+                    extras,
                     command,
                 })
                 .labelled("attribute")
@@ -482,10 +492,8 @@ fn parser<'tokens>()
             .labelled("comment")
             .boxed();
 
-        let arguments_inner = comment_inner
+        let arguments_inner = identifier_parser
             .clone()
-            .or_not()
-            .then(identifier_parser.clone())
             .then(
                 just(Token::Normal(NormalToken::SigilColon))
                     .ignore_then(type_parser.clone())
@@ -496,27 +504,24 @@ fn parser<'tokens>()
                     .ignore_then(literal_parser.clone())
                     .or_not(),
             )
-            .then(comment_inner.clone().or_not())
-            .map_with(
-                |((((leading_comment, name), ty), default), trailing_comment), e| {
-                    ArgumentDefinition {
-                        span: e.span(),
-                        leading_comment,
-                        name,
-                        ty,
-                        default,
-                        trailing_comment,
-                    }
-                },
-            )
+            .with_extras()
+            .map_with(|(((name, ty), default), extras), e| ArgumentDefinition {
+                span: e.span(),
+                extras,
+                name,
+                ty,
+                default,
+            })
             .separated_by(just(Token::Normal(NormalToken::SigilComma)))
             .allow_trailing()
             .collect::<Vec<_>>()
             .boxed();
-        let arguments = comment_inner.clone().or_not().then(arguments_inner)
-            .map_with(|(leading_comment, arguments), e| ArgumentsDefinition {
+
+        let arguments = arguments_inner
+            .with_extras()
+            .map_with(|(arguments, extras), e| ArgumentsDefinition {
                 span: e.span(),
-                leading_comment,
+                extras,
                 arguments,
             })
             .delimited_by(
@@ -527,6 +532,7 @@ fn parser<'tokens>()
 
         let module = doc_comment
             .clone()
+            .then(attribute_parser.clone())
             .then(visibility.or_not())
             .then_ignore(just(Token::Normal(NormalToken::KeywordMod)))
             .then(identifier_parser.clone())
@@ -536,11 +542,13 @@ fn parser<'tokens>()
                     .map(Some)
                     .or(just(Token::Normal(NormalToken::SigilSemiColon)).map(|_| None)),
             )
-            .map_with(|(((doc, visibility), name), body), e| {
+            .with_extras()
+            .map_with(|(((((doc, attributes), visibility), name), body), extras), e| {
                 Statement::Module(ModuleDefinition {
                     span: e.span(),
+                    extras,
                     doc,
-                    attributes: Vec::new(), // todo
+                    attributes,
                     visibility,
                     name,
                     body,
@@ -556,8 +564,10 @@ fn parser<'tokens>()
             .separated_by(just(Token::Normal(NormalToken::SigilDoubleColon)))
             .at_least(1)
             .collect::<Vec<_>>()
-            .map_with(|parts, e| UseName {
+            .with_extras()
+            .map_with(|(parts, extras), e| UseName {
                 span: e.span(),
+                extras,
                 parts,
             })
             .boxed();
@@ -572,9 +582,11 @@ fn parser<'tokens>()
                     .ignore_then(identifier_parser.clone())
                     .or_not(),
             )
-            .map_with(|((visibility, name), use_as), e| {
+            .with_extras()
+            .map_with(|(((visibility, name), use_as), extras), e| {
                 Statement::Use(UseStatement {
                     span: e.span(),
+                    extras,
                     visibility,
                     name,
                     use_as,
@@ -594,9 +606,11 @@ fn parser<'tokens>()
             .then_ignore(just(Token::Normal(NormalToken::KeywordInit)))
             .then(arguments.clone())
             .then(block.clone())
-            .map_with(|((doc, arguments), body), e| {
+            .with_extras()
+            .map_with(|(((doc, arguments), body), extras), e| {
                 Statement::Init(InitDefinition {
                     span: e.span(),
+                    extras,
                     doc,
                     arguments,
                     body,
@@ -612,10 +626,12 @@ fn parser<'tokens>()
             .then(identifier_parser.clone())
             .then(arguments.clone())
             .then(block.clone())
+            .with_extras()
             .map_with(
-                |((((((doc, attributes), visibility), kind), name), arguments), body), e| {
+                |(((((((doc, attributes), visibility), kind), name), arguments), body), extras), e| {
                     Statement::Workbench(WorkbenchDefinition {
                         span: e.span(),
+                        extras,
                         kind,
                         doc,
                         attributes,
@@ -630,9 +646,11 @@ fn parser<'tokens>()
 
         let return_statement = just(Token::Normal(NormalToken::KeywordReturn))
             .ignore_then(expression_parser.clone())
-            .map_with(|value, e| {
+            .with_extras()
+            .map_with(|(value, extras), e| {
                 Statement::Return(Return {
                     span: e.span(),
+                    extras,
                     value,
                 })
             })
@@ -650,10 +668,12 @@ fn parser<'tokens>()
                     .or_not(),
             )
             .then(block.clone())
+            .with_extras()
             .map_with(
-                |(((((doc, visibility), name), arguments), return_type), body), e| {
+                |((((((doc, visibility), name), arguments), return_type), body), extras), e| {
                     Statement::Function(FunctionDefinition {
                         span: e.span(),
+                        extras,
                         doc,
                         visibility,
                         name,
@@ -668,9 +688,11 @@ fn parser<'tokens>()
         let if_expression = attribute_parser
             .clone()
             .then(if_inner.clone().map(Expression::If))
-            .map_with(|(attributes, expression), e| {
+            .with_extras()
+            .map_with(|((attributes, expression), extras), e| {
                 Statement::Expression(ExpressionStatement {
                     span: e.span(),
+                    extras,
                     attributes,
                     expression,
                 })
@@ -703,8 +725,10 @@ fn parser<'tokens>()
         let trailing_expr = attribute_parser
             .clone()
             .then(expression_parser.clone())
-            .map_with(|(attributes, expression), e| ExpressionStatement {
+            .with_extras()
+            .map_with(|((attributes, expression), extras), e| ExpressionStatement {
                 span: e.span(),
+                extras,
                 attributes,
                 expression,
             })
@@ -714,30 +738,31 @@ fn parser<'tokens>()
             .repeated()
             .collect::<Vec<_>>()
             .then(trailing_expr)
-            .then(comment_inner.or_not())
-            .map_with(|((statements, tail), tail_comment), e| StatementList {
+            .with_extras()
+            .map_with(|((statements, tail), extras), e| StatementList {
                 span: e.span(),
+                extras,
                 statements,
                 tail,
-                tail_comment,
             })
+            .boxed()
     });
 
     expression_parser.define({
         let unclosed_string = select_ref! {
             Token::Error(LexerError::UnclosedString(_)) => (),
         }
-        .ignore_then(
-            semi_recovery
-                .clone()
-                .try_map_with(|_, e| {
-                    let span: Span = e.span();
-                    Err::<Expression, _>(Rich::custom((span.start - 1)..span.end, "unclosed string"))
-                })
-                .recover_with(via_parser(semi_recovery.clone().map(|_| Expression::Error))),
-        )
-        .labelled("unclosed string")
-        .boxed();
+            .ignore_then(
+                semi_recovery
+                    .clone()
+                    .try_map_with(|_, e| {
+                        let span: Span = e.span();
+                        Err::<Expression, _>(Rich::custom((span.start - 1)..span.end, "unclosed string"))
+                    })
+                    .recover_with(via_parser(semi_recovery.clone().map(|_| Expression::Error))),
+            )
+            .labelled("unclosed string")
+            .boxed();
 
         let literal = literal_parser
             .map(Expression::Literal)
@@ -768,8 +793,10 @@ fn parser<'tokens>()
             .repeated()
             .collect::<Vec<_>>()
             .nested_in(string_format_tokens)
-            .map_with(|parts, e| FormatString {
+            .with_extras()
+            .map_with(|(parts, extras), e| FormatString {
                 span: e.span(),
+                extras,
                 parts,
             })
             .map(Expression::String)
@@ -780,17 +807,19 @@ fn parser<'tokens>()
             .boxed();
 
         let tuple = tuple_body.clone()
+            .with_extras()
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenBracket)),
                 just(Token::Normal(NormalToken::SigilCloseBracket)),
             )
             .recover_with(via_parser(tuple_recovery))
-            .map_with(|values, e| {
-            Expression::Tuple(TupleExpression {
-                span: e.span(),
-                values,
+            .map_with(|(values, extras), e| {
+                Expression::Tuple(TupleExpression {
+                    span: e.span(),
+                    extras,
+                    values,
+                })
             })
-        })
             .labelled("tuple");
 
         let bracketed = expression_parser.clone().delimited_by(
@@ -798,28 +827,29 @@ fn parser<'tokens>()
             just(Token::Normal(NormalToken::SigilCloseBracket)),
         );
 
-        let array_item = comment_inner.or_not().clone()
-            .then(expression_parser.clone())
-            .then(comment_inner.or_not().clone())
-            .map_with(|((leading_comment, expression), trailing_comment), e| ArrayItem {
+        let array_item = expression_parser.clone()
+            .with_extras()
+            .map_with(|(expression, extras), e| ArrayItem {
                 span: e.span(),
-                leading_comment,
+                extras,
                 expression,
-                trailing_comment,
-            });
+            })
+            .boxed();
 
         let array_range = array_item
             .clone()
             .then_ignore(just(Token::Normal(NormalToken::SigilDoubleDot)))
             .then(array_item.clone())
+            .with_extras()
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
                 just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
             )
             .then(single_type.clone().or_not())
-            .map_with(|((start, end), ty), e| {
+            .map_with(|(((start, end), extras), ty), e| {
                 Expression::ArrayRange(ArrayRangeExpression {
                     span: e.span(),
+                    extras,
                     start: Box::new(start),
                     end: Box::new(end),
                     ty,
@@ -833,14 +863,16 @@ fn parser<'tokens>()
             .separated_by(just(Token::Normal(NormalToken::SigilComma)))
             .allow_trailing()
             .collect::<Vec<_>>()
+            .with_extras()
             .delimited_by(
                 just(Token::Normal(NormalToken::SigilOpenSquareBracket)),
                 just(Token::Normal(NormalToken::SigilCloseSquareBracket)),
             )
             .then(single_type.clone().or_not())
-            .map_with(|(items, ty), e| {
+            .map_with(|((items, extras), ty), e| {
                 Expression::ArrayList(ArrayListExpression {
                     span: e.span(),
+                    extras,
                     items,
                     ty,
                 })
@@ -869,13 +901,16 @@ fn parser<'tokens>()
                         .ignore_then(block.clone())
                         .or_not(),
                 )
-                .map_with(|(((condition, body), next_if), else_body), e| If {
+                .with_extras()
+                .map_with(|((((condition, body), next_if), else_body), extras), e| If {
                     span: e.span(),
+                    extras,
                     condition: Box::new(condition),
                     body,
                     next_if,
                     else_body,
-                }),
+                })
+                .boxed(),
         );
         let if_expression = if_inner
             .map(Expression::If)
@@ -887,6 +922,7 @@ fn parser<'tokens>()
             .map_with(|ident, e| QualifiedName {
                 span: e.span(),
                 parts: vec![ident],
+                extras: ItemExtras::default(),
             })
             .foldl_with(
                 just(Token::Normal(NormalToken::SigilDoubleColon))
@@ -898,6 +934,11 @@ fn parser<'tokens>()
                     acc
                 },
             )
+            .with_extras()
+            .map(|(mut name, extras)| {
+                name.extras = extras;
+                name
+            })
             .map(Expression::QualifiedName)
             .boxed();
 
@@ -951,7 +992,8 @@ fn parser<'tokens>()
         let access_item = access_attribute
             .or(access_method)
             .or(access_tuple)
-            .or(access_array);
+            .or(access_array)
+            .boxed();
 
         let element_access = base
             .clone()
@@ -967,9 +1009,11 @@ fn parser<'tokens>()
 
         let unary_expression = unary_operator_parser
             .then(element_access.clone())
-            .map_with(|(op, rhs), e| {
+            .with_extras()
+            .map_with(|((op, rhs), extras), e| {
                 Expression::UnaryOperation(UnaryOperation {
                     span: e.span(),
+                    extras,
                     operation: op,
                     rhs: rhs.into(),
                 })
@@ -1041,9 +1085,11 @@ fn parser<'tokens>()
             .then(format_width.or_not())
             .then(format_accuracy.or_not())
             .nested_in(format_tokens)
-            .map_with(|((expr, width), accuracy), e| {
+            .with_extras()
+            .map_with(|(((expr, width), accuracy), extras), e| {
                 StringPart::Expression(StringExpression {
                     span: e.span(),
+                    extras,
                     expression: expr,
                     accuracy,
                     width,

@@ -1,10 +1,22 @@
 use crate::Span;
-use crate::ast::SingleType;
+use crate::ast::{ItemExtras, SingleType};
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 
 #[derive(Debug, PartialEq)]
-pub enum Literal {
+pub struct Literal {
+    pub extras: ItemExtras,
+    pub literal: LiteralKind,
+}
+
+impl Literal {
+    pub fn span(&self) -> Span {
+        self.literal.span()
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub enum LiteralKind {
     Error(LiteralError),
     String(StringLiteral),
     Bool(BoolLiteral),
@@ -13,15 +25,15 @@ pub enum Literal {
     Quantity(QuantityLiteral),
 }
 
-impl Literal {
+impl LiteralKind {
     pub fn span(&self) -> Span {
         match self {
-            Literal::Error(lit) => lit.span.clone(),
-            Literal::String(lit) => lit.span.clone(),
-            Literal::Bool(lit) => lit.span.clone(),
-            Literal::Integer(lit) => lit.span.clone(),
-            Literal::Float(lit) => lit.span.clone(),
-            Literal::Quantity(lit) => lit.span.clone(),
+            LiteralKind::Error(lit) => lit.span.clone(),
+            LiteralKind::String(lit) => lit.span.clone(),
+            LiteralKind::Bool(lit) => lit.span.clone(),
+            LiteralKind::Integer(lit) => lit.span.clone(),
+            LiteralKind::Float(lit) => lit.span.clone(),
+            LiteralKind::Quantity(lit) => lit.span.clone(),
         }
     }
 }

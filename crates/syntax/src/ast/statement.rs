@@ -1,5 +1,5 @@
 use crate::Span;
-use crate::ast::{Call, Expression, Identifier, Literal, QualifiedName, StatementList, Type};
+use crate::ast::{Call, Expression, Identifier, ItemExtras, Literal, QualifiedName, StatementList, Type};
 
 #[derive(Debug, PartialEq)]
 pub enum Statement {
@@ -44,6 +44,7 @@ pub enum WorkspaceKind {
 #[derive(Debug, PartialEq)]
 pub struct WorkbenchDefinition {
     pub span: Span,
+    pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub kind: WorkspaceKind,
     pub attributes: Vec<Attribute>,
@@ -56,6 +57,7 @@ pub struct WorkbenchDefinition {
 #[derive(Debug, PartialEq)]
 pub struct ModuleDefinition {
     pub span: Span,
+    pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
@@ -66,6 +68,7 @@ pub struct ModuleDefinition {
 #[derive(Debug, PartialEq)]
 pub struct FunctionDefinition {
     pub span: Span,
+    pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
@@ -77,6 +80,7 @@ pub struct FunctionDefinition {
 #[derive(Debug, PartialEq)]
 pub struct InitDefinition {
     pub span: Span,
+    pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub arguments: ArgumentsDefinition,
     pub body: StatementList,
@@ -85,6 +89,7 @@ pub struct InitDefinition {
 #[derive(Debug, PartialEq)]
 pub struct UseStatement {
     pub span: Span,
+    pub extras: ItemExtras,
     pub visibility: Option<Visibility>,
     pub name: UseName,
     pub use_as: Option<Identifier>,
@@ -93,6 +98,7 @@ pub struct UseStatement {
 #[derive(Debug, PartialEq)]
 pub struct UseName {
     pub span: Span,
+    pub extras: ItemExtras,
     pub parts: Vec<UseStatementPart>,
 }
 
@@ -105,29 +111,29 @@ pub enum UseStatementPart {
 #[derive(Debug, PartialEq)]
 pub struct Return {
     pub span: Span,
+    pub extras: ItemExtras,
     pub value: Expression,
 }
 #[derive(Debug, PartialEq)]
 pub struct ArgumentsDefinition {
     pub span: Span,
-    pub leading_comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub arguments: Vec<ArgumentDefinition>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct ArgumentDefinition {
     pub span: Span,
-    pub leading_comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub name: Identifier,
     pub ty: Option<Type>,
     pub default: Option<Literal>,
-    pub trailing_comment: Option<Comment>,
 }
 
 #[derive(Debug, PartialEq)]
 pub struct Attribute {
     pub span: Span,
-    pub comment: Option<Comment>,
+    pub extras: ItemExtras,
     pub command: AttributeCommand,
 }
 
@@ -147,6 +153,7 @@ pub enum AssigmentQualifier {
 #[derive(Debug, PartialEq)]
 pub struct Assignment {
     pub span: Span,
+    pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
@@ -170,6 +177,7 @@ pub enum Visibility {
 #[derive(Debug, PartialEq)]
 pub struct ExpressionStatement {
     pub span: Span,
+    pub extras: ItemExtras,
     pub attributes: Vec<Attribute>,
     pub expression: Expression,
 }

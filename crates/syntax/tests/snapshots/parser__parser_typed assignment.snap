@@ -7,10 +7,18 @@ Ok(
         span: 0..20,
         statements: StatementList {
             span: 0..20,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Assignment(
                     Assignment {
                         span: 0..19,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: None,
@@ -33,6 +41,10 @@ Ok(
                                 lhs: QualifiedName(
                                     QualifiedName {
                                         span: 12..13,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         parts: [
                                             Identifier {
                                                 span: 12..13,
@@ -43,16 +55,22 @@ Ok(
                                 ),
                                 operation: Multiply,
                                 rhs: Literal(
-                                    Quantity(
-                                        QuantityLiteral {
-                                            span: 16..19,
-                                            value: 2.0,
-                                            ty: SingleType {
-                                                span: 17..19,
-                                                name: "mm",
-                                            },
+                                    Literal {
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        literal: Quantity(
+                                            QuantityLiteral {
+                                                span: 16..19,
+                                                value: 2.0,
+                                                ty: SingleType {
+                                                    span: 17..19,
+                                                    name: "mm",
+                                                },
+                                            },
+                                        ),
+                                    },
                                 ),
                             },
                         ),
@@ -60,7 +78,6 @@ Ok(
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

@@ -7,46 +7,73 @@ Ok(
         span: 0..7,
         statements: StatementList {
             span: 0..7,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..7,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: ArrayRange(
                         ArrayRangeExpression {
                             span: 0..7,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             start: ArrayItem {
                                 span: 1..2,
-                                leading_comment: None,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
                                 expression: Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 1..2,
-                                            value: 1,
+                                    Literal {
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 1..2,
+                                                value: 1,
+                                            },
+                                        ),
+                                    },
                                 ),
-                                trailing_comment: None,
                             },
                             end: ArrayItem {
                                 span: 4..6,
-                                leading_comment: None,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
                                 expression: Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 4..6,
-                                            value: 10,
+                                    Literal {
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 4..6,
+                                                value: 10,
+                                            },
+                                        ),
+                                    },
                                 ),
-                                trailing_comment: None,
                             },
                             ty: None,
                         },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

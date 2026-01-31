@@ -7,15 +7,27 @@ Ok(
         span: 0..27,
         statements: StatementList {
             span: 0..27,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Use(
                     UseStatement {
                         span: 0..26,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         visibility: Some(
                             Public,
                         ),
                         name: UseName {
                             span: 8..16,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             parts: [
                                 Identifier(
                                     Identifier {
@@ -41,7 +53,6 @@ Ok(
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

@@ -7,10 +7,18 @@ Ok(
         span: 0..6,
         statements: StatementList {
             span: 0..6,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..6,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: ElementAccess(
                         ElementAccess {
@@ -18,6 +26,10 @@ Ok(
                             value: QualifiedName(
                                 QualifiedName {
                                     span: 0..3,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     parts: [
                                         Identifier {
                                             span: 0..3,
@@ -28,19 +40,24 @@ Ok(
                             ),
                             element: ArrayElement(
                                 Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 4..5,
-                                            value: 1,
+                                    Literal {
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 4..5,
+                                                value: 1,
+                                            },
+                                        ),
+                                    },
                                 ),
                             ),
                         },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

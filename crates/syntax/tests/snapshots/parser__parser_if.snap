@@ -7,20 +7,36 @@ Ok(
         span: 0..19,
         statements: StatementList {
             span: 0..19,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Expression(
                     ExpressionStatement {
                         span: 0..19,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         attributes: [],
                         expression: If(
                             If {
                                 span: 0..19,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
                                 condition: BinaryOperation(
                                     BinaryOperation {
                                         span: 3..8,
                                         lhs: QualifiedName(
                                             QualifiedName {
                                                 span: 3..4,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
                                                 parts: [
                                                     Identifier {
                                                         span: 3..4,
@@ -31,27 +47,49 @@ Ok(
                                         ),
                                         operation: GreaterThan,
                                         rhs: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 7..8,
-                                                    value: 1,
+                                            Literal {
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
                                                 },
-                                            ),
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 7..8,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            },
                                         ),
                                     },
                                 ),
                                 body: StatementList {
                                     span: 11..17,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     statements: [
                                         Expression(
                                             ExpressionStatement {
                                                 span: 11..16,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
                                                 attributes: [],
                                                 expression: Call(
                                                     Call {
                                                         span: 11..16,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
                                                         name: QualifiedName {
                                                             span: 11..14,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
                                                             parts: [
                                                                 Identifier {
                                                                     span: 11..14,
@@ -61,7 +99,10 @@ Ok(
                                                         },
                                                         arguments: ArgumentList {
                                                             span: 15..15,
-                                                            leading_comment: None,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
                                                             arguments: [],
                                                         },
                                                     },
@@ -70,7 +111,6 @@ Ok(
                                         ),
                                     ],
                                     tail: None,
-                                    tail_comment: None,
                                 },
                                 next_if: None,
                                 else_body: None,
@@ -80,7 +120,6 @@ Ok(
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

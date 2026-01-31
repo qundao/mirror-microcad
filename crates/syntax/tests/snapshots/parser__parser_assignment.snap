@@ -7,10 +7,18 @@ Ok(
         span: 0..10,
         statements: StatementList {
             span: 0..10,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Assignment(
                     Assignment {
                         span: 0..9,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: None,
@@ -26,6 +34,10 @@ Ok(
                                 lhs: QualifiedName(
                                     QualifiedName {
                                         span: 4..5,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         parts: [
                                             Identifier {
                                                 span: 4..5,
@@ -36,12 +48,18 @@ Ok(
                                 ),
                                 operation: Multiply,
                                 rhs: Literal(
-                                    Integer(
-                                        IntegerLiteral {
-                                            span: 8..9,
-                                            value: 2,
+                                    Literal {
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 8..9,
+                                                value: 2,
+                                            },
+                                        ),
+                                    },
                                 ),
                             },
                         ),
@@ -49,7 +67,6 @@ Ok(
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

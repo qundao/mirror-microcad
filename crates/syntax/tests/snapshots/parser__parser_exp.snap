@@ -7,74 +7,128 @@ Ok(
         span: 0..36,
         statements: StatementList {
             span: 0..36,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Expression(
                     ExpressionStatement {
                         span: 0..5,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         attributes: [],
                         expression: Literal(
-                            Float(
-                                FloatLiteral {
-                                    span: 0..5,
-                                    value: 0.0001,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Float(
+                                    FloatLiteral {
+                                        span: 0..5,
+                                        value: 0.0001,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
                 Expression(
                     ExpressionStatement {
                         span: 7..12,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         attributes: [],
                         expression: Literal(
-                            Float(
-                                FloatLiteral {
-                                    span: 7..12,
-                                    value: 100.0,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Float(
+                                    FloatLiteral {
+                                        span: 7..12,
+                                        value: 100.0,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
                 Expression(
                     ExpressionStatement {
                         span: 14..18,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         attributes: [],
                         expression: Literal(
-                            Float(
-                                FloatLiteral {
-                                    span: 14..18,
-                                    value: 100.0,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Float(
+                                    FloatLiteral {
+                                        span: 14..18,
+                                        value: 100.0,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
                 Expression(
                     ExpressionStatement {
                         span: 20..24,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         attributes: [],
                         expression: Literal(
-                            Float(
-                                FloatLiteral {
-                                    span: 20..24,
-                                    value: 1000.0,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Float(
+                                    FloatLiteral {
+                                        span: 20..24,
+                                        value: 1000.0,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
                 Expression(
                     ExpressionStatement {
                         span: 26..31,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         attributes: [],
                         expression: Literal(
-                            Float(
-                                FloatLiteral {
-                                    span: 26..31,
-                                    value: 1200.0,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Float(
+                                    FloatLiteral {
+                                        span: 26..31,
+                                        value: 1200.0,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
@@ -82,18 +136,27 @@ Ok(
             tail: Some(
                 ExpressionStatement {
                     span: 33..36,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Literal(
-                        Float(
-                            FloatLiteral {
-                                span: 33..36,
-                                value: 1000.0,
+                        Literal {
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
+                            literal: Float(
+                                FloatLiteral {
+                                    span: 33..36,
+                                    value: 1000.0,
+                                },
+                            ),
+                        },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

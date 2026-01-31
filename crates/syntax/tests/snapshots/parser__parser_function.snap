@@ -7,10 +7,18 @@ Ok(
         span: 0..46,
         statements: StatementList {
             span: 0..46,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Function(
                     FunctionDefinition {
                         span: 0..46,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         visibility: None,
                         name: Identifier {
@@ -19,11 +27,24 @@ Ok(
                         },
                         arguments: ArgumentsDefinition {
                             span: 7..27,
-                            leading_comment: None,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             arguments: [
                                 ArgumentDefinition {
                                     span: 7..27,
-                                    leading_comment: None,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [
+                                            Comment(
+                                                Comment {
+                                                    span: 17..27,
+                                                    comment: "/* test */",
+                                                },
+                                            ),
+                                        ],
+                                    },
                                     name: Identifier {
                                         span: 7..8,
                                         name: "a",
@@ -37,12 +58,6 @@ Ok(
                                         ),
                                     ),
                                     default: None,
-                                    trailing_comment: Some(
-                                        Comment {
-                                            span: 17..27,
-                                            comment: "/* test */",
-                                        },
-                                    ),
                                 },
                             ],
                         },
@@ -56,10 +71,18 @@ Ok(
                         ),
                         body: StatementList {
                             span: 40..45,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             statements: [],
                             tail: Some(
                                 ExpressionStatement {
                                     span: 40..45,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     attributes: [],
                                     expression: BinaryOperation(
                                         BinaryOperation {
@@ -67,6 +90,10 @@ Ok(
                                             lhs: QualifiedName(
                                                 QualifiedName {
                                                     span: 40..41,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
                                                     parts: [
                                                         Identifier {
                                                             span: 40..41,
@@ -77,24 +104,28 @@ Ok(
                                             ),
                                             operation: Multiply,
                                             rhs: Literal(
-                                                Integer(
-                                                    IntegerLiteral {
-                                                        span: 44..45,
-                                                        value: 2,
+                                                Literal {
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
                                                     },
-                                                ),
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 44..45,
+                                                            value: 2,
+                                                        },
+                                                    ),
+                                                },
                                             ),
                                         },
                                     ),
                                 },
                             ),
-                            tail_comment: None,
                         },
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

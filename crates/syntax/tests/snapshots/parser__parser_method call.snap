@@ -7,10 +7,18 @@ Ok(
         span: 0..9,
         statements: StatementList {
             span: 0..9,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..9,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: ElementAccess(
                         ElementAccess {
@@ -18,6 +26,10 @@ Ok(
                             value: QualifiedName(
                                 QualifiedName {
                                     span: 0..3,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     parts: [
                                         Identifier {
                                             span: 0..3,
@@ -29,8 +41,16 @@ Ok(
                             element: Method(
                                 Call {
                                     span: 4..9,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     name: QualifiedName {
                                         span: 4..7,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         parts: [
                                             Identifier {
                                                 span: 4..7,
@@ -40,7 +60,10 @@ Ok(
                                     },
                                     arguments: ArgumentList {
                                         span: 8..8,
-                                        leading_comment: None,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         arguments: [],
                                     },
                                 },
@@ -49,7 +72,6 @@ Ok(
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

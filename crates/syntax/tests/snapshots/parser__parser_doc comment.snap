@@ -7,10 +7,18 @@ Ok(
         span: 0..85,
         statements: StatementList {
             span: 0..85,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Workbench(
                     WorkbenchDefinition {
                         span: 0..85,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: Some(
                             Comment {
                                 span: 0..15,
@@ -26,21 +34,40 @@ Ok(
                         },
                         arguments: ArgumentsDefinition {
                             span: 29..29,
-                            leading_comment: None,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             arguments: [],
                         },
                         body: StatementList {
                             span: 41..79,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             statements: [
                                 Expression(
                                     ExpressionStatement {
                                         span: 41..78,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         attributes: [],
                                         expression: Call(
                                             Call {
                                                 span: 41..78,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
                                                 name: QualifiedName {
                                                     span: 41..49,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
                                                     parts: [
                                                         Identifier {
                                                             span: 41..49,
@@ -50,52 +77,71 @@ Ok(
                                                 },
                                                 arguments: ArgumentList {
                                                     span: 50..77,
-                                                    leading_comment: None,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
                                                     arguments: [
                                                         Named(
                                                             NamedArgument {
                                                                 span: 50..63,
-                                                                leading_comment: None,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
                                                                 name: Identifier {
                                                                     span: 50..56,
                                                                     name: "height",
                                                                 },
                                                                 value: Literal(
-                                                                    Quantity(
-                                                                        QuantityLiteral {
-                                                                            span: 59..63,
-                                                                            value: 10.0,
-                                                                            ty: SingleType {
-                                                                                span: 61..63,
-                                                                                name: "mm",
-                                                                            },
+                                                                    Literal {
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
                                                                         },
-                                                                    ),
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 59..63,
+                                                                                value: 10.0,
+                                                                                ty: SingleType {
+                                                                                    span: 61..63,
+                                                                                    name: "mm",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
                                                                 ),
-                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                         Named(
                                                             NamedArgument {
                                                                 span: 65..77,
-                                                                leading_comment: None,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
                                                                 name: Identifier {
                                                                     span: 65..71,
                                                                     name: "radius",
                                                                 },
                                                                 value: Literal(
-                                                                    Quantity(
-                                                                        QuantityLiteral {
-                                                                            span: 74..77,
-                                                                            value: 5.0,
-                                                                            ty: SingleType {
-                                                                                span: 75..77,
-                                                                                name: "mm",
-                                                                            },
+                                                                    Literal {
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
                                                                         },
-                                                                    ),
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 74..77,
+                                                                                value: 5.0,
+                                                                                ty: SingleType {
+                                                                                    span: 75..77,
+                                                                                    name: "mm",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
                                                                 ),
-                                                                trailing_comment: None,
                                                             },
                                                         ),
                                                     ],
@@ -106,13 +152,11 @@ Ok(
                                 ),
                             ],
                             tail: None,
-                            tail_comment: None,
                         },
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

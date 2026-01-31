@@ -7,10 +7,18 @@ Ok(
         span: 0..55,
         statements: StatementList {
             span: 0..55,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Assignment(
                     Assignment {
                         span: 0..5,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: None,
@@ -21,12 +29,18 @@ Ok(
                         },
                         ty: None,
                         value: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 4..5,
-                                    value: 1,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 4..5,
+                                        value: 1,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
@@ -39,6 +53,10 @@ Ok(
                 Assignment(
                     Assignment {
                         span: 49..54,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: None,
@@ -49,18 +67,23 @@ Ok(
                         },
                         ty: None,
                         value: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 53..54,
-                                    value: 2,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 53..54,
+                                        value: 2,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

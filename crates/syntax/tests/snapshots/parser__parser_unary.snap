@@ -7,18 +7,34 @@ Ok(
         span: 0..6,
         statements: StatementList {
             span: 0..6,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..6,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: UnaryOperation(
                         UnaryOperation {
                             span: 0..6,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             operation: Not,
                             rhs: QualifiedName(
                                 QualifiedName {
                                     span: 1..6,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
                                     parts: [
                                         Identifier {
                                             span: 1..6,
@@ -31,7 +47,6 @@ Ok(
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )

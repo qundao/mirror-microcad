@@ -7,10 +7,18 @@ Ok(
         span: 0..8,
         statements: StatementList {
             span: 0..8,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Module(
                     ModuleDefinition {
                         span: 0..8,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: None,
@@ -23,7 +31,6 @@ Ok(
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

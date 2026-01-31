@@ -7,10 +7,18 @@ Ok(
         span: 0..13,
         statements: StatementList {
             span: 0..13,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Assignment(
                     Assignment {
                         span: 0..12,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [],
                         visibility: None,
@@ -23,32 +31,52 @@ Ok(
                         value: ArrayList(
                             ArrayListExpression {
                                 span: 4..12,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
                                 items: [
                                     ArrayItem {
                                         span: 5..6,
-                                        leading_comment: None,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         expression: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 5..6,
-                                                    value: 1,
+                                            Literal {
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
                                                 },
-                                            ),
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 5..6,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            },
                                         ),
-                                        trailing_comment: None,
                                     },
                                     ArrayItem {
                                         span: 8..9,
-                                        leading_comment: None,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         expression: Literal(
-                                            Integer(
-                                                IntegerLiteral {
-                                                    span: 8..9,
-                                                    value: 2,
+                                            Literal {
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
                                                 },
-                                            ),
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 8..9,
+                                                        value: 2,
+                                                    },
+                                                ),
+                                            },
                                         ),
-                                        trailing_comment: None,
                                     },
                                 ],
                                 ty: Some(
@@ -63,7 +91,6 @@ Ok(
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

@@ -7,18 +7,33 @@ Ok(
         span: 0..20,
         statements: StatementList {
             span: 0..20,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [
                 Assignment(
                     Assignment {
                         span: 0..19,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
                         doc: None,
                         attributes: [
                             Attribute {
                                 span: 0..9,
-                                comment: None,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
                                 command: Ident(
                                     QualifiedName {
                                         span: 2..8,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
                                         parts: [
                                             Identifier {
                                                 span: 2..8,
@@ -37,18 +52,23 @@ Ok(
                         },
                         ty: None,
                         value: Literal(
-                            Integer(
-                                IntegerLiteral {
-                                    span: 18..19,
-                                    value: 1,
+                            Literal {
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
                                 },
-                            ),
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 18..19,
+                                        value: 1,
+                                    },
+                                ),
+                            },
                         ),
                     },
                 ),
             ],
             tail: None,
-            tail_comment: None,
         },
     },
 )

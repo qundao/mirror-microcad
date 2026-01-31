@@ -7,20 +7,31 @@ Ok(
         span: 0..2,
         statements: StatementList {
             span: 0..2,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
             statements: [],
             tail: Some(
                 ExpressionStatement {
                     span: 0..2,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
                     attributes: [],
                     expression: Tuple(
                         TupleExpression {
                             span: 0..2,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
                             values: [],
                         },
                     ),
                 },
             ),
-            tail_comment: None,
         },
     },
 )
