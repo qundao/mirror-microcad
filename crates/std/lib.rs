@@ -16,17 +16,17 @@ mod manifest;
 #[derive(Debug, Error)]
 pub enum StdLibError {
     /// An error while processing the `manifest.toml` file.
-    #[error("An while processing manifest file")]
+    #[error("An error while processing manifest file: {0}")]
     ManifestError(#[from] manifest::ManifestError),
 
     /// Error during install or uninstall.
-    #[error("An error during installation")]
+    #[error("An error during installation: {0}")]
     InstallError(#[from] std::io::Error),
 }
 
 /// The µcad standard library asset.
 #[derive(RustEmbed)]
-#[folder = "lib"]
+#[folder = "lib/std"]
 pub struct Lib;
 
 /// An instance of the standard library.
@@ -52,6 +52,12 @@ impl StdLib {
         };
 
         let manifest = if manifest.library.version != Self::crate_version() {
+            eprintln!(
+                "µcad standard library version mismatch: {} != {}",
+                manifest.library.version,
+                Self::crate_version()
+            );
+
             // Handle version mismatch, force re-install
             Self::reinstall(true)?
         } else {
@@ -80,7 +86,11 @@ impl StdLib {
     /// Install the standard library into the standard library path and return its manifest.
     fn install(path: impl AsRef<std::path::Path>) -> Result<manifest::Manifest, StdLibError> {
         let path = path.as_ref();
-        println!("Installing µcad standard library into {:?}...", path);
+        eprintln!(
+            "Installing µcad standard library {} into {:?}...",
+            Self::crate_version(),
+            path
+        );
 
         std::fs::create_dir_all(path)?;
 
@@ -98,7 +108,7 @@ impl StdLib {
             )
         })?;
 
-        println!("Successfully installed µcad standard library.");
+        eprintln!("Successfully installed µcad standard library.");
 
         Ok(manifest::Manifest::load(path)?)
     }
@@ -107,21 +117,29 @@ impl StdLib {
     fn uninstall(path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
         let path = path.as_ref();
 
-        if !path.exists() {
-            println!(
-                "µcad standard library not found in {:?}. Nothing to uninstall.",
-                path
-            );
-            return Ok(());
+        // We cannot uninstall in debug mode.
+        #[cfg(debug_assertions)]
+        eprintln!("µcad standard library ({path:?}) cannot to be uninstalled in debug mode.");
+        return Ok(());
+
+        #[cfg(not(debug_assertions))]
+        {
+            if !path.exists() {
+                eprintln!(
+                    "µcad standard library not found in {:?}. Nothing to uninstall.",
+                    path
+                );
+                return Ok(());
+            }
+
+            eprintln!("Removing µcad standard library from {:?}...", path);
+
+            std::fs::remove_dir_all(path)?;
+
+            eprintln!("Successfully uninstalled µcad standard library.");
+
+            Ok(())
         }
-
-        println!("Removing µcad standard library from {:?}...", path);
-
-        std::fs::remove_dir_all(path)?;
-
-        println!("Successfully uninstalled µcad standard library.");
-
-        Ok(())
     }
 
     /// Global library search path + `./std`.
