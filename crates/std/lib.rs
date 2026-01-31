@@ -12,7 +12,7 @@ use crate::manifest::{Manifest, ManifestError};
 
 mod manifest;
 
-/// Manifest error.
+/// Standard library error.
 #[derive(Debug, Error)]
 pub enum StdLibError {
     /// An error while processing the `manifest.toml` file.
@@ -31,7 +31,7 @@ pub struct Lib;
 
 /// An instance of the standard library.
 pub struct StdLib {
-    /// Path of the library which contains `mod.µcad` and `manifest.toml`.
+    /// Path of the library which `manifest.toml`.
     pub path: std::path::PathBuf,
     /// The parsed manifest.
     pub manifest: manifest::Manifest,
@@ -148,6 +148,10 @@ impl StdLib {
     }
 }
 
+/// The global library search path.
+///
+/// Use the config directory in home directory `.config/microcad` in Release mode.
+/// In Debug mode, the local directory `./crates/std/lib` is used.
 pub fn global_library_search_path() -> std::path::PathBuf {
     #[cfg(not(debug_assertions))]
     return dirs::config_dir()
