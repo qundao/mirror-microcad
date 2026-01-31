@@ -5,60 +5,46 @@ expression: lex(input)
 [
     SpannedToken {
         span: 35..36,
-        token: Normal(
-            Quote(
-                String(
-                    [
-                        SpannedToken {
-                            span: 1..8,
-                            token: String(
-                                Content(
-                                    "string ",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 23..24,
-                            token: String(
-                                FormatStart(
-                                    [
-                                        SpannedToken {
-                                            span: 9..13,
-                                            token: Normal(
-                                                Identifier(
-                                                    "more",
-                                                ),
-                                            ),
-                                        },
-                                        SpannedToken {
-                                            span: 14..15,
-                                            token: Normal(
-                                                OperatorAdd,
-                                            ),
-                                        },
-                                        SpannedToken {
-                                            span: 16..23,
-                                            token: Normal(
-                                                Identifier(
-                                                    "complex",
-                                                ),
-                                            ),
-                                        },
-                                    ],
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 24..35,
-                            token: String(
-                                Content(
-                                    " expression",
-                                ),
-                            ),
-                        },
-                    ],
-                ),
-            ),
+        token: FormatStringStart,
+    },
+    SpannedToken {
+        span: 1..8,
+        token: StringContent(
+            "string ",
         ),
+    },
+    SpannedToken {
+        span: 23..24,
+        token: StringFormatOpen,
+    },
+    SpannedToken {
+        span: 9..13,
+        token: Identifier(
+            "more",
+        ),
+    },
+    SpannedToken {
+        span: 14..15,
+        token: OperatorAdd,
+    },
+    SpannedToken {
+        span: 16..23,
+        token: Identifier(
+            "complex",
+        ),
+    },
+    SpannedToken {
+        span: 23..24,
+        token: StringFormatClose,
+    },
+    SpannedToken {
+        span: 24..35,
+        token: StringContent(
+            " expression",
+        ),
+    },
+    SpannedToken {
+        span: 35..36,
+        token: FormatStringEnd,
     },
 ]

@@ -1,7 +1,7 @@
 use crate::Span;
 use crate::ast::{Comment, ItemExtra, ItemExtras};
 use crate::parser::{Extra, ParserInput};
-use crate::tokens::{NormalToken, Token};
+use crate::tokens::{Token};
 use chumsky::extra::ParserExtra;
 use chumsky::input::Input;
 use chumsky::{IterParser, Parser, extra, select_ref};
@@ -9,11 +9,11 @@ use chumsky::{IterParser, Parser, extra, select_ref};
 pub fn comment_parser<'tokens>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Comment, Extra<'tokens>> + 'tokens {
     select_ref! {
-        Token::Normal(NormalToken::SingleLineComment(comment) )= e => Comment {
+        Token::SingleLineComment(comment)= e => Comment {
             span: e.span(),
             comment: comment.as_ref().into()
         },
-        Token::Normal(NormalToken::MultiLineComment(comment)) = e => Comment {
+        Token::MultiLineComment(comment) = e => Comment {
             span: e.span(),
             comment: comment.as_ref().into()
         }

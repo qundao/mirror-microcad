@@ -83,4 +83,6 @@ pub enum LiteralErrorKind {
     Int(#[from] ParseIntError),
     #[error("unclosed string literal")]
     UnclosedString,
+    #[error("only numeric literals can be typed")]
+    Untypable,
 }

@@ -80,9 +80,15 @@ pub struct FormatString {
 
 #[derive(Debug, PartialEq)]
 pub enum StringPart {
-    Char(char),
+    Char(StringCharacter),
     Content(StringLiteral),
     Expression(StringExpression),
+}
+
+#[derive(Debug, PartialEq)]
+pub struct StringCharacter {
+    pub span: Span,
+    pub character: char,
 }
 
 #[derive(Debug, PartialEq)]

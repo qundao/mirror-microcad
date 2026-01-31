@@ -5,90 +5,64 @@ expression: lex(input)
 [
     SpannedToken {
         span: 0..2,
-        token: Normal(
-            KeywordFn,
-        ),
+        token: KeywordFn,
     },
     SpannedToken {
         span: 2..3,
-        token: Normal(
-            SigilOpenBracket,
-        ),
+        token: SigilOpenBracket,
     },
     SpannedToken {
         span: 3..4,
-        token: Normal(
-            Identifier(
-                "a",
-            ),
+        token: Identifier(
+            "a",
         ),
     },
     SpannedToken {
         span: 4..5,
-        token: Normal(
-            SigilColon,
-        ),
+        token: SigilColon,
     },
     SpannedToken {
         span: 6..12,
-        token: Normal(
-            Identifier(
-                "Length",
-            ),
+        token: Identifier(
+            "Length",
         ),
     },
     SpannedToken {
         span: 12..13,
-        token: Normal(
-            SigilCloseBracket,
-        ),
+        token: SigilCloseBracket,
     },
     SpannedToken {
         span: 14..16,
-        token: Normal(
-            SigilSingleArrow,
-        ),
+        token: SigilSingleArrow,
     },
     SpannedToken {
         span: 17..23,
-        token: Normal(
-            Identifier(
-                "Length",
-            ),
+        token: Identifier(
+            "Length",
         ),
     },
     SpannedToken {
         span: 24..25,
-        token: Normal(
-            SigilOpenCurlyBracket,
-        ),
+        token: SigilOpenCurlyBracket,
     },
     SpannedToken {
         span: 25..26,
-        token: Normal(
-            Identifier(
-                "a",
-            ),
+        token: Identifier(
+            "a",
         ),
     },
     SpannedToken {
         span: 27..28,
-        token: Normal(
-            OperatorMultiply,
-        ),
+        token: OperatorMultiply,
     },
     SpannedToken {
         span: 29..30,
-        token: Normal(
-            LiteralInt(
-                "2",
-            ),
+        token: LiteralInt(
+            "2",
         ),
     },
     SpannedToken {
         span: 30..31,
-        token: Normal(
-            SigilCloseCurlyBracket,
-        ),
+        token: SigilCloseCurlyBracket,
     },
 ]

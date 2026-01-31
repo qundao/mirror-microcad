@@ -1,7 +1,6 @@
 use insta::assert_debug_snapshot;
 use microcad_syntax::parser::{ParseError, parse};
 use microcad_syntax::tokens::lex;
-use miette::{Diagnostic, GraphicalTheme, IntoDiagnostic};
 use test_case::test_case;
 use thiserror::Error;
 
@@ -184,6 +183,7 @@ use thiserror::Error;
     "array comments",
     r#"[1 /* foo */,2 /* bar */]"#
 )]
+#[test_case("untypable", r#"b = "sad"m3;"#)]
 fn test_parser(name: &str, input: &str) {
     let tokens = lex(input);
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));

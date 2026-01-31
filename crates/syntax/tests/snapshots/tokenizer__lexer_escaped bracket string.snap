@@ -5,49 +5,8 @@ expression: lex(input)
 [
     SpannedToken {
         span: 34..35,
-        token: Normal(
-            Quote(
-                String(
-                    [
-                        SpannedToken {
-                            span: 1..8,
-                            token: String(
-                                Content(
-                                    "string ",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 8..10,
-                            token: String(
-                                EscapedCurlyOpen,
-                            ),
-                        },
-                        SpannedToken {
-                            span: 10..16,
-                            token: String(
-                                Content(
-                                    " with ",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 16..18,
-                            token: String(
-                                EscapedCurlyClose,
-                            ),
-                        },
-                        SpannedToken {
-                            span: 18..34,
-                            token: String(
-                                Content(
-                                    " escaped bracket",
-                                ),
-                            ),
-                        },
-                    ],
-                ),
-            ),
+        token: LiteralString(
+            "string { with } escaped bracket",
         ),
     },
 ]

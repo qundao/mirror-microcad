@@ -5,67 +5,8 @@ expression: lex(input)
 [
     SpannedToken {
         span: 35..36,
-        token: Normal(
-            Quote(
-                String(
-                    [
-                        SpannedToken {
-                            span: 1..8,
-                            token: String(
-                                Content(
-                                    "string ",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 8..10,
-                            token: String(
-                                Escaped(
-                                    "\\\"",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 10..16,
-                            token: String(
-                                Content(
-                                    " with ",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 16..18,
-                            token: String(
-                                Escaped(
-                                    "\\\"",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 18..27,
-                            token: String(
-                                Content(
-                                    " escaped ",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 27..28,
-                            token: String(
-                                BackSlash,
-                            ),
-                        },
-                        SpannedToken {
-                            span: 28..35,
-                            token: String(
-                                Content(
-                                    " quotes",
-                                ),
-                            ),
-                        },
-                    ],
-                ),
-            ),
+        token: LiteralString(
+            "string \" with \" escaped \\ quotes",
         ),
     },
 ]

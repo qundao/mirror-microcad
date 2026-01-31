@@ -5,26 +5,38 @@ expression: lex(input)
 [
     SpannedToken {
         span: 0..5,
-        token: Normal(
-            LiteralFloat(
-                ".1e-3",
-            ),
+        token: LiteralFloat(
+            ".1e-3",
         ),
     },
     SpannedToken {
         span: 6..11,
-        token: Normal(
-            LiteralFloat(
-                ".1e+3",
-            ),
+        token: LiteralFloat(
+            ".1e+3",
         ),
     },
     SpannedToken {
         span: 12..16,
-        token: Normal(
-            LiteralFloat(
-                ".1e3",
-            ),
+        token: LiteralFloat(
+            ".1e3",
+        ),
+    },
+    SpannedToken {
+        span: 17..21,
+        token: LiteralFloat(
+            "1.e3",
+        ),
+    },
+    SpannedToken {
+        span: 22..27,
+        token: LiteralFloat(
+            "1.2e3",
+        ),
+    },
+    SpannedToken {
+        span: 28..31,
+        token: LiteralFloat(
+            "1e3",
         ),
     },
 ]

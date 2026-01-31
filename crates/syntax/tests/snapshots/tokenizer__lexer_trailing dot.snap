@@ -4,17 +4,9 @@ expression: lex(input)
 ---
 [
     SpannedToken {
-        span: 0..1,
-        token: Normal(
-            LiteralInt(
-                "1",
-            ),
-        ),
-    },
-    SpannedToken {
-        span: 1..2,
-        token: Normal(
-            SigilDot,
+        span: 0..2,
+        token: LiteralFloat(
+            "1.",
         ),
     },
 ]

@@ -5,46 +5,36 @@ expression: lex(input)
 [
     SpannedToken {
         span: 25..26,
-        token: Normal(
-            Quote(
-                String(
-                    [
-                        SpannedToken {
-                            span: 1..8,
-                            token: String(
-                                Content(
-                                    "string ",
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 13..14,
-                            token: String(
-                                FormatStart(
-                                    [
-                                        SpannedToken {
-                                            span: 9..13,
-                                            token: Normal(
-                                                Identifier(
-                                                    "with",
-                                                ),
-                                            ),
-                                        },
-                                    ],
-                                ),
-                            ),
-                        },
-                        SpannedToken {
-                            span: 14..25,
-                            token: String(
-                                Content(
-                                    " expression",
-                                ),
-                            ),
-                        },
-                    ],
-                ),
-            ),
+        token: FormatStringStart,
+    },
+    SpannedToken {
+        span: 1..8,
+        token: StringContent(
+            "string ",
         ),
+    },
+    SpannedToken {
+        span: 13..14,
+        token: StringFormatOpen,
+    },
+    SpannedToken {
+        span: 9..13,
+        token: Identifier(
+            "with",
+        ),
+    },
+    SpannedToken {
+        span: 13..14,
+        token: StringFormatClose,
+    },
+    SpannedToken {
+        span: 14..25,
+        token: StringContent(
+            " expression",
+        ),
+    },
+    SpannedToken {
+        span: 25..26,
+        token: FormatStringEnd,
     },
 ]

@@ -5,17 +5,13 @@ expression: lex(input)
 [
     SpannedToken {
         span: 0..1,
-        token: Normal(
-            Identifier(
-                "a",
-            ),
+        token: Identifier(
+            "a",
         ),
     },
     SpannedToken {
         span: 2..3,
-        token: Normal(
-            OperatorAssignment,
-        ),
+        token: OperatorAssignment,
     },
     SpannedToken {
         span: 4..20,
@@ -27,30 +23,22 @@ expression: lex(input)
     },
     SpannedToken {
         span: 20..21,
-        token: Normal(
-            SigilSemiColon,
-        ),
+        token: SigilSemiColon,
     },
     SpannedToken {
         span: 22..23,
-        token: Normal(
-            Identifier(
-                "b",
-            ),
+        token: Identifier(
+            "b",
         ),
     },
     SpannedToken {
         span: 24..25,
-        token: Normal(
-            OperatorAssignment,
-        ),
+        token: OperatorAssignment,
     },
     SpannedToken {
         span: 26..27,
-        token: Normal(
-            LiteralInt(
-                "1",
-            ),
+        token: LiteralInt(
+            "1",
         ),
     },
 ]

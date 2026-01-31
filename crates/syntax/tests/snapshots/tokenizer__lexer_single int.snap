@@ -5,10 +5,8 @@ expression: lex(input)
 [
     SpannedToken {
         span: 0..1,
-        token: Normal(
-            LiteralInt(
-                "1",
-            ),
+        token: LiteralInt(
+            "1",
         ),
     },
 ]

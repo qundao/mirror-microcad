@@ -15,42 +15,36 @@ expression: lex(input)
     },
     SpannedToken {
         span: 4..5,
-        token: Error(
-            UnclosedString(
-                4..5,
-            ),
-        ),
+        token: SigilOpenSquareBracket,
     },
     SpannedToken {
-        span: 5..13,
-        token: Identifier(
-            "unclosed",
-        ),
-    },
-    SpannedToken {
-        span: 14..20,
-        token: Identifier(
-            "string",
-        ),
-    },
-    SpannedToken {
-        span: 20..21,
-        token: SigilSemiColon,
-    },
-    SpannedToken {
-        span: 26..27,
-        token: Identifier(
-            "b",
-        ),
-    },
-    SpannedToken {
-        span: 28..29,
-        token: OperatorAssignment,
-    },
-    SpannedToken {
-        span: 30..31,
+        span: 5..6,
         token: LiteralInt(
             "1",
         ),
+    },
+    SpannedToken {
+        span: 6..8,
+        token: SigilDoubleDot,
+    },
+    SpannedToken {
+        span: 8..9,
+        token: LiteralInt(
+            "3",
+        ),
+    },
+    SpannedToken {
+        span: 9..10,
+        token: SigilCloseSquareBracket,
+    },
+    SpannedToken {
+        span: 10..12,
+        token: Identifier(
+            "mm",
+        ),
+    },
+    SpannedToken {
+        span: 12..13,
+        token: SigilSemiColon,
     },
 ]

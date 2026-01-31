@@ -5,24 +5,18 @@ expression: lex(input)
 [
     SpannedToken {
         span: 0..1,
-        token: Normal(
-            LiteralInt(
-                "1",
-            ),
+        token: LiteralInt(
+            "1",
         ),
     },
     SpannedToken {
         span: 1..2,
-        token: Normal(
-            OperatorAdd,
-        ),
+        token: OperatorAdd,
     },
     SpannedToken {
         span: 2..3,
-        token: Normal(
-            LiteralInt(
-                "1",
-            ),
+        token: LiteralInt(
+            "1",
         ),
     },
 ]

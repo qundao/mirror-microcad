@@ -16,6 +16,7 @@ compact_str = "0.9.0"
 chumsky = "0.12.0"
 thiserror = "2.0.17"
 miette = "7.6.0"
+either = "1.15.0"
 
 [dev-dependencies]
 insta = { version = "1.45.0" }
