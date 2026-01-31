@@ -327,12 +327,15 @@ call = { qualified_name ~ ws* ~ call_op }
 // `export = "test.svg"`: ok # Command as string
 // `measure = width`: ok # Command as identifier without arguments
 // `measure = width, height(offset = 30mm)`: ok # Item with multiple commands
-attribute_item = _{ identifier ~ (ws* ~ "=" ~ ws* ~ attribute_command_list)? }
+attribute_item = _{ attribute_command_list }
 
-// `"test.svg"`: ok # Format string command
+attribute_assigment = { identifier ~ ws* ~ "=" ~ ws* ~ expression }
+attribute_call = { call }
+attribute_ident = { identifier }
+// `export"`: ok # Ident
 // `width(offset = 30mm)`: ok # Command with argument list.
-// `(style = "fill:none"): ok # Anonymous argument list.
-attribute_command = { expression | identifier ~ (ws* ~ call_op)? | call_op }
+// `style = "fill:none": ok # Assigment.
+attribute_command = { attribute_assigment | attribute_call | attribute_ident }
 
 // `width, height`: ok # Multiple commands.
 attribute_command_list = _{ attribute_command ~ (ws* ~ "," ~ ws* ~ attribute_command)* ~ ws* ~ ","? }

@@ -9,12 +9,22 @@ impl Parse for AttributeCommand {
 
         for inner in pair.inner() {
             match inner.as_rule() {
-                Rule::expression => return Ok(Self::Expression(Expression::parse(inner)?)),
-                Rule::identifier | Rule::argument_list => {
-                    return Ok(Self::Call(
-                        pair.find(Rule::identifier),
-                        pair.find(Rule::argument_list),
-                    ));
+                Rule::attribute_assigment => {
+                    return Ok(Self::Assigment {
+                        name: crate::find_rule!(inner, identifier)?,
+                        value: crate::find_rule!(inner, expression)?,
+                        src_ref: pair.src_ref(),
+                    });
+                }
+                Rule::attribute_ident => {
+                    return Ok(Self::Ident(crate::find_rule!(inner, identifier)?));
+                }
+                Rule::attribute_call => {
+                    let call: Call = crate::find_rule!(inner, call)?;
+                    if call.name.as_identifier().is_none() {
+                        return Err(ParseError::InvalidAttributeCall(call.name));
+                    }
+                    return Ok(Self::Call(call));
                 }
                 _ => {}
             }
@@ -36,7 +46,6 @@ impl Parse for Attribute {
         }
 
         Ok(Self {
-            id: pair.find(Rule::identifier).expect("Id"),
             commands,
             is_inner: pair.as_rule() == Rule::inner_attribute,
             src_ref: pair.src_ref(),

@@ -129,7 +129,11 @@ pub enum ParseError {
 
     /// If expression is missing an `else`
     #[error("If expression must return a value in all cases")]
-    IncompleteIfExpression(SrcRef)
+    IncompleteIfExpression(SrcRef),
+
+    /// Call attribute with a non-identifier name
+    #[error("Call attributes must have a plain identifier as name")]
+    InvalidAttributeCall(QualifiedName),
 }
 
 /// Result with parse error
@@ -165,7 +169,8 @@ impl SrcReferrer for ParseError {
             | ParseError::DuplicatedMapType(id)
             | ParseError::DuplicateIdentifier(id)
             | ParseError::DuplicateTupleIdentifier(id) => id.src_ref(),
-            ParseError::QualifiedNameIsNoId(name) => name.src_ref(),
+            ParseError::QualifiedNameIsNoId(name)
+            | ParseError::InvalidAttributeCall(name) => name.src_ref(),
             ParseError::UnexpectedToken(src_ref)
             | ParseError::MixedTupleArguments(src_ref)
             | ParseError::PositionalArgumentAfterNamed(src_ref)
