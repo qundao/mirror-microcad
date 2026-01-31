@@ -611,9 +611,9 @@ impl From<Model> for Value {
 }
 
 impl AttributesAccess for Value {
-    fn get_attributes_by_id(&self, id: &Identifier) -> Vec<crate::model::Attribute> {
+    fn get_attributes_by_name(&self, id: &QualifiedName) -> Vec<crate::model::Attribute> {
         match self {
-            Value::Model(model) => model.get_attributes_by_id(id),
+            Value::Model(model) => model.get_attributes_by_name(id),
             _ => Vec::default(),
         }
     }

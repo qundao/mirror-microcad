@@ -23,7 +23,7 @@ use microcad_core::{Color, Size2};
 #[derive(Clone, Debug)]
 pub struct CustomCommand {
     /// Attribute id.
-    pub id: Identifier,
+    pub id: QualifiedName,
     /// Argument tuple.
     pub arguments: Box<Tuple>,
 }
@@ -53,13 +53,13 @@ pub enum Attribute {
 
 impl Attribute {
     /// Return an id for the attribute.
-    fn id(&self) -> Identifier {
+    fn id(&self) -> QualifiedName {
         match &self {
-            Attribute::Color(_) => Identifier::no_ref("color"),
-            Attribute::Resolution(_) => Identifier::no_ref("resolution"),
-            Attribute::Size(_) => Identifier::no_ref("size"),
-            Attribute::Export(_) => Identifier::no_ref("export"),
-            Attribute::Measure(_) => Identifier::no_ref("measure"),
+            Attribute::Color(_) => Identifier::no_ref("color").into(),
+            Attribute::Resolution(_) => Identifier::no_ref("resolution").into(),
+            Attribute::Size(_) => Identifier::no_ref("size").into(),
+            Attribute::Export(_) => Identifier::no_ref("export").into(),
+            Attribute::Measure(_) => Identifier::no_ref("measure").into(),
             Attribute::Custom(attr) => attr.id.clone(),
         }
     }
@@ -114,11 +114,11 @@ impl PartialEq for Attribute {
 /// Access an attributes value by id.
 pub trait AttributesAccess {
     /// Get a value attribute by id.
-    fn get_attributes_by_id(&self, id: &Identifier) -> Vec<Attribute>;
+    fn get_attributes_by_name(&self, id: &QualifiedName) -> Vec<Attribute>;
 
     /// Get a single attributes.
-    fn get_single_attribute(&self, id: &Identifier) -> Option<Attribute> {
-        let attributes = self.get_attributes_by_id(id);
+    fn get_single_attribute(&self, id: &QualifiedName) -> Option<Attribute> {
+        let attributes = self.get_attributes_by_name(id);
         match attributes.len() {
             1 => attributes.first().cloned(),
             _ => None,
@@ -126,7 +126,7 @@ pub trait AttributesAccess {
     }
 
     /// Get single attribute as value.
-    fn get_attribute_value(&self, id: &Identifier) -> Value {
+    fn get_attribute_value(&self, id: &QualifiedName) -> Value {
         match self.get_single_attribute(id) {
             Some(attribute) => attribute.into(),
             None => Value::None,
@@ -135,7 +135,7 @@ pub trait AttributesAccess {
 
     /// Get resolution attribute.
     fn get_resolution(&self) -> Option<ResolutionAttribute> {
-        match self.get_single_attribute(&Identifier::no_ref("resolution")) {
+        match self.get_single_attribute(&Identifier::no_ref("resolution").into()) {
             Some(value) => match value {
                 Attribute::Resolution(resolution) => Some(resolution),
                 _ => unreachable!(),
@@ -146,7 +146,7 @@ pub trait AttributesAccess {
 
     /// Color (builtin attribute).
     fn get_color(&self) -> Option<Color> {
-        match self.get_single_attribute(&Identifier::no_ref("color")) {
+        match self.get_single_attribute(&Identifier::no_ref("color").into()) {
             Some(value) => match value {
                 Attribute::Color(color) => Some(color),
                 _ => unreachable!(),
@@ -157,7 +157,7 @@ pub trait AttributesAccess {
 
     /// Get size.
     fn get_size(&self) -> Option<Size2> {
-        self.get_single_attribute(&Identifier::no_ref("size"))
+        self.get_single_attribute(&Identifier::no_ref("size").into())
             .map(|attr| match attr {
                 Attribute::Size(size) => size,
                 _ => unreachable!(),
@@ -166,7 +166,7 @@ pub trait AttributesAccess {
 
     /// Get all export commands.
     fn get_exports(&self) -> Vec<ExportCommand> {
-        self.get_attributes_by_id(&Identifier::no_ref("export"))
+        self.get_attributes_by_name(&Identifier::no_ref("export").into())
             .into_iter()
             .fold(Vec::new(), |mut exports, command| {
                 match command {
@@ -179,7 +179,7 @@ pub trait AttributesAccess {
 
     /// Get all measure commands.
     fn get_measures(&self) -> Vec<MeasureCommand> {
-        self.get_attributes_by_id(&Identifier::no_ref("measure"))
+        self.get_attributes_by_name(&Identifier::no_ref("measure").into())
             .iter()
             .fold(Vec::new(), |mut measures, attribute| {
                 match attribute {
@@ -191,8 +191,8 @@ pub trait AttributesAccess {
     }
 
     /// Get custom attributes.
-    fn get_custom_attributes(&self, id: &Identifier) -> Vec<Tuple> {
-        self.get_attributes_by_id(id)
+    fn get_custom_attributes(&self, id: &QualifiedName) -> Vec<Tuple> {
+        self.get_attributes_by_name(id)
             .iter()
             .fold(Vec::new(), |mut attributes, attribute| {
                 match attribute {

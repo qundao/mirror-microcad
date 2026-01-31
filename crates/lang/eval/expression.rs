@@ -294,9 +294,9 @@ impl Eval for Expression {
             }
             Self::AttributeAccess(lhs, identifier, src_ref) => {
                 let value: Value = lhs.eval(context)?;
-                let value = value.get_attribute_value(identifier);
+                let value = value.get_attribute_value(&(identifier.into()));
                 if value == Value::None {
-                    context.error(src_ref, AttributeError::NotFound(identifier.clone()))?;
+                    context.error(src_ref, AttributeError::NotFound(identifier.clone().into()))?;
                 }
                 Ok(value)
             }

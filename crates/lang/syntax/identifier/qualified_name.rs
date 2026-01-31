@@ -10,6 +10,13 @@ use miette::SourceSpan;
 #[derive(Default, Clone, PartialEq, Hash, Eq, Ord, PartialOrd, DerefMut, Deref)]
 pub struct QualifiedName(Refer<Vec<Identifier>>);
 
+impl QualifiedName {
+    /// If the qualified name is a single identifier, return it
+    pub fn as_identifier(&self) -> Option<&Identifier> {
+        self.0.first().filter(|_| self.0.len() == 1)
+    }
+}
+
 /// List of *qualified names* which can be displayed.
 #[derive(Deref)]
 pub struct QualifiedNames(Vec<QualifiedName>);

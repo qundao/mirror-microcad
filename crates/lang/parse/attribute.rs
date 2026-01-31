@@ -12,7 +12,7 @@ impl Parse for AttributeCommand {
                 Rule::expression => return Ok(Self::Expression(Expression::parse(inner)?)),
                 Rule::identifier | Rule::argument_list => {
                     return Ok(Self::Call(
-                        pair.find(Rule::identifier),
+                        pair.find(Rule::qualified_name),
                         pair.find(Rule::argument_list),
                     ));
                 }
@@ -36,7 +36,7 @@ impl Parse for Attribute {
         }
 
         Ok(Self {
-            id: pair.find(Rule::identifier).expect("Id"),
+            id: pair.find(Rule::qualified_name).expect("Id"),
             commands,
             is_inner: pair.as_rule() == Rule::inner_attribute,
             src_ref: pair.src_ref(),

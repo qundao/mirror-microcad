@@ -596,6 +596,10 @@ impl ExporterAccess for EvalContext {
         self.exporters.exporter_by_id(id)
     }
 
+    fn exporter_by_name(&self, name: &QualifiedName) -> Result<Rc<dyn Exporter>, ExportError> {
+        self.exporters.exporter_by_name(name)
+    }
+
     fn exporter_by_filename(
         &self,
         filename: &std::path::Path,

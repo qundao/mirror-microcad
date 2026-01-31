@@ -8,6 +8,7 @@ use miette::Diagnostic;
 use crate::{Id, builtin::file_io::*, model::*, parameter, render::RenderError, value::*};
 
 use thiserror::Error;
+use crate::syntax::{Identifier, QualifiedName};
 
 /// Export error stub.
 #[derive(Error, Debug, Diagnostic)]
@@ -30,7 +31,7 @@ pub enum ExportError {
 
     /// No exporter for id.
     #[error("No exporter found with id `{0}`")]
-    NoExporterWithId(Id),
+    NoExporterWithId(QualifiedName),
 
     /// No exporter id.
     #[error("Multiple exporters for file extension: {0:?}")]
@@ -127,6 +128,9 @@ pub trait ExporterAccess {
     /// Get exporter by id.
     fn exporter_by_id(&self, id: &Id) -> Result<Rc<dyn Exporter>, ExportError>;
 
+    /// Get exporter by name.
+    fn exporter_by_name(&self, name: &QualifiedName) -> Result<Rc<dyn Exporter>, ExportError>;
+
     /// Get exporter by filename.
     fn exporter_by_filename(
         &self,
@@ -150,7 +154,18 @@ impl ExporterAccess for ExporterRegistry {
     fn exporter_by_id(&self, id: &Id) -> Result<Rc<dyn Exporter>, ExportError> {
         match self.io.by_id(id) {
             Some(exporter) => Ok(exporter),
-            None => Err(ExportError::NoExporterWithId(id.clone())),
+            None => Err(ExportError::NoExporterWithId(QualifiedName::from(Identifier::no_ref(id)))),
+        }
+    }
+
+    fn exporter_by_name(&self, name: &QualifiedName) -> Result<Rc<dyn Exporter>, ExportError> {
+        if let Some(id) = name.as_identifier() {
+            match self.io.by_id(id.id()) {
+                Some(exporter) => Ok(exporter),
+                None => Err(ExportError::NoExporterWithId(name.clone())),
+            }
+        } else {
+            Err(ExportError::NoExporterWithId(name.clone()))
         }
     }
 

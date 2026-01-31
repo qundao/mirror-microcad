@@ -10,7 +10,7 @@ use derive_more::{Deref, DerefMut};
 #[derive(Clone)]
 pub enum AttributeCommand {
     /// A command with an optional identifier and optional arguments: `width(offset = 30mm)`.
-    Call(Option<Identifier>, Option<ArgumentList>),
+    Call(Option<QualifiedName>, Option<ArgumentList>),
     /// A format string subcommand: `"test.svg"`.
     Expression(Expression),
 }
@@ -79,7 +79,7 @@ impl SrcReferrer for AttributeCommand {
 #[derive(Clone)]
 pub struct Attribute {
     /// The id of the attribute.
-    pub id: Identifier,
+    pub id: QualifiedName,
     /// Attribute commands: `width, height(30mm)`.
     pub commands: Vec<AttributeCommand>,
     /// Tells if the attribute is an inner attribute: `#[...]` (outer) vs `#![...]` (inner).

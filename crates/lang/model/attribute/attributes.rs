@@ -5,7 +5,7 @@
 
 use derive_more::{Deref, DerefMut};
 
-use crate::{model::*, syntax::Identifier};
+use crate::{model::*,};
 
 /// Model attributes, from an evaluated attribute list.
 ///
@@ -17,7 +17,7 @@ use crate::{model::*, syntax::Identifier};
 pub struct Attributes(pub Vec<Attribute>);
 
 impl AttributesAccess for Attributes {
-    fn get_attributes_by_id(&self, id: &Identifier) -> Vec<Attribute> {
+    fn get_attributes_by_name(&self, id: &QualifiedName) -> Vec<Attribute> {
         self.iter()
             .filter(|attribute| attribute.id() == *id)
             .cloned()

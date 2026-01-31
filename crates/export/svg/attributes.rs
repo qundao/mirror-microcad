@@ -147,7 +147,7 @@ impl SvgTagAttributes {
         }
 
         model
-            .get_custom_attributes(&Identifier::no_ref("svg"))
+            .get_custom_attributes(&Identifier::no_ref("svg").into())
             .iter()
             .for_each(|tuple| {
                 if let Some(Value::String(style)) = tuple.by_id(&Identifier::no_ref("style")) {

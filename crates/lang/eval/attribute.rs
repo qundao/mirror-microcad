@@ -20,7 +20,7 @@ use thiserror::Error;
 pub enum AttributeError {
     /// Unknown attribute.
     #[error("Attribute not supported: {0}")]
-    NotSupported(Identifier),
+    NotSupported(QualifiedName),
 
     /// Attribute cannot be assigned to an expression.
     #[error("Cannot assign attribute to expression `{0}`")]
@@ -28,11 +28,11 @@ pub enum AttributeError {
 
     /// The attribute was not found.
     #[error("Not found: {0}")]
-    NotFound(Identifier),
+    NotFound(QualifiedName),
 
     /// Invalid command.
     #[error("Invalid command list for attribute `{0}`")]
-    InvalidCommand(Identifier),
+    InvalidCommand(QualifiedName),
 }
 
 impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
@@ -113,7 +113,7 @@ impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
 
 impl Eval<Vec<ExportCommand>> for syntax::Attribute {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Vec<ExportCommand>> {
-        assert_eq!(self.id.id().as_str(), "export");
+        assert_eq!(self.id.as_identifier().map(|i| i.id().as_str()), Some("export"));
 
         self.commands
             .iter()
@@ -132,10 +132,10 @@ impl Eval<Vec<MeasureCommand>> for syntax::Attribute {
 
         for command in &self.commands {
             match command {
-                AttributeCommand::Call(Some(id), _) => match id.id().as_str() {
-                    "width" => commands.push(MeasureCommand::Width),
-                    "height" => commands.push(MeasureCommand::Height),
-                    "size" => commands.push(MeasureCommand::Size),
+                AttributeCommand::Call(Some(id), _) => match id.as_identifier().map(|id| id.id().as_str()) {
+                    Some("width") => commands.push(MeasureCommand::Width),
+                    Some("height") => commands.push(MeasureCommand::Height),
+                    Some("size") => commands.push(MeasureCommand::Size),
                     _ => context.warning(self, AttributeError::InvalidCommand(id.clone()))?,
                 },
                 _ => unimplemented!(),
@@ -148,7 +148,7 @@ impl Eval<Vec<MeasureCommand>> for syntax::Attribute {
 
 impl Eval<Vec<CustomCommand>> for syntax::Attribute {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Vec<CustomCommand>> {
-        match context.exporters().exporter_by_id(self.id.id()) {
+        match context.exporters().exporter_by_name(&self.id) {
             Ok(exporter) => {
                 let mut commands = Vec::new();
                 for command in &self.commands {
@@ -207,7 +207,7 @@ impl Eval<Option<Color>> for syntax::AttributeCommand {
                     _ => {
                         context.warning(
                             self,
-                            AttributeError::InvalidCommand(Identifier::no_ref("color")),
+                            AttributeError::InvalidCommand(Identifier::no_ref("color").into()),
                         )?;
                         Ok(None)
                     }
@@ -235,7 +235,7 @@ impl Eval<Option<ResolutionAttribute>> for syntax::AttributeCommand {
             AttributeCommand::Call(_, _) => {
                 context.warning(
                     self,
-                    AttributeError::InvalidCommand(Identifier::no_ref("resolution")),
+                    AttributeError::InvalidCommand(Identifier::no_ref("resolution").into()),
                 )?;
                 Ok(None)
             }
@@ -253,7 +253,7 @@ macro_rules! eval_to_attribute {
     ($id:ident: $ty:ty) => {
         impl Eval<Option<$ty>> for syntax::Attribute {
             fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<$ty>> {
-                assert_eq!(self.id.id().as_str(), stringify!($id));
+                assert_eq!(self.id.as_identifier().map(|id| id.id().as_str()), Some(stringify!($id)));
                 match self.single_command() {
                     Some(command) => Ok(command.eval(context)?),
                     None => {
@@ -272,26 +272,26 @@ eval_to_attribute!(size: Size2);
 
 impl Eval<Vec<crate::model::Attribute>> for syntax::Attribute {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Vec<crate::model::Attribute>> {
-        let id = self.id.id().as_str();
+        let id = self.id.as_identifier().map(|id| id.id().as_str());
         use crate::model::Attribute as Attr;
         Ok(match id {
-            "color" => match self.eval(context)? {
+            Some("color") => match self.eval(context)? {
                 Some(color) => vec![Attr::Color(color)],
                 None => Default::default(),
             },
-            "resolution" => match self.eval(context)? {
+            Some("resolution") => match self.eval(context)? {
                 Some(resolution) => vec![Attr::Resolution(resolution)],
                 None => Default::default(),
             },
-            "size" => match self.eval(context)? {
+            Some("size") => match self.eval(context)? {
                 Some(size) => vec![Attr::Size(size)],
                 None => Default::default(),
             },
-            "export" => {
+            Some("export") => {
                 let exports: Vec<ExportCommand> = self.eval(context)?;
                 exports.iter().cloned().map(Attr::Export).collect()
             }
-            "measure" => {
+            Some("measure") => {
                 let measures: Vec<MeasureCommand> = self.eval(context)?;
                 measures.iter().cloned().map(Attr::Measure).collect()
             }

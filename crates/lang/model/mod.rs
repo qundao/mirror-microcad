@@ -40,6 +40,7 @@ use crate::{
     tree_display::*,
     value::Value,
 };
+use crate::syntax::QualifiedName;
 
 /// A reference counted, mutable [`Model`].
 #[derive(Clone, Deref, DerefMut)]
@@ -232,8 +233,8 @@ impl Model {
 }
 
 impl AttributesAccess for Model {
-    fn get_attributes_by_id(&self, id: &Identifier) -> Vec<Attribute> {
-        self.borrow().attributes.get_attributes_by_id(id)
+    fn get_attributes_by_name(&self, id: &QualifiedName) -> Vec<Attribute> {
+        self.borrow().attributes.get_attributes_by_name(id)
     }
 }
 
