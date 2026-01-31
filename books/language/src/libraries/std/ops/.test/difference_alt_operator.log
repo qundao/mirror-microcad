@@ -13,5 +13,5 @@
   22:       geo2d::Rect(size = 2mm);
   23:   }.ops::subtract();
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

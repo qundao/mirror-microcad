@@ -18,5 +18,5 @@
   36:   
   37:   MySketch();
 
--- Errors --
-found 'Normal(KeywordConst)' at 36..41 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

@@ -16,5 +16,5 @@
   24:   // Construct a frame
   25:   Frame(width, height, thickness);
 
--- Errors --
-found 'Normal(KeywordUse)' at 57..60 expected statement, expression, or end of input
+-- Test Result --
+OK

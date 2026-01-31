@@ -8,37 +8,5 @@
 
   16:   std::geo3d::Cylinder(h = 50mm, d = 20mm).std::ops::scale(x = 200%);
 
-error at 64..65
--- Test Result --
-FAILS
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::scale(x=2, y=1, z=1) ->
-      - v = (x=2, y=1, z=1)
-      Transform __builtin::ops::scale(x=2, y=1, z=1) ->
-        Workpiece(part) std::geo3d::Cylinder(d=20mm, h=50mm) ->
-          - height = 50mm
-          - offset = -25mm
-          - radius_bottom = 10mm
-          - radius_top = 10mm
-          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-25mm) ->
-            - x = 0mm
-            - y = 0mm
-            - z = -25mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-25mm) ->
-              Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
-                - height = 50mm
-                - scale = (x=1, y=1)
-                - twist = 0rad
-                Operation __builtin::ops::extrude(height=50mm, scale_x=1, scale_y=1, twist=0rad) ->
-                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
-                    - center = (x=0mm, y=0mm)
-                    - radius = 10mm
-                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
-
-Export of "../books/language/src/libraries/std/ops/.test/scale_3d-out.stl" successful.
 -- Test Result --
 OK

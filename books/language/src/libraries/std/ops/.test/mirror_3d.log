@@ -20,5 +20,5 @@
   19:   .mirror(Y)
   20:   .mirror(Z)
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

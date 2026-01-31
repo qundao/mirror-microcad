@@ -10,5 +10,5 @@
   47:     pub use std::geo2d;
   48:   }
 
--- Errors --
-found 'Normal(KeywordUse)' at 14..17 expected 'Normal(KeywordFn)', something else, or 'Normal(KeywordMod)'
+-- Test Result --
+OK

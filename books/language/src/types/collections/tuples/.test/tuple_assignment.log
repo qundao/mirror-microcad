@@ -12,4 +12,4 @@
   11:   assert_eq([height,2m]);
 
 -- Errors --
-found 'Normal(OperatorAssignment)' at 16..17 expected binary operator, semicolon, or end of input
+ParseError { span: 16..17, error: found 'OperatorAssignment' at 16..17 expected attribute access, method call, tuple access, array access, binary operator, something else, semicolon, or end of input }

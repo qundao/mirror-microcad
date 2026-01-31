@@ -8,5 +8,5 @@
 
  105:   std::debug::assert_eq([ [-0.5mm,0.5mm]*2, [-1,1]mm ]);
 
--- Errors --
-found 'Normal(Identifier("mm"))' at 48..50 expected binary operator, 'Normal(SigilComma)', or 'Normal(SigilCloseSquareBracket)'
+-- Test Result --
+OK

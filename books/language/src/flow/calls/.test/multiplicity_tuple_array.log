@@ -10,5 +10,5 @@
   39:   
   40:   r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
 
--- Errors --
-found 'Normal(SigilDot)' at 51..52 expected 'Normal(SigilDoubleColon)', 'Normal(SigilOpenBracket)', binary operator, 'Normal(SigilColon)', 'Normal(OperatorAssignment)', semicolon, or end of input
+-- Test Result --
+OK

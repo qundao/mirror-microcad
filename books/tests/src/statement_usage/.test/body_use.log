@@ -10,5 +10,5 @@
   39:     use std;
   40:   }
 
--- Errors --
-found 'Normal(KeywordUse)' at 4..7 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

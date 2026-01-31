@@ -10,5 +10,5 @@
   71:     const B = 1;
   72:   init(l:Length) {} } K();
 
--- Errors --
-found 'Normal(KeywordConst)' at 16..21 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

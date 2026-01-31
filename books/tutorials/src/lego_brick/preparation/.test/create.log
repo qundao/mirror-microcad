@@ -15,5 +15,5 @@
   22:   // create YourSketch
   23:   YourSketch();
 
--- Errors --
-found 'Normal(MultiLineComment("/* your building plan */"))' at 47..71 expected identifier, or 'Normal(SigilCloseBracket)'
+-- Test Result --
+OK

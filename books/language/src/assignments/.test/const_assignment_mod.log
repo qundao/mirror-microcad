@@ -15,5 +15,5 @@
   17:   std::print(TEXT);
   18:   std::print(my_module::TEXT);
 
--- Errors --
-found 'Normal(KeywordConst)' at 0..5 expected statement, expression, or end of input
+-- Test Result --
+OK

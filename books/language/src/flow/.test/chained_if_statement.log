@@ -22,5 +22,5 @@
   47:   
   48:   MySketch([1,2,3]).align(X, 1cm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

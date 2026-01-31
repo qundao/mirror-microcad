@@ -13,5 +13,5 @@
   13:   
   14:   MySketch(1cm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

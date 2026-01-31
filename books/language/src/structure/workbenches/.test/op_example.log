@@ -12,5 +12,5 @@
   16:   // use operation nop on a circle
   17:   std::geo2d::Circle(radius = 1cm).nop();
 
--- Errors --
-found 'Normal(SigilDot)' at 129..130 expected binary operator, semicolon, or end of input
+-- Test Result --
+OK

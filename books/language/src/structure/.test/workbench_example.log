@@ -18,5 +18,5 @@
  112:   
  113:   PunchedDisk(radius = 1cm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 41..44 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

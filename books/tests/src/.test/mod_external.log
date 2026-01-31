@@ -9,5 +9,5 @@
   13:   // file: external.µcad
   14:   pub const a =1;
 
--- Errors --
-found 'Normal(KeywordConst)' at 28..33 expected 'Normal(KeywordFn)', something else, or 'Normal(KeywordMod)'
+-- Test Result --
+OK

@@ -14,5 +14,5 @@
   42:       std::geo2d::Rect(width = width - 2 * thickness, height = height - 2 * thickness);
   43:   }.std::ops::subtract();   // Apply the operation.
 
--- Errors --
-found 'Normal(SigilDot)' at 178..179 expected binary operator, semicolon, or end of input
+-- Test Result --
+OK

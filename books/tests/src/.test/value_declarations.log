@@ -100,5 +100,5 @@
  109:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
  110:   assert_eq([module::function(), 0]);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

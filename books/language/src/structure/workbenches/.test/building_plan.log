@@ -14,5 +14,5 @@
  104:   
  105:   std::debug::assert_eq([Wheel(5cm).radius, 5cm]);
 
--- Errors --
-found 'Normal(SigilDot)' at 197..198 expected binary operator, 'Normal(SigilComma)', 'Normal(SigilCloseSquareBracket)', or 'Normal(SigilDoubleDot)'
+-- Test Result --
+OK

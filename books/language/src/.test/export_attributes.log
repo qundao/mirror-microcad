@@ -12,5 +12,5 @@
   46:   #[export = "circle.svg"]  // Will be exported to `circle.svg`
   47:   std::geo2d::Circle(r = 42mm);
 
--- Errors --
-found 'Normal(SigilHash)' at 0..1 expected statement, expression, or end of input
+-- Test Result --
+OK

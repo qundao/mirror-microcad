@@ -17,5 +17,5 @@
   28:   
   29:   assert_eq([sin(asin(x)), x]);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

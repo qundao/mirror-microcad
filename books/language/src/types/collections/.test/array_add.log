@@ -8,5 +8,5 @@
 
   85:   std::debug::assert_eq([ [1,2]mm + 2mm, [3,4]mm ]);
 
--- Errors --
-found 'Normal(Identifier("mm"))' at 29..31 expected binary operator, 'Normal(SigilComma)', 'Normal(SigilCloseSquareBracket)', or 'Normal(SigilDoubleDot)'
+-- Test Result --
+OK

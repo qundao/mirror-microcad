@@ -23,5 +23,5 @@
   45:       std::geo2d::Circle(radius = 2cm);
   46:   }.punched_disk();
 
--- Errors --
-found 'Normal(SigilDot)' at 113..114 expected binary operator, or 'Normal(SigilOpenCurlyBracket)'
+-- Test Result --
+OK

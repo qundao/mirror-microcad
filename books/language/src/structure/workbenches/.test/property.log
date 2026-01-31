@@ -26,5 +26,5 @@
  292:   std::print("outer: {t.outer}");
  293:   std::print("inner: {t.inner}");
 
--- Errors --
-found 'Normal(KeywordUse)' at 130..133 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

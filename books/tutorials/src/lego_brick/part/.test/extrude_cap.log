@@ -15,5 +15,5 @@
   18:   Cap(width, height)
   19:       .extrude(1.0mm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

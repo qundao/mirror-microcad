@@ -18,5 +18,5 @@
  113:   my::Circle(r = 4mm);
  114:   my::Rect(size = 40mm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 64..67 expected 'Normal(KeywordFn)', something else, or 'Normal(KeywordMod)'
+-- Test Result --
+OK

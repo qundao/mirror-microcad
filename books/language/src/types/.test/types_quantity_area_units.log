@@ -14,28 +14,5 @@
  108:   std::debug::assert(square_millimeter == 0.1m²);
  109:   std::debug::assert(square_centimeter == 0.1m²);
 
-error at 28..30
 -- Test Result --
-FAILS
--- No Output --
--- Errors --
-  ⚠ warning: 4:1: Unused local square_inch.
-     ╭─[../books/language/src/types/quantities.md:106:1]
- 105 │ square_meter = 0.1m²;
- 106 │ square_inch = 155in²;
-     · ─────┬─────
-     ·      ╰── warning: 4:1: Unused local square_inch.
- 107 │ 
-     ╰────
-  ⚠ warning: 3:1: Unused local square_meter.
-     ╭─[../books/language/src/types/quantities.md:105:1]
- 104 │ square_centimeter = 1000cm²;
- 105 │ square_meter = 0.1m²;
-     · ──────┬─────
-     ·       ╰── warning: 3:1: Unused local square_meter.
- 106 │ square_inch = 155in²;
-     ╰────
-Unexpected warnings(s) which did occur in line(s): 105, 106
--- No Model --
--- Test Result --
-OK (BUT WARNINGS)
+OK

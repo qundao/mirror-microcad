@@ -11,5 +11,5 @@
   53:           y = [0..1] * 8mm)
   54:       ).std::ops::center();
 
--- Errors --
-found 'Normal(SigilDot)' at 94..95 expected binary operator, semicolon, or end of input
+-- Test Result --
+OK

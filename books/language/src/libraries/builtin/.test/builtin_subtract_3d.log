@@ -13,5 +13,5 @@
   26:       geo3d::Sphere(radius = 2.0mm).__builtin::ops::translate(x = 3.0mm);    
   27:   }.ops::subtract();
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

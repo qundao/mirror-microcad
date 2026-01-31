@@ -15,4 +15,4 @@
   37:   assert_eq([tuple.height,2m]);
 
 -- Errors --
-found 'Normal(Identifier("m"))' at 13..14 expected binary operator, or semicolon
+ParseError { span: 32..33, error: found 'OperatorAssignment' at 32..33 expected attribute access, method call, tuple access, array access, binary operator, something else, semicolon, or end of input }

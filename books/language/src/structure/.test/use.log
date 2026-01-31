@@ -12,5 +12,5 @@
   32:   Circle(r = 4mm);
   33:   Rect(size = 40mm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

@@ -18,5 +18,5 @@
   15:   
   16:   std::print(f(5));  // prints "match"
 
--- Errors --
-found 'Normal(OperatorAnd)' at 89..92 expected quantity type, binary operator, or 'Normal(SigilOpenCurlyBracket)'
+-- Test Result --
+OK

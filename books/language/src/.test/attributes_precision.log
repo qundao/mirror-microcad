@@ -11,11 +11,5 @@
   59:   
   60:   std::debug::assert_eq([c#resolution, 200%]);
 
-error at 18..19
--- Test Result --
-FAILS
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

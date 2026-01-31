@@ -8,5 +8,5 @@
 
   36:   pub use std;
 
--- Errors --
-found 'Normal(KeywordUse)' at 4..7 expected 'Normal(KeywordFn)', something else, or 'Normal(KeywordMod)'
+-- Test Result --
+OK

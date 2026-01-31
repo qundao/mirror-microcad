@@ -58,5 +58,5 @@
   82:   
   83:   d - r;
 
--- Errors --
-found 'Normal(KeywordConst)' at 151..156 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

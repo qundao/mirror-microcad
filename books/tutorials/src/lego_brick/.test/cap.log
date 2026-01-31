@@ -11,5 +11,5 @@
   16:   
   17:   Cap(width = 31.8mm, height = 15.8mm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 21..24 expected statement, expression, or end of input
+-- Test Result --
+OK

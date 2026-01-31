@@ -13,5 +13,5 @@
   17:   (Circle(d = 6.51mm) - Circle(d =  4.8mm)).translate(x = 8mm);
   18:   (Circle(d = 6.51mm) - Circle(d =  4.8mm)).translate(x = -8mm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

@@ -13,5 +13,5 @@
   10:       Circle(radius = 5mm);
   11:   }.translate(y=[-34mm/2 , 34mm/2]);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

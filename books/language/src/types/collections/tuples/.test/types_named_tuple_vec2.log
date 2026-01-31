@@ -10,5 +10,5 @@
   28:   
   29:   std::debug::assert(v.x + v.y == 5.0);
 
--- Errors --
-found 'Normal(SigilDot)' at 51..52 expected 'Normal(SigilDoubleColon)', 'Normal(SigilOpenBracket)', binary operator, 'Normal(OperatorAssignment)', 'Normal(SigilComma)', or 'Normal(SigilCloseBracket)'
+-- Test Result --
+OK

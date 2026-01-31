@@ -13,5 +13,5 @@
   97:   }
   98:   f();
 
--- Errors --
-found 'Normal(KeywordUse)' at 13..16 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

@@ -15,5 +15,5 @@
   66:       Circle(radius = 2mm); 
   67:   }
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

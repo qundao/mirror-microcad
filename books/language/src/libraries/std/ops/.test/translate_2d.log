@@ -8,5 +8,5 @@
 
    8:   std::geo2d::Rect(30mm).std::ops::translate(x = 10mm, y = 20mm);
 
--- Errors --
-found 'Normal(SigilDot)' at 22..23 expected binary operator, semicolon, or end of input
+-- Test Result --
+OK

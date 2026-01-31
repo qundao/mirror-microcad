@@ -8,18 +8,5 @@
 
   29:   tuple = (10cm, 10cm², 1l);
 
-error at 19..21
 -- Test Result --
-FAILS
--- No Output --
--- Errors --
-  ⚠ warning: 1:1: Unused local tuple.
-    ╭─[../books/language/src/types/collections/tuples/README.md:29:1]
- 29 │ tuple = (10cm, 10cm², 1l);
-    · ──┬──
-    ·   ╰── warning: 1:1: Unused local tuple.
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 29
--- No Model --
--- Test Result --
-OK (BUT WARNINGS)
+OK

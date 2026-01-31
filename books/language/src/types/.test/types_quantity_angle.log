@@ -15,11 +15,5 @@
   81:   
   82:   std::debug::assert( [degree, degree_, grad, turn, radian].all_equal() );
 
-error at 52..54
--- Test Result --
-FAILS
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -12,27 +12,5 @@
   44:   
   45:   a.ops::extrude(height = 4.0mm, scale_x = 100%, scale_y = 100%, twist = 0°);
 
-error at 184..185
--- Test Result --
-FAILS
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
-      a: Operation subtract() ->
-        Group ->
-          Primitive2D __builtin::geo2d::Circle(radius=9mm) ->
-          Multiplicity ->
-            Transform __builtin::ops::translate(x=-3mm, y=-3mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=2mm) ->
-            Transform __builtin::ops::translate(x=3mm, y=-3mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=2mm) ->
-            Transform __builtin::ops::translate(x=-3mm, y=3mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=2mm) ->
-            Transform __builtin::ops::translate(x=3mm, y=3mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=2mm) ->
-
-Export of "../books/language/src/libraries/builtin/.test/builtin_extrude-out.stl" successful.
 -- Test Result --
 OK

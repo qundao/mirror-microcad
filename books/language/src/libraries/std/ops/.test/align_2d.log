@@ -17,5 +17,5 @@
   18:       Rect(10mm);
   19:   }.align(X, 4mm);
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

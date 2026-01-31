@@ -19,5 +19,5 @@
   48:   // what was { .. }.subtract() before:
   49:   outer - inner;
 
--- Errors --
-found 'Normal(KeywordUse)' at 0..3 expected statement, expression, or end of input
+-- Test Result --
+OK

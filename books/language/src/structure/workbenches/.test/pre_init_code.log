@@ -29,5 +29,5 @@
  195:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
  196:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
 
--- Errors --
-found 'Normal(KeywordConst)' at 52..57 expected statement, expression, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK

@@ -10,33 +10,5 @@
   30:   // Who needs names?
   31:   f(1.0, 2cm, 3cm²);
 
-error at 76..78
 -- Test Result --
-FAILS
--- No Output --
--- Errors --
-  ⚠ warning: 1:7: Unused local a.
-    ╭─[../books/language/src/flow/calls/arguments.md:29:7]
- 29 │ fn f( a: Scalar, b: Length, c: Area ) {}
-    ·       ┬
-    ·       ╰── warning: 1:7: Unused local a.
- 30 │ // Who needs names?
-    ╰────
-  ⚠ warning: 1:18: Unused local b.
-    ╭─[../books/language/src/flow/calls/arguments.md:29:18]
- 29 │ fn f( a: Scalar, b: Length, c: Area ) {}
-    ·                  ┬
-    ·                  ╰── warning: 1:18: Unused local b.
- 30 │ // Who needs names?
-    ╰────
-  ⚠ warning: 1:29: Unused local c.
-    ╭─[../books/language/src/flow/calls/arguments.md:29:29]
- 29 │ fn f( a: Scalar, b: Length, c: Area ) {}
-    ·                             ┬
-    ·                             ╰── warning: 1:29: Unused local c.
- 30 │ // Who needs names?
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 29
--- No Model --
--- Test Result --
-OK (BUT WARNINGS)
+OK

@@ -13,5 +13,5 @@
   79:   
   80:   Knobs();
 
--- Errors --
-found 'Normal(SigilDot)' at 117..118 expected binary operator, semicolon, or 'Normal(SigilCloseCurlyBracket)'
+-- Test Result --
+OK
