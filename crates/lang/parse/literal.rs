@@ -40,14 +40,14 @@ impl FromAst for Literal {
     type AstNode = ast::Literal;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        Ok(match node {
-            ast::Literal::Bool(lit) => {
+        Ok(match &node.literal {
+            ast::LiteralKind::Bool(lit) => {
                 Literal::Bool(Refer::new(lit.value, context.src_ref(&lit.span)))
             }
-            ast::Literal::Integer(lit) => {
+            ast::LiteralKind::Integer(lit) => {
                 Literal::Integer(Refer::new(lit.value, context.src_ref(&lit.span)))
             }
-            ast::Literal::Quantity(lit) => {
+            ast::LiteralKind::Quantity(lit) => {
                 Literal::Number(NumberLiteral::from_ast(lit, context)?)
             },
             _ => todo!("unimplemented literal"),
