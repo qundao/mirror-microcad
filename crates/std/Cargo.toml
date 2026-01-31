@@ -19,3 +19,7 @@ path = "lib.rs"
 [dependencies]
 dirs = "6"
 rust-embed = "8.9"
+toml = "0.9"
+semver = { version = "1.0", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2.0"
