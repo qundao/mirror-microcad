@@ -35,20 +35,16 @@ impl RunCommand<ResolveContext> for Resolve {
 
         // Add default search paths path.
         if !self.no_std {
-            search_paths.push(microcad_std::global_std_path());
+            search_paths.push(microcad_std::global_library_search_path());
         }
 
-        // search for a usable std library
         if self.no_std {
             eprintln!("Info: omitting standard library (--no-std).");
-        } else if !search_paths
-            .iter()
-            .any(|search_path| microcad_std::is_installed(search_path))
-        {
-            eprintln!("Warning: No std library was found in given search paths: {search_paths:?}.");
-            if let Err(err) = microcad_std::install(microcad_std::global_std_path(), false) {
-                return Err(miette::miette!("Could not install standard library: {err}"));
-            }
+        } else {
+            // search for a usable std library and re-install it if necessary.
+            let stdlib_path = microcad_std::StdLib::default_path();
+            microcad_std::StdLib::new(stdlib_path)
+                .map_err(|err| miette::miette!("Could not load standard library: {err}"))?;
         }
 
         let start = std::time::Instant::now();
