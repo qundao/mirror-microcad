@@ -1,0 +1,19 @@
+﻿
+-- Test --
+        Test name: argument_match_single_identifier
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/argument_match/auto_identifier.md:20
+        Test path: ../books/language/src/flow/calls/argument_match/.test
+
+-- Code --
+
+  20:   fn f(x: Integer, y: Integer) -> Integer { x*y }
+  21:   x = 1;
+  22:   y = 2;
+  23:   f(x * 2, y * y); // matches because `x` and `y` match parameter names `x` and `y`
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

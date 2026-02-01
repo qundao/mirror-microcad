@@ -1,0 +1,28 @@
+﻿
+-- Test --
+        Test name: argument_match_short
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/argument_match/priorities.md:45
+        Test path: ../books/language/src/flow/calls/argument_match/.test
+
+-- Code --
+
+  45:   fn f( width: Length, height: Length ) -> Area { width * height }
+  46:   
+  47:   // use short identifiers
+  48:   f(w = 1cm, h = 2cm);
+  49:   // can be mixed
+  50:   f(w = 1cm, inner_radius = 2cm);
+
+-- No Output --
+-- Errors --
+  × error: 6:3: Missing arguments: height
+    ╭─[../books/language/src/flow/calls/argument_match/priorities.md:50:3]
+ 49 │ // can be mixed
+ 50 │ f(w = 1cm, inner_radius = 2cm);
+    ·   ─────────────┬─────────────
+    ·                ╰── error: 6:3: Missing arguments: height
+    ╰────
+Unexpected error(s) which did occur in line(s): 50
+-- Test Result --
+FAILS

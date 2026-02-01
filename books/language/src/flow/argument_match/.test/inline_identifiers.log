@@ -2,14 +2,14 @@
 -- Test --
         Test name: inline_identifiers
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/multiplicity.md:52
-        Test path: ../books/language/src/flow/calls/.test
+      Source file: ../books/language/src/flow/calls/argument_match/multiplicity.md:56
+        Test path: ../books/language/src/flow/calls/argument_match/.test
 
 -- Code --
 
-  52:   width = 2mm;
-  53:   height = 2mm;
-  54:   std::geo2d::Rect(width, height);
+  56:   width = 2mm;
+  57:   height = 2mm;
+  58:   std::geo2d::Rect(width, height);
 
 -- No Output --
 -- No Errors --
@@ -22,6 +22,6 @@
       - y = -1mm
       Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
 
-Export of "../books/language/src/flow/calls/.test/inline_identifiers-out.svg" successful.
+Export of "../books/language/src/flow/calls/argument_match/.test/inline_identifiers-out.svg" successful.
 -- Test Result --
 OK

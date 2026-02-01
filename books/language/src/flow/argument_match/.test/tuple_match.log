@@ -1,0 +1,49 @@
+﻿
+-- Test --
+        Test name: tuple_match
+  Expected result: todo
+      Source file: ../books/language/src/flow/calls/argument_match/tuple_matching.md:10
+        Test path: ../books/language/src/flow/calls/argument_match/.test
+
+-- Code --
+
+  10:   // Function with three parameters: x, y, and z
+  11:   fn f( x: Length, y: Length, z: Length ) {}
+  12:   
+  13:   // Since we do not want to change x and y in the following statements,
+  14:   // we prepare a tuple named plane:
+  15:   plane = (x=1cm, y=2cm);
+  16:   
+  17:   // Then we pass plane to f() three times with different z values
+  18:   f( plane, z=3cm);
+  19:   f( plane, z=6cm);
+  20:   f( plane, z=9cm);
+
+-- No Output --
+-- Errors --
+  × error: 9:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/argument_match/tuple_matching.md:18:4]
+ 17 │ // Then we pass plane to f() three times with different z values
+ 18 │ f( plane, z=3cm);
+    ·    ──────┬─────
+    ·          ╰── error: 9:4: Missing arguments: x,y
+ 19 │ f( plane, z=6cm);
+    ╰────
+  × error: 10:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/argument_match/tuple_matching.md:19:4]
+ 18 │ f( plane, z=3cm);
+ 19 │ f( plane, z=6cm);
+    ·    ──────┬─────
+    ·          ╰── error: 10:4: Missing arguments: x,y
+ 20 │ f( plane, z=9cm);
+    ╰────
+  × error: 11:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/argument_match/tuple_matching.md:20:4]
+ 19 │ f( plane, z=6cm);
+ 20 │ f( plane, z=9cm);
+    ·    ──────┬─────
+    ·          ╰── error: 11:4: Missing arguments: x,y
+    ╰────
+Unexpected error(s) which did occur in line(s): 18, 19, 20
+-- Test Result --
+TODO
