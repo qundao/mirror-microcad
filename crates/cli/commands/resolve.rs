@@ -41,9 +41,9 @@ impl RunCommand<ResolveContext> for Resolve {
         if self.no_std {
             eprintln!("Info: omitting standard library (--no-std).");
         } else {
-            // search for a usable std library and re-install it if necessary.
-            let stdlib_path = microcad_std::StdLib::default_path();
-            microcad_std::StdLib::new(stdlib_path)
+            // In Release mode: search for a usable std library and re-install it if necessary.
+            #[cfg(not(debug_assertions))]
+            microcad_std::StdLib::new(microcad_std::StdLib::default_path())
                 .map_err(|err| miette::miette!("Could not load standard library: {err}"))?;
         }
 

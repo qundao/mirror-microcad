@@ -97,10 +97,13 @@ impl StdLib {
             std::fs::write(
                 file_path,
                 StdLibEmbedded::get(file.as_ref())
-                    .expect("embedded folder 'lib' not found")
+                    .expect("embedded folder 'lib/std'")
                     .data,
             )
         })?;
+
+        // Write manifest file.
+        Manifest::default().save(path)?;
 
         eprintln!("Successfully installed µcad standard library.");
 
@@ -111,31 +114,30 @@ impl StdLib {
     fn uninstall(path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
         let path = path.as_ref();
 
-        // We cannot uninstall in debug mode.
-        #[cfg(debug_assertions)]
-        {
-            eprintln!("µcad standard library ({path:?}) cannot to be uninstalled in debug mode.");
+        if !path.exists() {
+            eprintln!(
+                "µcad standard library not found in {:?}. Nothing to uninstall.",
+                path
+            );
             return Ok(());
         }
 
-        #[cfg(not(debug_assertions))]
-        {
-            if !path.exists() {
-                eprintln!(
-                    "µcad standard library not found in {:?}. Nothing to uninstall.",
-                    path
-                );
-                return Ok(());
-            }
+        eprintln!("Removing µcad standard library from {:?}...", path);
 
-            eprintln!("Removing µcad standard library from {:?}...", path);
+        // Extract all embedded files.
+        StdLibEmbedded::iter().try_for_each(|file| {
+            let file_path = path.join(file.as_ref());
+            std::fs::remove_file(file_path)
+        })?;
 
-            std::fs::remove_dir_all(path)?;
+        std::fs::remove_file(Manifest::manifest_path(path))?;
 
-            eprintln!("Successfully uninstalled µcad standard library.");
+        // All standard library files should been remove now.
+        std::fs::remove_dir(path)?;
 
-            Ok(())
-        }
+        eprintln!("Successfully uninstalled µcad standard library.");
+
+        Ok(())
     }
 
     /// Global library search path + `./std`.
