@@ -2,39 +2,38 @@
 -- Test --
         Test name: argument_match_type_compatible
   Expected result: ok
-      Source file: ../books/language/src/flow/argument_match/priorities.md:84
+      Source file: ../books/language/src/flow/argument_match/priorities.md:91
         Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
-  84:   fn f( a: Scalar, b: Length, c: Area ) {}
-  85:   // giving an integer `1` to a `Scalar` parameter `a`
-  86:   f(1, 2cm, 3cm²);
+  91:   fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
+  92:   // giving an integer `1` to a `Scalar` parameter `a`
+  93:   f(1, 2cm, 3cm²);
 
 -- No Output --
 -- Errors --
   ⚠ warning: 1:7: Unused local a.
-    ╭─[../books/language/src/flow/argument_match/priorities.md:84:7]
- 84 │ fn f( a: Scalar, b: Length, c: Area ) {}
+    ╭─[../books/language/src/flow/argument_match/priorities.md:91:7]
+ 91 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·       ┬
     ·       ╰── warning: 1:7: Unused local a.
- 85 │ // giving an integer `1` to a `Scalar` parameter `a`
+ 92 │ // giving an integer `1` to a `Scalar` parameter `a`
     ╰────
   ⚠ warning: 1:18: Unused local b.
-    ╭─[../books/language/src/flow/argument_match/priorities.md:84:18]
- 84 │ fn f( a: Scalar, b: Length, c: Area ) {}
+    ╭─[../books/language/src/flow/argument_match/priorities.md:91:18]
+ 91 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·                  ┬
     ·                  ╰── warning: 1:18: Unused local b.
- 85 │ // giving an integer `1` to a `Scalar` parameter `a`
+ 92 │ // giving an integer `1` to a `Scalar` parameter `a`
     ╰────
   ⚠ warning: 1:29: Unused local c.
-    ╭─[../books/language/src/flow/argument_match/priorities.md:84:29]
- 84 │ fn f( a: Scalar, b: Length, c: Area ) {}
+    ╭─[../books/language/src/flow/argument_match/priorities.md:91:29]
+ 91 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·                             ┬
     ·                             ╰── warning: 1:29: Unused local c.
- 85 │ // giving an integer `1` to a `Scalar` parameter `a`
+ 92 │ // giving an integer `1` to a `Scalar` parameter `a`
     ╰────
-Unexpected warnings(s) which did occur in line(s): 84
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

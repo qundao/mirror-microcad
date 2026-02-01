@@ -43,17 +43,3 @@ r = std::geo2d::Rect(width = 2mm, height = 2mm);
 
 r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
 ```
-
-## Inline Identifiers
-
-Argument names can be skipped if the parameter expression is a single identifier.
-Like in the following example, where the variables `width` and `height` have the
-exact same name as the parameters of `Circle()`.
-
-[![test](.test/inline_identifiers.svg)](.test/inline_identifiers.log)
-
-```µcad,inline_identifiers
-width = 2mm;
-height = 2mm;
-std::geo2d::Rect(width, height);
-```

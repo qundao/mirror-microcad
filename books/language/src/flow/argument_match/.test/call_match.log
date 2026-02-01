@@ -7,7 +7,7 @@
 
 -- Code --
 
-  14:   fn f(x: Length) -> Length { return x*2; }
+  14:   fn f(x: Length) -> Length { x*2 }
   15:   
   16:   std::debug::assert_eq([ f( x = 10m ), 20m ]);
 

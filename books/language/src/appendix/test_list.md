@@ -11,13 +11,14 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/align_2d.svg)](../libraries/std/ops/.test/align_2d.log) | [align_2d](../libraries/std/ops/align.md) |
 | [![test](../libraries/std/ops/.test/align_2d_multiplicity.svg)](../libraries/std/ops/.test/align_2d_multiplicity.log) | [align_2d_multiplicity](../libraries/std/ops/align.md) |
 | [![test](../libraries/std/ops/.test/align_3d.svg)](../libraries/std/ops/.test/align_3d.log) | [align_3d](../libraries/std/ops/align.md) |
-| [![test](../flow/argument_match/.test/argument_match_auto.svg)](../flow/argument_match/.test/argument_match_auto.log) | [argument_match_auto](../flow/argument_match/auto_identifier.md) |
-| [![test](../flow/argument_match/.test/argument_match_auto_err.svg)](../flow/argument_match/.test/argument_match_auto_err.log) | [argument_match_auto_err](../flow/argument_match/auto_identifier.md) |
+| [![test](../flow/argument_match/.test/argument_match_auto.svg)](../flow/argument_match/.test/argument_match_auto.log) | [argument_match_auto](../flow/argument_match/inline_identifier.md) |
+| [![test](../flow/argument_match/.test/argument_match_auto_err.svg)](../flow/argument_match/.test/argument_match_auto_err.log) | [argument_match_auto_err](../flow/argument_match/inline_identifier.md) |
 | [![test](../flow/argument_match/.test/argument_match_default.svg)](../flow/argument_match/.test/argument_match_default.log) | [argument_match_default](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_empty.svg)](../flow/argument_match/.test/argument_match_empty.log) | [argument_match_empty](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_id.svg)](../flow/argument_match/.test/argument_match_id.log) | [argument_match_id](../flow/argument_match/priorities.md) |
 | [![test](../flow/argument_match/.test/argument_match_mix.svg)](../flow/argument_match/.test/argument_match_mix.log) | [argument_match_mix](../flow/argument_match/priorities.md) |
-| [![test](../flow/argument_match/.test/argument_match_name.svg)](../flow/argument_match/.test/argument_match_name.log) | [argument_match_name](../flow/argument_match/priorities.md) |
 | [![test](../flow/argument_match/.test/argument_match_short.svg)](../flow/argument_match/.test/argument_match_short.log) | [argument_match_short](../flow/argument_match/priorities.md) |
-| [![test](../flow/argument_match/.test/argument_match_single_identifier.svg)](../flow/argument_match/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](../flow/argument_match/auto_identifier.md) |
+| [![test](../flow/argument_match/.test/argument_match_single_identifier.svg)](../flow/argument_match/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](../flow/argument_match/inline_identifier.md) |
 | [![test](../flow/argument_match/.test/argument_match_type.svg)](../flow/argument_match/.test/argument_match_type.log) | [argument_match_type](../flow/argument_match/priorities.md) |
 | [![test](../flow/argument_match/.test/argument_match_type_compatible.svg)](../flow/argument_match/.test/argument_match_type_compatible.log) | [argument_match_type_compatible](../flow/argument_match/priorities.md) |
 | [![test](../types/collections/.test/array_add.svg)](../types/collections/.test/array_add.log) | [array_add](../types/collections/arrays.md) |
@@ -81,7 +82,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/illegal_workbench_statement.svg)](../structure/workbenches/.test/illegal_workbench_statement.log) | [illegal_workbench_statement](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/init_property.svg)](../structure/workbenches/.test/init_property.log) | [init_property](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/initializers.svg)](../structure/workbenches/.test/initializers.log) | [initializers](../structure/workbenches/README.md) |
-| [![test](../flow/argument_match/.test/inline_identifiers.svg)](../flow/argument_match/.test/inline_identifiers.log) | [inline_identifiers](../flow/argument_match/multiplicity.md) |
 | [![test](../structure/workbenches/.test/input.svg)](../structure/workbenches/.test/input.log) | [input](../structure/workbenches/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../structure/modules/.test/internal_mod.svg)](../structure/modules/.test/internal_mod.log) | [internal_mod](../structure/modules/internal_modules.md) |

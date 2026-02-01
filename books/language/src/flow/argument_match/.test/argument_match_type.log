@@ -2,39 +2,38 @@
 -- Test --
         Test name: argument_match_type
   Expected result: ok
-      Source file: ../books/language/src/flow/argument_match/priorities.md:72
+      Source file: ../books/language/src/flow/argument_match/priorities.md:78
         Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
-  72:   fn f( a: Scalar, b: Length, c: Area ) -> Volume{}
-  73:   // Who needs names?
-  74:   f(1.0, 2cm, 3cm²);
+  78:   fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
+  79:   // Who needs names?
+  80:   f(1.0, 2cm, 3cm²);
 
 -- No Output --
 -- Errors --
   ⚠ warning: 1:7: Unused local a.
-    ╭─[../books/language/src/flow/argument_match/priorities.md:72:7]
- 72 │ fn f( a: Scalar, b: Length, c: Area ) -> Volume{}
+    ╭─[../books/language/src/flow/argument_match/priorities.md:78:7]
+ 78 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·       ┬
     ·       ╰── warning: 1:7: Unused local a.
- 73 │ // Who needs names?
+ 79 │ // Who needs names?
     ╰────
   ⚠ warning: 1:18: Unused local b.
-    ╭─[../books/language/src/flow/argument_match/priorities.md:72:18]
- 72 │ fn f( a: Scalar, b: Length, c: Area ) -> Volume{}
+    ╭─[../books/language/src/flow/argument_match/priorities.md:78:18]
+ 78 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·                  ┬
     ·                  ╰── warning: 1:18: Unused local b.
- 73 │ // Who needs names?
+ 79 │ // Who needs names?
     ╰────
   ⚠ warning: 1:29: Unused local c.
-    ╭─[../books/language/src/flow/argument_match/priorities.md:72:29]
- 72 │ fn f( a: Scalar, b: Length, c: Area ) -> Volume{}
+    ╭─[../books/language/src/flow/argument_match/priorities.md:78:29]
+ 78 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·                             ┬
     ·                             ╰── warning: 1:29: Unused local c.
- 73 │ // Who needs names?
+ 79 │ // Who needs names?
     ╰────
-Unexpected warnings(s) which did occur in line(s): 72
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

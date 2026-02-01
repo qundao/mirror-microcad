@@ -1,8 +1,8 @@
 # Match Priorities
 
-A single parameter can match with an argument in several ways and every way has a
-*priority* which gets important when calling [workbenches](../calls/workbench_calls.md)
-that have overloading capabilities at initialization.
+A single parameter can match an argument in several ways, each with a defined *priority*.
+These priorities become more important when calling [workbenches](../calls/workbench_calls.md)
+which support overloaded initialization.
 
 | Priority<br>⭣ high to low | Matches                                                       | Example Parameters                  | Example Arguments |
 | ------------------------- | ------------------------------------------------------------- | ----------------------------------- | ----------------- |
@@ -15,16 +15,23 @@ that have overloading capabilities at initialization.
 
 ## Match Empty List
 
-The first case when both arguments and parameters are empty is trivial.
+Matches when both the arguments and parameters are empty.
+
+[![test](.test/argument_match_empty.svg)](.test/argument_match_empty.log)
+
+```µcad,argument_match_empty
+fn f() {}   // no parameters
+
+f();        // no arguments
+```
 
 ## Match Identifier
 
-The following example demonstrates a call to function `f` with each argument
-specified by name:
+The following example demonstrates calling a function `f` with each argument specified by name:
 
-[![test](.test/argument_match_name.svg)](.test/argument_match_name.log)
+[![test](.test/argument_match_id.svg)](.test/argument_match_id.log)
 
-```µcad,argument_match_name
+```µcad,argument_match_id
 fn f( width: Length, height: Length ) -> Area { width * height }
 
 x = f(height = 2cm, width = 1cm);   // call f() with parameters in arbitrary order
@@ -34,10 +41,9 @@ std::debug::assert_eq([ x, 2cm² ]);
 
 ## Match Short Identifier
 
-Parameter names can also matched by their short identifier.
+Parameters can also be matched using their short identifier. 
 
-The short form is every first letter of every word between any underscores (`_`).
-So the short form of `width` is `w` and from `inner_radius` it is `i_r`.
+The short form consists of the first letter of each word separated by underscores (_).
 
 [![test](.test/argument_match_short.svg)](.test/argument_match_short.log)
 
@@ -50,7 +56,7 @@ std::debug::assert_eq([ f(w = 1cm, h = 2cm), 2cm² ]);
 std::debug::assert_eq([ f(w = 1cm, height = 2cm), 2cm² ]);
 ```
 
-Here are some usual examples:
+Here are some usual examples of short identifiers:
 
 | Identifier                    | Short Identifier |
 | ----------------------------- | ---------------- |
@@ -63,50 +69,52 @@ Here are some usual examples:
 
 ## Match Type
 
-It is possible to use nameless values if all the *parameter types* of a called
-function (or workbench) differ in their types.
+Nameless values can be used if all parameter types of the called function
+(or workbench) are distinct.
 
 [![test](.test/argument_match_type.svg)](.test/argument_match_type.log)
 
 ```µcad,argument_match_type
-fn f( a: Scalar, b: Length, c: Area ) -> Volume{}
+fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
 // Who needs names?
 f(1.0, 2cm, 3cm²);
 ```
 
 ## Match Compatible Type
 
-Nameless arguments may also be not equal but compatible to *parameter types*.
+Nameless arguments can also be compatible with *parameter types*, even if they
+are not identical.
 
 [![test](.test/argument_match_type_compatible.svg)](.test/argument_match_type_compatible.log)
 
 ```µcad,argument_match_type_compatible
-fn f( a: Scalar, b: Length, c: Area ) {}
+fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
 // giving an integer `1` to a `Scalar` parameter `a`
 f(1, 2cm, 3cm²);
 ```
 
 ## Match Default
 
-If an argument was not given and it's parameter has a default defined then
-this will be used as argument value.
+If an argument is not provided and its parameter has a default value defined,
+the default will be used.
 
 [![test](.test/argument_match_default.svg)](.test/argument_match_default.log)
 
 ```µcad,argument_match_default
-fn f( a = 1mm ) {}
+fn f( a = 1mm ) {}  // warning: unused a
 // a has default
 f();
 ```
 
 ## Mix'em all
 
-You can mix both methods if some parameters cannot be identified by type alone.
+You can combine all these methods.
 
 [![test](.test/argument_match_mix.svg)](.test/argument_match_mix.log)
 
 ```µcad,argument_match_mix
-fn f( a: Scalar, b: Length, c=2cm, d: Area ) {}
-// `a` is the only Scalar and `b` is named, so `c` does not need a name.
+fn f( a: Scalar, b: Length, c=2cm, d: Area ) -> Volume { } // warning: unused a,b,c,d
+
+// `a` is the only Scalar and `b` is named, so `c` and `d` do not need a name.
 f(1, b=2cm, 2cm², 3cm);
 ```

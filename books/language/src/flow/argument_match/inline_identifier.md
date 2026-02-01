@@ -1,8 +1,9 @@
-# Automatic Identifier Matching
+# Inline Identifiers
 
-In some cases the name of the parameter is already included in an argument expression.
-So if there is only one (or multiple identical) identifiers within an expression
-and it (those) match an argument of the same type, this argument will be matched.
+In some cases, the parameter name is already included in the argument expression.
+If there is only one (or multiple identical) identifier(s) within an expression
+and it matches a parameter of the same type, that parameter will be automatically
+matched.
 
 [![test](.test/argument_match_auto.svg)](.test/argument_match_auto.log)
 
@@ -29,5 +30,5 @@ f(x * 2, y * y); // matches because `x` and `y` match parameter names `x` and `y
 fn f(x: Integer, y: Integer) -> Integer { x*y }
 x = 1;
 y = 2;
-f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
+f(x * y, y * x); // error: cannot be matched because arguments are not unique.
 ```

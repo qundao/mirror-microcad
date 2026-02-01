@@ -1,0 +1,20 @@
+﻿
+-- Test --
+        Test name: argument_match_id
+  Expected result: ok
+      Source file: ../books/language/src/flow/argument_match/priorities.md:35
+        Test path: ../books/language/src/flow/argument_match/.test
+
+-- Code --
+
+  35:   fn f( width: Length, height: Length ) -> Area { width * height }
+  36:   
+  37:   x = f(height = 2cm, width = 1cm);   // call f() with parameters in arbitrary order
+  38:   
+  39:   std::debug::assert_eq([ x, 2cm² ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
