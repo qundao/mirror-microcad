@@ -15,9 +15,9 @@
   54:       outer = if a == 1 {
   55:           Circle(r = 1cm)
   56:       } else if a == 2 {
-  57:           Rect(s = 1cm)
+  57:           Rect(1cm)
   58:       } else {
-  59:           Hexagon(r = 1cm)
+  59:           Hexagon(1cm)
   60:       };
   61:       outer - Circle(r = 3mm)
   62:   }

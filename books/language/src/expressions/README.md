@@ -54,9 +54,9 @@ sketch MySketch(a: Integer) {
     outer = if a == 1 {
         Circle(r = 1cm)
     } else if a == 2 {
-        Rect(s = 1cm)
+        Rect(1cm)
     } else {
-        Hexagon(r = 1cm)
+        Hexagon(1cm)
     };
     outer - Circle(r = 3mm)
 }

@@ -12,7 +12,7 @@ use std::ops::*;
 use std::math::*;
 
 {
-    Circle(radius = 0mm);
+    Circle(radius = 10mm);
     Rect(size = 10mm);
     Circle(radius = 10mm);
     Rect(size = 10mm);
