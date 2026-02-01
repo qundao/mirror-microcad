@@ -1,0 +1,26 @@
+﻿
+-- Test --
+        Test name: argument_match_default
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/arguments.md:104
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+ 104:   fn f( a = 1mm ) {}
+ 105:   // a has default
+ 106:   f();
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:7: Unused local a.
+     ╭─[../books/language/src/flow/calls/arguments.md:104:7]
+ 104 │ fn f( a = 1mm ) {}
+     ·       ┬
+     ·       ╰── warning: 1:7: Unused local a.
+ 105 │ // a has default
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 104
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)

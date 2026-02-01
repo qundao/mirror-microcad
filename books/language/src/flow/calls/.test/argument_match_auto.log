@@ -2,14 +2,14 @@
 -- Test --
         Test name: argument_match_auto
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/arguments.md:155
+      Source file: ../books/language/src/flow/calls/arguments.md:200
         Test path: ../books/language/src/flow/calls/.test
 
 -- Code --
 
- 155:   fn f(x: Integer, y: Integer) -> Integer { x*y }
- 156:   x = 1;
- 157:   f(x, y=2); // matches because argument `x` matches the name of parameter `x`
+ 200:   fn f(x: Integer, y: Integer) -> Integer { x*y }
+ 201:   x = 1;
+ 202:   f(x, y=2); // matches because argument `x` matches the name of parameter `x`
 
 -- No Output --
 -- No Errors --
