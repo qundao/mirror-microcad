@@ -15,7 +15,7 @@ use std::ops::*;
     Rect(size = 10mm);
     Rect(size = 10mm);
     Circle(radius = 10mm);
-}.distribute_grid(cell_size =30mm, rows = 2, columns = 2);
+}.distribute_grid(size =30mm, rows = 2, columns = 2);
 ```
 
 [![test](.test/distribute_grid_3d.svg)](.test/distribute_grid_3d.log)
@@ -29,5 +29,5 @@ use std::ops::*;
     Cube(size = 10mm);
     Cube(size = 10mm);
     Sphere(radius = 10mm);
-}.distribute_grid(cell_size = 30mm, rows = 2, columns = 2);
+}.distribute_grid(size = 30mm, rows = 2, columns = 2);
 ```

@@ -15,20 +15,20 @@
   29:       Cube(size = 10mm);
   30:       Cube(size = 10mm);
   31:       Sphere(radius = 10mm);
-  32:   }.distribute_grid(cell_size = 30mm, rows = 2, columns = 2);
+  32:   }.distribute_grid(size = 30mm, rows = 2, columns = 2);
 
 -- No Output --
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::distribute_grid(cell_size=30mm, columns=2, rows=2) ->
+    Workpiece(op) std::ops::distribute_grid(columns=2, rows=2, size=30mm) ->
       - columns = 2
-      - height = 60mm
+      - height = 30mm
       - rows = 2
-      - width = 60mm
-      - x = -30mm
-      - y = -30mm
-      Operation __builtin::ops::distribute_grid(columns=2, height=60mm, rows=2, width=60mm, x=-30mm, y=-30mm) ->
+      - width = 30mm
+      - x = -15mm
+      - y = -15mm
+      Operation __builtin::ops::distribute_grid(columns=2, height=30mm, rows=2, width=30mm, x=-15mm, y=-15mm) ->
         Group ->
           Workpiece(part) std::geo3d::Sphere(radius=10mm) ->
             - radius = 10mm
