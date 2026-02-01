@@ -24,7 +24,7 @@
     ·       ╰── Got: S( size = 100mm )
     ╰────
   help: Ambiguous initializations:
-        	Id/5 argument_match_collision_init::S::init(size: Length)
-        	Id/5 argument_match_collision_init::S::init(size: Length)
+        	argument_match_collision_init::S::init(size: Length)
+        	argument_match_collision_init::S::init(size: Length)
 -- Test Result --
 FAILS AS EXPECTED

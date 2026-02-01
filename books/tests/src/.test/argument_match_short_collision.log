@@ -23,7 +23,7 @@
     ·     ╰── Got: S( w = 100mm )
     ╰────
   help: Ambiguous initializations:
-        	Short/4 argument_match_short_collision::S(width: Length)
-        	Short/4 argument_match_short_collision::S::init(what: Length)
+        	argument_match_short_collision::S(width: Length)
+        	argument_match_short_collision::S::init(what: Length)
 -- Test Result --
 FAILS AS EXPECTED

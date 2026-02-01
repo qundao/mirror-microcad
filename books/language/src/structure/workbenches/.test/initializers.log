@@ -24,7 +24,7 @@
      ·           ╰── Got: Wheel( radius = 1mm )
      ╰────
   help: Ambiguous initializations:
-        	Id/5 initializers::Wheel(radius: Length)
-        	Id/5 initializers::Wheel::init(radius: Length)
+        	initializers::Wheel(radius: Length)
+        	initializers::Wheel::init(radius: Length)
 -- Test Result --
 FAILS AS EXPECTED (BUT IS TODO)

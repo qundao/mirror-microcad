@@ -185,18 +185,16 @@ impl WorkbenchDefinition {
             if matches.len() > 1 {
                 let ambiguous = matches
                     .iter()
-                    .map(|(init, m)| match init {
+                    .map(|(init, _)| match init {
                         Some(init) => {
                             format!(
-                                "{priority:>10} {name}::init({params})",
-                                priority = m.priority,
+                                "{name}::init({params})",
                                 name = symbol.full_name(),
                                 params = init.parameters
                             )
                         }
                         None => format!(
-                            "{priority:>10} {name:?}({params})",
-                            priority = m.priority,
+                            "{name:?}({params})",
                             name = symbol.full_name(),
                             params = self.plan
                         ),

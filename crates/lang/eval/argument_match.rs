@@ -48,13 +48,13 @@ impl Priority {
 impl std::fmt::Display for Priority {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Priority::None => write!(f, "<NONE>"),
-            Priority::Default => write!(f, "Default/1"),
-            Priority::TypeAuto => write!(f, "TypeAuto/2"),
-            Priority::Type => write!(f, "Type/3"),
-            Priority::Short => write!(f, "Short/4"),
-            Priority::Id => write!(f, "Id/5"),
-            Priority::Empty => write!(f, "Empty/5"),
+            Self::None => write!(f, "<NONE>"),
+            Self::Default => write!(f, "Default"),
+            Self::TypeAuto => write!(f, "TypeAuto"),
+            Self::Type => write!(f, "Type"),
+            Self::Short => write!(f, "Short"),
+            Self::Id => write!(f, "Id"),
+            Self::Empty => write!(f, "Empty"),
         }
     }
 }
@@ -112,30 +112,18 @@ impl<'a> ArgumentMatch<'a> {
             priority: Priority::None,
         };
 
-        fn match_id_exact(left: &Identifier, right: &Identifier) -> bool {
-            left == right
-        }
-
-        fn match_id_short(left: &Identifier, right: &Identifier) -> bool {
-            left.short_id() == *right
-        }
-
-        fn match_type_exact(left: &Type, right: &Type) -> bool {
-            left == right
-        }
-
-        fn match_type_auto(left: &Type, right: &Type) -> bool {
-            left.is_matching(right)
-        }
-
+        // Try to match all arguments with different strategies.
+        // The highest priority (see [Priority::high_to_low] for order) sets the
+        // result's priority which can the be used to select between available
+        // parameter sets (see [WorkbenchDefinition::call}).
         log::trace!("matching arguments:\n{am:?}");
         if !am.match_empty(Priority::Empty) {
-            am.match_ids(match_id_exact, Priority::Id)?;
-            am.match_ids(match_id_short, Priority::Short)?;
-            am.match_types(true, match_type_exact, Priority::Type);
-            am.match_types(false, match_type_auto, Priority::TypeAuto);
+            am.match_ids(Priority::Id, |l, r| l == r)?;
+            am.match_ids(Priority::Short, |l, r| &l.short_id() == r)?;
+            am.match_types(Priority::Type, |l, r| l == r, true);
+            am.match_types(Priority::TypeAuto, |l, r| l.is_matching(r), false);
             am.match_defaults(Priority::Default);
-            am.match_types(false, match_type_auto, Priority::TypeAuto);
+            am.match_types(Priority::TypeAuto, |l, r| l.is_matching(r), false);
 
             am.check_missing()?;
         }
@@ -154,8 +142,8 @@ impl<'a> ArgumentMatch<'a> {
     /// Match arguments by id
     fn match_ids(
         &mut self,
-        match_fn: impl Fn(&Identifier, &Identifier) -> bool,
         priority: Priority,
+        match_fn: impl Fn(&Identifier, &Identifier) -> bool,
     ) -> EvalResult<()> {
         let mut type_mismatch = IdentifierList::default();
         if !self.arguments.is_empty() {
@@ -196,9 +184,9 @@ impl<'a> ArgumentMatch<'a> {
     /// Match arguments by type
     fn match_types(
         &mut self,
-        mut exclude_defaults: bool,
-        match_fn: impl Fn(&Type, &Type) -> bool,
         priority: Priority,
+        match_fn: impl Fn(&Type, &Type) -> bool,
+        mut exclude_defaults: bool,
     ) {
         if !self.arguments.is_empty() {
             self.arguments.retain(|(arg_id, arg)| {
