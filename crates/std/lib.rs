@@ -27,7 +27,7 @@ pub enum StdLibError {
 /// The µcad standard library asset.
 #[derive(RustEmbed)]
 #[folder = "lib/std"]
-pub struct Lib;
+pub struct StdLibEmbedded;
 
 /// An instance of the standard library.
 pub struct StdLib {
@@ -51,11 +51,11 @@ impl StdLib {
             Err(err) => return Err(err.into()),
         };
 
-        let manifest = if manifest.library.version != Self::crate_version() {
+        let manifest = if manifest.library.version != crate::version() {
             eprintln!(
                 "µcad standard library version mismatch: {} != {}",
                 manifest.library.version,
-                Self::crate_version()
+                crate::version()
             );
 
             // Handle version mismatch, force re-install
@@ -65,12 +65,6 @@ impl StdLib {
         };
 
         Ok(Self { path, manifest })
-    }
-
-    /// Return the version number of this crate.
-    pub fn crate_version() -> semver::Version {
-        use std::str::FromStr;
-        semver::Version::from_str(env!("CARGO_PKG_VERSION")).expect("Valid version")
     }
 
     /// Try to reinstall into default path.
@@ -88,21 +82,21 @@ impl StdLib {
         let path = path.as_ref();
         eprintln!(
             "Installing µcad standard library {} into {:?}...",
-            Self::crate_version(),
+            crate::version(),
             path
         );
 
         std::fs::create_dir_all(path)?;
 
         // Extract all embedded files.
-        Lib::iter().try_for_each(|file| {
+        StdLibEmbedded::iter().try_for_each(|file| {
             let file_path = path.join(file.as_ref());
             if let Some(parent) = file_path.parent() {
                 std::fs::create_dir_all(parent)?;
             }
             std::fs::write(
                 file_path,
-                Lib::get(file.as_ref())
+                StdLibEmbedded::get(file.as_ref())
                     .expect("embedded folder 'lib' not found")
                     .data,
             )
@@ -119,8 +113,10 @@ impl StdLib {
 
         // We cannot uninstall in debug mode.
         #[cfg(debug_assertions)]
-        eprintln!("µcad standard library ({path:?}) cannot to be uninstalled in debug mode.");
-        return Ok(());
+        {
+            eprintln!("µcad standard library ({path:?}) cannot to be uninstalled in debug mode.");
+            return Ok(());
+        }
 
         #[cfg(not(debug_assertions))]
         {
@@ -161,4 +157,10 @@ pub fn global_library_search_path() -> std::path::PathBuf {
 
     #[cfg(debug_assertions)]
     return std::path::PathBuf::from("./crates/std/lib");
+}
+
+/// Return the version number of this crate.
+pub fn version() -> semver::Version {
+    use std::str::FromStr;
+    semver::Version::from_str(env!("CARGO_PKG_VERSION")).expect("Valid version")
 }
