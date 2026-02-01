@@ -103,7 +103,7 @@ impl<'a> ArgumentMatch<'a> {
         })
     }
 
-    /// Create new instance and start matching.
+    /// Create new instance and do matching
     fn new(arguments: &'a ArgumentValueList, params: &'a ParameterValueList) -> EvalResult<Self> {
         let mut am = Self {
             arguments: arguments.iter().map(|(id, v)| (id, v)).collect(),
@@ -114,8 +114,8 @@ impl<'a> ArgumentMatch<'a> {
 
         // Try to match all arguments with different strategies.
         // The highest priority (see [Priority::high_to_low] for order) sets the
-        // result's priority which can the be used to select between available
-        // parameter sets (see [WorkbenchDefinition::call}).
+        // result's overall priority which can the be used to select between
+        // available parameter sets (see [WorkbenchDefinition::call}).
         log::trace!("matching arguments:\n{am:?}");
         if !am.match_empty(Priority::Empty) {
             am.match_ids(Priority::Id, |l, r| l == r)?;
@@ -130,6 +130,7 @@ impl<'a> ArgumentMatch<'a> {
         Ok(am)
     }
 
+    /// Match empty parameters with empty arguments.
     fn match_empty(&mut self, priority: Priority) -> bool {
         if self.arguments.is_empty() && self.params.is_empty() {
             self.priority.set_once(priority);
@@ -139,7 +140,7 @@ impl<'a> ArgumentMatch<'a> {
         }
     }
 
-    /// Match arguments by id
+    /// Match arguments by id.
     fn match_ids(
         &mut self,
         priority: Priority,
@@ -181,7 +182,7 @@ impl<'a> ArgumentMatch<'a> {
         }
     }
 
-    /// Match arguments by type
+    /// Match arguments by type.
     fn match_types(
         &mut self,
         priority: Priority,
@@ -241,7 +242,7 @@ impl<'a> ArgumentMatch<'a> {
         }
     }
 
-    /// Fill arguments with defaults
+    /// Match arguments with parameter defaults.
     fn match_defaults(&mut self, priority: Priority) {
         if !self.params.is_empty() {
             // remove missing that can be found
@@ -353,6 +354,7 @@ impl std::fmt::Debug for ArgumentMatch<'_> {
 
 #[test]
 fn argument_matching() {
+    let _ = env_logger::try_init();
     use microcad_core::Length;
     let params: ParameterValueList = [
         crate::parameter!(a: Scalar),
