@@ -1,7 +1,0 @@
-[library]
-description = "The µcad standard library"
-version = "0.3.0"
-authors = [
-    "Michael Winkelmann (michael@winkelmann.site)",
-    "Patrick Hoffmann (p.hoffmann@berlin.de)",
-]

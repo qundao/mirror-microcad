@@ -57,6 +57,7 @@ impl Default for Library {
 /// Manifest descriptor.
 #[derive(Serialize, Deserialize, Default)]
 pub struct Manifest {
+    /// Library descriptor.
     pub library: Library,
 }
 
@@ -86,7 +87,8 @@ impl Manifest {
         Ok(())
     }
 
-    fn manifest_path(path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
+    /// Return `manifest.toml` file path.
+    pub fn manifest_path(path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
         path.as_ref().join("manifest.toml")
     }
 }
