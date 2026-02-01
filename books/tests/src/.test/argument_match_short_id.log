@@ -12,26 +12,11 @@
    8:   }
    9:   
   10:   f( x_param=1m, y_param=2m, z_param=3m );
-  11:   f( x=1m, y=2m, z=3m );
-  12:   f( x=1m, y=2m );
+  11:   f( x_p=1m, y_p=2m, z_p=3m );
+  12:   f( x_p=1m, y_p=2m );
 
 -- No Output --
--- Errors --
-  × error: 6:4: Missing arguments: x_param,y_param
-    ╭─[../books/tests/src/argument_match.md:11:4]
- 10 │ f( x_param=1m, y_param=2m, z_param=3m );
- 11 │ f( x=1m, y=2m, z=3m );
-    ·    ────────┬────────
-    ·            ╰── error: 6:4: Missing arguments: x_param,y_param
- 12 │ f( x=1m, y=2m );
-    ╰────
-  × error: 7:4: Missing arguments: x_param,y_param
-    ╭─[../books/tests/src/argument_match.md:12:4]
- 11 │ f( x=1m, y=2m, z=3m );
- 12 │ f( x=1m, y=2m );
-    ·    ─────┬─────
-    ·         ╰── error: 7:4: Missing arguments: x_param,y_param
-    ╰────
-Unexpected error(s) which did occur in line(s): 11, 12
+-- No Errors --
+-- No Model --
 -- Test Result --
-FAILS
+OK

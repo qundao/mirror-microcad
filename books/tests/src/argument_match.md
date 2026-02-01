@@ -8,8 +8,8 @@ fn f( x_param: Length, y_param: Length, z_param=0mm ) -> Volume  {
 }
 
 f( x_param=1m, y_param=2m, z_param=3m );
-f( x=1m, y=2m, z=3m );
-f( x=1m, y=2m );
+f( x_p=1m, y_p=2m, z_p=3m );
+f( x_p=1m, y_p=2m );
 ```
 
 ```µcad,argument_match_short_collision#fail
