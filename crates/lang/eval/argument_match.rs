@@ -147,34 +147,39 @@ impl<'a> ArgumentMatch<'a> {
         match_fn: impl Fn(&Identifier, &Identifier) -> bool,
     ) -> EvalResult<()> {
         let mut type_mismatch = IdentifierList::default();
-        if !self.arguments.is_empty() {
-            self.arguments.retain(|(id, arg)| {
-                let id = match (id.is_empty(), &arg.inline_id) {
-                    (true, Some(id)) => id,
-                    _ => id,
-                };
-
-                if !id.is_empty() {
-                    if let Some(n) = self.params.iter().position(|(i, _)| match_fn(i, id)) {
-                        if let Some(ty) = &self.params[n].1.specified_type {
-                            if !arg.ty().is_matching(ty) {
-                                type_mismatch.push(id.clone());
-                                return true;
-                            }
-                        }
-                        let (id, _) = self.params.swap_remove(n);
-                        log::trace!(
-                            "{found} parameter by id: {id:?}",
-                            found = crate::mark!(MATCH)
-                        );
-                        self.priority.set_once(priority);
-                        self.result.insert((*id).clone(), arg.value.clone());
-                        return false;
-                    }
-                }
-                true
-            });
+        if self.arguments.is_empty() {
+            return Ok(());
         }
+        self.arguments.retain(|(id, arg)| {
+            let id = match (id.is_empty(), &arg.inline_id) {
+                (true, Some(id)) => id,
+                _ => id,
+            };
+
+            if id.is_empty() {
+                return true;
+            }
+            match self.params.iter().position(|(i, _)| match_fn(i, id)) {
+                None => true,
+                Some(n) => {
+                    if let Some(ty) = &self.params[n].1.specified_type {
+                        if !arg.ty().is_matching(ty) {
+                            type_mismatch.push(id.clone());
+                            return true;
+                        }
+                    }
+                    let (id, _) = self.params.swap_remove(n);
+                    log::trace!(
+                        "{found} parameter by id: {id:?}",
+                        found = crate::mark!(MATCH)
+                    );
+                    self.priority.set_once(priority);
+                    self.result.insert((*id).clone(), arg.value.clone());
+                    false
+                }
+            }
+        });
+
         if type_mismatch.is_empty() {
             Ok(())
         } else {
@@ -189,80 +194,83 @@ impl<'a> ArgumentMatch<'a> {
         match_fn: impl Fn(&Type, &Type) -> bool,
         mut exclude_defaults: bool,
     ) {
-        if !self.arguments.is_empty() {
-            self.arguments.retain(|(arg_id, arg)| {
-                // filter params by type
-                let same_type: Vec<_> = self
-                    .params
-                    .iter()
-                    .enumerate()
-                    .filter(|(..)| arg_id.is_empty())
-                    .filter_map(|(n, (id, param))| {
-                        if param.ty() == Type::Invalid
-                            || if let Some(ty) = &param.specified_type {
-                                match_fn(&arg.ty(), ty)
-                            } else {
-                                false
-                            }
-                        {
-                            Some((n, *id, *param))
-                        } else {
-                            None
-                        }
-                    })
-                    .collect();
-
-                // if type check is exact ignore exclusion
-                if same_type.len() == 1 {
-                    exclude_defaults = false;
-                }
-                // ignore params with defaults
-                let mut same_type = same_type
-                    .into_iter()
-                    .filter(|(.., param)| !exclude_defaults || param.default_value.is_none());
-
-                if let Some((n, id, _)) = same_type.next() {
-                    if same_type.next().is_none() {
-                        log::trace!(
-                            "{found} parameter by type: {id:?}",
-                            found = crate::mark!(MATCH)
-                        );
-                        self.priority.set_once(priority);
-                        self.result.insert(id.clone(), arg.value.clone());
-                        self.params.swap_remove(n);
-                        return false;
-                    } else {
-                        log::trace!("more than one parameter with that type")
-                    }
-                } else {
-                    log::trace!("no parameter with that type (or id mismatch)")
-                }
-                true
-            })
+        if self.arguments.is_empty() {
+            return;
         }
+
+        self.arguments.retain(|(arg_id, arg)| {
+            // filter params by type
+            let same_type: Vec<_> = self
+                .params
+                .iter()
+                .enumerate()
+                .filter(|(..)| arg_id.is_empty())
+                .filter_map(|(n, (id, param))| {
+                    if param.ty() == Type::Invalid
+                        || if let Some(ty) = &param.specified_type {
+                            match_fn(&arg.ty(), ty)
+                        } else {
+                            false
+                        }
+                    {
+                        Some((n, *id, *param))
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+
+            // if type check is exact ignore exclusion
+            if same_type.len() == 1 {
+                exclude_defaults = false;
+            }
+            // ignore params with defaults
+            let mut same_type = same_type
+                .into_iter()
+                .filter(|(.., param)| !exclude_defaults || param.default_value.is_none());
+
+            if let Some((n, id, _)) = same_type.next() {
+                if same_type.next().is_none() {
+                    log::trace!(
+                        "{found} parameter by type: {id:?}",
+                        found = crate::mark!(MATCH)
+                    );
+                    self.priority.set_once(priority);
+                    self.result.insert(id.clone(), arg.value.clone());
+                    self.params.swap_remove(n);
+                    return false;
+                } else {
+                    log::trace!("more than one parameter with that type")
+                }
+            } else {
+                log::trace!("no parameter with that type (or id mismatch)")
+            }
+            true
+        })
     }
 
     /// Match arguments with parameter defaults.
     fn match_defaults(&mut self, priority: Priority) {
-        if !self.params.is_empty() {
-            // remove missing that can be found
-            self.params.retain(|(id, param)| {
-                // check for any default value
-                if let Some(def) = &param.default_value {
-                    // paranoia check if type is compatible
-                    if def.ty() == param.ty() {
-                        log::trace!(
-                            "{found} argument by default: {id:?} = {def}",
-                            found = crate::mark!(MATCH)
-                        );
-                        self.priority.set_once(priority);
-                        self.result.insert((*id).clone(), def.clone());
-                        return false;
-                    }
-                }
-                true
-            })
+        if self.params.is_empty() {
+            return;
         }
+        // remove missing that can be found
+        self.params.retain(|(id, param)| {
+            // check for any default value
+            if let Some(def) = &param.default_value {
+                // paranoia check if type is compatible
+                if def.ty() == param.ty() {
+                    log::trace!(
+                        "{found} argument by default: {id:?} = {def}",
+                        found = crate::mark!(MATCH)
+                    );
+                    self.priority.set_once(priority);
+                    self.result.insert((*id).clone(), def.clone());
+                    return false;
+                }
+            }
+            true
+        })
     }
 
     /// Return error if params are missing or arguments are to many
