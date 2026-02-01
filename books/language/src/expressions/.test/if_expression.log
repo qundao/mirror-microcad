@@ -13,13 +13,13 @@
   52:   
   53:   sketch MySketch(a: Integer) {
   54:       outer = if a == 1 {
-  55:           Circle(1cm)
+  55:           Circle(r = 1cm)
   56:       } else if a == 2 {
-  57:           Rect(1cm)
+  57:           Rect(s = 1cm)
   58:       } else {
-  59:           Hexagon(1cm)
+  59:           Hexagon(r = 1cm)
   60:       };
-  61:       outer - Circle(3mm)
+  61:       outer - Circle(r = 3mm)
   62:   }
   63:   
   64:   MySketch([1,2,3]).align(X, 1cm);

@@ -11,7 +11,7 @@
   28:   use std::ops::*;
   29:   use std::math::*;
   30:   
-  31:   Rect(10mm).rotate([0..10] * 90° / 10).align(X, 4mm);
+  31:   Rect(size = 10mm).rotate([0..10] * 90° / 10).align(X, 4mm);
 
 -- No Output --
 -- No Errors --

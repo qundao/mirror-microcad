@@ -9,7 +9,7 @@
 
    9:   use std::geo2d::*;
   10:   sketch MySketch( radius: Length) {
-  11:       Circle(radius) - Rect(radius);
+  11:       Circle(radius) - Rect(size = radius);
   12:   }
   13:   
   14:   MySketch(1cm);

@@ -97,7 +97,7 @@ pub sketch Ring(outer_radius: Length, inner_radius: Length ) {
          outer_radius = outer_diameter/2;
      }
 
-     Circle(outer_radius) - Circle(inner_radius) 
+     Circle(radius = outer_radius) - Circle(radius = inner_radius) 
 }
 
 /// A rounded rectangle.

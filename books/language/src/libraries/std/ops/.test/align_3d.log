@@ -12,10 +12,10 @@
   41:   use std::math::*;
   42:   
   43:   {
-  44:       Sphere(10mm);
-  45:       Cube(10mm);
-  46:       Sphere(10mm);
-  47:       Cube(10mm);
+  44:       Sphere(radius = 10mm);
+  45:       Cube(size = 10mm);
+  46:       Sphere(radius = 10mm);
+  47:       Cube(size = 10mm);
   48:   }.align(Z, 4mm);
 
 -- No Output --
@@ -39,7 +39,7 @@
               - y = 0mm
               - z = -5mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=-5mm) ->
-                Workpiece(op) std::ops::extrude(z=10mm) ->
+                Workpiece(op) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
                   - height = 10mm
                   - scale = (x=1, y=1)
                   - twist = 0rad
@@ -62,7 +62,7 @@
               - y = 0mm
               - z = -5mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=-5mm) ->
-                Workpiece(op) std::ops::extrude(z=10mm) ->
+                Workpiece(op) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
                   - height = 10mm
                   - scale = (x=1, y=1)
                   - twist = 0rad

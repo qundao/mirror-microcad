@@ -107,10 +107,10 @@ sketch PunchedDisk(radius: Length) {
     fn inner() { return radius/2; }
 
     // generate donut (and call inner)
-    Circle(radius) - Circle(inner());
+    Circle(radius) - Circle(radius = inner());
 }
 
-PunchedDisk(radius = 1cm);
+PunchedDisk(1cm);
 ```
 
 ### Restrictions

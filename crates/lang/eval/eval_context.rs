@@ -218,10 +218,7 @@ impl EvalContext {
             if let Some(id) = name.single_identifier() {
                 match self.get_property(id) {
                     Ok(value) => {
-                        log::trace!(
-                            "{found} property '{name:?}'",
-                            found = crate::mark!(FOUND_INTERIM)
-                        );
+                        log::trace!("{found} property '{name:?}'", found = crate::mark!(FOUND));
                         return Ok(Symbol::new(
                             SymbolDef::Constant(Visibility::Public, id.clone(), value),
                             None,
@@ -233,7 +230,7 @@ impl EvalContext {
         }
         log::trace!(
             "{not_found} Property '{name:?}'",
-            not_found = crate::mark!(NOT_FOUND_INTERIM)
+            not_found = crate::mark!(NOT_FOUND)
         );
         Err(EvalError::NoPropertyId(name.clone()))
     }
@@ -253,14 +250,14 @@ impl EvalContext {
                 Ok(symbol) => {
                     log::trace!(
                         "{found} symbol in current module: {symbol:?}",
-                        found = crate::mark!(FOUND_INTERIM),
+                        found = crate::mark!(FOUND),
                     );
                     Ok(symbol)
                 }
                 Err(err) => {
                     log::trace!(
                         "{not_found} symbol '{name:?}': {err}",
-                        not_found = crate::mark!(NOT_FOUND_INTERIM)
+                        not_found = crate::mark!(NOT_FOUND)
                     );
                     Err(err)
                 }
@@ -268,7 +265,7 @@ impl EvalContext {
         } else {
             log::trace!(
                 "{not_found} No current workbench",
-                not_found = crate::mark!(NOT_FOUND_INTERIM)
+                not_found = crate::mark!(NOT_FOUND)
             );
             Err(ResolveError::SymbolNotFound(name.clone()))
         }
@@ -466,7 +463,7 @@ impl Lookup<EvalError> for EvalContext {
                 if found.iter().all(|(_, x)| x == symbol) {
                     log::debug!(
                         "{found} symbol '{name:?}' in {origin}",
-                        found = crate::mark!(FOUND)
+                        found = crate::mark!(FOUND!)
                     );
                     symbol.set_used();
                     Ok(symbol.clone())
@@ -483,7 +480,7 @@ impl Lookup<EvalError> for EvalContext {
             None => {
                 log::debug!(
                     "{not_found} Symbol '{name:?}'",
-                    not_found = crate::mark!(NOT_FOUND)
+                    not_found = crate::mark!(NOT_FOUND!)
                 );
                 Err(EvalError::SymbolNotFound(name.clone()))
             }

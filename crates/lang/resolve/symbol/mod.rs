@@ -835,7 +835,7 @@ impl Lookup for Symbol {
                 } else {
                     log::trace!(
                         "{not_found} global symbol: {name:?}",
-                        not_found = crate::mark!(NOT_FOUND_INTERIM),
+                        not_found = crate::mark!(NOT_FOUND),
                     );
                     return Err(ResolveError::WrongTarget);
                 }
@@ -843,7 +843,7 @@ impl Lookup for Symbol {
             Err(err) => {
                 log::trace!(
                     "{not_found} global symbol: {name:?}",
-                    not_found = crate::mark!(NOT_FOUND_INTERIM),
+                    not_found = crate::mark!(NOT_FOUND),
                 );
                 return Err(err)?;
             }
@@ -851,7 +851,7 @@ impl Lookup for Symbol {
         symbol.set_check();
         log::trace!(
             "{found} global symbol: {symbol:?}",
-            found = crate::mark!(FOUND_INTERIM),
+            found = crate::mark!(FOUND),
         );
         Ok(symbol)
     }

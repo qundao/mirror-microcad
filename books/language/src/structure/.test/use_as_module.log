@@ -9,7 +9,7 @@
 
   64:   use std::geo2d as geo;
   65:   
-  66:   geo::Circle(4mm);
+  66:   geo::Circle(radius = 4mm);
 
 -- No Output --
 -- No Errors --

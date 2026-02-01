@@ -9,7 +9,7 @@
 
   41:   use std::geo2d;
   42:   
-  43:   geo2d::Circle(40mm);
+  43:   geo2d::Circle(radius = 40mm);
 
 -- No Output --
 -- No Errors --

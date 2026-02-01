@@ -5,12 +5,72 @@
 
 use crate::{eval::*, value::*};
 
+/// Match priorities
+///
+/// Argument matching in µcad is complex and comes in several priority layers.
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+pub enum Priority {
+    /// Matched empty parameter list
+    Empty,
+    /// Matched by exact identifier.
+    Id,
+    /// Matched by shortened identifier.
+    Short,
+    /// Matched by exact type.
+    Type,
+    /// Matched by automatic type conversion (e.g. Integer -> Scalar).
+    TypeAuto,
+    /// Matched by parameter default.
+    Default,
+    /// No priority (invalid).
+    None,
+}
+
+impl Priority {
+    pub(super) fn high_to_low() -> &'static [Priority] {
+        &[
+            Self::Empty,
+            Self::Id,
+            Self::Short,
+            Self::Type,
+            Self::TypeAuto,
+            Self::Default,
+        ]
+    }
+
+    fn set_once(&mut self, with: Self) {
+        if *self == Priority::None {
+            *self = with
+        }
+    }
+}
+
+impl std::fmt::Display for Priority {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Priority::None => write!(f, "<NONE>"),
+            Priority::Default => write!(f, "Default/1"),
+            Priority::TypeAuto => write!(f, "TypeAuto/2"),
+            Priority::Type => write!(f, "Type/3"),
+            Priority::Short => write!(f, "Short/4"),
+            Priority::Id => write!(f, "Id/5"),
+            Priority::Empty => write!(f, "Empty/5"),
+        }
+    }
+}
+
 /// Matching of `ParameterList` with `ArgumentValueList` into Tuple
-#[derive(Default)]
 pub struct ArgumentMatch<'a> {
     arguments: Vec<(&'a Identifier, &'a ArgumentValue)>,
     params: Vec<(&'a Identifier, &'a ParameterValue)>,
     result: Tuple,
+    priority: Priority,
+}
+
+#[derive(Debug)]
+pub struct MultiMatchResult {
+    pub args: Vec<Tuple>,
+    pub priority: Priority,
 }
 
 impl<'a> ArgumentMatch<'a> {
@@ -32,8 +92,12 @@ impl<'a> ArgumentMatch<'a> {
     pub fn find_multi_match(
         arguments: &'a ArgumentValueList,
         params: &'a ParameterValueList,
-    ) -> EvalResult<Vec<Tuple>> {
-        Ok(Self::new(arguments, params)?.multiply(params))
+    ) -> EvalResult<MultiMatchResult> {
+        let m = Self::new(arguments, params)?;
+        Ok(MultiMatchResult {
+            args: m.multiply(params),
+            priority: m.priority,
+        })
     }
 
     /// Create new instance and start matching.
@@ -42,6 +106,7 @@ impl<'a> ArgumentMatch<'a> {
             arguments: arguments.iter().map(|(id, v)| (id, v)).collect(),
             params: params.iter().collect(),
             result: Tuple::new_named(std::collections::HashMap::new(), arguments.src_ref()),
+            priority: Priority::None,
         };
 
         fn match_id_exact(left: &Identifier, right: &Identifier) -> bool {
@@ -60,22 +125,37 @@ impl<'a> ArgumentMatch<'a> {
             left.is_matching(right)
         }
 
-        am.match_ids(match_id_exact)?;
-        am.match_ids(match_id_short)?;
-        am.match_types(true, match_type_exact);
-        am.match_types(false, match_type_auto);
-        am.match_defaults();
-        am.match_types(false, match_type_auto);
-        am.check_missing()?;
+        log::trace!("matching arguments:\n{am:?}");
+        if !am.match_empty(Priority::Empty) {
+            am.match_ids(match_id_exact, Priority::Id)?;
+            am.match_ids(match_id_short, Priority::Short)?;
+            am.match_types(true, match_type_exact, Priority::Type);
+            am.match_types(false, match_type_auto, Priority::TypeAuto);
+            am.match_defaults(Priority::Default);
+            am.match_types(false, match_type_auto, Priority::TypeAuto);
 
+            am.check_missing()?;
+        }
         Ok(am)
     }
 
+    fn match_empty(&mut self, priority: Priority) -> bool {
+        if self.arguments.is_empty() && self.params.is_empty() {
+            self.priority.set_once(priority);
+            true
+        } else {
+            false
+        }
+    }
+
     /// Match arguments by id
-    fn match_ids(&mut self, match_fn: impl Fn(&Identifier, &Identifier) -> bool) -> EvalResult<()> {
+    fn match_ids(
+        &mut self,
+        match_fn: impl Fn(&Identifier, &Identifier) -> bool,
+        priority: Priority,
+    ) -> EvalResult<()> {
         let mut type_mismatch = IdentifierList::default();
         if !self.arguments.is_empty() {
-            log::trace!("find id match for:\n{self:?}");
             self.arguments.retain(|(id, arg)| {
                 let id = match (id.is_empty(), &arg.inline_id) {
                     (true, Some(id)) => id,
@@ -95,6 +175,7 @@ impl<'a> ArgumentMatch<'a> {
                             "{found} parameter by id: {id:?}",
                             found = crate::mark!(MATCH)
                         );
+                        self.priority.set_once(priority);
                         self.result.insert((*id).clone(), arg.value.clone());
                         return false;
                     }
@@ -110,13 +191,13 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Match arguments by type
-    fn match_types(&mut self, mut exclude_defaults: bool, match_fn: impl Fn(&Type, &Type) -> bool) {
+    fn match_types(
+        &mut self,
+        mut exclude_defaults: bool,
+        match_fn: impl Fn(&Type, &Type) -> bool,
+        priority: Priority,
+    ) {
         if !self.arguments.is_empty() {
-            if exclude_defaults {
-                log::trace!("find type matches for (defaults):\n{self:?}");
-            } else {
-                log::trace!("find type matches for:\n{self:?}");
-            }
             self.arguments.retain(|(arg_id, arg)| {
                 // filter params by type
                 let same_type: Vec<_> = self
@@ -132,7 +213,7 @@ impl<'a> ArgumentMatch<'a> {
                                 false
                             }
                         {
-                            Some((n, id, param))
+                            Some((n, *id, *param))
                         } else {
                             None
                         }
@@ -145,7 +226,7 @@ impl<'a> ArgumentMatch<'a> {
                 }
                 // ignore params with defaults
                 let mut same_type = same_type
-                    .iter()
+                    .into_iter()
                     .filter(|(.., param)| !exclude_defaults || param.default_value.is_none());
 
                 if let Some((n, id, _)) = same_type.next() {
@@ -154,14 +235,15 @@ impl<'a> ArgumentMatch<'a> {
                             "{found} parameter by type: {id:?}",
                             found = crate::mark!(MATCH)
                         );
-                        self.result.insert((**id).clone(), arg.value.clone());
-                        self.params.swap_remove(*n);
+                        self.priority.set_once(priority);
+                        self.result.insert(id.clone(), arg.value.clone());
+                        self.params.swap_remove(n);
                         return false;
                     } else {
-                        log::debug!("more than one parameter with that type")
+                        log::trace!("more than one parameter with that type")
                     }
                 } else {
-                    log::debug!("no parameter with that type (or id mismatch)")
+                    log::trace!("no parameter with that type (or id mismatch)")
                 }
                 true
             })
@@ -169,9 +251,8 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Fill arguments with defaults
-    fn match_defaults(&mut self) {
+    fn match_defaults(&mut self, priority: Priority) {
         if !self.params.is_empty() {
-            log::trace!("find default match for:\n{self:?}");
             // remove missing that can be found
             self.params.retain(|(id, param)| {
                 // check for any default value
@@ -182,6 +263,7 @@ impl<'a> ArgumentMatch<'a> {
                             "{found} argument by default: {id:?} = {def}",
                             found = crate::mark!(MATCH)
                         );
+                        self.priority.set_once(priority);
                         self.result.insert((*id).clone(), def.clone());
                         return false;
                     }
@@ -257,13 +339,21 @@ impl std::fmt::Debug for ArgumentMatch<'_> {
             args = self
                 .arguments
                 .iter()
-                .map(|(id, arg)| format!("{id:?} = {arg:?}"))
+                .map(|(id, arg)| format!(
+                    "{id:?} : {val:?}",
+                    id = match (id.is_empty(), &arg.inline_id) {
+                        (_, None) => id,
+                        (true, Some(inline_id)) => inline_id,
+                        (false, Some(_)) => id,
+                    },
+                    val = arg.value
+                ))
                 .collect::<Vec<_>>()
                 .join(", "),
             params = self
                 .params
                 .iter()
-                .map(|(id, param)| format!("{id:?} = {param:?}"))
+                .map(|(id, param)| format!("{id:?} {param:?}"))
                 .collect::<Vec<_>>()
                 .join(", "),
         )

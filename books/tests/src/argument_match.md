@@ -22,7 +22,7 @@ S(w=10cm); // error: short form cannot be used here because of ambiguity
 
 ```µcad,argument_match_collision#fail
 sketch S( width: Length ) {
-    init( width: Length ) { width=width; }  // error: same as building plan
+    init( width: Length ) { width=width; }
 }
 
 S(width=10cm); // error: short form cannot be used here because of ambiguity
@@ -31,8 +31,8 @@ S(width=10cm); // error: short form cannot be used here because of ambiguity
 ```µcad,argument_match_collision_init#fail
 sketch S( width: Length, height: Length ) {
     init( size: Length ) { width=size; height=size; }
-    init( size: Length ) { width=size; height=size; }  // error: same as other init
+    init( size: Length ) { width=size; height=size; }
 }
 
-S(width=10cm); // error: short form cannot be used here because of ambiguity
+S(size=10cm); // error: short form cannot be used here because of ambiguity
 ```

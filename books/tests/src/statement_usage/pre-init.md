@@ -27,8 +27,8 @@ init(l:Length) {} } K();
 [![test](.test/pre_init_init.svg)](.test/pre_init_init.log)
 
 ```µcad,pre_init_init
-sketch K() { 
-  init() {}
+sketch K(x: Length) { 
+  init() { x=1; }
 init(l:Length) {} } K();
 ```
 

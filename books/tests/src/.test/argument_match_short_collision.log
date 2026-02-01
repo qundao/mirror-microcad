@@ -1,0 +1,29 @@
+﻿
+-- Test --
+        Test name: argument_match_short_collision
+  Expected result: fail
+      Source file: ../books/tests/src/argument_match.md:16
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  16:   sketch S( width: Length ) {
+  17:       init( what: Length ) { width=what; }
+  18:   }
+  19:   
+  20:   S(w=10cm); // error: short form cannot be used here because of ambiguity
+
+-- No Output --
+-- Errors --
+  × error: 5:3: Workbench S has ambiguous initialization for those arguments
+    ╭─[../books/tests/src/argument_match.md:20:1]
+ 19 │ 
+ 20 │ S(w=10cm); // error: short form cannot be used here because of ambiguity
+    · ────┬────
+    ·     ╰── Got: S( w = 100mm )
+    ╰────
+  help: Ambiguous initializations:
+        	Short/4 argument_match_short_collision::S(width: Length)
+        	Short/4 argument_match_short_collision::S::init(what: Length)
+-- Test Result --
+FAILS AS EXPECTED

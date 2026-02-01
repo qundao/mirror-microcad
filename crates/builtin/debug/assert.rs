@@ -14,7 +14,7 @@ pub fn assert() -> Symbol {
         &|params, args, context| {
             match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
-                    for a in multi_args {
+                    for a in multi_args.args {
                         let v: bool = a.get("v");
                         if !v {
                             let message: String = a.get("message");
@@ -60,7 +60,7 @@ pub fn assert_eq() -> Symbol {
         &|params, args, context| {
             match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
-                    for array in multi_args {
+                    for array in multi_args.args {
                         let array_value = &array.get_value("array").expect("missing parameter");
 
                         if let Value::Array(exprs) = array_value {
@@ -111,7 +111,7 @@ pub fn assert_valid() -> Symbol {
         &|params, args, context| {
             match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
-                    for arg in multi_args {
+                    for arg in multi_args.args {
                         let target = arg.get::<Target>("target");
                         if target.target.is_none() {
                             context.error(
@@ -147,7 +147,7 @@ pub fn assert_invalid() -> Symbol {
         &|params, args, context| {
             match ArgumentMatch::find_multi_match(args, params) {
                 Ok(multi_args) => {
-                    for arg in multi_args {
+                    for arg in multi_args.args {
                         let target = arg.get::<Target>("target");
                         if let Some(query) = target.target {
                             log::trace!("target_name: {query}, {}", target.name);

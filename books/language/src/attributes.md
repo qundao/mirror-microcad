@@ -15,7 +15,7 @@ When viewed or exported, model node `c` will have a red color, because the `colo
 
 ```µcad,attributes_simple_example
 #[color = "#FF0000"]
-c = std::geo2d::Circle(42.0mm);
+c = std::geo2d::Circle(r = 42.0mm);
 
 std::debug::assert_eq([c#color, (r = 1.0, g = 0.0, b = 0.0, a = 1.0)]);
 ```
@@ -40,7 +40,7 @@ In viewer and when exported, the model will be drawn in the specified color.
 
 ```µcad,attributes_color
 #[color = "#FFFFFF"]
-c = std::geo2d::Circle(42.0mm);
+c = std::geo2d::Circle(r = 42.0mm);
 
 std::debug::assert_eq([c#color, (r = 1.0, g = 1.0, b = 1.0, a = 1.0)]);
 ```
@@ -55,7 +55,7 @@ This means the circle will be rendered with a resolution `0.05mm`.
 
 ```µcad,attributes_precision
 #[resolution = 200%]
-c = std::geo2d::Circle(42.0mm);
+c = std::geo2d::Circle(r = 42.0mm);
 
 std::debug::assert_eq([c#resolution, 200%]);
 ```
@@ -68,7 +68,7 @@ If you have created a part or a sketch and want to export it to a specific file,
 
 ```µcad,attributes_export
 #[export = "circle.svg"]
-c = std::geo2d::Circle(42.0mm);
+c = std::geo2d::Circle(r = 42.0mm);
 ```
 
 The exporter is detected automatically depending on the file extension.

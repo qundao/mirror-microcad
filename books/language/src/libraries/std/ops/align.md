@@ -12,10 +12,10 @@ use std::ops::*;
 use std::math::*;
 
 {
-    Circle(10mm);
-    Rect(10mm);
-    Circle(10mm);
-    Rect(10mm);
+    Circle(radius = 0mm);
+    Rect(size = 10mm);
+    Circle(radius = 10mm);
+    Rect(size = 10mm);
 }.align(X, 4mm);
 ```
 
@@ -28,7 +28,7 @@ use std::geo2d::*;
 use std::ops::*;
 use std::math::*;
 
-Rect(10mm).rotate([0..10] * 90° / 10).align(X, 4mm);
+Rect(size = 10mm).rotate([0..10] * 90° / 10).align(X, 4mm);
 ```
 
 You can also align 3D geometries:
@@ -41,9 +41,9 @@ use std::ops::*;
 use std::math::*;
 
 {
-    Sphere(10mm);
-    Cube(10mm);
-    Sphere(10mm);
-    Cube(10mm);
+    Sphere(radius = 10mm);
+    Cube(size = 10mm);
+    Sphere(radius = 10mm);
+    Cube(size = 10mm);
 }.align(Z, 4mm);
 ```

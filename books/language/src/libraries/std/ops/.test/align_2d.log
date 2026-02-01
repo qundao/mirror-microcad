@@ -12,10 +12,10 @@
   12:   use std::math::*;
   13:   
   14:   {
-  15:       Circle(10mm);
-  16:       Rect(10mm);
-  17:       Circle(10mm);
-  18:       Rect(10mm);
+  15:       Circle(radius = 0mm);
+  16:       Rect(size = 10mm);
+  17:       Circle(radius = 10mm);
+  18:       Rect(size = 10mm);
   19:   }.align(X, 4mm);
 
 -- No Output --
@@ -27,11 +27,11 @@
       - spacing = 4mm
       Operation __builtin::ops::align(spacing=4mm, x=1, y=0, z=0) ->
         Group ->
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0mm) ->
             - center = (x=0mm, y=0mm)
-            - radius = 10mm
+            - radius = 0mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=0mm) ->
           Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
             - height = 10mm
             - width = 10mm

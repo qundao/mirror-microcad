@@ -11,24 +11,24 @@
   11:   use std::ops::*;
   12:   
   13:   {
-  14:       Circle(10mm);
-  15:       Rect(10mm);
-  16:       Rect(10mm);
-  17:       Circle(10mm);
-  18:   }.distribute_grid(30mm, rows = 2, columns = 2);
+  14:       Circle(radius = 10mm);
+  15:       Rect(size = 10mm);
+  16:       Rect(size = 10mm);
+  17:       Circle(radius = 10mm);
+  18:   }.distribute_grid(cell_size =30mm, rows = 2, columns = 2);
 
 -- No Output --
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::distribute_grid(columns=2, rows=2, size=30mm) ->
+    Workpiece(op) std::ops::distribute_grid(cell_size=30mm, columns=2, rows=2) ->
       - columns = 2
-      - height = 30mm
+      - height = 60mm
       - rows = 2
-      - width = 30mm
-      - x = -15mm
-      - y = -15mm
-      Operation __builtin::ops::distribute_grid(columns=2, height=30mm, rows=2, width=30mm, x=-15mm, y=-15mm) ->
+      - width = 60mm
+      - x = -30mm
+      - y = -30mm
+      Operation __builtin::ops::distribute_grid(columns=2, height=60mm, rows=2, width=60mm, x=-30mm, y=-30mm) ->
         Group ->
           Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
             - center = (x=0mm, y=0mm)

@@ -217,7 +217,7 @@ impl Lookup<EvalError> for Stack {
                 Err(err) => {
                     log::trace!(
                         "{not_found} local symbol: {name:?}",
-                        not_found = crate::mark!(NOT_FOUND_INTERIM),
+                        not_found = crate::mark!(NOT_FOUND),
                     );
                     return Err(err);
                 }
@@ -229,14 +229,14 @@ impl Lookup<EvalError> for Stack {
             Ok(symbol) => {
                 log::trace!(
                     "{found} local symbol: {symbol:?}",
-                    found = crate::mark!(FOUND_INTERIM),
+                    found = crate::mark!(FOUND),
                 );
                 Ok(symbol)
             }
             Err(err) => {
                 log::trace!(
                     "{not_found} local symbol: {name:?}",
-                    not_found = crate::mark!(NOT_FOUND_INTERIM),
+                    not_found = crate::mark!(NOT_FOUND),
                 );
                 Err(err)
             }

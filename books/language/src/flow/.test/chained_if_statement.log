@@ -13,11 +13,11 @@
   37:   
   38:   sketch MySketch(a: Integer) {
   39:       if a == 1 {
-  40:           Circle(1cm)
+  40:           Circle(r = 1cm)
   41:       } else if a == 2 {
-  42:           Rect(1cm)
+  42:           Rect(s = 1cm)
   43:       } else {
-  44:           Hexagon(1cm)
+  44:           Hexagon(r = 1cm)
   45:       }
   46:   }
   47:   

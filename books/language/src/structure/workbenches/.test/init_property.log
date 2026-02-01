@@ -19,7 +19,7 @@
  139:       }
  140:   
  141:       // Now radius and thickness can be used
- 142:       std::geo2d::Circle(radius) - std::geo2d::Circle(radius - thickness);
+ 142:       std::geo2d::Circle(radius) - std::geo2d::Circle(radius = radius - thickness);
  143:   }
  144:   
  145:   // call with building plan

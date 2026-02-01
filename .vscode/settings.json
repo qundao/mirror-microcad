@@ -44,6 +44,7 @@
         "rustfmt",
         "rustmod",
         "signum",
+        "spiralize",
         "suffisticated",
         "tendloop",
         "thirdparty",

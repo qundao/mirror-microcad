@@ -11,7 +11,7 @@
   43:   fn f( width: Length, inner_radius: Length ) {}
   44:   
   45:   // use short identifiers
-  46:   f(w = 1cm, inner_radius = 2cm);
+  46:   f(w = 1cm, i_r = 2cm);
   47:   // can be mixed
   48:   f(w = 1cm, inner_radius = 2cm);
 

@@ -10,7 +10,7 @@ impl CallTrait for FunctionDefinition {
         match ArgumentMatch::find_multi_match(args, &self.signature.parameters.eval(context)?) {
             Ok(matches) => {
                 let mut result: Vec<Value> = Vec::new();
-                for args in matches {
+                for args in matches.args {
                     let value: Value = context.scope(
                         StackFrame::Function(self.id.clone(), args.into()),
                         |context| self.body.statements.eval(context),

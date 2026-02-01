@@ -8,13 +8,22 @@
 -- Code --
 
   24:   sketch S( width: Length ) {
-  25:       init( width: Length ) { width=width; }  // error: same as building plan
+  25:       init( width: Length ) { width=width; }
   26:   }
   27:   
   28:   S(width=10cm); // error: short form cannot be used here because of ambiguity
 
 -- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 25, 28
+-- Errors --
+  × error: 5:3: Workbench S has ambiguous initialization for those arguments
+    ╭─[../books/tests/src/argument_match.md:28:1]
+ 27 │ 
+ 28 │ S(width=10cm); // error: short form cannot be used here because of ambiguity
+    · ──────┬──────
+    ·       ╰── Got: S( width = 100mm )
+    ╰────
+  help: Ambiguous initializations:
+        	Id/5 argument_match_collision::S(width: Length)
+        	Id/5 argument_match_collision::S::init(width: Length)
 -- Test Result --
-FAILS WITH WRONG ERRORS
+FAILS AS EXPECTED

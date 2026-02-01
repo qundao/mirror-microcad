@@ -64,9 +64,9 @@ impl std::fmt::Display for ParameterValue {
 impl std::fmt::Debug for ParameterValue {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if let Some(def) = &self.default_value {
-            write!(f, "{ty:?} = {def:?}", ty = def.ty())?;
+            write!(f, ": {ty:?} = {def:?}", ty = def.ty())?;
         } else if let Some(ty) = &self.specified_type {
-            write!(f, "{ty:?}")?;
+            write!(f, "= {ty:?}")?;
         }
         Ok(())
     }

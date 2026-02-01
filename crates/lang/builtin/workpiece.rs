@@ -132,6 +132,7 @@ pub trait BuiltinWorkbenchDefinition {
             );
             Ok(Value::Model(
                 ArgumentMatch::find_multi_match(args, params)?
+                    .args
                     .iter()
                     .map(|tuple| Self::model(Creator::new(context.current_symbol(), tuple.clone())))
                     .collect::<Models>()

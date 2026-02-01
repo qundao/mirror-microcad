@@ -52,13 +52,13 @@ use std::geo2d::*;
 
 sketch MySketch(a: Integer) {
     outer = if a == 1 {
-        Circle(1cm)
+        Circle(r = 1cm)
     } else if a == 2 {
-        Rect(1cm)
+        Rect(s = 1cm)
     } else {
-        Hexagon(1cm)
+        Hexagon(r = 1cm)
     };
-    outer - Circle(3mm)
+    outer - Circle(r = 3mm)
 }
 
 MySketch([1,2,3]).align(X, 1cm);

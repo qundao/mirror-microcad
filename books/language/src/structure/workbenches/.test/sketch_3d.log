@@ -9,7 +9,7 @@
 
   26:   use std::geo3d::*;
   27:   sketch MySketch( radius: Length) {
-  28:       Sphere(radius) - Cube(radius);  // error
+  28:       Sphere(radius) - Cube(size = radius);  // error
   29:   }
   30:   
   31:   MySketch(1cm);

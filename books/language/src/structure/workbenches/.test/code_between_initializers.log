@@ -2,38 +2,38 @@
 -- Test --
         Test name: code_between_initializers
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/README.md:206
+      Source file: ../books/language/src/structure/workbenches/README.md:207
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 206:   sketch Wheel(radius: Length) {
- 207:       init( width:Length ) { radius = width / 2; }
- 208:       
- 209:       radius = 1; // error: code between initializers not allowed
- 210:   
- 211:       init( height:Length ) { radius = height / 2; }
- 212:   }
- 213:   
- 214:   Wheel(radius = 1.0mm);
+ 207:   sketch Wheel(radius: Length) {
+ 208:       init( width:Length ) { radius = width / 2; }
+ 209:       
+ 210:       radius = 1; // error: code between initializers not allowed
+ 211:   
+ 212:       init( height:Length ) { radius = height / 2; }
+ 213:   }
+ 214:   
+ 215:   Wheel(radius = 1.0mm);
 
 -- No Output --
 -- Errors --
   × error: 4:5: Code between initializers is not allowed
-     ╭─[../books/language/src/structure/workbenches/README.md:209:5]
- 208 │     
- 209 │     radius = 1; // error: code between initializers not allowed
+     ╭─[../books/language/src/structure/workbenches/README.md:210:5]
+ 209 │     
+ 210 │     radius = 1; // error: code between initializers not allowed
      ·     ─────┬─────
      ·          ╰── error: 4:5: Code between initializers is not allowed
- 210 │ 
+ 211 │ 
      ╰────
   × error: 4:5: Statement not allowed prior initializers
-     ╭─[../books/language/src/structure/workbenches/README.md:209:5]
- 208 │     
- 209 │     radius = 1; // error: code between initializers not allowed
+     ╭─[../books/language/src/structure/workbenches/README.md:210:5]
+ 209 │     
+ 210 │     radius = 1; // error: code between initializers not allowed
      ·     ─────┬─────
      ·          ╰── error: 4:5: Statement not allowed prior initializers
- 210 │ 
+ 211 │ 
      ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
