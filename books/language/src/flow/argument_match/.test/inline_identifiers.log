@@ -2,8 +2,8 @@
 -- Test --
         Test name: inline_identifiers
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/argument_match/multiplicity.md:56
-        Test path: ../books/language/src/flow/calls/argument_match/.test
+      Source file: ../books/language/src/flow/argument_match/multiplicity.md:56
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
@@ -22,6 +22,6 @@
       - y = -1mm
       Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
 
-Export of "../books/language/src/flow/calls/argument_match/.test/inline_identifiers-out.svg" successful.
+Export of "../books/language/src/flow/argument_match/.test/inline_identifiers-out.svg" successful.
 -- Test Result --
 OK

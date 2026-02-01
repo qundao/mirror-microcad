@@ -2,8 +2,8 @@
 -- Test --
         Test name: argument_match_default
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/argument_match/priorities.md:97
-        Test path: ../books/language/src/flow/calls/argument_match/.test
+      Source file: ../books/language/src/flow/argument_match/priorities.md:97
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
@@ -14,7 +14,7 @@
 -- No Output --
 -- Errors --
   ⚠ warning: 1:7: Unused local a.
-    ╭─[../books/language/src/flow/calls/argument_match/priorities.md:97:7]
+    ╭─[../books/language/src/flow/argument_match/priorities.md:97:7]
  97 │ fn f( a = 1mm ) {}
     ·       ┬
     ·       ╰── warning: 1:7: Unused local a.

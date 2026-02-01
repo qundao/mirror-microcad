@@ -2,8 +2,8 @@
 -- Test --
         Test name: tuple_match
   Expected result: todo
-      Source file: ../books/language/src/flow/calls/argument_match/tuple_matching.md:10
-        Test path: ../books/language/src/flow/calls/argument_match/.test
+      Source file: ../books/language/src/flow/argument_match/tuple_matching.md:10
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
@@ -22,7 +22,7 @@
 -- No Output --
 -- Errors --
   × error: 9:4: Missing arguments: x,y
-    ╭─[../books/language/src/flow/calls/argument_match/tuple_matching.md:18:4]
+    ╭─[../books/language/src/flow/argument_match/tuple_matching.md:18:4]
  17 │ // Then we pass plane to f() three times with different z values
  18 │ f( plane, z=3cm);
     ·    ──────┬─────
@@ -30,7 +30,7 @@
  19 │ f( plane, z=6cm);
     ╰────
   × error: 10:4: Missing arguments: x,y
-    ╭─[../books/language/src/flow/calls/argument_match/tuple_matching.md:19:4]
+    ╭─[../books/language/src/flow/argument_match/tuple_matching.md:19:4]
  18 │ f( plane, z=3cm);
  19 │ f( plane, z=6cm);
     ·    ──────┬─────
@@ -38,7 +38,7 @@
  20 │ f( plane, z=9cm);
     ╰────
   × error: 11:4: Missing arguments: x,y
-    ╭─[../books/language/src/flow/calls/argument_match/tuple_matching.md:20:4]
+    ╭─[../books/language/src/flow/argument_match/tuple_matching.md:20:4]
  19 │ f( plane, z=6cm);
  20 │ f( plane, z=9cm);
     ·    ──────┬─────

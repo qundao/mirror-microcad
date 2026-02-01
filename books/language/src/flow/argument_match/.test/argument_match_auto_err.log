@@ -2,8 +2,8 @@
 -- Test --
         Test name: argument_match_auto_err
   Expected result: fail
-      Source file: ../books/language/src/flow/calls/argument_match/auto_identifier.md:29
-        Test path: ../books/language/src/flow/calls/argument_match/.test
+      Source file: ../books/language/src/flow/argument_match/auto_identifier.md:29
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
@@ -15,7 +15,7 @@
 -- No Output --
 -- Errors --
   × error: 4:3: Missing arguments: x,y
-    ╭─[../books/language/src/flow/calls/argument_match/auto_identifier.md:32:3]
+    ╭─[../books/language/src/flow/argument_match/auto_identifier.md:32:3]
  31 │ y = 2;
  32 │ f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
     ·   ──────┬─────

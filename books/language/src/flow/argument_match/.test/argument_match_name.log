@@ -2,8 +2,8 @@
 -- Test --
         Test name: argument_match_name
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/argument_match/priorities.md:28
-        Test path: ../books/language/src/flow/calls/argument_match/.test
+      Source file: ../books/language/src/flow/argument_match/priorities.md:28
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 

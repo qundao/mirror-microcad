@@ -2,8 +2,8 @@
 -- Test --
         Test name: argument_match_mix
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/argument_match/priorities.md:109
-        Test path: ../books/language/src/flow/calls/argument_match/.test
+      Source file: ../books/language/src/flow/argument_match/priorities.md:109
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
@@ -14,28 +14,28 @@
 -- No Output --
 -- Errors --
   ⚠ warning: 1:7: Unused local a.
-     ╭─[../books/language/src/flow/calls/argument_match/priorities.md:109:7]
+     ╭─[../books/language/src/flow/argument_match/priorities.md:109:7]
  109 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) {}
      ·       ┬
      ·       ╰── warning: 1:7: Unused local a.
  110 │ // `a` is the only Scalar and `b` is named, so `c` does not need a name.
      ╰────
   ⚠ warning: 1:18: Unused local b.
-     ╭─[../books/language/src/flow/calls/argument_match/priorities.md:109:18]
+     ╭─[../books/language/src/flow/argument_match/priorities.md:109:18]
  109 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) {}
      ·                  ┬
      ·                  ╰── warning: 1:18: Unused local b.
  110 │ // `a` is the only Scalar and `b` is named, so `c` does not need a name.
      ╰────
   ⚠ warning: 1:29: Unused local c.
-     ╭─[../books/language/src/flow/calls/argument_match/priorities.md:109:29]
+     ╭─[../books/language/src/flow/argument_match/priorities.md:109:29]
  109 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) {}
      ·                             ┬
      ·                             ╰── warning: 1:29: Unused local c.
  110 │ // `a` is the only Scalar and `b` is named, so `c` does not need a name.
      ╰────
   ⚠ warning: 1:36: Unused local d.
-     ╭─[../books/language/src/flow/calls/argument_match/priorities.md:109:36]
+     ╭─[../books/language/src/flow/argument_match/priorities.md:109:36]
  109 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) {}
      ·                                    ┬
      ·                                    ╰── warning: 1:36: Unused local d.

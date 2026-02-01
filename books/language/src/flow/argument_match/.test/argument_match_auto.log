@@ -2,8 +2,8 @@
 -- Test --
         Test name: argument_match_auto
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/argument_match/auto_identifier.md:10
-        Test path: ../books/language/src/flow/calls/argument_match/.test
+      Source file: ../books/language/src/flow/argument_match/auto_identifier.md:10
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 

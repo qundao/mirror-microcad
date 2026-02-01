@@ -45,9 +45,9 @@ So the short form of `width` is `w` and from `inner_radius` it is `i_r`.
 fn f( width: Length, height: Length ) -> Area { width * height }
 
 // use short identifiers
-f(w = 1cm, h = 2cm);
+std::debug::assert_eq([ f(w = 1cm, h = 2cm), 2cm² ]);
 // can be mixed
-f(w = 1cm, inner_radius = 2cm);
+std::debug::assert_eq([ f(w = 1cm, height = 2cm), 2cm² ]);
 ```
 
 Here are some usual examples:
