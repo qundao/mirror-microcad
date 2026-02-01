@@ -67,9 +67,12 @@ pub struct ArgumentMatch<'a> {
     priority: Priority,
 }
 
+/// Result of a multi match
 #[derive(Debug)]
 pub struct MultiMatchResult {
+    /// Matching arguments
     pub args: Vec<Tuple>,
+    /// Match priority
     pub priority: Priority,
 }
 
@@ -88,7 +91,7 @@ impl<'a> ArgumentMatch<'a> {
 
     /// Match a `ParameterList` with an `ArgumentValueList` into an vector of tuples.
     ///
-    /// Returns `Ok(Tuple)`` if matches or Err() if not
+    /// Returns `Ok(MultiMatchResult)`` if matches or Err() if not
     pub fn find_multi_match(
         arguments: &'a ArgumentValueList,
         params: &'a ParameterValueList,

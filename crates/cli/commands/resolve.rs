@@ -41,10 +41,7 @@ impl RunCommand<ResolveContext> for Resolve {
         // search for a usable std library
         if self.no_std {
             eprintln!("Info: omitting standard library (--no-std).");
-        } else if !search_paths
-            .iter()
-            .any(|search_path| microcad_std::is_installed(search_path))
-        {
+        } else if !search_paths.iter().any(microcad_std::is_installed) {
             eprintln!("Warning: No std library was found in given search paths: {search_paths:?}.");
             if let Err(err) = microcad_std::install(microcad_std::global_std_path(), false) {
                 return Err(miette::miette!("Could not install standard library: {err}"));
