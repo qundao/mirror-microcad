@@ -2,7 +2,7 @@
 -- Test --
         Test name: mod_external
   Expected result: ok
-      Source file: ../books/tests/src/mod_external.md:13
+      Source file: ../books/tests/src/mod_file.md:13
         Test path: ../books/tests/src/.test
 
 -- Code --

@@ -2,38 +2,38 @@
 -- Test --
         Test name: mod_example
   Expected result: ok
-      Source file: ../books/language/src/structure/modules/README.md:23
+      Source file: ../books/language/src/structure/modules/README.md:24
         Test path: ../books/language/src/structure/modules/.test
 
 -- Code --
 
-  23:   // define private module
-  24:   mod my {
-  25:       // define public module
-  26:       pub mod math {
-  27:           // define PI as a public constant value
-  28:           pub const PI = 3.14159;
-  29:   
-  30:           // define some public calculation function
-  31:           pub fn abs(x: Scalar) -> Scalar {
-  32:               if x < 0 { return -x; } else { return x; }
-  33:           }
-  34:       }
-  35:   }
-  36:   
-  37:   // use the function and the constant
-  38:   x = my::math::abs(-1.0) * my::math::PI;
+  24:   // define private module
+  25:   mod my {
+  26:       // define public module
+  27:       pub mod math {
+  28:           // define PI as a public constant value
+  29:           pub const PI = 3.14159;
+  30:   
+  31:           // define some public calculation function
+  32:           pub fn abs(x: Scalar) -> Scalar {
+  33:               if x < 0 { return -x; } else { return x; }
+  34:           }
+  35:       }
+  36:   }
+  37:   
+  38:   // use the function and the constant
+  39:   x = my::math::abs(-1.0) * my::math::PI;
 
 -- No Output --
 -- Errors --
   ⚠ warning: 16:1: Unused local x.
-    ╭─[../books/language/src/structure/modules/README.md:38:1]
- 37 │ // use the function and the constant
- 38 │ x = my::math::abs(-1.0) * my::math::PI;
+    ╭─[../books/language/src/structure/modules/README.md:39:1]
+ 38 │ // use the function and the constant
+ 39 │ x = my::math::abs(-1.0) * my::math::PI;
     · ┬
     · ╰── warning: 16:1: Unused local x.
     ╰────
-Unexpected warnings(s) which did occur in line(s): 38
+Unexpected warnings(s) which did occur in line(s): 39
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

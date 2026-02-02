@@ -1,8 +1,8 @@
 ﻿
 -- Test --
-        Test name: external_modules_main
+        Test name: file_modules_main
   Expected result: ok
-      Source file: ../books/language/src/structure/modules/external_modules.md:11
+      Source file: ../books/language/src/structure/modules/file_modules.md:11
         Test path: ../books/language/src/structure/modules/.test
 
 -- Code --
