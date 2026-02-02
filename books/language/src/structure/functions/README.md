@@ -22,7 +22,8 @@ print_error("second");
 ```
 
 Output
-  :```txt
+  :
+   ```txt
    ERROR: first
    ERROR: second
    ```
