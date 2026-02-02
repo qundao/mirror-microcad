@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**222** tests have been evaluated with version **0.2.20** of microcad.
+**223** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -201,6 +201,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/.test/types_no_declaration.svg)](../types/.test/types_no_declaration.log) | [types_no_declaration](../types/) |
 | [![test](../types/.test/types_primitive_bool.svg)](../types/.test/types_primitive_bool.log) | [types_primitive_bool](../types/primitives.md) |
 | [![test](../types/.test/types_primitive_integer.svg)](../types/.test/types_primitive_integer.log) | [types_primitive_integer](../types/primitives.md) |
+| [![test](../types/.test/types_primitive_scalar.svg)](../types/.test/types_primitive_scalar.log) | [types_primitive_scalar](../types/primitives.md) |
 | [![test](../types/.test/types_primitive_string.svg)](../types/.test/types_primitive_string.log) | [types_primitive_string](../types/primitives.md) |
 | [![test](../types/.test/types_quantity_angle.svg)](../types/.test/types_quantity_angle.log) | [types_quantity_angle](../types/quantities.md) |
 | [![test](../types/.test/types_quantity_area.svg)](../types/.test/types_quantity_area.log) | [types_quantity_area](../types/quantities.md) |
