@@ -1,7 +1,7 @@
 # Match Priorities
 
 A single parameter can match an argument in several ways, each with a defined *priority*.
-These priorities become more important when calling [workbenches](../calls/workbench_calls.md)
+These priorities become  important when calling [workbenches](../calls/workbench_calls.md)
 which support overloaded initialization.
 
 | Priority<br>⭣ high to low | Matches                                                       | Example Parameters                  | Example Arguments |
@@ -41,7 +41,7 @@ std::debug::assert_eq([ x, 2cm² ]);
 
 ## Match Short Identifier
 
-Parameters can also be matched using their short identifier. 
+A parameter can also be matched using it's short identifier.
 
 The short form consists of the first letter of each word separated by underscores (_).
 

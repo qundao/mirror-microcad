@@ -56,7 +56,7 @@ impl std::fmt::Display for ParameterValue {
         if let Some(def) = &self.default_value {
             write!(f, "{} = {def}", def.ty())?;
         } else if let Some(ty) = &self.specified_type {
-            write!(f, "{ty}")?;
+            write!(f, "= {ty}")?;
         }
         Ok(())
     }
