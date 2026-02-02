@@ -1,6 +1,6 @@
-# External module
+# File module
 
-Let's assume we want to use the `LegoBrick` from an external file.
+Let's assume we want to use the `LegoBrick` from a different source file inside your project.
 
 Fortunately, this is simple!
 We just have to create a second file `my_brick.µcad`:
