@@ -16,7 +16,7 @@ In this tutorial you should have learned about the following things:
 - Constants
 - Extruding sketches with `std::ops::extrude`
 - Creating custom sketches, parts and operations
-- Separating code into external modules
+- Separating code into file modules
 - Controlling export with attributes
 
 Congratulations, you now have successfully finished this tutorial!
