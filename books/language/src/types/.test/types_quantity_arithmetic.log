@@ -9,95 +9,31 @@
 
  179:   use std::debug::assert_eq;
  180:   
- 181:   a = 6cm²;
+ 181:   a = 6cm;
  182:   b = 2cm;
- 183:   assert_eq([ a * b, 12cm³, 12l  ]);
- 184:   assert_eq([ a / b, 3cm ]);
- 185:   assert_eq([ a + b, 4mm ]);
- 186:   assert_eq([ a - b, 0mm ]);
+ 183:   assert_eq([ a * b, 12cm²  ]);
+ 184:   assert_eq([ a / b, 3 ]);
+ 185:   assert_eq([ a + b, 80mm ]);
+ 186:   assert_eq([ a - b, 40mm ]);
 
 -- No Output --
 -- Errors --
-  × error: 5:11: Assertion failed: Values differ: [12000mm³, 12000mm³, 12000000mm³]
-     ╭─[../books/language/src/types/quantities.md:183:11]
- 182 │ b = 2cm;
- 183 │ assert_eq([ a * b, 12cm³, 12l  ]);
-     ·           ───────────┬──────────
-     ·                      ╰── error: 5:11: Assertion failed: Values differ: [12000mm³, 12000mm³, 12000000mm³]
- 184 │ assert_eq([ a / b, 3cm ]);
-     ╰────
-  × error: 6:13: Quantity error: Invalid operation: `600mm²` / `20mm` (try `20mm` / `600mm²`)
-  ╰─▶ Invalid operation: `600mm²` / `20mm` (try `20mm` / `600mm²`)
-     ╭─[../books/language/src/types/quantities.md:184:13]
- 183 │ assert_eq([ a * b, 12cm³, 12l  ]);
- 184 │ assert_eq([ a / b, 3cm ]);
-     ·             ──┬──
-     ·               ╰── error: 6:13: Quantity error: Invalid operation: `600mm²` / `20mm` (try `20mm` / `600mm²`)
- 185 │ assert_eq([ a + b, 4mm ]);
-     ╰────
-  × error: 6:11: Array elements have different types: [<NO TYPE>, Length]
+  × error: 6:11: Array elements have different types: [Scalar, Integer]
      ╭─[../books/language/src/types/quantities.md:184:11]
- 183 │ assert_eq([ a * b, 12cm³, 12l  ]);
- 184 │ assert_eq([ a / b, 3cm ]);
-     ·           ───────┬──────
-     ·                  ╰── error: 6:11: Array elements have different types: [<NO TYPE>, Length]
- 185 │ assert_eq([ a + b, 4mm ]);
+ 183 │ assert_eq([ a * b, 12cm²  ]);
+ 184 │ assert_eq([ a / b, 3 ]);
+     ·           ──────┬─────
+     ·                 ╰── error: 6:11: Array elements have different types: [Scalar, Integer]
+ 185 │ assert_eq([ a + b, 80mm ]);
      ╰────
   × error: 6:11: Assertion failed: Invalid: <NO VALUE>
      ╭─[../books/language/src/types/quantities.md:184:11]
- 183 │ assert_eq([ a * b, 12cm³, 12l  ]);
- 184 │ assert_eq([ a / b, 3cm ]);
-     ·           ───────┬──────
-     ·                  ╰── error: 6:11: Assertion failed: Invalid: <NO VALUE>
- 185 │ assert_eq([ a + b, 4mm ]);
+ 183 │ assert_eq([ a * b, 12cm²  ]);
+ 184 │ assert_eq([ a / b, 3 ]);
+     ·           ──────┬─────
+     ·                 ╰── error: 6:11: Assertion failed: Invalid: <NO VALUE>
+ 185 │ assert_eq([ a + b, 80mm ]);
      ╰────
-  × error: 7:13: Quantity error: Invalid operation: `600mm²` + `20mm` (try `20mm` + `600mm²`)
-  ╰─▶ Invalid operation: `600mm²` + `20mm` (try `20mm` + `600mm²`)
-     ╭─[../books/language/src/types/quantities.md:185:13]
- 184 │ assert_eq([ a / b, 3cm ]);
- 185 │ assert_eq([ a + b, 4mm ]);
-     ·             ──┬──
-     ·               ╰── error: 7:13: Quantity error: Invalid operation: `600mm²` + `20mm` (try `20mm` + `600mm²`)
- 186 │ assert_eq([ a - b, 0mm ]);
-     ╰────
-  × error: 7:11: Array elements have different types: [<NO TYPE>, Length]
-     ╭─[../books/language/src/types/quantities.md:185:11]
- 184 │ assert_eq([ a / b, 3cm ]);
- 185 │ assert_eq([ a + b, 4mm ]);
-     ·           ───────┬──────
-     ·                  ╰── error: 7:11: Array elements have different types: [<NO TYPE>, Length]
- 186 │ assert_eq([ a - b, 0mm ]);
-     ╰────
-  × error: 7:11: Assertion failed: Invalid: <NO VALUE>
-     ╭─[../books/language/src/types/quantities.md:185:11]
- 184 │ assert_eq([ a / b, 3cm ]);
- 185 │ assert_eq([ a + b, 4mm ]);
-     ·           ───────┬──────
-     ·                  ╰── error: 7:11: Assertion failed: Invalid: <NO VALUE>
- 186 │ assert_eq([ a - b, 0mm ]);
-     ╰────
-  × error: 8:13: Quantity error: Invalid operation: `600mm²` - `20mm` (try `20mm` - `600mm²`)
-  ╰─▶ Invalid operation: `600mm²` - `20mm` (try `20mm` - `600mm²`)
-     ╭─[../books/language/src/types/quantities.md:186:13]
- 185 │ assert_eq([ a + b, 4mm ]);
- 186 │ assert_eq([ a - b, 0mm ]);
-     ·             ──┬──
-     ·               ╰── error: 8:13: Quantity error: Invalid operation: `600mm²` - `20mm` (try `20mm` - `600mm²`)
-     ╰────
-  × error: 8:11: Array elements have different types: [<NO TYPE>, Length]
-     ╭─[../books/language/src/types/quantities.md:186:11]
- 185 │ assert_eq([ a + b, 4mm ]);
- 186 │ assert_eq([ a - b, 0mm ]);
-     ·           ───────┬──────
-     ·                  ╰── error: 8:11: Array elements have different types: [<NO TYPE>, Length]
-     ╰────
-  × error: 8:11: Assertion failed: Invalid: <NO VALUE>
-     ╭─[../books/language/src/types/quantities.md:186:11]
- 185 │ assert_eq([ a + b, 4mm ]);
- 186 │ assert_eq([ a - b, 0mm ]);
-     ·           ───────┬──────
-     ·                  ╰── error: 8:11: Assertion failed: Invalid: <NO VALUE>
-     ╰────
-Unexpected error(s) which did occur in line(s): 183, 184, 185, 186
+Unexpected error(s) which did occur in line(s): 184
 -- Test Result --
 TODO
