@@ -10,6 +10,8 @@ Instead of having so-called positional arguments, µcad has *named arguments*, w
 that every parameter and every argument must have an *identifier*.
 Like `x` is in the following example:
 
+[![test](.test/call_match.svg)](.test/call_match.log)
+
 ```µcad,call_match
 fn f(x: Length) -> Length { x*2 }
 
