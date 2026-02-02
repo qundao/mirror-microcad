@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**218** tests have been evaluated with version **0.2.20** of microcad.
+**222** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -58,6 +58,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/builtin/.test/builtin_translate_twice.svg)](../libraries/builtin/.test/builtin_translate_twice.log) | [builtin_translate_twice](../libraries/builtin/ops.md) |
 | [![test](../flow/calls/.test/call_function.svg)](../flow/calls/.test/call_function.log) | [call_function](../flow/calls/) |
 | [![test](../flow/argument_match/.test/call_match.svg)](../flow/argument_match/.test/call_match.log) | [call_match](../flow/argument_match/) |
+| [![test](../flow/calls/.test/call_model.svg)](../flow/calls/.test/call_model.log) | [call_model](../flow/calls/) |
+| [![test](../flow/calls/.test/call_model_use.svg)](../flow/calls/.test/call_model_use.log) | [call_model_use](../flow/calls/) |
 | [![test](../flow/calls/.test/call_workbench.svg)](../flow/calls/.test/call_workbench.log) | [call_workbench](../flow/calls/) |
 | [![test](../structure/workbenches/elements/.test/code.svg)](../structure/workbenches/elements/.test/code.log) | [code](../structure/workbenches/elements/building_code.md) |
 | [![test](../structure/workbenches/elements/.test/code_between_initializers.svg)](../structure/workbenches/elements/.test/code_between_initializers.log) | [code_between_initializers](../structure/workbenches/elements/initializers.md) |
@@ -131,6 +133,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/operator_array.svg)](../expressions/.test/operator_array.log) | [operator_array](../expressions/operators.md) |
 | [![test](../expressions/.test/operator_examples.svg)](../expressions/.test/operator_examples.log) | [operator_examples](../expressions/operators.md) |
 | [![test](../libraries/std/ops/.test/orient_3d.svg)](../libraries/std/ops/.test/orient_3d.log) | [orient_3d](../libraries/std/ops/orient.md) |
+| [![test](../flow/calls/.test/parameter.svg)](../flow/calls/.test/parameter.log) | [parameter](../flow/calls/args_params.md) |
+| [![test](../flow/calls/.test/parameter_default.svg)](../flow/calls/.test/parameter_default.log) | [parameter_default](../flow/calls/args_params.md) |
 | [![test](../structure/workbenches/types/.test/parameters.svg)](../structure/workbenches/types/.test/parameters.log) | [parameters](../structure/workbenches/types/operations.md) |
 | [![test](../structure/workbenches/types/.test/part_2d.svg)](../structure/workbenches/types/.test/part_2d.log) | [part_2d](../structure/workbenches/types/parts.md) |
 | [![test](../structure/workbenches/types/.test/part_basic.svg)](../structure/workbenches/types/.test/part_basic.log) | [part_basic](../structure/workbenches/types/parts.md) |

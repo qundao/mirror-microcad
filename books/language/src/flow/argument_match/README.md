@@ -27,5 +27,4 @@ Fortunately there are some facilities for your convenience, like:
 
 All those are created to feel natural when using them together.
 If some explanations in the following sections may sound complicated, you might
-just go with the examples and
-"get the feeling".
+just go with the examples and "get the feeling".

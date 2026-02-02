@@ -123,6 +123,7 @@ impl<'a> ArgumentMatch<'a> {
             am.match_types(Priority::Type, |l, r| l == r, true);
             am.match_types(Priority::TypeAuto, |l, r| l.is_matching(r), false);
             am.match_defaults(Priority::Default);
+            // TODO: this extra step is useful (but not documented!)
             am.match_types(Priority::TypeAuto, |l, r| l.is_matching(r), false);
 
             am.check_missing()?;

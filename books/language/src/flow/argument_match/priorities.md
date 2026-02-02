@@ -13,6 +13,9 @@ which support overloaded initialization.
 | Compatible Type           | Match argument type with compatible parameter type            | `(x: Scalar)`                       | `f(1)`            |
 | Default                   | Match parameter defaults                                      | `(x=1mm)`                           | `()`              |
 
+The match strategy is to try all priorities in order from highest (`Empty`) to
+lowest (`Default`) until all arguments match a parameter.
+
 ## Match Empty List
 
 Matches when both the arguments and parameters are empty.
