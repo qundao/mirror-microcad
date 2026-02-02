@@ -11,11 +11,11 @@
   25:   use std::ops::*;
   26:   
   27:   {
-  28:       Sphere(10mm);
-  29:       Cube(10mm);
-  30:       Cube(10mm);
-  31:       Sphere(10mm);
-  32:   }.distribute_grid(30mm, rows = 2, columns = 2);
+  28:       Sphere(radius = 10mm);
+  29:       Cube(size = 10mm);
+  30:       Cube(size = 10mm);
+  31:       Sphere(radius = 10mm);
+  32:   }.distribute_grid(size = 30mm, rows = 2, columns = 2);
 
 -- No Output --
 -- No Errors --
@@ -42,7 +42,7 @@
               - y = 0mm
               - z = -5mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=-5mm) ->
-                Workpiece(op) std::ops::extrude(z=10mm) ->
+                Workpiece(op) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
                   - height = 10mm
                   - scale = (x=1, y=1)
                   - twist = 0rad
@@ -62,7 +62,7 @@
               - y = 0mm
               - z = -5mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=-5mm) ->
-                Workpiece(op) std::ops::extrude(z=10mm) ->
+                Workpiece(op) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
                   - height = 10mm
                   - scale = (x=1, y=1)
                   - twist = 0rad

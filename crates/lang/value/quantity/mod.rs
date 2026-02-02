@@ -121,9 +121,9 @@ impl std::fmt::Debug for Quantity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{} = {}",
+            "{} ({})",
+            round::round(self.value, OUTPUT_PRECISION),
             self.quantity_type,
-            round::round(self.value, OUTPUT_PRECISION)
         )
     }
 }

@@ -8,7 +8,7 @@
 -- Code --
 
   57:   #[resolution = 200%]
-  58:   c = std::geo2d::Circle(42.0mm);
+  58:   c = std::geo2d::Circle(r = 42.0mm);
   59:   
   60:   std::debug::assert_eq([c#resolution, 200%]);
 

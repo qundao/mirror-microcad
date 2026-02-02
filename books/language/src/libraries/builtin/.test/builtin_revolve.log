@@ -9,7 +9,7 @@
 
   55:   use __builtin::*;
   56:   
-  57:   std::geo2d::Circle(10mm)
+  57:   std::geo2d::Circle(radius = 10mm)
   58:       .ops::translate(x = 20.0mm, y = 0.0mm, z = 0.0mm)
   59:       .ops::revolve(angle = 360.0°);
 

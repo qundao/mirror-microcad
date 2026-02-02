@@ -12,7 +12,7 @@
  177:       const FACTOR = 2.0;
  178:   
  179:       // initializer
- 180:       init(diameter: Length) { into_radius(radius); }
+ 180:       init(diameter: Length) { radius = into_radius(diameter); }
  181:   
  182:       // function
  183:       fn into_radius( diameter: Length ) {
@@ -27,20 +27,12 @@
  192:       std::geo2d::Circle(radius);
  193:   }
  194:   
- 195:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
- 196:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
+ 195:   __builtin::debug::assert(Wheel(radius = 5cm).radius == 5cm);
+ 196:   __builtin::debug::assert(Wheel(radius = 5cm).diameter == 10cm);
+ 197:   __builtin::debug::assert(Wheel(diameter = 10cm).diameter == 10cm);
 
 -- No Output --
--- Errors --
-  ⚠ warning: 9:8: Unused global symbol into_radius.
-     ╭─[../books/language/src/structure/workbenches/README.md:183:8]
- 182 │     // function
- 183 │     fn into_radius( diameter: Length ) {
-     ·        ─────┬─────
-     ·             ╰── warning: 9:8: Unused global symbol into_radius.
- 184 │         // use constant FACTOR from init code
-     ╰────
-Unexpected warnings(s) which did occur in line(s): 183
+-- No Errors --
 -- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

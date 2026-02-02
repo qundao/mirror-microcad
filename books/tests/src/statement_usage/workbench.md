@@ -27,8 +27,8 @@ sketch K() {
 [![test](.test/workbench_init.svg)](.test/workbench_init.log)
 
 ```µcad,workbench_init
-sketch K() {
-  init() {}
+sketch K(x: Scalar) {
+  init() { x = 1; }
 } K();
 ```
 

@@ -2,14 +2,14 @@
 -- Test --
         Test name: multiplicity_arrays
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/multiplicity.md:12
-        Test path: ../books/language/src/flow/calls/.test
+      Source file: ../books/language/src/flow/argument_match/multiplicity.md:15
+        Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
-  12:   r = std::geo2d::Rect(width = 2mm, height = 2mm);
-  13:   
-  14:   r.std::ops::translate(x = [-4mm, 4mm], y = [-4mm, 4mm]);
+  15:   r = std::geo2d::Rect(width = 2mm, height = 2mm);
+  16:   
+  17:   r.std::ops::translate(x = [-4mm, 4mm], y = [-4mm, 4mm]);
 
 -- No Output --
 -- No Errors --
@@ -61,6 +61,6 @@
             - y = -1mm
             Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
 
-Export of "../books/language/src/flow/calls/.test/multiplicity_arrays-out.svg" successful.
+Export of "../books/language/src/flow/argument_match/.test/multiplicity_arrays-out.svg" successful.
 -- Test Result --
 OK

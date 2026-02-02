@@ -12,10 +12,10 @@
   12:   use std::math::*;
   13:   
   14:   {
-  15:       Circle(10mm);
-  16:       Rect(10mm);
-  17:       Circle(10mm);
-  18:       Rect(10mm);
+  15:       Circle(radius = 10mm);
+  16:       Rect(size = 10mm);
+  17:       Circle(radius = 10mm);
+  18:       Rect(size = 10mm);
   19:   }.align(X, 4mm);
 
 -- No Output --

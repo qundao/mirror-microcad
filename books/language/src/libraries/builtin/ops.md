@@ -54,7 +54,7 @@ a.ops::extrude(height = 4.0mm, scale_x = 100%, scale_y = 100%, twist = 0°);
 ```µcad,builtin_revolve
 use __builtin::*;
 
-std::geo2d::Circle(10mm)
+std::geo2d::Circle(radius = 10mm)
     .ops::translate(x = 20.0mm, y = 0.0mm, z = 0.0mm)
     .ops::revolve(angle = 360.0°);
 ```

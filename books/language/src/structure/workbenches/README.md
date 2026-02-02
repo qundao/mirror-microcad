@@ -139,7 +139,7 @@ sketch Wheel(radius: Length, thickness: Length) {
     }
 
     // Now radius and thickness can be used
-    std::geo2d::Circle(radius) - std::geo2d::Circle(radius - thickness);
+    std::geo2d::Circle(radius) - std::geo2d::Circle(radius = radius - thickness);
 }
 
 // call with building plan
@@ -177,7 +177,7 @@ sketch Wheel(radius: Length) {
     const FACTOR = 2.0;
 
     // initializer
-    init(diameter: Length) { into_radius(radius); }
+    init(diameter: Length) { radius = into_radius(diameter); }
 
     // function
     fn into_radius( diameter: Length ) {
@@ -192,8 +192,9 @@ sketch Wheel(radius: Length) {
     std::geo2d::Circle(radius);
 }
 
-__builtin::debug::assert(Wheel(5cm).radius == 5cm);
-__builtin::debug::assert(Wheel(5cm).diameter == 10cm);
+__builtin::debug::assert(Wheel(radius = 5cm).radius == 5cm);
+__builtin::debug::assert(Wheel(radius = 5cm).diameter == 10cm);
+__builtin::debug::assert(Wheel(diameter = 10cm).diameter == 10cm);
 ```
 
 ### Init Code Rules
@@ -282,7 +283,7 @@ sketch Wheel(outer: Length) {
     prop inner = outer / 2;
 
     // generate wheel (and use property inner)
-    Circle(outer) - Circle(inner);
+    Circle(r = outer) - Circle(r = inner);
 }
 
 // evaluate wheel
@@ -305,10 +306,10 @@ sketch Wheel(outer: Length) {
     // from outside this workbench
     inner = outer / 2;
 
-    Circle(outer) - Circle(inner);
+    Circle(r = outer) - Circle(r = inner);
 }
 
-t = Wheel(outer = 1cm);
+t = Wheel(1cm);
 
 // you can still extract and display `outer`
 std::print("outer: {t.outer}");

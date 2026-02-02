@@ -7,18 +7,6 @@ use rustc_hash::FxHashMap;
 
 use crate::{model::*, render::*, src_ref::*, syntax::*};
 
-/// Render state of the model.
-pub enum ModelRenderState {
-    /// The model has not been rendered.
-    /// Model output is [`None`].
-    Pending,
-    /// The model has been pre-rendered via [`Model::pre-render`]
-    /// Model output is [`Some`], but there is no geometry.
-    Preparing,
-    /// Rendering is completed.
-    Complete,
-}
-
 /// The actual model contents
 #[derive(custom_debug::Debug, Default)]
 pub struct ModelInner {
@@ -47,17 +35,6 @@ impl ModelInner {
         Self {
             element: Refer::new(element, src_ref),
             ..Default::default()
-        }
-    }
-
-    /// Return render state of the model.
-    pub fn render_state(&self) -> ModelRenderState {
-        match &self.output {
-            Some(output) => match output.geometry {
-                Some(_) => ModelRenderState::Complete,
-                None => ModelRenderState::Preparing,
-            },
-            None => ModelRenderState::Pending,
         }
     }
 

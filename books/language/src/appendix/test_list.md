@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**173** tests have been evaluated with version **0.2.20** of microcad.
+**177** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -11,12 +11,16 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/align_2d.svg)](../libraries/std/ops/.test/align_2d.log) | [align_2d](../libraries/std/ops/align.md) |
 | [![test](../libraries/std/ops/.test/align_2d_multiplicity.svg)](../libraries/std/ops/.test/align_2d_multiplicity.log) | [align_2d_multiplicity](../libraries/std/ops/align.md) |
 | [![test](../libraries/std/ops/.test/align_3d.svg)](../libraries/std/ops/.test/align_3d.log) | [align_3d](../libraries/std/ops/align.md) |
-| [![test](../flow/calls/.test/argument_match_auto.svg)](../flow/calls/.test/argument_match_auto.log) | [argument_match_auto](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/argument_match_auto_err.svg)](../flow/calls/.test/argument_match_auto_err.log) | [argument_match_auto_err](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/argument_match_mix.svg)](../flow/calls/.test/argument_match_mix.log) | [argument_match_mix](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/argument_match_name.svg)](../flow/calls/.test/argument_match_name.log) | [argument_match_name](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/argument_match_single_identifier.svg)](../flow/calls/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/argument_match_type.svg)](../flow/calls/.test/argument_match_type.log) | [argument_match_type](../flow/calls/arguments.md) |
+| [![test](../flow/argument_match/.test/argument_match_auto.svg)](../flow/argument_match/.test/argument_match_auto.log) | [argument_match_auto](../flow/argument_match/inline_identifier.md) |
+| [![test](../flow/argument_match/.test/argument_match_auto_err.svg)](../flow/argument_match/.test/argument_match_auto_err.log) | [argument_match_auto_err](../flow/argument_match/inline_identifier.md) |
+| [![test](../flow/argument_match/.test/argument_match_default.svg)](../flow/argument_match/.test/argument_match_default.log) | [argument_match_default](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_empty.svg)](../flow/argument_match/.test/argument_match_empty.log) | [argument_match_empty](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_id.svg)](../flow/argument_match/.test/argument_match_id.log) | [argument_match_id](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_mix.svg)](../flow/argument_match/.test/argument_match_mix.log) | [argument_match_mix](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_short.svg)](../flow/argument_match/.test/argument_match_short.log) | [argument_match_short](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_single_identifier.svg)](../flow/argument_match/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](../flow/argument_match/inline_identifier.md) |
+| [![test](../flow/argument_match/.test/argument_match_type.svg)](../flow/argument_match/.test/argument_match_type.log) | [argument_match_type](../flow/argument_match/priorities.md) |
+| [![test](../flow/argument_match/.test/argument_match_type_compatible.svg)](../flow/argument_match/.test/argument_match_type_compatible.log) | [argument_match_type_compatible](../flow/argument_match/priorities.md) |
 | [![test](../types/collections/.test/array_add.svg)](../types/collections/.test/array_add.log) | [array_add](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_div.svg)](../types/collections/.test/array_div.log) | [array_div](../types/collections/arrays.md) |
 | [![test](../types/collections/.test/array_expressions.svg)](../types/collections/.test/array_expressions.log) | [array_expressions](../types/collections/arrays.md) |
@@ -46,6 +50,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/builtin/.test/builtin_translate.svg)](../libraries/builtin/.test/builtin_translate.log) | [builtin_translate](../libraries/builtin/ops.md) |
 | [![test](../libraries/builtin/.test/builtin_translate_twice.svg)](../libraries/builtin/.test/builtin_translate_twice.log) | [builtin_translate_twice](../libraries/builtin/ops.md) |
 | [![test](../flow/calls/.test/call_function.svg)](../flow/calls/.test/call_function.log) | [call_function](../flow/calls/README.md) |
+| [![test](../flow/argument_match/.test/call_match.svg)](../flow/argument_match/.test/call_match.log) | [call_match](../flow/argument_match/README.md) |
 | [![test](../flow/calls/.test/call_workbench.svg)](../flow/calls/.test/call_workbench.log) | [call_workbench](../flow/calls/README.md) |
 | [![test](../flow/.test/chained_if_statement.svg)](../flow/.test/chained_if_statement.log) | [chained_if_statement](../flow/conditions.md) |
 | [![test](../structure/workbenches/.test/code.svg)](../structure/workbenches/.test/code.log) | [code](../structure/workbenches/README.md) |
@@ -77,7 +82,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/illegal_workbench_statement.svg)](../structure/workbenches/.test/illegal_workbench_statement.log) | [illegal_workbench_statement](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/init_property.svg)](../structure/workbenches/.test/init_property.log) | [init_property](../structure/workbenches/README.md) |
 | [![test](../structure/workbenches/.test/initializers.svg)](../structure/workbenches/.test/initializers.log) | [initializers](../structure/workbenches/README.md) |
-| [![test](../flow/calls/.test/inline_identifiers.svg)](../flow/calls/.test/inline_identifiers.log) | [inline_identifiers](../flow/calls/multiplicity.md) |
 | [![test](../structure/workbenches/.test/input.svg)](../structure/workbenches/.test/input.log) | [input](../structure/workbenches/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../structure/modules/.test/internal_mod.svg)](../structure/modules/.test/internal_mod.log) | [internal_mod](../structure/modules/internal_modules.md) |
@@ -90,10 +94,10 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/.test/missed_property.svg)](../structure/workbenches/.test/missed_property.log) | [missed_property](../structure/workbenches/README.md) |
 | [![test](../structure/.test/mod.svg)](../structure/.test/mod.log) | [mod](../structure/functions.md) |
 | [![test](../structure/modules/.test/mod_example.svg)](../structure/modules/.test/mod_example.log) | [mod_example](../structure/modules/README.md) |
-| [![test](../flow/calls/.test/multiplicity_arrays.svg)](../flow/calls/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/calls/multiplicity.md) |
-| [![test](../flow/calls/.test/multiplicity_tuple_array.svg)](../flow/calls/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/calls/multiplicity.md) |
+| [![test](../flow/argument_match/.test/multiplicity_arrays.svg)](../flow/argument_match/.test/multiplicity_arrays.log) | [multiplicity_arrays](../flow/argument_match/multiplicity.md) |
+| [![test](../flow/argument_match/.test/multiplicity_tuple_array.svg)](../flow/argument_match/.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](../flow/argument_match/multiplicity.md) |
 | [![test](../types/collections/tuples/.test/named_tuple_access.svg)](../types/collections/tuples/.test/named_tuple_access.log) | [named_tuple_access](../types/collections/tuples/README.md) |
-| [![test](../flow/calls/.test/no_multiplicity.svg)](../flow/calls/.test/no_multiplicity.log) | [no_multiplicity](../flow/calls/multiplicity.md) |
+| [![test](../flow/argument_match/.test/no_multiplicity.svg)](../flow/argument_match/.test/no_multiplicity.log) | [no_multiplicity](../flow/argument_match/multiplicity.md) |
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
 | [![test](../structure/workbenches/.test/op_example.svg)](../structure/workbenches/.test/op_example.log) | [op_example](../structure/workbenches/operations.md) |
 | [![test](../expressions/.test/operator_array.svg)](../expressions/.test/operator_array.log) | [operator_array](../expressions/operators.md) |
@@ -139,10 +143,10 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/tuples/.test/tuple_assignment_bundle.svg)](../types/collections/tuples/.test/tuple_assignment_bundle.log) | [tuple_assignment_bundle](../types/collections/tuples/assignments.md) |
 | [![test](../types/collections/tuples/.test/tuple_assignment_convert.svg)](../types/collections/tuples/.test/tuple_assignment_convert.log) | [tuple_assignment_convert](../types/collections/tuples/assignments.md) |
 | [![test](../types/collections/tuples/.test/tuple_div.svg)](../types/collections/tuples/.test/tuple_div.log) | [tuple_div](../types/collections/tuples/operators.md) |
-| [![test](../flow/calls/.test/tuple_match.svg)](../flow/calls/.test/tuple_match.log) | [tuple_match](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/tuple_match_errors.svg)](../flow/calls/.test/tuple_match_errors.log) | [tuple_match_errors](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/tuple_match_variants.svg)](../flow/calls/.test/tuple_match_variants.log) | [tuple_match_variants](../flow/calls/arguments.md) |
-| [![test](../flow/calls/.test/tuple_match_warnings.svg)](../flow/calls/.test/tuple_match_warnings.log) | [tuple_match_warnings](../flow/calls/arguments.md) |
+| [![test](../flow/argument_match/.test/tuple_match.svg)](../flow/argument_match/.test/tuple_match.log) | [tuple_match](../flow/argument_match/tuple_matching.md) |
+| [![test](../flow/argument_match/.test/tuple_match_errors.svg)](../flow/argument_match/.test/tuple_match_errors.log) | [tuple_match_errors](../flow/argument_match/errors.md) |
+| [![test](../flow/argument_match/.test/tuple_match_variants.svg)](../flow/argument_match/.test/tuple_match_variants.log) | [tuple_match_variants](../flow/argument_match/tuple_matching.md) |
+| [![test](../flow/argument_match/.test/tuple_match_warnings.svg)](../flow/argument_match/.test/tuple_match_warnings.log) | [tuple_match_warnings](../flow/argument_match/errors.md) |
 | [![test](../types/collections/tuples/.test/tuple_mul_scale.svg)](../types/collections/tuples/.test/tuple_mul_scale.log) | [tuple_mul_scale](../types/collections/tuples/operators.md) |
 | [![test](../types/collections/tuples/.test/tuple_neg.svg)](../types/collections/tuples/.test/tuple_neg.log) | [tuple_neg](../types/collections/tuples/operators.md) |
 | [![test](../types/collections/tuples/.test/tuple_sub.svg)](../types/collections/tuples/.test/tuple_sub.log) | [tuple_sub](../types/collections/tuples/operators.md) |

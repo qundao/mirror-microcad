@@ -8,7 +8,7 @@ They can be extruded into three-dimensional parts.
 ```µcad,sketch_basic
 use std::geo2d::*;
 sketch MySketch( radius: Length) {
-    Circle(radius) - Rect(radius);
+    Circle(radius) - Rect(size = radius);
 }
 
 MySketch(1cm);
@@ -25,7 +25,7 @@ If you generate a 3D model within a sketch you will get an error:
 ```µcad,sketch_3d#todo_fail
 use std::geo3d::*;
 sketch MySketch( radius: Length) {
-    Sphere(radius) - Cube(radius);  // error
+    Sphere(radius) - Cube(size = radius);  // error
 }
 
 MySketch(1cm);

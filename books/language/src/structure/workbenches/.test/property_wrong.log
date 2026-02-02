@@ -2,27 +2,27 @@
 -- Test --
         Test name: property_wrong
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/README.md:301
+      Source file: ../books/language/src/structure/workbenches/README.md:302
         Test path: ../books/language/src/structure/workbenches/.test
 
 -- Code --
 
- 301:   sketch Wheel(outer: Length) {
- 302:       use std::geo2d::Circle;
- 303:   
- 304:       // `inner` is declared as variable and may not be read
- 305:       // from outside this workbench
- 306:       inner = outer / 2;
- 307:   
- 308:       Circle(outer) - Circle(inner);
- 309:   }
- 310:   
- 311:   t = Wheel(outer = 1cm);
- 312:   
- 313:   // you can still extract and display `outer`
- 314:   std::print("outer: {t.outer}");
- 315:   // but you cannot access `inner` anymore
- 316:   std::print("inner: {t.inner}"); // error
+ 302:   sketch Wheel(outer: Length) {
+ 303:       use std::geo2d::Circle;
+ 304:   
+ 305:       // `inner` is declared as variable and may not be read
+ 306:       // from outside this workbench
+ 307:       inner = outer / 2;
+ 308:   
+ 309:       Circle(r = outer) - Circle(r = inner);
+ 310:   }
+ 311:   
+ 312:   t = Wheel(1cm);
+ 313:   
+ 314:   // you can still extract and display `outer`
+ 315:   std::print("outer: {t.outer}");
+ 316:   // but you cannot access `inner` anymore
+ 317:   std::print("inner: {t.inner}"); // error
 
 -- Output --
 outer: 10mm
@@ -30,9 +30,9 @@ inner: <NO VALUE>
 
 -- Errors --
   × error: 16:21: Property not found: inner
-     ╭─[../books/language/src/structure/workbenches/README.md:316:21]
- 315 │ // but you cannot access `inner` anymore
- 316 │ std::print("inner: {t.inner}"); // error
+     ╭─[../books/language/src/structure/workbenches/README.md:317:21]
+ 316 │ // but you cannot access `inner` anymore
+ 317 │ std::print("inner: {t.inner}"); // error
      ·                     ───┬───
      ·                        ╰── error: 16:21: Property not found: inner
      ╰────

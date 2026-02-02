@@ -22,12 +22,6 @@ use crate::{
 };
 
 /// Symbol
-///
-/// Every `Symbol` has a [`SymbolDefinition`], a *parent* and *children*.
-/// So `Symbol` is meant as a tree which is used by [`SymbolTable`] to store
-/// the resolved symbols by it's original structure in the source code and by it's *id*.
-///
-/// `Symbol` can be shared as mutable.
 #[derive(Clone)]
 pub struct Symbol {
     visibility: std::cell::RefCell<Visibility>,
@@ -835,7 +829,7 @@ impl Lookup for Symbol {
                 } else {
                     log::trace!(
                         "{not_found} global symbol: {name:?}",
-                        not_found = crate::mark!(NOT_FOUND_INTERIM),
+                        not_found = crate::mark!(NOT_FOUND),
                     );
                     return Err(ResolveError::WrongTarget);
                 }
@@ -843,7 +837,7 @@ impl Lookup for Symbol {
             Err(err) => {
                 log::trace!(
                     "{not_found} global symbol: {name:?}",
-                    not_found = crate::mark!(NOT_FOUND_INTERIM),
+                    not_found = crate::mark!(NOT_FOUND),
                 );
                 return Err(err)?;
             }
@@ -851,7 +845,7 @@ impl Lookup for Symbol {
         symbol.set_check();
         log::trace!(
             "{found} global symbol: {symbol:?}",
-            found = crate::mark!(FOUND_INTERIM),
+            found = crate::mark!(FOUND),
         );
         Ok(symbol)
     }

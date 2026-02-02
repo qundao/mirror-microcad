@@ -14,10 +14,10 @@
  107:       fn inner() { return radius/2; }
  108:   
  109:       // generate donut (and call inner)
- 110:       Circle(radius) - Circle(inner());
+ 110:       Circle(radius) - Circle(radius = inner());
  111:   }
  112:   
- 113:   PunchedDisk(radius = 1cm);
+ 113:   PunchedDisk(1cm);
 
 -- No Output --
 -- No Errors --

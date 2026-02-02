@@ -157,6 +157,10 @@ pub enum EvalError {
     #[error("Too many arguments: {0}")]
     TooManyArguments(IdentifierList),
 
+    /// Arguments match by identifier but have incompatible types
+    #[error("Arguments match by identifier but have incompatible types: {0}")]
+    IdMatchButNotType(String),
+
     /// Builtin error
     #[error("Builtin error: {0}")]
     BuiltinError(String),
@@ -186,6 +190,16 @@ pub enum EvalError {
         name: Identifier,
         actual_params: String,
         possible_params: Vec<String>,
+    },
+    /// Workbench didn't find a initialization routine matching the given arguments
+    #[error("Workbench {name} has ambiguous initialization for those arguments")]
+    #[diagnostic(help("Ambiguous initializations: \n\t{}", ambiguous_params.join("\n\t")))]
+    AmbiguousInitialization {
+        #[label("Got: {name}( {actual_params} )")]
+        src_ref: SrcRef,
+        name: Identifier,
+        actual_params: String,
+        ambiguous_params: Vec<String>,
     },
 
     /// Initializer missed to set a property from plan

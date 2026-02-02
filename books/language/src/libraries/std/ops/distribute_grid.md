@@ -11,11 +11,11 @@ use std::geo2d::*;
 use std::ops::*;
 
 {
-    Circle(10mm);
-    Rect(10mm);
-    Rect(10mm);
-    Circle(10mm);
-}.distribute_grid(30mm, rows = 2, columns = 2);
+    Circle(radius = 10mm);
+    Rect(size = 10mm);
+    Rect(size = 10mm);
+    Circle(radius = 10mm);
+}.distribute_grid(size =30mm, rows = 2, columns = 2);
 ```
 
 [![test](.test/distribute_grid_3d.svg)](.test/distribute_grid_3d.log)
@@ -25,9 +25,9 @@ use std::geo3d::*;
 use std::ops::*;
 
 {
-    Sphere(10mm);
-    Cube(10mm);
-    Cube(10mm);
-    Sphere(10mm);
-}.distribute_grid(30mm, rows = 2, columns = 2);
+    Sphere(radius = 10mm);
+    Cube(size = 10mm);
+    Cube(size = 10mm);
+    Sphere(radius = 10mm);
+}.distribute_grid(size = 30mm, rows = 2, columns = 2);
 ```

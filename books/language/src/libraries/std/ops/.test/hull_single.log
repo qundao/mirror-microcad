@@ -11,8 +11,8 @@
    9:   use std::ops::*;
   10:   
   11:   {
-  12:       Circle(10mm).translate(x = 10mm, y =  0mm);
-  13:       Circle(10mm).translate(x =  0mm, y = 10mm);
+  12:       Circle(radius = 10mm).translate(x = 10mm, y =  0mm);
+  13:       Circle(radius = 10mm).translate(x =  0mm, y = 10mm);
   14:   }.hull();
 
 -- No Output --

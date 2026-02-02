@@ -11,11 +11,11 @@
   11:   use std::ops::*;
   12:   
   13:   {
-  14:       Circle(10mm);
-  15:       Rect(10mm);
-  16:       Rect(10mm);
-  17:       Circle(10mm);
-  18:   }.distribute_grid(30mm, rows = 2, columns = 2);
+  14:       Circle(radius = 10mm);
+  15:       Rect(size = 10mm);
+  16:       Rect(size = 10mm);
+  17:       Circle(radius = 10mm);
+  18:   }.distribute_grid(size =30mm, rows = 2, columns = 2);
 
 -- No Output --
 -- No Errors --

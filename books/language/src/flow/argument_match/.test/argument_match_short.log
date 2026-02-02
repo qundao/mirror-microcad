@@ -1,0 +1,21 @@
+﻿
+-- Test --
+        Test name: argument_match_short
+  Expected result: ok
+      Source file: ../books/language/src/flow/argument_match/priorities.md:51
+        Test path: ../books/language/src/flow/argument_match/.test
+
+-- Code --
+
+  51:   fn f( width: Length, height: Length ) -> Area { width * height }
+  52:   
+  53:   // use short identifiers
+  54:   std::debug::assert_eq([ f(w = 1cm, h = 2cm), 2cm² ]);
+  55:   // can be mixed
+  56:   std::debug::assert_eq([ f(w = 1cm, height = 2cm), 2cm² ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

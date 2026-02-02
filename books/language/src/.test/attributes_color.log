@@ -8,7 +8,7 @@
 -- Code --
 
   42:   #[color = "#FFFFFF"]
-  43:   c = std::geo2d::Circle(42.0mm);
+  43:   c = std::geo2d::Circle(r = 42.0mm);
   44:   
   45:   std::debug::assert_eq([c#color, (r = 1.0, g = 1.0, b = 1.0, a = 1.0)]);
 

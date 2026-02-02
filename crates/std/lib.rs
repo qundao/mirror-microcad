@@ -41,7 +41,7 @@ pub fn install(search_path: impl AsRef<std::path::Path>, overwrite: bool) -> std
 
     println!("Installing µcad standard library into {:?}...", path);
 
-    std::fs::create_dir_all(&path)?;
+    std::fs::create_dir_all(path)?;
 
     // Extract all embedded files.
     Lib::iter().try_for_each(|file| {

@@ -15,9 +15,9 @@ use std::geo2d::*;
 
 sketch MySketch(a: Integer) {
     if a == 1 {
-        Circle(1cm)
+        Circle(r = 1cm)
     } else {
-        Rect(1cm)
+        Rect(s = 1cm)
     }
 }
 
@@ -37,11 +37,11 @@ use std::geo2d::*;
 
 sketch MySketch(a: Integer) {
     if a == 1 {
-        Circle(1cm)
+        Circle(r = 1cm)
     } else if a == 2 {
-        Rect(1cm)
+        Rect(s = 1cm)
     } else {
-        Hexagon(1cm)
+        Hexagon(r = 1cm)
     }
 }
 

@@ -67,7 +67,11 @@ pub fn shorten(what: &str, max_chars: usize) -> String {
             if p == max_chars {
                 Some('…')
             } else if p < max_chars {
-                if ch == '\n' { Some('⏎') } else { Some(ch) }
+                if ch == '\n' {
+                    Some('⏎')
+                } else {
+                    Some(ch)
+                }
             } else {
                 None
             }
@@ -103,14 +107,23 @@ macro_rules! shorten {
 #[cfg(feature = "ansi-color")]
 #[macro_export]
 macro_rules! mark {
-    (FOUND) => {
+    (FOUND!) => {
         color_print::cformat!("<G!,k,s> FOUND </>")
     };
-    (FOUND_INTERIM) => {
+    (FOUND) => {
         color_print::cformat!("<W!,k,s> FOUND </>")
     };
     (MATCH) => {
         color_print::cformat!("<Y!,k,s> MATCH </>")
+    };
+    (NO_MATCH) => {
+        color_print::cformat!("<Y,k,s> NO MATCH </>")
+    };
+    (MATCH!) => {
+        color_print::cformat!("<G!,k,s> MATCH </>")
+    };
+    (NO_MATCH!) => {
+        color_print::cformat!("<R,k,s> NO MATCH </>")
     };
     (CALL) => {
         color_print::cformat!("<B,k,s> CALL </>")
@@ -127,10 +140,10 @@ macro_rules! mark {
     (AMBIGUOUS) => {
         color_print::cformat!("<R,k,s> AMBIGUOUS </>")
     };
-    (NOT_FOUND) => {
+    (NOT_FOUND!) => {
         color_print::cformat!("<R,k,s> NOT FOUND </>")
     };
-    (NOT_FOUND_INTERIM) => {
+    (NOT_FOUND) => {
         color_print::cformat!("<Y,k,s> NOT FOUND </>")
     };
 }
@@ -150,6 +163,9 @@ macro_rules! found {
     (MATCH) => {
         "Match"
     };
+    (NO_MATCH) => {
+        "No Match"
+    };
     (CALL) => {
         "Call"
     };
@@ -168,7 +184,7 @@ macro_rules! found {
     (NOT_FOUND) => {
         "Not found"
     };
-    (NOT_FOUND_INTERIM) => {
+    (NOT_FOUND) => {
         "Not found"
     };
 }

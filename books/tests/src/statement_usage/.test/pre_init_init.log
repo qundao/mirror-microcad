@@ -7,8 +7,8 @@
 
 -- Code --
 
-  30:   sketch K() { 
-  31:     init() {}
+  30:   sketch K(x: Length) { 
+  31:     init() { x=1; }
   32:   init(l:Length) {} } K();
 
 -- No Output --
@@ -16,6 +16,7 @@
 -- Model --
   Group (root) ->
     Workpiece(sketch) pre_init_init::K() ->
+      - x = 1
 
 Export error: Render error: Nothing to render
 -- Test Result --

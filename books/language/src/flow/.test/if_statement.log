@@ -13,9 +13,9 @@
   15:   
   16:   sketch MySketch(a: Integer) {
   17:       if a == 1 {
-  18:           Circle(1cm)
+  18:           Circle(r = 1cm)
   19:       } else {
-  20:           Rect(1cm)
+  20:           Rect(s = 1cm)
   21:       }
   22:   }
   23:   

@@ -9,7 +9,7 @@
 
   54:   use std::geo2d::Circle as Disk;
   55:   
-  56:   Disk(4mm);
+  56:   Disk(radius = 4mm);
 
 -- No Output --
 -- No Errors --

@@ -138,7 +138,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
                 log::trace!(
                     "{found} symbol '{name:?}' within '{within}'",
                     within = within.full_name(),
-                    found = crate::mark!(FOUND_INTERIM)
+                    found = crate::mark!(FOUND)
                 );
                 Ok(symbol)
             }
@@ -147,7 +147,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
                 log::trace!(
                     "{not_found} symbol '{name:?}' within '{within}'",
                     within = within.full_name(),
-                    not_found = crate::mark!(NOT_FOUND_INTERIM)
+                    not_found = crate::mark!(NOT_FOUND)
                 );
                 Err(err)
             }
@@ -180,7 +180,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
         if name.count_super() > 0 {
             log::trace!(
                 "{not_found} '{name:?}' is not canonical",
-                not_found = crate::mark!(NOT_FOUND_INTERIM),
+                not_found = crate::mark!(NOT_FOUND),
             );
             return Err(ResolveError::SymbolNotFound(name.clone()));
         }

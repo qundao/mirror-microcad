@@ -26,7 +26,7 @@ pub part Cube(size_x: Length, size_y: Length, size_z: Length) {
     }
 
     std::geo2d::Rect(width = size_x, height = size_y)
-        .std::ops::extrude(z = size_z)
+        .std::ops::extrude(height = size_z)
         .std::ops::translate(z = -size_z / 2.0)
 }
 

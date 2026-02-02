@@ -1,0 +1,18 @@
+﻿
+-- Test --
+        Test name: argument_match_empty
+  Expected result: ok
+      Source file: ../books/language/src/flow/argument_match/priorities.md:23
+        Test path: ../books/language/src/flow/argument_match/.test
+
+-- Code --
+
+  23:   fn f() {}   // no parameters
+  24:   
+  25:   f();        // no arguments
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

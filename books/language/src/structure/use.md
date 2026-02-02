@@ -40,7 +40,7 @@ You may also use whole the *module* if the names you are using already exist as 
 ```µcad,use_module
 use std::geo2d;
 
-geo2d::Circle(40mm);
+geo2d::Circle(radius = 40mm);
 ```
 
 ## Use As Statement
@@ -53,7 +53,7 @@ locally rename the *target symbol*:
 ```µcad,use_as
 use std::geo2d::Circle as Disk;
 
-Disk(4mm);
+Disk(radius = 4mm);
 ```
 
 Or you may use `use as` with a *module*:
@@ -63,7 +63,7 @@ Or you may use `use as` with a *module*:
 ```µcad,use_as_module
 use std::geo2d as geo;
 
-geo::Circle(4mm);
+geo::Circle(radius = 4mm);
 ```
 
 ## Use All Statement

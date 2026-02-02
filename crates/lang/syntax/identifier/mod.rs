@@ -7,8 +7,8 @@ mod identifier_list;
 mod qualified_name;
 
 use derive_more::{Deref, DerefMut};
-use miette::SourceSpan;
 pub use identifier_list::*;
+use miette::SourceSpan;
 pub use qualified_name::*;
 
 use crate::{parse::*, parser::Parser, src_ref::*, syntax::*, Id};
@@ -54,6 +54,16 @@ pub enum Case {
     Invalid,
 }
 
+/// Shortened identifier
+#[derive(Deref)]
+pub(crate) struct ShortId(String);
+
+impl PartialEq<Identifier> for ShortId {
+    fn eq(&self, other: &Identifier) -> bool {
+        self.0 == other.to_string()
+    }
+}
+
 impl Identifier {
     /// Make empty (invalid) id
     pub fn none() -> Self {
@@ -95,6 +105,24 @@ impl Identifier {
     /// Get the value of the identifier
     pub fn id(&self) -> &Id {
         &self.0.value
+    }
+
+    /// Return first character of the identifier.
+    pub(crate) fn short_id(&self) -> ShortId {
+        let parts = self
+            .0
+            .value
+            .split("_")
+            .map(|part| {
+                part.chars()
+                    .next()
+                    .expect("cannot shorten empty Identifier")
+            })
+            .map(|p| p.to_string())
+            .collect::<Vec<_>>()
+            .join("_");
+
+        ShortId(parts)
     }
 
     /// Return number of identifiers in name
@@ -309,4 +337,15 @@ fn identifier_case() {
     assert_eq!(detect_case("A_B"), Case::UpperSnake);
 
     println!("All tests passed.");
+}
+
+#[test]
+fn test_short_identifiers() {
+    fn test(id: &str) -> String {
+        Identifier::from(id).short_id().to_string()
+    }
+
+    assert_eq!(test("weather_thermal_function"), "w_t_f");
+    assert_eq!(test("width"), "w");
+    assert_eq!(test("WeatherThermal_Function"), "W_F");
 }

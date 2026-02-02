@@ -15,6 +15,16 @@
  121:   Wheel(radius = 1.0mm);
 
 -- No Output --
--- No Errors --
+-- Errors --
+  × error: 6:7: Workbench Wheel has ambiguous initialization for those arguments
+     ╭─[../books/language/src/structure/workbenches/README.md:121:1]
+ 120 │ 
+ 121 │ Wheel(radius = 1.0mm);
+     · ──────────┬──────────
+     ·           ╰── Got: Wheel( radius = 1mm )
+     ╰────
+  help: Ambiguous initializations:
+        	initializers::Wheel(radius: Length)
+        	initializers::Wheel::init(radius: Length)
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED (BUT IS TODO)

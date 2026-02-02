@@ -60,7 +60,7 @@
                               - y = 0mm
                               - z = -25mm
                               Transform __builtin::ops::translate(x=0mm, y=0mm, z=-25mm) ->
-                                Workpiece(op) std::ops::extrude(z=50mm) ->
+                                Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
                                   - height = 50mm
                                   - scale = (x=1, y=1)
                                   - twist = 0rad
@@ -85,7 +85,7 @@
                                   - y = 0mm
                                   - z = -12.5mm
                                   Transform __builtin::ops::translate(x=0mm, y=0mm, z=-12.5mm) ->
-                                    Workpiece(op) std::ops::extrude(z=25mm) ->
+                                    Workpiece(op) std::ops::extrude(height=25mm, scale=(x=1, y=1), twist=0rad) ->
                                       - height = 25mm
                                       - scale = (x=1, y=1)
                                       - twist = 0rad

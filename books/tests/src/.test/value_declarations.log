@@ -97,7 +97,7 @@
  105:   assert_eq([module::pub_value, 2]);
  106:   assert_invalid(module::pub_sub_module::value);
  107:   assert_eq([module::pub_sub_module::pub_value, 4]);
- 108:   assert_eq([module::pub_sub_module::Workbench().property, 9]);
+ 108:   assert_eq([module::pub_sub_module::Workbench(p=5).property, 9]);
  109:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
  110:   assert_eq([module::function(), 0]);
 
