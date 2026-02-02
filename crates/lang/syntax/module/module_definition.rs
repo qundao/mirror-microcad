@@ -14,7 +14,7 @@ pub struct ModuleDefinition {
     pub visibility: Visibility,
     /// Name of the module.
     pub id: Identifier,
-    /// Module body. ('None' if external module
+    /// Module body. ('None' if file module)
     pub body: Option<Body>,
 }
 
