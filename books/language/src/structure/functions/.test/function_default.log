@@ -2,17 +2,17 @@
 -- Test --
         Test name: function_default
   Expected result: ok
-      Source file: ../books/language/src/structure/functions/README.md:39
+      Source file: ../books/language/src/structure/functions/README.md:40
         Test path: ../books/language/src/structure/functions/.test
 
 -- Code --
 
-  39:   fn f(x: Scalar, y=1mm) -> Length {
-  40:       x * y
-  41:   }
-  42:   
-  43:   std::debug::assert_eq([ f(2), 2mm ]);
-  44:   std::debug::assert_eq([ f(2, 2mm), 4mm ]);
+  40:   fn f(x: Scalar, y=1mm) -> Length {
+  41:       x * y
+  42:   }
+  43:   
+  44:   std::debug::assert_eq([ f(2), 2mm ]);
+  45:   std::debug::assert_eq([ f(2, 2mm), 4mm ]);
 
 -- No Output --
 -- No Errors --
