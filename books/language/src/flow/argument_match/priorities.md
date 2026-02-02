@@ -113,8 +113,11 @@ You can combine all these methods.
 [![test](.test/argument_match_mix.svg)](.test/argument_match_mix.log)
 
 ```µcad,argument_match_mix
-fn f( a: Scalar, b: Length, c=2cm, d: Area ) -> Volume { } // warning: unused a,b,c,d
+fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
 
-// `a` is the only Scalar and `b` is named, so `c` and `d` do not need a name.
-f(1, b=2cm, 2cm², 3cm);
+// `a` gets the Integer (1) which is compatible to Scalar (1.0)
+// `b` is named
+// `c` gets it's default
+// `d` does not need a name because `b` has one
+f(b=2cm, 1, 3cm);
 ```
