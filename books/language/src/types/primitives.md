@@ -26,12 +26,22 @@ std::debug::assert_eq([4 == 5 and 4 == 4, false]);
 
 ## Integer
 
-The type `integer` contains a natural number.
+The type `Integer` contains a natural number.
 
 [![test](.test/types_primitive_integer.svg)](.test/types_primitive_integer.log)
 
 ```µcad,types_primitive_integer
 i = 3;
+```
+
+## Scalar
+
+The type `Scalar` contains a natural number.
+
+[![test](.test/types_primitive_scalar.svg)](.test/types_primitive_scalar.log)
+
+```µcad,types_primitive_scalar
+i = 3.1415;
 ```
 
 ## String
