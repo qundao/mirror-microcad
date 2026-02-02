@@ -66,8 +66,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/expression_model.svg)](../expressions/.test/expression_model.log) | [expression_model](../expressions/) |
 | [![test](../expressions/.test/expression_multiply.svg)](../expressions/.test/expression_multiply.log) | [expression_multiply](../expressions/) |
 | [![test](../expressions/.test/expression_quantity.svg)](../expressions/.test/expression_quantity.log) | [expression_quantity](../expressions/) |
-| [![test](../structure/modules/.test/external_modules_main.svg)](../structure/modules/.test/external_modules_main.log) | [external_modules_main](../structure/modules/external_modules.md) |
-| [![test](../structure/modules/.test/external_modules_second.svg)](../structure/modules/.test/external_modules_second.log) | [external_modules_second](../structure/modules/external_modules.md) |
+| [![test](../structure/modules/.test/file_modules_main.svg)](../structure/modules/.test/file_modules_main.log) | [file_modules_main](../structure/modules/file_modules.md) |
+| [![test](../structure/modules/.test/file_modules_second.svg)](../structure/modules/.test/file_modules_second.log) | [file_modules_second](../structure/modules/file_modules.md) |
 | [![test](../types/.test/format_string.svg)](../types/.test/format_string.log) | [format_string](../types/format_string.md) |
 | [![test](../types/.test/format_string_err.svg)](../types/.test/format_string_err.log) | [format_string_err](../types/format_string.md) |
 | [![test](../types/.test/format_string_value.svg)](../types/.test/format_string_value.log) | [format_string_value](../types/format_string.md) |
@@ -85,9 +85,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/illegal_workbench_statement_sketch.svg)](../structure/workbenches/elements/.test/illegal_workbench_statement_sketch.log) | [illegal_workbench_statement_sketch](../structure/workbenches/elements/building_code.md) |
 | [![test](../structure/workbenches/elements/.test/init_code_no_building_plan.svg)](../structure/workbenches/elements/.test/init_code_no_building_plan.log) | [init_code_no_building_plan](../structure/workbenches/elements/init_code.md) |
 | [![test](../structure/workbenches/elements/.test/init_property.svg)](../structure/workbenches/elements/.test/init_property.log) | [init_property](../structure/workbenches/elements/initializers.md) |
+| [![test](../structure/modules/.test/inline_mod.svg)](../structure/modules/.test/inline_mod.log) | [inline_mod](../structure/modules/inline_modules.md) |
 | [![test](../structure/workbenches/types/.test/input.svg)](../structure/workbenches/types/.test/input.log) | [input](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
-| [![test](../structure/modules/.test/internal_mod.svg)](../structure/modules/.test/internal_mod.log) | [internal_mod](../structure/modules/internal_modules.md) |
 | [![test](../.test/lib_builtin.svg)](../.test/lib_builtin.log) | [lib_builtin](../libraries.md) |
 | [![test](../.test/lib_std.svg)](../.test/lib_std.log) | [lib_std](../libraries.md) |
 | [![test](../flow/argument_match/.test/match_ambiguous.svg)](../flow/argument_match/.test/match_ambiguous.log) | [match_ambiguous](../flow/argument_match/errors.md) |

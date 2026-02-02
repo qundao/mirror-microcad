@@ -74,8 +74,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/init_workbench.svg)](statement_usage/.test/init_workbench.log) | [init_workbench](statement_usage/init.md) |
 | [![test](.test/locals_unused.svg)](.test/locals_unused.log) | [locals_unused](locals.md) |
 | [![test](.test/method_call.svg)](.test/method_call.log) | [method_call](method_call.md) |
-| [![test](.test/mod_external.svg)](.test/mod_external.log) | [mod_external](mod_external.md) |
-| [![test](.test/mod_external_root.svg)](.test/mod_external_root.log) | [mod_external_root](mod_external.md) |
+| [![test](.test/mod_external.svg)](.test/mod_external.log) | [mod_external](mod_file.md) |
+| [![test](.test/mod_external_root.svg)](.test/mod_external_root.log) | [mod_external_root](mod_file.md) |
 | [![test](statement_usage/.test/module_assignment_const.svg)](statement_usage/.test/module_assignment_const.log) | [module_assignment_const](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_assignment_prop.svg)](statement_usage/.test/module_assignment_prop.log) | [module_assignment_prop](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_assignment_pub.svg)](statement_usage/.test/module_assignment_pub.log) | [module_assignment_pub](statement_usage/module.md) |
