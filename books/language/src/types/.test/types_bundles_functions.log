@@ -2,24 +2,24 @@
 -- Test --
         Test name: types_bundles_functions
   Expected result: ok
-      Source file: ../books/language/src/types/README.md:46
+      Source file: ../books/language/src/types/README.md:50
         Test path: ../books/language/src/types/.test
 
 -- Code --
 
-  46:   fn f(x = 4mm) {}       // use unit (with default)
-  47:   fn f(x: Length) {}     // use type (without default)
+  50:   fn f(x = 4mm) {}       // use unit (with default)
+  51:   fn f(x: Length) {}     // use type (without default)
 
 -- No Output --
 -- Errors --
   ⚠ warning: 2:4: Unused global symbol f.
-    ╭─[../books/language/src/types/README.md:47:4]
- 46 │ fn f(x = 4mm) {}       // use unit (with default)
- 47 │ fn f(x: Length) {}     // use type (without default)
+    ╭─[../books/language/src/types/README.md:51:4]
+ 50 │ fn f(x = 4mm) {}       // use unit (with default)
+ 51 │ fn f(x: Length) {}     // use type (without default)
     ·    ┬
     ·    ╰── warning: 2:4: Unused global symbol f.
     ╰────
-Unexpected warnings(s) which did occur in line(s): 47
+Unexpected warnings(s) which did occur in line(s): 51
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

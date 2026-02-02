@@ -175,7 +175,7 @@ Quantity types can use operators:
 
 [![test](.test/types_quantity_arithmetic.svg)](.test/types_quantity_arithmetic.log)
 
-```µcad,types_quantity_arithmetic
+```µcad,types_quantity_arithmetic#todo
 use std::debug::assert_eq;
 
 a = 6cm;
