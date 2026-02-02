@@ -1,8 +1,20 @@
 # Calls
 
+*Workbenches* and *functions* can get called, which just means there inner code
+gets executed.
+There are several types of calls which have some different effects or usage.
+
+| Type           | Example                           | Input(s)                    | Output       |
+| -------------- | --------------------------------- | --------------------------- | ------------ |
+| function call  | `value = my_function(..);`        | parameter list              | Value        |
+| workbench call | `model = MySketch(..);`           | parameter list              | Model[^prop] |
+| operation call | `new_model = model.my_operation;` | parameter list<br>and Model | Model[^prop] |
+
+[^prop]: including properties.
+
 ## Calling Functions
 
-A call of a function consists of just the *identifier* and an [argument list](arguments.md).
+A call of a [function](../../structure/functions/)  consists of just the *identifier* and an [argument list](arguments.md).
 and the result is a *value*:
 
 [![test](.test/call_function.svg)](.test/call_function.log)
@@ -21,7 +33,7 @@ std::debug::assert_eq( [s, 4] );
 ## Calling Workbenches
 
 [Workbenches](workbench.md) can be called in the same way as functions
-except that the result is a object node.
+except that the result is a *model*.
 
 [![test](.test/call_workbench.svg)](.test/call_workbench.log)
 
