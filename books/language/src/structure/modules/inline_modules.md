@@ -1,21 +1,18 @@
-# Internal Modules
+# Inline modules
 
-Internal modules are modules which have been defined with the `mod` keyword
-followed by a name and a body as the following example shows:
+Inline modules are modules are defined with the `mod` keyword,
+followed by a name and a body `{...}` as the following example shows:
 
-[![test](.test/internal_mod.svg)](.test/internal_mod.log)
+[![test](.test/inline_mod.svg)](.test/inline_mod.log)
 
-```µcad,internal_mod
+```µcad,inline_mod
 mod my_module {
     // e.g. define a constant
     pub VALUE = 1;
 }
 ```
 
-Module names are always written in
-[`lower_snake_case`](./../../appendix/coding.md).
-
-The following statements can be used within a module:
+The following statements can be used within an inline module:
 
 <!-- markdownlint-disable no-inline-html -->
 | Statement                                      | Purpose                                     | Example        |
@@ -26,5 +23,4 @@ The following statements can be used within a module:
 | [workbench](../workbenches)                    | build or transform 2D sketches and 3D parts | `part P() { }` |
 | [module](README.md)                            | modularization of complex code              | `mod m { }`    |
 | [use](../use.md)                               | use elements from other modules             | `use m;`       |
-| [call](../../flow/calls)                       | use functions and workbenches               | `f();`         |
-| [comment](../../doc/comments.md)               | for documentation                           | `// comment`   |
+| [comment](../../doc/comments.md)               | for documentation                           | `//! comment`  |

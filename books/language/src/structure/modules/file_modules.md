@@ -1,26 +1,28 @@
 # File Modules
 
-File modules are modules that include source files.
+File modules are modules that include µcad source files.
 
-For example if you put a second file beside your main source code file, you
-can easily import this second file.
+For example, if you put another file `second.µcad` next to your main file, you
+can easily import this second file via its name `second`:
 
-[![test](.test/external_modules_main.svg)](.test/external_modules_main.log)
+[![test](.test/file_modules_main.svg)](.test/file_modules_main.log)
 
-```µcad,external_modules_main
+```µcad,file_modules_main
 mod second;
 second::f(); 
 ```
 
-[![test](.test/external_modules_second.svg)](.test/external_modules_second.log)
+[![test](.test/file_modules_second.svg)](.test/file_modules_second.log)
 
-```µcad,external_modules_second
+```µcad,file_modules_second
 // file: second.µcad
 pub fn f() {}
 ```
 
-By using `mod second`, in the first source file, microcad searches for either a
-file called `second.µcad` or `second/mod.µcad` and loads it into a module.
+By writing `mod second;` in the first source file, microcad searches for either a
+file called `second.µcad` or `second/mod.µcad` and loads its public symbols into a module.
 
-**Hint**: Because external modules are source files, they may contain statements that are not allowed in internal modules.
-These statements (such as calls, expressions, or value assignments) will not be processed when including an external module.
+Please note that according to µcad code convention that says that module name have to be lower snake code, file names have to be written lower snake case, too.
+
+**Hint**: Because file modules are source files, they may contain statements that are not allowed in inline modules.
+These statements (such as calls, expressions, or value assignments) will not be processed when including a file module.
