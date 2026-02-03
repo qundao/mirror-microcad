@@ -182,8 +182,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/builtin/.test/text.svg)](../libraries/builtin/.test/text.log) | [text](../libraries/builtin/geo2d.md) |
 | [![test](../.test/toml_import.svg)](../.test/toml_import.log) | [toml_import](../import.md) |
 | [![test](../libraries/std/ops/.test/translate_2d.svg)](../libraries/std/ops/.test/translate_2d.log) | [translate_2d](../libraries/std/ops/translate.md) |
-| [![test](../types/collections/tuples/.test/tuple_error_name_mismatch.svg)](../types/collections/tuples/.test/tuple_error_name_mismatch.log) | [tuple_error_name_mismatch](../types/collections/tuples/operators.md) |
-| [![test](../types/collections/tuples/.test/tuple_error_type_mismatch.svg)](../types/collections/tuples/.test/tuple_error_type_mismatch.log) | [tuple_error_type_mismatch](../types/collections/tuples/operators.md) |
+| [![test](../types/collections/tuples/.test/tuple_error_mismatch.svg)](../types/collections/tuples/.test/tuple_error_mismatch.log) | [tuple_error_mismatch](../types/collections/tuples/operators.md) |
 | [![test](../types/collections/tuples/.test/tuple_operations.svg)](../types/collections/tuples/.test/tuple_operations.log) | [tuple_operations](../types/collections/tuples/operators.md) |
 | [![test](../types/.test/types_bundles_functions.svg)](../types/.test/types_bundles_functions.log) | [types_bundles_functions](../types/) |
 | [![test](../types/.test/types_def_vs_decl.svg)](../types/.test/types_def_vs_decl.log) | [types_def_vs_decl](../types/) |
@@ -210,6 +209,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/tuples/.test/unnamed_tuple.svg)](../types/collections/tuples/.test/unnamed_tuple.log) | [unnamed_tuple](../types/collections/tuples/) |
 | [![test](../types/collections/tuples/.test/unnamed_tuple_ambiguous.svg)](../types/collections/tuples/.test/unnamed_tuple_ambiguous.log) | [unnamed_tuple_ambiguous](../types/collections/tuples/) |
 | [![test](../types/collections/tuples/.test/unnamed_tuple_order.svg)](../types/collections/tuples/.test/unnamed_tuple_order.log) | [unnamed_tuple_order](../types/collections/tuples/) |
+| [![test](../types/collections/tuples/.test/unnamed_tuple_units.svg)](../types/collections/tuples/.test/unnamed_tuple_units.log) | [unnamed_tuple_units](../types/collections/tuples/) |
 | [![test](../structure/.test/use.svg)](../structure/.test/use.log) | [use](../structure/use.md) |
 | [![test](../structure/.test/use_all.svg)](../structure/.test/use_all.log) | [use_all](../structure/use.md) |
 | [![test](../structure/.test/use_as.svg)](../structure/.test/use_as.log) | [use_as](../structure/use.md) |

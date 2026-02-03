@@ -1,4 +1,4 @@
-# Type aliases 
+# Tuple Aliases
 
 Some named tuples are used frequently and thus they have aliases: `Color`, `Vec2` and `Vec3`.
 This feature is also called *named-tuple duck-typing*.
