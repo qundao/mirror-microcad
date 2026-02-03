@@ -1,0 +1,28 @@
+﻿
+-- Test --
+        Test name: array_helper_reverse
+  Expected result: todo
+      Source file: ../books/language/src/types/collections/array/helpers.md:42
+        Test path: ../books/language/src/types/collections/array/.test
+
+-- Code --
+
+  42:   std::debug::assert_eq([ std::count([1,2,3]), [3,2,1] ]);
+
+-- No Output --
+-- Errors --
+  × error: 1:23: Array elements have different types: [Integer, [Integer]]
+    ╭─[../books/language/src/types/collections/array/helpers.md:42:23]
+ 42 │ std::debug::assert_eq([ std::count([1,2,3]), [3,2,1] ]);
+    ·                       ────────────────┬───────────────
+    ·                                       ╰── error: 1:23: Array elements have different types: [Integer, [Integer]]
+    ╰────
+  × error: 1:23: Assertion failed: Invalid: <NO VALUE>
+    ╭─[../books/language/src/types/collections/array/helpers.md:42:23]
+ 42 │ std::debug::assert_eq([ std::count([1,2,3]), [3,2,1] ]);
+    ·                       ────────────────┬───────────────
+    ·                                       ╰── error: 1:23: Assertion failed: Invalid: <NO VALUE>
+    ╰────
+Unexpected error(s) which did occur in line(s): 42
+-- Test Result --
+TODO

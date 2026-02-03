@@ -1,65 +1,40 @@
 # Tuple operators
 
-## Addition `*`
+Tuples support the following operators.
 
-### Adding two tuples of the same type
+| Operator | Description               | Example                   |
+| -------- | ------------------------- | ------------------------- |
+| `+`      | add each element          | `(x=1, y=2) + (x=3, y=4)` |
+| `-`      | subtract each element     | `(x=1, y=2) - (x=3, y=4)` |
+| `*`      | multiply each element     | `(x=1, y=2) * (x=3, y=4)` |
+| `/`      | divide each element       | `(x=1, y=2) / (x=3, y=4)` |
+| `-`      | negation of each element  | `-(x=1, y=2)`             |
+| `!`      | inversion of each element | `!( true, false )`        |
 
-[![test](.test/tuple_add_same.svg)](.test/tuple_add_same.log)
+[![test](.test/tuple_operations.svg)](.test/tuple_operations.log)
 
-```µcad,tuple_add_same
-a = (x = 1.0mm, y = 2.0mm);
-b = (x = 3.0mm, y = 4.0mm);
-std::debug::assert_eq([a + b, (x = 4.0mm, y = 6.0mm)]);
+```µcad,tuple_operations
+std::debug::assert_eq([ (x=1, y=2) + (x=3, y=4), (x=4, y=6) ]);
+std::debug::assert_eq([ (x=2, y=3) - (x=1, y=4), (x=1, y=-1) ]);
+std::debug::assert_eq([ (x=1.0, y=2.0) * 2, (x=2.0, y=4.0) ]);
+std::debug::assert_eq([ (x = 1.0, y = 2.0) / 2, (x = 0.5, y = 1.0)]);
+std::debug::assert_eq([ -(x = 1.0, y = 2.0), (x = -1.0, y = -2.0)]);
 ```
 
-[![test](.test/tuple_add_different.svg)](.test/tuple_add_different.log)
+## Errors
 
-```µcad,tuple_add_different#fail
-a = (x = 1.0mm, y = 2.0mm);
-b = (x = 3.0mm, z = 4.0mm);
-c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
-std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+### Name mismatch
+
+[![test](.test/tuple_error_name_mismatch.svg)](.test/tuple_error_name_mismatch.log)
+
+```µcad,tuple_error_name_mismatch#fail
+(x=1, y=2) + (x=3, z=4); // error: type mismatch: lhs=(x: Integer, y: Integer), rhs=(x: Integer, z: Integer)
 ```
 
-### Subtraction `-`
+### Type mismatch
 
-#### Subtracting a quantity
+[![test](.test/tuple_error_type_mismatch.svg)](.test/tuple_error_type_mismatch.log)
 
-[![test](.test/tuple_sub.svg)](.test/tuple_sub.log)
-
-```µcad,tuple_sub
-a = (x = 2.0mm, y = 3.0mm);
-b = (x = 1.0mm, y = 4.0mm);
-std::debug::assert_eq([a - b, (x = 1.0mm, y = -1.0mm)]);
-```
-
-### Multiplication `*`
-
-#### Scaling a tuple
-
-[![test](.test/tuple_mul_scale.svg)](.test/tuple_mul_scale.log)
-
-```µcad,tuple_mul_scale
-v = (x = 1.0mm, y = 2.0mm);
-std::debug::assert_eq([v*2, (x = 2.0mm, y = 4.0mm)]);
-```
-
-### Division `/`
-
-#### Dividing a tuple by a value
-
-[![test](.test/tuple_div.svg)](.test/tuple_div.log)
-
-```µcad,tuple_div
-v = (x = 1.0mm, y = 2.0mm);
-std::debug::assert_eq([v/2, (x = 0.5mm, y = 1.0mm)]);
-```
-
-### Negation `-`
-
-[![test](.test/tuple_neg.svg)](.test/tuple_neg.log)
-
-```µcad,tuple_neg
-v = (x = 1.0mm, y = 2.0mm);
-std::debug::assert_eq([-v, (x = -1.0mm, y = -2.0mm)]);
+```µcad,tuple_error_type_mismatch#fail
+(x=1, y=2) + (x=3mm, y=4mm); // error: type mismatch: (x: Integer, y: Integer) + (x: Length, z: Length)
 ```

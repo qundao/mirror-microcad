@@ -1,6 +1,6 @@
 ﻿
 -- Test --
-        Test name: array_expressions
+        Test name: array_helper_count
   Expected result: ok
       Source file: ../books/language/src/types/collections/array/helpers.md:12
         Test path: ../books/language/src/types/collections/array/.test
