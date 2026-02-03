@@ -2,12 +2,12 @@
 -- Test --
         Test name: range_expressions_bad_type
   Expected result: fail
-      Source file: ../books/language/src/types/collections/arrays.md:63
-        Test path: ../books/language/src/types/collections/.test
+      Source file: ../books/language/src/types/collections/array/range.md:32
+        Test path: ../books/language/src/types/collections/array/.test
 
 -- Code --
 
-  63:   [1.0..2.0];  // parse_error
+  32:   [1.0..2.0];  // parse_error
 
 -- Parse Error --
 Parser error: expected single_line_comment or identifier

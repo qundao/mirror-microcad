@@ -1,0 +1,17 @@
+﻿
+-- Test --
+        Test name: array_expressions_head_tail
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/array/helpers.md:22
+        Test path: ../books/language/src/types/collections/array/.test
+
+-- Code --
+
+  22:   std::debug::assert_eq([ std::head([1,2,3]), 1 ]);
+  23:   std::debug::assert_eq([ std::tail([1,2,3]), [2,3] ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

@@ -2,27 +2,27 @@
 -- Test --
         Test name: range_expressions_bad_order
   Expected result: fail
-      Source file: ../books/language/src/types/collections/arrays.md:54
-        Test path: ../books/language/src/types/collections/.test
+      Source file: ../books/language/src/types/collections/array/range.md:23
+        Test path: ../books/language/src/types/collections/array/.test
 
 -- Code --
 
-  54:   [6..1];  // error
-  55:   [2..-2];  // error
+  23:   [6..1];  // error
+  24:   [2..-2];  // error
 
 -- No Output --
 -- Errors --
   × error: 1:2: Bad range, first number (6) must be smaller than last (1)
-    ╭─[../books/language/src/types/collections/arrays.md:54:2]
- 54 │ [6..1];  // error
+    ╭─[../books/language/src/types/collections/array/range.md:23:2]
+ 23 │ [6..1];  // error
     ·  ──┬─
     ·    ╰── error: 1:2: Bad range, first number (6) must be smaller than last (1)
- 55 │ [2..-2];  // error
+ 24 │ [2..-2];  // error
     ╰────
   × error: 2:2: Bad range, first number (2) must be smaller than last (-2)
-    ╭─[../books/language/src/types/collections/arrays.md:55:2]
- 54 │ [6..1];  // error
- 55 │ [2..-2];  // error
+    ╭─[../books/language/src/types/collections/array/range.md:24:2]
+ 23 │ [6..1];  // error
+ 24 │ [2..-2];  // error
     ·  ──┬──
     ·    ╰── error: 2:2: Bad range, first number (2) must be smaller than last (-2)
     ╰────

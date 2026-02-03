@@ -52,14 +52,4 @@ Some of the operators listed above can be used with arrays too.
 There result then is a new array with each value processed with the operator
 and the second operand.
 
-[![test](.test/operator_array.svg)](.test/operator_array.log)
-
-```µcad,operator_array
-use std::debug::assert_eq; // used for testing
-
-assert_eq([ -[1, 2, 3, 4]           , [-1, -2, -3, -4]     ]); // Negation
-assert_eq([ [1, 2, 3, 4] + 5        , [6, 7, 8, 9]         ]); // Addition
-assert_eq([ [1, 2, 3, 4] - 5        , [-4, -3, -2, -1]     ]); // Subtraction
-assert_eq([ [1, 2, 3, 4] * 5        , [5, 10, 15, 20]      ]); // Multiplication
-assert_eq([ [1.0, 2.0, 3.0, 4.0] / 5, [0.2, 0.4, 0.6, 0.8] ]); // Division
-```
+See [Array Operators](../types/collections/array/operators.md) for more information.

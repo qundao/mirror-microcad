@@ -1,0 +1,35 @@
+﻿
+-- Test --
+        Test name: array_operation_bool
+  Expected result: todo
+      Source file: ../books/language/src/types/collections/array/operators.md:29
+        Test path: ../books/language/src/types/collections/array/.test
+
+-- Code --
+
+  29:   std::debug::assert_eq([ ![true, false], [false, true] ]);
+
+-- No Output --
+-- Errors --
+  × error: 1:25: Value Error: Invalid operator: !
+  ╰─▶ Invalid operator: !
+    ╭─[../books/language/src/types/collections/array/operators.md:29:25]
+ 29 │ std::debug::assert_eq([ ![true, false], [false, true] ]);
+    ·                         ───────┬──────
+    ·                                ╰── error: 1:25: Value Error: Invalid operator: !
+    ╰────
+  × error: 1:23: Array elements have different types: [<NO TYPE>, [Bool]]
+    ╭─[../books/language/src/types/collections/array/operators.md:29:23]
+ 29 │ std::debug::assert_eq([ ![true, false], [false, true] ]);
+    ·                       ────────────────┬────────────────
+    ·                                       ╰── error: 1:23: Array elements have different types: [<NO TYPE>, [Bool]]
+    ╰────
+  × error: 1:23: Assertion failed: Invalid: <NO VALUE>
+    ╭─[../books/language/src/types/collections/array/operators.md:29:23]
+ 29 │ std::debug::assert_eq([ ![true, false], [false, true] ]);
+    ·                       ────────────────┬────────────────
+    ·                                       ╰── error: 1:23: Assertion failed: Invalid: <NO VALUE>
+    ╰────
+Unexpected error(s) which did occur in line(s): 29
+-- Test Result --
+TODO

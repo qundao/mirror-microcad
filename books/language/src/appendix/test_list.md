@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**221** tests have been evaluated with version **0.2.20** of microcad.
+**218** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -21,15 +21,13 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/argument_match/.test/argument_match_single_identifier.svg)](../flow/argument_match/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](../flow/argument_match/inline_identifier.md) |
 | [![test](../flow/argument_match/.test/argument_match_type.svg)](../flow/argument_match/.test/argument_match_type.log) | [argument_match_type](../flow/argument_match/priorities.md) |
 | [![test](../flow/argument_match/.test/argument_match_type_compatible.svg)](../flow/argument_match/.test/argument_match_type_compatible.log) | [argument_match_type_compatible](../flow/argument_match/priorities.md) |
-| [![test](../types/collections/.test/array_add.svg)](../types/collections/.test/array_add.log) | [array_add](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/array_div.svg)](../types/collections/.test/array_div.log) | [array_div](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/array_expressions.svg)](../types/collections/.test/array_expressions.log) | [array_expressions](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/array_expressions_head_tail.svg)](../types/collections/.test/array_expressions_head_tail.log) | [array_expressions_head_tail](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/array_mul_scale.svg)](../types/collections/.test/array_mul_scale.log) | [array_mul_scale](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/array_neg.svg)](../types/collections/.test/array_neg.log) | [array_neg](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/array_sub.svg)](../types/collections/.test/array_sub.log) | [array_sub](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/array_unit_bundling.svg)](../types/collections/.test/array_unit_bundling.log) | [array_unit_bundling](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/arrays_and_comments.svg)](../types/collections/.test/arrays_and_comments.log) | [arrays_and_comments](../types/collections/arrays.md) |
+| [![test](../types/collections/array/.test/array_expressions.svg)](../types/collections/array/.test/array_expressions.log) | [array_expressions](../types/collections/array/helpers.md) |
+| [![test](../types/collections/array/.test/array_expressions_head_tail.svg)](../types/collections/array/.test/array_expressions_head_tail.log) | [array_expressions_head_tail](../types/collections/array/helpers.md) |
+| [![test](../types/collections/array/.test/array_operation_bool.svg)](../types/collections/array/.test/array_operation_bool.log) | [array_operation_bool](../types/collections/array/operators.md) |
+| [![test](../types/collections/array/.test/array_operations.svg)](../types/collections/array/.test/array_operations.log) | [array_operations](../types/collections/array/operators.md) |
+| [![test](../types/collections/array/.test/array_unit_bundling.svg)](../types/collections/array/.test/array_unit_bundling.log) | [array_unit_bundling](../types/collections/array/) |
+| [![test](../types/collections/array/.test/array_unit_bundling_except.svg)](../types/collections/array/.test/array_unit_bundling_except.log) | [array_unit_bundling_except](../types/collections/array/) |
+| [![test](../types/collections/array/.test/arrays.svg)](../types/collections/array/.test/arrays.log) | [arrays](../types/collections/array/) |
 | [![test](../assignments/.test/assignment.svg)](../assignments/.test/assignment.log) | [assignment](../assignments/) |
 | [![test](../assignments/.test/assignment_model_module.svg)](../assignments/.test/assignment_model_module.log) | [assignment_model_module](../assignments/model.md) |
 | [![test](../assignments/.test/assignment_model_workbench.svg)](../assignments/.test/assignment_model_workbench.log) | [assignment_model_workbench](../assignments/model.md) |
@@ -132,7 +130,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/argument_match/.test/no_multiplicity.svg)](../flow/argument_match/.test/no_multiplicity.log) | [no_multiplicity](../flow/argument_match/multiplicity.md) |
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
 | [![test](../structure/workbenches/types/.test/op_example.svg)](../structure/workbenches/types/.test/op_example.log) | [op_example](../structure/workbenches/types/operations.md) |
-| [![test](../expressions/.test/operator_array.svg)](../expressions/.test/operator_array.log) | [operator_array](../expressions/operators.md) |
 | [![test](../expressions/.test/operator_examples.svg)](../expressions/.test/operator_examples.log) | [operator_examples](../expressions/operators.md) |
 | [![test](../libraries/std/ops/.test/orient_3d.svg)](../libraries/std/ops/.test/orient_3d.log) | [orient_3d](../libraries/std/ops/orient.md) |
 | [![test](../flow/calls/.test/parameter.svg)](../flow/calls/.test/parameter.log) | [parameter](../flow/calls/args_params.md) |
@@ -156,9 +153,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../assignments/.test/pub_assignment_workbench.svg)](../assignments/.test/pub_assignment_workbench.log) | [pub_assignment_workbench](../assignments/pub.md) |
 | [![test](../expressions/.test/quantity_literal.svg)](../expressions/.test/quantity_literal.log) | [quantity_literal](../expressions/literals.md) |
 | [![test](../types/.test/quantity_types_number_literals.svg)](../types/.test/quantity_types_number_literals.log) | [quantity_types_number_literals](../types/quantities.md) |
-| [![test](../types/collections/.test/range_expressions.svg)](../types/collections/.test/range_expressions.log) | [range_expressions](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/range_expressions_bad_order.svg)](../types/collections/.test/range_expressions_bad_order.log) | [range_expressions_bad_order](../types/collections/arrays.md) |
-| [![test](../types/collections/.test/range_expressions_bad_type.svg)](../types/collections/.test/range_expressions_bad_type.log) | [range_expressions_bad_type](../types/collections/arrays.md) |
+| [![test](../types/collections/array/.test/range_expressions.svg)](../types/collections/array/.test/range_expressions.log) | [range_expressions](../types/collections/array/range.md) |
+| [![test](../types/collections/array/.test/range_expressions_bad_order.svg)](../types/collections/array/.test/range_expressions_bad_order.log) | [range_expressions_bad_order](../types/collections/array/range.md) |
+| [![test](../types/collections/array/.test/range_expressions_bad_type.svg)](../types/collections/array/.test/range_expressions_bad_type.log) | [range_expressions_bad_type](../types/collections/array/range.md) |
 | [![test](../structure/functions/.test/return_twice.svg)](../structure/functions/.test/return_twice.log) | [return_twice](../structure/functions/result.md) |
 | [![test](../libraries/std/ops/.test/revolve.svg)](../libraries/std/ops/.test/revolve.log) | [revolve](../libraries/std/ops/revolve.md) |
 | [![test](../libraries/std/ops/.test/rotate_2d.svg)](../libraries/std/ops/.test/rotate_2d.log) | [rotate_2d](../libraries/std/ops/rotate.md) |
