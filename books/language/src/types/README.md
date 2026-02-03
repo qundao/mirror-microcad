@@ -11,7 +11,7 @@ Here is a complete list of the builtin types:
 | [*Boolean*](primitives.md#bool)    | Boolean value                          | `Bool`                                                             | `true`, `false`                                  |
 | [*Integer*](primitives.md#integer) | Integer value without unit             | `Integer`                                                          | `4`, `-1`                                        |
 | [*Scalar*](primitives.md#scalar)   | Floating point value without unit      | `Scalar`                                                           | `0.5`, `50%`, `-1.23e10`                         |
-| [*Quantity*](quantities.md)        | Floating point value with unit         | `Length`, `Area`, `Volume`, `Density`, `Angle`, `Weight`           | `-4mm`, `1.3m2`, `23.0e5deg`                     |
+| [*Quantity*](quantities.md)        | Floating point value with unit         | `Length`, `Area`, `Volume`, `Density`, `Angle`, `Weight`           | `-4mm`, `1.3m2`, `2cm²`, `23.0e5deg`             |
 | [*String*](primitives.md#string)   | UTF-8 text string                      | `String`                                                           | `"Hello, World!"`                                |
 | [*Array*](collections/arrays.md)   | List of values with *common type*      | `[Integer]`                                                        | `[1,2,3]`, `[1m,2cm,3µm]`                        |
 | [*Tuple*](collections/tuples/)     | List of named values or distinct types | `(Length,Scalar,Bool)`, `(x:Scalar,y:Length)`, `(x:Scalar,Length)` | `(4mm,4.0,true)`, `(x=4.0,y=4mm)`, `(x=4.0,4mm)` |
