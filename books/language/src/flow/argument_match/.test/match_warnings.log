@@ -1,0 +1,23 @@
+﻿
+-- Test --
+        Test name: match_warnings
+  Expected result: fail
+      Source file: ../books/language/src/flow/argument_match/errors.md:21
+        Test path: ../books/language/src/flow/argument_match/.test
+
+-- Code --
+
+  21:   fn f( x: Length, y: Length, z: Length ) {}
+  22:   f( x=1cm, y=2cm, v=5cm, z=3cm);  // error: Unexpected argument v
+
+-- No Output --
+-- Errors --
+  × error: 2:4: Too many arguments: v
+    ╭─[../books/language/src/flow/argument_match/errors.md:22:4]
+ 21 │ fn f( x: Length, y: Length, z: Length ) {}
+ 22 │ f( x=1cm, y=2cm, v=5cm, z=3cm);  // error: Unexpected argument v
+    ·    ─────────────┬────────────
+    ·                 ╰── error: 2:4: Too many arguments: v
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
