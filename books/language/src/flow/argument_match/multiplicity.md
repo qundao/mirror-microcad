@@ -33,4 +33,4 @@ r.translate(x = 4mm, y = 4mm);
 ```
 
 Normally, this would require two nested *for loops*.
-As you can see, the possibilities are endless.
+As you may imagine, multiplicity can be a powerful tool.
