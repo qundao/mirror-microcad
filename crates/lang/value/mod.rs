@@ -108,7 +108,7 @@ impl Value {
     pub fn unary_op(self, op: &str) -> ValueResult {
         match op {
             "-" => -self,
-            _ => unimplemented!(),
+            _ => Err(ValueError::InvalidOperator(op.to_string())),
         }
     }
 
@@ -186,7 +186,7 @@ impl crate::ty::Ty for Value {
             Value::Array(list) => list.ty(),
             Value::Tuple(tuple) => tuple.ty(),
             Value::Matrix(matrix) => matrix.ty(),
-            Value::Model(_) => Type::Models,
+            Value::Model(_) => Type::Model,
             Value::Return(r) => r.ty(),
             Value::Target(..) => Type::Target,
         }
