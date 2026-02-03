@@ -18,8 +18,9 @@ impl Parse for Type {
             Rule::base_type => match inner.as_str() {
                 // Builtin types.
                 "Integer" => Ok(Type::Integer),
-                "Bool" => Ok(Type::Bool),
                 "String" => Ok(Type::String),
+                "Bool" => Ok(Type::Bool),
+                "Model" => Ok(Type::Model),
                 _ => Err(ParseError::UnknownType(Refer::new(
                     inner.to_string(),
                     pair.into(),

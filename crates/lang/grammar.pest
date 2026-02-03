@@ -149,7 +149,7 @@ type = {
   | unit
 }
 
-base_type = { "Integer" | "String" | "Bool" | "Models" }
+base_type = { "Integer" | "String" | "Bool" | "Model" }
 
 quantity_type = { "Scalar" | "Length" | "Area" | "Volume" | "Density" | "Angle" | "Weight" }
 

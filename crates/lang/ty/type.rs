@@ -24,8 +24,8 @@ pub enum Type {
     Tuple(Box<TupleType>),
     /// Matrix type: `Matrix3x3`.
     Matrix(MatrixType),
-    /// Models.
-    Models,
+    /// Model.
+    Model,
     /// used for assert_valid() and assert_invalid()
     Target,
 }
@@ -126,7 +126,7 @@ impl std::fmt::Display for Type {
             Self::Array(t) => write!(f, "[{t}]"),
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
-            Self::Models => write!(f, "Models"),
+            Self::Model => write!(f, "Model"),
             Self::Target => write!(f, "Target"),
         }
     }
@@ -143,7 +143,7 @@ impl std::fmt::Debug for Type {
             Self::Array(t) => write!(f, "[{t}]"),
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
-            Self::Models => write!(f, "Models"),
+            Self::Model => write!(f, "Models"),
             Self::Target => write!(f, "Target"),
         }
     }
