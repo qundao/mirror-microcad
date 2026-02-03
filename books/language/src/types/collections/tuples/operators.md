@@ -21,20 +21,14 @@ std::debug::assert_eq([ (x = 1.0, y = 2.0) / 2, (x = 0.5, y = 1.0)]);
 std::debug::assert_eq([ -(x = 1.0, y = 2.0), (x = -1.0, y = -2.0)]);
 ```
 
-## Errors
+## Tuple Mismatch
 
-### Name mismatch
+Names or types must match like the element count.
 
-[![test](.test/tuple_error_name_mismatch.svg)](.test/tuple_error_name_mismatch.log)
+[![test](.test/tuple_error_mismatch.svg)](.test/tuple_error_mismatch.log)
 
-```µcad,tuple_error_name_mismatch#fail
-(x=1, y=2) + (x=3, z=4); // error: type mismatch: lhs=(x: Integer, y: Integer), rhs=(x: Integer, z: Integer)
-```
-
-### Type mismatch
-
-[![test](.test/tuple_error_type_mismatch.svg)](.test/tuple_error_type_mismatch.log)
-
-```µcad,tuple_error_type_mismatch#fail
-(x=1, y=2) + (x=3mm, y=4mm); // error: type mismatch: (x: Integer, y: Integer) + (x: Length, z: Length)
+```µcad,tuple_error_mismatch#fail
+(x=1, y=2) + (x=3, z=4);      // error: mismatch (x, y) + (x, z)
+(x=1, y=2) + (x=3mm, y=4mm);  // error: mismatch (Integer, Integer) + (Length, Length)
+(x=1, y=2) + (x=3, y=4, z=5); // error: mismatch unexpected z
 ```

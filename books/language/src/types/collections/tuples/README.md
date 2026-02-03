@@ -34,6 +34,8 @@ to a specific order.
 
 ## Arbitrary Order
 
+The order of values have no consequences for equality.
+
 [![test](.test/unnamed_tuple_order.svg)](.test/unnamed_tuple_order.log)
 
 ```µcad,unnamed_tuple_order
@@ -41,8 +43,16 @@ to a specific order.
 std::debug::assert_eq([ (1l, 10cm, 10cm²), (10cm, 10cm², 1l) ]);
 ```
 
-A partially or fully unnamed tuple can only be utilized through
-[argument matching](../structure/arguments.md#argument-matching) or *tuple assignment*.
+## Arbitrary Units
+
+Different units of values have no consequences for equality.
+
+[![test](.test/unnamed_tuple_units.svg)](.test/unnamed_tuple_units.log)
+
+```µcad,unnamed_tuple_units
+// these tuples are equal
+std::debug::assert_eq([ (1000cm3, 100mm, 0.01m²), (10cm, 100cm², 1l) ]);
+```
 
 ## Ambiguous Elements
 
