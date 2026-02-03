@@ -67,5 +67,7 @@
 - [Debugging](./debugging/README.md)
   - [Verification](./debugging/verification.md)
 - [Appendix](./appendix/README.md)
-  - [Coding Style](./appendix/coding.md)
+  - [Coding Style](./appendix/coding/README.md)
+    - [Naming convention](./appendix/coding/naming.md)
+  - [Keywords](./appendix/keywords.md)
   - [Test List](./appendix/test_list.md)
