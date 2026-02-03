@@ -55,7 +55,7 @@ sketch MySketch(text: String) {
 MySketch();
 ```
 
-## Rules
+## Restrictions
 
 ### Uppercase naming
 
