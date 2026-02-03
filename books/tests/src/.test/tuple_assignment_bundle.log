@@ -2,8 +2,8 @@
 -- Test --
         Test name: tuple_assignment_bundle
   Expected result: todo
-      Source file: ../books/language/src/types/collections/tuples/assignments.md:21
-        Test path: ../books/language/src/types/collections/tuples/.test
+      Source file: ../books/tests/src/tuple_assignments.md:21
+        Test path: ../books/tests/src/.test
 
 -- Code --
 

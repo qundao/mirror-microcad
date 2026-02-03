@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**218** tests have been evaluated with version **0.2.20** of microcad.
+**216** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -182,9 +182,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/builtin/.test/text.svg)](../libraries/builtin/.test/text.log) | [text](../libraries/builtin/geo2d.md) |
 | [![test](../.test/toml_import.svg)](../.test/toml_import.log) | [toml_import](../import.md) |
 | [![test](../libraries/std/ops/.test/translate_2d.svg)](../libraries/std/ops/.test/translate_2d.log) | [translate_2d](../libraries/std/ops/translate.md) |
-| [![test](../types/collections/tuples/.test/tuple_assignment.svg)](../types/collections/tuples/.test/tuple_assignment.log) | [tuple_assignment](../types/collections/tuples/assignments.md) |
-| [![test](../types/collections/tuples/.test/tuple_assignment_bundle.svg)](../types/collections/tuples/.test/tuple_assignment_bundle.log) | [tuple_assignment_bundle](../types/collections/tuples/assignments.md) |
-| [![test](../types/collections/tuples/.test/tuple_assignment_convert.svg)](../types/collections/tuples/.test/tuple_assignment_convert.log) | [tuple_assignment_convert](../types/collections/tuples/assignments.md) |
 | [![test](../types/collections/tuples/.test/tuple_error_name_mismatch.svg)](../types/collections/tuples/.test/tuple_error_name_mismatch.log) | [tuple_error_name_mismatch](../types/collections/tuples/operators.md) |
 | [![test](../types/collections/tuples/.test/tuple_error_type_mismatch.svg)](../types/collections/tuples/.test/tuple_error_type_mismatch.log) | [tuple_error_type_mismatch](../types/collections/tuples/operators.md) |
 | [![test](../types/collections/tuples/.test/tuple_operations.svg)](../types/collections/tuples/.test/tuple_operations.log) | [tuple_operations](../types/collections/tuples/operators.md) |
@@ -211,6 +208,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../libraries/std/ops/.test/union_alt_operator.svg)](../libraries/std/ops/.test/union_alt_operator.log) | [union_alt_operator](../libraries/std/ops/union.md) |
 | [![test](../libraries/std/ops/.test/union_operator.svg)](../libraries/std/ops/.test/union_operator.log) | [union_operator](../libraries/std/ops/union.md) |
 | [![test](../types/collections/tuples/.test/unnamed_tuple.svg)](../types/collections/tuples/.test/unnamed_tuple.log) | [unnamed_tuple](../types/collections/tuples/) |
+| [![test](../types/collections/tuples/.test/unnamed_tuple_ambiguous.svg)](../types/collections/tuples/.test/unnamed_tuple_ambiguous.log) | [unnamed_tuple_ambiguous](../types/collections/tuples/) |
 | [![test](../types/collections/tuples/.test/unnamed_tuple_order.svg)](../types/collections/tuples/.test/unnamed_tuple_order.log) | [unnamed_tuple_order](../types/collections/tuples/) |
 | [![test](../structure/.test/use.svg)](../structure/.test/use.log) | [use](../structure/use.md) |
 | [![test](../structure/.test/use_all.svg)](../structure/.test/use_all.log) | [use_all](../structure/use.md) |
