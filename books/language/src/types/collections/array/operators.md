@@ -8,8 +8,8 @@ Arrays support the following operators.
 | `-`      | subtract value from every element   | `[1, 2] - 2`        |
 | `*`      | multiply every element with a value | `[-1.0, 2.0] * 2.0` |
 | `/`      | divide every element by a value     | `[1.0, 2.0] / 2.0`  |
-| `-`      | unary negation                      | `-[ 1, 2 ]`         |
-| `!`      | unary inversion                     | `![ true, false ]`  |
+| `-`      | negate every element                | `-[ 1, 2 ]`         |
+| `!`      | invert every element                | `![ true, false ]`  |
 
 [![test](.test/array_operations.svg)](.test/array_operations.log)
 

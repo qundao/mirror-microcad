@@ -1,0 +1,16 @@
+﻿
+-- Test --
+        Test name: array_helper_tail
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/array/helpers.md:32
+        Test path: ../books/language/src/types/collections/array/.test
+
+-- Code --
+
+  32:   std::debug::assert_eq([ std::tail([1,2,3]), [2,3] ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
