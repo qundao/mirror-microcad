@@ -18,6 +18,7 @@
     - [Workbench](statement_usage/workbench.md)
     - [Body](statement_usage/body.md)
     - [Function](statement_usage/function.md)
+  - [Tuple Matching](./tuple_matching.md)
   - [Use](use.md)
   - [Value Declarations](value_declarations.md)
   - [Visibility](visibility.md)

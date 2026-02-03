@@ -32,14 +32,5 @@ r.translate(x = 4mm, y = -4mm);
 r.translate(x = 4mm, y = 4mm);
 ```
 
-Normally, this would require 2 nested *for loops*, which are not available in µcad.
-
-Another example uses an array of tuples and produces the same output:
-
-[![test](.test/multiplicity_tuple_array.svg)](.test/multiplicity_tuple_array.log)
-
-```µcad,multiplicity_tuple_array#todo
-r = std::geo2d::Rect(width = 2mm, height = 2mm);
-
-r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
-```
+Normally, this would require two nested *for loops*.
+As you can see, the possibilities are endless.

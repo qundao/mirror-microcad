@@ -46,4 +46,14 @@ q = (x=1cm, y=2cm);
 f( q, z=3cm );
 ```
 
-As you can see, the possibilities are endless.
+## Tuple Multiplicity
+
+Another example uses an array of tuples and produces the same output:
+
+[![test](.test/multiplicity_tuple_array.svg)](.test/multiplicity_tuple_array.log)
+
+```µcad,multiplicity_tuple_array#todo
+r = std::geo2d::Rect(width = 2mm, height = 2mm);
+
+r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
+```
