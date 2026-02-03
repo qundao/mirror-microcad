@@ -51,7 +51,6 @@
       - [Array Helpers](./types/collections/array/helpers.md)
       - [Array Operations](./types/collections/array/operators.md)
     - [Tuples](./types/collections/tuples/README.md)
-      - [Tuple Assignments](./types/collections/tuples/assignments.md)
       - [Tuple Operators](./types/collections/tuples/operators.md)
       - [Tuple Aliases](./types/collections/tuples/aliases.md)
   - [Quantities](./types/quantities.md)

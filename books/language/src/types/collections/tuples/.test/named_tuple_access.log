@@ -11,11 +11,11 @@
   11:   
   12:   tuple = (width=10cm, depth=10cm, volume=1l);
   13:   
-  14:   assert_eq([tuple.width, 10cm]);
-  15:   assert_eq([tuple.depth, 10cm]);
-  16:   assert_eq([tuple.volume, 1l]);
+  14:   assert_eq([ tuple.width, 10cm ]);
+  15:   assert_eq([ tuple.depth, 10cm ]);
+  16:   assert_eq([ tuple.volume, 1l ]);
   17:   
-  18:   assert_eq([tuple, (width=10cm, depth=10cm, volume=1l)]);
+  18:   assert_eq([ tuple, (width=10cm, depth=10cm, volume=1l) ]);
 
 -- No Output --
 -- No Errors --
