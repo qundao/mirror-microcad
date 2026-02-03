@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**134** tests have been evaluated with version **0.2.20** of microcad.
+**137** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -85,6 +85,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/module_return.svg)](statement_usage/.test/module_return.log) | [module_return](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_use.svg)](statement_usage/.test/module_use.log) | [module_use](statement_usage/module.md) |
 | [![test](statement_usage/.test/module_workbench.svg)](statement_usage/.test/module_workbench.log) | [module_workbench](statement_usage/module.md) |
+| [![test](.test/multiplicity_tuple_array.svg)](.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](tuple_matching.md) |
 | [![test](.test/operation_no_body.svg)](.test/operation_no_body.log) | [operation_no_body](semicolon.md) |
 | [![test](.test/operation_with_body.svg)](.test/operation_with_body.log) | [operation_with_body](semicolon.md) |
 | [![test](statement_usage/.test/pre_init_assignment_const.svg)](statement_usage/.test/pre_init_assignment_const.log) | [pre_init_assignment_const](statement_usage/pre-init.md) |
@@ -119,6 +120,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/source_return.svg)](statement_usage/.test/source_return.log) | [source_return](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_use.svg)](statement_usage/.test/source_use.log) | [source_use](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_workbench.svg)](statement_usage/.test/source_workbench.log) | [source_workbench](statement_usage/source.md) |
+| [![test](.test/tuple_match.svg)](.test/tuple_match.log) | [tuple_match](tuple_matching.md) |
+| [![test](.test/tuple_match_variants.svg)](.test/tuple_match_variants.log) | [tuple_match_variants](tuple_matching.md) |
 | [![test](.test/use_all_local.svg)](.test/use_all_local.log) | [use_all_local](use.md) |
 | [![test](.test/use_as_test.svg)](.test/use_as_test.log) | [use_as_test](use.md) |
 | [![test](.test/use_local.svg)](.test/use_local.log) | [use_local](use.md) |

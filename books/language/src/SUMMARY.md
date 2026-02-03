@@ -42,7 +42,6 @@
   - [Argument Matching](./flow/argument_match/README.md)
     - [Match Priorities](./flow/argument_match/priorities.md)
     - [Inline Identifiers](./flow/argument_match/inline_identifier.md)
-    - [Tuple Matching](./flow/argument_match/tuple_matching.md)
     - [Multiplicity](./flow/argument_match/multiplicity.md)
     - [Match Errors](./flow/argument_match/errors.md)
 - [Types](./types/README.md)
