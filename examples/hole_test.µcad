@@ -13,17 +13,9 @@ part Hole(diameter: Length) {
     Cylinder(radius_bottom = r, radius_top = r + THICKNESS * 50%, height = THICKNESS);
 }
 
-part LabeledHole(diameter: Length) {
-    t = std::to_string(diameter);
-    text = Text(t, 10mm).extrude(THICKNESS*2.0);
-    hole = Hole(diameter);
-
-    hole;
-}
-
 r = RoundedRect(60mm, radius = 10mm).extrude(THICKNESS);
 
-holes = LabeledHole([1..9] * 0.25mm)
-    .distribute_grid(60mm, rows = 3, columns = 3);
+holes = Hole([1..9] * 0.25mm)
+    .distribute_grid(size = 60mm, rows = 3, columns = 3);
 
 r - holes;
