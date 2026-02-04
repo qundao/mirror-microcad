@@ -2,15 +2,12 @@
 
 The following table lists all tests included in this documentation.
 
-**213** tests have been evaluated with version **0.2.20** of microcad.
+**175** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
 | Result | Source | Name |
 |-------:|--------|------|
-| [![test](../libraries/std/ops/.test/align_2d.svg)](../libraries/std/ops/.test/align_2d.log) | [align_2d](../libraries/std/ops/align.md) |
-| [![test](../libraries/std/ops/.test/align_2d_multiplicity.svg)](../libraries/std/ops/.test/align_2d_multiplicity.log) | [align_2d_multiplicity](../libraries/std/ops/align.md) |
-| [![test](../libraries/std/ops/.test/align_3d.svg)](../libraries/std/ops/.test/align_3d.log) | [align_3d](../libraries/std/ops/align.md) |
 | [![test](../flow/argument_match/.test/argument_match_auto.svg)](../flow/argument_match/.test/argument_match_auto.log) | [argument_match_auto](../flow/argument_match/inline_identifier.md) |
 | [![test](../flow/argument_match/.test/argument_match_auto_err.svg)](../flow/argument_match/.test/argument_match_auto_err.log) | [argument_match_auto_err](../flow/argument_match/inline_identifier.md) |
 | [![test](../flow/argument_match/.test/argument_match_default.svg)](../flow/argument_match/.test/argument_match_default.log) | [argument_match_default](../flow/argument_match/priorities.md) |
@@ -43,15 +40,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/boolean_literal.svg)](../expressions/.test/boolean_literal.log) | [boolean_literal](../expressions/literals.md) |
 | [![test](../structure/workbenches/elements/.test/building_plan.svg)](../structure/workbenches/elements/.test/building_plan.log) | [building_plan](../structure/workbenches/elements/building_plan.md) |
 | [![test](../structure/workbenches/elements/.test/building_plan_defaults.svg)](../structure/workbenches/elements/.test/building_plan_defaults.log) | [building_plan_defaults](../structure/workbenches/elements/initializers.md) |
-| [![test](../libraries/builtin/.test/builtin_debug_assert_false.svg)](../libraries/builtin/.test/builtin_debug_assert_false.log) | [builtin_debug_assert_false](../libraries/builtin/debug.md) |
-| [![test](../libraries/builtin/.test/builtin_debug_assert_true.svg)](../libraries/builtin/.test/builtin_debug_assert_true.log) | [builtin_debug_assert_true](../libraries/builtin/debug.md) |
-| [![test](../libraries/builtin/.test/builtin_extrude.svg)](../libraries/builtin/.test/builtin_extrude.log) | [builtin_extrude](../libraries/builtin/ops.md) |
-| [![test](../libraries/builtin/.test/builtin_print.svg)](../libraries/builtin/.test/builtin_print.log) | [builtin_print](../libraries/builtin/debug.md) |
-| [![test](../libraries/builtin/.test/builtin_revolve.svg)](../libraries/builtin/.test/builtin_revolve.log) | [builtin_revolve](../libraries/builtin/ops.md) |
-| [![test](../libraries/builtin/.test/builtin_subtract_2d.svg)](../libraries/builtin/.test/builtin_subtract_2d.log) | [builtin_subtract_2d](../libraries/builtin/ops.md) |
-| [![test](../libraries/builtin/.test/builtin_subtract_3d.svg)](../libraries/builtin/.test/builtin_subtract_3d.log) | [builtin_subtract_3d](../libraries/builtin/ops.md) |
-| [![test](../libraries/builtin/.test/builtin_translate.svg)](../libraries/builtin/.test/builtin_translate.log) | [builtin_translate](../libraries/builtin/ops.md) |
-| [![test](../libraries/builtin/.test/builtin_translate_twice.svg)](../libraries/builtin/.test/builtin_translate_twice.log) | [builtin_translate_twice](../libraries/builtin/ops.md) |
 | [![test](../flow/calls/.test/call_function.svg)](../flow/calls/.test/call_function.log) | [call_function](../flow/calls/) |
 | [![test](../flow/argument_match/.test/call_match.svg)](../flow/argument_match/.test/call_match.log) | [call_match](../flow/argument_match/) |
 | [![test](../flow/calls/.test/call_model.svg)](../flow/calls/.test/call_model.log) | [call_model](../flow/calls/) |
@@ -70,10 +58,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench_code.svg)](../assignments/.test/const_assignment_workbench_code.log) | [const_assignment_workbench_code](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench_code_wrong.svg)](../assignments/.test/const_assignment_workbench_code_wrong.log) | [const_assignment_workbench_code_wrong](../assignments/const.md) |
-| [![test](../libraries/std/ops/.test/difference_alt_operator.svg)](../libraries/std/ops/.test/difference_alt_operator.log) | [difference_alt_operator](../libraries/std/ops/subtract.md) |
-| [![test](../libraries/std/ops/.test/difference_operator.svg)](../libraries/std/ops/.test/difference_operator.log) | [difference_operator](../libraries/std/ops/subtract.md) |
-| [![test](../libraries/std/ops/.test/distribute_grid_2d.svg)](../libraries/std/ops/.test/distribute_grid_2d.log) | [distribute_grid_2d](../libraries/std/ops/distribute_grid.md) |
-| [![test](../libraries/std/ops/.test/distribute_grid_3d.svg)](../libraries/std/ops/.test/distribute_grid_3d.log) | [distribute_grid_3d](../libraries/std/ops/distribute_grid.md) |
 | [![test](../doc/.test/doc_comment.svg)](../doc/.test/doc_comment.log) | [doc_comment](../doc/comments.md) |
 | [![test](../structure/functions/.test/example.svg)](../structure/functions/.test/example.log) | [example](../structure/functions/) |
 | [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
@@ -84,7 +68,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../expressions/.test/expression_quantity.svg)](../expressions/.test/expression_quantity.log) | [expression_quantity](../expressions/) |
 | [![test](../structure/modules/.test/external_modules_main.svg)](../structure/modules/.test/external_modules_main.log) | [external_modules_main](../structure/modules/external_modules.md) |
 | [![test](../structure/modules/.test/external_modules_second.svg)](../structure/modules/.test/external_modules_second.log) | [external_modules_second](../structure/modules/external_modules.md) |
-| [![test](../libraries/std/ops/.test/extrude.svg)](../libraries/std/ops/.test/extrude.log) | [extrude](../libraries/std/ops/extrude.md) |
 | [![test](../types/.test/format_string.svg)](../types/.test/format_string.log) | [format_string](../types/format_string.md) |
 | [![test](../types/.test/format_string_err.svg)](../types/.test/format_string_err.log) | [format_string_err](../types/format_string.md) |
 | [![test](../types/.test/format_string_value.svg)](../types/.test/format_string_value.log) | [format_string_value](../types/format_string.md) |
@@ -94,8 +77,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/calls/.test/function_param_return.svg)](../flow/calls/.test/function_param_return.log) | [function_param_return](../flow/calls/function_calls.md) |
 | [![test](../structure/functions/.test/function_result.svg)](../structure/functions/.test/function_result.log) | [function_result](../structure/functions/result.md) |
 | [![test](../structure/functions/.test/function_return.svg)](../structure/functions/.test/function_return.log) | [function_return](../structure/functions/result.md) |
-| [![test](../libraries/std/ops/.test/hull_multiple.svg)](../libraries/std/ops/.test/hull_multiple.log) | [hull_multiple](../libraries/std/ops/hull.md) |
-| [![test](../libraries/std/ops/.test/hull_single.svg)](../libraries/std/ops/.test/hull_single.log) | [hull_single](../libraries/std/ops/hull.md) |
 | [![test](../flow/.test/if_expression.svg)](../flow/.test/if_expression.log) | [if_expression](../flow/conditions.md) |
 | [![test](../flow/.test/if_statement.svg)](../flow/.test/if_statement.log) | [if_statement](../flow/conditions.md) |
 | [![test](../flow/.test/if_statement_sketch.svg)](../flow/.test/if_statement_sketch.log) | [if_statement_sketch](../flow/conditions.md) |
@@ -107,15 +88,12 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/types/.test/input.svg)](../structure/workbenches/types/.test/input.log) | [input](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../structure/modules/.test/internal_mod.svg)](../structure/modules/.test/internal_mod.log) | [internal_mod](../structure/modules/internal_modules.md) |
-| [![test](../libraries/std/ops/.test/intersection_alt_operator.svg)](../libraries/std/ops/.test/intersection_alt_operator.log) | [intersection_alt_operator](../libraries/std/ops/intersect.md) |
-| [![test](../libraries/std/ops/.test/intersection_operator.svg)](../libraries/std/ops/.test/intersection_operator.log) | [intersection_operator](../libraries/std/ops/intersect.md) |
+| [![test](../.test/lib_builtin.svg)](../.test/lib_builtin.log) | [lib_builtin](../libraries.md) |
+| [![test](../.test/lib_std.svg)](../.test/lib_std.log) | [lib_std](../libraries.md) |
 | [![test](../flow/argument_match/.test/match_ambiguous.svg)](../flow/argument_match/.test/match_ambiguous.log) | [match_ambiguous](../flow/argument_match/errors.md) |
 | [![test](../flow/argument_match/.test/match_errors.svg)](../flow/argument_match/.test/match_errors.log) | [match_errors](../flow/argument_match/errors.md) |
 | [![test](../flow/argument_match/.test/match_warnings.svg)](../flow/argument_match/.test/match_warnings.log) | [match_warnings](../flow/argument_match/errors.md) |
-| [![test](../libraries/std/math/.test/math_abs.svg)](../libraries/std/math/.test/math_abs.log) | [math_abs](../libraries/std/math/) |
-| [![test](../libraries/std/math/.test/math_trigonometric.svg)](../libraries/std/math/.test/math_trigonometric.log) | [math_trigonometric](../libraries/std/math/) |
 | [![test](../types/models/.test/measure.svg)](../types/models/.test/measure.log) | [measure](../types/models/measures.md) |
-| [![test](../libraries/std/ops/.test/mirror_3d.svg)](../libraries/std/ops/.test/mirror_3d.log) | [mirror_3d](../libraries/std/ops/mirror.md) |
 | [![test](../structure/workbenches/elements/.test/missed_property.svg)](../structure/workbenches/elements/.test/missed_property.log) | [missed_property](../structure/workbenches/elements/initializers.md) |
 | [![test](../structure/functions/.test/mod.svg)](../structure/functions/.test/mod.log) | [mod](../structure/functions/module_functions.md) |
 | [![test](../structure/modules/.test/mod_example.svg)](../structure/modules/.test/mod_example.log) | [mod_example](../structure/modules/) |
@@ -132,7 +110,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
 | [![test](../structure/workbenches/types/.test/op_example.svg)](../structure/workbenches/types/.test/op_example.log) | [op_example](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/operator_examples.svg)](../expressions/.test/operator_examples.log) | [operator_examples](../expressions/operators.md) |
-| [![test](../libraries/std/ops/.test/orient_3d.svg)](../libraries/std/ops/.test/orient_3d.log) | [orient_3d](../libraries/std/ops/orient.md) |
 | [![test](../flow/calls/.test/parameter.svg)](../flow/calls/.test/parameter.log) | [parameter](../flow/calls/args_params.md) |
 | [![test](../flow/calls/.test/parameter_default.svg)](../flow/calls/.test/parameter_default.log) | [parameter_default](../flow/calls/args_params.md) |
 | [![test](../structure/workbenches/types/.test/parameters.svg)](../structure/workbenches/types/.test/parameters.log) | [parameters](../structure/workbenches/types/operations.md) |
@@ -158,28 +135,15 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/collections/array/.test/range_expressions_bad_order.svg)](../types/collections/array/.test/range_expressions_bad_order.log) | [range_expressions_bad_order](../types/collections/array/range.md) |
 | [![test](../types/collections/array/.test/range_expressions_bad_type.svg)](../types/collections/array/.test/range_expressions_bad_type.log) | [range_expressions_bad_type](../types/collections/array/range.md) |
 | [![test](../structure/functions/.test/return_twice.svg)](../structure/functions/.test/return_twice.log) | [return_twice](../structure/functions/result.md) |
-| [![test](../libraries/std/ops/.test/revolve.svg)](../libraries/std/ops/.test/revolve.log) | [revolve](../libraries/std/ops/revolve.md) |
-| [![test](../libraries/std/ops/.test/rotate_2d.svg)](../libraries/std/ops/.test/rotate_2d.log) | [rotate_2d](../libraries/std/ops/rotate.md) |
-| [![test](../libraries/std/ops/.test/rotate_3d.svg)](../libraries/std/ops/.test/rotate_3d.log) | [rotate_3d](../libraries/std/ops/rotate.md) |
 | [![test](../expressions/.test/scalar_literal.svg)](../expressions/.test/scalar_literal.log) | [scalar_literal](../expressions/literals.md) |
-| [![test](../libraries/std/ops/.test/scale_3d.svg)](../libraries/std/ops/.test/scale_3d.log) | [scale_3d](../libraries/std/ops/scale.md) |
-| [![test](../libraries/std/ops/.test/scale_uniform.svg)](../libraries/std/ops/.test/scale_uniform.log) | [scale_uniform](../libraries/std/ops/scale.md) |
-| [![test](../libraries/builtin/.test/sector.svg)](../libraries/builtin/.test/sector.log) | [sector](../libraries/builtin/geo2d.md) |
 | [![test](../structure/workbenches/types/.test/sketch_3d.svg)](../structure/workbenches/types/.test/sketch_3d.log) | [sketch_3d](../structure/workbenches/types/sketches.md) |
 | [![test](../structure/workbenches/types/.test/sketch_basic.svg)](../structure/workbenches/types/.test/sketch_basic.log) | [sketch_basic](../structure/workbenches/types/sketches.md) |
 | [![test](../structure/.test/source_file_2D.svg)](../structure/.test/source_file_2D.log) | [source_file_2D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_3D.svg)](../structure/.test/source_file_3D.log) | [source_file_3D](../structure/source_file.md) |
 | [![test](../structure/.test/source_file_mixed.svg)](../structure/.test/source_file_mixed.log) | [source_file_mixed](../structure/source_file.md) |
 | [![test](../flow/.test/start.svg)](../flow/.test/start.log) | [start](../flow/start_code.md) |
-| [![test](../libraries/std/ops/.test/std_geo2d_buffer.svg)](../libraries/std/ops/.test/std_geo2d_buffer.log) | [std_geo2d_buffer](../libraries/std/ops/buffer.md) |
-| [![test](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.svg)](../libraries/std/geo2d/.test/std_geo2d_involute_gear_profile.log) | [std_geo2d_involute_gear_profile](../libraries/std/geo2d/) |
-| [![test](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.svg)](../libraries/std/geo2d/.test/std_geo2d_rounded_rect.log) | [std_geo2d_rounded_rect](../libraries/std/geo2d/) |
-| [![test](../libraries/std/geo2d/.test/std_geo2d_sector.svg)](../libraries/std/geo2d/.test/std_geo2d_sector.log) | [std_geo2d_sector](../libraries/std/geo2d/) |
-| [![test](../libraries/std/geo2d/.test/std_geo2d_text.svg)](../libraries/std/geo2d/.test/std_geo2d_text.log) | [std_geo2d_text](../libraries/std/geo2d/) |
 | [![test](../expressions/.test/string_literal.svg)](../expressions/.test/string_literal.log) | [string_literal](../expressions/literals.md) |
-| [![test](../libraries/builtin/.test/text.svg)](../libraries/builtin/.test/text.log) | [text](../libraries/builtin/geo2d.md) |
 | [![test](../.test/toml_import.svg)](../.test/toml_import.log) | [toml_import](../import.md) |
-| [![test](../libraries/std/ops/.test/translate_2d.svg)](../libraries/std/ops/.test/translate_2d.log) | [translate_2d](../libraries/std/ops/translate.md) |
 | [![test](../types/collections/tuples/.test/tuple_error_mismatch.svg)](../types/collections/tuples/.test/tuple_error_mismatch.log) | [tuple_error_mismatch](../types/collections/tuples/operators.md) |
 | [![test](../types/collections/tuples/.test/tuple_operations.svg)](../types/collections/tuples/.test/tuple_operations.log) | [tuple_operations](../types/collections/tuples/operators.md) |
 | [![test](../types/.test/types_bundles_functions.svg)](../types/.test/types_bundles_functions.log) | [types_bundles_functions](../types/) |
@@ -201,8 +165,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/quantities/.test/types_quantity_volume.svg)](../types/quantities/.test/types_quantity_volume.log) | [types_quantity_volume](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_volume_units.svg)](../types/quantities/.test/types_quantity_volume_units.log) | [types_quantity_volume_units](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_weight.svg)](../types/quantities/.test/types_quantity_weight.log) | [types_quantity_weight](../types/quantities/types.md) |
-| [![test](../libraries/std/ops/.test/union_alt_operator.svg)](../libraries/std/ops/.test/union_alt_operator.log) | [union_alt_operator](../libraries/std/ops/union.md) |
-| [![test](../libraries/std/ops/.test/union_operator.svg)](../libraries/std/ops/.test/union_operator.log) | [union_operator](../libraries/std/ops/union.md) |
 | [![test](../types/collections/tuples/.test/unnamed_tuple.svg)](../types/collections/tuples/.test/unnamed_tuple.log) | [unnamed_tuple](../types/collections/tuples/) |
 | [![test](../types/collections/tuples/.test/unnamed_tuple_ambiguous.svg)](../types/collections/tuples/.test/unnamed_tuple_ambiguous.log) | [unnamed_tuple_ambiguous](../types/collections/tuples/) |
 | [![test](../types/collections/tuples/.test/unnamed_tuple_order.svg)](../types/collections/tuples/.test/unnamed_tuple_order.log) | [unnamed_tuple_order](../types/collections/tuples/) |

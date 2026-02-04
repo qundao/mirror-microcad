@@ -1,0 +1,20 @@
+﻿
+-- Test --
+        Test name: lib_std
+  Expected result: ok
+      Source file: ../books/language/src/libraries.md:16
+        Test path: ../books/language/src/.test
+
+-- Code --
+
+  16:   use std::print;
+  17:   
+  18:   print("Hello, µcad standard library!");
+
+-- Output --
+Hello, µcad standard library!
+
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
