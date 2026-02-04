@@ -1,6 +1,6 @@
 # Example: drill_plate
 
-[![test](.test/drill_plate.svg)](.test/drill_plate.log)
+[![Report](.test/drill_plate.svg)](.test/drill_plate.log)
 
 ```µcad,drill_plate
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -20,6 +20,8 @@ DrillPlate();
 
 ```
 
-![test](.test/drill_plate-out.svg)
+2D Output
+    : ![None](.test/drill_plate-out.svg)
 
-![test](.test/drill_plate-out.stl)
+3D Output
+    : ![None](.test/drill_plate-out.stl)

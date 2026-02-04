@@ -1,6 +1,6 @@
 # Example: cylinder_stack
 
-[![test](.test/cylinder_stack.svg)](.test/cylinder_stack.log)
+[![Report](.test/cylinder_stack.svg)](.test/cylinder_stack.log)
 
 ```µcad,cylinder_stack
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -25,6 +25,8 @@ CylinderStack(heights = [5, 15, 5]mm, radii = [6, 4, 4, 6]mm);
 
 ```
 
-![test](.test/cylinder_stack-out.svg)
+2D Output
+    : ![None](.test/cylinder_stack-out.svg)
 
-![test](.test/cylinder_stack-out.stl)
+3D Output
+    : ![None](.test/cylinder_stack-out.stl)

@@ -2,101 +2,46 @@
 -- Test --
         Test name: bricks_use_bricks
   Expected result: ok
-      Source file: ../books/examples/src/bricks.md:144
+      Source file: ../books/examples/src/bricks.md:148
         Test path: ../books/examples/src/.test
 
 -- Code --
 
- 144:   // file: use_bricks.µcad
- 145:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
- 146:   // SPDX-License-Identifier: AGPL-3.0-or-later
- 147:   
- 148:   mod brick;
- 149:   
- 150:   use brick::*;
+ 148:   // file: use_bricks
+ 149:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+ 150:   // SPDX-License-Identifier: AGPL-3.0-or-later
  151:   
- 152:   // 2x2 double height
- 153:   double_2x2 = Brick(rows = 2, columns = 2, base_height = 9.6mm * 2);
- 154:   
- 155:   // 4x2 single height
- 156:   single_4x2 = Brick(rows = 4, columns = 2);
- 157:   
- 158:   // 3x2 one-third height
- 159:   third_3x2 = Brick(rows = 3, columns = 2, base_height = 3.2mm);
- 160:   
- 161:   // generate geometry placing all elements side by side
- 162:   use std::ops::translate;
- 163:   
- 164:   single_4x2;
- 165:   double_2x2.translate(y = -40mm);
- 166:   third_3x2.translate(y = 40mm);
+ 152:   mod brick;
+ 153:   
+ 154:   use brick::*;
+ 155:   
+ 156:   // 2x2 double height
+ 157:   double_2x2 = Brick(rows = 2, columns = 2, base_height = 9.6mm * 2);
+ 158:   
+ 159:   // 4x2 single height
+ 160:   single_4x2 = Brick(rows = 4, columns = 2);
+ 161:   
+ 162:   // 3x2 one-third height
+ 163:   third_3x2 = Brick(rows = 3, columns = 2, base_height = 3.2mm);
+ 164:   
+ 165:   // generate geometry placing all elements side by side
+ 166:   use std::ops::translate;
+ 167:   
+ 168:   single_4x2;
+ 169:   double_2x2.translate(y = -40mm);
+ 170:   third_3x2.translate(y = 40mm);
 
 -- No Output --
 -- Errors --
-  × error: 24:18: Workbench Ring cannot find initialization for those arguments
-     ╭─[../books/examples/src/.test/brick.µcad:167:13]
- 166 │         if n_rings > 0 {
- 167 │             Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-     ·             ───────────────────┬───────────────────
-     ·                                ╰── Got: Ring( inner_d = 4.8mm, outer_d = 6.51mm )
- 168 │                 .multiply(n_rings)
-     ╰────
-  help: Possible initializations:
-        	Ring( outer_radius: Length, inner_radius: Length)
-        	Ring( outer_radius: Length, thickness: Length)
-        	Ring( outer_diameter: Length, inner_diameter: Length)
-        	Ring( outer_diameter: Length, thickness: Length)
-  ⚠ warning: 24:13: This expression statement did not produce any model
-     ╭─[../books/examples/src/.test/brick.µcad:167:13]
- 166 │         if n_rings > 0 {
- 167 │             Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-     ·             ───────────────────┬───────────────────
-     ·                                ╰── warning: 24:13: This expression statement did not produce any model
- 168 │                 .multiply(n_rings)
-     ╰────
-  × error: 24:18: Workbench Ring cannot find initialization for those arguments
-     ╭─[../books/examples/src/.test/brick.µcad:167:13]
- 166 │         if n_rings > 0 {
- 167 │             Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-     ·             ───────────────────┬───────────────────
-     ·                                ╰── Got: Ring( inner_d = 4.8mm, outer_d = 6.51mm )
- 168 │                 .multiply(n_rings)
-     ╰────
-  help: Possible initializations:
-        	Ring( outer_radius: Length, inner_radius: Length)
-        	Ring( outer_radius: Length, thickness: Length)
-        	Ring( outer_diameter: Length, inner_diameter: Length)
-        	Ring( outer_diameter: Length, thickness: Length)
-  ⚠ warning: 24:13: This expression statement did not produce any model
-     ╭─[../books/examples/src/.test/brick.µcad:167:13]
- 166 │         if n_rings > 0 {
- 167 │             Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-     ·             ───────────────────┬───────────────────
-     ·                                ╰── warning: 24:13: This expression statement did not produce any model
- 168 │                 .multiply(n_rings)
-     ╰────
-  × error: 24:18: Workbench Ring cannot find initialization for those arguments
-     ╭─[../books/examples/src/.test/brick.µcad:167:13]
- 166 │         if n_rings > 0 {
- 167 │             Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-     ·             ───────────────────┬───────────────────
-     ·                                ╰── Got: Ring( inner_d = 4.8mm, outer_d = 6.51mm )
- 168 │                 .multiply(n_rings)
-     ╰────
-  help: Possible initializations:
-        	Ring( outer_radius: Length, inner_radius: Length)
-        	Ring( outer_radius: Length, thickness: Length)
-        	Ring( outer_diameter: Length, inner_diameter: Length)
-        	Ring( outer_diameter: Length, thickness: Length)
-  ⚠ warning: 24:13: This expression statement did not produce any model
-     ╭─[../books/examples/src/.test/brick.µcad:167:13]
- 166 │         if n_rings > 0 {
- 167 │             Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-     ·             ───────────────────┬───────────────────
-     ·                                ╰── warning: 24:13: This expression statement did not produce any model
- 168 │                 .multiply(n_rings)
-     ╰────
-Unexpected error(s) which did occur in line(s): 167
-Unexpected warnings(s) which did occur in line(s): 167
+  × error: 5:5: Source of module 'brick' could not be found in "/home/pat/git/microcad/books/examples/src/.test" (expecting a file 'brick.µcad' or 'brick/mod.µcad')
+   ╭─[../books/examples/src/bricks.md:5:5]
+ 4 │ 
+ 5 │ mod brick;
+   ·     ──┬──
+   ·       ╰── module not found
+ 6 │ 
+   ╰────
+Unexpected error(s) which did occur in line(s): 5
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS

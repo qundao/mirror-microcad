@@ -2,10 +2,10 @@
 
 ## Module: gear_2d
 
-[![test](.test/gears_gear_2d.svg)](.test/gears_gear_2d.log)
+[![Report](.test/gears_gear_2d.svg)](.test/gears_gear_2d.log)
 
 ```µcad,gears_gear_2d
-// file: gear_2d.µcad
+// file: gear_2d
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -16,16 +16,18 @@ InvoluteGearProfile(1.0mm, 100);
 
 ```
 
-![test](.test/gears_gear_2d-out.svg)
+2D Output
+    : ![None](.test/gears_gear_2d-out.svg)
 
-![test](.test/gears_gear_2d-out.stl)
+3D Output
+    : ![None](.test/gears_gear_2d-out.stl)
 
-## Module: gears_3d
+    ## Module: gears_3d
 
-[![test](.test/gears_gears_3d.svg)](.test/gears_gears_3d.log)
+[![Report](.test/gears_gears_3d.svg)](.test/gears_gears_3d.log)
 
 ```µcad,gears_gears_3d
-// file: gears_3d.µcad
+// file: gears_3d
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -80,16 +82,18 @@ gear3.rotate(-angle / gear3.teeth).translate(gear1.outer_radius + gear3.pitch_ra
 
 ```
 
-![test](.test/gears_gears_3d-out.svg)
+2D Output
+    : ![None](.test/gears_gears_3d-out.svg)
 
-![test](.test/gears_gears_3d-out.stl)
+3D Output
+    : ![None](.test/gears_gears_3d-out.stl)
 
-## Module: herringbone_gears
+    ## Module: herringbone_gears
 
-[![test](.test/gears_herringbone_gears.svg)](.test/gears_herringbone_gears.log)
+[![Report](.test/gears_herringbone_gears.svg)](.test/gears_herringbone_gears.log)
 
 ```µcad,gears_herringbone_gears
-// file: herringbone_gears.µcad
+// file: herringbone_gears
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -135,7 +139,10 @@ gear2
 
 ```
 
-![test](.test/gears_herringbone_gears-out.svg)
+2D Output
+    : ![None](.test/gears_herringbone_gears-out.svg)
 
-![test](.test/gears_herringbone_gears-out.stl)
+3D Output
+    : ![None](.test/gears_herringbone_gears-out.stl)
 
+    

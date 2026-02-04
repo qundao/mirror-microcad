@@ -1,6 +1,6 @@
 # Example: csg_cube
 
-[![test](.test/csg_cube.svg)](.test/csg_cube.log)
+[![Report](.test/csg_cube.svg)](.test/csg_cube.log)
 
 ```µcad,csg_cube
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
@@ -21,6 +21,8 @@ CsgCube(50mm);
 
 ```
 
-![test](.test/csg_cube-out.svg)
+2D Output
+    : ![None](.test/csg_cube-out.svg)
 
-![test](.test/csg_cube-out.stl)
+3D Output
+    : ![None](.test/csg_cube-out.stl)

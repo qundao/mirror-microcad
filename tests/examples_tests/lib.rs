@@ -12,8 +12,8 @@ pub fn generate_example_book(
     book_src: impl AsRef<Path>,
 ) -> Result<()> {
     let mut examples = Vec::new();
-    std::fs::remove_dir_all(book_src.as_ref()).expect("test error");
-    std::fs::create_dir(book_src.as_ref()).expect("test error");
+    //std::fs::remove_dir_all(book_src.as_ref()).expect("test error");
+    //std::fs::create_dir(book_src.as_ref()).expect("test error");
     for entry in std::fs::read_dir(input_folder).into_diagnostic()?.flatten() {
         let path = entry.path();
         let file_name = path
@@ -38,15 +38,17 @@ pub fn generate_example_book(
                         let code = format!(
                             "# Example: {name}
 
-[![test](.test/{name}.svg)](.test/{name}.log)
+[![Report](.test/{name}.svg)](.test/{name}.log)
 
 ```µcad,{name}
 {content}
 ```
 
-![test](.test/{name}-out.svg)
+2D Output
+    : ![None](.test/{name}-out.svg)
 
-![test](.test/{name}-out.stl)
+3D Output
+    : ![None](.test/{name}-out.stl)
 "
                         );
 
@@ -60,7 +62,7 @@ pub fn generate_example_book(
                             .expect("test error")
                             .to_string_lossy()
                             .to_string();
-                        examples.push((file_name, md_name));
+                        examples.push((name, md_name));
                     }
                 }
             } else if file_type.is_dir() {
@@ -68,11 +70,6 @@ pub fn generate_example_book(
                 let mut code = format!("# Example: {name}\n\n");
                 for entry in std::fs::read_dir(entry.path()).into_diagnostic()?.flatten() {
                     let path = entry.path();
-                    let file_name = path
-                        .file_name()
-                        .expect("test error")
-                        .to_string_lossy()
-                        .to_string();
                     let name = path
                         .file_stem()
                         .expect("test error")
@@ -92,18 +89,20 @@ pub fn generate_example_book(
                                         format!(
                                             "## Module: {name}
 
-[![test](.test/{folder_name}_{name}.svg)](.test/{folder_name}_{name}.log)
+[![Report](.test/{folder_name}_{name}.svg)](.test/{folder_name}_{name}.log)
 
 ```µcad,{folder_name}_{name}
-// file: {file_name}
+// file: {name}
 {content}
 ```
 
-![test](.test/{folder_name}_{name}-out.svg)
+2D Output
+    : ![None](.test/{folder_name}_{name}-out.svg)
 
-![test](.test/{folder_name}_{name}-out.stl)
+3D Output
+    : ![None](.test/{folder_name}_{name}-out.stl)
 
-"
+    "
                                         )
                                         .chars(),
                                     );
@@ -122,7 +121,7 @@ pub fn generate_example_book(
                     .expect("test error")
                     .to_string_lossy()
                     .to_string();
-                examples.push((folder_name, md_name));
+                examples.push((name, md_name));
             }
         }
     }

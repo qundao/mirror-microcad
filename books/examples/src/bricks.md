@@ -2,10 +2,10 @@
 
 ## Module: tutorial
 
-[![test](.test/bricks_tutorial.svg)](.test/bricks_tutorial.log)
+[![Report](.test/bricks_tutorial.svg)](.test/bricks_tutorial.log)
 
 ```µcad,bricks_tutorial
-// file: tutorial.µcad
+// file: tutorial
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -64,16 +64,18 @@ LegoBrick();
 
 ```
 
-![test](.test/bricks_tutorial-out.svg)
+2D Output
+    : ![None](.test/bricks_tutorial-out.svg)
 
-![test](.test/bricks_tutorial-out.stl)
+3D Output
+    : ![None](.test/bricks_tutorial-out.stl)
 
-## Module: brick
+    ## Module: brick
 
-[![test](.test/bricks_brick.svg)](.test/bricks_brick.log)
+[![Report](.test/bricks_brick.svg)](.test/bricks_brick.log)
 
 ```µcad,bricks_brick
-// file: brick.µcad
+// file: brick
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -132,16 +134,18 @@ Brick(
 
 ```
 
-![test](.test/bricks_brick-out.svg)
+2D Output
+    : ![None](.test/bricks_brick-out.svg)
 
-![test](.test/bricks_brick-out.stl)
+3D Output
+    : ![None](.test/bricks_brick-out.stl)
 
-## Module: use_bricks
+    ## Module: use_bricks
 
-[![test](.test/bricks_use_bricks.svg)](.test/bricks_use_bricks.log)
+[![Report](.test/bricks_use_bricks.svg)](.test/bricks_use_bricks.log)
 
 ```µcad,bricks_use_bricks
-// file: use_bricks.µcad
+// file: use_bricks
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -166,7 +170,10 @@ double_2x2.translate(y = -40mm);
 third_3x2.translate(y = 40mm);
 ```
 
-![test](.test/bricks_use_bricks-out.svg)
+2D Output
+    : ![None](.test/bricks_use_bricks-out.svg)
 
-![test](.test/bricks_use_bricks-out.stl)
+3D Output
+    : ![None](.test/bricks_use_bricks-out.stl)
 
+    

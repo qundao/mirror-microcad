@@ -1,6 +1,6 @@
 # Example: lid
 
-[![test](.test/lid.svg)](.test/lid.log)
+[![Report](.test/lid.svg)](.test/lid.log)
 
 ```µcad,lid
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
@@ -31,6 +31,8 @@ l; // Instantiate the lid.
 
 ```
 
-![test](.test/lid-out.svg)
+2D Output
+    : ![None](.test/lid-out.svg)
 
-![test](.test/lid-out.stl)
+3D Output
+    : ![None](.test/lid-out.stl)

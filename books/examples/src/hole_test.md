@@ -1,6 +1,6 @@
 # Example: hole_test
 
-[![test](.test/hole_test.svg)](.test/hole_test.log)
+[![Report](.test/hole_test.svg)](.test/hole_test.log)
 
 ```µcad,hole_test
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -27,6 +27,8 @@ r - holes;
 
 ```
 
-![test](.test/hole_test-out.svg)
+2D Output
+    : ![None](.test/hole_test-out.svg)
 
-![test](.test/hole_test-out.stl)
+3D Output
+    : ![None](.test/hole_test-out.stl)
