@@ -1,0 +1,22 @@
+﻿
+-- Test --
+        Test name: types_quantity_volume
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities/types.md:94
+        Test path: ../books/language/src/types/quantities/.test
+
+-- Code --
+
+  94:   a = 3mm;
+  95:   b = 2mm;
+  96:   c = 4mm;
+  97:   
+  98:   volume = a * b * c;
+  99:   
+ 100:   std::debug::assert(volume == 24mm³);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

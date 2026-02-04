@@ -1,0 +1,40 @@
+﻿
+-- Test --
+        Test name: quantity_types_number_literals
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities/README.md:8
+        Test path: ../books/language/src/types/quantities/.test
+
+-- Code --
+
+   8:   // declare variable `height` of type `Length` to 1.4 Meters
+   9:   height = 1.4m;
+  10:   
+  11:   // use as *default* value in parameter list
+  12:   fn f( height = 1m ) {}
+  13:   
+  14:   // calculate a `Length` called `width` by multiplying the
+  15:   // `height` with `Scalar` `2` and add ten centimeters
+  16:   width = height * 2 + 10cm;
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 9:1: Unused local width.
+    ╭─[../books/language/src/types/quantities/README.md:16:1]
+ 15 │ // `height` with `Scalar` `2` and add ten centimeters
+ 16 │ width = height * 2 + 10cm;
+    · ──┬──
+    ·   ╰── warning: 9:1: Unused local width.
+    ╰────
+  ⚠ warning: 5:4: Unused global symbol f.
+    ╭─[../books/language/src/types/quantities/README.md:12:4]
+ 11 │ // use as *default* value in parameter list
+ 12 │ fn f( height = 1m ) {}
+    ·    ┬
+    ·    ╰── warning: 5:4: Unused global symbol f.
+ 13 │ 
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 12, 16
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)

@@ -1,13 +1,10 @@
-# Quantities
-
-*Quantities* are numeric values coupled with a unit.
-Each unit refers to example one quantity type.
+# Quantity Types
 
 The following quantity types are supported:
 
 | Type      | Metric Units                                | Imperial Units                 |
 | --------- | ------------------------------------------- | ------------------------------ |
-| `Scalar`  | -, `%`                                      | -                              |
+| `Scalar`  | `%` *or none*                               | -                              |
 | `Length`  | `µm`, `mm`, `cm`, `m`                       | `in` or `"`, `ft` or `'`, `yd` |
 | `Angle`   | `°` or `deg`, `grad`, `turn`,`rad`          |                                |
 | `Area`    | `µm²`,`mm²`,`cm²`,`m³`                      | `in²`, `ft²` , `yd²`           |
@@ -17,28 +14,7 @@ The following quantity types are supported:
 
 **Note**: More units [may be implemented](https://codeberg.org/microcad/microcad/issues/76).
 
-## Quantity Literals
-
-Quantities can be declared by *literals*.
-This means that your will automatically get the following type if you use the beside units:
-
-[![test](.test/quantity_types_number_literals.svg)](.test/quantity_types_number_literals.log)
-
-```µcad,quantity_types_number_literals
-// declare variable `height` of type `Length` to 1.4 Meters
-height = 1.4m;
-
-// use as *default* value in parameter list
-fn f( height = 1m ) {}
-
-// calculate a `Length` called `width` by multiplying the
-// `height` with `Scalar` `2` and add ten centimeters
-width = height * 2 + 10cm;
-```
-
-## Quantity Types
-
-### Scalar
+## Scalar
 
 The type `Scalar` contains a floating number (without any *unit*) and must be written with at least one decimal place (or in percent).
 
@@ -50,7 +26,7 @@ pi =  3.1415;
 percent = 55%;
 ```
 
-### Length
+## Length
 
 `Length` is used to describe a concrete length.
 
@@ -65,7 +41,7 @@ inches = 39.37007874015748in;
 std::debug::assert_eq([ millimeters, centimeters, meters, inches ]);
 ```
 
-### Angle
+## Angle
 
 Angles are used with rotations and in constrains when proving measures.
 
@@ -82,7 +58,7 @@ turn = 0.5turns;
 std::debug::assert_eq([ degree, degree_, grad, turn, radian ]);
 ```
 
-### Area
+## Area
 
 An `Area` is a two-dimensional quantity. It is the result when multiplying two `Length`s.
 
@@ -108,7 +84,7 @@ square_inch = 155in²;
 std::debug::assert_eq([ square_millimeter, square_centimeter ]);
 ```
 
-### Volume
+## Volume
 
 A `Volume` is a three-dimensional quantity. It is the result when multiplying three `Length`s.
 
@@ -145,7 +121,7 @@ std::debug::assert_eq([ cubic_millimeter,
                         ]);
 ```
 
-### Density
+## Density
 
 Currently `Density` has not specific use in µcad and only can use unit `g/mm³`.
 
@@ -155,7 +131,7 @@ Currently `Density` has not specific use in µcad and only can use unit `g/mm³`
 gramm_per_square_centimeters = 19.302g/mm³;
 ```
 
-### Weight
+## Weight
 
 Weights can be calculated by applying volumes to materials.
 
@@ -167,21 +143,4 @@ kilogram = 1.0kg;
 pound = 2.204623lb;
 
 std::debug::assert_eq([ gram, kilogram ]);
-```
-
-## Arithmetic
-
-Quantity types can use operators:
-
-[![test](.test/types_quantity_arithmetic.svg)](.test/types_quantity_arithmetic.log)
-
-```µcad,types_quantity_arithmetic#todo
-use std::debug::assert_eq;
-
-a = 6cm;
-b = 2cm;
-assert_eq([ a * b, 12cm²  ]);
-assert_eq([ a / b, 3 ]);
-assert_eq([ a + b, 80mm ]);
-assert_eq([ a - b, 40mm ]);
 ```

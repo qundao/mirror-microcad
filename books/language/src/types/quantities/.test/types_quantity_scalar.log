@@ -1,0 +1,41 @@
+﻿
+-- Test --
+        Test name: types_quantity_scalar
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities/types.md:24
+        Test path: ../books/language/src/types/quantities/.test
+
+-- Code --
+
+  24:   zero = 0;
+  25:   pi =  3.1415;
+  26:   percent = 55%;
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 3:1: Unused local percent.
+    ╭─[../books/language/src/types/quantities/types.md:26:1]
+ 25 │ pi =  3.1415;
+ 26 │ percent = 55%;
+    · ───┬───
+    ·    ╰── warning: 3:1: Unused local percent.
+    ╰────
+  ⚠ warning: 2:1: Unused local pi.
+    ╭─[../books/language/src/types/quantities/types.md:25:1]
+ 24 │ zero = 0;
+ 25 │ pi =  3.1415;
+    · ─┬
+    ·  ╰── warning: 2:1: Unused local pi.
+ 26 │ percent = 55%;
+    ╰────
+  ⚠ warning: 1:1: Unused local zero.
+    ╭─[../books/language/src/types/quantities/types.md:24:1]
+ 24 │ zero = 0;
+    · ──┬─
+    ·   ╰── warning: 1:1: Unused local zero.
+ 25 │ pi =  3.1415;
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 24, 25, 26
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)

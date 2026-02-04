@@ -1,0 +1,38 @@
+﻿
+-- Test --
+        Test name: types_quantity_area_units
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities/types.md:79
+        Test path: ../books/language/src/types/quantities/.test
+
+-- Code --
+
+  79:   square_millimeter = 100000mm²;
+  80:   square_centimeter = 1000cm2;
+  81:   square_meter = 0.1m²;
+  82:   square_inch = 155in²;
+  83:   
+  84:   std::debug::assert_eq([ square_millimeter, square_centimeter ]);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 4:1: Unused local square_inch.
+    ╭─[../books/language/src/types/quantities/types.md:82:1]
+ 81 │ square_meter = 0.1m²;
+ 82 │ square_inch = 155in²;
+    · ─────┬─────
+    ·      ╰── warning: 4:1: Unused local square_inch.
+ 83 │ 
+    ╰────
+  ⚠ warning: 3:1: Unused local square_meter.
+    ╭─[../books/language/src/types/quantities/types.md:81:1]
+ 80 │ square_centimeter = 1000cm2;
+ 81 │ square_meter = 0.1m²;
+    · ──────┬─────
+    ·       ╰── warning: 3:1: Unused local square_meter.
+ 82 │ square_inch = 155in²;
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 81, 82
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
