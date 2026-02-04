@@ -6,22 +6,25 @@
 There are several operators which can be used to combine *expressions* with
 each other:
 
-| Operator |  Type  |      Input types       |      Result Type       | Description      |
-| :------: | :----: | :--------------------: | :--------------------: | ---------------- |
-|   `-`    | unary  | Integer, Scalar, Array | Integer, Scalar, Array | Negation         |
-|   `+`    | binary | Integer, Scalar, Array | Integer, Scalar, Array | Addition         |
-|   `-`    | binary | Integer, Scalar, Array | Integer, Scalar, Array | Subtraction      |
-|   `*`    | binary | Integer, Scalar, Array | Integer, Scalar, Array | Multiplication   |
-|   `/`    | binary | Integer, Scalar, Array | Integer, Scalar, Array | Division         |
-|   `^`    | binary |    Integer, Scalar     |    Integer, Scalar     | Power            |
-|   `&`    | binary |        Boolean         |        Boolean         | Logical AND      |
-|   `\|`   | binary |        Boolean         |        Boolean         | Logical OR       |
-|   `>`    | binary |    Integer, Scalar     |        Boolean         | Greater than     |
-|   `>=`   | binary |    Integer, Scalar     |        Boolean         | Greater or equal |
-|   `<`    | binary |    Integer, Scalar     |        Boolean         | Less than        |
-|   `<=`   | binary |    Integer, Scalar     |        Boolean         | Less or equal    |
-|   `==`   | binary |    Integer, Scalar     |        Boolean         | Equal            |
-|   `!=`   | binary |    Integer, Scalar     |        Boolean         | Not equal        |
+| Operator |  Type  | 1st Operand[^x]  | 2nd Operand  | Result Type | Description      |
+| :------: | :----: | :--------------- | :----------- | :---------- | ---------------- |
+|   `!`    | unary  | `B`              | -            | *same*      | Inversion        |
+|   `-`    | unary  | `I` `Q` `A` `T`  | -            | *same*      | Negation         |
+|   `+`    | binary | `I` `Q` `A` `T`  | *compatible* | *same*      | Addition         |
+|   `-`    | binary | `I` `Q` `A` `T`  | *compatible* | *same*      | Subtraction      |
+|   `*`    | binary | `I` `Q` `A` `T`  | *compatible* | *same*      | Multiplication   |
+|   `/`    | binary | `I` `Q` `A` `T`  | *compatible* | *same*      | Division         |
+|   `^`    | binary | `I` `Q`          | `Integer`    | *like 1st*  | Power            |
+|   `&`    | binary | `B`              | `Boolean`    | `Boolean`   | Logical AND      |
+|   `\|`   | binary | `B`              | `Boolean`    | `Boolean`   | Logical OR       |
+|   `>`    | binary | `I` `Q`          | *compatible* | `Boolean`   | Greater than     |
+|   `>=`   | binary | `I` `Q`          | *compatible* | `Boolean`   | Greater or equal |
+|   `<`    | binary | `I` `Q`          | *compatible* | `Boolean`   | Less than        |
+|   `<=`   | binary | `I` `Q`          | *compatible* | `Boolean`   | Less or equal    |
+|   `==`   | binary | `I` `Q` `A` `T`  | *compatible* | `Boolean`   | Equal            |
+|   `!=`   | binary | `I` `Q` `A`  `T` | *compatible* | `Boolean`   | Not equal        |
+
+[^x]:`B` = Boolean, `I` = Integer, `Q` = Quantity, `A` = Array, `T` = Tuple
 
 Here are some examples of each operator:
 

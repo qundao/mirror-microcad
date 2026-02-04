@@ -72,4 +72,5 @@
   - [Coding Style](./appendix/coding/README.md)
     - [Naming convention](./appendix/coding/naming.md)
   - [Keywords](./appendix/keywords.md)
+  - [Special Characters](./appendix/special_characters.md)
   - [Test List](./appendix/test_list.md)

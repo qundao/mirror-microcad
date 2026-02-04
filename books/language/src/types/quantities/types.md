@@ -1,18 +1,23 @@
 # Quantity Types
 
-The following quantity types are supported:
+The following *quantity types* are [currently](https://codeberg.org/microcad/microcad/issues/76) supported in µcad:
 
 | Type      | Metric Units                                | Imperial Units                 |
 | --------- | ------------------------------------------- | ------------------------------ |
 | `Scalar`  | `%` *or none*                               | -                              |
 | `Length`  | `µm`, `mm`, `cm`, `m`                       | `in` or `"`, `ft` or `'`, `yd` |
 | `Angle`   | `°` or `deg`, `grad`, `turn`,`rad`          |                                |
-| `Area`    | `µm²`,`mm²`,`cm²`,`m³`                      | `in²`, `ft²` , `yd²`           |
+| `Area`    | `µm²`,`mm²`,`cm²`,`m²`                      | `in²`, `ft²` , `yd²`           |
 | `Volume`  | `µm³`, `mm³`,`cm³`,`m³`,`ml`,`cl`,`l`, `µl` | `in³`, `ft³` , `yd³`           |
 | `Density` | `g/mm³`                                     | -                              |
 | `Weight`  | `g`, `kg`                                   | `lb`, `oz`                     |
 
-**Note**: More units [may be implemented](https://codeberg.org/microcad/microcad/issues/76).
+> [!TIP]
+> Special characters like `µ`, `°`, `²`, and  `³` have ASCII[^ascii] replacements
+> you may use if your keyboard misses these letters
+> (see [this appendix](../../appendix/special_characters.md) for more information).
+
+[^ascii]: see [wikipedia about ASCII](https://de.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange)
 
 ## Scalar
 

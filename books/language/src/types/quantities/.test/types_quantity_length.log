@@ -2,17 +2,17 @@
 -- Test --
         Test name: types_quantity_length
   Expected result: ok
-      Source file: ../books/language/src/types/quantities/types.md:36
+      Source file: ../books/language/src/types/quantities/types.md:41
         Test path: ../books/language/src/types/quantities/.test
 
 -- Code --
 
-  36:   millimeters = 1000mm;
-  37:   centimeters = 100cm;
-  38:   meters = 1m;
-  39:   inches = 39.37007874015748in;
-  40:   
-  41:   std::debug::assert_eq([ millimeters, centimeters, meters, inches ]);
+  41:   millimeters = 1000mm;
+  42:   centimeters = 100cm;
+  43:   meters = 1m;
+  44:   inches = 39.37007874015748in;
+  45:   
+  46:   std::debug::assert_eq([ millimeters, centimeters, meters, inches ]);
 
 -- No Output --
 -- No Errors --

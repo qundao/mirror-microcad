@@ -192,9 +192,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/quantities/.test/types_quantity_angle.svg)](../types/quantities/.test/types_quantity_angle.log) | [types_quantity_angle](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_area.svg)](../types/quantities/.test/types_quantity_area.log) | [types_quantity_area](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_area_units.svg)](../types/quantities/.test/types_quantity_area_units.log) | [types_quantity_area_units](../types/quantities/types.md) |
-| [![test](../types/quantities/.test/types_quantity_arithmetic.svg)](../types/quantities/.test/types_quantity_arithmetic.log) | [types_quantity_arithmetic](../types/quantities/operators.md) |
 | [![test](../types/quantities/.test/types_quantity_density_units.svg)](../types/quantities/.test/types_quantity_density_units.log) | [types_quantity_density_units](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_length.svg)](../types/quantities/.test/types_quantity_length.log) | [types_quantity_length](../types/quantities/types.md) |
+| [![test](../types/quantities/.test/types_quantity_operators.svg)](../types/quantities/.test/types_quantity_operators.log) | [types_quantity_operators](../types/quantities/operators.md) |
 | [![test](../types/quantities/.test/types_quantity_scalar.svg)](../types/quantities/.test/types_quantity_scalar.log) | [types_quantity_scalar](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_volume.svg)](../types/quantities/.test/types_quantity_volume.log) | [types_quantity_volume](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_volume_units.svg)](../types/quantities/.test/types_quantity_volume_units.log) | [types_quantity_volume_units](../types/quantities/types.md) |
