@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**211** tests have been evaluated with version **0.2.20** of microcad.
+**213** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -85,6 +85,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/modules/.test/external_modules_main.svg)](../structure/modules/.test/external_modules_main.log) | [external_modules_main](../structure/modules/external_modules.md) |
 | [![test](../structure/modules/.test/external_modules_second.svg)](../structure/modules/.test/external_modules_second.log) | [external_modules_second](../structure/modules/external_modules.md) |
 | [![test](../libraries/std/ops/.test/extrude.svg)](../libraries/std/ops/.test/extrude.log) | [extrude](../libraries/std/ops/extrude.md) |
+| [![test](../types/.test/format_string.svg)](../types/.test/format_string.log) | [format_string](../types/format_string.md) |
+| [![test](../types/.test/format_string_err.svg)](../types/.test/format_string_err.log) | [format_string_err](../types/format_string.md) |
+| [![test](../types/.test/format_string_value.svg)](../types/.test/format_string_value.log) | [format_string_value](../types/format_string.md) |
 | [![test](../flow/calls/.test/function_call.svg)](../flow/calls/.test/function_call.log) | [function_call](../flow/calls/function_calls.md) |
 | [![test](../structure/functions/.test/function_conditional_result.svg)](../structure/functions/.test/function_conditional_result.log) | [function_conditional_result](../structure/functions/result.md) |
 | [![test](../structure/functions/.test/function_default.svg)](../structure/functions/.test/function_default.log) | [function_default](../structure/functions/) |
@@ -187,7 +190,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../types/.test/types_no_declaration.svg)](../types/.test/types_no_declaration.log) | [types_no_declaration](../types/) |
 | [![test](../types/.test/types_primitive_bool.svg)](../types/.test/types_primitive_bool.log) | [types_primitive_bool](../types/primitives.md) |
 | [![test](../types/.test/types_primitive_integer.svg)](../types/.test/types_primitive_integer.log) | [types_primitive_integer](../types/primitives.md) |
-| [![test](../types/.test/types_primitive_scalar.svg)](../types/.test/types_primitive_scalar.log) | [types_primitive_scalar](../types/primitives.md) |
 | [![test](../types/.test/types_primitive_string.svg)](../types/.test/types_primitive_string.log) | [types_primitive_string](../types/primitives.md) |
 | [![test](../types/quantities/.test/types_quantity_angle.svg)](../types/quantities/.test/types_quantity_angle.log) | [types_quantity_angle](../types/quantities/types.md) |
 | [![test](../types/quantities/.test/types_quantity_area.svg)](../types/quantities/.test/types_quantity_area.log) | [types_quantity_area](../types/quantities/types.md) |
