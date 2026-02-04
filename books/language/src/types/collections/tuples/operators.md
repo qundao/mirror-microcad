@@ -1,4 +1,4 @@
-# Tuple operators
+# Tuple Operators
 
 Tuples support the following operators.
 
