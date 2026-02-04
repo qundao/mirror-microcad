@@ -1,0 +1,23 @@
+﻿
+-- Test --
+        Test name: types_quantity_angle
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities/types.md:51
+        Test path: ../books/language/src/types/quantities/.test
+
+-- Code --
+
+  51:   pi = std::math::PI;
+  52:   radian = 1rad * pi;
+  53:   degree = 180°;
+  54:   degree_ = 180deg;
+  55:   grad = 200grad;
+  56:   turn = 0.5turns;
+  57:   
+  58:   std::debug::assert_eq([ degree, degree_, grad, turn, radian ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
