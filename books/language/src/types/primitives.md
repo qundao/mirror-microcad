@@ -34,16 +34,6 @@ The type `Integer` contains a natural number.
 i = 3;
 ```
 
-## Scalar
-
-The type `Scalar` contains a natural number.
-
-[![test](.test/types_primitive_scalar.svg)](.test/types_primitive_scalar.log)
-
-```µcad,types_primitive_scalar
-i = 3.1415;
-```
-
 ## String
 
 Text can be used to logging or to render text.
