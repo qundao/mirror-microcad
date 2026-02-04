@@ -1,4 +1,4 @@
-# Conditionals
+# Conditions
 
 The *if statement* can control the program flow by the result of conditions.
 
