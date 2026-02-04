@@ -1,0 +1,43 @@
+﻿
+-- Test --
+        Test name: ngons
+  Expected result: ok
+      Source file: ../books/examples/src/ngons.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::geo2d::*;
+  10:   use std::ops::*;
+  11:   
+  12:   (Hexagon(20mm) - Ngon(5, 10mm)).extrude(20mm);
+  13:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+      - height = 20mm
+      - scale = (x=1, y=1)
+      - twist = 0rad
+      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+        Operation subtract() ->
+          Group ->
+            Workpiece(sketch) std::geo2d::Hexagon(radius=20mm) ->
+              - radius = 20mm
+              Workpiece(sketch) std::geo2d::Ngon(n=6, radius=20mm) ->
+                - n = 6
+                - radius = 20mm
+                Primitive2D __builtin::geo2d::Ngon(n=6, radius=20mm) ->
+            Workpiece(sketch) std::geo2d::Ngon(n=5, radius=10mm) ->
+              - n = 5
+              - radius = 10mm
+              Primitive2D __builtin::geo2d::Ngon(n=5, radius=10mm) ->
+
+Export of "../books/examples/src/.test/ngons-out.stl" successful.
+-- Test Result --
+OK

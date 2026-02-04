@@ -1,0 +1,271 @@
+﻿
+-- Test --
+        Test name: buffer_stand
+  Expected result: ok
+      Source file: ../books/examples/src/buffer_stand.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::ops::*;
+  10:   use std::geo2d::*;
+  11:   use std::math::*;
+  12:   
+  13:   part BufferStand() {
+  14:       size = 5.25in;
+  15:       width = 5.875in;
+  16:   
+  17:       base = (Circle(d = width) & Rect(width, height = size / 2))
+  18:           .extrude(4.0in);
+  19:   
+  20:       side = {
+  21:           Line(height = size/2);
+  22:           Circle(d = 1.5in).translate(x = -3.25in);
+  23:       }
+  24:       .hull()
+  25:       .extrude(width)
+  26:       .orient(X)
+  27:       .translate(x = -width / 2);
+  28:   
+  29:       front_cut_off = {
+  30:           w = 4.25in;
+  31:           d = w * 0.5 - 0.5in;
+  32:   
+  33:           Circle(r = 0.5in, c = (x = [d,-d], y = 0in));
+  34:           Line(width = w, p = (x = -w * 0.5, y = -4.0in));
+  35:       }
+  36:       .hull()
+  37:       .extrude(width)
+  38:       .orient(Y)
+  39:       .translate(y = -width / 4, z = 0.75in);
+  40:   
+  41:       bearing = (Rect(width = 1.25in, height = width - 1in) | Rect(height = width, width = 0.5in))
+  42:           .revolve()
+  43:           .orient(X)
+  44:           .translate(z = 3.25in);
+  45:   
+  46:       mount = Rect(height = 4.25in - 3.5in, width = 1.5in * 50%, x = 0mm, y = 0mm)
+  47:           .revolve()
+  48:           .orient(X)
+  49:           .translate(x = [2.0, -2.0]in, z = 3.25in);
+  50:       
+  51:       bottom_bar = {
+  52:           Circle(d = 0.15in).translate(x = -1.35in);
+  53:           Line(height = 0.5in);
+  54:       }
+  55:       .hull()
+  56:       .extrude(width)
+  57:       .orient(X)
+  58:       .translate(x = -width / 2);
+  59:   
+  60:       base & (side - front_cut_off) | (base & bottom_bar) | mount - bearing;
+  61:   }
+  62:   
+  63:   BufferStand();
+  64:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(part) buffer_stand::BufferStand() ->
+      Operation subtract() ->
+        Group ->
+          Operation union() ->
+            Group ->
+              Operation union() ->
+                Group ->
+                  Operation intersect() ->
+                    Group ->
+                      base: Workpiece(op) std::ops::extrude(height=101.6mm, scale=(x=1, y=1), twist=0rad) ->
+                        - height = 101.6mm
+                        - scale = (x=1, y=1)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=101.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                          Operation intersect() ->
+                            Group ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=149.225mm) ->
+                                - center = (x=0mm, y=0mm)
+                                - radius = 74.6125mm
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                  Primitive2D __builtin::geo2d::Circle(radius=74.6125mm) ->
+                              Workpiece(sketch) std::geo2d::Rect(height=66.675mm, width=149.225mm) ->
+                                - height = 66.675mm
+                                - width = 149.225mm
+                                - x = -74.6125mm
+                                - y = -33.3375mm
+                                Primitive2D __builtin::geo2d::Rect(height=66.675mm, width=149.225mm, x=-74.6125mm, y=-33.3375mm) ->
+                      Operation subtract() ->
+                        Group ->
+                          side: Workpiece(op) std::ops::translate(x=-74.6125mm, y=0mm, z=0mm) ->
+                            - x = -74.6125mm
+                            - y = 0mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=-74.6125mm, y=0mm, z=0mm) ->
+                              Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
+                                - v = (x=1, y=0, z=0)
+                                Transform __builtin::ops::orient(x=1, y=0, z=0) ->
+                                  Workpiece(op) std::ops::extrude(height=149.225mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 149.225mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=149.225mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Operation __builtin::ops::hull() ->
+                                        Group ->
+                                          Workpiece(sketch) std::geo2d::Line(height=66.675mm, x=0mm) ->
+                                            - p0 = (x=0, y=-33.3375)
+                                            - p1 = (x=0, y=33.3375)
+                                            Primitive2D __builtin::geo2d::Line(x0=0, x1=0, y0=-33.3375, y1=33.3375) ->
+                                          Workpiece(op) std::ops::translate(x=-82.55mm, y=0mm, z=0mm) ->
+                                            - x = -82.55mm
+                                            - y = 0mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=-82.55mm, y=0mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=38.1mm) ->
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 19.05mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                  Primitive2D __builtin::geo2d::Circle(radius=19.05mm) ->
+                          front_cut_off: Workpiece(op) std::ops::translate(x=0mm, y=-37.30625mm, z=19.05mm) ->
+                            - x = 0mm
+                            - y = -37.30625mm
+                            - z = 19.05mm
+                            Transform __builtin::ops::translate(x=0mm, y=-37.30625mm, z=19.05mm) ->
+                              Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) ->
+                                - v = (x=0, y=1, z=0)
+                                Transform __builtin::ops::orient(x=0, y=1, z=0) ->
+                                  Workpiece(op) std::ops::extrude(height=149.225mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 149.225mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=149.225mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Operation __builtin::ops::hull() ->
+                                        Group ->
+                                          Workpiece(sketch) std::geo2d::Circle(center=(x=[41.27499999999999mm, -41.27499999999999mm], y=0mm), radius=12.7mm) ->
+                                            - center = (x=[41.27499999999999mm, -41.27499999999999mm], y=0mm)
+                                            - radius = 12.7mm
+                                            Multiplicity ->
+                                              Transform __builtin::ops::translate(x=41.27499999999999mm, y=0mm, z=0mm) ->
+                                                Primitive2D __builtin::geo2d::Circle(radius=12.7mm) ->
+                                              Transform __builtin::ops::translate(x=-41.27499999999999mm, y=0mm, z=0mm) ->
+                                                Primitive2D __builtin::geo2d::Circle(radius=12.7mm) ->
+                                          Workpiece(sketch) std::geo2d::Line(p=(x=-53.97499999999999mm, y=-101.6mm), width=107.94999999999997mm) ->
+                                            - p0 = (x=-53.97499999999999, y=-101.6)
+                                            - p1 = (x=53.97499999999999, y=-101.6)
+                                            Primitive2D __builtin::geo2d::Line(x0=-53.97499999999999, x1=53.97499999999999, y0=-101.6, y1=-101.6) ->
+                  Operation intersect() ->
+                    Group ->
+                      base: Workpiece(op) std::ops::extrude(height=101.6mm, scale=(x=1, y=1), twist=0rad) ->
+                        - height = 101.6mm
+                        - scale = (x=1, y=1)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=101.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                          Operation intersect() ->
+                            Group ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=149.225mm) ->
+                                - center = (x=0mm, y=0mm)
+                                - radius = 74.6125mm
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                  Primitive2D __builtin::geo2d::Circle(radius=74.6125mm) ->
+                              Workpiece(sketch) std::geo2d::Rect(height=66.675mm, width=149.225mm) ->
+                                - height = 66.675mm
+                                - width = 149.225mm
+                                - x = -74.6125mm
+                                - y = -33.3375mm
+                                Primitive2D __builtin::geo2d::Rect(height=66.675mm, width=149.225mm, x=-74.6125mm, y=-33.3375mm) ->
+                      bottom_bar: Workpiece(op) std::ops::translate(x=-74.6125mm, y=0mm, z=0mm) ->
+                        - x = -74.6125mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=-74.6125mm, y=0mm, z=0mm) ->
+                          Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
+                            - v = (x=1, y=0, z=0)
+                            Transform __builtin::ops::orient(x=1, y=0, z=0) ->
+                              Workpiece(op) std::ops::extrude(height=149.225mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 149.225mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=149.225mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Operation __builtin::ops::hull() ->
+                                    Group ->
+                                      Workpiece(op) std::ops::translate(x=-34.29mm, y=0mm, z=0mm) ->
+                                        - x = -34.29mm
+                                        - y = 0mm
+                                        - z = 0mm
+                                        Transform __builtin::ops::translate(x=-34.29mm, y=0mm, z=0mm) ->
+                                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=3.81mm) ->
+                                            - center = (x=0mm, y=0mm)
+                                            - radius = 1.905mm
+                                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                              Primitive2D __builtin::geo2d::Circle(radius=1.905mm) ->
+                                      Workpiece(sketch) std::geo2d::Line(height=12.7mm, x=0mm) ->
+                                        - p0 = (x=0, y=-6.35)
+                                        - p1 = (x=0, y=6.35)
+                                        Primitive2D __builtin::geo2d::Line(x0=0, x1=0, y0=-6.35, y1=6.35) ->
+              mount: Multiplicity ->
+                Workpiece(op) std::ops::translate(x=50.8mm, y=0mm, z=82.55mm) ->
+                  - x = 50.8mm
+                  - y = 0mm
+                  - z = 82.55mm
+                  Transform __builtin::ops::translate(x=50.8mm, y=0mm, z=82.55mm) ->
+                    Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
+                      - v = (x=1, y=0, z=0)
+                      Transform __builtin::ops::orient(x=1, y=0, z=0) ->
+                        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+                          - angle = 6.28318530717959rad
+                          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+                            Workpiece(sketch) std::geo2d::Rect(height=19.05mm, width=19.05mm, x=0mm, y=0mm) ->
+                              - height = 19.05mm
+                              - width = 19.05mm
+                              - x = 0mm
+                              - y = 0mm
+                              Primitive2D __builtin::geo2d::Rect(height=19.05mm, width=19.05mm, x=0mm, y=0mm) ->
+                Workpiece(op) std::ops::translate(x=-50.8mm, y=0mm, z=82.55mm) ->
+                  - x = -50.8mm
+                  - y = 0mm
+                  - z = 82.55mm
+                  Transform __builtin::ops::translate(x=-50.8mm, y=0mm, z=82.55mm) ->
+                    Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
+                      - v = (x=1, y=0, z=0)
+                      Transform __builtin::ops::orient(x=1, y=0, z=0) ->
+                        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+                          - angle = 6.28318530717959rad
+                          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+                            Workpiece(sketch) std::geo2d::Rect(height=19.05mm, width=19.05mm, x=0mm, y=0mm) ->
+                              - height = 19.05mm
+                              - width = 19.05mm
+                              - x = 0mm
+                              - y = 0mm
+                              Primitive2D __builtin::geo2d::Rect(height=19.05mm, width=19.05mm, x=0mm, y=0mm) ->
+          bearing: Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=82.55mm) ->
+            - x = 0mm
+            - y = 0mm
+            - z = 82.55mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=82.55mm) ->
+              Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
+                - v = (x=1, y=0, z=0)
+                Transform __builtin::ops::orient(x=1, y=0, z=0) ->
+                  Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+                    - angle = 6.28318530717959rad
+                    Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+                      Operation union() ->
+                        Group ->
+                          Workpiece(sketch) std::geo2d::Rect(height=123.82499999999997mm, width=31.75mm) ->
+                            - height = 123.82499999999997mm
+                            - width = 31.75mm
+                            - x = -15.875mm
+                            - y = -61.91249999999999mm
+                            Primitive2D __builtin::geo2d::Rect(height=123.82499999999997mm, width=31.75mm, x=-15.875mm, y=-61.91249999999999mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(height=149.225mm, width=12.7mm) ->
+                            - height = 149.225mm
+                            - width = 12.7mm
+                            - x = -6.35mm
+                            - y = -74.6125mm
+                            Primitive2D __builtin::geo2d::Rect(height=149.225mm, width=12.7mm, x=-6.35mm, y=-74.6125mm) ->
+
+Export of "../books/examples/src/.test/buffer_stand-out.stl" successful.
+-- Test Result --
+OK

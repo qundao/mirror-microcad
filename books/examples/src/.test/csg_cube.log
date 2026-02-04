@@ -1,0 +1,133 @@
+﻿
+-- Test --
+        Test name: csg_cube
+  Expected result: ok
+      Source file: ../books/examples/src/csg_cube.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::math::*;
+  10:   use std::ops::*;
+  11:   use std::geo3d::*;
+  12:   
+  13:   part CsgCube(size: Length) {
+  14:       s = size / sqrt(2.1);
+  15:       body = Sphere(radius = s) & Cube(size);
+  16:       holes = Cylinder(size, diameter = s).orient([X,Y,Z]);
+  17:       body - holes;
+  18:   }
+  19:   
+  20:   CsgCube(50mm);
+  21:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(part) csg_cube::CsgCube(size=50mm) ->
+      - size = 50mm
+      Operation subtract() ->
+        Group ->
+          body: Operation intersect() ->
+            Group ->
+              Workpiece(part) std::geo3d::Sphere(radius=34.50327796711771mm) ->
+                - radius = 34.50327796711771mm
+                Primitive3D __builtin::geo3d::Sphere(radius=34.50327796711771mm) ->
+              Workpiece(part) std::geo3d::Cube(size=50mm) ->
+                - size_x = 50mm
+                - size_y = 50mm
+                - size_z = 50mm
+                Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                  - x = 0mm
+                  - y = 0mm
+                  - z = -25mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                    Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
+                      - height = 50mm
+                      - scale = (x=1, y=1)
+                      - twist = 0rad
+                      Operation __builtin::ops::extrude(height=50mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        Workpiece(sketch) std::geo2d::Rect(height=50mm, width=50mm) ->
+                          - height = 50mm
+                          - width = 50mm
+                          - x = -25mm
+                          - y = -25mm
+                          Primitive2D __builtin::geo2d::Rect(height=50mm, width=50mm, x=-25mm, y=-25mm) ->
+          holes: Multiplicity ->
+            Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
+              - v = (x=1, y=0, z=0)
+              Transform __builtin::ops::orient(x=1, y=0, z=0) ->
+                Workpiece(part) std::geo3d::Cylinder(diameter=34.50327796711771mm, height=50mm) ->
+                  - height = 50mm
+                  - offset = -25mm
+                  - radius_bottom = 17.25163898355886mm
+                  - radius_top = 17.25163898355886mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = -25mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                      Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
+                        - height = 50mm
+                        - scale = (x=1, y=1)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=50mm, scale_x=1, scale_y=1, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=17.25163898355886mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 17.25163898355886mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=17.25163898355886mm) ->
+            Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) ->
+              - v = (x=0, y=1, z=0)
+              Transform __builtin::ops::orient(x=0, y=1, z=0) ->
+                Workpiece(part) std::geo3d::Cylinder(diameter=34.50327796711771mm, height=50mm) ->
+                  - height = 50mm
+                  - offset = -25mm
+                  - radius_bottom = 17.25163898355886mm
+                  - radius_top = 17.25163898355886mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = -25mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                      Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
+                        - height = 50mm
+                        - scale = (x=1, y=1)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=50mm, scale_x=1, scale_y=1, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=17.25163898355886mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 17.25163898355886mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=17.25163898355886mm) ->
+            Workpiece(op) std::ops::orient(v=(x=0, y=0, z=1)) ->
+              - v = (x=0, y=0, z=1)
+              Transform __builtin::ops::orient(x=0, y=0, z=1) ->
+                Workpiece(part) std::geo3d::Cylinder(diameter=34.50327796711771mm, height=50mm) ->
+                  - height = 50mm
+                  - offset = -25mm
+                  - radius_bottom = 17.25163898355886mm
+                  - radius_top = 17.25163898355886mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = -25mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-25mm) ->
+                      Workpiece(op) std::ops::extrude(height=50mm, scale=(x=1, y=1), twist=0rad) ->
+                        - height = 50mm
+                        - scale = (x=1, y=1)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=50mm, scale_x=1, scale_y=1, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=17.25163898355886mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 17.25163898355886mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=17.25163898355886mm) ->
+
+Export of "../books/examples/src/.test/csg_cube-out.stl" successful.
+-- Test Result --
+OK

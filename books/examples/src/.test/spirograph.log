@@ -1,0 +1,144 @@
+﻿
+-- Test --
+        Test name: spirograph
+  Expected result: ok
+      Source file: ../books/examples/src/spirograph.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::geo2d::*;
+  10:   use std::ops::*;
+  11:   
+  12:   mod logo;
+  13:   
+  14:   use logo::microcad::Logo;
+  15:   
+  16:   const TEETH_SIZE = 0.5mm;
+  17:   const THICKNESS = 2mm;
+  18:   const BORDER_WIDTH = 7mm;
+  19:   
+  20:   sketch GearProfile(teeth: Integer) {
+  21:       prop module = TEETH_SIZE;
+  22:       prop radius = teeth * module;
+  23:       SinusoidalGearProfile(module, teeth, stretch = 0.6, roundness = 0.6);
+  24:   }
+  25:   
+  26:   
+  27:   sketch RingProfile(outer_teeth: Integer, inner_teeth: Integer, border_width = BORDER_WIDTH) {
+  28:       inner_gear = GearProfile(inner_teeth);
+  29:       outer_gear = GearProfile(outer_teeth);
+  30:       prop radius = outer_gear.radius;
+  31:       prop shift = inner_gear.radius * 40%;
+  32:   
+  33:       sector = {
+  34:           disc = Circle(outer_gear.radius - border_width);
+  35:           sector = Sector(radius = outer_gear.radius, start = 30°, end = 90°).rotate(60°);
+  36:           inner_disc = Circle(inner_gear.radius - border_width * 250%);
+  37:           ring = Ring(outer_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width);
+  38:   
+  39:           (disc - (sector - inner_disc) - ring.translate(x = shift))
+  40:               .buffer(-TEETH_SIZE * 2)
+  41:               .buffer(TEETH_SIZE * 2);
+  42:       };
+  43:   
+  44:       outer_gear - sector - inner_gear.translate(x = shift);
+  45:   }
+  46:   
+  47:   part PencilHole(pencil_hole_diameter = 0.5mm, offset = 0.0mm) {
+  48:       Circle(d = pencil_hole_diameter)
+  49:           .extrude(THICKNESS, scale = (x = 300%, y = 300%))
+  50:           .translate(y = offset);
+  51:   }
+  52:   
+  53:   part PencilHoles(radius: Length, n = 4, start = 4, angle = 22.5°) {
+  54:       {
+  55:           PencilHole(offset = [start..n*2-1] * radius / n / 2);
+  56:           PencilHole(offset = ([start..n*2-1] + 0.5) * radius / n / 2).rotate(-angle);
+  57:           PencilHole(offset = ([start..n*2-1] + 1/3) * radius / n / 2).rotate(angle);
+  58:       }.rotate(90°)
+  59:   }
+  60:   
+  61:   #[export = "spirograph_frame.stl"]
+  62:   #[color = std::color::BLUE]
+  63:   {
+  64:       outer_gear = GearProfile(180);
+  65:       size = outer_gear.radius * 200% + 3 * BORDER_WIDTH;
+  66:       frame = {
+  67:           border = RoundedRect(size, radius = BORDER_WIDTH * 200%);    
+  68:           border - outer_gear;
+  69:       }.extrude(THICKNESS*2);
+  70:   
+  71:       logo2 = Logo(size = BORDER_WIDTH*85%)
+  72:           .extrude(THICKNESS)
+  73:           .translate(x = size * 35%, y = size * 43%, z = THICKNESS * 150%);
+  74:       
+  75:       url = Text("microcad.xyz", BORDER_WIDTH*150%)
+  76:           .center()
+  77:           .extrude(THICKNESS)
+  78:           .translate(x = size * 32%, y = -size * 46%, z = THICKNESS * 150%);
+  79:   
+  80:       frame - logo2 - url;
+  81:   }.translate(x = 0mm);
+  82:   
+  83:   ring_1 = RingProfile(outer_teeth = 180, inner_teeth = 120);
+  84:   ring_2 = RingProfile(outer_teeth = 120, inner_teeth = 72);
+  85:   ring_3 = RingProfile(outer_teeth = 72, inner_teeth = 36);
+  86:   
+  87:   
+  88:   
+  89:   #[export = "spirograph_ring_1.stl"]
+  90:   #[color = std::color::GREEN]
+  91:   {
+  92:       ring = ring_1.extrude(THICKNESS);
+  93:       pencil_holes = PencilHoles(ring_1.radius, n = 6, start = 6);
+  94:       ring - pencil_holes;
+  95:   }.translate();
+  96:   
+  97:   #[export = "spirograph_ring_2.stl"]
+  98:   #[color = std::color::RED]
+  99:   {
+ 100:       ring = ring_2.extrude(THICKNESS);
+ 101:       pencil_holes = PencilHoles(ring_2.radius, n = 5, start = 5);
+ 102:       ring - pencil_holes;
+ 103:   }.translate(x = ring_1.shift);
+ 104:   
+ 105:   
+ 106:   #[export = "spirograph_ring_3.stl"]
+ 107:   #[color = std::color::YELLOW]
+ 108:   {
+ 109:       ring = ring_3.extrude(THICKNESS);
+ 110:       pencil_holes = PencilHoles(ring_3.radius);
+ 111:       ring - pencil_holes;
+ 112:   }.translate(x = ring_2.shift + ring_1.shift);
+ 113:   
+ 114:   gear = {
+ 115:       profile = GearProfile(36);
+ 116:       gear = profile.extrude(THICKNESS);
+ 117:       pencil_holes = PencilHoles(profile.radius, start = 1, n = 2, 120°);
+ 118:   
+ 119:       gear - pencil_holes;
+ 120:   };
+ 121:   
+ 122:   #[export = "spirograph_gear.stl"]
+ 123:   #[color = std::color::TEAL]
+ 124:   gear.translate(x = ring_1.shift + ring_2.shift + ring_3.shift);
+ 125:   
+
+-- No Output --
+-- Errors --
+  × error: 7:5: Source of module 'logo' could not be found in "/home/pat/git/microcad/books/examples/src/.test" (expecting a file 'logo.µcad' or 'logo/mod.µcad')
+   ╭─[../books/examples/src/spirograph.md:7:5]
+ 6 │ 
+ 7 │ mod logo;
+   ·     ──┬─
+   ·       ╰── module not found
+ 8 │ 
+   ╰────
+Unexpected error(s) which did occur in line(s): 7
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS

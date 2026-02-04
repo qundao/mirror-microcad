@@ -34,4 +34,15 @@ fn main() {
     ) {
         panic!("error generating rust test code from markdown file: {err}");
     }
+
+    examples_tests::generate_example_book("../examples", "../books/examples/src")
+        .expect("test error");
+
+    if let Err(err) = microcad_markdown_test::generate(
+        "../books/examples/src",
+        "md_test_book_examples.rs",
+        "../books/examples/src/test_list.md",
+    ) {
+        panic!("error generating rust test code from markdown file: {err}");
+    }
 }

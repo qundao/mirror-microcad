@@ -1,0 +1,52 @@
+﻿
+-- Test --
+        Test name: multi_export
+  Expected result: ok
+      Source file: ../books/examples/src/multi_export.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::ops::*;
+  10:   
+  11:   #[export = "rect.svg"]
+  12:   std::geo2d::Rect(42mm)
+  13:       .rotate(45°);
+  14:   
+  15:   #[export = "circle.svg"]  // Will be exported to `circle.svg`
+  16:   std::geo2d::Circle(r = 42mm)
+  17:       .translate(x = 42mm);
+  18:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->
+      - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
+      #[export = "rect.svg" with exporter `svg`]
+      Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
+        Workpiece(sketch) std::geo2d::Rect(size=42mm) ->
+          - height = 42mm
+          - width = 42mm
+          - x = -21mm
+          - y = -21mm
+          Primitive2D __builtin::geo2d::Rect(height=42mm, width=42mm, x=-21mm, y=-21mm) ->
+    Workpiece(op) std::ops::translate(x=42mm, y=0mm, z=0mm) ->
+      - x = 42mm
+      - y = 0mm
+      - z = 0mm
+      #[export = "circle.svg" with exporter `svg`]
+      Transform __builtin::ops::translate(x=42mm, y=0mm, z=0mm) ->
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=42mm) ->
+          - center = (x=0mm, y=0mm)
+          - radius = 42mm
+          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+            Primitive2D __builtin::geo2d::Circle(radius=42mm) ->
+
+Export of "../books/examples/src/.test/multi_export-out.svg" successful.
+-- Test Result --
+OK

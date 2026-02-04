@@ -1,0 +1,334 @@
+﻿
+-- Test --
+        Test name: letter_cube
+  Expected result: ok
+      Source file: ../books/examples/src/letter_cube.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::math::*;
+  10:   use std::ops::*;
+  11:   use std::geo3d::*;
+  12:   use std::geo2d::*;
+  13:   
+  14:   part Letter(letter: String, size: Length, axis: Vec3) {
+  15:       Text(letter, height = size)
+  16:           .center()
+  17:           .contour(thickness = 0.25mm, distance = 0.5mm)
+  18:           .extrude(1mm)
+  19:           .translate(z = size / 2 - 0.5mm)
+  20:           .orient(axis);
+  21:   }
+  22:   
+  23:   
+  24:   part LetterCube(size: Length) {
+  25:       s = size / sqrt(2.1);
+  26:       body = Cube(size) & Sphere(r = s);
+  27:       p = Letter("P", size, [-Z, Z]).rotate(z = -90°);
+  28:       t = Letter("T", size, [-X, X]).rotate(x = 90°);
+  29:       f = Letter("F", size, [-Y, Y]);
+  30:       body - (p | t | f);
+  31:   }
+  32:   
+  33:   LetterCube(20mm).translate(z = 10mm);
+  34:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=10mm) ->
+      - x = 0mm
+      - y = 0mm
+      - z = 10mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=10mm) ->
+        Workpiece(part) letter_cube::LetterCube(size=20mm) ->
+          - size = 20mm
+          Operation subtract() ->
+            Group ->
+              body: Operation intersect() ->
+                Group ->
+                  Workpiece(part) std::geo3d::Cube(size=20mm) ->
+                    - size_x = 20mm
+                    - size_y = 20mm
+                    - size_z = 20mm
+                    Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+                      - x = 0mm
+                      - y = 0mm
+                      - z = -10mm
+                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+                        Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+                          - height = 20mm
+                          - scale = (x=1, y=1)
+                          - twist = 0rad
+                          Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+                            Workpiece(sketch) std::geo2d::Rect(height=20mm, width=20mm) ->
+                              - height = 20mm
+                              - width = 20mm
+                              - x = -10mm
+                              - y = -10mm
+                              Primitive2D __builtin::geo2d::Rect(height=20mm, width=20mm, x=-10mm, y=-10mm) ->
+                  Workpiece(part) std::geo3d::Sphere(radius=13.80131118684708mm) ->
+                    - radius = 13.80131118684708mm
+                    Primitive3D __builtin::geo3d::Sphere(radius=13.80131118684708mm) ->
+              Operation union() ->
+                Group ->
+                  Operation union() ->
+                    Group ->
+                      p: Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=-1.5707963267949rad) ->
+                        - matrix = Matrix3 [[6.123233995736766e-17, -1.0, 0.0], [1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, -1.0, 0.0], [1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) letter_cube::Letter(axis=(x=-0, y=-0, z=-1), letter=P, size=20mm) ->
+                              - axis = (x=-0, y=-0, z=-1)
+                              - letter = P
+                              - size = 20mm
+                              Workpiece(op) std::ops::orient(v=(x=-0, y=-0, z=-1)) ->
+                                - v = (x=-0, y=-0, z=-1)
+                                Transform __builtin::ops::orient(x=-0, y=-0, z=-1) ->
+                                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 9.5mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                      Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                        - height = 1mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                          Workpiece(op) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
+                                            - distance = 0.5mm
+                                            - thickness = 0.25mm
+                                            Operation subtract() ->
+                                              Group ->
+                                                Workpiece(op) std::ops::buffer(distance=0.625mm) ->
+                                                  - distance = 0.625mm
+                                                  Operation __builtin::ops::buffer(distance=0.625mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=P) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = P
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) ->
+                                                Workpiece(op) std::ops::buffer(distance=0.375mm) ->
+                                                  - distance = 0.375mm
+                                                  Operation __builtin::ops::buffer(distance=0.375mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=P) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = P
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) ->
+                            Workpiece(part) letter_cube::Letter(axis=(x=0, y=0, z=1), letter=P, size=20mm) ->
+                              - axis = (x=0, y=0, z=1)
+                              - letter = P
+                              - size = 20mm
+                              Workpiece(op) std::ops::orient(v=(x=0, y=0, z=1)) ->
+                                - v = (x=0, y=0, z=1)
+                                Transform __builtin::ops::orient(x=0, y=0, z=1) ->
+                                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 9.5mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                      Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                        - height = 1mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                          Workpiece(op) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
+                                            - distance = 0.5mm
+                                            - thickness = 0.25mm
+                                            Operation subtract() ->
+                                              Group ->
+                                                Workpiece(op) std::ops::buffer(distance=0.625mm) ->
+                                                  - distance = 0.625mm
+                                                  Operation __builtin::ops::buffer(distance=0.625mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=P) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = P
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) ->
+                                                Workpiece(op) std::ops::buffer(distance=0.375mm) ->
+                                                  - distance = 0.375mm
+                                                  Operation __builtin::ops::buffer(distance=0.375mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=P) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = P
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) ->
+                      t: Workpiece(op) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                        - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
+                          Multiplicity ->
+                            Workpiece(part) letter_cube::Letter(axis=(x=-1, y=-0, z=-0), letter=T, size=20mm) ->
+                              - axis = (x=-1, y=-0, z=-0)
+                              - letter = T
+                              - size = 20mm
+                              Workpiece(op) std::ops::orient(v=(x=-1, y=-0, z=-0)) ->
+                                - v = (x=-1, y=-0, z=-0)
+                                Transform __builtin::ops::orient(x=-1, y=-0, z=-0) ->
+                                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 9.5mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                      Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                        - height = 1mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                          Workpiece(op) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
+                                            - distance = 0.5mm
+                                            - thickness = 0.25mm
+                                            Operation subtract() ->
+                                              Group ->
+                                                Workpiece(op) std::ops::buffer(distance=0.625mm) ->
+                                                  - distance = 0.625mm
+                                                  Operation __builtin::ops::buffer(distance=0.625mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=T) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = T
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) ->
+                                                Workpiece(op) std::ops::buffer(distance=0.375mm) ->
+                                                  - distance = 0.375mm
+                                                  Operation __builtin::ops::buffer(distance=0.375mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=T) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = T
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) ->
+                            Workpiece(part) letter_cube::Letter(axis=(x=1, y=0, z=0), letter=T, size=20mm) ->
+                              - axis = (x=1, y=0, z=0)
+                              - letter = T
+                              - size = 20mm
+                              Workpiece(op) std::ops::orient(v=(x=1, y=0, z=0)) ->
+                                - v = (x=1, y=0, z=0)
+                                Transform __builtin::ops::orient(x=1, y=0, z=0) ->
+                                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 9.5mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                                      Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                        - height = 1mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                          Workpiece(op) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
+                                            - distance = 0.5mm
+                                            - thickness = 0.25mm
+                                            Operation subtract() ->
+                                              Group ->
+                                                Workpiece(op) std::ops::buffer(distance=0.625mm) ->
+                                                  - distance = 0.625mm
+                                                  Operation __builtin::ops::buffer(distance=0.625mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=T) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = T
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) ->
+                                                Workpiece(op) std::ops::buffer(distance=0.375mm) ->
+                                                  - distance = 0.375mm
+                                                  Operation __builtin::ops::buffer(distance=0.375mm) ->
+                                                    Operation __builtin::ops::center() ->
+                                                      Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=T) ->
+                                                        - font_file = 
+                                                        - height = 20mm
+                                                        - text = T
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) ->
+                  f: Multiplicity ->
+                    Workpiece(part) letter_cube::Letter(axis=(x=-0, y=-1, z=-0), letter=F, size=20mm) ->
+                      - axis = (x=-0, y=-1, z=-0)
+                      - letter = F
+                      - size = 20mm
+                      Workpiece(op) std::ops::orient(v=(x=-0, y=-1, z=-0)) ->
+                        - v = (x=-0, y=-1, z=-0)
+                        Transform __builtin::ops::orient(x=-0, y=-1, z=-0) ->
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = 9.5mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                              Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 1mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(op) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
+                                    - distance = 0.5mm
+                                    - thickness = 0.25mm
+                                    Operation subtract() ->
+                                      Group ->
+                                        Workpiece(op) std::ops::buffer(distance=0.625mm) ->
+                                          - distance = 0.625mm
+                                          Operation __builtin::ops::buffer(distance=0.625mm) ->
+                                            Operation __builtin::ops::center() ->
+                                              Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=F) ->
+                                                - font_file = 
+                                                - height = 20mm
+                                                - text = F
+                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) ->
+                                        Workpiece(op) std::ops::buffer(distance=0.375mm) ->
+                                          - distance = 0.375mm
+                                          Operation __builtin::ops::buffer(distance=0.375mm) ->
+                                            Operation __builtin::ops::center() ->
+                                              Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=F) ->
+                                                - font_file = 
+                                                - height = 20mm
+                                                - text = F
+                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) ->
+                    Workpiece(part) letter_cube::Letter(axis=(x=0, y=1, z=0), letter=F, size=20mm) ->
+                      - axis = (x=0, y=1, z=0)
+                      - letter = F
+                      - size = 20mm
+                      Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) ->
+                        - v = (x=0, y=1, z=0)
+                        Transform __builtin::ops::orient(x=0, y=1, z=0) ->
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = 9.5mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
+                              Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 1mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(op) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
+                                    - distance = 0.5mm
+                                    - thickness = 0.25mm
+                                    Operation subtract() ->
+                                      Group ->
+                                        Workpiece(op) std::ops::buffer(distance=0.625mm) ->
+                                          - distance = 0.625mm
+                                          Operation __builtin::ops::buffer(distance=0.625mm) ->
+                                            Operation __builtin::ops::center() ->
+                                              Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=F) ->
+                                                - font_file = 
+                                                - height = 20mm
+                                                - text = F
+                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) ->
+                                        Workpiece(op) std::ops::buffer(distance=0.375mm) ->
+                                          - distance = 0.375mm
+                                          Operation __builtin::ops::buffer(distance=0.375mm) ->
+                                            Operation __builtin::ops::center() ->
+                                              Workpiece(sketch) std::geo2d::Text(font_file=, height=20mm, text=F) ->
+                                                - font_file = 
+                                                - height = 20mm
+                                                - text = F
+                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) ->
+
+Export of "../books/examples/src/.test/letter_cube-out.stl" successful.
+-- Test Result --
+OK

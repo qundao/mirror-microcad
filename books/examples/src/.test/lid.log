@@ -1,0 +1,95 @@
+﻿
+-- Test --
+        Test name: lid
+  Expected result: ok
+      Source file: ../books/examples/src/lid.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   /// A part called `Lid` with three parameters.
+  10:   part Lid(
+  11:       thickness = 1.6mm,
+  12:       inner_diameter = 16.0cm,
+  13:       height = 20.0mm,
+  14:   ) {
+  15:       // Calculate the outer diameter
+  16:       outer_diameter = 2.0 * thickness + inner_diameter;
+  17:   
+  18:       // Create two cylinders, one for the outer and one for the inner
+  19:       outer = std::geo3d::Cylinder(d = outer_diameter, h = height);
+  20:       inner = std::geo3d::Cylinder(d = inner_diameter, h = height).std::ops::translate(z = thickness);
+  21:   
+  22:       // Calculate the difference between two translated cylinders and output them
+  23:       outer - inner;
+  24:   }
+  25:   
+  26:   
+  27:   // `l` is the instance of the lid model
+  28:   l = Lid();
+  29:   
+  30:   l; // Instantiate the lid.
+  31:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    l: Workpiece(part) lid::Lid(height=20mm, inner_diameter=160mm, thickness=1.6mm) ->
+      - height = 20mm
+      - inner_diameter = 160mm
+      - thickness = 1.6mm
+      Operation subtract() ->
+        Group ->
+          outer: Workpiece(part) std::geo3d::Cylinder(diameter=163.2mm, height=20mm) ->
+            - height = 20mm
+            - offset = -10mm
+            - radius_bottom = 81.6mm
+            - radius_top = 81.6mm
+            Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+              - x = 0mm
+              - y = 0mm
+              - z = -10mm
+              Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+                Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+                  - height = 20mm
+                  - scale = (x=1, y=1)
+                  - twist = 0rad
+                  Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=81.6mm) ->
+                      - center = (x=0mm, y=0mm)
+                      - radius = 81.6mm
+                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                        Primitive2D __builtin::geo2d::Circle(radius=81.6mm) ->
+          inner: Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=1.6mm) ->
+            - x = 0mm
+            - y = 0mm
+            - z = 1.6mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=1.6mm) ->
+              Workpiece(part) std::geo3d::Cylinder(diameter=160mm, height=20mm) ->
+                - height = 20mm
+                - offset = -10mm
+                - radius_bottom = 80mm
+                - radius_top = 80mm
+                Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+                  - x = 0mm
+                  - y = 0mm
+                  - z = -10mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+                    Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+                      - height = 20mm
+                      - scale = (x=1, y=1)
+                      - twist = 0rad
+                      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=80mm) ->
+                          - center = (x=0mm, y=0mm)
+                          - radius = 80mm
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::Circle(radius=80mm) ->
+
+Export of "../books/examples/src/.test/lid-out.stl" successful.
+-- Test Result --
+OK

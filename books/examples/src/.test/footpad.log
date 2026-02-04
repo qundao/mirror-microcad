@@ -1,0 +1,141 @@
+﻿
+-- Test --
+        Test name: footpad
+  Expected result: ok
+      Source file: ../books/examples/src/footpad.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::ops::*;
+  10:   use std::geo2d::*;
+  11:   use std::math::*;
+  12:   
+  13:   part FootPad(
+  14:       height = 45mm,
+  15:       base = (x = 155mm, y = 101mm, z = 18mm),
+  16:       slot = (x = 8mm, y = 13mm),
+  17:       center_hole = (d_inner = 42mm, d_outer = 55mm),
+  18:       corner_hole = (d_lower = 14mm, d_upper = 22mm),
+  19:       corner_radius = 15mm,
+  20:   ) {
+  21:       s = (x = base.x / 2 - corner_radius, y = base.y / 2 - corner_radius);
+  22:       hole_pos = (x = [-1,1]*s.x, y = [-1,1]*s.y);
+  23:       r = corner_radius;
+  24:       
+  25:       base_lower = Circle(r, c = hole_pos)
+  26:           .hull()
+  27:           .extrude(12mm);
+  28:   
+  29:       base_upper_height = slot.x;
+  30:       base_lower_height = base.z - base_upper_height;
+  31:   
+  32:       base_upper = {
+  33:           top_left = (x = -s.x, y = s.y);
+  34:           top_right = (x = s.x, y = s.y);
+  35:           bottom_left = (x = -s.x, y = -s.y);
+  36:           bottom_right = (x = s.x, y = -s.y);
+  37:           (Circle(r, c = (x = top_left, y = bottom_right)).hull() | Circle(r, c = (x = top_right, y = bottom_left)).hull());
+  38:       }
+  39:       .extrude(base_upper_height)
+  40:       .translate(z = base_lower_height);
+  41:       
+  42:       center = {
+  43:           (Circle(d = center_hole.d_outer) - Circle(d = center_hole.d_inner))
+  44:               .extrude(height);
+  45:           
+  46:           Rect(height = slot.x, width = center_hole.d_outer)
+  47:               .extrude(slot.y)
+  48:               .translate(z = height - slot.y);
+  49:           
+  50:       }.subtract();
+  51:   
+  52:       holes = {
+  53:           Circle(d = corner_hole.d_lower, c = hole_pos)
+  54:               .extrude(height = base_lower_height);
+  55:           Circle(d = corner_hole.d_upper, c = hole_pos)
+  56:               .extrude(height = base.z * 2)
+  57:               .translate(z = base_lower_height);
+  58:           Circle(d = center_hole.d_inner)
+  59:               .extrude(height);
+  60:       }.union();
+  61:   
+  62:       base_lower | base_upper | center - holes;
+  63:   }
+  64:   
+  65:   FootPad();
+
+-- No Output --
+-- Errors --
+  × error: 20:25: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/examples/src/footpad.md:25:18]
+ 24 │     
+ 25 │     base_lower = Circle(r, c = hole_pos)
+    ·                  ───────────┬───────────
+    ·                             ╰── Got: Circle( c = (x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm]), r = 15mm )
+ 26 │         .hull()
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  ⚠ warning: 20:18: This expression statement did not produce any model
+    ╭─[../books/examples/src/footpad.md:25:18]
+ 24 │     
+ 25 │     base_lower = Circle(r, c = hole_pos)
+    ·                  ───────────┬───────────
+    ·                             ╰── warning: 20:18: This expression statement did not produce any model
+ 26 │         .hull()
+    ╰────
+  × error: 32:17: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/examples/src/footpad.md:37:10]
+ 36 │         bottom_right = (x = s.x, y = -s.y);
+ 37 │         (Circle(r, c = (x = top_left, y = bottom_right)).hull() | Circle(r, c = (x = top_right, y = bottom_left)).hull());
+    ·          ───────────────────────┬───────────────────────
+    ·                                 ╰── Got: Circle( c = (x=(x=-62.5mm, y=35.5mm), y=(x=62.5mm, y=-35.5mm)), r = 15mm )
+ 38 │     }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  ⚠ warning: 32:10: This expression statement did not produce any model
+    ╭─[../books/examples/src/footpad.md:37:10]
+ 36 │         bottom_right = (x = s.x, y = -s.y);
+ 37 │         (Circle(r, c = (x = top_left, y = bottom_right)).hull() | Circle(r, c = (x = top_right, y = bottom_left)).hull());
+    ·          ───────────────────────┬───────────────────────
+    ·                                 ╰── warning: 32:10: This expression statement did not produce any model
+ 38 │     }
+    ╰────
+  × error: 32:74: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/examples/src/footpad.md:37:67]
+ 36 │         bottom_right = (x = s.x, y = -s.y);
+ 37 │         (Circle(r, c = (x = top_left, y = bottom_right)).hull() | Circle(r, c = (x = top_right, y = bottom_left)).hull());
+    ·                                                                   ───────────────────────┬───────────────────────
+    ·                                                                                          ╰── Got: Circle( c = (x=(x=62.5mm, y=35.5mm), y=(x=-62.5mm, y=-35.5mm)), r = 15mm )
+ 38 │     }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  ⚠ warning: 32:67: This expression statement did not produce any model
+    ╭─[../books/examples/src/footpad.md:37:67]
+ 36 │         bottom_right = (x = s.x, y = -s.y);
+ 37 │         (Circle(r, c = (x = top_left, y = bottom_right)).hull() | Circle(r, c = (x = top_right, y = bottom_left)).hull());
+    ·                                                                   ───────────────────────┬───────────────────────
+    ·                                                                                          ╰── warning: 32:67: This expression statement did not produce any model
+ 38 │     }
+    ╰────
+  ⚠ warning: 6:5: Unused global symbol std::math.
+    ╭─[../books/examples/src/footpad.md:11:5]
+ 10 │ use std::geo2d::*;
+ 11 │ use std::math::*;
+    ·     ────┬────
+    ·         ╰── warning: 6:5: Unused global symbol std::math.
+ 12 │ 
+    ╰────
+Unexpected error(s) which did occur in line(s): 25, 37
+Unexpected warnings(s) which did occur in line(s): 11, 25, 37
+-- Test Result --
+FAILS

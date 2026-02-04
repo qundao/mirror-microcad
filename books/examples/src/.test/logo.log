@@ -1,0 +1,144 @@
+﻿
+-- Test --
+        Test name: logo
+  Expected result: ok
+      Source file: ../books/examples/src/logo.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   pub mod microcad {
+  10:       use std::geo2d::*;
+  11:       use std::ops::*;
+  12:   
+  13:       sketch IconElement( radius: Length ) {
+  14:           c = Sector(radius, start = 180°, end = 270°).translate(y = radius);
+  15:           r = Rect(width = radius, height = radius * 2, x = -radius, y = -radius);
+  16:           c | r
+  17:       }
+  18:   
+  19:       sketch Arc(radius: Length, thickness: Length, angle = 300°) {
+  20:           Sector(radius, start = -angle / 2, end = angle / 2)
+  21:               .rotate(180° - angle) - Circle(radius - thickness)
+  22:       }
+  23:   
+  24:       pub sketch Icon(radius: Length) {
+  25:           prop gap = radius / 5;
+  26:           IconElement(radius)
+  27:               .translate(x = -radius - gap)
+  28:               .rotate([0..3] * 90°); 
+  29:       }
+  30:   
+  31:       pub sketch Micro(radius: Length, thickness: Length) {
+  32:           u = Sector(radius, 180°).rotate(90°) - Circle(radius-thickness);
+  33:           r_l = Rect(width = thickness, height = radius * 3, x = -radius, y = -2*radius);
+  34:           r_r = Rect(width = thickness, height = radius * 2, x = radius - thickness, y = -radius);
+  35:           u | r_l | r_r
+  36:       }
+  37:   
+  38:       pub sketch C(radius: Length, thickness: Length) {
+  39:           Arc(radius, thickness, 260°)
+  40:       }
+  41:   
+  42:       pub sketch A(radius: Length, thickness: Length) {
+  43:           Arc(radius, thickness)
+  44:            | Rect(width = thickness, height = radius * 2, x = radius * 0.5, y = -radius);
+  45:       }
+  46:   
+  47:       pub sketch D(radius: Length, thickness: Length) {
+  48:           Arc(radius, thickness)
+  49:            | Rect(width = thickness, height = radius * 3, x = radius * 0.5, y = -radius);
+  50:       }
+  51:   
+  52:       pub sketch Logo(radius: Length, thickness: Length) {
+  53:           use std::math::*;
+  54:           init(size: Length) {
+  55:               radius = size * 50%;
+  56:               thickness = radius * 40%;
+  57:           }
+  58:           
+  59:           {
+  60:               Icon(radius);
+  61:               {
+  62:                   Micro(radius, thickness);
+  63:                   C(radius, thickness);
+  64:                   A(radius, thickness);
+  65:                   D(radius, thickness);
+  66:               }.align(X);
+  67:           }.align(X, 4mm).center();
+  68:       }
+  69:   }
+  70:   
+  71:   use std::ops::*;
+  72:   
+  73:   pub SIZE = 1cm;
+  74:   
+  75:   microcad::Logo(size = SIZE).extrude(4mm);
+  76:   
+  77:   
+
+-- No Output --
+-- Errors --
+  × error: 27:55: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/examples/src/logo.md:32:50]
+ 31 │     pub sketch Micro(radius: Length, thickness: Length) {
+ 32 │         u = Sector(radius, 180°).rotate(90°) - Circle(radius-thickness);
+    ·                                                ────────────┬───────────
+    ·                                                            ╰── Got: Circle( 3mm )
+ 33 │         r_l = Rect(width = thickness, height = radius * 3, x = -radius, y = -2*radius);
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 16:44: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/examples/src/logo.md:21:38]
+ 20 │         Sector(radius, start = -angle / 2, end = angle / 2)
+ 21 │             .rotate(180° - angle) - Circle(radius - thickness)
+    ·                                     ─────────────┬────────────
+    ·                                                  ╰── Got: Circle( 3mm )
+ 22 │     }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 16:44: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/examples/src/logo.md:21:38]
+ 20 │         Sector(radius, start = -angle / 2, end = angle / 2)
+ 21 │             .rotate(180° - angle) - Circle(radius - thickness)
+    ·                                     ─────────────┬────────────
+    ·                                                  ╰── Got: Circle( 3mm )
+ 22 │     }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 16:44: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/examples/src/logo.md:21:38]
+ 20 │         Sector(radius, start = -angle / 2, end = angle / 2)
+ 21 │             .rotate(180° - angle) - Circle(radius - thickness)
+    ·                                     ─────────────┬────────────
+    ·                                                  ╰── Got: Circle( 3mm )
+ 22 │     }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+  ⚠ warning: 1:1: Unused local PI.
+   ╭─[<NO FILE>:1:1]
+ 1 │ <NO FILE>
+   · ─┬
+   ·  ╰── warning: 1:1: Unused local PI.
+   ╰────
+  ⚠ warning: 1:1: Unused local Y.
+   ╭─[<NO FILE>:1:1]
+ 1 │ <NO FILE>
+   · ┬
+   · ╰── warning: 1:1: Unused local Y.
+   ╰────
+Unexpected error(s) which did occur in line(s): 21, 32
+Unexpected warnings(s) which did occur in line(s): 6
+-- Test Result --
+FAILS

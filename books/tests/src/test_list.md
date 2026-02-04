@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**128** tests have been evaluated with version **0.2.20** of microcad.
+**127** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -65,7 +65,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/init_use.svg)](statement_usage/.test/init_use.log) | [init_use](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_workbench.svg)](statement_usage/.test/init_workbench.log) | [init_workbench](statement_usage/init.md) |
 | [![test](.test/locals_unused.svg)](.test/locals_unused.log) | [locals_unused](locals.md) |
-| [![test](.test/logo.svg)](.test/logo.log) | [logo](logo.md) |
 | [![test](.test/method_call.svg)](.test/method_call.log) | [method_call](method_call.md) |
 | [![test](.test/mod_external.svg)](.test/mod_external.log) | [mod_external](mod_external.md) |
 | [![test](.test/mod_external_root.svg)](.test/mod_external_root.log) | [mod_external_root](mod_external.md) |

@@ -14,3 +14,6 @@ include!(concat!(env!("OUT_DIR"), "/md_test_book_language.rs"));
 
 #[cfg(test)]
 include!(concat!(env!("OUT_DIR"), "/md_test_book_tutorials.rs"));
+
+#[cfg(test)]
+include!(concat!(env!("OUT_DIR"), "/md_test_book_examples.rs"));

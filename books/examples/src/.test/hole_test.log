@@ -1,0 +1,273 @@
+﻿
+-- Test --
+        Test name: hole_test
+  Expected result: ok
+      Source file: ../books/examples/src/hole_test.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::geo2d::*;
+  10:   use std::geo3d::*;
+  11:   use std::ops::*;
+  12:   use std::math::*;
+  13:   
+  14:   const THICKNESS = 2mm;
+  15:   
+  16:   part Hole(diameter: Length) {
+  17:       r = diameter * 50%;
+  18:       Cylinder(radius_bottom = r, radius_top = r + THICKNESS * 50%, height = THICKNESS);
+  19:   }
+  20:   
+  21:   r = RoundedRect(60mm, radius = 10mm).extrude(THICKNESS);
+  22:   
+  23:   holes = Hole([1..9] * 0.25mm)
+  24:       .distribute_grid(size = 60mm, rows = 3, columns = 3);
+  25:   
+  26:   r - holes;
+  27:   
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 7:5: Unused global symbol std::math.
+    ╭─[../books/examples/src/hole_test.md:12:5]
+ 11 │ use std::ops::*;
+ 12 │ use std::math::*;
+    ·     ────┬────
+    ·         ╰── warning: 7:5: Unused global symbol std::math.
+ 13 │ 
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 12
+-- Model --
+  Group (root) ->
+    Operation subtract() ->
+      Group ->
+        r: Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+          - height = 2mm
+          - scale = (x=1, y=1)
+          - twist = 0rad
+          Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+            Workpiece(sketch) std::geo2d::RoundedRect(radius=10mm, size=60mm) ->
+              - height = 60mm
+              - radius_bottom_left = 10mm
+              - radius_bottom_right = 10mm
+              - radius_top_left = 10mm
+              - radius_top_right = 10mm
+              - width = 60mm
+              - x = -30mm
+              - y = -30mm
+              Primitive2D __builtin::geo2d::RoundedRect(height=60mm, radius_bottom_left=10mm, radius_bottom_right=10mm, radius_top_left=10mm, radius_top_right=10mm, width=60mm, x=-30mm, y=-30mm) ->
+        holes: Workpiece(op) std::ops::distribute_grid(columns=3, rows=3, size=60mm) ->
+          - columns = 3
+          - height = 60mm
+          - rows = 3
+          - width = 60mm
+          - x = -30mm
+          - y = -30mm
+          Operation __builtin::ops::distribute_grid(columns=3, height=60mm, rows=3, width=60mm, x=-30mm, y=-30mm) ->
+            Multiplicity ->
+              Workpiece(part) hole_test::Hole(diameter=0.25mm) ->
+                - diameter = 0.25mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.125mm, radius_top=1.125mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 0.125mm
+                  - radius_top = 1.125mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=9, y=9), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=9, y=9)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=9, scale_y=9, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.125mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 0.125mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=0.125mm) ->
+              Workpiece(part) hole_test::Hole(diameter=0.5mm) ->
+                - diameter = 0.5mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.25mm, radius_top=1.25mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 0.25mm
+                  - radius_top = 1.25mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=5, y=5), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=5, y=5)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=5, scale_y=5, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.25mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 0.25mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+              Workpiece(part) hole_test::Hole(diameter=0.75mm) ->
+                - diameter = 0.75mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.375mm, radius_top=1.375mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 0.375mm
+                  - radius_top = 1.375mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3.66666666666667, y=3.66666666666667), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=3.66666666666667, y=3.66666666666667)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=3.66666666666667, scale_y=3.66666666666667, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.375mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 0.375mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=0.375mm) ->
+              Workpiece(part) hole_test::Hole(diameter=1mm) ->
+                - diameter = 1mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.5mm, radius_top=1.5mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 0.5mm
+                  - radius_top = 1.5mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=3, y=3)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.5mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 0.5mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=0.5mm) ->
+              Workpiece(part) hole_test::Hole(diameter=1.25mm) ->
+                - diameter = 1.25mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.625mm, radius_top=1.625mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 0.625mm
+                  - radius_top = 1.625mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=2.6, y=2.6), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=2.6, y=2.6)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.6, scale_y=2.6, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.625mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 0.625mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=0.625mm) ->
+              Workpiece(part) hole_test::Hole(diameter=1.5mm) ->
+                - diameter = 1.5mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.75mm, radius_top=1.75mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 0.75mm
+                  - radius_top = 1.75mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=2.33333333333333, y=2.33333333333333), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=2.33333333333333, y=2.33333333333333)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.33333333333333, scale_y=2.33333333333333, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.75mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 0.75mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=0.75mm) ->
+              Workpiece(part) hole_test::Hole(diameter=1.75mm) ->
+                - diameter = 1.75mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.875mm, radius_top=1.875mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 0.875mm
+                  - radius_top = 1.875mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=2.14285714285714, y=2.14285714285714), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=2.14285714285714, y=2.14285714285714)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.14285714285714, scale_y=2.14285714285714, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.875mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 0.875mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=0.875mm) ->
+              Workpiece(part) hole_test::Hole(diameter=2mm) ->
+                - diameter = 2mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=1mm, radius_top=2mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 1mm
+                  - radius_top = 2mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=2, y=2), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=2, y=2)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2, scale_y=2, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 1mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
+              Workpiece(part) hole_test::Hole(diameter=2.25mm) ->
+                - diameter = 2.25mm
+                Workpiece(part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=1.125mm, radius_top=2.125mm) ->
+                  - height = 2mm
+                  - offset = 0mm
+                  - radius_bottom = 1.125mm
+                  - radius_top = 2.125mm
+                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    - x = 0mm
+                    - y = 0mm
+                    - z = 0mm
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1.88888888888889, y=1.88888888888889), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=1.88888888888889, y=1.88888888888889)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=1.88888888888889, scale_y=1.88888888888889, twist=0rad) ->
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.125mm) ->
+                            - center = (x=0mm, y=0mm)
+                            - radius = 1.125mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                              Primitive2D __builtin::geo2d::Circle(radius=1.125mm) ->
+
+Export of "../books/examples/src/.test/hole_test-out.stl" successful.
+-- Test Result --
+OK (BUT WARNINGS)

@@ -1,0 +1,531 @@
+﻿
+-- Test --
+        Test name: dome
+  Expected result: ok
+      Source file: ../books/examples/src/dome.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::geo2d::*;
+  10:   use std::ops::*;
+  11:   
+  12:   pub part Dome(size: Length, strut_width = 1mm) {
+  13:   	Rect(strut_width)
+  14:   		.translate(x = size)
+  15:   		.revolve(180°)
+  16:   		.rotate(x = -[0..6]*180°/6)
+  17:   		.rotate(z = [0..3]*180°/3);
+  18:   }
+  19:   
+  20:   Dome(10mm, strut_width = 0.25mm);
+  21:   
+  22:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(part) dome::Dome(size=10mm, strut_width=0.25mm) ->
+      - size = 10mm
+      - strut_width = 0.25mm
+      Multiplicity ->
+        Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=0rad) ->
+          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+            Multiplicity ->
+              Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-0.5235987755983rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.0471975511966rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.5707963267949rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.0943951023932rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.61799387799149rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-3.14159265358979rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+        Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=1.0471975511966rad) ->
+          - matrix = Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]
+          Transform __builtin::ops::rotate(matrix=Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]) ->
+            Multiplicity ->
+              Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-0.5235987755983rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.0471975511966rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.5707963267949rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.0943951023932rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.61799387799149rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-3.14159265358979rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+        Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=2.0943951023932rad) ->
+          - matrix = Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
+          Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) ->
+            Multiplicity ->
+              Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-0.5235987755983rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.0471975511966rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.5707963267949rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.0943951023932rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.61799387799149rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-3.14159265358979rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+        Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=3.14159265358979rad) ->
+          - matrix = Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]
+          Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+            Multiplicity ->
+              Workpiece(op) std::ops::rotate(x=0rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-0.5235987755983rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, 0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.0471975511966rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 0.5000000000000001, -0.8660254037844386], [0.0, 0.8660254037844386, 0.5000000000000001]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-1.5707963267949rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, -1.0], [0.0, 1.0, 6.123233995736766e-17]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.0943951023932rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.4999999999999998, -0.8660254037844387], [0.0, 0.8660254037844387, -0.4999999999999998]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-2.61799387799149rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -0.8660254037844387, -0.49999999999999994], [0.0, 0.49999999999999994, -0.8660254037844387]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+              Workpiece(op) std::ops::rotate(x=-3.14159265358979rad, y=0rad, z=0rad) ->
+                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, -1.2246467991473532e-16], [0.0, 1.2246467991473532e-16, -1.0]]) ->
+                  Workpiece(op) std::ops::revolve(angle=3.14159265358979rad) ->
+                    - angle = 3.14159265358979rad
+                    Operation __builtin::ops::revolve(angle=3.14159265358979rad) ->
+                      Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                        - x = 10mm
+                        - y = 0mm
+                        - z = 0mm
+                        Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                          Workpiece(sketch) std::geo2d::Rect(size=0.25mm) ->
+                            - height = 0.25mm
+                            - width = 0.25mm
+                            - x = -0.125mm
+                            - y = -0.125mm
+                            Primitive2D __builtin::geo2d::Rect(height=0.25mm, width=0.25mm, x=-0.125mm, y=-0.125mm) ->
+
+Export of "../books/examples/src/.test/dome-out.stl" successful.
+-- Test Result --
+OK
