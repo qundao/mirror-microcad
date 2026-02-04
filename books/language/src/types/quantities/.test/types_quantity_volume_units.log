@@ -2,45 +2,45 @@
 -- Test --
         Test name: types_quantity_volume_units
   Expected result: ok
-      Source file: ../books/language/src/types/quantities/types.md:108
+      Source file: ../books/language/src/types/quantities/types.md:113
         Test path: ../books/language/src/types/quantities/.test
 
 -- Code --
 
- 108:   cubic_millimeter = 1000000.0mm³;
- 109:   cubic_centimeter = 100.0cl;
- 110:   cubic_meter = 0.001m3;
- 111:   cubic_inch = 61.0237in³;
- 112:   liter = 1.0l;
- 113:   centiliter = 100.0cl;
- 114:   milliliter = 1000.0ml;
- 115:   
- 116:   std::debug::assert_eq([ cubic_millimeter,
- 117:                           cubic_centimeter,
- 118:                           cubic_meter,
- 119:                           centiliter,
- 120:                           milliliter
- 121:                           ]);
+ 113:   cubic_millimeter = 1000000.0mm³;
+ 114:   cubic_centimeter = 100.0cl;
+ 115:   cubic_meter = 0.001m3;
+ 116:   cubic_inch = 61.0237in³;
+ 117:   liter = 1.0l;
+ 118:   centiliter = 100.0cl;
+ 119:   milliliter = 1000.0ml;
+ 120:   
+ 121:   std::debug::assert_eq([ cubic_millimeter,
+ 122:                           cubic_centimeter,
+ 123:                           cubic_meter,
+ 124:                           centiliter,
+ 125:                           milliliter
+ 126:                           ]);
 
 -- No Output --
 -- Errors --
   ⚠ warning: 4:1: Unused local cubic_inch.
-     ╭─[../books/language/src/types/quantities/types.md:111:1]
- 110 │ cubic_meter = 0.001m3;
- 111 │ cubic_inch = 61.0237in³;
+     ╭─[../books/language/src/types/quantities/types.md:116:1]
+ 115 │ cubic_meter = 0.001m3;
+ 116 │ cubic_inch = 61.0237in³;
      · ─────┬────
      ·      ╰── warning: 4:1: Unused local cubic_inch.
- 112 │ liter = 1.0l;
+ 117 │ liter = 1.0l;
      ╰────
   ⚠ warning: 5:1: Unused local liter.
-     ╭─[../books/language/src/types/quantities/types.md:112:1]
- 111 │ cubic_inch = 61.0237in³;
- 112 │ liter = 1.0l;
+     ╭─[../books/language/src/types/quantities/types.md:117:1]
+ 116 │ cubic_inch = 61.0237in³;
+ 117 │ liter = 1.0l;
      · ──┬──
      ·   ╰── warning: 5:1: Unused local liter.
- 113 │ centiliter = 100.0cl;
+ 118 │ centiliter = 100.0cl;
      ╰────
-Unexpected warnings(s) which did occur in line(s): 111, 112
+Unexpected warnings(s) which did occur in line(s): 116, 117
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

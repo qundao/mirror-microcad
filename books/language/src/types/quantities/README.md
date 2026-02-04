@@ -1,6 +1,9 @@
 # Quantities
 
-*Quantities* are numeric values coupled with a unit that refers to a [*quantity type*](types.md).
+The term *quantities* bundles a set of [*quantity types*](types.md) which are
+basically *floating point[^float] values* with physical *units* (e.g.  Meter, Liters,...) attached.
+
+[^float]: see [wikipedia about floating point](https://en.wikipedia.org/wiki/Floating-point_arithmetic)
 
 [![test](.test/quantity_types_number_literals.svg)](.test/quantity_types_number_literals.log)
 

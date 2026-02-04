@@ -1,16 +1,19 @@
-# Arithmetic
+# Operators
 
-Quantity types can use operators:
+Quantity types support most operators which primitive types do.
+See section [operators in expressions](../../expressions/operators.md) for a
+complete list
 
-[![test](.test/types_quantity_arithmetic.svg)](.test/types_quantity_arithmetic.log)
+The only difference about quantity operators is, that they calculate units too,
+where units remain flexible.
 
-```µcad,types_quantity_arithmetic#todo
+[![test](.test/types_quantity_operators.svg)](.test/types_quantity_operators.log)
+
+```µcad,types_quantity_operators#todo
 use std::debug::assert_eq;
 
-a = 6cm;
-b = 2cm;
-assert_eq([ a * b, 12cm²  ]);
-assert_eq([ a / b, 3 ]);
-assert_eq([ a + b, 80mm ]);
-assert_eq([ a - b, 40mm ]);
+assert_eq([ 6cm * 2cm, 12cm²  ]);
+assert_eq([ 6cm / 2cm, 3 ]);
+assert_eq([ 6cm + 2cm, 80mm ]);
+assert_eq([ 6cm - 2cm, 0.04m ]);
 ```
