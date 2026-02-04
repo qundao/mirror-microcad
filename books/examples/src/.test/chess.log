@@ -1,0 +1,111 @@
+﻿
+-- Test --
+        Test name: chess
+  Expected result: ok
+      Source file: ../books/examples/src/chess.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   
+  10:   use std::geo2d::*;
+  11:   use std::geo3d::*;
+  12:   use std::ops::*;
+  13:   use std::math::*;
+  14:   
+  15:   // https://de.wikipedia.org/wiki/Bauhaus-Schachspiel
+  16:   
+  17:   pub TILE_SIZE = 5.8cm;
+  18:   const BASE_SIZE = TILE_SIZE * 70%;
+  19:   
+  20:   
+  21:   pub part Pawn() {
+  22:       Cube(BASE_SIZE * 80%)
+  23:   }
+  24:   
+  25:   pub part King() {
+  26:       { 
+  27:           Cube(BASE_SIZE);
+  28:           Cube(BASE_SIZE / sqrt(2)).rotate(45°);
+  29:       }.align(Z)
+  30:   }
+  31:   
+  32:   pub part Queen() {
+  33:       { 
+  34:           Cube(BASE_SIZE);
+  35:           Sphere(diameter = BASE_SIZE / sqrt(2));
+  36:       }.align(Z)
+  37:   }
+  38:   
+  39:   pub part Bishop() {
+  40:       size = BASE_SIZE / 3;
+  41:       Rect(size * 90%)
+  42:           .translate(size * 150%, [45,-135]°)
+  43:           .hull()
+  44:           .mirror(X)
+  45:           .union()
+  46:           .extrude(BASE_SIZE)
+  47:           .rotate(x = 90°)
+  48:           .center()
+  49:   }
+  50:   
+  51:   pub part Rook() {
+  52:       Cube(BASE_SIZE)
+  53:   }
+  54:   
+  55:   pub part Knight() {
+  56:       {
+  57:           s = BASE_SIZE/2;
+  58:           r = Rect(BASE_SIZE);
+  59:           (r - r.translate(x = s, y = s)).extrude(s);
+  60:       }.rotate([0,90]°).align(Z)
+  61:   }
+  62:   
+  63:   
+  64:   {
+  65:       Rook();
+  66:       Knight();
+  67:       Bishop();
+  68:       Queen();
+  69:       King();
+  70:       Bishop();
+  71:       Knight().rotate(x = 180°).rotate(90°);
+  72:       Rook();
+  73:       8 * Pawn();
+  74:   }
+  75:   .distribute_grid(cell_size = TILE_SIZE, rows = 2, columns = 8)
+  76:   .translate(y = TILE_SIZE * 3)
+  77:   .rotate([0, 180]°);
+  78:   
+  79:   board_height = 1mm;
+  80:   Rect(TILE_SIZE * 8).extrude(board_height).translate(z = -board_height);
+  81:   
+
+-- No Output --
+-- Errors --
+  × error: 54:49: Workbench extrude cannot find initialization for those arguments
+    ╭─[../books/examples/src/chess.md:59:41]
+ 58 │         r = Rect(BASE_SIZE);
+ 59 │         (r - r.translate(x = s, y = s)).extrude(s);
+    ·                                         ────┬────
+    ·                                             ╰── Got: extrude( s = 20.3mm )
+ 60 │     }.rotate([0,90]°).align(Z)
+    ╰────
+  help: Possible initializations:
+        	extrude( height: Length, scale = (x = 100%, y = 100%), twist = 0°)
+  × error: 54:49: Workbench extrude cannot find initialization for those arguments
+    ╭─[../books/examples/src/chess.md:59:41]
+ 58 │         r = Rect(BASE_SIZE);
+ 59 │         (r - r.translate(x = s, y = s)).extrude(s);
+    ·                                         ────┬────
+    ·                                             ╰── Got: extrude( s = 20.3mm )
+ 60 │     }.rotate([0,90]°).align(Z)
+    ╰────
+  help: Possible initializations:
+        	extrude( height: Length, scale = (x = 100%, y = 100%), twist = 0°)
+Unexpected error(s) which did occur in line(s): 59
+-- Test Result --
+FAILS

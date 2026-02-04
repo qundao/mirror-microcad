@@ -1,0 +1,36 @@
+# Example: lid
+
+[![test](.test/lid.svg)](.test/lid.log)
+
+```µcad,lid
+// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/// A part called `Lid` with three parameters.
+part Lid(
+    thickness = 1.6mm,
+    inner_diameter = 16.0cm,
+    height = 20.0mm,
+) {
+    // Calculate the outer diameter
+    outer_diameter = 2.0 * thickness + inner_diameter;
+
+    // Create two cylinders, one for the outer and one for the inner
+    outer = std::geo3d::Cylinder(d = outer_diameter, h = height);
+    inner = std::geo3d::Cylinder(d = inner_diameter, h = height).std::ops::translate(z = thickness);
+
+    // Calculate the difference between two translated cylinders and output them
+    outer - inner;
+}
+
+
+// `l` is the instance of the lid model
+l = Lid();
+
+l; // Instantiate the lid.
+
+```
+
+![test](.test/lid-out.svg)
+
+![test](.test/lid-out.stl)

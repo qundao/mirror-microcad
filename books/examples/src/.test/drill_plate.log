@@ -1,0 +1,86 @@
+﻿
+-- Test --
+        Test name: drill_plate
+  Expected result: ok
+      Source file: ../books/examples/src/drill_plate.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::geo2d::*;
+  10:   use std::ops::*;
+  11:   
+  12:   /// A drill plate with four holes.
+  13:   #[color = "red"]
+  14:   sketch DrillPlate(size = 100mm, hole_size = 10mm) {
+  15:       l = size/2 - hole_size;
+  16:       Rect(size) - Circle(diameter = hole_size).translate(x = [-l,l], y = [-l,l])
+  17:   }
+  18:   
+  19:   DrillPlate();
+  20:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) drill_plate::DrillPlate(hole_size=10mm, size=100mm) ->
+      - hole_size = 10mm
+      - size = 100mm
+      #[color = rgba(1, 0, 0, 1)]
+      Operation subtract() ->
+        Group ->
+          Workpiece(sketch) std::geo2d::Rect(size=100mm) ->
+            - height = 100mm
+            - width = 100mm
+            - x = -50mm
+            - y = -50mm
+            Primitive2D __builtin::geo2d::Rect(height=100mm, width=100mm, x=-50mm, y=-50mm) ->
+          Multiplicity ->
+            Workpiece(op) std::ops::translate(x=-40mm, y=-40mm, z=0mm) ->
+              - x = -40mm
+              - y = -40mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=-40mm, y=-40mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=10mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 5mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
+            Workpiece(op) std::ops::translate(x=40mm, y=-40mm, z=0mm) ->
+              - x = 40mm
+              - y = -40mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=40mm, y=-40mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=10mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 5mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
+            Workpiece(op) std::ops::translate(x=-40mm, y=40mm, z=0mm) ->
+              - x = -40mm
+              - y = 40mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=-40mm, y=40mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=10mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 5mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
+            Workpiece(op) std::ops::translate(x=40mm, y=40mm, z=0mm) ->
+              - x = 40mm
+              - y = 40mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=40mm, y=40mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=10mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 5mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
+
+Export of "../books/examples/src/.test/drill_plate-out.svg" successful.
+-- Test Result --
+OK

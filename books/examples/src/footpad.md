@@ -1,3 +1,8 @@
+# Example: footpad
+
+[![test](.test/footpad.svg)](.test/footpad.log)
+
+```µcad,footpad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -58,3 +63,8 @@ part FootPad(
 }
 
 FootPad();
+```
+
+![test](.test/footpad-out.svg)
+
+![test](.test/footpad-out.stl)

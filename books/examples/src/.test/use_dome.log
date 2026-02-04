@@ -1,0 +1,30 @@
+﻿
+-- Test --
+        Test name: use_dome
+  Expected result: ok
+      Source file: ../books/examples/src/use_dome.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   mod dome;
+  10:   
+  11:   dome::Dome(10mm, strut_width = 0.5mm).std::ops::mirror(std::math::Z);
+
+-- No Output --
+-- Errors --
+  × error: 4:5: Source of module 'dome' could not be found in "/home/pat/git/microcad/books/examples/src/.test" (expecting a file 'dome.µcad' or 'dome/mod.µcad')
+   ╭─[../books/examples/src/use_dome.md:4:5]
+ 3 │ 
+ 4 │ mod dome;
+   ·     ──┬─
+   ·       ╰── module not found
+ 5 │ 
+   ╰────
+Unexpected error(s) which did occur in line(s): 4
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS

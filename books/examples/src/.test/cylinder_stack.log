@@ -1,0 +1,117 @@
+﻿
+-- Test --
+        Test name: cylinder_stack
+  Expected result: ok
+      Source file: ../books/examples/src/cylinder_stack.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   use std::geo3d::*;
+  10:   use std::debug::*;
+  11:   
+  12:   part CylinderStack(heights: [Length], radii: [Length], offset: Length = 0mm) {
+  13:       assert(heights.count() == radii.count() - 1, "radii must be an array with one more elements that heights");
+  14:   
+  15:   	self = Cylinder(height = heights.head(), radius_bottom = radii.head(), radius_top = radii.tail().head(), offset);
+  16:   	if heights.count() > 1 {
+  17:   		self | CylinderStack(heights = heights.tail(), radii = radii.tail(), offset = offset + heights.head())
+  18:   	} else {
+  19:   		self
+  20:   	}
+  21:   }
+  22:   
+  23:   CylinderStack(heights = [5, 15, 5]mm, radii = [6, 4, 4, 6]mm);
+  24:   
+  25:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(part) cylinder_stack::CylinderStack(heights=[5mm, 15mm, 5mm], offset=0mm, radii=[6mm, 4mm, 4mm, 6mm]) ->
+      - heights = [5mm, 15mm, 5mm]
+      - offset = 0mm
+      - radii = [6mm, 4mm, 4mm, 6mm]
+      Group ->
+        Operation union() ->
+          Group ->
+            self: Workpiece(part) std::geo3d::Cylinder(height=5mm, offset=0mm, radius_bottom=6mm, radius_top=4mm) ->
+              - height = 5mm
+              - offset = 0mm
+              - radius_bottom = 6mm
+              - radius_top = 4mm
+              Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                - x = 0mm
+                - y = 0mm
+                - z = 0mm
+                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                  Workpiece(op) std::ops::extrude(height=5mm, scale=(x=0.66666666666667, y=0.66666666666667), twist=0rad) ->
+                    - height = 5mm
+                    - scale = (x=0.66666666666667, y=0.66666666666667)
+                    - twist = 0rad
+                    Operation __builtin::ops::extrude(height=5mm, scale_x=0.66666666666667, scale_y=0.66666666666667, twist=0rad) ->
+                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=6mm) ->
+                        - center = (x=0mm, y=0mm)
+                        - radius = 6mm
+                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                          Primitive2D __builtin::geo2d::Circle(radius=6mm) ->
+            Workpiece(part) cylinder_stack::CylinderStack(heights=[15mm, 5mm], offset=5mm, radii=[4mm, 4mm, 6mm]) ->
+              - heights = [15mm, 5mm]
+              - offset = 5mm
+              - radii = [4mm, 4mm, 6mm]
+              Group ->
+                Operation union() ->
+                  Group ->
+                    self: Workpiece(part) std::geo3d::Cylinder(height=15mm, offset=5mm, radius_bottom=4mm, radius_top=4mm) ->
+                      - height = 15mm
+                      - offset = 5mm
+                      - radius_bottom = 4mm
+                      - radius_top = 4mm
+                      Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=5mm) ->
+                        - x = 0mm
+                        - y = 0mm
+                        - z = 5mm
+                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=5mm) ->
+                          Workpiece(op) std::ops::extrude(height=15mm, scale=(x=1, y=1), twist=0rad) ->
+                            - height = 15mm
+                            - scale = (x=1, y=1)
+                            - twist = 0rad
+                            Operation __builtin::ops::extrude(height=15mm, scale_x=1, scale_y=1, twist=0rad) ->
+                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
+                                - center = (x=0mm, y=0mm)
+                                - radius = 4mm
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                  Primitive2D __builtin::geo2d::Circle(radius=4mm) ->
+                    Workpiece(part) cylinder_stack::CylinderStack(heights=[5mm], offset=20mm, radii=[4mm, 6mm]) ->
+                      - heights = [5mm]
+                      - offset = 20mm
+                      - radii = [4mm, 6mm]
+                      Group ->
+                        self: Workpiece(part) std::geo3d::Cylinder(height=5mm, offset=20mm, radius_bottom=4mm, radius_top=6mm) ->
+                          - height = 5mm
+                          - offset = 20mm
+                          - radius_bottom = 4mm
+                          - radius_top = 6mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=20mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = 20mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=20mm) ->
+                              Workpiece(op) std::ops::extrude(height=5mm, scale=(x=1.5, y=1.5), twist=0rad) ->
+                                - height = 5mm
+                                - scale = (x=1.5, y=1.5)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=5mm, scale_x=1.5, scale_y=1.5, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=4mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 4mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=4mm) ->
+
+Export of "../books/examples/src/.test/cylinder_stack-out.stl" successful.
+-- Test Result --
+OK
