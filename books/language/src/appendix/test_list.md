@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**216** tests have been evaluated with version **0.2.20** of microcad.
+**211** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -21,11 +21,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../flow/argument_match/.test/argument_match_single_identifier.svg)](../flow/argument_match/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](../flow/argument_match/inline_identifier.md) |
 | [![test](../flow/argument_match/.test/argument_match_type.svg)](../flow/argument_match/.test/argument_match_type.log) | [argument_match_type](../flow/argument_match/priorities.md) |
 | [![test](../flow/argument_match/.test/argument_match_type_compatible.svg)](../flow/argument_match/.test/argument_match_type_compatible.log) | [argument_match_type_compatible](../flow/argument_match/priorities.md) |
-| [![test](../types/collections/array/.test/array_helper_count.svg)](../types/collections/array/.test/array_helper_count.log) | [array_helper_count](../types/collections/array/helpers.md) |
-| [![test](../types/collections/array/.test/array_helper_head.svg)](../types/collections/array/.test/array_helper_head.log) | [array_helper_head](../types/collections/array/helpers.md) |
-| [![test](../types/collections/array/.test/array_helper_reverse.svg)](../types/collections/array/.test/array_helper_reverse.log) | [array_helper_reverse](../types/collections/array/helpers.md) |
-| [![test](../types/collections/array/.test/array_helper_sort.svg)](../types/collections/array/.test/array_helper_sort.log) | [array_helper_sort](../types/collections/array/helpers.md) |
-| [![test](../types/collections/array/.test/array_helper_tail.svg)](../types/collections/array/.test/array_helper_tail.log) | [array_helper_tail](../types/collections/array/helpers.md) |
 | [![test](../types/collections/array/.test/array_operation_bool.svg)](../types/collections/array/.test/array_operation_bool.log) | [array_operation_bool](../types/collections/array/operators.md) |
 | [![test](../types/collections/array/.test/array_operations.svg)](../types/collections/array/.test/array_operations.log) | [array_operations](../types/collections/array/operators.md) |
 | [![test](../types/collections/array/.test/array_unit_bundling.svg)](../types/collections/array/.test/array_unit_bundling.log) | [array_unit_bundling](../types/collections/array/) |

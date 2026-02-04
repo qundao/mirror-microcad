@@ -48,7 +48,6 @@
   - [Collections](./types/collections/README.md)
     - [Arrays](./types/collections/array/README.md)
       - [Range Arrays](./types/collections/array/range.md)
-      - [Array Helpers](./types/collections/array/helpers.md)
       - [Array Operations](./types/collections/array/operators.md)
     - [Tuples](./types/collections/tuples/README.md)
       - [Tuple Operators](./types/collections/tuples/operators.md)

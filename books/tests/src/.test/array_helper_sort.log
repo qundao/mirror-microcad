@@ -2,8 +2,8 @@
 -- Test --
         Test name: array_helper_sort
   Expected result: todo
-      Source file: ../books/language/src/types/collections/array/helpers.md:52
-        Test path: ../books/language/src/types/collections/array/.test
+      Source file: ../books/tests/src/array_helpers.md:52
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -12,19 +12,19 @@
 -- No Output --
 -- Errors --
   × error: 1:25: Symbol std::sore not found.
-    ╭─[../books/language/src/types/collections/array/helpers.md:52:25]
+    ╭─[../books/tests/src/array_helpers.md:52:25]
  52 │ std::debug::assert_eq([ std::sore([3,1,2]), [1,2,3] ]);
     ·                         ─────────┬────────
     ·                                  ╰── error: 1:25: Symbol std::sore not found.
     ╰────
   × error: 1:23: Array elements have different types: [<NO TYPE>, [Integer]]
-    ╭─[../books/language/src/types/collections/array/helpers.md:52:23]
+    ╭─[../books/tests/src/array_helpers.md:52:23]
  52 │ std::debug::assert_eq([ std::sore([3,1,2]), [1,2,3] ]);
     ·                       ───────────────┬───────────────
     ·                                      ╰── error: 1:23: Array elements have different types: [<NO TYPE>, [Integer]]
     ╰────
   × error: 1:23: Assertion failed: Invalid: <NO VALUE>
-    ╭─[../books/language/src/types/collections/array/helpers.md:52:23]
+    ╭─[../books/tests/src/array_helpers.md:52:23]
  52 │ std::debug::assert_eq([ std::sore([3,1,2]), [1,2,3] ]);
     ·                       ───────────────┬───────────────
     ·                                      ╰── error: 1:23: Assertion failed: Invalid: <NO VALUE>
