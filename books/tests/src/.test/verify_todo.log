@@ -2,8 +2,8 @@
 -- Test --
         Test name: verify_todo
   Expected result: ok
-      Source file: ../books/language/src/debugging/verification.md:40
-        Test path: ../books/language/src/debugging/.test
+      Source file: ../books/tests/src/debug.md:40
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -18,7 +18,7 @@
 -- No Output --
 -- Errors --
   ☞ info: 4:20: a is zero
-    ╭─[../books/language/src/debugging/verification.md:43:20]
+    ╭─[../books/tests/src/debug.md:43:20]
  42 │ if a == 0 {
  43 │     std::log::info("a is zero");
     ·                    ─────┬─────
