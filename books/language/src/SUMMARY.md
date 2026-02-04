@@ -64,8 +64,6 @@
 - [Export](./export.md)
 - [Import](./import.md)
 - [Included Libraries](./libraries.md)
-- [Debugging](./debugging/README.md)
-  - [Verification](./debugging/verification.md)
 - [Appendix](./appendix/README.md)
   - [Coding Style](./appendix/coding/README.md)
     - [Naming convention](./appendix/coding/naming.md)

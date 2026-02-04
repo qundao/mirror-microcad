@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**175** tests have been evaluated with version **0.2.20** of microcad.
+**171** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -175,10 +175,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/.test/use_as_module.svg)](../structure/.test/use_as_module.log) | [use_as_module](../structure/use.md) |
 | [![test](../structure/.test/use_module.svg)](../structure/.test/use_module.log) | [use_module](../structure/use.md) |
 | [![test](../structure/.test/use_statement_pub.svg)](../structure/.test/use_statement_pub.log) | [use_statement_pub](../structure/use.md) |
-| [![test](../debugging/.test/verify_assert.svg)](../debugging/.test/verify_assert.log) | [verify_assert](../debugging/verification.md) |
-| [![test](../debugging/.test/verify_assert_fail.svg)](../debugging/.test/verify_assert_fail.log) | [verify_assert_fail](../debugging/verification.md) |
-| [![test](../debugging/.test/verify_error.svg)](../debugging/.test/verify_error.log) | [verify_error](../debugging/verification.md) |
-| [![test](../debugging/.test/verify_todo.svg)](../debugging/.test/verify_todo.log) | [verify_todo](../debugging/verification.md) |
 | [![test](../structure/functions/.test/workbench_example.svg)](../structure/functions/.test/workbench_example.log) | [workbench_example](../structure/functions/workbench_functions.md) |
 | [![test](../structure/functions/.test/workbench_fn_prop.svg)](../structure/functions/.test/workbench_fn_prop.log) | [workbench_fn_prop](../structure/functions/workbench_functions.md) |
 | [![test](../structure/functions/.test/workbench_init_prop.svg)](../structure/functions/.test/workbench_init_prop.log) | [workbench_init_prop](../structure/functions/workbench_functions.md) |

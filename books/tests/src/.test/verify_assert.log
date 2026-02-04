@@ -2,8 +2,8 @@
 -- Test --
         Test name: verify_assert
   Expected result: ok
-      Source file: ../books/language/src/debugging/verification.md:16
-        Test path: ../books/language/src/debugging/.test
+      Source file: ../books/tests/src/debug.md:16
+        Test path: ../books/tests/src/.test
 
 -- Code --
 

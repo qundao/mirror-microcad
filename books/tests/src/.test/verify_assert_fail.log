@@ -2,8 +2,8 @@
 -- Test --
         Test name: verify_assert_fail
   Expected result: fail
-      Source file: ../books/language/src/debugging/verification.md:22
-        Test path: ../books/language/src/debugging/.test
+      Source file: ../books/tests/src/debug.md:22
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -12,7 +12,7 @@
 -- No Output --
 -- Errors --
   × error: 1:20: Assertion failed: this assertion fails
-    ╭─[../books/language/src/debugging/verification.md:22:20]
+    ╭─[../books/tests/src/debug.md:22:20]
  22 │ std::debug::assert(false, "this assertion fails"); // error
     ·                    ──────────────┬──────────────
     ·                                  ╰── error: 1:20: Assertion failed: this assertion fails

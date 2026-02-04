@@ -2,8 +2,8 @@
 -- Test --
         Test name: verify_error
   Expected result: fail
-      Source file: ../books/language/src/debugging/verification.md:30
-        Test path: ../books/language/src/debugging/.test
+      Source file: ../books/tests/src/debug.md:30
+        Test path: ../books/tests/src/.test
 
 -- Code --
 
@@ -12,7 +12,7 @@
 -- No Output --
 -- Errors --
   × error: 1:17: Builtin error: this should not have happened
-    ╭─[../books/language/src/debugging/verification.md:30:17]
+    ╭─[../books/tests/src/debug.md:30:17]
  30 │ std::log::error("this should not have happened"); // error
     ·                 ───────────────┬───────────────
     ·                                ╰── error: 1:17: Builtin error: this should not have happened

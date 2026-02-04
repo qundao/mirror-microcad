@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**145** tests have been evaluated with version **0.2.20** of microcad.
+**149** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -137,6 +137,10 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/use_statement_test.svg)](.test/use_statement_test.log) | [use_statement_test](use.md) |
 | [![test](.test/use_test.svg)](.test/use_test.log) | [use_test](use.md) |
 | [![test](.test/value_declarations.svg)](.test/value_declarations.log) | [value_declarations](value_declarations.md) |
+| [![test](.test/verify_assert.svg)](.test/verify_assert.log) | [verify_assert](debug.md) |
+| [![test](.test/verify_assert_fail.svg)](.test/verify_assert_fail.log) | [verify_assert_fail](debug.md) |
+| [![test](.test/verify_error.svg)](.test/verify_error.log) | [verify_error](debug.md) |
+| [![test](.test/verify_todo.svg)](.test/verify_todo.log) | [verify_todo](debug.md) |
 | [![test](.test/visibility.svg)](.test/visibility.log) | [visibility](visibility.md) |
 | [![test](statement_usage/.test/workbench_assignment_const.svg)](statement_usage/.test/workbench_assignment_const.log) | [workbench_assignment_const](statement_usage/workbench.md) |
 | [![test](statement_usage/.test/workbench_assignment_prop.svg)](statement_usage/.test/workbench_assignment_prop.log) | [workbench_assignment_prop](statement_usage/workbench.md) |
