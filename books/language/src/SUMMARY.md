@@ -56,6 +56,7 @@
     - [Quantity Types](./types/quantities/types.md)
     - [Quantity Operators](./types/quantities/operators.md)
   - [Primitive Types](./types/primitives.md)
+  - [Format Strings](./types/format_string.md)
   - [Models](./types/models/README.md)
     - [Measures](./types/models/measures.md)
 - [Documentation](./doc/comments.md)
