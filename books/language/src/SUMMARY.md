@@ -36,7 +36,7 @@
   - [Model Assignments](./assignments/model.md)
 - [Program Flow](./flow/README.md)
   - [Start Code](./flow/start_code.md)
-  - [Conditionals](./flow/conditions.md)
+  - [Conditions](./flow/conditions.md)
   - [Calls](./flow/calls/README.md)
     - [Parameters & Arguments](./flow/calls/args_params.md)
   - [Argument Matching](./flow/argument_match/README.md)
