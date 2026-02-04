@@ -1,4 +1,4 @@
-# Operators
+# Quantity Operators
 
 Quantity types support most operators which primitive types do.
 See section [operators in expressions](../../expressions/operators.md) for a
