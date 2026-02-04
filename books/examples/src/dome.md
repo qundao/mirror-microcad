@@ -1,6 +1,6 @@
 # Example: dome
 
-[![test](.test/dome.svg)](.test/dome.log)
+[![Report](.test/dome.svg)](.test/dome.log)
 
 ```µcad,dome
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -22,6 +22,8 @@ Dome(10mm, strut_width = 0.25mm);
 
 ```
 
-![test](.test/dome-out.svg)
+2D Output
+    : ![None](.test/dome-out.svg)
 
-![test](.test/dome-out.stl)
+3D Output
+    : ![None](.test/dome-out.stl)

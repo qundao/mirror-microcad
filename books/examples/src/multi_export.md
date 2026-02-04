@@ -1,6 +1,6 @@
 # Example: multi_export
 
-[![test](.test/multi_export.svg)](.test/multi_export.log)
+[![Report](.test/multi_export.svg)](.test/multi_export.log)
 
 ```µcad,multi_export
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -18,6 +18,8 @@ std::geo2d::Circle(r = 42mm)
 
 ```
 
-![test](.test/multi_export-out.svg)
+2D Output
+    : ![None](.test/multi_export-out.svg)
 
-![test](.test/multi_export-out.stl)
+3D Output
+    : ![None](.test/multi_export-out.stl)

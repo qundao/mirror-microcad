@@ -1,6 +1,6 @@
 # Example: buffer_stand
 
-[![test](.test/buffer_stand.svg)](.test/buffer_stand.log)
+[![Report](.test/buffer_stand.svg)](.test/buffer_stand.log)
 
 ```µcad,buffer_stand
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -64,6 +64,8 @@ BufferStand();
 
 ```
 
-![test](.test/buffer_stand-out.svg)
+2D Output
+    : ![None](.test/buffer_stand-out.svg)
 
-![test](.test/buffer_stand-out.stl)
+3D Output
+    : ![None](.test/buffer_stand-out.stl)

@@ -1,6 +1,6 @@
 # Example: chess
 
-[![test](.test/chess.svg)](.test/chess.log)
+[![Report](.test/chess.svg)](.test/chess.log)
 
 ```µcad,chess
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -81,6 +81,8 @@ Rect(TILE_SIZE * 8).extrude(board_height).translate(z = -board_height);
 
 ```
 
-![test](.test/chess-out.svg)
+2D Output
+    : ![None](.test/chess-out.svg)
 
-![test](.test/chess-out.stl)
+3D Output
+    : ![None](.test/chess-out.stl)

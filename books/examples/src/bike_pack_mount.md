@@ -1,6 +1,6 @@
 # Example: bike_pack_mount
 
-[![test](.test/bike_pack_mount.svg)](.test/bike_pack_mount.log)
+[![Report](.test/bike_pack_mount.svg)](.test/bike_pack_mount.log)
 
 ```µcad,bike_pack_mount
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -62,6 +62,8 @@ Upper().translate(y = -50mm);
 
 ```
 
-![test](.test/bike_pack_mount-out.svg)
+2D Output
+    : ![None](.test/bike_pack_mount-out.svg)
 
-![test](.test/bike_pack_mount-out.stl)
+3D Output
+    : ![None](.test/bike_pack_mount-out.stl)

@@ -2,314 +2,314 @@
 -- Test --
         Test name: gears_gears_3d
   Expected result: ok
-      Source file: ../books/examples/src/gears.md:28
+      Source file: ../books/examples/src/gears.md:30
         Test path: ../books/examples/src/.test
 
 -- Code --
 
-  28:   // file: gears_3d.µcad
-  29:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
-  30:   // SPDX-License-Identifier: AGPL-3.0-or-later
-  31:   
-  32:   use std::ops::*;
-  33:   use std::geo2d::*;
-  34:   use std::math::*;
-  35:   
-  36:   const TEETH = 20;
+  30:   // file: gears_3d
+  31:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  32:   // SPDX-License-Identifier: AGPL-3.0-or-later
+  33:   
+  34:   use std::ops::*;
+  35:   use std::geo2d::*;
+  36:   use std::math::*;
   37:   
-  38:   angle = 30° * TEETH;
+  38:   const TEETH = 20;
   39:   
-  40:   part Gear(teeth: Integer) {
-  41:       gear_profile = InvoluteGearProfile(module = 1.0mm, teeth);
-  42:   
-  43:       prop pitch_radius = gear_profile.pitch_radius;
-  44:       prop outer_radius = gear_profile.outer_radius;
-  45:   
-  46:       n_holes = 5;
+  40:   angle = 30° * TEETH;
+  41:   
+  42:   part Gear(teeth: Integer) {
+  43:       gear_profile = InvoluteGearProfile(module = 1.0mm, teeth);
+  44:   
+  45:       prop pitch_radius = gear_profile.pitch_radius;
+  46:       prop outer_radius = gear_profile.outer_radius;
   47:   
-  48:       bearing_hole = Circle(gear_profile.pitch_radius / 8);
-  49:       
-  50:       hole_radius = pitch_radius / n_holes;
-  51:       holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
-  52:   
-  53:       inner = Circle(pitch_radius - 3mm);
+  48:       n_holes = 5;
+  49:   
+  50:       bearing_hole = Circle(gear_profile.pitch_radius / 8);
+  51:       
+  52:       hole_radius = pitch_radius / n_holes;
+  53:       holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
   54:   
-  55:       bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
-  56:           Circle(gear_profile.module)
-  57:               .extrude(pitch_radius / 4)
-  58:               .translate(z = -pitch_radius / 4).rotate(x = 90°).translate(z = 5mm);
-  59:   
-  60:       bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
-  61:   }
-  62:   
-  63:   
-  64:   gear1 = Gear(80);
-  65:   gear2 = Gear(40);
-  66:   gear3 = Gear(20);
-  67:   
-  68:   #[color = std::color::BLUE]
-  69:   #[export = "gear1.stl"]
-  70:   gear1.rotate(angle / gear1.teeth);
-  71:   
-  72:   #[color = std::color::RED]
-  73:   #[export = "gear2.stl"]
-  74:   gear2.rotate(-angle / gear2.teeth + 360°/gear2.teeth/2.0).translate(gear2.outer_radius + gear1.pitch_radius, 135°);
-  75:   
-  76:   #[color = std::color::GREEN]
-  77:   #[export = "gear3.stl"]
-  78:   gear3.rotate(-angle / gear3.teeth).translate(gear1.outer_radius + gear3.pitch_radius, 45°);
-  79:   
-  80:   
+  55:       inner = Circle(pitch_radius - 3mm);
+  56:   
+  57:       bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+  58:           Circle(gear_profile.module)
+  59:               .extrude(pitch_radius / 4)
+  60:               .translate(z = -pitch_radius / 4).rotate(x = 90°).translate(z = 5mm);
+  61:   
+  62:       bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
+  63:   }
+  64:   
+  65:   
+  66:   gear1 = Gear(80);
+  67:   gear2 = Gear(40);
+  68:   gear3 = Gear(20);
+  69:   
+  70:   #[color = std::color::BLUE]
+  71:   #[export = "gear1.stl"]
+  72:   gear1.rotate(angle / gear1.teeth);
+  73:   
+  74:   #[color = std::color::RED]
+  75:   #[export = "gear2.stl"]
+  76:   gear2.rotate(-angle / gear2.teeth + 360°/gear2.teeth/2.0).translate(gear2.outer_radius + gear1.pitch_radius, 135°);
+  77:   
+  78:   #[color = std::color::GREEN]
+  79:   #[export = "gear3.stl"]
+  80:   gear3.rotate(-angle / gear3.teeth).translate(gear1.outer_radius + gear3.pitch_radius, 45°);
+  81:   
+  82:   
 
 -- No Output --
 -- Errors --
   × error: 21:27: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:48:20]
- 47 │ 
- 48 │     bearing_hole = Circle(gear_profile.pitch_radius / 8);
+    ╭─[../books/examples/src/gears.md:50:20]
+ 49 │ 
+ 50 │     bearing_hole = Circle(gear_profile.pitch_radius / 8);
     ·                    ──────────────────┬──────────────────
     ·                                      ╰── Got: Circle( 5mm )
- 49 │     
+ 51 │     
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 24:20: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:51:13]
- 50 │     hole_radius = pitch_radius / n_holes;
- 51 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
+    ╭─[../books/examples/src/gears.md:53:13]
+ 52 │     hole_radius = pitch_radius / n_holes;
+ 53 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
     ·             ───────────────┬──────────────
     ·                            ╰── Got: Circle( 8mm )
- 52 │ 
+ 54 │ 
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   ⚠ warning: 24:13: This expression statement did not produce any model
-    ╭─[../books/examples/src/gears.md:51:13]
- 50 │     hole_radius = pitch_radius / n_holes;
- 51 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
+    ╭─[../books/examples/src/gears.md:53:13]
+ 52 │     hole_radius = pitch_radius / n_holes;
+ 53 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
     ·             ───────────────┬──────────────
     ·                            ╰── warning: 24:13: This expression statement did not produce any model
- 52 │ 
+ 54 │ 
     ╰────
   × error: 26:20: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:53:13]
- 52 │ 
- 53 │     inner = Circle(pitch_radius - 3mm);
+    ╭─[../books/examples/src/gears.md:55:13]
+ 54 │ 
+ 55 │     inner = Circle(pitch_radius - 3mm);
     ·             ─────────────┬────────────
     ·                          ╰── Got: Circle( pitch_radius = 37mm )
- 54 │ 
+ 56 │ 
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 28:23: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:55:16]
- 54 │ 
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+    ╭─[../books/examples/src/gears.md:57:16]
+ 56 │ 
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
     ·                ────────────┬───────────
     ·                            ╰── Got: Circle( pitch_radius = 10mm )
- 56 │         Circle(gear_profile.module)
+ 58 │         Circle(gear_profile.module)
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 29:16: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:56:9]
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
- 56 │         Circle(gear_profile.module)
+    ╭─[../books/examples/src/gears.md:58:9]
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+ 58 │         Circle(gear_profile.module)
     ·         ─────────────┬─────────────
     ·                      ╰── Got: Circle( 1mm )
- 57 │             .extrude(pitch_radius / 4)
+ 59 │             .extrude(pitch_radius / 4)
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   ⚠ warning: 29:9: This expression statement did not produce any model
-    ╭─[../books/examples/src/gears.md:56:9]
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
- 56 │         Circle(gear_profile.module)
+    ╭─[../books/examples/src/gears.md:58:9]
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+ 58 │         Circle(gear_profile.module)
     ·         ─────────────┬─────────────
     ·                      ╰── warning: 29:9: This expression statement did not produce any model
- 57 │             .extrude(pitch_radius / 4)
+ 59 │             .extrude(pitch_radius / 4)
     ╰────
   × error: 33:39: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:60:32]
- 59 │ 
- 60 │     bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
+    ╭─[../books/examples/src/gears.md:62:32]
+ 61 │ 
+ 62 │     bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
     ·                                ────────────┬───────────
     ·                                            ╰── Got: Circle( pitch_radius = 10mm )
- 61 │ }
+ 63 │ }
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 21:27: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:48:20]
- 47 │ 
- 48 │     bearing_hole = Circle(gear_profile.pitch_radius / 8);
+    ╭─[../books/examples/src/gears.md:50:20]
+ 49 │ 
+ 50 │     bearing_hole = Circle(gear_profile.pitch_radius / 8);
     ·                    ──────────────────┬──────────────────
     ·                                      ╰── Got: Circle( 2.5mm )
- 49 │     
+ 51 │     
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 24:20: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:51:13]
- 50 │     hole_radius = pitch_radius / n_holes;
- 51 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
+    ╭─[../books/examples/src/gears.md:53:13]
+ 52 │     hole_radius = pitch_radius / n_holes;
+ 53 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
     ·             ───────────────┬──────────────
     ·                            ╰── Got: Circle( 4mm )
- 52 │ 
+ 54 │ 
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   ⚠ warning: 24:13: This expression statement did not produce any model
-    ╭─[../books/examples/src/gears.md:51:13]
- 50 │     hole_radius = pitch_radius / n_holes;
- 51 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
+    ╭─[../books/examples/src/gears.md:53:13]
+ 52 │     hole_radius = pitch_radius / n_holes;
+ 53 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
     ·             ───────────────┬──────────────
     ·                            ╰── warning: 24:13: This expression statement did not produce any model
- 52 │ 
+ 54 │ 
     ╰────
   × error: 26:20: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:53:13]
- 52 │ 
- 53 │     inner = Circle(pitch_radius - 3mm);
+    ╭─[../books/examples/src/gears.md:55:13]
+ 54 │ 
+ 55 │     inner = Circle(pitch_radius - 3mm);
     ·             ─────────────┬────────────
     ·                          ╰── Got: Circle( pitch_radius = 17mm )
- 54 │ 
+ 56 │ 
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 28:23: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:55:16]
- 54 │ 
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+    ╭─[../books/examples/src/gears.md:57:16]
+ 56 │ 
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
     ·                ────────────┬───────────
     ·                            ╰── Got: Circle( pitch_radius = 5mm )
- 56 │         Circle(gear_profile.module)
+ 58 │         Circle(gear_profile.module)
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 29:16: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:56:9]
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
- 56 │         Circle(gear_profile.module)
+    ╭─[../books/examples/src/gears.md:58:9]
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+ 58 │         Circle(gear_profile.module)
     ·         ─────────────┬─────────────
     ·                      ╰── Got: Circle( 1mm )
- 57 │             .extrude(pitch_radius / 4)
+ 59 │             .extrude(pitch_radius / 4)
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   ⚠ warning: 29:9: This expression statement did not produce any model
-    ╭─[../books/examples/src/gears.md:56:9]
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
- 56 │         Circle(gear_profile.module)
+    ╭─[../books/examples/src/gears.md:58:9]
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+ 58 │         Circle(gear_profile.module)
     ·         ─────────────┬─────────────
     ·                      ╰── warning: 29:9: This expression statement did not produce any model
- 57 │             .extrude(pitch_radius / 4)
+ 59 │             .extrude(pitch_radius / 4)
     ╰────
   × error: 33:39: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:60:32]
- 59 │ 
- 60 │     bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
+    ╭─[../books/examples/src/gears.md:62:32]
+ 61 │ 
+ 62 │     bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
     ·                                ────────────┬───────────
     ·                                            ╰── Got: Circle( pitch_radius = 5mm )
- 61 │ }
+ 63 │ }
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 21:27: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:48:20]
- 47 │ 
- 48 │     bearing_hole = Circle(gear_profile.pitch_radius / 8);
+    ╭─[../books/examples/src/gears.md:50:20]
+ 49 │ 
+ 50 │     bearing_hole = Circle(gear_profile.pitch_radius / 8);
     ·                    ──────────────────┬──────────────────
     ·                                      ╰── Got: Circle( 1.25mm )
- 49 │     
+ 51 │     
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 24:20: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:51:13]
- 50 │     hole_radius = pitch_radius / n_holes;
- 51 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
+    ╭─[../books/examples/src/gears.md:53:13]
+ 52 │     hole_radius = pitch_radius / n_holes;
+ 53 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
     ·             ───────────────┬──────────────
     ·                            ╰── Got: Circle( 2mm )
- 52 │ 
+ 54 │ 
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   ⚠ warning: 24:13: This expression statement did not produce any model
-    ╭─[../books/examples/src/gears.md:51:13]
- 50 │     hole_radius = pitch_radius / n_holes;
- 51 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
+    ╭─[../books/examples/src/gears.md:53:13]
+ 52 │     hole_radius = pitch_radius / n_holes;
+ 53 │     holes = Circle(pitch_radius / n_holes).translate(x = outer_radius - hole_radius * 2).rotate([1..n_holes] * 360° / n_holes);
     ·             ───────────────┬──────────────
     ·                            ╰── warning: 24:13: This expression statement did not produce any model
- 52 │ 
+ 54 │ 
     ╰────
   × error: 26:20: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:53:13]
- 52 │ 
- 53 │     inner = Circle(pitch_radius - 3mm);
+    ╭─[../books/examples/src/gears.md:55:13]
+ 54 │ 
+ 55 │     inner = Circle(pitch_radius - 3mm);
     ·             ─────────────┬────────────
     ·                          ╰── Got: Circle( pitch_radius = 7mm )
- 54 │ 
+ 56 │ 
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 28:23: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:55:16]
- 54 │ 
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+    ╭─[../books/examples/src/gears.md:57:16]
+ 56 │ 
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
     ·                ────────────┬───────────
     ·                            ╰── Got: Circle( pitch_radius = 2.5mm )
- 56 │         Circle(gear_profile.module)
+ 58 │         Circle(gear_profile.module)
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   × error: 29:16: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:56:9]
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
- 56 │         Circle(gear_profile.module)
+    ╭─[../books/examples/src/gears.md:58:9]
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+ 58 │         Circle(gear_profile.module)
     ·         ─────────────┬─────────────
     ·                      ╰── Got: Circle( 1mm )
- 57 │             .extrude(pitch_radius / 4)
+ 59 │             .extrude(pitch_radius / 4)
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
   ⚠ warning: 29:9: This expression statement did not produce any model
-    ╭─[../books/examples/src/gears.md:56:9]
- 55 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
- 56 │         Circle(gear_profile.module)
+    ╭─[../books/examples/src/gears.md:58:9]
+ 57 │     bearing = (Circle(pitch_radius / 4) - bearing_hole).extrude(8mm) - 
+ 58 │         Circle(gear_profile.module)
     ·         ─────────────┬─────────────
     ·                      ╰── warning: 29:9: This expression statement did not produce any model
- 57 │             .extrude(pitch_radius / 4)
+ 59 │             .extrude(pitch_radius / 4)
     ╰────
   × error: 33:39: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/examples/src/gears.md:60:32]
- 59 │ 
- 60 │     bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
+    ╭─[../books/examples/src/gears.md:62:32]
+ 61 │ 
+ 62 │     bearing | (inner - holes - Circle(pitch_radius / 4)).extrude(2mm) | (gear_profile - inner).extrude(4mm);
     ·                                ────────────┬───────────
     ·                                            ╰── Got: Circle( pitch_radius = 2.5mm )
- 61 │ }
+ 63 │ }
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-Unexpected error(s) which did occur in line(s): 48, 51, 53, 55, 56, 60
-Unexpected warnings(s) which did occur in line(s): 51, 56
+Unexpected error(s) which did occur in line(s): 50, 53, 55, 57, 58, 62
+Unexpected warnings(s) which did occur in line(s): 53, 58
 -- Test Result --
 FAILS

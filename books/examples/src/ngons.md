@@ -1,6 +1,6 @@
 # Example: ngons
 
-[![test](.test/ngons.svg)](.test/ngons.log)
+[![Report](.test/ngons.svg)](.test/ngons.log)
 
 ```µcad,ngons
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -13,6 +13,8 @@ use std::ops::*;
 
 ```
 
-![test](.test/ngons-out.svg)
+2D Output
+    : ![None](.test/ngons-out.svg)
 
-![test](.test/ngons-out.stl)
+3D Output
+    : ![None](.test/ngons-out.stl)

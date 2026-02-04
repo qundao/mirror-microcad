@@ -2,32 +2,32 @@
 -- Test --
         Test name: text_love
   Expected result: ok
-      Source file: ../books/examples/src/text.md:36
+      Source file: ../books/examples/src/text.md:38
         Test path: ../books/examples/src/.test
 
 -- Code --
 
-  36:   // file: love.µcad
-  37:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
-  38:   // SPDX-License-Identifier: AGPL-3.0-or-later
-  39:   
-  40:   use std::geo2d::*;
-  41:   use std::ops::*;
-  42:   
-  43:   sketch Heart(size: Length) {
-  44:       r = size / 3;
-  45:       Circle(d = size).translate(x = [r, -r], y = r) | Rect(size).rotate(45°);
-  46:   }
-  47:   
-  48:   #[color = std::color::GREEN]
-  49:   Text("µcad", height = 80mm).center().translate(x = -110mm).extrude(4mm);
-  50:   
-  51:   #[color = std::color::RED]
-  52:   Heart(40mm).extrude(12mm);
-  53:   
-  54:   #[color = std::color::BLUE]
-  55:   Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
-  56:   
+  38:   // file: love
+  39:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  40:   // SPDX-License-Identifier: AGPL-3.0-or-later
+  41:   
+  42:   use std::geo2d::*;
+  43:   use std::ops::*;
+  44:   
+  45:   sketch Heart(size: Length) {
+  46:       r = size / 3;
+  47:       Circle(d = size).translate(x = [r, -r], y = r) | Rect(size).rotate(45°);
+  48:   }
+  49:   
+  50:   #[color = std::color::GREEN]
+  51:   Text("µcad", height = 80mm).center().translate(x = -110mm).extrude(4mm);
+  52:   
+  53:   #[color = std::color::RED]
+  54:   Heart(40mm).extrude(12mm);
+  55:   
+  56:   #[color = std::color::BLUE]
+  57:   Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
+  58:   
 
 -- No Output --
 -- No Errors --

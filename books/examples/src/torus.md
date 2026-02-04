@@ -1,6 +1,6 @@
 # Example: torus
 
-[![test](.test/torus.svg)](.test/torus.log)
+[![Report](.test/torus.svg)](.test/torus.log)
 
 ```µcad,torus
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -10,6 +10,8 @@ std::geo3d::Torus([1..5] * 10mm, minor_radius = 3mm);
 
 ```
 
-![test](.test/torus-out.svg)
+2D Output
+    : ![None](.test/torus-out.svg)
 
-![test](.test/torus-out.stl)
+3D Output
+    : ![None](.test/torus-out.stl)

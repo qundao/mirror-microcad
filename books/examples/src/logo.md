@@ -1,6 +1,6 @@
 # Example: logo
 
-[![test](.test/logo.svg)](.test/logo.log)
+[![Report](.test/logo.svg)](.test/logo.log)
 
 ```µcad,logo
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -77,6 +77,8 @@ microcad::Logo(size = SIZE).extrude(4mm);
 
 ```
 
-![test](.test/logo-out.svg)
+2D Output
+    : ![None](.test/logo-out.svg)
 
-![test](.test/logo-out.stl)
+3D Output
+    : ![None](.test/logo-out.stl)

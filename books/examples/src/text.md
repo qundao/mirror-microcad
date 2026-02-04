@@ -2,10 +2,10 @@
 
 ## Module: text_plate
 
-[![test](.test/text_text_plate.svg)](.test/text_text_plate.log)
+[![Report](.test/text_text_plate.svg)](.test/text_text_plate.log)
 
 ```µcad,text_text_plate
-// file: text_plate.µcad
+// file: text_plate
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -24,16 +24,18 @@ TextPlate("Hello µcad", 10mm)
 
 ```
 
-![test](.test/text_text_plate-out.svg)
+2D Output
+    : ![None](.test/text_text_plate-out.svg)
 
-![test](.test/text_text_plate-out.stl)
+3D Output
+    : ![None](.test/text_text_plate-out.stl)
 
-## Module: love
+    ## Module: love
 
-[![test](.test/text_love.svg)](.test/text_love.log)
+[![Report](.test/text_love.svg)](.test/text_love.log)
 
 ```µcad,text_love
-// file: love.µcad
+// file: love
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -56,7 +58,10 @@ Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
 
 ```
 
-![test](.test/text_love-out.svg)
+2D Output
+    : ![None](.test/text_love-out.svg)
 
-![test](.test/text_love-out.stl)
+3D Output
+    : ![None](.test/text_love-out.stl)
 
+    

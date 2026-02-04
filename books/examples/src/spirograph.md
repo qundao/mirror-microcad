@@ -1,6 +1,6 @@
 # Example: spirograph
 
-[![test](.test/spirograph.svg)](.test/spirograph.log)
+[![Report](.test/spirograph.svg)](.test/spirograph.log)
 
 ```µcad,spirograph
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -125,6 +125,8 @@ gear.translate(x = ring_1.shift + ring_2.shift + ring_3.shift);
 
 ```
 
-![test](.test/spirograph-out.svg)
+2D Output
+    : ![None](.test/spirograph-out.svg)
 
-![test](.test/spirograph-out.stl)
+3D Output
+    : ![None](.test/spirograph-out.stl)

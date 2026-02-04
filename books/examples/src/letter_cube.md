@@ -1,6 +1,6 @@
 # Example: letter_cube
 
-[![test](.test/letter_cube.svg)](.test/letter_cube.log)
+[![Report](.test/letter_cube.svg)](.test/letter_cube.log)
 
 ```µcad,letter_cube
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
@@ -34,6 +34,8 @@ LetterCube(20mm).translate(z = 10mm);
 
 ```
 
-![test](.test/letter_cube-out.svg)
+2D Output
+    : ![None](.test/letter_cube-out.svg)
 
-![test](.test/letter_cube-out.stl)
+3D Output
+    : ![None](.test/letter_cube-out.stl)
