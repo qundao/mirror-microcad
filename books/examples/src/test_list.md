@@ -2,13 +2,16 @@
 
 The following table lists all tests included in this documentation.
 
-**17** tests have been evaluated with version **0.2.20** of microcad.
+**25** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
 | Result | Source | Name |
 |-------:|--------|------|
 | [![test](.test/bike_pack_mount.svg)](.test/bike_pack_mount.log) | [bike_pack_mount](bike_pack_mount.md) |
+| [![test](.test/bricks_brick.svg)](.test/bricks_brick.log) | [bricks_brick](bricks.md) |
+| [![test](.test/bricks_tutorial.svg)](.test/bricks_tutorial.log) | [bricks_tutorial](bricks.md) |
+| [![test](.test/bricks_use_bricks.svg)](.test/bricks_use_bricks.log) | [bricks_use_bricks](bricks.md) |
 | [![test](.test/buffer_stand.svg)](.test/buffer_stand.log) | [buffer_stand](buffer_stand.md) |
 | [![test](.test/chess.svg)](.test/chess.log) | [chess](chess.md) |
 | [![test](.test/csg_cube.svg)](.test/csg_cube.log) | [csg_cube](csg_cube.md) |
@@ -16,6 +19,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/dome.svg)](.test/dome.log) | [dome](dome.md) |
 | [![test](.test/drill_plate.svg)](.test/drill_plate.log) | [drill_plate](drill_plate.md) |
 | [![test](.test/footpad.svg)](.test/footpad.log) | [footpad](footpad.md) |
+| [![test](.test/gears_gear_2d.svg)](.test/gears_gear_2d.log) | [gears_gear_2d](gears.md) |
+| [![test](.test/gears_gears_3d.svg)](.test/gears_gears_3d.log) | [gears_gears_3d](gears.md) |
+| [![test](.test/gears_herringbone_gears.svg)](.test/gears_herringbone_gears.log) | [gears_herringbone_gears](gears.md) |
 | [![test](.test/hole_test.svg)](.test/hole_test.log) | [hole_test](hole_test.md) |
 | [![test](.test/letter_cube.svg)](.test/letter_cube.log) | [letter_cube](letter_cube.md) |
 | [![test](.test/lid.svg)](.test/lid.log) | [lid](lid.md) |
@@ -23,5 +29,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/multi_export.svg)](.test/multi_export.log) | [multi_export](multi_export.md) |
 | [![test](.test/ngons.svg)](.test/ngons.log) | [ngons](ngons.md) |
 | [![test](.test/spirograph.svg)](.test/spirograph.log) | [spirograph](spirograph.md) |
+| [![test](.test/text_love.svg)](.test/text_love.log) | [text_love](text.md) |
+| [![test](.test/text_text_plate.svg)](.test/text_text_plate.log) | [text_text_plate](text.md) |
 | [![test](.test/torus.svg)](.test/torus.log) | [torus](torus.md) |
 | [![test](.test/use_dome.svg)](.test/use_dome.log) | [use_dome](use_dome.md) |

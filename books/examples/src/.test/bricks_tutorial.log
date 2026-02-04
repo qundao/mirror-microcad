@@ -1,0 +1,94 @@
+﻿
+-- Test --
+        Test name: bricks_tutorial
+  Expected result: ok
+      Source file: ../books/examples/src/bricks.md:8
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   8:   // file: tutorial.µcad
+   9:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  10:   // SPDX-License-Identifier: AGPL-3.0-or-later
+  11:   
+  12:   use std::geo2d::*;
+  13:   use std::ops::*;
+  14:   
+  15:   pub const SPACING = 8mm;
+  16:   
+  17:   op grid(columns: Integer, rows: Integer) {
+  18:       @input
+  19:           .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
+  20:           .center()
+  21:   }
+  22:   
+  23:   sketch Base(
+  24:       columns: Integer,
+  25:       rows: Integer,
+  26:       width: Length,
+  27:       height: Length
+  28:   ) {
+  29:       thickness = 1.2mm;
+  30:       frame = Frame(width, height, thickness);
+  31:       struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+  32:           .grid(columns = columns-1, rows = rows-1);
+  33:       frame | struts;
+  34:   }
+  35:   
+  36:   use Rect as Cap;
+  37:   
+  38:   sketch Knobs(columns: Integer, rows: Integer) {
+  39:       Circle(d = 4.8mm)
+  40:           .grid(columns, rows);
+  41:   }
+  42:   
+  43:   pub part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
+  44:       width = columns * SPACING - 0.2mm;
+  45:       height =rows * SPACING - 0.2mm;
+  46:       cap_thickness = 1.0mm;
+  47:   
+  48:       base = Base(rows, columns, width, height)
+  49:           .extrude(base_height - cap_thickness);
+  50:   
+  51:       cap = Cap(width, height)
+  52:           .extrude(cap_thickness)
+  53:           .translate(z = base_height - cap_thickness);
+  54:   
+  55:       knobs = Knobs(rows, columns)
+  56:           .extrude(1.7mm)
+  57:           .translate(z = base_height);
+  58:   
+  59:       base | cap | knobs;
+  60:   }
+  61:   
+  62:   // render a brick with default values
+  63:   LegoBrick();
+  64:   
+
+-- No Output --
+-- Errors --
+  × error: 24:19: Workbench Ring cannot find initialization for those arguments
+    ╭─[../books/examples/src/bricks.md:31:14]
+ 30 │     frame = Frame(width, height, thickness);
+ 31 │     struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+    ·              ───────────────────┬───────────────────
+    ·                                 ╰── Got: Ring( inner_d = 4.8mm, outer_d = 6.51mm )
+ 32 │         .grid(columns = columns-1, rows = rows-1);
+    ╰────
+  help: Possible initializations:
+        	Ring( outer_radius: Length, inner_radius: Length)
+        	Ring( outer_radius: Length, thickness: Length)
+        	Ring( outer_diameter: Length, inner_diameter: Length)
+        	Ring( outer_diameter: Length, thickness: Length)
+  ⚠ warning: 24:14: This expression statement did not produce any model
+    ╭─[../books/examples/src/bricks.md:31:14]
+ 30 │     frame = Frame(width, height, thickness);
+ 31 │     struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+    ·              ───────────────────┬───────────────────
+    ·                                 ╰── warning: 24:14: This expression statement did not produce any model
+ 32 │         .grid(columns = columns-1, rows = rows-1);
+    ╰────
+Unexpected error(s) which did occur in line(s): 31
+Unexpected warnings(s) which did occur in line(s): 31
+-- Test Result --
+FAILS

@@ -1,0 +1,70 @@
+﻿
+-- Test --
+        Test name: text_text_plate
+  Expected result: ok
+      Source file: ../books/examples/src/text.md:8
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   8:   // file: text_plate.µcad
+   9:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  10:   // SPDX-License-Identifier: AGPL-3.0-or-later
+  11:   
+  12:   use std::geo2d::*;
+  13:   use std::ops::*;
+  14:   use std::math::*;
+  15:   
+  16:   sketch TextPlate(text: String, height: Length = 30mm) {
+  17:       letters = Text(text, height).center();
+  18:       plate = RoundedRect(60mm, radius = 20mm);
+  19:       plate - letters
+  20:   }
+  21:   
+  22:   TextPlate("Hello µcad", 10mm)
+  23:       .extrude(2mm, 0°);
+  24:   
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 7:5: Unused global symbol std::math.
+    ╭─[../books/examples/src/text.md:14:5]
+ 13 │ use std::ops::*;
+ 14 │ use std::math::*;
+    ·     ────┬────
+    ·         ╰── warning: 7:5: Unused global symbol std::math.
+ 15 │ 
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 14
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+      - height = 2mm
+      - scale = (x=1, y=1)
+      - twist = 0rad
+      Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+        Workpiece(sketch) text_text_plate::TextPlate(height=10mm, text=Hello µcad) ->
+          - height = 10mm
+          - text = Hello µcad
+          Operation subtract() ->
+            Group ->
+              plate: Workpiece(sketch) std::geo2d::RoundedRect(radius=20mm, size=60mm) ->
+                - height = 60mm
+                - radius_bottom_left = 20mm
+                - radius_bottom_right = 20mm
+                - radius_top_left = 20mm
+                - radius_top_right = 20mm
+                - width = 60mm
+                - x = -30mm
+                - y = -30mm
+                Primitive2D __builtin::geo2d::RoundedRect(height=60mm, radius_bottom_left=20mm, radius_bottom_right=20mm, radius_top_left=20mm, radius_top_right=20mm, width=60mm, x=-30mm, y=-30mm) ->
+              letters: Operation __builtin::ops::center() ->
+                Workpiece(sketch) std::geo2d::Text(font_file=, height=10mm, text=Hello µcad) ->
+                  - font_file = 
+                  - height = 10mm
+                  - text = Hello µcad
+                  Primitive2D __builtin::geo2d::Text(font_file=, height=10mm, text=Hello µcad) ->
+
+Export of "../books/examples/src/.test/text_text_plate-out.stl" successful.
+-- Test Result --
+OK (BUT WARNINGS)
