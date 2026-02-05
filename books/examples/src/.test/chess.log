@@ -58,9 +58,9 @@
   54:   
   55:   pub part Knight() {
   56:       {
-  57:           s = BASE_SIZE/2;
+  57:           height = BASE_SIZE/2;
   58:           r = Rect(BASE_SIZE);
-  59:           (r - r.translate(x = s, y = s)).extrude(s);
+  59:           (r - r.translate(x = height, y = height)).extrude(height);
   60:       }.rotate([0,90]°).align(Z)
   61:   }
   62:   
@@ -85,27 +85,1063 @@
   81:   
 
 -- No Output --
--- Errors --
-  × error: 54:49: Workbench extrude cannot find initialization for those arguments
-    ╭─[../books/examples/src/chess.md:59:41]
- 58 │         r = Rect(BASE_SIZE);
- 59 │         (r - r.translate(x = s, y = s)).extrude(s);
-    ·                                         ────┬────
-    ·                                             ╰── Got: extrude( s = 20.3mm )
- 60 │     }.rotate([0,90]°).align(Z)
-    ╰────
-  help: Possible initializations:
-        	extrude( height: Length, scale = (x = 100%, y = 100%), twist = 0°)
-  × error: 54:49: Workbench extrude cannot find initialization for those arguments
-    ╭─[../books/examples/src/chess.md:59:41]
- 58 │         r = Rect(BASE_SIZE);
- 59 │         (r - r.translate(x = s, y = s)).extrude(s);
-    ·                                         ────┬────
-    ·                                             ╰── Got: extrude( s = 20.3mm )
- 60 │     }.rotate([0,90]°).align(Z)
-    ╰────
-  help: Possible initializations:
-        	extrude( height: Length, scale = (x = 100%, y = 100%), twist = 0°)
-Unexpected error(s) which did occur in line(s): 59
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Multiplicity ->
+      Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+        - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+          Workpiece(op) std::ops::translate(x=0mm, y=174mm, z=0mm) ->
+            - x = 0mm
+            - y = 174mm
+            - z = 0mm
+            Transform __builtin::ops::translate(x=0mm, y=174mm, z=0mm) ->
+              Workpiece(op) std::ops::distribute_grid(cell_size=58mm, columns=8, rows=2) ->
+                - columns = 8
+                - height = 116mm
+                - rows = 2
+                - width = 464mm
+                - x = -232mm
+                - y = -58mm
+                Operation __builtin::ops::distribute_grid(columns=8, height=116mm, rows=2, width=464mm, x=-232mm, y=-58mm) ->
+                  Group ->
+                    Workpiece(part) chess::Rook() ->
+                      Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                        - size_x = 40.6mm
+                        - size_y = 40.6mm
+                        - size_z = 40.6mm
+                        Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                          - x = 0mm
+                          - y = 0mm
+                          - z = -20.3mm
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                  - height = 40.6mm
+                                  - width = 40.6mm
+                                  - x = -20.3mm
+                                  - y = -20.3mm
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Workpiece(part) chess::Knight() ->
+                      Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                        - direction = (x=0, y=0, z=1)
+                        - spacing = 0mm
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                          Multiplicity ->
+                            Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                              - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                                Group ->
+                                  Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 20.3mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Operation subtract() ->
+                                        Group ->
+                                          r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            - height = 40.6mm
+                                            - width = 40.6mm
+                                            - x = -20.3mm
+                                            - y = -20.3mm
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                          Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            - x = 20.3mm
+                                            - y = 20.3mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                              r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                - height = 40.6mm
+                                                - width = 40.6mm
+                                                - x = -20.3mm
+                                                - y = -20.3mm
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                            Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                              - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                                Group ->
+                                  Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 20.3mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Operation subtract() ->
+                                        Group ->
+                                          r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            - height = 40.6mm
+                                            - width = 40.6mm
+                                            - x = -20.3mm
+                                            - y = -20.3mm
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                          Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            - x = 20.3mm
+                                            - y = 20.3mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                              r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                - height = 40.6mm
+                                                - width = 40.6mm
+                                                - x = -20.3mm
+                                                - y = -20.3mm
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Workpiece(part) chess::Bishop() ->
+                      Operation __builtin::ops::center() ->
+                        Workpiece(op) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Operation __builtin::ops::union() ->
+                                  Workpiece(op) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                                    - n = (x=1, y=0, z=0)
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 0mm
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
+                                      Operation __builtin::ops::hull() ->
+                                        Multiplicity ->
+                                          Workpiece(op) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                            - x = 14.35426765808692mm
+                                            - y = 14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                                          Workpiece(op) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                            - x = -14.35426765808692mm
+                                            - y = -14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                    Workpiece(part) chess::Queen() ->
+                      Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                        - direction = (x=0, y=0, z=1)
+                        - spacing = 0mm
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                          Group ->
+                            Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                              - size_x = 40.6mm
+                              - size_y = 40.6mm
+                              - size_z = 40.6mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                - x = 0mm
+                                - y = 0mm
+                                - z = -20.3mm
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                  Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 40.6mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                        - height = 40.6mm
+                                        - width = 40.6mm
+                                        - x = -20.3mm
+                                        - y = -20.3mm
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                            Workpiece(part) std::geo3d::Sphere(diameter=28.70853531617383mm) ->
+                              - radius = 14.35426765808692mm
+                              Primitive3D __builtin::geo3d::Sphere(radius=14.35426765808692mm) ->
+                    Workpiece(part) chess::King() ->
+                      Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                        - direction = (x=0, y=0, z=1)
+                        - spacing = 0mm
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                          Group ->
+                            Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                              - size_x = 40.6mm
+                              - size_y = 40.6mm
+                              - size_z = 40.6mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                - x = 0mm
+                                - y = 0mm
+                                - z = -20.3mm
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                  Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 40.6mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                        - height = 40.6mm
+                                        - width = 40.6mm
+                                        - x = -20.3mm
+                                        - y = -20.3mm
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                            Workpiece(op) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->
+                              - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
+                                Workpiece(part) std::geo3d::Cube(size=28.70853531617383mm) ->
+                                  - size_x = 28.70853531617383mm
+                                  - size_y = 28.70853531617383mm
+                                  - size_z = 28.70853531617383mm
+                                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = -14.35426765808692mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
+                                      Workpiece(op) std::ops::extrude(height=28.70853531617383mm, scale=(x=1, y=1), twist=0rad) ->
+                                        - height = 28.70853531617383mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Operation __builtin::ops::extrude(height=28.70853531617383mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                          Workpiece(sketch) std::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm) ->
+                                            - height = 28.70853531617383mm
+                                            - width = 28.70853531617383mm
+                                            - x = -14.35426765808692mm
+                                            - y = -14.35426765808692mm
+                                            Primitive2D __builtin::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm, x=-14.35426765808692mm, y=-14.35426765808692mm) ->
+                    Workpiece(part) chess::Bishop() ->
+                      Operation __builtin::ops::center() ->
+                        Workpiece(op) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Operation __builtin::ops::union() ->
+                                  Workpiece(op) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                                    - n = (x=1, y=0, z=0)
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 0mm
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
+                                      Operation __builtin::ops::hull() ->
+                                        Multiplicity ->
+                                          Workpiece(op) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                            - x = 14.35426765808692mm
+                                            - y = 14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                                          Workpiece(op) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                            - x = -14.35426765808692mm
+                                            - y = -14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                    Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                      - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                        Workpiece(op) std::ops::rotate(x=3.14159265358979rad, y=0rad, z=0rad) ->
+                          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]) ->
+                            Workpiece(part) chess::Knight() ->
+                              Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                                - direction = (x=0, y=0, z=1)
+                                - spacing = 0mm
+                                Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                                  Multiplicity ->
+                                    Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                      - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                                        Group ->
+                                          Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                            - height = 20.3mm
+                                            - scale = (x=1, y=1)
+                                            - twist = 0rad
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                              Operation subtract() ->
+                                                Group ->
+                                                  r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    - height = 40.6mm
+                                                    - width = 40.6mm
+                                                    - x = -20.3mm
+                                                    - y = -20.3mm
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                                  Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    - x = 20.3mm
+                                                    - y = 20.3mm
+                                                    - z = 0mm
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                        - height = 40.6mm
+                                                        - width = 40.6mm
+                                                        - x = -20.3mm
+                                                        - y = -20.3mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                    Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                      - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                                        Group ->
+                                          Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                            - height = 20.3mm
+                                            - scale = (x=1, y=1)
+                                            - twist = 0rad
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                              Operation subtract() ->
+                                                Group ->
+                                                  r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    - height = 40.6mm
+                                                    - width = 40.6mm
+                                                    - x = -20.3mm
+                                                    - y = -20.3mm
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                                  Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    - x = 20.3mm
+                                                    - y = 20.3mm
+                                                    - z = 0mm
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                        - height = 40.6mm
+                                                        - width = 40.6mm
+                                                        - x = -20.3mm
+                                                        - y = -20.3mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Workpiece(part) chess::Rook() ->
+                      Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                        - size_x = 40.6mm
+                        - size_y = 40.6mm
+                        - size_z = 40.6mm
+                        Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                          - x = 0mm
+                          - y = 0mm
+                          - z = -20.3mm
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                  - height = 40.6mm
+                                  - width = 40.6mm
+                                  - x = -20.3mm
+                                  - y = -20.3mm
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Multiplicity ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+      Workpiece(op) std::ops::rotate(angle=3.14159265358979rad, axis=(x=0, y=0, z=1)) ->
+        - matrix = Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]
+        Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+          Workpiece(op) std::ops::translate(x=0mm, y=174mm, z=0mm) ->
+            - x = 0mm
+            - y = 174mm
+            - z = 0mm
+            Transform __builtin::ops::translate(x=0mm, y=174mm, z=0mm) ->
+              Workpiece(op) std::ops::distribute_grid(cell_size=58mm, columns=8, rows=2) ->
+                - columns = 8
+                - height = 116mm
+                - rows = 2
+                - width = 464mm
+                - x = -232mm
+                - y = -58mm
+                Operation __builtin::ops::distribute_grid(columns=8, height=116mm, rows=2, width=464mm, x=-232mm, y=-58mm) ->
+                  Group ->
+                    Workpiece(part) chess::Rook() ->
+                      Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                        - size_x = 40.6mm
+                        - size_y = 40.6mm
+                        - size_z = 40.6mm
+                        Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                          - x = 0mm
+                          - y = 0mm
+                          - z = -20.3mm
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                  - height = 40.6mm
+                                  - width = 40.6mm
+                                  - x = -20.3mm
+                                  - y = -20.3mm
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Workpiece(part) chess::Knight() ->
+                      Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                        - direction = (x=0, y=0, z=1)
+                        - spacing = 0mm
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                          Multiplicity ->
+                            Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                              - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                                Group ->
+                                  Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 20.3mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Operation subtract() ->
+                                        Group ->
+                                          r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            - height = 40.6mm
+                                            - width = 40.6mm
+                                            - x = -20.3mm
+                                            - y = -20.3mm
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                          Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            - x = 20.3mm
+                                            - y = 20.3mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                              r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                - height = 40.6mm
+                                                - width = 40.6mm
+                                                - x = -20.3mm
+                                                - y = -20.3mm
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                            Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                              - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                                Group ->
+                                  Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 20.3mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Operation subtract() ->
+                                        Group ->
+                                          r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            - height = 40.6mm
+                                            - width = 40.6mm
+                                            - x = -20.3mm
+                                            - y = -20.3mm
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                          Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            - x = 20.3mm
+                                            - y = 20.3mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                              r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                - height = 40.6mm
+                                                - width = 40.6mm
+                                                - x = -20.3mm
+                                                - y = -20.3mm
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Workpiece(part) chess::Bishop() ->
+                      Operation __builtin::ops::center() ->
+                        Workpiece(op) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Operation __builtin::ops::union() ->
+                                  Workpiece(op) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                                    - n = (x=1, y=0, z=0)
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 0mm
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
+                                      Operation __builtin::ops::hull() ->
+                                        Multiplicity ->
+                                          Workpiece(op) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                            - x = 14.35426765808692mm
+                                            - y = 14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                                          Workpiece(op) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                            - x = -14.35426765808692mm
+                                            - y = -14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                    Workpiece(part) chess::Queen() ->
+                      Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                        - direction = (x=0, y=0, z=1)
+                        - spacing = 0mm
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                          Group ->
+                            Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                              - size_x = 40.6mm
+                              - size_y = 40.6mm
+                              - size_z = 40.6mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                - x = 0mm
+                                - y = 0mm
+                                - z = -20.3mm
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                  Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 40.6mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                        - height = 40.6mm
+                                        - width = 40.6mm
+                                        - x = -20.3mm
+                                        - y = -20.3mm
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                            Workpiece(part) std::geo3d::Sphere(diameter=28.70853531617383mm) ->
+                              - radius = 14.35426765808692mm
+                              Primitive3D __builtin::geo3d::Sphere(radius=14.35426765808692mm) ->
+                    Workpiece(part) chess::King() ->
+                      Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                        - direction = (x=0, y=0, z=1)
+                        - spacing = 0mm
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                          Group ->
+                            Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                              - size_x = 40.6mm
+                              - size_y = 40.6mm
+                              - size_z = 40.6mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                - x = 0mm
+                                - y = 0mm
+                                - z = -20.3mm
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                                  Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                                    - height = 40.6mm
+                                    - scale = (x=1, y=1)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                        - height = 40.6mm
+                                        - width = 40.6mm
+                                        - x = -20.3mm
+                                        - y = -20.3mm
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                            Workpiece(op) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->
+                              - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
+                                Workpiece(part) std::geo3d::Cube(size=28.70853531617383mm) ->
+                                  - size_x = 28.70853531617383mm
+                                  - size_y = 28.70853531617383mm
+                                  - size_z = 28.70853531617383mm
+                                  Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = -14.35426765808692mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
+                                      Workpiece(op) std::ops::extrude(height=28.70853531617383mm, scale=(x=1, y=1), twist=0rad) ->
+                                        - height = 28.70853531617383mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Operation __builtin::ops::extrude(height=28.70853531617383mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                          Workpiece(sketch) std::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm) ->
+                                            - height = 28.70853531617383mm
+                                            - width = 28.70853531617383mm
+                                            - x = -14.35426765808692mm
+                                            - y = -14.35426765808692mm
+                                            Primitive2D __builtin::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm, x=-14.35426765808692mm, y=-14.35426765808692mm) ->
+                    Workpiece(part) chess::Bishop() ->
+                      Operation __builtin::ops::center() ->
+                        Workpiece(op) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Operation __builtin::ops::union() ->
+                                  Workpiece(op) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                                    - n = (x=1, y=0, z=0)
+                                    - x = 0mm
+                                    - y = 0mm
+                                    - z = 0mm
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
+                                      Operation __builtin::ops::hull() ->
+                                        Multiplicity ->
+                                          Workpiece(op) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                            - x = 14.35426765808692mm
+                                            - y = 14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                                          Workpiece(op) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                            - x = -14.35426765808692mm
+                                            - y = -14.35426765808692mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
+                                              Workpiece(sketch) std::geo2d::Rect(size=12.18mm) ->
+                                                - height = 12.18mm
+                                                - width = 12.18mm
+                                                - x = -6.09mm
+                                                - y = -6.09mm
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
+                    Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                      - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                        Workpiece(op) std::ops::rotate(x=3.14159265358979rad, y=0rad, z=0rad) ->
+                          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]) ->
+                            Workpiece(part) chess::Knight() ->
+                              Workpiece(op) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                                - direction = (x=0, y=0, z=1)
+                                - spacing = 0mm
+                                Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
+                                  Multiplicity ->
+                                    Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                      - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                                        Group ->
+                                          Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                            - height = 20.3mm
+                                            - scale = (x=1, y=1)
+                                            - twist = 0rad
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                              Operation subtract() ->
+                                                Group ->
+                                                  r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    - height = 40.6mm
+                                                    - width = 40.6mm
+                                                    - x = -20.3mm
+                                                    - y = -20.3mm
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                                  Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    - x = 20.3mm
+                                                    - y = 20.3mm
+                                                    - z = 0mm
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                        - height = 40.6mm
+                                                        - width = 40.6mm
+                                                        - x = -20.3mm
+                                                        - y = -20.3mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                    Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                      - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                                        Group ->
+                                          Workpiece(op) std::ops::extrude(height=20.3mm, scale=(x=1, y=1), twist=0rad) ->
+                                            - height = 20.3mm
+                                            - scale = (x=1, y=1)
+                                            - twist = 0rad
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                              Operation subtract() ->
+                                                Group ->
+                                                  r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    - height = 40.6mm
+                                                    - width = 40.6mm
+                                                    - x = -20.3mm
+                                                    - y = -20.3mm
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                                                  Workpiece(op) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    - x = 20.3mm
+                                                    - y = 20.3mm
+                                                    - z = 0mm
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                        - height = 40.6mm
+                                                        - width = 40.6mm
+                                                        - x = -20.3mm
+                                                        - y = -20.3mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Workpiece(part) chess::Rook() ->
+                      Workpiece(part) std::geo3d::Cube(size=40.6mm) ->
+                        - size_x = 40.6mm
+                        - size_y = 40.6mm
+                        - size_z = 40.6mm
+                        Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                          - x = 0mm
+                          - y = 0mm
+                          - z = -20.3mm
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                            Workpiece(op) std::ops::extrude(height=40.6mm, scale=(x=1, y=1), twist=0rad) ->
+                              - height = 40.6mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                Workpiece(sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                  - height = 40.6mm
+                                  - width = 40.6mm
+                                  - x = -20.3mm
+                                  - y = -20.3mm
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
+                    Multiplicity ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+                      Workpiece(part) chess::Pawn() ->
+                        Workpiece(part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                          - size_x = 32.48000000000001mm
+                          - size_y = 32.48000000000001mm
+                          - size_z = 32.48000000000001mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                            - x = 0mm
+                            - y = 0mm
+                            - z = -16.24mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                              Workpiece(op) std::ops::extrude(height=32.48000000000001mm, scale=(x=1, y=1), twist=0rad) ->
+                                - height = 32.48000000000001mm
+                                - scale = (x=1, y=1)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                    - height = 32.48000000000001mm
+                                    - width = 32.48000000000001mm
+                                    - x = -16.24mm
+                                    - y = -16.24mm
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
+    Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-1mm) ->
+      - x = 0mm
+      - y = 0mm
+      - z = -1mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=-1mm) ->
+        Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+          - height = 1mm
+          - scale = (x=1, y=1)
+          - twist = 0rad
+          Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+            Workpiece(sketch) std::geo2d::Rect(size=464mm) ->
+              - height = 464mm
+              - width = 464mm
+              - x = -232mm
+              - y = -232mm
+              Primitive2D __builtin::geo2d::Rect(height=464mm, width=464mm, x=-232mm, y=-232mm) ->
+
+Export of "../books/examples/src/.test/chess-out.stl" successful.
 -- Test Result --
-FAILS
+OK
