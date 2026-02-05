@@ -42,10 +42,10 @@ pub fn generate_example_book(
 {content}
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/{name}-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/{name}-out.stl)
 "
                         );
@@ -104,10 +104,10 @@ pub fn generate_example_book(
 {content}
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/{folder_name}_{name}-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/{folder_name}_{name}-out.stl)
 \n"
                                         )

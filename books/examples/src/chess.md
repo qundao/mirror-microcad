@@ -81,8 +81,8 @@ Rect(TILE_SIZE * 8).extrude(board_height).translate(z = -board_height);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/chess-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/chess-out.stl)

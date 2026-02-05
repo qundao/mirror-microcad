@@ -10,8 +10,8 @@ std::geo3d::Torus([1..5] * 10mm, minor_radius = 3mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/torus-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/torus-out.stl)

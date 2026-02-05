@@ -65,8 +65,8 @@ part FootPad(
 FootPad();
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/footpad-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/footpad-out.stl)

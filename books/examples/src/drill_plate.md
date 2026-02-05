@@ -20,8 +20,8 @@ DrillPlate();
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/drill_plate-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/drill_plate-out.stl)

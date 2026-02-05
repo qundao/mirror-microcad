@@ -25,8 +25,8 @@ CylinderStack(heights = [5, 15, 5]mm, radii = [6, 4, 4, 6]mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/cylinder_stack-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/cylinder_stack-out.stl)

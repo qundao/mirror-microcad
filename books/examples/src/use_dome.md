@@ -11,8 +11,8 @@ mod dome;
 dome::Dome(10mm, strut_width = 0.5mm).std::ops::mirror(std::math::Z);
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/use_dome-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/use_dome-out.stl)

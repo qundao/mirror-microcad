@@ -27,8 +27,8 @@ r - holes;
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/hole_test-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/hole_test-out.stl)
