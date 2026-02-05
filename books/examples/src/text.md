@@ -5,7 +5,7 @@
 [![Report](.test/text_love.svg)](.test/text_love.log)
 
 ```µcad,text_love
-// file: love
+// file: love.µcad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -39,7 +39,7 @@ Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
 [![Report](.test/text_text_plate.svg)](.test/text_text_plate.log)
 
 ```µcad,text_text_plate
-// file: text_plate
+// file: text_plate.µcad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 

@@ -73,6 +73,11 @@ pub fn generate_example_book(
                 dirs.sort_by_key(|l| l.file_name());
                 for entry in dirs {
                     let path = entry.path();
+                    let file_name = path
+                        .file_name()
+                        .expect("test error")
+                        .to_string_lossy()
+                        .to_string();
                     let name = path
                         .file_stem()
                         .expect("test error")
@@ -95,7 +100,7 @@ pub fn generate_example_book(
 [![Report](.test/{folder_name}_{name}.svg)](.test/{folder_name}_{name}.log)
 
 ```µcad,{folder_name}_{name}
-// file: {name}
+// file: {file_name}
 {content}
 ```
 
