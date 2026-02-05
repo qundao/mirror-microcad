@@ -37,12 +37,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 4:3: Arguments match by identifier but have incompatible types: x
+  × error: 4:3: Arguments match by identifier but have incompatible types: x: String != Scalar
     ╭─[../books/tests/src/auto_convert.md:9:3]
   8 │ f(x=[1]);
   9 │ f(x="");    // error
     ·   ──┬─
-    ·     ╰── error: 4:3: Arguments match by identifier but have incompatible types: x
+    ·     ╰── error: 4:3: Arguments match by identifier but have incompatible types: x: String != Scalar
  10 │ f("");      // error
     ╰────
   × error: 5:3: Missing arguments: x
@@ -53,20 +53,20 @@
     ·    ╰── error: 5:3: Missing arguments: x
  11 │ f(1.0);
     ╰────
-  × error: 12:3: Arguments match by identifier but have incompatible types: x
+  × error: 12:3: Arguments match by identifier but have incompatible types: x: Scalar != Integer
     ╭─[../books/tests/src/auto_convert.md:17:3]
  16 │ fn g( x: Integer ) { _ = x; }
  17 │ g(x=1.0);   // error
     ·   ──┬──
-    ·     ╰── error: 12:3: Arguments match by identifier but have incompatible types: x
+    ·     ╰── error: 12:3: Arguments match by identifier but have incompatible types: x: Scalar != Integer
  18 │ g(x="");    // error
     ╰────
-  × error: 13:3: Arguments match by identifier but have incompatible types: x
+  × error: 13:3: Arguments match by identifier but have incompatible types: x: String != Integer
     ╭─[../books/tests/src/auto_convert.md:18:3]
  17 │ g(x=1.0);   // error
  18 │ g(x="");    // error
     ·   ──┬─
-    ·     ╰── error: 13:3: Arguments match by identifier but have incompatible types: x
+    ·     ╰── error: 13:3: Arguments match by identifier but have incompatible types: x: String != Integer
  19 │ g("");      // error
     ╰────
   × error: 14:3: Missing arguments: x
@@ -93,12 +93,12 @@
     ·     ╰── error: 16:3: Missing arguments: x
  22 │ g(1);
     ╰────
-  × error: 21:3: Arguments match by identifier but have incompatible types: x
+  × error: 21:3: Arguments match by identifier but have incompatible types: x: Scalar != String
     ╭─[../books/tests/src/auto_convert.md:26:3]
  25 │ fn h( x: String ) { _ = x; }
  26 │ h(x=1.0);   // error
     ·   ──┬──
-    ·     ╰── error: 21:3: Arguments match by identifier but have incompatible types: x
+    ·     ╰── error: 21:3: Arguments match by identifier but have incompatible types: x: Scalar != String
  27 │ h(x="");
     ╰────
   × error: 26:3: Missing arguments: x

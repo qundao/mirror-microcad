@@ -130,7 +130,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:5: Source of module 'logo' could not be found in "/home/pat/git/rustfahrt/microcad/books/examples/src/.test" (expecting a file 'logo.µcad' or 'logo/mod.µcad')
+  × error: 7:5: Source of module 'logo' could not be found in "/home/pat/git/microcad/books/examples/src/.test" (expecting a file 'logo.µcad' or 'logo/mod.µcad')
    ╭─[../books/examples/src/spirograph.md:7:5]
  6 │ 
  7 │ mod logo;

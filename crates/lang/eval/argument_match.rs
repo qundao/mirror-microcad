@@ -146,7 +146,7 @@ impl<'a> ArgumentMatch<'a> {
         priority: Priority,
         match_fn: impl Fn(&Identifier, &Identifier) -> bool,
     ) -> EvalResult<()> {
-        let mut type_mismatch = IdentifierList::default();
+        let mut type_mismatch = Vec::new();
         if self.arguments.is_empty() {
             return Ok(());
         }
@@ -164,7 +164,7 @@ impl<'a> ArgumentMatch<'a> {
                 Some(n) => {
                     if let Some(ty) = &self.params[n].1.specified_type {
                         if !arg.ty().is_matching(ty) {
-                            type_mismatch.push(id.clone());
+                            type_mismatch.push((id.clone(), arg.ty(), ty));
                             return true;
                         }
                     }
@@ -183,7 +183,12 @@ impl<'a> ArgumentMatch<'a> {
         if type_mismatch.is_empty() {
             Ok(())
         } else {
-            Err(EvalError::IdMatchButNotType(type_mismatch.to_string()))
+            let type_mismatch = type_mismatch
+                .iter()
+                .map(|(id, ty1, ty2)| format!("{id}: {ty1} != {ty2}"))
+                .collect::<Vec<_>>()
+                .join(", ");
+            Err(EvalError::IdMatchButNotType(type_mismatch))
         }
     }
 
