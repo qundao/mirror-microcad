@@ -15,9 +15,9 @@ part FootPad(
 ) {
     s = (x = base.x / 2 - corner_radius, y = base.y / 2 - corner_radius);
     hole_pos = (x = [-1,1]*s.x, y = [-1,1]*s.y);
-    r = corner_radius;
+    radius = corner_radius;
     
-    base_lower = Circle(r, c = hole_pos)
+    base_lower = Circle(radius, c = hole_pos)
         .hull()
         .extrude(12mm);
 
@@ -29,7 +29,8 @@ part FootPad(
         top_right = (x = s.x, y = s.y);
         bottom_left = (x = -s.x, y = -s.y);
         bottom_right = (x = s.x, y = -s.y);
-        (Circle(r, c = (x = top_left, y = bottom_right)).hull() | Circle(r, c = (x = top_right, y = bottom_left)).hull());
+        (Circle(radius, c = (x = top_left.x, y = bottom_right.y)).hull() 
+        | Circle(radius, c = (x = top_right.x, y = bottom_left.y)).hull());
     }
     .extrude(base_upper_height)
     .translate(z = base_lower_height);

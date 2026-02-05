@@ -16,7 +16,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 4:5: Source of module 'dome' could not be found in "/home/pat/git/rustfahrt/microcad/books/examples/src/.test" (expecting a file 'dome.µcad' or 'dome/mod.µcad')
+  × error: 4:5: Source of module 'dome' could not be found in "/home/pat/git/microcad/books/examples/src/.test" (expecting a file 'dome.µcad' or 'dome/mod.µcad')
    ╭─[../books/examples/src/use_dome.md:4:5]
  3 │ 
  4 │ mod dome;
