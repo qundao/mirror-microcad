@@ -228,6 +228,7 @@ pub enum EvalError {
 
     /// Resolve Error
     #[error("Resolve error: {0}")]
+    #[diagnostic(transparent)]
     ResolveError(ResolveError),
 
     /// Unexpected source file in expression

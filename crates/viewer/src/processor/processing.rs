@@ -85,8 +85,10 @@ impl Processor {
                         self.render(None)?;
                         self.respond()
                     }
-                    Err(err) => {
-                        log::error!("{err}");
+                    Err(errors) => {
+                        for err in errors {
+                            log::error!("{err}");
+                        }
                         self.state_change(ProcessingState::Error);
                         Ok(vec![])
                     }

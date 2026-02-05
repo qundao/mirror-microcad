@@ -448,9 +448,9 @@ impl Symbol {
                 SymbolDef::Workbench(wb) => wb.names(),
                 SymbolDef::Function(f) => f.names(),
                 SymbolDef::Assignment(a) => a.names(),
-                SymbolDef::Alias(..) | SymbolDef::UseAll(..) => {
+                SymbolDef::Alias(_, _, name) | SymbolDef::UseAll(_, name) => {
                     log::error!("Resolve Context:\n{context:?}");
-                    return Err(ResolveError::ResolveCheckFailed);
+                    return Err(ResolveError::ResolveCheckFailed(name.src_ref()));
                 }
                 _ => Default::default(),
             };

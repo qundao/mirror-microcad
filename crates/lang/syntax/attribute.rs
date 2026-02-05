@@ -9,30 +9,41 @@ use derive_more::{Deref, DerefMut};
 /// *Command syntax* within an attribute.
 #[derive(Clone)]
 pub enum AttributeCommand {
-    /// A command with an optional identifier and optional arguments: `width(offset = 30mm)`.
-    Call(Option<Identifier>, Option<ArgumentList>),
-    /// A format string subcommand: `"test.svg"`.
-    Expression(Expression),
+    /// A bare name
+    Ident(Identifier),
+    /// A command with optional arguments: `width(offset = 30mm)`.
+    Call(Call),
+    /// An assignment: `color = "red"`.
+    Assigment {
+        /// Source code reference.
+        src_ref: SrcRef,
+        /// Name of the assigment.
+        name: Identifier,
+        /// Value name of the assigment.
+        value: Expression,
+    },
+}
+
+impl AttributeCommand {
+    /// Qualified name of the attribute command
+    pub fn name(&self) -> &Identifier {
+        match self {
+            AttributeCommand::Ident(name) => name,
+            AttributeCommand::Call(call) => call
+                .name
+                .as_identifier()
+                .expect("non-identifier attribute call"),
+            AttributeCommand::Assigment { name, .. } => name,
+        }
+    }
 }
 
 impl std::fmt::Display for AttributeCommand {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
-            AttributeCommand::Call(id, argument_list) => {
-                write!(
-                    f,
-                    "{id}{argument_list}",
-                    id = match id {
-                        Some(id) => format!("{id}"),
-                        None => String::new(),
-                    },
-                    argument_list = match argument_list {
-                        Some(argument_list) => format!("({argument_list})"),
-                        None => String::new(),
-                    }
-                )
-            }
-            AttributeCommand::Expression(expression) => write!(f, "{expression}"),
+            AttributeCommand::Ident(name) => write!(f, "{name}"),
+            AttributeCommand::Call(call) => write!(f, "{call}"),
+            AttributeCommand::Assigment { name, value, .. } => write!(f, "{name} = {value}"),
         }
     }
 }
@@ -40,21 +51,9 @@ impl std::fmt::Display for AttributeCommand {
 impl std::fmt::Debug for AttributeCommand {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
-            AttributeCommand::Call(id, argument_list) => {
-                write!(
-                    f,
-                    "{id:?}{argument_list:?}",
-                    id = match id {
-                        Some(id) => format!("{id:?}"),
-                        None => String::new(),
-                    },
-                    argument_list = match argument_list {
-                        Some(argument_list) => format!("({argument_list:?})"),
-                        None => String::new(),
-                    }
-                )
-            }
-            AttributeCommand::Expression(expression) => write!(f, "{expression:?}"),
+            AttributeCommand::Ident(name) => write!(f, "{name:?}"),
+            AttributeCommand::Call(call) => write!(f, "{call:?}"),
+            AttributeCommand::Assigment { name, value, .. } => write!(f, "{name:?} = {value:?}"),
         }
     }
 }
@@ -62,15 +61,9 @@ impl std::fmt::Debug for AttributeCommand {
 impl SrcReferrer for AttributeCommand {
     fn src_ref(&self) -> SrcRef {
         match &self {
-            AttributeCommand::Call(identifier, argument_list) => {
-                match (identifier, argument_list) {
-                    (None, None) => unreachable!("Invalid AttributeCommand::Call"),
-                    (None, Some(arguments)) => arguments.src_ref(),
-                    (Some(identifier), None) => identifier.src_ref(),
-                    (Some(identifier), Some(arguments)) => SrcRef::merge(identifier, arguments),
-                }
-            }
-            AttributeCommand::Expression(expression) => expression.src_ref(),
+            AttributeCommand::Ident(name) => name.src_ref(),
+            AttributeCommand::Call(call) => call.src_ref(),
+            AttributeCommand::Assigment { src_ref, .. } => src_ref.clone(),
         }
     }
 }
@@ -78,9 +71,7 @@ impl SrcReferrer for AttributeCommand {
 /// An attribute item.
 #[derive(Clone)]
 pub struct Attribute {
-    /// The id of the attribute.
-    pub id: Identifier,
-    /// Attribute commands: `width, height(30mm)`.
+    /// Attribute commands: `export = "test.stl", height(30mm)`.
     pub commands: Vec<AttributeCommand>,
     /// Tells if the attribute is an inner attribute: `#[...]` (outer) vs `#![...]` (inner).
     pub is_inner: bool,
@@ -110,19 +101,15 @@ impl std::fmt::Display for Attribute {
             true => write!(f, "#![")?,
             false => write!(f, "#[")?,
         }
-        match self.commands.is_empty() {
-            true => write!(f, "{}", self.id)?,
-            false => write!(
-                f,
-                "{} = {}",
-                self.id,
-                self.commands
-                    .iter()
-                    .map(|command| command.to_string())
-                    .collect::<Vec<_>>()
-                    .join(", ")
-            )?,
-        }
+        write!(
+            f,
+            "{}",
+            self.commands
+                .iter()
+                .map(|command| command.to_string())
+                .collect::<Vec<_>>()
+                .join(", ")
+        )?;
         writeln!(f, "]")
     }
 }
@@ -142,6 +129,12 @@ impl SrcReferrer for Attribute {
 /// A list of attributes, e.g. `#foo #[bar, baz = 42]`
 #[derive(Clone, Default, Deref, DerefMut)]
 pub struct AttributeList(Vec<Attribute>);
+
+impl From<Vec<Attribute>> for AttributeList {
+    fn from(value: Vec<Attribute>) -> Self {
+        AttributeList(value)
+    }
+}
 
 impl std::fmt::Display for AttributeList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -16,7 +16,7 @@ pub struct SourceFile {
     /// Root code body.
     pub statements: StatementList,
     /// Name of loaded file.
-    filename: Option<std::path::PathBuf>,
+    pub filename: Option<std::path::PathBuf>,
     /// Source file string, TODO: might be a &'a str in the future
     pub source: String,
 

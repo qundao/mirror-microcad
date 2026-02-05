@@ -1,5 +1,5 @@
+use crate::ast::{Call, Expression, Identifier, ItemExtras, StatementList, Type};
 use crate::Span;
-use crate::ast::{Call, Expression, ItemExtras, Identifier, StatementList, Type};
 
 #[derive(Debug, PartialEq)]
 pub enum Statement {
@@ -146,9 +146,9 @@ pub enum AttributeCommand {
 }
 
 #[derive(Debug, PartialEq)]
-pub enum AssigmentQualifier {
+pub enum AssignmentQualifier {
     Const,
-    Prop
+    Prop,
 }
 
 #[derive(Debug, PartialEq)]

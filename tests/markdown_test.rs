@@ -54,9 +54,11 @@ pub fn run_test(env: Option<TestEnv>) {
             // test is expected to fail?
             "fail" | "todo_fail" => match source_file_result {
                 // test expected to fail failed at parsing?
-                Err(err) => {
-                    env.log_ln("-- Parse Error --");
-                    env.log_ln(&err.to_string());
+                Err(errors) => {
+                    for err in errors {
+                        env.log_ln("-- Parse Error --");
+                        env.log_ln(&err.to_string());
+                    }
                     if env.has_error_markers() {
                         env.result(TestResult::FailWrong);
                         panic!("ERROR: test is marked to fail but with wrong errors/warnings");
@@ -132,9 +134,11 @@ pub fn run_test(env: Option<TestEnv>) {
             // test is expected to succeed?
             "ok" | "todo" | "warn" | "todo_warn" => match source_file_result {
                 // test awaited to succeed and parsing failed?
-                Err(err) => {
-                    env.log_ln("-- Parse Error --");
-                    env.log_ln(&err.to_string());
+                Err(errors) => {
+                    for err in &errors {
+                        env.log_ln("-- Parse Error --");
+                        env.log_ln(&err.to_string());
+                    }
 
                     if env.todo() {
                         env.result(TestResult::Todo);
@@ -143,7 +147,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     } else {
                         env.result(TestResult::Fail);
-                        panic!("ERROR: {err}")
+                        panic!("ERROR: {}", errors[0])
                     }
                 }
                 // test awaited to succeed and parsing succeeds?

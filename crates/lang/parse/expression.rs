@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, rc::*, syntax::*};
+use microcad_syntax::ast;
+use microcad_syntax::ast::{Element, LiteralKind};
 
 impl Parse for RangeFirst {
     fn parse(pair: Pair) -> ParseResult<Self> {
@@ -12,6 +14,34 @@ impl Parse for RangeFirst {
                     .map(|i| Expression::Literal(Literal::Integer(i))))
                 .expect("Expression"),
         )))
+    }
+}
+
+impl FromAst for RangeFirst {
+    type AstNode = ast::ArrayItem;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        if matches!(
+            node.expression,
+            ast::Expression::Literal(
+                ast::Literal {
+                    literal: ast::LiteralKind::Float(_)
+                        | ast::LiteralKind::String(_)
+                        | ast::LiteralKind::Quantity(_)
+                        | ast::LiteralKind::Bool(_),
+                    ..
+                },
+                ..
+            )
+        ) {
+            return Err(ParseError::InvalidRangeType {
+                src_ref: context.src_ref(&node.expression.span()),
+            });
+        }
+        Ok(RangeFirst(Box::new(Expression::from_ast(
+            &node.expression,
+            context,
+        )?)))
     }
 }
 
@@ -27,12 +57,52 @@ impl Parse for RangeLast {
     }
 }
 
+impl FromAst for RangeLast {
+    type AstNode = ast::ArrayItem;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        if matches!(
+            node.expression,
+            ast::Expression::Literal(
+                ast::Literal {
+                    literal: ast::LiteralKind::Float(_)
+                        | ast::LiteralKind::String(_)
+                        | ast::LiteralKind::Quantity(_)
+                        | ast::LiteralKind::Bool(_),
+                    ..
+                },
+                ..
+            )
+        ) {
+            return Err(ParseError::InvalidRangeType {
+                src_ref: context.src_ref(&node.expression.span()),
+            });
+        }
+        Ok(RangeLast(Box::new(Expression::from_ast(
+            &node.expression,
+            context,
+        )?)))
+    }
+}
+
 impl Parse for RangeExpression {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Ok(Self {
             first: pair.find(Rule::range_start).expect("Range start"),
             last: pair.find(Rule::range_end).expect("Range end"),
             src_ref: pair.src_ref(),
+        })
+    }
+}
+
+impl FromAst for RangeExpression {
+    type AstNode = ast::ArrayRangeExpression;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(RangeExpression {
+            first: RangeFirst::from_ast(&node.start, context)?,
+            last: RangeLast::from_ast(&node.end, context)?,
+            src_ref: context.src_ref(&node.span),
         })
     }
 }
@@ -45,6 +115,17 @@ impl Parse for ListExpression {
                 _ => None,
             })
             .collect::<Result<Vec<_>, _>>()
+    }
+}
+
+impl FromAst for ListExpression {
+    type AstNode = ast::ArrayListExpression;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        node.items
+            .iter()
+            .map(|item| Expression::from_ast(&item.expression, context))
+            .collect::<Result<ListExpression, _>>()
     }
 }
 
@@ -70,6 +151,17 @@ impl Parse for Marker {
         Ok(Self {
             id: Identifier::parse(pair.inner().next().expect(INTERNAL_PARSE_ERROR))?,
             src_ref: pair.src_ref(),
+        })
+    }
+}
+
+impl FromAst for Marker {
+    type AstNode = ast::Identifier;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(Marker {
+            id: Identifier::from_ast(node, context)?,
+            src_ref: context.src_ref(&node.span),
         })
     }
 }
@@ -144,7 +236,7 @@ impl Parse for Expression {
                         } else {
                             Ok(Self::If(Box::new(statement)))
                         }
-                    },
+                    }
                     (primary, Rule::call) => Ok(Self::Call(Call::parse(primary)?)),
                     (primary, Rule::qualified_name) => {
                         Ok(Self::QualifiedName(QualifiedName::parse(primary)?))
@@ -247,6 +339,100 @@ impl Parse for Expression {
     }
 }
 
+impl FromAst for Expression {
+    type AstNode = ast::Expression;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(match node {
+            ast::Expression::Call(expr) => Expression::Call(Call::from_ast(expr, context)?),
+            ast::Expression::Literal(ast::Literal {
+                literal: LiteralKind::String(s),
+                span,
+                ..
+            }) => Expression::FormatString(FormatString(Refer::new(
+                vec![FormatStringInner::String(Refer::new(
+                    s.content.clone(),
+                    context.src_ref(&s.span),
+                ))],
+                context.src_ref(span),
+            ))),
+            ast::Expression::Literal(expr) => {
+                Expression::Literal(Literal::from_ast(expr, context)?)
+            }
+            ast::Expression::String(s) => {
+                Expression::FormatString(FormatString::from_ast(s, context)?)
+            }
+            ast::Expression::Tuple(t) => {
+                Expression::TupleExpression(TupleExpression::from_ast(t, context)?)
+            }
+            ast::Expression::ArrayRange(a) => Expression::ArrayExpression(ArrayExpression {
+                inner: ArrayExpressionInner::Range(RangeExpression::from_ast(a, context)?),
+                unit: a
+                    .ty
+                    .as_ref()
+                    .map(|ty| Unit::from_ast(ty, context))
+                    .transpose()?
+                    .unwrap_or_default(),
+                src_ref: context.src_ref(&a.span),
+            }),
+            ast::Expression::ArrayList(a) => Expression::ArrayExpression(ArrayExpression {
+                inner: ArrayExpressionInner::List(ListExpression::from_ast(a, context)?),
+                unit: a
+                    .ty
+                    .as_ref()
+                    .map(|ty| Unit::from_ast(ty, context))
+                    .transpose()?
+                    .unwrap_or_default(),
+                src_ref: context.src_ref(&a.span),
+            }),
+            ast::Expression::QualifiedName(n) => {
+                Expression::QualifiedName(QualifiedName::from_ast(n, context)?)
+            }
+            ast::Expression::Marker(m) => Expression::Marker(Marker::from_ast(m, context)?),
+            ast::Expression::BinaryOperation(binop) => Expression::BinaryOp {
+                lhs: Box::new(Expression::from_ast(&binop.lhs, context)?),
+                rhs: Box::new(Expression::from_ast(&binop.rhs, context)?),
+                op: binop.operation.as_str().into(),
+                src_ref: context.src_ref(&binop.span),
+            },
+            ast::Expression::UnaryOperation(unop) => Expression::UnaryOp {
+                rhs: Box::new(Expression::from_ast(&unop.rhs, context)?),
+                op: unop.operation.as_str().into(),
+                src_ref: context.src_ref(&unop.span),
+            },
+            ast::Expression::Block(b) => Expression::Body(Body::from_ast(b, context)?),
+            ast::Expression::ElementAccess(access) => match &access.element {
+                Element::Attribute(a) => Expression::AttributeAccess(
+                    Box::new(Expression::from_ast(&access.value, context)?),
+                    Identifier::from_ast(a, context)?,
+                    context.src_ref(&access.span),
+                ),
+                Element::Tuple(t) => Expression::PropertyAccess(
+                    Box::new(Expression::from_ast(&access.value, context)?),
+                    Identifier::from_ast(t, context)?,
+                    context.src_ref(&access.span),
+                ),
+                Element::Method(m) => Expression::MethodCall(
+                    Box::new(Expression::from_ast(&access.value, context)?),
+                    MethodCall::from_ast(m, context)?,
+                    context.src_ref(&access.span),
+                ),
+                Element::ArrayElement(e) => Expression::ArrayElementAccess(
+                    Box::new(Expression::from_ast(&access.value, context)?),
+                    Box::new(Expression::from_ast(e, context)?),
+                    context.src_ref(&access.span),
+                ),
+            },
+            ast::Expression::If(i) => Expression::If(Box::new(IfStatement::from_ast(i, context)?)),
+            ast::Expression::Error(span) => {
+                return Err(ParseError::InvalidExpression {
+                    src_ref: context.src_ref(span),
+                });
+            }
+        })
+    }
+}
+
 impl Parse for Rc<Expression> {
     fn parse(pair: Pair) -> ParseResult<Self> {
         Ok(Rc::new(Expression::parse(pair)?))
@@ -258,6 +444,32 @@ impl Parse for TupleExpression {
         Ok(TupleExpression {
             args: crate::find_rule!(pair, argument_list)?,
             src_ref: pair.clone().into(),
+        })
+    }
+}
+
+impl FromAst for TupleExpression {
+    type AstNode = ast::TupleExpression;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        let mut args = ArgumentList::default();
+        for value in &node.values {
+            args.value
+                .try_push(Argument {
+                    id: value
+                        .name
+                        .as_ref()
+                        .map(|name| Identifier::from_ast(name, context))
+                        .transpose()?,
+                    expression: Expression::from_ast(&value.value, context)?,
+                    src_ref: context.src_ref(&value.span),
+                })
+                .map_err(ParseError::DuplicateArgument)?;
+        }
+
+        Ok(TupleExpression {
+            args,
+            src_ref: context.src_ref(&node.span),
         })
     }
 }

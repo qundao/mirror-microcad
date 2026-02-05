@@ -14,7 +14,8 @@ use crate::{diag::*, parse::*, syntax::*};
 pub enum ResolveError {
     /// Parse Error.
     #[error("Parse Error: {0}")]
-    ParseError(#[from] ParseErrorWithSource),
+    #[diagnostic(transparent)]
+    ParseError(#[from] ParseErrorsWithSource),
 
     /// Can't find a project file by hash.
     #[error("Could not find a file with hash {0}")]
@@ -82,7 +83,7 @@ pub enum ResolveError {
 
     /// Resolve check failed
     #[error("Resolve failed")]
-    ResolveCheckFailed,
+    ResolveCheckFailed(SrcRef),
 
     /// Symbol is private
     #[error("Symbol {0} is private")]
@@ -119,6 +120,8 @@ impl SrcReferrer for ResolveError {
     fn src_ref(&self) -> SrcRef {
         match self {
             ResolveError::SourceFileNotFound(identifier, _) => identifier.src_ref(),
+            ResolveError::ParseError(parse_error) => parse_error.src_ref(),
+            ResolveError::ResolveCheckFailed(src_ref) => src_ref.clone(),
             _ => SrcRef(None),
         }
     }

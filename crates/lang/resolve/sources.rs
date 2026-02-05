@@ -61,14 +61,17 @@ impl Sources {
         // load all external source files into cache
         externals
             .iter()
-            .try_for_each(|(name, path)| -> Result<(), ParseErrorWithSource> {
-                let source_file = SourceFile::load_with_name(path.clone(), name.clone())?;
+            .try_for_each(|(name, path)| -> Result<(), ParseErrorsWithSource> {
+                let (source_file, error) = SourceFile::load_with_name(path.clone(), name.clone());
                 let index = source_files.len();
                 by_hash.insert(source_file.hash, index);
                 by_path.insert(source_file.filename(), index);
                 by_name.insert(name.clone(), index);
                 source_files.push(source_file);
-                Ok(())
+                match error {
+                    Some(error) => Err(error),
+                    None => Ok(()),
+                }
             })?;
 
         Ok(Self {
@@ -101,7 +104,7 @@ impl Sources {
         let name = source_file.name.clone();
 
         // maybe overwrite existing
-        let index = if let Some(index) = self.by_path.get(&source_file.filename()).copied() {
+        let index = if let Some(index) = self.by_path.get(&path).copied() {
             self.by_hash.remove(&hash);
             self.by_name.remove(&name);
             self.by_path.remove(&path);
@@ -269,9 +272,12 @@ impl Sources {
         );
         let file_path = find_mod_file_by_id(parent_path, id)?;
         let name = self.generate_name_from_path(&file_path)?;
-        let source_file = SourceFile::load_with_name(&file_path, name)?;
+        let (source_file, error) = SourceFile::load_with_name(&file_path, name);
         self.insert(source_file.clone());
-        Ok(source_file)
+        match error {
+            Some(error) => Err(error.into()),
+            None => Ok(source_file),
+        }
     }
 
     /// Reload an existing file
@@ -284,10 +290,13 @@ impl Sources {
         if let Some(index) = self.by_path.get(&path).copied() {
             let old = self.source_files[index].clone();
             let name = old.name.clone();
-            let new = SourceFile::load_with_name(path, name)?;
+            let (new, error) = SourceFile::load_with_name(path, name);
             self.insert(new.clone());
             log::trace!("new sources:\n{self:?}");
-            Ok(ReplacedSourceFile { new, old })
+            match error {
+                Some(error) => Err(error.into()),
+                None => Ok(ReplacedSourceFile { new, old }),
+            }
         } else {
             Err(ResolveError::FileNotFound(path))
         }

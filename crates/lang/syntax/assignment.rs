@@ -13,7 +13,7 @@ pub struct Assignment {
     /// Value's visibility
     pub visibility: Visibility,
     /// Assignee qualifier
-    qualifier: Qualifier,
+    pub qualifier: Qualifier,
     /// Assignee
     pub id: Identifier,
     /// Type of the assignee

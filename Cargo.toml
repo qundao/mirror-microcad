@@ -12,6 +12,7 @@ default-members = [
     "crates/lang",
     "crates/lsp",
     "crates/std",
+    "crates/syntax",
     "crates/viewer-ipc",
 
     "tests",
@@ -29,6 +30,7 @@ members = [
     "crates/lang",
     "crates/lsp",
     "crates/std",
+    "crates/syntax",
     "crates/viewer-ipc",
 
     "tests",
@@ -61,6 +63,7 @@ keywords = ["cad", "geometry", "3d", "printing", "cnc", "openscad"]
 [workspace.dependencies]
 debug-cell = { git = "https://github.com/fightling/debug-cell.git", version = "0.1.1" }
 microcad-core = { path = "crates/core", version = "0.2.20" }
+microcad-syntax = { path = "crates/syntax", version = "0.2.20" }
 microcad-import = { path = "crates/import", version = "0.2.20" }
 microcad-export = { path = "crates/export", version = "0.2.20" }
 microcad-lang = { path = "crates/lang", version = "0.2.20" }

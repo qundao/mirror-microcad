@@ -46,63 +46,51 @@ impl ResolveContext {
         builtin: Option<Symbol>,
         diag: DiagHandler,
     ) -> ResolveResult<Self> {
-        match Self::create_ex(
-            root.clone(),
-            search_paths,
-            builtin,
+        let mut context = Self {
+            sources: Sources::load(root.clone(), search_paths)?,
             diag,
+            ..Default::default()
+        };
+        match context.load(builtin,
             ResolveMode::Checked,
         ) {
-            Ok(context) => Ok(context),
+            Ok(()) => Ok(context),
             Err(err) => {
-                // create empty context which might be given to following stages like export.
-                let mut context = ResolveContext {
-                    sources: Sources::load(root, search_paths)?,
-                    mode: ResolveMode::Failed,
-                    ..Default::default()
-                };
                 context.error(&err.src_ref(), err)?;
                 Ok(context)
             }
         }
     }
 
-    fn create_ex(
-        root: Rc<SourceFile>,
-        search_paths: &[impl AsRef<std::path::Path>],
+    fn load(
+        &mut self,
         builtin: Option<Symbol>,
-        diag: DiagHandler,
         mode: ResolveMode,
-    ) -> ResolveResult<Self> {
-        let mut context = Self {
-            sources: Sources::load(root.clone(), search_paths)?,
-            diag,
-            ..Default::default()
-        };
-        context.symbolize()?;
-        log::trace!("Symbolized Context:\n{context:?}");
+    ) -> ResolveResult<()> {
+        self.symbolize()?;
+        log::trace!("Symbolized Context:\n{self:?}");
         if let Some(builtin) = builtin {
             log::trace!("Added builtin library {id}.", id = builtin.id());
-            context.root.add_symbol(builtin)?;
+            self.root.add_symbol(builtin)?;
         }
         if matches!(mode, ResolveMode::Resolved | ResolveMode::Checked) {
-            context.resolve()?;
+            self.resolve()?;
             if matches!(mode, ResolveMode::Checked) {
-                context.check()?;
+                self.check()?;
             }
         }
-        Ok(context)
+        Ok(())
     }
 
     #[cfg(test)]
     pub(super) fn test_create(root: Rc<SourceFile>, mode: ResolveMode) -> ResolveResult<Self> {
-        Self::create_ex(
-            root,
-            &[] as &[std::path::PathBuf],
-            None,
-            Default::default(),
-            mode,
-        )
+        let mut context = Self {
+            sources: Sources::load(root.clone(), &[] as &[std::path::PathBuf])?,
+            diag,
+            ..Default::default()
+        };
+        context.load(None, mode)?;
+        Ok(context)
     }
 
     #[cfg(test)]
@@ -203,7 +191,7 @@ impl ResolveContext {
             .iter()
             .try_for_each(|symbol| symbol.check(self, &exclude_ids))
         {
-            self.error(&crate::src_ref::SrcRef::default(), err)?;
+            self.error(&err.src_ref(), err)?;
         } else if !self.has_errors() {
             self.mode = ResolveMode::Checked;
         }
