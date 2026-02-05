@@ -33,7 +33,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 5:5: Source of module 'brick' could not be found in "/home/pat/git/microcad/books/examples/src/.test" (expecting a file 'brick.µcad' or 'brick/mod.µcad')
+  × error: 5:5: Source of module 'brick' could not be found in "/home/pat/git/rustfahrt/microcad/books/examples/src/.test" (expecting a file 'brick.µcad' or 'brick/mod.µcad')
    ╭─[../books/examples/src/bricks.md:5:5]
  4 │ 
  5 │ mod brick;

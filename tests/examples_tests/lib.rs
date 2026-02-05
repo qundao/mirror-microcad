@@ -12,8 +12,6 @@ pub fn generate_example_book(
     book_src: impl AsRef<Path>,
 ) -> Result<()> {
     let mut examples = Vec::new();
-    //std::fs::remove_dir_all(book_src.as_ref()).expect("test error");
-    //std::fs::create_dir(book_src.as_ref()).expect("test error");
     for entry in std::fs::read_dir(input_folder).into_diagnostic()?.flatten() {
         let path = entry.path();
         let file_name = path
@@ -68,7 +66,12 @@ pub fn generate_example_book(
             } else if file_type.is_dir() {
                 let folder_name = file_name;
                 let mut code = format!("# Example: {name}\n\n");
-                for entry in std::fs::read_dir(entry.path()).into_diagnostic()?.flatten() {
+                let mut dirs: Vec<_> = std::fs::read_dir(entry.path())
+                    .into_diagnostic()?
+                    .flatten()
+                    .collect();
+                dirs.sort_by_key(|l| l.file_name());
+                for entry in dirs {
                     let path = entry.path();
                     let name = path
                         .file_stem()
@@ -101,8 +104,7 @@ pub fn generate_example_book(
 
 3D Output
     : ![None](.test/{folder_name}_{name}-out.stl)
-
-    "
+\n"
                                         )
                                         .chars(),
                                     );
@@ -140,10 +142,26 @@ pub fn generate_example_book(
             examples.join("\n")
         }
     );
+    let mut created_files: Vec<_> = examples
+        .iter()
+        .map(|(_, md)| book_src.as_ref().join(md))
+        .collect();
+    created_files.push(summary.clone());
+
     std::fs::File::create(summary)
         .expect("file access error")
         .write_all(code.as_bytes())
         .expect("write error");
 
+    for entry in std::fs::read_dir(book_src).into_diagnostic()?.flatten() {
+        let path = entry.path();
+        if !created_files.contains(&path) {
+            if let Ok(file_type) = entry.file_type() {
+                if file_type.is_file() {
+                    std::fs::remove_file(path).into_diagnostic()?
+                }
+            }
+        }
+    }
     Ok(())
 }

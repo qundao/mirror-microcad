@@ -1,5 +1,75 @@
 # Example: bricks
 
+## Module: brick
+
+[![Report](.test/bricks_brick.svg)](.test/bricks_brick.log)
+
+```µcad,bricks_brick
+// file: brick
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use std::geo2d::*;
+use std::ops::*;
+use std::math::*;
+
+pub const SPACING = 8mm;
+pub const THICKNESS = 1.2mm;
+pub const BASE_HEIGHT = 9.6mm;
+pub const TOLERANCE = 0.2mm;
+
+pub part Brick(rows = 2, columns = 4, base_height = BASE_HEIGHT) {
+    width = columns * SPACING - TOLERANCE;
+    height = rows * SPACING - TOLERANCE;
+
+    base = {
+        Frame(width, height, THICKNESS);
+        r = rows - 1;
+        c = columns - 1;
+        n_rings = r * c;
+        if n_rings > 0 {
+            Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+                .multiply(n_rings)
+                .distribute_grid(
+                    width = width - width / columns,
+                    height = height - height / rows,
+                    rows = r, 
+                    columns = c
+                );
+        }
+    }
+    .extrude(base_height - THICKNESS);
+
+    cap = Rect(width, height).extrude(THICKNESS);
+
+    knobs = Circle(d = 4.8mm)
+        .multiply(rows * columns)
+        .distribute_grid(width, height, rows, columns)
+        .extrude(1.7mm);
+
+    { base; cap; knobs; }.align(Z).union();
+}
+
+n = 4;
+
+Brick(
+    rows = [1..n], 
+    columns = [1..n], 
+    base_height = BASE_HEIGHT * [1 / 3, 100%, 200%, 300%]
+)
+.distribute_grid(cell_size = n * 10mm, 
+    rows = 2*n, 
+    columns = 2*n,
+);
+
+```
+
+2D Output
+    : ![None](.test/bricks_brick-out.svg)
+
+3D Output
+    : ![None](.test/bricks_brick-out.stl)
+
 ## Module: tutorial
 
 [![Report](.test/bricks_tutorial.svg)](.test/bricks_tutorial.log)
@@ -70,77 +140,7 @@ LegoBrick();
 3D Output
     : ![None](.test/bricks_tutorial-out.stl)
 
-    ## Module: brick
-
-[![Report](.test/bricks_brick.svg)](.test/bricks_brick.log)
-
-```µcad,bricks_brick
-// file: brick
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-use std::geo2d::*;
-use std::ops::*;
-use std::math::*;
-
-pub const SPACING = 8mm;
-pub const THICKNESS = 1.2mm;
-pub const BASE_HEIGHT = 9.6mm;
-pub const TOLERANCE = 0.2mm;
-
-pub part Brick(rows = 2, columns = 4, base_height = BASE_HEIGHT) {
-    width = columns * SPACING - TOLERANCE;
-    height = rows * SPACING - TOLERANCE;
-
-    base = {
-        Frame(width, height, THICKNESS);
-        r = rows - 1;
-        c = columns - 1;
-        n_rings = r * c;
-        if n_rings > 0 {
-            Ring(outer_d = 6.51mm, inner_d = 4.8mm)
-                .multiply(n_rings)
-                .distribute_grid(
-                    width = width - width / columns,
-                    height = height - height / rows,
-                    rows = r, 
-                    columns = c
-                );
-        }
-    }
-    .extrude(base_height - THICKNESS);
-
-    cap = Rect(width, height).extrude(THICKNESS);
-
-    knobs = Circle(d = 4.8mm)
-        .multiply(rows * columns)
-        .distribute_grid(width, height, rows, columns)
-        .extrude(1.7mm);
-
-    { base; cap; knobs; }.align(Z).union();
-}
-
-n = 4;
-
-Brick(
-    rows = [1..n], 
-    columns = [1..n], 
-    base_height = BASE_HEIGHT * [1 / 3, 100%, 200%, 300%]
-)
-.distribute_grid(cell_size = n * 10mm, 
-    rows = 2*n, 
-    columns = 2*n,
-);
-
-```
-
-2D Output
-    : ![None](.test/bricks_brick-out.svg)
-
-3D Output
-    : ![None](.test/bricks_brick-out.stl)
-
-    ## Module: use_bricks
+## Module: use_bricks
 
 [![Report](.test/bricks_use_bricks.svg)](.test/bricks_use_bricks.log)
 
@@ -176,4 +176,3 @@ third_3x2.translate(y = 40mm);
 3D Output
     : ![None](.test/bricks_use_bricks-out.stl)
 
-    

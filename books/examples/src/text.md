@@ -1,36 +1,6 @@
 # Example: text
 
-## Module: text_plate
-
-[![Report](.test/text_text_plate.svg)](.test/text_text_plate.log)
-
-```µcad,text_text_plate
-// file: text_plate
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
-// SPDX-License-Identifier: AGPL-3.0-or-later
-
-use std::geo2d::*;
-use std::ops::*;
-use std::math::*;
-
-sketch TextPlate(text: String, height: Length = 30mm) {
-    letters = Text(text, height).center();
-    plate = RoundedRect(60mm, radius = 20mm);
-    plate - letters
-}
-
-TextPlate("Hello µcad", 10mm)
-    .extrude(2mm, 0°);
-
-```
-
-2D Output
-    : ![None](.test/text_text_plate-out.svg)
-
-3D Output
-    : ![None](.test/text_text_plate-out.stl)
-
-    ## Module: love
+## Module: love
 
 [![Report](.test/text_love.svg)](.test/text_love.log)
 
@@ -64,4 +34,33 @@ Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
 3D Output
     : ![None](.test/text_love-out.stl)
 
-    
+## Module: text_plate
+
+[![Report](.test/text_text_plate.svg)](.test/text_text_plate.log)
+
+```µcad,text_text_plate
+// file: text_plate
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use std::geo2d::*;
+use std::ops::*;
+use std::math::*;
+
+sketch TextPlate(text: String, height: Length = 30mm) {
+    letters = Text(text, height).center();
+    plate = RoundedRect(60mm, radius = 20mm);
+    plate - letters
+}
+
+TextPlate("Hello µcad", 10mm)
+    .extrude(2mm, 0°);
+
+```
+
+2D Output
+    : ![None](.test/text_text_plate-out.svg)
+
+3D Output
+    : ![None](.test/text_text_plate-out.stl)
+
