@@ -26,7 +26,7 @@
     ╭─[../books/language/src/structure/workbenches/elements/properties.md:75:9]
  74 │ 
  75 │         prop center = radius - inner;       // error: do not use prop here
-    ·         ──────────────┬──────────────
+    ·         ──────────────┬─────────────
     ·                       ╰── error: 5:9: Assignment statement not available here
  76 │     }
     ╰────
@@ -54,7 +54,7 @@
     ╭─[../books/language/src/structure/workbenches/elements/properties.md:82:23]
  81 │ 
  82 │ std::debug::assert_eq([ center, 1.75cm ] );
-    ·                       ─────────┬─────────
+    ·                       ─────────┬────────
     ·                                ╰── error: 12:23: Assertion failed: Values differ: [7.5mm, 17.5mm]
     ╰────
 Unexpected error(s) which did occur in line(s): 78, 82

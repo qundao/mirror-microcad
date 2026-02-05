@@ -45,12 +45,12 @@
     ·     ╰── error: 4:3: Arguments match by identifier but have incompatible types: x: String != Scalar
  10 │ f("");      // error
     ╰────
-  × error: 5:3: Missing arguments: x
-    ╭─[../books/tests/src/auto_convert.md:10:3]
+  × error: 5:4: Missing arguments: x
+    ╭─[../books/tests/src/auto_convert.md:10:4]
   9 │ f(x="");    // error
  10 │ f("");      // error
-    ·   ─┬
-    ·    ╰── error: 5:3: Missing arguments: x
+    ·    ┬
+    ·    ╰── error: 5:4: Missing arguments: x
  11 │ f(1.0);
     ╰────
   × error: 12:3: Arguments match by identifier but have incompatible types: x: Scalar != Integer
@@ -69,12 +69,12 @@
     ·     ╰── error: 13:3: Arguments match by identifier but have incompatible types: x: String != Integer
  19 │ g("");      // error
     ╰────
-  × error: 14:3: Missing arguments: x
-    ╭─[../books/tests/src/auto_convert.md:19:3]
+  × error: 14:4: Missing arguments: x
+    ╭─[../books/tests/src/auto_convert.md:19:4]
  18 │ g(x="");    // error
  19 │ g("");      // error
-    ·   ─┬
-    ·    ╰── error: 14:3: Missing arguments: x
+    ·    ┬
+    ·    ╰── error: 14:4: Missing arguments: x
  20 │ g(1.0);     // error
     ╰────
   × error: 15:3: Missing arguments: x

@@ -19,12 +19,12 @@
     ·                ╰── error: 1:1: Symbol std::ops::translate not found.
  54 │ {}.std::ops::translate(x = 3.0mm);  // warning: Calling operation on empty geometry
     ╰────
-  ⚠ warning: 2:1: This expression statement did not produce any model
-    ╭─[../books/tests/src/semicolon.md:54:1]
+  ⚠ warning: 2:2: This expression statement did not produce any model
+    ╭─[../books/tests/src/semicolon.md:54:2]
  53 │ std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
  54 │ {}.std::ops::translate(x = 3.0mm);  // warning: Calling operation on empty geometry
-    · ─┬
-    ·  ╰── warning: 2:1: This expression statement did not produce any model
+    ·  ▲
+    ·  ╰── warning: 2:2: This expression statement did not produce any model
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

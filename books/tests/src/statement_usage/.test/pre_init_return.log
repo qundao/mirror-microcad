@@ -17,7 +17,7 @@
     ╭─[../books/tests/src/statement_usage/pre-init.md:55:3]
  54 │ sketch K() { 
  55 │   return 1; // error
-    ·   ────┬────
+    ·   ────┬───
     ·       ╰── error: 2:3: Statement not allowed within workbenches
  56 │ init(l:Length) {} } K();
     ╰────
@@ -25,7 +25,7 @@
     ╭─[../books/tests/src/statement_usage/pre-init.md:55:3]
  54 │ sketch K() { 
  55 │   return 1; // error
-    ·   ────┬────
+    ·   ────┬───
     ·       ╰── error: 2:3: Statement is not available within Sketch
  56 │ init(l:Length) {} } K();
     ╰────

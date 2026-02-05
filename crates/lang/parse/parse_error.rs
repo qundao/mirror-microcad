@@ -21,17 +21,9 @@ pub enum ParseError {
     #[error("Error parsing integer literal: {0}")]
     ParseIntError(Refer<std::num::ParseIntError>),
 
-    /// Parser rule not found error
-    #[error("Rule not found: {0:?}")]
-    RuleNotFoundError(Box<crate::parser::Rule>),
-
     /// IO Error
     #[error("IO Error: {0}")]
     IoError(Refer<std::io::Error>),
-
-    /// Error in pest parser
-    #[error("Parser error: {}", .0.variant.message())]
-    Parser(Box<pest::error::Error<crate::parser::Rule>>),
 
     /// Error parsing color literal
     #[error("Error parsing color: {0}")]
@@ -182,26 +174,6 @@ pub type ParseResult<T> = Result<T, ParseError>;
 impl SrcReferrer for ParseError {
     fn src_ref(&self) -> SrcRef {
         match self {
-            ParseError::Parser(error) => SrcRef::new(
-                match error.location {
-                    pest::error::InputLocation::Pos(pos) => std::ops::Range {
-                        start: pos,
-                        end: pos,
-                    },
-                    pest::error::InputLocation::Span((start, end)) => {
-                        std::ops::Range { start, end }
-                    }
-                },
-                match error.line_col {
-                    pest::error::LineColLocation::Pos(pos) => pos.0,
-                    pest::error::LineColLocation::Span(start, _) => start.0,
-                },
-                match error.line_col {
-                    pest::error::LineColLocation::Pos(pos) => pos.1,
-                    pest::error::LineColLocation::Span(start, _) => start.1,
-                },
-                0,
-            ),
             ParseError::DuplicateNamedArgument(id)
             | ParseError::ParameterMissingTypeOrValue(id)
             | ParseError::DuplicateParameter(id)
@@ -230,7 +202,6 @@ impl SrcReferrer for ParseError {
             | ParseError::InvalidRangeType { src_ref } => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
-            ParseError::RuleNotFoundError(_) => SrcRef(None),
             ParseError::IoError(error) => error.src_ref(),
             ParseError::ParseColorError(parse_color_error) => parse_color_error.src_ref(),
             ParseError::UnknownColorName(name) => name.src_ref(),
@@ -260,7 +231,6 @@ impl Diagnostic for ParseError {
     fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         let src_ref = self.src_ref().0?;
         let message = match self {
-            ParseError::Parser(err) => err.variant.message().to_string(),
             ParseError::AstParser { error, .. } => {
                 return error.labels();
             }

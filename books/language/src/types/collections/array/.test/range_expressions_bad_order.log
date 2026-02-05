@@ -12,19 +12,19 @@
 
 -- No Output --
 -- Errors --
-  × error: 1:2: Bad range, first number (6) must be smaller than last (1)
-    ╭─[../books/language/src/types/collections/array/range.md:23:2]
+  × error: 1:1: Bad range, first number (6) must be smaller than last (1)
+    ╭─[../books/language/src/types/collections/array/range.md:23:1]
  23 │ [6..1];  // error
-    ·  ──┬─
-    ·    ╰── error: 1:2: Bad range, first number (6) must be smaller than last (1)
+    · ───┬──
+    ·    ╰── error: 1:1: Bad range, first number (6) must be smaller than last (1)
  24 │ [2..-2];  // error
     ╰────
-  × error: 2:2: Bad range, first number (2) must be smaller than last (-2)
-    ╭─[../books/language/src/types/collections/array/range.md:24:2]
+  × error: 2:1: Bad range, first number (2) must be smaller than last (-2)
+    ╭─[../books/language/src/types/collections/array/range.md:24:1]
  23 │ [6..1];  // error
  24 │ [2..-2];  // error
-    ·  ──┬──
-    ·    ╰── error: 2:2: Bad range, first number (2) must be smaller than last (-2)
+    · ───┬───
+    ·    ╰── error: 2:1: Bad range, first number (2) must be smaller than last (-2)
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

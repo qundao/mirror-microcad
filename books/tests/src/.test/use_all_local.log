@@ -15,32 +15,7 @@
   98:   f();
 
 -- No Output --
--- Errors --
-  ⚠ warning: 1:1: Unused local PI.
-   ╭─[<NO FILE>:1:1]
- 1 │ <NO FILE>
-   · ─┬
-   ·  ╰── warning: 1:1: Unused local PI.
-   ╰────
-  ⚠ warning: 1:1: Unused local X.
-   ╭─[<NO FILE>:1:1]
- 1 │ <NO FILE>
-   · ┬
-   · ╰── warning: 1:1: Unused local X.
-   ╰────
-  ⚠ warning: 1:1: Unused local Y.
-   ╭─[<NO FILE>:1:1]
- 1 │ <NO FILE>
-   · ┬
-   · ╰── warning: 1:1: Unused local Y.
-   ╰────
-  ⚠ warning: 1:1: Unused local Z.
-   ╭─[<NO FILE>:1:1]
- 1 │ <NO FILE>
-   · ┬
-   · ╰── warning: 1:1: Unused local Z.
-   ╰────
-Unexpected warnings(s) which did occur in line(s): 93
+-- No Errors --
 -- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

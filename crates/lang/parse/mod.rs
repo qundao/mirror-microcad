@@ -41,11 +41,28 @@ mod r#type;
 mod r#use;
 mod workbench;
 
-pub(crate) mod find_rule;
 pub(crate) mod parse_error;
 
-pub use find_rule::*;
+use microcad_syntax::{parser, tokens};
 pub use parse_error::*;
 
 use crate::{src_ref::*, syntax::*};
-const INTERNAL_PARSE_ERROR: &str = "internal parse error";
+use crate::parser::ParseContext;
+
+pub(crate) fn build_ast(source: &str, parse_context: &ParseContext) -> Result<microcad_syntax::ast::SourceFile, ParseErrorsWithSource> {
+    let tokens = tokens::lex(source);
+    parser::parse(tokens.as_slice()).map_err(|errors| {
+        let errors = errors
+            .into_iter()
+            .map(|error| ParseError::AstParser {
+                src_ref: parse_context.src_ref(&error.span),
+                error,
+            })
+            .collect::<Vec<_>>();
+        ParseErrorsWithSource {
+            errors,
+            source_code: Some(source.into()),
+            source_hash: parse_context.source_file_hash,
+        }
+    })
+}

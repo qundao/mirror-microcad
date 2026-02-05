@@ -1,19 +1,8 @@
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{parse::*, parser::*, rc::*, syntax::*};
+use crate::{parse::*, parser::*, syntax::*};
 use microcad_syntax::ast;
-
-impl Parse for Rc<ModuleDefinition> {
-    fn parse(pair: Pair) -> ParseResult<Self> {
-        Ok(Rc::new(ModuleDefinition {
-            doc: crate::find_rule_opt!(pair, doc_block)?,
-            visibility: crate::find_rule!(pair, visibility)?,
-            id: crate::find_rule!(pair, identifier)?,
-            body: crate::find_rule_opt!(pair, body)?,
-        }))
-    }
-}
 
 impl FromAst for ModuleDefinition {
     type AstNode = ast::ModuleDefinition;

@@ -17,7 +17,7 @@
      ╭─[../books/tests/src/statement_usage/body.md:103:3]
  102 │ {
  103 │   prop a = 1; // error
-     ·   ─────┬─────
+     ·   ─────┬────
      ·        ╰── error: 2:3: Assignment statement not available here
  104 │ }
      ╰────
@@ -25,7 +25,7 @@
      ╭─[../books/tests/src/statement_usage/body.md:103:3]
  102 │ {
  103 │   prop a = 1; // error
-     ·   ─────┬─────
+     ·   ─────┬────
      ·        ╰── error: 2:3: Missing model in workbench
  104 │ }
      ╰────

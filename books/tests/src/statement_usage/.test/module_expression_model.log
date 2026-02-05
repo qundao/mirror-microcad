@@ -17,7 +17,7 @@
      ╭─[../books/tests/src/statement_usage/module.md:111:3]
  110 │ mod k { // warning
  111 │   __builtin::geo2d::Circle(radius=1mm); // error
-     ·   ──────────────────┬──────────────────
+     ·   ──────────────────┬─────────────────
      ·                     ╰── error: 2:3: Expression statement not available here
  112 │ }
      ╰────

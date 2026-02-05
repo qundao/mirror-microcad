@@ -17,7 +17,7 @@
     ╭─[../books/tests/src/statement_usage/init.md:95:3]
  94 │ sketch K() { init(l:Length) {
  95 │   prop a = l; // error
-    ·   ─────┬─────
+    ·   ─────┬────
     ·        ╰── error: 2:3: Assignment statement not available here
  96 │ } } K(1cm);
     ╰────

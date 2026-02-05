@@ -5,12 +5,6 @@
 
 /// pest test main
 fn main() {
-    microcad_pest_test::generate(
-        "microcad_lang::parser::Parser",
-        "microcad_lang::parser::Rule",
-        "../crates/lang/grammar.pest",
-    );
-
     if let Err(err) = microcad_markdown_test::generate(
         "../books/tests/src",
         "md_test_book_tests.rs",

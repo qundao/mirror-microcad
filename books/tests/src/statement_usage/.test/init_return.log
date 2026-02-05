@@ -17,7 +17,7 @@
     ╭─[../books/tests/src/statement_usage/init.md:55:3]
  54 │ sketch K() { init(l:Length) {
  55 │   return l; // error
-    ·   ────┬────
+    ·   ────┬───
     ·       ╰── error: 2:3: Return statement not available here
  56 │ } } K(1cm);
     ╰────

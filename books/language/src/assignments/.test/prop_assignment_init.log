@@ -21,7 +21,7 @@
     ╭─[../books/language/src/assignments/property.md:46:5]
  45 │ sketch MySketch(radius: Length) {
  46 │     prop diameter = radius * 2; // error: not in initialization code
-    ·     ─────────────┬─────────────
+    ·     ─────────────┬────────────
     ·                  ╰── error: 2:5: Statement not allowed prior initializers
  47 │     
     ╰────

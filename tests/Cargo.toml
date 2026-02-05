@@ -26,7 +26,6 @@ microcad_test_tools = { path = "microcad_test_tools", version = "0" }
 
 [build-dependencies]
 microcad_markdown_test = { path = "microcad_markdown_test", version = "0" }
-microcad_pest_test = { path = "microcad_pest_test", version = "0" }
 microcad_test_tools = { path = "microcad_test_tools", version = "0" }
 examples_tests = { path = "examples_tests", version = "0" }
 

@@ -11,7 +11,7 @@ pub use identifier_list::*;
 use miette::SourceSpan;
 pub use qualified_name::*;
 
-use crate::{parse::*, parser::Parser, src_ref::*, syntax::*, Id};
+use crate::{parse::*, src_ref::*, syntax::*, Id};
 
 /// µcad identifier
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -137,7 +137,18 @@ impl Identifier {
 
     /// check if this is a valid identifier (contains only `A`-`Z`, `a`-`z` or `_`)
     pub fn validate(self) -> ParseResult<Self> {
-        Parser::parse_rule(crate::parser::Rule::identifier, self.id().as_str(), 0)
+        let str = self.0.as_str();
+        
+        let Some(start) = str.chars().next() else {
+            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+        };
+        if start != '_' && !start.is_ascii_alphabetic() {
+            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+        }
+        if !str.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
+            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+        }
+        Ok(self)
     }
 
     /// Add given `prefix` to identifier to get `qualified name`.
@@ -220,7 +231,8 @@ impl From<&std::ffi::OsStr> for Identifier {
 
 impl From<&str> for Identifier {
     fn from(value: &str) -> Self {
-        Parser::parse_rule(crate::parser::Rule::identifier, value, 0).expect("A valid identifier")
+        let identifier = Identifier::no_ref(value);
+        identifier.validate().expect("A valid identifier")
     }
 }
 

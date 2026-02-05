@@ -26,7 +26,7 @@
      ╭─[../books/language/src/assignments/const.md:145:5]
  144 │ fn f() {
  145 │     const MY_CONST = 1;     // error: not allowed in functions
-     ·     ─────────┬─────────
+     ·     ─────────┬────────
      ·              ╰── error: 2:5: Assignment statement is not available within Function
  146 │ }
      ╰────
@@ -34,7 +34,7 @@
      ╭─[../books/language/src/assignments/const.md:145:5]
  144 │ fn f() {
  145 │     const MY_CONST = 1;     // error: not allowed in functions
-     ·     ─────────┬─────────
+     ·     ─────────┬────────
      ·              ╰── error: 2:5: Declaration of MY_CONST not allowed within const_assignment_fn::f
  146 │ }
      ╰────
@@ -42,7 +42,7 @@
      ╭─[../books/language/src/assignments/const.md:151:9]
  150 │     fn f() {
  151 │         const MY_CONST = 1; // error: not allowed in workbench functions
-     ·         ─────────┬─────────
+     ·         ─────────┬────────
      ·                  ╰── error: 8:9: Assignment statement is not available within Function
  152 │     }
      ╰────
@@ -50,7 +50,7 @@
      ╭─[../books/language/src/assignments/const.md:151:9]
  150 │     fn f() {
  151 │         const MY_CONST = 1; // error: not allowed in workbench functions
-     ·         ─────────┬─────────
+     ·         ─────────┬────────
      ·                  ╰── error: 8:9: Declaration of MY_CONST not allowed within const_assignment_fn::MySketch::f
  152 │     }
      ╰────

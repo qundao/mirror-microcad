@@ -18,7 +18,7 @@
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
  40 │     const MY_CONST = 1;     // error: not allowed in functions
-    ·     ─────────┬─────────
+    ·     ─────────┬────────
     ·              ╰── error: 2:5: Assignment statement is not available within Function
  41 │ }
     ╰────
@@ -26,7 +26,7 @@
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
  40 │     const MY_CONST = 1;     // error: not allowed in functions
-    ·     ─────────┬─────────
+    ·     ─────────┬────────
     ·              ╰── error: 2:5: Declaration of MY_CONST not allowed within pub_assignment_fn::f
  41 │ }
     ╰────

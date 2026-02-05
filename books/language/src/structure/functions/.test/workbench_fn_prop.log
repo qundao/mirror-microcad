@@ -28,7 +28,7 @@
     ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
  57 │     fn inner() {
  58 │         prop hole = radius/2;  // error: prop not allowed in function
-    ·         ──────────┬──────────
+    ·         ──────────┬─────────
     ·                   ╰── error: 5:9: Assignment statement is not available within Function
  59 │         hole
     ╰────
@@ -36,7 +36,7 @@
     ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
  57 │     fn inner() {
  58 │         prop hole = radius/2;  // error: prop not allowed in function
-    ·         ──────────┬──────────
+    ·         ──────────┬─────────
     ·                   ╰── error: 5:9: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
  59 │         hole
     ╰────

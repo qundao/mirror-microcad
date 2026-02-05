@@ -33,7 +33,7 @@
     ╭─[../books/language/src/structure/functions/workbench_functions.md:81:9]
  80 │     init(diameter: Length) { 
  81 │         prop radius = diameter/2; // error: prop not allowed in init
-    ·         ────────────┬────────────
+    ·         ────────────┬───────────
     ·                     ╰── error: 5:9: Assignment statement not available here
  82 │     }
     ╰────

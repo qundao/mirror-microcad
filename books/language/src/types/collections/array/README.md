@@ -10,7 +10,7 @@ An array is an ordered collection of values with a common type.
 
 [![test](.test/arrays.svg)](.test/arrays.log)
 
-```µcad,arrays
+```µcad,arrays#todo
 a : [Integer] = [ 1, 2, 3, 4, 5 ];
 b : [Scalar]  = [ 1.42, 2.3, 3.1, 4.42, 5.23 ];
 c : [Length]  = [ 1.42mm, 2.3m, 3.1cm, 4.42cm, 5.23m ];

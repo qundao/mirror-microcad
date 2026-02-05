@@ -82,20 +82,7 @@
   78:   
 
 -- No Output --
--- Errors --
-  ⚠ warning: 1:1: Unused local PI.
-   ╭─[<NO FILE>:1:1]
- 1 │ <NO FILE>
-   · ─┬
-   ·  ╰── warning: 1:1: Unused local PI.
-   ╰────
-  ⚠ warning: 1:1: Unused local Y.
-   ╭─[<NO FILE>:1:1]
- 1 │ <NO FILE>
-   · ┬
-   · ╰── warning: 1:1: Unused local Y.
-   ╰────
-Unexpected warnings(s) which did occur in line(s): 6
+-- No Errors --
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
@@ -352,4 +339,4 @@ Unexpected warnings(s) which did occur in line(s): 6
 
 Export of "../books/examples/src/.test/logo-out.stl" successful.
 -- Test Result --
-OK (BUT WARNINGS)
+OK

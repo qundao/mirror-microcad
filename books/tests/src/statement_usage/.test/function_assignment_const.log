@@ -17,16 +17,16 @@
     ╭─[../books/tests/src/statement_usage/function.md:71:3]
  70 │ fn f() {
  71 │   const B = 1; // error
-    ·   ──────┬─────
-    ·         ╰── error: 2:3: Assignment statement is not available within Function
+    ·   ─────┬─────
+    ·        ╰── error: 2:3: Assignment statement is not available within Function
  72 │ } f();
     ╰────
   × error: 2:3: Declaration of B not allowed within function_assignment_const::f
     ╭─[../books/tests/src/statement_usage/function.md:71:3]
  70 │ fn f() {
  71 │   const B = 1; // error
-    ·   ──────┬─────
-    ·         ╰── error: 2:3: Declaration of B not allowed within function_assignment_const::f
+    ·   ─────┬─────
+    ·        ╰── error: 2:3: Declaration of B not allowed within function_assignment_const::f
  72 │ } f();
     ╰────
 Evaluation aborted because of prior resolve errors!

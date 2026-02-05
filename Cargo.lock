@@ -5448,7 +5448,6 @@ dependencies = [
  "microcad-export",
  "microcad-lang",
  "microcad_markdown_test",
- "microcad_pest_test",
  "microcad_test_tools",
  "pest",
  "pest_derive",
@@ -5510,16 +5509,6 @@ dependencies = [
  "microcad_test_tools",
  "miette",
  "regex",
-]
-
-[[package]]
-name = "microcad_pest_test"
-version = "0.2.20"
-dependencies = [
- "env_logger",
- "log",
- "pest",
- "pest_derive",
 ]
 
 [[package]]

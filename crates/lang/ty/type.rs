@@ -150,16 +150,6 @@ impl std::fmt::Debug for Type {
 }
 
 #[test]
-fn builtin_type() {
-    use crate::parser::*;
-    use crate::syntax::*;
-
-    let ty = Parser::parse_rule::<TypeAnnotation>(Rule::r#type, "Integer", 0).expect("test error");
-    assert_eq!(ty.0.to_string(), "Integer");
-    assert_eq!(ty.0.value, Type::Integer);
-}
-
-#[test]
 fn type_matching() {
     assert!(Type::scalar().is_matching(&Type::scalar()));
     assert!(!Type::scalar().is_matching(&Type::Integer));

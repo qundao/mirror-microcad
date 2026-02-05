@@ -21,7 +21,6 @@ pub use line_col::*;
 pub use refer::*;
 pub use src_referrer::*;
 
-use crate::parser::*;
 use derive_more::Deref;
 use miette::SourceSpan;
 
@@ -249,18 +248,6 @@ fn merge_all() {
         ),
         SrcRef::new(Range { start: 0, end: 16 }, 1, 1, 123),
     );
-}
-
-impl From<Pair<'_>> for SrcRef {
-    fn from(pair: Pair) -> Self {
-        let (line, col) = pair.line_col();
-        Self::new(
-            pair.as_span().start()..pair.as_span().end(),
-            line,
-            col,
-            pair.source_hash(),
-        )
-    }
 }
 
 #[test]

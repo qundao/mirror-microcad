@@ -10,7 +10,7 @@
 //! - Evaluate resolved sources in [`eval`]
 //! - Diagnose any evaluation errors in [`diag`]
 //!
-//! The grammar of µcad can be found [here](../../../lang/grammar.pest).
+//! The syntax definitions and parser of µcad can be found [here](../../../syntax).
 //!
 //! Good starting point to understand how µcad syntax works: [`syntax::SourceFile::load()`] loads a µcad source file.
 
@@ -35,28 +35,6 @@ pub type Id = compact_str::CompactString;
 
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
-
-/// Parse a rule from given string into a syntax element.
-/// - `ty`: Type of the output syntax element
-/// - `rule`: Parsing rule to use.
-/// - `code`: String slice of the code to parse
-#[macro_export]
-macro_rules! parse {
-    ($ty:path, $rule:path, $code:expr) => {
-        $crate::parser::Parser::parse_rule::<$ty>($rule, $code, 0).expect("bad inline code")
-    };
-}
-
-#[test]
-fn parse_macro() {
-    let y3 = 3;
-    let p = parse!(
-        syntax::ParameterList,
-        parser::Rule::parameter_list,
-        &format!("(x=0,y=[1,2,{y3},4],z=2)")
-    );
-    assert_eq!(p.to_string(), "x = 0, y = [1, 2, 3, 4], z = 2");
-}
 
 /// Shortens given string to it's first line and to `max_chars` characters.
 pub fn shorten(what: &str, max_chars: usize) -> String {

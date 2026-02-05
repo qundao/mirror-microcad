@@ -86,7 +86,6 @@ impl ResolveContext {
     pub(super) fn test_create(root: Rc<SourceFile>, mode: ResolveMode) -> ResolveResult<Self> {
         let mut context = Self {
             sources: Sources::load(root.clone(), &[] as &[std::path::PathBuf])?,
-            diag,
             ..Default::default()
         };
         context.load(None, mode)?;

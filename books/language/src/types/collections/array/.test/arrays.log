@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: arrays
-  Expected result: ok
+  Expected result: todo
       Source file: ../books/language/src/types/collections/array/README.md:14
         Test path: ../books/language/src/types/collections/array/.test
 
@@ -15,48 +15,7 @@
   19:                     std::geo3d::Sphere(radius = 1cm)
   20:                   ];
 
--- No Output --
--- Errors --
-  ⚠ warning: 1:1: Unused local a.
-    ╭─[../books/language/src/types/collections/array/README.md:14:1]
- 14 │ a : [Integer] = [ 1, 2, 3, 4, 5 ];
-    · ┬
-    · ╰── warning: 1:1: Unused local a.
- 15 │ b : [Scalar]  = [ 1.42, 2.3, 3.1, 4.42, 5.23 ];
-    ╰────
-  ⚠ warning: 2:1: Unused local b.
-    ╭─[../books/language/src/types/collections/array/README.md:15:1]
- 14 │ a : [Integer] = [ 1, 2, 3, 4, 5 ];
- 15 │ b : [Scalar]  = [ 1.42, 2.3, 3.1, 4.42, 5.23 ];
-    · ┬
-    · ╰── warning: 2:1: Unused local b.
- 16 │ c : [Length]  = [ 1.42mm, 2.3m, 3.1cm, 4.42cm, 5.23m ];
-    ╰────
-  ⚠ warning: 3:1: Unused local c.
-    ╭─[../books/language/src/types/collections/array/README.md:16:1]
- 15 │ b : [Scalar]  = [ 1.42, 2.3, 3.1, 4.42, 5.23 ];
- 16 │ c : [Length]  = [ 1.42mm, 2.3m, 3.1cm, 4.42cm, 5.23m ];
-    · ┬
-    · ╰── warning: 3:1: Unused local c.
- 17 │ d : [String]  = [ "one", "two", "three", "four", "five" ];
-    ╰────
-  ⚠ warning: 4:1: Unused local d.
-    ╭─[../books/language/src/types/collections/array/README.md:17:1]
- 16 │ c : [Length]  = [ 1.42mm, 2.3m, 3.1cm, 4.42cm, 5.23m ];
- 17 │ d : [String]  = [ "one", "two", "three", "four", "five" ];
-    · ┬
-    · ╰── warning: 4:1: Unused local d.
- 18 │ e : [Model]   = [ std::geo2d::Circle(radius = 1cm),
-    ╰────
-  ⚠ warning: 5:1: Unused local e.
-    ╭─[../books/language/src/types/collections/array/README.md:18:1]
- 17 │ d : [String]  = [ "one", "two", "three", "four", "five" ];
- 18 │ e : [Model]   = [ std::geo2d::Circle(radius = 1cm),
-    · ┬
-    · ╰── warning: 5:1: Unused local e.
- 19 │                   std::geo3d::Sphere(radius = 1cm)
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 14, 15, 16, 17, 18
--- No Model --
+-- Parse Error --
+Unknown type: Model
 -- Test Result --
-OK (BUT WARNINGS)
+TODO

@@ -54,39 +54,39 @@
     ╭─[../books/tests/src/tuple_matching.md:34:4]
  33 │ // Parameters given by named tuple
  34 │ f( (x=1cm, y=2cm, z=3cm) );
-    ·    ───────────┬──────────
-    ·               ╰── error: 7:4: Missing arguments: x,y,z
+    ·    ──────────┬──────────
+    ·              ╰── error: 7:4: Missing arguments: x,y,z
  35 │ 
     ╰────
   × error: 11:4: Missing arguments: x,y,z
     ╭─[../books/tests/src/tuple_matching.md:38:4]
  37 │ p = (x=1cm, y=2cm, z=3cm);
  38 │ f( p );
-    ·    ─┬
-    ·     ╰── error: 11:4: Missing arguments: x,y,z
+    ·    ┬
+    ·    ╰── error: 11:4: Missing arguments: x,y,z
  39 │ 
     ╰────
   × error: 14:4: Missing arguments: x,y
     ╭─[../books/tests/src/tuple_matching.md:41:4]
  40 │ // Parameters given by named tuple and a single value
  41 │ f( (x=1cm, y=2cm), z=3cm );
-    ·    ───────────┬──────────
-    ·               ╰── error: 14:4: Missing arguments: x,y
+    ·    ──────────┬──────────
+    ·              ╰── error: 14:4: Missing arguments: x,y
  42 │ f( y=2cm, (x=1cm, z=3cm) );
     ╰────
   × error: 15:4: Missing arguments: x,z
     ╭─[../books/tests/src/tuple_matching.md:42:4]
  41 │ f( (x=1cm, y=2cm), z=3cm );
  42 │ f( y=2cm, (x=1cm, z=3cm) );
-    ·    ───────────┬──────────
-    ·               ╰── error: 15:4: Missing arguments: x,z
+    ·    ──────────┬──────────
+    ·              ╰── error: 15:4: Missing arguments: x,z
  43 │ 
     ╰────
   × error: 19:4: Missing arguments: x,y
     ╭─[../books/tests/src/tuple_matching.md:46:4]
  45 │ q = (x=1cm, y=2cm);
  46 │ f( q, z=3cm );
-    ·    ────┬────
+    ·    ────┬───
     ·        ╰── error: 19:4: Missing arguments: x,y
     ╰────
 Unexpected error(s) which did occur in line(s): 34, 38, 41, 42, 46

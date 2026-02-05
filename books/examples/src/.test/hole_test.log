@@ -32,12 +32,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 7:5: Unused global symbol std::math.
+  ⚠ warning: 7:5: Unused global symbol std::math::*.
     ╭─[../books/examples/src/hole_test.md:12:5]
  11 │ use std::ops::*;
  12 │ use std::math::*;
-    ·     ────┬────
-    ·         ╰── warning: 7:5: Unused global symbol std::math.
+    ·     ──────┬─────
+    ·           ╰── warning: 7:5: Unused global symbol std::math::*.
  13 │ 
     ╰────
 Unexpected warnings(s) which did occur in line(s): 12

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, rc::*, tree_display::*};
-use microcad_syntax::{ast, parser, tokens};
+use microcad_syntax::ast;
 use std::fs::read_to_string;
 
 impl SourceFile {
@@ -33,12 +33,10 @@ impl SourceFile {
             Ok(buf) => buf,
             Err(error) => {
                 let error = ParseError::LoadSource(name.src_ref(), path.into(), error);
-                let mut source_file = SourceFile::new(None, StatementList::default(), String::new(), 0);
+                let mut source_file =
+                    SourceFile::new(None, StatementList::default(), String::new(), 0);
                 source_file.name = name;
-                return (
-                    Rc::new(source_file),
-                    Some(error.into()),
-                )
+                return (Rc::new(source_file), Some(error.into()));
             }
         };
 
@@ -86,43 +84,27 @@ impl SourceFile {
             source
         };
 
-        let tokens = tokens::lex(source_str);
-        let ast = match parser::parse(tokens.as_slice()) {
+        let ast = match build_ast(source_str, &parse_context) {
             Ok(ast) => ast,
-            Err(errors) => {
-                let errors = errors
-                    .into_iter()
-                    .map(|error| ParseError::AstParser {
-                        src_ref: parse_context.src_ref(&error.span),
-                        error,
-                    })
-                    .collect::<Vec<_>>();
-                let error = ParseErrorsWithSource {
-                    errors,
-                    source_code: Some(source_str.into()),
-                    source_hash: parse_context.source_file_hash,
-                };
-                return (
-                    dummy_source(),
-                    Some(error),
-                );
+            Err(error) => {
+                return (dummy_source(), Some(error));
             }
         };
 
-        let mut source_file = match Self::from_ast(&ast, &parse_context)
-            .map_err(|error| vec![error]) {
-            Ok(source_file) => source_file,
-            Err(errors) => {
-                return (
-                    dummy_source(),
-                    Some(ParseErrorsWithSource {
-                        errors,
-                        source_code: Some(source_str.into()),
-                        source_hash: parse_context.source_file_hash,
-                    })
-                );
-            }
-        };
+        let mut source_file =
+            match Self::from_ast(&ast, &parse_context).map_err(|error| vec![error]) {
+                Ok(source_file) => source_file,
+                Err(errors) => {
+                    return (
+                        dummy_source(),
+                        Some(ParseErrorsWithSource {
+                            errors,
+                            source_code: Some(source_str.into()),
+                            source_hash: parse_context.source_file_hash,
+                        }),
+                    );
+                }
+            };
         if let Some(name) = name {
             source_file.set_name(QualifiedName::from_id(Identifier::no_ref(name)));
         } else {
@@ -134,13 +116,6 @@ impl SourceFile {
         (source_file, None)
     }
 
-    fn calculate_hash(value: &str) -> u64 {
-        use std::hash::{Hash, Hasher};
-        let mut hasher = rustc_hash::FxHasher::default();
-        value.hash(&mut hasher);
-        hasher.finish()
-    }
-
     /// Get the source file name from path.
     pub fn name_from_path(path: impl AsRef<std::path::Path>) -> QualifiedName {
         QualifiedName::from_id(Identifier::no_ref(
@@ -149,21 +124,6 @@ impl SourceFile {
                 .file_stem()
                 .expect("illegal file name")
                 .to_string_lossy(),
-        ))
-    }
-}
-
-impl Parse for SourceFile {
-    fn parse(mut pair: Pair) -> ParseResult<Self> {
-        // calculate hash over complete file content
-        let hash = Self::calculate_hash(pair.as_str());
-        pair.set_source_hash(hash);
-
-        Ok(SourceFile::new(
-            crate::find_rule_opt!(pair, doc_block)?,
-            crate::find_rule!(pair, statement_list)?,
-            pair.as_span().as_str().to_string(),
-            hash,
         ))
     }
 }
@@ -183,15 +143,15 @@ impl FromAst for SourceFile {
 
 #[test]
 fn parse_source_file() {
-    let source_file = Parser::parse_rule::<SourceFile>(
-        Rule::source_file,
+    let source_file = SourceFile::load_from_str(
+        None,
+        "test.µcad",
         r#"use std::log::info;
             part Foo(r: Scalar) {
                 info("Hello, world, {r}!");
             }
             Foo(20.0);
             "#,
-        0,
     )
     .expect("test error");
 

@@ -19,7 +19,7 @@
     ╭─[../books/language/src/assignments/property.md:34:5]
  33 │ fn f() {
  34 │     prop diameter = radius * 2; // error: not in functions
-    ·     ─────────────┬─────────────
+    ·     ─────────────┬────────────
     ·                  ╰── error: 2:5: Assignment statement is not available within Function
  35 │ }
     ╰────
@@ -27,7 +27,7 @@
     ╭─[../books/language/src/assignments/property.md:34:5]
  33 │ fn f() {
  34 │     prop diameter = radius * 2; // error: not in functions
-    ·     ─────────────┬─────────────
+    ·     ─────────────┬────────────
     ·                  ╰── error: 2:5: Declaration of diameter not allowed within prop_assignment_fn::f
  35 │ }
     ╰────

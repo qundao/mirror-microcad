@@ -19,11 +19,11 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:5: Unused global symbol std::ops.
+  ⚠ warning: 1:5: Unused global symbol std::ops::*.
     ╭─[../books/tutorials/src/lego_brick/part/custom_op.md:11:5]
  11 │ use std::ops::*;
-    ·     ────┬───
-    ·         ╰── warning: 1:5: Unused global symbol std::ops.
+    ·     ─────┬─────
+    ·          ╰── warning: 1:5: Unused global symbol std::ops::*.
  12 │ 
     ╰────
   ⚠ warning: 5:4: Unused global symbol grid.

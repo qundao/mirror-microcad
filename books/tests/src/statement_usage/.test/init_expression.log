@@ -17,8 +17,8 @@
      ╭─[../books/tests/src/statement_usage/init.md:103:3]
  102 │ sketch K() { init(l:Length) {
  103 │   l + 2; // error
-     ·   ───┬──
-     ·      ╰── error: 2:3: Expression statement not available here
+     ·   ──┬──
+     ·     ╰── error: 2:3: Expression statement not available here
  104 │ } } K(1cm);
      ╰────
   × error: 2:3: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)

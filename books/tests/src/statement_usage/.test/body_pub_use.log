@@ -17,8 +17,8 @@
     ╭─[../books/tests/src/statement_usage/body.md:47:3]
  46 │ {
  47 │   pub use std; // error
-    ·   ──────┬─────
-    ·         ╰── error: 2:3: Public use statement not available here
+    ·   ─────┬─────
+    ·        ╰── error: 2:3: Public use statement not available here
  48 │ }
     ╰────
 -- Test Result --

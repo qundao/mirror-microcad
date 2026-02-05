@@ -19,12 +19,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 5:5: Unused global symbol std::ops.
+  ⚠ warning: 5:5: Unused global symbol std::ops::*.
     ╭─[../books/examples/src/gears.md:12:5]
  11 │ 
  12 │ use std::ops::*;
-    ·     ────┬───
-    ·         ╰── warning: 5:5: Unused global symbol std::ops.
+    ·     ─────┬─────
+    ·          ╰── warning: 5:5: Unused global symbol std::ops::*.
  13 │ use std::geo2d::*;
     ╰────
 Unexpected warnings(s) which did occur in line(s): 12

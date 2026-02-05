@@ -17,8 +17,8 @@
     ╭─[../books/tests/src/statement_usage/init.md:31:3]
  30 │ sketch K() { init(l:Length) { // warning
  31 │   init() {} // error
-    ·   ────┬────
-    ·       ╰── error: 2:3: Init statement not available here
+    ·   ─────────┬────────
+    ·            ╰── error: 2:3: Init statement not available here
  32 │ } } K(1cm);
     ╰────
   ⚠ warning: 1:19: Unused local l.

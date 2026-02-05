@@ -4,9 +4,6 @@
 mod markdown_test;
 
 #[cfg(test)]
-include!(concat!(env!("OUT_DIR"), "/microcad_pest_test.rs"));
-
-#[cfg(test)]
 include!(concat!(env!("OUT_DIR"), "/md_test_book_tests.rs"));
 
 #[cfg(test)]

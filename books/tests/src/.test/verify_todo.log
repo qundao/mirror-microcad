@@ -17,12 +17,12 @@
 
 -- No Output --
 -- Errors --
-  ☞ info: 4:20: a is zero
-    ╭─[../books/tests/src/debug.md:43:20]
+  ☞ info: 4:30: a is zero
+    ╭─[../books/tests/src/debug.md:43:30]
  42 │ if a == 0 {
  43 │     std::log::info("a is zero");
-    ·                    ─────┬─────
-    ·                         ╰── info: 4:20: a is zero
+    ·                              ┬
+    ·                              ╰── info: 4:30: a is zero
  44 │ } else {
     ╰────
 -- Model --

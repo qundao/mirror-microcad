@@ -17,8 +17,8 @@
      ╭─[../books/tests/src/statement_usage/module.md:103:3]
  102 │ mod k {  // warning
  103 │   1 + 2; // error
-     ·   ───┬──
-     ·      ╰── error: 2:3: Expression statement not available here
+     ·   ──┬──
+     ·     ╰── error: 2:3: Expression statement not available here
  104 │ }
      ╰────
   ⚠ warning: 1:5: Unused global symbol k.

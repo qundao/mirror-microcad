@@ -4,19 +4,6 @@
 use crate::{parse::*, parser::*, syntax::*};
 use microcad_syntax::ast;
 
-impl Parse for InitDefinition {
-    fn parse(pair: Pair) -> ParseResult<Self> {
-        Parser::ensure_rule(&pair, Rule::init_definition);
-
-        Ok(InitDefinition {
-            doc: crate::find_rule_opt!(pair, doc_block)?,
-            parameters: crate::find_rule!(pair, parameter_list)?,
-            body: crate::find_rule!(pair, body)?,
-            src_ref: pair.into(),
-        })
-    }
-}
-
 impl FromAst for InitDefinition {
     type AstNode = ast::InitDefinition;
 

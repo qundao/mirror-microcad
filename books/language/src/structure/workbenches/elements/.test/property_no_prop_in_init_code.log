@@ -23,7 +23,7 @@
     ╭─[../books/language/src/structure/workbenches/elements/properties.md:97:5]
  96 │ 
  97 │     prop max = 100;     // error: do not use prop here
-    ·     ───────┬───────
+    ·     ───────┬──────
     ·            ╰── error: 3:5: Statement not allowed prior initializers
  98 │ 
     ╰────

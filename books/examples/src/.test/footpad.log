@@ -71,12 +71,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 6:5: Unused global symbol std::math.
+  ⚠ warning: 6:5: Unused global symbol std::math::*.
     ╭─[../books/examples/src/footpad.md:11:5]
  10 │ use std::geo2d::*;
  11 │ use std::math::*;
-    ·     ────┬────
-    ·         ╰── warning: 6:5: Unused global symbol std::math.
+    ·     ──────┬─────
+    ·           ╰── warning: 6:5: Unused global symbol std::math::*.
  12 │ 
     ╰────
 Unexpected warnings(s) which did occur in line(s): 11

@@ -13,6 +13,6 @@
   11:   assert_eq([height,2m]);
 
 -- Parse Error --
-Parser error: expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon or end of input
 -- Test Result --
 TODO

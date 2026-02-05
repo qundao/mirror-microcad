@@ -13,7 +13,7 @@
   18:   #[export("circle.svg")] // Will be exported to `circle.svg`
   19:   std::geo2d::Circle(r = 42mm);
 
--- Parse Error --
-Parser error: expected single_line_comment
+-- No Output --
+-- No Errors --
 -- Test Result --
-TODO
+OK (BUT IS TODO)

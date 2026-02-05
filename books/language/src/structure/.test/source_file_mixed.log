@@ -16,7 +16,7 @@
     ╭─[../books/language/src/structure/source_file.md:59:1]
  58 │ std::geo2d::Circle(radius = 1cm);
  59 │ std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
-    · ────────────────┬────────────────
+    · ────────────────┬───────────────
     ·                 ╰── error: 2:1: Cannot mix 2d and 3d geometries
     ╰────
 -- Test Result --

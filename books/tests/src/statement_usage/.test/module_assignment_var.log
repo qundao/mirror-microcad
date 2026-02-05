@@ -17,8 +17,8 @@
     ╭─[../books/tests/src/statement_usage/module.md:87:3]
  86 │ mod k {
  87 │   a = 1; // error
-    ·   ───┬──
-    ·      ╰── error: 2:3: Declaration of a not allowed within module_assignment_var::k
+    ·   ──┬──
+    ·     ╰── error: 2:3: Declaration of a not allowed within module_assignment_var::k
  88 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!
