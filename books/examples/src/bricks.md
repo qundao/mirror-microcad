@@ -5,7 +5,7 @@
 [![Report](.test/bricks_brick.svg)](.test/bricks_brick.log)
 
 ```µcad,bricks_brick
-// file: brick
+// file: brick.µcad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -28,7 +28,7 @@ pub part Brick(rows = 2, columns = 4, base_height = BASE_HEIGHT) {
         c = columns - 1;
         n_rings = r * c;
         if n_rings > 0 {
-            Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+            Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
                 .multiply(n_rings)
                 .distribute_grid(
                     width = width - width / columns,
@@ -75,7 +75,7 @@ Brick(
 [![Report](.test/bricks_tutorial.svg)](.test/bricks_tutorial.log)
 
 ```µcad,bricks_tutorial
-// file: tutorial
+// file: tutorial.µcad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -98,7 +98,7 @@ sketch Base(
 ) {
     thickness = 1.2mm;
     frame = Frame(width, height, thickness);
-    struts = Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+    struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
         .grid(columns = columns-1, rows = rows-1);
     frame | struts;
 }
@@ -145,7 +145,7 @@ LegoBrick();
 [![Report](.test/bricks_use_bricks.svg)](.test/bricks_use_bricks.log)
 
 ```µcad,bricks_use_bricks
-// file: use_bricks
+// file: use_bricks.µcad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 

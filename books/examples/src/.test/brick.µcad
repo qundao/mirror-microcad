@@ -1,4 +1,4 @@
-// file: brick
+// file: brick.µcad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
@@ -21,7 +21,7 @@ pub part Brick(rows = 2, columns = 4, base_height = BASE_HEIGHT) {
         c = columns - 1;
         n_rings = r * c;
         if n_rings > 0 {
-            Ring(outer_d = 6.51mm, inner_d = 4.8mm)
+            Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
                 .multiply(n_rings)
                 .distribute_grid(
                     width = width - width / columns,
