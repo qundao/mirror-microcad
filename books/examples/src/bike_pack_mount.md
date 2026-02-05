@@ -62,8 +62,8 @@ Upper().translate(y = -50mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/bike_pack_mount-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/bike_pack_mount-out.stl)

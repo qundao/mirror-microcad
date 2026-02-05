@@ -13,8 +13,8 @@ use std::ops::*;
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/ngons-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/ngons-out.stl)

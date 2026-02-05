@@ -22,8 +22,8 @@ Dome(10mm, strut_width = 0.25mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/dome-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/dome-out.stl)

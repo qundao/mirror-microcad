@@ -125,8 +125,8 @@ gear.translate(x = ring_1.shift + ring_2.shift + ring_3.shift);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/spirograph-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/spirograph-out.stl)

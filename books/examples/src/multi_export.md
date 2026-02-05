@@ -18,8 +18,8 @@ std::geo2d::Circle(r = 42mm)
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/multi_export-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/multi_export-out.stl)

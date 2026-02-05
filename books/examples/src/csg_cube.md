@@ -21,8 +21,8 @@ CsgCube(50mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/csg_cube-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/csg_cube-out.stl)

@@ -64,10 +64,10 @@ Brick(
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/bricks_brick-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/bricks_brick-out.stl)
 
 ## Module: tutorial
@@ -134,10 +134,10 @@ LegoBrick();
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/bricks_tutorial-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/bricks_tutorial-out.stl)
 
 ## Module: use_bricks
@@ -170,9 +170,9 @@ double_2x2.translate(y = -40mm);
 third_3x2.translate(y = 40mm);
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/bricks_use_bricks-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/bricks_use_bricks-out.stl)
 

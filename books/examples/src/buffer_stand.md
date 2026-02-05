@@ -64,8 +64,8 @@ BufferStand();
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/buffer_stand-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/buffer_stand-out.stl)

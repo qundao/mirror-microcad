@@ -28,10 +28,10 @@ Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/text_love-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/text_love-out.stl)
 
 ## Module: text_plate
@@ -58,9 +58,9 @@ TextPlate("Hello µcad", 10mm)
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/text_text_plate-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/text_text_plate-out.stl)
 

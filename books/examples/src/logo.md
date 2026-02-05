@@ -77,8 +77,8 @@ microcad::Logo(size = SIZE).extrude(4mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/logo-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/logo-out.stl)

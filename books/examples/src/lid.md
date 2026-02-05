@@ -31,8 +31,8 @@ l; // Instantiate the lid.
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/lid-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/lid-out.stl)

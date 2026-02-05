@@ -34,8 +34,8 @@ LetterCube(20mm).translate(z = 10mm);
 
 ```
 
-2D Output
+**2D Output**
     : ![None](.test/letter_cube-out.svg)
 
-3D Output
+**3D Output**
     : ![None](.test/letter_cube-out.stl)
