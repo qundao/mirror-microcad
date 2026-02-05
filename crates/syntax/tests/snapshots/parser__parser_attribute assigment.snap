@@ -1,0 +1,96 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..31,
+        statements: StatementList {
+            span: 0..31,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..30,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        attributes: [
+                            Attribute {
+                                span: 0..20,
+                                is_inner: false,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                commands: [
+                                    Assignment(
+                                        Assignment {
+                                            span: 2..19,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            doc: None,
+                                            attributes: [],
+                                            visibility: None,
+                                            qualifier: None,
+                                            name: Identifier {
+                                                span: 2..7,
+                                                name: "color",
+                                            },
+                                            ty: None,
+                                            value: Literal(
+                                                Literal {
+                                                    span: 18..19,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    literal: String(
+                                                        StringLiteral {
+                                                            span: 18..19,
+                                                            content: "#FF00FF",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                ],
+                            },
+                        ],
+                        visibility: None,
+                        qualifier: None,
+                        name: Identifier {
+                            span: 25..26,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: Literal(
+                            Literal {
+                                span: 29..30,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 29..30,
+                                        value: 1,
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

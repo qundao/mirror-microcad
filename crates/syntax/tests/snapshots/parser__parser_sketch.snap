@@ -1,0 +1,148 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..58,
+        statements: StatementList {
+            span: 0..58,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Workbench(
+                    WorkbenchDefinition {
+                        span: 0..58,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        kind: Sketch,
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 7..12,
+                            name: "Wheel",
+                        },
+                        arguments: ArgumentsDefinition {
+                            span: 13..27,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 13..27,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    name: Identifier {
+                                        span: 13..19,
+                                        name: "radius",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 21..27,
+                                                name: "Length",
+                                            },
+                                        ),
+                                    ),
+                                    default: None,
+                                },
+                            ],
+                        },
+                        body: StatementList {
+                            span: 30..57,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            statements: [
+                                Expression(
+                                    ExpressionStatement {
+                                        span: 30..56,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        attributes: [],
+                                        expression: Call(
+                                            Call {
+                                                span: 30..56,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                name: QualifiedName {
+                                                    span: 30..48,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 30..33,
+                                                            name: "std",
+                                                        },
+                                                        Identifier {
+                                                            span: 35..40,
+                                                            name: "geo2d",
+                                                        },
+                                                        Identifier {
+                                                            span: 42..48,
+                                                            name: "Circle",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 49..55,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    arguments: [
+                                                        Unnamed(
+                                                            UnnamedArgument {
+                                                                span: 49..55,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                value: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 49..55,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 49..55,
+                                                                                name: "radius",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
+                                            },
+                                        ),
+                                    },
+                                ),
+                            ],
+                            tail: None,
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

@@ -1,0 +1,147 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..25,
+        statements: StatementList {
+            span: 0..25,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Expression(
+                    ExpressionStatement {
+                        span: 0..25,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: If(
+                            If {
+                                span: 0..25,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                condition: BinaryOperation(
+                                    BinaryOperation {
+                                        span: 3..8,
+                                        lhs: QualifiedName(
+                                            QualifiedName {
+                                                span: 3..4,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                parts: [
+                                                    Identifier {
+                                                        span: 3..4,
+                                                        name: "a",
+                                                    },
+                                                ],
+                                            },
+                                        ),
+                                        operation: GreaterThan,
+                                        rhs: Literal(
+                                            Literal {
+                                                span: 7..8,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 7..8,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ),
+                                body: StatementList {
+                                    span: 11..12,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    statements: [],
+                                    tail: Some(
+                                        Expression(
+                                            ExpressionStatement {
+                                                span: 11..12,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                attributes: [],
+                                                expression: Literal(
+                                                    Literal {
+                                                        span: 11..12,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        literal: Integer(
+                                                            IntegerLiteral {
+                                                                span: 11..12,
+                                                                value: 3,
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                },
+                                next_if: None,
+                                else_body: Some(
+                                    StatementList {
+                                        span: 22..23,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        statements: [],
+                                        tail: Some(
+                                            Expression(
+                                                ExpressionStatement {
+                                                    span: 22..23,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    attributes: [],
+                                                    expression: Literal(
+                                                        Literal {
+                                                            span: 22..23,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
+                                                            literal: Integer(
+                                                                IntegerLiteral {
+                                                                    span: 22..23,
+                                                                    value: 4,
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

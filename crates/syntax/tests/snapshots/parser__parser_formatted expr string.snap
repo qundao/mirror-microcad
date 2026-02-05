@@ -1,0 +1,67 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 47..48,
+        statements: StatementList {
+            span: 47..48,
+            statements: [],
+            tail: Some(
+                String(
+                    FormatString {
+                        span: 47..48,
+                        parts: [
+                            Content(
+                                StringContent {
+                                    span: 1..8,
+                                    content: "string ",
+                                },
+                            ),
+                            Expression(
+                                StringExpression {
+                                    span: 35..36,
+                                    expression: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 9..30,
+                                            lhs: Identifier(
+                                                Identifier {
+                                                    span: 9..17,
+                                                    name: "formated",
+                                                },
+                                            ),
+                                            operation: Subtract,
+                                            rhs: Identifier(
+                                                Identifier {
+                                                    span: 20..30,
+                                                    name: "expression",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    accuracy: Some(
+                                        Ok(
+                                            5,
+                                        ),
+                                    ),
+                                    width: Some(
+                                        Ok(
+                                            3,
+                                        ),
+                                    ),
+                                },
+                            ),
+                            Content(
+                                StringContent {
+                                    span: 36..47,
+                                    content: " expression",
+                                },
+                            ),
+                        ],
+                    },
+                ),
+            ),
+        },
+    },
+)

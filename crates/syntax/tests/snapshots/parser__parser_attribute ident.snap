@@ -1,0 +1,69 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..20,
+        statements: StatementList {
+            span: 0..20,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..19,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        attributes: [
+                            Attribute {
+                                span: 0..9,
+                                is_inner: false,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                commands: [
+                                    Ident(
+                                        Identifier {
+                                            span: 2..8,
+                                            name: "export",
+                                        },
+                                    ),
+                                ],
+                            },
+                        ],
+                        visibility: None,
+                        qualifier: None,
+                        name: Identifier {
+                            span: 14..15,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: Literal(
+                            Literal {
+                                span: 18..19,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 18..19,
+                                        value: 1,
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

@@ -1,0 +1,122 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..38,
+        statements: StatementList {
+            span: 0..38,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..37,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        attributes: [
+                            Attribute {
+                                span: 0..27,
+                                is_inner: false,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                commands: [
+                                    Call(
+                                        Call {
+                                            span: 2..26,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            name: QualifiedName {
+                                                span: 2..5,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                parts: [
+                                                    Identifier {
+                                                        span: 2..5,
+                                                        name: "svg",
+                                                    },
+                                                ],
+                                            },
+                                            arguments: ArgumentList {
+                                                span: 6..25,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                arguments: [
+                                                    Named(
+                                                        NamedArgument {
+                                                            span: 6..25,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
+                                                            name: Identifier {
+                                                                span: 6..11,
+                                                                name: "style",
+                                                            },
+                                                            value: Literal(
+                                                                Literal {
+                                                                    span: 24..25,
+                                                                    extras: ItemExtras {
+                                                                        leading: [],
+                                                                        trailing: [],
+                                                                    },
+                                                                    literal: String(
+                                                                        StringLiteral {
+                                                                            span: 24..25,
+                                                                            content: "fill:none",
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                ],
+                                            },
+                                        },
+                                    ),
+                                ],
+                            },
+                        ],
+                        visibility: None,
+                        qualifier: None,
+                        name: Identifier {
+                            span: 32..33,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: Literal(
+                            Literal {
+                                span: 36..37,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                literal: Integer(
+                                    IntegerLiteral {
+                                        span: 36..37,
+                                        value: 1,
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

@@ -1,0 +1,251 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..130,
+        statements: StatementList {
+            span: 0..130,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Workbench(
+                    WorkbenchDefinition {
+                        span: 0..130,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        kind: Sketch,
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 7..12,
+                            name: "Wheel",
+                        },
+                        arguments: ArgumentsDefinition {
+                            span: 13..27,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 13..27,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    name: Identifier {
+                                        span: 13..19,
+                                        name: "radius",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 21..27,
+                                                name: "Length",
+                                            },
+                                        ),
+                                    ),
+                                    default: None,
+                                },
+                            ],
+                        },
+                        body: StatementList {
+                            span: 35..128,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            statements: [
+                                Init(
+                                    InitDefinition {
+                                        span: 35..96,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        doc: None,
+                                        arguments: ArgumentsDefinition {
+                                            span: 40..56,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            arguments: [
+                                                ArgumentDefinition {
+                                                    span: 40..56,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    name: Identifier {
+                                                        span: 40..48,
+                                                        name: "diameter",
+                                                    },
+                                                    ty: Some(
+                                                        Single(
+                                                            SingleType {
+                                                                span: 50..56,
+                                                                name: "Length",
+                                                            },
+                                                        ),
+                                                    ),
+                                                    default: None,
+                                                },
+                                            ],
+                                        },
+                                        body: StatementList {
+                                            span: 68..90,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            statements: [
+                                                Assignment(
+                                                    Assignment {
+                                                        span: 68..89,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        doc: None,
+                                                        attributes: [],
+                                                        visibility: None,
+                                                        qualifier: None,
+                                                        name: Identifier {
+                                                            span: 68..74,
+                                                            name: "radius",
+                                                        },
+                                                        ty: None,
+                                                        value: BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 77..89,
+                                                                lhs: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 77..85,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 77..85,
+                                                                                name: "diameter",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                                operation: Divide,
+                                                                rhs: Literal(
+                                                                    Literal {
+                                                                        span: 88..89,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Integer(
+                                                                            IntegerLiteral {
+                                                                                span: 88..89,
+                                                                                value: 2,
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            ],
+                                            tail: None,
+                                        },
+                                    },
+                                ),
+                                Expression(
+                                    ExpressionStatement {
+                                        span: 101..127,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        attributes: [],
+                                        expression: Call(
+                                            Call {
+                                                span: 101..127,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                name: QualifiedName {
+                                                    span: 101..119,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 101..104,
+                                                            name: "std",
+                                                        },
+                                                        Identifier {
+                                                            span: 106..111,
+                                                            name: "geo2d",
+                                                        },
+                                                        Identifier {
+                                                            span: 113..119,
+                                                            name: "Circle",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 120..126,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    arguments: [
+                                                        Unnamed(
+                                                            UnnamedArgument {
+                                                                span: 120..126,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                value: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 120..126,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 120..126,
+                                                                                name: "radius",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
+                                            },
+                                        ),
+                                    },
+                                ),
+                            ],
+                            tail: None,
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

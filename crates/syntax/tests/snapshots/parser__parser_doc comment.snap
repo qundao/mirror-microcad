@@ -1,0 +1,167 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..85,
+        statements: StatementList {
+            span: 0..85,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Comment(
+                    Comment {
+                        span: 0..15,
+                        lines: [
+                            "/// Doc comment",
+                        ],
+                    },
+                ),
+                Workbench(
+                    WorkbenchDefinition {
+                        span: 20..85,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        kind: Part,
+                        attributes: [],
+                        visibility: None,
+                        name: Identifier {
+                            span: 25..28,
+                            name: "Foo",
+                        },
+                        arguments: ArgumentsDefinition {
+                            span: 29..29,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            arguments: [],
+                        },
+                        body: StatementList {
+                            span: 41..79,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            statements: [
+                                Expression(
+                                    ExpressionStatement {
+                                        span: 41..78,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        attributes: [],
+                                        expression: Call(
+                                            Call {
+                                                span: 41..78,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                name: QualifiedName {
+                                                    span: 41..49,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 41..49,
+                                                            name: "Cylinder",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 50..77,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    arguments: [
+                                                        Named(
+                                                            NamedArgument {
+                                                                span: 50..63,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                name: Identifier {
+                                                                    span: 50..56,
+                                                                    name: "height",
+                                                                },
+                                                                value: Literal(
+                                                                    Literal {
+                                                                        span: 59..63,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 59..63,
+                                                                                value: 10.0,
+                                                                                ty: SingleType {
+                                                                                    span: 61..63,
+                                                                                    name: "mm",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                        Named(
+                                                            NamedArgument {
+                                                                span: 65..77,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                name: Identifier {
+                                                                    span: 65..71,
+                                                                    name: "radius",
+                                                                },
+                                                                value: Literal(
+                                                                    Literal {
+                                                                        span: 74..77,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 74..77,
+                                                                                value: 5.0,
+                                                                                ty: SingleType {
+                                                                                    span: 75..77,
+                                                                                    name: "mm",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
+                                            },
+                                        ),
+                                    },
+                                ),
+                            ],
+                            tail: None,
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

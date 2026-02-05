@@ -1,0 +1,110 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 48..49,
+        statements: StatementList {
+            span: 48..49,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 48..49,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: String(
+                            FormatString {
+                                span: 48..49,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                parts: [
+                                    Content(
+                                        StringLiteral {
+                                            span: 1..8,
+                                            content: "string ",
+                                        },
+                                    ),
+                                    Expression(
+                                        StringExpression {
+                                            span: 36..37,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            expression: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 9..31,
+                                                    lhs: QualifiedName(
+                                                        QualifiedName {
+                                                            span: 9..18,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
+                                                            parts: [
+                                                                Identifier {
+                                                                    span: 9..18,
+                                                                    name: "formatted",
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                    operation: Subtract,
+                                                    rhs: QualifiedName(
+                                                        QualifiedName {
+                                                            span: 21..31,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
+                                                            parts: [
+                                                                Identifier {
+                                                                    span: 21..31,
+                                                                    name: "expression",
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                            specification: StringFormatSpecification {
+                                                span: 32..36,
+                                                precision: Some(
+                                                    Ok(
+                                                        5,
+                                                    ),
+                                                ),
+                                                width: Some(
+                                                    Ok(
+                                                        3,
+                                                    ),
+                                                ),
+                                            },
+                                        },
+                                    ),
+                                    Content(
+                                        StringLiteral {
+                                            span: 37..48,
+                                            content: " expression",
+                                        },
+                                    ),
+                                ],
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

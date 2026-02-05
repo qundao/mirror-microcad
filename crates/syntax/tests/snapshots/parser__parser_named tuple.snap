@@ -1,0 +1,117 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..27,
+        statements: StatementList {
+            span: 0..27,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 0..27,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: Tuple(
+                            TupleExpression {
+                                span: 0..27,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                values: [
+                                    TupleItem {
+                                        span: 1..11,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        name: Some(
+                                            Identifier {
+                                                span: 1..7,
+                                                name: "length",
+                                            },
+                                        ),
+                                        value: Literal(
+                                            Literal {
+                                                span: 10..11,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 10..11,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                    TupleItem {
+                                        span: 13..26,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        name: Some(
+                                            Identifier {
+                                                span: 13..18,
+                                                name: "width",
+                                            },
+                                        ),
+                                        value: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 21..26,
+                                                lhs: Literal(
+                                                    Literal {
+                                                        span: 21..22,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        literal: Integer(
+                                                            IntegerLiteral {
+                                                                span: 21..22,
+                                                                value: 1,
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                                operation: Add,
+                                                rhs: Literal(
+                                                    Literal {
+                                                        span: 25..26,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        literal: Integer(
+                                                            IntegerLiteral {
+                                                                span: 25..26,
+                                                                value: 1,
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ],
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

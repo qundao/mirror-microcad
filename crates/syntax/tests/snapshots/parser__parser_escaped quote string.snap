@@ -1,0 +1,44 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 35..36,
+        statements: StatementList {
+            span: 35..36,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 35..36,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: Literal(
+                            Literal {
+                                span: 35..36,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                literal: String(
+                                    StringLiteral {
+                                        span: 35..36,
+                                        content: "string \" with \" escaped \\ quotes",
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

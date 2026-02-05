@@ -1,0 +1,148 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..22,
+        statements: StatementList {
+            span: 0..22,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 0..22,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: ElementAccess(
+                            ElementAccess {
+                                span: 0..22,
+                                value: ElementAccess(
+                                    ElementAccess {
+                                        span: 0..14,
+                                        value: ElementAccess(
+                                            ElementAccess {
+                                                span: 0..10,
+                                                value: ElementAccess(
+                                                    ElementAccess {
+                                                        span: 0..6,
+                                                        value: QualifiedName(
+                                                            QualifiedName {
+                                                                span: 0..3,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                parts: [
+                                                                    Identifier {
+                                                                        span: 0..3,
+                                                                        name: "foo",
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ),
+                                                        element: ArrayElement(
+                                                            Literal(
+                                                                Literal {
+                                                                    span: 4..5,
+                                                                    extras: ItemExtras {
+                                                                        leading: [],
+                                                                        trailing: [],
+                                                                    },
+                                                                    literal: Integer(
+                                                                        IntegerLiteral {
+                                                                            span: 4..5,
+                                                                            value: 1,
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        ),
+                                                    },
+                                                ),
+                                                element: Attribute(
+                                                    Identifier {
+                                                        span: 7..10,
+                                                        name: "bar",
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                        element: Tuple(
+                                            Identifier {
+                                                span: 11..14,
+                                                name: "asd",
+                                            },
+                                        ),
+                                    },
+                                ),
+                                element: Method(
+                                    Call {
+                                        span: 15..22,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        name: QualifiedName {
+                                            span: 15..19,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            parts: [
+                                                Identifier {
+                                                    span: 15..19,
+                                                    name: "call",
+                                                },
+                                            ],
+                                        },
+                                        arguments: ArgumentList {
+                                            span: 20..21,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            arguments: [
+                                                Unnamed(
+                                                    UnnamedArgument {
+                                                        span: 20..21,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        value: Literal(
+                                                            Literal {
+                                                                span: 20..21,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                literal: Integer(
+                                                                    IntegerLiteral {
+                                                                        span: 20..21,
+                                                                        value: 1,
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            ],
+                                        },
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

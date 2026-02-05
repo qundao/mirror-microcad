@@ -1,0 +1,107 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..9,
+        statements: StatementList {
+            span: 0..9,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 0..9,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: BinaryOperation(
+                            BinaryOperation {
+                                span: 0..9,
+                                lhs: BinaryOperation(
+                                    BinaryOperation {
+                                        span: 0..3,
+                                        lhs: QualifiedName(
+                                            QualifiedName {
+                                                span: 0..1,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                parts: [
+                                                    Identifier {
+                                                        span: 0..1,
+                                                        name: "a",
+                                                    },
+                                                ],
+                                            },
+                                        ),
+                                        operation: PowerXor,
+                                        rhs: Literal(
+                                            Literal {
+                                                span: 2..3,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 2..3,
+                                                        value: 2,
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ),
+                                operation: Add,
+                                rhs: BinaryOperation(
+                                    BinaryOperation {
+                                        span: 6..9,
+                                        lhs: QualifiedName(
+                                            QualifiedName {
+                                                span: 6..7,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                parts: [
+                                                    Identifier {
+                                                        span: 6..7,
+                                                        name: "b",
+                                                    },
+                                                ],
+                                            },
+                                        ),
+                                        operation: PowerXor,
+                                        rhs: Literal(
+                                            Literal {
+                                                span: 8..9,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 8..9,
+                                                        value: 3,
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

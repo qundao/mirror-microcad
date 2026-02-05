@@ -1,0 +1,65 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..5,
+        statements: StatementList {
+            span: 0..5,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 0..5,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: BinaryOperation(
+                            BinaryOperation {
+                                span: 0..5,
+                                lhs: Literal(
+                                    Literal {
+                                        span: 0..1,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 0..1,
+                                                value: 1,
+                                            },
+                                        ),
+                                    },
+                                ),
+                                operation: Add,
+                                rhs: Literal(
+                                    Literal {
+                                        span: 4..5,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 4..5,
+                                                value: 1,
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

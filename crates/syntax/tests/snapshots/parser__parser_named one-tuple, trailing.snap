@@ -1,0 +1,68 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..13,
+        statements: StatementList {
+            span: 0..13,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 0..13,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: Tuple(
+                            TupleExpression {
+                                span: 0..13,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                values: [
+                                    TupleItem {
+                                        span: 1..11,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        name: Some(
+                                            Identifier {
+                                                span: 1..7,
+                                                name: "length",
+                                            },
+                                        ),
+                                        value: Literal(
+                                            Literal {
+                                                span: 10..11,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 10..11,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ],
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

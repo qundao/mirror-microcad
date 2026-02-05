@@ -1,0 +1,98 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..13,
+        statements: StatementList {
+            span: 0..13,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Assignment(
+                    Assignment {
+                        span: 0..12,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        attributes: [],
+                        visibility: None,
+                        qualifier: None,
+                        name: Identifier {
+                            span: 0..1,
+                            name: "a",
+                        },
+                        ty: None,
+                        value: ArrayList(
+                            ArrayListExpression {
+                                span: 4..12,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                items: [
+                                    ArrayItem {
+                                        span: 5..6,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        expression: Literal(
+                                            Literal {
+                                                span: 5..6,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 5..6,
+                                                        value: 1,
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                    ArrayItem {
+                                        span: 8..9,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        expression: Literal(
+                                            Literal {
+                                                span: 8..9,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 8..9,
+                                                        value: 2,
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ],
+                                ty: Some(
+                                    SingleType {
+                                        span: 10..12,
+                                        name: "mm",
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

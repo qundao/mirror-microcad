@@ -1,0 +1,153 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..34,
+        statements: StatementList {
+            span: 0..34,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Function(
+                    FunctionDefinition {
+                        span: 0..34,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        doc: None,
+                        visibility: None,
+                        name: Identifier {
+                            span: 3..6,
+                            name: "foo",
+                        },
+                        arguments: ArgumentsDefinition {
+                            span: 7..25,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            arguments: [
+                                ArgumentDefinition {
+                                    span: 7..16,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    name: Identifier {
+                                        span: 7..8,
+                                        name: "a",
+                                    },
+                                    ty: Some(
+                                        Single(
+                                            SingleType {
+                                                span: 10..16,
+                                                name: "Length",
+                                            },
+                                        ),
+                                    ),
+                                    default: None,
+                                },
+                                ArgumentDefinition {
+                                    span: 18..25,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    name: Identifier {
+                                        span: 18..19,
+                                        name: "b",
+                                    },
+                                    ty: None,
+                                    default: Some(
+                                        Literal(
+                                            Literal {
+                                                span: 22..25,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Quantity(
+                                                    QuantityLiteral {
+                                                        span: 22..25,
+                                                        value: 3.0,
+                                                        ty: SingleType {
+                                                            span: 23..25,
+                                                            name: "mm",
+                                                        },
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    ),
+                                },
+                            ],
+                        },
+                        return_type: None,
+                        body: StatementList {
+                            span: 28..33,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            statements: [],
+                            tail: Some(
+                                Expression(
+                                    ExpressionStatement {
+                                        span: 28..33,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        attributes: [],
+                                        expression: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 28..33,
+                                                lhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 28..29,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 28..29,
+                                                                name: "b",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                                operation: Divide,
+                                                rhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 32..33,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 32..33,
+                                                                name: "a",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ),
+                            ),
+                        },
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

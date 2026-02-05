@@ -1,0 +1,223 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..44,
+        statements: StatementList {
+            span: 0..44,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 0..44,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: BinaryOperation(
+                            BinaryOperation {
+                                span: 0..44,
+                                lhs: BinaryOperation(
+                                    BinaryOperation {
+                                        span: 0..39,
+                                        lhs: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 0..34,
+                                                lhs: BinaryOperation(
+                                                    BinaryOperation {
+                                                        span: 0..20,
+                                                        lhs: BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 0..7,
+                                                                lhs: Literal(
+                                                                    Literal {
+                                                                        span: 0..2,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 0..2,
+                                                                                value: 0.0,
+                                                                                ty: SingleType {
+                                                                                    span: 1..2,
+                                                                                    name: "\"",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                                operation: Add,
+                                                                rhs: Literal(
+                                                                    Literal {
+                                                                        span: 5..7,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 5..7,
+                                                                                value: 1.0,
+                                                                                ty: SingleType {
+                                                                                    span: 6..7,
+                                                                                    name: "%",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                        operation: Add,
+                                                        rhs: BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 10..20,
+                                                                lhs: Literal(
+                                                                    Literal {
+                                                                        span: 10..13,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 10..13,
+                                                                                value: 2.0,
+                                                                                ty: SingleType {
+                                                                                    span: 11..13,
+                                                                                    name: "mm",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                                operation: Divide,
+                                                                rhs: Literal(
+                                                                    Literal {
+                                                                        span: 16..20,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 16..20,
+                                                                                value: 3.0,
+                                                                                ty: SingleType {
+                                                                                    span: 17..20,
+                                                                                    name: "mm2",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                                operation: Subtract,
+                                                rhs: BinaryOperation(
+                                                    BinaryOperation {
+                                                        span: 23..34,
+                                                        lhs: Literal(
+                                                            Literal {
+                                                                span: 23..28,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                literal: Quantity(
+                                                                    QuantityLiteral {
+                                                                        span: 23..28,
+                                                                        value: 4.0,
+                                                                        ty: SingleType {
+                                                                            span: 24..28,
+                                                                            name: "mm³",
+                                                                        },
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                        operation: Multiply,
+                                                        rhs: Literal(
+                                                            Literal {
+                                                                span: 31..34,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                literal: Quantity(
+                                                                    QuantityLiteral {
+                                                                        span: 31..34,
+                                                                        value: 1.0,
+                                                                        ty: SingleType {
+                                                                            span: 32..34,
+                                                                            name: "°",
+                                                                        },
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                        operation: Add,
+                                        rhs: Literal(
+                                            Literal {
+                                                span: 37..39,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Quantity(
+                                                    QuantityLiteral {
+                                                        span: 37..39,
+                                                        value: 1.0,
+                                                        ty: SingleType {
+                                                            span: 38..39,
+                                                            name: "\"",
+                                                        },
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ),
+                                operation: Subtract,
+                                rhs: Literal(
+                                    Literal {
+                                        span: 42..44,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        literal: Quantity(
+                                            QuantityLiteral {
+                                                span: 42..44,
+                                                value: 2.0,
+                                                ty: SingleType {
+                                                    span: 43..44,
+                                                    name: "'",
+                                                },
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

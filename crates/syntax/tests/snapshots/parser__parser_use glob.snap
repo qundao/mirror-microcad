@@ -1,0 +1,54 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..16,
+        statements: StatementList {
+            span: 0..16,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [
+                Use(
+                    UseStatement {
+                        span: 0..15,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        visibility: None,
+                        name: UseName {
+                            span: 4..15,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            parts: [
+                                Identifier(
+                                    Identifier {
+                                        span: 4..7,
+                                        name: "foo",
+                                    },
+                                ),
+                                Identifier(
+                                    Identifier {
+                                        span: 9..12,
+                                        name: "bar",
+                                    },
+                                ),
+                                Glob(
+                                    14..15,
+                                ),
+                            ],
+                        },
+                        use_as: None,
+                    },
+                ),
+            ],
+            tail: None,
+        },
+    },
+)
