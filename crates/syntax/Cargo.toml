@@ -1,0 +1,24 @@
+[package]
+name = "microcad-syntax"
+description.workspace = true
+authors.workspace = true
+version.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+
+[dependencies]
+logos = "0.16.0"
+compact_str = "0.9.0"
+chumsky = "0.12.0"
+thiserror = "2.0.17"
+miette = "7.6.0"
+either = "1.15.0"
+
+[dev-dependencies]
+insta = { version = "1.45.0" }
+test-case = "3.3.1"
+miette = { version = "7.6.0", features = ["fancy"] }
