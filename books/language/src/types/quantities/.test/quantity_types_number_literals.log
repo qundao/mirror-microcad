@@ -19,19 +19,19 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 9:1: Unused local width.
+  ⚠ warning: 19:1: Unused local width.
     ╭─[../books/language/src/types/quantities/README.md:19:1]
  18 │ // `height` with `Scalar` `2` and add ten centimeters
  19 │ width = height * 2 + 10cm;
     · ──┬──
-    ·   ╰── warning: 9:1: Unused local width.
+    ·   ╰── Unused local width.
     ╰────
-  ⚠ warning: 5:4: Unused global symbol f.
+  ⚠ warning: 15:4: Unused global symbol f.
     ╭─[../books/language/src/types/quantities/README.md:15:4]
  14 │ // use as *default* value in parameter list
  15 │ fn f( height = 1m ) {}
     ·    ┬
-    ·    ╰── warning: 5:4: Unused global symbol f.
+    ·    ╰── Unused global symbol f.
  16 │ 
     ╰────
 Unexpected warnings(s) which did occur in line(s): 15, 19

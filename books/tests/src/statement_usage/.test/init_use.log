@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:19: Unused local l.
+  ⚠ warning: 38:19: Unused local l.
     ╭─[../books/tests/src/statement_usage/init.md:38:19]
  38 │ sketch K() { init(l:Length) {
     ·                   ┬
-    ·                   ╰── warning: 1:19: Unused local l.
+    ·                   ╰── Unused local l.
  39 │   use std;
     ╰────
 Unexpected warnings(s) which did occur in line(s): 38

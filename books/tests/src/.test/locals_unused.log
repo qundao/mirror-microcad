@@ -15,11 +15,11 @@
 1
 
 -- Errors --
-  ⚠ warning: 1:1: Unused local x.
+  ⚠ warning: 6:1: Unused local x.
    ╭─[../books/tests/src/locals.md:6:1]
  6 │ x = 1; // warning: unused local
    · ┬
-   · ╰── warning: 1:1: Unused local x.
+   · ╰── Unused local x.
  7 │ y = 1;
    ╰────
 -- No Model --

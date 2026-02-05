@@ -32,12 +32,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 9:8: Unused global symbol into_radius.
+  ⚠ warning: 21:8: Unused global symbol into_radius.
     ╭─[../books/language/src/structure/workbenches/elements/init_code.md:21:8]
  20 │     // function
  21 │     fn into_radius( diameter: Length ) {
     ·        ─────┬─────
-    ·             ╰── warning: 9:8: Unused global symbol into_radius.
+    ·             ╰── Unused global symbol into_radius.
  22 │         // use constant FACTOR from init code
     ╰────
 Unexpected warnings(s) which did occur in line(s): 21

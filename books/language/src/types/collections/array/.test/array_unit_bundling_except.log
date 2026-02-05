@@ -11,23 +11,23 @@
 
 -- No Output --
 -- Errors --
-  × error: 1:41: Array elements have different types: [Integer, Length, Integer]
+  × error: 40:41: Array elements have different types: [Integer, Length, Integer]
     ╭─[../books/language/src/types/collections/array/README.md:40:41]
  40 │ std::debug::assert_eq([ [1mm, 2m, 3mm], [1, 2m, 3]mm ]);
     ·                                         ──────┬─────
-    ·                                               ╰── error: 1:41: Array elements have different types: [Integer, Length, Integer]
+    ·                                               ╰── Array elements have different types: [Integer, Length, Integer]
     ╰────
-  × error: 1:23: Array elements have different types: [[Length], <NO TYPE>]
+  × error: 40:23: Array elements have different types: [[Length], <NO TYPE>]
     ╭─[../books/language/src/types/collections/array/README.md:40:23]
  40 │ std::debug::assert_eq([ [1mm, 2m, 3mm], [1, 2m, 3]mm ]);
     ·                       ────────────────┬───────────────
-    ·                                       ╰── error: 1:23: Array elements have different types: [[Length], <NO TYPE>]
+    ·                                       ╰── Array elements have different types: [[Length], <NO TYPE>]
     ╰────
-  × error: 1:23: Assertion failed: Invalid: <NO VALUE>
+  × error: 40:23: Assertion failed: Invalid: <NO VALUE>
     ╭─[../books/language/src/types/collections/array/README.md:40:23]
  40 │ std::debug::assert_eq([ [1mm, 2m, 3mm], [1, 2m, 3]mm ]);
     ·                       ────────────────┬───────────────
-    ·                                       ╰── error: 1:23: Assertion failed: Invalid: <NO VALUE>
+    ·                                       ╰── Assertion failed: Invalid: <NO VALUE>
     ╰────
 Unexpected error(s) which did occur in line(s): 40
 -- Test Result --

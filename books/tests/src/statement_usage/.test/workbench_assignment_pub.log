@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Assignment statement is not available within Sketch
+  × error: 103:3: Assignment statement is not available within Sketch
      ╭─[../books/tests/src/statement_usage/workbench.md:103:3]
  102 │ sketch K() {
  103 │   pub a = 1; // error
      ·   ────┬────
-     ·       ╰── error: 2:3: Assignment statement is not available within Sketch
+     ·       ╰── Assignment statement is not available within Sketch
  104 │ } K();
      ╰────
 Evaluation aborted because of prior resolve errors!

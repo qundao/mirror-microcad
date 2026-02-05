@@ -18,20 +18,20 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:11: Array elements have different types: [<NO TYPE>, Integer]
+  × error: 74:11: Array elements have different types: [<NO TYPE>, Integer]
     ╭─[../books/tests/src/function.md:74:11]
  73 │ use std::debug::*;
  74 │ assert_eq([ f(1), 2 ]);
     ·           ─────┬─────
-    ·                ╰── error: 7:11: Array elements have different types: [<NO TYPE>, Integer]
+    ·                ╰── Array elements have different types: [<NO TYPE>, Integer]
  75 │ assert_eq([ f(4), 3 ]);
     ╰────
-  × error: 7:11: Assertion failed: Invalid: <NO VALUE>
+  × error: 74:11: Assertion failed: Invalid: <NO VALUE>
     ╭─[../books/tests/src/function.md:74:11]
  73 │ use std::debug::*;
  74 │ assert_eq([ f(1), 2 ]);
     ·           ─────┬─────
-    ·                ╰── error: 7:11: Assertion failed: Invalid: <NO VALUE>
+    ·                ╰── Assertion failed: Invalid: <NO VALUE>
  75 │ assert_eq([ f(4), 3 ]);
     ╰────
 Expected error(s) which did not occur in line(s): 68

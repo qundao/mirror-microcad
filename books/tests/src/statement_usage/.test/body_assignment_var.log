@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 2:3: Unused local a.
+  ⚠ warning: 95:3: Unused local a.
     ╭─[../books/tests/src/statement_usage/body.md:95:3]
  94 │ {
  95 │   a = 1;
     ·   ┬
-    ·   ╰── warning: 2:3: Unused local a.
+    ·   ╰── Unused local a.
  96 │ }
     ╰────
 Unexpected warnings(s) which did occur in line(s): 95

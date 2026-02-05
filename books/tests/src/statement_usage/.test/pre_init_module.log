@@ -13,28 +13,28 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:7: Statement not allowed within workbenches
+  × error: 15:7: Statement not allowed within workbenches
     ╭─[../books/tests/src/statement_usage/pre-init.md:15:7]
  14 │ sketch K() { 
  15 │   mod m {}   // error
     ·       ┬
-    ·       ╰── error: 2:7: Statement not allowed within workbenches
+    ·       ╰── Statement not allowed within workbenches
  16 │ init(l:Length) {} } K();
     ╰────
-  × error: 2:7: Statement is not available within Sketch
+  × error: 15:7: Statement is not available within Sketch
     ╭─[../books/tests/src/statement_usage/pre-init.md:15:7]
  14 │ sketch K() { 
  15 │   mod m {}   // error
     ·       ┬
-    ·       ╰── error: 2:7: Statement is not available within Sketch
+    ·       ╰── Statement is not available within Sketch
  16 │ init(l:Length) {} } K();
     ╰────
-  × error: 2:7: Module definition is not available within Sketch
+  × error: 15:7: Module definition is not available within Sketch
     ╭─[../books/tests/src/statement_usage/pre-init.md:15:7]
  14 │ sketch K() { 
  15 │   mod m {}   // error
     ·       ┬
-    ·       ╰── error: 2:7: Module definition is not available within Sketch
+    ·       ╰── Module definition is not available within Sketch
  16 │ init(l:Length) {} } K();
     ╰────
 Evaluation aborted because of prior resolve errors!

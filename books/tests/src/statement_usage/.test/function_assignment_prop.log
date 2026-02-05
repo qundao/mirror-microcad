@@ -13,20 +13,20 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Assignment statement is not available within Function
+  × error: 95:3: Assignment statement is not available within Function
     ╭─[../books/tests/src/statement_usage/function.md:95:3]
  94 │ fn f() {
  95 │   prop a = 1; // error
     ·   ─────┬────
-    ·        ╰── error: 2:3: Assignment statement is not available within Function
+    ·        ╰── Assignment statement is not available within Function
  96 │ } f();
     ╰────
-  × error: 2:3: Declaration of a not allowed within function_assignment_prop::f
+  × error: 95:3: Declaration of a not allowed within function_assignment_prop::f
     ╭─[../books/tests/src/statement_usage/function.md:95:3]
  94 │ fn f() {
  95 │   prop a = 1; // error
     ·   ─────┬────
-    ·        ╰── error: 2:3: Declaration of a not allowed within function_assignment_prop::f
+    ·        ╰── Declaration of a not allowed within function_assignment_prop::f
  96 │ } f();
     ╰────
 Evaluation aborted because of prior resolve errors!

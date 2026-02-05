@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Declaration of a not allowed within assignment_model_module::my_module
+  × error: 39:5: Declaration of a not allowed within assignment_model_module::my_module
     ╭─[../books/language/src/assignments/model.md:39:5]
  38 │ mod my_module {
  39 │     a = std::geo2d::Circle(radius = 1mm);   // error
     ·     ──────────────────┬─────────────────
-    ·                       ╰── error: 2:5: Declaration of a not allowed within assignment_model_module::my_module
+    ·                       ╰── Declaration of a not allowed within assignment_model_module::my_module
  40 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!

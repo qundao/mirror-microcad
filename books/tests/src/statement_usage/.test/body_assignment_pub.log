@@ -13,20 +13,20 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Assignment statement not available here
+  × error: 87:3: Assignment statement not available here
     ╭─[../books/tests/src/statement_usage/body.md:87:3]
  86 │ {
  87 │   pub p = 1; // error
     ·   ────┬────
-    ·       ╰── error: 2:3: Assignment statement not available here
+    ·       ╰── Assignment statement not available here
  88 │ }
     ╰────
-  × error: 2:3: Symbol p not found.
+  × error: 87:3: Symbol p not found.
     ╭─[../books/tests/src/statement_usage/body.md:87:3]
  86 │ {
  87 │   pub p = 1; // error
     ·   ────┬────
-    ·       ╰── error: 2:3: Symbol p not found.
+    ·       ╰── Symbol p not found.
  88 │ }
     ╰────
 -- Test Result --

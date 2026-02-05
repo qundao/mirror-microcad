@@ -11,11 +11,11 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:1: Unused local i.
+  ⚠ warning: 34:1: Unused local i.
     ╭─[../books/language/src/types/primitives.md:34:1]
  34 │ i = 3;
     · ┬
-    · ╰── warning: 1:1: Unused local i.
+    · ╰── Unused local i.
     ╰────
 Unexpected warnings(s) which did occur in line(s): 34
 -- No Model --

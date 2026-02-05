@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Statement is not available within Module
+  × error: 31:3: Statement is not available within Module
     ╭─[../books/tests/src/statement_usage/module.md:31:3]
  30 │ mod k {
  31 │   init() { }  // error
     ·   ──────────┬─────────
-    ·             ╰── error: 2:3: Statement is not available within Module
+    ·             ╰── Statement is not available within Module
  32 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!

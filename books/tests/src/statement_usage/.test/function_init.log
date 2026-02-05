@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Statement is not available within Function
+  × error: 31:3: Statement is not available within Function
     ╭─[../books/tests/src/statement_usage/function.md:31:3]
  30 │ fn f() {
  31 │   init() {} // error
     ·   ─────────┬────────
-    ·            ╰── error: 2:3: Statement is not available within Function
+    ·            ╰── Statement is not available within Function
  32 │ } f();
     ╰────
 Evaluation aborted because of prior resolve errors!

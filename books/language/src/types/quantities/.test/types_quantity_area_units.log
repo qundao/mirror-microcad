@@ -16,20 +16,20 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 4:1: Unused local square_inch.
+  ⚠ warning: 87:1: Unused local square_inch.
     ╭─[../books/language/src/types/quantities/types.md:87:1]
  86 │ square_meter = 0.1m²;
  87 │ square_inch = 155in²;
     · ─────┬─────
-    ·      ╰── warning: 4:1: Unused local square_inch.
+    ·      ╰── Unused local square_inch.
  88 │ 
     ╰────
-  ⚠ warning: 3:1: Unused local square_meter.
+  ⚠ warning: 86:1: Unused local square_meter.
     ╭─[../books/language/src/types/quantities/types.md:86:1]
  85 │ square_centimeter = 1000cm2;
  86 │ square_meter = 0.1m²;
     · ──────┬─────
-    ·       ╰── warning: 3:1: Unused local square_meter.
+    ·       ╰── Unused local square_meter.
  87 │ square_inch = 155in²;
     ╰────
 Unexpected warnings(s) which did occur in line(s): 86, 87

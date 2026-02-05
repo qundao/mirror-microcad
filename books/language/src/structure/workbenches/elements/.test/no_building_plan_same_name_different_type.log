@@ -21,16 +21,16 @@
 
 -- No Output --
 -- Errors --
-  × error: 8:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
+  × error: 139:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
   ╰─▶ Invalid operation: `1` + `9mm` (try `9mm` + `1`)
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:21]
  138 │ 
  139 │     Circle(radius = radius + thickness) - Circle(radius)
      ·                     ─────────┬────────
-     ·                              ╰── error: 8:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
+     ·                              ╰── Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
  140 │ }
      ╰────
-  × error: 8:12: Workbench Circle cannot find initialization for those arguments
+  × error: 139:12: Workbench Circle cannot find initialization for those arguments
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:5]
  138 │ 
  139 │     Circle(radius = radius + thickness) - Circle(radius)
@@ -41,7 +41,7 @@
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-  × error: 8:50: Workbench Circle cannot find initialization for those arguments
+  × error: 139:50: Workbench Circle cannot find initialization for those arguments
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:43]
  138 │ 
  139 │     Circle(radius = radius + thickness) - Circle(radius)

@@ -16,12 +16,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Statement not allowed prior initializers
+  × error: 114:5: Statement not allowed prior initializers
      ╭─[../books/language/src/assignments/value.md:114:5]
  113 │ sketch MySketch() {
  114 │     a = 1;   // error
      ·     ──┬──
-     ·       ╰── error: 2:5: Statement not allowed prior initializers
+     ·       ╰── Statement not allowed prior initializers
  115 │     init(_x : Scalar) {}
      ╰────
 Evaluation aborted because of prior resolve errors!

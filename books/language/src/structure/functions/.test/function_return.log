@@ -22,26 +22,26 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:9: Unused local x.
+  ⚠ warning: 61:9: Unused local x.
     ╭─[../books/language/src/structure/functions/result.md:61:9]
  61 │ fn pow( x: Scalar, n: Integer ) -> Scalar {
     ·         ┬
-    ·         ╰── warning: 1:9: Unused local x.
+    ·         ╰── Unused local x.
  62 │     if n > 1 {
     ╰────
-  × error: 11:23: Assertion failed: Values differ: [8, 64]
+  × error: 71:23: Assertion failed: Values differ: [8, 64]
     ╭─[../books/language/src/structure/functions/result.md:71:23]
  70 │ 
  71 │ std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
     ·                       ──────────┬─────────
-    ·                                 ╰── error: 11:23: Assertion failed: Values differ: [8, 64]
+    ·                                 ╰── Assertion failed: Values differ: [8, 64]
  72 │ std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
     ╰────
-  ⚠ warning: 1:9: Unused local x.
+  ⚠ warning: 61:9: Unused local x.
     ╭─[../books/language/src/structure/functions/result.md:61:9]
  61 │ fn pow( x: Scalar, n: Integer ) -> Scalar {
     ·         ┬
-    ·         ╰── warning: 1:9: Unused local x.
+    ·         ╰── Unused local x.
  62 │     if n > 1 {
     ╰────
 Unexpected error(s) which did occur in line(s): 71

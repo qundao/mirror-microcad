@@ -14,12 +14,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 4:3: Missing arguments: x,y
+  × error: 33:3: Missing arguments: x,y
     ╭─[../books/language/src/flow/argument_match/inline_identifier.md:33:3]
  32 │ y = 2;
  33 │ f(x * y, y * x); // error: cannot be matched because arguments are not unique.
     ·   ──────┬─────
-    ·         ╰── error: 4:3: Missing arguments: x,y
+    ·         ╰── Missing arguments: x,y
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

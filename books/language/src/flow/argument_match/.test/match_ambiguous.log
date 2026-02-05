@@ -12,12 +12,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:4: Missing arguments: y,z
+  × error: 34:4: Missing arguments: y,z
     ╭─[../books/language/src/flow/argument_match/errors.md:34:4]
  33 │ fn f( x: Length, y: Length, z: Length ) {}
  34 │ f( x=1cm, 5cm, 3cm);  // error: Missing arguments y and z
     ·    ───────┬───────
-    ·           ╰── error: 2:4: Missing arguments: y,z
+    ·           ╰── Missing arguments: y,z
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:7: Unused local a.
+  ⚠ warning: 107:7: Unused local a.
      ╭─[../books/language/src/flow/argument_match/priorities.md:107:7]
  107 │ fn f( a = 1mm ) {}  // warning: unused a
      ·       ┬
-     ·       ╰── warning: 1:7: Unused local a.
+     ·       ╰── Unused local a.
  108 │ // a has default
      ╰────
 -- No Model --

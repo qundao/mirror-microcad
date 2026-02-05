@@ -28,27 +28,27 @@
 
 -- No Output --
 -- Errors --
-  × error: 18:13: Quantity error: Invalid operation: `20mm²` / `4mm` (try `4mm` / `20mm²`)
+  × error: 51:13: Quantity error: Invalid operation: `20mm²` / `4mm` (try `4mm` / `20mm²`)
   ╰─▶ Invalid operation: `20mm²` / `4mm` (try `4mm` / `20mm²`)
     ╭─[../books/language/src/expressions/README.md:51:13]
  50 │ // dividing an area by a length is a length
  51 │ assert_eq([ 20mm² / 4mm, 5mm ]);
     ·             ─────┬─────
-    ·                  ╰── error: 18:13: Quantity error: Invalid operation: `20mm²` / `4mm` (try `4mm` / `20mm²`)
+    ·                  ╰── Quantity error: Invalid operation: `20mm²` / `4mm` (try `4mm` / `20mm²`)
     ╰────
-  × error: 18:11: Array elements have different types: [<NO TYPE>, Length]
+  × error: 51:11: Array elements have different types: [<NO TYPE>, Length]
     ╭─[../books/language/src/expressions/README.md:51:11]
  50 │ // dividing an area by a length is a length
  51 │ assert_eq([ 20mm² / 4mm, 5mm ]);
     ·           ──────────┬─────────
-    ·                     ╰── error: 18:11: Array elements have different types: [<NO TYPE>, Length]
+    ·                     ╰── Array elements have different types: [<NO TYPE>, Length]
     ╰────
-  × error: 18:11: Assertion failed: Invalid: <NO VALUE>
+  × error: 51:11: Assertion failed: Invalid: <NO VALUE>
     ╭─[../books/language/src/expressions/README.md:51:11]
  50 │ // dividing an area by a length is a length
  51 │ assert_eq([ 20mm² / 4mm, 5mm ]);
     ·           ──────────┬─────────
-    ·                     ╰── error: 18:11: Assertion failed: Invalid: <NO VALUE>
+    ·                     ╰── Assertion failed: Invalid: <NO VALUE>
     ╰────
 Unexpected error(s) which did occur in line(s): 51
 -- Test Result --

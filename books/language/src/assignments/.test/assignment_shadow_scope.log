@@ -16,7 +16,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 4:5: Value a already in defined: 5
+  × error: 79:5: Value a already in defined: 5
     ╭─[../books/language/src/assignments/value.md:79:5]
  76 │ a = 5;
     · ┬

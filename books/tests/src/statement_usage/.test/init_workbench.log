@@ -13,19 +13,19 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:10: sketch statement not available here
+  × error: 7:10: sketch statement not available here
    ╭─[../books/tests/src/statement_usage/init.md:7:10]
  6 │ sketch K() { init(l:Length) { // warning
  7 │   sketch F() {} // error
    ·          ┬
-   ·          ╰── error: 2:10: sketch statement not available here
+   ·          ╰── sketch statement not available here
  8 │ } } K(1cm);
    ╰────
-  ⚠ warning: 1:19: Unused local l.
+  ⚠ warning: 6:19: Unused local l.
    ╭─[../books/tests/src/statement_usage/init.md:6:19]
  6 │ sketch K() { init(l:Length) { // warning
    ·                   ┬
-   ·                   ╰── warning: 1:19: Unused local l.
+   ·                   ╰── Unused local l.
  7 │   sketch F() {} // error
    ╰────
 -- Test Result --

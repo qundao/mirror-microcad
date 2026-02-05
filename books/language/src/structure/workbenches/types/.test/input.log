@@ -26,15 +26,15 @@
 
 -- No Output --
 -- Errors --
-  × error: 4:15: Symbol count not found.
+  × error: 41:15: Symbol count not found.
     ╭─[../books/language/src/structure/workbenches/types/operations.md:41:15]
  40 │     // check number of input models
  41 │     if @input.count() == 2 {
     ·               ──┬──
-    ·                 ╰── error: 4:15: Symbol count not found.
+    ·                 ╰── Symbol count not found.
  42 │         // make hole by subtracting both inputs
     ╰────
-  × error: 4:5: If condition is not a boolean: <NO VALUE>
+  × error: 41:5: If condition is not a boolean: <NO VALUE>
     ╭─[../books/language/src/structure/workbenches/types/operations.md:41:5]
  40 │         // check number of input models
  41 │ ╭─▶     if @input.count() == 2 {
@@ -43,7 +43,7 @@
  44 │ │       } else {
  45 │ │           std::error("punched_disk must get exactly two objects");
  46 │ ├─▶     }
-    · ╰──── error: 4:5: If condition is not a boolean: <NO VALUE>
+    · ╰──── If condition is not a boolean: <NO VALUE>
  47 │     }
     ╰────
 Unexpected error(s) which did occur in line(s): 41

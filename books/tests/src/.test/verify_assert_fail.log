@@ -11,11 +11,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 1:20: Assertion failed: this assertion fails
+  × error: 22:20: Assertion failed: this assertion fails
     ╭─[../books/tests/src/debug.md:22:20]
  22 │ std::debug::assert(false, "this assertion fails"); // error
     ·                    ──────────────┬──────────────
-    ·                                  ╰── error: 1:20: Assertion failed: this assertion fails
+    ·                                  ╰── Assertion failed: this assertion fails
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

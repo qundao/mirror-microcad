@@ -28,28 +28,28 @@
 
 -- No Output --
 -- Errors --
-  × error: 12:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+  × error: 91:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
     ╭─[../books/language/src/assignments/const.md:91:9]
  90 │     pub sketch Sketch() {
  91 │         const A = 5;   // error: A is ambiguous
     ·         ─────┬─────
-    ·              ╰── error: 12:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+    ·              ╰── Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
  92 │         const A = 5;   // error: A already defined in this workbench
     ╰────
-  × error: 13:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+  × error: 92:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
     ╭─[../books/language/src/assignments/const.md:92:9]
  91 │         const A = 5;   // error: A is ambiguous
  92 │         const A = 5;   // error: A already defined in this workbench
     ·         ─────┬─────
-    ·              ╰── error: 13:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+    ·              ╰── Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
  93 │     }
     ╰────
-  ⚠ warning: 13:9: Unused global symbol const A = 5.
+  ⚠ warning: 92:9: Unused global symbol const A = 5.
     ╭─[../books/language/src/assignments/const.md:92:9]
  91 │         const A = 5;   // error: A is ambiguous
  92 │         const A = 5;   // error: A already defined in this workbench
     ·         ─────┬─────
-    ·              ╰── warning: 13:9: Unused global symbol const A = 5.
+    ·              ╰── Unused global symbol const A = 5.
  93 │     }
     ╰────
 Expected error(s) which did not occur in line(s): 82

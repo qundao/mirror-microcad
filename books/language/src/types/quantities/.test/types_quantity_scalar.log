@@ -13,26 +13,26 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 3:1: Unused local percent.
+  ⚠ warning: 31:1: Unused local percent.
     ╭─[../books/language/src/types/quantities/types.md:31:1]
  30 │ pi =  3.1415;
  31 │ percent = 55%;
     · ───┬───
-    ·    ╰── warning: 3:1: Unused local percent.
+    ·    ╰── Unused local percent.
     ╰────
-  ⚠ warning: 2:1: Unused local pi.
+  ⚠ warning: 30:1: Unused local pi.
     ╭─[../books/language/src/types/quantities/types.md:30:1]
  29 │ zero = 0;
  30 │ pi =  3.1415;
     · ─┬
-    ·  ╰── warning: 2:1: Unused local pi.
+    ·  ╰── Unused local pi.
  31 │ percent = 55%;
     ╰────
-  ⚠ warning: 1:1: Unused local zero.
+  ⚠ warning: 29:1: Unused local zero.
     ╭─[../books/language/src/types/quantities/types.md:29:1]
  29 │ zero = 0;
     · ──┬─
-    ·   ╰── warning: 1:1: Unused local zero.
+    ·   ╰── Unused local zero.
  30 │ pi =  3.1415;
     ╰────
 Unexpected warnings(s) which did occur in line(s): 29, 30, 31

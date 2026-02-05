@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 3:23: Workbench translate cannot find initialization for those arguments
+  × error: 58:23: Workbench translate cannot find initialization for those arguments
     ╭─[../books/tests/src/tuple_matching.md:58:3]
  57 │ 
  58 │ r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);

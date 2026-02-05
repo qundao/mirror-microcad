@@ -16,84 +16,84 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 19:12: Unused local Frame.
+  ⚠ warning: 46:12: Unused local Frame.
     ╭─[../crates/std/lib/std/geo2d.µcad:46:12]
  45 │ /// A frame with a thickness.
  46 │ pub sketch Frame(width: Length, height: Length, thickness: Length) {
     ·            ──┬──
-    ·              ╰── warning: 19:12: Unused local Frame.
+    ·              ╰── Unused local Frame.
  47 │     std::debug::assert(thickness > 0.0mm, "Thickness must be a positive number (thickness = {thickness})");
     ╰────
-  ⚠ warning: 25:12: Unused local Hexagon.
+  ⚠ warning: 52:12: Unused local Hexagon.
     ╭─[../crates/std/lib/std/geo2d.µcad:52:12]
  51 │ /// A regular hexagon.
  52 │ pub sketch Hexagon(radius: Length) {
     ·            ───┬───
-    ·               ╰── warning: 25:12: Unused local Hexagon.
+    ·               ╰── Unused local Hexagon.
  53 │     Ngon(6, radius);
     ╰────
-  ⚠ warning: 30:12: Unused local InvoluteGearProfile.
+  ⚠ warning: 57:12: Unused local InvoluteGearProfile.
     ╭─[../crates/std/lib/std/geo2d.µcad:57:12]
  56 │ 
  57 │ pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 0° /* The built-in formula is wrong, this should be 20° */) {
     ·            ─────────┬─────────
-    ·                     ╰── warning: 30:12: Unused local InvoluteGearProfile.
+    ·                     ╰── Unused local InvoluteGearProfile.
  58 │     prop pitch_radius = module * teeth / 2.0;
     ╰────
-  ⚠ warning: 40:12: Unused local Line.
+  ⚠ warning: 67:12: Unused local Line.
     ╭─[../crates/std/lib/std/geo2d.µcad:67:12]
  66 │ 
  67 │ pub sketch Line(p0: Vec2, p1: Vec2) {
     ·            ──┬─
-    ·              ╰── warning: 40:12: Unused local Line.
+    ·              ╰── Unused local Line.
  68 │     init(width: Length, y = 0.0mm) {
     ╰────
-  ⚠ warning: 60:12: Unused local Ngon.
+  ⚠ warning: 87:12: Unused local Ngon.
     ╭─[../crates/std/lib/std/geo2d.µcad:87:12]
  86 │ /// A regular convex polygon with `n` corners.
  87 │ pub sketch Ngon(n: Integer, radius: Length) {
     ·            ──┬─
-    ·              ╰── warning: 60:12: Unused local Ngon.
+    ·              ╰── Unused local Ngon.
  88 │     std::debug::assert(n > 2, "N must be at least 3.");
     ╰────
-  ⚠ warning: 85:12: Unused local Ring.
+  ⚠ warning: 112:12: Unused local Ring.
      ╭─[../crates/std/lib/std/geo2d.µcad:112:12]
  111 │ 
  112 │ pub sketch Ring(outer_radius: Length, inner_radius: Length ) {
      ·            ──┬─
-     ·              ╰── warning: 85:12: Unused local Ring.
+     ·              ╰── Unused local Ring.
  113 │      init(outer_radius: Length, thickness: Length) {
      ╰────
-  ⚠ warning: 107:12: Unused local RoundedRect.
+  ⚠ warning: 134:12: Unused local RoundedRect.
      ╭─[../crates/std/lib/std/geo2d.µcad:134:12]
  133 │ /// * Centered rect with width and height: `RoundedRect(width = 10.0mm, height = 5.0mm);`
  134 │ pub sketch RoundedRect(
      ·            ─────┬─────
-     ·                 ╰── warning: 107:12: Unused local RoundedRect.
+     ·                 ╰── Unused local RoundedRect.
  135 │     width: Length,
      ╰────
-  ⚠ warning: 147:12: Unused local Sector.
+  ⚠ warning: 174:12: Unused local Sector.
      ╭─[../crates/std/lib/std/geo2d.µcad:174:12]
  173 │ /// Circle sector definition.
  174 │ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
      ·            ───┬──
-     ·               ╰── warning: 147:12: Unused local Sector.
+     ·               ╰── Unused local Sector.
  175 │     init(radius: Length, angle: Angle, offset = 0°) {
      ╰────
-  ⚠ warning: 156:12: Unused local SinusoidalGearProfile.
+  ⚠ warning: 183:12: Unused local SinusoidalGearProfile.
      ╭─[../crates/std/lib/std/geo2d.µcad:183:12]
  182 │ 
  183 │ pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5, stretch = 0.5) {
      ·            ──────────┬──────────
-     ·                      ╰── warning: 156:12: Unused local SinusoidalGearProfile.
+     ·                      ╰── Unused local SinusoidalGearProfile.
  184 │     prop pitch_radius = module * teeth;
      ╰────
-  ⚠ warning: 166:12: Unused local Text.
+  ⚠ warning: 193:12: Unused local Text.
      ╭─[../crates/std/lib/std/geo2d.µcad:193:12]
  192 │ /// Text definition.
  193 │ pub sketch Text(height: Length, text: String, font_file = "") {
      ·            ──┬─
-     ·              ╰── warning: 166:12: Unused local Text.
+     ·              ╰── Unused local Text.
  194 │     __builtin::geo2d::Text(height, text, font_file);
      ╰────
 Expected error(s) which did not occur in line(s): 30

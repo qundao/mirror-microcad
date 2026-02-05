@@ -12,7 +12,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:1: Value a already in defined: 5
+  × error: 91:1: Value a already in defined: 5
     ╭─[../books/language/src/assignments/value.md:91:1]
  90 │ a = 5;      // warning: unused local
     · ┬
@@ -22,11 +22,11 @@
     ·     ╰── a is already defined
     ╰────
   help: Values in microcad are immutable
-  ⚠ warning: 1:1: Unused local a.
+  ⚠ warning: 90:1: Unused local a.
     ╭─[../books/language/src/assignments/value.md:90:1]
  90 │ a = 5;      // warning: unused local
     · ┬
-    · ╰── warning: 1:1: Unused local a.
+    · ╰── Unused local a.
  91 │ a = a * 2;  // error: a already defined in this scope
     ╰────
 -- Test Result --

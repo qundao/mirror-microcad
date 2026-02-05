@@ -26,12 +26,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 16:1: Unused local x.
+  ⚠ warning: 39:1: Unused local x.
     ╭─[../books/language/src/structure/modules/README.md:39:1]
  38 │ // use the function and the constant
  39 │ x = my::math::abs(-1.0) * my::math::PI;
     · ┬
-    · ╰── warning: 16:1: Unused local x.
+    · ╰── Unused local x.
     ╰────
 Unexpected warnings(s) which did occur in line(s): 39
 -- No Model --

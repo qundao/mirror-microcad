@@ -11,11 +11,11 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:1: Unused local gramm_per_square_centimeters.
+  ⚠ warning: 136:1: Unused local gramm_per_square_centimeters.
      ╭─[../books/language/src/types/quantities/types.md:136:1]
  136 │ gramm_per_square_centimeters = 19.302g/mm³;
      · ──────────────┬─────────────
-     ·               ╰── warning: 1:1: Unused local gramm_per_square_centimeters.
+     ·               ╰── Unused local gramm_per_square_centimeters.
      ╰────
 Unexpected warnings(s) which did occur in line(s): 136
 -- No Model --

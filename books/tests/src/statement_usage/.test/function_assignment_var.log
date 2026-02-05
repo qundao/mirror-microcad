@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 2:3: Unused local a.
+  ⚠ warning: 87:3: Unused local a.
     ╭─[../books/tests/src/statement_usage/function.md:87:3]
  86 │ fn f() {
  87 │   a = 1;
     ·   ┬
-    ·   ╰── warning: 2:3: Unused local a.
+    ·   ╰── Unused local a.
  88 │ } f();
     ╰────
 Unexpected warnings(s) which did occur in line(s): 87

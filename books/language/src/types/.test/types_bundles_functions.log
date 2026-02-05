@@ -12,12 +12,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 2:4: Unused global symbol f.
+  ⚠ warning: 50:4: Unused global symbol f.
     ╭─[../books/language/src/types/README.md:50:4]
  49 │ fn f(x = 4mm) {}       // use unit (with default)
  50 │ fn f(x: Length) {}     // use type (without default)
     ·    ┬
-    ·    ╰── warning: 2:4: Unused global symbol f.
+    ·    ╰── Unused global symbol f.
     ╰────
 Unexpected warnings(s) which did occur in line(s): 50
 -- No Model --

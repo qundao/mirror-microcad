@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Statement is not available within Sketch
+  × error: 63:5: Statement is not available within Sketch
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:63:5]
  62 │ sketch Wheel(radius: Length) {
  63 │     return;         // error
     ·     ───┬──
-    ·        ╰── error: 2:5: Statement is not available within Sketch
+    ·        ╰── Statement is not available within Sketch
  64 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!

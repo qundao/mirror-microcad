@@ -13,20 +13,20 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:10: Statement is not available within Function
+  × error: 7:10: Statement is not available within Function
    ╭─[../books/tests/src/statement_usage/function.md:7:10]
  6 │ fn f() {
  7 │   sketch S() {} // error
    ·          ┬
-   ·          ╰── error: 2:10: Statement is not available within Function
+   ·          ╰── Statement is not available within Function
  8 │ } f();
    ╰────
-  × error: 2:10: Sketch is not available within Function
+  × error: 7:10: Sketch is not available within Function
    ╭─[../books/tests/src/statement_usage/function.md:7:10]
  6 │ fn f() {
  7 │   sketch S() {} // error
    ·          ┬
-   ·          ╰── error: 2:10: Sketch is not available within Function
+   ·          ╰── Sketch is not available within Function
  8 │ } f();
    ╰────
 Evaluation aborted because of prior resolve errors!

@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 2:3: Unused local a.
+  ⚠ warning: 87:3: Unused local a.
     ╭─[../books/tests/src/statement_usage/init.md:87:3]
  86 │ sketch K() { init(l:Length) {
  87 │   a = l;
     ·   ┬
-    ·   ╰── warning: 2:3: Unused local a.
+    ·   ╰── Unused local a.
  88 │ } } K(1cm);
     ╰────
 Unexpected warnings(s) which did occur in line(s): 87

@@ -11,11 +11,11 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:1: Unused local outer.
+  ⚠ warning: 10:1: Unused local outer.
     ╭─[../books/tutorials/src/lego_brick/base/frame/naming.md:10:1]
  10 │ outer = std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
     · ──┬──
-    ·   ╰── warning: 1:1: Unused local outer.
+    ·   ╰── Unused local outer.
     ╰────
 Unexpected warnings(s) which did occur in line(s): 10
 -- No Model --

@@ -14,20 +14,20 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Assignment statement is not available within Function
+  × error: 40:5: Assignment statement is not available within Function
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
  40 │     const MY_CONST = 1;     // error: not allowed in functions
     ·     ─────────┬────────
-    ·              ╰── error: 2:5: Assignment statement is not available within Function
+    ·              ╰── Assignment statement is not available within Function
  41 │ }
     ╰────
-  × error: 2:5: Declaration of MY_CONST not allowed within pub_assignment_fn::f
+  × error: 40:5: Declaration of MY_CONST not allowed within pub_assignment_fn::f
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
  40 │     const MY_CONST = 1;     // error: not allowed in functions
     ·     ─────────┬────────
-    ·              ╰── error: 2:5: Declaration of MY_CONST not allowed within pub_assignment_fn::f
+    ·              ╰── Declaration of MY_CONST not allowed within pub_assignment_fn::f
  41 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!

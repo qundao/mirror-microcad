@@ -13,20 +13,20 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:6: Statement is not available within Function
+  × error: 23:6: Statement is not available within Function
     ╭─[../books/tests/src/statement_usage/function.md:23:6]
  22 │ fn f() {
  23 │   fn f() {} // error
     ·      ┬
-    ·      ╰── error: 2:6: Statement is not available within Function
+    ·      ╰── Statement is not available within Function
  24 │ } f();
     ╰────
-  × error: 2:6: Function definition is not available within Function
+  × error: 23:6: Function definition is not available within Function
     ╭─[../books/tests/src/statement_usage/function.md:23:6]
  22 │ fn f() {
  23 │   fn f() {} // error
     ·      ┬
-    ·      ╰── error: 2:6: Function definition is not available within Function
+    ·      ╰── Function definition is not available within Function
  24 │ } f();
     ╰────
 Evaluation aborted because of prior resolve errors!

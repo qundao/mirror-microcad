@@ -24,20 +24,20 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 4:1: Unused local cubic_inch.
+  ⚠ warning: 116:1: Unused local cubic_inch.
      ╭─[../books/language/src/types/quantities/types.md:116:1]
  115 │ cubic_meter = 0.001m3;
  116 │ cubic_inch = 61.0237in³;
      · ─────┬────
-     ·      ╰── warning: 4:1: Unused local cubic_inch.
+     ·      ╰── Unused local cubic_inch.
  117 │ liter = 1.0l;
      ╰────
-  ⚠ warning: 5:1: Unused local liter.
+  ⚠ warning: 117:1: Unused local liter.
      ╭─[../books/language/src/types/quantities/types.md:117:1]
  116 │ cubic_inch = 61.0237in³;
  117 │ liter = 1.0l;
      · ──┬──
-     ·   ╰── warning: 5:1: Unused local liter.
+     ·   ╰── Unused local liter.
  118 │ centiliter = 100.0cl;
      ╰────
 Unexpected warnings(s) which did occur in line(s): 116, 117

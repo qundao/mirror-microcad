@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Expression statement not available here
+  × error: 111:3: Expression statement not available here
      ╭─[../books/tests/src/statement_usage/init.md:111:3]
  110 │ sketch K() { init(l:Length) {
  111 │   __builtin::geo2d::Circle(radius=l); // error
      ·   ─────────────────┬────────────────
-     ·                    ╰── error: 2:3: Expression statement not available here
+     ·                    ╰── Expression statement not available here
  112 │ } } K(1cm);
      ╰────
 -- Test Result --

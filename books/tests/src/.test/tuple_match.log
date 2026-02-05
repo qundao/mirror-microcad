@@ -21,28 +21,28 @@
 
 -- No Output --
 -- Errors --
-  × error: 9:4: Missing arguments: x,y
+  × error: 18:4: Missing arguments: x,y
     ╭─[../books/tests/src/tuple_matching.md:18:4]
  17 │ // Then we pass plane to f() three times with different z values
  18 │ f( plane, z=3cm);
     ·    ──────┬─────
-    ·          ╰── error: 9:4: Missing arguments: x,y
+    ·          ╰── Missing arguments: x,y
  19 │ f( plane, z=6cm);
     ╰────
-  × error: 10:4: Missing arguments: x,y
+  × error: 19:4: Missing arguments: x,y
     ╭─[../books/tests/src/tuple_matching.md:19:4]
  18 │ f( plane, z=3cm);
  19 │ f( plane, z=6cm);
     ·    ──────┬─────
-    ·          ╰── error: 10:4: Missing arguments: x,y
+    ·          ╰── Missing arguments: x,y
  20 │ f( plane, z=9cm);
     ╰────
-  × error: 11:4: Missing arguments: x,y
+  × error: 20:4: Missing arguments: x,y
     ╭─[../books/tests/src/tuple_matching.md:20:4]
  19 │ f( plane, z=6cm);
  20 │ f( plane, z=9cm);
     ·    ──────┬─────
-    ·          ╰── error: 11:4: Missing arguments: x,y
+    ·          ╰── Missing arguments: x,y
     ╰────
 Unexpected error(s) which did occur in line(s): 18, 19, 20
 -- Test Result --

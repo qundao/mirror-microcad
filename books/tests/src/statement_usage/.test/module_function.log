@@ -13,19 +13,19 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:5: Unused global symbol k.
+  ⚠ warning: 22:5: Unused global symbol k.
     ╭─[../books/tests/src/statement_usage/module.md:22:5]
  22 │ mod k {
     ·     ┬
-    ·     ╰── warning: 1:5: Unused global symbol k.
+    ·     ╰── Unused global symbol k.
  23 │   fn f() {}
     ╰────
-  ⚠ warning: 2:6: Unused global symbol f.
+  ⚠ warning: 23:6: Unused global symbol f.
     ╭─[../books/tests/src/statement_usage/module.md:23:6]
  22 │ mod k {
  23 │   fn f() {}
     ·      ┬
-    ·      ╰── warning: 2:6: Unused global symbol f.
+    ·      ╰── Unused global symbol f.
  24 │ }
     ╰────
 Unexpected warnings(s) which did occur in line(s): 22, 23

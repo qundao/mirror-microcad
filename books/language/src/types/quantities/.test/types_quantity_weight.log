@@ -15,12 +15,12 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 3:1: Unused local pound.
+  ⚠ warning: 148:1: Unused local pound.
      ╭─[../books/language/src/types/quantities/types.md:148:1]
  147 │ kilogram = 1.0kg;
  148 │ pound = 2.204623lb;
      · ──┬──
-     ·   ╰── warning: 3:1: Unused local pound.
+     ·   ╰── Unused local pound.
  149 │ 
      ╰────
 Unexpected warnings(s) which did occur in line(s): 148

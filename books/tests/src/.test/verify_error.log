@@ -11,11 +11,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 1:47: Builtin error: this should not have happened
+  × error: 30:47: Builtin error: this should not have happened
     ╭─[../books/tests/src/debug.md:30:47]
  30 │ std::log::error("this should not have happened"); // error
     ·                                               ┬
-    ·                                               ╰── error: 1:47: Builtin error: this should not have happened
+    ·                                               ╰── Builtin error: this should not have happened
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

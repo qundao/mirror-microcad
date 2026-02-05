@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Statement not allowed prior initializers
+  × error: 111:3: Statement not allowed prior initializers
      ╭─[../books/tests/src/statement_usage/pre-init.md:111:3]
  110 │ sketch K() { 
  111 │   __builtin::geo2d::Circle(radius=1mm); // error
      ·   ──────────────────┬─────────────────
-     ·                     ╰── error: 2:3: Statement not allowed prior initializers
+     ·                     ╰── Statement not allowed prior initializers
  112 │ init(l:Length) {} }
      ╰────
 Evaluation aborted because of prior resolve errors!

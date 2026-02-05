@@ -20,7 +20,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:12: Workbench Circle has ambiguous initialization for those arguments
+  × error: 53:12: Workbench Circle has ambiguous initialization for those arguments
     ╭─[../books/language/src/structure/workbenches/elements/init_code.md:53:5]
  52 │     init( diameter: Length ) { radius = diameter / 2; }
  53 │     Circle(radius + thickness) - Circle(radius)

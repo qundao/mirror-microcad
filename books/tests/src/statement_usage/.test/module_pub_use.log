@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:5: Unused global symbol k.
+  ⚠ warning: 46:5: Unused global symbol k.
     ╭─[../books/tests/src/statement_usage/module.md:46:5]
  46 │ mod k {
     ·     ┬
-    ·     ╰── warning: 1:5: Unused global symbol k.
+    ·     ╰── Unused global symbol k.
  47 │   pub use std::geo2d;
     ╰────
 Unexpected warnings(s) which did occur in line(s): 46

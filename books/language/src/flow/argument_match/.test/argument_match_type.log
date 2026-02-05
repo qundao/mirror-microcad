@@ -13,25 +13,25 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 1:7: Unused local a.
+  ⚠ warning: 81:7: Unused local a.
     ╭─[../books/language/src/flow/argument_match/priorities.md:81:7]
  81 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·       ┬
-    ·       ╰── warning: 1:7: Unused local a.
+    ·       ╰── Unused local a.
  82 │ // Who needs names?
     ╰────
-  ⚠ warning: 1:18: Unused local b.
+  ⚠ warning: 81:18: Unused local b.
     ╭─[../books/language/src/flow/argument_match/priorities.md:81:18]
  81 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·                  ┬
-    ·                  ╰── warning: 1:18: Unused local b.
+    ·                  ╰── Unused local b.
  82 │ // Who needs names?
     ╰────
-  ⚠ warning: 1:29: Unused local c.
+  ⚠ warning: 81:29: Unused local c.
     ╭─[../books/language/src/flow/argument_match/priorities.md:81:29]
  81 │ fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
     ·                             ┬
-    ·                             ╰── warning: 1:29: Unused local c.
+    ·                             ╰── Unused local c.
  82 │ // Who needs names?
     ╰────
 -- No Model --

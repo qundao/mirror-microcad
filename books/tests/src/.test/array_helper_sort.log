@@ -11,23 +11,23 @@
 
 -- No Output --
 -- Errors --
-  × error: 1:25: Symbol std::sore not found.
+  × error: 52:25: Symbol std::sore not found.
     ╭─[../books/tests/src/array_helpers.md:52:25]
  52 │ std::debug::assert_eq([ std::sore([3,1,2]), [1,2,3] ]);
     ·                         ─────────┬────────
-    ·                                  ╰── error: 1:25: Symbol std::sore not found.
+    ·                                  ╰── Symbol std::sore not found.
     ╰────
-  × error: 1:23: Array elements have different types: [<NO TYPE>, [Integer]]
+  × error: 52:23: Array elements have different types: [<NO TYPE>, [Integer]]
     ╭─[../books/tests/src/array_helpers.md:52:23]
  52 │ std::debug::assert_eq([ std::sore([3,1,2]), [1,2,3] ]);
     ·                       ───────────────┬───────────────
-    ·                                      ╰── error: 1:23: Array elements have different types: [<NO TYPE>, [Integer]]
+    ·                                      ╰── Array elements have different types: [<NO TYPE>, [Integer]]
     ╰────
-  × error: 1:23: Assertion failed: Invalid: <NO VALUE>
+  × error: 52:23: Assertion failed: Invalid: <NO VALUE>
     ╭─[../books/tests/src/array_helpers.md:52:23]
  52 │ std::debug::assert_eq([ std::sore([3,1,2]), [1,2,3] ]);
     ·                       ───────────────┬───────────────
-    ·                                      ╰── error: 1:23: Assertion failed: Invalid: <NO VALUE>
+    ·                                      ╰── Assertion failed: Invalid: <NO VALUE>
     ╰────
 Unexpected error(s) which did occur in line(s): 52
 -- Test Result --

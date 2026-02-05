@@ -11,17 +11,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 1:1: Assignment statement is not available within SourceFile
+  × error: 72:1: Assignment statement is not available within SourceFile
     ╭─[../books/tests/src/statement_usage/source.md:72:1]
  72 │ prop a = 1;  // error
     · ─────┬────
-    ·      ╰── error: 1:1: Assignment statement is not available within SourceFile
+    ·      ╰── Assignment statement is not available within SourceFile
     ╰────
-  × error: 1:1: Declaration of a not allowed within source_assignment_prop
+  × error: 72:1: Declaration of a not allowed within source_assignment_prop
     ╭─[../books/tests/src/statement_usage/source.md:72:1]
  72 │ prop a = 1;  // error
     · ─────┬────
-    ·      ╰── error: 1:1: Declaration of a not allowed within source_assignment_prop
+    ·      ╰── Declaration of a not allowed within source_assignment_prop
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

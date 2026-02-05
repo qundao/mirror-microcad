@@ -15,7 +15,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 5:3: Workbench S has ambiguous initialization for those arguments
+  × error: 32:3: Workbench S has ambiguous initialization for those arguments
     ╭─[../books/tests/src/argument_match.md:32:1]
  31 │ 
  32 │ S(width=10cm); // error: short form cannot be used here because of ambiguity

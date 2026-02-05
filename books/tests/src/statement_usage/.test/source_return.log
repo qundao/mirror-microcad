@@ -11,11 +11,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 1:1: Statement is not available within SourceFile
+  × error: 42:1: Statement is not available within SourceFile
     ╭─[../books/tests/src/statement_usage/source.md:42:1]
  42 │ return 1;  // error
     · ────┬───
-    ·     ╰── error: 1:1: Statement is not available within SourceFile
+    ·     ╰── Statement is not available within SourceFile
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

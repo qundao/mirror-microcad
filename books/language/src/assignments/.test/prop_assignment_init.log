@@ -17,12 +17,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Statement not allowed prior initializers
+  × error: 46:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/property.md:46:5]
  45 │ sketch MySketch(radius: Length) {
  46 │     prop diameter = radius * 2; // error: not in initialization code
     ·     ─────────────┬────────────
-    ·                  ╰── error: 2:5: Statement not allowed prior initializers
+    ·                  ╰── Statement not allowed prior initializers
  47 │     
     ╰────
 Evaluation aborted because of prior resolve errors!

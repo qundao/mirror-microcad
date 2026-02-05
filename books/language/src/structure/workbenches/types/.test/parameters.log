@@ -26,15 +26,15 @@
 
 -- No Output --
 -- Errors --
-  × error: 3:15: Symbol count not found.
+  × error: 66:15: Symbol count not found.
     ╭─[../books/language/src/structure/workbenches/types/operations.md:66:15]
  65 │ op punch_disk(radius: Length) {
  66 │     if @input.count() == 1 {
     ·               ──┬──
-    ·                 ╰── error: 3:15: Symbol count not found.
+    ·                 ╰── Symbol count not found.
  67 │         { 
     ╰────
-  × error: 3:5: If condition is not a boolean: <NO VALUE>
+  × error: 66:5: If condition is not a boolean: <NO VALUE>
     ╭─[../books/language/src/structure/workbenches/types/operations.md:66:5]
  65 │     op punch_disk(radius: Length) {
  66 │ ╭─▶     if @input.count() == 1 {
@@ -45,7 +45,7 @@
  71 │ │       } else {
  72 │ │           std::error("punch_disk must get one object");
  73 │ ├─▶     }
-    · ╰──── error: 3:5: If condition is not a boolean: <NO VALUE>
+    · ╰──── If condition is not a boolean: <NO VALUE>
  74 │     }
     ╰────
 Unexpected error(s) which did occur in line(s): 66

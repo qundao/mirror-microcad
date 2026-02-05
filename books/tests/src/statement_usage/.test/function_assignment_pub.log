@@ -13,20 +13,20 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Assignment statement is not available within Function
+  × error: 79:3: Assignment statement is not available within Function
     ╭─[../books/tests/src/statement_usage/function.md:79:3]
  78 │ fn f() {
  79 │   pub p = 1; // error
     ·   ────┬────
-    ·       ╰── error: 2:3: Assignment statement is not available within Function
+    ·       ╰── Assignment statement is not available within Function
  80 │ } f();
     ╰────
-  × error: 2:3: Declaration of p not allowed within function_assignment_pub::f
+  × error: 79:3: Declaration of p not allowed within function_assignment_pub::f
     ╭─[../books/tests/src/statement_usage/function.md:79:3]
  78 │ fn f() {
  79 │   pub p = 1; // error
     ·   ────┬────
-    ·       ╰── error: 2:3: Declaration of p not allowed within function_assignment_pub::f
+    ·       ╰── Declaration of p not allowed within function_assignment_pub::f
  80 │ } f();
     ╰────
 Evaluation aborted because of prior resolve errors!

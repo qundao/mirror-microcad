@@ -13,12 +13,12 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Declaration of a not allowed within assignment_module::my_module
+  × error: 102:5: Declaration of a not allowed within assignment_module::my_module
      ╭─[../books/language/src/assignments/value.md:102:5]
  101 │ mod my_module {
  102 │     a = 1; // error
      ·     ──┬──
-     ·       ╰── error: 2:5: Declaration of a not allowed within assignment_module::my_module
+     ·       ╰── Declaration of a not allowed within assignment_module::my_module
  103 │ }
      ╰────
 Evaluation aborted because of prior resolve errors!
