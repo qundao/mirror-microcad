@@ -22,7 +22,7 @@ InvoluteGearProfile(1.0mm, 100);
 3D Output
     : ![None](.test/gears_gear_2d-out.stl)
 
-    ## Module: gears_3d
+## Module: gears_3d
 
 [![Report](.test/gears_gears_3d.svg)](.test/gears_gears_3d.log)
 
@@ -88,7 +88,7 @@ gear3.rotate(-angle / gear3.teeth).translate(gear1.outer_radius + gear3.pitch_ra
 3D Output
     : ![None](.test/gears_gears_3d-out.stl)
 
-    ## Module: herringbone_gears
+## Module: herringbone_gears
 
 [![Report](.test/gears_herringbone_gears.svg)](.test/gears_herringbone_gears.log)
 
@@ -145,4 +145,3 @@ gear2
 3D Output
     : ![None](.test/gears_herringbone_gears-out.stl)
 
-    

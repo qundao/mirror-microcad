@@ -2,40 +2,40 @@
 -- Test --
         Test name: text_text_plate
   Expected result: ok
-      Source file: ../books/examples/src/text.md:8
+      Source file: ../books/examples/src/text.md:42
         Test path: ../books/examples/src/.test
 
 -- Code --
 
-   8:   // file: text_plate
-   9:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
-  10:   // SPDX-License-Identifier: AGPL-3.0-or-later
-  11:   
-  12:   use std::geo2d::*;
-  13:   use std::ops::*;
-  14:   use std::math::*;
-  15:   
-  16:   sketch TextPlate(text: String, height: Length = 30mm) {
-  17:       letters = Text(text, height).center();
-  18:       plate = RoundedRect(60mm, radius = 20mm);
-  19:       plate - letters
-  20:   }
-  21:   
-  22:   TextPlate("Hello µcad", 10mm)
-  23:       .extrude(2mm, 0°);
-  24:   
+  42:   // file: text_plate
+  43:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  44:   // SPDX-License-Identifier: AGPL-3.0-or-later
+  45:   
+  46:   use std::geo2d::*;
+  47:   use std::ops::*;
+  48:   use std::math::*;
+  49:   
+  50:   sketch TextPlate(text: String, height: Length = 30mm) {
+  51:       letters = Text(text, height).center();
+  52:       plate = RoundedRect(60mm, radius = 20mm);
+  53:       plate - letters
+  54:   }
+  55:   
+  56:   TextPlate("Hello µcad", 10mm)
+  57:       .extrude(2mm, 0°);
+  58:   
 
 -- No Output --
 -- Errors --
   ⚠ warning: 7:5: Unused global symbol std::math.
-    ╭─[../books/examples/src/text.md:14:5]
- 13 │ use std::ops::*;
- 14 │ use std::math::*;
+    ╭─[../books/examples/src/text.md:48:5]
+ 47 │ use std::ops::*;
+ 48 │ use std::math::*;
     ·     ────┬────
     ·         ╰── warning: 7:5: Unused global symbol std::math.
- 15 │ 
+ 49 │ 
     ╰────
-Unexpected warnings(s) which did occur in line(s): 14
+Unexpected warnings(s) which did occur in line(s): 48
 -- Model --
   Group (root) ->
     Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
