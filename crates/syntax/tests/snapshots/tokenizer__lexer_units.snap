@@ -1,0 +1,112 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..1,
+        token: LiteralInt(
+            "1",
+        ),
+    },
+    SpannedToken {
+        span: 1..2,
+        token: Unit(
+            "%",
+        ),
+    },
+    SpannedToken {
+        span: 3..4,
+        token: OperatorAdd,
+    },
+    SpannedToken {
+        span: 5..6,
+        token: LiteralInt(
+            "2",
+        ),
+    },
+    SpannedToken {
+        span: 6..8,
+        token: Identifier(
+            "mm",
+        ),
+    },
+    SpannedToken {
+        span: 9..10,
+        token: OperatorDivide,
+    },
+    SpannedToken {
+        span: 11..12,
+        token: LiteralInt(
+            "3",
+        ),
+    },
+    SpannedToken {
+        span: 12..15,
+        token: Identifier(
+            "mm2",
+        ),
+    },
+    SpannedToken {
+        span: 16..17,
+        token: OperatorSubtract,
+    },
+    SpannedToken {
+        span: 18..19,
+        token: LiteralInt(
+            "4",
+        ),
+    },
+    SpannedToken {
+        span: 19..23,
+        token: Unit(
+            "mm³",
+        ),
+    },
+    SpannedToken {
+        span: 24..25,
+        token: OperatorMultiply,
+    },
+    SpannedToken {
+        span: 26..27,
+        token: LiteralInt(
+            "1",
+        ),
+    },
+    SpannedToken {
+        span: 27..29,
+        token: Unit(
+            "°",
+        ),
+    },
+    SpannedToken {
+        span: 30..31,
+        token: OperatorAdd,
+    },
+    SpannedToken {
+        span: 32..33,
+        token: LiteralInt(
+            "1",
+        ),
+    },
+    SpannedToken {
+        span: 33..34,
+        token: SigilQuote,
+    },
+    SpannedToken {
+        span: 35..36,
+        token: OperatorSubtract,
+    },
+    SpannedToken {
+        span: 37..38,
+        token: LiteralInt(
+            "2",
+        ),
+    },
+    SpannedToken {
+        span: 38..39,
+        token: Unit(
+            "'",
+        ),
+    },
+]

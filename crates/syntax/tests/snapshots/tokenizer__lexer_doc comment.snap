@@ -1,0 +1,104 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..15,
+        token: DocComment(
+            "/// Doc comment",
+        ),
+    },
+    SpannedToken {
+        span: 20..24,
+        token: KeywordPart,
+    },
+    SpannedToken {
+        span: 25..28,
+        token: Identifier(
+            "Foo",
+        ),
+    },
+    SpannedToken {
+        span: 28..29,
+        token: SigilOpenBracket,
+    },
+    SpannedToken {
+        span: 29..30,
+        token: SigilCloseBracket,
+    },
+    SpannedToken {
+        span: 31..32,
+        token: SigilOpenCurlyBracket,
+    },
+    SpannedToken {
+        span: 41..49,
+        token: Identifier(
+            "Cylinder",
+        ),
+    },
+    SpannedToken {
+        span: 49..50,
+        token: SigilOpenBracket,
+    },
+    SpannedToken {
+        span: 50..56,
+        token: Identifier(
+            "height",
+        ),
+    },
+    SpannedToken {
+        span: 57..58,
+        token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 59..61,
+        token: LiteralInt(
+            "10",
+        ),
+    },
+    SpannedToken {
+        span: 61..63,
+        token: Identifier(
+            "mm",
+        ),
+    },
+    SpannedToken {
+        span: 63..64,
+        token: SigilComma,
+    },
+    SpannedToken {
+        span: 65..71,
+        token: Identifier(
+            "radius",
+        ),
+    },
+    SpannedToken {
+        span: 72..73,
+        token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 74..75,
+        token: LiteralInt(
+            "5",
+        ),
+    },
+    SpannedToken {
+        span: 75..77,
+        token: Identifier(
+            "mm",
+        ),
+    },
+    SpannedToken {
+        span: 77..78,
+        token: SigilCloseBracket,
+    },
+    SpannedToken {
+        span: 78..79,
+        token: SigilSemiColon,
+    },
+    SpannedToken {
+        span: 84..85,
+        token: SigilCloseCurlyBracket,
+    },
+]

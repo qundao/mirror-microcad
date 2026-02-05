@@ -1,0 +1,52 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..1,
+        token: Identifier(
+            "a",
+        ),
+    },
+    SpannedToken {
+        span: 2..3,
+        token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 4..5,
+        token: LiteralInt(
+            "1",
+        ),
+    },
+    SpannedToken {
+        span: 5..6,
+        token: SigilSemiColon,
+    },
+    SpannedToken {
+        span: 7..44,
+        token: MultiLineComment(
+            "multi\n    line\n    comment",
+        ),
+    },
+    SpannedToken {
+        span: 49..50,
+        token: Identifier(
+            "b",
+        ),
+    },
+    SpannedToken {
+        span: 51..52,
+        token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 53..54,
+        token: LiteralInt(
+            "2",
+        ),
+    },
+    SpannedToken {
+        span: 54..55,
+        token: SigilSemiColon,
+    },
+]

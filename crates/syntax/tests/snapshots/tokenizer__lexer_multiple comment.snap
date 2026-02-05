@@ -1,0 +1,18 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 0..11,
+        token: SingleLineComment(
+            "comment1",
+        ),
+    },
+    SpannedToken {
+        span: 16..27,
+        token: SingleLineComment(
+            "comment2",
+        ),
+    },
+]

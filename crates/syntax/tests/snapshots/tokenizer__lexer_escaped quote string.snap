@@ -1,0 +1,12 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 35..36,
+        token: LiteralString(
+            "string \" with \" escaped \\ quotes",
+        ),
+    },
+]

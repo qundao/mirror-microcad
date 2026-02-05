@@ -1,0 +1,12 @@
+---
+source: crates/syntax/tests/tokenizer.rs
+expression: lex(input)
+---
+[
+    SpannedToken {
+        span: 13..14,
+        token: LiteralString(
+            "plain string",
+        ),
+    },
+]
