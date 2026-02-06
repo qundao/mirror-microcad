@@ -119,12 +119,12 @@ part Gear(teeth: Integer)  {
     prop tooth_distance = gear_profile.tooth_distance;
     prop module = gear_profile.module;
 
-    disc = Circle(pitch_radius - module * 400%);
+    disc = Circle(radius = pitch_radius - module * 400%);
     web = {
         sector = Sector(disc.radius, 360° / 5)
             .buffer(-disc.radius * 15%)
             .buffer(disc.radius * 12%);
-        holes = (sector - Circle(module * 1000%))
+        holes = (sector - Circle(radius = module * 1000%))
             .rotate([0..4] * 360° / 5);
         hub = InvoluteGearProfile(2.5mm, 7);
         disc - holes - hub;
