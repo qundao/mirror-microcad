@@ -75,7 +75,7 @@ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, off
 /// Examples:
 /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
 pub part Torus(major_radius: Length, minor_radius: Length) {
-    std::geo2d::Circle(minor_radius)
+    std::geo2d::Circle(radius = minor_radius)
         .std::ops::translate(x = major_radius)
         .std::ops::revolve();
 }
