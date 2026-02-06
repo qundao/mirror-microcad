@@ -7,23 +7,24 @@
 
 -- Code --
 
-   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
-   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
-   8:   
-   9:   use std::geo2d::*;
-  10:   use std::ops::*;
-  11:   
-  12:   pub part Dome(size: Length, strut_width = 1mm) {
-  13:   	Rect(strut_width)
-  14:   		.translate(x = size)
-  15:   		.revolve(180°)
-  16:   		.rotate(x = -[0..6]*180°/6)
-  17:   		.rotate(z = [0..3]*180°/3);
-  18:   }
-  19:   
-  20:   Dome(10mm, strut_width = 0.25mm);
-  21:   
+   6:   // file: dome.µcad
+   7:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   8:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   9:   
+  10:   use std::geo2d::*;
+  11:   use std::ops::*;
+  12:   
+  13:   pub part Dome(size: Length, strut_width = 1mm) {
+  14:   	Rect(strut_width)
+  15:   		.translate(x = size)
+  16:   		.revolve(180°)
+  17:   		.rotate(x = -[0..6]*180°/6)
+  18:   		.rotate(z = [0..3]*180°/3);
+  19:   }
+  20:   
+  21:   Dome(10mm, strut_width = 0.25mm);
   22:   
+  23:   
 
 -- No Output --
 -- No Errors --
