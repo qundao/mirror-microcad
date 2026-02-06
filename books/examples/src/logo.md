@@ -18,7 +18,7 @@ pub mod microcad {
 
     sketch Arc(radius: Length, thickness: Length, angle = 300°) {
         Sector(radius, start = -angle / 2, end = angle / 2)
-            .rotate(180° - angle) - Circle(radius - thickness)
+            .rotate(180° - angle) - Circle(radius = radius - thickness)
     }
 
     pub sketch Icon(radius: Length) {
@@ -29,7 +29,7 @@ pub mod microcad {
     }
 
     pub sketch Micro(radius: Length, thickness: Length) {
-        u = Sector(radius, 180°).rotate(90°) - Circle(radius-thickness);
+        u = Sector(radius, 180°).rotate(90°) - Circle(radius = radius - thickness);
         r_l = Rect(width = thickness, height = radius * 3, x = -radius, y = -2*radius);
         r_r = Rect(width = thickness, height = radius * 2, x = radius - thickness, y = -radius);
         u | r_l | r_r
