@@ -74,10 +74,12 @@ impl LexerError {
     }
 }
 
-pub fn lex<'a>(input: &'a str) -> Vec<SpannedToken<Token<'a>>> {
-    from_logos(Lexer::<NormalToken>::new(input).spanned()).collect()
+/// Tokenize a µcad source string into an iterator of tokens.
+pub fn lex<'a>(input: &'a str) -> impl Iterator<Item = SpannedToken<Token<'a>>> {
+    from_logos(Lexer::<NormalToken>::new(input).spanned())
 }
 
+/// Source token for µcad files
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token<'a> {
     SingleLineComment(Cow<'a, str>),

@@ -50,7 +50,7 @@ use crate::{src_ref::*, syntax::*};
 use crate::parser::ParseContext;
 
 pub(crate) fn build_ast(source: &str, parse_context: &ParseContext) -> Result<microcad_syntax::ast::SourceFile, ParseErrorsWithSource> {
-    let tokens = tokens::lex(source);
+    let tokens: Vec<_> = tokens::lex(source).collect();
     parser::parse(tokens.as_slice()).map_err(|errors| {
         let errors = errors
             .into_iter()

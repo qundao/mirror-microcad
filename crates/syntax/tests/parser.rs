@@ -190,6 +190,6 @@ use test_case::test_case;
 #[test_case("untypable", r#"b = "sad"m3;"#)]
 #[test_case("binop precedence", "a^2 + b^3")]
 fn test_parser(name: &str, input: &str) {
-    let tokens = lex(input);
+    let tokens: Vec<_> = lex(input).collect();
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));
 }
