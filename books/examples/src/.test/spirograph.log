@@ -35,10 +35,10 @@
   31:       prop shift = inner_gear.radius * 40%;
   32:   
   33:       sector = {
-  34:           disc = Circle(outer_gear.radius - border_width);
-  35:           sector = Sector(radius = outer_gear.radius, start = 30°, end = 90°).rotate(60°);
-  36:           inner_disc = Circle(inner_gear.radius - border_width * 250%);
-  37:           ring = Ring(outer_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width);
+  34:           disc = Circle(r = outer_gear.radius - border_width);
+  35:           sector = Sector(r = outer_gear.radius, start = 30°, end = 90°).rotate(60°);
+  36:           inner_disc = Circle(r = inner_gear.radius - border_width * 250%);
+  37:           ring = Ring(o_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width);
   38:   
   39:           (disc - (sector - inner_disc) - ring.translate(x = shift))
   40:               .buffer(-TEETH_SIZE * 2)
@@ -130,15 +130,1730 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:5: Source of module 'logo' could not be found in "/home/pat/git/rustfahrt/microcad/books/examples/src/.test" (expecting a file 'logo.µcad' or 'logo/mod.µcad')
-   ╭─[../books/examples/src/spirograph.md:7:5]
- 6 │ 
- 7 │ mod logo;
-   ·     ──┬─
-   ·       ╰── module not found
- 8 │ 
+  ⚠ warning: 1:1: Unused local PI.
+   ╭─[<NO FILE>:1:1]
+ 1 │ <NO FILE>
+   · ─┬
+   ·  ╰── warning: 1:1: Unused local PI.
    ╰────
-Unexpected error(s) which did occur in line(s): 7
-Evaluation aborted because of prior resolve errors!
+  ⚠ warning: 1:1: Unused local Y.
+   ╭─[<NO FILE>:1:1]
+ 1 │ <NO FILE>
+   · ┬
+   · ╰── warning: 1:1: Unused local Y.
+   ╰────
+Unexpected warnings(s) which did occur in line(s): 6
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+      - x = 0mm
+      - y = 0mm
+      - z = 0mm
+      #[export = "spirograph_frame.stl" with exporter `stl`]
+      #[color = rgba(0, 0, 1, 1)]
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+        Group ->
+          Operation subtract() ->
+            Group ->
+              Operation subtract() ->
+                Group ->
+                  frame: Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+                    - height = 4mm
+                    - scale = (x=1, y=1)
+                    - twist = 0rad
+                    Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
+                      Group ->
+                        Operation subtract() ->
+                          Group ->
+                            border: Workpiece(sketch) std::geo2d::RoundedRect(radius=14mm, size=201mm) ->
+                              - height = 201mm
+                              - radius_bottom_left = 14mm
+                              - radius_bottom_right = 14mm
+                              - radius_top_left = 14mm
+                              - radius_top_right = 14mm
+                              - width = 201mm
+                              - x = -100.5mm
+                              - y = -100.5mm
+                              Primitive2D __builtin::geo2d::RoundedRect(height=201mm, radius_bottom_left=14mm, radius_bottom_right=14mm, radius_top_left=14mm, radius_top_right=14mm, width=201mm, x=-100.5mm, y=-100.5mm) ->
+                            outer_gear: Workpiece(sketch) spirograph::GearProfile(teeth=180) ->
+                              - module = 0.5mm
+                              - radius = 90mm
+                              - teeth = 180
+                              Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=180) ->
+                                - module = 0.5mm
+                                - outer_radius = 90.5mm
+                                - pitch_radius = 90mm
+                                - roundness = 0.6
+                                - stretch = 0.6
+                                - teeth = 180
+                                - tooth_angle = 0.03490658503989rad
+                                Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=180) ->
+                  logo2: Workpiece(op) std::ops::translate(x=70.35000000000001mm, y=86.42999999999999mm, z=3mm) ->
+                    - x = 70.35000000000001mm
+                    - y = 86.42999999999999mm
+                    - z = 3mm
+                    Transform __builtin::ops::translate(x=70.35000000000001mm, y=86.42999999999999mm, z=3mm) ->
+                      Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                        - height = 2mm
+                        - scale = (x=1, y=1)
+                        - twist = 0rad
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                          Workpiece(sketch) spirograph::logo::microcad::Logo(size=5.95mm) ->
+                            - radius = 2.975mm
+                            - thickness = 1.19mm
+                            Operation __builtin::ops::center() ->
+                              Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=4mm) ->
+                                - direction = (x=1, y=0, z=0)
+                                - spacing = 4mm
+                                Operation __builtin::ops::align(spacing=4mm, x=1, y=0, z=0) ->
+                                  Group ->
+                                    Workpiece(sketch) spirograph::logo::microcad::Icon(radius=2.975mm) ->
+                                      - gap = 0.595mm
+                                      - radius = 2.975mm
+                                      Multiplicity ->
+                                        Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                          - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                                            Workpiece(op) std::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                              - x = -3.57mm
+                                              - y = 0mm
+                                              - z = 0mm
+                                              Transform __builtin::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                                Workpiece(sketch) spirograph::logo::microcad::IconElement(radius=2.975mm) ->
+                                                  - radius = 2.975mm
+                                                  Operation union() ->
+                                                    Group ->
+                                                      c: Workpiece(op) std::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                        - x = 0mm
+                                                        - y = 2.975mm
+                                                        - z = 0mm
+                                                        Transform __builtin::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                          Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                            - end = 4.71238898038469rad
+                                                            - radius = 2.975mm
+                                                            - start = 3.14159265358979rad
+                                                            Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                                        - height = 5.95mm
+                                                        - width = 2.975mm
+                                                        - x = -2.975mm
+                                                        - y = -2.975mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                        Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                          - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                                          Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                                            Workpiece(op) std::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                              - x = -3.57mm
+                                              - y = 0mm
+                                              - z = 0mm
+                                              Transform __builtin::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                                Workpiece(sketch) spirograph::logo::microcad::IconElement(radius=2.975mm) ->
+                                                  - radius = 2.975mm
+                                                  Operation union() ->
+                                                    Group ->
+                                                      c: Workpiece(op) std::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                        - x = 0mm
+                                                        - y = 2.975mm
+                                                        - z = 0mm
+                                                        Transform __builtin::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                          Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                            - end = 4.71238898038469rad
+                                                            - radius = 2.975mm
+                                                            - start = 3.14159265358979rad
+                                                            Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                                        - height = 5.95mm
+                                                        - width = 2.975mm
+                                                        - x = -2.975mm
+                                                        - y = -2.975mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                        Workpiece(op) std::ops::rotate(angle=3.14159265358979rad, axis=(x=0, y=0, z=1)) ->
+                                          - matrix = Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]
+                                          Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                                            Workpiece(op) std::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                              - x = -3.57mm
+                                              - y = 0mm
+                                              - z = 0mm
+                                              Transform __builtin::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                                Workpiece(sketch) spirograph::logo::microcad::IconElement(radius=2.975mm) ->
+                                                  - radius = 2.975mm
+                                                  Operation union() ->
+                                                    Group ->
+                                                      c: Workpiece(op) std::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                        - x = 0mm
+                                                        - y = 2.975mm
+                                                        - z = 0mm
+                                                        Transform __builtin::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                          Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                            - end = 4.71238898038469rad
+                                                            - radius = 2.975mm
+                                                            - start = 3.14159265358979rad
+                                                            Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                                        - height = 5.95mm
+                                                        - width = 2.975mm
+                                                        - x = -2.975mm
+                                                        - y = -2.975mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                        Workpiece(op) std::ops::rotate(angle=4.71238898038469rad, axis=(x=0, y=0, z=1)) ->
+                                          - matrix = Matrix3 [[-1.8369701987210297e-16, -1.0, 0.0], [1.0, -1.8369701987210297e-16, 0.0], [0.0, 0.0, 1.0]]
+                                          Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.8369701987210297e-16, -1.0, 0.0], [1.0, -1.8369701987210297e-16, 0.0], [0.0, 0.0, 1.0]]) ->
+                                            Workpiece(op) std::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                              - x = -3.57mm
+                                              - y = 0mm
+                                              - z = 0mm
+                                              Transform __builtin::ops::translate(x=-3.57mm, y=0mm, z=0mm) ->
+                                                Workpiece(sketch) spirograph::logo::microcad::IconElement(radius=2.975mm) ->
+                                                  - radius = 2.975mm
+                                                  Operation union() ->
+                                                    Group ->
+                                                      c: Workpiece(op) std::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                        - x = 0mm
+                                                        - y = 2.975mm
+                                                        - z = 0mm
+                                                        Transform __builtin::ops::translate(x=0mm, y=2.975mm, z=0mm) ->
+                                                          Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                            - end = 4.71238898038469rad
+                                                            - radius = 2.975mm
+                                                            - start = 3.14159265358979rad
+                                                            Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=2.975mm, start=3.14159265358979rad) ->
+                                                      r: Workpiece(sketch) std::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                                        - height = 5.95mm
+                                                        - width = 2.975mm
+                                                        - x = -2.975mm
+                                                        - y = -2.975mm
+                                                        Primitive2D __builtin::geo2d::Rect(height=5.95mm, width=2.975mm, x=-2.975mm, y=-2.975mm) ->
+                                    Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=0mm) ->
+                                      - direction = (x=1, y=0, z=0)
+                                      - spacing = 0mm
+                                      Operation __builtin::ops::align(spacing=0mm, x=1, y=0, z=0) ->
+                                        Group ->
+                                          Workpiece(sketch) spirograph::logo::microcad::Micro(radius=2.975mm, thickness=1.19mm) ->
+                                            - radius = 2.975mm
+                                            - thickness = 1.19mm
+                                            Operation union() ->
+                                              Group ->
+                                                Operation union() ->
+                                                  Group ->
+                                                    u: Operation subtract() ->
+                                                      Group ->
+                                                        Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                                          - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                                                          Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                                                            Workpiece(sketch) std::geo2d::Sector(angle=3.14159265358979rad, offset=0rad, radius=2.975mm) ->
+                                                              - end = 1.5707963267949rad
+                                                              - radius = 2.975mm
+                                                              - start = -1.5707963267949rad
+                                                              Primitive2D __builtin::geo2d::Sector(end=1.5707963267949rad, radius=2.975mm, start=-1.5707963267949rad) ->
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.785mm) ->
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 1.785mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                            Primitive2D __builtin::geo2d::Circle(radius=1.785mm) ->
+                                                    r_l: Workpiece(sketch) std::geo2d::Rect(height=8.925mm, width=1.19mm, x=-2.975mm, y=-5.95mm) ->
+                                                      - height = 8.925mm
+                                                      - width = 1.19mm
+                                                      - x = -2.975mm
+                                                      - y = -5.95mm
+                                                      Primitive2D __builtin::geo2d::Rect(height=8.925mm, width=1.19mm, x=-2.975mm, y=-5.95mm) ->
+                                                r_r: Workpiece(sketch) std::geo2d::Rect(height=5.95mm, width=1.19mm, x=1.785mm, y=-2.975mm) ->
+                                                  - height = 5.95mm
+                                                  - width = 1.19mm
+                                                  - x = 1.785mm
+                                                  - y = -2.975mm
+                                                  Primitive2D __builtin::geo2d::Rect(height=5.95mm, width=1.19mm, x=1.785mm, y=-2.975mm) ->
+                                          Workpiece(sketch) spirograph::logo::microcad::C(radius=2.975mm, thickness=1.19mm) ->
+                                            - radius = 2.975mm
+                                            - thickness = 1.19mm
+                                            Workpiece(sketch) spirograph::logo::microcad::Arc(angle=4.53785605518526rad, radius=2.975mm, thickness=1.19mm) ->
+                                              - angle = 4.53785605518526rad
+                                              - radius = 2.975mm
+                                              - thickness = 1.19mm
+                                              Operation subtract() ->
+                                                Group ->
+                                                  Workpiece(op) std::ops::rotate(angle=-1.39626340159546rad, axis=(x=0, y=0, z=1)) ->
+                                                    - matrix = Matrix3 [[0.17364817766693022, -0.9848077530122081, 0.0], [0.9848077530122081, 0.17364817766693022, 0.0], [0.0, 0.0, 1.0]]
+                                                    Transform __builtin::ops::rotate(matrix=Matrix3 [[0.17364817766693022, -0.9848077530122081, 0.0], [0.9848077530122081, 0.17364817766693022, 0.0], [0.0, 0.0, 1.0]]) ->
+                                                      Workpiece(sketch) std::geo2d::Sector(end=2.26892802759263rad, radius=2.975mm, start=-2.26892802759263rad) ->
+                                                        - end = 2.26892802759263rad
+                                                        - radius = 2.975mm
+                                                        - start = -2.26892802759263rad
+                                                        Primitive2D __builtin::geo2d::Sector(end=2.26892802759263rad, radius=2.975mm, start=-2.26892802759263rad) ->
+                                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.785mm) ->
+                                                    - center = (x=0mm, y=0mm)
+                                                    - radius = 1.785mm
+                                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                      Primitive2D __builtin::geo2d::Circle(radius=1.785mm) ->
+                                          Workpiece(sketch) spirograph::logo::microcad::A(radius=2.975mm, thickness=1.19mm) ->
+                                            - radius = 2.975mm
+                                            - thickness = 1.19mm
+                                            Operation union() ->
+                                              Group ->
+                                                Workpiece(sketch) spirograph::logo::microcad::Arc(angle=5.23598775598299rad, radius=2.975mm, thickness=1.19mm) ->
+                                                  - angle = 5.23598775598299rad
+                                                  - radius = 2.975mm
+                                                  - thickness = 1.19mm
+                                                  Operation subtract() ->
+                                                    Group ->
+                                                      Workpiece(op) std::ops::rotate(angle=-2.0943951023932rad, axis=(x=0, y=0, z=1)) ->
+                                                        - matrix = Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]
+                                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]) ->
+                                                          Workpiece(sketch) std::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) ->
+                                                            - end = 2.61799387799149rad
+                                                            - radius = 2.975mm
+                                                            - start = -2.61799387799149rad
+                                                            Primitive2D __builtin::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) ->
+                                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.785mm) ->
+                                                        - center = (x=0mm, y=0mm)
+                                                        - radius = 1.785mm
+                                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                          Primitive2D __builtin::geo2d::Circle(radius=1.785mm) ->
+                                                Workpiece(sketch) std::geo2d::Rect(height=5.95mm, width=1.19mm, x=1.4875mm, y=-2.975mm) ->
+                                                  - height = 5.95mm
+                                                  - width = 1.19mm
+                                                  - x = 1.4875mm
+                                                  - y = -2.975mm
+                                                  Primitive2D __builtin::geo2d::Rect(height=5.95mm, width=1.19mm, x=1.4875mm, y=-2.975mm) ->
+                                          Workpiece(sketch) spirograph::logo::microcad::D(radius=2.975mm, thickness=1.19mm) ->
+                                            - radius = 2.975mm
+                                            - thickness = 1.19mm
+                                            Operation union() ->
+                                              Group ->
+                                                Workpiece(sketch) spirograph::logo::microcad::Arc(angle=5.23598775598299rad, radius=2.975mm, thickness=1.19mm) ->
+                                                  - angle = 5.23598775598299rad
+                                                  - radius = 2.975mm
+                                                  - thickness = 1.19mm
+                                                  Operation subtract() ->
+                                                    Group ->
+                                                      Workpiece(op) std::ops::rotate(angle=-2.0943951023932rad, axis=(x=0, y=0, z=1)) ->
+                                                        - matrix = Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]
+                                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]) ->
+                                                          Workpiece(sketch) std::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) ->
+                                                            - end = 2.61799387799149rad
+                                                            - radius = 2.975mm
+                                                            - start = -2.61799387799149rad
+                                                            Primitive2D __builtin::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) ->
+                                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.785mm) ->
+                                                        - center = (x=0mm, y=0mm)
+                                                        - radius = 1.785mm
+                                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                          Primitive2D __builtin::geo2d::Circle(radius=1.785mm) ->
+                                                Workpiece(sketch) std::geo2d::Rect(height=8.925mm, width=1.19mm, x=1.4875mm, y=-2.975mm) ->
+                                                  - height = 8.925mm
+                                                  - width = 1.19mm
+                                                  - x = 1.4875mm
+                                                  - y = -2.975mm
+                                                  Primitive2D __builtin::geo2d::Rect(height=8.925mm, width=1.19mm, x=1.4875mm, y=-2.975mm) ->
+              url: Workpiece(op) std::ops::translate(x=64.32000000000001mm, y=-92.46mm, z=3mm) ->
+                - x = 64.32000000000001mm
+                - y = -92.46mm
+                - z = 3mm
+                Transform __builtin::ops::translate(x=64.32000000000001mm, y=-92.46mm, z=3mm) ->
+                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                    - height = 2mm
+                    - scale = (x=1, y=1)
+                    - twist = 0rad
+                    Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                      Operation __builtin::ops::center() ->
+                        Workpiece(sketch) std::geo2d::Text(font_file=, height=10.5mm, text=microcad.xyz) ->
+                          - font_file = 
+                          - height = 10.5mm
+                          - text = microcad.xyz
+                          Primitive2D __builtin::geo2d::Text(font_file=, height=10.5mm, text=microcad.xyz) ->
+    Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=0mm) ->
+      - x = 0mm
+      - y = 0mm
+      - z = 0mm
+      #[export = "spirograph_ring_1.stl" with exporter `stl`]
+      #[color = rgba(0, 1, 0, 1)]
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+        Group ->
+          Operation subtract() ->
+            Group ->
+              ring: Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                - height = 2mm
+                - scale = (x=1, y=1)
+                - twist = 0rad
+                Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                  ring_1: Workpiece(sketch) spirograph::RingProfile(border_width=7mm, inner_teeth=120, outer_teeth=180) ->
+                    - border_width = 7mm
+                    - inner_teeth = 120
+                    - outer_teeth = 180
+                    - radius = 90mm
+                    - shift = 24mm
+                    Operation subtract() ->
+                      Group ->
+                        Operation subtract() ->
+                          Group ->
+                            outer_gear: Workpiece(sketch) spirograph::GearProfile(teeth=180) ->
+                              - module = 0.5mm
+                              - radius = 90mm
+                              - teeth = 180
+                              Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=180) ->
+                                - module = 0.5mm
+                                - outer_radius = 90.5mm
+                                - pitch_radius = 90mm
+                                - roundness = 0.6
+                                - stretch = 0.6
+                                - teeth = 180
+                                - tooth_angle = 0.03490658503989rad
+                                Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=180) ->
+                            sector: Group ->
+                              Workpiece(op) std::ops::buffer(distance=1mm) ->
+                                - distance = 1mm
+                                Operation __builtin::ops::buffer(distance=1mm) ->
+                                  Workpiece(op) std::ops::buffer(distance=-1mm) ->
+                                    - distance = -1mm
+                                    Operation __builtin::ops::buffer(distance=-1mm) ->
+                                      Operation subtract() ->
+                                        Group ->
+                                          Operation subtract() ->
+                                            Group ->
+                                              disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=83mm) ->
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 83mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                  Primitive2D __builtin::geo2d::Circle(radius=83mm) ->
+                                              Operation subtract() ->
+                                                Group ->
+                                                  sector: Workpiece(op) std::ops::rotate(angle=1.0471975511966rad, axis=(x=0, y=0, z=1)) ->
+                                                    - matrix = Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]
+                                                    Transform __builtin::ops::rotate(matrix=Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]) ->
+                                                      Workpiece(sketch) std::geo2d::Sector(end=1.5707963267949rad, radius=90mm, start=0.5235987755983rad) ->
+                                                        - end = 1.5707963267949rad
+                                                        - radius = 90mm
+                                                        - start = 0.5235987755983rad
+                                                        Primitive2D __builtin::geo2d::Sector(end=1.5707963267949rad, radius=90mm, start=0.5235987755983rad) ->
+                                                  inner_disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=42.5mm) ->
+                                                    - center = (x=0mm, y=0mm)
+                                                    - radius = 42.5mm
+                                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                      Primitive2D __builtin::geo2d::Circle(radius=42.5mm) ->
+                                          Workpiece(op) std::ops::translate(x=24mm, y=0mm, z=0mm) ->
+                                            - x = 24mm
+                                            - y = 0mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=24mm, y=0mm, z=0mm) ->
+                                              ring: Workpiece(sketch) std::geo2d::Ring(outer_radius=66mm, thickness=7mm) ->
+                                                - inner_radius = 59mm
+                                                - outer_radius = 66mm
+                                                Operation subtract() ->
+                                                  Group ->
+                                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=66mm) ->
+                                                      - center = (x=0mm, y=0mm)
+                                                      - radius = 66mm
+                                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                        Primitive2D __builtin::geo2d::Circle(radius=66mm) ->
+                                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=59mm) ->
+                                                      - center = (x=0mm, y=0mm)
+                                                      - radius = 59mm
+                                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                        Primitive2D __builtin::geo2d::Circle(radius=59mm) ->
+                        Workpiece(op) std::ops::translate(x=24mm, y=0mm, z=0mm) ->
+                          - x = 24mm
+                          - y = 0mm
+                          - z = 0mm
+                          Transform __builtin::ops::translate(x=24mm, y=0mm, z=0mm) ->
+                            inner_gear: Workpiece(sketch) spirograph::GearProfile(teeth=120) ->
+                              - module = 0.5mm
+                              - radius = 60mm
+                              - teeth = 120
+                              Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=120) ->
+                                - module = 0.5mm
+                                - outer_radius = 60.5mm
+                                - pitch_radius = 60mm
+                                - roundness = 0.6
+                                - stretch = 0.6
+                                - teeth = 120
+                                - tooth_angle = 0.05235987755983rad
+                                Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=120) ->
+              pencil_holes: Workpiece(part) spirograph::PencilHoles(angle=0.39269908169872rad, n=6, radius=90mm, start=6) ->
+                - angle = 0.39269908169872rad
+                - n = 6
+                - radius = 90mm
+                - start = 6
+                Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                  - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                    Group ->
+                      Multiplicity ->
+                        Workpiece(part) spirograph::PencilHole(offset=45mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 45mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=45mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 45mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=45mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=52.5mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 52.5mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=52.5mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 52.5mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=52.5mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=60mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 60mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=60mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 60mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=60mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=67.5mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 67.5mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=67.5mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 67.5mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=67.5mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=75mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 75mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=75mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 75mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=75mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=82.5mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 82.5mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=82.5mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 82.5mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=82.5mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=-0.39269908169872rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=48.75mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 48.75mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=48.75mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 48.75mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=48.75mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=56.25mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 56.25mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=56.25mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 56.25mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=56.25mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=63.75mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 63.75mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=63.75mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 63.75mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=63.75mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=71.25mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 71.25mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=71.25mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 71.25mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=71.25mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=78.75mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 78.75mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=78.75mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 78.75mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=78.75mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=86.25mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 86.25mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=86.25mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 86.25mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=86.25mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=0.39269908169872rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=47.5mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 47.5mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=47.5mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 47.5mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=47.5mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=55mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 55mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=55mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 55mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=55mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=62.5mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 62.5mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=62.5mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 62.5mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=62.5mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=70mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 70mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=70mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 70mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=70mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=77.5mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 77.5mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=77.5mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 77.5mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=77.5mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=85mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 85mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=85mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 85mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=85mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+    Workpiece(op) std::ops::translate(x=24mm, y=0mm, z=0mm) ->
+      - x = 24mm
+      - y = 0mm
+      - z = 0mm
+      #[export = "spirograph_ring_2.stl" with exporter `stl`]
+      #[color = rgba(1, 0, 0, 1)]
+      Transform __builtin::ops::translate(x=24mm, y=0mm, z=0mm) ->
+        Group ->
+          Operation subtract() ->
+            Group ->
+              ring: Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                - height = 2mm
+                - scale = (x=1, y=1)
+                - twist = 0rad
+                Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                  ring_2: Workpiece(sketch) spirograph::RingProfile(border_width=7mm, inner_teeth=72, outer_teeth=120) ->
+                    - border_width = 7mm
+                    - inner_teeth = 72
+                    - outer_teeth = 120
+                    - radius = 60mm
+                    - shift = 14.4mm
+                    Operation subtract() ->
+                      Group ->
+                        Operation subtract() ->
+                          Group ->
+                            outer_gear: Workpiece(sketch) spirograph::GearProfile(teeth=120) ->
+                              - module = 0.5mm
+                              - radius = 60mm
+                              - teeth = 120
+                              Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=120) ->
+                                - module = 0.5mm
+                                - outer_radius = 60.5mm
+                                - pitch_radius = 60mm
+                                - roundness = 0.6
+                                - stretch = 0.6
+                                - teeth = 120
+                                - tooth_angle = 0.05235987755983rad
+                                Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=120) ->
+                            sector: Group ->
+                              Workpiece(op) std::ops::buffer(distance=1mm) ->
+                                - distance = 1mm
+                                Operation __builtin::ops::buffer(distance=1mm) ->
+                                  Workpiece(op) std::ops::buffer(distance=-1mm) ->
+                                    - distance = -1mm
+                                    Operation __builtin::ops::buffer(distance=-1mm) ->
+                                      Operation subtract() ->
+                                        Group ->
+                                          Operation subtract() ->
+                                            Group ->
+                                              disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=53mm) ->
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 53mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                  Primitive2D __builtin::geo2d::Circle(radius=53mm) ->
+                                              Operation subtract() ->
+                                                Group ->
+                                                  sector: Workpiece(op) std::ops::rotate(angle=1.0471975511966rad, axis=(x=0, y=0, z=1)) ->
+                                                    - matrix = Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]
+                                                    Transform __builtin::ops::rotate(matrix=Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]) ->
+                                                      Workpiece(sketch) std::geo2d::Sector(end=1.5707963267949rad, radius=60mm, start=0.5235987755983rad) ->
+                                                        - end = 1.5707963267949rad
+                                                        - radius = 60mm
+                                                        - start = 0.5235987755983rad
+                                                        Primitive2D __builtin::geo2d::Sector(end=1.5707963267949rad, radius=60mm, start=0.5235987755983rad) ->
+                                                  inner_disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=18.5mm) ->
+                                                    - center = (x=0mm, y=0mm)
+                                                    - radius = 18.5mm
+                                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                      Primitive2D __builtin::geo2d::Circle(radius=18.5mm) ->
+                                          Workpiece(op) std::ops::translate(x=14.4mm, y=0mm, z=0mm) ->
+                                            - x = 14.4mm
+                                            - y = 0mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=14.4mm, y=0mm, z=0mm) ->
+                                              ring: Workpiece(sketch) std::geo2d::Ring(outer_radius=42mm, thickness=7mm) ->
+                                                - inner_radius = 35mm
+                                                - outer_radius = 42mm
+                                                Operation subtract() ->
+                                                  Group ->
+                                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=42mm) ->
+                                                      - center = (x=0mm, y=0mm)
+                                                      - radius = 42mm
+                                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                        Primitive2D __builtin::geo2d::Circle(radius=42mm) ->
+                                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=35mm) ->
+                                                      - center = (x=0mm, y=0mm)
+                                                      - radius = 35mm
+                                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                        Primitive2D __builtin::geo2d::Circle(radius=35mm) ->
+                        Workpiece(op) std::ops::translate(x=14.4mm, y=0mm, z=0mm) ->
+                          - x = 14.4mm
+                          - y = 0mm
+                          - z = 0mm
+                          Transform __builtin::ops::translate(x=14.4mm, y=0mm, z=0mm) ->
+                            inner_gear: Workpiece(sketch) spirograph::GearProfile(teeth=72) ->
+                              - module = 0.5mm
+                              - radius = 36mm
+                              - teeth = 72
+                              Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=72) ->
+                                - module = 0.5mm
+                                - outer_radius = 36.5mm
+                                - pitch_radius = 36mm
+                                - roundness = 0.6
+                                - stretch = 0.6
+                                - teeth = 72
+                                - tooth_angle = 0.08726646259972rad
+                                Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=72) ->
+              pencil_holes: Workpiece(part) spirograph::PencilHoles(angle=0.39269908169872rad, n=5, radius=60mm, start=5) ->
+                - angle = 0.39269908169872rad
+                - n = 5
+                - radius = 60mm
+                - start = 5
+                Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                  - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                    Group ->
+                      Multiplicity ->
+                        Workpiece(part) spirograph::PencilHole(offset=30mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 30mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=30mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 30mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=30mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=36mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 36mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=36mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 36mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=36mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=42mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 42mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=42mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 42mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=42mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=48mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 48mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=48mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 48mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=48mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=54mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 54mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=54mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 54mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=54mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=-0.39269908169872rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=33mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 33mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=33mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 33mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=33mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=39mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 39mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=39mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 39mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=39mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=45mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 45mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=45mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 45mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=45mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=51mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 51mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=51mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 51mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=51mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=57mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 57mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=57mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 57mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=57mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=0.39269908169872rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=32mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 32mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=32mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 32mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=32mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=38mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 38mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=38mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 38mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=38mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=44mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 44mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=44mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 44mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=44mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=50.00000000000001mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 50.00000000000001mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=50.00000000000001mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 50.00000000000001mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=50.00000000000001mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=56mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 56mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=56mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 56mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=56mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+    Workpiece(op) std::ops::translate(x=38.4mm, y=0mm, z=0mm) ->
+      - x = 38.4mm
+      - y = 0mm
+      - z = 0mm
+      #[export = "spirograph_ring_3.stl" with exporter `stl`]
+      #[color = rgba(1, 1, 0, 1)]
+      Transform __builtin::ops::translate(x=38.4mm, y=0mm, z=0mm) ->
+        Group ->
+          Operation subtract() ->
+            Group ->
+              ring: Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                - height = 2mm
+                - scale = (x=1, y=1)
+                - twist = 0rad
+                Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                  ring_3: Workpiece(sketch) spirograph::RingProfile(border_width=7mm, inner_teeth=36, outer_teeth=72) ->
+                    - border_width = 7mm
+                    - inner_teeth = 36
+                    - outer_teeth = 72
+                    - radius = 36mm
+                    - shift = 7.2mm
+                    Operation subtract() ->
+                      Group ->
+                        Operation subtract() ->
+                          Group ->
+                            outer_gear: Workpiece(sketch) spirograph::GearProfile(teeth=72) ->
+                              - module = 0.5mm
+                              - radius = 36mm
+                              - teeth = 72
+                              Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=72) ->
+                                - module = 0.5mm
+                                - outer_radius = 36.5mm
+                                - pitch_radius = 36mm
+                                - roundness = 0.6
+                                - stretch = 0.6
+                                - teeth = 72
+                                - tooth_angle = 0.08726646259972rad
+                                Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=72) ->
+                            sector: Group ->
+                              Workpiece(op) std::ops::buffer(distance=1mm) ->
+                                - distance = 1mm
+                                Operation __builtin::ops::buffer(distance=1mm) ->
+                                  Workpiece(op) std::ops::buffer(distance=-1mm) ->
+                                    - distance = -1mm
+                                    Operation __builtin::ops::buffer(distance=-1mm) ->
+                                      Operation subtract() ->
+                                        Group ->
+                                          Operation subtract() ->
+                                            Group ->
+                                              disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=29mm) ->
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 29mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                  Primitive2D __builtin::geo2d::Circle(radius=29mm) ->
+                                              Operation subtract() ->
+                                                Group ->
+                                                  sector: Workpiece(op) std::ops::rotate(angle=1.0471975511966rad, axis=(x=0, y=0, z=1)) ->
+                                                    - matrix = Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]
+                                                    Transform __builtin::ops::rotate(matrix=Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]) ->
+                                                      Workpiece(sketch) std::geo2d::Sector(end=1.5707963267949rad, radius=36mm, start=0.5235987755983rad) ->
+                                                        - end = 1.5707963267949rad
+                                                        - radius = 36mm
+                                                        - start = 0.5235987755983rad
+                                                        Primitive2D __builtin::geo2d::Sector(end=1.5707963267949rad, radius=36mm, start=0.5235987755983rad) ->
+                                                  inner_disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.5mm) ->
+                                                    - center = (x=0mm, y=0mm)
+                                                    - radius = 0.5mm
+                                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                      Primitive2D __builtin::geo2d::Circle(radius=0.5mm) ->
+                                          Workpiece(op) std::ops::translate(x=7.2mm, y=0mm, z=0mm) ->
+                                            - x = 7.2mm
+                                            - y = 0mm
+                                            - z = 0mm
+                                            Transform __builtin::ops::translate(x=7.2mm, y=0mm, z=0mm) ->
+                                              ring: Workpiece(sketch) std::geo2d::Ring(outer_radius=24mm, thickness=7mm) ->
+                                                - inner_radius = 17mm
+                                                - outer_radius = 24mm
+                                                Operation subtract() ->
+                                                  Group ->
+                                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=24mm) ->
+                                                      - center = (x=0mm, y=0mm)
+                                                      - radius = 24mm
+                                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                        Primitive2D __builtin::geo2d::Circle(radius=24mm) ->
+                                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=17mm) ->
+                                                      - center = (x=0mm, y=0mm)
+                                                      - radius = 17mm
+                                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                                        Primitive2D __builtin::geo2d::Circle(radius=17mm) ->
+                        Workpiece(op) std::ops::translate(x=7.2mm, y=0mm, z=0mm) ->
+                          - x = 7.2mm
+                          - y = 0mm
+                          - z = 0mm
+                          Transform __builtin::ops::translate(x=7.2mm, y=0mm, z=0mm) ->
+                            inner_gear: Workpiece(sketch) spirograph::GearProfile(teeth=36) ->
+                              - module = 0.5mm
+                              - radius = 18mm
+                              - teeth = 36
+                              Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=36) ->
+                                - module = 0.5mm
+                                - outer_radius = 18.5mm
+                                - pitch_radius = 18mm
+                                - roundness = 0.6
+                                - stretch = 0.6
+                                - teeth = 36
+                                - tooth_angle = 0.17453292519943rad
+                                Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=36) ->
+              pencil_holes: Workpiece(part) spirograph::PencilHoles(angle=0.39269908169872rad, n=4, radius=36mm, start=4) ->
+                - angle = 0.39269908169872rad
+                - n = 4
+                - radius = 36mm
+                - start = 4
+                Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                  - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                    Group ->
+                      Multiplicity ->
+                        Workpiece(part) spirograph::PencilHole(offset=18mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 18mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=18mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 18mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=18mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=22.5mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 22.5mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=22.5mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 22.5mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=22.5mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=27mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 27mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=27mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 27mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=27mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=31.5mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 31.5mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=31.5mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 31.5mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=31.5mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=-0.39269908169872rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=20.25mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 20.25mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=20.25mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 20.25mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=20.25mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=24.75mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 24.75mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=24.75mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 24.75mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=24.75mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=29.25mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 29.25mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=29.25mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 29.25mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=29.25mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=33.75mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 33.75mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=33.75mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 33.75mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=33.75mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=0.39269908169872rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=19.5mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 19.5mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=19.5mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 19.5mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=19.5mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=24mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 24mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=24mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 24mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=24mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=28.5mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 28.5mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=28.5mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 28.5mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=28.5mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=33mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 33mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=33mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 33mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=33mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+    Workpiece(op) std::ops::translate(x=45.6mm, y=0mm, z=0mm) ->
+      - x = 45.6mm
+      - y = 0mm
+      - z = 0mm
+      #[export = "spirograph_gear.stl" with exporter `stl`]
+      #[color = rgba(0, 0.5, 0.5, 1)]
+      Transform __builtin::ops::translate(x=45.6mm, y=0mm, z=0mm) ->
+        gear: Group ->
+          Operation subtract() ->
+            Group ->
+              gear: Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                - height = 2mm
+                - scale = (x=1, y=1)
+                - twist = 0rad
+                Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                  profile: Workpiece(sketch) spirograph::GearProfile(teeth=36) ->
+                    - module = 0.5mm
+                    - radius = 18mm
+                    - teeth = 36
+                    Workpiece(sketch) std::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=36) ->
+                      - module = 0.5mm
+                      - outer_radius = 18.5mm
+                      - pitch_radius = 18mm
+                      - roundness = 0.6
+                      - stretch = 0.6
+                      - teeth = 36
+                      - tooth_angle = 0.17453292519943rad
+                      Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=36) ->
+              pencil_holes: Workpiece(part) spirograph::PencilHoles(angle=2.0943951023932rad, n=2, radius=18mm, start=1) ->
+                - angle = 2.0943951023932rad
+                - n = 2
+                - radius = 18mm
+                - start = 1
+                Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                  - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                    Group ->
+                      Multiplicity ->
+                        Workpiece(part) spirograph::PencilHole(offset=4.5mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 4.5mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=4.5mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 4.5mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=4.5mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=9mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 9mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=9mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 9mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=9mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                        Workpiece(part) spirograph::PencilHole(offset=13.5mm, pencil_hole_diameter=0.5mm) ->
+                          - offset = 13.5mm
+                          - pencil_hole_diameter = 0.5mm
+                          Workpiece(op) std::ops::translate(x=0mm, y=13.5mm, z=0mm) ->
+                            - x = 0mm
+                            - y = 13.5mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=0mm, y=13.5mm, z=0mm) ->
+                              Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                - height = 2mm
+                                - scale = (x=3, y=3)
+                                - twist = 0rad
+                                Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                  Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=-2.0943951023932rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[-0.4999999999999998, -0.8660254037844387, 0.0], [0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, -0.8660254037844387, 0.0], [0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=6.75mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 6.75mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=6.75mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 6.75mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=6.75mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=11.25mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 11.25mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=11.25mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 11.25mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=11.25mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=15.75mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 15.75mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=15.75mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 15.75mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=15.75mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                      Workpiece(op) std::ops::rotate(angle=2.0943951023932rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Multiplicity ->
+                            Workpiece(part) spirograph::PencilHole(offset=6mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 6mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=6mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 6mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=6mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=10.5mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 10.5mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=10.5mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 10.5mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=10.5mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+                            Workpiece(part) spirograph::PencilHole(offset=15mm, pencil_hole_diameter=0.5mm) ->
+                              - offset = 15mm
+                              - pencil_hole_diameter = 0.5mm
+                              Workpiece(op) std::ops::translate(x=0mm, y=15mm, z=0mm) ->
+                                - x = 0mm
+                                - y = 15mm
+                                - z = 0mm
+                                Transform __builtin::ops::translate(x=0mm, y=15mm, z=0mm) ->
+                                  Workpiece(op) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                                    - height = 2mm
+                                    - scale = (x=3, y=3)
+                                    - twist = 0rad
+                                    Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) ->
+
+Export of "../books/examples/src/.test/spirograph-out.stl" successful.
 -- Test Result --
-FAILS
+OK (BUT WARNINGS)
