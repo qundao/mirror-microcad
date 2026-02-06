@@ -107,6 +107,7 @@ impl Diagnostic {
                 let wrapper = DiagnosticWrapper {
                     diagnostic: self,
                     source: miette_source,
+                    line_offset,
                 };
                 let handler = miette::GraphicalReportHandler::new_themed(options.theme());
                 handler.render_report(&mut f, &wrapper)?
@@ -153,6 +154,7 @@ impl std::fmt::Debug for Diagnostic {
 struct DiagnosticWrapper<'a> {
     diagnostic: &'a Diagnostic,
     source: MietteSourceFile<'a>,
+    line_offset: usize,
 }
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {
@@ -163,7 +165,13 @@ impl std::fmt::Debug for DiagnosticWrapper<'_> {
 
 impl std::fmt::Display for DiagnosticWrapper<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.diagnostic)
+        let src_ref = self.diagnostic.src_ref().with_line_offset(self.line_offset);
+        match self.diagnostic {
+            Diagnostic::Trace(message) => write!(f, "trace: {}: {message}", src_ref),
+            Diagnostic::Info(message) => write!(f, "info: {}: {message}", src_ref),
+            Diagnostic::Warning(error) => write!(f, "warning: {}: {error}", src_ref),
+            Diagnostic::Error(error) => write!(f, "error: {}: {error}", src_ref),
+        }
     }
 }
 

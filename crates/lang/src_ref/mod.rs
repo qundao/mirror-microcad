@@ -52,6 +52,11 @@ impl SrcRef {
     pub fn as_miette_span(&self) -> Option<SourceSpan> {
         self.0.as_ref().map(|s| SourceSpan::new(s.range.start.into(), s.range.len()))
     }
+
+    /// Return a reference with a given line offset.
+    pub fn with_line_offset(self, offset: usize) -> Self {
+        Self(self.0.map(|inner| Box::new(inner.with_line_offset(offset))))
+    }
 }
 
 impl From<SrcRef> for SourceSpan {
