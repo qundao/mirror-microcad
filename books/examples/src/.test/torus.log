@@ -14,103 +14,91 @@
   10:   
 
 -- No Output --
--- Errors --
-  × error: 78:24: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── Got: Circle( minor_radius = 3mm )
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  help: Ambiguous initializations:
-        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
-        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-  ⚠ warning: 78:5: This expression statement did not produce any model
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── warning: 78:5: This expression statement did not produce any model
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  × error: 78:24: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── Got: Circle( minor_radius = 3mm )
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  help: Ambiguous initializations:
-        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
-        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-  ⚠ warning: 78:5: This expression statement did not produce any model
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── warning: 78:5: This expression statement did not produce any model
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  × error: 78:24: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── Got: Circle( minor_radius = 3mm )
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  help: Ambiguous initializations:
-        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
-        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-  ⚠ warning: 78:5: This expression statement did not produce any model
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── warning: 78:5: This expression statement did not produce any model
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  × error: 78:24: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── Got: Circle( minor_radius = 3mm )
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  help: Ambiguous initializations:
-        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
-        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-  ⚠ warning: 78:5: This expression statement did not produce any model
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── warning: 78:5: This expression statement did not produce any model
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  × error: 78:24: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── Got: Circle( minor_radius = 3mm )
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-  help: Ambiguous initializations:
-        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
-        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-  ⚠ warning: 78:5: This expression statement did not produce any model
-    ╭─[../crates/std/lib/std/geo3d.µcad:83:5]
- 82 │ pub part Torus(major_radius: Length, minor_radius: Length) {
- 83 │     std::geo2d::Circle(minor_radius)
-    ·     ────────────────┬───────────────
-    ·                     ╰── warning: 78:5: This expression statement did not produce any model
- 84 │         .std::ops::translate(x = major_radius)
-    ╰────
-Unexpected error(s) which did occur in line(s): 83
-Unexpected warnings(s) which did occur in line(s): 83
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Multiplicity ->
+      Workpiece(part) std::geo3d::Torus(major_radius=10mm, minor_radius=3mm) ->
+        - major_radius = 10mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+              - x = 10mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=20mm, minor_radius=3mm) ->
+        - major_radius = 20mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=20mm, y=0mm, z=0mm) ->
+              - x = 20mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=20mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=30mm, minor_radius=3mm) ->
+        - major_radius = 30mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=30mm, y=0mm, z=0mm) ->
+              - x = 30mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=30mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=40mm, minor_radius=3mm) ->
+        - major_radius = 40mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=40mm, y=0mm, z=0mm) ->
+              - x = 40mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=40mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=50mm, minor_radius=3mm) ->
+        - major_radius = 50mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=50mm, y=0mm, z=0mm) ->
+              - x = 50mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=50mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+
+Export of "../books/examples/src/.test/torus-out.stl" successful.
 -- Test Result --
-FAILS
+OK
