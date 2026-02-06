@@ -1,8 +1,3 @@
-# Example: dome
-
-[![Report](.test/dome.svg)](.test/dome.log)
-
-```µcad,dome
 // file: dome.µcad
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -21,10 +16,3 @@ pub part Dome(size: Length, strut_width = 1mm) {
 Dome(10mm, strut_width = 0.25mm);
 
 
-```
-
-**2D Output**
-    : ![None](.test/dome-out.svg)
-
-**3D Output**
-    : ![None](.test/dome-out.stl)
