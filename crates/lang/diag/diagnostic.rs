@@ -159,7 +159,7 @@ struct DiagnosticWrapper<'a> {
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self.diagnostic)
+        write!(f, "{}", self)
     }
 }
 
@@ -211,7 +211,7 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
         self.diagnostic.report().labels()
             .or_else(|| {
                 let span = self.diagnostic.src_ref().as_miette_span()?;
-                let label = miette::LabeledSpan::new_with_span(Some(self.diagnostic.to_string()), span);
+                let label = miette::LabeledSpan::new_with_span(Some(self.diagnostic.message()), span);
                 Some(Box::new(std::iter::once(label)))
             })
     }
