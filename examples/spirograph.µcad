@@ -26,10 +26,10 @@ sketch RingProfile(outer_teeth: Integer, inner_teeth: Integer, border_width = BO
     prop shift = inner_gear.radius * 40%;
 
     sector = {
-        disc = Circle(outer_gear.radius - border_width);
-        sector = Sector(radius = outer_gear.radius, start = 30°, end = 90°).rotate(60°);
-        inner_disc = Circle(inner_gear.radius - border_width * 250%);
-        ring = Ring(outer_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width);
+        disc = Circle(r = outer_gear.radius - border_width);
+        sector = Sector(r = outer_gear.radius, start = 30°, end = 90°).rotate(60°);
+        inner_disc = Circle(r = inner_gear.radius - border_width * 250%);
+        ring = Ring(o_r = inner_gear.radius + border_width - TEETH_SIZE * 2, thickness = border_width);
 
         (disc - (sector - inner_disc) - ring.translate(x = shift))
             .buffer(-TEETH_SIZE * 2)
