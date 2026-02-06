@@ -141,7 +141,7 @@ pub enum ParseError {
     #[error("{error}")]
     AstParser {
         src_ref: SrcRef,
-        error: microcad_syntax::parser::ParseError,
+        error: microcad_syntax::ParseError,
     },
 
     /// Call attribute with a non-identifier name

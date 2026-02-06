@@ -6,14 +6,16 @@ use chumsky::error::{Rich, RichReason};
 use miette::{Diagnostic, LabeledSpan};
 use std::iter::once;
 
+/// An error from building the abstract syntax tree
 #[derive(Debug)]
 pub struct ParseError {
+    /// The span of the source that caused the error
     pub span: Span,
     error: Rich<'static, Token<'static>, Span>,
 }
 
 impl ParseError {
-    pub fn new<'tokens>(error: Rich<'tokens, Token<'tokens>, Span>) -> Self {
+    pub(crate) fn new<'tokens>(error: Rich<'tokens, Token<'tokens>, Span>) -> Self {
         Self {
             span: error.span().clone(),
             error: error.map_token(Token::into_owned).into_owned(),

@@ -2,7 +2,9 @@ use crate::Span;
 use crate::ast::Identifier;
 use compact_str::CompactString;
 
+/// The possible types
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum Type {
     Single(SingleType),
     Array(ArrayType),
@@ -10,6 +12,7 @@ pub enum Type {
 }
 
 impl Type {
+    /// Get the span of the type
     pub fn span(&self) -> Span {
         match self {
             Type::Single(ty) => ty.span.clone(),
@@ -19,19 +22,25 @@ impl Type {
     }
 }
 
+/// A type for a single numeric value
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct SingleType {
     pub span: Span,
     pub name: CompactString,
 }
 
+/// An array type
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ArrayType {
     pub span: Span,
     pub inner: Box<Type>,
 }
 
+/// A tuple type
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct TupleType {
     pub span: Span,
     pub inner: Vec<(Option<Identifier>, Type)>,

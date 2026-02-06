@@ -1,7 +1,9 @@
 use crate::ast::{Call, Expression, Identifier, ItemExtras, StatementList, Type};
 use crate::Span;
 
+/// A µcad statements
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum Statement {
     Workbench(WorkbenchDefinition),
     Module(ModuleDefinition),
@@ -17,6 +19,7 @@ pub enum Statement {
 }
 
 impl Statement {
+    /// Get the span for the statement
     pub fn span(&self) -> Span {
         match self {
             Statement::Workbench(st) => st.span.clone(),
@@ -34,14 +37,18 @@ impl Statement {
     }
 }
 
+/// The possible type of workbenches
 #[derive(Debug, PartialEq, Copy, Clone)]
+#[allow(missing_docs)]
 pub enum WorkbenchKind {
     Sketch,
     Part,
     Op,
 }
 
+/// A definition of a workbench
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct WorkbenchDefinition {
     pub span: Span,
     pub extras: ItemExtras,
@@ -54,7 +61,9 @@ pub struct WorkbenchDefinition {
     pub body: StatementList,
 }
 
+/// A definition of a module
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ModuleDefinition {
     pub span: Span,
     pub extras: ItemExtras,
@@ -65,7 +74,9 @@ pub struct ModuleDefinition {
     pub body: Option<StatementList>,
 }
 
+/// A definition of a function
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct FunctionDefinition {
     pub span: Span,
     pub extras: ItemExtras,
@@ -77,7 +88,9 @@ pub struct FunctionDefinition {
     pub body: StatementList,
 }
 
+/// An init definition for a workbench
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct InitDefinition {
     pub span: Span,
     pub extras: ItemExtras,
@@ -86,7 +99,9 @@ pub struct InitDefinition {
     pub body: StatementList,
 }
 
+/// A use statement that imports an item from an external library
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct UseStatement {
     pub span: Span,
     pub extras: ItemExtras,
@@ -95,33 +110,44 @@ pub struct UseStatement {
     pub use_as: Option<Identifier>,
 }
 
+/// The name of the item being imported
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct UseName {
     pub span: Span,
     pub extras: ItemExtras,
     pub parts: Vec<UseStatementPart>,
 }
 
+/// The parts a [`UseName`] consists of, separated by `::`
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum UseStatementPart {
     Identifier(Identifier),
     Glob(Span),
 }
 
+/// A return statement
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct Return {
     pub span: Span,
     pub extras: ItemExtras,
     pub value: Option<Expression>,
 }
+
+/// A definition of the arguments of a workbench definition or function definition
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ArgumentsDefinition {
     pub span: Span,
     pub extras: ItemExtras,
     pub arguments: Vec<ArgumentDefinition>,
 }
 
+/// A definition of a single of a workbench definition or function definition
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ArgumentDefinition {
     pub span: Span,
     pub extras: ItemExtras,
@@ -130,7 +156,9 @@ pub struct ArgumentDefinition {
     pub default: Option<Expression>,
 }
 
+/// An attribute that can be attached to a statement
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct Attribute {
     pub span: Span,
     pub is_inner: bool,
@@ -138,20 +166,26 @@ pub struct Attribute {
     pub commands: Vec<AttributeCommand>,
 }
 
+/// The contents an an [`Attribute`]
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum AttributeCommand {
     Ident(Identifier),
     Assignment(Assignment),
     Call(Call),
 }
 
+/// An optional qualifier that can be part of an [`Assignment`]
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum AssignmentQualifier {
     Const,
     Prop,
 }
 
+/// An assigment statement
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct Assignment {
     pub span: Span,
     pub extras: ItemExtras,
@@ -164,18 +198,24 @@ pub struct Assignment {
     pub value: Box<Expression>,
 }
 
+/// A single- or multi-line comment
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct Comment {
     pub span: Span,
     pub lines: Vec<String>,
 }
 
+/// An optional visibility modifier that can be art of assigment and module, function and workbench definitions
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum Visibility {
     Public,
 }
 
+/// A statement containing of a bare expression
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ExpressionStatement {
     pub span: Span,
     pub extras: ItemExtras,

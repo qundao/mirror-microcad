@@ -4,12 +4,14 @@ use logos::{Lexer, Logos};
 use std::borrow::Cow;
 
 #[derive(Debug, PartialEq, Clone)]
+#[allow(missing_docs)]
 pub enum LogosToken<'a> {
     Normal(NormalToken<'a>),
     Error(LexerError),
 }
 
 #[derive(Logos, Debug, PartialEq, Clone)]
+#[allow(missing_docs)]
 #[logos(error(LexerError))]
 #[logos(skip r"[ \t\n\f]+")]
 pub enum NormalToken<'a> {
@@ -204,6 +206,7 @@ fn string_token_callback<'a>(
 
 #[derive(Logos, Debug, PartialEq, Clone)]
 #[logos(error(LexerError))]
+#[allow(missing_docs)]
 pub enum StringToken<'a> {
     #[regex(r#"[^"{}\\]+"#, callback = token_cow)]
     Content(Cow<'a, str>),
@@ -319,6 +322,7 @@ fn format_token_callback<'a>(
 
 #[derive(Logos, Debug, PartialEq, Clone)]
 #[logos(error(LexerError))]
+#[allow(missing_docs)]
 pub enum StringFormatToken<'a> {
     #[token("}")]
     FormatEnd,

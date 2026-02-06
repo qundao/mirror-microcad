@@ -9,13 +9,17 @@ use thiserror::Error;
 mod from_logos;
 mod logos;
 
+/// A source token with attached span
 #[derive(Debug, PartialEq, Clone)]
 pub struct SpannedToken<T> {
+    /// the span of the token
     pub span: Span,
+    /// the token
     pub token: T,
 }
 
 impl SpannedToken<Token<'_>> {
+    /// Create an owned version of the token
     pub fn into_owned(self) -> SpannedToken<Token<'static>> {
         SpannedToken {
             span: self.span,
@@ -25,15 +29,9 @@ impl SpannedToken<Token<'_>> {
 }
 
 impl<T> SpannedToken<T> {
+    /// Create a [`SpannedToken`] from [`Span`] and token
     pub fn new(span: Span, token: T) -> Self {
         SpannedToken { span, token }
-    }
-
-    pub fn map_token<U, F: Fn(T) -> U>(self, f: F) -> SpannedToken<U> {
-        SpannedToken {
-            span: self.span,
-            token: f(self.token),
-        }
     }
 }
 
@@ -43,18 +41,23 @@ impl<T: PartialEq> PartialEq<T> for SpannedToken<T> {
     }
 }
 
+/// Possible errors encountered while tokenizing
 #[derive(Debug, Default, Clone, PartialEq, Error)]
 pub enum LexerError {
+    /// No valid token was found for the character
     #[default]
     #[error("No valid token")]
     NoValidToken,
+    /// A format string was encountered that wasn't closed correctly
     #[error("Unclosed format string")]
     UnclosedStringFormat(Span),
+    /// A string was encountered that wasn't closed correctly
     #[error("Unclosed string")]
     UnclosedString(Span),
 }
 
 impl LexerError {
+    /// Get a descriptive name of the error type
     pub fn kind(&self) -> &'static str {
         match self {
             LexerError::NoValidToken => "no valid token",
@@ -65,6 +68,7 @@ impl LexerError {
 }
 
 impl LexerError {
+    /// Get the span of the error
     pub fn span(&self) -> Option<Span> {
         match self {
             LexerError::UnclosedStringFormat(span) => Some(span.clone()),
@@ -82,79 +86,148 @@ pub fn lex<'a>(input: &'a str) -> impl Iterator<Item = SpannedToken<Token<'a>>> 
 /// Source token for µcad files
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token<'a> {
+    /// A single-line comment, starting with `//`
     SingleLineComment(Cow<'a, str>),
+    /// A multi-line comment, starting with `/*` and ending with `*/`
     MultiLineComment(Cow<'a, str>),
+    /// A doc-comment, starting with `///`
     DocComment(Cow<'a, str>),
 
+    /// The `mod` keyword
     KeywordMod,
+    /// The `part` keyword
     KeywordPart,
+    /// The `sketch` keyword
     KeywordSketch,
+    /// The `op` keyword
     KeywordOp,
+    /// The `fn` keyword
     KeywordFn,
+    /// The `if` keyword
     KeywordIf,
+    /// The `else` keyword
     KeywordElse,
+    /// The `use` keyword
     KeywordUse,
+    /// The `as` keyword
     KeywordAs,
+    /// The `return` keyword
     KeywordReturn,
+    /// The `pub` keyword
     KeywordPub,
+    /// The `const` keyword
     KeywordConst,
+    /// The `prop` keyword
     KeywordProp,
+    /// The `init` keyword
     KeywordInit,
 
+    /// An identifier, alphanumeric, starting with either an alpha character or a underscore
     Identifier(Cow<'a, str>),
+    /// A unit identifier
     Unit(Cow<'a, str>),
 
+    /// An integer literal
     LiteralInt(Cow<'a, str>),
+    /// A float literal
     LiteralFloat(Cow<'a, str>),
+    /// A boolean literal
     LiteralBool(bool),
+    /// A string literal
     LiteralString(Cow<'a, str>),
 
+    /// Double-quote indicating the start of a format string
     FormatStringStart,
+    /// Double-quote indicating the end of a format string
     FormatStringEnd,
+    /// Literal string content of a format string
     StringContent(Cow<'a, str>),
+    /// Escaped character inside a format string
     Character(char),
+    /// The start of the format expression inside a format string
     StringFormatOpen,
+    /// The end of the format expression inside a format string
     StringFormatClose,
+    /// The precision specification of the format expression inside a format string
     StringFormatPrecision(Cow<'a, str>),
+    /// The width specification of the format expression inside a format string
     StringFormatWidth(Cow<'a, str>),
 
+    /// The `:` symbol
     SigilColon,
+    /// The `;` symbol
     SigilSemiColon,
+    /// The `::` symbol
     SigilDoubleColon,
+    /// The `(` symbol
     SigilOpenBracket,
+    /// The `)` symbol
     SigilCloseBracket,
+    /// The `[` symbol
     SigilOpenSquareBracket,
+    /// The `]` symbol
     SigilCloseSquareBracket,
+    /// The `{` symbol
     SigilOpenCurlyBracket,
+    /// The `}` symbol
     SigilCloseCurlyBracket,
+    /// The `#` symbol
     SigilHash,
+    /// The `.` symbol
     SigilDot,
+    /// The `,` symbol
     SigilComma,
+    /// The `..` symbol
     SigilDoubleDot,
+    /// The `@` symbol
     SigilAt,
+    /// The `->` symbol
     SigilSingleArrow,
+    /// The `"` symbol
     SigilQuote,
 
+    /// Add operator: `+`
     OperatorAdd,
+    /// Subtract operator: `-`
     OperatorSubtract,
+    /// Multiply operator: `-`
     OperatorMultiply,
+    /// Divide operator: `/`
     OperatorDivide,
+    /// Union operator: `|`
     OperatorUnion,
+    /// Intersect operator: `&`
     OperatorIntersect,
+    /// xor operator: `^`
     OperatorPowerXor,
+    /// Greater-than operator: `>`
     OperatorGreaterThan,
+    /// Less-than operator: `<`
     OperatorLessThan,
+    /// Greater-or-equal operator: `>=`
     OperatorGreaterEqual,
+    /// Less-or-equal operator: `<=`
     OperatorLessEqual,
+    /// Near operator: `~`
     OperatorNear,
+    /// Equal operator: `==`
     OperatorEqual,
+    /// Not-equal operator: `!=`
     OperatorNotEqual,
+    /// And operator: `and`
     OperatorAnd,
+    /// Or operator: `or`
     OperatorOr,
+    /// Xor operator: `xor'
     OperatorXor,
+    /// Not operator: `!`
     OperatorNot,
+    /// Assignment operator: `=`
     OperatorAssignment,
 
+    /// A lexer failure
+    ///
+    /// When encountering an error, the lexer attempts to recover and continue emitting further tokens
     Error(LexerError),
 }
 
@@ -165,6 +238,7 @@ impl Display for Token<'_> {
 }
 
 impl Token<'_> {
+    /// Create an owned version of the token
     pub fn into_owned(self) -> Token<'static> {
         match self {
             Token::SingleLineComment(c) => Token::SingleLineComment(c.into_owned().into()),
@@ -238,6 +312,7 @@ impl Token<'_> {
         }
     }
 
+    /// Get a descriptive name or symbol for the token type
     pub fn kind(&self) -> &'static str {
         match self {
             Token::SingleLineComment(_) => "single-line comment",
@@ -310,6 +385,7 @@ impl Token<'_> {
         }
     }
 
+    /// Check if the token is an error
     pub fn is_error(&self) -> bool {
         matches!(self, Token::Error(_))
     }

@@ -1,6 +1,8 @@
+#![allow(missing_docs)]
+
 use insta::assert_debug_snapshot;
-use microcad_syntax::parser::parse;
-use microcad_syntax::tokens::lex;
+use microcad_syntax::parse;
+use microcad_syntax::lex;
 use test_case::test_case;
 
 #[test_case("single int", "1")]

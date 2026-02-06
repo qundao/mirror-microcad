@@ -1,3 +1,5 @@
+#![allow(missing_docs)]
+
 use insta::assert_debug_snapshot;
 use microcad_syntax::tokens::lex;
 use test_case::test_case;
@@ -61,5 +63,5 @@ use test_case::test_case;
 #[test_case("tuple access", r##"foo.bar"##)]
 #[test_case("array range units", "a = [1..3]mm;")]
 fn test_lexer(name: &str, input: &str) {
-    assert_debug_snapshot!(format!("lexer_{name}"), lex(input));
+    assert_debug_snapshot!(format!("lexer_{name}"), lex(input).collect::<Vec<_>>());
 }

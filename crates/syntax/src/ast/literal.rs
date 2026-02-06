@@ -4,7 +4,9 @@ use std::num::{ParseFloatError, ParseIntError};
 use std::ops::Neg;
 use thiserror::Error;
 
+/// A literal value
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct Literal {
     pub span: Span,
     pub extras: ItemExtras,
@@ -12,12 +14,15 @@ pub struct Literal {
 }
 
 impl Literal {
+    /// Get the span for the literal
     pub fn span(&self) -> Span {
         self.literal.span()
     }
 }
 
+/// The various types of literal values a [`Literal`] can contain
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum LiteralKind {
     Error(LiteralError),
     String(StringLiteral),
@@ -28,6 +33,7 @@ pub enum LiteralKind {
 }
 
 impl LiteralKind {
+    /// Get the span for the literal
     pub fn span(&self) -> Span {
         match self {
             LiteralKind::Error(lit) => lit.span.clone(),
@@ -40,19 +46,25 @@ impl LiteralKind {
     }
 }
 
+/// A string literal, without format expressions
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct StringLiteral {
     pub span: Span,
     pub content: String,
 }
 
+/// A boolean literal, either `true` or `false`
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct BoolLiteral {
     pub span: Span,
     pub value: bool,
 }
 
+/// An integer literal without type
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct IntegerLiteral {
     pub span: Span,
     pub value: i64,
@@ -69,7 +81,9 @@ impl Neg for IntegerLiteral {
     }
 }
 
+/// An float literal without type
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct FloatLiteral {
     pub span: Span,
     pub value: f64,
@@ -86,7 +100,9 @@ impl Neg for FloatLiteral {
     }
 }
 
+// A float literal with type
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct QuantityLiteral {
     pub span: Span,
     pub value: f64,
@@ -105,13 +121,16 @@ impl Neg for QuantityLiteral {
     }
 }
 
+/// An error that can be encountered while parsing literal tokens
 #[derive(Debug, PartialEq, Clone)]
+#[allow(missing_docs)]
 pub struct LiteralError {
     pub span: Span,
     pub kind: LiteralErrorKind,
 }
 
 #[derive(Debug, Error, PartialEq, Clone)]
+#[allow(missing_docs)]
 pub enum LiteralErrorKind {
     #[error(transparent)]
     Float(#[from] ParseFloatError),

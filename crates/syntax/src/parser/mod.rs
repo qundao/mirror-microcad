@@ -34,13 +34,14 @@ type ParserInput<'input, 'token> = MappedInput<
     InputMap<'input, 'token>,
 >;
 
-pub fn input<'input, 'tokens>(
+fn input<'input, 'tokens>(
     input: &'input [SpannedToken<Token<'tokens>>],
 ) -> ParserInput<'input, 'tokens> {
     let end = input.last().map(|t| t.span.end).unwrap_or_default();
     Input::map(input, end..end, map_token_input)
 }
 
+/// Build an abstract syntax tree from a list of tokens
 pub fn parse<'tokens>(
     tokens: &'tokens [SpannedToken<Token<'tokens>>],
 ) -> Result<SourceFile, Vec<ParseError>> {

@@ -2,7 +2,9 @@ use crate::Span;
 use crate::ast::{Identifier, ItemExtras, Literal, SingleType, Statement, StringLiteral};
 use std::num::ParseIntError;
 
+/// An operator for binary operators
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum Operator {
     Add,
     Subtract,
@@ -24,6 +26,7 @@ pub enum Operator {
 }
 
 impl Operator {
+    /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
             Operator::Add => "+",
@@ -47,7 +50,9 @@ impl Operator {
     }
 }
 
+/// An operator for unary operators
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum UnaryOperator {
     Minus,
     Plus,
@@ -55,6 +60,7 @@ pub enum UnaryOperator {
 }
 
 impl UnaryOperator {
+    /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
             UnaryOperator::Minus => "-",
@@ -64,7 +70,9 @@ impl UnaryOperator {
     }
 }
 
+/// Any expression.
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum Expression {
     Literal(Literal),
     Tuple(TupleExpression),
@@ -83,6 +91,7 @@ pub enum Expression {
 }
 
 impl Expression {
+    /// Get the source span for the identifier
     pub fn span(&self) -> Span {
         match self {
             Expression::Literal(ex) => ex.span(),
@@ -103,27 +112,35 @@ impl Expression {
     }
 }
 
+/// A string containing a format expression
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct FormatString {
     pub span: Span,
     pub extras: ItemExtras,
     pub parts: Vec<StringPart>,
 }
 
+/// A part of a [`FormatString`]
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum StringPart {
     Char(StringCharacter),
     Content(StringLiteral),
     Expression(StringExpression),
 }
 
+/// A single character that is part of a [`FormatString`]
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct StringCharacter {
     pub span: Span,
     pub character: char,
 }
 
+/// A format expression that is part of a [`FormatString`]
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct StringExpression {
     pub span: Span,
     pub extras: ItemExtras,
@@ -131,7 +148,11 @@ pub struct StringExpression {
     pub specification: Box<StringFormatSpecification>,
 }
 
+/// The format specification for a [`StringExpression`], specifying the with and precision for number formatting
+///
+/// All parts of the specification are optional
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct StringFormatSpecification {
     pub span: Span,
     pub precision: Option<Result<u32, (ParseIntError, Span)>>,
@@ -139,12 +160,15 @@ pub struct StringFormatSpecification {
 }
 
 impl StringFormatSpecification {
+    /// Check if an part of the specification is specified
     pub fn is_some(&self) -> bool {
         self.precision.is_some() || self.width.is_some()
     }
 }
 
+/// An item that is part of a tuple expression
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct TupleItem {
     pub span: Span,
     pub extras: ItemExtras,
@@ -152,14 +176,18 @@ pub struct TupleItem {
     pub value: Expression,
 }
 
+/// A tuple expression, a fixed size set of items that don't need to be the same type
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct TupleExpression {
     pub span: Span,
     pub extras: ItemExtras,
     pub values: Vec<TupleItem>,
 }
 
+/// An array range, containing all values from the start value (inclusive) till then end value (exclusive)
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ArrayRangeExpression {
     pub span: Span,
     pub extras: ItemExtras,
@@ -168,7 +196,9 @@ pub struct ArrayRangeExpression {
     pub ty: Option<SingleType>,
 }
 
+/// An array specified as a list of items
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ArrayListExpression {
     pub span: Span,
     pub extras: ItemExtras,
@@ -176,21 +206,27 @@ pub struct ArrayListExpression {
     pub ty: Option<SingleType>,
 }
 
+/// An item that can be part of an array expression
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ArrayItem {
     pub span: Span,
     pub extras: ItemExtras,
     pub expression: Expression,
 }
 
+/// A qualified name, containing one or more [`Literal`]s seperated by `::`
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct QualifiedName {
     pub span: Span,
     pub extras: ItemExtras,
     pub parts: Vec<Identifier>,
 }
 
+/// A binary operation
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct BinaryOperation {
     pub span: Span,
     pub lhs: Box<Expression>,
@@ -198,7 +234,9 @@ pub struct BinaryOperation {
     pub rhs: Box<Expression>,
 }
 
+/// A unary operation
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct UnaryOperation {
     pub span: Span,
     pub extras: ItemExtras,
@@ -206,7 +244,9 @@ pub struct UnaryOperation {
     pub rhs: Box<Expression>,
 }
 
+/// A function call
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct Call {
     pub span: Span,
     pub extras: ItemExtras,
@@ -214,14 +254,20 @@ pub struct Call {
     pub arguments: ArgumentList,
 }
 
+/// An expression that access an element from another expression.
+///
+/// Either accessing an array or tuple item, accessing an attribute of a value or a method call.
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ElementAccess {
     pub span: Span,
     pub value: Box<Expression>,
     pub element: Element,
 }
 
+/// The possible element access types
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum Element {
     Attribute(Identifier),
     Tuple(Identifier),
@@ -229,7 +275,9 @@ pub enum Element {
     ArrayElement(Box<Expression>),
 }
 
+/// An if expression, can be used as either a statement or expression
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct If {
     pub span: Span,
     pub extras: ItemExtras,
@@ -239,7 +287,9 @@ pub struct If {
     pub else_body: Option<StatementList>,
 }
 
+/// A list of statements, with an optional "tail" expression
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct StatementList {
     pub span: Span,
     pub extras: ItemExtras,
@@ -247,20 +297,25 @@ pub struct StatementList {
     pub tail: Option<Box<Statement>>,
 }
 
+/// A list of arguments to a function call
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct ArgumentList {
     pub span: Span,
     pub extras: ItemExtras,
     pub arguments: Vec<Argument>,
 }
 
+/// A function argument that is part of an [`ArgumentList`]
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub enum Argument {
     Unnamed(UnnamedArgument),
     Named(NamedArgument),
 }
 
 impl Argument {
+    /// The name of the argument, if specified
     pub fn name(&self) -> Option<&Identifier> {
         match self {
             Argument::Unnamed(_) => None,
@@ -268,6 +323,7 @@ impl Argument {
         }
     }
 
+    /// The value of the argument
     pub fn value(&self) -> &Expression {
         match self {
             Argument::Unnamed(arg) => &arg.value,
@@ -275,6 +331,7 @@ impl Argument {
         }
     }
 
+    /// The span of the argument
     pub fn span(&self) -> &Span {
         match self {
             Argument::Unnamed(arg) => &arg.span,
@@ -283,14 +340,18 @@ impl Argument {
     }
 }
 
+/// An argument without specified name
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct UnnamedArgument {
     pub span: Span,
     pub extras: ItemExtras,
     pub value: Expression,
 }
 
+/// An argument with a specified name
 #[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
 pub struct NamedArgument {
     pub span: Span,
     pub extras: ItemExtras,

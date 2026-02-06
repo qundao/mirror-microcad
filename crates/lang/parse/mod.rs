@@ -43,15 +43,15 @@ mod workbench;
 
 pub(crate) mod parse_error;
 
-use microcad_syntax::{parser, tokens};
+use microcad_syntax::{lex, parse};
 pub use parse_error::*;
 
 use crate::{src_ref::*, syntax::*};
 use crate::parser::ParseContext;
 
 pub(crate) fn build_ast(source: &str, parse_context: &ParseContext) -> Result<microcad_syntax::ast::SourceFile, ParseErrorsWithSource> {
-    let tokens: Vec<_> = tokens::lex(source).collect();
-    parser::parse(tokens.as_slice()).map_err(|errors| {
+    let tokens: Vec<_> = lex(source).collect();
+    parse(tokens.as_slice()).map_err(|errors| {
         let errors = errors
             .into_iter()
             .map(|error| ParseError::AstParser {
