@@ -1,9 +1,9 @@
 # Multiplicity
 
-A core concept of µcad is called *Argument Multiplicity* which replace *loops* like they
-are known from other languages.
+A core concept of µcad is called *Argument Multiplicity* which replaces *loops* known from imperative languages.
 
 When working with multiplicities, each argument can be provided as an *array* of elements of a parameter's type.
+
 Each list element will then be evaluated for each of the array's values.
 This way, we can intuitively express a call that is executed for each argument variant.
 
