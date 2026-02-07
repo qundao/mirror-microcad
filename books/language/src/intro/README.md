@@ -6,7 +6,7 @@ mathematical equation) resulting in a graphical output.
 
 ## Purpose of this document
 
-This document is meant as an explaining reference of all features of microcad.
+This document is meant as an explaining reference of all features of µcad.
 So chapter-wise this book will explain them around some example code.
 This example code is automatically tested and gives us a bit of a guarantee,
 that those features we explain here, work like we say.
