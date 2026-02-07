@@ -1,8 +1,10 @@
 # Conditions
 
-The *if statement* can control the program flow by the result of conditions.
+The *`if` statement* controls the program flow by the result of boolean conditions.
 
-In general an id statement consists of the following elements in fixed order:
+## Structure of an if statement
+
+In general, an `if` statement consists of the following elements in a fixed order:
 
 1. an initial `if` followed by the condition in form of an [*boolean expression*](../expressions/#boolean-results)
 2. a block of code (in `{ .. }`) which is processed if the condition is true
@@ -34,7 +36,7 @@ Output
 
 ## `if` in workbenches
 
-Inside a workbench block, an if statement can be used to select different shapes
+Inside a workbench block, an `if` statement can be used to select different shapes
 or constructions depending on input parameters.
 So in the following example all possible geometries are generated with [*parameter multiplicity*](calls/multiplicity.md)
 and put side by side with the operation `std::ops::align`.
