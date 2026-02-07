@@ -2,18 +2,18 @@
 -- Test --
         Test name: use_statement_pub
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:100
+      Source file: ../books/language/src/structure/use.md:96
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
- 100:   mod my {
- 101:       pub use std::geo3d::Sphere;
- 102:       pub use std::geo3d::Cube;
- 103:   }
- 104:   
- 105:   my::Sphere(radius = 4mm);
- 106:   my::Cube(size = 40mm);
+  96:   mod my {
+  97:       pub use std::geo3d::Sphere;
+  98:       pub use std::geo3d::Cube;
+  99:   }
+ 100:   
+ 101:   my::Sphere(radius = 4mm);
+ 102:   my::Cube(size = 40mm);
 
 -- No Output --
 -- No Errors --

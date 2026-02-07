@@ -2,14 +2,14 @@
 -- Test --
         Test name: lib_builtin
   Expected result: ok
-      Source file: ../books/language/src/libraries.md:33
+      Source file: ../books/language/src/libraries.md:17
         Test path: ../books/language/src/.test
 
 -- Code --
 
-  33:   use __builtin::print;
-  34:   
-  35:   print("Hello, µcad builtin library!");
+  17:   use __builtin::print;
+  18:   
+  19:   print("Hello, µcad builtin library!");
 
 -- Output --
 Hello, µcad builtin library!

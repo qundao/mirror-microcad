@@ -2,14 +2,14 @@
 -- Test --
         Test name: lib_std
   Expected result: ok
-      Source file: ../books/language/src/libraries.md:16
+      Source file: ../books/language/src/libraries.md:33
         Test path: ../books/language/src/.test
 
 -- Code --
 
-  16:   use std::print;
-  17:   
-  18:   print("Hello, µcad standard library!");
+  33:   use std::print;
+  34:   
+  35:   print("Hello, µcad standard library!");
 
 -- Output --
 Hello, µcad standard library!

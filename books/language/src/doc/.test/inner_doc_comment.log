@@ -1,0 +1,19 @@
+﻿
+-- Test --
+        Test name: inner_doc_comment
+  Expected result: todo
+      Source file: ../books/language/src/doc/comments.md:79
+        Test path: ../books/language/src/doc/.test
+
+-- Code --
+
+  79:   //! This inner doc comment documents the whole source file.
+  80:   
+  81:   fn f( n: Integer ) -> Integer { n }
+  82:   
+  83:   f(1);
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+OK (BUT IS TODO)

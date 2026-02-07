@@ -1,0 +1,32 @@
+﻿
+-- Test --
+        Test name: outer_doc_comment
+  Expected result: ok
+      Source file: ../books/language/src/doc/comments.md:36
+        Test path: ../books/language/src/doc/.test
+
+-- Code --
+
+  36:   /// A function which returns what it gets.
+  37:   ///
+  38:   /// It simply returns the **same** value...
+  39:   ///
+  40:   /// ...as it got from the *parameter*.
+  41:   ///
+  42:   /// ## Arguments
+  43:   ///
+  44:   /// - `n`: input value
+  45:   ///
+  46:   /// ## Returns
+  47:   ///
+  48:   /// Output value.
+  49:   fn f( n: Integer ) -> Integer { n }
+  50:   
+  51:   // usual comment for non-symbols
+  52:   f(1);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
