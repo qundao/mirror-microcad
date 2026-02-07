@@ -13,22 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Assignment statement is not available within Function
+  × error: 95:3: Property assigment is not available within function
     ╭─[../books/tests/src/statement_usage/function.md:95:3]
  94 │ fn f() {
+    ·    ┬
+    ·    ╰── Within this function
  95 │   prop a = 1; // error
     ·   ─────┬────
-    ·        ╰── Assignment statement is not available within Function
+    ·        ╰── This property assigment is not allowed
  96 │ } f();
     ╰────
-  × error: 95:3: Declaration of a not allowed within function_assignment_prop::f
-    ╭─[../books/tests/src/statement_usage/function.md:95:3]
- 94 │ fn f() {
- 95 │   prop a = 1; // error
-    ·   ─────┬────
-    ·        ╰── Declaration of a not allowed within function_assignment_prop::f
- 96 │ } f();
-    ╰────
+  help: property assigment is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

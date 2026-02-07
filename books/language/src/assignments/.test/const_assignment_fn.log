@@ -22,38 +22,29 @@
 
 -- No Output --
 -- Errors --
-  × error: 145:5: Assignment statement is not available within Function
+  × error: 145:5: Constant assigment is not available within function
      ╭─[../books/language/src/assignments/const.md:145:5]
  144 │ fn f() {
+     ·    ┬
+     ·    ╰── Within this function
  145 │     const MY_CONST = 1;     // error: not allowed in functions
      ·     ─────────┬────────
-     ·              ╰── Assignment statement is not available within Function
+     ·              ╰── This constant assigment is not allowed
  146 │ }
      ╰────
-  × error: 145:5: Declaration of MY_CONST not allowed within const_assignment_fn::f
-     ╭─[../books/language/src/assignments/const.md:145:5]
- 144 │ fn f() {
- 145 │     const MY_CONST = 1;     // error: not allowed in functions
-     ·     ─────────┬────────
-     ·              ╰── Declaration of MY_CONST not allowed within const_assignment_fn::f
- 146 │ }
-     ╰────
-  × error: 151:9: Assignment statement is not available within Function
+  help: constant assigment is only allowed within source root, module definition or workbench definition
+  × error: 151:9: Constant assigment is not available within function
      ╭─[../books/language/src/assignments/const.md:151:9]
+ 149 │ sketch MySketch() {
  150 │     fn f() {
+     ·        ┬
+     ·        ╰── Within this function
  151 │         const MY_CONST = 1; // error: not allowed in workbench functions
      ·         ─────────┬────────
-     ·                  ╰── Assignment statement is not available within Function
+     ·                  ╰── This constant assigment is not allowed
  152 │     }
      ╰────
-  × error: 151:9: Declaration of MY_CONST not allowed within const_assignment_fn::MySketch::f
-     ╭─[../books/language/src/assignments/const.md:151:9]
- 150 │     fn f() {
- 151 │         const MY_CONST = 1; // error: not allowed in workbench functions
-     ·         ─────────┬────────
-     ·                  ╰── Declaration of MY_CONST not allowed within const_assignment_fn::MySketch::f
- 152 │     }
-     ╰────
+  help: constant assigment is only allowed within source root, module definition or workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

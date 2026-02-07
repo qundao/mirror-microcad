@@ -13,22 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:10: Statement is not available within Function
+  × error: 7:10: Sketch is not available within function
    ╭─[../books/tests/src/statement_usage/function.md:7:10]
  6 │ fn f() {
+   ·    ┬
+   ·    ╰── Within this function
  7 │   sketch S() {} // error
    ·          ┬
-   ·          ╰── Statement is not available within Function
+   ·          ╰── This sketch is not allowed
  8 │ } f();
    ╰────
-  × error: 7:10: Sketch is not available within Function
-   ╭─[../books/tests/src/statement_usage/function.md:7:10]
- 6 │ fn f() {
- 7 │   sketch S() {} // error
-   ·          ┬
-   ·          ╰── Sketch is not available within Function
- 8 │ } f();
-   ╰────
+  help: sketch is only allowed within source root or module definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

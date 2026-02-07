@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 102:5: Declaration of a not allowed within assignment_module::my_module
+  × error: 102:5: Assigment is not available within module
      ╭─[../books/language/src/assignments/value.md:102:5]
  101 │ mod my_module {
+     ·     ────┬────
+     ·         ╰── Within this module
  102 │     a = 1; // error
      ·     ──┬──
-     ·       ╰── Declaration of a not allowed within assignment_module::my_module
+     ·       ╰── This assigment is not allowed
  103 │ }
      ╰────
+  help: assigment is only allowed within source root, module definition, workbench definition or function definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

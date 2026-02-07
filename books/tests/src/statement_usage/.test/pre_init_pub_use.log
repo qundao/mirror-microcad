@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Use statement is not available within Sketch
+  × error: 47:3: Use statement is not available within sketch
     ╭─[../books/tests/src/statement_usage/pre-init.md:47:3]
  46 │ sketch K() { 
+    ·        ┬
+    ·        ╰── Within this sketch
  47 │   pub use std; // error
     ·   ─────┬─────
-    ·        ╰── Use statement is not available within Sketch
+    ·        ╰── This use statement is not allowed
  48 │ init(l:Length) {} } K();
     ╰────
+  help: use statement is only allowed within source root or module definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

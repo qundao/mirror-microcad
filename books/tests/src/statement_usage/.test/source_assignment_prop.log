@@ -11,18 +11,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 72:1: Assignment statement is not available within SourceFile
+  × error: 72:1: Property assigment is not available within source file
     ╭─[../books/tests/src/statement_usage/source.md:72:1]
  72 │ prop a = 1;  // error
-    · ─────┬────
-    ·      ╰── Assignment statement is not available within SourceFile
+    · ─────┬────┬
+    ·      │    ╰── Within this source file
+    ·      ╰── This property assigment is not allowed
     ╰────
-  × error: 72:1: Declaration of a not allowed within source_assignment_prop
-    ╭─[../books/tests/src/statement_usage/source.md:72:1]
- 72 │ prop a = 1;  // error
-    · ─────┬────
-    ·      ╰── Declaration of a not allowed within source_assignment_prop
-    ╰────
+  help: property assigment is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

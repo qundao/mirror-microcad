@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 63:5: Statement is not available within Sketch
+  × error: 63:5: Return statement is not available within sketch
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:63:5]
  62 │ sketch Wheel(radius: Length) {
+    ·        ──┬──
+    ·          ╰── Within this sketch
  63 │     return;         // error
     ·     ───┬──
-    ·        ╰── Statement is not available within Sketch
+    ·        ╰── This return statement is not allowed
  64 │ }
     ╰────
+  help: return statement is only allowed within function definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -13,22 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Assignment statement is not available within Module
+  × error: 95:3: Property assigment is not available within module
     ╭─[../books/tests/src/statement_usage/module.md:95:3]
  94 │ mod k {
+    ·     ┬
+    ·     ╰── Within this module
  95 │   prop a = 1;  // error
     ·   ─────┬────
-    ·        ╰── Assignment statement is not available within Module
+    ·        ╰── This property assigment is not allowed
  96 │ }
     ╰────
-  × error: 95:3: Declaration of a not allowed within module_assignment_prop::k
-    ╭─[../books/tests/src/statement_usage/module.md:95:3]
- 94 │ mod k {
- 95 │   prop a = 1;  // error
-    ·   ─────┬────
-    ·        ╰── Declaration of a not allowed within module_assignment_prop::k
- 96 │ }
-    ╰────
+  help: property assigment is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
