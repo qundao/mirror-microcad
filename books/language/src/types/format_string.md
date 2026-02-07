@@ -23,7 +23,7 @@ print_length(7mm);
 
 ## Bad Expression in Format String
 
-If a format string expression cannot be solved you will get an error.
+If a format string expression cannot be evaluated, you will get an error.
 
 [![test](.test/format_string_err.svg)](.test/format_string_err.log)
 
