@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**171** tests have been evaluated with version **0.2.20** of microcad.
+**172** tests have been evaluated with version **0.2.20** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -32,10 +32,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../assignments/.test/assignment_value.svg)](../assignments/.test/assignment_value.log) | [assignment_value](../assignments/value.md) |
 | [![test](../assignments/.test/assignment_value_scope.svg)](../assignments/.test/assignment_value_scope.log) | [assignment_value_scope](../assignments/value.md) |
 | [![test](../assignments/.test/assignment_workbench.svg)](../assignments/.test/assignment_workbench.log) | [assignment_workbench](../assignments/value.md) |
-| [![test](../.test/attributes_color.svg)](../.test/attributes_color.log) | [attributes_color](../attributes.md) |
-| [![test](../.test/attributes_export.svg)](../.test/attributes_export.log) | [attributes_export](../attributes.md) |
-| [![test](../.test/attributes_precision.svg)](../.test/attributes_precision.log) | [attributes_precision](../attributes.md) |
-| [![test](../.test/attributes_simple_example.svg)](../.test/attributes_simple_example.log) | [attributes_simple_example](../attributes.md) |
+| [![test](../attributes/.test/attributes_color.svg)](../attributes/.test/attributes_color.log) | [attributes_color](../attributes/metadata_attributes.md) |
+| [![test](../attributes/.test/attributes_export.svg)](../attributes/.test/attributes_export.log) | [attributes_export](../attributes/command_attributes.md) |
+| [![test](../attributes/.test/attributes_precision.svg)](../attributes/.test/attributes_precision.log) | [attributes_precision](../attributes/metadata_attributes.md) |
 | [![test](../types/.test/boolean.svg)](../types/.test/boolean.log) | [boolean](../types/primitives.md) |
 | [![test](../expressions/.test/boolean_literal.svg)](../expressions/.test/boolean_literal.log) | [boolean_literal](../expressions/literals.md) |
 | [![test](../structure/workbenches/elements/.test/building_plan.svg)](../structure/workbenches/elements/.test/building_plan.log) | [building_plan](../structure/workbenches/elements/building_plan.md) |
@@ -86,6 +85,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/init_code_no_building_plan.svg)](../structure/workbenches/elements/.test/init_code_no_building_plan.log) | [init_code_no_building_plan](../structure/workbenches/elements/init_code.md) |
 | [![test](../structure/workbenches/elements/.test/init_property.svg)](../structure/workbenches/elements/.test/init_property.log) | [init_property](../structure/workbenches/elements/initializers.md) |
 | [![test](../structure/modules/.test/inline_mod.svg)](../structure/modules/.test/inline_mod.log) | [inline_mod](../structure/modules/inline_modules.md) |
+| [![test](../attributes/.test/inner_attributes.svg)](../attributes/.test/inner_attributes.log) | [inner_attributes](../attributes/) |
 | [![test](../structure/workbenches/types/.test/input.svg)](../structure/workbenches/types/.test/input.log) | [input](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../.test/lib_builtin.svg)](../.test/lib_builtin.log) | [lib_builtin](../libraries.md) |
@@ -110,6 +110,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/.test/none.svg)](../structure/.test/none.log) | [none](../structure/use.md) |
 | [![test](../structure/workbenches/types/.test/op_example.svg)](../structure/workbenches/types/.test/op_example.log) | [op_example](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/operator_examples.svg)](../expressions/.test/operator_examples.log) | [operator_examples](../expressions/operators.md) |
+| [![test](../attributes/.test/outer_attributes.svg)](../attributes/.test/outer_attributes.log) | [outer_attributes](../attributes/) |
 | [![test](../flow/calls/.test/parameter.svg)](../flow/calls/.test/parameter.log) | [parameter](../flow/calls/args_params.md) |
 | [![test](../flow/calls/.test/parameter_default.svg)](../flow/calls/.test/parameter_default.log) | [parameter_default](../flow/calls/args_params.md) |
 | [![test](../structure/workbenches/types/.test/parameters.svg)](../structure/workbenches/types/.test/parameters.log) | [parameters](../structure/workbenches/types/operations.md) |
