@@ -1,14 +1,9 @@
 # Use Statements
 
-When including code from other [*modules*](modules/internal_modules.md) or
-other [*source files*](modules/external_modules.md) the use of
-*fully qualified names* (e.g. `std:geo3d::Sphere` or `std:geo3d::Cube`) may
-produce much boiler plate code when using them often.
-The powerful `use` statement solves this problem and gives you an elegant method
-to import code from other sources.
+The use statement imports symbols from one module into another’s local namespace.
+This allows symbols to be referenced by their short names rather than their fully qualified names, reducing boilerplate and improving code readability.
 
-The following example which uses two *parts* of `std::geo3d` shows the problem
-with long names:
+The following example which uses two *parts* of `std::geo3d` shows the problem with long names:
 
 [![test](.test/none.svg)](.test/none.log)
 
@@ -17,12 +12,14 @@ std::geo3d::Sphere(radius = 40mm);
 std::geo3d::Cube(size = 40mm);
 ```
 
-There are several ways to solve this with `use`:
+There are several ways to solve this with `use`.
 
-## Use Statement
+## `use` Statement
 
-Looking at the example below using `use` does not seem any shorter, but if we would use `Sphere` and `Cube`
-more often this would shorten things quite a lot:
+A use statement creates a local alias for a specific symbol. While the initial declaration takes space, it significantly shortens subsequent calls.
+
+Looking at the example below, using `use` does not seem any shorter, but if we would use `Sphere` and `Cube` repeatedly,
+this would shorten things quite a lot:
 
 [![test](.test/use.svg)](.test/use.log)
 
@@ -34,24 +31,22 @@ Sphere(radius = 4mm);
 Cube(size = 40mm);
 ```
 
-Alternatively you can use the whole *module* `geo3d` at once and would get rid
-of the `std::` part within the names:
+Alternatively, you may also use an entire **module** `geo3d` and to get rid of the `std::` prefix part within the names:
 
 [![test](.test/use_module.svg)](.test/use_module.log)
 
 ```µcad,use_module
 use std::geo3d;
 
-geo3d::Sphere(radius = 40mm);
+geo3d::Sphere(radius = 40mm); // Drops the `std::` prefix.
 ```
 
-## Use As Statement
+## `use ... as` Statement
 
-Internally every *use statement* defines an *aliases* with an *identifier*
+Internally, every *use statement* defines an *alias* with an *identifier*
 (e.g. `Sphere`) and a *target symbol* it points to (e.g. `std::geo3d::Sphere`).
 
-If name conflicts occur a way to deal with this is to explicitly name the
-*identifier* with `use as`:
+To prevent name collisions or to improve clarity, you can provide a custom *identifier* using the `as` keyword:
 
 [![test](.test/use_as.svg)](.test/use_as.log)
 
@@ -71,7 +66,7 @@ use std::geo3d as space;
 space::Sphere(radius = 4mm);
 ```
 
-## Use All Statement
+## `use *` Statement
 
 The shortest way to use many symbols from one module is to use `*` as *target*.
 The following example defines aliases for **all** symbols of `std::geo3d`.
@@ -92,7 +87,8 @@ between your code and the aliased symbols, some of which you might not even use.
 ## Public Use Statement
 
 The `pub use` statement does not only make the *target symbol* visible within
-the module in which it is defined, but from the outside too.
+the module in which it is defined, but from the outside, too.
+See the [visibility section](../visibility.md) for information.
 
 [![test](.test/use_statement_pub.svg)](.test/use_statement_pub.log)
 
