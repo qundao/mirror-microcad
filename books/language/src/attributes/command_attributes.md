@@ -22,6 +22,7 @@ std::geo2d::Circle(r = 42mm);
 When this µcad source file is exported via the command line interface, the two models will be exported to `rect.svg` and `circle.svg`.
 This way, you can export multiple file at once.
 
-The exporter is detected automatically depending on the file extension.
+The corresponding exporter is detected automatically depending on the file extension.
 
-See [export](../export.md) for more information.
+An export command can only be used in top level code within a source code.
+It cannot be used within modules, workbenches and functions.
