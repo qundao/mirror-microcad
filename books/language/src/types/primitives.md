@@ -2,7 +2,7 @@
 
 ## Bool
 
-Boolean is the result type of boolean expressions which may just be `true` or `false`.
+Boolean is the result type of boolean expressions, which may be `true` or `false`.
 
 [![test](.test/types_primitive_bool.svg)](.test/types_primitive_bool.log)
 
