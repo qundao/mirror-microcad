@@ -13,15 +13,13 @@ In this section, we will look at some literals.
 
 There are several types of literals:
 
-| Name                               | Encoding               | Description                            |
-| ---------------------------------- | ---------------------- | -------------------------------------- |
-| [*Integer*](#integer-literals)     | 64 bit[^bits]  integer | signed integer                         |
-| [*Scalar*](#scalar-literals)       | 64 bit[^bits] float    | signed floating point                  |
-| [*Boolean*](#boolean-literals)     | 1 bit bool             | boolean                                |
-| [*String*](#string-literals)       | UTF-8                  | Text                                   |
-| [*Quantities*](#quantity-literals) | 64 bit[^bits] float    | signed floating point (including type) |
-
-[^bits]: On 64 bit systems.
+| Name                               | Encoding       | Description                            |
+| ---------------------------------- | -------------- | -------------------------------------- |
+| [*Integer*](#integer-literals)     | 64 bit integer | signed integer                         |
+| [*Scalar*](#scalar-literals)       | 64 bit float   | signed floating point                  |
+| [*Boolean*](#boolean-literals)     | 1 bit bool     | boolean                                |
+| [*String*](#string-literals)       | UTF-8          | Text                                   |
+| [*Quantities*](#quantity-literals) | 64 bit float   | signed floating point (including type) |
 
 ## Integer Literals
 
