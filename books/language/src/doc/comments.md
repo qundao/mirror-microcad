@@ -1,8 +1,8 @@
 # Documentation
 
-## Code Comments
+## Code Comments (`//`, `/* ... */`)
 
-By using `//` or `/*` and `*/` you may insert comments within the code.
+By using `//` or `/* ... */` you may insert comments within the code.
 
 [![test](.test/comment.svg)](.test/comment.log)
 
@@ -19,18 +19,20 @@ std::print("Hello, ");   // Line comments can be appended to a line
 std::print( /* Block comments can be placed almost anywhere */ "world!");
 ```
 
-## Doc Comments
+## Doc Comments (`///`, `//!`)
 
 You may also use comments to attribute your code with documentation.
+There are outer (`///`) and inner `//!` doc comments.
+
+### Outer doc comments (`///`)
 
 By placing a comment with `///` above a symbol definition you can attribute
 your code with documentation.
 Markdown may be used to shape sections or format text.
 
-
 [![test](.test/doc_comment.svg)](.test/doc_comment.log)
 
-```µcad,doc_comment
+```µcad,outer_doc_comment
 /// A function which returns what it gets.
 ///
 /// It simply returns the **same** value...
@@ -68,3 +70,15 @@ The above function `f` will be documented with the following markdown output:
 > ## Returns
 >
 > Output value.
+
+### Inner doc comments (`//!`)
+
+Inner doc comments are used to document code inside a source file:
+
+```µcad,inner_doc_comment#todo
+//! This inner doc comment documents the whole source file.
+
+fn f( n: Integer ) -> Integer { n }
+
+f(1);
+```
