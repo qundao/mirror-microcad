@@ -16,14 +16,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Assignment statement is not available within Sketch
+  × error: 2:5: Public constant assigment is not available within sketch
     ╭─[../books/language/src/assignments/const.md:46:5]
  45 │ sketch MySketch() {
+    ·        ────┬───
+    ·            ╰── Within this sketch
  46 │     pub const TEXT = "Hello";  // error
     ·     ────────────┬────────────
-    ·                 ╰── error: 2:5: Assignment statement is not available within Sketch
+    ·                 ╰── This public constant assigment is not allowed
  47 │     std::print(TEXT);
     ╰────
+  help: public constant assigment is only allowed within source root or module definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

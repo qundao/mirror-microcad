@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:3: Declaration of a not allowed within module_assignment_var::k
+  × error: 2:3: Assigment is not available within module
     ╭─[../books/tests/src/statement_usage/module.md:79:3]
  78 │ mod k {
+    ·     ┬
+    ·     ╰── Within this module
  79 │   a = 1; // error
     ·   ───┬──
-    ·      ╰── error: 2:3: Declaration of a not allowed within module_assignment_var::k
+    ·      ╰── This assigment is not allowed
  80 │ }
     ╰────
+  help: assigment is only allowed within source root, module definition, workbench definition or function definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -20,21 +20,30 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:5: Declaration of a not allowed within assignment_module::my_module
+  × error: 2:5: Assigment is not available within module
     ╭─[../books/language/src/assignments/values.md:38:5]
  37 │ mod my_module {
+    ·     ────┬────
+    ·         ╰── Within this module
  38 │     a = 1; // error
     ·     ───┬──
-    ·        ╰── error: 2:5: Declaration of a not allowed within assignment_module::my_module
+    ·        ╰── This assigment is not allowed
  39 │ }
     ╰────
+  help: assigment is only allowed within source root, module definition, workbench definition or function definition
   × error: 6:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/values.md:42:5]
+ 40 │ 
  41 │ sketch MySketch() {
+    ·        ────┬───
+    ·            ╰── Inside this sketch
  42 │     a = 1;   // error
     ·     ───┬──
-    ·        ╰── error: 6:5: Statement not allowed prior initializers
+    ·        ╰── This statement is not allowed
  43 │     init(_x : Scalar) {}
+    ·     ──────────┬─────────
+    ·               ╰── Before this initializer
+ 44 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

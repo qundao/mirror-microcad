@@ -19,22 +19,18 @@
 
 -- No Output --
 -- Errors --
-  × error: 3:9: Assignment statement is not available within Function
+  × error: 3:9: Property assigment is not available within function
      ╭─[../books/language/src/structure/functions.md:139:9]
+ 137 │ part PunchedDisk(radius: Length) {
  138 │     fn inner() { 
+     ·        ──┬──
+     ·          ╰── Within this function
  139 │         prop hole = radius/2;  // error: prop not allowed in function
      ·         ──────────┬──────────
-     ·                   ╰── error: 3:9: Assignment statement is not available within Function
+     ·                   ╰── This property assigment is not allowed
  140 │         return hole;
      ╰────
-  × error: 3:9: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
-     ╭─[../books/language/src/structure/functions.md:139:9]
- 138 │     fn inner() { 
- 139 │         prop hole = radius/2;  // error: prop not allowed in function
-     ·         ──────────┬──────────
-     ·                   ╰── error: 3:9: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
- 140 │         return hole;
-     ╰────
+  help: property assigment is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

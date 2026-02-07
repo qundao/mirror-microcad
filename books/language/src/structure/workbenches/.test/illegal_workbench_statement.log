@@ -16,22 +16,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 2:12: Statement is not available within Sketch
+  × error: 2:12: Sketch is not available within sketch
      ╭─[../books/language/src/structure/workbenches/README.md:257:12]
  256 │ sketch Wheel(radius: Length) {
+     ·        ──┬──
+     ·          ╰── Within this sketch
  257 │     sketch Axis(length: Length) {}  // error
      ·            ──┬─
-     ·              ╰── error: 2:12: Statement is not available within Sketch
+     ·              ╰── This sketch is not allowed
  258 │     std::geo2d::Circle(radius);
      ╰────
-  × error: 2:12: Sketch is not available within Sketch
-     ╭─[../books/language/src/structure/workbenches/README.md:257:12]
- 256 │ sketch Wheel(radius: Length) {
- 257 │     sketch Axis(length: Length) {}  // error
-     ·            ──┬─
-     ·              ╰── error: 2:12: Sketch is not available within Sketch
- 258 │     std::geo2d::Circle(radius);
-     ╰────
+  help: sketch is only allowed within source root or module definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
