@@ -1,6 +1,6 @@
 # Special Characters
 
-µcad is already using a Unicode character in it's name and it allows some more
+µcad is already using a Unicode character in its name and it allows even more Unicode
 to improve readability of scientific unit notations within the source code.
 
 [Sadly](https://codeberg.org/microcad/microcad/issues/81) the majority of keyboards do not support some of them.
