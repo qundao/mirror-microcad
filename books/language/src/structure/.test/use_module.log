@@ -2,14 +2,14 @@
 -- Test --
         Test name: use_module
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:43
+      Source file: ../books/language/src/structure/use.md:39
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  43:   use std::geo3d;
-  44:   
-  45:   geo3d::Sphere(radius = 40mm);
+  39:   use std::geo3d;
+  40:   
+  41:   geo3d::Sphere(radius = 40mm); // Drops the `std::` prefix.
 
 -- No Output --
 -- No Errors --

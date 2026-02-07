@@ -2,22 +2,22 @@
 -- Test --
         Test name: if_statement
   Expected result: ok
-      Source file: ../books/language/src/flow/conditions.md:19
+      Source file: ../books/language/src/flow/conditions.md:21
         Test path: ../books/language/src/flow/.test
 
 -- Code --
 
-  19:   use std::geo2d::*;
-  20:   
-  21:   x = 0;  // output changes if you change that value
+  21:   use std::geo2d::*;
   22:   
-  23:   if x > 0 {
-  24:       Circle(radius = 5mm);
-  25:   } else if x < 0 {
-  26:       Rect(10mm);
-  27:   } else {
-  28:       Hexagon(5mm);
-  29:   }
+  23:   x = 0;  // output changes if you change that value
+  24:   
+  25:   if x > 0 {
+  26:       Circle(radius = 5mm);
+  27:   } else if x < 0 {
+  28:       Rect(10mm);
+  29:   } else {
+  30:       Hexagon(5mm);
+  31:   }
 
 -- No Output --
 -- No Errors --

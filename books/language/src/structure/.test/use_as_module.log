@@ -2,14 +2,14 @@
 -- Test --
         Test name: use_as_module
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:69
+      Source file: ../books/language/src/structure/use.md:64
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  69:   use std::geo3d as space;
-  70:   
-  71:   space::Sphere(radius = 4mm);
+  64:   use std::geo3d as space;
+  65:   
+  66:   space::Sphere(radius = 4mm);
 
 -- No Output --
 -- No Errors --

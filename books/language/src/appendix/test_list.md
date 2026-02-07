@@ -57,9 +57,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../assignments/.test/const_assignment_workbench.svg)](../assignments/.test/const_assignment_workbench.log) | [const_assignment_workbench](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench_code.svg)](../assignments/.test/const_assignment_workbench_code.log) | [const_assignment_workbench_code](../assignments/const.md) |
 | [![test](../assignments/.test/const_assignment_workbench_code_wrong.svg)](../assignments/.test/const_assignment_workbench_code_wrong.log) | [const_assignment_workbench_code_wrong](../assignments/const.md) |
-| [![test](../doc/.test/doc_comment.svg)](../doc/.test/doc_comment.log) | [doc_comment](../doc/comments.md) |
 | [![test](../structure/functions/.test/example.svg)](../structure/functions/.test/example.log) | [example](../structure/functions/) |
-| [![test](../.test/export_attributes.svg)](../.test/export_attributes.log) | [export_attributes](../export.md) |
 | [![test](../expressions/.test/expression_boolean.svg)](../expressions/.test/expression_boolean.log) | [expression_boolean](../expressions/) |
 | [![test](../expressions/.test/expression_literals.svg)](../expressions/.test/expression_literals.log) | [expression_literals](../expressions/literals.md) |
 | [![test](../expressions/.test/expression_model.svg)](../expressions/.test/expression_model.log) | [expression_model](../expressions/) |
@@ -86,6 +84,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/elements/.test/init_property.svg)](../structure/workbenches/elements/.test/init_property.log) | [init_property](../structure/workbenches/elements/initializers.md) |
 | [![test](../structure/modules/.test/inline_mod.svg)](../structure/modules/.test/inline_mod.log) | [inline_mod](../structure/modules/inline_modules.md) |
 | [![test](../attributes/.test/inner_attributes.svg)](../attributes/.test/inner_attributes.log) | [inner_attributes](../attributes/) |
+| [![test](../doc/.test/inner_doc_comment.svg)](../doc/.test/inner_doc_comment.log) | [inner_doc_comment](../doc/comments.md) |
 | [![test](../structure/workbenches/types/.test/input.svg)](../structure/workbenches/types/.test/input.log) | [input](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/integer_literal.svg)](../expressions/.test/integer_literal.log) | [integer_literal](../expressions/literals.md) |
 | [![test](../.test/lib_builtin.svg)](../.test/lib_builtin.log) | [lib_builtin](../libraries.md) |
@@ -111,6 +110,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](../structure/workbenches/types/.test/op_example.svg)](../structure/workbenches/types/.test/op_example.log) | [op_example](../structure/workbenches/types/operations.md) |
 | [![test](../expressions/.test/operator_examples.svg)](../expressions/.test/operator_examples.log) | [operator_examples](../expressions/operators.md) |
 | [![test](../attributes/.test/outer_attributes.svg)](../attributes/.test/outer_attributes.log) | [outer_attributes](../attributes/) |
+| [![test](../doc/.test/outer_doc_comment.svg)](../doc/.test/outer_doc_comment.log) | [outer_doc_comment](../doc/comments.md) |
 | [![test](../flow/calls/.test/parameter.svg)](../flow/calls/.test/parameter.log) | [parameter](../flow/calls/args_params.md) |
 | [![test](../flow/calls/.test/parameter_default.svg)](../flow/calls/.test/parameter_default.log) | [parameter_default](../flow/calls/args_params.md) |
 | [![test](../structure/workbenches/types/.test/parameters.svg)](../structure/workbenches/types/.test/parameters.log) | [parameters](../structure/workbenches/types/operations.md) |

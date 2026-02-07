@@ -2,14 +2,14 @@
 -- Test --
         Test name: use_as
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:59
+      Source file: ../books/language/src/structure/use.md:54
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  59:   use std::geo3d::Sphere as Ball;
-  60:   
-  61:   Ball(radius = 4mm);
+  54:   use std::geo3d::Sphere as Ball;
+  55:   
+  56:   Ball(radius = 4mm);
 
 -- No Output --
 -- No Errors --

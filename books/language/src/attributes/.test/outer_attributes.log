@@ -12,7 +12,6 @@
   26:       std::geo2d::Circle(r = 20mm);
   27:       std::geo2d::Rect(size = 20mm).std::ops::translate(x = 20mm);
   28:   }
-  29:   
 
 -- No Output --
 -- No Errors --

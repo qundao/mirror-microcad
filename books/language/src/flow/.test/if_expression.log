@@ -2,28 +2,28 @@
 -- Test --
         Test name: if_expression
   Expected result: ok
-      Source file: ../books/language/src/flow/conditions.md:73
+      Source file: ../books/language/src/flow/conditions.md:75
         Test path: ../books/language/src/flow/.test
 
 -- Code --
 
-  73:   use std::ops::*;
-  74:   use std::math::*;
-  75:   use std::geo2d::*;
-  76:   
-  77:   sketch MySketch(x: Integer) {
-  78:       outer = if x > 0 {
-  79:           Circle(radius = 5mm)
-  80:       } else if x < 0 {
-  81:           Rect(10mm)
-  82:       } else {
-  83:           Hexagon(5mm)
-  84:       };
-  85:   
-  86:       outer - Circle(radius = 3mm)
-  87:   }
-  88:   
-  89:   MySketch([-1,0,1]).align(X, 5mm);
+  75:   use std::ops::*;
+  76:   use std::math::*;
+  77:   use std::geo2d::*;
+  78:   
+  79:   sketch MySketch(x: Integer) {
+  80:       outer = if x > 0 {
+  81:           Circle(radius = 5mm)
+  82:       } else if x < 0 {
+  83:           Rect(10mm)
+  84:       } else {
+  85:           Hexagon(5mm)
+  86:       };
+  87:   
+  88:       outer - Circle(radius = 3mm)
+  89:   }
+  90:   
+  91:   MySketch([-1,0,1]).align(X, 5mm);
 
 -- No Output --
 -- No Errors --

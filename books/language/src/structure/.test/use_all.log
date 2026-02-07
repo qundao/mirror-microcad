@@ -2,16 +2,16 @@
 -- Test --
         Test name: use_all
   Expected result: ok
-      Source file: ../books/language/src/structure/use.md:82
+      Source file: ../books/language/src/structure/use.md:77
         Test path: ../books/language/src/structure/.test
 
 -- Code --
 
-  82:   use std::geo3d::*;
-  83:   
-  84:   Sphere(radius = 4mm);
-  85:   Cube(size = 40mm);
-  86:   Torus(major_radius = 40mm, minor_radius = 20mm);
+  77:   use std::geo3d::*;
+  78:   
+  79:   Sphere(radius = 4mm);
+  80:   Cube(size = 40mm);
+  81:   Torus(major_radius = 40mm, minor_radius = 20mm);
 
 -- No Output --
 -- No Errors --

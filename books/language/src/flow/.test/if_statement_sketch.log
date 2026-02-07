@@ -2,26 +2,26 @@
 -- Test --
         Test name: if_statement_sketch
   Expected result: ok
-      Source file: ../books/language/src/flow/conditions.md:45
+      Source file: ../books/language/src/flow/conditions.md:47
         Test path: ../books/language/src/flow/.test
 
 -- Code --
 
-  45:   use std::ops::*;
-  46:   use std::math::*;
-  47:   use std::geo2d::*;
-  48:   
-  49:   sketch MySketch(x: Integer) {
-  50:       if x > 0 {
-  51:           Circle(radius = 5mm)
-  52:       } else if x < 0 {
-  53:           Rect(10mm)
-  54:       } else {
-  55:           Hexagon(5mm)
-  56:       }
-  57:   }
-  58:   
-  59:   MySketch([-1,0,2]).align(X, 5mm);
+  47:   use std::ops::*;
+  48:   use std::math::*;
+  49:   use std::geo2d::*;
+  50:   
+  51:   sketch MySketch(x: Integer) {
+  52:       if x > 0 {
+  53:           Circle(radius = 5mm)
+  54:       } else if x < 0 {
+  55:           Rect(10mm)
+  56:       } else {
+  57:           Hexagon(5mm)
+  58:       }
+  59:   }
+  60:   
+  61:   MySketch([-1,0,2]).align(X, 5mm);
 
 -- No Output --
 -- No Errors --
