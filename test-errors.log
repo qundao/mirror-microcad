@@ -1,0 +1,1895 @@
+
+========= ./books/language/book/libraries/builtin/.test/builtin_debug_assert_false.log =========
+
+-- Test --
+        Test name: builtin_debug_assert_false
+  Expected result: fail
+      Source file: ../books/language/src/libraries/builtin/debug.md:24
+        Test path: ../books/language/src/libraries/builtin/.test
+
+-- Code --
+
+  24:   __builtin::debug::assert(false); // error: Assertion failed: false
+
+-- No Output --
+-- Errors --
+  × error: 1:26: Assertion failed: false
+    ╭─[../books/language/src/libraries/builtin/debug.md:24:26]
+ 24 │ __builtin::debug::assert(false); // error: Assertion failed: false
+    ·                          ──┬──
+    ·                            ╰── error: 1:26: Assertion failed: false
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/assignments/.test/assignment_immutable.log =========
+
+-- Test --
+        Test name: assignment_immutable
+  Expected result: fail
+      Source file: ../books/language/src/assignments/values.md:27
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  27:   a = 5; // warning: unused local
+  28:   a = a * 2; // error: a already defined in this scope
+
+-- No Output --
+-- Errors --
+  × error: 2:1: Value a already in defined: 5
+    ╭─[../books/language/src/assignments/values.md:28:1]
+ 27 │ a = 5; // warning: unused local
+    · ┬
+    · ╰── Previously defined here
+ 28 │ a = a * 2; // error: a already defined in this scope
+    · ────┬────
+    ·     ╰── a is already defined
+    ╰────
+  help: Values in microcad are immutable
+  ⚠ warning: 1:1: Unused local a.
+    ╭─[../books/language/src/assignments/values.md:27:1]
+ 27 │ a = 5; // warning: unused local
+    · ┬
+    · ╰── warning: 1:1: Unused local a.
+ 28 │ a = a * 2; // error: a already defined in this scope
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/assignments/.test/const_assignment_workbench.log =========
+
+-- Test --
+        Test name: const_assignment_workbench
+  Expected result: ok
+      Source file: ../books/language/src/assignments/const.md:27
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  27:   sketch MySketch(text: String) {
+  28:       const TEXT = "Hello";
+  29:   
+  30:       init() {
+  31:           text = TEXT;
+  32:       }
+  33:   
+  34:       std::print(text);
+  35:   }
+  36:   
+  37:   MySketch();
+
+-- Output --
+Hello
+
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) const_assignment_workbench::MySketch() ->
+      - text = Hello
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK
+
+========= ./books/language/book/assignments/.test/assignment_module.log =========
+
+-- Test --
+        Test name: assignment_module
+  Expected result: fail
+      Source file: ../books/language/src/assignments/values.md:37
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  37:   mod my_module {
+  38:       a = 1; // error
+  39:   }
+  40:   
+  41:   sketch MySketch() {
+  42:       a = 1;   // error
+  43:       init(_x : Scalar) {}
+  44:   }
+  45:   
+  46:   MySketch();
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Declaration of a not allowed within assignment_module::my_module
+    ╭─[../books/language/src/assignments/values.md:38:5]
+ 37 │ mod my_module {
+ 38 │     a = 1; // error
+    ·     ───┬──
+    ·        ╰── error: 2:5: Declaration of a not allowed within assignment_module::my_module
+ 39 │ }
+    ╰────
+  × error: 6:5: Statement not allowed prior initializers
+    ╭─[../books/language/src/assignments/values.md:42:5]
+ 41 │ sketch MySketch() {
+ 42 │     a = 1;   // error
+    ·     ───┬──
+    ·        ╰── error: 6:5: Statement not allowed prior initializers
+ 43 │     init(_x : Scalar) {}
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/assignments/.test/const_assignment_workbench_pub.log =========
+
+-- Test --
+        Test name: const_assignment_workbench_pub
+  Expected result: fail
+      Source file: ../books/language/src/assignments/const.md:45
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  45:   sketch MySketch() {
+  46:       pub const TEXT = "Hello";  // error
+  47:       std::print(TEXT);
+  48:   }
+  49:   
+  50:   MySketch();
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Assignment statement is not available within Sketch
+    ╭─[../books/language/src/assignments/const.md:46:5]
+ 45 │ sketch MySketch() {
+ 46 │     pub const TEXT = "Hello";  // error
+    ·     ────────────┬────────────
+    ·                 ╰── error: 2:5: Assignment statement is not available within Sketch
+ 47 │     std::print(TEXT);
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/flow/calls/.test/multiplicity_tuple_array.log =========
+
+-- Test --
+        Test name: multiplicity_tuple_array
+  Expected result: todo
+      Source file: ../books/language/src/flow/calls/multiplicity.md:38
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  38:   r = std::geo2d::Rect(width = 2mm, height = 2mm);
+  39:   
+  40:   r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
+
+-- No Output --
+-- Errors --
+  × error: 3:23: Workbench translate cannot find initialization for those arguments
+    ╭─[../books/language/src/flow/calls/multiplicity.md:40:3]
+ 39 │ 
+ 40 │ r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
+    ·   ────────────────────────────────────────────┬───────────────────────────────────────────
+    ·                                               ╰── Got: translate( [(x: Length, y: Length)] )
+    ╰────
+  help: Possible initializations:
+        	translate( x = 0mm, y = 0mm, z = 0mm)
+        	translate( distance: Length, angle: Angle)
+Unexpected error(s) which did occur in line(s): 40
+-- Test Result --
+TODO
+
+========= ./books/language/book/flow/calls/.test/tuple_match_warnings.log =========
+
+-- Test --
+        Test name: tuple_match_warnings
+  Expected result: fail
+      Source file: ../books/language/src/flow/calls/arguments.md:112
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+ 112:   fn f( x: Length, y: Length, z: Length ) {}
+ 113:   f( (x=1cm, y=2cm, v=5cm), z=3cm);  // error: Missing arguments: x,y
+
+-- No Output --
+-- Errors --
+  × error: 2:4: Missing arguments: x,y
+     ╭─[../books/language/src/flow/calls/arguments.md:113:4]
+ 112 │ fn f( x: Length, y: Length, z: Length ) {}
+ 113 │ f( (x=1cm, y=2cm, v=5cm), z=3cm);  // error: Missing arguments: x,y
+     ·    ──────────────┬─────────────
+     ·                  ╰── error: 2:4: Missing arguments: x,y
+     ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/flow/calls/.test/tuple_match_variants.log =========
+
+-- Test --
+        Test name: tuple_match_variants
+  Expected result: todo
+      Source file: ../books/language/src/flow/calls/arguments.md:73
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  73:   fn f( x: Length, y: Length, z: Length ) {}
+  74:   
+  75:   // Every parameter given by name
+  76:   f( x=1cm, y=2cm, z=3cm);
+  77:   
+  78:   // Parameters given by named tuple
+  79:   f( (x=1cm, y=2cm, z=3cm) );
+  80:   
+  81:   // Parameters given by named tuple variable
+  82:   p = (x=1cm, y=2cm, z=3cm);
+  83:   f( p );
+  84:   
+  85:   // Parameters given by named tuple and a single value
+  86:   f( (x=1cm, y=2cm), z=3cm );
+  87:   f( y=2cm, (x=1cm, z=3cm) );
+  88:   
+  89:   // Parameters given by named tuple variable and a single value
+  90:   q = (x=1cm, y=2cm);
+  91:   f( q, z=3cm );
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:7: Unused local x.
+    ╭─[../books/language/src/flow/calls/arguments.md:73:7]
+ 73 │ fn f( x: Length, y: Length, z: Length ) {}
+    ·       ┬
+    ·       ╰── warning: 1:7: Unused local x.
+ 74 │ 
+    ╰────
+  ⚠ warning: 1:18: Unused local y.
+    ╭─[../books/language/src/flow/calls/arguments.md:73:18]
+ 73 │ fn f( x: Length, y: Length, z: Length ) {}
+    ·                  ┬
+    ·                  ╰── warning: 1:18: Unused local y.
+ 74 │ 
+    ╰────
+  ⚠ warning: 1:29: Unused local z.
+    ╭─[../books/language/src/flow/calls/arguments.md:73:29]
+ 73 │ fn f( x: Length, y: Length, z: Length ) {}
+    ·                             ┬
+    ·                             ╰── warning: 1:29: Unused local z.
+ 74 │ 
+    ╰────
+  × error: 7:4: Missing arguments: x,y,z
+    ╭─[../books/language/src/flow/calls/arguments.md:79:4]
+ 78 │ // Parameters given by named tuple
+ 79 │ f( (x=1cm, y=2cm, z=3cm) );
+    ·    ───────────┬──────────
+    ·               ╰── error: 7:4: Missing arguments: x,y,z
+ 80 │ 
+    ╰────
+  × error: 11:4: Missing arguments: x,y,z
+    ╭─[../books/language/src/flow/calls/arguments.md:83:4]
+ 82 │ p = (x=1cm, y=2cm, z=3cm);
+ 83 │ f( p );
+    ·    ─┬
+    ·     ╰── error: 11:4: Missing arguments: x,y,z
+ 84 │ 
+    ╰────
+  × error: 14:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:86:4]
+ 85 │ // Parameters given by named tuple and a single value
+ 86 │ f( (x=1cm, y=2cm), z=3cm );
+    ·    ───────────┬──────────
+    ·               ╰── error: 14:4: Missing arguments: x,y
+ 87 │ f( y=2cm, (x=1cm, z=3cm) );
+    ╰────
+  × error: 15:4: Missing arguments: x,z
+    ╭─[../books/language/src/flow/calls/arguments.md:87:4]
+ 86 │ f( (x=1cm, y=2cm), z=3cm );
+ 87 │ f( y=2cm, (x=1cm, z=3cm) );
+    ·    ───────────┬──────────
+    ·               ╰── error: 15:4: Missing arguments: x,z
+ 88 │ 
+    ╰────
+  × error: 19:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:91:4]
+ 90 │ q = (x=1cm, y=2cm);
+ 91 │ f( q, z=3cm );
+    ·    ────┬────
+    ·        ╰── error: 19:4: Missing arguments: x,y
+    ╰────
+Unexpected error(s) which did occur in line(s): 79, 83, 86, 87, 91
+Unexpected warnings(s) which did occur in line(s): 73
+-- Test Result --
+TODO
+
+========= ./books/language/book/flow/calls/.test/tuple_match_errors.log =========
+
+-- Test --
+        Test name: tuple_match_errors
+  Expected result: fail
+      Source file: ../books/language/src/flow/calls/arguments.md:103
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+ 103:   fn f( x: Length, y: Length, z: Length ) {}
+ 104:   f( (x=1cm, v=2cm), z=3cm); // error: y is missing here
+
+-- No Output --
+-- Errors --
+  × error: 2:4: Missing arguments: x,y
+     ╭─[../books/language/src/flow/calls/arguments.md:104:4]
+ 103 │ fn f( x: Length, y: Length, z: Length ) {}
+ 104 │ f( (x=1cm, v=2cm), z=3cm); // error: y is missing here
+     ·    ──────────┬──────────
+     ·              ╰── error: 2:4: Missing arguments: x,y
+     ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/flow/calls/.test/argument_match_mix.log =========
+
+-- Test --
+        Test name: argument_match_mix
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/arguments.md:41
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  41:   fn f( a: Scalar, b: Length, c: Length ) {}
+  42:   // `a` is the only Scalar and `b` is named, so `c` does not need a name.
+  43:   f(1.0, b=2cm, 3cm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:7: Unused local a.
+    ╭─[../books/language/src/flow/calls/arguments.md:41:7]
+ 41 │ fn f( a: Scalar, b: Length, c: Length ) {}
+    ·       ┬
+    ·       ╰── warning: 1:7: Unused local a.
+ 42 │ // `a` is the only Scalar and `b` is named, so `c` does not need a name.
+    ╰────
+  ⚠ warning: 1:18: Unused local b.
+    ╭─[../books/language/src/flow/calls/arguments.md:41:18]
+ 41 │ fn f( a: Scalar, b: Length, c: Length ) {}
+    ·                  ┬
+    ·                  ╰── warning: 1:18: Unused local b.
+ 42 │ // `a` is the only Scalar and `b` is named, so `c` does not need a name.
+    ╰────
+  ⚠ warning: 1:29: Unused local c.
+    ╭─[../books/language/src/flow/calls/arguments.md:41:29]
+ 41 │ fn f( a: Scalar, b: Length, c: Length ) {}
+    ·                             ┬
+    ·                             ╰── warning: 1:29: Unused local c.
+ 42 │ // `a` is the only Scalar and `b` is named, so `c` does not need a name.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 41
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/flow/calls/.test/argument_match_type.log =========
+
+-- Test --
+        Test name: argument_match_type
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/arguments.md:29
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  29:   fn f( a: Scalar, b: Length, c: Area ) {}
+  30:   // Who needs names?
+  31:   f(1.0, 2cm, 3cm²);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:7: Unused local a.
+    ╭─[../books/language/src/flow/calls/arguments.md:29:7]
+ 29 │ fn f( a: Scalar, b: Length, c: Area ) {}
+    ·       ┬
+    ·       ╰── warning: 1:7: Unused local a.
+ 30 │ // Who needs names?
+    ╰────
+  ⚠ warning: 1:18: Unused local b.
+    ╭─[../books/language/src/flow/calls/arguments.md:29:18]
+ 29 │ fn f( a: Scalar, b: Length, c: Area ) {}
+    ·                  ┬
+    ·                  ╰── warning: 1:18: Unused local b.
+ 30 │ // Who needs names?
+    ╰────
+  ⚠ warning: 1:29: Unused local c.
+    ╭─[../books/language/src/flow/calls/arguments.md:29:29]
+ 29 │ fn f( a: Scalar, b: Length, c: Area ) {}
+    ·                             ┬
+    ·                             ╰── warning: 1:29: Unused local c.
+ 30 │ // Who needs names?
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 29
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/flow/calls/.test/tuple_match.log =========
+
+-- Test --
+        Test name: tuple_match
+  Expected result: todo
+      Source file: ../books/language/src/flow/calls/arguments.md:55
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  55:   // Function with three parameters: x, y, and z
+  56:   fn f( x: Length, y: Length, z: Length ) {}
+  57:   
+  58:   // Since we do not want to change x and y in the following statements,
+  59:   // we prepare a tuple named plane:
+  60:   plane = (x=1cm, y=2cm);
+  61:   
+  62:   // Then we pass plane to f() three times with different z values
+  63:   f( plane, z=3cm);
+  64:   f( plane, z=6cm);
+  65:   f( plane, z=9cm);
+
+-- No Output --
+-- Errors --
+  × error: 9:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:63:4]
+ 62 │ // Then we pass plane to f() three times with different z values
+ 63 │ f( plane, z=3cm);
+    ·    ──────┬─────
+    ·          ╰── error: 9:4: Missing arguments: x,y
+ 64 │ f( plane, z=6cm);
+    ╰────
+  × error: 10:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:64:4]
+ 63 │ f( plane, z=3cm);
+ 64 │ f( plane, z=6cm);
+    ·    ──────┬─────
+    ·          ╰── error: 10:4: Missing arguments: x,y
+ 65 │ f( plane, z=9cm);
+    ╰────
+  × error: 11:4: Missing arguments: x,y
+    ╭─[../books/language/src/flow/calls/arguments.md:65:4]
+ 64 │ f( plane, z=6cm);
+ 65 │ f( plane, z=9cm);
+    ·    ──────┬─────
+    ·          ╰── error: 11:4: Missing arguments: x,y
+    ╰────
+Unexpected error(s) which did occur in line(s): 63, 64, 65
+-- Test Result --
+TODO
+
+========= ./books/language/book/flow/calls/.test/argument_match_auto_err.log =========
+
+-- Test --
+        Test name: argument_match_auto_err
+  Expected result: fail
+      Source file: ../books/language/src/flow/calls/arguments.md:144
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+ 144:   fn f(x: Integer, y: Integer) -> Integer { x*y }
+ 145:   x = 1;
+ 146:   y = 2;
+ 147:   f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
+
+-- No Output --
+-- Errors --
+  × error: 4:3: Missing arguments: x,y
+     ╭─[../books/language/src/flow/calls/arguments.md:147:3]
+ 146 │ y = 2;
+ 147 │ f(x * y, y * x); // error: `x` and `y` cannot be matched because they are not unique within the arguments.
+     ·   ──────┬─────
+     ·         ╰── error: 4:3: Missing arguments: x,y
+     ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/flow/calls/.test/argument_match_name.log =========
+
+-- Test --
+        Test name: argument_match_name
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/arguments.md:16
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  16:   fn f( x: Length, y: Length, z: Length ) {}
+  17:   
+  18:   f(x = 1cm, y = 2cm, z = 3cm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:7: Unused local x.
+    ╭─[../books/language/src/flow/calls/arguments.md:16:7]
+ 16 │ fn f( x: Length, y: Length, z: Length ) {}
+    ·       ┬
+    ·       ╰── warning: 1:7: Unused local x.
+ 17 │ 
+    ╰────
+  ⚠ warning: 1:18: Unused local y.
+    ╭─[../books/language/src/flow/calls/arguments.md:16:18]
+ 16 │ fn f( x: Length, y: Length, z: Length ) {}
+    ·                  ┬
+    ·                  ╰── warning: 1:18: Unused local y.
+ 17 │ 
+    ╰────
+  ⚠ warning: 1:29: Unused local z.
+    ╭─[../books/language/src/flow/calls/arguments.md:16:29]
+ 16 │ fn f( x: Length, y: Length, z: Length ) {}
+    ·                             ┬
+    ·                             ╰── warning: 1:29: Unused local z.
+ 17 │ 
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 16
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/structure/workbenches/.test/part_basic.log =========
+
+-- Test --
+        Test name: part_basic
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/parts.md:9
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+   9:   part MyPart() {}
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:6: Unused global symbol MyPart.
+   ╭─[../books/language/src/structure/workbenches/parts.md:9:6]
+ 9 │ part MyPart() {}
+   ·      ───┬──
+   ·         ╰── warning: 1:6: Unused global symbol MyPart.
+   ╰────
+Unexpected warnings(s) which did occur in line(s): 9
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/structure/workbenches/.test/initializers.log =========
+
+-- Test --
+        Test name: initializers
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/README.md:116
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+ 116:   sketch Wheel(radius: Length) {
+ 117:       init( radius: Length ) {} // error: same parameters as in building plan
+ 118:       std::geo2d::Circle(1mm);
+ 119:   }
+ 120:   
+ 121:   Wheel(radius = 1.0mm);
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+TODO (SHALL FAIL)
+
+========= ./books/language/book/structure/workbenches/.test/parameters.log =========
+
+-- Test --
+        Test name: parameters
+  Expected result: todo
+      Source file: ../books/language/src/structure/workbenches/operations.md:54
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  54:   // define operation which takes multiple items
+  55:   op punch_disk(radius: Length) {
+  56:       if @input.count() == 1 {
+  57:           { 
+  58:               @input;
+  59:               std::geo2d::Circle(radius);
+  60:           }.subtract();
+  61:       } else {
+  62:           std::error("punch_disk must get one object");
+  63:       }
+  64:   }
+  65:   
+  66:   // use operation punch_disk on a circle
+  67:   {
+  68:       std::geo2d::Circle(radius = 2cm);
+  69:   }.punch_disk(radius = 1cm);
+
+-- No Output --
+-- Errors --
+  × error: 3:15: Symbol count not found.
+    ╭─[../books/language/src/structure/workbenches/operations.md:56:15]
+ 55 │ op punch_disk(radius: Length) {
+ 56 │     if @input.count() == 1 {
+    ·               ──┬──
+    ·                 ╰── error: 3:15: Symbol count not found.
+ 57 │         { 
+    ╰────
+  × error: 3:5: If condition is not a boolean: <NO VALUE>
+    ╭─[../books/language/src/structure/workbenches/operations.md:56:5]
+ 55 │     op punch_disk(radius: Length) {
+ 56 │ ╭─▶     if @input.count() == 1 {
+ 57 │ │           { 
+ 58 │ │               @input;
+ 59 │ │               std::geo2d::Circle(radius);
+ 60 │ │           }.subtract();
+ 61 │ │       } else {
+ 62 │ │           std::error("punch_disk must get one object");
+ 63 │ ├─▶     }
+    · ╰──── error: 3:5: If condition is not a boolean: <NO VALUE>
+ 64 │     }
+    ╰────
+Unexpected error(s) which did occur in line(s): 56
+-- Test Result --
+TODO
+
+========= ./books/language/book/structure/workbenches/.test/code_between_initializers.log =========
+
+-- Test --
+        Test name: code_between_initializers
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:206
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+ 206:   sketch Wheel(radius: Length) {
+ 207:       init( width:Length ) { radius = width / 2; }
+ 208:       
+ 209:       radius = 1; // error: code between initializers not allowed
+ 210:   
+ 211:       init( height:Length ) { radius = height / 2; }
+ 212:   }
+ 213:   
+ 214:   Wheel(radius = 1.0mm);
+
+-- No Output --
+-- Errors --
+  × error: 4:5: Code between initializers is not allowed
+     ╭─[../books/language/src/structure/workbenches/README.md:209:5]
+ 208 │     
+ 209 │     radius = 1; // error: code between initializers not allowed
+     ·     ─────┬─────
+     ·          ╰── error: 4:5: Code between initializers is not allowed
+ 210 │ 
+     ╰────
+  × error: 4:5: Statement not allowed prior initializers
+     ╭─[../books/language/src/structure/workbenches/README.md:209:5]
+ 208 │     
+ 209 │     radius = 1; // error: code between initializers not allowed
+     ·     ─────┬─────
+     ·          ╰── error: 4:5: Statement not allowed prior initializers
+ 210 │ 
+     ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/structure/workbenches/.test/missed_property.log =========
+
+-- Test --
+        Test name: missed_property
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:157
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+ 157:   sketch Wheel(radius: Length) {
+ 158:       init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
+ 159:   }
+ 160:   
+ 161:   Wheel(width = 1.0mm);
+
+-- No Output --
+-- Errors --
+  × error: 2:5: Workbench plan incomplete. Missing properties: radius
+     ╭─[../books/language/src/structure/workbenches/README.md:158:5]
+ 157 │ sketch Wheel(radius: Length) {
+ 158 │     init( width: Length ) { _ = width; } // error: misses to set `radius` from building plan
+     ·     ──────────────────┬─────────────────
+     ·                       ╰── error: 2:5: Workbench plan incomplete. Missing properties: radius
+ 159 │ }
+     ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/structure/workbenches/.test/sketch_3d.log =========
+
+-- Test --
+        Test name: sketch_3d
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/sketches.md:26
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  26:   use std::geo3d::*;
+  27:   sketch MySketch( radius: Length) {
+  28:       Sphere(radius) - Cube(radius);  // error
+  29:   }
+  30:   
+  31:   MySketch(1cm);
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+TODO (SHALL FAIL)
+
+========= ./books/language/book/structure/workbenches/.test/code_post_init.log =========
+
+-- Test --
+        Test name: code_post_init
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:239
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+ 239:   sketch Wheel(radius: Length) {
+ 240:       // initializer
+ 241:       init( diameter: Length ) { radius = diameter / 2; }
+ 242:   
+ 243:       // building code starts here
+ 244:       std::geo2d::Circle(radius);
+ 245:   }
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:8: Unused global symbol Wheel.
+     ╭─[../books/language/src/structure/workbenches/README.md:239:8]
+ 239 │ sketch Wheel(radius: Length) {
+     ·        ──┬──
+     ·          ╰── warning: 1:8: Unused global symbol Wheel.
+ 240 │     // initializer
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 239
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/structure/workbenches/.test/pre_init_code.log =========
+
+-- Test --
+        Test name: pre_init_code
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:175
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+ 175:   sketch Wheel(radius: Length) {
+ 176:       // init code
+ 177:       const FACTOR = 2.0;
+ 178:   
+ 179:       // initializer
+ 180:       init(diameter: Length) { into_radius(radius); }
+ 181:   
+ 182:       // function
+ 183:       fn into_radius( diameter: Length ) {
+ 184:           // use constant FACTOR from init code
+ 185:           return diameter / FACTOR;
+ 186:       }
+ 187:   
+ 188:       // set property diameter and use FACTOR from init code
+ 189:       prop diameter = radius * FACTOR;
+ 190:       
+ 191:       // code body
+ 192:       std::geo2d::Circle(radius);
+ 193:   }
+ 194:   
+ 195:   __builtin::debug::assert(Wheel(5cm).radius == 5cm);
+ 196:   __builtin::debug::assert(Wheel(5cm).diameter == 10cm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 9:8: Unused global symbol into_radius.
+     ╭─[../books/language/src/structure/workbenches/README.md:183:8]
+ 182 │     // function
+ 183 │     fn into_radius( diameter: Length ) {
+     ·        ─────┬─────
+     ·             ╰── warning: 9:8: Unused global symbol into_radius.
+ 184 │         // use constant FACTOR from init code
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 183
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/structure/workbenches/.test/property_wrong.log =========
+
+-- Test --
+        Test name: property_wrong
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:301
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+ 301:   sketch Wheel(outer: Length) {
+ 302:       use std::geo2d::Circle;
+ 303:   
+ 304:       // `inner` is declared as variable and may not be read
+ 305:       // from outside this workbench
+ 306:       inner = outer / 2;
+ 307:   
+ 308:       Circle(outer) - Circle(inner);
+ 309:   }
+ 310:   
+ 311:   t = Wheel(outer = 1cm);
+ 312:   
+ 313:   // you can still extract and display `outer`
+ 314:   std::print("outer: {t.outer}");
+ 315:   // but you cannot access `inner` anymore
+ 316:   std::print("inner: {t.inner}"); // error
+
+-- Output --
+outer: 10mm
+inner: <NO VALUE>
+
+-- Errors --
+  × error: 16:21: Property not found: inner
+     ╭─[../books/language/src/structure/workbenches/README.md:316:21]
+ 315 │ // but you cannot access `inner` anymore
+ 316 │ std::print("inner: {t.inner}"); // error
+     ·                     ───┬───
+     ·                        ╰── error: 16:21: Property not found: inner
+     ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/structure/workbenches/.test/part_declaration.log =========
+
+-- Test --
+        Test name: part_declaration
+  Expected result: ok
+      Source file: ../books/language/src/structure/workbenches/README.md:33
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  33:   // Sketch with a `radius` as building plan.
+  34:   // Which will automatically become a property.
+  35:   sketch Wheel(radius: Length) {
+  36:       
+  37:       // Init code...
+  38:       const FACTOR = 2;
+  39:   
+  40:       // Initializer #1
+  41:       init(diameter: Length) {
+  42:           // must set `radius`
+  43:           radius = diameter / FACTOR;
+  44:       }
+  45:   
+  46:       // No code in between!
+  47:   
+  48:       // Initializer #2
+  49:       init(r: Length) {
+  50:           // must set `radius`
+  51:           radius = r;
+  52:       }
+  53:   
+  54:       // Function (sub routine)
+  55:       fn into_diameter(r: Length) {
+  56:           return r * FACTOR;
+  57:       }
+  58:   
+  59:       // Building code...
+  60:   
+  61:       // Set a property which can be seen from outside.
+  62:       prop diameter = into_diameter(radius);
+  63:       
+  64:       // Local variable `r`
+  65:       r = radius;
+  66:       
+  67:       // Create a circle.
+  68:       std::geo2d::Circle(r);
+  69:   }
+  70:   
+  71:   use std::debug::*;
+  72:   
+  73:   // Call sketch with diameter.
+  74:   d = Wheel(diameter = 2cm);
+  75:   // Check radius property.
+  76:   assert_eq([d.radius, 1cm]);
+  77:   
+  78:   // Call sketch with radius.
+  79:   r = Wheel(radius = 2cm);
+  80:   // Check diameter property.
+  81:   assert_eq([r.diameter, 4cm]);
+  82:   
+  83:   d - r;
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Operation subtract() ->
+      Group ->
+        d: Workpiece(sketch) part_declaration::Wheel(diameter=20mm) ->
+          - diameter = 20mm
+          - radius = 10mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+        r: Workpiece(sketch) part_declaration::Wheel(radius=20mm) ->
+          - diameter = 40mm
+          - radius = 20mm
+          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
+            - center = (x=0mm, y=0mm)
+            - radius = 20mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
+
+Export error: Render error: Nothing to render
+-- Test Result --
+OK
+
+========= ./books/language/book/structure/workbenches/.test/illegal_workbench_statement.log =========
+
+-- Test --
+        Test name: illegal_workbench_statement
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/README.md:255
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+ 255:   sketch Wheel(radius: Length) {
+ 256:       sketch Axis(length: Length) {}  // error
+ 257:       std::geo2d::Circle(radius);
+ 258:   }
+ 259:   
+ 260:   Wheel(radius = 1.0mm);
+
+-- No Output --
+-- Errors --
+  × error: 2:12: Statement is not available within Sketch
+     ╭─[../books/language/src/structure/workbenches/README.md:256:12]
+ 255 │ sketch Wheel(radius: Length) {
+ 256 │     sketch Axis(length: Length) {}  // error
+     ·            ──┬─
+     ·              ╰── error: 2:12: Statement is not available within Sketch
+ 257 │     std::geo2d::Circle(radius);
+     ╰────
+  × error: 2:12: Sketch is not available within Sketch
+     ╭─[../books/language/src/structure/workbenches/README.md:256:12]
+ 255 │ sketch Wheel(radius: Length) {
+ 256 │     sketch Axis(length: Length) {}  // error
+     ·            ──┬─
+     ·              ╰── error: 2:12: Sketch is not available within Sketch
+ 257 │     std::geo2d::Circle(radius);
+     ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/structure/workbenches/.test/input.log =========
+
+-- Test --
+        Test name: input
+  Expected result: todo
+      Source file: ../books/language/src/structure/workbenches/operations.md:31
+        Test path: ../books/language/src/structure/workbenches/.test
+
+-- Code --
+
+  31:   // define operation which takes multiple items
+  32:   op punched_disk() { 
+  33:       // check number of children
+  34:       if @input.count() == 2 {
+  35:           // make hole
+  36:           @input.subtract(); 
+  37:       } else {
+  38:           std::error("punched_disk must get two objects");
+  39:       }
+  40:   }
+  41:   
+  42:   // use operation punch_disk with two circles
+  43:   {
+  44:       std::geo2d::Circle(radius = 1cm);
+  45:       std::geo2d::Circle(radius = 2cm);
+  46:   }.punched_disk();
+
+-- No Output --
+-- Errors --
+  × error: 4:15: Symbol count not found.
+    ╭─[../books/language/src/structure/workbenches/operations.md:34:15]
+ 33 │     // check number of children
+ 34 │     if @input.count() == 2 {
+    ·               ──┬──
+    ·                 ╰── error: 4:15: Symbol count not found.
+ 35 │         // make hole
+    ╰────
+  × error: 4:5: If condition is not a boolean: <NO VALUE>
+    ╭─[../books/language/src/structure/workbenches/operations.md:34:5]
+ 33 │         // check number of children
+ 34 │ ╭─▶     if @input.count() == 2 {
+ 35 │ │           // make hole
+ 36 │ │           @input.subtract(); 
+ 37 │ │       } else {
+ 38 │ │           std::error("punched_disk must get two objects");
+ 39 │ ├─▶     }
+    · ╰──── error: 4:5: If condition is not a boolean: <NO VALUE>
+ 40 │     }
+    ╰────
+Unexpected error(s) which did occur in line(s): 34
+-- Test Result --
+TODO
+
+========= ./books/language/book/structure/modules/.test/mod_example.log =========
+
+-- Test --
+        Test name: mod_example
+  Expected result: ok
+      Source file: ../books/language/src/structure/modules/README.md:23
+        Test path: ../books/language/src/structure/modules/.test
+
+-- Code --
+
+  23:   // define private module
+  24:   mod my {
+  25:       // define public module
+  26:       pub mod math {
+  27:           // define PI as a public constant value
+  28:           pub const PI = 3.14159;
+  29:   
+  30:           // define some public calculation function
+  31:           pub fn abs(x: Scalar) -> Scalar {
+  32:               if x < 0 { return -x; } else { return x; }
+  33:           }
+  34:       }
+  35:   }
+  36:   
+  37:   // use the function and the constant
+  38:   x = my::math::abs(-1.0) * my::math::PI;
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 16:1: Unused local x.
+    ╭─[../books/language/src/structure/modules/README.md:38:1]
+ 37 │ // use the function and the constant
+ 38 │ x = my::math::abs(-1.0) * my::math::PI;
+    · ┬
+    · ╰── warning: 16:1: Unused local x.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 38
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/structure/modules/.test/internal_mod.log =========
+
+-- Test --
+        Test name: internal_mod
+  Expected result: ok
+      Source file: ../books/language/src/structure/modules/internal_modules.md:9
+        Test path: ../books/language/src/structure/modules/.test
+
+-- Code --
+
+   9:   mod my_module {
+  10:       // statements
+  11:   }
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:5: Unused global symbol my_module.
+    ╭─[../books/language/src/structure/modules/internal_modules.md:9:5]
+  9 │ mod my_module {
+    ·     ────┬────
+    ·         ╰── warning: 1:5: Unused global symbol my_module.
+ 10 │     // statements
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 9
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/structure/.test/example.log =========
+
+-- Test --
+        Test name: example
+  Expected result: ok
+      Source file: ../books/language/src/structure/functions.md:11
+        Test path: ../books/language/src/structure/.test
+
+-- Code --
+
+  11:   // define function print_error with text as parameter of type String
+  12:   fn print_error( text: String ) {
+  13:       // code body
+  14:       std::print("ERROR: {text}");
+  15:   }
+  16:   
+  17:   print_error("first");
+  18:   print_error("second");
+
+-- Output --
+ERROR: first
+ERROR: second
+
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
+
+========= ./books/language/book/structure/.test/source_file_mixed.log =========
+
+-- Test --
+        Test name: source_file_mixed
+  Expected result: fail
+      Source file: ../books/language/src/structure/source_file.md:55
+        Test path: ../books/language/src/structure/.test
+
+-- Code --
+
+  55:   std::geo2d::Circle(radius = 1cm);
+  56:   std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
+
+-- No Output --
+-- Errors --
+  × error: 2:1: Cannot mix 2d and 3d geometries
+    ╭─[../books/language/src/structure/source_file.md:56:1]
+ 55 │ std::geo2d::Circle(radius = 1cm);
+ 56 │ std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
+    · ────────────────┬────────────────
+    ·                 ╰── error: 2:1: Cannot mix 2d and 3d geometries
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/structure/.test/workbench_fn_prop.log =========
+
+-- Test --
+        Test name: workbench_fn_prop
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions.md:137
+        Test path: ../books/language/src/structure/.test
+
+-- Code --
+
+ 137:   part PunchedDisk(radius: Length) {
+ 138:       fn inner() { 
+ 139:           prop hole = radius/2;  // error: prop not allowed in function
+ 140:           return hole;
+ 141:       }
+ 142:       inner();
+ 143:   }
+ 144:   
+ 145:   PunchedDisk(1cm);
+
+-- No Output --
+-- Errors --
+  × error: 3:9: Assignment statement is not available within Function
+     ╭─[../books/language/src/structure/functions.md:139:9]
+ 138 │     fn inner() { 
+ 139 │         prop hole = radius/2;  // error: prop not allowed in function
+     ·         ──────────┬──────────
+     ·                   ╰── error: 3:9: Assignment statement is not available within Function
+ 140 │         return hole;
+     ╰────
+  × error: 3:9: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
+     ╭─[../books/language/src/structure/functions.md:139:9]
+ 138 │     fn inner() { 
+ 139 │         prop hole = radius/2;  // error: prop not allowed in function
+     ·         ──────────┬──────────
+     ·                   ╰── error: 3:9: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
+ 140 │         return hole;
+     ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/structure/.test/workbench_pub.log =========
+
+-- Test --
+        Test name: workbench_pub
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions.md:125
+        Test path: ../books/language/src/structure/.test
+
+-- Code --
+
+ 125:   part PunchedDisk(radius: Length) {
+ 126:       pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
+ 127:   }
+ 128:   
+ 129:   PunchedDisk(4.0mm);
+
+-- No Output --
+-- Errors --
+  × error: 2:12: Function statement not available here
+     ╭─[../books/language/src/structure/functions.md:126:12]
+ 125 │ part PunchedDisk(radius: Length) {
+ 126 │     pub fn inner() { return radius/2; }   // error: cant use pub fn inside workbench
+     ·            ──┬──
+     ·              ╰── error: 2:12: Function statement not available here
+ 127 │ }
+     ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/structure/.test/mod.log =========
+
+-- Test --
+        Test name: mod
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions.md:69
+        Test path: ../books/language/src/structure/.test
+
+-- Code --
+
+  69:   // module math
+  70:   mod math {
+  71:       // pow cannot be called from outside math
+  72:       fn pow( x: Scalar, n: Integer ) {
+  73:           if n == 1 {
+  74:               x   // return x
+  75:           } else {
+  76:               x * pow(x, n-1) // return recursive product
+  77:           }
+  78:       }
+  79:   
+  80:       // square is callable from outside math
+  81:       pub fn square(x: Scalar) {
+  82:           // call internal pow
+  83:           pow(x, 2)
+  84:       }
+  85:   }
+  86:   
+  87:   // call square in math
+  88:   math::square(2.0);
+  89:   math::pow(2.0, 5);  // error: pow is private
+
+-- No Output --
+-- Errors --
+  × error: 21:1: Symbol math::pow not found.
+    ╭─[../books/language/src/structure/functions.md:89:1]
+ 88 │ math::square(2.0);
+ 89 │ math::pow(2.0, 5);  // error: pow is private
+    · ────────┬────────
+    ·         ╰── error: 21:1: Symbol math::pow not found.
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/types/models/.test/measure.log =========
+
+-- Test --
+        Test name: measure
+  Expected result: todo
+      Source file: ../books/language/src/types/models/measures.md:10
+        Test path: ../books/language/src/types/models/.test
+
+-- Code --
+
+  10:   __builtin::debug::assert_eq([
+  11:       // use measure area() on a circle
+  12:       std::geo2d::Circle(radius=10mm).area(),
+  13:   
+  14:       // circle area formula for comparison
+  15:       10mm * 10mm * std::math::PI
+  16:   ]);
+
+-- No Output --
+-- Errors --
+  × error: 3:37: Symbol area not found.
+    ╭─[../books/language/src/types/models/measures.md:12:37]
+ 11 │     // use measure area() on a circle
+ 12 │     std::geo2d::Circle(radius=10mm).area(),
+    ·                                     ──┬─
+    ·                                       ╰── error: 3:37: Symbol area not found.
+ 13 │ 
+    ╰────
+  × error: 1:29: Array elements have different types: [<NO TYPE>, Area]
+    ╭─[../books/language/src/types/models/measures.md:10:29]
+ 10 │ ╭─▶ __builtin::debug::assert_eq([
+ 11 │ │       // use measure area() on a circle
+ 12 │ │       std::geo2d::Circle(radius=10mm).area(),
+ 13 │ │   
+ 14 │ │       // circle area formula for comparison
+ 15 │ │       10mm * 10mm * std::math::PI
+ 16 │ ├─▶ ]);
+    · ╰──── error: 1:29: Array elements have different types: [<NO TYPE>, Area]
+    ╰────
+  × error: 1:29: Assertion failed: Invalid: <NO VALUE>
+    ╭─[../books/language/src/types/models/measures.md:10:29]
+ 10 │ ╭─▶ __builtin::debug::assert_eq([
+ 11 │ │       // use measure area() on a circle
+ 12 │ │       std::geo2d::Circle(radius=10mm).area(),
+ 13 │ │   
+ 14 │ │       // circle area formula for comparison
+ 15 │ │       10mm * 10mm * std::math::PI
+ 16 │ ├─▶ ]);
+    · ╰──── error: 1:29: Assertion failed: Invalid: <NO VALUE>
+    ╰────
+Unexpected error(s) which did occur in line(s): 10, 12
+-- Test Result --
+TODO
+
+========= ./books/language/book/types/collections/tuples/.test/tuple_assignment_bundle.log =========
+
+-- Test --
+        Test name: tuple_assignment_bundle
+  Expected result: todo
+      Source file: ../books/language/src/types/collections/tuples/assignments.md:21
+        Test path: ../books/language/src/types/collections/tuples/.test
+
+-- Code --
+
+  21:   (width, height) = [1,2]m;
+  22:   assert_eq([width,1m]);
+  23:   assert_eq([height,2m]);
+
+-- Parse Error --
+Parser error: expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+TODO
+
+========= ./books/language/book/types/collections/tuples/.test/unnamed_tuple.log =========
+
+-- Test --
+        Test name: unnamed_tuple
+  Expected result: ok
+      Source file: ../books/language/src/types/collections/tuples/README.md:29
+        Test path: ../books/language/src/types/collections/tuples/.test
+
+-- Code --
+
+  29:   tuple = (10cm, 10cm², 1l);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:1: Unused local tuple.
+    ╭─[../books/language/src/types/collections/tuples/README.md:29:1]
+ 29 │ tuple = (10cm, 10cm², 1l);
+    · ──┬──
+    ·   ╰── warning: 1:1: Unused local tuple.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 29
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/collections/tuples/.test/tuple_assignment.log =========
+
+-- Test --
+        Test name: tuple_assignment
+  Expected result: todo
+      Source file: ../books/language/src/types/collections/tuples/assignments.md:8
+        Test path: ../books/language/src/types/collections/tuples/.test
+
+-- Code --
+
+   8:   (width, height) = (1m,2m);
+   9:   // check values of width and height
+  10:   assert_eq([width,1m]);
+  11:   assert_eq([height,2m]);
+
+-- Parse Error --
+Parser error: expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+TODO
+
+========= ./books/language/book/types/collections/tuples/.test/tuple_add_different.log =========
+
+-- Test --
+        Test name: tuple_add_different
+  Expected result: fail
+      Source file: ../books/language/src/types/collections/tuples/operators.md:18
+        Test path: ../books/language/src/types/collections/tuples/.test
+
+-- Code --
+
+  18:   a = (x = 1.0mm, y = 2.0mm);
+  19:   b = (x = 3.0mm, z = 4.0mm);
+  20:   c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+  21:   std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+
+-- No Output --
+-- Errors --
+  × error: 3:5: Tuple type mismatch: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+    ╭─[../books/language/src/types/collections/tuples/operators.md:20:5]
+ 19 │ b = (x = 3.0mm, z = 4.0mm);
+ 20 │ c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+    ·     ──┬──
+    ·       ╰── error: 3:5: Tuple type mismatch: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+ 21 │ std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+    ╰────
+  × error: 4:23: Array elements have different types: [<NO TYPE>, (x: Length, y: Length)]
+    ╭─[../books/language/src/types/collections/tuples/operators.md:21:23]
+ 20 │ c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+ 21 │ std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+    ·                       ─────────────┬─────────────
+    ·                                    ╰── error: 4:23: Array elements have different types: [<NO TYPE>, (x: Length, y: Length)]
+    ╰────
+  × error: 4:23: Assertion failed: Invalid: <NO VALUE>
+    ╭─[../books/language/src/types/collections/tuples/operators.md:21:23]
+ 20 │ c = a + b; // error: Tuple type mismatch for +: lhs=(x: Length, y: Length), rhs=(x: Length, z: Length)
+ 21 │ std::debug::assert_eq([c, (x = 4.0mm, y = 6.0mm)]); // error: Array elements have different types: [<INVALID TYPE>, (x: Length, y: Length)]
+    ·                       ─────────────┬─────────────
+    ·                                    ╰── error: 4:23: Assertion failed: Invalid: <NO VALUE>
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/types/collections/tuples/.test/tuple_assignment_convert.log =========
+
+-- Test --
+        Test name: tuple_assignment_convert
+  Expected result: todo
+      Source file: ../books/language/src/types/collections/tuples/assignments.md:31
+        Test path: ../books/language/src/types/collections/tuples/.test
+
+-- Code --
+
+  31:   array = [1,2]m;
+  32:   (width, height) = array;
+  33:   tuple = (width, height);
+  34:   
+  35:   assert_eq([tuple,(1m,2m)]);
+  36:   assert_eq([tuple.width,1m]);
+  37:   assert_eq([tuple.height,2m]);
+
+-- Parse Error --
+Parser error: expected EOI, single_line_comment, array_element_access, tuple_element_access, attribute_access, add, subtract, multiply, divide, union, intersect, power_xor, greater_than, less_than, greater_equal, less_equal, equal, near, not_equal, and, or, xor, if_binary_op, else_binary_op, or method_call
+-- Test Result --
+TODO
+
+========= ./books/language/book/types/collections/.test/range_expressions_bad_order.log =========
+
+-- Test --
+        Test name: range_expressions_bad_order
+  Expected result: fail
+      Source file: ../books/language/src/types/collections/arrays.md:54
+        Test path: ../books/language/src/types/collections/.test
+
+-- Code --
+
+  54:   [6..1];  // error
+  55:   [2..-2];  // error
+
+-- No Output --
+-- Errors --
+  × error: 1:2: Bad range, first number (6) must be smaller than last (1)
+    ╭─[../books/language/src/types/collections/arrays.md:54:2]
+ 54 │ [6..1];  // error
+    ·  ──┬─
+    ·    ╰── error: 1:2: Bad range, first number (6) must be smaller than last (1)
+ 55 │ [2..-2];  // error
+    ╰────
+  × error: 2:2: Bad range, first number (2) must be smaller than last (-2)
+    ╭─[../books/language/src/types/collections/arrays.md:55:2]
+ 54 │ [6..1];  // error
+ 55 │ [2..-2];  // error
+    ·  ──┬──
+    ·    ╰── error: 2:2: Bad range, first number (2) must be smaller than last (-2)
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/types/collections/.test/range_expressions_bad_type.log =========
+
+-- Test --
+        Test name: range_expressions_bad_type
+  Expected result: fail
+      Source file: ../books/language/src/types/collections/arrays.md:63
+        Test path: ../books/language/src/types/collections/.test
+
+-- Code --
+
+  63:   [1.0..2.0];  // parse_error
+
+-- Parse Error --
+Parser error: expected single_line_comment or identifier
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/types/.test/types_def_vs_decl.log =========
+
+-- Test --
+        Test name: types_def_vs_decl
+  Expected result: ok
+      Source file: ../books/language/src/types/README.md:29
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+  29:   x: Length = 4mm;   // explicit type declaration
+  30:   y = 4mm;           // implicit type declaration via units.
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:1: Unused local x.
+    ╭─[../books/language/src/types/README.md:29:1]
+ 29 │ x: Length = 4mm;   // explicit type declaration
+    · ┬
+    · ╰── warning: 1:1: Unused local x.
+ 30 │ y = 4mm;           // implicit type declaration via units.
+    ╰────
+  ⚠ warning: 2:1: Unused local y.
+    ╭─[../books/language/src/types/README.md:30:1]
+ 29 │ x: Length = 4mm;   // explicit type declaration
+ 30 │ y = 4mm;           // implicit type declaration via units.
+    · ┬
+    · ╰── warning: 2:1: Unused local y.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 29, 30
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/types_quantity_area_units.log =========
+
+-- Test --
+        Test name: types_quantity_area_units
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:103
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+ 103:   square_millimeter = 100000mm²;
+ 104:   square_centimeter = 1000cm²;
+ 105:   square_meter = 0.1m²;
+ 106:   square_inch = 155in²;
+ 107:   
+ 108:   std::debug::assert(square_millimeter == 0.1m²);
+ 109:   std::debug::assert(square_centimeter == 0.1m²);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 4:1: Unused local square_inch.
+     ╭─[../books/language/src/types/quantities.md:106:1]
+ 105 │ square_meter = 0.1m²;
+ 106 │ square_inch = 155in²;
+     · ─────┬─────
+     ·      ╰── warning: 4:1: Unused local square_inch.
+ 107 │ 
+     ╰────
+  ⚠ warning: 3:1: Unused local square_meter.
+     ╭─[../books/language/src/types/quantities.md:105:1]
+ 104 │ square_centimeter = 1000cm²;
+ 105 │ square_meter = 0.1m²;
+     · ──────┬─────
+     ·       ╰── warning: 3:1: Unused local square_meter.
+ 106 │ square_inch = 155in²;
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 105, 106
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/types_quantity_scalar.log =========
+
+-- Test --
+        Test name: types_quantity_scalar
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:48
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+  48:   zero = 0;
+  49:   pi =  3.1415;
+  50:   percent = 55%;
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 3:1: Unused local percent.
+    ╭─[../books/language/src/types/quantities.md:50:1]
+ 49 │ pi =  3.1415;
+ 50 │ percent = 55%;
+    · ───┬───
+    ·    ╰── warning: 3:1: Unused local percent.
+    ╰────
+  ⚠ warning: 2:1: Unused local pi.
+    ╭─[../books/language/src/types/quantities.md:49:1]
+ 48 │ zero = 0;
+ 49 │ pi =  3.1415;
+    · ─┬
+    ·  ╰── warning: 2:1: Unused local pi.
+ 50 │ percent = 55%;
+    ╰────
+  ⚠ warning: 1:1: Unused local zero.
+    ╭─[../books/language/src/types/quantities.md:48:1]
+ 48 │ zero = 0;
+    · ──┬─
+    ·   ╰── warning: 1:1: Unused local zero.
+ 49 │ pi =  3.1415;
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 48, 49, 50
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/types_bundles_functions.log =========
+
+-- Test --
+        Test name: types_bundles_functions
+  Expected result: ok
+      Source file: ../books/language/src/types/README.md:47
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+  47:   fn f(x = 4mm) {}        // use unit (with default)
+  48:   fn f(x: Length) {}     // use type (without default)
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 2:4: Unused global symbol f.
+    ╭─[../books/language/src/types/README.md:48:4]
+ 47 │ fn f(x = 4mm) {}        // use unit (with default)
+ 48 │ fn f(x: Length) {}     // use type (without default)
+    ·    ┬
+    ·    ╰── warning: 2:4: Unused global symbol f.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 48
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/types_quantity_weight.log =========
+
+-- Test --
+        Test name: types_quantity_weight
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:159
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+ 159:   gram = 1000.0g;
+ 160:   kilogram = 1.0kg;
+ 161:   pound = 2.204623lb;
+ 162:   
+ 163:   std::debug::assert([gram, kilogram].all_equal());
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 3:1: Unused local pound.
+     ╭─[../books/language/src/types/quantities.md:161:1]
+ 160 │ kilogram = 1.0kg;
+ 161 │ pound = 2.204623lb;
+     · ──┬──
+     ·   ╰── warning: 3:1: Unused local pound.
+ 162 │ 
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 161
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/types_primitive_integer.log =========
+
+-- Test --
+        Test name: types_primitive_integer
+  Expected result: ok
+      Source file: ../books/language/src/types/primitives.md:34
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+  34:   i = 3;
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:1: Unused local i.
+    ╭─[../books/language/src/types/primitives.md:34:1]
+ 34 │ i = 3;
+    · ┬
+    · ╰── warning: 1:1: Unused local i.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 34
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/types_quantity_volume_units.log =========
+
+-- Test --
+        Test name: types_quantity_volume_units
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:133
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+ 133:   cubic_millimeter = 1000000.0mm³;
+ 134:   cubic_centimeter = 100.0cl;
+ 135:   cubic_meter = 0.001m³;
+ 136:   cubic_inch = 61.0237in³;
+ 137:   liter = 1.0l;
+ 138:   centiliter = 100.0cl;
+ 139:   milliliter = 1000.0ml;
+ 140:   
+ 141:   std::debug::assert(cubic_millimeter == 1.0l);
+ 142:   std::debug::assert(cubic_centimeter == 1.0l);
+ 143:   std::debug::assert(cubic_meter == 1.0l);
+ 144:   std::debug::assert(centiliter == 1.0l);
+ 145:   std::debug::assert(milliliter == 1.0l);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 4:1: Unused local cubic_inch.
+     ╭─[../books/language/src/types/quantities.md:136:1]
+ 135 │ cubic_meter = 0.001m³;
+ 136 │ cubic_inch = 61.0237in³;
+     · ─────┬────
+     ·      ╰── warning: 4:1: Unused local cubic_inch.
+ 137 │ liter = 1.0l;
+     ╰────
+  ⚠ warning: 5:1: Unused local liter.
+     ╭─[../books/language/src/types/quantities.md:137:1]
+ 136 │ cubic_inch = 61.0237in³;
+ 137 │ liter = 1.0l;
+     · ──┬──
+     ·   ╰── warning: 5:1: Unused local liter.
+ 138 │ centiliter = 100.0cl;
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 136, 137
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/quantity_types_number_literals.log =========
+
+-- Test --
+        Test name: quantity_types_number_literals
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities.md:28
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+  28:   // declare variable `height` of type `Length` to 1.4 Meters
+  29:   height = 1.4m;
+  30:   
+  31:   // use as *default* value in parameter list
+  32:   fn f( height = 1m ) {}
+  33:   
+  34:   // calculate a `Length` called `width` by multiplying the
+  35:   // `height` with `Scalar` `2` and add ten centimeters
+  36:   width = height * 2 + 10cm;
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 9:1: Unused local width.
+    ╭─[../books/language/src/types/quantities.md:36:1]
+ 35 │ // `height` with `Scalar` `2` and add ten centimeters
+ 36 │ width = height * 2 + 10cm;
+    · ──┬──
+    ·   ╰── warning: 9:1: Unused local width.
+    ╰────
+  ⚠ warning: 5:4: Unused global symbol f.
+    ╭─[../books/language/src/types/quantities.md:32:4]
+ 31 │ // use as *default* value in parameter list
+ 32 │ fn f( height = 1m ) {}
+    ·    ┬
+    ·    ╰── warning: 5:4: Unused global symbol f.
+ 33 │ 
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 32, 36
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/types/.test/types_no_declaration.log =========
+
+-- Test --
+        Test name: types_no_declaration
+  Expected result: fail
+      Source file: ../books/language/src/types/README.md:39
+        Test path: ../books/language/src/types/.test
+
+-- Code --
+
+  39:   x: Length;         // parse_error
+
+-- Parse Error --
+Parser error: expected single_line_comment
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/.test/attributes_export.log =========
+
+-- Test --
+        Test name: attributes_export
+  Expected result: ok
+      Source file: ../books/language/src/attributes.md:70
+        Test path: ../books/language/src/.test
+
+-- Code --
+
+  70:   #[export = "circle.svg"]
+  71:   c = std::geo2d::Circle(42.0mm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 2:1: Unused local c.
+    ╭─[../books/language/src/attributes.md:71:1]
+ 70 │ #[export = "circle.svg"]
+ 71 │ c = std::geo2d::Circle(42.0mm);
+    · ┬
+    · ╰── warning: 2:1: Unused local c.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 71
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
+
+========= ./books/language/book/debugging/.test/verify_error.log =========
+
+-- Test --
+        Test name: verify_error
+  Expected result: fail
+      Source file: ../books/language/src/debugging/verification.md:30
+        Test path: ../books/language/src/debugging/.test
+
+-- Code --
+
+  30:   std::log::error("this should not have happened"); // error
+
+-- No Output --
+-- Errors --
+  × error: 1:17: Builtin error: this should not have happened
+    ╭─[../books/language/src/debugging/verification.md:30:17]
+ 30 │ std::log::error("this should not have happened"); // error
+    ·                 ───────────────┬───────────────
+    ·                                ╰── error: 1:17: Builtin error: this should not have happened
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/language/book/debugging/.test/verify_assert_fail.log =========
+
+-- Test --
+        Test name: verify_assert_fail
+  Expected result: fail
+      Source file: ../books/language/src/debugging/verification.md:22
+        Test path: ../books/language/src/debugging/.test
+
+-- Code --
+
+  22:   std::debug::assert(false, "this assertion fails"); // error
+
+-- No Output --
+-- Errors --
+  × error: 1:20: Assertion failed: this assertion fails
+    ╭─[../books/language/src/debugging/verification.md:22:20]
+ 22 │ std::debug::assert(false, "this assertion fails"); // error
+    ·                    ──────────────┬──────────────
+    ·                                  ╰── error: 1:20: Assertion failed: this assertion fails
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED
