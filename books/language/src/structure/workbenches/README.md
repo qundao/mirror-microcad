@@ -1,6 +1,6 @@
 # Workbenches
 
-*Workbenches* are essential in µcad for creating and constructing 2D
+*Workbenches* are essential language elements in µcad for creating and constructing 2D
 [*sketches*](sketches.md), 3D [*parts*](parts.md), or performing [*operations*](operations.md) on
 them.
 Every *workbench* is initialized with a [*building plan*](building_plan.md)
