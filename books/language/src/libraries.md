@@ -1,22 +1,6 @@
 # Included Libraries
 
-With `microcad` come two out of the box libraries.
-
-## µcad Standard Library
-
-The *µcad standard library* is written in µcad and provides a convenient
-interface to the µcad builtin library.
-
-The µcad standard library is available in the global module `std` and is self
-documented in a [reference book](https://docs.microcad.xyz/std/book).
-
-[![test](.test/lib_std.svg)](.test/lib_std.log)
-
-```µcad,lib_std
-use std::print;
-
-print("Hello, µcad standard library!");
-```
+With `microcad` comes with a *builtin* and a *standard* library.
 
 ## µcad Builtin Library
 
@@ -33,4 +17,20 @@ documented in a [reference book](https://docs.microcad.xyz/builtin/book).
 use __builtin::print;
 
 print("Hello, µcad builtin library!");
+```
+
+## µcad Standard Library
+
+The *µcad standard library* is written in µcad and provides a convenient
+interface to the µcad builtin library.
+
+The µcad standard library is available in the global module `std` and is self
+documented in a [reference book](https://docs.microcad.xyz/std/book).
+
+[![test](.test/lib_std.svg)](.test/lib_std.log)
+
+```µcad,lib_std
+use std::print;
+
+print("Hello, µcad standard library!");
 ```
