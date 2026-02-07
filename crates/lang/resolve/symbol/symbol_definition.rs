@@ -73,21 +73,21 @@ impl SymbolDef {
         }
     }
 
-    pub(crate) fn kind_str(&self) -> String {
+    pub(crate) fn kind_str(&self) -> &'static str {
         match self {
-            Self::Root => "Root".to_string(),
-            Self::Workbench(w) => format!("{}", w.kind),
-            Self::Module(..) => "Module".to_string(),
-            Self::Function(..) => "Function".to_string(),
-            Self::SourceFile(..) => "SourceFile".to_string(),
-            Self::Builtin(b) => format!("{}", b.kind),
-            Self::Constant(..) => "Constant".to_string(),
-            Self::Assignment(..) => "Assignment".to_string(),
-            Self::Argument(..) => "Argument".to_string(),
-            Self::Alias(..) => "Alias".to_string(),
-            Self::UseAll(..) => "UseAll".to_string(),
+            Self::Root => "root",
+            Self::Workbench(w) => w.kind.as_str(),
+            Self::Module(..) => "module",
+            Self::Function(..) => "function",
+            Self::SourceFile(..) => "source file",
+            Self::Builtin(b) => b.kind.as_str(),
+            Self::Constant(..) => "constant",
+            Self::Assignment(..) => "assignment",
+            Self::Argument(..) => "argument",
+            Self::Alias(..) => "alias",
+            Self::UseAll(..) => "use-all",
             #[cfg(test)]
-            Self::Tester(..) => "Tester".to_string(),
+            Self::Tester(..) => "tester",
         }
     }
 

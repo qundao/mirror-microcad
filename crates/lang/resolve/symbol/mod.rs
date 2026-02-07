@@ -519,7 +519,7 @@ impl Symbol {
         }
     }
 
-    pub(crate) fn kind_str(&self) -> String {
+    pub(crate) fn kind_str(&self) -> &'static str {
         self.inner.borrow().def.kind_str()
     }
 

@@ -5,19 +5,15 @@
 
 use crate::{resolve::*, syntax::*};
 
-fn capitalize_first(s: String) -> String {
-    let mut c = s.chars();
-    match c.next() {
-        None => String::new(),
-        Some(first) => first.to_uppercase().collect::<String>() + c.as_str(),
-    }
-}
-
 pub(super) trait Grant {
     /// Checks if definition is allowed to occur within the given parent symbol.
     fn grant(&self, _parent: &Symbol, _context: &mut ResolveContext) -> DiagResult<&Self> {
         Ok(self)
     }
+
+    fn kind(&self) -> &'static str;
+
+    fn allowed_parents(&self) -> &'static [&'static str];
 }
 
 impl Grant for ModuleDefinition {
@@ -26,13 +22,18 @@ impl Grant for ModuleDefinition {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported(
-                    "Module definition".into(),
-                    capitalize_first(def.kind_str()),
-                ),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "module definition"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["source root", "module"]
     }
 }
 
@@ -45,61 +46,46 @@ impl Grant for StatementList {
             | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported(
-                    "Statement list".to_string(),
-                    parent.kind_str(),
-                ),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "statement list"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["source root", "module definition", "workbench definition", "function definition"]
     }
 }
 
 impl Grant for Statement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
-        parent.with_def(|def| match (def, &self) {
-            (
-                SymbolDef::SourceFile(..),
-                Statement::Assignment(..)
-                | Statement::Expression(..)
-                | Statement::Function(..)
-                | Statement::If(..)
-                | Statement::Module(..)
-                | Statement::Use(..)
-                | Statement::Workbench(..),
-            )
-            | (
-                SymbolDef::Module(..),
-                Statement::Assignment(..)
-                | Statement::Expression(..)
-                | Statement::Function(..)
-                | Statement::Module(..)
-                | Statement::Use(..)
-                | Statement::Workbench(..),
-            )
-            | (
-                SymbolDef::Workbench(..),
-                Statement::Assignment(..)
-                | Statement::Expression(..)
-                | Statement::Function(..)
-                | Statement::If(..)
-                | Statement::Init(..)
-                | Statement::Use(..),
-            )
-            | (
-                SymbolDef::Function(..),
-                Statement::Assignment(..)
-                | Statement::If(..)
-                | Statement::Return(..)
-                | Statement::Use(..)
-                | Statement::Expression(..),
-            ) => Ok(()),
-            _ => context.error(
-                self,
-                ResolveError::StatementNotSupported("Statement".to_string(), parent.kind_str()),
-            ),
-        })?;
+        match self {
+            Statement::If(statement) => {
+                statement.grant(parent, context)?;
+            },
+            Statement::Init(statement) => {
+                statement.grant(parent, context)?;
+            },
+            Statement::Return(statement) => {
+                statement.grant(parent, context)?;
+            },
+            _ => {
+                // the error handling for the other statements are already handled
+            }
+        }
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "statement"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        unreachable!()
     }
 }
 
@@ -109,10 +95,18 @@ impl Grant for WorkbenchDefinition {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported(self.kind.to_string(), parent.kind_str()),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        self.kind.as_str()
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["source root", "module definition"]
     }
 }
 
@@ -122,13 +116,18 @@ impl Grant for FunctionDefinition {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) | SymbolDef::Workbench(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported(
-                    "Function definition".to_string(),
-                    parent.kind_str(),
-                ),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "function definition"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["source root", "module definition", "workbench definition"]
     }
 }
 
@@ -138,13 +137,18 @@ impl Grant for InitDefinition {
             SymbolDef::Workbench(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported(
-                    "Init definition".to_string(),
-                    parent.kind_str(),
-                ),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "init definition"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["workbench definition"]
     }
 }
 
@@ -154,13 +158,18 @@ impl Grant for ReturnStatement {
             SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported(
-                    "Return statement".to_string(),
-                    parent.kind_str(),
-                ),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "return statement"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["function definition"]
     }
 }
 
@@ -168,15 +177,22 @@ impl Grant for IfStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
             SymbolDef::SourceFile(..)
-            | SymbolDef::Module(..)
             | SymbolDef::Workbench(..)
             | SymbolDef::Function(..) => Ok(()),
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("If statement".to_string(), parent.kind_str()),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "if statement"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["source root", "module definition", "workbench definition", "function definition"]
     }
 }
 
@@ -203,13 +219,42 @@ impl Grant for AssignmentStatement {
         if !grant {
             context.error(
                 self,
-                ResolveError::StatementNotSupported(
-                    "Assignment statement".to_string(),
-                    parent.kind_str(),
-                ),
+                StatementNotSupportedError::new(self, parent),
             )?;
         }
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        if matches!(self.assignment.visibility, Visibility::Private) {
+            match self.assignment.qualifier() {
+                Qualifier::Value => "assigment",
+                Qualifier::Const => "constant assigment",
+                Qualifier::Prop => "property assigment",
+            }
+        } else {
+            match self.assignment.qualifier() {
+                Qualifier::Value => "public assigment",
+                Qualifier::Const => "public constant assigment",
+                Qualifier::Prop => "public property assigment",
+            }
+        }
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        if matches!(self.assignment.visibility, Visibility::Private) {
+            match self.assignment.qualifier() {
+                Qualifier::Value => &["source root", "module definition", "workbench definition", "function definition"],
+                Qualifier::Const => &["source root", "module definition", "workbench definition"],
+                Qualifier::Prop => &["workbench definition"],
+            }
+        } else {
+            match self.assignment.qualifier() {
+                Qualifier::Value => &[],
+                Qualifier::Const => &["source root", "module definition"],
+                Qualifier::Prop => &[],
+            }
+        }
     }
 }
 
@@ -225,10 +270,18 @@ impl Grant for Body {
             }
             _ => context.error(
                 self,
-                ResolveError::StatementNotSupported("Code body".to_string(), parent.kind_str()),
+                StatementNotSupportedError::new(self, parent),
             ),
         })?;
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "code body"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        &["source root", "module definition", "workbench definition", "function definition"]
     }
 }
 
@@ -327,9 +380,20 @@ impl Grant for UseStatement {
         if !grant {
             context.error(
                 self,
-                ResolveError::StatementNotSupported("Use statement".to_string(), parent.kind_str()),
+                StatementNotSupportedError::new(self, parent),
             )?;
         }
         Ok(self)
+    }
+
+    fn kind(&self) -> &'static str {
+        "use statement"
+    }
+
+    fn allowed_parents(&self) -> &'static [&'static str] {
+        match self.visibility {
+            Visibility::Private | Visibility::PrivateUse(_) => &["source root", "module definition", "workbench definition", "function definition"],
+            _ => &["source root", "module definition"],
+        }
     }
 }
