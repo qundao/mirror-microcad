@@ -20,10 +20,7 @@ impl Grant for ModuleDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) => Ok(()),
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -44,10 +41,7 @@ impl Grant for StatementList {
             | SymbolDef::Module(..)
             | SymbolDef::Workbench(..)
             | SymbolDef::Function(..) => Ok(()),
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -57,7 +51,12 @@ impl Grant for StatementList {
     }
 
     fn allowed_parents(&self) -> &'static [&'static str] {
-        &["source root", "module definition", "workbench definition", "function definition"]
+        &[
+            "source root",
+            "module definition",
+            "workbench definition",
+            "function definition",
+        ]
     }
 }
 
@@ -66,13 +65,13 @@ impl Grant for Statement {
         match self {
             Statement::If(statement) => {
                 statement.grant(parent, context)?;
-            },
+            }
             Statement::Init(statement) => {
                 statement.grant(parent, context)?;
-            },
+            }
             Statement::Return(statement) => {
                 statement.grant(parent, context)?;
-            },
+            }
             _ => {
                 // the error handling for the other statements are already handled
             }
@@ -93,10 +92,7 @@ impl Grant for WorkbenchDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) => Ok(()),
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -114,10 +110,7 @@ impl Grant for FunctionDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) | SymbolDef::Workbench(..) => Ok(()),
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -135,10 +128,7 @@ impl Grant for InitDefinition {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
             SymbolDef::Workbench(..) => Ok(()),
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -156,10 +146,7 @@ impl Grant for ReturnStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
             SymbolDef::Function(..) => Ok(()),
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -176,13 +163,10 @@ impl Grant for ReturnStatement {
 impl Grant for IfStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
         parent.with_def(|def| match def {
-            SymbolDef::SourceFile(..)
-            | SymbolDef::Workbench(..)
-            | SymbolDef::Function(..) => Ok(()),
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            SymbolDef::SourceFile(..) | SymbolDef::Workbench(..) | SymbolDef::Function(..) => {
+                Ok(())
+            }
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -192,35 +176,29 @@ impl Grant for IfStatement {
     }
 
     fn allowed_parents(&self) -> &'static [&'static str] {
-        &["source root", "module definition", "workbench definition", "function definition"]
+        &[
+            "source root",
+            "module definition",
+            "workbench definition",
+            "function definition",
+        ]
     }
 }
 
 impl Grant for AssignmentStatement {
     fn grant(&self, parent: &Symbol, context: &mut ResolveContext) -> DiagResult<&Self> {
-        let grant = parent.with_def(|def| match def {
-            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => {
-                match self.assignment.qualifier() {
-                    Qualifier::Value => matches!(self.assignment.visibility, Visibility::Private),
-                    Qualifier::Const => true,
-                    Qualifier::Prop => false,
-                }
+        let grant = match (self.assignment.qualifier(), &self.assignment.visibility) {
+            (Qualifier::Value, Visibility::Private | Visibility::PrivateUse(_)) => {
+                parent.can_value()
             }
-            SymbolDef::Workbench(..) => matches!(self.assignment.visibility, Visibility::Private),
-            SymbolDef::Function(..) => match self.assignment.qualifier() {
-                Qualifier::Value => {
-                    matches!(self.assignment.visibility, Visibility::Private)
-                }
-                Qualifier::Prop | Qualifier::Const => false,
-            },
-            _ => false,
-        });
+            (_, Visibility::Public) => parent.can_public(),
+            (Qualifier::Const, _) => parent.can_const(),
+            (Qualifier::Prop, _) => parent.can_prop(),
+            (_, Visibility::Deleted) => false,
+        };
 
         if !grant {
-            context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            )?;
+            context.error(self, StatementNotSupportedError::new(self, parent))?;
         }
         Ok(self)
     }
@@ -244,7 +222,12 @@ impl Grant for AssignmentStatement {
     fn allowed_parents(&self) -> &'static [&'static str] {
         if matches!(self.assignment.visibility, Visibility::Private) {
             match self.assignment.qualifier() {
-                Qualifier::Value => &["source root", "module definition", "workbench definition", "function definition"],
+                Qualifier::Value => &[
+                    "source root",
+                    "module definition",
+                    "workbench definition",
+                    "function definition",
+                ],
                 Qualifier::Const => &["source root", "module definition", "workbench definition"],
                 Qualifier::Prop => &["workbench definition"],
             }
@@ -268,10 +251,7 @@ impl Grant for Body {
                 }
                 Ok(())
             }
-            _ => context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            ),
+            _ => context.error(self, StatementNotSupportedError::new(self, parent)),
         })?;
         Ok(self)
     }
@@ -281,7 +261,12 @@ impl Grant for Body {
     }
 
     fn allowed_parents(&self) -> &'static [&'static str] {
-        &["source root", "module definition", "workbench definition", "function definition"]
+        &[
+            "source root",
+            "module definition",
+            "workbench definition",
+            "function definition",
+        ]
     }
 }
 
@@ -378,10 +363,7 @@ impl Grant for UseStatement {
         });
 
         if !grant {
-            context.error(
-                self,
-                StatementNotSupportedError::new(self, parent),
-            )?;
+            context.error(self, StatementNotSupportedError::new(self, parent))?;
         }
         Ok(self)
     }
@@ -392,7 +374,12 @@ impl Grant for UseStatement {
 
     fn allowed_parents(&self) -> &'static [&'static str] {
         match self.visibility {
-            Visibility::Private | Visibility::PrivateUse(_) => &["source root", "module definition", "workbench definition", "function definition"],
+            Visibility::Private | Visibility::PrivateUse(_) => &[
+                "source root",
+                "module definition",
+                "workbench definition",
+                "function definition",
+            ],
             _ => &["source root", "module definition"],
         }
     }
