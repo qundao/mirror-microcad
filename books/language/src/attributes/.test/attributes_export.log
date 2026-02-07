@@ -1,0 +1,25 @@
+﻿
+-- Test --
+        Test name: attributes_export
+  Expected result: ok
+      Source file: ../books/language/src/attributes/command_attributes.md:10
+        Test path: ../books/language/src/attributes/.test
+
+-- Code --
+
+  10:   #[export = "circle.svg"]
+  11:   c = std::geo2d::Circle(r = 42.0mm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 2:1: Unused local c.
+    ╭─[../books/language/src/attributes/command_attributes.md:11:1]
+ 10 │ #[export = "circle.svg"]
+ 11 │ c = std::geo2d::Circle(r = 42.0mm);
+    · ┬
+    · ╰── warning: 2:1: Unused local c.
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 11
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)
