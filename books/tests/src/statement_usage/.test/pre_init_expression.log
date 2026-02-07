@@ -16,10 +16,14 @@
   × error: 2:3: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:95:3]
  94 │ sketch K() { 
+    ·        ┬
+    ·        ╰── inside this sketch
  95 │   1 + 2; // error
     ·   ───┬──
-    ·      ╰── error: 2:3: Statement not allowed prior initializers
+    ·      ╰── this statement
  96 │ init(l:Length) {} } K();
+    · ────────┬────────
+    ·         ╰── before this initializer
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

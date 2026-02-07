@@ -30,11 +30,17 @@
     ╰────
   × error: 6:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/values.md:42:5]
+ 40 │ 
  41 │ sketch MySketch() {
+    ·        ────┬───
+    ·            ╰── inside this sketch
  42 │     a = 1;   // error
     ·     ───┬──
-    ·        ╰── error: 6:5: Statement not allowed prior initializers
+    ·        ╰── this statement
  43 │     init(_x : Scalar) {}
+    ·     ──────────┬─────────
+    ·               ╰── before this initializer
+ 44 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

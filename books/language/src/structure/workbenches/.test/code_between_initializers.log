@@ -21,19 +21,18 @@
 -- Errors --
   × error: 4:5: Code between initializers is not allowed
      ╭─[../books/language/src/structure/workbenches/README.md:210:5]
- 209 │     
- 210 │     radius = 1; // error: code between initializers not allowed
-     ·     ─────┬─────
-     ·          ╰── error: 4:5: Code between initializers is not allowed
- 211 │ 
-     ╰────
-  × error: 4:5: Statement not allowed prior initializers
-     ╭─[../books/language/src/structure/workbenches/README.md:210:5]
- 209 │     
- 210 │     radius = 1; // error: code between initializers not allowed
-     ·     ─────┬─────
-     ·          ╰── error: 4:5: Statement not allowed prior initializers
- 211 │ 
+ 207 │     sketch Wheel(radius: Length) {
+     ·            ──┬──
+     ·              ╰── inside this sketch
+ 208 │ ╭─▶     init( width:Length ) { radius = width / 2; }
+ 209 │ │       
+ 210 │ │       radius = 1; // error: code between initializers not allowed
+     · │       ─────┬─────
+     · │            ╰── this statement
+ 211 │ │   
+ 212 │ ├─▶     init( height:Length ) { radius = height / 2; }
+     · ╰──── between these initializers
+ 213 │     }
      ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

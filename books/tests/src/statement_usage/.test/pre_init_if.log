@@ -16,10 +16,14 @@
   × error: 2:3: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:63:3]
  62 │ sketch K() { 
+    ·        ┬
+    ·        ╰── inside this sketch
  63 │   if std::math::PI == 3 { } // error
     ·   ────────────┬────────────
-    ·               ╰── error: 2:3: Statement not allowed prior initializers
+    ·               ╰── this statement
  64 │ init(l:Length) {} } K();
+    · ────────┬────────
+    ·         ╰── before this initializer
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
