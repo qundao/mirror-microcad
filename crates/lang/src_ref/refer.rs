@@ -77,3 +77,9 @@ impl<T: std::iter::IntoIterator> std::iter::IntoIterator for Refer<T> {
         self.value.into_iter()
     }
 }
+
+impl<T> From<Refer<T>> for SourceSpan {
+    fn from(value: Refer<T>) -> Self {
+        value.src_ref.as_miette_span().unwrap_or_else(|| SourceSpan::new(0.into(), 0))
+    }
+}

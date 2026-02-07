@@ -23,6 +23,19 @@ pub enum BuiltinWorkbenchKind {
     Operation,
 }
 
+impl BuiltinWorkbenchKind {
+
+    /// return kind name
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            BuiltinWorkbenchKind::Primitive2D => "primitive-2d",
+            BuiltinWorkbenchKind::Primitive3D => "primitive-3d",
+            BuiltinWorkbenchKind::Transform => "transform",
+            BuiltinWorkbenchKind::Operation => "operator",
+        }
+    }
+}
+
 /// The return value when calling a built-in workpiece.
 pub enum BuiltinWorkpieceOutput {
     /// 2D geometry output.
