@@ -108,11 +108,29 @@ pub enum ResolveError {
 
     /// Code Between initializers
     #[error("Code between initializers is not allowed")]
-    CodeBetweenInitializers,
+    #[allow(missing_docs)]
+    CodeBetweenInitializers {
+        #[label("between these initializers")]
+        initializers: SourceSpan,
+        #[label(primary, "this statement")]
+        statement: SourceSpan,
+        #[label("inside this {kind}")]
+        workbench: SourceSpan,
+        kind: &'static str,
+    },
 
     /// Statement not allowed prior initializers
     #[error("Statement not allowed prior initializers")]
-    StatementNotAllowedPriorInitializers,
+    #[allow(missing_docs)]
+    StatementNotAllowedPriorInitializers {
+        #[label("before this initializer")]
+        initializer: SourceSpan,
+        #[label(primary, "this statement")]
+        statement: SourceSpan,
+        #[label("inside this {kind}")]
+        workbench: SourceSpan,
+        kind: &'static str,
+    },
 }
 
 impl SrcReferrer for ResolveError {
