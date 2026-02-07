@@ -1,6 +1,6 @@
 # Program Structure
 
-A µcad program primary consists of the following *core elements*:
+A µcad program primarily consists of the following *core elements*:
 
 - [Source Files](source_file.md)
 - [Modules](modules/)
