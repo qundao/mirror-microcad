@@ -26,7 +26,6 @@ Outer attributes are placed **outside** and **before** a statement. They apply t
     std::geo2d::Circle(r = 20mm);
     std::geo2d::Rect(size = 20mm).std::ops::translate(x = 20mm);
 }
-
 ```
 
 ### Inner Attributes (`#![...]`)
@@ -42,7 +41,6 @@ The following code is semantically equivalent to the outer attribute example abo
     std::geo2d::Circle(r = 20mm);
     std::geo2d::Rect(size = 20mm).std::ops::translate(x = 20mm);
 }
-
 ```
 
 > **Pro Tip:** Inner attributes are particularly useful at the very top of a file to set global parameters without needing to wrap the entire script in a group body.
