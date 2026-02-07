@@ -24,14 +24,14 @@ Outer attributes are placed **outside** and **before** a statement. They apply t
 #[color = "#FF0000"]
 {
     std::geo2d::Circle(r = 20mm);
-    std::geo2d::Rect(size = 20mm).translate(x = 20mm);
+    std::geo2d::Rect(size = 20mm).std::ops::translate(x = 20mm);
 }
 
 ```
 
 ### Inner Attributes (`#![...]`)
 
-Inner attributes are separate statements **inside** block or source file.
+Inner attributes are separate statements **inside** a block or source file.
 They apply to the "parent" model they reside in, affecting everything within that scope.
 The following code is semantically equivalent to the outer attribute example above:
 
@@ -40,7 +40,7 @@ The following code is semantically equivalent to the outer attribute example abo
     #![color = "#FF0000"]
 
     std::geo2d::Circle(r = 20mm);
-    std::geo2d::Rect(size = 20mm).translate(x = 20mm);
+    std::geo2d::Rect(size = 20mm).std::ops::translate(x = 20mm);
 }
 
 ```
