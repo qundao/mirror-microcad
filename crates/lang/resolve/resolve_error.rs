@@ -117,11 +117,29 @@ pub enum ResolveError {
 
     /// Code Between initializers
     #[error("Code between initializers is not allowed")]
-    CodeBetweenInitializers,
+    #[allow(missing_docs)]
+    CodeBetweenInitializers {
+        #[label("Between these initializers")]
+        initializers: SrcRef,
+        #[label(primary, "This statement is not allowed")]
+        statement: SrcRef,
+        #[label("Inside this {kind}")]
+        workbench: SrcRef,
+        kind: &'static str,
+    },
 
     /// Statement not allowed prior initializers
     #[error("Statement not allowed prior initializers")]
-    StatementNotAllowedPriorInitializers,
+    #[allow(missing_docs)]
+    StatementNotAllowedPriorInitializers {
+        #[label("Before this initializer")]
+        initializer: SrcRef,
+        #[label(primary, "This statement is not allowed")]
+        statement: SrcRef,
+        #[label("Inside this {kind}")]
+        workbench: SrcRef,
+        kind: &'static str,
+    },
 }
 
 

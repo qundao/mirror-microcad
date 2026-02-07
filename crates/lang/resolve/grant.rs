@@ -3,6 +3,7 @@
 
 //! Check wether a statement is legally placed.
 
+use crate::src_ref::{SrcRef, SrcReferrer};
 use crate::{resolve::*, syntax::*};
 
 pub(super) trait Grant {
@@ -246,7 +247,7 @@ impl Grant for Body {
         parent.with_def(|def| match def {
             SymbolDef::SourceFile(..) | SymbolDef::Module(..) | SymbolDef::Function(..) => Ok(()),
             SymbolDef::Workbench(..) => {
-                if let Err(err) = self.check_statements(context) {
+                if let Err(err) = self.check_statements(parent, context) {
                     context.error(self, err)?;
                 }
                 Ok(())
@@ -271,13 +272,30 @@ impl Grant for Body {
 }
 
 impl Body {
-    fn check_statements(&self, context: &mut ResolveContext) -> ResolveResult<()> {
-        if let (Some(first_init), Some(last_init)) = (
+    fn check_statements(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<()> {
+        if let (Some(first_init_pos), Some(last_init_pos)) = (
             self.iter()
                 .position(|stmt| matches!(stmt, Statement::Init(_))),
             self.iter()
                 .rposition(|stmt| matches!(stmt, Statement::Init(_))),
         ) {
+            let first_init = &self.statements[first_init_pos];
+            let last_init = &self.statements[last_init_pos];
+
+            let code_before_err =
+                |stmt: &Statement| ResolveError::StatementNotAllowedPriorInitializers {
+                    initializer: first_init.src_ref().into(),
+                    statement: stmt.src_ref().into(),
+                    workbench: parent.src_ref().into(),
+                    kind: parent.kind_str(),
+                };
+            let code_between_err = |stmt: &Statement| ResolveError::CodeBetweenInitializers {
+                initializers: SrcRef::merge(&first_init.src_ref(), &last_init.src_ref()),
+                statement: stmt.src_ref().into(),
+                workbench: parent.src_ref().into(),
+                kind: parent.kind_str(),
+            };
+
             for (n, stmt) in self.iter().enumerate() {
                 match stmt {
                     // ignore inits
@@ -290,8 +308,8 @@ impl Body {
 
                     // RULE: Ony use or assignments before initializers
                     Statement::Use(_) => {
-                        if n > first_init && n < last_init {
-                            context.error(stmt, ResolveError::CodeBetweenInitializers)?;
+                        if n > first_init_pos && n < last_init_pos {
+                            context.error(stmt, code_between_err(stmt))?;
                         }
                     }
 
@@ -301,30 +319,26 @@ impl Body {
                             if matches!(a_stmt.assignment.visibility, Visibility::Public) {
                                 context.error(a_stmt, ResolveError::IllegalWorkbenchStatement)?;
                             }
-                            if n > first_init && n < last_init {
-                                context.error(a_stmt, ResolveError::CodeBetweenInitializers)?;
+                            if n > first_init_pos && n < last_init_pos {
+                                context.error(a_stmt, code_between_err(stmt))?;
                             }
                         }
                         Qualifier::Value => {
-                            if n < last_init {
-                                if n > first_init {
-                                    context.error(a_stmt, ResolveError::CodeBetweenInitializers)?;
+                            if n < last_init_pos {
+                                if n > first_init_pos {
+                                    context.error(a_stmt, code_between_err(stmt))?;
+                                } else {
+                                    context.error(a_stmt, code_before_err(stmt))?;
                                 }
-                                context.error(
-                                    a_stmt,
-                                    ResolveError::StatementNotAllowedPriorInitializers,
-                                )?;
                             }
                         }
                         Qualifier::Prop => {
-                            if n < last_init {
-                                if n > first_init {
-                                    context.error(a_stmt, ResolveError::CodeBetweenInitializers)?;
+                            if n < last_init_pos {
+                                if n > first_init_pos {
+                                    context.error(a_stmt, code_between_err(stmt))?;
+                                } else {
+                                    context.error(a_stmt, code_before_err(stmt))?;
                                 }
-                                context.error(
-                                    a_stmt,
-                                    ResolveError::StatementNotAllowedPriorInitializers,
-                                )?;
                             }
                         }
                     },
@@ -335,12 +349,12 @@ impl Body {
                     | Statement::Expression(_)
                     | Statement::Function(_) => {
                         // RULE: No code between initializers
-                        if n < last_init {
-                            if n > first_init {
-                                context.error(stmt, ResolveError::CodeBetweenInitializers)?;
+                        if n < last_init_pos {
+                            if n > first_init_pos {
+                                context.error(stmt, code_between_err(stmt))?;
+                            } else {
+                                context.error(stmt, code_before_err(stmt))?;
                             }
-                            context
-                                .error(stmt, ResolveError::StatementNotAllowedPriorInitializers)?;
                         }
                     }
                 }
