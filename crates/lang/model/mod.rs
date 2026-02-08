@@ -51,11 +51,6 @@ impl Model {
         Self(inner)
     }
 
-    /// Calculate depth of the model.
-    pub fn depth(&self) -> usize {
-        self.parents().count()
-    }
-
     /// Return `true`, if model has no children.
     pub fn is_empty(&self) -> bool {
         self.borrow().is_empty()
@@ -71,7 +66,6 @@ impl Model {
     }
 
     /// Make a deep copy if this model.
-    /// TODO: isn't this a Clone?
     pub fn make_deep_copy(&self) -> Self {
         let copy = Self(RcMut::new(self.0.borrow().clone_content()));
         for child in self.borrow().children.iter() {
@@ -83,17 +77,6 @@ impl Model {
     /// Return address of this model.
     pub fn addr(&self) -> usize {
         self.0.as_ptr().addr()
-    }
-
-    /// Check if `other` is and `self` have the same address.
-    pub fn is_same_as(&self, other: &Model) -> bool {
-        self.addr() == other.addr()
-    }
-
-    /// Remove child from this model.
-    pub fn remove_child(&self, child: &Model) {
-        let mut s = self.0.borrow_mut();
-        s.children.retain(|model| !model.is_same_as(child));
     }
 
     /// Append a single model as child.
