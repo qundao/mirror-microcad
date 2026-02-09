@@ -14,6 +14,7 @@ impl FromAst for InitDefinition {
                 .as_ref()
                 .map(|doc| DocBlock::from_ast(doc, context))
                 .transpose()?,
+            keyword_ref: context.src_ref(&node.keyword_span),
             parameters: ParameterList::from_ast(&node.arguments, context)?,
             body: Body::from_ast(&node.body, context)?,
             src_ref: context.src_ref(&node.span),

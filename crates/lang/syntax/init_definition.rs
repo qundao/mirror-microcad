@@ -16,6 +16,8 @@ use crate::{src_ref::*, syntax::*};
 /// ```
 #[derive(Clone)]
 pub struct InitDefinition {
+    /// SrcRef of the `init` keyword
+    pub keyword_ref: SrcRef,
     /// Documentation.
     pub doc: Option<DocBlock>,
     /// Parameter list for this init definition

@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 39:5: Declaration of a not allowed within assignment_model_module::my_module
+  × error: 39:5: Assigment is not available within module
     ╭─[../books/language/src/assignments/model.md:39:5]
  38 │ mod my_module {
+    ·     ────┬────
+    ·         ╰── Within this module
  39 │     a = std::geo2d::Circle(radius = 1mm);   // error
     ·     ──────────────────┬─────────────────
-    ·                       ╰── Declaration of a not allowed within assignment_model_module::my_module
+    ·                       ╰── This assigment is not allowed
  40 │ }
     ╰────
+  help: assigment is only allowed within source root, module definition, workbench definition or function definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

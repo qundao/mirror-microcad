@@ -13,22 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 71:3: Assignment statement is not available within Function
+  × error: 71:3: Constant assigment is not available within function
     ╭─[../books/tests/src/statement_usage/function.md:71:3]
  70 │ fn f() {
+    ·    ┬
+    ·    ╰── Within this function
  71 │   const B = 1; // error
     ·   ─────┬─────
-    ·        ╰── Assignment statement is not available within Function
+    ·        ╰── This constant assigment is not allowed
  72 │ } f();
     ╰────
-  × error: 71:3: Declaration of B not allowed within function_assignment_const::f
-    ╭─[../books/tests/src/statement_usage/function.md:71:3]
- 70 │ fn f() {
- 71 │   const B = 1; // error
-    ·   ─────┬─────
-    ·        ╰── Declaration of B not allowed within function_assignment_const::f
- 72 │ } f();
-    ╰────
+  help: constant assigment is only allowed within source root, module definition or workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

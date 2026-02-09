@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 103:3: Assignment statement is not available within Sketch
+  × error: 103:3: Public constant assigment is not available within sketch
      ╭─[../books/tests/src/statement_usage/workbench.md:103:3]
  102 │ sketch K() {
+     ·        ┬
+     ·        ╰── Within this sketch
  103 │   pub a = 1; // error
      ·   ────┬────
-     ·       ╰── Assignment statement is not available within Sketch
+     ·       ╰── This public constant assigment is not allowed
  104 │ } K();
      ╰────
+  help: public constant assigment is only allowed within source root or module definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -19,10 +19,15 @@
   × error: 114:5: Statement not allowed prior initializers
      ╭─[../books/language/src/assignments/value.md:114:5]
  113 │ sketch MySketch() {
+     ·        ────┬───
+     ·            ╰── Inside this sketch
  114 │     a = 1;   // error
      ·     ──┬──
-     ·       ╰── Statement not allowed prior initializers
+     ·       ╰── This statement is not allowed
  115 │     init(_x : Scalar) {}
+     ·     ──┬─
+     ·       ╰── Before this initializer
+ 116 │ }
      ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

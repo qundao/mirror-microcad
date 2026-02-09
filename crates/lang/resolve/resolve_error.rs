@@ -1,6 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#![allow(unused_assignments)]
 //! Resolve error
 
 use miette::Diagnostic;
@@ -8,6 +9,16 @@ use thiserror::Error;
 
 use crate::src_ref::{SrcRef, SrcReferrer};
 use crate::{diag::*, parse::*, syntax::*};
+use crate::resolve::grant::Grant;
+use crate::resolve::Symbol;
+
+fn capitalize_first(s: &str) -> String {
+    let mut c = s.chars();
+    match c.next() {
+        None => String::new(),
+        Some(first) => first.to_uppercase().collect::<String>() + c.as_str(),
+    }
+}
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
@@ -49,10 +60,6 @@ pub enum ResolveError {
     #[error("Symbol {0} is not a value")]
     NotAValue(QualifiedName),
 
-    /// Declaration of property not allowed here
-    #[error("Declaration of {0} not allowed within {1}")]
-    DeclNotAllowed(Identifier, QualifiedName),
-
     /// Sternal module file not found
     #[error("Ambiguous external module files found {0:?}")]
     AmbiguousExternals(Vec<std::path::PathBuf>),
@@ -78,8 +85,9 @@ pub enum ResolveError {
     DiagError(#[from] DiagError),
 
     /// Statement is not supported in this context.
-    #[error("{0} is not available within {1}")]
-    StatementNotSupported(String, String),
+    #[error(transparent)]
+    #[diagnostic(transparent)]
+    StatementNotSupported(#[from] StatementNotSupportedError),
 
     /// Resolve check failed
     #[error("Resolve failed")]
@@ -109,11 +117,80 @@ pub enum ResolveError {
 
     /// Code Between initializers
     #[error("Code between initializers is not allowed")]
-    CodeBetweenInitializers,
+    #[allow(missing_docs)]
+    CodeBetweenInitializers {
+        #[label("Between these initializers")]
+        initializers: SrcRef,
+        #[label(primary, "This statement is not allowed")]
+        statement: SrcRef,
+        #[label("Inside this {kind}")]
+        workbench: SrcRef,
+        kind: &'static str,
+    },
 
     /// Statement not allowed prior initializers
     #[error("Statement not allowed prior initializers")]
-    StatementNotAllowedPriorInitializers,
+    #[allow(missing_docs)]
+    StatementNotAllowedPriorInitializers {
+        #[label("Before this initializer")]
+        initializer: SrcRef,
+        #[label(primary, "This statement is not allowed")]
+        statement: SrcRef,
+        #[label("Inside this {kind}")]
+        workbench: SrcRef,
+        kind: &'static str,
+    },
+}
+
+
+/// Statement is not supported in this context.
+#[derive(Debug, Error, Diagnostic)]
+#[error("{} is not available within {outer}", capitalize_first(inner))]
+#[diagnostic(help("{inner} is only allowed within {}", self.allowed_parents()))]
+pub struct StatementNotSupportedError {
+    inner: &'static str,
+    #[label(primary, "This {inner} is not allowed")]
+    inner_span: SrcRef,
+    outer: &'static str,
+    #[label("Within this {outer}")]
+    outer_span: SrcRef,
+    allowed_parents: &'static[&'static str],
+}
+
+impl StatementNotSupportedError {
+    /// Create an error from inner node name, src_ref and parent
+    pub(super) fn new<T: Grant + SrcReferrer>(node: &T, parent: &Symbol) -> Self {
+        StatementNotSupportedError {
+            inner: node.kind(),
+            inner_span: node.src_ref(),
+            outer: parent.kind_str(),
+            outer_span: parent.src_ref(),
+            allowed_parents: node.allowed_parents(),
+        }
+    }
+
+    fn allowed_parents(&self) -> impl std::fmt::Display {
+        struct AllowedParents(&'static[&'static str]);
+
+        impl std::fmt::Display for AllowedParents {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                let mut items = self.0.iter();
+                if let Some(first) = items.next() {
+                    write!(f, "{first}")?;
+                }
+                let last = items.next_back();
+                for item in items {
+                    write!(f, ", {item}")?;
+                }
+                if let Some(last) = last {
+                    write!(f, " or {last}")?;
+                }
+                Ok(())
+            }
+        }
+
+        AllowedParents(self.allowed_parents)
+    }
 }
 
 impl SrcReferrer for ResolveError {

@@ -20,13 +20,20 @@
 -- No Output --
 -- Errors --
   × error: 97:5: Statement not allowed prior initializers
-    ╭─[../books/language/src/structure/workbenches/elements/properties.md:97:5]
- 96 │ 
- 97 │     prop max = 100;     // error: do not use prop here
-    ·     ───────┬──────
-    ·            ╰── Statement not allowed prior initializers
- 98 │ 
-    ╰────
+     ╭─[../books/language/src/structure/workbenches/elements/properties.md:97:5]
+  95 │ sketch Wheel(outer: Length) {
+     ·        ──┬──
+     ·          ╰── Inside this sketch
+  96 │ 
+  97 │     prop max = 100;     // error: do not use prop here
+     ·     ───────┬──────
+     ·            ╰── This statement is not allowed
+  98 │ 
+  99 │     init(inner: Length) {
+     ·     ──┬─
+     ·       ╰── Before this initializer
+ 100 │         outer = inner * 2;
+     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

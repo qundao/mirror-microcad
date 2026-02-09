@@ -564,15 +564,17 @@ fn parser<'tokens>()
         }
         .boxed();
 
+
         let init = doc_comment
             .clone()
-            .then_ignore(just(Token::KeywordInit))
+            .then(just(Token::KeywordInit).map_with(|_, e| e.span()))
             .then(arguments.clone())
             .then(block.clone())
             .with_extras()
-            .map_with(|(((doc, arguments), body), extras), e| {
+            .map_with(|((((doc, keyword_span), arguments), body), extras), e| {
                 Statement::Init(InitDefinition {
                     span: e.span(),
+                    keyword_span,
                     extras,
                     doc,
                     arguments,
@@ -580,7 +582,6 @@ fn parser<'tokens>()
                 })
             })
             .boxed();
-
         let workspace = doc_comment
             .clone()
             .then(attribute_parser.clone())

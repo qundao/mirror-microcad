@@ -13,22 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 55:9: Statement is not available within Sketch
+  × error: 55:9: Module definition is not available within sketch
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:9]
  54 │ sketch Wheel(radius: Length) {
+    ·        ──┬──
+    ·          ╰── Within this sketch
  55 │     mod m {}        // error
     ·         ┬
-    ·         ╰── Statement is not available within Sketch
+    ·         ╰── This module definition is not allowed
  56 │ }
     ╰────
-  × error: 55:9: Module definition is not available within Sketch
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:9]
- 54 │ sketch Wheel(radius: Length) {
- 55 │     mod m {}        // error
-    ·         ┬
-    ·         ╰── Module definition is not available within Sketch
- 56 │ }
-    ╰────
+  help: module definition is only allowed within source root or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

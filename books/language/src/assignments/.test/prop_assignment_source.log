@@ -11,18 +11,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 25:1: Assignment statement is not available within SourceFile
+  × error: 25:1: Property assigment is not available within source file
     ╭─[../books/language/src/assignments/property.md:25:1]
  25 │ prop diameter = radius * 2; // error: not in source file
-    · ─────────────┬────────────
-    ·              ╰── Assignment statement is not available within SourceFile
+    · ─────────────┬────────────┬
+    ·              │            ╰── Within this source file
+    ·              ╰── This property assigment is not allowed
     ╰────
-  × error: 25:1: Declaration of diameter not allowed within prop_assignment_source
-    ╭─[../books/language/src/assignments/property.md:25:1]
- 25 │ prop diameter = radius * 2; // error: not in source file
-    · ─────────────┬────────────
-    ·              ╰── Declaration of diameter not allowed within prop_assignment_source
-    ╰────
+  help: property assigment is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

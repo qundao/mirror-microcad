@@ -19,10 +19,15 @@
   × error: 51:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/model.md:51:5]
  50 │ sketch MySketch() {
+    ·        ────┬───
+    ·            ╰── Inside this sketch
  51 │     a = std::geo2d::Circle(radius = 1mm);   // error
     ·     ──────────────────┬─────────────────
-    ·                       ╰── Statement not allowed prior initializers
+    ·                       ╰── This statement is not allowed
  52 │     init(_x : Scalar) {}
+    ·     ──┬─
+    ·       ╰── Before this initializer
+ 53 │ }
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

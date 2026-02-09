@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Statement is not available within Module
+  × error: 31:3: Init definition is not available within module
     ╭─[../books/tests/src/statement_usage/module.md:31:3]
  30 │ mod k {
+    ·     ┬
+    ·     ╰── Within this module
  31 │   init() { }  // error
     ·   ──────────┬─────────
-    ·             ╰── Statement is not available within Module
+    ·             ╰── This init definition is not allowed
  32 │ }
     ╰────
+  help: init definition is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

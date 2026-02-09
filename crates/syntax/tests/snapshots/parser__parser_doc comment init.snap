@@ -23,6 +23,7 @@ Ok(
                 Init(
                     InitDefinition {
                         span: 20..28,
+                        keyword_span: 20..24,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],

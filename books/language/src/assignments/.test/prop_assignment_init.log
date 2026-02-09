@@ -20,10 +20,16 @@
   × error: 46:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/property.md:46:5]
  45 │ sketch MySketch(radius: Length) {
+    ·        ────┬───
+    ·            ╰── Inside this sketch
  46 │     prop diameter = radius * 2; // error: not in initialization code
     ·     ─────────────┬────────────
-    ·                  ╰── Statement not allowed prior initializers
+    ·                  ╰── This statement is not allowed
  47 │     
+ 48 │     init() { radius = 1; }
+    ·     ──┬─
+    ·       ╰── Before this initializer
+ 49 │     std::geo2d::Circle(radius);
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

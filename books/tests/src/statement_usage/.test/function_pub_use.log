@@ -13,14 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Use statement is not available within Function
+  × error: 47:3: Use statement is not available within function
     ╭─[../books/tests/src/statement_usage/function.md:47:3]
  46 │ fn f() {
+    ·    ┬
+    ·    ╰── Within this function
  47 │   pub use std; // error
     ·   ─────┬─────
-    ·        ╰── Use statement is not available within Function
+    ·        ╰── This use statement is not allowed
  48 │ } f();
     ╰────
+  help: use statement is only allowed within source root or module definition
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

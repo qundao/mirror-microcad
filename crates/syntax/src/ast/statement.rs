@@ -96,6 +96,7 @@ pub struct FunctionDefinition {
 #[allow(missing_docs)]
 pub struct InitDefinition {
     pub span: Span,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub arguments: ArgumentsDefinition,

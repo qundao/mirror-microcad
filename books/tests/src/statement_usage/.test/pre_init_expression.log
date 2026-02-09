@@ -16,10 +16,14 @@
   × error: 103:3: Statement not allowed prior initializers
      ╭─[../books/tests/src/statement_usage/pre-init.md:103:3]
  102 │ sketch K() { 
+     ·        ┬
+     ·        ╰── Inside this sketch
  103 │   1 + 2; // error
      ·   ──┬──
-     ·     ╰── Statement not allowed prior initializers
+     ·     ╰── This statement is not allowed
  104 │ init(l:Length) {} } K();
+     · ──┬─
+     ·   ╰── Before this initializer
      ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

@@ -13,22 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Statement is not available within Sketch
+  × error: 15:7: Module definition is not available within sketch
     ╭─[../books/tests/src/statement_usage/workbench.md:15:7]
  14 │ sketch K() {
+    ·        ┬
+    ·        ╰── Within this sketch
  15 │   mod m {} // error
     ·       ┬
-    ·       ╰── Statement is not available within Sketch
+    ·       ╰── This module definition is not allowed
  16 │ } K();
     ╰────
-  × error: 15:7: Module definition is not available within Sketch
-    ╭─[../books/tests/src/statement_usage/workbench.md:15:7]
- 14 │ sketch K() {
- 15 │   mod m {} // error
-    ·       ┬
-    ·       ╰── Module definition is not available within Sketch
- 16 │ } K();
-    ╰────
+  help: module definition is only allowed within source root or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
