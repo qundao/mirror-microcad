@@ -75,9 +75,6 @@ impl Cli {
             Commands::Watch(watch) => {
                 watch.run(self)?;
             }
-            Commands::Install(install) => {
-                install.run(self)?;
-            }
             Commands::Completions(completions) => {
                 completions.run(self)?;
             }

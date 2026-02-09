@@ -7,7 +7,6 @@ mod completions;
 mod create;
 mod eval;
 mod export;
-mod install;
 mod parse;
 mod resolve;
 mod watch;
@@ -17,7 +16,6 @@ use clap::Subcommand;
 pub use create::Create;
 pub use eval::Eval;
 pub use export::Export;
-pub use install::Install;
 pub use parse::Parse;
 pub use resolve::Resolve;
 pub use watch::Watch;
@@ -43,9 +41,6 @@ pub enum Commands {
 
     /// Watch a µcad file
     Watch(Watch),
-
-    /// Install µcad standard library
-    Install(Install),
 
     /// Print shell completions
     Completions(Completions),
