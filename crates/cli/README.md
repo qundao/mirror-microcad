@@ -88,12 +88,7 @@ You're now ready to use µcad!
 
 ## Resources
 
-- Tutorials:
-
-  - <http://microcad.xyz>  
-- Language documentation:
-
-  - <https://docs.microcad.xyz/language/book/index.html>
+Documentation: <https://docs.microcad.xyz/language/book/index.html>
 
 ## ❤️ Donate
 
