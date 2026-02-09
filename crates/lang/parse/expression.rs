@@ -205,7 +205,10 @@ impl FromAst for TupleExpression {
                     expression: Expression::from_ast(&value.value, context)?,
                     src_ref: context.src_ref(&value.span),
                 })
-                .map_err(ParseError::DuplicateArgument)?;
+                .map_err(|(previous, id)| ParseError::DuplicateArgument {
+                    previous,
+                    id,
+                })?;
         }
 
         Ok(TupleExpression {

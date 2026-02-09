@@ -44,7 +44,7 @@ pub enum ParseError {
 
     #[error("Duplicate argument: {id}")]
     DuplicateArgument {
-        #[label(primary, "Duplicate identifier")]
+        #[label(primary, "Duplicate argument")]
         id: Identifier,
         #[label("Previous declaration")]
         previous: Identifier,

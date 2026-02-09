@@ -1,8 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_syntax::ast;
 use crate::{ord_map::*, parse::*, parser::*, syntax::*};
+use microcad_syntax::ast;
 
 impl FromAst for Call {
     type AstNode = ast::Call;
@@ -20,11 +20,15 @@ impl FromAst for ArgumentList {
     type AstNode = ast::ArgumentList;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        let mut argument_list = ArgumentList(Refer::new(OrdMap::default(), context.src_ref(&node.span)));
+        let mut argument_list =
+            ArgumentList(Refer::new(OrdMap::default(), context.src_ref(&node.span)));
         for arg in &node.arguments {
             argument_list
                 .try_push(Argument::from_ast(arg, context)?)
-                .map_err(ParseError::DuplicateArgument)?;
+                .map_err(|(previous, id)| ParseError::DuplicateArgument {
+                    previous,
+                    id,
+                })?;
         }
         Ok(argument_list)
     }
@@ -35,9 +39,12 @@ impl FromAst for Argument {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(Argument {
-            id: node.name().map(|name| Identifier::from_ast(name, context)).transpose()?,
+            id: node
+                .name()
+                .map(|name| Identifier::from_ast(name, context))
+                .transpose()?,
             src_ref: context.src_ref(node.span()),
-            expression: Expression::from_ast(node.value(), context)?
+            expression: Expression::from_ast(node.value(), context)?,
         })
     }
 }
