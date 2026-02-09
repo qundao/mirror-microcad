@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: attributes_export
-  Expected result: todo
+  Expected result: ok
       Source file: ../books/language/src/attributes/command_attributes.md:15
         Test path: ../books/language/src/attributes/.test
 
@@ -15,5 +15,22 @@
 
 -- No Output --
 -- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::Rect(size=42mm) ->
+      - height = 42mm
+      - width = 42mm
+      - x = -21mm
+      - y = -21mm
+      #[export = "rect.svg" with exporter `svg`]
+      Primitive2D __builtin::geo2d::Rect(height=42mm, width=42mm, x=-21mm, y=-21mm) ->
+    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=42mm) ->
+      - center = (x=0mm, y=0mm)
+      - radius = 42mm
+      #[export = "circle.svg" with exporter `svg`]
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+        Primitive2D __builtin::geo2d::Circle(radius=42mm) ->
+
+Export of "../books/language/src/attributes/.test/attributes_export-out.svg" successful.
 -- Test Result --
-OK (BUT IS TODO)
+OK
