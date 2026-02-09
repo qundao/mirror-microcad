@@ -236,6 +236,16 @@ impl SrcRef {
             _ => false,
         }
     }
+
+    /// Get the line of the start of the referenced source, if any
+    pub fn line(&self) -> Option<usize> {
+        self.0.as_ref().map(|inner| inner.at.line)
+    }
+
+    /// Get the column of the start of the referenced source, if any
+    pub fn col(&self) -> Option<usize> {
+        self.0.as_ref().map(|inner| inner.at.line)
+    }
 }
 
 #[test]

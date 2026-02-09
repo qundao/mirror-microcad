@@ -8,6 +8,7 @@ use microcad_lang::{
     model::Model,
     syntax::SourceFile,
 };
+use microcad_lang::src_ref::SrcReferrer;
 use microcad_test_tools::test_env::*;
 
 #[allow(dead_code)]
@@ -55,13 +56,19 @@ pub fn run_test(env: Option<TestEnv>) {
             "fail" | "todo_fail" => match source_file_result {
                 // test expected to fail failed at parsing?
                 Err(errors) => {
+                    let mut error_lines = std::collections::HashSet::new();
                     for err in errors {
+                        if let Some(line) = err.src_ref().line() {
+                            error_lines.insert(line + env.offset() - 1);
+                        }
                         env.log_ln("-- Parse Error --");
                         env.log_ln(&err.to_string());
                     }
                     if env.has_error_markers() {
-                        env.result(TestResult::FailWrong);
-                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                        if env.report_wrong_errors(&error_lines, &std::collections::HashSet::new()) {
+                            env.result(TestResult::FailWrong);
+                            panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                        }
                     } else if env.todo() {
                         env.result(TestResult::NotTodoFail);
                     } else {
