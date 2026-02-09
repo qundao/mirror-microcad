@@ -273,24 +273,25 @@ impl Grant for Body {
 
 impl Body {
     fn check_statements(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<()> {
-        if let (Some(first_init_pos), Some(last_init_pos)) = (
-            self.iter()
-                .position(|stmt| matches!(stmt, Statement::Init(_))),
-            self.iter()
-                .rposition(|stmt| matches!(stmt, Statement::Init(_))),
+        fn find_init((pos, stmt): (usize, &Statement)) -> Option<(usize, &InitDefinition)> {
+            match stmt {
+                Statement::Init(init) => Some((pos, init.as_ref())),
+                _ => None,
+            }
+        }
+        if let (Some((first_init_pos, first_init)), Some((last_init_pos, last_init))) = (
+            self.iter().enumerate().find_map(find_init),
+            self.iter().enumerate().rev().find_map(find_init),
         ) {
-            let first_init = &self.statements[first_init_pos];
-            let last_init = &self.statements[last_init_pos];
-
             let code_before_err =
                 |stmt: &Statement| ResolveError::StatementNotAllowedPriorInitializers {
-                    initializer: first_init.src_ref().into(),
+                    initializer: first_init.keyword_ref.clone().into(),
                     statement: stmt.src_ref().into(),
                     workbench: parent.src_ref().into(),
                     kind: parent.kind_str(),
                 };
             let code_between_err = |stmt: &Statement| ResolveError::CodeBetweenInitializers {
-                initializers: SrcRef::merge(&first_init.src_ref(), &last_init.src_ref()),
+                initializers: SrcRef::merge(&first_init.keyword_ref, &last_init.keyword_ref),
                 statement: stmt.src_ref().into(),
                 workbench: parent.src_ref().into(),
                 kind: parent.kind_str(),
