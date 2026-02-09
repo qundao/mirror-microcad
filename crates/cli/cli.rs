@@ -33,13 +33,6 @@ pub struct Cli {
     pub config: Config,
 }
 
-impl Default for Cli {
-    /// Create a new CLI with default search paths.
-    fn default() -> Self {
-        Self::parse()
-    }
-}
-
 impl Cli {
     /// Create a new CLI.
     pub fn new() -> miette::Result<Self> {
