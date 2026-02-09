@@ -10,7 +10,7 @@ Sketches are named in `PascalCase`:
 ```µcad,sketch_basic
 sketch MySketch( radius: Length) {
     use std::geo2d::*;
-    Circle(radius) - Rect(size = radius);
+    Circle(radius) - Rect(size = radius)
 }
 
 MySketch(1cm);
@@ -31,7 +31,7 @@ You will get an error if you generate a 3D model with a sketch:
 ```µcad,sketch_3d#todo_fail
 sketch MySketch( radius: Length) {
     use std::geo3d::*;
-    Sphere(radius) - Cube(size = radius);  // error: Sphere and Cube are 3D
+    Sphere(radius) - Cube(size = radius)  // error: Sphere and Cube are 3D
 }
 
 MySketch(1cm);
