@@ -35,16 +35,12 @@
  42 │         // make hole by subtracting both inputs
     ╰────
   × error: 41:5: If condition is not a boolean: <NO VALUE>
-    ╭─[../books/language/src/structure/workbenches/types/operations.md:41:5]
- 40 │         // check number of input models
- 41 │ ╭─▶     if @input.count() == 2 {
- 42 │ │           // make hole by subtracting both inputs
- 43 │ │           @input.subtract(); 
- 44 │ │       } else {
- 45 │ │           std::error("punched_disk must get exactly two objects");
- 46 │ ├─▶     }
-    · ╰──── If condition is not a boolean: <NO VALUE>
- 47 │     }
+    ╭─[../books/language/src/structure/workbenches/types/operations.md:41:8]
+ 40 │     // check number of input models
+ 41 │     if @input.count() == 2 {
+    ·        ─────────┬─────────
+    ·                 ╰── Not a boolean
+ 42 │         // make hole by subtracting both inputs
     ╰────
 Unexpected error(s) which did occur in line(s): 41
 -- Test Result --

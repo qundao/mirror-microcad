@@ -35,18 +35,12 @@
  67 │         { 
     ╰────
   × error: 66:5: If condition is not a boolean: <NO VALUE>
-    ╭─[../books/language/src/structure/workbenches/types/operations.md:66:5]
- 65 │     op punch_disk(radius: Length) {
- 66 │ ╭─▶     if @input.count() == 1 {
- 67 │ │           { 
- 68 │ │               @input;
- 69 │ │               std::geo2d::Circle(radius);
- 70 │ │           }.subtract();
- 71 │ │       } else {
- 72 │ │           std::error("punch_disk must get one object");
- 73 │ ├─▶     }
-    · ╰──── If condition is not a boolean: <NO VALUE>
- 74 │     }
+    ╭─[../books/language/src/structure/workbenches/types/operations.md:66:8]
+ 65 │ op punch_disk(radius: Length) {
+ 66 │     if @input.count() == 1 {
+    ·        ─────────┬─────────
+    ·                 ╰── Not a boolean
+ 67 │         { 
     ╰────
 Unexpected error(s) which did occur in line(s): 66
 -- Test Result --
