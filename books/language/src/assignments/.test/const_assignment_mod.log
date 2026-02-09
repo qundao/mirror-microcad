@@ -2,25 +2,40 @@
 -- Test --
         Test name: const_assignment_mod
   Expected result: ok
-      Source file: ../books/language/src/assignments/const.md:11
+      Source file: ../books/language/src/assignments/const.md:15
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  11:   const TEXT = "Hello";
-  12:   
-  13:   mod my_module {
-  14:       pub const TEXT = "Hello";
-  15:   }
+  15:   const TEXT = "Hello";
   16:   
-  17:   std::print(TEXT);
-  18:   std::print(my_module::TEXT);
+  17:   mod my_module {
+  18:       
+  19:       // constant assignment
+  20:       const TEXT = "Hello my_module";
+  21:   
+  22:       // public function
+  23:       pub fn f() -> String {
+  24:           TEXT
+  25:       }
+  26:   
+  27:       // public workbench
+  28:       pub sketch MySketch(text: String) {
+  29:           std::debug::assert_eq([ TEXT, text ]);
+  30:       }
+  31:   }
+  32:   
+  33:   my_module::MySketch("Hello my_module");
+  34:   std::debug::assert_eq([ my_module::f(), "Hello my_module" ]);
+  35:   std::debug::assert_eq([ TEXT, "Hello" ]);
 
--- Output --
-Hello
-Hello
-
+-- No Output --
 -- No Errors --
--- No Model --
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) const_assignment_mod::my_module::MySketch(text=Hello my_module) ->
+      - text = Hello my_module
+
+Export error: Render error: Nothing to render
 -- Test Result --
 OK

@@ -1,0 +1,34 @@
+﻿
+-- Test --
+        Test name: illegal_workbench_statement_mod
+  Expected result: fail
+      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:54
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  54:   sketch Wheel(radius: Length) {
+  55:       mod m {}        // error
+  56:   }
+
+-- No Output --
+-- Errors --
+  × error: 2:9: Statement is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:9]
+ 54 │ sketch Wheel(radius: Length) {
+ 55 │     mod m {}        // error
+    ·         ┬
+    ·         ╰── error: 2:9: Statement is not available within Sketch
+ 56 │ }
+    ╰────
+  × error: 2:9: Module definition is not available within Sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:9]
+ 54 │ sketch Wheel(radius: Length) {
+ 55 │     mod m {}        // error
+    ·         ┬
+    ·         ╰── error: 2:9: Module definition is not available within Sketch
+ 56 │ }
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

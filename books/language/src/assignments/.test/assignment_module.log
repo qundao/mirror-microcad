@@ -2,40 +2,25 @@
 -- Test --
         Test name: assignment_module
   Expected result: fail
-      Source file: ../books/language/src/assignments/values.md:37
+      Source file: ../books/language/src/assignments/value.md:101
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  37:   mod my_module {
-  38:       a = 1; // error
-  39:   }
-  40:   
-  41:   sketch MySketch() {
-  42:       a = 1;   // error
-  43:       init(_x : Scalar) {}
-  44:   }
-  45:   
-  46:   MySketch();
+ 101:   mod my_module {
+ 102:       a = 1; // error
+ 103:   }
 
 -- No Output --
 -- Errors --
   × error: 2:5: Declaration of a not allowed within assignment_module::my_module
-    ╭─[../books/language/src/assignments/values.md:38:5]
- 37 │ mod my_module {
- 38 │     a = 1; // error
-    ·     ───┬──
-    ·        ╰── error: 2:5: Declaration of a not allowed within assignment_module::my_module
- 39 │ }
-    ╰────
-  × error: 6:5: Statement not allowed prior initializers
-    ╭─[../books/language/src/assignments/values.md:42:5]
- 41 │ sketch MySketch() {
- 42 │     a = 1;   // error
-    ·     ───┬──
-    ·        ╰── error: 6:5: Statement not allowed prior initializers
- 43 │     init(_x : Scalar) {}
-    ╰────
+     ╭─[../books/language/src/assignments/value.md:102:5]
+ 101 │ mod my_module {
+ 102 │     a = 1; // error
+     ·     ───┬──
+     ·        ╰── error: 2:5: Declaration of a not allowed within assignment_module::my_module
+ 103 │ }
+     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

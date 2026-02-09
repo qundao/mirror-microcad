@@ -1,0 +1,16 @@
+﻿
+-- Test --
+        Test name: array_helper_count
+  Expected result: ok
+      Source file: ../books/tests/src/array_helpers.md:12
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  12:   std::debug::assert_eq([ std::count([1,2,3]), 3 ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

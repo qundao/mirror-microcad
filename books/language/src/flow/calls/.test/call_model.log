@@ -1,0 +1,33 @@
+﻿
+-- Test --
+        Test name: call_model
+  Expected result: ok
+      Source file: ../books/language/src/flow/calls/README.md:52
+        Test path: ../books/language/src/flow/calls/.test
+
+-- Code --
+
+  52:   // call square with a size and store object node in s
+  53:   s = std::geo2d::Circle(radius = 2cm);
+  54:   
+  55:   // translate object s
+  56:   s.std::ops::translate(x = 1cm);
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+      - x = 10mm
+      - y = 0mm
+      - z = 0mm
+      Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+        s: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
+          - center = (x=0mm, y=0mm)
+          - radius = 20mm
+          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+            Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
+
+Export of "../books/language/src/flow/calls/.test/call_model-out.svg" successful.
+-- Test Result --
+OK

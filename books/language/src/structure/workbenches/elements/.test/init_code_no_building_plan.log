@@ -1,0 +1,36 @@
+﻿
+-- Test --
+        Test name: init_code_no_building_plan
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/elements/init_code.md:47
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  47:   sketch Wheel(radius: Length, thickness = 5mm) {
+  48:       use std::geo2d::Circle;
+  49:   
+  50:       const _ = radius * 2;   // error: cannot use radius from building plan
+  51:   
+  52:       init( diameter: Length ) { radius = diameter / 2; }
+  53:       Circle(radius + thickness) - Circle(radius)
+  54:   }
+  55:   
+  56:   Wheel(radius = 1cm);
+
+-- No Output --
+-- Errors --
+  × error: 7:12: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:53:5]
+ 52 │     init( diameter: Length ) { radius = diameter / 2; }
+ 53 │     Circle(radius + thickness) - Circle(radius)
+    ·     ─────────────┬────────────
+    ·                  ╰── Got: Circle( 15mm )
+ 54 │ }
+    ╰────
+  help: Ambiguous initializations:
+        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
+        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+Expected error(s) which did not occur in line(s): 50
+-- Test Result --
+TODO (SHALL FAIL)

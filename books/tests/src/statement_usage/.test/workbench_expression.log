@@ -2,14 +2,14 @@
 -- Test --
         Test name: workbench_expression
   Expected result: ok
-      Source file: ../books/tests/src/statement_usage/workbench.md:102
+      Source file: ../books/tests/src/statement_usage/workbench.md:110
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
- 102:   sketch K() {
- 103:     1 + 2;
- 104:   } K();
+ 110:   sketch K() {
+ 111:     1 + 2;
+ 112:   } K();
 
 -- No Output --
 -- No Errors --

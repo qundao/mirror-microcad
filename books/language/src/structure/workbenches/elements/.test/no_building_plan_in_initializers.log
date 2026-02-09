@@ -1,0 +1,26 @@
+﻿
+-- Test --
+        Test name: no_building_plan_in_initializers
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/elements/initializers.md:91
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  91:   sketch Wheel(radius: Length, thickness = 5mm) {
+  92:       use std::geo2d::Circle;
+  93:       
+  94:       init( diameter: Length, thickness = 5mm ) { 
+  95:           _ = radius;            // error: cannot read radius here
+  96:           radius = diameter / 2; // instead you need to set it
+  97:       }
+  98:       
+  99:       Circle(radius = radius + thickness) - Circle(radius)
+ 100:   }
+ 101:   Wheel(diameter = 1cm);
+
+-- No Output --
+-- No Errors --
+Expected error(s) which did not occur in line(s): 95
+-- Test Result --
+TODO (SHALL FAIL)

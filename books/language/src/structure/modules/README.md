@@ -1,20 +1,21 @@
 # Modules
 
 A module is a way to organize and group code into logical units.
-Modules help manage scope and control visibility (e.g., using `pub` to make
-items public available).
+Module are declared with the `mod` keyword.
+Modules help to manage scope and define namespaces in your code.
+Each module has a unique name that must be written as [`lower_snake_case`](./../../appendix/coding.md).
 
-**In short:**
+In µcad, there are two kinds of modules:
 
-- Modules define a namespace for your code.
-- They can be nested to create hierarchies,
-- declared with the `mod` keyword (internal modules)
-- or in separate files (external modules).
-- Control what is exposed to the outside world using `pub`.
+* [*inline modules*](inline_modules.md): Inline modules defined by a name and a body inside a file: `mod my_module { ... }`.
+* [*file modules*](file_modules.md): File modules have their definition in a separate file: `mod my_file;`.
+
+The visibility of modules of modules can be controlled via the `pub` qualifier.
+If a module is qualified as `pub`, it becomes visible to external.
 
 ## Example
 
-The following example shows two nested *internal modules* carrying a public constant and
+The following example shows two nested *inline modules* carrying a public constant and
 a public function which then are used from outside the modules:
 
 [![test](.test/mod_example.svg)](.test/mod_example.log)

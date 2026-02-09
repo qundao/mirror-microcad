@@ -2,12 +2,12 @@
 -- Test --
         Test name: string_literal
   Expected result: ok
-      Source file: ../books/language/src/expressions/literals.md:55
+      Source file: ../books/language/src/expressions/literals.md:73
         Test path: ../books/language/src/expressions/.test
 
 -- Code --
 
-  55:   "Hello, World!"
+  73:   "Hello, World!"
 
 -- No Output --
 -- No Errors --

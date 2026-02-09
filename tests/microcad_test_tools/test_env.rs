@@ -1,4 +1,4 @@
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Markdown test environment
@@ -25,6 +25,8 @@ pub enum TestResult {
     Ok,
     /// Ok but has warning(s)
     OkWarn,
+    /// Ok, but with wrong warning(s)
+    OkWrong,
     /// Ok to fail
     FailOk,
     /// Marked as todo but is ok
@@ -41,6 +43,8 @@ pub enum TestResult {
     Todo,
     /// Work in progress (should fail)
     TodoFail,
+    /// Work in progress (incorrect warnings)
+    TodoWarn,
 }
 
 impl std::fmt::Display for TestEnv {
@@ -353,6 +357,7 @@ impl TestEnv {
         let (res, res_long) = match result {
             TestResult::Ok => ("ok", "OK"),
             TestResult::OkWarn => ("ok_warn", "OK (BUT WARNINGS)"),
+            TestResult::OkWrong => ("ok_warn", "OK (BUT WRONG WARNINGS)"),
             TestResult::Todo => ("todo", "TODO"),
             TestResult::NotTodo => ("not_todo", "OK (BUT IS TODO)"),
             TestResult::Fail => ("fail", "FAILS"),
@@ -361,6 +366,7 @@ impl TestEnv {
             TestResult::NotTodoFail => ("not_todo_fail", "FAILS AS EXPECTED (BUT IS TODO)"),
             TestResult::TodoFail => ("todo_fail", "TODO (SHALL FAIL)"),
             TestResult::OkFail => ("ok_fail", "OK BUT SHOULD FAIL"),
+            TestResult::TodoWarn => ("todo_warn", "TODO (WRONG WARNINGS)"),
         };
         let _ = std::fs::remove_file(self.banner_file());
         let _ = std::fs::hard_link(format!("images/{res}.svg"), self.banner_file());

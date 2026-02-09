@@ -1,0 +1,38 @@
+﻿
+-- Test --
+        Test name: sketch_3d
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/types/sketches.md:32
+        Test path: ../books/language/src/structure/workbenches/types/.test
+
+-- Code --
+
+  32:   sketch MySketch( radius: Length) {
+  33:       use std::geo3d::*;
+  34:       Sphere(radius) - Cube(size = radius);  // error: Sphere and Cube are 3D
+  35:   }
+  36:   
+  37:   MySketch(1cm);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 37:10: Unused local Cylinder.
+    ╭─[../crates/std/lib/std/geo3d.µcad:68:10]
+ 67 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
+ 68 │ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, offset: Length = 0.0mm) {
+    ·          ────┬───
+    ·              ╰── warning: 37:10: Unused local Cylinder.
+ 69 │     /// Initialize by `radius` and `height`. Cylinder will be centered.
+    ╰────
+  ⚠ warning: 77:10: Unused local Torus.
+     ╭─[../crates/std/lib/std/geo3d.µcad:108:10]
+ 107 │ /// * `Torus(major_radius = 45.0mm, minor_radius = 5.0mm)`
+ 108 │ pub part Torus(major_radius: Length, minor_radius: Length) {
+     ·          ──┬──
+     ·            ╰── warning: 77:10: Unused local Torus.
+ 109 │     std::geo2d::Circle(radius = minor_radius)
+     ╰────
+Expected error(s) which did not occur in line(s): 34
+Unexpected warnings(s) which did occur in line(s): 68, 108
+-- Test Result --
+TODO (SHALL FAIL)

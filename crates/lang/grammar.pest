@@ -1,4 +1,4 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2024-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 // Grammar for the µcad language
@@ -149,7 +149,7 @@ type = {
   | unit
 }
 
-base_type = { "Integer" | "String" | "Bool" | "Models" }
+base_type = { "Integer" | "String" | "Bool" | "Model" }
 
 quantity_type = { "Scalar" | "Length" | "Area" | "Volume" | "Density" | "Angle" | "Weight" }
 
@@ -398,7 +398,7 @@ function_signature = { parameter_list ~ (ws* ~ "->" ~ ws* ~ type)? }
 function_definition = { doc_block? ~ (visibility ~ ws+)? ~ "fn" ~ ws+ ~ identifier ~ ws* ~ function_signature ~ ws* ~ body }
 
 // `return 5.0mm;`: ok
-return_statement = { "return" ~ ws* ~ expression ~ ws* ~ ";" }
+return_statement = { "return" ~ (ws* ~ expression)? ~ ws* ~ ";" }
 
 // `if a > 5.0mm { return 5.0mm; }`: ok
 // `if a > 5.0mm { return 5.0mm; } else { return 4.0mm; }`: ok

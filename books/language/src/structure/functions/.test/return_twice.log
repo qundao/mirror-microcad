@@ -1,0 +1,56 @@
+﻿
+-- Test --
+        Test name: return_twice
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/functions/result.md:40
+        Test path: ../books/language/src/structure/functions/.test
+
+-- Code --
+
+  40:   fn pow( x: Scalar, n: Integer ) -> Scalar {
+  41:       if n > 1 {
+  42:           x * pow(x, n-1)
+  43:       } else if n < 1 {
+  44:           1.0 / x / pow(x, -n)
+  45:       }
+  46:       1.0 // error: without else this line would return a second value
+  47:   }
+  48:   
+  49:   std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
+  50:   std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:9: Unused local x.
+    ╭─[../books/language/src/structure/functions/result.md:40:9]
+ 40 │ fn pow( x: Scalar, n: Integer ) -> Scalar {
+    ·         ┬
+    ·         ╰── warning: 1:9: Unused local x.
+ 41 │     if n > 1 {
+    ╰────
+  × error: 10:23: Assertion failed: Values differ: [1, 64]
+    ╭─[../books/language/src/structure/functions/result.md:49:23]
+ 48 │ 
+ 49 │ std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
+    ·                       ──────────┬─────────
+    ·                                 ╰── error: 10:23: Assertion failed: Values differ: [1, 64]
+ 50 │ std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+    ╰────
+  ⚠ warning: 1:9: Unused local x.
+    ╭─[../books/language/src/structure/functions/result.md:40:9]
+ 40 │ fn pow( x: Scalar, n: Integer ) -> Scalar {
+    ·         ┬
+    ·         ╰── warning: 1:9: Unused local x.
+ 41 │     if n > 1 {
+    ╰────
+  × error: 11:23: Assertion failed: Values differ: [1, 0.015625]
+    ╭─[../books/language/src/structure/functions/result.md:50:23]
+ 49 │ std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
+ 50 │ std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+    ·                       ────────────┬────────────
+    ·                                   ╰── error: 11:23: Assertion failed: Values differ: [1, 0.015625]
+    ╰────
+Expected error(s) which did not occur in line(s): 46
+Unexpected warnings(s) which did occur in line(s): 40
+-- Test Result --
+TODO (SHALL FAIL)

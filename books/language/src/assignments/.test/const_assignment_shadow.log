@@ -1,0 +1,58 @@
+﻿
+-- Test --
+        Test name: const_assignment_shadow
+  Expected result: todo_fail
+      Source file: ../books/language/src/assignments/const.md:80
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  80:   mod module {
+  81:       const A = 5;
+  82:       const A = 1;  // error: A already defined in this module
+  83:   
+  84:       pub mod another_module {
+  85:           const A = 5;   // ok
+  86:   
+  87:           pub fn a() -> Integer { A }
+  88:       }
+  89:   
+  90:       pub sketch Sketch() {
+  91:           const A = 5;   // error: A is ambiguous
+  92:           const A = 5;   // error: A already defined in this workbench
+  93:       }
+  94:   }
+  95:   
+  96:   std::debug::assert_eq([ module::another_module::a(), 5 ]);
+  97:   module::Sketch();
+
+-- No Output --
+-- Errors --
+  × error: 12:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+    ╭─[../books/language/src/assignments/const.md:91:9]
+ 90 │     pub sketch Sketch() {
+ 91 │         const A = 5;   // error: A is ambiguous
+    ·         ──────┬─────
+    ·               ╰── error: 12:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+ 92 │         const A = 5;   // error: A already defined in this workbench
+    ╰────
+  × error: 13:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+    ╭─[../books/language/src/assignments/const.md:92:9]
+ 91 │         const A = 5;   // error: A is ambiguous
+ 92 │         const A = 5;   // error: A already defined in this workbench
+    ·         ──────┬─────
+    ·               ╰── error: 13:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+ 93 │     }
+    ╰────
+  ⚠ warning: 13:9: Unused global symbol const A = 5.
+    ╭─[../books/language/src/assignments/const.md:92:9]
+ 91 │         const A = 5;   // error: A is ambiguous
+ 92 │         const A = 5;   // error: A already defined in this workbench
+    ·         ─────┬─────
+    ·              ╰── warning: 13:9: Unused global symbol const A = 5.
+ 93 │     }
+    ╰────
+Expected error(s) which did not occur in line(s): 82
+Unexpected warnings(s) which did occur in line(s): 92
+-- Test Result --
+TODO (SHALL FAIL)

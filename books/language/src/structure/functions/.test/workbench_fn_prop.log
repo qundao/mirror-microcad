@@ -1,0 +1,45 @@
+﻿
+-- Test --
+        Test name: workbench_fn_prop
+  Expected result: fail
+      Source file: ../books/language/src/structure/functions/workbench_functions.md:54
+        Test path: ../books/language/src/structure/functions/.test
+
+-- Code --
+
+  54:   sketch PunchedDisk(radius: Length) {
+  55:       use std::geo2d::Circle;
+  56:   
+  57:       fn inner() {
+  58:           prop hole = radius/2;  // error: prop not allowed in function
+  59:           hole
+  60:       }
+  61:   
+  62:       prop hole = radius/2;      // correct prop definition
+  63:   
+  64:       Circle(radius) - Circle(radius = inner());
+  65:   }
+  66:   
+  67:   PunchedDisk(1cm);
+
+-- No Output --
+-- Errors --
+  × error: 5:9: Assignment statement is not available within Function
+    ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
+ 57 │     fn inner() {
+ 58 │         prop hole = radius/2;  // error: prop not allowed in function
+    ·         ──────────┬──────────
+    ·                   ╰── error: 5:9: Assignment statement is not available within Function
+ 59 │         hole
+    ╰────
+  × error: 5:9: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
+    ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
+ 57 │     fn inner() {
+ 58 │         prop hole = radius/2;  // error: prop not allowed in function
+    ·         ──────────┬──────────
+    ·                   ╰── error: 5:9: Declaration of hole not allowed within workbench_fn_prop::PunchedDisk::inner
+ 59 │         hole
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

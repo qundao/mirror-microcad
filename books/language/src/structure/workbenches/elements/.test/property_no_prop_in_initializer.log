@@ -1,0 +1,62 @@
+﻿
+-- Test --
+        Test name: property_no_prop_in_initializer
+  Expected result: todo_fail
+      Source file: ../books/language/src/structure/workbenches/elements/properties.md:71
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  71:   sketch Wheel(radius: Length, thickness = 5cm) {
+  72:       init(radius: Length, inner: Length) {
+  73:           thickness = radius - inner;
+  74:   
+  75:           prop center = radius - inner;       // error: do not use prop here
+  76:       }
+  77:       
+  78:       prop center = radius - thickness / 2;   // here it's ok
+  79:   }
+  80:   center = Wheel(radius = 1cm, inner = 0.5cm).center;
+  81:   
+  82:   std::debug::assert_eq([ center, 1.75cm ] );
+
+-- No Output --
+-- Errors --
+  × error: 5:9: Assignment statement not available here
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:75:9]
+ 74 │ 
+ 75 │         prop center = radius - inner;       // error: do not use prop here
+    ·         ──────────────┬──────────────
+    ·                       ╰── error: 5:9: Assignment statement not available here
+ 76 │     }
+    ╰────
+  × error: 8:10: Value center already in defined: 5mm
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:78:5]
+ 77 │     
+ 78 │     prop center = radius - thickness / 2;   // here it's ok
+    ·     ──────────────────┬─────────────────┬
+    ·                       │                 ╰── Previously defined here
+    ·                       ╰── center is already defined
+ 79 │ }
+    ╰────
+  help: Values in microcad are immutable
+  × error: 8:5: Value center already in defined: 5mm
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:78:10]
+ 77 │     
+ 78 │     prop center = radius - thickness / 2;   // here it's ok
+    ·          ───┬──┬
+    ·             │  ╰── Previously defined here
+    ·             ╰── center is already defined
+ 79 │ }
+    ╰────
+  help: Values in microcad are immutable
+  × error: 12:23: Assertion failed: Values differ: [7.5mm, 17.5mm]
+    ╭─[../books/language/src/structure/workbenches/elements/properties.md:82:23]
+ 81 │ 
+ 82 │ std::debug::assert_eq([ center, 1.75cm ] );
+    ·                       ─────────┬─────────
+    ·                                ╰── error: 12:23: Assertion failed: Values differ: [7.5mm, 17.5mm]
+    ╰────
+Unexpected error(s) which did occur in line(s): 78, 82
+-- Test Result --
+TODO (SHALL FAIL)

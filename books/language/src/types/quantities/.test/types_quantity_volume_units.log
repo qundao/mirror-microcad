@@ -1,0 +1,46 @@
+﻿
+-- Test --
+        Test name: types_quantity_volume_units
+  Expected result: ok
+      Source file: ../books/language/src/types/quantities/types.md:113
+        Test path: ../books/language/src/types/quantities/.test
+
+-- Code --
+
+ 113:   cubic_millimeter = 1000000.0mm³;
+ 114:   cubic_centimeter = 100.0cl;
+ 115:   cubic_meter = 0.001m3;
+ 116:   cubic_inch = 61.0237in³;
+ 117:   liter = 1.0l;
+ 118:   centiliter = 100.0cl;
+ 119:   milliliter = 1000.0ml;
+ 120:   
+ 121:   std::debug::assert_eq([ cubic_millimeter,
+ 122:                           cubic_centimeter,
+ 123:                           cubic_meter,
+ 124:                           centiliter,
+ 125:                           milliliter
+ 126:                           ]);
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 4:1: Unused local cubic_inch.
+     ╭─[../books/language/src/types/quantities/types.md:116:1]
+ 115 │ cubic_meter = 0.001m3;
+ 116 │ cubic_inch = 61.0237in³;
+     · ─────┬────
+     ·      ╰── warning: 4:1: Unused local cubic_inch.
+ 117 │ liter = 1.0l;
+     ╰────
+  ⚠ warning: 5:1: Unused local liter.
+     ╭─[../books/language/src/types/quantities/types.md:117:1]
+ 116 │ cubic_inch = 61.0237in³;
+ 117 │ liter = 1.0l;
+     · ──┬──
+     ·   ╰── warning: 5:1: Unused local liter.
+ 118 │ centiliter = 100.0cl;
+     ╰────
+Unexpected warnings(s) which did occur in line(s): 116, 117
+-- No Model --
+-- Test Result --
+OK (BUT WARNINGS)

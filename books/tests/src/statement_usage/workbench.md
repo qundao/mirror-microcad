@@ -96,6 +96,14 @@ sketch K() {
 } K();
 ```
 
+[![test](.test/workbench_assignment_pub.svg)](.test/workbench_assignment_pub.log)
+
+```µcad,workbench_assignment_pub#fail
+sketch K() {
+  pub a = 1; // error
+} K();
+```
+
 [![test](.test/workbench_expression.svg)](.test/workbench_expression.log)
 
 ```µcad,workbench_expression

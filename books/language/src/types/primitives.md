@@ -2,7 +2,7 @@
 
 ## Bool
 
-Boolean is the result type of boolean expressions which may just be `true` or `false`.
+Boolean is the result type of boolean expressions, which may be `true` or `false`.
 
 [![test](.test/types_primitive_bool.svg)](.test/types_primitive_bool.log)
 
@@ -10,7 +10,7 @@ Boolean is the result type of boolean expressions which may just be `true` or `f
 std::debug::assert(true != false);
 ```
 
-Boolean values can be combined with `or` and `and` operators:
+Boolean values can be combined with `or` and `and` [operators](../expressions/operators.md):
 
 [![test](.test/boolean.svg)](.test/boolean.log)
 
@@ -26,7 +26,7 @@ std::debug::assert_eq([4 == 5 and 4 == 4, false]);
 
 ## Integer
 
-The type `integer` contains a natural number.
+The type `Integer` contains an integer number.
 
 [![test](.test/types_primitive_integer.svg)](.test/types_primitive_integer.log)
 
@@ -36,7 +36,7 @@ i = 3;
 
 ## String
 
-Text can be used to logging or to render text.
+*Strings* are mostly used for rendering text.
 
 [![test](.test/types_primitive_string.svg)](.test/types_primitive_string.log)
 

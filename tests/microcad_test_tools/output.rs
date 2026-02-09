@@ -1,4 +1,4 @@
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Output of a markdown test.
@@ -81,6 +81,11 @@ impl Output {
         let banner = banner.to_str().expect(e);
         let input = input.to_str().expect(e);
         let log = log.to_str().expect(e);
+
+        let input = match input.strip_suffix("README.md") {
+            Some(input) => input,
+            None => input,
+        };
 
         format!(
             "| [![test]({banner})]({log}) | [{name}]({input}) |\n",

@@ -2,12 +2,12 @@
 -- Test --
         Test name: source_expression
   Expected result: ok
-      Source file: ../books/tests/src/statement_usage/source.md:72
+      Source file: ../books/tests/src/statement_usage/source.md:78
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  72:   1 + 2;
+  78:   1 + 2;
 
 -- No Output --
 -- No Errors --

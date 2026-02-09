@@ -7,17 +7,10 @@
 
 -- Code --
 
-  29:   tuple = (10cm, 10cm², 1l);
+  29:   (10cm, 10cm², 1l);
 
 -- No Output --
--- Errors --
-  ⚠ warning: 1:1: Unused local tuple.
-    ╭─[../books/language/src/types/collections/tuples/README.md:29:1]
- 29 │ tuple = (10cm, 10cm², 1l);
-    · ──┬──
-    ·   ╰── warning: 1:1: Unused local tuple.
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 29
+-- No Errors --
 -- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

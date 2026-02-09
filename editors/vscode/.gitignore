@@ -3,3 +3,7 @@ out/
 dist/
 .vscode-test/
 *.vsix
+src/extension.js
+src/extension.js.map
+src/test/extension.test.js
+src/test/extension.test.js.map

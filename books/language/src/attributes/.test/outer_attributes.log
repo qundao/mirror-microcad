@@ -1,0 +1,19 @@
+﻿
+-- Test --
+        Test name: outer_attributes
+  Expected result: todo
+      Source file: ../books/language/src/attributes/README.md:24
+        Test path: ../books/language/src/attributes/.test
+
+-- Code --
+
+  24:   #[color = "#FF0000"]
+  25:   {
+  26:       std::geo2d::Circle(r = 20mm);
+  27:       std::geo2d::Rect(size = 20mm).std::ops::translate(x = 20mm);
+  28:   }
+
+-- No Output --
+-- No Errors --
+-- Test Result --
+OK (BUT IS TODO)

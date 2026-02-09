@@ -2,46 +2,49 @@
 -- Test --
         Test name: argument_match_mix
   Expected result: ok
-      Source file: ../books/language/src/flow/argument_match/priorities.md:116
+      Source file: ../books/language/src/flow/argument_match/priorities.md:119
         Test path: ../books/language/src/flow/argument_match/.test
 
 -- Code --
 
- 116:   fn f( a: Scalar, b: Length, c=2cm, d: Area ) -> Volume { } // warning: unused a,b,c,d
- 117:   
- 118:   // `a` is the only Scalar and `b` is named, so `c` and `d` do not need a name.
- 119:   f(1, b=2cm, 2cm², 3cm);
+ 119:   fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
+ 120:   
+ 121:   // `a` gets the Integer (1) which is compatible to Scalar (1.0)
+ 122:   // `b` is named
+ 123:   // `c` gets it's default
+ 124:   // `d` does not need a name because `b` has one
+ 125:   f(b=2cm, 1, 3cm);
 
 -- No Output --
 -- Errors --
   ⚠ warning: 1:7: Unused local a.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:116:7]
- 116 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) -> Volume { } // warning: unused a,b,c,d
+     ╭─[../books/language/src/flow/argument_match/priorities.md:119:7]
+ 119 │ fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
      ·       ┬
      ·       ╰── warning: 1:7: Unused local a.
- 117 │ 
+ 120 │ 
      ╰────
   ⚠ warning: 1:18: Unused local b.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:116:18]
- 116 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) -> Volume { } // warning: unused a,b,c,d
+     ╭─[../books/language/src/flow/argument_match/priorities.md:119:18]
+ 119 │ fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
      ·                  ┬
      ·                  ╰── warning: 1:18: Unused local b.
- 117 │ 
+ 120 │ 
      ╰────
   ⚠ warning: 1:29: Unused local c.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:116:29]
- 116 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) -> Volume { } // warning: unused a,b,c,d
+     ╭─[../books/language/src/flow/argument_match/priorities.md:119:29]
+ 119 │ fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
      ·                             ┬
      ·                             ╰── warning: 1:29: Unused local c.
- 117 │ 
+ 120 │ 
      ╰────
   ⚠ warning: 1:36: Unused local d.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:116:36]
- 116 │ fn f( a: Scalar, b: Length, c=2cm, d: Area ) -> Volume { } // warning: unused a,b,c,d
+     ╭─[../books/language/src/flow/argument_match/priorities.md:119:36]
+ 119 │ fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
      ·                                    ┬
      ·                                    ╰── warning: 1:36: Unused local d.
- 117 │ 
+ 120 │ 
      ╰────
 -- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

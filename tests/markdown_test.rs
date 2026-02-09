@@ -52,7 +52,7 @@ pub fn run_test(env: Option<TestEnv>) {
 
         match env.mode() {
             // test is expected to fail?
-            "fail" | "todo_fail" | "warn" | "todo_warn" => match source_file_result {
+            "fail" | "todo_fail" => match source_file_result {
                 // test expected to fail failed at parsing?
                 Err(err) => {
                     env.log_ln("-- Parse Error --");
@@ -74,13 +74,9 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
-                    if !env.todo()
-                        && env.report_wrong_errors(&context.error_lines(), &context.warning_lines())
-                    {
-                        env.result(TestResult::FailWrong);
-                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
-                    }
 
+                    let err_warn =
+                        env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
                     let _ = fs::remove_file(env.banner_file());
 
                     // check if test expected to fail failed at evaluation
@@ -92,10 +88,22 @@ pub fn run_test(env: Option<TestEnv>) {
                         // evaluation had been aborted?
                         (Err(err), _, false) => {
                             env.log_ln(&err.to_string());
+                            if err_warn {
+                                env.result(TestResult::FailWrong);
+                                panic!(
+                                    "ERROR: test is marked to fail but with wrong errors/warnings"
+                                );
+                            }
                             env.result(TestResult::FailOk);
                         }
                         // evaluation produced errors?
                         (_, true, false) => {
+                            if err_warn {
+                                env.result(TestResult::FailWrong);
+                                panic!(
+                                    "ERROR: test is marked to fail but with wrong errors/warnings"
+                                );
+                            }
                             env.result(TestResult::FailOk);
                             log::debug!(
                                 "there were {error_count} errors (see {log:?})",
@@ -104,7 +112,13 @@ pub fn run_test(env: Option<TestEnv>) {
                             );
                         }
                         // test fails as expected but is todo
-                        (Err(_), _, true) | (_, true, true) => env.result(TestResult::NotTodoFail),
+                        (Err(_), _, true) | (_, true, true) => {
+                            if err_warn {
+                                env.result(TestResult::TodoFail)
+                            } else {
+                                env.result(TestResult::NotTodoFail)
+                            }
+                        }
                         // test expected to fail but succeeds and is todo to fail?
                         (_, _, true) => env.result(TestResult::TodoFail),
                         // test expected to fail but succeeds?
@@ -116,7 +130,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 }
             },
             // test is expected to succeed?
-            "ok" | "todo" => match source_file_result {
+            "ok" | "todo" | "warn" | "todo_warn" => match source_file_result {
                 // test awaited to succeed and parsing failed?
                 Err(err) => {
                     env.log_ln("-- Parse Error --");
@@ -140,7 +154,8 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     env.report_output(context.output());
                     env.report_errors(context.diagnosis());
-                    env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
+                    let err_warn =
+                        env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
 
                     let _ = fs::remove_file(env.banner_file());
 
@@ -149,10 +164,19 @@ pub fn run_test(env: Option<TestEnv>) {
                         // test expected to succeed and succeeds with no errors
                         (Ok(model), false, false) => {
                             report_model(&mut env, model);
-                            if context.has_warnings() {
-                                env.result(TestResult::OkWarn);
+                            if err_warn {
+                                match env.mode() {
+                                    "warn" => {
+                                        env.result(TestResult::OkWrong);
+                                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                                    }
+                                    "todo_warn" => {
+                                        env.result(TestResult::TodoWarn);
+                                    }
+                                    _ => env.result(TestResult::OkWarn),
+                                }
                             } else {
-                                env.result(TestResult::Ok);
+                                env.result(TestResult::Ok)
                             }
                         }
                         // test is todo but succeeds with no errors

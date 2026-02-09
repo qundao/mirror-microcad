@@ -2,26 +2,26 @@
 -- Test --
         Test name: body_assignment_var
   Expected result: ok
-      Source file: ../books/tests/src/statement_usage/body.md:86
+      Source file: ../books/tests/src/statement_usage/body.md:94
         Test path: ../books/tests/src/statement_usage/.test
 
 -- Code --
 
-  86:   {
-  87:     a = 1;
-  88:   }
+  94:   {
+  95:     a = 1;
+  96:   }
 
 -- No Output --
 -- Errors --
   ⚠ warning: 2:3: Unused local a.
-    ╭─[../books/tests/src/statement_usage/body.md:87:3]
- 86 │ {
- 87 │   a = 1;
+    ╭─[../books/tests/src/statement_usage/body.md:95:3]
+ 94 │ {
+ 95 │   a = 1;
     ·   ┬
     ·   ╰── warning: 2:3: Unused local a.
- 88 │ }
+ 96 │ }
     ╰────
-Unexpected warnings(s) which did occur in line(s): 87
+Unexpected warnings(s) which did occur in line(s): 95
 -- Model --
   Group (root) ->
     Group ->

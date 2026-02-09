@@ -1,0 +1,16 @@
+﻿
+-- Test --
+        Test name: source_assignment_pub
+  Expected result: ok
+      Source file: ../books/tests/src/statement_usage/source.md:60
+        Test path: ../books/tests/src/statement_usage/.test
+
+-- Code --
+
+  60:   pub p = 1;
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

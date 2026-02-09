@@ -1,0 +1,37 @@
+﻿
+-- Test --
+        Test name: model_expression_builtin
+  Expected result: ok
+      Source file: ../books/language/src/expressions/model_expression.md:24
+        Test path: ../books/language/src/expressions/.test
+
+-- Code --
+
+  24:   use __builtin::ops::subtract;
+  25:   
+  26:   {
+  27:       std::geo2d::Rect(1cm);
+  28:       std::geo2d::Circle(radius = 3mm);
+  29:   }.subtract();
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Operation __builtin::ops::subtract() ->
+      Group ->
+        Workpiece(sketch) std::geo2d::Rect(size=10mm) ->
+          - height = 10mm
+          - width = 10mm
+          - x = -5mm
+          - y = -5mm
+          Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+          - center = (x=0mm, y=0mm)
+          - radius = 3mm
+          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+            Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+
+Export of "../books/language/src/expressions/.test/model_expression_builtin-out.svg" successful.
+-- Test Result --
+OK

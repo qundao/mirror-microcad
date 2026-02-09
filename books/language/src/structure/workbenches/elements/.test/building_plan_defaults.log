@@ -1,0 +1,48 @@
+﻿
+-- Test --
+        Test name: building_plan_defaults
+  Expected result: todo
+      Source file: ../books/language/src/structure/workbenches/elements/initializers.md:67
+        Test path: ../books/language/src/structure/workbenches/elements/.test
+
+-- Code --
+
+  67:   sketch Wheel(radius: Length, thickness = 5mm) {
+  68:       use std::geo2d::Circle;
+  69:       
+  70:       init(diameter: Length) { 
+  71:           radius = diameter / 2;
+  72:           // thickness has been set automatically by the default in the building plan 
+  73:       }
+  74:       
+  75:       Circle(radius = radius + thickness) - Circle(radius)
+  76:   }
+  77:   
+  78:   Wheel(diameter = 1cm);
+
+-- No Output --
+-- Errors --
+  × error: 4:5: Building plan incomplete. Missing properties: thickness
+    ╭─[../books/language/src/structure/workbenches/elements/initializers.md:70:5]
+ 69 │         
+ 70 │ ╭─▶     init(diameter: Length) { 
+ 71 │ │           radius = diameter / 2;
+ 72 │ │           // thickness has been set automatically by the default in the building plan 
+ 73 │ ├─▶     }
+    · ╰──── error: 4:5: Building plan incomplete. Missing properties: thickness
+ 74 │         
+    ╰────
+  × error: 9:12: Workbench Circle cannot find initialization for those arguments
+    ╭─[../books/language/src/structure/workbenches/elements/initializers.md:75:5]
+ 74 │     
+ 75 │     Circle(radius = radius + thickness) - Circle(radius)
+    ·     ─────────────────┬─────────────────
+    ·                      ╰── Got: Circle( radius = <NO VALUE> )
+ 76 │ }
+    ╰────
+  help: Possible initializations:
+        	Circle( radius: Length, center = (x = 0mm, y = 0mm))
+        	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+Unexpected error(s) which did occur in line(s): 70, 75
+-- Test Result --
+TODO

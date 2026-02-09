@@ -1,0 +1,28 @@
+﻿
+-- Test --
+        Test name: multiplicity_tuple_array
+  Expected result: todo
+      Source file: ../books/tests/src/tuple_matching.md:56
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  56:   r = std::geo2d::Rect(width = 2mm, height = 2mm);
+  57:   
+  58:   r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
+
+-- No Output --
+-- Errors --
+  × error: 3:23: Workbench translate cannot find initialization for those arguments
+    ╭─[../books/tests/src/tuple_matching.md:58:3]
+ 57 │ 
+ 58 │ r.std::ops::translate([(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)]);
+    ·   ────────────────────────────────────────────┬───────────────────────────────────────────
+    ·                                               ╰── Got: translate( [(x=-4mm, y=-4mm), (x=-4mm, y=4mm), (x=4mm, y=-4mm), (x=4mm, y=4mm)] )
+    ╰────
+  help: Possible initializations:
+        	translate( x = 0mm, y = 0mm, z = 0mm)
+        	translate( distance: Length, angle: Angle)
+Unexpected error(s) which did occur in line(s): 58
+-- Test Result --
+TODO

@@ -1,0 +1,34 @@
+﻿
+-- Test --
+        Test name: pre_init_assignment_pub
+  Expected result: fail
+      Source file: ../books/tests/src/statement_usage/pre-init.md:78
+        Test path: ../books/tests/src/statement_usage/.test
+
+-- Code --
+
+  78:   sketch K() { 
+  79:     pub p = 1;  // error
+  80:   init(l:Length) {} } K();
+
+-- No Output --
+-- Errors --
+  × error: 2:3: Statement not allowed within workbenches
+    ╭─[../books/tests/src/statement_usage/pre-init.md:79:3]
+ 78 │ sketch K() { 
+ 79 │   pub p = 1;  // error
+    ·   ─────┬────
+    ·        ╰── error: 2:3: Statement not allowed within workbenches
+ 80 │ init(l:Length) {} } K();
+    ╰────
+  × error: 2:3: Assignment statement is not available within Sketch
+    ╭─[../books/tests/src/statement_usage/pre-init.md:79:3]
+ 78 │ sketch K() { 
+ 79 │   pub p = 1;  // error
+    ·   ─────┬────
+    ·        ╰── error: 2:3: Assignment statement is not available within Sketch
+ 80 │ init(l:Length) {} } K();
+    ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

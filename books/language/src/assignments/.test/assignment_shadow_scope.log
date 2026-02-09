@@ -1,0 +1,34 @@
+﻿
+-- Test --
+        Test name: assignment_shadow_scope
+  Expected result: todo
+      Source file: ../books/language/src/assignments/value.md:76
+        Test path: ../books/language/src/assignments/.test
+
+-- Code --
+
+  76:   a = 5;
+  77:   
+  78:   {
+  79:       a = a * 2;   // this works because we are in a new scope
+  80:       std::debug::assert_eq([ a, 10 ]);
+  81:   }
+
+-- No Output --
+-- Errors --
+  × error: 4:5: Value a already in defined: 5
+    ╭─[../books/language/src/assignments/value.md:79:5]
+ 76 │ a = 5;
+    · ┬
+    · ╰── Previously defined here
+ 77 │ 
+ 78 │ {
+ 79 │     a = a * 2;   // this works because we are in a new scope
+    ·     ────┬────
+    ·         ╰── a is already defined
+ 80 │     std::debug::assert_eq([ a, 10 ]);
+    ╰────
+  help: Values in microcad are immutable
+Unexpected error(s) which did occur in line(s): 79
+-- Test Result --
+TODO

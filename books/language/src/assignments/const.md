@@ -1,9 +1,13 @@
 # Constant Assignments
 
-Unlike *value assignments*, constant assignments are not stored on the *evaluation
-stack* but in the *symbol table*.
-Constant assignments can be placed directly within a module — which is not allowed
-for value assignments — and they can also be declared as public.
+Unlike *values*, constants are not stored on the *stack* but in
+the *symbol table*.
+For example this allows them to be accessed from within functions or workbenches
+in the same module where the constant is defined.
+Constants can be placed in
+[source files](../structure/source_file.md),
+[modules](../structure/modules/) or
+[initialization code](../structure/workbenches/elements/init_code.md).
 
 [![test](.test/const_assignment_mod.svg)](.test/const_assignment_mod.log)
 
@@ -11,11 +15,24 @@ for value assignments — and they can also be declared as public.
 const TEXT = "Hello";
 
 mod my_module {
-    pub const TEXT = "Hello";
+    
+    // constant assignment
+    const TEXT = "Hello my_module";
+
+    // public function
+    pub fn f() -> String {
+        TEXT
+    }
+
+    // public workbench
+    pub sketch MySketch(text: String) {
+        std::debug::assert_eq([ TEXT, text ]);
+    }
 }
 
-std::print(TEXT);
-std::print(my_module::TEXT);
+my_module::MySketch("Hello my_module");
+std::debug::assert_eq([ my_module::f(), "Hello my_module" ]);
+std::debug::assert_eq([ TEXT, "Hello" ]);
 ```
 
 Additionally, constant assignments are permitted in the *init code* of a
@@ -25,6 +42,7 @@ Additionally, constant assignments are permitted in the *init code* of a
 
 ```µcad,const_assignment_workbench
 sketch MySketch(text: String) {
+    // constant assignment in initialization code
     const TEXT = "Hello";
 
     init() {
@@ -37,15 +55,117 @@ sketch MySketch(text: String) {
 MySketch();
 ```
 
-Using `pub` is not allowed in workbenches:
+## Restrictions
 
-[![test](.test/const_assignment_workbench_pub.svg)](.test/const_assignment_workbench_pub.log)
+### Uppercase naming
 
-```µcad,const_assignment_workbench_pub#fail
-sketch MySketch() {
-    pub const TEXT = "Hello";  // error
-    std::print(TEXT);
+Constants are always written in `UPPER_CASE`.
+
+[![test](.test/const_assignment_uppercase.svg)](.test/const_assignment_uppercase.log)
+
+```µcad,const_assignment_uppercase#todo_warn
+const A = 1;        // ok
+const a = 1;        // warning
+const MyValue = 1;  // warning
+const MY_VALUE = 1; // ok
+```
+
+### Ambiguous Names
+
+A constant cannot be defined within the same module or workbench twice.
+
+[![test](.test/const_assignment_shadow.svg)](.test/const_assignment_shadow.log)
+
+```µcad,const_assignment_shadow#todo_fail
+mod module {
+    const A = 5;
+    const A = 1;  // error: A already defined in this module
+
+    pub mod another_module {
+        const A = 5;   // ok
+
+        pub fn a() -> Integer { A }
+    }
+
+    pub sketch Sketch() {
+        const A = 5;   // error: A is ambiguous
+        const A = 5;   // error: A already defined in this workbench
+    }
 }
 
+std::debug::assert_eq([ module::another_module::a(), 5 ]);
+module::Sketch();
+```
+
+### Not in building code
+
+Constant assignments cannot be used in building code (the code below any initializers).
+
+[![test](.test/const_assignment_building_code.svg)](.test/const_assignment_building_code.log)
+
+```µcad,const_assignment_building_code#todo_fail
+sketch MySketch() {
+    init(_: Integer) {}
+    const MY_CONST = 1;   // error: not allowed in building code
+}
+MySketch();
+```
+
+Constant assignments must be on top of the workbench code if initializers are not used.
+
+[![test](.test/const_assignment_workbench_code.svg)](.test/const_assignment_workbench_code.log)
+
+```µcad,const_assignment_workbench_code
+sketch MySketch() {
+    const MY_CONST = 1;   // allowed if no initializers
+}
+MySketch();
+```
+
+They cannot be placed below non constant assignments within in a workbench.
+
+[![test](.test/const_assignment_workbench_code_wrong.svg)](.test/const_assignment_workbench_code_wrong.log)
+
+```µcad,const_assignment_workbench_code_wrong#todo_fail
+sketch MySketch() {
+    _i = 5;                 // any non const code
+    const MY_CONST = 1;     // error: const not allowed then
+}
+MySketch();
+```
+
+### Not in function
+
+Constant assignments cannot be used in functions.
+
+[![test](.test/const_assignment_fn.svg)](.test/const_assignment_fn.log)
+
+```µcad,const_assignment_fn#fail
+fn f() {
+    const MY_CONST = 1;     // error: not allowed in functions
+}
+f();
+
+sketch MySketch() {
+    fn f() {
+        const MY_CONST = 1; // error: not allowed in workbench functions
+    }
+    f();
+}
+MySketch();
+```
+
+### Not in initializers
+
+Constant assignments cannot be used in initializers.
+
+[![test](.test/const_assignment_init.svg)](.test/const_assignment_init.log)
+
+```µcad,const_assignment_init#todo_fail
+sketch MySketch() {
+    init(_: Integer) {
+        const MY_CONST = 1;   // error: not allowed in initializers
+    }
+}
 MySketch();
 ```

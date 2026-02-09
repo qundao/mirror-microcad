@@ -2,19 +2,16 @@
 -- Test --
         Test name: call_function
   Expected result: ok
-      Source file: ../books/language/src/flow/calls/README.md:11
+      Source file: ../books/language/src/flow/calls/README.md:23
         Test path: ../books/language/src/flow/calls/.test
 
 -- Code --
 
-  11:   // function definition
-  12:   fn square(x: Scalar) { return x * x; }
-  13:   
-  14:   // call function square with parameter 2 and store result in s
-  15:   s = square(x = 2);
-  16:   
-  17:   // check value
-  18:   std::debug::assert_eq( [s, 4] );
+  23:   // call function -2 and store result in x
+  24:   x = std::math::abs(-2);
+  25:   
+  26:   // check value
+  27:   std::debug::assert_eq( [x, 2] );
 
 -- No Output --
 -- No Errors --

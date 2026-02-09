@@ -1,0 +1,19 @@
+﻿
+-- Test --
+        Test name: attributes_export
+  Expected result: todo
+      Source file: ../books/language/src/attributes/command_attributes.md:15
+        Test path: ../books/language/src/attributes/.test
+
+-- Code --
+
+  15:   #[export("rect.svg")] // Will be exported to `rect.svg`
+  16:   std::geo2d::Rect(42mm);
+  17:   
+  18:   #[export("circle.svg")] // Will be exported to `circle.svg`
+  19:   std::geo2d::Circle(r = 42mm);
+
+-- Parse Error --
+Parser error: expected single_line_comment
+-- Test Result --
+TODO
