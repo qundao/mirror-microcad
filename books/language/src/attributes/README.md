@@ -20,6 +20,8 @@ The primary difference lies in the **scope** of what the attribute affects.
 
 Outer attributes are placed **outside** and **before** a statement. They apply to the specific node or block immediately following them.
 
+[![test](.test/outer_attributes.svg)](.test/outer_attributes.log)
+
 ```µcad,outer_attributes#todo
 #[color = "#FF0000"]
 {
@@ -33,6 +35,8 @@ Outer attributes are placed **outside** and **before** a statement. They apply t
 Inner attributes are separate statements **inside** a block or source file.
 They apply to the "parent" model they reside in, affecting everything within that scope.
 The following code is semantically equivalent to the outer attribute example above:
+
+[![test](.test/inner_attributes.svg)](.test/inner_attributes.log)
 
 ```µcad,inner_attributes#todo
 {

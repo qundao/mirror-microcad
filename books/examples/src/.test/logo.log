@@ -8,7 +8,7 @@
 -- Code --
 
    6:   // file: logo.µcad
-   7:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
    8:   // SPDX-License-Identifier: AGPL-3.0-or-later
    9:   
   10:   pub mod microcad {

@@ -1,3 +1,6 @@
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 //! Syntax definitions and parser for µcad source code.
 //!
 //! This module includes the components to parse µcad source code into a stream of tokens or abstract syntax tree.

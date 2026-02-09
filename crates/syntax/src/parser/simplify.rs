@@ -1,3 +1,6 @@
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 use crate::ast::{Expression, Literal, LiteralKind, UnaryOperation, UnaryOperator};
 
 /// Merge negated numeric literals into negative numeric literals

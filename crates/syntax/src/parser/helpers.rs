@@ -1,3 +1,6 @@
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 use crate::Span;
 use crate::ast::{BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator};
 use crate::parser::{Extra, ParserInput};

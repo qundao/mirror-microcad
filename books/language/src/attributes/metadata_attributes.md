@@ -38,7 +38,7 @@ It determines how a smooth mathematical curve is sampled and converted into disc
 
 This means the circle in the example below will be rendered with a resolution `0.05mm`.
 
-[![test](.test/attributes_resolution.svg)](.test/attributes_precision.log)
+[![test](.test/attributes_precision.svg)](.test/attributes_precision.log)
 
 ```µcad,attributes_precision
 #[resolution = 200%]

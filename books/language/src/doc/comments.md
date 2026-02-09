@@ -30,7 +30,7 @@ By placing a comment with `///` above a symbol definition you can attribute
 your code with documentation.
 Markdown may be used to shape sections or format text.
 
-[![test](.test/doc_comment.svg)](.test/doc_comment.log)
+[![test](.test/outer_doc_comment.svg)](.test/outer_doc_comment.log)
 
 ```µcad,outer_doc_comment
 /// A function which returns what it gets.
@@ -74,6 +74,8 @@ The above function `f` will be documented with the following markdown output:
 ### Inner doc comments (`//!`)
 
 Inner doc comments are used to document code inside a source file:
+
+[![test](.test/inner_doc_comment.svg)](.test/inner_doc_comment.log)
 
 ```µcad,inner_doc_comment#todo
 //! This inner doc comment documents the whole source file.
