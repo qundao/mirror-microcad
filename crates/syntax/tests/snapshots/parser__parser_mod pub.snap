@@ -15,6 +15,7 @@ Ok(
                 Module(
                     ModuleDefinition {
                         span: 0..26,
+                        keyword_span: 4..7,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
@@ -39,6 +40,7 @@ Ok(
                                     Function(
                                         FunctionDefinition {
                                             span: 14..24,
+                                            keyword_span: 14..16,
                                             extras: ItemExtras {
                                                 leading: [],
                                                 trailing: [],

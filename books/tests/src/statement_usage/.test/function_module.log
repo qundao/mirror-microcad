@@ -14,13 +14,13 @@
 -- No Output --
 -- Errors --
   × error: 15:7: Module definition is not available within function
-    ╭─[../books/tests/src/statement_usage/function.md:15:7]
+    ╭─[../books/tests/src/statement_usage/function.md:15:3]
  14 │ fn f() {
-    ·    ┬
-    ·    ╰── Within this function
+    · ─┬
+    ·  ╰── Within this function
  15 │   mod m {} // error
-    ·       ┬
-    ·       ╰── This module definition is not allowed
+    ·   ─┬─
+    ·    ╰── This module definition is not allowed
  16 │ } f();
     ╰────
   help: module definition is only allowed within source root or module

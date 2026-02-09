@@ -28,8 +28,8 @@
     ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
  56 │ 
  57 │     fn inner() {
-    ·        ──┬──
-    ·          ╰── Within this function
+    ·     ─┬
+    ·      ╰── Within this function
  58 │         prop hole = radius/2;  // error: prop not allowed in function
     ·         ──────────┬─────────
     ·                   ╰── This property assigment is not allowed

@@ -14,9 +14,9 @@
   × error: 24:1: Init definition is not available within source file
     ╭─[../books/tests/src/statement_usage/source.md:24:1]
  24 │ init() {} // error
-    · ─────────┬────────┬
-    ·          │        ╰── Within this source file
-    ·          ╰── This init definition is not allowed
+    · ──┬─┬
+    ·   │ ╰── Within this source file
+    ·   ╰── This init definition is not allowed
     ╰────
   help: init definition is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!

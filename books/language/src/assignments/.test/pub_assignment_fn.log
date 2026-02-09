@@ -17,8 +17,8 @@
   × error: 40:5: Constant assigment is not available within function
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
-    ·    ┬
-    ·    ╰── Within this function
+    · ─┬
+    ·  ╰── Within this function
  40 │     const MY_CONST = 1;     // error: not allowed in functions
     ·     ─────────┬────────
     ·              ╰── This constant assigment is not allowed

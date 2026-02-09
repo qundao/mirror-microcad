@@ -34,13 +34,13 @@
    ·   ╰── Before this initializer
    ╰────
   × error: 7:10: Sketch is not available within sketch
-   ╭─[../books/tests/src/statement_usage/pre-init.md:7:10]
+   ╭─[../books/tests/src/statement_usage/pre-init.md:7:3]
  6 │ sketch K() { 
-   ·        ┬
-   ·        ╰── Within this sketch
+   · ───┬──
+   ·    ╰── Within this sketch
  7 │   sketch F() {} K();  // error
-   ·          ┬
-   ·          ╰── This sketch is not allowed
+   ·   ───┬──
+   ·      ╰── This sketch is not allowed
  8 │ init(l:Length) {} } K();
    ╰────
   help: sketch is only allowed within source root or module definition

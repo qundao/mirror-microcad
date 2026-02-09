@@ -25,8 +25,8 @@
   × error: 145:5: Constant assigment is not available within function
      ╭─[../books/language/src/assignments/const.md:145:5]
  144 │ fn f() {
-     ·    ┬
-     ·    ╰── Within this function
+     · ─┬
+     ·  ╰── Within this function
  145 │     const MY_CONST = 1;     // error: not allowed in functions
      ·     ─────────┬────────
      ·              ╰── This constant assigment is not allowed
@@ -37,8 +37,8 @@
      ╭─[../books/language/src/assignments/const.md:151:9]
  149 │ sketch MySketch() {
  150 │     fn f() {
-     ·        ┬
-     ·        ╰── Within this function
+     ·     ─┬
+     ·      ╰── Within this function
  151 │         const MY_CONST = 1; // error: not allowed in workbench functions
      ·         ─────────┬────────
      ·                  ╰── This constant assigment is not allowed

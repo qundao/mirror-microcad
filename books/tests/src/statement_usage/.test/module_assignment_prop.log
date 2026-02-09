@@ -16,8 +16,8 @@
   × error: 95:3: Property assigment is not available within module
     ╭─[../books/tests/src/statement_usage/module.md:95:3]
  94 │ mod k {
-    ·     ┬
-    ·     ╰── Within this module
+    · ─┬─
+    ·  ╰── Within this module
  95 │   prop a = 1;  // error
     ·   ─────┬────
     ·        ╰── This property assigment is not allowed

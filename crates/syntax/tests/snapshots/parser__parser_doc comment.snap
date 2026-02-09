@@ -23,6 +23,7 @@ Ok(
                 Workbench(
                     WorkbenchDefinition {
                         span: 20..85,
+                        keyword_span: 20..24,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],

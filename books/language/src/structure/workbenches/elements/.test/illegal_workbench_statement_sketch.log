@@ -16,38 +16,38 @@
 -- No Output --
 -- Errors --
   × error: 45:12: Sketch is not available within sketch
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:45:12]
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:45:5]
  44 │ sketch Wheel(radius: Length) {
-    ·        ──┬──
-    ·          ╰── Within this sketch
+    · ───┬──
+    ·    ╰── Within this sketch
  45 │     sketch A() {}   // error
-    ·            ┬
-    ·            ╰── This sketch is not allowed
+    ·     ───┬──
+    ·        ╰── This sketch is not allowed
  46 │     part B() {}     // error
     ╰────
   help: sketch is only allowed within source root or module definition
   × error: 46:10: Part is not available within sketch
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:46:10]
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:46:5]
  44 │ sketch Wheel(radius: Length) {
-    ·        ──┬──
-    ·          ╰── Within this sketch
+    · ───┬──
+    ·    ╰── Within this sketch
  45 │     sketch A() {}   // error
  46 │     part B() {}     // error
-    ·          ┬
-    ·          ╰── This part is not allowed
+    ·     ──┬─
+    ·       ╰── This part is not allowed
  47 │     op C() {}       // error
     ╰────
   help: part is only allowed within source root or module definition
   × error: 47:8: Op is not available within sketch
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:47:8]
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:47:5]
  44 │ sketch Wheel(radius: Length) {
-    ·        ──┬──
-    ·          ╰── Within this sketch
+    · ───┬──
+    ·    ╰── Within this sketch
  45 │     sketch A() {}   // error
  46 │     part B() {}     // error
  47 │     op C() {}       // error
-    ·        ┬
-    ·        ╰── This op is not allowed
+    ·     ─┬
+    ·      ╰── This op is not allowed
  48 │ }
     ╰────
   help: op is only allowed within source root or module definition

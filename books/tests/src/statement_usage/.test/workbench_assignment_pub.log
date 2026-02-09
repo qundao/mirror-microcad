@@ -16,8 +16,8 @@
   × error: 103:3: Public constant assigment is not available within sketch
      ╭─[../books/tests/src/statement_usage/workbench.md:103:3]
  102 │ sketch K() {
-     ·        ┬
-     ·        ╰── Within this sketch
+     · ───┬──
+     ·    ╰── Within this sketch
  103 │   pub a = 1; // error
      ·   ────┬────
      ·       ╰── This public constant assigment is not allowed
