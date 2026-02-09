@@ -16,6 +16,14 @@
   20:                   ];
 
 -- Parse Error --
-Unknown type: Model
+  × error: 19:6: Unknown type: Model
+    ╭─[../books/language/src/types/collections/array/README.md:19:6]
+ 18 │ d : [String]  = [ "one", "two", "three", "four", "five" ];
+ 19 │ e : [Model]   = [ std::geo2d::Circle(radius = 1cm),
+    ·      ──┬──
+    ·        ╰── Unknown type: Model
+ 20 │                   std::geo3d::Sphere(radius = 1cm)
+    ╰────
+
 -- Test Result --
 TODO
