@@ -280,9 +280,11 @@ fn scan_for_tests(
                 if end.captures_iter(line).next().is_some() {
                     if let Some(mut env) = TestEnv::new(file_path, &test_name, &test_code, start_no)
                     {
+                        let head = "// file: ";
                         let mut test_output = env.generate(output);
-                        if let Some(first_line) = test_code.lines().next() {
-                            let head = "// file: ";
+                        if let Some(first_line) =
+                            test_code.lines().find(|line| line.starts_with(head))
+                        {
                             if first_line.starts_with(head) {
                                 let (_, filename) = first_line.split_at(head.len());
                                 let filename = env.test_path().join(filename);
