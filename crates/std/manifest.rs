@@ -83,7 +83,7 @@ impl Manifest {
     pub fn save(&self, path: impl AsRef<std::path::Path>) -> Result<(), ManifestError> {
         let s = toml::to_string(&self)?;
         let mut file = std::fs::File::create(Self::manifest_path(path))?;
-        file.write(s.as_bytes())?;
+        file.write_all(s.as_bytes())?;
         Ok(())
     }
 
