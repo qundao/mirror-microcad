@@ -5,10 +5,10 @@ While they do not alter the geometry of the model tree itself, they provide esse
 
 ## Attribute Categories
 
-| Type | Syntax Example | Purpose |
-| --- | --- | --- |
-| [**Metadata**](metadata_attributes.md) | `#[color = "red"]` | Attaches key-value pairs for organizational or aesthetic metadata. |
-| [**Command**](command_attributes.md) | `#[export("mesh.stl")]` | Triggers specific actions, like file generation or render settings. |
+| Type                                   | Syntax Example          | Purpose                                                             |
+| -------------------------------------- | ----------------------- | ------------------------------------------------------------------- |
+| [**Metadata**](metadata_attributes.md) | `#[color = "red"]`      | Attaches key-value pairs for organizational or aesthetic metadata.  |
+| [**Command**](command_attributes.md)   | `#[export("mesh.stl")]` | Triggers specific actions, like file generation or render settings. |
 
 ---
 
@@ -22,7 +22,7 @@ Outer attributes are placed **outside** and **before** a statement. They apply t
 
 [![test](.test/outer_attributes.svg)](.test/outer_attributes.log)
 
-```µcad,outer_attributes#todo
+```µcad,outer_attributes
 #[color = "#FF0000"]
 {
     std::geo2d::Circle(r = 20mm);
@@ -38,7 +38,7 @@ The following code is semantically equivalent to the outer attribute example abo
 
 [![test](.test/inner_attributes.svg)](.test/inner_attributes.log)
 
-```µcad,inner_attributes#todo
+```µcad,inner_attributes
 {
     #![color = "#FF0000"]
 
