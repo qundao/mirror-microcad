@@ -12,6 +12,8 @@ f( x_p=1m, y_p=2m, z_p=3m );
 f( x_p=1m, y_p=2m );
 ```
 
+[![test](.test/argument_match_short_collision.svg)](.test/argument_match_short_collision.log)
+
 ```µcad,argument_match_short_collision#fail
 sketch S( width: Length ) {
     init( what: Length ) { width=what; }
@@ -20,6 +22,8 @@ sketch S( width: Length ) {
 S(w=10cm); // error: short form cannot be used here because of ambiguity
 ```
 
+[![test](.test/argument_match_collision.svg)](.test/argument_match_collision.log)
+
 ```µcad,argument_match_collision#fail
 sketch S( width: Length ) {
     init( width: Length ) { width=width; }
@@ -27,6 +31,8 @@ sketch S( width: Length ) {
 
 S(width=10cm); // error: short form cannot be used here because of ambiguity
 ```
+
+[![test](.test/argument_match_collision_init.svg)](.test/argument_match_collision_init.log)
 
 ```µcad,argument_match_collision_init#fail
 sketch S( width: Length, height: Length ) {

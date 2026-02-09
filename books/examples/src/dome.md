@@ -1,0 +1,30 @@
+# Example: dome
+
+[![Report](.test/dome.svg)](.test/dome.log)
+
+```µcad,dome
+// file: dome.µcad
+// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use std::geo2d::*;
+use std::ops::*;
+
+pub part Dome(size: Length, strut_width = 1mm) {
+	Rect(strut_width)
+		.translate(x = size)
+		.revolve(180°)
+		.rotate(x = -[0..6]*180°/6)
+		.rotate(z = [0..3]*180°/3);
+}
+
+Dome(10mm, strut_width = 0.25mm);
+
+
+```
+
+**2D Output**
+    : ![None](.test/dome-out.svg)
+
+**3D Output**
+    : ![None](.test/dome-out.stl)

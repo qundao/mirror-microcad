@@ -1,0 +1,104 @@
+﻿
+-- Test --
+        Test name: torus
+  Expected result: ok
+      Source file: ../books/examples/src/torus.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   7:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   8:   
+   9:   std::geo3d::Torus([1..5] * 10mm, minor_radius = 3mm);
+  10:   
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Multiplicity ->
+      Workpiece(part) std::geo3d::Torus(major_radius=10mm, minor_radius=3mm) ->
+        - major_radius = 10mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
+              - x = 10mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=20mm, minor_radius=3mm) ->
+        - major_radius = 20mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=20mm, y=0mm, z=0mm) ->
+              - x = 20mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=20mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=30mm, minor_radius=3mm) ->
+        - major_radius = 30mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=30mm, y=0mm, z=0mm) ->
+              - x = 30mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=30mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=40mm, minor_radius=3mm) ->
+        - major_radius = 40mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=40mm, y=0mm, z=0mm) ->
+              - x = 40mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=40mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+      Workpiece(part) std::geo3d::Torus(major_radius=50mm, minor_radius=3mm) ->
+        - major_radius = 50mm
+        - minor_radius = 3mm
+        Workpiece(op) std::ops::revolve(angle=6.28318530717959rad) ->
+          - angle = 6.28318530717959rad
+          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+            Workpiece(op) std::ops::translate(x=50mm, y=0mm, z=0mm) ->
+              - x = 50mm
+              - y = 0mm
+              - z = 0mm
+              Transform __builtin::ops::translate(x=50mm, y=0mm, z=0mm) ->
+                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                  - center = (x=0mm, y=0mm)
+                  - radius = 3mm
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+
+Export of "../books/examples/src/.test/torus-out.stl" successful.
+-- Test Result --
+OK

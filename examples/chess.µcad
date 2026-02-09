@@ -49,9 +49,9 @@ pub part Rook() {
 
 pub part Knight() {
     {
-        s = BASE_SIZE/2;
+        height = BASE_SIZE/2;
         r = Rect(BASE_SIZE);
-        (r - r.translate(x = s, y = s)).extrude(s);
+        (r - r.translate(x = height, y = height)).extrude(height);
     }.rotate([0,90]°).align(Z)
 }
 

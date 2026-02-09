@@ -1,0 +1,45 @@
+﻿
+-- Test --
+        Test name: gears_gear_2d
+  Expected result: ok
+      Source file: ../books/examples/src/gears.md:8
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   8:   // file: gear_2d.µcad
+   9:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  10:   // SPDX-License-Identifier: AGPL-3.0-or-later
+  11:   
+  12:   use std::ops::*;
+  13:   use std::geo2d::*;
+  14:   
+  15:   InvoluteGearProfile(1.0mm, 100);
+  16:   
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 5:5: Unused global symbol std::ops.
+    ╭─[../books/examples/src/gears.md:12:5]
+ 11 │ 
+ 12 │ use std::ops::*;
+    ·     ────┬───
+    ·         ╰── warning: 5:5: Unused global symbol std::ops.
+ 13 │ use std::geo2d::*;
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 12
+-- Model --
+  Group (root) ->
+    Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=100) ->
+      - module = 1mm
+      - outer_radius = 51mm
+      - pitch_radius = 50mm
+      - pressure_angle = 0rad
+      - teeth = 100
+      - tooth_angle = 0.0628318530718rad
+      - tooth_distance = 3.14159265358979mm
+      Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=100) ->
+
+Export of "../books/examples/src/.test/gears_gear_2d-out.svg" successful.
+-- Test Result --
+OK (BUT WARNINGS)

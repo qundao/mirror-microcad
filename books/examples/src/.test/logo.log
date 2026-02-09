@@ -1,0 +1,355 @@
+﻿
+-- Test --
+        Test name: logo
+  Expected result: ok
+      Source file: ../books/examples/src/logo.md:6
+        Test path: ../books/examples/src/.test
+
+-- Code --
+
+   6:   // file: logo.µcad
+   7:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   8:   // SPDX-License-Identifier: AGPL-3.0-or-later
+   9:   
+  10:   pub mod microcad {
+  11:       use std::geo2d::*;
+  12:       use std::ops::*;
+  13:   
+  14:       sketch IconElement( radius: Length ) {
+  15:           c = Sector(radius, start = 180°, end = 270°).translate(y = radius);
+  16:           r = Rect(width = radius, height = radius * 2, x = -radius, y = -radius);
+  17:           c | r
+  18:       }
+  19:   
+  20:       sketch Arc(radius: Length, thickness: Length, angle = 300°) {
+  21:           Sector(radius, start = -angle / 2, end = angle / 2)
+  22:               .rotate(180° - angle) - Circle(radius = radius - thickness)
+  23:       }
+  24:   
+  25:       pub sketch Icon(radius: Length) {
+  26:           prop gap = radius / 5;
+  27:           IconElement(radius)
+  28:               .translate(x = -radius - gap)
+  29:               .rotate([0..3] * 90°); 
+  30:       }
+  31:   
+  32:       pub sketch Micro(radius: Length, thickness: Length) {
+  33:           u = Sector(radius, 180°).rotate(90°) - Circle(radius = radius - thickness);
+  34:           r_l = Rect(width = thickness, height = radius * 3, x = -radius, y = -2*radius);
+  35:           r_r = Rect(width = thickness, height = radius * 2, x = radius - thickness, y = -radius);
+  36:           u | r_l | r_r
+  37:       }
+  38:   
+  39:       pub sketch C(radius: Length, thickness: Length) {
+  40:           Arc(radius, thickness, 260°)
+  41:       }
+  42:   
+  43:       pub sketch A(radius: Length, thickness: Length) {
+  44:           Arc(radius, thickness)
+  45:            | Rect(width = thickness, height = radius * 2, x = radius * 0.5, y = -radius);
+  46:       }
+  47:   
+  48:       pub sketch D(radius: Length, thickness: Length) {
+  49:           Arc(radius, thickness)
+  50:            | Rect(width = thickness, height = radius * 3, x = radius * 0.5, y = -radius);
+  51:       }
+  52:   
+  53:       pub sketch Logo(radius: Length, thickness: Length) {
+  54:           use std::math::*;
+  55:           init(size: Length) {
+  56:               radius = size * 50%;
+  57:               thickness = radius * 40%;
+  58:           }
+  59:           
+  60:           {
+  61:               Icon(radius);
+  62:               {
+  63:                   Micro(radius, thickness);
+  64:                   C(radius, thickness);
+  65:                   A(radius, thickness);
+  66:                   D(radius, thickness);
+  67:               }.align(X);
+  68:           }.align(X, 4mm).center();
+  69:       }
+  70:   }
+  71:   
+  72:   use std::ops::*;
+  73:   
+  74:   pub SIZE = 1cm;
+  75:   
+  76:   microcad::Logo(size = SIZE).extrude(4mm);
+  77:   
+  78:   
+
+-- No Output --
+-- Errors --
+  ⚠ warning: 1:1: Unused local PI.
+   ╭─[<NO FILE>:1:1]
+ 1 │ <NO FILE>
+   · ─┬
+   ·  ╰── warning: 1:1: Unused local PI.
+   ╰────
+  ⚠ warning: 1:1: Unused local Y.
+   ╭─[<NO FILE>:1:1]
+ 1 │ <NO FILE>
+   · ┬
+   · ╰── warning: 1:1: Unused local Y.
+   ╰────
+Unexpected warnings(s) which did occur in line(s): 6
+-- Model --
+  Group (root) ->
+    Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+      - height = 4mm
+      - scale = (x=1, y=1)
+      - twist = 0rad
+      Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
+        Workpiece(sketch) logo::microcad::Logo(size=10mm) ->
+          - radius = 5mm
+          - thickness = 2mm
+          Operation __builtin::ops::center() ->
+            Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=4mm) ->
+              - direction = (x=1, y=0, z=0)
+              - spacing = 4mm
+              Operation __builtin::ops::align(spacing=4mm, x=1, y=0, z=0) ->
+                Group ->
+                  Workpiece(sketch) logo::microcad::Icon(radius=5mm) ->
+                    - gap = 1mm
+                    - radius = 5mm
+                    Multiplicity ->
+                      Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Workpiece(op) std::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                            - x = -6mm
+                            - y = 0mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                              Workpiece(sketch) logo::microcad::IconElement(radius=5mm) ->
+                                - radius = 5mm
+                                Operation union() ->
+                                  Group ->
+                                    c: Workpiece(op) std::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                      - x = 0mm
+                                      - y = 5mm
+                                      - z = 0mm
+                                      Transform __builtin::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                        Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                          - end = 4.71238898038469rad
+                                          - radius = 5mm
+                                          - start = 3.14159265358979rad
+                                          Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                    r: Workpiece(sketch) std::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                                      - height = 10mm
+                                      - width = 5mm
+                                      - x = -5mm
+                                      - y = -5mm
+                                      Primitive2D __builtin::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                      Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Workpiece(op) std::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                            - x = -6mm
+                            - y = 0mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                              Workpiece(sketch) logo::microcad::IconElement(radius=5mm) ->
+                                - radius = 5mm
+                                Operation union() ->
+                                  Group ->
+                                    c: Workpiece(op) std::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                      - x = 0mm
+                                      - y = 5mm
+                                      - z = 0mm
+                                      Transform __builtin::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                        Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                          - end = 4.71238898038469rad
+                                          - radius = 5mm
+                                          - start = 3.14159265358979rad
+                                          Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                    r: Workpiece(sketch) std::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                                      - height = 10mm
+                                      - width = 5mm
+                                      - x = -5mm
+                                      - y = -5mm
+                                      Primitive2D __builtin::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                      Workpiece(op) std::ops::rotate(angle=3.14159265358979rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Workpiece(op) std::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                            - x = -6mm
+                            - y = 0mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                              Workpiece(sketch) logo::microcad::IconElement(radius=5mm) ->
+                                - radius = 5mm
+                                Operation union() ->
+                                  Group ->
+                                    c: Workpiece(op) std::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                      - x = 0mm
+                                      - y = 5mm
+                                      - z = 0mm
+                                      Transform __builtin::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                        Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                          - end = 4.71238898038469rad
+                                          - radius = 5mm
+                                          - start = 3.14159265358979rad
+                                          Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                    r: Workpiece(sketch) std::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                                      - height = 10mm
+                                      - width = 5mm
+                                      - x = -5mm
+                                      - y = -5mm
+                                      Primitive2D __builtin::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                      Workpiece(op) std::ops::rotate(angle=4.71238898038469rad, axis=(x=0, y=0, z=1)) ->
+                        - matrix = Matrix3 [[-1.8369701987210297e-16, -1.0, 0.0], [1.0, -1.8369701987210297e-16, 0.0], [0.0, 0.0, 1.0]]
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.8369701987210297e-16, -1.0, 0.0], [1.0, -1.8369701987210297e-16, 0.0], [0.0, 0.0, 1.0]]) ->
+                          Workpiece(op) std::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                            - x = -6mm
+                            - y = 0mm
+                            - z = 0mm
+                            Transform __builtin::ops::translate(x=-6mm, y=0mm, z=0mm) ->
+                              Workpiece(sketch) logo::microcad::IconElement(radius=5mm) ->
+                                - radius = 5mm
+                                Operation union() ->
+                                  Group ->
+                                    c: Workpiece(op) std::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                      - x = 0mm
+                                      - y = 5mm
+                                      - z = 0mm
+                                      Transform __builtin::ops::translate(x=0mm, y=5mm, z=0mm) ->
+                                        Workpiece(sketch) std::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                          - end = 4.71238898038469rad
+                                          - radius = 5mm
+                                          - start = 3.14159265358979rad
+                                          Primitive2D __builtin::geo2d::Sector(end=4.71238898038469rad, radius=5mm, start=3.14159265358979rad) ->
+                                    r: Workpiece(sketch) std::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                                      - height = 10mm
+                                      - width = 5mm
+                                      - x = -5mm
+                                      - y = -5mm
+                                      Primitive2D __builtin::geo2d::Rect(height=10mm, width=5mm, x=-5mm, y=-5mm) ->
+                  Workpiece(op) std::ops::align(direction=(x=1, y=0, z=0), spacing=0mm) ->
+                    - direction = (x=1, y=0, z=0)
+                    - spacing = 0mm
+                    Operation __builtin::ops::align(spacing=0mm, x=1, y=0, z=0) ->
+                      Group ->
+                        Workpiece(sketch) logo::microcad::Micro(radius=5mm, thickness=2mm) ->
+                          - radius = 5mm
+                          - thickness = 2mm
+                          Operation union() ->
+                            Group ->
+                              Operation union() ->
+                                Group ->
+                                  u: Operation subtract() ->
+                                    Group ->
+                                      Workpiece(op) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                        - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
+                                          Workpiece(sketch) std::geo2d::Sector(angle=3.14159265358979rad, offset=0rad, radius=5mm) ->
+                                            - end = 1.5707963267949rad
+                                            - radius = 5mm
+                                            - start = -1.5707963267949rad
+                                            Primitive2D __builtin::geo2d::Sector(end=1.5707963267949rad, radius=5mm, start=-1.5707963267949rad) ->
+                                      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                                        - center = (x=0mm, y=0mm)
+                                        - radius = 3mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                          Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+                                  r_l: Workpiece(sketch) std::geo2d::Rect(height=15mm, width=2mm, x=-5mm, y=-10mm) ->
+                                    - height = 15mm
+                                    - width = 2mm
+                                    - x = -5mm
+                                    - y = -10mm
+                                    Primitive2D __builtin::geo2d::Rect(height=15mm, width=2mm, x=-5mm, y=-10mm) ->
+                              r_r: Workpiece(sketch) std::geo2d::Rect(height=10mm, width=2mm, x=3mm, y=-5mm) ->
+                                - height = 10mm
+                                - width = 2mm
+                                - x = 3mm
+                                - y = -5mm
+                                Primitive2D __builtin::geo2d::Rect(height=10mm, width=2mm, x=3mm, y=-5mm) ->
+                        Workpiece(sketch) logo::microcad::C(radius=5mm, thickness=2mm) ->
+                          - radius = 5mm
+                          - thickness = 2mm
+                          Workpiece(sketch) logo::microcad::Arc(angle=4.53785605518526rad, radius=5mm, thickness=2mm) ->
+                            - angle = 4.53785605518526rad
+                            - radius = 5mm
+                            - thickness = 2mm
+                            Operation subtract() ->
+                              Group ->
+                                Workpiece(op) std::ops::rotate(angle=-1.39626340159546rad, axis=(x=0, y=0, z=1)) ->
+                                  - matrix = Matrix3 [[0.17364817766693022, -0.9848077530122081, 0.0], [0.9848077530122081, 0.17364817766693022, 0.0], [0.0, 0.0, 1.0]]
+                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.17364817766693022, -0.9848077530122081, 0.0], [0.9848077530122081, 0.17364817766693022, 0.0], [0.0, 0.0, 1.0]]) ->
+                                    Workpiece(sketch) std::geo2d::Sector(end=2.26892802759263rad, radius=5mm, start=-2.26892802759263rad) ->
+                                      - end = 2.26892802759263rad
+                                      - radius = 5mm
+                                      - start = -2.26892802759263rad
+                                      Primitive2D __builtin::geo2d::Sector(end=2.26892802759263rad, radius=5mm, start=-2.26892802759263rad) ->
+                                Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                                  - center = (x=0mm, y=0mm)
+                                  - radius = 3mm
+                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                    Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+                        Workpiece(sketch) logo::microcad::A(radius=5mm, thickness=2mm) ->
+                          - radius = 5mm
+                          - thickness = 2mm
+                          Operation union() ->
+                            Group ->
+                              Workpiece(sketch) logo::microcad::Arc(angle=5.23598775598299rad, radius=5mm, thickness=2mm) ->
+                                - angle = 5.23598775598299rad
+                                - radius = 5mm
+                                - thickness = 2mm
+                                Operation subtract() ->
+                                  Group ->
+                                    Workpiece(op) std::ops::rotate(angle=-2.0943951023932rad, axis=(x=0, y=0, z=1)) ->
+                                      - matrix = Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]) ->
+                                        Workpiece(sketch) std::geo2d::Sector(end=2.61799387799149rad, radius=5mm, start=-2.61799387799149rad) ->
+                                          - end = 2.61799387799149rad
+                                          - radius = 5mm
+                                          - start = -2.61799387799149rad
+                                          Primitive2D __builtin::geo2d::Sector(end=2.61799387799149rad, radius=5mm, start=-2.61799387799149rad) ->
+                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                                      - center = (x=0mm, y=0mm)
+                                      - radius = 3mm
+                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                        Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+                              Workpiece(sketch) std::geo2d::Rect(height=10mm, width=2mm, x=2.5mm, y=-5mm) ->
+                                - height = 10mm
+                                - width = 2mm
+                                - x = 2.5mm
+                                - y = -5mm
+                                Primitive2D __builtin::geo2d::Rect(height=10mm, width=2mm, x=2.5mm, y=-5mm) ->
+                        Workpiece(sketch) logo::microcad::D(radius=5mm, thickness=2mm) ->
+                          - radius = 5mm
+                          - thickness = 2mm
+                          Operation union() ->
+                            Group ->
+                              Workpiece(sketch) logo::microcad::Arc(angle=5.23598775598299rad, radius=5mm, thickness=2mm) ->
+                                - angle = 5.23598775598299rad
+                                - radius = 5mm
+                                - thickness = 2mm
+                                Operation subtract() ->
+                                  Group ->
+                                    Workpiece(op) std::ops::rotate(angle=-2.0943951023932rad, axis=(x=0, y=0, z=1)) ->
+                                      - matrix = Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]) ->
+                                        Workpiece(sketch) std::geo2d::Sector(end=2.61799387799149rad, radius=5mm, start=-2.61799387799149rad) ->
+                                          - end = 2.61799387799149rad
+                                          - radius = 5mm
+                                          - start = -2.61799387799149rad
+                                          Primitive2D __builtin::geo2d::Sector(end=2.61799387799149rad, radius=5mm, start=-2.61799387799149rad) ->
+                                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
+                                      - center = (x=0mm, y=0mm)
+                                      - radius = 3mm
+                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+                                        Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
+                              Workpiece(sketch) std::geo2d::Rect(height=15mm, width=2mm, x=2.5mm, y=-5mm) ->
+                                - height = 15mm
+                                - width = 2mm
+                                - x = 2.5mm
+                                - y = -5mm
+                                Primitive2D __builtin::geo2d::Rect(height=15mm, width=2mm, x=2.5mm, y=-5mm) ->
+
+Export of "../books/examples/src/.test/logo-out.stl" successful.
+-- Test Result --
+OK (BUT WARNINGS)
