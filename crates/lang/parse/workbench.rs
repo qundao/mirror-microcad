@@ -18,6 +18,7 @@ impl FromAst for Rc<WorkbenchDefinition> {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(Rc::new(WorkbenchDefinition {
+            keyword_ref: context.src_ref(&node.keyword_span),
             doc: node
                 .doc
                 .as_ref()

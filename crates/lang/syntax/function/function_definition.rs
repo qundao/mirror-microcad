@@ -8,6 +8,8 @@ use crate::{src_ref::*, syntax::*};
 /// Function definition
 #[derive(Clone)]
 pub struct FunctionDefinition {
+    /// SrcRef of the `fn` keyword
+    pub keyword_ref: SrcRef,
     /// Documentation.
     pub doc: Option<DocBlock>,
     /// Visibility

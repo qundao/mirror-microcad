@@ -8,6 +8,8 @@ use crate::{rc::*, src_ref::*, syntax::*};
 /// Module definition.
 #[derive(Clone, Default)]
 pub struct ModuleDefinition {
+    /// SrcRef of the `mod` keyword
+    pub keyword_ref: SrcRef,
     /// Documentation.
     pub doc: Option<DocBlock>,
     /// Visibility of the module.

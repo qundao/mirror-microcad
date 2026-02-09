@@ -171,9 +171,9 @@ impl StatementNotSupportedError {
     pub(super) fn new<T: Grant + SrcReferrer>(node: &T, parent: &Symbol) -> Self {
         StatementNotSupportedError {
             inner: node.kind(),
-            inner_span: node.src_ref(),
+            inner_span: node.kind_ref().unwrap_or_else(|| node.src_ref()),
             outer: parent.kind_str(),
-            outer_span: parent.src_ref(),
+            outer_span: parent.kind_ref().unwrap_or_else(|| parent.src_ref()),
             allowed_parents: node.allowed_parents(),
         }
     }

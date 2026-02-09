@@ -9,6 +9,7 @@ impl FromAst for FunctionDefinition {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(FunctionDefinition {
+            keyword_ref: context.src_ref(&node.keyword_span),
             doc: node
                 .doc
                 .as_ref()

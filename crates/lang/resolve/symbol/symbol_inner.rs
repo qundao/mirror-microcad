@@ -20,6 +20,17 @@ pub(super) struct SymbolInner {
     pub(super) used: std::cell::OnceCell<()>,
 }
 
+impl SymbolInner {
+    pub fn kind_ref(&self) -> Option<SrcRef> {
+        match &self.def {
+            SymbolDef::Module(m) => Some(m.keyword_ref.clone()),
+            SymbolDef::Workbench(wb) => Some(wb.keyword_ref.clone()),
+            SymbolDef::Function(f) => Some(f.keyword_ref.clone()),
+            _ => None,
+        }
+    }
+}
+
 impl SrcReferrer for SymbolInner {
     fn src_ref(&self) -> SrcRef {
         match &self.def {

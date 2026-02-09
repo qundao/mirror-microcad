@@ -32,6 +32,8 @@ impl WorkbenchKind {
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Clone)]
 pub struct WorkbenchDefinition {
+    /// SrcRef of the `sketch`/`part`/`op` keyword
+    pub keyword_ref: SrcRef,
     /// Documentation.
     pub doc: Option<DocBlock>,
     /// Workbench attributes.

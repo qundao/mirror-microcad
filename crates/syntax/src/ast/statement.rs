@@ -54,6 +54,7 @@ pub enum WorkbenchKind {
 #[allow(missing_docs)]
 pub struct WorkbenchDefinition {
     pub span: Span,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub kind: WorkbenchKind,
@@ -69,6 +70,7 @@ pub struct WorkbenchDefinition {
 #[allow(missing_docs)]
 pub struct ModuleDefinition {
     pub span: Span,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
@@ -82,6 +84,7 @@ pub struct ModuleDefinition {
 #[allow(missing_docs)]
 pub struct FunctionDefinition {
     pub span: Span,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub visibility: Option<Visibility>,

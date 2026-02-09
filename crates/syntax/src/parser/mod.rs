@@ -497,7 +497,7 @@ fn parser<'tokens>(
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.or_not())
-            .then_ignore(just(Token::KeywordMod))
+            .then(just(Token::KeywordMod).map_with(|_, e| e.span()))
             .then(identifier_parser.clone())
             .then(
                 block
@@ -507,9 +507,10 @@ fn parser<'tokens>(
             )
             .with_extras()
             .map_with(
-                |(((((doc, attributes), visibility), name), body), extras), e| {
+                |((((((doc, attributes), visibility), keyword_span), name), body), extras), e| {
                     Statement::Module(ModuleDefinition {
                         span: e.span(),
+                        keyword_span,
                         extras,
                         doc,
                         attributes,
@@ -585,16 +586,17 @@ fn parser<'tokens>(
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.or_not())
-            .then(workspace_kind)
+            .then(workspace_kind.map_with(|kind, e| (kind, e.span())))
             .then(identifier_parser.clone())
             .then(arguments.clone())
             .then(block.clone())
             .with_extras()
             .map_with(
-                |(((((((doc, attributes), visibility), kind), name), arguments), body), extras),
+                |(((((((doc, attributes), visibility), (kind, keyword_span)), name), arguments), body), extras),
                  e| {
                     Statement::Workbench(WorkbenchDefinition {
                         span: e.span(),
+                        keyword_span,
                         extras,
                         kind,
                         doc,
@@ -623,7 +625,7 @@ fn parser<'tokens>(
         let function = doc_comment
             .clone()
             .then(visibility.or_not())
-            .then_ignore(just(Token::KeywordFn))
+            .then(just(Token::KeywordFn).map_with(|_, e| e.span()))
             .then(identifier_parser.clone())
             .then(arguments.clone())
             .then(
@@ -634,9 +636,10 @@ fn parser<'tokens>(
             .then(block.clone())
             .with_extras()
             .map_with(
-                |((((((doc, visibility), name), arguments), return_type), body), extras), e| {
+                |(((((((doc, visibility), keyword_span), name), arguments), return_type), body), extras), e| {
                     Statement::Function(FunctionDefinition {
                         span: e.span(),
+                        keyword_span,
                         extras,
                         doc,
                         visibility,
