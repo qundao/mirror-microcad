@@ -93,6 +93,27 @@ fn map_normal_token(token: SpannedToken<NormalToken>) -> impl Iterator<Item = Sp
         NormalToken::KeywordInit => {
             Either::Left(once(SpannedToken::new(token.span, Token::KeywordInit)))
         }
+        NormalToken::KeywordPlugin => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordPlugin)))
+        }
+        NormalToken::KeywordAssembly => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordAssembly)))
+        }
+        NormalToken::KeywordMaterial => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordMaterial)))
+        }
+        NormalToken::KeywordUnit => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordUnit)))
+        }
+        NormalToken::KeywordEnum => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordEnum)))
+        }
+        NormalToken::KeywordStruct => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordStruct)))
+        }
+        NormalToken::KeywordMatch => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordMatch)))
+        }
         NormalToken::Identifier(i) => {
             Either::Left(once(SpannedToken::new(token.span, Token::Identifier(i))))
         }

@@ -3,11 +3,11 @@
 
 use crate::Span;
 use crate::ast::{BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator};
-use crate::parser::{Extra, ParserInput};
+use crate::parser::{Extra, ParserInput, STRUCTURAL_TOKENS};
 use crate::tokens::Token;
 use chumsky::extra::ParserExtra;
 use chumsky::input::Input;
-use chumsky::prelude::one_of;
+use chumsky::prelude::*;
 use chumsky::{IterParser, Parser, extra, select_ref};
 
 pub fn comment_parser<'tokens>()
@@ -40,6 +40,41 @@ pub fn extras_parser<'tokens>()
         .map(ItemExtra::Comment)
         .repeated()
         .collect::<Vec<_>>()
+}
+
+/// Ignore tokens, until we hit the end of a pair or nested curly brackets
+///
+/// Used for error recovery
+pub fn ignore_till_matched_brackets<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
+    none_of(STRUCTURAL_TOKENS)
+        .repeated()
+        .ignore_then(nested_delimiters(
+            Token::SigilOpenCurlyBracket,
+            Token::SigilCloseCurlyBracket,
+            [
+                (
+                    Token::SigilOpenSquareBracket,
+                    Token::SigilCloseSquareBracket,
+                ),
+                (Token::SigilOpenBracket, Token::SigilCloseBracket),
+            ],
+            |_| (),
+        ))
+        .boxed()
+}
+
+/// Ignore tokens, until we hit a semicolon
+///
+/// Used for error recovery
+pub fn ignore_till_semi<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
+    none_of(Token::SigilSemiColon)
+        .repeated()
+        .at_least(1)
+        .then(just(Token::SigilSemiColon))
+        .ignored()
+        .boxed()
 }
 
 pub fn binop<'tokens, I>(

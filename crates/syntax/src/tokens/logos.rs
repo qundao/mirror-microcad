@@ -53,6 +53,20 @@ pub enum NormalToken<'a> {
     KeywordProp,
     #[token("init")]
     KeywordInit,
+    #[token("__plugin")]
+    KeywordPlugin,
+    #[token("assembly")]
+    KeywordAssembly,
+    #[token("material")]
+    KeywordMaterial,
+    #[token("unit")]
+    KeywordUnit,
+    #[token("enum")]
+    KeywordEnum,
+    #[token("struct")]
+    KeywordStruct,
+    #[token("match")]
+    KeywordMatch,
 
     #[regex("(_|[a-zA-Z])[_a-zA-Z0-9']*", callback = token_cow, priority = 4)]
     Identifier(Cow<'a, str>),
