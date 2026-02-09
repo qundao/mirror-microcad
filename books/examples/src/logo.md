@@ -3,9 +3,9 @@
 [![Report](.test/logo.svg)](.test/logo.log)
 
 ```µcad,logo
-// file: logo.µcad
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
+// file: logo.µcad
 
 pub mod microcad {
     use std::geo2d::*;

@@ -49,7 +49,7 @@ authors = [
     "Michael Winkelmann (michael@winkelmann.site)",
     "Patrick Hoffmann (p.hoffmann@berlin.de)",
 ]
-version = "0.2.20"
+version = "0.3.0"
 edition = "2024"
 homepage = "https://microcad.xyz"
 repository = "https://codeberg.org/microcad/microcad"

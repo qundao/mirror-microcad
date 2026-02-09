@@ -3,9 +3,9 @@
 [![Report](.test/dome.svg)](.test/dome.log)
 
 ```µcad,dome
-// file: dome.µcad
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
+// file: dome.µcad
 
 use std::geo2d::*;
 use std::ops::*;
