@@ -3,6 +3,7 @@
 
 [package]
 name = "microcad_markdown_test"
+description = "Library to generate tests from µcad code snippets inside markdown files"
 edition.workspace = true
 rust-version.workspace = true
 version.workspace = true

@@ -3,7 +3,8 @@
 
 [package]
 name = "microcad-syntax"
-description.workspace = true
+description = "µcad syntax lexer and parser"
+documentation = "https://docs.rs/microcad-syntax"
 authors.workspace = true
 version.workspace = true
 edition.workspace = true

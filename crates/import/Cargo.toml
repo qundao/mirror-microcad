@@ -3,7 +3,7 @@
 
 [package]
 name = "microcad-import"
-description = "µcad import"
+description = "µcad import API"
 documentation = "https://docs.rs/microcad-import"
 authors.workspace = true
 edition.workspace = true

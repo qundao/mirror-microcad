@@ -3,7 +3,7 @@
 
 [package]
 name = "microcad-export"
-description = "µcad export"
+description = "µcad export API"
 documentation = "https://docs.rs/microcad-export"
 authors.workspace = true
 edition.workspace = true

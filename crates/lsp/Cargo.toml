@@ -3,7 +3,7 @@
 
 [package]
 name = "microcad-lsp"
-description = "LSP backend for microcad"
+description = "LSP implementation for µcad language"
 documentation = "https://docs.rs/microcad-lsp"
 authors.workspace = true
 edition.workspace = true
