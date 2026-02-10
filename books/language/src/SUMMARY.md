@@ -2,7 +2,8 @@
 
 - [Introduction](./intro/README.md)
   - [Preface](./intro/preface.md)
-  - [Tested Examples](intro/testing.md)
+  - [Language Design](./intro/language_design.md)
+  - [Tested Examples](./intro/testing.md)
 - [Program Structure](./structure/README.md)
   - [Source Files](./structure/source_file.md)
   - [Modules](./structure/modules/README.md)
