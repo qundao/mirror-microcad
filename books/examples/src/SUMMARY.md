@@ -1,5 +1,7 @@
 # Examples
 
+This book was generated automatically.
+
 - [bike_pack_mount](bike_pack_mount.md)
 - [bricks](bricks.md)
 - [buffer_stand](buffer_stand.md)
