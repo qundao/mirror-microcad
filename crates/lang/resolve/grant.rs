@@ -285,15 +285,15 @@ impl Body {
         ) {
             let code_before_err =
                 |stmt: &Statement| ResolveError::StatementNotAllowedPriorInitializers {
-                    initializer: first_init.keyword_ref.clone().into(),
-                    statement: stmt.src_ref().into(),
-                    workbench: parent.src_ref().into(),
+                    initializer: first_init.keyword_ref.clone(),
+                    statement: stmt.src_ref(),
+                    workbench: parent.src_ref(),
                     kind: parent.kind_str(),
                 };
             let code_between_err = |stmt: &Statement| ResolveError::CodeBetweenInitializers {
                 initializers: SrcRef::merge(&first_init.keyword_ref, &last_init.keyword_ref),
-                statement: stmt.src_ref().into(),
-                workbench: parent.src_ref().into(),
+                statement: stmt.src_ref(),
+                workbench: parent.src_ref(),
                 kind: parent.kind_str(),
             };
 
