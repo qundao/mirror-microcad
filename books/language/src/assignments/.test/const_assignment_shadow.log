@@ -28,7 +28,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 82:11: Ambiguous identifiers
+  × error: 82:11: Ambiguous identifier 'A'
     ╭─[../books/language/src/assignments/const.md:81:11]
  80 │ mod module {
  81 │     const A = 5;
@@ -39,7 +39,7 @@
     ·           ╰── Ambiguous usage of 'A'
  83 │ 
     ╰────
-  × error: 92:15: Ambiguous identifiers
+  × error: 92:15: Ambiguous identifier 'A'
     ╭─[../books/language/src/assignments/const.md:91:15]
  90 │     pub sketch Sketch() {
  91 │         const A = 5;

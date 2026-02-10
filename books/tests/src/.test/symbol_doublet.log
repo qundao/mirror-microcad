@@ -19,7 +19,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 8:4: Ambiguous identifiers
+  × error: 8:4: Ambiguous identifier 'foo'
    ╭─[../books/tests/src/symbols.md:4:5]
  4 │ mod foo {
    ·     ─┬─

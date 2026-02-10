@@ -73,7 +73,7 @@ pub enum ResolveError {
     AmbiguousSymbol(QualifiedName, QualifiedNames),
 
     /// Ambiguous symbol was found
-    #[error("Ambiguous identifiers")]
+    #[error("Ambiguous identifier '{ambiguous}'")]
     #[allow(missing_docs)]
     AmbiguousId {
         #[label(primary, "First usage of '{first}'")]
