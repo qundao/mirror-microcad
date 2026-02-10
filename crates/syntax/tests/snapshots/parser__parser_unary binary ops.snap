@@ -1,0 +1,113 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(tokens.as_slice())
+---
+Ok(
+    SourceFile {
+        span: 0..11,
+        statements: StatementList {
+            span: 0..11,
+            extras: ItemExtras {
+                leading: [],
+                trailing: [],
+            },
+            statements: [],
+            tail: Some(
+                Expression(
+                    ExpressionStatement {
+                        span: 0..11,
+                        extras: ItemExtras {
+                            leading: [],
+                            trailing: [],
+                        },
+                        attributes: [],
+                        expression: BinaryOperation(
+                            BinaryOperation {
+                                span: 0..11,
+                                lhs: UnaryOperation(
+                                    UnaryOperation {
+                                        span: 0..4,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        operation: Minus,
+                                        rhs: ArrayList(
+                                            ArrayListExpression {
+                                                span: 1..4,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                items: [
+                                                    ArrayItem {
+                                                        span: 2..3,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        expression: Literal(
+                                                            Literal {
+                                                                span: 2..3,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                literal: Integer(
+                                                                    IntegerLiteral {
+                                                                        span: 2..3,
+                                                                        value: 1,
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ],
+                                                ty: None,
+                                            },
+                                        ),
+                                    },
+                                ),
+                                operation: NotEqual,
+                                rhs: ArrayList(
+                                    ArrayListExpression {
+                                        span: 8..11,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        items: [
+                                            ArrayItem {
+                                                span: 9..10,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                expression: Literal(
+                                                    Literal {
+                                                        span: 9..10,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        literal: Integer(
+                                                            IntegerLiteral {
+                                                                span: 9..10,
+                                                                value: 1,
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                        ty: None,
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            ),
+        },
+    },
+)

@@ -4,8 +4,8 @@
 #![allow(missing_docs)]
 
 use insta::assert_debug_snapshot;
-use microcad_syntax::parse;
 use microcad_syntax::lex;
+use microcad_syntax::parse;
 use test_case::test_case;
 
 #[test_case("single int", "1")]
@@ -87,7 +87,7 @@ use test_case::test_case;
     }"#
 )]
 #[test_case(
-    "doc comment assigment",
+    "doc comment assignment",
     r#"/// Doc comment
     a = 1;"#
 )]
@@ -141,9 +141,9 @@ use test_case::test_case;
 #[test_case("array list units", "a = [1, 2]mm;")]
 #[test_case("array range units", "a = [1..3]mm;")]
 #[test_case("const", "const FOO = 1;")]
-#[test_case("pub assigment", "pub foo = 1;")]
+#[test_case("pub assignment", "pub foo = 1;")]
 #[test_case(
-    "attribute assigment",
+    "attribute assignment",
     r##"#[color = "#FF00FF"]
     a = 1;"##
 )]
@@ -186,14 +186,11 @@ use test_case::test_case;
     b = 1;"#
 )]
 #[test_case("units", r#"0" + 1% + 2mm / 3mm2 - 4mm³ * 1° + 1" - 2'"#; "units")]
-#[test_case("array binops", r#"[1,2]" == [1,2]cm"#)]
-#[test_case("unary binops", r#"-[1] != [1]"#)]
-#[test_case(
-    "array comments",
-    r#"[1 /* foo */,2 /* bar */]"#
-)]
-#[test_case("untypable", r#"b = "sad"m3;"#)]
-#[test_case("binop precedence", "a^2 + b^3")]
+#[test_case("array binary ops", r#"[1,2]" == [1,2]cm"#)]
+#[test_case("unary binary ops", r#"-[1] != [1]"#)]
+#[test_case("array comments", r#"[1 /* foo */,2 /* bar */]"#)]
+#[test_case("un-typeable", r#"b = "sad"m3;"#)]
+#[test_case("binary op precedence", "a^2 + b^3")]
 fn test_parser(name: &str, input: &str) {
     let tokens: Vec<_> = lex(input).collect();
     assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));
