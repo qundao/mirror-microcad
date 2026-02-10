@@ -2,7 +2,7 @@
 
 ## Module: love
 
-[![Report](.test/text_love.svg)](.test/text_love.log)
+[![test](.test/text_love.svg)](.test/text_love.log)
 
 ```µcad,text_love
 // file: love.µcad
@@ -36,7 +36,7 @@ Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
 
 ## Module: text_plate
 
-[![Report](.test/text_text_plate.svg)](.test/text_text_plate.log)
+[![test](.test/text_text_plate.svg)](.test/text_text_plate.log)
 
 ```µcad,text_text_plate
 // file: text_plate.µcad

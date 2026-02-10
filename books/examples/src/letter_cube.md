@@ -1,6 +1,6 @@
 # Example: letter_cube
 
-[![Report](.test/letter_cube.svg)](.test/letter_cube.log)
+[![test](.test/letter_cube.svg)](.test/letter_cube.log)
 
 ```µcad,letter_cube
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

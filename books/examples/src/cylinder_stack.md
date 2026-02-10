@@ -1,6 +1,6 @@
 # Example: cylinder_stack
 
-[![Report](.test/cylinder_stack.svg)](.test/cylinder_stack.log)
+[![test](.test/cylinder_stack.svg)](.test/cylinder_stack.log)
 
 ```µcad,cylinder_stack
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

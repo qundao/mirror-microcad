@@ -1,6 +1,6 @@
 # Example: logo
 
-[![Report](.test/logo.svg)](.test/logo.log)
+[![test](.test/logo.svg)](.test/logo.log)
 
 ```µcad,logo
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>

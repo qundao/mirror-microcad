@@ -1,6 +1,6 @@
 # Example: spirograph
 
-[![Report](.test/spirograph.svg)](.test/spirograph.log)
+[![test](.test/spirograph.svg)](.test/spirograph.log)
 
 ```µcad,spirograph
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>

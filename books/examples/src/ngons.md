@@ -1,6 +1,6 @@
 # Example: ngons
 
-[![Report](.test/ngons.svg)](.test/ngons.log)
+[![test](.test/ngons.svg)](.test/ngons.log)
 
 ```µcad,ngons
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

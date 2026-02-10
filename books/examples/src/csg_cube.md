@@ -1,6 +1,6 @@
 # Example: csg_cube
 
-[![Report](.test/csg_cube.svg)](.test/csg_cube.log)
+[![test](.test/csg_cube.svg)](.test/csg_cube.log)
 
 ```µcad,csg_cube
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>

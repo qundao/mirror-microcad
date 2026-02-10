@@ -2,7 +2,7 @@
 
 ## Module: brick
 
-[![Report](.test/bricks_brick.svg)](.test/bricks_brick.log)
+[![test](.test/bricks_brick.svg)](.test/bricks_brick.log)
 
 ```µcad,bricks_brick
 // file: brick.µcad
@@ -72,7 +72,7 @@ Brick(
 
 ## Module: tutorial
 
-[![Report](.test/bricks_tutorial.svg)](.test/bricks_tutorial.log)
+[![test](.test/bricks_tutorial.svg)](.test/bricks_tutorial.log)
 
 ```µcad,bricks_tutorial
 // file: tutorial.µcad
@@ -142,7 +142,7 @@ LegoBrick();
 
 ## Module: use_bricks
 
-[![Report](.test/bricks_use_bricks.svg)](.test/bricks_use_bricks.log)
+[![test](.test/bricks_use_bricks.svg)](.test/bricks_use_bricks.log)
 
 ```µcad,bricks_use_bricks
 // file: use_bricks.µcad

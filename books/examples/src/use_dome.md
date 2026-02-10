@@ -1,6 +1,6 @@
 # Example: use_dome
 
-[![Report](.test/use_dome.svg)](.test/use_dome.log)
+[![test](.test/use_dome.svg)](.test/use_dome.log)
 
 ```µcad,use_dome
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

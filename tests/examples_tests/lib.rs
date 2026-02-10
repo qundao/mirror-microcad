@@ -36,7 +36,7 @@ pub fn generate_example_book(
                         let code = format!(
                             "# Example: {name}
 
-[![Report](.test/{name}.svg)](.test/{name}.log)
+[![test](.test/{name}.svg)](.test/{name}.log)
 
 ```µcad,{name}
 {content}
@@ -97,7 +97,7 @@ pub fn generate_example_book(
                                         format!(
                                             "## Module: {name}
 
-[![Report](.test/{folder_name}_{name}.svg)](.test/{folder_name}_{name}.log)
+[![test](.test/{folder_name}_{name}.svg)](.test/{folder_name}_{name}.log)
 
 ```µcad,{folder_name}_{name}
 // file: {file_name}

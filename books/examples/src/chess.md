@@ -1,6 +1,6 @@
 # Example: chess
 
-[![Report](.test/chess.svg)](.test/chess.log)
+[![test](.test/chess.svg)](.test/chess.log)
 
 ```µcad,chess
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>

@@ -1,6 +1,6 @@
 # Example: bike_pack_mount
 
-[![Report](.test/bike_pack_mount.svg)](.test/bike_pack_mount.log)
+[![test](.test/bike_pack_mount.svg)](.test/bike_pack_mount.log)
 
 ```µcad,bike_pack_mount
 // Copyright © 2025 The µcad authors <info@ucad.xyz>
