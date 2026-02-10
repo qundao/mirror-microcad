@@ -5,15 +5,15 @@ mod error;
 mod helpers;
 mod simplify;
 
-use crate::Span;
 use crate::ast::*;
 use crate::parser::helpers::{binop, comment_parser};
 use crate::parser::simplify::simplify_unary_op;
 use crate::tokens::*;
+use crate::Span;
 use chumsky::error::Rich;
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
-use chumsky::{Parser, extra, select_ref};
+use chumsky::{extra, select_ref, Parser};
 pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
@@ -54,8 +54,8 @@ pub fn parse<'tokens>(
         .map_err(|errors| errors.into_iter().map(ParseError::new).collect())
 }
 
-fn parser<'tokens>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
+fn parser<'tokens>(
+) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
@@ -563,7 +563,6 @@ fn parser<'tokens>()
             Token::KeywordOp => WorkbenchKind::Op,
         }
         .boxed();
-
 
         let init = doc_comment
             .clone()

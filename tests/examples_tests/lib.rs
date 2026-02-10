@@ -135,9 +135,7 @@ pub fn generate_example_book(
 
     let summary = book_src.as_ref().join("SUMMARY.md");
     let code = format!(
-        "# Examples
-
-{}",
+        "# Examples\n\nThis book was generated automatically.\n\n{}\n",
         {
             let mut examples = examples
                 .iter()

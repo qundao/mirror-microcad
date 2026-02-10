@@ -187,7 +187,7 @@ pub enum AssignmentQualifier {
     Prop,
 }
 
-/// An assigment statement
+/// An assignment statement
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct Assignment {
@@ -210,7 +210,7 @@ pub struct Comment {
     pub lines: Vec<String>,
 }
 
-/// An optional visibility modifier that can be art of assigment and module, function and workbench definitions
+/// An optional visibility modifier that can be art of assignment and module, function and workbench definitions
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub enum Visibility {

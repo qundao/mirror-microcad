@@ -1,12 +1,12 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::error::Error;
-use std::fmt::{Display, Formatter};
-use crate::Span;
 use crate::tokens::Token;
+use crate::Span;
 use chumsky::error::{Rich, RichReason};
 use miette::{Diagnostic, LabeledSpan};
+use std::error::Error;
+use std::fmt::{Display, Formatter};
 use std::iter::once;
 
 /// An error from building the abstract syntax tree
@@ -30,9 +30,7 @@ impl Display for ParseError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self.error.reason() {
             RichReason::Custom(error) => write!(f, "{error}"),
-            RichReason::ExpectedFound {
-                expected, ..
-            } => {
+            RichReason::ExpectedFound { expected, .. } => {
                 write!(f, "Expected ")?;
                 let mut expected = expected.iter();
                 if let Some(pattern) = expected.next() {
@@ -41,22 +39,20 @@ impl Display for ParseError {
                 let last = expected.next_back();
                 for pattern in expected {
                     write!(f, ", {pattern}")?;
-                };
+                }
                 if let Some(pattern) = last {
                     write!(f, " or {pattern}")?;
                 }
                 Ok(())
-            },
+            }
         }
     }
 }
 
-impl Error for ParseError {
-
-}
+impl Error for ParseError {}
 
 impl Diagnostic for ParseError {
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=LabeledSpan> + '_>> {
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         let msg = match self.error.reason() {
             RichReason::Custom(error) => error.clone(),
             RichReason::ExpectedFound {
