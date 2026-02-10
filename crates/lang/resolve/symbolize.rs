@@ -61,7 +61,15 @@ impl Symbolize<SymbolMap> for StatementList {
                 .grant(parent, context)?
                 .symbolize(parent, context)?
             {
-                symbols.insert(id, symbol);
+                if let Some(alt) = symbols.insert(id.clone(), symbol) {
+                    context.error(
+                        &id,
+                        ResolveError::AmbiguousId {
+                            first: alt.id(),
+                            ambiguous: id.clone(),
+                        },
+                    )?;
+                }
             }
         }
 

@@ -76,10 +76,10 @@ A constant cannot be defined within the same module or workbench twice.
 
 [![test](.test/const_assignment_shadow.svg)](.test/const_assignment_shadow.log)
 
-```µcad,const_assignment_shadow#todo_fail
+```µcad,const_assignment_shadow#fail
 mod module {
     const A = 5;
-    const A = 1;  // error: A already defined in this module
+    const A = 1;  // error: ambiguous identifier in this module
 
     pub mod another_module {
         const A = 5;   // ok
@@ -88,8 +88,8 @@ mod module {
     }
 
     pub sketch Sketch() {
-        const A = 5;   // error: A is ambiguous
-        const A = 5;   // error: A already defined in this workbench
+        const A = 5;
+        const A = 5;   // error: ambiguous identifier in this workbench
     }
 }
 

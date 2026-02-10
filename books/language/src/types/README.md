@@ -47,7 +47,7 @@ you can declare the type only but also pass a default value:
 
 ```µcad,types_bundles_functions
 fn f(x = 4mm) {}       // use unit (with default)
-fn f(x: Length) {}     // use type (without default)
+fn g(x: Length) {}     // use type (without default)
 ```
 
 > [!NOTE]
