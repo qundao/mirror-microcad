@@ -1,0 +1,38 @@
+﻿
+-- Test --
+        Test name: symbol_doublet
+  Expected result: fail
+      Source file: ../books/tests/src/symbols.md:4
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   4:   mod foo {
+   5:       pub const A = 1mm;
+   6:   }
+   7:   
+   8:   fn foo() -> Length { // error: Ambiguous identifiers
+   9:       foo::A
+  10:   }
+  11:   
+  12:   foo();
+
+-- No Output --
+-- Errors --
+  × error: 8:4: Ambiguous identifiers
+   ╭─[../books/tests/src/symbols.md:4:5]
+ 4 │ mod foo {
+   ·     ─┬─
+   ·      ╰── First usage of 'foo'
+ 5 │     pub const A = 1mm;
+   ╰────
+   ╭─[../books/tests/src/symbols.md:8:4]
+ 7 │ 
+ 8 │ fn foo() -> Length { // error: Ambiguous identifiers
+   ·    ─┬─
+   ·     ╰── Ambiguous usage of 'foo'
+ 9 │     foo::A
+   ╰────
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

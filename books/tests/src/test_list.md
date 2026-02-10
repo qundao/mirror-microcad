@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**149** tests have been evaluated with version **0.3.0** of microcad.
+**150** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -125,6 +125,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/source_return.svg)](statement_usage/.test/source_return.log) | [source_return](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_use.svg)](statement_usage/.test/source_use.log) | [source_use](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_workbench.svg)](statement_usage/.test/source_workbench.log) | [source_workbench](statement_usage/source.md) |
+| [![test](.test/symbol_doublet.svg)](.test/symbol_doublet.log) | [symbol_doublet](symbols.md) |
 | [![test](.test/tuple_assignment.svg)](.test/tuple_assignment.log) | [tuple_assignment](tuple_assignments.md) |
 | [![test](.test/tuple_assignment_bundle.svg)](.test/tuple_assignment_bundle.log) | [tuple_assignment_bundle](tuple_assignments.md) |
 | [![test](.test/tuple_assignment_convert.svg)](.test/tuple_assignment_convert.log) | [tuple_assignment_convert](tuple_assignments.md) |
