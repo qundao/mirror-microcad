@@ -7,10 +7,10 @@
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::src_ref::{SrcRef, SrcReferrer};
-use crate::{diag::*, parse::*, syntax::*};
 use crate::resolve::grant::Grant;
 use crate::resolve::Symbol;
+use crate::src_ref::{SrcRef, SrcReferrer};
+use crate::{diag::*, parse::*, syntax::*};
 
 fn capitalize_first(s: &str) -> String {
     let mut c = s.chars();
@@ -71,6 +71,16 @@ pub enum ResolveError {
     /// Ambiguous symbol was found
     #[error("Ambiguous symbol found: {0}")]
     AmbiguousSymbol(QualifiedName, QualifiedNames),
+
+    /// Ambiguous symbol was found
+    #[error("Ambiguous identifiers")]
+    #[allow(missing_docs)]
+    AmbiguousId {
+        #[label(primary, "First usage of '{first}'")]
+        first: Identifier,
+        #[label("Ambiguous usage of '{ambiguous}'")]
+        ambiguous: Identifier,
+    },
 
     /// ScanDir Error
     #[error("{0}")]
@@ -142,7 +152,6 @@ pub enum ResolveError {
     },
 }
 
-
 /// Statement is not supported in this context.
 #[derive(Debug, Error, Diagnostic)]
 #[error("{} is not available within {outer}", capitalize_first(inner))]
@@ -154,7 +163,7 @@ pub struct StatementNotSupportedError {
     outer: &'static str,
     #[label("Within this {outer}")]
     outer_span: SrcRef,
-    allowed_parents: &'static[&'static str],
+    allowed_parents: &'static [&'static str],
 }
 
 impl StatementNotSupportedError {
@@ -170,7 +179,7 @@ impl StatementNotSupportedError {
     }
 
     fn allowed_parents(&self) -> impl std::fmt::Display {
-        struct AllowedParents(&'static[&'static str]);
+        struct AllowedParents(&'static [&'static str]);
 
         impl std::fmt::Display for AllowedParents {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
