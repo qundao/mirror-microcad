@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: const_assignment_shadow
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/assignments/const.md:80
         Test path: ../books/language/src/assignments/.test
 
@@ -9,7 +9,7 @@
 
   80:   mod module {
   81:       const A = 5;
-  82:       const A = 1;  // error: A already defined in this module
+  82:       const A = 1;  // error: ambiguous identifier in this module
   83:   
   84:       pub mod another_module {
   85:           const A = 5;   // ok
@@ -18,8 +18,8 @@
   88:       }
   89:   
   90:       pub sketch Sketch() {
-  91:           const A = 5;   // error: A is ambiguous
-  92:           const A = 5;   // error: A already defined in this workbench
+  91:           const A = 5;
+  92:           const A = 5;   // error: ambiguous identifier in this workbench
   93:       }
   94:   }
   95:   
@@ -28,31 +28,28 @@
 
 -- No Output --
 -- Errors --
-  × error: 91:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
-    ╭─[../books/language/src/assignments/const.md:91:9]
+  × error: 82:11: Ambiguous identifiers
+    ╭─[../books/language/src/assignments/const.md:81:11]
+ 80 │ mod module {
+ 81 │     const A = 5;
+    ·           ┬
+    ·           ╰── First usage of 'A'
+ 82 │     const A = 1;  // error: ambiguous identifier in this module
+    ·           ┬
+    ·           ╰── Ambiguous usage of 'A'
+ 83 │ 
+    ╰────
+  × error: 92:15: Ambiguous identifiers
+    ╭─[../books/language/src/assignments/const.md:91:15]
  90 │     pub sketch Sketch() {
- 91 │         const A = 5;   // error: A is ambiguous
-    ·         ─────┬─────
-    ·              ╰── Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
- 92 │         const A = 5;   // error: A already defined in this workbench
-    ╰────
-  × error: 92:9: Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
-    ╭─[../books/language/src/assignments/const.md:92:9]
- 91 │         const A = 5;   // error: A is ambiguous
- 92 │         const A = 5;   // error: A already defined in this workbench
-    ·         ─────┬─────
-    ·              ╰── Ambiguous symbol A might be one of the following: const_assignment_shadow::module::A, const_assignment_shadow::module::Sketch::A
+ 91 │         const A = 5;
+    ·               ┬
+    ·               ╰── First usage of 'A'
+ 92 │         const A = 5;   // error: ambiguous identifier in this workbench
+    ·               ┬
+    ·               ╰── Ambiguous usage of 'A'
  93 │     }
     ╰────
-  ⚠ warning: 92:9: Unused global symbol const A = 5.
-    ╭─[../books/language/src/assignments/const.md:92:9]
- 91 │         const A = 5;   // error: A is ambiguous
- 92 │         const A = 5;   // error: A already defined in this workbench
-    ·         ─────┬─────
-    ·              ╰── Unused global symbol const A = 5.
- 93 │     }
-    ╰────
-Expected error(s) which did not occur in line(s): 82
-Unexpected warnings(s) which did occur in line(s): 92
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED
