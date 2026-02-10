@@ -5449,6 +5449,7 @@ dependencies = [
  "microcad-lang",
  "microcad_markdown_test",
  "microcad_test_tools",
+ "miette",
  "pest",
  "pest_derive",
 ]

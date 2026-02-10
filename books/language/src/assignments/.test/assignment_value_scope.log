@@ -35,6 +35,14 @@
   60:   assert_invalid(b);
 
 -- Parse Error --
-Expected something else, comment, semicolon or end of input
+  × error: 59:1: Expected something else, comment, semicolon or end of input
+    ╭─[../books/language/src/assignments/value.md:59:1]
+ 58 │ // a is still available
+ 59 │ assert_valid(a);
+    · ──────┬─────
+    ·       ╰── unexpected identifier
+ 60 │ // b not known here anymore
+    ╰────
+
 -- Test Result --
 TODO

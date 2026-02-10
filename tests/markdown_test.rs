@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::rc::Rc;
-
+use miette::Report;
 use microcad_lang::{
     eval::{Capture, EvalContext},
     model::Model,
     syntax::SourceFile,
 };
+use microcad_lang::resolve::Sources;
+use microcad_lang::src_ref::{Refer, SrcReferrer};
 use microcad_test_tools::test_env::*;
 
 #[allow(dead_code)]
@@ -47,21 +49,32 @@ pub fn run_test(env: Option<TestEnv>) {
         ));
 
         // load and handle µcad source file
-        let source_file_result =
-            SourceFile::load_from_str(Some(env.name()), env.source_path(), env.code());
+        let (source, errors) =
+            SourceFile::load_from_str_with_recovery(Some(env.name()), env.source_path(), env.code());
+        let sources = Sources::load(source.clone(), &<Vec::<&str>>::new()).expect("no externals to fail");
+        let mut render_options = DiagRenderOptions::default();
+        render_options.color = false;
 
         match env.mode() {
             // test is expected to fail?
-            "fail" | "todo_fail" => match source_file_result {
+            "fail" | "todo_fail" => match errors {
                 // test expected to fail failed at parsing?
-                Err(errors) => {
+                Some(errors) => {
+                    let mut error_lines = std::collections::HashSet::new();
                     for err in errors {
+                        if let Some(line) = err.src_ref().line() {
+                            error_lines.insert(line + env.offset() - 1);
+                        }
                         env.log_ln("-- Parse Error --");
-                        env.log_ln(&err.to_string());
+                        let src_ref = err.src_ref();
+                        let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
+                        env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
                     }
                     if env.has_error_markers() {
-                        env.result(TestResult::FailWrong);
-                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                        if env.report_wrong_errors(&error_lines, &std::collections::HashSet::new()) {
+                            env.result(TestResult::FailWrong);
+                            panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                        }
                     } else if env.todo() {
                         env.result(TestResult::NotTodoFail);
                     } else {
@@ -69,7 +82,7 @@ pub fn run_test(env: Option<TestEnv>) {
                     }
                 }
                 // test expected to fail succeeded at parsing?
-                Ok(source) => {
+                None => {
                     // evaluate the code including µcad std library
                     let mut context = create_context(&source, env.offset());
                     let eval = context.eval();
@@ -132,12 +145,15 @@ pub fn run_test(env: Option<TestEnv>) {
                 }
             },
             // test is expected to succeed?
-            "ok" | "todo" | "warn" | "todo_warn" => match source_file_result {
+            "ok" | "todo" | "warn" | "todo_warn" => match errors {
                 // test awaited to succeed and parsing failed?
-                Err(errors) => {
-                    for err in &errors {
+                Some(errors) => {
+                    let first_err = errors[0].to_string();
+                    for err in errors {
                         env.log_ln("-- Parse Error --");
-                        env.log_ln(&err.to_string());
+                        let src_ref = err.src_ref();
+                        let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
+                        env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
                     }
 
                     if env.todo() {
@@ -147,11 +163,11 @@ pub fn run_test(env: Option<TestEnv>) {
                         panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                     } else {
                         env.result(TestResult::Fail);
-                        panic!("ERROR: {}", errors[0])
+                        panic!("ERROR: {first_err}")
                     }
                 }
                 // test awaited to succeed and parsing succeeds?
-                Ok(source) => {
+                None => {
                     // evaluate the code including µcad std library
                     let mut context = create_context(&source, env.offset());
                     let eval = context.eval();

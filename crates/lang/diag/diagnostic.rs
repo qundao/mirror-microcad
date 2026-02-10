@@ -1,9 +1,9 @@
 // Copyright © 2024-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use miette::SourceCode;
-use crate::{diag::*, resolve::*, src_ref::*};
 use crate::syntax::MietteSourceFile;
+use crate::{diag::*, resolve::*, src_ref::*};
+use miette::SourceCode;
 
 /// Diagnostic message with source code reference attached.
 pub enum Diagnostic {
@@ -52,7 +52,7 @@ impl Diagnostic {
             Diagnostic::Trace(r)
             | Diagnostic::Info(r)
             | Diagnostic::Warning(r)
-            | Diagnostic::Error(r) => &r.value
+            | Diagnostic::Error(r) => &r.value,
         }
     }
 
@@ -115,6 +115,18 @@ impl Diagnostic {
         }
 
         Ok(())
+    }
+
+    /// Pretty print the diagnostics to a string, see `pretty_print` for more information
+    pub fn to_pretty_string(
+        &self,
+        source_by_hash: &impl GetSourceByHash,
+        line_offset: usize,
+        options: &DiagRenderOptions,
+    ) -> String {
+        let mut buff = String::new();
+        self.pretty_print(&mut buff, source_by_hash, line_offset, options).expect("format to string can't fail");
+        buff
     }
 }
 
@@ -207,16 +219,15 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
         self.diagnostic.report().diagnostic_source()
     }
 
-    fn labels(&self) -> Option<Box<dyn Iterator<Item=miette::LabeledSpan> + '_>> {
-        self.diagnostic.report().labels()
-            .or_else(|| {
-                let span = self.diagnostic.src_ref().as_miette_span()?;
-                let label = miette::LabeledSpan::new_with_span(Some(self.diagnostic.message()), span);
-                Some(Box::new(std::iter::once(label)))
-            })
+    fn labels(&self) -> Option<Box<dyn Iterator<Item = miette::LabeledSpan> + '_>> {
+        self.diagnostic.report().labels().or_else(|| {
+            let span = self.diagnostic.src_ref().as_miette_span()?;
+            let label = miette::LabeledSpan::new_with_span(Some(self.diagnostic.message()), span);
+            Some(Box::new(std::iter::once(label)))
+        })
     }
 
-    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item=&'a dyn miette::Diagnostic> + 'a>> {
+    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item = &'a dyn miette::Diagnostic> + 'a>> {
         self.diagnostic.report().related()
     }
 
