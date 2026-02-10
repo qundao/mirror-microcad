@@ -18,7 +18,7 @@ git repository or if you are not so familiar with git, just leave an issue at
 [codeberg.org](https://codeberg.org/microcad/microcad/issues) so we can
 implement your ideas.
 
-## ❤️ Donate
+## ❤️ Support the project
 
 If you like this project, you can help us spend more time on it by donating:
 

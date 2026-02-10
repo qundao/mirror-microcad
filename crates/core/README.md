@@ -1,9 +1,14 @@
 # µcad core crate
 
-This crate contains the core functionality of µcad.
+[![Crates.io](https://img.shields.io/crates/v/microcad-core.svg)](https://crates.io/crates/microcad-core)
+[![Documentation](https://docs.rs/microcad-core/badge.svg)](https://docs.rs/microcad-core/)
+
+This crate provides the core functionality of µcad.
 It provides the basic data structures used to handle geometries and operations on them.
 
-## ❤️ Donate
+## ❤️ Support the Project
+
+This crate is part of the [microcad project](https://microcad.xyz).
 
 If you like this project, you can help us spend more time on it by donating:
 

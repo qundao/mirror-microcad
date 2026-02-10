@@ -1,6 +1,9 @@
-# microcad viewer
+# µcad viewer
 
-This crate provides the viewer to view µcad files.
+[![Crates.io](https://img.shields.io/crates/v/microcad-viewer.svg)](https://crates.io/crates/microcad-viewer)
+[![Documentation](https://docs.rs/microcad-viewer/badge.svg)](https://docs.rs/microcad-viewer/)
+
+This crate provides the viewer application to view µcad files.
 
 ## Requirements
 
@@ -10,21 +13,31 @@ On Debian systems using wayland, install the wayland libraries first before comp
 sudo apt install libwayland-dev
 ```
 
+## Install via cargo
+
+```sh
+cargo install microcad-viewer
+```
+
 ## Run
 
-Start the microcad viewer by typing `microcad-viewer` into your console.
+After install, you can run the microcad viewer by typing `microcad-viewer` into your console.
 
 ```sh
-microcad-viewer
+microcad-viewer some_file.µcad
 ```
 
-### Run workspace root using Cargo
+*Note: Typing the `.µcad` extension is optional*
+
+### Run in workspace root using Cargo
 
 ```sh
-RUST_LOG=info cargo run --bin microcad-viewer --package microcad-viewer -- examples/csg_cube.µcad
+RUST_LOG=info cargo run --bin microcad-viewer --package microcad-viewer -- examples/csg_cube
 ```
 
-## ❤️ Donate
+## ❤️ Support the project
+
+This crate is part of the [microcad project](https://microcad.xyz).
 
 If you like this project, you can help us spend more time on it by donating:
 

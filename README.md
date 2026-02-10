@@ -7,10 +7,12 @@
 ![µcad Logo](images/logo.png)
 
 µcad (pronounced *microcad*) is a description language for modeling parameterizable geometric objects.
+
 Simple basic shapes can be composed to create complex geometries which then can be rendered into STL
 or SVG files for 3D printing or CNC milling.
 
 **Note**: This project is in an early stage of development and is not yet feature complete.
+
 Feel free to [contribute](CONTRIBUTE.md) by opening issues or pull requests.
 
 ## Content
@@ -22,7 +24,7 @@ Feel free to [contribute](CONTRIBUTE.md) by opening issues or pull requests.
 - [Command line usage](#command-line-usage)
 - [Using the viewer](#using-the-viewer)
 - [Documentation](#documentation)
-- [❤️ Donate](#️-donate)
+- [❤️ Support the project](#️-support-the-project)
 - [💚 Funded by](#-funded-by)
 
 ## Quick Start
@@ -78,13 +80,6 @@ To install the latest release of *µcad* via *cargo*, type:
 cargo install microcad
 ```
 
-On first use, µcad requires its standard library.  
-If it is not yet installed, you can install it with:
-
-```sh
-microcad install std
-```
-
 ## Command line usage
 
 After installing, you can run a basic example by typing:
@@ -125,15 +120,12 @@ microcad-viewer ./examples/bricks/brick
 
 ## Documentation
 
-- [Description of language features](lang/doc/README.md)
 - [Language reference](http://docs.microcad.xyz/language/book/)
-- [Basic concepts](lang/doc/CONCEPTS.md)
-- [Glossary](lang/doc/GLOSSARY.md)
-- [Contribute Documentation](CONTRIBUTE.md#contribute-documentation)
+- [Contribute Documentation](CONTRIBUTE.md)
 
-## ❤️ Donate
+## ❤️ Support the project
 
-If you like this project you can help us spending more time with it by donating:
+If you like this project, you can help us spend more time on it by donating:
 
 <a href="https://opencollective.com/microcad/donate" target="_blank">
 <img src="https://opencollective.com/microcad/donate/button@2x.png?color=blue" width=300 />
