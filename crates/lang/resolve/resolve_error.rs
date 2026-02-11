@@ -4,7 +4,7 @@
 #![allow(unused_assignments)]
 //! Resolve error
 
-use miette::Diagnostic;
+use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
 use crate::resolve::grant::Grant;
@@ -154,15 +154,15 @@ pub enum ResolveError {
 
 /// Statement is not supported in this context.
 #[derive(Debug, Error, Diagnostic)]
-#[error("{} is not available within {outer}", capitalize_first(inner))]
+#[error("{} is not allowed {} {}", capitalize_first(inner), self.placement(), self.outer())]
 #[diagnostic(help("{inner} is only allowed within {}", self.allowed_parents()))]
 pub struct StatementNotSupportedError {
     inner: &'static str,
-    #[label(primary, "This {inner} is not allowed")]
+    #[label(primary, "This {inner} is not allowed{}", self.maybe_here())]
     inner_span: SrcRef,
     outer: &'static str,
     #[label("Within this {outer}")]
-    outer_span: SrcRef,
+    outer_span: Option<SourceSpan>,
     allowed_parents: &'static [&'static str],
 }
 
@@ -173,7 +173,9 @@ impl StatementNotSupportedError {
             inner: node.kind(),
             inner_span: node.kind_ref().unwrap_or_else(|| node.src_ref()),
             outer: parent.kind_str(),
-            outer_span: parent.kind_ref().unwrap_or_else(|| parent.src_ref()),
+            outer_span: (!parent.is_source())
+                .then(|| parent.kind_ref().unwrap_or_else(|| parent.src_ref()))
+                .and_then(|src_ref| src_ref.as_miette_span()),
             allowed_parents: node.allowed_parents(),
         }
     }
@@ -199,6 +201,34 @@ impl StatementNotSupportedError {
         }
 
         AllowedParents(self.allowed_parents)
+    }
+
+    fn parent_is_root(&self) -> bool {
+        self.outer == "source file"
+    }
+
+    fn placement(&self) -> &'static str {
+        if self.parent_is_root() {
+            "at"
+        } else {
+            "within"
+        }
+    }
+
+    fn outer(&self) -> &'static str {
+        if self.parent_is_root() {
+            "source root"
+        } else {
+            self.outer
+        }
+    }
+
+    fn maybe_here(&self) -> &'static str {
+        if self.parent_is_root() {
+            " here"
+        } else {
+            ""
+        }
     }
 }
 
