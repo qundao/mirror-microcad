@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 79:3: Public constant assigment is not available within function
+  × error: 79:3: Public constant assigment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:79:3]
  78 │ fn f() {
     · ─┬

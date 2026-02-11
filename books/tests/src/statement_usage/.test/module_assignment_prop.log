@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Property assigment is not available within module
+  × error: 95:3: Property assigment is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:95:3]
  94 │ mod k {
     · ─┬─

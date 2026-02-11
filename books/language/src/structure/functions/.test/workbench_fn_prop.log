@@ -24,7 +24,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 58:9: Property assigment is not available within function
+  × error: 58:9: Property assigment is not allowed within function
     ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
  56 │ 
  57 │     fn inner() {

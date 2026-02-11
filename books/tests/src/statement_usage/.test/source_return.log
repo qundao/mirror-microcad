@@ -11,12 +11,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 42:1: Return statement is not available within source file
+  × error: 42:1: Return statement is not allowed at source root
     ╭─[../books/tests/src/statement_usage/source.md:42:1]
  42 │ return 1;  // error
-    · ────┬───┬
-    ·     │   ╰── Within this source file
-    ·     ╰── This return statement is not allowed
+    · ────┬───
+    ·     ╰── This return statement is not allowed here
     ╰────
   help: return statement is only allowed within function definition
 Evaluation aborted because of prior resolve errors!

@@ -33,7 +33,7 @@
    · ──┬─
    ·   ╰── Before this initializer
    ╰────
-  × error: 7:10: Sketch is not available within sketch
+  × error: 7:10: Sketch is not allowed within sketch
    ╭─[../books/tests/src/statement_usage/pre-init.md:7:3]
  6 │ sketch K() { 
    · ───┬──

@@ -21,7 +21,7 @@
     ·       ╰── Statement not allowed within workbenches
  16 │ init(l:Length) {} } K();
     ╰────
-  × error: 15:7: Module definition is not available within sketch
+  × error: 15:7: Module definition is not allowed within sketch
     ╭─[../books/tests/src/statement_usage/pre-init.md:15:3]
  14 │ sketch K() { 
     · ───┬──

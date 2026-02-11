@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 71:3: Constant assigment is not available within function
+  × error: 71:3: Constant assigment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:71:3]
  70 │ fn f() {
     · ─┬

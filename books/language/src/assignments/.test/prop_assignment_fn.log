@@ -15,7 +15,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 34:5: Property assigment is not available within function
+  × error: 34:5: Property assigment is not allowed within function
     ╭─[../books/language/src/assignments/property.md:34:5]
  33 │ fn f() {
     · ─┬

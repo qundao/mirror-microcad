@@ -21,7 +21,7 @@
     ·       ╰── Statement not allowed within workbenches
  56 │ init(l:Length) {} } K();
     ╰────
-  × error: 55:3: Return statement is not available within sketch
+  × error: 55:3: Return statement is not allowed within sketch
     ╭─[../books/tests/src/statement_usage/pre-init.md:55:3]
  54 │ sketch K() { 
     · ───┬──

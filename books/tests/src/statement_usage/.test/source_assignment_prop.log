@@ -11,12 +11,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 72:1: Property assigment is not available within source file
+  × error: 72:1: Property assigment is not allowed at source root
     ╭─[../books/tests/src/statement_usage/source.md:72:1]
  72 │ prop a = 1;  // error
-    · ─────┬────┬
-    ·      │    ╰── Within this source file
-    ·      ╰── This property assigment is not allowed
+    · ─────┬────
+    ·      ╰── This property assigment is not allowed here
     ╰────
   help: property assigment is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!

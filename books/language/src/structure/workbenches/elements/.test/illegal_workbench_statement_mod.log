@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 55:9: Module definition is not available within sketch
+  × error: 55:9: Module definition is not allowed within sketch
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:5]
  54 │ sketch Wheel(radius: Length) {
     · ───┬──

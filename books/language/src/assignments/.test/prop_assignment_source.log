@@ -11,12 +11,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 25:1: Property assigment is not available within source file
+  × error: 25:1: Property assigment is not allowed at source root
     ╭─[../books/language/src/assignments/property.md:25:1]
  25 │ prop diameter = radius * 2; // error: not in source file
-    · ─────────────┬────────────┬
-    ·              │            ╰── Within this source file
-    ·              ╰── This property assigment is not allowed
+    · ─────────────┬────────────
+    ·              ╰── This property assigment is not allowed here
     ╰────
   help: property assigment is only allowed within workbench definition
 Evaluation aborted because of prior resolve errors!

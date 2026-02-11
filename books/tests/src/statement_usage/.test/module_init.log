@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init definition is not available within module
+  × error: 31:3: Init definition is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:31:3]
  30 │ mod k {
     · ─┬─

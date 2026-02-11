@@ -15,7 +15,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 45:12: Sketch is not available within sketch
+  × error: 45:12: Sketch is not allowed within sketch
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:45:5]
  44 │ sketch Wheel(radius: Length) {
     · ───┬──
@@ -26,7 +26,7 @@
  46 │     part B() {}     // error
     ╰────
   help: sketch is only allowed within source root or module definition
-  × error: 46:10: Part is not available within sketch
+  × error: 46:10: Part is not allowed within sketch
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:46:5]
  44 │ sketch Wheel(radius: Length) {
     · ───┬──
@@ -38,7 +38,7 @@
  47 │     op C() {}       // error
     ╰────
   help: part is only allowed within source root or module definition
-  × error: 47:8: Op is not available within sketch
+  × error: 47:8: Op is not allowed within sketch
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:47:5]
  44 │ sketch Wheel(radius: Length) {
     · ───┬──

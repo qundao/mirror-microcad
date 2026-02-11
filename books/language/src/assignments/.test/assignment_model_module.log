@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 39:5: Assigment is not available within module
+  × error: 39:5: Assigment is not allowed within module
     ╭─[../books/language/src/assignments/model.md:39:5]
  38 │ mod my_module {
     · ─┬─

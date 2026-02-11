@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init definition is not available within function
+  × error: 31:3: Init definition is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:31:3]
  30 │ fn f() {
     · ─┬

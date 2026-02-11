@@ -21,7 +21,7 @@
     ·       ╰── Statement not allowed within workbenches
  80 │ init(l:Length) {} } K();
     ╰────
-  × error: 79:3: Public constant assigment is not available within sketch
+  × error: 79:3: Public constant assigment is not allowed within sketch
     ╭─[../books/tests/src/statement_usage/pre-init.md:79:3]
  78 │ sketch K() { 
     · ───┬──

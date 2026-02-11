@@ -14,7 +14,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 40:5: Constant assigment is not available within function
+  × error: 40:5: Constant assigment is not allowed within function
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
     · ─┬

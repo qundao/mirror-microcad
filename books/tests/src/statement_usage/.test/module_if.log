@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 63:3: If statement is not available within module
+  × error: 63:3: If statement is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:63:3]
  62 │ mod k {
     · ─┬─

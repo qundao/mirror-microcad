@@ -22,7 +22,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 145:5: Constant assigment is not available within function
+  × error: 145:5: Constant assigment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:145:5]
  144 │ fn f() {
      · ─┬
@@ -33,7 +33,7 @@
  146 │ }
      ╰────
   help: constant assigment is only allowed within source root, module definition or workbench definition
-  × error: 151:9: Constant assigment is not available within function
+  × error: 151:9: Constant assigment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:151:9]
  149 │ sketch MySketch() {
  150 │     fn f() {

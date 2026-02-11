@@ -13,7 +13,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:10: Sketch is not available within function
+  × error: 7:10: Sketch is not allowed within function
    ╭─[../books/tests/src/statement_usage/function.md:7:3]
  6 │ fn f() {
    · ─┬
