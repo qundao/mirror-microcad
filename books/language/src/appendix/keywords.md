@@ -41,6 +41,7 @@ The following keywords are reserved and cannot be used as identifier.
 | `String`    | text string                                |
 | `struct`    | (reserved)                                 |
 | `true`      | boolean constant                           |
+| `type`      | (reserved)                                 |
 | `unit`      | (reserved)                                 |
 | `use`       | use statement                              |
 | `Vec2`      | 2D vector                                  |

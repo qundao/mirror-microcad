@@ -26,4 +26,6 @@ unit foo; // error
 a = 3; // recovered
 
 a = material; // error
+
+type A = Integer; // error
 ```
