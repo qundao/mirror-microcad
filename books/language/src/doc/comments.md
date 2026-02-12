@@ -77,7 +77,7 @@ Inner doc comments are used to document code inside a source file:
 
 [![test](.test/inner_doc_comment.svg)](.test/inner_doc_comment.log)
 
-```µcad,inner_doc_comment#todo
+```µcad,inner_doc_comment
 //! This inner doc comment documents the whole source file.
 
 fn f( n: Integer ) -> Integer { n }

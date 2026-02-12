@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: inner_attributes
-  Expected result: todo
+  Expected result: ok
       Source file: ../books/language/src/attributes/README.md:42
         Test path: ../books/language/src/attributes/.test
 
@@ -16,5 +16,27 @@
 
 -- No Output --
 -- No Errors --
+-- Model --
+  Group (root) ->
+    Group ->
+      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
+        - center = (x=0mm, y=0mm)
+        - radius = 20mm
+        #[color = rgba(1, 0, 0, 1)]
+        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
+          Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
+      Workpiece(op) std::ops::translate(x=20mm, y=0mm, z=0mm) ->
+        - x = 20mm
+        - y = 0mm
+        - z = 0mm
+        Transform __builtin::ops::translate(x=20mm, y=0mm, z=0mm) ->
+          Workpiece(sketch) std::geo2d::Rect(size=20mm) ->
+            - height = 20mm
+            - width = 20mm
+            - x = -10mm
+            - y = -10mm
+            Primitive2D __builtin::geo2d::Rect(height=20mm, width=20mm, x=-10mm, y=-10mm) ->
+
+Export of "../books/language/src/attributes/.test/inner_attributes-out.svg" successful.
 -- Test Result --
-OK (BUT IS TODO)
+OK

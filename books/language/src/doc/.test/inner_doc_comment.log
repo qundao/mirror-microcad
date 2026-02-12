@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: inner_doc_comment
-  Expected result: todo
+  Expected result: ok
       Source file: ../books/language/src/doc/comments.md:81
         Test path: ../books/language/src/doc/.test
 
@@ -15,5 +15,6 @@
 
 -- No Output --
 -- No Errors --
+-- No Model --
 -- Test Result --
-OK (BUT IS TODO)
+OK
