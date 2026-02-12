@@ -29,7 +29,7 @@ impl ParseError {
     }
 }
 
-#[derive(Debug, Error, Clone)]
+#[derive(Debug, Error, Clone, Diagnostic)]
 pub enum ParseErrorKind {
     #[error("{0} is a reserved keyword")]
     ReservedAttribute(&'static str),
@@ -65,9 +65,21 @@ impl Display for ParseError {
 impl Error for ParseError {}
 
 impl Diagnostic for ParseError {
+    fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+        match self.error.reason() {
+            RichReason::Custom(error) => error.help(),
+            _ => None
+        }
+    }
+
     fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         let msg = match self.error.reason() {
-            RichReason::Custom(error) => error.to_string(),
+            RichReason::Custom(error) => {
+                if let Some(labels) = error.labels() {
+                    return Some(labels);
+                }
+                error.to_string()
+            },
             RichReason::ExpectedFound {
                 found: Some(found), ..
             } if found.is_error() => found.kind().into(),
