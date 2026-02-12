@@ -1,0 +1,22 @@
+﻿
+-- Test --
+        Test name: unclosed_tuple
+  Expected result: fail
+      Source file: ../books/tests/src/unclosed_brackets.md:6
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   6:   a = (1, 2, 3;
+
+-- Parse Error --
+  × error: 7:13: Unclosed tuple
+   ╭─[../books/tests/src/unclosed_brackets.md:7:5]
+ 7 │ a = (1, 2, 3;
+   ·     ┬       ▲
+   ·     │       ╰── expected tuple to be closed by here with a ')'
+   ·     ╰── tuple opened here
+   ╰────
+
+-- Test Result --
+FAILS AS EXPECTED

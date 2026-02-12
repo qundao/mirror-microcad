@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**151** tests have been evaluated with version **0.3.0** of microcad.
+**154** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -132,6 +132,9 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/tuple_assignment_convert.svg)](.test/tuple_assignment_convert.log) | [tuple_assignment_convert](tuple_assignments.md) |
 | [![test](.test/tuple_match.svg)](.test/tuple_match.log) | [tuple_match](tuple_matching.md) |
 | [![test](.test/tuple_match_variants.svg)](.test/tuple_match_variants.log) | [tuple_match_variants](tuple_matching.md) |
+| [![test](.test/unclosed_bracket_expr.svg)](.test/unclosed_bracket_expr.log) | [unclosed_bracket_expr](unclosed_brackets.md) |
+| [![test](.test/unclosed_code_block.svg)](.test/unclosed_code_block.log) | [unclosed_code_block](unclosed_brackets.md) |
+| [![test](.test/unclosed_tuple.svg)](.test/unclosed_tuple.log) | [unclosed_tuple](unclosed_brackets.md) |
 | [![test](.test/use_all_local.svg)](.test/use_all_local.log) | [use_all_local](use.md) |
 | [![test](.test/use_as_test.svg)](.test/use_as_test.log) | [use_as_test](use.md) |
 | [![test](.test/use_local.svg)](.test/use_local.log) | [use_local](use.md) |

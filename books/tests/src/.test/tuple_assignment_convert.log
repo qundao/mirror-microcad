@@ -22,7 +22,7 @@
  32 │ array = [1,2]m;
  33 │ (width, height) = array;
     ·                 ┬
-    ·                 ╰── Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon or end of input
+    ·                 ╰── unexpected =
  34 │ tuple = (width, height);
     ╰────
 

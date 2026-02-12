@@ -18,7 +18,7 @@
     ╭─[../books/tests/src/tuple_assignments.md:9:17]
   9 │ (width, height) = (1m,2m);
     ·                 ┬
-    ·                 ╰── Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon or end of input
+    ·                 ╰── unexpected =
  10 │ // check values of width and height
     ╰────
 

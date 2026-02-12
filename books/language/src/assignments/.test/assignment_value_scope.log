@@ -40,7 +40,7 @@
  58 │ // a is still available
  59 │ assert_valid(a);
     · ──────┬─────
-    ·       ╰── Expected something else, comment, semicolon or end of input
+    ·       ╰── unexpected identifier
  60 │ // b not known here anymore
     ╰────
 
