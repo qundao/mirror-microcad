@@ -35,7 +35,10 @@ impl FromAst for ParameterList {
             let param = Parameter::from_ast(param, context)?;
             parameters
                 .try_push(param)
-                .map_err(ParseError::DuplicateIdentifier)?;
+                .map_err(|(previous, id)| ParseError::DuplicateArgument {
+                    previous,
+                    id,
+                })?;
         }
         Ok(ParameterList(Refer::new(
             parameters,

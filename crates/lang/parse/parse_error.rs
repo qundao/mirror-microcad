@@ -3,131 +3,105 @@
 
 //! Parser errors
 
+use miette::{Diagnostic, SourceCode};
 use crate::{parse::*, ty::*};
 use microcad_syntax::ast::LiteralErrorKind;
-use miette::{Diagnostic, LabeledSpan, SourceCode};
-use std::iter::once;
 use thiserror::Error;
 
 /// Parsing errors
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
 pub enum ParseError {
-    /// Error parsing floating point literal
     #[error("Error parsing floating point literal: {0}")]
-    ParseFloatError(Refer<std::num::ParseFloatError>),
+    ParseFloatError(
+        #[label("{0}")]
+        Refer<std::num::ParseFloatError>
+    ),
 
-    /// Error parsing integer literal
     #[error("Error parsing integer literal: {0}")]
-    ParseIntError(Refer<std::num::ParseIntError>),
+    ParseIntError(
+        #[label("{0}")]
+        Refer<std::num::ParseIntError>
+    ),
 
-    /// IO Error
-    #[error("IO Error: {0}")]
-    IoError(Refer<std::io::Error>),
-
-    /// Error parsing color literal
-    #[error("Error parsing color: {0}")]
-    ParseColorError(Refer<microcad_core::ParseColorError>),
-
-    /// Unknown color name
-    #[error("Unknown color: {0}")]
-    UnknownColorName(Refer<String>),
-
-    /// Unknown unit
     #[error("Unknown unit: {0}")]
-    UnknownUnit(Refer<String>),
+    UnknownUnit(
+        #[label("Unknown unit")]
+        Refer<String>
+    ),
 
-    /// Unexpected token
     #[error("Unexpected token")]
-    UnexpectedToken(SrcRef),
+    UnexpectedToken(
+        #[label("Unexpected token")]
+        SrcRef
+    ),
 
-    /// Tuple expression contains both named and positional arguments
-    #[error("Tuple expression contains both named and positional arguments")]
-    MixedTupleArguments(SrcRef),
-
-    /// Duplicate named argument
-    #[error("Duplicate named argument: {0}")]
-    DuplicateNamedArgument(Identifier),
-
-    /// Positional argument after named argument
-    #[error("Positional argument after named argument")]
-    PositionalArgumentAfterNamed(SrcRef),
-
-    /// Empty tuple expression
-    #[error("Empty tuple expression")]
-    EmptyTupleExpression(SrcRef),
-
-    /// Missing type or value for definition parameter
     #[error("Missing type or value for definition parameter: {0}")]
-    ParameterMissingTypeOrValue(Identifier),
+    ParameterMissingTypeOrValue(
+        #[label("Missing type or value")]
+        Identifier
+    ),
 
-    /// Duplicate parameter
-    #[error("Duplicate parameter: {0}")]
-    DuplicateParameter(Identifier),
+    #[error("Duplicate argument: {id}")]
+    DuplicateArgument {
+        #[label(primary, "Duplicate argument")]
+        id: Identifier,
+        #[label("Previous declaration")]
+        previous: Identifier,
+    },
 
-    /// Duplicate argument
-    #[error("Duplicate argument: {0}")]
-    DuplicateArgument(Identifier),
+    #[error("Duplicate id: {id}")]
+    DuplicateIdentifier {
+        #[label(primary, "Duplicate identifier")]
+        id: Identifier,
+        #[label("Previous declaration")]
+        previous: Identifier,
+    },
 
-    /// Duplicated type name in map
-    #[error("Duplicated type name in map: {0}")]
-    DuplicatedMapType(Identifier),
+    #[error("Duplicate id in tuple: {id}")]
+    DuplicateTupleIdentifier {
+        #[label(primary, "Duplicate identifier")]
+        id: Identifier,
+        #[label("Previous declaration")]
+        previous: Identifier,
+    },
 
-    /// Duplicate id
-    #[error("Duplicate id: {0}")]
-    DuplicateIdentifier(Identifier),
+    #[error("Duplicate unnamed type in tuple: {ty}")]
+    DuplicateTupleType {
+        #[label(primary, "Duplicate item")]
+        ty: Refer<Type>,
+        #[label("Previous declaration")]
+        previous: Refer<Type>,
+    },
 
-    /// Duplicate id in tuple
-    #[error("Duplicate id in tuple: {0}")]
-    DuplicateTupleIdentifier(Identifier),
-
-    /// Duplicate unnamed type in tuple
-    #[error("Duplicate unnamed type in tuple: {0}")]
-    DuplicateTupleType(Refer<Type>),
-
-    /// Missing format expression
-    #[error("Missing format expression")]
-    MissingFormatExpression(SrcRef),
-
-    /// Statement between two init statements
-    #[error("Statement between two init statements")]
-    StatementBetweenInit(SrcRef),
-
-    /// Loading of a source file failed
     #[error("Loading of source file {1:?} failed: {2}")]
     LoadSource(SrcRef, std::path::PathBuf, std::io::Error),
-
-    /// Grammar rule error
-    #[error("Grammar rule error {0}")]
-    GrammarRuleError(Refer<String>),
-
-    /// Grammar rule error
-    #[error("Invalid qualified name '{0}'")]
-    InvalidQualifiedName(Refer<String>),
 
     /// Grammar rule error
     #[error("Invalid id '{0}'")]
     InvalidIdentifier(Refer<String>),
 
-    /// Qualified name cannot be converted into an Id
-    #[error("Qualified name {0} cannot be converted into an Id")]
-    QualifiedNameIsNoId(QualifiedName),
-
-    /// Element is not available
     #[error("Element is not available")]
-    NotAvailable(SrcRef),
+    NotAvailable(
+        #[label("Element is not available")]
+        SrcRef
+    ),
 
-    /// Unknown type
     #[error("Unknown type: {0}")]
-    UnknownType(Refer<String>),
+    UnknownType(
+        #[label("Unknown type")]
+        Refer<String>
+    ),
 
-    /// Matrix type with invalid dimenstions
+    #[error("If expression must return a value in all cases")]
+    IncompleteIfExpression(
+        #[label("Incomplete if expression")]
+        SrcRef
+    ),
+
+    /// Matrix type with invalid dimensions
     #[error("Invalid matrix type: {0}")]
     InvalidMatrixType(Refer<String>),
-
-    /// If expression is missing an `else`
-    #[error("If expression must return a value in all cases")]
-    IncompleteIfExpression(SrcRef),
 
     /// Invalid glob pattern
     #[error("Invalid glob pattern, wildcard must be at the end of the pattern")]
@@ -143,10 +117,6 @@ pub enum ParseError {
         src_ref: SrcRef,
         error: microcad_syntax::ParseError,
     },
-
-    /// Call attribute with a non-identifier name
-    #[error("Call attributes must have a plain identifier as name")]
-    InvalidAttributeCall(QualifiedName),
 
     /// An invalid literal was encountered
     #[error("Invalid literal: {error}")]
@@ -174,22 +144,11 @@ pub type ParseResult<T> = Result<T, ParseError>;
 impl SrcReferrer for ParseError {
     fn src_ref(&self) -> SrcRef {
         match self {
-            ParseError::DuplicateNamedArgument(id)
-            | ParseError::ParameterMissingTypeOrValue(id)
-            | ParseError::DuplicateParameter(id)
-            | ParseError::DuplicateArgument(id)
-            | ParseError::DuplicatedMapType(id)
-            | ParseError::DuplicateIdentifier(id)
-            | ParseError::DuplicateTupleIdentifier(id) => id.src_ref(),
-            ParseError::QualifiedNameIsNoId(name) | ParseError::InvalidAttributeCall(name) => {
-                name.src_ref()
-            }
+            ParseError::ParameterMissingTypeOrValue(id)
+            | ParseError::DuplicateArgument{id, ..}
+            | ParseError::DuplicateIdentifier{id, ..}
+            | ParseError::DuplicateTupleIdentifier{id, ..} => id.src_ref(),
             ParseError::UnexpectedToken(src_ref)
-            | ParseError::MixedTupleArguments(src_ref)
-            | ParseError::PositionalArgumentAfterNamed(src_ref)
-            | ParseError::EmptyTupleExpression(src_ref)
-            | ParseError::MissingFormatExpression(src_ref)
-            | ParseError::StatementBetweenInit(src_ref)
             | ParseError::NotAvailable(src_ref)
             | ParseError::IncompleteIfExpression(src_ref)
             | ParseError::LoadSource(src_ref, ..)
@@ -202,14 +161,9 @@ impl SrcReferrer for ParseError {
             | ParseError::InvalidRangeType { src_ref } => src_ref.clone(),
             ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
-            ParseError::IoError(error) => error.src_ref(),
-            ParseError::ParseColorError(parse_color_error) => parse_color_error.src_ref(),
-            ParseError::UnknownColorName(name) => name.src_ref(),
-            ParseError::UnknownUnit(unit) => unit.src_ref(),
-            ParseError::DuplicateTupleType(ty) => ty.src_ref(),
-            ParseError::GrammarRuleError(rule) => rule.src_ref(),
-            ParseError::InvalidQualifiedName(name) => name.src_ref(),
             ParseError::InvalidIdentifier(id) => id.src_ref(),
+            ParseError::UnknownUnit(unit) => unit.src_ref(),
+            ParseError::DuplicateTupleType{ty, ..} => ty.src_ref(),
             ParseError::UnknownType(ty) => ty.src_ref(),
             ParseError::InvalidMatrixType(ty) => ty.src_ref(),
         }
@@ -227,21 +181,7 @@ impl ParseError {
     }
 }
 
-impl Diagnostic for ParseError {
-    fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
-        let src_ref = self.src_ref().0?;
-        let message = match self {
-            ParseError::AstParser { error, .. } => {
-                return error.labels();
-            }
-            _ => self.to_string(),
-        };
-        let label = LabeledSpan::new(Some(message), src_ref.range.start, src_ref.range.len());
-        Some(Box::new(once(label)))
-    }
-}
-
-/// Parse errors, possibly with source code
+/// Parse error, possibly with source code
 #[derive(Debug, Error)]
 #[error("Failed to parse")] // todo
 pub struct ParseErrorsWithSource {

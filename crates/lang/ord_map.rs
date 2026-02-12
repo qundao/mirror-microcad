@@ -91,12 +91,16 @@ where
     }
 
     /// add new value
-    pub fn try_push(&mut self, item: V) -> Result<(), K> {
-        if let Some(key) = item.key().clone() {
-            if self.map.contains_key(&key) {
-                return Err(key);
-            }
-            self.map.insert(key, self.vec.len());
+    ///
+    /// On duplicated named entries, it returns the existing key and the new, duplicate key
+    pub fn try_push(&mut self, item: V) -> Result<(), (K, K)> {
+        if let Some(key) = item.key() {
+            match self.map.entry(key) {
+                std::collections::hash_map::Entry::Vacant(entry) => entry.insert(self.vec.len()),
+                std::collections::hash_map::Entry::Occupied(entry) => {
+                    return Err((entry.key().clone(), item.key().unwrap()));
+                }
+            };
         }
         self.vec.push(item);
         Ok(())
