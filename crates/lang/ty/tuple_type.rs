@@ -11,6 +11,7 @@ pub struct TupleType {
     pub(crate) named: std::collections::HashMap<Identifier, Type>,
     pub(crate) unnamed: std::collections::HashSet<Type>,
 }
+
 impl TupleType {
     /// Create new Vec2 type.
     pub fn new_vec2() -> Self {
@@ -47,21 +48,6 @@ impl TupleType {
         [("width", Type::length()), ("height", Type::length())]
             .into_iter()
             .collect()
-    }
-
-    /// Match tuples by id.
-    ///
-    /// TODO: Does not check any inner types!
-    /// TODO: Use argument matching to match types.
-    pub fn matches(&self, other: &Self) -> bool {
-        if !self.unnamed.is_empty()
-            || self.named.len() != other.named.len()
-            || !self.unnamed.is_empty()
-            || !other.unnamed.is_empty()
-        {
-            return false;
-        }
-        other.named.iter().all(|k| self.named.contains_key(k.0))
     }
 
     /// Test if the named tuple has exactly all the given keys
@@ -175,4 +161,9 @@ impl std::fmt::Display for TupleType {
             types.join(", ")
         })
     }
+}
+
+#[test]
+fn test_tuple_type_eq() {
+    assert_eq!(TupleType::new_color(), TupleType::new_color());
 }
