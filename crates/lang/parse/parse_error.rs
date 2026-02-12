@@ -120,6 +120,7 @@ pub enum ParseError {
     #[error("Invalid literal: {error}")]
     InvalidLiteral {
         error: LiteralErrorKind,
+        #[label("{error}")]
         src_ref: SrcRef,
     },
 
