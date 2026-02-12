@@ -5,20 +5,21 @@ mod error;
 mod helpers;
 mod simplify;
 
+use crate::Span;
 use crate::ast::*;
-use crate::parser::error::{Rich, ParseErrorKind};
+use crate::parser::error::{ParseErrorKind, Rich};
 use crate::parser::helpers::*;
 use crate::parser::simplify::simplify_unary_op;
 use crate::tokens::*;
-use crate::Span;
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
-use chumsky::{extra, select_ref, Parser};
+use chumsky::{Parser, extra, select_ref};
 pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
 
-type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>>;
+type Error<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
+type Extra<'tokens> = extra::Err<Error<'tokens>>;
 
 pub fn map_token_input<'a, 'token>(
     spanned: &'a SpannedToken<Token<'token>>,
@@ -64,8 +65,8 @@ const STRUCTURAL_TOKENS: &[Token] = &[
     Token::SigilSemiColon,
 ];
 
-fn parser<'tokens>(
-) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
+fn parser<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
@@ -103,9 +104,15 @@ fn parser<'tokens>(
 
     let block = statement_list_parser
         .clone()
-        .delimited_by(
+        .delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
             just(Token::SigilCloseCurlyBracket),
+            |err: Error, open, end| Rich::custom(err.span().clone(), ParseErrorKind::UnclosedBracket {
+                open,
+                end,
+                kind: "code block",
+                close_token: Token::SigilCloseCurlyBracket,
+            }),
         )
         .recover_with(via_parser(block_recovery))
         .boxed();
@@ -246,7 +253,7 @@ fn parser<'tokens>(
         single_value
             .then(single_type.clone().or_not())
             .with_extras()
-            .map_with(|((literal, ty), extras), e| {
+            .try_map_with(|((literal, ty), extras), e| {
                 let literal = match (literal, ty) {
                     (LiteralKind::Float(float), Some(ty)) => {
                         LiteralKind::Quantity(QuantityLiteral {
@@ -268,11 +275,11 @@ fn parser<'tokens>(
                     }),
                     (literal, None) => literal,
                 };
-                Literal {
+                Ok(Literal {
                     span: e.span(),
                     literal,
                     extras,
-                }
+                })
             })
             .labelled("literal")
             .boxed()

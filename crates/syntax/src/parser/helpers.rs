@@ -3,9 +3,9 @@
 
 use crate::Span;
 use crate::ast::{BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator};
-use crate::parser::{Extra, ParserInput, STRUCTURAL_TOKENS};
+use crate::parser::{Error, Extra, ParserInput, STRUCTURAL_TOKENS};
 use crate::tokens::Token;
-use chumsky::extra::ParserExtra;
+use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
 use chumsky::prelude::*;
 use chumsky::{IterParser, Parser, extra, select_ref};
@@ -126,6 +126,17 @@ where
     O: 'src,
 {
     fn with_extras(self) -> impl Parser<'src, I, (O, ItemExtras), E> + 'src;
+
+    fn delimited_with_spanned_error<B, C, U, V, F>(
+        self,
+        before: B,
+        after: C,
+        err_map: F,
+    ) -> impl Parser<'src, I, O, E>
+    where
+        B: Parser<'src, I, U, Full<E::Error, SimpleState<Span>, E::Context>>,
+        C: Parser<'src, I, V, Full<E::Error, SimpleState<Span>, E::Context>>,
+        F: Fn(E::Error, I::Span, I::Span) -> E::Error;
 }
 
 impl<'tokens, O, P> ParserExt<'tokens, ParserInput<'tokens, 'tokens>, O, Extra<'tokens>> for P
@@ -141,5 +152,34 @@ where
             .then(extras_parser())
             .map(|((leading, res), trailing)| (res, ItemExtras { leading, trailing }))
             .boxed()
+    }
+
+    fn delimited_with_spanned_error<B, C, U, V, F>(
+        self,
+        before: B,
+        after: C,
+        err_map: F,
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Extra<'tokens>>
+    where
+        B: Parser<
+                'tokens,
+                ParserInput<'tokens, 'tokens>,
+                U,
+                Full<Error<'tokens>, SimpleState<Span>, ()>,
+            >,
+        C: Parser<
+                'tokens,
+                ParserInput<'tokens, 'tokens>,
+                V,
+                Full<Error<'tokens>, SimpleState<Span>, ()>,
+            >,
+        F: Fn(Error<'tokens>, Span, Span) -> Error<'tokens>,
+    {
+        before
+            .map_with(|_, e| *e.state() = e.span().into())
+            .then(self.with_state(()))
+            .then(after.map_err_with_state(move |e, span: Span, state| err_map(e, state.0.clone(), span)))
+            .map(|((_, res), _)| res)
+            .with_state(SimpleState(0..0))
     }
 }

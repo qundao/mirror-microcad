@@ -37,6 +37,15 @@ pub enum ParseErrorKind {
     ReservedAttributeAsIdentifier(&'static str),
     #[error("unclosed string")]
     UnterminatedString,
+    #[error("Unclosed {kind}")]
+    UnclosedBracket {
+        #[label("{kind} opened here")]
+        open: Span,
+        #[label("expected {kind} to be closed by here with a '{close_token}'")]
+        end: Span,
+        kind: &'static str,
+        close_token: Token<'static>,
+    },
 }
 
 impl Display for ParseError {
