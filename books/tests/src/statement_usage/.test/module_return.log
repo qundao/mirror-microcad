@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 55:3: Return statement is not available within module
+  × error: 55:3: Return statement is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:55:3]
  54 │ mod k {
-    ·     ┬
-    ·     ╰── Within this module
+    · ─┬─
+    ·  ╰── Within this module
  55 │   return 1;  // error
     ·   ────┬───
     ·       ╰── This return statement is not allowed

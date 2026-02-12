@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 102:5: Assigment is not available within module
+  × error: 102:5: Assigment is not allowed within module
      ╭─[../books/language/src/assignments/value.md:102:5]
  101 │ mod my_module {
-     ·     ────┬────
-     ·         ╰── Within this module
+     · ─┬─
+     ·  ╰── Within this module
  102 │     a = 1; // error
      ·     ──┬──
      ·       ╰── This assigment is not allowed

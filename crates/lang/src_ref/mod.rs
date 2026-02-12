@@ -93,6 +93,12 @@ impl SrcRefInner {
     }
 }
 
+impl From<SrcRefInner> for SourceSpan {
+    fn from(value: SrcRefInner) -> Self {
+        SourceSpan::new(value.range.start.into(), value.range.len())
+    }
+}
+
 impl std::fmt::Display for SrcRef {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match &self.0 {

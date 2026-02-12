@@ -15,11 +15,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 34:5: Property assigment is not available within function
+  × error: 34:5: Property assigment is not allowed within function
     ╭─[../books/language/src/assignments/property.md:34:5]
  33 │ fn f() {
-    ·    ┬
-    ·    ╰── Within this function
+    · ─┬
+    ·  ╰── Within this function
  34 │     prop diameter = radius * 2; // error: not in functions
     ·     ─────────────┬────────────
     ·                  ╰── This property assigment is not allowed

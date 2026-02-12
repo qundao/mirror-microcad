@@ -13,14 +13,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:10: Sketch is not available within sketch
-   ╭─[../books/tests/src/statement_usage/workbench.md:7:10]
+  × error: 7:10: Sketch is not allowed within sketch
+   ╭─[../books/tests/src/statement_usage/workbench.md:7:3]
  6 │ sketch K() {
-   ·        ┬
-   ·        ╰── Within this sketch
+   · ───┬──
+   ·    ╰── Within this sketch
  7 │   sketch F() {} F(); // error
-   ·          ┬
-   ·          ╰── This sketch is not allowed
+   ·   ───┬──
+   ·      ╰── This sketch is not allowed
  8 │ } K();
    ╰────
   help: sketch is only allowed within source root or module definition

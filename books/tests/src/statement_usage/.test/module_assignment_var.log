@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 87:3: Assigment is not available within module
+  × error: 87:3: Assigment is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:87:3]
  86 │ mod k {
-    ·     ┬
-    ·     ╰── Within this module
+    · ─┬─
+    ·  ╰── Within this module
  87 │   a = 1; // error
     ·   ──┬──
     ·     ╰── This assigment is not allowed

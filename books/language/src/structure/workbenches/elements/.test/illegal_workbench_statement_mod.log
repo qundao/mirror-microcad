@@ -13,14 +13,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 55:9: Module definition is not available within sketch
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:9]
+  × error: 55:9: Module definition is not allowed within sketch
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:5]
  54 │ sketch Wheel(radius: Length) {
-    ·        ──┬──
-    ·          ╰── Within this sketch
+    · ───┬──
+    ·    ╰── Within this sketch
  55 │     mod m {}        // error
-    ·         ┬
-    ·         ╰── This module definition is not allowed
+    ·     ─┬─
+    ·      ╰── This module definition is not allowed
  56 │ }
     ╰────
   help: module definition is only allowed within source root or module

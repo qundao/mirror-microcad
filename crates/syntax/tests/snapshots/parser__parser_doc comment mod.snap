@@ -23,6 +23,7 @@ Ok(
                 Module(
                     ModuleDefinition {
                         span: 20..50,
+                        keyword_span: 20..23,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],

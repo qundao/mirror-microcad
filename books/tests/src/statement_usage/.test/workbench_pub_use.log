@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Use statement is not available within sketch
+  × error: 47:3: Use statement is not allowed within sketch
     ╭─[../books/tests/src/statement_usage/workbench.md:47:3]
  46 │ sketch K() {
-    ·        ┬
-    ·        ╰── Within this sketch
+    · ───┬──
+    ·    ╰── Within this sketch
  47 │   pub use std; // error
     ·   ─────┬─────
     ·        ╰── This use statement is not allowed

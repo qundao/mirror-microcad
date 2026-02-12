@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Property assigment is not available within function
+  × error: 95:3: Property assigment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:95:3]
  94 │ fn f() {
-    ·    ┬
-    ·    ╰── Within this function
+    · ─┬
+    ·  ╰── Within this function
  95 │   prop a = 1; // error
     ·   ─────┬────
     ·        ╰── This property assigment is not allowed

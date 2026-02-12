@@ -13,14 +13,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Module definition is not available within sketch
-    ╭─[../books/tests/src/statement_usage/workbench.md:15:7]
+  × error: 15:7: Module definition is not allowed within sketch
+    ╭─[../books/tests/src/statement_usage/workbench.md:15:3]
  14 │ sketch K() {
-    ·        ┬
-    ·        ╰── Within this sketch
+    · ───┬──
+    ·    ╰── Within this sketch
  15 │   mod m {} // error
-    ·       ┬
-    ·       ╰── This module definition is not allowed
+    ·   ─┬─
+    ·    ╰── This module definition is not allowed
  16 │ } K();
     ╰────
   help: module definition is only allowed within source root or module

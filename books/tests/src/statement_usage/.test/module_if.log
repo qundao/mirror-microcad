@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 63:3: If statement is not available within module
+  × error: 63:3: If statement is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:63:3]
  62 │ mod k {
-    ·     ┬
-    ·     ╰── Within this module
+    · ─┬─
+    ·  ╰── Within this module
  63 │   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }  // error
     ·   ───────────────────────────────────┬───────────────────────────────────
     ·                                      ╰── This if statement is not allowed

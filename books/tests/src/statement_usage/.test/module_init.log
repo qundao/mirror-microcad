@@ -13,14 +13,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init definition is not available within module
+  × error: 31:3: Init definition is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:31:3]
  30 │ mod k {
-    ·     ┬
-    ·     ╰── Within this module
+    · ─┬─
+    ·  ╰── Within this module
  31 │   init() { }  // error
-    ·   ──────────┬─────────
-    ·             ╰── This init definition is not allowed
+    ·   ──┬─
+    ·     ╰── This init definition is not allowed
  32 │ }
     ╰────
   help: init definition is only allowed within workbench definition

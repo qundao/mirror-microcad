@@ -15,6 +15,7 @@ Ok(
                 Function(
                     FunctionDefinition {
                         span: 0..46,
+                        keyword_span: 20..22,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],

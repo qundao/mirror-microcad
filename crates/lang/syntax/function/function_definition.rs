@@ -1,4 +1,4 @@
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2024-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Function definition syntax element
@@ -8,6 +8,8 @@ use crate::{src_ref::*, syntax::*};
 /// Function definition
 #[derive(Clone)]
 pub struct FunctionDefinition {
+    /// SrcRef of the `fn` keyword
+    pub keyword_ref: SrcRef,
     /// Documentation.
     pub doc: Option<DocBlock>,
     /// Visibility

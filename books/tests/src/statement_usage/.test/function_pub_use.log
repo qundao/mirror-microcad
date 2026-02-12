@@ -13,11 +13,11 @@
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Use statement is not available within function
+  × error: 47:3: Use statement is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:47:3]
  46 │ fn f() {
-    ·    ┬
-    ·    ╰── Within this function
+    · ─┬
+    ·  ╰── Within this function
  47 │   pub use std; // error
     ·   ─────┬─────
     ·        ╰── This use statement is not allowed

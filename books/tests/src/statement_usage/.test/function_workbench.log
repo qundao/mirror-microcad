@@ -13,14 +13,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 7:10: Sketch is not available within function
-   ╭─[../books/tests/src/statement_usage/function.md:7:10]
+  × error: 7:10: Sketch is not allowed within function
+   ╭─[../books/tests/src/statement_usage/function.md:7:3]
  6 │ fn f() {
-   ·    ┬
-   ·    ╰── Within this function
+   · ─┬
+   ·  ╰── Within this function
  7 │   sketch S() {} // error
-   ·          ┬
-   ·          ╰── This sketch is not allowed
+   ·   ───┬──
+   ·      ╰── This sketch is not allowed
  8 │ } f();
    ╰────
   help: sketch is only allowed within source root or module definition

@@ -260,6 +260,11 @@ impl Symbol {
     pub fn riter(&self) -> RecurseChildren {
         RecurseChildren::new(self.clone())
     }
+
+    /// Get the `SrcRef` for the kind keyword of this symbol, if any
+    pub fn kind_ref(&self) -> Option<SrcRef> {
+        self.inner.borrow().kind_ref()
+    }
 }
 
 // visibility

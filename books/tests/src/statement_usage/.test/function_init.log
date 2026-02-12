@@ -13,14 +13,14 @@
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init definition is not available within function
+  × error: 31:3: Init definition is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:31:3]
  30 │ fn f() {
-    ·    ┬
-    ·    ╰── Within this function
+    · ─┬
+    ·  ╰── Within this function
  31 │   init() {} // error
-    ·   ─────────┬────────
-    ·            ╰── This init definition is not allowed
+    ·   ──┬─
+    ·     ╰── This init definition is not allowed
  32 │ } f();
     ╰────
   help: init definition is only allowed within workbench definition

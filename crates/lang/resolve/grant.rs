@@ -14,6 +14,10 @@ pub(super) trait Grant {
 
     fn kind(&self) -> &'static str;
 
+    fn kind_ref(&self) -> Option<SrcRef> {
+        None
+    }
+
     fn allowed_parents(&self) -> &'static [&'static str];
 }
 
@@ -28,6 +32,10 @@ impl Grant for ModuleDefinition {
 
     fn kind(&self) -> &'static str {
         "module definition"
+    }
+
+    fn kind_ref(&self) -> Option<SrcRef> {
+        Some(self.keyword_ref.clone())
     }
 
     fn allowed_parents(&self) -> &'static [&'static str] {
@@ -102,6 +110,10 @@ impl Grant for WorkbenchDefinition {
         self.kind.as_str()
     }
 
+    fn kind_ref(&self) -> Option<SrcRef> {
+        Some(self.keyword_ref.clone())
+    }
+
     fn allowed_parents(&self) -> &'static [&'static str] {
         &["source root", "module definition"]
     }
@@ -136,6 +148,10 @@ impl Grant for InitDefinition {
 
     fn kind(&self) -> &'static str {
         "init definition"
+    }
+
+    fn kind_ref(&self) -> Option<SrcRef> {
+        Some(self.keyword_ref.clone())
     }
 
     fn allowed_parents(&self) -> &'static [&'static str] {
