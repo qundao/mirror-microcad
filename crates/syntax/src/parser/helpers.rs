@@ -45,7 +45,7 @@ pub fn extras_parser<'tokens>()
 /// Ignore tokens, until we hit the end of a pair or nested curly brackets
 ///
 /// Used for error recovery
-pub fn ignore_till_matched_brackets<'tokens>()
+pub fn ignore_till_matched_curly<'tokens>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
     none_of(STRUCTURAL_TOKENS)
         .repeated()
@@ -178,7 +178,11 @@ where
         before
             .map_with(|_, e| *e.state() = e.span().into())
             .then(self.with_state(()))
-            .then(after.map_err_with_state(move |e, span: Span, state| err_map(e, state.0.clone(), span)))
+            .then(
+                after.map_err_with_state(move |e, span: Span, state| {
+                    err_map(e, state.0.clone(), span)
+                }),
+            )
             .map(|((_, res), _)| res)
             .with_state(SimpleState(0..0))
     }

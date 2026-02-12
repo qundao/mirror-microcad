@@ -307,23 +307,29 @@ fn parser<'tokens>()
     .or_not()
     .boxed();
 
-    let tuple_recovery = just(Token::SigilOpenBracket)
-        .then(
-            none_of(Token::SigilCloseBracket)
-                .repeated()
-                .then(just(Token::SigilCloseBracket)),
-        )
-        .map_with(|_, e| {
+    let tuple_recovery = nested_delimiters(
+        Token::SigilOpenCurlyBracket,
+        Token::SigilCloseCurlyBracket,
+        [
             (
-                vec![TupleItem {
-                    span: e.span(),
-                    name: None,
-                    value: Expression::Error(e.span()),
-                    extras: ItemExtras::default(),
-                }],
-                ItemExtras::default(),
-            )
-        });
+                Token::SigilOpenSquareBracket,
+                Token::SigilCloseSquareBracket,
+            ),
+            (Token::SigilOpenBracket, Token::SigilCloseBracket),
+        ],
+        |_| (),
+    )
+    .map_with(|_, e| {
+        (
+            vec![TupleItem {
+                span: e.span(),
+                name: None,
+                value: Expression::Error(e.span()),
+                extras: ItemExtras::default(),
+            }],
+            ItemExtras::default(),
+        )
+    });
 
     let tuple_body = identifier_parser
         .clone()
@@ -753,7 +759,7 @@ fn parser<'tokens>()
                         none_of([Token::OperatorAssignment, Token::SigilDoubleColon]).rewind(),
                     )
                     .clone()
-                    .ignore_then(ignore_till_matched_brackets().or(ignore_till_semi())),
+                    .ignore_then(ignore_till_matched_curly().or(ignore_till_semi())),
             ))
             .map_with(|_, e| Statement::Error(e.span()))
             .boxed();
