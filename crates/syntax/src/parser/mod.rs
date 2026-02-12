@@ -6,11 +6,11 @@ mod helpers;
 mod simplify;
 
 use crate::ast::*;
+use crate::parser::error::{Rich, ParseErrorKind};
 use crate::parser::helpers::*;
 use crate::parser::simplify::simplify_unary_op;
 use crate::tokens::*;
 use crate::Span;
-use chumsky::error::Rich;
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
 use chumsky::{extra, select_ref, Parser};
@@ -18,7 +18,7 @@ pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
 
-type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span>>;
+type Extra<'tokens> = extra::Err<Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>>;
 
 pub fn map_token_input<'a, 'token>(
     spanned: &'a SpannedToken<Token<'token>>,
@@ -119,7 +119,7 @@ fn parser<'tokens>(
         .validate(|kind, e, emitter| {
             emitter.emit(Rich::custom(
                 e.span(),
-                format!("{kind} is a reserved keyword and can't be used as an identifier"),
+                ParseErrorKind::ReservedAttributeAsIdentifier(kind),
             ));
             kind
         })
@@ -736,7 +736,7 @@ fn parser<'tokens>(
             .try_map_with(|kind, e| {
                 Err::<(), _>(Rich::custom(
                     e.span(),
-                    format!("{kind} is a reserved keyword"),
+                    ParseErrorKind::ReservedAttribute(kind),
                 ))
             })
             .ignored()
@@ -813,7 +813,7 @@ fn parser<'tokens>(
                     let span: Span = e.span();
                     Err::<Expression, _>(Rich::custom(
                         (span.start - 1)..span.end,
-                        "unclosed string",
+                        ParseErrorKind::UnterminatedString,
                     ))
                 })
                 .recover_with(via_parser(
