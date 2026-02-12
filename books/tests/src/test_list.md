@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**150** tests have been evaluated with version **0.3.0** of microcad.
+**151** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -107,6 +107,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/pre_init_return.svg)](statement_usage/.test/pre_init_return.log) | [pre_init_return](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_use.svg)](statement_usage/.test/pre_init_use.log) | [pre_init_use](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_workbench.svg)](statement_usage/.test/pre_init_workbench.log) | [pre_init_workbench](statement_usage/pre-init.md) |
+| [![test](.test/reserved_keywords.svg)](.test/reserved_keywords.log) | [reserved_keywords](reserved_keywords.md) |
 | [![test](.test/scopes.svg)](.test/scopes.log) | [scopes](scopes.md) |
 | [![test](.test/sketch_missing_semicolon.svg)](.test/sketch_missing_semicolon.log) | [sketch_missing_semicolon](semicolon.md) |
 | [![test](.test/sketch_with_body.svg)](.test/sketch_with_body.log) | [sketch_with_body](semicolon.md) |

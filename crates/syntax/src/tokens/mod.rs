@@ -124,6 +124,20 @@ pub enum Token<'a> {
     KeywordProp,
     /// The `init` keyword
     KeywordInit,
+    /// The `__plugin` keyword
+    KeywordPlugin,
+    /// The `assembly` keyword
+    KeywordAssembly,
+    /// The `material` keyword
+    KeywordMaterial,
+    /// The `unit` keyword
+    KeywordUnit,
+    /// The `enum` keyword
+    KeywordEnum,
+    /// The `struct` keyword
+    KeywordStruct,
+    /// The `match` keyword
+    KeywordMatch,
 
     /// An identifier, alphanumeric, starting with either an alpha character or a underscore
     Identifier(Cow<'a, str>),
@@ -267,6 +281,13 @@ impl Token<'_> {
             Token::KeywordConst => Token::KeywordConst,
             Token::KeywordProp => Token::KeywordProp,
             Token::KeywordInit => Token::KeywordInit,
+            Token::KeywordAssembly => Token::KeywordAssembly,
+            Token::KeywordPlugin => Token::KeywordPlugin,
+            Token::KeywordMaterial => Token::KeywordMaterial,
+            Token::KeywordUnit => Token::KeywordUnit,
+            Token::KeywordEnum => Token::KeywordEnum,
+            Token::KeywordStruct => Token::KeywordStruct,
+            Token::KeywordMatch => Token::KeywordMatch,
             Token::LiteralBool(l) => Token::LiteralBool(l),
             Token::SigilColon => Token::SigilColon,
             Token::SigilSemiColon => Token::SigilSemiColon,
@@ -335,6 +356,13 @@ impl Token<'_> {
             Token::KeywordConst => "const",
             Token::KeywordProp => "prop",
             Token::KeywordInit => "init",
+            Token::KeywordPlugin => "__plugin",
+            Token::KeywordAssembly => "assembly",
+            Token::KeywordMaterial => "material",
+            Token::KeywordUnit => "unit",
+            Token::KeywordEnum => "enum",
+            Token::KeywordStruct => "struct",
+            Token::KeywordMatch => "match",
             Token::Identifier(_) => "identifier",
             Token::Unit(_) => "unit",
             Token::LiteralInt(_) => "integer literal",

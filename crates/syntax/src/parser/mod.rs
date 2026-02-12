@@ -6,7 +6,7 @@ mod helpers;
 mod simplify;
 
 use crate::ast::*;
-use crate::parser::helpers::{binop, comment_parser};
+use crate::parser::helpers::*;
 use crate::parser::simplify::simplify_unary_op;
 use crate::tokens::*;
 use crate::Span;
@@ -54,6 +54,16 @@ pub fn parse<'tokens>(
         .map_err(|errors| errors.into_iter().map(ParseError::new).collect())
 }
 
+const STRUCTURAL_TOKENS: &[Token] = &[
+    Token::SigilOpenCurlyBracket,
+    Token::SigilCloseCurlyBracket,
+    Token::SigilOpenBracket,
+    Token::SigilCloseBracket,
+    Token::SigilOpenSquareBracket,
+    Token::SigilCloseSquareBracket,
+    Token::SigilSemiColon,
+];
+
 fn parser<'tokens>(
 ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
     let mut statement_list_parser = Recursive::declare();
@@ -64,6 +74,19 @@ fn parser<'tokens>(
     let mut if_inner = Recursive::declare();
 
     let semi_recovery = none_of(Token::SigilSemiColon).repeated().ignored();
+
+    let reserved_keyword = select_ref! {
+        token @ (
+            Token::KeywordPlugin |
+            Token::KeywordAssembly |
+            Token::KeywordMaterial |
+            Token::KeywordUnit |
+            Token::KeywordEnum |
+            Token::KeywordStruct |
+            Token::KeywordMatch
+        ) => token.kind(),
+    }
+    .boxed();
 
     let block_recovery = just(Token::SigilOpenCurlyBracket)
         .then(
@@ -91,6 +114,19 @@ fn parser<'tokens>(
         span: e.span(),
         name: ident.as_ref().into(),
     } }
+    .or(reserved_keyword
+        .clone()
+        .validate(|kind, e, emitter| {
+            emitter.emit(Rich::custom(
+                e.span(),
+                format!("{kind} is a reserved keyword and can't be used as an identifier"),
+            ));
+            kind
+        })
+        .map_with(|kind, e| Identifier {
+            span: e.span(),
+            name: kind.into(),
+        }))
     .labelled("identifier")
     .boxed();
 
@@ -592,7 +628,16 @@ fn parser<'tokens>(
             .then(block.clone())
             .with_extras()
             .map_with(
-                |(((((((doc, attributes), visibility), (kind, keyword_span)), name), arguments), body), extras),
+                |(
+                    (
+                        (
+                            ((((doc, attributes), visibility), (kind, keyword_span)), name),
+                            arguments,
+                        ),
+                        body,
+                    ),
+                    extras,
+                ),
                  e| {
                     Statement::Workbench(WorkbenchDefinition {
                         span: e.span(),
@@ -636,7 +681,11 @@ fn parser<'tokens>(
             .then(block.clone())
             .with_extras()
             .map_with(
-                |(((((((doc, visibility), keyword_span), name), arguments), return_type), body), extras), e| {
+                |(
+                    ((((((doc, visibility), keyword_span), name), arguments), return_type), body),
+                    extras,
+                ),
+                 e| {
                     Statement::Function(FunctionDefinition {
                         span: e.span(),
                         keyword_span,
@@ -681,6 +730,27 @@ fn parser<'tokens>(
         .map(Statement::Comment)
         .boxed();
 
+        let reserved_keyword_statement = reserved_keyword
+            .clone()
+            .then_ignore(none_of([Token::OperatorAssignment, Token::SigilDoubleColon]).rewind())
+            .try_map_with(|kind, e| {
+                Err::<(), _>(Rich::custom(
+                    e.span(),
+                    format!("{kind} is a reserved keyword"),
+                ))
+            })
+            .ignored()
+            .recover_with(via_parser(
+                reserved_keyword
+                    .then_ignore(
+                        none_of([Token::OperatorAssignment, Token::SigilDoubleColon]).rewind(),
+                    )
+                    .clone()
+                    .ignore_then(ignore_till_matched_brackets().or(ignore_till_semi())),
+            ))
+            .map_with(|_, e| Statement::Error(e.span()))
+            .boxed();
+
         let with_semi = assignment
             .or(return_statement)
             .or(use_statement)
@@ -697,6 +767,7 @@ fn parser<'tokens>(
             .boxed();
 
         without_semi
+            .or(reserved_keyword_statement)
             .or(with_semi.then_ignore(just(Token::SigilSemiColon).labelled("semicolon")))
             .labelled("statement")
     });
