@@ -11,8 +11,8 @@ impl FromAst for DocBlock {
         let (summary, details) =
             if let Some(line_num) = node.lines.iter().position(|line| line.trim().is_empty()) {
                 (
-                    join_parts(&node.lines[0..line_num]),
-                    Some(join_parts(&node.lines[line_num..])),
+                    node.lines[0..line_num].join(""),
+                    Some(&node.lines[line_num..].join("")).cloned(),
                 )
             } else {
                 (node.lines.clone().join("\n"), None)
@@ -24,12 +24,4 @@ impl FromAst for DocBlock {
             src_ref: context.src_ref(&node.span),
         })
     }
-}
-
-fn join_parts(parts: &[String]) -> String {
-    let mut result = String::with_capacity(64);
-    for part in parts {
-        result.push_str(part);
-    }
-    result
 }
