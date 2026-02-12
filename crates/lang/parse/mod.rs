@@ -54,9 +54,9 @@ pub(crate) fn build_ast(source: &str, parse_context: &ParseContext) -> Result<mi
     parse(tokens.as_slice()).map_err(|errors| {
         let errors = errors
             .into_iter()
-            .map(|error| ParseError::AstParser {
-                src_ref: parse_context.src_ref(&error.span),
-                error,
+            .map(|error| {
+                let src_ref = parse_context.src_ref(&error.span);
+                ParseError::AstParser(Refer::new(error, src_ref))
             })
             .collect::<Vec<_>>();
         ParseErrorsWithSource {
