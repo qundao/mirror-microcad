@@ -1,8 +1,15 @@
 # µcad standard library
 
-This crate provides the µcad standard library and functionality in Rust to embed it into applications.
+[![Crates.io](https://img.shields.io/crates/v/microcad-std.svg)](https://crates.io/crates/microcad-std)
+[![Documentation](https://docs.rs/microcad-std/badge.svg)](https://docs.rs/microcad-std/)
 
-## ❤️ Donate
+This crate provides the µcad standard library itself and a Rust API to embed it into applications.
+
+The Rust API includes functionality to embed the lib as well as to install and uninstall it in the user's home directory.
+
+## ❤️ Support the project
+
+This crate is part of the [microcad project](https://microcad.xyz).
 
 If you like this project, you can help us spend more time on it by donating:
 

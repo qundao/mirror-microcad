@@ -1,8 +1,21 @@
 # microcad
 
-This crate provides the command line interpreter of µcad.
+[![Crates.io](https://img.shields.io/crates/v/microcad.svg)](https://crates.io/crates/microcad)
+[![Documentation](https://docs.rs/microcad/badge.svg)](https://docs.rs/microcad/)
+
+This crate provides a command line interface for µcad language.
 
 **Note**: This project is in an early stage of development and is not yet feature complete!
+
+## Quick Start
+
+To process a µcad file and export its geometry into an STL, use the following command:
+
+```sh
+microcad export ./examples/bricks/brick
+```
+
+This will export the 3D geometry description in `./examples/bricks/brick.µcad` as a `brick.stl` file.
 
 ## Installation
 
@@ -16,6 +29,8 @@ Use the following line to install Ninja and CMake:
 ```sh
 sudo apt install ninja-build cmake
 ```
+
+Pre-built debian packages which are attached to our release logs:
 
 ### MacOS
 
@@ -31,23 +46,6 @@ To install the latest release of *µcad* via *cargo*, type:
 
 ```sh
 cargo install microcad
-```
-
-## Command line usage
-
-After installing, you can run a basic example by typing:
-
-```sh
-microcad eval ./examples/bricks/brick
-```
-
-This will *evaluate* the input file and will output the model tree.
-The *evaluate* command will not export the output geometry.
-
-To generate an STL model file use the `export` command with an additional output file name:
-
-```sh
-microcad export ./examples/bricks/brick
 ```
 
 ## Run
@@ -86,11 +84,25 @@ Options:
 
 You're now ready to use µcad!
 
+## Command line usage
+
+To generate an STL model file, use the `export` command (with an optional output file name):
+
+```sh
+microcad export ./examples/bricks/brick
+```
+
+This will export the geometry into a `brick.stl` file.
+
 ## Resources
 
-Documentation: <https://docs.microcad.xyz/language/book/index.html>
+* Documentation: <https://docs.microcad.xyz/language/book/index.html>
+* µcad Viewer: <https://crates.io/crates/microcad-viewer/>
+*
 
-## ❤️ Donate
+## ❤️ Support the project
+
+This crate is part of the [microcad project](https://microcad.xyz).
 
 If you like this project, you can help us spend more time on it by donating:
 

@@ -13,7 +13,8 @@ npm run package
 ```
 
 Open VS Code Command Palette (F1, Ctrl+Shift+P or Cmd+Shift+P) and select
-```
+
+```vscode
 > Developer: Install Extension from Location…
 ```
 
@@ -36,6 +37,17 @@ code --install-extension microcad-0.0.2.vsix
 ```
 
 This will install the extension and you should see output similar to:
+
 ```
 Extension `microcad-0.0.2.vsix` was successfully installed.
 ```
+
+## ❤️ Support the project
+
+This extension is part of the [microcad project](https://microcad.xyz).
+
+If you like this project, you can help us spend more time on it by donating:
+
+<a href="https://opencollective.com/microcad/donate" target="_blank">
+<img src="https://opencollective.com/microcad/donate/button@2x.png?color=blue" width=300 />
+</a>

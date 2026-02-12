@@ -3,7 +3,7 @@
 
 [package]
 name = "microcad-viewer-ipc"
-description = "µcad Viewer Interprocess Communication"
+description = "µcad Viewer Interprocess Communication API"
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true

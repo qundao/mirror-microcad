@@ -3,6 +3,7 @@
 
 [package]
 name = "microcad-builtin-proc-macros"
+description = "Provides procedural macros for creating µcad built-in symbols."
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true
@@ -10,7 +11,6 @@ license.workspace = true
 repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
-description.workspace = true
 
 [lib]
 proc-macro = true

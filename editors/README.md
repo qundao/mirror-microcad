@@ -2,7 +2,9 @@
 
 This folder contains integrations and plugins for various editors and IDEs.
 
-## ❤️ Donate
+## ❤️ Support the project
+
+This folder is part of the [microcad project](https://microcad.xyz).
 
 If you like this project, you can help us spend more time on it by donating:
 

@@ -1,13 +1,24 @@
 # µcad inspector
 
-This crate provides the inspector app to inspect µcad files.
+[![Crates.io](https://img.shields.io/crates/v/microcad-inspector.svg)](https://crates.io/crates/microcad-inspector)
+[![Documentation](https://docs.rs/microcad-inspector/badge.svg)](https://docs.rs/microcad-inspector/)
+
+This crate provides an experimental inspector app to inspect µcad files.
+
+## Install via cargo
+
+You can install this application using cargo.
+
+```sh
+cargo install microcad-inspector
+```
 
 ## Run
 
-Start the microcad viewer by typing `microcad-inspector` into your console.
+After installing, you can run the microcad inspector by typing `microcad-inspector` into your console.
 
 ```sh
-microcad-inspector
+microcad-inspector some_file.µcad
 ```
 
 ### Run workspace root using Cargo
@@ -16,7 +27,9 @@ microcad-inspector
 RUST_LOG=info cargo run --bin microcad-inspector --package microcad-inspector -- examples/csg_cube.µcad
 ```
 
-## ❤️ Donate
+## ❤️ Support the project
+
+This crate is part of the [microcad project](https://microcad.xyz).
 
 If you like this project, you can help us spend more time on it by donating:
 

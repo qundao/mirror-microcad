@@ -3,7 +3,7 @@
 
 [package]
 name = "microcad-builtin"
-description = "µcad Builtin Library"
+description = "Provides the built-in functionalities available in the µcad language."
 documentation = "https://docs.rs/microcad-std"
 edition.workspace = true
 rust-version.workspace = true

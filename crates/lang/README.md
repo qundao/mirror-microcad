@@ -3,13 +3,15 @@
 [![Crates.io](https://img.shields.io/crates/v/microcad-lang.svg)](https://crates.io/crates/microcad-lang)
 [![Documentation](https://docs.rs/microcad-lang/badge.svg)](https://docs.rs/microcad-lang/)
 
-This is the language module of microcad which includes parsing, resolving and evaluating microcad code.
+This is the µcad language crate which includes resolving and evaluating µcad code.
 
-To use this you need to install an application like the crate [microcad](https://crates.io/crates/microcad) which offers a command line interface to this library.
+In order to write programs in the µcad language, you need an interpreter like [microcad](https://crates.io/crates/microcad) which offers a command line interface.
 
-An intro page about the microcad language can be found [here](https://codeberg.org/microcad/microcad/src/branch/main/README.md).
+For more information about how to use language, please refer to the [µcad language book](http://docs.microcad.xyz/language/book).
 
-## ❤️ Donate
+## ❤️ Support the project
+
+This crate is part of the [microcad project](https://microcad.xyz).
 
 If you like this project, you can help us spend more time on it by donating:
 

@@ -1,9 +1,9 @@
 // Copyright © 2024-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad pest test
+//! µcad markdown test
 
-/// pest test main
+/// markdown test main
 fn main() {
     if let Err(err) = microcad_markdown_test::generate(
         "../books/tests/src",
