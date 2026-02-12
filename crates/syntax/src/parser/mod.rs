@@ -11,6 +11,7 @@ use crate::parser::error::{ParseErrorKind, Rich};
 use crate::parser::helpers::*;
 use crate::parser::simplify::simplify_unary_op;
 use crate::tokens::*;
+
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
@@ -84,7 +85,8 @@ fn parser<'tokens>()
             Token::KeywordUnit |
             Token::KeywordEnum |
             Token::KeywordStruct |
-            Token::KeywordMatch
+            Token::KeywordMatch |
+            Token::KeywordType
         ) => token.kind(),
     }
     .boxed();

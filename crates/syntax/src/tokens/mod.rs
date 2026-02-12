@@ -138,6 +138,8 @@ pub enum Token<'a> {
     KeywordStruct,
     /// The `match` keyword
     KeywordMatch,
+    /// The `type` keyword
+    KeywordType,
 
     /// An identifier, alphanumeric, starting with either an alpha character or a underscore
     Identifier(Cow<'a, str>),
@@ -288,6 +290,7 @@ impl Token<'_> {
             Token::KeywordEnum => Token::KeywordEnum,
             Token::KeywordStruct => Token::KeywordStruct,
             Token::KeywordMatch => Token::KeywordMatch,
+            Token::KeywordType => Token::KeywordType,
             Token::LiteralBool(l) => Token::LiteralBool(l),
             Token::SigilColon => Token::SigilColon,
             Token::SigilSemiColon => Token::SigilSemiColon,
@@ -363,6 +366,7 @@ impl Token<'_> {
             Token::KeywordEnum => "enum",
             Token::KeywordStruct => "struct",
             Token::KeywordMatch => "match",
+            Token::KeywordType => "type",
             Token::Identifier(_) => "identifier",
             Token::Unit(_) => "unit",
             Token::LiteralInt(_) => "integer literal",
