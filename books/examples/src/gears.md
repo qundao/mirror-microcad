@@ -2,7 +2,7 @@
 
 ## Module: gear_2d
 
-[![Report](.test/gears_gear_2d.svg)](.test/gears_gear_2d.log)
+[![test](.test/gears_gear_2d.svg)](.test/gears_gear_2d.log)
 
 ```µcad,gears_gear_2d
 // file: gear_2d.µcad
@@ -24,7 +24,7 @@ InvoluteGearProfile(1.0mm, 100);
 
 ## Module: gears_3d
 
-[![Report](.test/gears_gears_3d.svg)](.test/gears_gears_3d.log)
+[![test](.test/gears_gears_3d.svg)](.test/gears_gears_3d.log)
 
 ```µcad,gears_gears_3d
 // file: gears_3d.µcad
@@ -100,7 +100,7 @@ gear3
 
 ## Module: herringbone_gears
 
-[![Report](.test/gears_herringbone_gears.svg)](.test/gears_herringbone_gears.log)
+[![test](.test/gears_herringbone_gears.svg)](.test/gears_herringbone_gears.log)
 
 ```µcad,gears_herringbone_gears
 // file: herringbone_gears.µcad

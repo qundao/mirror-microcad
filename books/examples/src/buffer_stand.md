@@ -1,6 +1,6 @@
 # Example: buffer_stand
 
-[![Report](.test/buffer_stand.svg)](.test/buffer_stand.log)
+[![test](.test/buffer_stand.svg)](.test/buffer_stand.log)
 
 ```µcad,buffer_stand
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

@@ -1,6 +1,6 @@
 # Example: multi_export
 
-[![Report](.test/multi_export.svg)](.test/multi_export.log)
+[![test](.test/multi_export.svg)](.test/multi_export.log)
 
 ```µcad,multi_export
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

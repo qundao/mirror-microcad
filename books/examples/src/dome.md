@@ -1,6 +1,6 @@
 # Example: dome
 
-[![Report](.test/dome.svg)](.test/dome.log)
+[![test](.test/dome.svg)](.test/dome.log)
 
 ```µcad,dome
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>

@@ -1,6 +1,6 @@
 # Example: drill_plate
 
-[![Report](.test/drill_plate.svg)](.test/drill_plate.log)
+[![test](.test/drill_plate.svg)](.test/drill_plate.log)
 
 ```µcad,drill_plate
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

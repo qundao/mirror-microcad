@@ -1,6 +1,6 @@
 # Example: torus
 
-[![Report](.test/torus.svg)](.test/torus.log)
+[![test](.test/torus.svg)](.test/torus.log)
 
 ```µcad,torus
 // Copyright © 2025 The µcad authors <info@ucad.xyz>

@@ -1,6 +1,6 @@
 # Example: footpad
 
-[![Report](.test/footpad.svg)](.test/footpad.log)
+[![test](.test/footpad.svg)](.test/footpad.log)
 
 ```µcad,footpad
 // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>

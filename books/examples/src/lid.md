@@ -1,6 +1,6 @@
 # Example: lid
 
-[![Report](.test/lid.svg)](.test/lid.log)
+[![test](.test/lid.svg)](.test/lid.log)
 
 ```µcad,lid
 // Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
