@@ -18,7 +18,7 @@
  47 │ 
  48 │ Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
     ·                      ┬
-    ·                      ╰── unexpected {
+    ·                      ╰── Expected comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', semicolon or end of input
     ╰────
 
 -- Test Result --

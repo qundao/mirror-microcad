@@ -21,7 +21,7 @@
  18 │ d : [String]  = [ "one", "two", "three", "four", "five" ];
  19 │ e : [Model]   = [ std::geo2d::Circle(radius = 1cm),
     ·      ──┬──
-    ·        ╰── Unknown type: Model
+    ·        ╰── Unknown type
  20 │                   std::geo3d::Sphere(radius = 1cm)
     ╰────
 
