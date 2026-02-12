@@ -107,12 +107,17 @@ fn parser<'tokens>()
         .delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
             just(Token::SigilCloseCurlyBracket),
-            |err: Error, open, end| Rich::custom(err.span().clone(), ParseErrorKind::UnclosedBracket {
-                open,
-                end,
-                kind: "code block",
-                close_token: Token::SigilCloseCurlyBracket,
-            }),
+            |err: Error, open, end| {
+                Rich::custom(
+                    err.span().clone(),
+                    ParseErrorKind::UnclosedBracket {
+                        open,
+                        end,
+                        kind: "code block",
+                        close_token: Token::SigilCloseCurlyBracket,
+                    },
+                )
+            },
         )
         .recover_with(via_parser(block_recovery))
         .boxed();
@@ -193,9 +198,20 @@ fn parser<'tokens>()
             .separated_by(just(Token::SigilComma))
             .allow_trailing()
             .collect::<Vec<_>>()
-            .delimited_by(
+            .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
+                |err: Error, open, end| {
+                    Rich::custom(
+                        err.span().clone(),
+                        ParseErrorKind::UnclosedBracket {
+                            open,
+                            end,
+                            kind: "tuple type",
+                            close_token: Token::SigilCloseBracket,
+                        },
+                    )
+                },
             )
             .map_with(|inner, e| {
                 Type::Tuple(TupleType {
@@ -308,14 +324,14 @@ fn parser<'tokens>()
     .boxed();
 
     let tuple_recovery = nested_delimiters(
-        Token::SigilOpenCurlyBracket,
-        Token::SigilCloseCurlyBracket,
+        Token::SigilOpenBracket,
+        Token::SigilCloseBracket,
         [
             (
                 Token::SigilOpenSquareBracket,
                 Token::SigilCloseSquareBracket,
             ),
-            (Token::SigilOpenBracket, Token::SigilCloseBracket),
+            (Token::SigilOpenCurlyBracket, Token::SigilCloseCurlyBracket),
         ],
         |_| (),
     )
@@ -375,9 +391,20 @@ fn parser<'tokens>()
                         .collect::<Vec<_>>(),
                 })
                 .labelled("function arguments")
-                .delimited_by(
+                .delimited_with_spanned_error(
                     just(Token::SigilOpenBracket),
                     just(Token::SigilCloseBracket),
+                    |err: Error, open, end| {
+                        Rich::custom(
+                            err.span().clone(),
+                            ParseErrorKind::UnclosedBracket {
+                                open,
+                                end,
+                                kind: "function arguments",
+                                close_token: Token::SigilCloseBracket,
+                            },
+                        )
+                    },
                 )
                 .recover_with(via_parser(tuple_recovery.clone().map_with(|_, e| {
                     ArgumentList {
@@ -536,9 +563,20 @@ fn parser<'tokens>()
                 extras,
                 arguments,
             })
-            .delimited_by(
+            .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
+                |err: Error, open, end| {
+                    Rich::custom(
+                        err.span().clone(),
+                        ParseErrorKind::UnclosedBracket {
+                            open,
+                            end,
+                            kind: "function arguments",
+                            close_token: Token::SigilCloseBracket,
+                        },
+                    )
+                },
             )
             .boxed();
 
@@ -923,11 +961,21 @@ fn parser<'tokens>()
         let tuple = tuple_body
             .clone()
             .with_extras()
-            .delimited_by(
+            .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
+                |err: Error, open, end| {
+                    Rich::custom(
+                        err.span().clone(),
+                        ParseErrorKind::UnclosedBracket {
+                            open,
+                            end,
+                            kind: "tuple",
+                            close_token: Token::SigilCloseBracket,
+                        },
+                    )
+                },
             )
-            .recover_with(via_parser(tuple_recovery))
             .map_with(|(values, extras), e| {
                 Expression::Tuple(TupleExpression {
                     span: e.span(),
@@ -937,10 +985,24 @@ fn parser<'tokens>()
             })
             .labelled("tuple");
 
-        let bracketed = expression_parser.clone().delimited_by(
-            just(Token::SigilOpenBracket),
-            just(Token::SigilCloseBracket),
-        );
+        let bracketed = expression_parser
+            .clone()
+            .delimited_with_spanned_error(
+                just(Token::SigilOpenBracket),
+                just(Token::SigilCloseBracket),
+                |err: Error, open, end| {
+                    Rich::custom(
+                        err.span().clone(),
+                        ParseErrorKind::UnclosedBracket {
+                            open,
+                            end,
+                            kind: "bracketed expression",
+                            close_token: Token::SigilCloseBracket,
+                        },
+                    )
+                },
+            )
+            .boxed();
 
         let array_item = expression_parser
             .clone()
@@ -1061,13 +1123,18 @@ fn parser<'tokens>()
             .map(Expression::Call)
             .labelled("method call");
 
+        let bracket_based = bracketed.or(tuple).recover_with(via_parser(
+            tuple_recovery
+                .clone()
+                .map_with(|_, e| Expression::Error(e.span())),
+        ));
+
         let base = literal
             .or(string_format)
             .or(call)
             .or(qualified_name_expr)
             .or(marker)
-            .or(bracketed)
-            .or(tuple)
+            .or(bracket_based)
             .or(array_range)
             .or(array_list)
             .or(block_expression)
