@@ -22,7 +22,10 @@ impl Eval<Value> for IfStatement {
                 }
             }
             _ => {
-                context.error(self, EvalError::IfConditionIsNotBool(cond.to_string()))?;
+                context.error(self, EvalError::IfConditionIsNotBool {
+                    condition: cond.to_string(),
+                    src_ref: self.cond.src_ref(),
+                })?;
                 Ok(Value::None)
             }
         }
@@ -46,7 +49,10 @@ impl Eval<Option<Model>> for IfStatement {
                 }
             }
             _ => {
-                context.error(self, EvalError::IfConditionIsNotBool(cond.to_string()))?;
+                context.error(self, EvalError::IfConditionIsNotBool {
+                    condition: cond.to_string(),
+                    src_ref: self.cond.src_ref(),
+                })?;
                 Ok(None)
             }
         }

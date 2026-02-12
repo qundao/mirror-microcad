@@ -178,8 +178,12 @@ pub enum EvalError {
     CannotMixGeometry,
 
     /// A condition of an if statement is not a boolean
-    #[error("If condition is not a boolean: {0}")]
-    IfConditionIsNotBool(String),
+    #[error("If condition is not a boolean: {condition}")]
+    IfConditionIsNotBool {
+        condition: String,
+        #[label("Not a boolean")]
+        src_ref: SrcRef,
+    },
 
     /// Workbench didn't find a initialization routine matching the given arguments
     #[error("Workbench {name} cannot find initialization for those arguments")]
