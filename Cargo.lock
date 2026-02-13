@@ -5477,6 +5477,7 @@ dependencies = [
  "pest",
  "pest_derive",
  "update_copyright",
+ "update_md_banner",
 ]
 
 [[package]]
