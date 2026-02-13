@@ -106,6 +106,7 @@ impl Symbolize<Option<(Identifier, Symbol)>> for Statement {
             | Statement::Return(_)
             | Statement::If(_)
             | Statement::InnerAttribute(_)
+            | Statement::InnerDocComment(_)
             | Statement::Expression(_) => Ok(None),
         }
     }

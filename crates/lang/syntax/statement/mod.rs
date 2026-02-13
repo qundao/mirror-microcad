@@ -8,12 +8,14 @@ use crate::{rc::*, src_ref::*, syntax::*};
 mod assignment_statement;
 mod expression_statement;
 mod if_statement;
+mod inner_doc_comment;
 mod return_statement;
 mod statement_list;
 
 pub use assignment_statement::*;
 pub use expression_statement::*;
 pub use if_statement::*;
+pub use inner_doc_comment::*;
 pub use return_statement::*;
 pub use statement_list::*;
 
@@ -37,6 +39,8 @@ pub enum Statement {
     If(IfStatement),
     /// Inner attribute statement: `#![size = std::A4]`.
     InnerAttribute(Attribute),
+    /// Inner doc comment: `//! Text`.
+    InnerDocComment(InnerDocComment),
 
     /// Assignment statement.
     Assignment(AssignmentStatement),
@@ -56,6 +60,7 @@ impl SrcReferrer for Statement {
             Self::Return(r) => r.src_ref(),
             Self::If(i) => i.src_ref(),
             Self::InnerAttribute(i) => i.src_ref(),
+            Self::InnerDocComment(i) => i.src_ref(),
 
             Self::Assignment(a) => a.src_ref(),
             Self::Expression(e) => e.src_ref(),
@@ -83,6 +88,7 @@ impl std::fmt::Display for Statement {
             Self::Return(r) => write!(f, "{r};"),
             Self::If(i) => write!(f, "{i}"),
             Self::InnerAttribute(i) => write!(f, "{i}"),
+            Self::InnerDocComment(i) => write!(f, "{i}"),
 
             Self::Assignment(a) => write!(f, "{a}"),
             Self::Expression(e) => write!(f, "{e}"),
@@ -109,6 +115,7 @@ impl std::fmt::Debug for Statement {
             Self::Return(r) => write!(f, "{r:?};"),
             Self::If(i) => write!(f, "{i:?}"),
             Self::InnerAttribute(i) => write!(f, "{i:?}"),
+            Self::InnerDocComment(i) => write!(f, "{i:?}"),
 
             Self::Assignment(a) => write!(f, "{a:?}"),
             Self::Expression(e) => write!(f, "{e:?}"),
@@ -129,6 +136,7 @@ impl TreeDisplay for Statement {
             Self::Return(r) => r.tree_print(f, depth),
             Self::If(i) => i.tree_print(f, depth),
             Self::InnerAttribute(i) => i.tree_print(f, depth),
+            Self::InnerDocComment(i) => i.tree_print(f, depth),
 
             Self::Assignment(a) => a.tree_print(f, depth),
             Self::Expression(e) => e.tree_print(f, depth),
