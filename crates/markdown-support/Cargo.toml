@@ -1,0 +1,22 @@
+# Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-markdown-support"
+description = "µcad Markdown Support"
+documentation = "https://docs.rs/microcad-markdown-support"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lib]
+path = "lib.rs"
+
+[dependencies]
+markdown = "1.0.0"
+
+microcad-lang = { workspace = true }
