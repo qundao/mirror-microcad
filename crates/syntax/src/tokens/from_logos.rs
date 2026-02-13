@@ -51,6 +51,10 @@ fn map_normal_token(token: SpannedToken<NormalToken>) -> impl Iterator<Item = Sp
         NormalToken::DocComment(c) => {
             Either::Left(once(SpannedToken::new(token.span, Token::DocComment(c))))
         }
+        NormalToken::InnerDocComment(c) => Either::Left(once(SpannedToken::new(
+            token.span,
+            Token::InnerDocComment(c),
+        ))),
         NormalToken::KeywordMod => {
             Either::Left(once(SpannedToken::new(token.span, Token::KeywordMod)))
         }

@@ -18,12 +18,14 @@ pub enum LogosToken<'a> {
 #[logos(error(LexerError))]
 #[logos(skip r"[ \t\n\f]+")]
 pub enum NormalToken<'a> {
+    #[regex(r#"\/\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
+    DocComment(Cow<'a, str>),
+    #[regex(r#"\/\/![^\n]*"#, allow_greedy = true, callback = token_cow)]
+    InnerDocComment(Cow<'a, str>),
     #[regex(r#"\/\/[^\n]*"#, allow_greedy = true, callback = single_line_comment_callback)]
     SingleLineComment(Cow<'a, str>),
     #[token("/*", callback = multi_line_comment_callback)]
     MultiLineComment(Cow<'a, str>),
-    #[regex(r#"\/\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
-    DocComment(Cow<'a, str>),
 
     #[token("mod")]
     KeywordMod,

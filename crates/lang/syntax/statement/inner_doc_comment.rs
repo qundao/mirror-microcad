@@ -9,7 +9,7 @@ use crate::{src_ref::*, tree_display::*};
 ///
 /// A doc comment statement only contains one line of documentation.
 #[derive(Clone, Debug)]
-pub struct InnerDocComment(Refer<String>);
+pub struct InnerDocComment(pub Refer<String>);
 
 impl SrcReferrer for InnerDocComment {
     fn src_ref(&self) -> SrcRef {

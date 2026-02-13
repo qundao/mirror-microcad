@@ -95,6 +95,8 @@ pub enum Token<'a> {
     MultiLineComment(Cow<'a, str>),
     /// A doc-comment, starting with `///`
     DocComment(Cow<'a, str>),
+    /// An inner doc-comment, starting with `//!`
+    InnerDocComment(Cow<'a, str>),
 
     /// The `mod` keyword
     KeywordMod,
@@ -261,6 +263,7 @@ impl Token<'_> {
             Token::SingleLineComment(c) => Token::SingleLineComment(c.into_owned().into()),
             Token::MultiLineComment(c) => Token::MultiLineComment(c.into_owned().into()),
             Token::DocComment(c) => Token::DocComment(c.into_owned().into()),
+            Token::InnerDocComment(c) => Token::InnerDocComment(c.into_owned().into()),
             Token::Identifier(s) => Token::Identifier(s.into_owned().into()),
             Token::Unit(s) => Token::Unit(s.into_owned().into()),
             Token::LiteralInt(s) => Token::LiteralInt(s.into_owned().into()),
@@ -342,6 +345,7 @@ impl Token<'_> {
             Token::SingleLineComment(_) => "single-line comment",
             Token::MultiLineComment(_) => "multi-line comment",
             Token::DocComment(_) => "doc comment",
+            Token::InnerDocComment(_) => "inner doc comment",
             Token::KeywordMod => "mod",
             Token::KeywordPart => "part",
             Token::KeywordSketch => "sketch",
