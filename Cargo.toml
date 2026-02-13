@@ -11,6 +11,7 @@ default-members = [
     "crates/import",
     "crates/lang",
     "crates/lsp",
+    "crates/markdown-support",
     "crates/std",
     "crates/syntax",
     "crates/viewer-ipc",
@@ -29,6 +30,7 @@ members = [
     "crates/import",
     "crates/lang",
     "crates/lsp",
+    "crates/markdown-support",
     "crates/std",
     "crates/syntax",
     "crates/viewer-ipc",
@@ -67,6 +69,7 @@ microcad-syntax = { path = "crates/syntax", version = "0.3.0" }
 microcad-import = { path = "crates/import", version = "0.3.0" }
 microcad-export = { path = "crates/export", version = "0.3.0" }
 microcad-lang = { path = "crates/lang", version = "0.3.0" }
+microcad-markdown-support = { path = "crates/markdown-support", version = "0.3.0" }
 microcad-builtin = { path = "crates/builtin", version = "0.3.0" }
 microcad-builtin-proc-macros = { path = "crates/builtin-proc-macros", version = "0.3.0" }
 microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.3.0" }
