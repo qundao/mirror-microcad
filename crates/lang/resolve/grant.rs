@@ -363,6 +363,7 @@ impl Body {
                     // Post init statements
                     Statement::If(_)
                     | Statement::InnerAttribute(_)
+                    | Statement::InnerDocComment(_)
                     | Statement::Expression(_)
                     | Statement::Function(_) => {
                         // RULE: No code between initializers

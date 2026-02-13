@@ -45,6 +45,10 @@ impl Eval for Statement {
                 i.grant(context)?;
                 Ok(Value::None)
             }
+            Self::InnerDocComment(i) => {
+                i.grant(context)?;
+                Ok(Value::None)
+            }
             Self::Init(i) => {
                 i.grant(context)?;
                 Ok(Value::None)
@@ -89,6 +93,10 @@ impl Eval<Option<Model>> for Statement {
             Self::Expression(e) => e.eval(context)?,
             Self::InnerAttribute(a) => {
                 a.grant(context)?;
+                None
+            }
+            Self::InnerDocComment(doc) => {
+                doc.grant(context)?;
                 None
             }
         };
