@@ -51,5 +51,7 @@ fn main() {
             "../thirdparty/*",
         ],
     )
-    .expect("io error")
+    .expect("io error");
+
+    update_md_banner::update_md_banner("../books").expect("io error");
 }
