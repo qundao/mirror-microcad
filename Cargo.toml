@@ -15,9 +15,9 @@ default-members = [
     "crates/syntax",
     "crates/viewer-ipc",
 
+    "tests/update-copyright",
+    "tests/update-md-banner",
     "tests",
-    "tools/update-copyright",
-    "tools/update-md-banner",
 ]
 
 members = [
@@ -33,9 +33,9 @@ members = [
     "crates/syntax",
     "crates/viewer-ipc",
 
+    "tests/update-copyright",
+    "tests/update-md-banner",
     "tests",
-    "tools/update-copyright",
-    "tools/update-md-banner",
 
     # Non default members
     "crates/viewer",
