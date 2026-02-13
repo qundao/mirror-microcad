@@ -5476,6 +5476,7 @@ dependencies = [
  "miette",
  "pest",
  "pest_derive",
+ "update_copyright",
 ]
 
 [[package]]

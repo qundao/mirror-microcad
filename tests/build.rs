@@ -39,4 +39,17 @@ fn main() {
     ) {
         panic!("error generating rust test code from markdown file: {err}");
     }
+
+    update_copyright::update_copyrights(
+        "../",
+        &["toml"],
+        &["rs", "pest", "slint", "wgsl", "µcad"],
+        &[
+            "../target/*",
+            "../tests/*.µcad",
+            "../crates/cli/examples/*.µcad",
+            "../thirdparty/*",
+        ],
+    )
+    .expect("io error")
 }
