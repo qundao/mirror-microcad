@@ -96,9 +96,10 @@ impl FromAst for Statement {
             ast::Statement::Use(statement) => {
                 Statement::Use(UseStatement::from_ast(statement, context)?)
             }
-            ast::Statement::Expression(ast::ExpressionStatement { expression: ast::Expression::If(if_statement), .. }) => {
-                Statement::If(IfStatement::from_ast(if_statement, context)?)
-            }
+            ast::Statement::Expression(ast::ExpressionStatement {
+                expression: ast::Expression::If(if_statement),
+                ..
+            }) => Statement::If(IfStatement::from_ast(if_statement, context)?),
             ast::Statement::Expression(statement) => {
                 Statement::Expression(ExpressionStatement::from_ast(statement, context)?)
             }
@@ -114,6 +115,9 @@ impl FromAst for Statement {
             ast::Statement::Return(r) => Statement::Return(ReturnStatement::from_ast(r, context)?),
             ast::Statement::InnerAttribute(a) => {
                 Statement::InnerAttribute(Attribute::from_ast(a, context)?)
+            }
+            ast::Statement::InnerDocComment(i) => {
+                Statement::InnerDocComment(InnerDocComment::from_ast(i, context)?)
             }
             ast::Statement::Assignment(a) => {
                 Statement::Assignment(AssignmentStatement::from_ast(a, context)?)

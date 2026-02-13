@@ -1,8 +1,8 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::ast::{Call, Expression, Identifier, ItemExtras, StatementList, Type};
 use crate::Span;
+use crate::ast::{Call, Expression, Identifier, ItemExtras, StatementList, Type};
 
 /// A µcad statements
 #[derive(Debug, PartialEq)]
@@ -17,6 +17,7 @@ pub enum Statement {
     InnerAttribute(Attribute),
     Assignment(Assignment),
     Expression(ExpressionStatement),
+    InnerDocComment(Comment),
     Comment(Comment),
     Error(Span),
 }
@@ -34,6 +35,7 @@ impl Statement {
             Statement::InnerAttribute(st) => st.span.clone(),
             Statement::Assignment(st) => st.span.clone(),
             Statement::Expression(st) => st.span.clone(),
+            Statement::InnerDocComment(st) => st.span.clone(),
             Statement::Comment(st) => st.span.clone(),
             Statement::Error(span) => span.clone(),
         }
