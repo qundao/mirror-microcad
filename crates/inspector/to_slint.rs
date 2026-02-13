@@ -6,6 +6,7 @@
 use crate::*;
 
 use microcad_lang::model::{Creator, Element, Model};
+use slint::ToSharedString;
 
 pub trait ItemsFromTree<T, D = usize>: Sized
 where
@@ -51,13 +52,8 @@ impl From<&Refer<Element>> for VM_Element {
 impl From<&DocBlock> for VM_DocBlock {
     fn from(doc: &DocBlock) -> Self {
         Self {
-            summary: (&doc.summary).into(),
-            details: doc
-                .details
-                .as_ref()
-                .map(|details| details.into())
-                .unwrap_or_default(),
-            src_ref: (&doc.src_ref).into(),
+            lines: doc.0.join("\n").to_shared_string(),
+            src_ref: (&doc.src_ref()).into(),
         }
     }
 }

@@ -8,21 +8,10 @@ impl FromAst for DocBlock {
     type AstNode = ast::Comment;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        let (summary, details) =
-            if let Some(line_num) = node.lines.iter().position(|line| line.trim().is_empty()) {
-                (
-                    node.lines[0..line_num].join(""),
-                    Some(&node.lines[line_num..].join("")).cloned(),
-                )
-            } else {
-                (node.lines.clone().join("\n"), None)
-            };
-
-        Ok(DocBlock {
-            summary,
-            details,
-            src_ref: context.src_ref(&node.span),
-        })
+        Ok(DocBlock(Refer::new(
+            node.lines.clone(),
+            context.src_ref(&node.span),
+        )))
     }
 }
 
