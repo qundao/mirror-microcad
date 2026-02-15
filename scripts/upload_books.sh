@@ -1,5 +1,21 @@
 #!/bin/sh
 
+# Check for flags
+DRY_RUN=""
+SHOW_ONLY=""
+for arg in "$@"; do
+    case "$arg" in
+        --dry-run|-d)
+            DRY_RUN="--dry-run"
+            echo "DRY-RUN MODE - No files will be uploaded"
+            echo ""
+            ;;
+        --show-command|-s)
+            SHOW_ONLY="true"
+            ;;
+    esac
+done
+
 # Get script directory and project root
 SCRIPT_DIR=$(dirname "$0")
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -14,38 +30,38 @@ else
 fi
 
 # Check if all variables are set
-if [ -z "$SFTP_HOST" ] || [ -z "$SFTP_USER" ] || [ -z "$SFTP_KEY" ]; then
+if [ -z "$FTP_HOST" ] || [ -z "$FTP_USER" ] || [ -z "$FTP_PW" ]; then
     echo "Error: SFTP credentials incomplete in .env"
     exit 1
 fi
 
 # Set default values
-SFTP_PORT="${SFTP_PORT:-22}"
-SFTP_REMOTE_PATH="${SFTP_REMOTE_PATH:-.}"
+FTP_PORT="${FTP_PORT:-21}"
+FTP_REMOTE_PATH="${FTP_REMOTE_PATH:-.}"
 
-# Check for dry-run flag
-DRY_RUN=""
-if [ "$1" = "--dry-run" ] || [ "$1" = "-d" ]; then
-    DRY_RUN="--dry-run"
-    echo "DRY-RUN MODE - No files will be uploaded"
-    echo ""
-fi
-
-
-echo "Starting upload..."
 
 # Build lftp commands dynamically
-LFTP_COMMANDS="set sftp:connect-program 'ssh -i $SFTP_KEY';"
+echo "Generate the command..."
+LFTP_COMMANDS="set ftp:ssl-force true;"
+# LFTP_COMMANDS=""
 for book_dir in "$BOOKS_DIR"/*/book/; do
     if [ -d "$book_dir" ]; then
         book_name=$(echo "$book_dir" | awk -F'/' '{print $(NF-2)}')
-        LFTP_COMMANDS="$LFTP_COMMANDS mirror -R --delete --verbose $DRY_RUN $book_dir $SFTP_REMOTE_PATH/$book_name/;"
+        LFTP_COMMANDS="$LFTP_COMMANDS mirror -R --delete --verbose $DRY_RUN $book_dir $FTP_REMOTE_PATH/$book_name/;"
     fi
 done
 LFTP_COMMANDS="$LFTP_COMMANDS quit"
 
+# Only show the command
+if [ -n "$SHOW_ONLY" ]; then
+    echo "LFTP command:"
+    echo "lftp -e \"$LFTP_COMMANDS\" ftp://\$FTP_USER:\$FTP_PW@$FTP_HOST:$FTP_PORT"
+    exit 0
+fi
+
 # Upload via lftp
-lftp -e "$LFTP_COMMANDS" sftp://$SFTP_USER@$SFTP_HOST:$SFTP_PORT
+echo "Starting upload..."
+lftp -e "$LFTP_COMMANDS" ftp://$FTP_USER:$FTP_PW@$FTP_HOST:$FTP_PORT
 
 if [ $? -eq 0 ]; then
     if [ -n "$DRY_RUN" ]; then
@@ -56,6 +72,7 @@ if [ $? -eq 0 ]; then
         echo "Upload successful!"
     fi
 else
+        echo ""
     echo "Upload failed!"
     exit 1
 fi
