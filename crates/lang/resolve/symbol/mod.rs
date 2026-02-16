@@ -423,7 +423,7 @@ impl Symbol {
     }
 
     /// Work with the symbol definition.
-    pub(crate) fn with_def<T>(&self, mut f: impl FnMut(&SymbolDef) -> T) -> T {
+    pub fn with_def<T>(&self, mut f: impl FnMut(&SymbolDef) -> T) -> T {
         f(&self.inner.borrow().def)
     }
 
