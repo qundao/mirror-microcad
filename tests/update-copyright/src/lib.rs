@@ -45,7 +45,6 @@ pub fn update_copyrights(
         })
         .expect("scan_path failed");
 
-    let current_year = chrono::Local::now().date_naive().format("%Y").to_string();
     for path in files {
         if let Some(prefix) = extensions.iter().find_map(|(prefix, extensions)| {
             if let Some(ext) = path.extension() {

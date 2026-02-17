@@ -14,18 +14,24 @@ fn main() {
         return;
     }
 
+    // run copyright update/check depending on environment variables `COPYRIGHT_CHECK` and `COPYRIGHT_UPDATE`
     let check_only = std::env::var("COPYRIGHT_CHECK").is_ok();
     let update = std::env::var("COPYRIGHT_UPDATE").is_ok();
     if update || check_only {
-        println!("cargo:warning=updating copyright");
+        println!("cargo:warning=updating copyrights...");
         let check_failed = check_copyright(check_only).expect("copyright check failed");
         if check_failed {
             panic!("copyrights changed")
         }
     }
 
-    update_banners().expect("banner update failed");
+    // update test banners in markdown books
+    use update_md_banner::*;
+    println!("cargo:warning=updating test banners...");
+    update_md_banner("../books").expect("banner update failed");
 
+    // generate rust tests from µcad code in markdown books
+    println!("cargo:warning=generating mdbooks...");
     update_book("tests").expect("test generation failed");
     update_book("language").expect("test generation failed");
     update_book("tutorials").expect("test generation failed");
@@ -47,10 +53,6 @@ fn check_copyright(check_only: bool) -> anyhow::Result<bool> {
         ],
         check_only,
     )?)
-}
-
-fn update_banners() -> anyhow::Result<()> {
-    Ok(update_md_banner::update_md_banner("../books")?)
 }
 
 fn update_book(name: &str) -> anyhow::Result<()> {
