@@ -10,7 +10,9 @@ fn main() {
     // ignore pre-build steps in rust-analyzer or clippy
     if std::env::var("RUST_ANALYZER_INTERNALS_DO_NOT_USE").is_ok()
         || std::env::var("CLIPPY_ARGS").is_ok()
+        || std::env::var("SKIP_BUILD_RS").is_ok()
     {
+        println!("cargo:warning=skipping build.rs because of environment var!");
         return;
     }
 
