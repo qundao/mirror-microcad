@@ -32,9 +32,11 @@ impl ParseError {
 #[derive(Debug, Error, Clone, Diagnostic)]
 pub enum ParseErrorKind {
     #[error("{0} is a reserved keyword")]
-    ReservedAttribute(&'static str),
+    ReservedKeyword(&'static str),
     #[error("{0} is a reserved keyword and can't be used as an identifier")]
-    ReservedAttributeAsIdentifier(&'static str),
+    ReservedKeywordAsIdentifier(&'static str),
+    #[error("{0} is a keyword and can't be used as an identifier")]
+    KeywordAsIdentifier(&'static str),
     #[error("unclosed string")]
     UnterminatedString,
     #[error("Unclosed {kind}")]
