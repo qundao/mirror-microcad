@@ -5,48 +5,39 @@ use regex::Regex;
 use scan_dir::ScanDir;
 use std::{fs, process::Command};
 
-fn is_excluded(path: impl AsRef<std::path::Path>, excluded_patterns: &[&str]) -> bool {
-    let path_str = path.as_ref().to_str().unwrap_or_default();
-
-    excluded_patterns.iter().any(|pattern| {
-        // Convert wildcard '*' to regex '.*'
-        let regex_pattern = format!("^{}$", regex::escape(pattern).replace(r"\*", ".*"));
-        Regex::new(&regex_pattern)
-            .map(|re| re.is_match(path_str))
-            .unwrap_or(false)
-    })
-}
-
+/// Search a path for specific files and update copyright notice
+/// # Arguments
+/// `search_path`: Path which will be recursively searched
+/// `has_extensions`: List of extensions
 pub fn update_copyrights(
     search_path: impl AsRef<std::path::Path>,
-    hash_extensions: &[&str],
-    slash_extension: &[&str],
-    exclude_patterns: &[&str],
-) -> std::io::Result<()> {
-    let mut extensions = vec![];
-    extensions.extend_from_slice(
-        &hash_extensions
-            .iter()
-            .map(|s| format!(".{s}"))
-            .collect::<Vec<_>>(),
-    );
-    extensions.extend_from_slice(
-        &slash_extension
-            .iter()
-            .map(|s| format!(".{s}"))
-            .collect::<Vec<_>>(),
-    );
+    extensions: &[(&str, &[&str])],
+    exclusions: &[&str],
+    check_only: bool,
+) -> std::io::Result<bool> {
+    let mut check_failed = false;
 
-    eprintln!("Searching for extensions: {}", extensions.join(", "));
-    eprintln!("Excluding: {}", exclude_patterns.join(", "));
+    // convert exclusions into patterns
+    let exclusions: Vec<_> = exclusions
+        .iter()
+        .map(|pattern| glob::Pattern::new(pattern).expect("bad exclusion pattern"))
+        .collect();
 
     let re = Regex::new(r"Copyright © (\d{4}(-\d{4})?)").unwrap();
 
     let files = ScanDir::files()
-        .walk(search_path, |iter| {
-            iter.filter(|(entry, name)| {
-                extensions.iter().any(|extension| {
-                    name.ends_with(extension) && !is_excluded(entry.path(), exclude_patterns)
+        .walk(&search_path, |iter| {
+            iter.filter(|(entry, _)| {
+                !exclusions
+                    .iter()
+                    .any(|exclusion| exclusion.matches(&entry.path().to_string_lossy()))
+            })
+            .filter(|(_, name)| {
+                extensions.iter().any(|extensions| {
+                    extensions
+                        .1
+                        .iter()
+                        .any(|extension| name.ends_with(extension))
                 })
             })
             .map(|(ref entry, _)| entry.path())
@@ -54,71 +45,72 @@ pub fn update_copyrights(
         })
         .expect("scan_path failed");
 
+    let current_year = chrono::Local::now().date_naive().format("%Y").to_string();
     for path in files {
-        let ext = path
-            .extension()
-            .expect("extension")
-            .to_string_lossy()
-            .to_string();
-
-        let prefix = if slash_extension.contains(&ext.as_str()) {
-            "//"
-        } else if hash_extensions.contains(&ext.as_str()) {
-            "#"
-        } else {
-            panic!("unexpected extension")
-        };
-
-        let content = fs::read_to_string(&path)?;
-        let lines: Vec<&str> = content.lines().collect();
-
-        if lines.len() < 2
-            || !lines[0].starts_with(&format!("{prefix} Copyright"))
-            || !lines[1].starts_with(&format!("{prefix} SPDX-License-Identifier"))
-        {
-            let copyright_notice = format!(
-                "{prefix} Copyright © 2025 The µcad authors <info@ucad.xyz>\n{prefix} SPDX-License-Identifier: AGPL-3.0-or-later\n\n"
-            );
-
-            let mut new_content = String::new();
-            new_content.push_str(&copyright_notice);
-            new_content.push_str(&content);
-
-            fs::write(&path, new_content)?;
-        }
-
-        let git_log = Command::new("git")
-            .arg("log")
-            .arg("--follow")
-            .arg("--format=%ad")
-            .arg("--date=short")
-            .arg(path.to_str().unwrap())
-            .output()?;
-
-        let git_log = String::from_utf8(git_log.stdout).unwrap();
-        if !git_log.is_empty() {
-            let years: Vec<&str> = git_log
-                .lines()
-                .map(|s| s.split('-').next().unwrap())
-                .collect();
-            let min_year = years.iter().min().unwrap();
-            let max_year = years.iter().max().unwrap();
-
-            let year_range = if min_year == max_year {
-                min_year.to_string()
+        if let Some(prefix) = extensions.iter().find_map(|(prefix, extensions)| {
+            if let Some(ext) = path.extension() {
+                extensions
+                    .contains(&ext.to_string_lossy().to_string().as_str())
+                    .then_some(*prefix)
             } else {
-                format!("{min_year}-{max_year}")
-            };
-
-            let new_content = re.replace(&content, format!("Copyright © {year_range}"));
-
-            if new_content != content {
-                fs::write(&path, new_content.to_string())?;
+                None
             }
-        } else {
-            eprintln!("untracked file: {path:?}");
+        }) {
+            let mut content = fs::read_to_string(&path)?;
+            let lines: Vec<&str> = content.lines().collect();
+            if lines.len() < 2
+                || !lines[0].starts_with(&format!("{prefix} Copyright"))
+                || !lines[1].starts_with(&format!("{prefix} SPDX-License-Identifier"))
+            {
+                let copyright_notice = format!(
+                    "{prefix} Copyright © 0000 The µcad authors <info@ucad.xyz>\n{prefix} SPDX-License-Identifier: AGPL-3.0-or-later\n\n"
+                );
+
+                let mut new_content = String::new();
+                new_content.push_str(&copyright_notice);
+                new_content.push_str(&content);
+                println!("cargo:warning=new: {path:?}");
+                content = new_content;
+            }
+
+            let git_log = Command::new("git")
+                .arg("log")
+                .arg("--follow")
+                .arg("--format=%ad")
+                .arg("--date=short")
+                .arg(path.to_str().unwrap())
+                .output()?;
+
+            let git_log = String::from_utf8(git_log.stdout).unwrap();
+            if !git_log.is_empty() {
+                let years: Vec<&str> = git_log
+                    .lines()
+                    .map(|s| s.split('-').next().unwrap())
+                    .collect();
+                let min_year = years.iter().min().unwrap();
+                let max_year = years.iter().max().unwrap();
+
+                let year_range = if min_year == max_year {
+                    min_year.to_string()
+                } else {
+                    format!("{min_year}-{max_year}")
+                };
+
+                let new_content = re.replace(&content, format!("Copyright © {year_range}"));
+
+                if new_content != content {
+                    println!("cargo:warning=update: {path:?} -> {year_range}");
+                    if check_only {
+                        check_failed = true;
+                    } else {
+                        fs::write(&path, new_content.to_string())?;
+                    }
+                }
+            } else {
+                eprintln!("untracked file: {path:?}");
+            }
         }
     }
 
-    Ok(())
+    Ok(check_failed)
 }

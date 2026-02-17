@@ -1,6 +1,13 @@
 #matrix:
 #  RUST: [stable, beta, nightly]
 
+clone:
+  - name: git
+    image: woodpeckerci/plugin-git
+    settings:
+      partial: false
+      depth: 0
+
 steps:
   test:
     when:
@@ -12,5 +19,5 @@ steps:
       - apt-get update && apt-get install -y ninja-build cmake
       - rustup default $RUST
       - rustup component add rustfmt
-      - cargo check -j 4
-      - cargo test -j 4
+      - cargo check -j $(nproc)
+      - COPYRIGHT_CHECK=1 cargo test -j $(nproc)
