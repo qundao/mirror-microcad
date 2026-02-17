@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: const_assignment_workbench_code
-  Expected result: ok
+  Expected result: no_output
       Source file: ../books/language/src/assignments/const.md:119
         Test path: ../books/language/src/assignments/.test
 
@@ -18,6 +18,5 @@
   Group (root) ->
     Workpiece(sketch) const_assignment_workbench_code::MySketch() ->
 
-Export failed: Render error: Nothing to render.
 -- Test Result --
-FAILS
+OK

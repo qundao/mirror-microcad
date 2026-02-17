@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: workbench_assignment_prop
-  Expected result: ok
+  Expected result: no_output
       Source file: ../books/tests/src/statement_usage/workbench.md:94
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -18,6 +18,5 @@
     Workpiece(sketch) workbench_assignment_prop::K() ->
       - a = 1
 
-Export failed: Render error: Nothing to render.
 -- Test Result --
-FAILS
+OK

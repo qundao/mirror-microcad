@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: init_assignment_var
-  Expected result: ok
+  Expected result: no_output
       Source file: ../books/tests/src/statement_usage/init.md:86
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -26,6 +26,5 @@ Unexpected warnings(s) which did occur in line(s): 87
   Group (root) ->
     Workpiece(sketch) init_assignment_var::K(l=10mm) ->
 
-Export failed: Render error: Nothing to render.
 -- Test Result --
-FAILS
+OK

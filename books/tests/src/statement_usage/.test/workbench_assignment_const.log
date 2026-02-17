@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: workbench_assignment_const
-  Expected result: ok
+  Expected result: no_output
       Source file: ../books/tests/src/statement_usage/workbench.md:78
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -17,6 +17,5 @@
   Group (root) ->
     Workpiece(sketch) workbench_assignment_const::K() ->
 
-Export failed: Render error: Nothing to render.
 -- Test Result --
-FAILS
+OK

@@ -10,40 +10,29 @@
    6:   mod a {
    7:       pub mod b {
    8:           pub mod c {
-   9:               pub part M1() { std::geo3d::Sphere(1cm) }
+   9:               pub part M1() { std::geo3d::Sphere(radius=1cm) }
   10:           }
   11:       }
   12:   
-  13:       pub part M2() { std::geo3d::Sphere(2cm) }
+  13:       pub part M2() { std::geo3d::Sphere(radius=2cm) }
   14:   }
   15:   
   16:   a::b::c::M1();
   17:   a::M2();
 
 -- No Output --
--- Errors --
-  × error: 9:48: Workbench Sphere has ambiguous initialization for those arguments
-    ╭─[../books/tests/src/modules.md:9:29]
-  8 │         pub mod c {
-  9 │             pub part M1() { std::geo3d::Sphere(1cm) }
-    ·                             ───────────┬───────────
-    ·                                        ╰── Got: Sphere( 10mm )
- 10 │         }
-    ╰────
-  help: Ambiguous initializations:
-        	std::geo3d::Sphere(radius: Length)
-        	std::geo3d::Sphere::init(diameter: Length)
-  × error: 13:40: Workbench Sphere has ambiguous initialization for those arguments
-    ╭─[../books/tests/src/modules.md:13:21]
- 12 │ 
- 13 │     pub part M2() { std::geo3d::Sphere(2cm) }
-    ·                     ───────────┬───────────
-    ·                                ╰── Got: Sphere( 20mm )
- 14 │ }
-    ╰────
-  help: Ambiguous initializations:
-        	std::geo3d::Sphere(radius: Length)
-        	std::geo3d::Sphere::init(diameter: Length)
-Unexpected error(s) which did occur in line(s): 9, 13
+-- No Errors --
+-- Model --
+  Group (root) ->
+    Workpiece(part) builtin_modules::a::b::c::M1() ->
+      Workpiece(part) std::geo3d::Sphere(radius=10mm) ->
+        - radius = 10mm
+        Primitive3D __builtin::geo3d::Sphere(radius=10mm) ->
+    Workpiece(part) builtin_modules::a::M2() ->
+      Workpiece(part) std::geo3d::Sphere(radius=20mm) ->
+        - radius = 20mm
+        Primitive3D __builtin::geo3d::Sphere(radius=20mm) ->
+
+Export of "../books/tests/src/.test/builtin_modules-out.stl" successful.
 -- Test Result --
-FAILS
+OK

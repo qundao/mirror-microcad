@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: source_workbench
-  Expected result: ok
+  Expected result: no_output
       Source file: ../books/tests/src/statement_usage/source.md:6
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -15,6 +15,5 @@
   Group (root) ->
     Workpiece(sketch) source_workbench::F() ->
 
-Export failed: Render error: Nothing to render.
 -- Test Result --
-FAILS
+OK

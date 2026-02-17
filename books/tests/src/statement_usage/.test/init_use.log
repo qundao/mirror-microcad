@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: init_use
-  Expected result: ok
+  Expected result: no_output
       Source file: ../books/tests/src/statement_usage/init.md:38
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -25,6 +25,5 @@ Unexpected warnings(s) which did occur in line(s): 38
   Group (root) ->
     Workpiece(sketch) init_use::K(l=10mm) ->
 
-Export failed: Render error: Nothing to render.
 -- Test Result --
-FAILS
+OK

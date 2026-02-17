@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: const_assignment_mod
-  Expected result: ok
+  Expected result: no_output
       Source file: ../books/language/src/assignments/const.md:15
         Test path: ../books/language/src/assignments/.test
 
@@ -36,6 +36,5 @@
     Workpiece(sketch) const_assignment_mod::my_module::MySketch(text=Hello my_module) ->
       - text = Hello my_module
 
-Export failed: Render error: Nothing to render.
 -- Test Result --
-FAILS
+OK

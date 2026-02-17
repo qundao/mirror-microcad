@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: pre_init_assignment_var
-  Expected result: fail
+  Expected result: todo_fail
       Source file: ../books/tests/src/statement_usage/pre-init.md:86
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -25,6 +25,5 @@
     · ──┬─
     ·   ╰── Before this initializer
     ╰────
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
-FAILS AS EXPECTED
+FAILS AS EXPECTED (BUT IS TODO)
