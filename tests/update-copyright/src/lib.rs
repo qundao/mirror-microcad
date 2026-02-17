@@ -84,7 +84,6 @@ pub fn update_copyrights(
             new_content.push_str(&copyright_notice);
             new_content.push_str(&content);
 
-            println!("{path:?}");
             fs::write(&path, new_content)?;
         }
 
