@@ -23,7 +23,7 @@ fn main() {
         println!("cargo:warning=updating copyrights...");
         let check_failed = check_copyright(check_only).expect("copyright check failed");
         if check_failed {
-            panic!("copyrights changed")
+            panic!("copyrights changed - please run: COPYRIGHT_UPDATE=1 cargo test")
         }
     }
 
