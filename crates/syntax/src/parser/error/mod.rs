@@ -1,29 +1,51 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::tokens::Token;
+mod rich;
+
 use crate::Span;
-use chumsky::error::{Rich, RichReason};
+use crate::tokens::Token;
 use miette::{Diagnostic, LabeledSpan};
+pub use rich::{Rich, RichReason};
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::iter::once;
+use thiserror::Error;
 
 /// An error from building the abstract syntax tree
 #[derive(Debug)]
 pub struct ParseError {
     /// The span of the source that caused the error
     pub span: Span,
-    error: Rich<'static, Token<'static>, Span>,
+    error: Rich<'static, Token<'static>, Span, ParseErrorKind>,
 }
 
 impl ParseError {
-    pub(crate) fn new<'tokens>(error: Rich<'tokens, Token<'tokens>, Span>) -> Self {
+    pub(crate) fn new<'tokens>(error: Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>) -> Self {
         Self {
             span: error.span().clone(),
             error: error.map_token(Token::into_owned).into_owned(),
         }
     }
+}
+
+#[derive(Debug, Error, Clone, Diagnostic)]
+pub enum ParseErrorKind {
+    #[error("{0} is a reserved keyword")]
+    ReservedAttribute(&'static str),
+    #[error("{0} is a reserved keyword and can't be used as an identifier")]
+    ReservedAttributeAsIdentifier(&'static str),
+    #[error("unclosed string")]
+    UnterminatedString,
+    #[error("Unclosed {kind}")]
+    UnclosedBracket {
+        #[label("{kind} opened here")]
+        open: Span,
+        #[label("expected {kind} to be closed by here with a '{close_token}'")]
+        end: Span,
+        kind: &'static str,
+        close_token: Token<'static>,
+    },
 }
 
 impl Display for ParseError {
@@ -52,9 +74,21 @@ impl Display for ParseError {
 impl Error for ParseError {}
 
 impl Diagnostic for ParseError {
+    fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
+        match self.error.reason() {
+            RichReason::Custom(error) => error.help(),
+            _ => None
+        }
+    }
+
     fn labels(&self) -> Option<Box<dyn Iterator<Item = LabeledSpan> + '_>> {
         let msg = match self.error.reason() {
-            RichReason::Custom(error) => error.clone(),
+            RichReason::Custom(error) => {
+                if let Some(labels) = error.labels() {
+                    return Some(labels);
+                }
+                error.to_string()
+            },
             RichReason::ExpectedFound {
                 found: Some(found), ..
             } if found.is_error() => found.kind().into(),

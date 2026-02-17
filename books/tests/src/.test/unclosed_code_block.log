@@ -1,0 +1,25 @@
+﻿
+-- Test --
+        Test name: unclosed_code_block
+  Expected result: fail
+      Source file: ../books/tests/src/unclosed_brackets.md:18
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  18:   a = {
+  19:       1 + 2;
+
+-- Parse Error --
+  × error: 20:11: Unclosed code block
+    ╭─[../books/tests/src/unclosed_brackets.md:19:5]
+ 19 │ a = {
+    ·     ┬
+    ·     ╰── code block opened here
+ 20 │     1 + 2;
+    ·           ▲
+    ·           ╰── expected code block to be closed by here with a '}'
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED

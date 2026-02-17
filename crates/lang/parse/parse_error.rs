@@ -112,16 +112,15 @@ pub enum ParseError {
     UseGlobAlias(SrcRef),
 
     /// A parser from the AST builder
-    #[error("{error}")]
-    AstParser {
-        src_ref: SrcRef,
-        error: microcad_syntax::ParseError,
-    },
+    #[error(transparent)]
+    #[diagnostic(transparent)]
+    AstParser(Refer<microcad_syntax::ParseError>),
 
     /// An invalid literal was encountered
     #[error("Invalid literal: {error}")]
     InvalidLiteral {
         error: LiteralErrorKind,
+        #[label("{error}")]
         src_ref: SrcRef,
     },
 
@@ -154,7 +153,6 @@ impl SrcReferrer for ParseError {
             | ParseError::LoadSource(src_ref, ..)
             | ParseError::InvalidGlobPattern(src_ref)
             | ParseError::UseGlobAlias(src_ref)
-            | ParseError::AstParser { src_ref, .. }
             | ParseError::InvalidLiteral { src_ref, .. }
             | ParseError::InvalidExpression { src_ref }
             | ParseError::InvalidStatement { src_ref }
@@ -166,6 +164,7 @@ impl SrcReferrer for ParseError {
             ParseError::DuplicateTupleType{ty, ..} => ty.src_ref(),
             ParseError::UnknownType(ty) => ty.src_ref(),
             ParseError::InvalidMatrixType(ty) => ty.src_ref(),
+            ParseError::AstParser(err) => err.src_ref(),
         }
     }
 }

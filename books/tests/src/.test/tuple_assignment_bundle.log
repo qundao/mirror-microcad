@@ -17,7 +17,7 @@
     ╭─[../books/tests/src/tuple_assignments.md:22:17]
  22 │ (width, height) = [1,2]m;
     ·                 ┬
-    ·                 ╰── Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon or end of input
+    ·                 ╰── unexpected =
  23 │ assert_eq([width,1m]);
     ╰────
 
