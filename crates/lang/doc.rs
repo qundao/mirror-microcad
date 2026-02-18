@@ -10,7 +10,7 @@ use crate::{
     syntax::*,
 };
 
-/// Documentation trait to fetch documentation from symbols
+/// Documentation trait to fetch documentation from a [Symbol].
 ///
 /// The retrieved `DocBlock` struct can processed further to markdown.
 /// Depending on the `Symbol`, the returned DocBlock might be empty.
@@ -28,6 +28,22 @@ pub trait Doc {
     /// Fetch outer documentation.
     fn outer_doc(&self) -> DocBlock {
         DocBlock::default()
+    }
+}
+
+impl Doc for DocBlock {
+    fn doc(&self) -> DocBlock {
+        self.clone()
+    }
+}
+
+impl Doc for InitDefinition {
+    fn outer_doc(&self) -> DocBlock {
+        self.doc.as_ref().cloned().unwrap_or_default()
+    }
+
+    fn inner_doc(&self) -> DocBlock {
+        self.body.inner_doc()
     }
 }
 
