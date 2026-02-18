@@ -1,4 +1,4 @@
-# Copyright © 2024-2026 The µcad authors <info@ucad.xyz>
+# Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [package]
@@ -29,6 +29,9 @@ microcad_test_tools = { path = "microcad_test_tools", version = "0" }
 microcad_markdown_test = { path = "microcad_markdown_test", version = "0" }
 microcad_test_tools = { path = "microcad_test_tools", version = "0" }
 examples_tests = { path = "examples_tests", version = "0" }
+update_copyright = { path = "update-copyright", version = "0" }
+update_md_banner = { path = "update-md-banner", version = "0" }
+anyhow = "1.0"
 
 [lints.rust]
 #missing_docs = "warn"

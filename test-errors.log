@@ -10,7 +10,7 @@
 
 -- Code --
 
-   6:   // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+   6:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
    7:   // SPDX-License-Identifier: AGPL-3.0-or-later
    8:   
    9:   use std::ops::*;
@@ -244,7 +244,7 @@ OK (BUT WARNINGS)
 -- Code --
 
    8:   // file: gear_2d.µcad
-   9:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   9:   // Copyright © 2025 The µcad authors <info@microcad.xyz>
   10:   // SPDX-License-Identifier: AGPL-3.0-or-later
   11:   
   12:   use std::ops::*;
@@ -292,7 +292,7 @@ OK (BUT WARNINGS)
 -- Code --
 
   42:   // file: text_plate.µcad
-  43:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  43:   // Copyright © 2025 The µcad authors <info@microcad.xyz>
   44:   // SPDX-License-Identifier: AGPL-3.0-or-later
   45:   
   46:   use std::geo2d::*;
@@ -364,7 +364,7 @@ OK (BUT WARNINGS)
 
 -- Code --
 
-   6:   // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+   6:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
    7:   // SPDX-License-Identifier: AGPL-3.0-or-later
    8:   
    9:   use std::geo2d::*;

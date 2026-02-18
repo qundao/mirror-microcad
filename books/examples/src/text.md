@@ -6,7 +6,7 @@
 
 ```µcad,text_love
 // file: love.µcad
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::geo2d::*;
@@ -40,7 +40,7 @@ Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
 
 ```µcad,text_text_plate
 // file: text_plate.µcad
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::geo2d::*;

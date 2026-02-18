@@ -1,4 +1,4 @@
-// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{diag::*, resolve::*, syntax::*, tree_display::FormatTree, value::*};

@@ -8,7 +8,7 @@
 -- Code --
 
  148:   // file: use_bricks.µcad
- 149:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+ 149:   // Copyright © 2025 The µcad authors <info@microcad.xyz>
  150:   // SPDX-License-Identifier: AGPL-3.0-or-later
  151:   
  152:   mod brick;

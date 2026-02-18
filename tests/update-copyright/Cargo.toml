@@ -1,4 +1,4 @@
-# Copyright © 2025 The µcad authors <info@ucad.xyz>
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [package]
@@ -13,8 +13,13 @@ rust-version.workspace = true
 license.workspace = true
 keywords.workspace = true
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
 regex = "1"
 scan_dir = "0.3"
 env_logger = "0.11"
 clap = { version = "4", features = ["derive"] }
+glob = "0.3"
+chrono = "0.4"

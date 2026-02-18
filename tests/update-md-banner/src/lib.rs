@@ -1,16 +1,11 @@
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use regex::Regex;
 use scan_dir::ScanDir;
 use std::fs;
 
-fn main() -> std::io::Result<()> {
-    scan_path("./books")?;
-    Ok(())
-}
-
-fn scan_path(search_path: &str) -> std::io::Result<()> {
+pub fn update_md_banner(search_path: &str) -> std::io::Result<()> {
     let extensions = [".md"];
 
     let re_test = Regex::new(r"\[!\[test\].*\n\n").unwrap();

@@ -5463,6 +5463,7 @@ dependencies = [
 name = "microcad-tests"
 version = "0.3.0"
 dependencies = [
+ "anyhow",
  "ctor",
  "env_logger",
  "examples_tests",
@@ -5476,6 +5477,8 @@ dependencies = [
  "miette",
  "pest",
  "pest_derive",
+ "update_copyright",
+ "update_md_banner",
 ]
 
 [[package]]
@@ -8758,8 +8761,10 @@ checksum = "6d49784317cd0d1ee7ec5c716dd598ec5b4483ea832a2dced265471cc0f690ae"
 name = "update_copyright"
 version = "0.3.0"
 dependencies = [
+ "chrono",
  "clap",
  "env_logger",
+ "glob",
  "regex",
  "scan_dir",
 ]

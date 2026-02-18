@@ -1,16 +1,16 @@
-// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::rc::Rc;
-use miette::Report;
+use microcad_lang::resolve::Sources;
+use microcad_lang::src_ref::{Refer, SrcReferrer};
 use microcad_lang::{
     eval::{Capture, EvalContext},
     model::Model,
     syntax::SourceFile,
 };
-use microcad_lang::resolve::Sources;
-use microcad_lang::src_ref::{Refer, SrcReferrer};
 use microcad_test_tools::test_env::*;
+use miette::Report;
+use std::rc::Rc;
 
 #[allow(dead_code)]
 pub fn init() {
@@ -49,9 +49,13 @@ pub fn run_test(env: Option<TestEnv>) {
         ));
 
         // load and handle µcad source file
-        let (source, errors) =
-            SourceFile::load_from_str_with_recovery(Some(env.name()), env.source_path(), env.code());
-        let sources = Sources::load(source.clone(), &<Vec::<&str>>::new()).expect("no externals to fail");
+        let (source, errors) = SourceFile::load_from_str_with_recovery(
+            Some(env.name()),
+            env.source_path(),
+            env.code(),
+        );
+        let sources =
+            Sources::load(source.clone(), &<Vec<&str>>::new()).expect("no externals to fail");
         let mut render_options = DiagRenderOptions::default();
         render_options.color = false;
 
@@ -71,7 +75,8 @@ pub fn run_test(env: Option<TestEnv>) {
                         env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
                     }
                     if env.has_error_markers() {
-                        if env.report_wrong_errors(&error_lines, &std::collections::HashSet::new()) {
+                        if env.report_wrong_errors(&error_lines, &std::collections::HashSet::new())
+                        {
                             env.result(TestResult::FailWrong);
                             panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                         }
@@ -188,7 +193,9 @@ pub fn run_test(env: Option<TestEnv>) {
                                 match env.mode() {
                                     "warn" => {
                                         env.result(TestResult::OkWrong);
-                                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                                        panic!(
+                                            "ERROR: test is marked to fail but with wrong errors/warnings"
+                                        );
                                     }
                                     "todo_warn" => {
                                         env.result(TestResult::TodoWarn);

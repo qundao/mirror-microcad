@@ -1,4 +1,4 @@
-# Copyright © 2024-2026 The µcad authors <info@ucad.xyz>
+# Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [workspace]
@@ -16,8 +16,8 @@ default-members = [
     "crates/viewer-ipc",
 
     "tests",
-    "tools/update-copyright",
-    "tools/update-md-banner",
+    "tests/update-copyright",
+    "tests/update-md-banner",
 ]
 
 members = [
@@ -34,8 +34,8 @@ members = [
     "crates/viewer-ipc",
 
     "tests",
-    "tools/update-copyright",
-    "tools/update-md-banner",
+    "tests/update-copyright",
+    "tests/update-md-banner",
 
     # Non default members
     "crates/viewer",

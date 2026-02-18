@@ -7,7 +7,7 @@
 
 -- Code --
 
-   6:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+   6:   // Copyright © 2025 The µcad authors <info@microcad.xyz>
    7:   // SPDX-License-Identifier: AGPL-3.0-or-later
    8:   
    9:   use std::geo2d::*;

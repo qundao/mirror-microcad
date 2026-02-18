@@ -1,3 +1,6 @@
+// Copyright © 2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 //! A copy of Rich, but with a generic `Custom` error type instead of a string
 //!
 //! Hopefully we can remove this again in the future if https://github.com/zesterer/chumsky/issues/959 gets resolved

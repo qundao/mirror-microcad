@@ -8,7 +8,7 @@
 -- Code --
 
  106:   // file: herringbone_gears.µcad
- 107:   // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+ 107:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
  108:   // SPDX-License-Identifier: AGPL-3.0-or-later
  109:   
  110:   use std::ops::*;
