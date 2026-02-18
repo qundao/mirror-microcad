@@ -63,17 +63,182 @@ impl BookWriter {
         })
     }
 
-    /// Test
-    fn write_symbol(&self, symbol: &Symbol) -> Result<(), BookWriteError> {
-        symbol.write_md(Self::symbol_path(symbol));
+    fn _generate_summary(
+        &self,
+        writer: &mut impl std::fmt::Write,
+        symbol: &Symbol,
+        depth: usize,
+    ) -> std::fmt::Result {
+        fn entry(
+            writer: &mut impl std::fmt::Write,
+            id: impl std::fmt::Display,
+            path: impl AsRef<std::path::Path>,
+            depth: usize,
+        ) -> std::fmt::Result {
+            writeln!(
+                writer,
+                "{:indent$}- [`{id}`]({path})",
+                "",
+                indent = 2 * depth,
+                path = path.as_ref().display()
+            )
+        }
+
+        fn recurse<'a>(
+            self_: &BookWriter,
+            writer: &mut impl std::fmt::Write,
+            symbols: impl IntoIterator<Item = &'a Symbol>,
+            depth: usize,
+        ) -> std::fmt::Result {
+            symbols
+                .into_iter()
+                .try_for_each(|symbol| self_._generate_summary(writer, symbol, depth))
+        }
+
+        let path = Self::symbol_path(symbol);
+
+        entry(writer, symbol.id(), path, depth)?;
+        let depth = depth + 1;
+
+        let children: Vec<_> = symbol.iter().filter(|symbol| symbol.is_public()).collect();
+
+        let aliases: Vec<_> = children
+            .iter()
+            .filter(|symbol| symbol.with_def(|def| matches!(def, SymbolDef::Alias(..))))
+            .cloned()
+            .collect();
+
+        if !aliases.is_empty() {
+            entry(writer, "Aliases", "use.md", depth)?;
+            // TODO Generate alias md file.
+        }
+
+        let modules: Vec<_> = children
+            .iter()
+            .filter(|symbol| {
+                symbol.with_def(|def| {
+                    matches!(def, SymbolDef::SourceFile(..) | SymbolDef::Module(..))
+                })
+            })
+            .collect();
+
+        if !modules.is_empty() {
+            entry(writer, "Modules", "mod.md", depth)?;
+            let depth = depth + 1;
+            recurse(self, writer, modules.into_iter(), depth)?;
+        }
+
+        let sketches: Vec<_> = children
+            .iter()
+            .filter(|symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        matches!(
+                            workbench_definition.kind.value,
+                            microcad_lang::syntax::WorkbenchKind::Sketch
+                        )
+                    }
+                    _ => false,
+                })
+            })
+            .collect();
+
+        if !sketches.is_empty() {
+            entry(writer, "Sketches", "sketch.md", depth)?;
+            let depth = depth + 1;
+            recurse(self, writer, sketches.into_iter(), depth)?;
+        }
+
+        let parts: Vec<_> = children
+            .iter()
+            .filter(|symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        matches!(
+                            workbench_definition.kind.value,
+                            microcad_lang::syntax::WorkbenchKind::Part
+                        )
+                    }
+                    _ => false,
+                })
+            })
+            .collect();
+
+        if !parts.is_empty() {
+            entry(writer, "Parts", "part.md", depth)?;
+            let depth = depth + 1;
+            recurse(self, writer, parts.into_iter(), depth)?;
+        }
+
+        let ops: Vec<_> = children
+            .iter()
+            .filter(|symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        matches!(
+                            workbench_definition.kind.value,
+                            microcad_lang::syntax::WorkbenchKind::Operation
+                        )
+                    }
+                    _ => false,
+                })
+            })
+            .collect();
+
+        if !ops.is_empty() {
+            entry(writer, "Operations", "op.md", depth)?;
+            let depth = depth + 1;
+            recurse(self, writer, ops.into_iter(), depth)?;
+        }
+
+        let functions: Vec<_> = children
+            .iter()
+            .filter(|symbol| symbol.with_def(|def| matches!(def, SymbolDef::Function(..))))
+            .collect();
+
+        if !functions.is_empty() {
+            entry(writer, "Functions", "fn.md", depth)?;
+            let depth = depth + 1;
+            recurse(self, writer, functions.into_iter(), depth)?;
+        }
+
+        Ok(())
     }
 
-    fn write_summary(&self, symbol: &Symbol) {
-        
+    fn generate_summary(
+        &self,
+        writer: &mut impl std::fmt::Write,
+        symbol: &Symbol,
+    ) -> std::fmt::Result {
+        writeln!(writer, "# Summary")?;
+        writeln!(writer)?;
+        self._generate_summary(writer, symbol, 0)
     }
 
-    pub fn write(&self, symbol: &Symbol) -> Result<(), BookWriteError> {
+    fn write_symbol(&self, symbol: &Symbol) -> std::io::Result<()> {
+        symbol
+            .riter()
+            .try_for_each(|symbol| symbol.write_md(Self::symbol_path(&symbol)))
+    }
+
+    fn write_summary(&self, symbol: &Symbol) -> std::io::Result<()> {
+        // 1. Create the SUMMARY.md file
+        let mut file = std::fs::File::create(self.path.join("SUMMARY.md"))?;
+
+        // 2. We use a String as a buffer because generate_summary requires std::fmt::Write
+        let mut buffer = String::new();
+
+        // 3. Call generate_summary. We map the fmt::Error to an io::Error.
+
+        self.generate_summary(&mut buffer, symbol)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        file.write(buffer.as_bytes())?;
+        Ok(())
+    }
+
+    pub fn write(&self, symbol: &Symbol) -> std::io::Result<()> {
         self.write_book_toml()?;
-        self.write_symbol(&symbol)
+        self.write_summary(symbol)?;
+        self.write_symbol(symbol)
     }
 }
