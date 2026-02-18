@@ -1,0 +1,24 @@
+﻿
+-- Test --
+        Test name: call_same_parameter_name
+  Expected result: fail
+      Source file: ../books/tests/src/calls.md:4
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   4:   use std::geo2d::*;
+   5:   use std::ops::*;
+   6:   
+   7:   Rect(w = 10mm, w = 10mm); // error: same parameter name
+
+-- Parse Error --
+  × error: 8:16: Duplicate argument: w
+   ╭─[../books/tests/src/calls.md:8:16]
+ 7 │ 
+ 8 │ Rect(w = 10mm, w = 10mm); // error: same parameter name
+   ·      ┬         ┬
+   ·      │         ╰── Duplicate argument
+   ·      ╰── Previous declaration
+   ╰────
+
