@@ -13,7 +13,7 @@ pub use marker::*;
 pub use range_expression::*;
 pub use tuple_expression::*;
 
-use crate::{src_ref::*, syntax::*, value::*};
+use crate::{src_ref::*, syntax::*, ty::*, value::*};
 
 /// List of expressions.
 pub type ListExpression = Vec<Expression>;

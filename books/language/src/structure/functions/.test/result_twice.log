@@ -1,7 +1,7 @@
 ﻿
 -- Test --
-        Test name: return_twice
-  Expected result: todo_fail
+        Test name: result_twice
+  Expected result: fail
       Source file: ../books/language/src/structure/functions/result.md:40
         Test path: ../books/language/src/structure/functions/.test
 
@@ -53,4 +53,4 @@
 Expected error(s) which did not occur in line(s): 46
 Unexpected warnings(s) which did occur in line(s): 40
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS WITH WRONG ERRORS

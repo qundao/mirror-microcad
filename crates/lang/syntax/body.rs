@@ -5,7 +5,7 @@
 
 use derive_more::Deref;
 
-use crate::{src_ref::*, syntax::*};
+use crate::{src_ref::*, syntax::*, ty::*};
 
 /// [StatementList] from inside `{}` brackets.
 #[derive(Clone, Default, Deref)]

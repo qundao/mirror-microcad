@@ -34,9 +34,9 @@ std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
 
 Of course returning a value twice is not allowed.
 
-[![test](.test/return_twice.svg)](.test/return_twice.log)
+[![test](.test/result_twice.svg)](.test/result_twice.log)
 
-```µcad,return_twice#todo_fail
+```µcad,result_twice#fail
 fn pow( x: Scalar, n: Integer ) -> Scalar {
     if n > 1 {
         x * pow(x, n-1)

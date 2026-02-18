@@ -7,8 +7,8 @@
 use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
-use crate::resolve::grant::Grant;
 use crate::resolve::Symbol;
+use crate::resolve::grant::Grant;
 use crate::src_ref::{SrcRef, SrcReferrer};
 use crate::{diag::*, parse::*, syntax::*};
 
@@ -150,6 +150,15 @@ pub enum ResolveError {
         workbench: SrcRef,
         kind: &'static str,
     },
+    /// Statement not allowed prior initializers
+    #[error("Statement not allowed prior initializers")]
+    #[allow(missing_docs)]
+    UnexpectedResult {
+        #[label("Unexpected result value (missed a semicolon?)")]
+        result: SrcRef,
+        #[label(primary, "This statement ")]
+        statement: SrcRef,
+    },
 }
 
 /// Statement is not supported in this context.
@@ -224,11 +233,7 @@ impl StatementNotSupportedError {
     }
 
     fn maybe_here(&self) -> &'static str {
-        if self.parent_is_root() {
-            " here"
-        } else {
-            ""
-        }
+        if self.parent_is_root() { " here" } else { "" }
     }
 }
 
