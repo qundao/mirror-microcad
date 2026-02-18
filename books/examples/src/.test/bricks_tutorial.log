@@ -8,7 +8,7 @@
 -- Code --
 
   78:   // file: tutorial.µcad
-  79:   // Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+  79:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
   80:   // SPDX-License-Identifier: AGPL-3.0-or-later
   81:   
   82:   use std::geo2d::*;

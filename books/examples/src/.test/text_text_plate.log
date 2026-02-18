@@ -8,7 +8,7 @@
 -- Code --
 
   42:   // file: text_plate.µcad
-  43:   // Copyright © 2025 The µcad authors <info@ucad.xyz>
+  43:   // Copyright © 2025 The µcad authors <info@microcad.xyz>
   44:   // SPDX-License-Identifier: AGPL-3.0-or-later
   45:   
   46:   use std::geo2d::*;
