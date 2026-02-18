@@ -135,7 +135,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](types/collections/array/.test/range_expressions.svg)](types/collections/array/.test/range_expressions.log) | [range_expressions](types/collections/array/range.md) |
 | [![test](types/collections/array/.test/range_expressions_bad_order.svg)](types/collections/array/.test/range_expressions_bad_order.log) | [range_expressions_bad_order](types/collections/array/range.md) |
 | [![test](types/collections/array/.test/range_expressions_bad_type.svg)](types/collections/array/.test/range_expressions_bad_type.log) | [range_expressions_bad_type](types/collections/array/range.md) |
-| [![test](structure/functions/.test/return_twice.svg)](structure/functions/.test/return_twice.log) | [return_twice](structure/functions/result.md) |
+| [![test](structure/functions/.test/result_twice.svg)](structure/functions/.test/result_twice.log) | [result_twice](structure/functions/result.md) |
 | [![test](expressions/.test/scalar_literal.svg)](expressions/.test/scalar_literal.log) | [scalar_literal](expressions/literals.md) |
 | [![test](structure/workbenches/types/.test/sketch_3d.svg)](structure/workbenches/types/.test/sketch_3d.log) | [sketch_3d](structure/workbenches/types/sketches.md) |
 | [![test](structure/workbenches/types/.test/sketch_basic.svg)](structure/workbenches/types/.test/sketch_basic.log) | [sketch_basic](structure/workbenches/types/sketches.md) |

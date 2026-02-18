@@ -18,6 +18,7 @@
 //!
 //! To "run" the source file (and get the expected output) it must now be evaluated (see [`crate::eval`])  .
 
+mod deduce_type;
 mod externals;
 mod grant;
 mod lookup;
@@ -29,6 +30,7 @@ mod symbol;
 mod symbolize;
 
 use crate::{diag::*, syntax::*};
+pub use deduce_type::*;
 pub use externals::*;
 pub use lookup::*;
 pub use resolve_context::*;

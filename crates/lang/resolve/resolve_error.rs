@@ -7,9 +7,7 @@
 use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
-use crate::resolve::grant::Scope;
-use crate::src_ref::{SrcRef, SrcReferrer};
-use crate::{diag::*, parse::*, syntax::*};
+use crate::{diag::*, parse::*, resolve::*, src_ref::*, syntax::*};
 
 fn capitalize_first(s: &str) -> String {
     let mut c = s.chars();
@@ -148,6 +146,15 @@ pub enum ResolveError {
         #[label("Inside this {scope}")]
         workbench: SrcRef,
         scope: &'static str,
+    },
+    /// Statement not allowed prior initializers
+    #[error("Statement not allowed prior initializers")]
+    #[allow(missing_docs)]
+    UnexpectedResult {
+        #[label("Unexpected result value (missed a semicolon?)")]
+        result: SrcRef,
+        #[label(primary, "This statement ")]
+        statement: SrcRef,
     },
 }
 
