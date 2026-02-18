@@ -10,7 +10,7 @@ use crate::{rc::*, src_ref::*, syntax::*};
 pub struct ModuleDefinition {
     /// SrcRef of the `mod` keyword
     pub keyword_ref: SrcRef,
-    /// Documentation.
+    /// Outer documentation.
     pub doc: Option<DocBlock>,
     /// Visibility of the module.
     pub visibility: Visibility,

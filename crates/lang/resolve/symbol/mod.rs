@@ -332,7 +332,10 @@ impl Symbol {
 
     /// check if a public assigment may be declared within this symbol
     pub(super) fn can_public(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::Module(..) | SymbolDef::SourceFile(..))
+        matches!(
+            self.inner.borrow().def,
+            SymbolDef::Module(..) | SymbolDef::SourceFile(..)
+        )
     }
 
     fn is_root(&self) -> bool {
