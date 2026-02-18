@@ -70,7 +70,31 @@ where
     }
 }
 
-impl<K, V> OrdMap<K, V>
+struct OrdMapIterator<'a, K, V>
+where
+    V: OrdMapValue<K>,
+    K: std::cmp::Eq + std::hash::Hash + Clone,
+{
+    ord_map: &'a OrdMap<K, V>,
+    iter: std::collections::hash_map::Iter<'a, K, usize>,
+}
+
+impl<'a, K, V> Iterator for OrdMapIterator<'a, K, V>
+where
+    V: OrdMapValue<K>,
+    K: std::cmp::Eq + std::hash::Hash + Clone,
+{
+    type Item = (&'a K, &'a V);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.iter.next() {
+            Some(n) => Some((n.0, &self.ord_map.vec[*n.1])),
+            None => None,
+        }
+    }
+}
+
+impl<'a, K, V> OrdMap<K, V>
 where
     V: OrdMapValue<K>,
     K: std::cmp::Eq + std::hash::Hash + Clone,
@@ -78,6 +102,14 @@ where
     /// get iterator over values in original order
     pub fn iter(&self) -> std::slice::Iter<'_, V> {
         self.vec.iter()
+    }
+
+    /// get iterator over values from map
+    pub fn map_iter(&'a self) -> OrdMapIterator<'a, K, V> {
+        OrdMapIterator {
+            ord_map: &self,
+            iter: self.map.iter(),
+        }
     }
 
     /// return number of stored values
