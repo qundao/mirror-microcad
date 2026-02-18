@@ -1,4 +1,4 @@
-// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! µcad language server processor.
@@ -10,13 +10,13 @@
 use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
-use miette::IntoDiagnostic;
 use microcad_lang::{
     diag::{self, PushDiag},
     eval,
     src_ref::{self, SrcReferrer},
     syntax,
 };
+use miette::IntoDiagnostic;
 use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Url};
 
 /// A processor request.

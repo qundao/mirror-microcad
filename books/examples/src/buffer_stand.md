@@ -3,7 +3,7 @@
 [![test](.test/buffer_stand.svg)](.test/buffer_stand.log)
 
 ```µcad,buffer_stand
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::ops::*;

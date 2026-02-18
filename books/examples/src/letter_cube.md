@@ -3,7 +3,7 @@
 [![test](.test/letter_cube.svg)](.test/letter_cube.log)
 
 ```µcad,letter_cube
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::math::*;

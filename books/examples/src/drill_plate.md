@@ -3,7 +3,7 @@
 [![test](.test/drill_plate.svg)](.test/drill_plate.log)
 
 ```µcad,drill_plate
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use std::geo2d::*;

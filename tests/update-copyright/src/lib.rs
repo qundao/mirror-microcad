@@ -1,4 +1,4 @@
-// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use regex::Regex;
@@ -62,7 +62,7 @@ pub fn update_copyrights(
                 || !lines[1].starts_with(&format!("{prefix} SPDX-License-Identifier"))
             {
                 let copyright_notice = format!(
-                    "{prefix} Copyright © 0000 The µcad authors <info@ucad.xyz>\n{prefix} SPDX-License-Identifier: AGPL-3.0-or-later\n\n"
+                    "{prefix} Copyright © 0000 The µcad authors <info@microcad.xyz>\n{prefix} SPDX-License-Identifier: AGPL-3.0-or-later\n\n"
                 );
 
                 let mut new_content = String::new();

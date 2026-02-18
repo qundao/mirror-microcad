@@ -3,7 +3,7 @@
 [![test](.test/lid.svg)](.test/lid.log)
 
 ```µcad,lid
-// Copyright © 2024-2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2024-2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 /// A part called `Lid` with three parameters.

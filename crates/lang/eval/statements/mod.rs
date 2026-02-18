@@ -1,8 +1,8 @@
-// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Workbench definition syntax element evaluation
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{eval::*, model::*};
