@@ -88,6 +88,25 @@ fn parser<'tokens>()
         ) => token.kind(),
     }
     .boxed();
+    let keyword = select_ref! {
+        token @ (
+            Token::KeywordMod |
+            Token::KeywordPart |
+            Token::KeywordSketch |
+            Token::KeywordOp |
+            Token::KeywordFn |
+            Token::KeywordIf |
+            Token::KeywordElse |
+            Token::KeywordUse |
+            Token::KeywordAs |
+            Token::KeywordReturn |
+            Token::KeywordPub |
+            Token::KeywordConst |
+            Token::KeywordProp |
+            Token::KeywordInit
+        ) => token.kind(),
+    }
+    .boxed();
 
     let block_recovery = just(Token::SigilOpenCurlyBracket)
         .then(
@@ -131,7 +150,20 @@ fn parser<'tokens>()
         .validate(|kind, e, emitter| {
             emitter.emit(Rich::custom(
                 e.span(),
-                ParseErrorKind::ReservedAttributeAsIdentifier(kind),
+                ParseErrorKind::ReservedKeywordAsIdentifier(kind),
+            ));
+            kind
+        })
+        .map_with(|kind, e| Identifier {
+            span: e.span(),
+            name: kind.into(),
+        }))
+    .or(keyword
+        .clone()
+        .validate(|kind, e, emitter| {
+            emitter.emit(Rich::custom(
+                e.span(),
+                ParseErrorKind::KeywordAsIdentifier(kind),
             ));
             kind
         })
@@ -787,7 +819,7 @@ fn parser<'tokens>()
             .try_map_with(|kind, e| {
                 Err::<(), _>(Rich::custom(
                     e.span(),
-                    ParseErrorKind::ReservedAttribute(kind),
+                    ParseErrorKind::ReservedKeyword(kind),
                 ))
             })
             .ignored()
@@ -1132,13 +1164,13 @@ fn parser<'tokens>()
         let base = literal
             .or(string_format)
             .or(call)
-            .or(qualified_name_expr)
             .or(marker)
             .or(bracket_based)
             .or(array_range)
             .or(array_list)
             .or(block_expression)
             .or(if_expression)
+            .or(qualified_name_expr)
             .boxed();
 
         let access_attribute = just(Token::SigilHash)

@@ -32,70 +32,70 @@
   28:   a = material; // error
 
 -- Parse Error --
-  × error: 7:7: assembly is a reserved keyword and can't be used as an identifier
+  × error: 7:7: 'assembly' is a reserved keyword and can't be used as an identifier
    ╭─[../books/tests/src/reserved_keywords.md:7:7]
  7 │ const assembly = 1; // error
    ·       ────┬───
-   ·           ╰── assembly is a reserved keyword and can't be used as an identifier
+   ·           ╰── 'assembly' is a reserved keyword and can't be used as an identifier
  8 │ 
    ╰────
 
 -- Parse Error --
-  × error: 11:1: unit is a reserved keyword and can't be used as an identifier
+  × error: 11:1: 'unit' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:11:1]
  10 │ 
  11 │ unit = 1; // error
     · ──┬─
-    ·   ╰── unit is a reserved keyword and can't be used as an identifier
+    ·   ╰── 'unit' is a reserved keyword and can't be used as an identifier
  12 │ 
     ╰────
 
 -- Parse Error --
-  × error: 13:4: match is a reserved keyword and can't be used as an identifier
+  × error: 13:4: 'match' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:13:4]
  12 │ 
  13 │ fn match() { // error
     ·    ──┬──
-    ·      ╰── match is a reserved keyword and can't be used as an identifier
+    ·      ╰── 'match' is a reserved keyword and can't be used as an identifier
  14 │ 
     ╰────
 
 -- Parse Error --
-  × error: 17:9: enum is a reserved keyword and can't be used as an identifier
+  × error: 17:9: 'enum' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:17:9]
  16 │ 
  17 │ somefun(enum); // error
     ·         ──┬─
-    ·           ╰── enum is a reserved keyword and can't be used as an identifier
+    ·           ╰── 'enum' is a reserved keyword and can't be used as an identifier
  18 │ 
     ╰────
 
 -- Parse Error --
-  × error: 19:1: struct is a reserved keyword
+  × error: 19:1: 'struct' is a reserved keyword
     ╭─[../books/tests/src/reserved_keywords.md:19:1]
  18 │ 
  19 │ struct asd { // error
     · ───┬──
-    ·    ╰── struct is a reserved keyword
+    ·    ╰── 'struct' is a reserved keyword
  20 │ 
     ╰────
 
 -- Parse Error --
-  × error: 25:1: unit is a reserved keyword
+  × error: 25:1: 'unit' is a reserved keyword
     ╭─[../books/tests/src/reserved_keywords.md:25:1]
  24 │ 
  25 │ unit foo; // error
     · ──┬─
-    ·   ╰── unit is a reserved keyword
+    ·   ╰── 'unit' is a reserved keyword
  26 │ 
     ╰────
 
 -- Parse Error --
-  × error: 29:5: material is a reserved keyword and can't be used as an identifier
+  × error: 29:5: 'material' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:29:5]
  28 │ 
  29 │ a = material; // error
     ·     ────┬───
-    ·         ╰── material is a reserved keyword and can't be used as an identifier
+    ·         ╰── 'material' is a reserved keyword and can't be used as an identifier
     ╰────
 
