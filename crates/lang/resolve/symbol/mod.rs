@@ -270,12 +270,12 @@ impl Symbol {
 // visibility
 impl Symbol {
     /// Return `true` if symbol's visibility is private
-    pub(super) fn visibility(&self) -> Visibility {
+    pub fn visibility(&self) -> Visibility {
         self.visibility.borrow().clone()
     }
 
     /// Return `true` if symbol's visibility set to is public.
-    pub(super) fn is_public(&self) -> bool {
+    pub fn is_public(&self) -> bool {
         matches!(self.visibility(), Visibility::Public)
     }
 
@@ -305,7 +305,7 @@ impl Symbol {
 // definition dependent
 impl Symbol {
     /// Return the internal *id* of this symbol.
-    pub(crate) fn id(&self) -> Identifier {
+    pub fn id(&self) -> Identifier {
         self.inner.borrow().def.id()
     }
 

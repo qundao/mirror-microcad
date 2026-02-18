@@ -17,9 +17,9 @@ version.workspace = true
 path = "lib.rs"
 
 [dependencies]
-markdown = "1.0.0"
 toml = { version = "0.9", features = ["serde"] }
 serde = "1.0"
 thiserror = "2.0"
 
 microcad-lang = { workspace = true }
+microcad-builtin = { workspace = true }
