@@ -60,6 +60,6 @@ Either names or types must be unique in a tuple.
 
 [![test](.test/unnamed_tuple_ambiguous.svg)](.test/unnamed_tuple_ambiguous.log)
 
-```µcad,unnamed_tuple_ambiguous#todo_fail
+```µcad,unnamed_tuple_ambiguous#fail
 (10cm, 10mm, 1m);  // error: ambiguous type Length
 ```

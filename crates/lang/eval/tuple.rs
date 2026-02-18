@@ -10,6 +10,22 @@ impl Eval for TupleExpression {
             .map(|(id, arg)| (id.clone(), arg.value.clone()))
             .partition(|(id, _)| id.is_none());
 
+        // check unnamed for ambiguous types
+        let mut h = std::collections::HashSet::new();
+        unnamed
+            .iter()
+            .map(|(_, value)| value.ty())
+            .try_for_each(|ty| {
+                if h.insert(ty.clone()) {
+                    Ok(())
+                } else {
+                    Err(EvalError::AmbiguousType {
+                        ty,
+                        src_ref: self.src_ref.clone(),
+                    })
+                }
+            })?;
+
         Ok(Value::Tuple(
             Tuple {
                 named: named.into_iter().collect(),
