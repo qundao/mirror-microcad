@@ -8,28 +8,26 @@ impl FromAst for DocBlock {
     type AstNode = ast::Comment;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        let (summary, details) =
-            if let Some(line_num) = node.lines.iter().position(|line| line.trim().is_empty()) {
-                (
-                    join_parts(&node.lines[0..line_num]),
-                    Some(join_parts(&node.lines[line_num..])),
-                )
-            } else {
-                (node.lines.clone().join("\n"), None)
-            };
-
-        Ok(DocBlock {
-            summary,
-            details,
-            src_ref: context.src_ref(&node.span),
-        })
+        Ok(DocBlock(Refer::new(
+            node.lines.clone(),
+            context.src_ref(&node.span),
+        )))
     }
 }
 
-fn join_parts(parts: &[String]) -> String {
-    let mut result = String::with_capacity(64);
-    for part in parts {
-        result.push_str(part);
+impl FromAst for InnerDocComment {
+    type AstNode = ast::Comment;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        assert_eq!(node.lines.len(), 1, "There should not more than 1 line");
+        let line = node
+            .lines
+            .first()
+            .cloned()
+            .unwrap_or_default()
+            .trim()
+            .to_string();
+
+        Ok(Self(Refer::new(line, context.src_ref(&node.span))))
     }
-    result
 }

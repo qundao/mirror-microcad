@@ -1,4 +1,4 @@
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Collect names from within definitions.
@@ -45,6 +45,7 @@ impl Names for Statement {
             Statement::Module(_) => NameList::default(),
             Statement::Function(_) => NameList::default(),
             Statement::InnerAttribute(_) => NameList::default(),
+            Statement::InnerDocComment(_) => NameList::default(),
 
             Statement::Init(i) => i.names().drop_locals(),
             Statement::If(i) => i.names().drop_locals(),

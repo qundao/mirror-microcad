@@ -815,6 +815,18 @@ fn parser<'tokens>()
         .map(Statement::Comment)
         .boxed();
 
+        let inner_doc_statement = select_ref! {
+            Token::InnerDocComment(comment) => comment,
+        }
+        .with_extras()
+        .map_with(|line, e| Comment {
+            span: e.span(),
+            lines: vec![line.0.as_ref().into()],
+        })
+        .labelled("innerdoc-comment")
+        .map(Statement::InnerDocComment)
+        .boxed();
+
         let reserved_keyword_statement = reserved_keyword
             .clone()
             .then_ignore(none_of([Token::OperatorAssignment, Token::SigilDoubleColon]).rewind())
@@ -843,6 +855,7 @@ fn parser<'tokens>()
             .boxed();
 
         let without_semi = function
+            .or(inner_doc_statement)
             .or(doc_statement)
             .or(init)
             .or(workspace)

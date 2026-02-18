@@ -1,4 +1,4 @@
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Workbench definition syntax element evaluation
@@ -42,6 +42,10 @@ impl Eval for Statement {
             Self::If(i) => i.eval(context),
             Self::Expression(e) => e.eval(context),
             Self::InnerAttribute(i) => {
+                i.grant(context)?;
+                Ok(Value::None)
+            }
+            Self::InnerDocComment(i) => {
                 i.grant(context)?;
                 Ok(Value::None)
             }
@@ -89,6 +93,10 @@ impl Eval<Option<Model>> for Statement {
             Self::Expression(e) => e.eval(context)?,
             Self::InnerAttribute(a) => {
                 a.grant(context)?;
+                None
+            }
+            Self::InnerDocComment(doc) => {
+                doc.grant(context)?;
                 None
             }
         };

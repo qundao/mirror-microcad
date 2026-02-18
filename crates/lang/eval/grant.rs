@@ -1,4 +1,4 @@
-// Copyright © 2025 The µcad authors <info@ucad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{eval::*, syntax::*};
@@ -205,6 +205,28 @@ impl Grant for Body {
         if !granted {
             context.error(self, EvalError::StatementNotSupported("Body"))?;
         }
+        Ok(())
+    }
+}
+
+impl Grant for InnerDocComment {
+    fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
+        let granted = context
+            .stack
+            .current_frame()
+            .map(|stack_frame| {
+                use StackFrame::*;
+                matches!(
+                    stack_frame,
+                    Source(..) | Module(..) | Init(..) | Workbench(..) | Function(..)
+                )
+            })
+            .unwrap_or_default();
+
+        if !granted {
+            context.error(self, EvalError::StatementNotSupported("InnerDocComment"))?;
+        }
+
         Ok(())
     }
 }
