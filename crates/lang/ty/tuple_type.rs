@@ -50,18 +50,23 @@ impl TupleType {
     }
 
     /// Match tuples by id.
-    ///
-    /// TODO: Does not check any inner types!
-    /// TODO: Use argument matching to match types.
-    pub fn matches(&self, other: &Self) -> bool {
-        if !self.unnamed.is_empty()
-            || self.named.len() != other.named.len()
-            || !self.unnamed.is_empty()
-            || !other.unnamed.is_empty()
+    pub(crate) fn is_matching(&self, params: &TupleType) -> bool {
+        if self == params {
+            true
+        } else if self.unnamed.is_empty()
+            && params.unnamed.is_empty()
+            && self.named.len() == params.named.len()
         {
-            return false;
+            self.named.iter().all(|arg| {
+                if let Some(ty) = params.named.get(arg.0) {
+                    arg.1 == ty || arg.1.is_array_of(ty)
+                } else {
+                    false
+                }
+            })
+        } else {
+            false
         }
-        other.named.iter().all(|k| self.named.contains_key(k.0))
     }
 
     /// Test if the named tuple has exactly all the given keys
@@ -175,4 +180,28 @@ impl std::fmt::Display for TupleType {
             types.join(", ")
         })
     }
+}
+
+#[test]
+fn test_tuple_type_match() {
+    let args = TupleType {
+        named: [
+            (Identifier::no_ref("x"), Type::Integer),
+            (
+                Identifier::no_ref("y"),
+                Type::Array(Box::new(Type::Integer)),
+            ),
+        ]
+        .into(),
+        unnamed: [].into(),
+    };
+    let params = TupleType {
+        named: [
+            (Identifier::no_ref("x"), Type::Integer),
+            (Identifier::no_ref("y"), Type::Integer),
+        ]
+        .into(),
+        unnamed: [].into(),
+    };
+    assert!(args.is_matching(&params));
 }
