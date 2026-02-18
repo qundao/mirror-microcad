@@ -30,6 +30,8 @@
   26:   a = 3; // recovered
   27:   
   28:   a = material; // error
+  29:   
+  30:   type A = Integer; // error
 
 -- Parse Error --
   × error: 7:7: 'assembly' is a reserved keyword and can't be used as an identifier
@@ -97,5 +99,15 @@
  29 │ a = material; // error
     ·     ────┬───
     ·         ╰── 'material' is a reserved keyword and can't be used as an identifier
+ 30 │ 
+    ╰────
+
+-- Parse Error --
+  × error: 31:1: 'type' is a reserved keyword
+    ╭─[../books/tests/src/reserved_keywords.md:31:1]
+ 30 │ 
+ 31 │ type A = Integer; // error
+    · ──┬─
+    ·   ╰── 'type' is a reserved keyword
     ╰────
 

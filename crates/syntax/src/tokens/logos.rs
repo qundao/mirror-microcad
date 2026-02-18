@@ -67,6 +67,8 @@ pub enum NormalToken<'a> {
     KeywordStruct,
     #[token("match")]
     KeywordMatch,
+    #[token("type")]
+    KeywordType,
 
     #[regex("(_|[a-zA-Z])[_a-zA-Z0-9']*", callback = token_cow, priority = 4)]
     Identifier(Cow<'a, str>),
