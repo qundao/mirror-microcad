@@ -16,14 +16,14 @@ pub struct BookWriter {
 }
 
 #[derive(Debug, Error)]
-enum BookWriteError {
+pub enum BookWriteError {
     /// IO error
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
 }
 
 impl BookWriter {
-    fn new(&self, path: impl AsRef<std::path::Path>) -> Self {
+    pub fn new(path: impl AsRef<std::path::Path>) -> Self {
         Self {
             path: path.as_ref().to_path_buf(),
         }
@@ -216,9 +216,12 @@ impl BookWriter {
     }
 
     fn write_symbol(&self, symbol: &Symbol) -> std::io::Result<()> {
-        symbol
-            .riter()
-            .try_for_each(|symbol| symbol.write_md(Self::symbol_path(&symbol)))
+        symbol.riter().try_for_each(|symbol| {
+            let path = self.path.join(Self::symbol_path(&symbol));
+            std::fs::create_dir_all(&path.parent().expect("A parent"))?;
+            println!("{}", path.display());
+            symbol.write_md(&path)
+        })
     }
 
     fn write_summary(&self, symbol: &Symbol) -> std::io::Result<()> {
@@ -237,6 +240,8 @@ impl BookWriter {
     }
 
     pub fn write(&self, symbol: &Symbol) -> std::io::Result<()> {
+        std::fs::create_dir_all(&self.path)?;
+
         self.write_book_toml()?;
         self.write_summary(symbol)?;
         self.write_symbol(symbol)

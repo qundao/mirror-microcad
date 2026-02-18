@@ -19,7 +19,7 @@ use microcad_lang::{
 
 use crate::md::{Markdown, Section};
 
-mod book;
+pub mod book;
 
 pub trait ToMd: microcad_lang::doc::Doc {
     fn to_md(&self) -> md::Markdown {

@@ -16,10 +16,16 @@ version.workspace = true
 [lib]
 path = "lib.rs"
 
+[[bin]]
+name = "microcad-mdbook-generator"
+path = "main.rs"
+
 [dependencies]
 toml = { version = "0.9", features = ["serde"] }
 serde = "1.0"
 thiserror = "2.0"
+clap = { version = "4", features = ["derive"] }
+
 
 microcad-lang = { workspace = true }
 microcad-builtin = { workspace = true }
