@@ -5448,6 +5448,9 @@ version = "0.3.0"
 dependencies = [
  "markdown",
  "microcad-lang",
+ "serde",
+ "thiserror 2.0.18",
+ "toml",
 ]
 
 [[package]]
