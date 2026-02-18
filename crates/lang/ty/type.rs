@@ -65,7 +65,7 @@ impl Type {
                     || self.is_array_of(&Type::scalar())
                     || self.is_array_of(&Type::Integer)
             }
-            (Type::Tuple(ty_s), Type::Tuple(ty_p)) => ty_s.matches(ty_p),
+            (Type::Tuple(ty_s), Type::Tuple(ty_p)) => ty_s.is_matching(ty_p),
             _ => self == param_type || self.is_array_of(param_type),
         }
     }
