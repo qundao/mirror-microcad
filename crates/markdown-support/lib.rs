@@ -5,21 +5,16 @@
 
 use std::{io::Write, path::Path};
 
+pub mod book;
 mod md;
 
 use microcad_lang::{
-    doc::Doc,
     resolve::*,
-    src_ref,
     syntax::{
-        DocBlock, FunctionDefinition, InitDefinition, Initialized, ModuleDefinition, SourceFile,
-        Statement, StatementList, WorkbenchDefinition,
+        FunctionDefinition, InitDefinition, ModuleDefinition, SourceFile, StatementList,
+        WorkbenchDefinition,
     },
 };
-
-use crate::md::{Markdown, Section};
-
-pub mod book;
 
 pub trait ToMd: microcad_lang::doc::Doc {
     fn to_md(&self) -> md::Markdown {
@@ -29,18 +24,7 @@ pub trait ToMd: microcad_lang::doc::Doc {
 
 impl ToMd for InitDefinition {}
 
-impl ToMd for StatementList {
-    fn to_md(&self) -> md::Markdown {
-        let section = Section::from_markdown(&self.doc().fetch_text());
-
-        // TODO Add initializers
-        // TODO Write constants
-
-        // TODO Write properties
-
-        Markdown(section)
-    }
-}
+impl ToMd for StatementList {}
 
 impl ToMd for SourceFile {}
 
