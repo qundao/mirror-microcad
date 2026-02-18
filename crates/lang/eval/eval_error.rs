@@ -314,6 +314,16 @@ pub enum EvalError {
     /// Bad range (first > last)
     #[error("Bad range, first number ({0}) must be smaller than last ({1})")]
     BadRange(i64, i64),
+
+    /// Ambiguous types in tuple
+    #[error("Ambiguous type '{ty}' in tuple")]
+    AmbiguousType {
+        ty: Type,
+        #[label(
+            "Some unnamed values in this tuple share the same type '{ty}'.\nMaybe check the units or use identifiers in this tuple."
+        )]
+        src_ref: SrcRef,
+    },
 }
 
 /// Result type of any evaluation.

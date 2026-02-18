@@ -3,8 +3,8 @@
 
 //! Value errors.
 
-use miette::Diagnostic;
 use crate::value::{error::QuantityError, *};
+use miette::Diagnostic;
 use thiserror::Error;
 
 /// Value error
