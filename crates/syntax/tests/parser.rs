@@ -103,7 +103,12 @@ use test_case::test_case;
     r#"/// Doc comment
     init(){}"#
 )]
-#[test_case("inner doc comment", r#"//! Doc comment"#)]
+#[test_case(
+    "inner doc comment",
+    r#"//! Doc comment1
+    //! Doc comment2
+    "#
+)]
 #[test_case("tuple", "(1, 1 + 1)")]
 #[test_case("one-tuple", "(1,)")]
 #[test_case("one-bracketed", "(1)")]
