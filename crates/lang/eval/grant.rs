@@ -211,11 +211,17 @@ impl Grant for Body {
 
 impl Grant for InnerDocComment {
     fn grant(&self, context: &mut EvalContext) -> EvalResult<()> {
-        let granted = if let Some(stack_frame) = context.stack.current_frame() {
-            !matches!(stack_frame, StackFrame::Call { .. } | StackFrame::Body(..))
-        } else {
-            false
-        };
+        let granted = context
+            .stack
+            .current_frame()
+            .map(|stack_frame| {
+                use StackFrame::*;
+                matches!(
+                    stack_frame,
+                    Source(..) | Module(..) | Init(..) | Workbench(..) | Function(..)
+                )
+            })
+            .unwrap_or_default();
 
         if !granted {
             context.error(self, EvalError::StatementNotSupported("InnerDocComment"))?;
