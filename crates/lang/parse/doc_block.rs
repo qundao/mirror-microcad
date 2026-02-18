@@ -19,16 +19,15 @@ impl FromAst for InnerDocComment {
     type AstNode = ast::Comment;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        let line = if let Some(line_num) = node.lines.iter().position(|line| line.trim().is_empty())
-        {
-            node.lines[0..line_num].join("")
-        } else {
-            node.lines.clone().join("\n")
-        };
+        assert_eq!(node.lines.len(), 1, "There should not more than 1 line");
+        let line = node
+            .lines
+            .first()
+            .cloned()
+            .unwrap_or_default()
+            .trim()
+            .to_string();
 
-        Ok(InnerDocComment(Refer::new(
-            line,
-            context.src_ref(&node.span),
-        )))
+        Ok(Self(Refer::new(line, context.src_ref(&node.span))))
     }
 }
