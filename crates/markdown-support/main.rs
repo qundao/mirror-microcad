@@ -1,22 +1,13 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
-#[derive(Parser)]
-#[command(version, about, long_about = None)]
-struct Args {
-    /// Path to search for files
-    #[arg(default_value = ".")]
-    search_path: std::path::PathBuf,
-    /// File extensions to include (using "# " as comment prefix)
-    #[arg(short = 'H', long)]
-    hash_extensions: Vec<String>,
-    /// File extensions to include (using "// " as comment prefix)
-    #[arg(short = 'S', long)]
-    slash_extension: Vec<String>,
-    /// patterns to exclude (e.g. "./target/*")
-    #[arg(short, long)]
-    exclude_patterns: Vec<String>,
+
+extern crate microcad_markdown_support;
+
+use microcad_markdown_support::*;
+
+fn main() -> std::io::Result<()> {
+    let book_writer = book::BookWriter::new("./mdbook_test");
+
+    let builtin = microcad_builtin::builtin_module();
+    book_writer.write(&builtin)
 }
-
-use regex::Regex;
-
-fn main() -> std::io::Result<()> {}
