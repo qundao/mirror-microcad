@@ -8,12 +8,12 @@
 // to minimize code changes from upstream, we disable some warnings
 #![allow(dead_code, clippy::unwrap_used)]
 
-use std::borrow::Cow;
-use chumsky::{text, DefaultExpected};
 use chumsky::error::{Error, LabelError};
 use chumsky::input::Input;
 use chumsky::prelude::SimpleSpan;
 use chumsky::util::MaybeRef;
+use chumsky::{DefaultExpected, text};
+use std::borrow::Cow;
 
 /// An expected pattern for a [`Rich`] error.
 #[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
