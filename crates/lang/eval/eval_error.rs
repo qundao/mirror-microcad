@@ -324,6 +324,15 @@ pub enum EvalError {
         )]
         src_ref: SrcRef,
     },
+
+    /// Statement not allowed prior initializers
+    #[error("Statement not allowed prior initializers")]
+    UnexpectedResult {
+        #[label("Unexpected result value (missed a semicolon?)")]
+        result: SrcRef,
+        #[label(primary, "This statement ")]
+        statement: SrcRef,
+    },
 }
 
 /// Result type of any evaluation.

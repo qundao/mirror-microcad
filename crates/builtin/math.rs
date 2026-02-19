@@ -26,6 +26,7 @@ fn abs() -> Symbol {
                 }
             })
         },
+        &|params| todo!(),
         None,
     )
 }
@@ -51,6 +52,7 @@ fn sqrt() -> Symbol {
                 }
             })
         },
+        &|params| todo!(),
         None,
     )
 }
@@ -74,6 +76,7 @@ fn int() -> Symbol {
                 }
             })
         },
+        &|_| Ok(Type::Integer),
         None,
     )
 }
@@ -112,6 +115,7 @@ fn cos() -> Symbol {
         "cos",
         [parameter!(x)].into_iter(),
         &|_params, args, ctx| trigonometric("cos", args, ctx, |v| v.cos()),
+        &|_| Ok(Type::Quantity(QuantityType::Scalar)),
         None,
     )
 }
@@ -122,6 +126,7 @@ fn sin() -> Symbol {
         "sin",
         [parameter!(x)].into_iter(),
         &|_params, args, ctx| trigonometric("sin", args, ctx, |v| v.sin()),
+        &|_| Ok(Type::Quantity(QuantityType::Scalar)),
         None,
     )
 }
@@ -132,6 +137,7 @@ fn tan() -> Symbol {
         "tan",
         [parameter!(x)].into_iter(),
         &|_params, args, ctx| trigonometric("tan", args, ctx, |v| v.tan()),
+        &|_| Ok(Type::Quantity(QuantityType::Scalar)),
         None,
     )
 }
@@ -142,6 +148,7 @@ fn acos() -> Symbol {
         "acos",
         [parameter!(x)].into_iter(),
         &|_params, args, ctx| trigonometric("acos", args, ctx, |v| v.acos()),
+        &|_| Ok(Type::Quantity(QuantityType::Scalar)),
         None,
     )
 }
@@ -152,6 +159,7 @@ fn asin() -> Symbol {
         "asin",
         [parameter!(x)].into_iter(),
         &|_params, args, ctx| trigonometric("asin", args, ctx, |v| v.asin()),
+        &|_| Ok(Type::Quantity(QuantityType::Scalar)),
         None,
     )
 }
@@ -162,6 +170,7 @@ fn atan() -> Symbol {
         "atan",
         [parameter!(x)].into_iter(),
         &|_params, args, ctx| trigonometric("atan", args, ctx, |v| v.atan()),
+        &|_| Ok(Type::Quantity(QuantityType::Scalar)),
         None,
     )
 }
@@ -249,6 +258,12 @@ fn rotate_around_axis() -> Symbol {
                 Ok(Value::None)
             }
         },
+        &|_| {
+            Ok(Type::Matrix(MatrixType {
+                rows: 3,
+                columns: 3,
+            }))
+        },
         None,
     )
 }
@@ -275,6 +290,12 @@ fn rotate_xyz() -> Symbol {
                 Ok(Value::None)
             }
         },
+        &|_| {
+            Ok(Type::Matrix(MatrixType {
+                rows: 3,
+                columns: 3,
+            }))
+        },
         None,
     )
 }
@@ -300,6 +321,12 @@ fn rotate_zyx() -> Symbol {
                 ctx.error(args, err)?;
                 Ok(Value::None)
             }
+        },
+        &|_| {
+            Ok(Type::Matrix(MatrixType {
+                rows: 3,
+                columns: 3,
+            }))
         },
         None,
     )

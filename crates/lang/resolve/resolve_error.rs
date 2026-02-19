@@ -150,15 +150,6 @@ pub enum ResolveError {
         workbench: SrcRef,
         kind: &'static str,
     },
-    /// Statement not allowed prior initializers
-    #[error("Statement not allowed prior initializers")]
-    #[allow(missing_docs)]
-    UnexpectedResult {
-        #[label("Unexpected result value (missed a semicolon?)")]
-        result: SrcRef,
-        #[label(primary, "This statement ")]
-        statement: SrcRef,
-    },
 }
 
 /// Statement is not supported in this context.

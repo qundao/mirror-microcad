@@ -21,7 +21,7 @@ pub use microcad_lang::builtin::{
     Exporter, ExporterAccess, ExporterRegistry, Importer, ImporterRegistry, ModuleBuilder, Symbol,
 };
 
-use microcad_lang::{diag::*, eval::*, ty::Ty, value::*};
+use microcad_lang::{diag::*, eval::*, ty::*, value::*};
 
 /// Return type of argument.
 fn type_of() -> Symbol {
@@ -35,6 +35,7 @@ fn type_of() -> Symbol {
             }
             Ok(Value::None)
         },
+        &|_| Ok(Type::String),
         None,
     )
 }
@@ -55,6 +56,7 @@ fn count() -> Symbol {
                 }
             })
         },
+        &|_| Ok(Type::Integer),
         None,
     )
 }
@@ -81,6 +83,17 @@ fn head() -> Symbol {
                 }
             })
         },
+        &|params| {
+            if params.len() == 1 {
+                if let Type::Array(ty) = params.iter().next().expect("internal error").1.ty() {
+                    Ok(*ty)
+                } else {
+                    todo!("not an array")
+                }
+            } else {
+                todo!("wrong number of parameters")
+            }
+        },
         None,
     )
 }
@@ -101,6 +114,13 @@ fn tail() -> Symbol {
                 }
             })
         },
+        &|params| {
+            if params.len() == 1 {
+                Ok(params.iter().next().expect("internal error").1.ty())
+            } else {
+                todo!("wrong number of parameters")
+            }
+        },
         None,
     )
 }
@@ -114,6 +134,7 @@ fn to_string() -> Symbol {
             let (_, arg) = args.get_single()?;
             Ok(Value::String(arg.value.to_string()))
         },
+        &|_| Ok(Type::String),
         None,
     )
 }

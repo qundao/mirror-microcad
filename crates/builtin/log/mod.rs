@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang::{diag::*, eval::*, parameter, resolve::*, value::*};
+use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
 /// Module for built-logging.
 pub fn log() -> Symbol {
@@ -27,6 +27,7 @@ pub fn error() -> Symbol {
                 })?;
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }
@@ -45,6 +46,7 @@ pub fn warning() -> Symbol {
                 })?;
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }
@@ -61,6 +63,7 @@ pub fn info() -> Symbol {
                 })?;
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }
@@ -76,6 +79,7 @@ pub fn todo() -> Symbol {
                 })?;
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }

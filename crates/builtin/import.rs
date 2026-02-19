@@ -3,7 +3,7 @@
 
 //! Built-in import function.
 
-use microcad_lang::{builtin::*, diag::*, eval::*, value::*};
+use microcad_lang::{builtin::*, diag::*, eval::*, ty::*, value::*};
 
 use crate::Symbol;
 
@@ -29,6 +29,7 @@ pub fn import() -> Symbol {
                 Ok(Value::None)
             }
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }

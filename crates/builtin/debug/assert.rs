@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang::{diag::*, eval::*, parameter, resolve::*, value::*};
+use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
 pub fn assert() -> Symbol {
     Symbol::new_builtin_fn(
@@ -37,6 +37,7 @@ pub fn assert() -> Symbol {
 
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }
@@ -96,6 +97,7 @@ pub fn assert_eq() -> Symbol {
 
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }
@@ -132,6 +134,7 @@ pub fn assert_valid() -> Symbol {
 
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }
@@ -170,6 +173,7 @@ pub fn assert_invalid() -> Symbol {
 
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }

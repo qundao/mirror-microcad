@@ -24,7 +24,6 @@ pub enum BuiltinWorkbenchKind {
 }
 
 impl BuiltinWorkbenchKind {
-
     /// return kind name
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -171,6 +170,7 @@ pub trait BuiltinWorkbenchDefinition {
             parameters: Self::parameters(),
             kind: BuiltinKind::Workbench(Self::kind()),
             f: Self::function(),
+            r: &|_| Ok(Type::Model),
             doc: Self::doc(),
         })
     }

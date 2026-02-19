@@ -83,6 +83,7 @@ impl Symbol {
         name: &'static str,
         parameters: impl Iterator<Item = (Identifier, ParameterValue)>,
         f: &'static BuiltinFn,
+        r: &'static BuiltinResultFn,
         doc: Option<&'static str>,
     ) -> Symbol {
         Self::new_builtin(Builtin {
@@ -90,6 +91,7 @@ impl Symbol {
             parameters: parameters.collect(),
             kind: BuiltinKind::Function,
             f,
+            r,
             doc: doc.map(DocBlock::new_builtin),
         })
     }
@@ -332,7 +334,10 @@ impl Symbol {
 
     /// check if a public assigment may be declared within this symbol
     pub(super) fn can_public(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::Module(..) | SymbolDef::SourceFile(..))
+        matches!(
+            self.inner.borrow().def,
+            SymbolDef::Module(..) | SymbolDef::SourceFile(..)
+        )
     }
 
     fn is_root(&self) -> bool {

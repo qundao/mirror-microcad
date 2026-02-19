@@ -1,6 +1,6 @@
 use std::ops::{Div, Mul};
 
-use crate::{builtin::Builtin, resolve::*, src_ref::*, syntax::*, ty::*};
+use crate::{builtin::Builtin, eval::*, src_ref::*, syntax::*, ty::*, value::*};
 
 /// Interface to deduce the result type of a statement
 pub trait DeduceType {
@@ -9,24 +9,22 @@ pub trait DeduceType {
     /// - `context`: Resolve context to fetch symbols
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type>;
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type>;
 }
 
 impl DeduceType for Body {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
-        assert!(context.is_checked());
-
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         let mut result = Type::Invalid;
         let mut result_src_ref = None;
         for statement in &self.0 {
             if let Some(result_src_ref) = result_src_ref {
-                return Err(ResolveError::UnexpectedResult {
+                return Err(EvalError::UnexpectedResult {
                     result: result_src_ref,
                     statement: statement.src_ref(),
                 });
@@ -43,9 +41,9 @@ impl DeduceType for Body {
 impl DeduceType for Statement {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         match self {
             Statement::Expression(expr) => expr.deduce_type(params, context),
             Statement::Workbench(wd) => wd.deduce_type(params, context),
@@ -65,9 +63,9 @@ impl DeduceType for Statement {
 impl DeduceType for ExpressionStatement {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         self.expression.deduce_type(params, context)
     }
 }
@@ -75,9 +73,9 @@ impl DeduceType for ExpressionStatement {
 impl DeduceType for Expression {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         match &self {
             Expression::Invalid => Ok(Type::Invalid),
             Expression::Literal(l) => Ok(l.value().ty()),
@@ -115,7 +113,7 @@ impl DeduceType for Expression {
 }
 
 impl DeduceType for ArrayExpression {
-    fn deduce_type(&self, _: &mut ParameterList, _: &mut ResolveContext) -> ResolveResult<Type> {
+    fn deduce_type(&self, _: &mut ParameterValueList, _: &mut EvalContext) -> EvalResult<Type> {
         Ok(Type::Array(self.unit.ty().into()))
     }
 }
@@ -123,9 +121,9 @@ impl DeduceType for ArrayExpression {
 impl DeduceType for TupleExpression {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         Ok(Type::Tuple(Box::new(
             self.args
                 .iter()
@@ -133,7 +131,7 @@ impl DeduceType for TupleExpression {
                     Ok(ty) => Ok((arg.id.clone().unwrap_or(Identifier::none()), ty)),
                     Err(err) => Err(err),
                 })
-                .collect::<ResolveResult<_>>()?,
+                .collect::<EvalResult<_>>()?,
         )))
     }
 }
@@ -141,19 +139,20 @@ impl DeduceType for TupleExpression {
 impl DeduceType for WorkbenchDefinition {
     fn deduce_type(
         &self,
-        _: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
-        self.body.deduce_type(&mut self.plan.clone(), context)
+        _: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
+        self.body
+            .deduce_type(&mut self.plan.eval(context)?, context)
     }
 }
 
 impl DeduceType for FunctionDefinition {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         self.body.deduce_type(params, context)
     }
 }
@@ -161,19 +160,20 @@ impl DeduceType for FunctionDefinition {
 impl DeduceType for InitDefinition {
     fn deduce_type(
         &self,
-        _: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
-        self.body.deduce_type(&mut self.parameters.clone(), context)
+        _: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
+        self.body
+            .deduce_type(&mut self.parameters.eval(context)?, context)
     }
 }
 
 impl DeduceType for ReturnStatement {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         if let Some(result) = &self.result {
             result.deduce_type(params, context)
         } else {
@@ -185,9 +185,9 @@ impl DeduceType for ReturnStatement {
 impl DeduceType for IfStatement {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         let body = self.body.deduce_type(params, context)?;
         if let Some(body_else) = &self.body_else {
             if body != body_else.deduce_type(params, context)? {
@@ -206,11 +206,10 @@ impl DeduceType for IfStatement {
 impl DeduceType for Call {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         context
-            .root
             .lookup(&self.name, LookupTarget::Function)?
             .deduce_type(params, context)
     }
@@ -219,9 +218,9 @@ impl DeduceType for Call {
 impl DeduceType for QualifiedName {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         todo!()
     }
 }
@@ -229,9 +228,9 @@ impl DeduceType for QualifiedName {
 impl DeduceType for Marker {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         todo!()
     }
 }
@@ -239,13 +238,13 @@ impl DeduceType for Marker {
 impl DeduceType for Symbol {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         self.with_def(|def| match def {
             SymbolDef::Workbench(wd) => wd.deduce_type(params, context),
             SymbolDef::Function(fd) => fd.deduce_type(params, context),
-            SymbolDef::Builtin(bi) => todo!(),
+            SymbolDef::Builtin(..) => todo!(),
             SymbolDef::Constant(.., v) | SymbolDef::Argument(.., v) => todo!(),
             SymbolDef::Root
             | SymbolDef::SourceFile(..)
@@ -255,7 +254,7 @@ impl DeduceType for Symbol {
             | SymbolDef::Assignment(..) => Ok(Type::Invalid),
 
             #[cfg(test)]
-            SymbolDef::Tester(identifier) => todo!(),
+            SymbolDef::Tester(..) => todo!(),
         })
     }
 }
@@ -263,9 +262,9 @@ impl DeduceType for Symbol {
 impl DeduceType for Builtin {
     fn deduce_type(
         &self,
-        params: &mut ParameterList,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Type> {
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
         match &self.kind {
             crate::builtin::BuiltinKind::Function => todo!(),
             crate::builtin::BuiltinKind::Workbench(..) => Ok(Type::Model),
