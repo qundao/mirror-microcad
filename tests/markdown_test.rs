@@ -56,15 +56,18 @@ pub fn run_test(env: Option<TestEnv>) {
         );
         let sources =
             Sources::load(source.clone(), &<Vec<&str>>::new()).expect("no externals to fail");
-        let mut render_options = DiagRenderOptions::default();
-        render_options.color = false;
+        let render_options = DiagRenderOptions {
+            color: false,
+            ..Default::default()
+        };
 
         match env.mode() {
             // test is expected to fail?
             "fail" | "todo_fail" => match errors {
                 // test expected to fail failed at parsing?
                 Some(errors) => {
-                    let mut error_lines = std::collections::HashSet::new();
+                    use std::collections::HashSet;
+                    let mut error_lines = HashSet::new();
                     for err in errors {
                         if let Some(line) = err.src_ref().line() {
                             error_lines.insert(line + env.offset() - 1);
@@ -75,11 +78,11 @@ pub fn run_test(env: Option<TestEnv>) {
                         env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
                     }
                     if env.has_error_markers() {
-                        if env.report_wrong_errors(&error_lines, &std::collections::HashSet::new())
-                        {
+                        if env.report_wrong_errors(&error_lines, &HashSet::new()) {
                             env.result(TestResult::FailWrong);
                             panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                         }
+                        env.result(TestResult::FailOk);
                     } else if env.todo() {
                         env.result(TestResult::NotTodoFail);
                     } else {

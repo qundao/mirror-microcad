@@ -111,3 +111,5 @@
     ·   ╰── 'type' is a reserved keyword
     ╰────
 
+-- Test Result --
+FAILS AS EXPECTED
