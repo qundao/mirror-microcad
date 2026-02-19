@@ -65,6 +65,8 @@ pub enum Value {
     ConstExpression(Rc<Expression>),
     /// for assert_valid() and assert_invalid()
     Target(Target),
+    /// Naked type (without value).
+    Type(Type),
 }
 
 impl Value {
@@ -190,6 +192,7 @@ impl crate::ty::Ty for Value {
             Value::Model(_) => Type::Model,
             Value::Return(r) => r.ty(),
             Value::Target(..) => Type::Target,
+            Value::Type(ty) => ty.clone(),
         }
     }
 }
@@ -403,6 +406,7 @@ impl std::fmt::Display for Value {
             Value::Return(r) => write!(f, "{r}"),
             Value::ConstExpression(e) => write!(f, "{e}"),
             Value::Target(target) => write!(f, "{target}"),
+            Value::Type(ty) => write!(f, "{ty}"),
         }
     }
 }
@@ -422,6 +426,7 @@ impl std::fmt::Debug for Value {
             Value::Return(r) => write!(f, "->{r:?}"),
             Value::ConstExpression(e) => write!(f, "{e:?}"),
             Value::Target(target) => write!(f, "{target:?}"),
+            Value::Type(ty) => write!(f, "{ty:?}"),
         }
     }
 }
@@ -441,6 +446,7 @@ impl std::hash::Hash for Value {
             Value::Return(value) => value.hash(state),
             Value::ConstExpression(expression) => expression.to_string().hash(state), // TODO: Is this correct?
             Value::Target(target) => target.hash(state),
+            Value::Type(ty) => ty.hash(state),
         }
     }
 }

@@ -1,6 +1,6 @@
 use std::ops::{Div, Mul};
 
-use crate::{builtin::Builtin, eval::*, src_ref::*, syntax::*, ty::*, value::*};
+use crate::{builtin::Builtin, eval::*, model::Model, src_ref::*, syntax::*, ty::*, value::*};
 
 /// Interface to deduce the result type of a statement
 pub trait DeduceType {
@@ -14,12 +14,56 @@ pub trait DeduceType {
     ) -> EvalResult<Type>;
 }
 
+impl DeduceType for Symbol {
+    fn deduce_type(
+        &self,
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
+        log::trace!("deducing Symbol {}", self.id());
+        self.with_def(|def| match def {
+            SymbolDef::Workbench(wd) => wd.deduce_type(params, context),
+            SymbolDef::Function(fd) => fd.deduce_type(params, context),
+            SymbolDef::Builtin(..) => todo!(),
+            SymbolDef::SourceFile(sf) => sf.statements.deduce_type(params, context),
+            SymbolDef::Constant(.., v) | SymbolDef::Argument(.., v) => todo!(),
+            SymbolDef::Root => {
+                for (_, symbol) in self.children() {
+                    if Type::Invalid != symbol.deduce_type(params, context)? {
+                        todo!("ERROR");
+                    }
+                }
+                Ok(Type::Invalid)
+            }
+            SymbolDef::Module(..)
+            | SymbolDef::Alias(..)
+            | SymbolDef::UseAll(..)
+            | SymbolDef::Assignment(..) => Ok(Type::Invalid),
+
+            #[cfg(test)]
+            SymbolDef::Tester(..) => todo!(),
+        })
+    }
+}
+
 impl DeduceType for Body {
     fn deduce_type(
         &self,
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing Body");
+        self.statements.deduce_type(params, context)
+    }
+}
+
+impl DeduceType for StatementList {
+    fn deduce_type(
+        &self,
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
+        log::trace!("deducing StatementList");
         let mut result = Type::Invalid;
         let mut result_src_ref = None;
         for statement in &self.0 {
@@ -44,6 +88,7 @@ impl DeduceType for Statement {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing Statement");
         match self {
             Statement::Expression(expr) => expr.deduce_type(params, context),
             Statement::Workbench(wd) => wd.deduce_type(params, context),
@@ -51,9 +96,9 @@ impl DeduceType for Statement {
             Statement::Init(id) => id.deduce_type(params, context),
             Statement::Return(rs) => rs.deduce_type(params, context),
             Statement::If(is) => is.deduce_type(params, context),
-            Statement::Use(..)
-            | Statement::Assignment(..)
-            | Statement::Module(..)
+            Statement::Use(u) => u.deduce_type(params, context),
+            Statement::Assignment(a) => a.deduce_type(params, context),
+            Statement::Module(..)
             | Statement::InnerAttribute(..)
             | Statement::InnerDocComment(..) => Ok(Type::Invalid),
         }
@@ -66,6 +111,7 @@ impl DeduceType for ExpressionStatement {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing ExpressionStatement");
         self.expression.deduce_type(params, context)
     }
 }
@@ -76,6 +122,7 @@ impl DeduceType for Expression {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing Expression");
         match &self {
             Expression::Invalid => Ok(Type::Invalid),
             Expression::Literal(l) => Ok(l.value().ty()),
@@ -114,6 +161,7 @@ impl DeduceType for Expression {
 
 impl DeduceType for ArrayExpression {
     fn deduce_type(&self, _: &mut ParameterValueList, _: &mut EvalContext) -> EvalResult<Type> {
+        log::trace!("deducing ArrayExpression");
         Ok(Type::Array(self.unit.ty().into()))
     }
 }
@@ -124,6 +172,7 @@ impl DeduceType for TupleExpression {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing TupleExpression");
         Ok(Type::Tuple(Box::new(
             self.args
                 .iter()
@@ -136,12 +185,30 @@ impl DeduceType for TupleExpression {
     }
 }
 
+fn parameter_list_to_symbol_map(
+    params: ParameterList,
+    context: &mut EvalContext,
+) -> EvalResult<SymbolMap> {
+    Ok(SymbolMap(
+        params
+            .iter()
+            .map(|param| param.eval_type(context))
+            .collect()?,
+    ))
+}
+
 impl DeduceType for WorkbenchDefinition {
     fn deduce_type(
         &self,
         _: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing WorkbenchDefinition {}", self.id);
+        context.open(StackFrame::Workbench(
+            Default::default(),
+            self.id.clone(),
+            self.plan,
+        ));
         self.body
             .deduce_type(&mut self.plan.eval(context)?, context)
     }
@@ -153,6 +220,7 @@ impl DeduceType for FunctionDefinition {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing FunctionDefinition {}", self.id);
         self.body.deduce_type(params, context)
     }
 }
@@ -163,6 +231,7 @@ impl DeduceType for InitDefinition {
         _: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing InitDefinition");
         self.body
             .deduce_type(&mut self.parameters.eval(context)?, context)
     }
@@ -174,6 +243,7 @@ impl DeduceType for ReturnStatement {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing ReturnStatement");
         if let Some(result) = &self.result {
             result.deduce_type(params, context)
         } else {
@@ -188,6 +258,7 @@ impl DeduceType for IfStatement {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing IfStatement");
         let body = self.body.deduce_type(params, context)?;
         if let Some(body_else) = &self.body_else {
             if body != body_else.deduce_type(params, context)? {
@@ -209,6 +280,7 @@ impl DeduceType for Call {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing Call");
         context
             .lookup(&self.name, LookupTarget::Function)?
             .deduce_type(params, context)
@@ -221,6 +293,7 @@ impl DeduceType for QualifiedName {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing QualifiedName {}", self);
         let symbol = context.lookup(self, LookupTarget::Any)?;
 
         todo!("get type of symbol")
@@ -233,31 +306,8 @@ impl DeduceType for Marker {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("Marker");
         todo!()
-    }
-}
-
-impl DeduceType for Symbol {
-    fn deduce_type(
-        &self,
-        params: &mut ParameterValueList,
-        context: &mut EvalContext,
-    ) -> EvalResult<Type> {
-        self.with_def(|def| match def {
-            SymbolDef::Workbench(wd) => wd.deduce_type(params, context),
-            SymbolDef::Function(fd) => fd.deduce_type(params, context),
-            SymbolDef::Builtin(..) => todo!(),
-            SymbolDef::Constant(.., v) | SymbolDef::Argument(.., v) => todo!(),
-            SymbolDef::Root
-            | SymbolDef::SourceFile(..)
-            | SymbolDef::Module(..)
-            | SymbolDef::Alias(..)
-            | SymbolDef::UseAll(..)
-            | SymbolDef::Assignment(..) => Ok(Type::Invalid),
-
-            #[cfg(test)]
-            SymbolDef::Tester(..) => todo!(),
-        })
     }
 }
 
@@ -267,9 +317,34 @@ impl DeduceType for Builtin {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
+        log::trace!("deducing Builtin {}", self.id());
         match &self.kind {
             crate::builtin::BuiltinKind::Function => todo!(),
             crate::builtin::BuiltinKind::Workbench(..) => Ok(Type::Model),
         }
+    }
+}
+
+impl DeduceType for AssignmentStatement {
+    fn deduce_type(
+        &self,
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
+        log::trace!("Marker");
+        let ty = self.assignment.expression.deduce_type(params, context)?;
+        context.set_local_value(self.assignment.id.clone(), Value::Type(ty))?;
+        Ok(Type::Invalid)
+    }
+}
+
+impl DeduceType for UseStatement {
+    fn deduce_type(
+        &self,
+        params: &mut ParameterValueList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Type> {
+        log::trace!("Marker");
+        todo!()
     }
 }

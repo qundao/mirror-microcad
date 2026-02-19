@@ -49,6 +49,14 @@ impl Parameter {
         }
     }
 
+    pub fn eval_type(&self, context: &mut EvalContext) -> crate::eval::EvalResult<Type> {
+        if let Some(specified_type) = &self.specified_type {
+            Ok(specified_type.ty())
+        } else {
+            Ok(self.eval_default_value(context)?.ty())
+        }
+    }
+
     /// Evaluate default value considering specified type
     ///
     /// If there is no default value, returns `Value::None` without raising an error.

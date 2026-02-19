@@ -218,6 +218,15 @@ impl Symbol {
         self.inner.borrow().children.iter().for_each(f)
     }
 
+    pub fn children(&self) -> Vec<(Identifier, Symbol)> {
+        self.inner
+            .borrow()
+            .children
+            .iter()
+            .map(|(id, symbol)| (id.clone(), symbol.clone()))
+            .collect()
+    }
+
     /// Create a vector of cloned children.
     fn public_children(&self, visibility: Visibility, src_ref: SrcRef) -> SymbolMap {
         let inner = self.inner.borrow();

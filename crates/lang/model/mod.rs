@@ -45,6 +45,12 @@ use crate::{
 #[derive(Clone, Deref, DerefMut)]
 pub struct Model(RcMut<ModelInner>);
 
+impl Default for Model {
+    fn default() -> Self {
+        Self(RcMut::new(Default::default()))
+    }
+}
+
 impl Model {
     /// Create new model from inner.
     pub fn new(inner: RcMut<ModelInner>) -> Self {
