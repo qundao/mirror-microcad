@@ -11,6 +11,7 @@ pub struct TupleType {
     pub(crate) named: std::collections::HashMap<Identifier, Type>,
     pub(crate) unnamed: std::collections::HashSet<Type>,
 }
+
 impl TupleType {
     /// Create new Vec2 type.
     pub fn new_vec2() -> Self {
@@ -180,6 +181,11 @@ impl std::fmt::Display for TupleType {
             types.join(", ")
         })
     }
+}
+
+#[test]
+fn test_tuple_type_eq() {
+    assert_eq!(TupleType::new_color(), TupleType::new_color());
 }
 
 #[test]
