@@ -24,7 +24,6 @@ pub enum BuiltinWorkbenchKind {
 }
 
 impl BuiltinWorkbenchKind {
-
     /// return kind name
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -156,7 +155,9 @@ pub trait BuiltinWorkbenchDefinition {
 
     /// Workbench function
     fn doc() -> Option<DocBlock> {
-        Self::help().map(DocBlock::new_builtin)
+        let doc = Self::help().map(DocBlock::new_builtin);
+        println!("{doc:?}");
+        doc
     }
 
     /// Part initialization parameters

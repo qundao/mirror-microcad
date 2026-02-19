@@ -217,7 +217,7 @@ impl BookWriter {
 
     fn write_symbol(&self, symbol: &Symbol) -> std::io::Result<()> {
         symbol.riter().try_for_each(|symbol| {
-            let path = self.path.join(Self::symbol_path(&symbol));
+            let path = self.path.join("src").join(Self::symbol_path(&symbol));
             std::fs::create_dir_all(&path.parent().expect("A parent"))?;
             println!("{}", path.display());
             symbol.write_md(&path)
@@ -226,7 +226,7 @@ impl BookWriter {
 
     fn write_summary(&self, symbol: &Symbol) -> std::io::Result<()> {
         // 1. Create the SUMMARY.md file
-        let mut file = std::fs::File::create(self.path.join("SUMMARY.md"))?;
+        let mut file = std::fs::File::create(self.path.join("src").join("SUMMARY.md"))?;
 
         // 2. We use a String as a buffer because generate_summary requires std::fmt::Write
         let mut buffer = String::new();
@@ -240,7 +240,7 @@ impl BookWriter {
     }
 
     pub fn write(&self, symbol: &Symbol) -> std::io::Result<()> {
-        std::fs::create_dir_all(&self.path)?;
+        std::fs::create_dir_all(&self.path.join("src"))?;
 
         self.write_book_toml()?;
         self.write_summary(symbol)?;

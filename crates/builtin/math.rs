@@ -51,7 +51,7 @@ fn sqrt() -> Symbol {
                 }
             })
         },
-        None,
+        Some("Squre root `sqrt(x)`"),
     )
 }
 
