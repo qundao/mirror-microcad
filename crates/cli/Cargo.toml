@@ -38,6 +38,7 @@ microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
 microcad-export = { workspace = true }
 microcad-std = { workspace = true }
+microcad-markdown-support = { workspace = true }
 
 [build-dependencies]
 walkdir = "2"

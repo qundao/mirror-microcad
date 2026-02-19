@@ -29,8 +29,8 @@ impl RunCommand<()> for Doc {
 
         let output_path = self
             .output_path
-            .as_ref()
-            .unwrap_or(&PathBuf::from("./doc").join(self.resolve.parse.input_name()));
+            .clone()
+            .unwrap_or(PathBuf::from("./doc").join(self.resolve.parse.input_name()));
 
         match context.has_errors() {
             true => {
@@ -44,7 +44,11 @@ impl RunCommand<()> for Doc {
 
         let start = std::time::Instant::now();
 
-        todo!("Generate docs");
+        use microcad_markdown_support::book::BookWriter;
+        let book_writer = BookWriter::new(output_path);
+        book_writer
+            .write(&context.root)
+            .map_err(|err| miette::miette!("{err}"))?;
 
         if cli.time {
             eprintln!(
