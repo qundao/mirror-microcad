@@ -21,6 +21,30 @@ impl Parse {
     pub fn input_with_ext(&self, cli: &Cli) -> std::path::PathBuf {
         cli.path_with_default_ext(&self.input)
     }
+
+    /// Return name of the parsed file
+    pub fn input_name(&self) -> String {
+        eprintln!("{:?}", std::env::current_dir().expect("no current dir"));
+
+        let input = std::path::absolute(&self.input).expect("No error");
+
+        match input.file_stem().map(|s| s.to_string_lossy().to_string()) {
+            Some(file_stem) => {
+                if &file_stem == "mod" {
+                    input
+                        .parent()
+                        .expect("No error")
+                        .file_name()
+                        .expect("No parent folder name")
+                        .to_string_lossy()
+                        .to_string()
+                } else {
+                    file_stem
+                }
+            }
+            None => unimplemented!("No file stem"),
+        }
+    }
 }
 
 impl RunCommand<Rc<SourceFile>> for Parse {
@@ -41,4 +65,21 @@ impl RunCommand<Rc<SourceFile>> for Parse {
         }
         Ok(source_file)
     }
+}
+
+#[test]
+fn cli_test_parse() {
+    let p = Parse {
+        input: "foo.µcad".into(),
+        syntax: false,
+    };
+
+    assert_eq!(p.input_name(), "foo");
+
+    let p = Parse {
+        input: "../std/lib/std/mod.µcad".into(),
+        syntax: false,
+    };
+
+    assert_eq!(p.input_name(), "std");
 }

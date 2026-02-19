@@ -5,6 +5,7 @@
 
 mod completions;
 mod create;
+mod doc;
 mod eval;
 mod export;
 mod parse;
@@ -14,6 +15,7 @@ mod watch;
 use clap::Subcommand;
 
 pub use create::Create;
+pub use doc::Doc;
 pub use eval::Eval;
 pub use export::Export;
 pub use parse::Parse;
@@ -41,6 +43,9 @@ pub enum Commands {
 
     /// Watch a µcad file
     Watch(Watch),
+
+    /// Generate Markdown docs.
+    Doc(Doc),
 
     /// Print shell completions
     Completions(Completions),
