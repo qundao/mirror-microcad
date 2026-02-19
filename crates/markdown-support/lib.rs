@@ -16,27 +16,59 @@ use microcad_lang::{
     },
 };
 
-pub trait ToMd: microcad_lang::doc::Doc {
+pub trait ToMd {
+    fn to_md(&self) -> md::Markdown;
+}
+
+impl ToMd for InitDefinition {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&self.doc().fetch_text())
+        use microcad_lang::doc::Doc;
+        md::Markdown::new(&format!(
+            "# `{}`\n{}",
+            self.to_string(),
+            self.doc().fetch_text()
+        ))
     }
 }
 
-impl ToMd for InitDefinition {}
-
-impl ToMd for StatementList {}
-
-impl ToMd for SourceFile {}
-
-impl ToMd for FunctionDefinition {}
-
-impl ToMd for ModuleDefinition {}
-
-impl ToMd for WorkbenchDefinition {
-    // TODO: Also add initializers and properties.
+impl ToMd for SourceFile {
+    fn to_md(&self) -> md::Markdown {
+        use microcad_lang::doc::Doc;
+        md::Markdown::new(&format!(
+            "# `{}`\n{}",
+            self.filename_as_str(),
+            self.doc().fetch_text()
+        ))
+    }
 }
 
-impl ToMd for microcad_lang::builtin::Builtin {}
+impl ToMd for FunctionDefinition {
+    fn to_md(&self) -> md::Markdown {
+        use microcad_lang::doc::Doc;
+        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+    }
+}
+
+impl ToMd for ModuleDefinition {
+    fn to_md(&self) -> md::Markdown {
+        use microcad_lang::doc::Doc;
+        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+    }
+}
+
+impl ToMd for WorkbenchDefinition {
+    fn to_md(&self) -> md::Markdown {
+        use microcad_lang::doc::Doc;
+        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+    }
+}
+
+impl ToMd for microcad_lang::builtin::Builtin {
+    fn to_md(&self) -> md::Markdown {
+        use microcad_lang::doc::Doc;
+        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+    }
+}
 
 impl ToMd for SymbolDef {
     fn to_md(&self) -> md::Markdown {
@@ -60,7 +92,9 @@ impl ToMd for Symbol {
 pub trait WriteMdFile: ToMd {
     fn write_md(&self, path: impl AsRef<Path>) -> std::io::Result<()> {
         let mut file = std::fs::File::create(path)?;
-        file.write_all(self.to_md().to_string().as_bytes())
+        let md = self.to_md();
+        println!("{md}");
+        file.write_all(md.to_string().as_bytes())
     }
 }
 

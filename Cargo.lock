@@ -5437,6 +5437,7 @@ dependencies = [
 name = "microcad-markdown-support"
 version = "0.3.0"
 dependencies = [
+ "clap",
  "microcad-builtin",
  "microcad-lang",
  "serde",
