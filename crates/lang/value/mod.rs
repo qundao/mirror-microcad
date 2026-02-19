@@ -108,6 +108,7 @@ impl Value {
     pub fn unary_op(self, op: &str) -> ValueResult {
         match op {
             "-" => -self,
+            "!" => !self,
             _ => Err(ValueError::InvalidOperator(op.to_string())),
         }
     }
@@ -203,6 +204,19 @@ impl std::ops::Neg for Value {
             Value::Array(a) => -a,
             Value::Tuple(t) => -t.as_ref().clone(),
             _ => Err(ValueError::InvalidOperator("-".into())),
+        }
+    }
+}
+
+impl std::ops::Not for Value {
+    type Output = ValueResult;
+
+    fn not(self) -> Self::Output {
+        match self {
+            Value::Bool(b) => Ok(Value::Bool(!b)),
+            Value::Array(a) => !a,
+            Value::Tuple(t) => !t.as_ref().clone(),
+            _ => Err(ValueError::InvalidOperator("!".into())),
         }
     }
 }

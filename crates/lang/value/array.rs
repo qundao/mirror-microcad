@@ -218,6 +218,20 @@ impl std::ops::Neg for Array {
     }
 }
 
+impl std::ops::Not for Array {
+    type Output = ValueResult;
+
+    fn not(self) -> Self::Output {
+        let items: ValueList = self
+            .iter()
+            .map(|value| !value.clone())
+            .collect::<Result<Vec<_>, _>>()?
+            .into_iter()
+            .collect();
+        Ok(Value::Array(items.try_into()?))
+    }
+}
+
 #[test]
 fn test_array_debug() {
     let val1 = Value::Target(Target::new("my::name1".into(), Some("my::target1".into())));

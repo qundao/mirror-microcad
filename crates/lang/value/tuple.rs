@@ -550,6 +550,14 @@ impl std::ops::Neg for Tuple {
     }
 }
 
+impl std::ops::Not for Tuple {
+    type Output = ValueResult;
+
+    fn not(self) -> Self::Output {
+        Ok(Value::Tuple(Box::new(self.transform(|value| !value)?)))
+    }
+}
+
 impl std::hash::Hash for Tuple {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.unnamed.iter().for_each(|(ty, value)| {
