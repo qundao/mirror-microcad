@@ -5,7 +5,7 @@
 
 use std::path::PathBuf;
 
-use microcad_lang::{diag::*, eval::*, model::Model, tree_display::*};
+use microcad_lang::diag::*;
 
 use crate::{
     Cli,
@@ -30,7 +30,7 @@ impl RunCommand<()> for Doc {
         let output_path = self
             .output_path
             .clone()
-            .unwrap_or(PathBuf::from("./doc").join(self.resolve.parse.input_name()));
+            .unwrap_or(PathBuf::from("./doc").join(&self.resolve.parse.input_name()?.to_string()));
 
         match context.has_errors() {
             true => {

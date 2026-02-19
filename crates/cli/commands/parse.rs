@@ -19,16 +19,23 @@ pub struct Parse {
 
 impl Parse {
     pub fn input_with_ext(&self, cli: &Cli) -> std::path::PathBuf {
-        cli.path_with_default_ext(&self.input)
+        let input = &self.input;
+        let input = if input.is_dir() {
+            &input.join("mod.µcad")
+        } else {
+            input
+        };
+
+        cli.path_with_default_ext(&input)
     }
 
     /// Return name of the parsed file
-    pub fn input_name(&self) -> String {
+    pub fn input_name(&self) -> miette::Result<QualifiedName> {
         eprintln!("{:?}", std::env::current_dir().expect("no current dir"));
 
         let input = std::path::absolute(&self.input).expect("No error");
 
-        match input.file_stem().map(|s| s.to_string_lossy().to_string()) {
+        let name = match input.file_stem().map(|s| s.to_string_lossy().to_string()) {
             Some(file_stem) => {
                 if &file_stem == "mod" {
                     input
@@ -43,6 +50,11 @@ impl Parse {
                 }
             }
             None => unimplemented!("No file stem"),
+        };
+
+        match name.as_str().try_into() {
+            Ok(name) => Ok(name),
+            Err(err) => Err(miette::miette!("Not a valid file stem")),
         }
     }
 }
@@ -50,7 +62,12 @@ impl Parse {
 impl RunCommand<Rc<SourceFile>> for Parse {
     fn run(&self, cli: &Cli) -> miette::Result<Rc<SourceFile>> {
         let start = std::time::Instant::now();
-        let source_file = SourceFile::load(self.input_with_ext(cli))?;
+        let name = self.input_name()?;
+
+        let (source_file, error) = SourceFile::load_with_name(self.input_with_ext(cli), name);
+        if let Some(error) = error {
+            return Err(error.into());
+        }
 
         if cli.time {
             eprintln!("Parsing Time   : {}", Cli::time_to_string(&start.elapsed()));
@@ -68,18 +85,24 @@ impl RunCommand<Rc<SourceFile>> for Parse {
 }
 
 #[test]
-fn cli_test_parse() {
+fn test_cli_parse() {
     let p = Parse {
         input: "foo.µcad".into(),
         syntax: false,
     };
 
-    assert_eq!(p.input_name(), "foo");
+    assert_eq!(
+        p.input_name().expect("test error"),
+        "foo".try_into().expect("test error")
+    );
 
     let p = Parse {
         input: "../std/lib/std/mod.µcad".into(),
         syntax: false,
     };
 
-    assert_eq!(p.input_name(), "std");
+    assert_eq!(
+        p.input_name().expect("no input name"),
+        QualifiedName::from_id("std".into())
+    );
 }

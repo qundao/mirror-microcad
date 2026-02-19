@@ -37,7 +37,7 @@ impl DocBlock {
             _ => {
                 let merged =
                     a.0.iter()
-                        .chain(vec![String::default()].iter()) // Add an empty line
+                        .chain([String::default()].iter()) // Add an empty line
                         .chain(b.0.iter())
                         .cloned()
                         .collect::<Vec<_>>();
