@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: types_quantity_operators
-  Expected result: todo
+  Expected result: ok
       Source file: ../books/language/src/types/quantities/operators.md:13
         Test path: ../books/language/src/types/quantities/.test
 
@@ -10,28 +10,12 @@
   13:   use std::debug::assert_eq;
   14:   
   15:   assert_eq([ 6cm * 2cm, 12cm²  ]);
-  16:   assert_eq([ 6cm / 2cm, 3 ]);
+  16:   assert_eq([ 6cm / 2cm, 3.0 ]);
   17:   assert_eq([ 6cm + 2cm, 80mm ]);
   18:   assert_eq([ 6cm - 2cm, 0.04m ]);
 
 -- No Output --
--- Errors --
-  × error: 16:11: Array elements have different types: [Scalar, Integer]
-    ╭─[../books/language/src/types/quantities/operators.md:16:11]
- 15 │ assert_eq([ 6cm * 2cm, 12cm²  ]);
- 16 │ assert_eq([ 6cm / 2cm, 3 ]);
-    ·           ────────┬───────
-    ·                   ╰── Array elements have different types: [Scalar, Integer]
- 17 │ assert_eq([ 6cm + 2cm, 80mm ]);
-    ╰────
-  × error: 16:11: Assertion failed: Invalid: <NO VALUE>
-    ╭─[../books/language/src/types/quantities/operators.md:16:11]
- 15 │ assert_eq([ 6cm * 2cm, 12cm²  ]);
- 16 │ assert_eq([ 6cm / 2cm, 3 ]);
-    ·           ────────┬───────
-    ·                   ╰── Assertion failed: Invalid: <NO VALUE>
- 17 │ assert_eq([ 6cm + 2cm, 80mm ]);
-    ╰────
-Unexpected error(s) which did occur in line(s): 16
+-- No Errors --
+-- No Model --
 -- Test Result --
-TODO
+OK
