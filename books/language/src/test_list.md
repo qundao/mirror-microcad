@@ -18,8 +18,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](flow/argument_match/.test/argument_match_single_identifier.svg)](flow/argument_match/.test/argument_match_single_identifier.log) | [argument_match_single_identifier](flow/argument_match/inline_identifier.md) |
 | [![test](flow/argument_match/.test/argument_match_type.svg)](flow/argument_match/.test/argument_match_type.log) | [argument_match_type](flow/argument_match/priorities.md) |
 | [![test](flow/argument_match/.test/argument_match_type_compatible.svg)](flow/argument_match/.test/argument_match_type_compatible.log) | [argument_match_type_compatible](flow/argument_match/priorities.md) |
-| [![test](types/collections/array/.test/array_operation_bool.svg)](types/collections/array/.test/array_operation_bool.log) | [array_operation_bool](types/collections/array/operators.md) |
 | [![test](types/collections/array/.test/array_operations.svg)](types/collections/array/.test/array_operations.log) | [array_operations](types/collections/array/operators.md) |
+| [![test](types/collections/array/.test/array_operator_not.svg)](types/collections/array/.test/array_operator_not.log) | [array_operator_not](types/collections/array/operators.md) |
 | [![test](types/collections/array/.test/array_unit_bundling.svg)](types/collections/array/.test/array_unit_bundling.log) | [array_unit_bundling](types/collections/array/) |
 | [![test](types/collections/array/.test/array_unit_bundling_except.svg)](types/collections/array/.test/array_unit_bundling_except.log) | [array_unit_bundling_except](types/collections/array/) |
 | [![test](types/collections/array/.test/arrays.svg)](types/collections/array/.test/arrays.log) | [arrays](types/collections/array/) |
