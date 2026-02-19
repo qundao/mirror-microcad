@@ -5272,6 +5272,7 @@ dependencies = [
  "microcad-core",
  "microcad-export",
  "microcad-lang",
+ "microcad-markdown-support",
  "microcad-std",
  "miette",
  "notify",
