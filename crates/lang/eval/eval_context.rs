@@ -87,6 +87,9 @@ impl EvalContext {
         }
         let model: Model = self.sources.root().eval(self)?;
         log::trace!("Post-evaluation context:\n{self:?}");
+
+        self.check_results()?;
+
         log::trace!("Evaluated Model:\n{}", FormatTree(&model));
 
         let unused = self
@@ -115,6 +118,15 @@ impl EvalContext {
         } else {
             Ok(Some(model))
         }
+    }
+
+    fn check_results(&mut self) -> EvalResult<()> {
+        log::trace!("Checking result paths");
+        let root = self.root.clone();
+        if root.deduce_type(&mut ParameterValueList::default(), self)? != Type::Invalid {
+            todo!("source file has result error")
+        }
+        Ok(())
     }
 
     /// Run the closure `f` within the given `stack_frame`.

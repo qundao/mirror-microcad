@@ -221,7 +221,9 @@ impl DeduceType for QualifiedName {
         params: &mut ParameterValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Type> {
-        todo!()
+        let symbol = context.lookup(self, LookupTarget::Any)?;
+
+        todo!("get type of symbol")
     }
 }
 
