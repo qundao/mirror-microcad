@@ -208,12 +208,11 @@ impl std::ops::Neg for Array {
     type Output = ValueResult;
 
     fn neg(self) -> Self::Output {
-        let items: ValueList = self
-            .iter()
-            .map(|value| -value.clone())
-            .collect::<Result<Vec<_>, _>>()?
-            .into_iter()
-            .collect();
+        let items = ValueList::new(
+            self.iter()
+                .map(|value| -value.clone())
+                .collect::<Result<Vec<_>, _>>()?,
+        );
         Ok(Value::Array(items.try_into()?))
     }
 }
@@ -222,12 +221,11 @@ impl std::ops::Not for Array {
     type Output = ValueResult;
 
     fn not(self) -> Self::Output {
-        let items: ValueList = self
-            .iter()
-            .map(|value| !value.clone())
-            .collect::<Result<Vec<_>, _>>()?
-            .into_iter()
-            .collect();
+        let items = ValueList::new(
+            self.iter()
+                .map(|value| !value.clone())
+                .collect::<Result<Vec<_>, _>>()?,
+        );
         Ok(Value::Array(items.try_into()?))
     }
 }
