@@ -24,7 +24,7 @@ Ok(
                         kind: Part,
                         attributes: [
                             Attribute {
-                                span: 0..20,
+                                span: 0..25,
                                 is_inner: false,
                                 extras: ItemExtras {
                                     leading: [],
@@ -81,7 +81,7 @@ Ok(
                             arguments: [],
                         },
                         body: StatementList {
-                            span: 46..84,
+                            span: 46..89,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],

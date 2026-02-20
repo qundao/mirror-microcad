@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: lex(input)
+expression: "lex(input).collect::<Vec<_>>()"
 ---
 [
     SpannedToken {
@@ -16,8 +16,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 2..3,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 3..4,
         token: OperatorAdd,
+    },
+    SpannedToken {
+        span: 4..5,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 5..6,
@@ -32,8 +44,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 8..9,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 9..10,
         token: OperatorDivide,
+    },
+    SpannedToken {
+        span: 10..11,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 11..12,
@@ -48,8 +72,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 15..16,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 16..17,
         token: OperatorSubtract,
+    },
+    SpannedToken {
+        span: 17..18,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 18..19,
@@ -64,8 +100,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 23..24,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 24..25,
         token: OperatorMultiply,
+    },
+    SpannedToken {
+        span: 25..26,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 26..27,
@@ -80,8 +128,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 29..30,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 30..31,
         token: OperatorAdd,
+    },
+    SpannedToken {
+        span: 31..32,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 32..33,
@@ -94,8 +154,20 @@ expression: lex(input)
         token: SigilQuote,
     },
     SpannedToken {
+        span: 34..35,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 35..36,
         token: OperatorSubtract,
+    },
+    SpannedToken {
+        span: 36..37,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 37..38,

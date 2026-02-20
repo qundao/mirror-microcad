@@ -40,6 +40,9 @@ fn map_token(token: SpannedToken<LogosToken>) -> impl Iterator<Item = SpannedTok
 
 fn map_normal_token(token: SpannedToken<NormalToken>) -> impl Iterator<Item = SpannedToken<Token>> {
     match token.token {
+        NormalToken::Whitespace(c) => {
+            Either::Left(once(SpannedToken::new(token.span, Token::Whitespace(c))))
+        }
         NormalToken::SingleLineComment(c) => Either::Left(once(SpannedToken::new(
             token.span,
             Token::SingleLineComment(c),

@@ -22,7 +22,7 @@ Ok(
                         },
                         doc: Some(
                             Comment {
-                                span: 0..15,
+                                span: 0..20,
                                 lines: [
                                     "/// Doc comment",
                                 ],
@@ -43,7 +43,7 @@ Ok(
                         },
                         return_type: None,
                         body: StatementList {
-                            span: 39..40,
+                            span: 39..45,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],

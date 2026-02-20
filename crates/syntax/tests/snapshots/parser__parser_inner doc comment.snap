@@ -4,9 +4,9 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..37,
+        span: 0..42,
         statements: StatementList {
-            span: 0..37,
+            span: 0..42,
             extras: ItemExtras {
                 leading: [],
                 trailing: [],
@@ -14,16 +14,9 @@ Ok(
             statements: [
                 InnerDocComment(
                     Comment {
-                        span: 0..16,
+                        span: 0..42,
                         lines: [
                             "//! Doc comment1",
-                        ],
-                    },
-                ),
-                InnerDocComment(
-                    Comment {
-                        span: 21..37,
-                        lines: [
                             "//! Doc comment2",
                         ],
                     },

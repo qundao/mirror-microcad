@@ -29,7 +29,7 @@ Ok(
                         },
                         body: Some(
                             StatementList {
-                                span: 10..20,
+                                span: 10..21,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],

@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: lex(input)
+expression: "lex(input).collect::<Vec<_>>()"
 ---
 [
     SpannedToken {
@@ -10,8 +10,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 15..20,
+        token: Whitespace(
+            "\n    ",
+        ),
+    },
+    SpannedToken {
         span: 20..24,
         token: KeywordPart,
+    },
+    SpannedToken {
+        span: 24..25,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 25..28,
@@ -28,8 +40,20 @@ expression: lex(input)
         token: SigilCloseBracket,
     },
     SpannedToken {
+        span: 30..31,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 31..32,
         token: SigilOpenCurlyBracket,
+    },
+    SpannedToken {
+        span: 32..41,
+        token: Whitespace(
+            "\n        ",
+        ),
     },
     SpannedToken {
         span: 41..49,
@@ -48,8 +72,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 56..57,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 57..58,
         token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 58..59,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 59..61,
@@ -68,14 +104,32 @@ expression: lex(input)
         token: SigilComma,
     },
     SpannedToken {
+        span: 64..65,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 65..71,
         token: Identifier(
             "radius",
         ),
     },
     SpannedToken {
+        span: 71..72,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 72..73,
         token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 73..74,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 74..75,
@@ -96,6 +150,12 @@ expression: lex(input)
     SpannedToken {
         span: 78..79,
         token: SigilSemiColon,
+    },
+    SpannedToken {
+        span: 79..84,
+        token: Whitespace(
+            "\n    ",
+        ),
     },
     SpannedToken {
         span: 84..85,

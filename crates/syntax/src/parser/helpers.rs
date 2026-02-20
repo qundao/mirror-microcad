@@ -7,11 +7,16 @@ use crate::parser::{Error, Extra, ParserInput, STRUCTURAL_TOKENS};
 use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
+use chumsky::inspector::Inspector;
 use chumsky::prelude::*;
 use chumsky::{IterParser, Parser, extra, select_ref};
 
-pub fn comment_parser<'tokens>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Comment, Extra<'tokens>> + 'tokens {
+pub fn comment_parser<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Comment, Full<Error<'tokens>, S, Ctx>> + 'tokens
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
     let single_line_comments = select_ref! {
         Token::SingleLineComment(comment) => comment
     }
@@ -23,23 +28,45 @@ pub fn comment_parser<'tokens>()
         lines: lines.into_iter().map(|s| s.as_ref().into()).collect(),
     })
     .boxed();
-    single_line_comments
-        .or(select_ref! {
-            Token::MultiLineComment(comment) = e => Comment {
-                span: e.span(),
-                lines: vec![comment.as_ref().into()]
-            }
-        })
+    let multi_line = select_ref! {
+        Token::MultiLineComment(comment) = e => Comment {
+            span: e.span(),
+            lines: vec![comment.as_ref().into()]
+        }
+    };
+    let comment = single_line_comments
+        .or(multi_line)
         .labelled("comment")
-        .boxed()
+        .boxed();
+
+    whitespace_parser().or_not().ignore_then(comment)
+}
+pub fn whitespace_parser<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Full<Error<'tokens>, S, Ctx>>
++ 'tokens
++ Clone
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
+    select_ref! {
+        Token::Whitespace(_) => ()
+    }
+    .labelled("whitespace")
+    .boxed()
 }
 
-pub fn extras_parser<'tokens>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Vec<ItemExtra>, Extra<'tokens>> {
+pub fn extras_parser<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Vec<ItemExtra>, Full<Error<'tokens>, S, Ctx>>
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
     comment_parser()
         .map(ItemExtra::Comment)
         .repeated()
         .collect::<Vec<_>>()
+        .boxed()
 }
 
 /// Ignore tokens, until we hit the end of a pair or nested curly brackets
@@ -87,7 +114,12 @@ where
     params
         .clone()
         .foldl_with(
-            one_of(tokens).then(params).repeated(),
+            whitespace_parser()
+                .or_not()
+                .ignore_then(one_of(tokens))
+                .then_maybe_whitespace()
+                .then(params)
+                .repeated(),
             |lhs, (op, rhs), e| {
                 Expression::BinaryOperation(BinaryOperation {
                     span: e.span(),
@@ -127,6 +159,12 @@ where
 {
     fn with_extras(self) -> impl Parser<'src, I, (O, ItemExtras), E> + 'src;
 
+    /// Required a whitespace
+    fn then_whitespace(self) -> impl Parser<'src, I, O, E> + 'src;
+
+    /// Allow a whitespace
+    fn then_maybe_whitespace(self) -> impl Parser<'src, I, O, E> + 'src;
+
     fn delimited_with_spanned_error<B, C, U, V, F>(
         self,
         before: B,
@@ -139,19 +177,36 @@ where
         F: Fn(E::Error, I::Span, I::Span) -> E::Error;
 }
 
-impl<'tokens, O, P> ParserExt<'tokens, ParserInput<'tokens, 'tokens>, O, Extra<'tokens>> for P
+impl<'tokens, O, P, S, Ctx>
+    ParserExt<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> for P
 where
-    P: Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Extra<'tokens>> + 'tokens,
+    P: Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> + 'tokens,
     O: 'tokens,
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
 {
     fn with_extras(
         self,
-    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (O, ItemExtras), Extra<'tokens>> {
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (O, ItemExtras), Full<Error<'tokens>, S, Ctx>>
+    {
         extras_parser()
+            .then_maybe_whitespace()
             .then(self)
             .then(extras_parser())
             .map(|((leading, res), trailing)| (res, ItemExtras { leading, trailing }))
             .boxed()
+    }
+
+    fn then_whitespace(
+        self,
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> {
+        self.then_ignore(whitespace_parser())
+    }
+
+    fn then_maybe_whitespace(
+        self,
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> {
+        self.then_ignore(whitespace_parser().or_not())
     }
 
     fn delimited_with_spanned_error<B, C, U, V, F>(
@@ -159,25 +214,25 @@ where
         before: B,
         after: C,
         err_map: F,
-    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Extra<'tokens>>
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>>
     where
         B: Parser<
                 'tokens,
                 ParserInput<'tokens, 'tokens>,
                 U,
-                Full<Error<'tokens>, SimpleState<Span>, ()>,
+                Full<Error<'tokens>, SimpleState<Span>, Ctx>,
             >,
         C: Parser<
                 'tokens,
                 ParserInput<'tokens, 'tokens>,
                 V,
-                Full<Error<'tokens>, SimpleState<Span>, ()>,
+                Full<Error<'tokens>, SimpleState<Span>, Ctx>,
             >,
         F: Fn(Error<'tokens>, Span, Span) -> Error<'tokens>,
     {
         before
             .map_with(|_, e| *e.state() = e.span().into())
-            .then(self.with_state(()))
+            .then(self.with_state(S::default()))
             .then(
                 after.map_err_with_state(move |e, span: Span, state| {
                     err_map(e, state.0.clone(), span)

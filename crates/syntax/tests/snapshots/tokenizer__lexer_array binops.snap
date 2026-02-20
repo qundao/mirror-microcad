@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: lex(input)
+expression: "lex(input).collect::<Vec<_>>()"
 ---
 [
     SpannedToken {
@@ -32,8 +32,20 @@ expression: lex(input)
         token: SigilQuote,
     },
     SpannedToken {
+        span: 6..7,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 7..9,
         token: OperatorEqual,
+    },
+    SpannedToken {
+        span: 9..10,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 10..11,

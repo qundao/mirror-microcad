@@ -53,6 +53,12 @@ use test_case::test_case;
         Cylinder(height = 10mm, radius = 5mm);
     }"#
 )]
+#[test_case(
+    "inner doc comment",
+    r#"//! Doc comment1
+    //! Doc comment2
+    "#
+)]
 #[test_case("invalid expr string", r#"a = "string {broken"; b = 1"#)]
 #[test_case("invalid expr string format", r#"a = "string {broken:"; b = 1"#)]
 #[test_case(
