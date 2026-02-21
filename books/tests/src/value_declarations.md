@@ -53,8 +53,6 @@ mod module {
                 assert_eq([sketch_local, 6]);
                 assert_eq([alt_param, 7]);
                 assert_eq([init_local, 8]);
-
-                prop param = 5; // needed to compile
             }
 
             // property of sketch

@@ -4,7 +4,7 @@
 
 ```µcad,pre_init_workbench#fail
 sketch K() { 
-  sketch F() {} K();  // error
+  sketch F() {}  // error
 init(l:Length) {} } K();
 ```
 

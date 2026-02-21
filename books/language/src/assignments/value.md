@@ -68,20 +68,9 @@ So-called "shadowing" (reusing a *name*) is prohibited.
 This restriction is highly intentional because µcad follows a concept of strict
 immutability[^immutable] of all value definitions.
 
-[^immutable]: Reusing names would undercut the ability to connect identifiers to values (e.g. when displaying).
+[^immutable]: Reusing names would undercut the ability to connect identifiers to values (*labeling*).
 
-[![test](.test/assignment_shadow_scope.svg)](.test/assignment_shadow_scope.log)
-
-```µcad,assignment_shadow_scope#todo
-a = 5;
-
-{
-    a = a * 2;   // this works because we are in a new scope
-    std::debug::assert_eq([ a, 10 ]);
-}
-```
-
-Another assignment of a variable with the same name without an additional scope is
+So another assignment of a variable with the same name without an additional scope is
 prohibited.
 
 [![test](.test/assignment_shadow.svg)](.test/assignment_shadow.log)
@@ -90,6 +79,21 @@ prohibited.
 a = 5;      // warning: unused local
 a = a * 2;  // error: a already defined in this scope
 ```
+
+Even if using *anonymous scopes* this does not change.
+
+[![test](.test/assignment_shadow_scope.svg)](.test/assignment_shadow_scope.log)
+
+```µcad,assignment_shadow_scope#todo
+a = 5;
+{
+    a = a * 2;   // error: a already defined within parent scope
+    std::debug::assert_eq([ a, 10 ]);
+}
+```
+
+ > [!NOTE] Anonymous scopes do not open new namespaces in µcad.
+ > This is different in a lot of other languages!
 
 ### Not in modules
 

@@ -99,7 +99,7 @@ mod k {
 [![test](.test/module_expression.svg)](.test/module_expression.log)
 
 ```µcad,module_expression#fail
-mod k {  // warning
+mod k {
   1 + 2; // error
 }
 ```
@@ -107,7 +107,7 @@ mod k {  // warning
 [![test](.test/module_expression_model.svg)](.test/module_expression_model.log)
 
 ```µcad,module_expression_model#fail
-mod k { // warning
+mod k {
   __builtin::geo2d::Circle(radius=1mm); // error
 }
 ```

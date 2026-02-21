@@ -3,7 +3,7 @@
 [![test](.test/init_workbench.svg)](.test/init_workbench.log)
 
 ```µcad,init_workbench#fail
-sketch K() { init(l:Length) { // warning
+sketch K() { init(l:Length) {
   sketch F() {} // error
 } } K(1cm);
 ```
@@ -11,7 +11,7 @@ sketch K() { init(l:Length) { // warning
 [![test](.test/init_module.svg)](.test/init_module.log)
 
 ```µcad,init_module#fail
-sketch K() { init(l:Length) { // warning
+sketch K() { init(l:Length) {
   mod m {} // error
 } } K(1cm);
 ```
@@ -19,7 +19,7 @@ sketch K() { init(l:Length) { // warning
 [![test](.test/init_function.svg)](.test/init_function.log)
 
 ```µcad,init_function#fail
-sketch K() { init(l:Length) { // warning
+sketch K() { init(l:Length) {
   fn f() {} // error
 } } K(1cm);
 ```
@@ -27,7 +27,7 @@ sketch K() { init(l:Length) { // warning
 [![test](.test/init_init.svg)](.test/init_init.log)
 
 ```µcad,init_init#fail
-sketch K() { init(l:Length) { // warning
+sketch K() { init(l:Length) {
   init() {} // error
 } } K(1cm);
 ```
@@ -43,7 +43,7 @@ sketch K() { init(l:Length) {
 [![test](.test/init_pub_use.svg)](.test/init_pub_use.log)
 
 ```µcad,init_pub_use#fail
-sketch K() { init(l:Length) { // warning
+sketch K() { init(l:Length) {
   pub use std; // error
 } } K(1cm);
 ```

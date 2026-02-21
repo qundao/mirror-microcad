@@ -15,7 +15,7 @@ sketch Wheel(radius: Length) {
     const FACTOR = 2.0;
 
     // initializer
-    init(diameter: Length) { into_radius(diameter) }
+    init(diameter: Length) { radius = into_radius(diameter); }
 
     // function
     fn into_radius( diameter: Length ) {
