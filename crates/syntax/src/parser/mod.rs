@@ -571,14 +571,31 @@ fn parser<'tokens>()
             .then(
                 just(Token::SigilColon)
                     .then_maybe_whitespace()
-                    .ignore_then(type_parser.clone())
+                    .ignore_then(
+                        type_parser.clone().recover_with(via_parser(
+                            recovery_expect_any_except(&[
+                                Token::SigilComma,
+                                Token::OperatorAssignment,
+                                Token::SigilCloseBracket,
+                            ])
+                            .map_with(|_, e| Type::dummy(e.span())),
+                        )),
+                    )
                     .then_maybe_whitespace()
                     .or_not(),
             )
             .then(
                 just(Token::OperatorAssignment)
                     .then_maybe_whitespace()
-                    .ignore_then(expression_parser.clone())
+                    .ignore_then(
+                        expression_parser.clone().recover_with(via_parser(
+                            recovery_expect_any_except(&[
+                                Token::SigilComma,
+                                Token::SigilCloseBracket,
+                            ])
+                            .map_with(|_, e| Expression::Error(e.span())),
+                        )),
+                    )
                     .then_maybe_whitespace()
                     .or_not(),
             )
