@@ -202,10 +202,6 @@ impl EvalContext {
         matches!(self.stack.current_frame(), Some(StackFrame::Init(_)))
     }
 
-    pub(super) fn is_within_function(&self) -> bool {
-        self.stack.is_within_function()
-    }
-
     /// Lookup a property by qualified name.
     fn lookup_property(&self, name: &QualifiedName) -> EvalResult<Symbol> {
         log::trace!(
