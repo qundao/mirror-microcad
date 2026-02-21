@@ -161,7 +161,7 @@ Constant assignments cannot be used in initializers.
 
 [![test](.test/const_assignment_init.svg)](.test/const_assignment_init.log)
 
-```µcad,const_assignment_init#todo_fail
+```µcad,const_assignment_init#fail
 sketch MySketch() {
     init(_: Integer) {
         const MY_CONST = 1;   // error: not allowed in initializers
