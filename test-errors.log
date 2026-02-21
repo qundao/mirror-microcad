@@ -745,17 +745,17 @@ OK
 
 -- No Output --
 -- Errors --
-  × error: 39:5: Assigment is not allowed within module
+  × error: 39:5: Value assignment is not allowed within module
     ╭─[../books/language/src/assignments/model.md:39:5]
  38 │ mod my_module {
     · ─┬─
     ·  ╰── Within this module
  39 │     a = std::geo2d::Circle(radius = 1mm);   // error
     ·     ──────────────────┬─────────────────
-    ·                       ╰── This assigment is not allowed
+    ·                       ╰── This value assignment is not allowed
  40 │ }
     ╰────
-  help: assigment is only allowed within source root, module definition, workbench definition or function definition
+  help: value assignment is only allowed within source file, module, workbench or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -765,7 +765,7 @@ FAILS AS EXPECTED
 ﻿
 -- Test --
         Test name: const_assignment_init
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/assignments/const.md:165
         Test path: ../books/language/src/assignments/.test
 
@@ -779,10 +779,22 @@ FAILS AS EXPECTED
  170:   MySketch();
 
 -- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 167
+-- Errors --
+  × error: 167:9: Constant assignment is not allowed within initializer
+     ╭─[../books/language/src/assignments/const.md:167:9]
+ 165 │ sketch MySketch() {
+ 166 │     init(_: Integer) {
+     ·     ──┬─
+     ·       ╰── Within this initializer
+ 167 │         const MY_CONST = 1;   // error: not allowed in initializers
+     ·         ─────────┬────────
+     ·                  ╰── This constant assignment is not allowed
+ 168 │     }
+     ╰────
+  help: constant assignment is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED
 
 ========= ./books/language/book/assignments/.test/const_assignment_workbench_code.log =========
 
@@ -854,7 +866,7 @@ OK
  58 │ // a is still available
  59 │ assert_valid(a);
     · ──────┬─────
-    ·       ╰── Expected something else, comment, semicolon or end of input
+    ·       ╰── unexpected identifier
  60 │ // b not known here anymore
     ╰────
 
@@ -867,32 +879,32 @@ TODO
 -- Test --
         Test name: assignment_workbench
   Expected result: fail
-      Source file: ../books/language/src/assignments/value.md:113
+      Source file: ../books/language/src/assignments/value.md:117
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
- 113:   sketch MySketch() {
- 114:       a = 1;   // error
- 115:       init(_x : Scalar) {}
- 116:   }
- 117:   
- 118:   MySketch();
+ 117:   sketch MySketch() {
+ 118:       a = 1;   // error
+ 119:       init(_x : Scalar) {}
+ 120:   }
+ 121:   
+ 122:   MySketch();
 
 -- No Output --
 -- Errors --
-  × error: 114:5: Statement not allowed prior initializers
-     ╭─[../books/language/src/assignments/value.md:114:5]
- 113 │ sketch MySketch() {
-     ·        ────┬───
-     ·            ╰── Inside this sketch
- 114 │     a = 1;   // error
+  × error: 118:5: Statement not allowed prior initializers
+     ╭─[../books/language/src/assignments/value.md:118:5]
+ 117 │ sketch MySketch() {
+     · ───┬──
+     ·    ╰── Inside this workbench
+ 118 │     a = 1;   // error
      ·     ──┬──
      ·       ╰── This statement is not allowed
- 115 │     init(_x : Scalar) {}
+ 119 │     init(_x : Scalar) {}
      ·     ──┬─
      ·       ╰── Before this initializer
- 116 │ }
+ 120 │ }
      ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
@@ -903,7 +915,7 @@ FAILS AS EXPECTED
 ﻿
 -- Test --
         Test name: prop_assignment_initializer
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/assignments/property.md:59
         Test path: ../books/language/src/assignments/.test
 
@@ -919,10 +931,23 @@ FAILS AS EXPECTED
   66:   MySketch(5cm)
 
 -- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 62
+-- Errors --
+  × error: 62:9: Property assignment is not allowed within initializer
+    ╭─[../books/language/src/assignments/property.md:62:9]
+ 59 │ sketch MySketch(radius: Length) {
+ 60 │     init() { 
+    ·     ──┬─
+    ·       ╰── Within this initializer
+ 61 │         radius = 1; 
+ 62 │         prop diameter = radius * 2; // error: not in initializer
+    ·         ─────────────┬────────────
+    ·                      ╰── This property assignment is not allowed
+ 63 │     }
+    ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED
 
 ========= ./books/language/book/assignments/.test/pub_assignment_workbench.log =========
 
@@ -944,17 +969,17 @@ TODO (SHALL FAIL)
 
 -- No Output --
 -- Errors --
-  × error: 27:5: Public constant assigment is not allowed within sketch
+  × error: 27:5: Public constant assignment is not allowed within workbench
     ╭─[../books/language/src/assignments/pub.md:27:5]
  26 │ sketch MySketch() {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  27 │     pub TEXT = "Hello";  // error
     ·     ─────────┬────────
-    ·              ╰── This public constant assigment is not allowed
+    ·              ╰── This public constant assignment is not allowed
  28 │     std::print(TEXT);
     ╰────
-  help: public constant assigment is only allowed within source root or module definition
+  help: public constant assignment is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -978,17 +1003,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 34:5: Property assigment is not allowed within function
+  × error: 34:5: Property assignment is not allowed within function
     ╭─[../books/language/src/assignments/property.md:34:5]
  33 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  34 │     prop diameter = radius * 2; // error: not in functions
     ·     ─────────────┬────────────
-    ·                  ╰── This property assigment is not allowed
+    ·                  ╰── This property assignment is not allowed
  35 │ }
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -1016,8 +1041,8 @@ FAILS AS EXPECTED
   × error: 51:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/model.md:51:5]
  50 │ sketch MySketch() {
-    ·        ────┬───
-    ·            ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  51 │     a = std::geo2d::Circle(radius = 1mm);   // error
     ·     ──────────────────┬─────────────────
     ·                       ╰── This statement is not allowed
@@ -1071,17 +1096,17 @@ TODO (SHALL FAIL)
 
 -- No Output --
 -- Errors --
-  × error: 40:5: Constant assigment is not allowed within function
+  × error: 40:5: Constant assignment is not allowed within function
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  40 │     const MY_CONST = 1;     // error: not allowed in functions
     ·     ─────────┬────────
-    ·              ╰── This constant assigment is not allowed
+    ·              ╰── This constant assignment is not allowed
  41 │ }
     ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
+  help: constant assignment is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -1159,34 +1184,31 @@ TODO (WRONG WARNINGS)
 -- Test --
         Test name: assignment_shadow_scope
   Expected result: todo
-      Source file: ../books/language/src/assignments/value.md:76
+      Source file: ../books/language/src/assignments/value.md:88
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  76:   a = 5;
-  77:   
-  78:   {
-  79:       a = a * 2;   // this works because we are in a new scope
-  80:       std::debug::assert_eq([ a, 10 ]);
-  81:   }
+  88:   a = 5;
+  89:   {
+  90:       a = a * 2;   // error: a already defined within parent scope
+  91:       std::debug::assert_eq([ a, 10 ]);
+  92:   }
 
 -- No Output --
 -- Errors --
-  × error: 79:5: Value a already in defined: 5
-    ╭─[../books/language/src/assignments/value.md:79:5]
- 76 │ a = 5;
+  × error: 90:5: Value a already in defined: 5
+    ╭─[../books/language/src/assignments/value.md:90:5]
+ 88 │ a = 5;
     · ┬
     · ╰── Previously defined here
- 77 │ 
- 78 │ {
- 79 │     a = a * 2;   // this works because we are in a new scope
+ 89 │ {
+ 90 │     a = a * 2;   // error: a already defined within parent scope
     ·     ────┬────
     ·         ╰── a is already defined
- 80 │     std::debug::assert_eq([ a, 10 ]);
+ 91 │     std::debug::assert_eq([ a, 10 ]);
     ╰────
   help: Values in microcad are immutable
-Unexpected error(s) which did occur in line(s): 79
 -- Test Result --
 TODO
 
@@ -1297,18 +1319,18 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 145:5: Constant assigment is not allowed within function
+  × error: 145:5: Constant assignment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:145:5]
  144 │ fn f() {
      · ─┬
      ·  ╰── Within this function
  145 │     const MY_CONST = 1;     // error: not allowed in functions
      ·     ─────────┬────────
-     ·              ╰── This constant assigment is not allowed
+     ·              ╰── This constant assignment is not allowed
  146 │ }
      ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
-  × error: 151:9: Constant assigment is not allowed within function
+  help: constant assignment is only allowed within source file, module or workbench
+  × error: 151:9: Constant assignment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:151:9]
  149 │ sketch MySketch() {
  150 │     fn f() {
@@ -1316,10 +1338,10 @@ FAILS AS EXPECTED
      ·      ╰── Within this function
  151 │         const MY_CONST = 1; // error: not allowed in workbench functions
      ·         ─────────┬────────
-     ·                  ╰── This constant assigment is not allowed
+     ·                  ╰── This constant assignment is not allowed
  152 │     }
      ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
+  help: constant assignment is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -1431,32 +1453,32 @@ OK (BUT WARNINGS)
 -- Test --
         Test name: assignment_shadow
   Expected result: fail
-      Source file: ../books/language/src/assignments/value.md:90
+      Source file: ../books/language/src/assignments/value.md:79
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  90:   a = 5;      // warning: unused local
-  91:   a = a * 2;  // error: a already defined in this scope
+  79:   a = 5;      // warning: unused local
+  80:   a = a * 2;  // error: a already defined in this scope
 
 -- No Output --
 -- Errors --
-  × error: 91:1: Value a already in defined: 5
-    ╭─[../books/language/src/assignments/value.md:91:1]
- 90 │ a = 5;      // warning: unused local
+  × error: 80:1: Value a already in defined: 5
+    ╭─[../books/language/src/assignments/value.md:80:1]
+ 79 │ a = 5;      // warning: unused local
     · ┬
     · ╰── Previously defined here
- 91 │ a = a * 2;  // error: a already defined in this scope
+ 80 │ a = a * 2;  // error: a already defined in this scope
     · ────┬────
     ·     ╰── a is already defined
     ╰────
   help: Values in microcad are immutable
-  ⚠ warning: 90:1: Unused local a.
-    ╭─[../books/language/src/assignments/value.md:90:1]
- 90 │ a = 5;      // warning: unused local
+  ⚠ warning: 79:1: Unused local a.
+    ╭─[../books/language/src/assignments/value.md:79:1]
+ 79 │ a = 5;      // warning: unused local
     · ┬
     · ╰── Unused local a.
- 91 │ a = a * 2;  // error: a already defined in this scope
+ 80 │ a = a * 2;  // error: a already defined in this scope
     ╰────
 -- Test Result --
 FAILS AS EXPECTED
@@ -1467,28 +1489,28 @@ FAILS AS EXPECTED
 -- Test --
         Test name: assignment_module
   Expected result: fail
-      Source file: ../books/language/src/assignments/value.md:101
+      Source file: ../books/language/src/assignments/value.md:105
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
- 101:   mod my_module {
- 102:       a = 1; // error
- 103:   }
+ 105:   mod my_module {
+ 106:       a = 1; // error
+ 107:   }
 
 -- No Output --
 -- Errors --
-  × error: 102:5: Assigment is not allowed within module
-     ╭─[../books/language/src/assignments/value.md:102:5]
- 101 │ mod my_module {
+  × error: 106:5: Value assignment is not allowed within module
+     ╭─[../books/language/src/assignments/value.md:106:5]
+ 105 │ mod my_module {
      · ─┬─
      ·  ╰── Within this module
- 102 │     a = 1; // error
+ 106 │     a = 1; // error
      ·     ──┬──
-     ·       ╰── This assigment is not allowed
- 103 │ }
+     ·       ╰── This value assignment is not allowed
+ 107 │ }
      ╰────
-  help: assigment is only allowed within source root, module definition, workbench definition or function definition
+  help: value assignment is only allowed within source file, module, workbench or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -1517,8 +1539,8 @@ FAILS AS EXPECTED
   × error: 46:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/property.md:46:5]
  45 │ sketch MySketch(radius: Length) {
-    ·        ────┬───
-    ·            ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  46 │     prop diameter = radius * 2; // error: not in initialization code
     ·     ─────────────┬────────────
     ·                  ╰── This statement is not allowed
@@ -1547,13 +1569,13 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 25:1: Property assigment is not allowed at source root
+  × error: 25:1: Property assignment is not allowed at source root
     ╭─[../books/language/src/assignments/property.md:25:1]
  25 │ prop diameter = radius * 2; // error: not in source file
     · ─────────────┬────────────
-    ·              ╰── This property assigment is not allowed here
+    ·              ╰── This property assignment is not allowed here
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -1951,17 +1973,17 @@ TODO
 
 -- No Output --
 -- Errors --
-  × error: 63:5: Return statement is not allowed within sketch
+  × error: 63:5: Return statement is not allowed within workbench
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:63:5]
  62 │ sketch Wheel(radius: Length) {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  63 │     return;         // error
     ·     ───┬──
     ·        ╰── This return statement is not allowed
  64 │ }
     ╰────
-  help: return statement is only allowed within function definition
+  help: return statement is only allowed within function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -2010,7 +2032,7 @@ TODO (SHALL FAIL)
 ﻿
 -- Test --
         Test name: property_no_prop_in_initializer
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/structure/workbenches/elements/properties.md:71
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
@@ -2031,44 +2053,23 @@ TODO (SHALL FAIL)
 
 -- No Output --
 -- Errors --
-  × error: 75:9: Assignment statement not available here
+  × error: 75:9: Property assignment is not allowed within initializer
     ╭─[../books/language/src/structure/workbenches/elements/properties.md:75:9]
+ 71 │ sketch Wheel(radius: Length, thickness = 5cm) {
+ 72 │     init(radius: Length, inner: Length) {
+    ·     ──┬─
+    ·       ╰── Within this initializer
+ 73 │         thickness = radius - inner;
  74 │ 
  75 │         prop center = radius - inner;       // error: do not use prop here
     ·         ──────────────┬─────────────
-    ·                       ╰── Assignment statement not available here
+    ·                       ╰── This property assignment is not allowed
  76 │     }
     ╰────
-  × error: 78:10: Value center already in defined: 5mm
-    ╭─[../books/language/src/structure/workbenches/elements/properties.md:78:5]
- 77 │     
- 78 │     prop center = radius - thickness / 2;   // here it's ok
-    ·     ──────────────────┬─────────────────┬
-    ·                       │                 ╰── Previously defined here
-    ·                       ╰── center is already defined
- 79 │ }
-    ╰────
-  help: Values in microcad are immutable
-  × error: 78:5: Value center already in defined: 5mm
-    ╭─[../books/language/src/structure/workbenches/elements/properties.md:78:10]
- 77 │     
- 78 │     prop center = radius - thickness / 2;   // here it's ok
-    ·          ───┬──┬
-    ·             │  ╰── Previously defined here
-    ·             ╰── center is already defined
- 79 │ }
-    ╰────
-  help: Values in microcad are immutable
-  × error: 82:23: Assertion failed: Values differ: [7.5mm, 17.5mm]
-    ╭─[../books/language/src/structure/workbenches/elements/properties.md:82:23]
- 81 │ 
- 82 │ std::debug::assert_eq([ center, 1.75cm ] );
-    ·                       ─────────┬────────
-    ·                                ╰── Assertion failed: Values differ: [7.5mm, 17.5mm]
-    ╰────
-Unexpected error(s) which did occur in line(s): 78, 82
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED
 
 ========= ./books/language/book/structure/workbenches/elements/.test/code_between_initializers.log =========
 
@@ -2097,8 +2098,8 @@ TODO (SHALL FAIL)
   × error: 156:5: Code between initializers is not allowed
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:156:5]
  152 │     sketch Wheel(radius: Length, thickness = 5mm) {
-     ·            ──┬──
-     ·              ╰── Inside this sketch
+     ·     ───┬──
+     ·        ╰── Inside this workbench
  153 │         use std::geo2d::Circle;
  154 │     
  155 │ ╭─▶     init( width: Length, thickness = 5mm ) { radius = width / 2; }
@@ -2130,17 +2131,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 55:9: Module definition is not allowed within sketch
+  × error: 55:9: Module is not allowed within workbench
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:5]
  54 │ sketch Wheel(radius: Length) {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  55 │     mod m {}        // error
     ·     ─┬─
-    ·      ╰── This module definition is not allowed
+    ·      ╰── This module is not allowed
  56 │ }
     ╰────
-  help: module definition is only allowed within source root or module
+  help: module is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -2219,42 +2220,42 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 45:12: Sketch is not allowed within sketch
+  × error: 45:12: Workbench is not allowed within workbench
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:45:5]
  44 │ sketch Wheel(radius: Length) {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  45 │     sketch A() {}   // error
     ·     ───┬──
-    ·        ╰── This sketch is not allowed
+    ·        ╰── This workbench is not allowed
  46 │     part B() {}     // error
     ╰────
-  help: sketch is only allowed within source root or module definition
-  × error: 46:10: Part is not allowed within sketch
+  help: workbench is only allowed within source file or module
+  × error: 46:10: Workbench is not allowed within workbench
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:46:5]
  44 │ sketch Wheel(radius: Length) {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  45 │     sketch A() {}   // error
  46 │     part B() {}     // error
     ·     ──┬─
-    ·       ╰── This part is not allowed
+    ·       ╰── This workbench is not allowed
  47 │     op C() {}       // error
     ╰────
-  help: part is only allowed within source root or module definition
-  × error: 47:8: Op is not allowed within sketch
+  help: workbench is only allowed within source file or module
+  × error: 47:8: Workbench is not allowed within workbench
     ╭─[../books/language/src/structure/workbenches/elements/building_code.md:47:5]
  44 │ sketch Wheel(radius: Length) {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  45 │     sketch A() {}   // error
  46 │     part B() {}     // error
  47 │     op C() {}       // error
     ·     ─┬
-    ·      ╰── This op is not allowed
+    ·      ╰── This workbench is not allowed
  48 │ }
     ╰────
-  help: op is only allowed within source root or module definition
+  help: workbench is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -2364,7 +2365,7 @@ TODO (SHALL FAIL)
   15:       const FACTOR = 2.0;
   16:   
   17:       // initializer
-  18:       init(diameter: Length) { into_radius(diameter) }
+  18:       init(diameter: Length) { radius = into_radius(diameter); }
   19:   
   20:       // function
   21:       fn into_radius( diameter: Length ) {
@@ -2515,8 +2516,8 @@ FAILS AS EXPECTED
   × error: 97:5: Statement not allowed prior initializers
      ╭─[../books/language/src/structure/workbenches/elements/properties.md:97:5]
   95 │ sketch Wheel(outer: Length) {
-     ·        ──┬──
-     ·          ╰── Inside this sketch
+     · ───┬──
+     ·    ╰── Inside this workbench
   96 │ 
   97 │     prop max = 100;     // error: do not use prop here
      ·     ───────┬──────
@@ -3259,7 +3260,7 @@ TODO
 
 -- No Output --
 -- Errors --
-  × error: 58:9: Property assigment is not allowed within function
+  × error: 58:9: Property assignment is not allowed within function
     ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
  56 │ 
  57 │     fn inner() {
@@ -3267,10 +3268,10 @@ TODO
     ·      ╰── Within this function
  58 │         prop hole = radius/2;  // error: prop not allowed in function
     ·         ──────────┬─────────
-    ·                   ╰── This property assigment is not allowed
+    ·                   ╰── This property assignment is not allowed
  59 │         hole
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -3308,14 +3309,19 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 81:9: Assignment statement not available here
+  × error: 81:9: Property assignment is not allowed within initializer
     ╭─[../books/language/src/structure/functions/workbench_functions.md:81:9]
+ 79 │ 
  80 │     init(diameter: Length) { 
+    ·     ──┬─
+    ·       ╰── Within this initializer
  81 │         prop radius = diameter/2; // error: prop not allowed in init
     ·         ────────────┬───────────
-    ·                     ╰── Assignment statement not available here
+    ·                     ╰── This property assignment is not allowed
  82 │     }
     ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -3342,14 +3348,20 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 39:12: Function statement not available here
-    ╭─[../books/language/src/structure/functions/workbench_functions.md:39:12]
+  × error: 39:12: Function is not allowed within workbench
+    ╭─[../books/language/src/structure/functions/workbench_functions.md:39:9]
+ 36 │ sketch PunchedDisk(radius: Length) {
+    · ───┬──
+    ·    ╰── Within this workbench
+ 37 │     use std::geo2d::Circle;
  38 │ 
  39 │     pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
-    ·            ──┬──
-    ·              ╰── Function statement not available here
+    ·         ─┬
+    ·          ╰── This function is not allowed
  40 │ 
     ╰────
+  help: function is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -3622,46 +3634,6 @@ Unexpected warnings(s) which did occur in line(s): 148
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)
-
-========= ./books/language/book/types/quantities/.test/types_quantity_operators.log =========
-
-﻿
--- Test --
-        Test name: types_quantity_operators
-  Expected result: todo
-      Source file: ../books/language/src/types/quantities/operators.md:13
-        Test path: ../books/language/src/types/quantities/.test
-
--- Code --
-
-  13:   use std::debug::assert_eq;
-  14:   
-  15:   assert_eq([ 6cm * 2cm, 12cm²  ]);
-  16:   assert_eq([ 6cm / 2cm, 3 ]);
-  17:   assert_eq([ 6cm + 2cm, 80mm ]);
-  18:   assert_eq([ 6cm - 2cm, 0.04m ]);
-
--- No Output --
--- Errors --
-  × error: 16:11: Array elements have different types: [Scalar, Integer]
-    ╭─[../books/language/src/types/quantities/operators.md:16:11]
- 15 │ assert_eq([ 6cm * 2cm, 12cm²  ]);
- 16 │ assert_eq([ 6cm / 2cm, 3 ]);
-    ·           ────────┬───────
-    ·                   ╰── Array elements have different types: [Scalar, Integer]
- 17 │ assert_eq([ 6cm + 2cm, 80mm ]);
-    ╰────
-  × error: 16:11: Assertion failed: Invalid: <NO VALUE>
-    ╭─[../books/language/src/types/quantities/operators.md:16:11]
- 15 │ assert_eq([ 6cm * 2cm, 12cm²  ]);
- 16 │ assert_eq([ 6cm / 2cm, 3 ]);
-    ·           ────────┬───────
-    ·                   ╰── Assertion failed: Invalid: <NO VALUE>
- 17 │ assert_eq([ 6cm + 2cm, 80mm ]);
-    ╰────
-Unexpected error(s) which did occur in line(s): 16
--- Test Result --
-TODO
 
 ========= ./books/language/book/types/quantities/.test/types_quantity_volume_units.log =========
 
@@ -3992,7 +3964,7 @@ FAILS AS EXPECTED
 ﻿
 -- Test --
         Test name: unnamed_tuple_ambiguous
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/types/collections/tuples/README.md:64
         Test path: ../books/language/src/types/collections/tuples/.test
 
@@ -4001,10 +3973,16 @@ FAILS AS EXPECTED
   64:   (10cm, 10mm, 1m);  // error: ambiguous type Length
 
 -- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 64
+-- Errors --
+  × error: 64:1: Ambiguous type 'Length' in tuple
+    ╭─[../books/language/src/types/collections/tuples/README.md:64:1]
+ 64 │ (10cm, 10mm, 1m);  // error: ambiguous type Length
+    · ────────┬───────
+    ·         ╰─┤ Some unnamed values in this tuple share the same type 'Length'.
+    ·           │ Maybe check the units or use identifiers in this tuple.
+    ╰────
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED
 
 ========= ./books/language/book/types/.test/types_def_vs_decl.log =========
 
@@ -4159,7 +4137,7 @@ OK (BUT WARNINGS)
     ╭─[../books/language/src/types/README.md:40:10]
  40 │ x: Length;         // parse_error
     ·          ┬
-    ·          ╰── Expected '='
+    ·          ╰── unexpected ;
     ╰────
 
 -- Test Result --
@@ -4215,17 +4193,17 @@ OK
     ·       ╰── Statement not allowed within workbenches
  56 │ init(l:Length) {} } K();
     ╰────
-  × error: 55:3: Return statement is not allowed within sketch
+  × error: 55:3: Return statement is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/pre-init.md:55:3]
  54 │ sketch K() { 
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  55 │   return 1; // error
     ·   ────┬───
     ·       ╰── This return statement is not allowed
  56 │ init(l:Length) {} } K();
     ╰────
-  help: return statement is only allowed within function definition
+  help: return statement is only allowed within function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -4257,7 +4235,7 @@ FAILS AS EXPECTED
     ·       ╰── This return statement is not allowed
  56 │ }
     ╰────
-  help: return statement is only allowed within function definition
+  help: return statement is only allowed within function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -4279,14 +4257,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 7:10: sketch statement not available here
-   ╭─[../books/tests/src/statement_usage/body.md:7:10]
- 6 │ {
- 7 │   sketch F() {} // error
-   ·          ┬
-   ·          ╰── sketch statement not available here
- 8 │ }
+  × error: 7:10: Workbench is not allowed within expression statement
+   ╭─[../books/tests/src/statement_usage/body.md:7:3]
+ 6 │ ╭─▶ {
+ 7 │ │     sketch F() {} // error
+   · │     ───┬──
+   · │        ╰── This workbench is not allowed
+ 8 │ ├─▶ }
+   · ╰──── Within this expression statement
    ╰────
+  help: workbench is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4366,17 +4347,17 @@ OK (BUT WARNINGS)
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Use statement is not allowed within sketch
+  × error: 47:3: Use statement is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/pre-init.md:47:3]
  46 │ sketch K() { 
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  47 │   pub use std; // error
     ·   ─────┬─────
     ·        ╰── This use statement is not allowed
  48 │ init(l:Length) {} } K();
     ╰────
-  help: use statement is only allowed within source root or module definition
+  help: use statement is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -4398,22 +4379,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 103:3: Assignment statement not available here
+  × error: 103:3: Property assignment is not allowed within expression statement
      ╭─[../books/tests/src/statement_usage/body.md:103:3]
- 102 │ {
- 103 │   prop a = 1; // error
-     ·   ─────┬────
-     ·        ╰── Assignment statement not available here
- 104 │ }
+ 102 │ ╭─▶ {
+ 103 │ │     prop a = 1; // error
+     · │     ─────┬────
+     · │          ╰── This property assignment is not allowed
+ 104 │ ├─▶ }
+     · ╰──── Within this expression statement
      ╰────
-  × error: 103:3: Missing model in workbench
-     ╭─[../books/tests/src/statement_usage/body.md:103:3]
- 102 │ {
- 103 │   prop a = 1; // error
-     ·   ─────┬────
-     ·        ╰── Missing model in workbench
- 104 │ }
-     ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4428,27 +4404,24 @@ FAILS AS EXPECTED
 
 -- Code --
 
- 110:   mod k { // warning
+ 110:   mod k {
  111:     __builtin::geo2d::Circle(radius=1mm); // error
  112:   }
 
 -- No Output --
 -- Errors --
-  × error: 111:3: Expression statement not available here
+  × error: 111:3: Expression statement is not allowed within module
      ╭─[../books/tests/src/statement_usage/module.md:111:3]
- 110 │ mod k { // warning
+ 110 │ mod k {
+     · ─┬─
+     ·  ╰── Within this module
  111 │   __builtin::geo2d::Circle(radius=1mm); // error
      ·   ──────────────────┬─────────────────
-     ·                     ╰── Expression statement not available here
+     ·                     ╰── This expression statement is not allowed
  112 │ }
      ╰────
-  ⚠ warning: 110:5: Unused global symbol k.
-     ╭─[../books/tests/src/statement_usage/module.md:110:5]
- 110 │ mod k { // warning
-     ·     ┬
-     ·     ╰── Unused global symbol k.
- 111 │   __builtin::geo2d::Circle(radius=1mm); // error
-     ╰────
+  help: expression statement is only allowed within source file, workbench, function, if statement, statement list or expression
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4502,17 +4475,17 @@ OK
     ·       ╰── Statement not allowed within workbenches
  80 │ init(l:Length) {} } K();
     ╰────
-  × error: 79:3: Public constant assigment is not allowed within sketch
+  × error: 79:3: Public constant assignment is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/pre-init.md:79:3]
  78 │ sketch K() { 
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  79 │   pub p = 1;  // error
     ·   ────┬────
-    ·       ╰── This public constant assigment is not allowed
+    ·       ╰── This public constant assignment is not allowed
  80 │ init(l:Length) {} } K();
     ╰────
-  help: public constant assigment is only allowed within source root or module definition
+  help: public constant assignment is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -4534,14 +4507,18 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 63:3: If statement not available here
+  × error: 63:3: If statement is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:63:3]
  62 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  63 │   if std::math::PI == l { } // error
     ·   ─────────────────┬────────────────
-    ·                    ╰── If statement not available here
+    ·                    ╰── This if statement is not allowed
  64 │ } } K(1cm);
     ╰────
+  help: if statement is only allowed within source file, workbench or function
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4562,17 +4539,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Use statement is not allowed within sketch
+  × error: 47:3: Use statement is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/workbench.md:47:3]
  46 │ sketch K() {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  47 │   pub use std; // error
     ·   ─────┬─────
     ·        ╰── This use statement is not allowed
  48 │ } K();
     ╰────
-  help: use statement is only allowed within source root or module definition
+  help: use statement is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -4588,27 +4565,24 @@ FAILS AS EXPECTED
 
 -- Code --
 
-  46:   sketch K() { init(l:Length) { // warning
+  46:   sketch K() { init(l:Length) {
   47:     pub use std; // error
   48:   } } K(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Public use statement not available here
+  × error: 47:3: Use statement is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:47:3]
- 46 │ sketch K() { init(l:Length) { // warning
+ 46 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  47 │   pub use std; // error
     ·   ─────┬─────
-    ·        ╰── Public use statement not available here
+    ·        ╰── This use statement is not allowed
  48 │ } } K(1cm);
     ╰────
-  ⚠ warning: 46:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:46:19]
- 46 │ sketch K() { init(l:Length) { // warning
-    ·                   ┬
-    ·                   ╰── Unused local l.
- 47 │   pub use std; // error
-    ╰────
+  help: use statement is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4624,7 +4598,7 @@ FAILS AS EXPECTED
 -- Code --
 
    6:   sketch K() { 
-   7:     sketch F() {} K();  // error
+   7:     sketch F() {}  // error
    8:   init(l:Length) {} } K();
 
 -- No Output --
@@ -4632,34 +4606,22 @@ FAILS AS EXPECTED
   × error: 7:10: Statement not allowed within workbenches
    ╭─[../books/tests/src/statement_usage/pre-init.md:7:10]
  6 │ sketch K() { 
- 7 │   sketch F() {} K();  // error
+ 7 │   sketch F() {}  // error
    ·          ┬
    ·          ╰── Statement not allowed within workbenches
  8 │ init(l:Length) {} } K();
    ╰────
-  × error: 7:17: Statement not allowed prior initializers
-   ╭─[../books/tests/src/statement_usage/pre-init.md:7:17]
- 6 │ sketch K() { 
-   ·        ┬
-   ·        ╰── Inside this sketch
- 7 │   sketch F() {} K();  // error
-   ·                 ─┬─
-   ·                  ╰── This statement is not allowed
- 8 │ init(l:Length) {} } K();
-   · ──┬─
-   ·   ╰── Before this initializer
-   ╰────
-  × error: 7:10: Sketch is not allowed within sketch
+  × error: 7:10: Workbench is not allowed within workbench
    ╭─[../books/tests/src/statement_usage/pre-init.md:7:3]
  6 │ sketch K() { 
    · ───┬──
-   ·    ╰── Within this sketch
- 7 │   sketch F() {} K();  // error
+   ·    ╰── Within this workbench
+ 7 │   sketch F() {}  // error
    ·   ───┬──
-   ·      ╰── This sketch is not allowed
+   ·      ╰── This workbench is not allowed
  8 │ init(l:Length) {} } K();
    ╰────
-  help: sketch is only allowed within source root or module definition
+  help: workbench is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -4707,22 +4669,18 @@ OK (BUT WARNINGS)
 
 -- No Output --
 -- Errors --
-  × error: 71:3: Assignment statement not available here
+  × error: 71:3: Constant assignment is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:71:3]
  70 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  71 │   const B = l; // error
     ·   ─────┬─────
-    ·        ╰── Assignment statement not available here
+    ·        ╰── This constant assignment is not allowed
  72 │ } } K(1cm);
     ╰────
-  × error: 71:3: Symbol B not found.
-    ╭─[../books/tests/src/statement_usage/init.md:71:3]
- 70 │ sketch K() { init(l:Length) {
- 71 │   const B = l; // error
-    ·   ─────┬─────
-    ·        ╰── Symbol B not found.
- 72 │ } } K(1cm);
-    ╰────
+  help: constant assignment is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4743,17 +4701,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init definition is not allowed within module
+  × error: 31:3: Initializer is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:31:3]
  30 │ mod k {
     · ─┬─
     ·  ╰── Within this module
  31 │   init() { }  // error
     ·   ──┬─
-    ·     ╰── This init definition is not allowed
+    ·     ╰── This initializer is not allowed
  32 │ }
     ╰────
-  help: init definition is only allowed within workbench definition
+  help: initializer is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -4769,27 +4727,24 @@ FAILS AS EXPECTED
 
 -- Code --
 
- 102:   mod k {  // warning
+ 102:   mod k {
  103:     1 + 2; // error
  104:   }
 
 -- No Output --
 -- Errors --
-  × error: 103:3: Expression statement not available here
+  × error: 103:3: Expression statement is not allowed within module
      ╭─[../books/tests/src/statement_usage/module.md:103:3]
- 102 │ mod k {  // warning
+ 102 │ mod k {
+     · ─┬─
+     ·  ╰── Within this module
  103 │   1 + 2; // error
      ·   ──┬──
-     ·     ╰── Expression statement not available here
+     ·     ╰── This expression statement is not allowed
  104 │ }
      ╰────
-  ⚠ warning: 102:5: Unused global symbol k.
-     ╭─[../books/tests/src/statement_usage/module.md:102:5]
- 102 │ mod k {  // warning
-     ·     ┬
-     ·     ╰── Unused global symbol k.
- 103 │   1 + 2; // error
-     ╰────
+  help: expression statement is only allowed within source file, workbench, function, if statement, statement list or expression
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4810,14 +4765,6 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 103:3: Expression statement not available here
-     ╭─[../books/tests/src/statement_usage/init.md:103:3]
- 102 │ sketch K() { init(l:Length) {
- 103 │   l + 2; // error
-     ·   ──┬──
-     ·     ╰── Expression statement not available here
- 104 │ } } K(1cm);
-     ╰────
   × error: 103:3: Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
   ╰─▶ Invalid operation: `10mm` + `2` (try `2` + `10mm`)
      ╭─[../books/tests/src/statement_usage/init.md:103:3]
@@ -4882,14 +4829,17 @@ OK (BUT WARNINGS)
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Module statement not available here
-    ╭─[../books/tests/src/statement_usage/body.md:15:7]
- 14 │ {
- 15 │   mod m {} // error
-    ·       ┬
-    ·       ╰── Module statement not available here
- 16 │ }
+  × error: 15:7: Module is not allowed within expression statement
+    ╭─[../books/tests/src/statement_usage/body.md:15:3]
+ 14 │ ╭─▶ {
+ 15 │ │     mod m {} // error
+    · │     ─┬─
+    · │      ╰── This module is not allowed
+ 16 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
+  help: module is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -4940,14 +4890,18 @@ OK (BUT WARNINGS)
 
 -- No Output --
 -- Errors --
-  × error: 55:3: Return statement not available here
+  × error: 55:3: Return statement is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:55:3]
  54 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  55 │   return l; // error
     ·   ────┬───
-    ·       ╰── Return statement not available here
+    ·       ╰── This return statement is not allowed
  56 │ } } K(1cm);
     ╰────
+  help: return statement is only allowed within function
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5023,8 +4977,8 @@ OK
   × error: 63:3: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:63:3]
  62 │ sketch K() { 
-    ·        ┬
-    ·        ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  63 │   if std::math::PI == 3 { } // error
     ·   ─────────────────┬────────────────
     ·                    ╰── This statement is not allowed
@@ -5047,27 +5001,24 @@ FAILS AS EXPECTED
 
 -- Code --
 
-   6:   sketch K() { init(l:Length) { // warning
+   6:   sketch K() { init(l:Length) {
    7:     sketch F() {} // error
    8:   } } K(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 7:10: sketch statement not available here
-   ╭─[../books/tests/src/statement_usage/init.md:7:10]
- 6 │ sketch K() { init(l:Length) { // warning
+  × error: 7:10: Workbench is not allowed within initializer
+   ╭─[../books/tests/src/statement_usage/init.md:7:3]
+ 6 │ sketch K() { init(l:Length) {
+   ·              ──┬─
+   ·                ╰── Within this initializer
  7 │   sketch F() {} // error
-   ·          ┬
-   ·          ╰── sketch statement not available here
+   ·   ───┬──
+   ·      ╰── This workbench is not allowed
  8 │ } } K(1cm);
    ╰────
-  ⚠ warning: 6:19: Unused local l.
-   ╭─[../books/tests/src/statement_usage/init.md:6:19]
- 6 │ sketch K() { init(l:Length) { // warning
-   ·                   ┬
-   ·                   ╰── Unused local l.
- 7 │   sketch F() {} // error
-   ╰────
+  help: workbench is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5088,17 +5039,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 87:3: Assigment is not allowed within module
+  × error: 87:3: Value assignment is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:87:3]
  86 │ mod k {
     · ─┬─
     ·  ╰── Within this module
  87 │   a = 1; // error
     ·   ──┬──
-    ·     ╰── This assigment is not allowed
+    ·     ╰── This value assignment is not allowed
  88 │ }
     ╰────
-  help: assigment is only allowed within source root, module definition, workbench definition or function definition
+  help: value assignment is only allowed within source file, module, workbench or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5120,22 +5071,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 87:3: Assignment statement not available here
+  × error: 87:3: Public constant assignment is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:87:3]
- 86 │ {
- 87 │   pub p = 1; // error
-    ·   ────┬────
-    ·       ╰── Assignment statement not available here
- 88 │ }
+ 86 │ ╭─▶ {
+ 87 │ │     pub p = 1; // error
+    · │     ────┬────
+    · │         ╰── This public constant assignment is not allowed
+ 88 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
-  × error: 87:3: Symbol p not found.
-    ╭─[../books/tests/src/statement_usage/body.md:87:3]
- 86 │ {
- 87 │   pub p = 1; // error
-    ·   ────┬────
-    ·       ╰── Symbol p not found.
- 88 │ }
-    ╰────
+  help: public constant assignment is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5166,7 +5112,7 @@ FAILS AS EXPECTED
     ·        ╰── This use statement is not allowed
  48 │ } f();
     ╰────
-  help: use statement is only allowed within source root or module definition
+  help: use statement is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5188,14 +5134,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Public use statement not available here
+  × error: 47:3: Use statement is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:47:3]
- 46 │ {
- 47 │   pub use std; // error
-    ·   ─────┬─────
-    ·        ╰── Public use statement not available here
- 48 │ }
+ 46 │ ╭─▶ {
+ 47 │ │     pub use std; // error
+    · │     ─────┬─────
+    · │          ╰── This use statement is not allowed
+ 48 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
+  help: use statement is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5219,8 +5168,8 @@ FAILS AS EXPECTED
   × error: 103:3: Statement not allowed prior initializers
      ╭─[../books/tests/src/statement_usage/pre-init.md:103:3]
  102 │ sketch K() { 
-     ·        ┬
-     ·        ╰── Inside this sketch
+     · ───┬──
+     ·    ╰── Inside this workbench
  103 │   1 + 2; // error
      ·   ──┬──
      ·     ╰── This statement is not allowed
@@ -5249,17 +5198,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Property assigment is not allowed within function
+  × error: 95:3: Property assignment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:95:3]
  94 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  95 │   prop a = 1; // error
     ·   ─────┬────
-    ·        ╰── This property assigment is not allowed
+    ·        ╰── This property assignment is not allowed
  96 │ } f();
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5289,17 +5238,17 @@ FAILS AS EXPECTED
     ·       ╰── Statement not allowed within workbenches
  16 │ init(l:Length) {} } K();
     ╰────
-  × error: 15:7: Module definition is not allowed within sketch
+  × error: 15:7: Module is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/pre-init.md:15:3]
  14 │ sketch K() { 
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  15 │   mod m {}   // error
     ·   ─┬─
-    ·    ╰── This module definition is not allowed
+    ·    ╰── This module is not allowed
  16 │ init(l:Length) {} } K();
     ╰────
-  help: module definition is only allowed within source root or module
+  help: module is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5321,17 +5270,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 103:3: Public constant assigment is not allowed within sketch
+  × error: 103:3: Public constant assignment is not allowed within workbench
      ╭─[../books/tests/src/statement_usage/workbench.md:103:3]
  102 │ sketch K() {
      · ───┬──
-     ·    ╰── Within this sketch
+     ·    ╰── Within this workbench
  103 │   pub a = 1; // error
      ·   ────┬────
-     ·       ╰── This public constant assigment is not allowed
+     ·       ╰── This public constant assignment is not allowed
  104 │ } K();
      ╰────
-  help: public constant assigment is only allowed within source root or module definition
+  help: public constant assignment is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5356,8 +5305,8 @@ FAILS AS EXPECTED
   × error: 23:6: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:23:6]
  22 │ sketch K() { 
-    ·        ┬
-    ·        ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  23 │   fn f() {} f();   // error
     ·      ┬
     ·      ╰── This statement is not allowed
@@ -5368,8 +5317,8 @@ FAILS AS EXPECTED
   × error: 23:13: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:23:13]
  22 │ sketch K() { 
-    ·        ┬
-    ·        ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  23 │   fn f() {} f();   // error
     ·             ─┬─
     ·              ╰── This statement is not allowed
@@ -5398,17 +5347,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 7:10: Sketch is not allowed within sketch
+  × error: 7:10: Workbench is not allowed within workbench
    ╭─[../books/tests/src/statement_usage/workbench.md:7:3]
  6 │ sketch K() {
    · ───┬──
-   ·    ╰── Within this sketch
+   ·    ╰── Within this workbench
  7 │   sketch F() {} F(); // error
    ·   ───┬──
-   ·      ╰── This sketch is not allowed
+   ·      ╰── This workbench is not allowed
  8 │ } K();
    ╰────
-  help: sketch is only allowed within source root or module definition
+  help: workbench is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5430,14 +5379,18 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Assignment statement not available here
+  × error: 95:3: Property assignment is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:95:3]
  94 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  95 │   prop a = l; // error
     ·   ─────┬────
-    ·        ╰── Assignment statement not available here
+    ·        ╰── This property assignment is not allowed
  96 │ } } K(1cm);
     ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5456,13 +5409,13 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 72:1: Property assigment is not allowed at source root
+  × error: 72:1: Property assignment is not allowed at source root
     ╭─[../books/tests/src/statement_usage/source.md:72:1]
  72 │ prop a = 1;  // error
     · ─────┬────
-    ·      ╰── This property assigment is not allowed here
+    ·      ╰── This property assignment is not allowed here
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5494,7 +5447,7 @@ FAILS AS EXPECTED
     ·                                      ╰── This if statement is not allowed
  64 │ }
     ╰────
-  help: if statement is only allowed within source root, module definition, workbench definition or function definition
+  help: if statement is only allowed within source file, workbench or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5516,17 +5469,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 7:10: Sketch is not allowed within function
+  × error: 7:10: Workbench is not allowed within function
    ╭─[../books/tests/src/statement_usage/function.md:7:3]
  6 │ fn f() {
    · ─┬
    ·  ╰── Within this function
  7 │   sketch S() {} // error
    ·   ───┬──
-   ·      ╰── This sketch is not allowed
+   ·      ╰── This workbench is not allowed
  8 │ } f();
    ╰────
-  help: sketch is only allowed within source root or module definition
+  help: workbench is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5551,8 +5504,8 @@ FAILS AS EXPECTED
   × error: 87:3: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:87:3]
  86 │ sketch K() { 
-    ·        ┬
-    ·        ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  87 │   a = 1; // error
     ·   ──┬──
     ·     ╰── This statement is not allowed
@@ -5561,34 +5514,6 @@ FAILS AS EXPECTED
     ·   ╰── Before this initializer
     ╰────
 Evaluation aborted because of prior resolve errors!
--- Test Result --
-FAILS AS EXPECTED
-
-========= ./books/tests/book/statement_usage/.test/init_expression_model.log =========
-
-﻿
--- Test --
-        Test name: init_expression_model
-  Expected result: fail
-      Source file: ../books/tests/src/statement_usage/init.md:110
-        Test path: ../books/tests/src/statement_usage/.test
-
--- Code --
-
- 110:   sketch K() { init(l:Length) {
- 111:     __builtin::geo2d::Circle(radius=l); // error
- 112:   } } K(1cm);
-
--- No Output --
--- Errors --
-  × error: 111:3: Expression statement not available here
-     ╭─[../books/tests/src/statement_usage/init.md:111:3]
- 110 │ sketch K() { init(l:Length) {
- 111 │   __builtin::geo2d::Circle(radius=l); // error
-     ·   ─────────────────┬────────────────
-     ·                    ╰── Expression statement not available here
- 112 │ } } K(1cm);
-     ╰────
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5609,14 +5534,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init statement not available here
+  × error: 31:3: Initializer is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:31:3]
- 30 │ {
- 31 │   init() {} // error
-    ·   ─────────┬────────
-    ·            ╰── Init statement not available here
- 32 │ }
+ 30 │ ╭─▶ {
+ 31 │ │     init() {} // error
+    · │     ──┬─
+    · │       ╰── This initializer is not allowed
+ 32 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
+  help: initializer is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5637,22 +5565,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 79:3: Assignment statement not available here
+  × error: 79:3: Constant assignment is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:79:3]
- 78 │ {
- 79 │   const B = 1; // error
-    ·   ─────┬─────
-    ·        ╰── Assignment statement not available here
- 80 │ }
+ 78 │ ╭─▶ {
+ 79 │ │     const B = 1; // error
+    · │     ─────┬─────
+    · │          ╰── This constant assignment is not allowed
+ 80 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
-  × error: 79:3: Symbol B not found.
-    ╭─[../books/tests/src/statement_usage/body.md:79:3]
- 78 │ {
- 79 │   const B = 1; // error
-    ·   ─────┬─────
-    ·        ╰── Symbol B not found.
- 80 │ }
-    ╰────
+  help: constant assignment is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -5673,17 +5596,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Module definition is not allowed within function
+  × error: 15:7: Module is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:15:3]
  14 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  15 │   mod m {} // error
     ·   ─┬─
-    ·    ╰── This module definition is not allowed
+    ·    ╰── This module is not allowed
  16 │ } f();
     ╰────
-  help: module definition is only allowed within source root or module
+  help: module is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5729,13 +5652,13 @@ OK
 
 -- No Output --
 -- Errors --
-  × error: 24:1: Init definition is not allowed at source root
+  × error: 24:1: Initializer is not allowed at source root
     ╭─[../books/tests/src/statement_usage/source.md:24:1]
  24 │ init() {} // error
     · ──┬─
-    ·   ╰── This init definition is not allowed here
+    ·   ╰── This initializer is not allowed here
     ╰────
-  help: init definition is only allowed within workbench definition
+  help: initializer is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5819,17 +5742,17 @@ OK
 
 -- No Output --
 -- Errors --
-  × error: 23:6: Function definition is not allowed within function
-    ╭─[../books/tests/src/statement_usage/function.md:23:6]
+  × error: 23:6: Function is not allowed within function
+    ╭─[../books/tests/src/statement_usage/function.md:23:3]
  22 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  23 │   fn f() {} // error
-    ·      ┬
-    ·      ╰── This function definition is not allowed
+    ·   ─┬
+    ·    ╰── This function is not allowed
  24 │ } f();
     ╰────
-  help: function definition is only allowed within source root, module definition or workbench definition
+  help: function is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5885,17 +5808,17 @@ OK (BUT WARNINGS)
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Module definition is not allowed within sketch
+  × error: 15:7: Module is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/workbench.md:15:3]
  14 │ sketch K() {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  15 │   mod m {} // error
     ·   ─┬─
-    ·    ╰── This module definition is not allowed
+    ·    ╰── This module is not allowed
  16 │ } K();
     ╰────
-  help: module definition is only allowed within source root or module
+  help: module is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5917,17 +5840,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 71:3: Constant assigment is not allowed within function
+  × error: 71:3: Constant assignment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:71:3]
  70 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  71 │   const B = 1; // error
     ·   ─────┬─────
-    ·        ╰── This constant assigment is not allowed
+    ·        ╰── This constant assignment is not allowed
  72 │ } f();
     ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
+  help: constant assignment is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -5952,8 +5875,8 @@ FAILS AS EXPECTED
   × error: 111:3: Statement not allowed prior initializers
      ╭─[../books/tests/src/statement_usage/pre-init.md:111:3]
  110 │ sketch K() { 
-     ·        ┬
-     ·        ╰── Inside this sketch
+     · ───┬──
+     ·    ╰── Inside this workbench
  111 │   __builtin::geo2d::Circle(radius=1mm); // error
      ·   ──────────────────┬─────────────────
      ·                     ╰── This statement is not allowed
@@ -6048,7 +5971,7 @@ OK
     · ────┬───
     ·     ╰── This return statement is not allowed here
     ╰────
-  help: return statement is only allowed within function definition
+  help: return statement is only allowed within function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -6070,22 +5993,18 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 79:3: Assignment statement not available here
+  × error: 79:3: Public constant assignment is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:79:3]
  78 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  79 │   pub a = l; // error
     ·   ────┬────
-    ·       ╰── Assignment statement not available here
+    ·       ╰── This public constant assignment is not allowed
  80 │ } } K(1cm);
     ╰────
-  × error: 79:3: Symbol a not found.
-    ╭─[../books/tests/src/statement_usage/init.md:79:3]
- 78 │ sketch K() { init(l:Length) {
- 79 │   pub a = l; // error
-    ·   ────┬────
-    ·       ╰── Symbol a not found.
- 80 │ } } K(1cm);
-    ╰────
+  help: public constant assignment is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -6206,8 +6125,8 @@ OK
   × error: 95:3: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:95:3]
  94 │ sketch K() {
-    ·        ┬
-    ·        ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  95 │   prop a = 1; // error
     ·   ─────┬────
     ·        ╰── This statement is not allowed
@@ -6312,17 +6231,17 @@ OK
 
 -- No Output --
 -- Errors --
-  × error: 79:3: Public constant assigment is not allowed within function
+  × error: 79:3: Public constant assignment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:79:3]
  78 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  79 │   pub p = 1; // error
     ·   ────┬────
-    ·       ╰── This public constant assigment is not allowed
+    ·       ╰── This public constant assignment is not allowed
  80 │ } f();
     ╰────
-  help: public constant assigment is only allowed within source root or module definition
+  help: public constant assignment is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -6344,17 +6263,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 55:3: Return statement is not allowed within sketch
+  × error: 55:3: Return statement is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/workbench.md:55:3]
  54 │ sketch K() {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  55 │   return 1; // error
     ·   ────┬───
     ·       ╰── This return statement is not allowed
  56 │ } K();
     ╰────
-  help: return statement is only allowed within function definition
+  help: return statement is only allowed within function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -6376,17 +6295,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Property assigment is not allowed within module
+  × error: 95:3: Property assignment is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:95:3]
  94 │ mod k {
     · ─┬─
     ·  ╰── Within this module
  95 │   prop a = 1;  // error
     ·   ─────┬────
-    ·        ╰── This property assigment is not allowed
+    ·        ╰── This property assignment is not allowed
  96 │ }
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -6408,22 +6327,17 @@ FAILS AS EXPECTED
 
 -- No Output --
 -- Errors --
-  × error: 23:6: Function statement not available here
-    ╭─[../books/tests/src/statement_usage/body.md:23:6]
- 22 │ {
- 23 │   fn f() {} f(); // error
-    ·      ┬
-    ·      ╰── Function statement not available here
- 24 │ }
+  × error: 23:6: Function is not allowed within expression statement
+    ╭─[../books/tests/src/statement_usage/body.md:23:3]
+ 22 │ ╭─▶ {
+ 23 │ │     fn f() {} f(); // error
+    · │     ─┬
+    · │      ╰── This function is not allowed
+ 24 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
-  × error: 23:13: Symbol f not found.
-    ╭─[../books/tests/src/statement_usage/body.md:23:13]
- 22 │ {
- 23 │   fn f() {} f(); // error
-    ·             ─┬─
-    ·              ╰── Symbol f not found.
- 24 │ }
-    ╰────
+  help: function is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -6438,27 +6352,24 @@ FAILS AS EXPECTED
 
 -- Code --
 
-  22:   sketch K() { init(l:Length) { // warning
+  22:   sketch K() { init(l:Length) {
   23:     fn f() {} // error
   24:   } } K(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 23:6: Function statement not available here
-    ╭─[../books/tests/src/statement_usage/init.md:23:6]
- 22 │ sketch K() { init(l:Length) { // warning
+  × error: 23:6: Function is not allowed within initializer
+    ╭─[../books/tests/src/statement_usage/init.md:23:3]
+ 22 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  23 │   fn f() {} // error
-    ·      ┬
-    ·      ╰── Function statement not available here
+    ·   ─┬
+    ·    ╰── This function is not allowed
  24 │ } } K(1cm);
     ╰────
-  ⚠ warning: 22:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:22:19]
- 22 │ sketch K() { init(l:Length) { // warning
-    ·                   ┬
-    ·                   ╰── Unused local l.
- 23 │   fn f() {} // error
-    ╰────
+  help: function is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -6473,27 +6384,24 @@ FAILS AS EXPECTED
 
 -- Code --
 
-  14:   sketch K() { init(l:Length) { // warning
+  14:   sketch K() { init(l:Length) {
   15:     mod m {} // error
   16:   } } K(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Module statement not available here
-    ╭─[../books/tests/src/statement_usage/init.md:15:7]
- 14 │ sketch K() { init(l:Length) { // warning
+  × error: 15:7: Module is not allowed within initializer
+    ╭─[../books/tests/src/statement_usage/init.md:15:3]
+ 14 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  15 │   mod m {} // error
-    ·       ┬
-    ·       ╰── Module statement not available here
+    ·   ─┬─
+    ·    ╰── This module is not allowed
  16 │ } } K(1cm);
     ╰────
-  ⚠ warning: 14:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:14:19]
- 14 │ sketch K() { init(l:Length) { // warning
-    ·                   ┬
-    ·                   ╰── Unused local l.
- 15 │   mod m {} // error
-    ╰────
+  help: module is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -6508,27 +6416,24 @@ FAILS AS EXPECTED
 
 -- Code --
 
-  30:   sketch K() { init(l:Length) { // warning
+  30:   sketch K() { init(l:Length) {
   31:     init() {} // error
   32:   } } K(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init statement not available here
+  × error: 31:3: Initializer is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:31:3]
- 30 │ sketch K() { init(l:Length) { // warning
+ 30 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  31 │   init() {} // error
-    ·   ─────────┬────────
-    ·            ╰── Init statement not available here
+    ·   ──┬─
+    ·     ╰── This initializer is not allowed
  32 │ } } K(1cm);
     ╰────
-  ⚠ warning: 30:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:30:19]
- 30 │ sketch K() { init(l:Length) { // warning
-    ·                   ┬
-    ·                   ╰── Unused local l.
- 31 │   init() {} // error
-    ╰────
+  help: initializer is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -6578,17 +6483,17 @@ OK (BUT WARNINGS)
 
 -- No Output --
 -- Errors --
-  × error: 31:3: Init definition is not allowed within function
+  × error: 31:3: Initializer is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:31:3]
  30 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  31 │   init() {} // error
     ·   ──┬─
-    ·     ╰── This init definition is not allowed
+    ·     ╰── This initializer is not allowed
  32 │ } f();
     ╰────
-  help: init definition is only allowed within workbench definition
+  help: initializer is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
@@ -6695,14 +6600,17 @@ OK
 
 -- No Output --
 -- Errors --
-  × error: 55:3: Return statement not available here
+  × error: 55:3: Return statement is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:55:3]
- 54 │ {
- 55 │   return 1; // error
-    ·   ────┬───
-    ·       ╰── Return statement not available here
- 56 │ }
+ 54 │ ╭─▶ {
+ 55 │ │     return 1; // error
+    · │     ────┬───
+    · │         ╰── This return statement is not allowed
+ 56 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
+  help: return statement is only allowed within function
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -6755,61 +6663,59 @@ FAILS AS EXPECTED
   53:                   assert_eq([sketch_local, 6]);
   54:                   assert_eq([alt_param, 7]);
   55:                   assert_eq([init_local, 8]);
-  56:   
-  57:                   prop param = 5; // needed to compile
-  58:               }
-  59:   
-  60:               // property of sketch
-  61:               prop property = 9;
-  62:   
-  63:               // post init code
-  64:               assert_eq([super::value,1]);
-  65:               assert_eq([super::pub_value, 2]);
-  66:               assert_eq([value, 3]);
-  67:               assert_eq([pub_value, 4]);
-  68:               assert_eq([param, 5]);
-  69:               assert_eq([sketch_local, 6]);
-  70:               assert_invalid(alt_param);
-  71:               assert_invalid(init_local);
-  72:               assert_eq([property, 9]);
-  73:   
-  74:               function();
-  75:           }
-  76:   
-  77:           fn function(fn_param = 10) {
-  78:               assert_eq([super::value, 1]);
-  79:               assert_eq([super::pub_value, 2]);
-  80:               assert_eq([value, 3]);
-  81:               assert_eq([pub_value, 4]);
-  82:               assert_invalid(param);
-  83:               // assert_invalid(Workbench);
-  84:               assert_eq([fn_param, 10]);
-  85:   
-  86:               return 0;
-  87:           }
-  88:       }
-  89:   
-  90:       pub fn function(fn_param = 11) {
-  91:           assert_eq([value, 1]);
-  92:           assert_eq([pub_value, 2]);
-  93:           assert_invalid(pub_sub_module::value);
-  94:           assert_eq([pub_sub_module::pub_value, 4]);
-  95:           assert_invalid(Workbench);
-  96:           assert_invalid(PrivateWorkbench);
-  97:           assert_eq([fn_param, 11]);
-  98:           
-  99:           return 0;
- 100:       }
- 101:   }
- 102:   
- 103:   // source file code 
- 104:   assert_invalid(module::value);
- 105:   assert_eq([module::pub_value, 2]);
- 106:   assert_invalid(module::pub_sub_module::value);
- 107:   assert_eq([module::pub_sub_module::pub_value, 4]);
- 108:   assert_eq([module::pub_sub_module::Workbench(p=5).property, 9]);
- 109:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
- 110:   assert_eq([module::function(), 0]);
+  56:               }
+  57:   
+  58:               // property of sketch
+  59:               prop property = 9;
+  60:   
+  61:               // post init code
+  62:               assert_eq([super::value,1]);
+  63:               assert_eq([super::pub_value, 2]);
+  64:               assert_eq([value, 3]);
+  65:               assert_eq([pub_value, 4]);
+  66:               assert_eq([param, 5]);
+  67:               assert_eq([sketch_local, 6]);
+  68:               assert_invalid(alt_param);
+  69:               assert_invalid(init_local);
+  70:               assert_eq([property, 9]);
+  71:   
+  72:               function();
+  73:           }
+  74:   
+  75:           fn function(fn_param = 10) {
+  76:               assert_eq([super::value, 1]);
+  77:               assert_eq([super::pub_value, 2]);
+  78:               assert_eq([value, 3]);
+  79:               assert_eq([pub_value, 4]);
+  80:               assert_invalid(param);
+  81:               // assert_invalid(Workbench);
+  82:               assert_eq([fn_param, 10]);
+  83:   
+  84:               return 0;
+  85:           }
+  86:       }
+  87:   
+  88:       pub fn function(fn_param = 11) {
+  89:           assert_eq([value, 1]);
+  90:           assert_eq([pub_value, 2]);
+  91:           assert_invalid(pub_sub_module::value);
+  92:           assert_eq([pub_sub_module::pub_value, 4]);
+  93:           assert_invalid(Workbench);
+  94:           assert_invalid(PrivateWorkbench);
+  95:           assert_eq([fn_param, 11]);
+  96:           
+  97:           return 0;
+  98:       }
+  99:   }
+ 100:   
+ 101:   // source file code 
+ 102:   assert_invalid(module::value);
+ 103:   assert_eq([module::pub_value, 2]);
+ 104:   assert_invalid(module::pub_sub_module::value);
+ 105:   assert_eq([module::pub_sub_module::pub_value, 4]);
+ 106:   assert_eq([module::pub_sub_module::Workbench(p=5).property, 9]);
+ 107:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
+ 108:   assert_eq([module::function(), 0]);
 
 -- No Output --
 -- Errors --
@@ -6864,6 +6770,31 @@ OK (BUT WARNINGS)
  11 │     foo::A
     ╰────
 Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/tests/book/.test/unclosed_tuple.log =========
+
+﻿
+-- Test --
+        Test name: unclosed_tuple
+  Expected result: fail
+      Source file: ../books/tests/src/unclosed_brackets.md:6
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   6:   a = (1, 2, 3;
+
+-- Parse Error --
+  × error: 7:13: Unclosed tuple
+   ╭─[../books/tests/src/unclosed_brackets.md:7:5]
+ 7 │ a = (1, 2, 3;
+   ·     ┬       ▲
+   ·     │       ╰── expected tuple to be closed by here with a ')'
+   ·     ╰── tuple opened here
+   ╰────
+
 -- Test Result --
 FAILS AS EXPECTED
 
@@ -6938,7 +6869,7 @@ OK (BUT WARNINGS)
  47 │ 
  48 │ Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
     ·                      ┬
-    ·                      ╰── Expected comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', semicolon or end of input
+    ·                      ╰── unexpected {
     ╰────
 
 -- Test Result --
@@ -7122,7 +7053,7 @@ OK (BUT WARNINGS)
     ╭─[../books/tests/src/tuple_assignments.md:22:17]
  22 │ (width, height) = [1,2]m;
     ·                 ┬
-    ·                 ╰── Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon or end of input
+    ·                 ╰── unexpected =
  23 │ assert_eq([width,1m]);
     ╰────
 
@@ -7318,6 +7249,34 @@ Export error: Render error: Nothing to render
 -- Test Result --
 OK
 
+========= ./books/tests/book/.test/unclosed_code_block.log =========
+
+﻿
+-- Test --
+        Test name: unclosed_code_block
+  Expected result: fail
+      Source file: ../books/tests/src/unclosed_brackets.md:18
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  18:   a = {
+  19:       1 + 2;
+
+-- Parse Error --
+  × error: 20:11: Unclosed code block
+    ╭─[../books/tests/src/unclosed_brackets.md:19:5]
+ 19 │ a = {
+    ·     ┬
+    ·     ╰── code block opened here
+ 20 │     1 + 2;
+    ·           ▲
+    ·           ╰── expected code block to be closed by here with a '}'
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED
+
 ========= ./books/tests/book/.test/tuple_match_variants.log =========
 
 ﻿
@@ -7483,75 +7442,89 @@ FAILS AS EXPECTED
   26:   a = 3; // recovered
   27:   
   28:   a = material; // error
+  29:   
+  30:   type A = Integer; // error
 
 -- Parse Error --
-  × error: 7:7: assembly is a reserved keyword and can't be used as an identifier
+  × error: 7:7: 'assembly' is a reserved keyword and can't be used as an identifier
    ╭─[../books/tests/src/reserved_keywords.md:7:7]
  7 │ const assembly = 1; // error
    ·       ────┬───
-   ·           ╰── assembly is a reserved keyword and can't be used as an identifier
+   ·           ╰── 'assembly' is a reserved keyword and can't be used as an identifier
  8 │ 
    ╰────
 
 -- Parse Error --
-  × error: 11:1: unit is a reserved keyword and can't be used as an identifier
+  × error: 11:1: 'unit' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:11:1]
  10 │ 
  11 │ unit = 1; // error
     · ──┬─
-    ·   ╰── unit is a reserved keyword and can't be used as an identifier
+    ·   ╰── 'unit' is a reserved keyword and can't be used as an identifier
  12 │ 
     ╰────
 
 -- Parse Error --
-  × error: 13:4: match is a reserved keyword and can't be used as an identifier
+  × error: 13:4: 'match' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:13:4]
  12 │ 
  13 │ fn match() { // error
     ·    ──┬──
-    ·      ╰── match is a reserved keyword and can't be used as an identifier
+    ·      ╰── 'match' is a reserved keyword and can't be used as an identifier
  14 │ 
     ╰────
 
 -- Parse Error --
-  × error: 17:9: enum is a reserved keyword and can't be used as an identifier
+  × error: 17:9: 'enum' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:17:9]
  16 │ 
  17 │ somefun(enum); // error
     ·         ──┬─
-    ·           ╰── enum is a reserved keyword and can't be used as an identifier
+    ·           ╰── 'enum' is a reserved keyword and can't be used as an identifier
  18 │ 
     ╰────
 
 -- Parse Error --
-  × error: 19:1: struct is a reserved keyword
+  × error: 19:1: 'struct' is a reserved keyword
     ╭─[../books/tests/src/reserved_keywords.md:19:1]
  18 │ 
  19 │ struct asd { // error
     · ───┬──
-    ·    ╰── struct is a reserved keyword
+    ·    ╰── 'struct' is a reserved keyword
  20 │ 
     ╰────
 
 -- Parse Error --
-  × error: 25:1: unit is a reserved keyword
+  × error: 25:1: 'unit' is a reserved keyword
     ╭─[../books/tests/src/reserved_keywords.md:25:1]
  24 │ 
  25 │ unit foo; // error
     · ──┬─
-    ·   ╰── unit is a reserved keyword
+    ·   ╰── 'unit' is a reserved keyword
  26 │ 
     ╰────
 
 -- Parse Error --
-  × error: 29:5: material is a reserved keyword and can't be used as an identifier
+  × error: 29:5: 'material' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:29:5]
  28 │ 
  29 │ a = material; // error
     ·     ────┬───
-    ·         ╰── material is a reserved keyword and can't be used as an identifier
+    ·         ╰── 'material' is a reserved keyword and can't be used as an identifier
+ 30 │ 
     ╰────
 
+-- Parse Error --
+  × error: 31:1: 'type' is a reserved keyword
+    ╭─[../books/tests/src/reserved_keywords.md:31:1]
+ 30 │ 
+ 31 │ type A = Integer; // error
+    · ──┬─
+    ·   ╰── 'type' is a reserved keyword
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED
 
 ========= ./books/tests/book/.test/use_statement_test.log =========
 
@@ -7771,7 +7744,7 @@ OK (BUT WARNINGS)
     ╭─[../books/tests/src/tuple_assignments.md:9:17]
   9 │ (width, height) = (1m,2m);
     ·                 ┬
-    ·                 ╰── Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon or end of input
+    ·                 ╰── unexpected =
  10 │ // check values of width and height
     ╰────
 
@@ -7920,6 +7893,31 @@ TODO
 -- Test Result --
 FAILS AS EXPECTED
 
+========= ./books/tests/book/.test/unclosed_bracket_expr.log =========
+
+﻿
+-- Test --
+        Test name: unclosed_bracket_expr
+  Expected result: fail
+      Source file: ../books/tests/src/unclosed_brackets.md:12
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  12:   a = (1 + 2;
+
+-- Parse Error --
+  × error: 13:11: Unclosed bracketed expression
+    ╭─[../books/tests/src/unclosed_brackets.md:13:5]
+ 13 │ a = (1 + 2;
+    ·     ┬     ▲
+    ·     │     ╰── expected bracketed expression to be closed by here with a ')'
+    ·     ╰── bracketed expression opened here
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED
+
 ========= ./books/tests/book/.test/verify_assert_fail.log =========
 
 ﻿
@@ -8002,7 +8000,7 @@ FAILS AS EXPECTED
  32 │ array = [1,2]m;
  33 │ (width, height) = array;
     ·                 ┬
-    ·                 ╰── Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon or end of input
+    ·                 ╰── unexpected =
  34 │ tuple = (width, height);
     ╰────
 
@@ -8038,5 +8036,34 @@ TODO
   help: Ambiguous initializations:
         	argument_match_collision::S(width: Length)
         	argument_match_collision::S::init(width: Length)
+-- Test Result --
+FAILS AS EXPECTED
+
+========= ./books/tests/book/.test/call_same_parameter_name.log =========
+
+﻿
+-- Test --
+        Test name: call_same_parameter_name
+  Expected result: fail
+      Source file: ../books/tests/src/calls.md:6
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   6:   use std::geo2d::*;
+   7:   use std::ops::*;
+   8:   
+   9:   Rect(w = 10mm, w = 10mm); // error: same parameter name
+
+-- Parse Error --
+  × error: 10:16: Duplicate argument: w
+    ╭─[../books/tests/src/calls.md:10:16]
+  9 │ 
+ 10 │ Rect(w = 10mm, w = 10mm); // error: same parameter name
+    ·      ┬         ┬
+    ·      │         ╰── Duplicate argument
+    ·      ╰── Previous declaration
+    ╰────
+
 -- Test Result --
 FAILS AS EXPECTED
