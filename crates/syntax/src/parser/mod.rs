@@ -644,7 +644,14 @@ fn parser<'tokens>()
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordMod).map_with(|_, e| e.span()))
             .then_whitespace()
-            .then(identifier_parser.clone())
+            .then(identifier_parser.clone().recover_with(via_parser(
+                recovery_expect_any_except(&[Token::SigilOpenCurlyBracket]).map_with(|_, e| {
+                    Identifier {
+                        span: e.span(),
+                        name: CompactString::default(),
+                    }
+                }),
+            )))
             .then_maybe_whitespace()
             .then(
                 block
