@@ -69,7 +69,7 @@ impl Scope {
             Module(..) | Workbench(..) => &[SOURCE, MODULE],
             Function(..) => &[SOURCE, MODULE, WORKBENCH],
             Init(..) => &[WORKBENCH],
-            If(..) => &[SOURCE, WORKBENCH, FUNCTION],
+            If(..) => &[SOURCE, WORKBENCH, FUNCTION, IF, EXPRESSION],
             StatementList(..) => &[SOURCE, MODULE, WORKBENCH, FUNCTION],
             Return(..) => &[FUNCTION],
             Assignment(.., visibility, qualifier) => {
