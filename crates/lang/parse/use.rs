@@ -30,6 +30,7 @@ impl FromAst for UseStatement {
             .filter_map(|part| match part {
                 UseStatementPart::Identifier(ident) => Some(Identifier::from_ast(ident, context)),
                 UseStatementPart::Glob(_) => None,
+                UseStatementPart::Error(_) => None,
             })
             .collect::<Result<Vec<_>, _>>()?;
         let name = QualifiedName::new(name, context.src_ref(&node.name.span));

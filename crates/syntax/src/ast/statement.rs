@@ -134,6 +134,7 @@ pub struct UseName {
 pub enum UseStatementPart {
     Identifier(Identifier),
     Glob(Span),
+    Error(Span),
 }
 
 /// A return statement

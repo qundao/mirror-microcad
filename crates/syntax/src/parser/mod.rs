@@ -15,6 +15,7 @@ use crate::tokens::*;
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
+use compact_str::CompactString;
 pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
@@ -674,10 +675,17 @@ fn parser<'tokens>()
             )
             .boxed();
 
-        let use_parts = identifier_parser
+        let use_part = identifier_parser
             .clone()
             .map(UseStatementPart::Identifier)
             .or(just(Token::OperatorMultiply).map_with(|_, e| UseStatementPart::Glob(e.span())))
+            .recover_with(via_parser(
+                recovery_expect_any_except(&[Token::SigilDoubleColon])
+                    .map_with(|_, e| UseStatementPart::Error(e.span())),
+            ))
+            .boxed();
+
+        let use_parts = use_part
             .separated_by(just(Token::SigilDoubleColon))
             .at_least(1)
             .collect::<Vec<_>>()
@@ -699,7 +707,12 @@ fn parser<'tokens>()
                 whitespace_parser()
                     .then(just(Token::KeywordAs))
                     .then_whitespace()
-                    .ignore_then(identifier_parser.clone())
+                    .ignore_then(identifier_parser.clone().recover_with(via_parser(
+                        recovery_expect_any().map_with(|_, e| Identifier {
+                            span: e.span(),
+                            name: CompactString::default(),
+                        }),
+                    )))
                     .or_not(),
             )
             .with_extras()
@@ -901,14 +914,17 @@ fn parser<'tokens>()
                 reserved_keyword
                     .then_ignore(not_assigment)
                     .clone()
-                    .ignore_then(ignore_till_matched_curly().or(ignore_till_semi())),
+                    .ignore_then(
+                        ignore_till_matched_curly()
+                            .or(ignore_till_semi().then_ignore(just(Token::SigilSemiColon))),
+                    ),
             ))
             .map_with(|_, e| Statement::Error(e.span()))
             .boxed();
 
-        let with_semi = assignment
-            .or(return_statement)
+        let with_semi = return_statement
             .or(use_statement)
+            .or(assignment)
             .or(expression)
             .then_maybe_whitespace()
             .boxed();
@@ -921,7 +937,6 @@ fn parser<'tokens>()
             .or(module)
             .or(comment)
             .or(if_expression)
-            .then_maybe_whitespace()
             .boxed();
 
         without_semi
@@ -1364,8 +1379,10 @@ fn parser<'tokens>()
         or_and.labelled("expression").boxed()
     });
 
-    statement_list_parser.map_with(move |statements, ex| SourceFile {
-        span: ex.span(),
-        statements,
-    })
+    statement_list_parser
+        .then_ignore(end())
+        .map_with(move |statements, ex| SourceFile {
+            span: ex.span(),
+            statements,
+        })
 }
