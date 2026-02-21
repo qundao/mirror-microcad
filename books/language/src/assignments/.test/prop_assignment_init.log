@@ -20,8 +20,8 @@
   × error: 46:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/property.md:46:5]
  45 │ sketch MySketch(radius: Length) {
-    ·        ────┬───
-    ·            ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  46 │     prop diameter = radius * 2; // error: not in initialization code
     ·     ─────────────┬────────────
     ·                  ╰── This statement is not allowed

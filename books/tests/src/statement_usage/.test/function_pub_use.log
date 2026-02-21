@@ -23,7 +23,7 @@
     ·        ╰── This use statement is not allowed
  48 │ } f();
     ╰────
-  help: use statement is only allowed within source root or module definition
+  help: use statement is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

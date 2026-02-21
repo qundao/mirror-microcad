@@ -13,17 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 23:6: Function definition is not allowed within function
-    ╭─[../books/tests/src/statement_usage/function.md:23:6]
+  × error: 23:6: Function is not allowed within function
+    ╭─[../books/tests/src/statement_usage/function.md:23:3]
  22 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  23 │   fn f() {} // error
-    ·      ┬
-    ·      ╰── This function definition is not allowed
+    ·   ─┬
+    ·    ╰── This function is not allowed
  24 │ } f();
     ╰────
-  help: function definition is only allowed within source root, module definition or workbench definition
+  help: function is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
