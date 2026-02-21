@@ -179,6 +179,17 @@ pub struct TupleItem {
     pub value: Expression,
 }
 
+impl TupleItem {
+    pub(crate) fn dummy(span: Span) -> Self {
+        TupleItem {
+            span: span.clone(),
+            extras: ItemExtras::default(),
+            name: None,
+            value: Expression::Error(span),
+        }
+    }
+}
+
 /// A tuple expression, a fixed size set of items that don't need to be the same type
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
@@ -300,6 +311,17 @@ pub struct StatementList {
     pub tail: Option<Box<Statement>>,
 }
 
+impl StatementList {
+    pub(crate) fn dummy(span: Span) -> Self {
+        StatementList {
+            span,
+            extras: ItemExtras::default(),
+            statements: Vec::default(),
+            tail: None,
+        }
+    }
+}
+
 /// A list of arguments to a function call
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
@@ -307,6 +329,16 @@ pub struct ArgumentList {
     pub span: Span,
     pub extras: ItemExtras,
     pub arguments: Vec<Argument>,
+}
+
+impl ArgumentList {
+    pub(crate) fn dummy(span: Span) -> Self {
+        ArgumentList {
+            span,
+            extras: ItemExtras::default(),
+            arguments: Vec::new(),
+        }
+    }
 }
 
 /// A function argument that is part of an [`ArgumentList`]

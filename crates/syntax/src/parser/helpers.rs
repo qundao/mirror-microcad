@@ -90,6 +90,27 @@ pub fn ignore_till_matched_curly<'tokens>()
     .boxed()
 }
 
+/// Ignore tokens, until we hit the end of a pair or nested brackets
+///
+/// Used for error recovery
+pub fn ignore_till_matched_brackets<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
+    nested_delimiters(
+        Token::SigilOpenBracket,
+        Token::SigilCloseBracket,
+        [
+            (
+                Token::SigilOpenSquareBracket,
+                Token::SigilCloseSquareBracket,
+            ),
+            (Token::SigilOpenCurlyBracket, Token::SigilCloseCurlyBracket),
+        ],
+        |_| (),
+    )
+    .ignored()
+    .boxed()
+}
+
 /// Ignore tokens, until we hit a semicolon, without consuming the semicolon
 ///
 /// Used for error recovery
