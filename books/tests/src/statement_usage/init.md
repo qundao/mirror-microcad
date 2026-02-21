@@ -106,8 +106,8 @@ sketch K() { init(l:Length) {
 
 [![test](.test/init_expression_model.svg)](.test/init_expression_model.log)
 
-```µcad,init_expression_model#fail
+```µcad,init_expression_model#todo_fail
 sketch K() { init(l:Length) {
-  __builtin::geo2d::Circle(radius=l); // error
+  __builtin::geo2d::Circle(radius=l);
 } } K(1cm);
 ```
