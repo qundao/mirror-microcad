@@ -98,7 +98,7 @@ where
             match self.map.entry(key) {
                 std::collections::hash_map::Entry::Vacant(entry) => entry.insert(self.vec.len()),
                 std::collections::hash_map::Entry::Occupied(entry) => {
-                    return Err((entry.key().clone(), item.key().unwrap()));
+                    return Err((entry.key().clone(), item.key().expect("ord_map error")));
                 }
             };
         }
