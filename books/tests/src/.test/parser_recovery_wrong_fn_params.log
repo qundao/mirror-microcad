@@ -1,0 +1,55 @@
+﻿
+-- Test --
+        Test name: parser_recovery_wrong_fn_params
+  Expected result: fail
+      Source file: ../books/tests/src/parser_recovery.md:6
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   6:   fn bar (a: 1, b: mod) { // error, invalid params
+   7:     1=; // error inside an if statement with broken params
+   8:   }
+   9:   
+  10:   a =; // error after an if statement with broken params
+
+-- Parse Error --
+  × error: 7:12: Expected type
+   ╭─[../books/tests/src/parser_recovery.md:7:12]
+ 7 │ fn bar (a: 1, b: mod) { // error, invalid params
+   ·            ┬
+   ·            ╰── unexpected integer literal
+ 8 │   1=; // error inside an if statement with broken params
+   ╰────
+
+-- Parse Error --
+  × error: 7:18: Expected type
+   ╭─[../books/tests/src/parser_recovery.md:7:18]
+ 7 │ fn bar (a: 1, b: mod) { // error, invalid params
+   ·                  ─┬─
+   ·                   ╰── unexpected mod
+ 8 │   1=; // error inside an if statement with broken params
+   ╰────
+
+-- Parse Error --
+  × error: 8:4: Expected quantity type, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  │ 'and' or semicolon
+   ╭─[../books/tests/src/parser_recovery.md:8:4]
+ 7 │ fn bar (a: 1, b: mod) { // error, invalid params
+ 8 │   1=; // error inside an if statement with broken params
+   ·    ┬
+   ·    ╰── unexpected =
+ 9 │ }
+   ╰────
+
+-- Parse Error --
+  × error: 11:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:11:4]
+ 10 │ 
+ 11 │ a =; // error after an if statement with broken params
+    ·    ┬
+    ·    ╰── unexpected ;
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED

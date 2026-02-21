@@ -1,0 +1,46 @@
+﻿
+-- Test --
+        Test name: parser_recovery_missing_fn_params
+  Expected result: fail
+      Source file: ../books/tests/src/parser_recovery.md:16
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  16:   fn bar { // error, no params
+  17:     1=; // error inside an if statement with missing params
+  18:   }
+  19:   
+  20:   a =; // error after an if statement with missing params
+
+-- Parse Error --
+  × error: 17:8: Expected '('
+    ╭─[../books/tests/src/parser_recovery.md:17:8]
+ 17 │ fn bar { // error, no params
+    ·        ┬
+    ·        ╰── unexpected {
+ 18 │   1=; // error inside an if statement with missing params
+    ╰────
+
+-- Parse Error --
+  × error: 18:4: Expected quantity type, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  │ 'and' or semicolon
+    ╭─[../books/tests/src/parser_recovery.md:18:4]
+ 17 │ fn bar { // error, no params
+ 18 │   1=; // error inside an if statement with missing params
+    ·    ┬
+    ·    ╰── unexpected =
+ 19 │ }
+    ╰────
+
+-- Parse Error --
+  × error: 21:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:21:4]
+ 20 │ 
+ 21 │ a =; // error after an if statement with missing params
+    ·    ┬
+    ·    ╰── unexpected ;
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED

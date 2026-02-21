@@ -1,0 +1,33 @@
+﻿
+-- Test --
+        Test name: parser_recovery_use_non_identifier
+  Expected result: fail
+      Source file: ../books/tests/src/parser_recovery.md:44
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  44:   use a::1; // error, non-identifier in use name
+  45:   
+  46:   a =; // error after a broken use statement
+
+-- Parse Error --
+  × error: 45:8: Expected identifier or '*'
+    ╭─[../books/tests/src/parser_recovery.md:45:8]
+ 45 │ use a::1; // error, non-identifier in use name
+    ·        ┬
+    ·        ╰── unexpected integer literal
+ 46 │ 
+    ╰────
+
+-- Parse Error --
+  × error: 47:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:47:4]
+ 46 │ 
+ 47 │ a =; // error after a broken use statement
+    ·    ┬
+    ·    ╰── unexpected ;
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED
