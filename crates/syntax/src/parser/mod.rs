@@ -111,18 +111,12 @@ fn parser<'tokens>()
     }
     .boxed();
 
-    let block_recovery = just(Token::SigilOpenCurlyBracket)
-        .then(
-            none_of(Token::SigilCloseCurlyBracket)
-                .repeated()
-                .then(just(Token::SigilCloseCurlyBracket)),
-        )
-        .map_with(|_, e| StatementList {
-            span: e.span(),
-            statements: vec![Statement::Error(e.span())],
-            tail: None,
-            extras: ItemExtras::default(),
-        });
+    let block_recovery = ignore_till_matched_curly().map_with(|_, e| StatementList {
+        span: e.span(),
+        statements: Vec::default(),
+        tail: None,
+        extras: ItemExtras::default(),
+    });
 
     let block = whitespace_parser()
         .or_not()
@@ -915,7 +909,9 @@ fn parser<'tokens>()
                     .then_ignore(not_assigment)
                     .clone()
                     .ignore_then(
-                        ignore_till_matched_curly()
+                        none_of(STRUCTURAL_TOKENS)
+                            .repeated()
+                            .then_ignore(ignore_till_matched_curly())
                             .or(ignore_till_semi().then_ignore(just(Token::SigilSemiColon))),
                     ),
             ))

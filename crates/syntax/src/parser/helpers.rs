@@ -3,7 +3,7 @@
 
 use crate::Span;
 use crate::ast::{BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator};
-use crate::parser::{Error, Extra, ParserInput, STRUCTURAL_TOKENS};
+use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
@@ -74,9 +74,7 @@ where
 /// Used for error recovery
 pub fn ignore_till_matched_curly<'tokens>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
-    none_of(STRUCTURAL_TOKENS)
-        .repeated()
-        .ignore_then(nested_delimiters(
+        nested_delimiters(
             Token::SigilOpenCurlyBracket,
             Token::SigilCloseCurlyBracket,
             [
@@ -87,7 +85,7 @@ pub fn ignore_till_matched_curly<'tokens>()
                 (Token::SigilOpenBracket, Token::SigilCloseBracket),
             ],
             |_| (),
-        ))
+        ).ignored()
         .boxed()
 }
 
