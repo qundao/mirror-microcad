@@ -23,6 +23,13 @@ impl Type {
             Type::Tuple(ty) => ty.span.clone(),
         }
     }
+
+    pub(crate) fn dummy(span: Span) -> Self {
+        Type::Single(SingleType {
+            span,
+            name: CompactString::default(),
+        })
+    }
 }
 
 /// A type for a single numeric value
