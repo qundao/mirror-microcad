@@ -944,7 +944,17 @@ fn parser<'tokens>()
 
         without_semi
             .or(reserved_keyword_statement)
-            .or(with_semi.then_ignore(just(Token::SigilSemiColon).labelled("semicolon")))
+            .or(with_semi.then_ignore(
+                just(Token::SigilSemiColon)
+                    .labelled("semicolon")
+                    .ignored()
+                    .recover_with(via_parser(
+                        none_of(STRUCTURAL_TOKENS)
+                            .repeated()
+                            .then_ignore(just(Token::SigilSemiColon)),
+                    )),
+            ))
+            .boxed()
             .labelled("statement")
     });
 

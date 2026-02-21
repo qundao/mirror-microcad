@@ -74,19 +74,20 @@ where
 /// Used for error recovery
 pub fn ignore_till_matched_curly<'tokens>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
-        nested_delimiters(
-            Token::SigilOpenCurlyBracket,
-            Token::SigilCloseCurlyBracket,
-            [
-                (
-                    Token::SigilOpenSquareBracket,
-                    Token::SigilCloseSquareBracket,
-                ),
-                (Token::SigilOpenBracket, Token::SigilCloseBracket),
-            ],
-            |_| (),
-        ).ignored()
-        .boxed()
+    nested_delimiters(
+        Token::SigilOpenCurlyBracket,
+        Token::SigilCloseCurlyBracket,
+        [
+            (
+                Token::SigilOpenSquareBracket,
+                Token::SigilCloseSquareBracket,
+            ),
+            (Token::SigilOpenBracket, Token::SigilCloseBracket),
+        ],
+        |_| (),
+    )
+    .ignored()
+    .boxed()
 }
 
 /// Ignore tokens, until we hit a semicolon, without consuming the semicolon
