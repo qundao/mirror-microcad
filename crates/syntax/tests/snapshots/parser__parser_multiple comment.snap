@@ -11,9 +11,16 @@ Ok(
                 leading: [
                     Comment(
                         Comment {
-                            span: 0..27,
+                            span: 0..11,
                             lines: [
                                 "comment1",
+                            ],
+                        },
+                    ),
+                    Comment(
+                        Comment {
+                            span: 16..27,
+                            lines: [
                                 "comment2",
                             ],
                         },

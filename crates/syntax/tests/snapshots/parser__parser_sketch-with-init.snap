@@ -58,7 +58,7 @@ Ok(
                             ],
                         },
                         body: StatementList {
-                            span: 35..128,
+                            span: 35..129,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
@@ -103,7 +103,7 @@ Ok(
                                             ],
                                         },
                                         body: StatementList {
-                                            span: 68..90,
+                                            span: 68..95,
                                             extras: ItemExtras {
                                                 leading: [],
                                                 trailing: [],

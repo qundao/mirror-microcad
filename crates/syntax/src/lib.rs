@@ -19,5 +19,5 @@ mod parser;
 /// Source tokens for µcad files
 pub mod tokens;
 
+pub use parser::{ParseError, parse};
 pub use tokens::lex;
-pub use parser::{parse, ParseError};

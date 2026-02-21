@@ -42,7 +42,7 @@ Ok(
                                     ],
                                 },
                                 arguments: ArgumentList {
-                                    span: 13..32,
+                                    span: 4..37,
                                     extras: ItemExtras {
                                         leading: [],
                                         trailing: [],

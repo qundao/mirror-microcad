@@ -22,7 +22,7 @@ Ok(
                         doc: None,
                         attributes: [
                             Attribute {
-                                span: 0..20,
+                                span: 0..25,
                                 is_inner: false,
                                 extras: ItemExtras {
                                     leading: [],

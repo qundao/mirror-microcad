@@ -54,7 +54,7 @@ Ok(
                                     default: None,
                                 },
                                 ArgumentDefinition {
-                                    span: 18..25,
+                                    span: 17..25,
                                     extras: ItemExtras {
                                         leading: [],
                                         trailing: [],

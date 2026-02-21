@@ -64,7 +64,7 @@ Ok(
                                     },
                                 ),
                                 body: StatementList {
-                                    span: 11..12,
+                                    span: 11..13,
                                     extras: ItemExtras {
                                         leading: [],
                                         trailing: [],
@@ -101,7 +101,7 @@ Ok(
                                 next_if: None,
                                 else_body: Some(
                                     StatementList {
-                                        span: 22..23,
+                                        span: 22..24,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],

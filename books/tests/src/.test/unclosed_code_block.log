@@ -11,14 +11,12 @@
   19:       1 + 2;
 
 -- Parse Error --
-  × error: 20:11: Unclosed code block
+  × error: 21:1: Unclosed code block
     ╭─[../books/tests/src/unclosed_brackets.md:19:5]
  19 │ a = {
     ·     ┬
     ·     ╰── code block opened here
  20 │     1 + 2;
-    ·           ▲
-    ·           ╰── expected code block to be closed by here with a '}'
     ╰────
 
 -- Test Result --

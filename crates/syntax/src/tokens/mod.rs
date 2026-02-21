@@ -89,6 +89,9 @@ pub fn lex<'a>(input: &'a str) -> impl Iterator<Item = SpannedToken<Token<'a>>> 
 /// Source token for µcad files
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token<'a> {
+    /// Whitespace
+    Whitespace(Cow<'a, str>),
+
     /// A single-line comment, starting with `//`
     SingleLineComment(Cow<'a, str>),
     /// A multi-line comment, starting with `/*` and ending with `*/`
@@ -262,6 +265,7 @@ impl Token<'_> {
     /// Create an owned version of the token
     pub fn into_owned(self) -> Token<'static> {
         match self {
+            Token::Whitespace(c) => Token::Whitespace(c.into_owned().into()),
             Token::SingleLineComment(c) => Token::SingleLineComment(c.into_owned().into()),
             Token::MultiLineComment(c) => Token::MultiLineComment(c.into_owned().into()),
             Token::DocComment(c) => Token::DocComment(c.into_owned().into()),
@@ -345,6 +349,7 @@ impl Token<'_> {
     /// Get a descriptive name or symbol for the token type
     pub fn kind(&self) -> &'static str {
         match self {
+            Token::Whitespace(_) => "whitespace",
             Token::SingleLineComment(_) => "single-line comment",
             Token::MultiLineComment(_) => "multi-line comment",
             Token::DocComment(_) => "doc comment",

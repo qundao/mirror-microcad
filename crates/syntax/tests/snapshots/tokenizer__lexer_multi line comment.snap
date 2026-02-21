@@ -1,6 +1,6 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: lex(input)
+expression: "lex(input).collect::<Vec<_>>()"
 ---
 [
     SpannedToken {
@@ -10,8 +10,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 1..2,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 2..3,
         token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 3..4,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 4..5,
@@ -24,9 +36,21 @@ expression: lex(input)
         token: SigilSemiColon,
     },
     SpannedToken {
+        span: 6..7,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 7..44,
         token: MultiLineComment(
             "multi\n    line\n    comment",
+        ),
+    },
+    SpannedToken {
+        span: 44..49,
+        token: Whitespace(
+            "\n    ",
         ),
     },
     SpannedToken {
@@ -36,8 +60,20 @@ expression: lex(input)
         ),
     },
     SpannedToken {
+        span: 50..51,
+        token: Whitespace(
+            " ",
+        ),
+    },
+    SpannedToken {
         span: 51..52,
         token: OperatorAssignment,
+    },
+    SpannedToken {
+        span: 52..53,
+        token: Whitespace(
+            " ",
+        ),
     },
     SpannedToken {
         span: 53..54,

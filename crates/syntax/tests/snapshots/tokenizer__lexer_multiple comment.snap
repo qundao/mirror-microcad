@@ -1,12 +1,18 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: lex(input)
+expression: "lex(input).collect::<Vec<_>>()"
 ---
 [
     SpannedToken {
         span: 0..11,
         token: SingleLineComment(
             "comment1",
+        ),
+    },
+    SpannedToken {
+        span: 11..16,
+        token: Whitespace(
+            "\n    ",
         ),
     },
     SpannedToken {

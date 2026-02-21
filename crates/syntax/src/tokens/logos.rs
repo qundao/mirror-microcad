@@ -16,8 +16,10 @@ pub enum LogosToken<'a> {
 #[derive(Logos, Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
 #[logos(error(LexerError))]
-#[logos(skip r"[ \t\n\f]+")]
 pub enum NormalToken<'a> {
+    #[regex(r"[ \t\n\f]", callback = whitespace_callback)]
+    Whitespace(Cow<'a, str>),
+
     #[regex(r#"\/\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
     DocComment(Cow<'a, str>),
     #[regex(r#"\/\/![^\n]*"#, allow_greedy = true, callback = token_cow)]
@@ -176,6 +178,16 @@ fn multi_line_comment_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Opti
     let comment = text[2..end].trim_start_matches('*').trim();
     lex.bump(end);
     Some(comment.into())
+}
+
+fn whitespace_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'a, str>> {
+    let text = &lex.source()[lex.span().start..];
+    let end = text
+        .find(|c: char| !c.is_ascii_whitespace())
+        .unwrap_or(text.len());
+    let whitespace = &text[0..end];
+    lex.bump(end - 1);
+    Some(whitespace.into())
 }
 
 fn single_line_comment_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'a, str>> {

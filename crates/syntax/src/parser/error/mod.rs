@@ -4,6 +4,7 @@
 mod rich;
 
 use crate::Span;
+use crate::parser::error::rich::RichPattern;
 use crate::tokens::Token;
 use miette::{Diagnostic, LabeledSpan};
 pub use rich::{Rich, RichReason};
@@ -56,7 +57,11 @@ impl Display for ParseError {
             RichReason::Custom(error) => write!(f, "{error}"),
             RichReason::ExpectedFound { expected, .. } => {
                 write!(f, "Expected ")?;
-                let mut expected = expected.iter();
+                let mut expected = expected.iter().filter(|pat| match pat {
+                    // don't show 'whitespace' as possible tokens, if there are also others
+                    RichPattern::Label(label) if expected.len() > 1 => label != "whitespace",
+                    _ => true,
+                });
                 if let Some(pattern) = expected.next() {
                     write!(f, "{pattern}")?;
                 }
@@ -79,7 +84,7 @@ impl Diagnostic for ParseError {
     fn help<'a>(&'a self) -> Option<Box<dyn Display + 'a>> {
         match self.error.reason() {
             RichReason::Custom(error) => error.help(),
-            _ => None
+            _ => None,
         }
     }
 
@@ -90,7 +95,7 @@ impl Diagnostic for ParseError {
                     return Some(labels);
                 }
                 error.to_string()
-            },
+            }
             RichReason::ExpectedFound {
                 found: Some(found), ..
             } if found.is_error() => found.kind().into(),
