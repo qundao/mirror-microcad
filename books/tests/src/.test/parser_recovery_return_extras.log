@@ -2,30 +2,30 @@
 -- Test --
         Test name: parser_recovery_return_extras
   Expected result: fail
-      Source file: ../books/tests/src/parser_recovery.md:36
+      Source file: ../books/tests/src/parser_recovery.md:56
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  36:   return 1 2;// error, unexpected tokens after return statement
-  37:   
-  38:   a =; // error after a broken return statement
+  56:   return 1 2;// error, unexpected tokens after return statement
+  57:   
+  58:   a =; // error after a broken return statement
 
 -- Parse Error --
-  × error: 37:10: Expected comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
+  × error: 57:10: Expected comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
   │ semicolon
-    ╭─[../books/tests/src/parser_recovery.md:37:10]
- 37 │ return 1 2;// error, unexpected tokens after return statement
+    ╭─[../books/tests/src/parser_recovery.md:57:10]
+ 57 │ return 1 2;// error, unexpected tokens after return statement
     ·          ┬
     ·          ╰── unexpected integer literal
- 38 │ 
+ 58 │ 
     ╰────
 
 -- Parse Error --
-  × error: 39:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:39:4]
- 38 │ 
- 39 │ a =; // error after a broken return statement
+  × error: 59:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:59:4]
+ 58 │ 
+ 59 │ a =; // error after a broken return statement
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

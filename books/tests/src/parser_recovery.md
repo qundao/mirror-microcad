@@ -20,6 +20,26 @@ fn bar { // error, no params
 a =; // error after an if statement with missing params
 ```
 
+[![test](.test/parser_recovery_missing_fn_name.svg)](.test/parser_recovery_missing_fn_name.log)
+
+```µcad,parser_recovery_missing_fn_name#fail
+fn () { // error, no name
+  1=; // error inside an if statement with missing params
+}
+
+a =; // error after a function with no name
+```
+
+[![test](.test/parser_recovery_missing_workspace_name.svg)](.test/parser_recovery_missing_workspace_name.log)
+
+```µcad,parser_recovery_missing_workspace_name#fail
+sketch () { // error, no name
+  1=; // error inside an if statement with missing params
+}
+
+a =; // error after a workspace with no name
+```
+
 [![test](.test/parser_recovery_missing_mod_name.svg)](.test/parser_recovery_missing_mod_name.log)
 
 ```µcad,parser_recovery_missing_mod_name#fail
@@ -27,7 +47,7 @@ mod { // error, no name
   1=; // error inside a mod statements with no name
 }
 
-a =; // error after a mod statements with no name
+a =; // error after a mod with no name
 ```
 
 [![test](.test/parser_recovery_return_extras.svg)](.test/parser_recovery_return_extras.log)

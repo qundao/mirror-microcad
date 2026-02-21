@@ -2,29 +2,29 @@
 -- Test --
         Test name: parser_recovery_use_missing_as
   Expected result: fail
-      Source file: ../books/tests/src/parser_recovery.md:52
+      Source file: ../books/tests/src/parser_recovery.md:72
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  52:   use a::b as ; // error, missing as name
-  53:   
-  54:   a =; // error after a broken use statement
+  72:   use a::b as ; // error, missing as name
+  73:   
+  74:   a =; // error after a broken use statement
 
 -- Parse Error --
-  × error: 53:13: Expected identifier
-    ╭─[../books/tests/src/parser_recovery.md:53:13]
- 53 │ use a::b as ; // error, missing as name
+  × error: 73:13: Expected identifier
+    ╭─[../books/tests/src/parser_recovery.md:73:13]
+ 73 │ use a::b as ; // error, missing as name
     ·             ┬
     ·             ╰── unexpected ;
- 54 │ 
+ 74 │ 
     ╰────
 
 -- Parse Error --
-  × error: 55:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:55:4]
- 54 │ 
- 55 │ a =; // error after a broken use statement
+  × error: 75:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:75:4]
+ 74 │ 
+ 75 │ a =; // error after a broken use statement
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

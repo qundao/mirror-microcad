@@ -2,29 +2,29 @@
 -- Test --
         Test name: parser_recovery_use_invalid_as
   Expected result: fail
-      Source file: ../books/tests/src/parser_recovery.md:60
+      Source file: ../books/tests/src/parser_recovery.md:80
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  60:   use a::b as 1; // error, invalid as name
-  61:   
-  62:   a =; // error after a broken use statement
+  80:   use a::b as 1; // error, invalid as name
+  81:   
+  82:   a =; // error after a broken use statement
 
 -- Parse Error --
-  × error: 61:13: Expected identifier
-    ╭─[../books/tests/src/parser_recovery.md:61:13]
- 61 │ use a::b as 1; // error, invalid as name
+  × error: 81:13: Expected identifier
+    ╭─[../books/tests/src/parser_recovery.md:81:13]
+ 81 │ use a::b as 1; // error, invalid as name
     ·             ┬
     ·             ╰── unexpected integer literal
- 62 │ 
+ 82 │ 
     ╰────
 
 -- Parse Error --
-  × error: 63:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:63:4]
- 62 │ 
- 63 │ a =; // error after a broken use statement
+  × error: 83:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:83:4]
+ 82 │ 
+ 83 │ a =; // error after a broken use statement
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

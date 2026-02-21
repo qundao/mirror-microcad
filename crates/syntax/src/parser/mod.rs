@@ -728,7 +728,7 @@ fn parser<'tokens>()
             })
             .boxed();
 
-        let workspace_kind = select_ref! {
+        let workbench_kind = select_ref! {
             Token::KeywordSketch => WorkbenchKind::Sketch,
             Token::KeywordPart => WorkbenchKind::Part,
             Token::KeywordOp => WorkbenchKind::Op,
@@ -754,13 +754,21 @@ fn parser<'tokens>()
                 })
             })
             .boxed();
-        let workspace = doc_comment
+        let workbench = doc_comment
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
-            .then(workspace_kind.map_with(|kind, e| (kind, e.span())))
+            .then(workbench_kind.map_with(|kind, e| (kind, e.span())))
             .then_whitespace()
-            .then(identifier_parser.clone())
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[
+                        Token::SigilOpenCurlyBracket,
+                        Token::SigilOpenBracket,
+                    ])
+                    .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
             .then_maybe_whitespace()
             .then(arguments.clone())
             .then_maybe_whitespace()
@@ -812,7 +820,15 @@ fn parser<'tokens>()
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordFn).map_with(|_, e| e.span()))
             .then_whitespace()
-            .then(identifier_parser.clone())
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[
+                        Token::SigilOpenCurlyBracket,
+                        Token::SigilOpenBracket,
+                    ])
+                    .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
             .then_maybe_whitespace()
             .then(arguments.clone())
             .then_maybe_whitespace()
@@ -936,7 +952,7 @@ fn parser<'tokens>()
             .or(inner_doc_statement)
             .or(doc_statement)
             .or(init)
-            .or(workspace)
+            .or(workbench)
             .or(module)
             .or(comment)
             .or(if_expression)
