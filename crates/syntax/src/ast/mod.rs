@@ -22,6 +22,15 @@ pub struct Identifier {
     pub name: CompactString,
 }
 
+impl Identifier {
+    pub(crate) fn dummy(span: Span) -> Self {
+        Identifier {
+            span,
+            name: CompactString::default(),
+        }
+    }
+}
+
 /// A µcad source file
 #[derive(Debug)]
 #[allow(missing_docs)]

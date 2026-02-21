@@ -15,7 +15,6 @@ use crate::tokens::*;
 use chumsky::input::{Input, MappedInput};
 use chumsky::prelude::*;
 use chumsky::{Parser, extra, select_ref};
-use compact_str::CompactString;
 pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
@@ -111,12 +110,8 @@ fn parser<'tokens>()
     }
     .boxed();
 
-    let block_recovery = ignore_till_matched_curly().map_with(|_, e| StatementList {
-        span: e.span(),
-        statements: Vec::default(),
-        tail: None,
-        extras: ItemExtras::default(),
-    });
+    let block_recovery =
+        ignore_till_matched_curly().map_with(|_, e| StatementList::dummy(e.span()));
 
     let block = whitespace_parser()
         .or_not()
@@ -372,17 +367,7 @@ fn parser<'tokens>()
         ],
         |_| (),
     )
-    .map_with(|_, e| {
-        (
-            vec![TupleItem {
-                span: e.span(),
-                name: None,
-                value: Expression::Error(e.span()),
-                extras: ItemExtras::default(),
-            }],
-            ItemExtras::default(),
-        )
-    });
+    .map_with(|_, e| (vec![TupleItem::dummy(e.span())], ItemExtras::default()));
 
     let tuple_body = identifier_parser
         .clone()
@@ -448,13 +433,11 @@ fn parser<'tokens>()
                         )
                     },
                 )
-                .recover_with(via_parser(tuple_recovery.clone().map_with(|_, e| {
-                    ArgumentList {
-                        span: e.span(),
-                        extras: ItemExtras::default(),
-                        arguments: Vec::new(),
-                    }
-                }))),
+                .recover_with(via_parser(
+                    tuple_recovery
+                        .clone()
+                        .map_with(|_, e| ArgumentList::dummy(e.span())),
+                )),
         )
         .with_extras()
         .map_with(|((name, arguments), extras), e| Call {
@@ -636,6 +619,11 @@ fn parser<'tokens>()
                     )
                 },
             )
+            .recover_with(via_parser(
+                ignore_till_matched_brackets()
+                    .or(none_of(STRUCTURAL_TOKENS).repeated())
+                    .map_with(|_, e| ArgumentsDefinition::dummy(e.span())),
+            ))
             .boxed();
 
         let module = doc_comment
@@ -644,14 +632,12 @@ fn parser<'tokens>()
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordMod).map_with(|_, e| e.span()))
             .then_whitespace()
-            .then(identifier_parser.clone().recover_with(via_parser(
-                recovery_expect_any_except(&[Token::SigilOpenCurlyBracket]).map_with(|_, e| {
-                    Identifier {
-                        span: e.span(),
-                        name: CompactString::default(),
-                    }
-                }),
-            )))
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[Token::SigilOpenCurlyBracket])
+                        .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
             .then_maybe_whitespace()
             .then(
                 block
@@ -709,10 +695,7 @@ fn parser<'tokens>()
                     .then(just(Token::KeywordAs))
                     .then_whitespace()
                     .ignore_then(identifier_parser.clone().recover_with(via_parser(
-                        recovery_expect_any().map_with(|_, e| Identifier {
-                            span: e.span(),
-                            name: CompactString::default(),
-                        }),
+                        recovery_expect_any().map_with(|_, e| Identifier::dummy(e.span())),
                     )))
                     .or_not(),
             )

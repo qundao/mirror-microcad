@@ -155,6 +155,16 @@ pub struct ArgumentsDefinition {
     pub arguments: Vec<ArgumentDefinition>,
 }
 
+impl ArgumentsDefinition {
+    pub(crate) fn dummy(span: Span) -> Self {
+        ArgumentsDefinition {
+            span,
+            extras: ItemExtras::default(),
+            arguments: Vec::default(),
+        }
+    }
+}
+
 /// A definition of a single of a workbench definition or function definition
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
