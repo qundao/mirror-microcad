@@ -55,72 +55,46 @@ impl Scope {
         }
     }
 
-    pub(super) fn allowed_parents(&self) -> &'static [Scope] {
+    pub(super) fn allowed_parents(&self) -> &'static [&'static Scope] {
         use Scope::*;
+        const SOURCE: &Scope = &Source;
+        const MODULE: &Scope = &Module(SrcRef(None));
+        const WORKBENCH: &Scope = &Workbench(SrcRef(None));
+        const FUNCTION: &Scope = &Function(SrcRef(None));
+        const IF: &Scope = &If(SrcRef(None));
+        const STMT_LIST: &Scope = &StatementList(SrcRef(None));
+        const EXPRESSION: &Scope = &Expression(SrcRef(None));
+
         match self {
             Source => &[],
-            Module(..) | Workbench(..) => &[Source, Module(SrcRef(None))],
-            Function(..) => &[Source, Module(SrcRef(None)), Workbench(SrcRef(None))],
-            Init(..) => &[Workbench(SrcRef(None))],
-            If(..) => &[Source, Workbench(SrcRef(None)), Function(SrcRef(None))],
-            StatementList(..) => &[
-                Source,
-                Module(SrcRef(None)),
-                Workbench(SrcRef(None)),
-                Function(SrcRef(None)),
-            ],
-            Return(..) => &[Function(SrcRef(None))],
+            Module(..) | Workbench(..) => &[SOURCE, MODULE],
+            Function(..) => &[SOURCE, MODULE, WORKBENCH],
+            Init(..) => &[WORKBENCH],
+            If(..) => &[SOURCE, WORKBENCH, FUNCTION],
+            StatementList(..) => &[SOURCE, MODULE, WORKBENCH, FUNCTION],
+            Return(..) => &[FUNCTION],
             Assignment(.., visibility, qualifier) => {
                 use {Qualifier::*, Visibility::*};
                 match (visibility, qualifier) {
-                    (Private, Value) => &[
-                        Source,
-                        Module(SrcRef(None)),
-                        Workbench(SrcRef(None)),
-                        Function(SrcRef(None)),
-                    ],
-                    (Private, Const) => &[Source, Module(SrcRef(None)), Workbench(SrcRef(None))],
-                    (Private, Prop) => &[Workbench(SrcRef(None))],
+                    (Private, Value) => &[SOURCE, MODULE, WORKBENCH, FUNCTION],
+                    (Private, Const) => &[SOURCE, MODULE, WORKBENCH],
+                    (Private, Prop) => &[WORKBENCH],
                     (Public, Value) => &[],
-                    (Public, Const) => &[Source, Module(SrcRef(None))],
+                    (Public, Const) => &[SOURCE, MODULE],
                     (Public, Prop) => &[],
                     _ => unreachable!(),
                 }
             }
-            Body(..) => &[
-                Source,
-                Module(SrcRef(None)),
-                Workbench(SrcRef(None)),
-                Function(SrcRef(None)),
-            ],
+            Body(..) => &[SOURCE, MODULE, WORKBENCH, FUNCTION],
             Use(.., visibility) => {
                 use Visibility::*;
                 match visibility {
-                    Private | PrivateUse(..) => &[
-                        Source,
-                        Module(SrcRef(None)),
-                        Workbench(SrcRef(None)),
-                        Function(SrcRef(None)),
-                    ],
-                    _ => &[Source, Module(SrcRef(None))],
+                    Private | PrivateUse(..) => &[SOURCE, MODULE, WORKBENCH, FUNCTION],
+                    _ => &[SOURCE, MODULE],
                 }
             }
-            ExpressionStatement(..) => &[
-                Source,
-                Workbench(SrcRef(None)),
-                Function(SrcRef(None)),
-                If(SrcRef(None)),
-                StatementList(SrcRef(None)),
-                Expression(SrcRef(None)),
-            ],
-            Expression(..) => &[
-                Source,
-                Workbench(SrcRef(None)),
-                Function(SrcRef(None)),
-                If(SrcRef(None)),
-                StatementList(SrcRef(None)),
-                Expression(SrcRef(None)),
-            ],
+            ExpressionStatement(..) => &[SOURCE, WORKBENCH, FUNCTION, IF, STMT_LIST, EXPRESSION],
+            Expression(..) => &[SOURCE, WORKBENCH, FUNCTION, IF, STMT_LIST, EXPRESSION],
         }
     }
 }
