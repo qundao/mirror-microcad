@@ -7,8 +7,7 @@
 use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
-use crate::resolve::grant::Grant;
-use crate::resolve::Symbol;
+use crate::resolve::grant::Scope;
 use crate::src_ref::{SrcRef, SrcReferrer};
 use crate::{diag::*, parse::*, syntax::*};
 
@@ -133,9 +132,9 @@ pub enum ResolveError {
         initializers: SrcRef,
         #[label(primary, "This statement is not allowed")]
         statement: SrcRef,
-        #[label("Inside this {kind}")]
+        #[label("Inside this {scope}")]
         workbench: SrcRef,
-        kind: &'static str,
+        scope: &'static str,
     },
 
     /// Statement not allowed prior initializers
@@ -146,9 +145,9 @@ pub enum ResolveError {
         initializer: SrcRef,
         #[label(primary, "This statement is not allowed")]
         statement: SrcRef,
-        #[label("Inside this {kind}")]
+        #[label("Inside this {scope}")]
         workbench: SrcRef,
-        kind: &'static str,
+        scope: &'static str,
     },
 }
 
@@ -163,25 +162,27 @@ pub struct StatementNotSupportedError {
     outer: &'static str,
     #[label("Within this {outer}")]
     outer_span: Option<SourceSpan>,
-    allowed_parents: &'static [&'static str],
+    allowed_parents: Vec<&'static str>,
 }
 
 impl StatementNotSupportedError {
     /// Create an error from inner node name, src_ref and parent
-    pub(super) fn new<T: Grant + SrcReferrer>(node: &T, parent: &Symbol) -> Self {
+    pub(super) fn new(node: &Scope, parent: &Scope) -> Self {
         StatementNotSupportedError {
-            inner: node.kind(),
-            inner_span: node.kind_ref().unwrap_or_else(|| node.src_ref()),
-            outer: parent.kind_str(),
-            outer_span: (!parent.is_source())
-                .then(|| parent.kind_ref().unwrap_or_else(|| parent.src_ref()))
-                .and_then(|src_ref| src_ref.as_miette_span()),
-            allowed_parents: node.allowed_parents(),
+            inner: node.to_str(),
+            inner_span: node.src_ref(),
+            outer: parent.to_str(),
+            outer_span: parent.src_ref().as_miette_span(),
+            allowed_parents: node
+                .allowed_parents()
+                .iter()
+                .map(|scope| scope.to_str())
+                .collect(),
         }
     }
 
     fn allowed_parents(&self) -> impl std::fmt::Display {
-        struct AllowedParents(&'static [&'static str]);
+        struct AllowedParents(Vec<&'static str>);
 
         impl std::fmt::Display for AllowedParents {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -200,7 +201,7 @@ impl StatementNotSupportedError {
             }
         }
 
-        AllowedParents(self.allowed_parents)
+        AllowedParents(self.allowed_parents.clone())
     }
 
     fn parent_is_root(&self) -> bool {
@@ -224,11 +225,7 @@ impl StatementNotSupportedError {
     }
 
     fn maybe_here(&self) -> &'static str {
-        if self.parent_is_root() {
-            " here"
-        } else {
-            ""
-        }
+        if self.parent_is_root() { " here" } else { "" }
     }
 }
 

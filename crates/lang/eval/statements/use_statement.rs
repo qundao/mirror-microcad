@@ -25,8 +25,6 @@ pub trait UseLocally {
 
 impl Eval<()> for UseStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<()> {
-        self.grant(context)?;
-
         if !context.is_module() {
             log::trace!("Evaluating use statement: {self}");
             match &self.decl {

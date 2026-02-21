@@ -205,10 +205,7 @@ impl FromAst for TupleExpression {
                     expression: Expression::from_ast(&value.value, context)?,
                     src_ref: context.src_ref(&value.span),
                 })
-                .map_err(|(previous, id)| ParseError::DuplicateArgument {
-                    previous,
-                    id,
-                })?;
+                .map_err(|(previous, id)| ParseError::DuplicateArgument { previous, id })?;
         }
 
         Ok(TupleExpression {
@@ -227,7 +224,12 @@ macro_rules! tuple_expression {
         use $crate::parser::FromAst;
         let context = $crate::parser::ParseContext::new($code);
         let ast = $crate::parse::build_ast($code, &context).unwrap();
-        let statement = ast.statements.statements.first().or(ast.statements.tail.as_deref()).expect("empty source");
+        let statement = ast
+            .statements
+            .statements
+            .first()
+            .or(ast.statements.tail.as_deref())
+            .expect("empty source");
         let tuple_expression = match statement {
             ast::Statement::Expression(ast::ExpressionStatement {
                 expression: ast::Expression::Tuple(tuple),
