@@ -16,8 +16,8 @@
   × error: 87:3: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:87:3]
  86 │ sketch K() { 
-    ·        ┬
-    ·        ╰── Inside this sketch
+    · ───┬──
+    ·    ╰── Inside this workbench
  87 │   a = 1; // error
     ·   ──┬──
     ·     ╰── This statement is not allowed

@@ -13,13 +13,16 @@
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Public use statement not available here
+  × error: 47:3: Use statement is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:47:3]
- 46 │ {
- 47 │   pub use std; // error
-    ·   ─────┬─────
-    ·        ╰── Public use statement not available here
- 48 │ }
+ 46 │ ╭─▶ {
+ 47 │ │     pub use std; // error
+    · │     ─────┬─────
+    · │          ╰── This use statement is not allowed
+ 48 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
+  help: use statement is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

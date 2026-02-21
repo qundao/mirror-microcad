@@ -23,7 +23,7 @@
     ·                                      ╰── This if statement is not allowed
  64 │ }
     ╰────
-  help: if statement is only allowed within source root, module definition, workbench definition or function definition
+  help: if statement is only allowed within source file, workbench or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

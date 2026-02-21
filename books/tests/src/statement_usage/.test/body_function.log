@@ -13,21 +13,16 @@
 
 -- No Output --
 -- Errors --
-  × error: 23:6: Function statement not available here
-    ╭─[../books/tests/src/statement_usage/body.md:23:6]
- 22 │ {
- 23 │   fn f() {} f(); // error
-    ·      ┬
-    ·      ╰── Function statement not available here
- 24 │ }
+  × error: 23:6: Function is not allowed within expression statement
+    ╭─[../books/tests/src/statement_usage/body.md:23:3]
+ 22 │ ╭─▶ {
+ 23 │ │     fn f() {} f(); // error
+    · │     ─┬
+    · │      ╰── This function is not allowed
+ 24 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
-  × error: 23:13: Symbol f not found.
-    ╭─[../books/tests/src/statement_usage/body.md:23:13]
- 22 │ {
- 23 │   fn f() {} f(); // error
-    ·             ─┬─
-    ·              ╰── Symbol f not found.
- 24 │ }
-    ╰────
+  help: function is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

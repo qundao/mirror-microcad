@@ -15,17 +15,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 34:5: Property assigment is not allowed within function
+  × error: 34:5: Property assignment is not allowed within function
     ╭─[../books/language/src/assignments/property.md:34:5]
  33 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  34 │     prop diameter = radius * 2; // error: not in functions
     ·     ─────────────┬────────────
-    ·                  ╰── This property assigment is not allowed
+    ·                  ╰── This property assignment is not allowed
  35 │ }
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

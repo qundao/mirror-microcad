@@ -13,17 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 87:3: Assigment is not allowed within module
+  × error: 87:3: Value assignment is not allowed within module
     ╭─[../books/tests/src/statement_usage/module.md:87:3]
  86 │ mod k {
     · ─┬─
     ·  ╰── Within this module
  87 │   a = 1; // error
     ·   ──┬──
-    ·     ╰── This assigment is not allowed
+    ·     ╰── This value assignment is not allowed
  88 │ }
     ╰────
-  help: assigment is only allowed within source root, module definition, workbench definition or function definition
+  help: value assignment is only allowed within source file, module, workbench or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

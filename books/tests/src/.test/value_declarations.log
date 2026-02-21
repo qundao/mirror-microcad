@@ -45,61 +45,59 @@
   53:                   assert_eq([sketch_local, 6]);
   54:                   assert_eq([alt_param, 7]);
   55:                   assert_eq([init_local, 8]);
-  56:   
-  57:                   prop param = 5; // needed to compile
-  58:               }
-  59:   
-  60:               // property of sketch
-  61:               prop property = 9;
-  62:   
-  63:               // post init code
-  64:               assert_eq([super::value,1]);
-  65:               assert_eq([super::pub_value, 2]);
-  66:               assert_eq([value, 3]);
-  67:               assert_eq([pub_value, 4]);
-  68:               assert_eq([param, 5]);
-  69:               assert_eq([sketch_local, 6]);
-  70:               assert_invalid(alt_param);
-  71:               assert_invalid(init_local);
-  72:               assert_eq([property, 9]);
-  73:   
-  74:               function();
-  75:           }
-  76:   
-  77:           fn function(fn_param = 10) {
-  78:               assert_eq([super::value, 1]);
-  79:               assert_eq([super::pub_value, 2]);
-  80:               assert_eq([value, 3]);
-  81:               assert_eq([pub_value, 4]);
-  82:               assert_invalid(param);
-  83:               // assert_invalid(Workbench);
-  84:               assert_eq([fn_param, 10]);
-  85:   
-  86:               return 0;
-  87:           }
-  88:       }
-  89:   
-  90:       pub fn function(fn_param = 11) {
-  91:           assert_eq([value, 1]);
-  92:           assert_eq([pub_value, 2]);
-  93:           assert_invalid(pub_sub_module::value);
-  94:           assert_eq([pub_sub_module::pub_value, 4]);
-  95:           assert_invalid(Workbench);
-  96:           assert_invalid(PrivateWorkbench);
-  97:           assert_eq([fn_param, 11]);
-  98:           
-  99:           return 0;
- 100:       }
- 101:   }
- 102:   
- 103:   // source file code 
- 104:   assert_invalid(module::value);
- 105:   assert_eq([module::pub_value, 2]);
- 106:   assert_invalid(module::pub_sub_module::value);
- 107:   assert_eq([module::pub_sub_module::pub_value, 4]);
- 108:   assert_eq([module::pub_sub_module::Workbench(p=5).property, 9]);
- 109:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
- 110:   assert_eq([module::function(), 0]);
+  56:               }
+  57:   
+  58:               // property of sketch
+  59:               prop property = 9;
+  60:   
+  61:               // post init code
+  62:               assert_eq([super::value,1]);
+  63:               assert_eq([super::pub_value, 2]);
+  64:               assert_eq([value, 3]);
+  65:               assert_eq([pub_value, 4]);
+  66:               assert_eq([param, 5]);
+  67:               assert_eq([sketch_local, 6]);
+  68:               assert_invalid(alt_param);
+  69:               assert_invalid(init_local);
+  70:               assert_eq([property, 9]);
+  71:   
+  72:               function();
+  73:           }
+  74:   
+  75:           fn function(fn_param = 10) {
+  76:               assert_eq([super::value, 1]);
+  77:               assert_eq([super::pub_value, 2]);
+  78:               assert_eq([value, 3]);
+  79:               assert_eq([pub_value, 4]);
+  80:               assert_invalid(param);
+  81:               // assert_invalid(Workbench);
+  82:               assert_eq([fn_param, 10]);
+  83:   
+  84:               return 0;
+  85:           }
+  86:       }
+  87:   
+  88:       pub fn function(fn_param = 11) {
+  89:           assert_eq([value, 1]);
+  90:           assert_eq([pub_value, 2]);
+  91:           assert_invalid(pub_sub_module::value);
+  92:           assert_eq([pub_sub_module::pub_value, 4]);
+  93:           assert_invalid(Workbench);
+  94:           assert_invalid(PrivateWorkbench);
+  95:           assert_eq([fn_param, 11]);
+  96:           
+  97:           return 0;
+  98:       }
+  99:   }
+ 100:   
+ 101:   // source file code 
+ 102:   assert_invalid(module::value);
+ 103:   assert_eq([module::pub_value, 2]);
+ 104:   assert_invalid(module::pub_sub_module::value);
+ 105:   assert_eq([module::pub_sub_module::pub_value, 4]);
+ 106:   assert_eq([module::pub_sub_module::Workbench(p=5).property, 9]);
+ 107:   assert_invalid(module::pub_sub_module::PrivateWorkbench);
+ 108:   assert_eq([module::function(), 0]);
 
 -- No Output --
 -- Errors --

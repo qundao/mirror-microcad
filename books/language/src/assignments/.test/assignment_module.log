@@ -2,28 +2,28 @@
 -- Test --
         Test name: assignment_module
   Expected result: fail
-      Source file: ../books/language/src/assignments/value.md:101
+      Source file: ../books/language/src/assignments/value.md:105
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
- 101:   mod my_module {
- 102:       a = 1; // error
- 103:   }
+ 105:   mod my_module {
+ 106:       a = 1; // error
+ 107:   }
 
 -- No Output --
 -- Errors --
-  × error: 102:5: Assigment is not allowed within module
-     ╭─[../books/language/src/assignments/value.md:102:5]
- 101 │ mod my_module {
+  × error: 106:5: Value assignment is not allowed within module
+     ╭─[../books/language/src/assignments/value.md:106:5]
+ 105 │ mod my_module {
      · ─┬─
      ·  ╰── Within this module
- 102 │     a = 1; // error
+ 106 │     a = 1; // error
      ·     ──┬──
-     ·       ╰── This assigment is not allowed
- 103 │ }
+     ·       ╰── This value assignment is not allowed
+ 107 │ }
      ╰────
-  help: assigment is only allowed within source root, module definition, workbench definition or function definition
+  help: value assignment is only allowed within source file, module, workbench or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

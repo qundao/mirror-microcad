@@ -13,13 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 63:3: If statement not available here
+  × error: 63:3: If statement is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:63:3]
  62 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  63 │   if std::math::PI == l { } // error
     ·   ─────────────────┬────────────────
-    ·                    ╰── If statement not available here
+    ·                    ╰── This if statement is not allowed
  64 │ } } K(1cm);
     ╰────
+  help: if statement is only allowed within source file, workbench or function
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

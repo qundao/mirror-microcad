@@ -13,21 +13,16 @@
 
 -- No Output --
 -- Errors --
-  × error: 103:3: Assignment statement not available here
+  × error: 103:3: Property assignment is not allowed within expression statement
      ╭─[../books/tests/src/statement_usage/body.md:103:3]
- 102 │ {
- 103 │   prop a = 1; // error
-     ·   ─────┬────
-     ·        ╰── Assignment statement not available here
- 104 │ }
+ 102 │ ╭─▶ {
+ 103 │ │     prop a = 1; // error
+     · │     ─────┬────
+     · │          ╰── This property assignment is not allowed
+ 104 │ ├─▶ }
+     · ╰──── Within this expression statement
      ╰────
-  × error: 103:3: Missing model in workbench
-     ╭─[../books/tests/src/statement_usage/body.md:103:3]
- 102 │ {
- 103 │   prop a = 1; // error
-     ·   ─────┬────
-     ·        ╰── Missing model in workbench
- 104 │ }
-     ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

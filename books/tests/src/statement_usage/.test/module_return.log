@@ -23,7 +23,7 @@
     ·       ╰── This return statement is not allowed
  56 │ }
     ╰────
-  help: return statement is only allowed within function definition
+  help: return statement is only allowed within function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

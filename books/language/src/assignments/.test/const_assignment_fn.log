@@ -22,18 +22,18 @@
 
 -- No Output --
 -- Errors --
-  × error: 145:5: Constant assigment is not allowed within function
+  × error: 145:5: Constant assignment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:145:5]
  144 │ fn f() {
      · ─┬
      ·  ╰── Within this function
  145 │     const MY_CONST = 1;     // error: not allowed in functions
      ·     ─────────┬────────
-     ·              ╰── This constant assigment is not allowed
+     ·              ╰── This constant assignment is not allowed
  146 │ }
      ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
-  × error: 151:9: Constant assigment is not allowed within function
+  help: constant assignment is only allowed within source file, module or workbench
+  × error: 151:9: Constant assignment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:151:9]
  149 │ sketch MySketch() {
  150 │     fn f() {
@@ -41,10 +41,10 @@
      ·      ╰── Within this function
  151 │         const MY_CONST = 1; // error: not allowed in workbench functions
      ·         ─────────┬────────
-     ·                  ╰── This constant assigment is not allowed
+     ·                  ╰── This constant assignment is not allowed
  152 │     }
      ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
+  help: constant assignment is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

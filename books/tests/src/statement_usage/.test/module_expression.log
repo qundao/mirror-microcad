@@ -7,26 +7,23 @@
 
 -- Code --
 
- 102:   mod k {  // warning
+ 102:   mod k {
  103:     1 + 2; // error
  104:   }
 
 -- No Output --
 -- Errors --
-  × error: 103:3: Expression statement not available here
+  × error: 103:3: Expression statement is not allowed within module
      ╭─[../books/tests/src/statement_usage/module.md:103:3]
- 102 │ mod k {  // warning
+ 102 │ mod k {
+     · ─┬─
+     ·  ╰── Within this module
  103 │   1 + 2; // error
      ·   ──┬──
-     ·     ╰── Expression statement not available here
+     ·     ╰── This expression statement is not allowed
  104 │ }
      ╰────
-  ⚠ warning: 102:5: Unused global symbol k.
-     ╭─[../books/tests/src/statement_usage/module.md:102:5]
- 102 │ mod k {  // warning
-     ·     ┬
-     ·     ╰── Unused global symbol k.
- 103 │   1 + 2; // error
-     ╰────
+  help: expression statement is only allowed within source file, workbench, function, if statement, statement list or expression
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

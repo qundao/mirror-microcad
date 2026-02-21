@@ -13,13 +13,16 @@
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Module statement not available here
-    ╭─[../books/tests/src/statement_usage/body.md:15:7]
- 14 │ {
- 15 │   mod m {} // error
-    ·       ┬
-    ·       ╰── Module statement not available here
- 16 │ }
+  × error: 15:7: Module is not allowed within expression statement
+    ╭─[../books/tests/src/statement_usage/body.md:15:3]
+ 14 │ ╭─▶ {
+ 15 │ │     mod m {} // error
+    · │     ─┬─
+    · │      ╰── This module is not allowed
+ 16 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
+  help: module is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

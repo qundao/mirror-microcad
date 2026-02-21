@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: const_assignment_init
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/assignments/const.md:165
         Test path: ../books/language/src/assignments/.test
 
@@ -15,7 +15,19 @@
  170:   MySketch();
 
 -- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 167
+-- Errors --
+  × error: 167:9: Constant assignment is not allowed within initializer
+     ╭─[../books/language/src/assignments/const.md:167:9]
+ 165 │ sketch MySketch() {
+ 166 │     init(_: Integer) {
+     ·     ──┬─
+     ·       ╰── Within this initializer
+ 167 │         const MY_CONST = 1;   // error: not allowed in initializers
+     ·         ─────────┬────────
+     ·                  ╰── This constant assignment is not allowed
+ 168 │     }
+     ╰────
+  help: constant assignment is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED

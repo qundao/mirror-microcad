@@ -13,13 +13,16 @@
 
 -- No Output --
 -- Errors --
-  × error: 55:3: Return statement not available here
+  × error: 55:3: Return statement is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:55:3]
- 54 │ {
- 55 │   return 1; // error
-    ·   ────┬───
-    ·       ╰── Return statement not available here
- 56 │ }
+ 54 │ ╭─▶ {
+ 55 │ │     return 1; // error
+    · │     ────┬───
+    · │         ╰── This return statement is not allowed
+ 56 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
+  help: return statement is only allowed within function
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

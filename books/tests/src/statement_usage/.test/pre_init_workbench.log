@@ -8,7 +8,7 @@
 -- Code --
 
    6:   sketch K() { 
-   7:     sketch F() {} K();  // error
+   7:     sketch F() {}  // error
    8:   init(l:Length) {} } K();
 
 -- No Output --
@@ -16,34 +16,22 @@
   × error: 7:10: Statement not allowed within workbenches
    ╭─[../books/tests/src/statement_usage/pre-init.md:7:10]
  6 │ sketch K() { 
- 7 │   sketch F() {} K();  // error
+ 7 │   sketch F() {}  // error
    ·          ┬
    ·          ╰── Statement not allowed within workbenches
  8 │ init(l:Length) {} } K();
    ╰────
-  × error: 7:17: Statement not allowed prior initializers
-   ╭─[../books/tests/src/statement_usage/pre-init.md:7:17]
- 6 │ sketch K() { 
-   ·        ┬
-   ·        ╰── Inside this sketch
- 7 │   sketch F() {} K();  // error
-   ·                 ─┬─
-   ·                  ╰── This statement is not allowed
- 8 │ init(l:Length) {} } K();
-   · ──┬─
-   ·   ╰── Before this initializer
-   ╰────
-  × error: 7:10: Sketch is not allowed within sketch
+  × error: 7:10: Workbench is not allowed within workbench
    ╭─[../books/tests/src/statement_usage/pre-init.md:7:3]
  6 │ sketch K() { 
    · ───┬──
-   ·    ╰── Within this sketch
- 7 │   sketch F() {} K();  // error
+   ·    ╰── Within this workbench
+ 7 │   sketch F() {}  // error
    ·   ───┬──
-   ·      ╰── This sketch is not allowed
+   ·      ╰── This workbench is not allowed
  8 │ init(l:Length) {} } K();
    ╰────
-  help: sketch is only allowed within source root or module definition
+  help: workbench is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -13,21 +13,16 @@
 
 -- No Output --
 -- Errors --
-  × error: 79:3: Assignment statement not available here
+  × error: 79:3: Constant assignment is not allowed within expression statement
     ╭─[../books/tests/src/statement_usage/body.md:79:3]
- 78 │ {
- 79 │   const B = 1; // error
-    ·   ─────┬─────
-    ·        ╰── Assignment statement not available here
- 80 │ }
+ 78 │ ╭─▶ {
+ 79 │ │     const B = 1; // error
+    · │     ─────┬─────
+    · │          ╰── This constant assignment is not allowed
+ 80 │ ├─▶ }
+    · ╰──── Within this expression statement
     ╰────
-  × error: 79:3: Symbol B not found.
-    ╭─[../books/tests/src/statement_usage/body.md:79:3]
- 78 │ {
- 79 │   const B = 1; // error
-    ·   ─────┬─────
-    ·        ╰── Symbol B not found.
- 80 │ }
-    ╰────
+  help: constant assignment is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

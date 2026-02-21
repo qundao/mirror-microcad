@@ -13,13 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 95:3: Assignment statement not available here
+  × error: 95:3: Property assignment is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:95:3]
  94 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  95 │   prop a = l; // error
     ·   ─────┬────
-    ·        ╰── Assignment statement not available here
+    ·        ╰── This property assignment is not allowed
  96 │ } } K(1cm);
     ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

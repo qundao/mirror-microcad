@@ -12,7 +12,7 @@
   15:       const FACTOR = 2.0;
   16:   
   17:       // initializer
-  18:       init(diameter: Length) { into_radius(diameter) }
+  18:       init(diameter: Length) { radius = into_radius(diameter); }
   19:   
   20:       // function
   21:       fn into_radius( diameter: Length ) {

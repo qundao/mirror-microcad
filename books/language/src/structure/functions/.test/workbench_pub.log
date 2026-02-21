@@ -19,13 +19,19 @@
 
 -- No Output --
 -- Errors --
-  × error: 39:12: Function statement not available here
-    ╭─[../books/language/src/structure/functions/workbench_functions.md:39:12]
+  × error: 39:12: Function is not allowed within workbench
+    ╭─[../books/language/src/structure/functions/workbench_functions.md:39:9]
+ 36 │ sketch PunchedDisk(radius: Length) {
+    · ───┬──
+    ·    ╰── Within this workbench
+ 37 │     use std::geo2d::Circle;
  38 │ 
  39 │     pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
-    ·            ──┬──
-    ·              ╰── Function statement not available here
+    ·         ─┬
+    ·          ╰── This function is not allowed
  40 │ 
     ╰────
+  help: function is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -24,7 +24,7 @@
 
 -- No Output --
 -- Errors --
-  × error: 58:9: Property assigment is not allowed within function
+  × error: 58:9: Property assignment is not allowed within function
     ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
  56 │ 
  57 │     fn inner() {
@@ -32,10 +32,10 @@
     ·      ╰── Within this function
  58 │         prop hole = radius/2;  // error: prop not allowed in function
     ·         ──────────┬─────────
-    ·                   ╰── This property assigment is not allowed
+    ·                   ╰── This property assignment is not allowed
  59 │         hole
     ╰────
-  help: property assigment is only allowed within workbench definition
+  help: property assignment is only allowed within workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

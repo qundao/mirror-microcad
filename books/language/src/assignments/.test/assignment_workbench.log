@@ -2,32 +2,32 @@
 -- Test --
         Test name: assignment_workbench
   Expected result: fail
-      Source file: ../books/language/src/assignments/value.md:113
+      Source file: ../books/language/src/assignments/value.md:117
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
- 113:   sketch MySketch() {
- 114:       a = 1;   // error
- 115:       init(_x : Scalar) {}
- 116:   }
- 117:   
- 118:   MySketch();
+ 117:   sketch MySketch() {
+ 118:       a = 1;   // error
+ 119:       init(_x : Scalar) {}
+ 120:   }
+ 121:   
+ 122:   MySketch();
 
 -- No Output --
 -- Errors --
-  × error: 114:5: Statement not allowed prior initializers
-     ╭─[../books/language/src/assignments/value.md:114:5]
- 113 │ sketch MySketch() {
-     ·        ────┬───
-     ·            ╰── Inside this sketch
- 114 │     a = 1;   // error
+  × error: 118:5: Statement not allowed prior initializers
+     ╭─[../books/language/src/assignments/value.md:118:5]
+ 117 │ sketch MySketch() {
+     · ───┬──
+     ·    ╰── Inside this workbench
+ 118 │     a = 1;   // error
      ·     ──┬──
      ·       ╰── This statement is not allowed
- 115 │     init(_x : Scalar) {}
+ 119 │     init(_x : Scalar) {}
      ·     ──┬─
      ·       ╰── Before this initializer
- 116 │ }
+ 120 │ }
      ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

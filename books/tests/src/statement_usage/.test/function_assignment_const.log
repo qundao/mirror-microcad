@@ -13,17 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 71:3: Constant assigment is not allowed within function
+  × error: 71:3: Constant assignment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:71:3]
  70 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  71 │   const B = 1; // error
     ·   ─────┬─────
-    ·        ╰── This constant assigment is not allowed
+    ·        ╰── This constant assignment is not allowed
  72 │ } f();
     ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
+  help: constant assignment is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

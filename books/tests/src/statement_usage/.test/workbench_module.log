@@ -13,17 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 15:7: Module definition is not allowed within sketch
+  × error: 15:7: Module is not allowed within workbench
     ╭─[../books/tests/src/statement_usage/workbench.md:15:3]
  14 │ sketch K() {
     · ───┬──
-    ·    ╰── Within this sketch
+    ·    ╰── Within this workbench
  15 │   mod m {} // error
     ·   ─┬─
-    ·    ╰── This module definition is not allowed
+    ·    ╰── This module is not allowed
  16 │ } K();
     ╰────
-  help: module definition is only allowed within source root or module
+  help: module is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

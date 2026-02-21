@@ -7,26 +7,23 @@
 
 -- Code --
 
-  22:   sketch K() { init(l:Length) { // warning
+  22:   sketch K() { init(l:Length) {
   23:     fn f() {} // error
   24:   } } K(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 23:6: Function statement not available here
-    ╭─[../books/tests/src/statement_usage/init.md:23:6]
- 22 │ sketch K() { init(l:Length) { // warning
+  × error: 23:6: Function is not allowed within initializer
+    ╭─[../books/tests/src/statement_usage/init.md:23:3]
+ 22 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  23 │   fn f() {} // error
-    ·      ┬
-    ·      ╰── Function statement not available here
+    ·   ─┬
+    ·    ╰── This function is not allowed
  24 │ } } K(1cm);
     ╰────
-  ⚠ warning: 22:19: Unused local l.
-    ╭─[../books/tests/src/statement_usage/init.md:22:19]
- 22 │ sketch K() { init(l:Length) { // warning
-    ·                   ┬
-    ·                   ╰── Unused local l.
- 23 │   fn f() {} // error
-    ╰────
+  help: function is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
