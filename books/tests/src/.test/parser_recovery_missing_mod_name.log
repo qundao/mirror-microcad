@@ -2,42 +2,42 @@
 -- Test --
         Test name: parser_recovery_missing_mod_name
   Expected result: fail
-      Source file: ../books/tests/src/parser_recovery.md:26
+      Source file: ../books/tests/src/parser_recovery.md:46
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  26:   mod { // error, no name
-  27:     1=; // error inside a mod statements with no name
-  28:   }
-  29:   
-  30:   a =; // error after a mod statements with no name
+  46:   mod { // error, no name
+  47:     1=; // error inside a mod statements with no name
+  48:   }
+  49:   
+  50:   a =; // error after a mod with no name
 
 -- Parse Error --
-  × error: 27:5: Expected identifier
-    ╭─[../books/tests/src/parser_recovery.md:27:5]
- 27 │ mod { // error, no name
+  × error: 47:5: Expected identifier
+    ╭─[../books/tests/src/parser_recovery.md:47:5]
+ 47 │ mod { // error, no name
     ·     ┬
     ·     ╰── unexpected {
- 28 │   1=; // error inside a mod statements with no name
+ 48 │   1=; // error inside a mod statements with no name
     ╰────
 
 -- Parse Error --
-  × error: 28:4: Expected quantity type, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  × error: 48:4: Expected quantity type, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[../books/tests/src/parser_recovery.md:28:4]
- 27 │ mod { // error, no name
- 28 │   1=; // error inside a mod statements with no name
+    ╭─[../books/tests/src/parser_recovery.md:48:4]
+ 47 │ mod { // error, no name
+ 48 │   1=; // error inside a mod statements with no name
     ·    ┬
     ·    ╰── unexpected =
- 29 │ }
+ 49 │ }
     ╰────
 
 -- Parse Error --
-  × error: 31:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:31:4]
- 30 │ 
- 31 │ a =; // error after a mod statements with no name
+  × error: 51:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:51:4]
+ 50 │ 
+ 51 │ a =; // error after a mod with no name
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

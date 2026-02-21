@@ -2,38 +2,38 @@
 -- Test --
         Test name: parser_recovery_use_leading_double_colon
   Expected result: fail
-      Source file: ../books/tests/src/parser_recovery.md:68
+      Source file: ../books/tests/src/parser_recovery.md:88
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  68:   use a:: as 1; // error, name
-  69:   
-  70:   a =; // error after a broken use statement
+  88:   use a:: as 1; // error, name
+  89:   
+  90:   a =; // error after a broken use statement
 
 -- Parse Error --
-  × error: 69:8: Expected identifier or '*'
-    ╭─[../books/tests/src/parser_recovery.md:69:8]
- 69 │ use a:: as 1; // error, name
+  × error: 89:8: Expected identifier or '*'
+    ╭─[../books/tests/src/parser_recovery.md:89:8]
+ 89 │ use a:: as 1; // error, name
     ·        ┬
     ·        ╰── unexpected whitespace
- 70 │ 
+ 90 │ 
     ╰────
 
 -- Parse Error --
-  × error: 69:12: Expected identifier
-    ╭─[../books/tests/src/parser_recovery.md:69:12]
- 69 │ use a:: as 1; // error, name
+  × error: 89:12: Expected identifier
+    ╭─[../books/tests/src/parser_recovery.md:89:12]
+ 89 │ use a:: as 1; // error, name
     ·            ┬
     ·            ╰── unexpected integer literal
- 70 │ 
+ 90 │ 
     ╰────
 
 -- Parse Error --
-  × error: 71:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:71:4]
- 70 │ 
- 71 │ a =; // error after a broken use statement
+  × error: 91:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:91:4]
+ 90 │ 
+ 91 │ a =; // error after a broken use statement
     ·    ┬
     ·    ╰── unexpected ;
     ╰────
