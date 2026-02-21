@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**155** tests have been evaluated with version **0.3.0** of microcad.
+**163** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -94,6 +94,14 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/multiplicity_tuple_array.svg)](.test/multiplicity_tuple_array.log) | [multiplicity_tuple_array](tuple_matching.md) |
 | [![test](.test/operation_no_body.svg)](.test/operation_no_body.log) | [operation_no_body](semicolon.md) |
 | [![test](.test/operation_with_body.svg)](.test/operation_with_body.log) | [operation_with_body](semicolon.md) |
+| [![test](.test/parser_recovery_missing_fn_params.svg)](.test/parser_recovery_missing_fn_params.log) | [parser_recovery_missing_fn_params](parser_recovery.md) |
+| [![test](.test/parser_recovery_missing_mod_name.svg)](.test/parser_recovery_missing_mod_name.log) | [parser_recovery_missing_mod_name](parser_recovery.md) |
+| [![test](.test/parser_recovery_return_extras.svg)](.test/parser_recovery_return_extras.log) | [parser_recovery_return_extras](parser_recovery.md) |
+| [![test](.test/parser_recovery_use_invalid_as.svg)](.test/parser_recovery_use_invalid_as.log) | [parser_recovery_use_invalid_as](parser_recovery.md) |
+| [![test](.test/parser_recovery_use_leading_double_colon.svg)](.test/parser_recovery_use_leading_double_colon.log) | [parser_recovery_use_leading_double_colon](parser_recovery.md) |
+| [![test](.test/parser_recovery_use_missing_as.svg)](.test/parser_recovery_use_missing_as.log) | [parser_recovery_use_missing_as](parser_recovery.md) |
+| [![test](.test/parser_recovery_use_non_identifier.svg)](.test/parser_recovery_use_non_identifier.log) | [parser_recovery_use_non_identifier](parser_recovery.md) |
+| [![test](.test/parser_recovery_wrong_fn_params.svg)](.test/parser_recovery_wrong_fn_params.log) | [parser_recovery_wrong_fn_params](parser_recovery.md) |
 | [![test](statement_usage/.test/pre_init_assignment_const.svg)](statement_usage/.test/pre_init_assignment_const.log) | [pre_init_assignment_const](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_assignment_prop.svg)](statement_usage/.test/pre_init_assignment_prop.log) | [pre_init_assignment_prop](statement_usage/pre-init.md) |
 | [![test](statement_usage/.test/pre_init_assignment_pub.svg)](statement_usage/.test/pre_init_assignment_pub.log) | [pre_init_assignment_pub](statement_usage/pre-init.md) |

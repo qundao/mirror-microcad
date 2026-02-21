@@ -1,0 +1,34 @@
+﻿
+-- Test --
+        Test name: parser_recovery_return_extras
+  Expected result: fail
+      Source file: ../books/tests/src/parser_recovery.md:36
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  36:   return 1 2;// error, unexpected tokens after return statement
+  37:   
+  38:   a =; // error after a broken return statement
+
+-- Parse Error --
+  × error: 37:10: Expected comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
+  │ semicolon
+    ╭─[../books/tests/src/parser_recovery.md:37:10]
+ 37 │ return 1 2;// error, unexpected tokens after return statement
+    ·          ┬
+    ·          ╰── unexpected integer literal
+ 38 │ 
+    ╰────
+
+-- Parse Error --
+  × error: 39:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:39:4]
+ 38 │ 
+ 39 │ a =; // error after a broken return statement
+    ·    ┬
+    ·    ╰── unexpected ;
+    ╰────
+
+-- Test Result --
+FAILS AS EXPECTED
