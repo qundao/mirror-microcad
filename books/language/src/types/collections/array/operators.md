@@ -23,8 +23,8 @@ assert_eq([ [1.0, 2.0] / 2.0,  [0.5, 1.0] ]);
 assert_eq([ -[-1.0, 1.0],      [1.0, -1.0] ]);
 ```
 
-[![test](.test/array_operation_bool.svg)](.test/array_operation_bool.log)
+[![test](.test/array_operator_not.svg)](.test/array_operator_not.log)
 
-```µcad,array_operation_bool#todo
+```µcad,array_operator_not
 std::debug::assert_eq([ ![true, false], [false, true] ]);
 ```
