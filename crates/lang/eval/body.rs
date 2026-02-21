@@ -12,16 +12,31 @@ impl Eval<Value> for Body {
     }
 }
 
-/// Evaluate the body into a single group: `{}`.
 impl Eval<Option<Model>> for Body {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
-        context
-            .scope(StackFrame::Body(SymbolMap::default()), |context| {
-                Ok(ModelBuilder::new(Element::Group, self.src_ref())
-                    .add_children(self.statements.eval(context)?)?
-                    .attributes(self.statements.eval(context)?)
-                    .build())
-            })
-            .map(Some)
+        self.eval(context).map(Some)
+    }
+}
+
+impl Eval<Models> for Body {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Models> {
+        self.statements.eval(context)
+    }
+}
+
+impl Eval<Model> for Body {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Model> {
+        context.scope(StackFrame::Body(SymbolMap::default()), |context| {
+            Ok(ModelBuilder::new(Element::Group, self.src_ref())
+                .add_children(self.statements.eval(context)?)?
+                .attributes(self.statements.eval(context)?)
+                .build())
+        })
+    }
+}
+
+impl Eval<Attributes> for Body {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Attributes> {
+        self.statements.eval(context)
     }
 }

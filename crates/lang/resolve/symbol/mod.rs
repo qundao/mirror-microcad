@@ -330,11 +330,6 @@ impl Symbol {
         matches!(self.inner.borrow().def, SymbolDef::Workbench(..))
     }
 
-    /// check if a public assigment may be declared within this symbol
-    pub(super) fn can_public(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::Module(..) | SymbolDef::SourceFile(..))
-    }
-
     fn is_root(&self) -> bool {
         matches!(self.inner.borrow().def, SymbolDef::Root)
     }
@@ -527,10 +522,6 @@ impl Symbol {
                 }
             }
         }
-    }
-
-    pub(crate) fn kind_str(&self) -> &'static str {
-        self.inner.borrow().def.kind_str()
     }
 
     pub(super) fn source_hash(&self) -> u64 {

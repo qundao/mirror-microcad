@@ -19,18 +19,6 @@ pub use use_statement::*;
 impl Eval for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match self {
-            Self::Workbench(w) => {
-                w.grant(context)?;
-                Ok(Value::None)
-            }
-            Self::Module(m) => {
-                m.grant(context)?;
-                Ok(Value::None)
-            }
-            Self::Function(f) => {
-                f.grant(context)?;
-                Ok(Value::None)
-            }
             Self::Use(u) => {
                 u.eval(context)?;
                 Ok(Value::None)
@@ -41,19 +29,14 @@ impl Eval for Statement {
             }
             Self::If(i) => i.eval(context),
             Self::Expression(e) => e.eval(context),
-            Self::InnerAttribute(i) => {
-                i.grant(context)?;
-                Ok(Value::None)
-            }
-            Self::InnerDocComment(i) => {
-                i.grant(context)?;
-                Ok(Value::None)
-            }
-            Self::Init(i) => {
-                i.grant(context)?;
-                Ok(Value::None)
-            }
             Self::Return(r) => r.eval(context),
+
+            Self::Workbench(..)
+            | Self::Module(..)
+            | Self::Function(..)
+            | Self::InnerAttribute(..)
+            | Self::InnerDocComment(..)
+            | Self::Init(..) => Ok(Value::None),
         }
     }
 }
@@ -61,24 +44,8 @@ impl Eval for Statement {
 impl Eval<Option<Model>> for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         let model: Option<Model> = match self {
-            Self::Workbench(w) => {
-                w.grant(context)?;
-                None
-            }
             Self::Module(m) => {
                 m.eval(context)?;
-                None
-            }
-            Self::Function(f) => {
-                f.grant(context)?;
-                None
-            }
-            Self::Init(i) => {
-                i.grant(context)?;
-                None
-            }
-            Self::Return(r) => {
-                r.grant(context)?;
                 None
             }
             Self::Use(u) => {
@@ -91,14 +58,13 @@ impl Eval<Option<Model>> for Statement {
             }
             Self::If(i) => i.eval(context)?,
             Self::Expression(e) => e.eval(context)?,
-            Self::InnerAttribute(a) => {
-                a.grant(context)?;
-                None
-            }
-            Self::InnerDocComment(doc) => {
-                doc.grant(context)?;
-                None
-            }
+
+            Self::Workbench(..)
+            | Self::Function(..)
+            | Self::Init(..)
+            | Self::Return(..)
+            | Self::InnerAttribute(..)
+            | Self::InnerDocComment(..) => None,
         };
 
         if let Some(ref model) = model {

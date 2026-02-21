@@ -3,8 +3,8 @@
 
 //! µcad source file representation
 
-use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 use crate::{src_ref::*, syntax::*};
+use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
 /// µcad source file
 #[derive(Clone, Default)]
@@ -191,7 +191,9 @@ impl SourceCode for MietteSourceFile<'_> {
         context_lines_before: usize,
         context_lines_after: usize,
     ) -> Result<Box<dyn SpanContents<'a> + 'a>, MietteError> {
-        let inner_contents = self.source.read_span(span, context_lines_before, context_lines_after)?;
+        let inner_contents =
+            self.source
+                .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
             self.name.clone(),
             inner_contents.data(),
@@ -199,7 +201,8 @@ impl SourceCode for MietteSourceFile<'_> {
             inner_contents.line() + self.line_offset,
             inner_contents.column(),
             inner_contents.line_count(),
-        ).with_language("µcad");
+        )
+        .with_language("µcad");
         Ok(Box::new(contents))
     }
 }
