@@ -16,8 +16,8 @@
   37:   assert_eq([tuple.height,2m]);
 
 -- Parse Error --
-  × error: 33:17: Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment, semicolon
-  │ or end of input
+  × error: 33:17: Expected attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', comment or
+  │ semicolon
     ╭─[../books/tests/src/tuple_assignments.md:33:17]
  32 │ array = [1,2]m;
  33 │ (width, height) = array;
