@@ -67,7 +67,7 @@ You may not define a property within an initializer.
 
 [![test](.test/property_no_prop_in_initializer.svg)](.test/property_no_prop_in_initializer.log)
 
-```µcad,property_no_prop_in_initializer#todo_fail
+```µcad,property_no_prop_in_initializer#fail
 sketch Wheel(radius: Length, thickness = 5cm) {
     init(radius: Length, inner: Length) {
         thickness = radius - inner;
