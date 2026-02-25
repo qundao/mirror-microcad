@@ -14,62 +14,44 @@ pub(crate) use scope::*;
 pub(super) trait Grant {
     /// Checks if definition is allowed to occur within the given parent symbol.
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()>;
-
-    /// Return scope information.
-    fn scope(&self) -> Scope;
 }
 
 impl Grant for SourceFile {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
-        context.scope(Source, |context| {
-            self.statements.iter().try_for_each(|statement| {
-                statement.grant(context)?;
-                Ok(())
-            })
+        use ScopeType::*;
+        context.scope(Scope(Source, SrcRef(None)), |context| {
+            self.statements.grant(context)
         })
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Source
     }
 }
 
 impl Grant for ModuleDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
-        match &context.parent() {
-            Source | Module(..) => Ok(()),
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+        use ScopeType::*;
+        let scope = Scope(Module, self.keyword_ref.clone());
+        let parent = &context.parent();
+        match parent.ty() {
+            Source | Module => Ok(()),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
         if let Some(body) = &self.body {
-            context.scope(Module(self.keyword_ref.clone()), |context| {
-                body.grant(context)
-            })?;
+            context.scope(scope, |context| body.grant(context))?;
         }
         Ok(())
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Module(self.keyword_ref.clone())
     }
 }
 
 impl Grant for StatementList {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
-        match &context.parent() {
-            Source | Module(..) | Workbench(..) | Function(..) => Ok(()),
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+        use ScopeType::*;
+        let scope = Scope(StatementList, self.src_ref());
+        let parent = &context.parent();
+        match parent.ty() {
+            Source | Module | Workbench | Function | Init | If | ExpressionStatement => Ok(()),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
-        self.iter().try_for_each(|statement| {
-            statement.grant(context)?;
-            Ok(())
-        })
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::StatementList(self.src_ref())
+        self.iter()
+            .try_for_each(|statement| statement.grant(context))
     }
 }
 
@@ -92,189 +74,152 @@ impl Grant for Statement {
             }
         }
     }
-
-    fn scope(&self) -> Scope {
-        use Statement::*;
-        match self {
-            If(statement) => statement.scope(),
-            Init(statement) => statement.scope(),
-            Return(statement) => statement.scope(),
-            Workbench(statement) => statement.scope(),
-            Module(statement) => statement.scope(),
-            Function(statement) => statement.scope(),
-            Use(statement) => statement.scope(),
-            Assignment(statement) => statement.scope(),
-            _ => unreachable!(),
-        }
-    }
 }
 
 impl Grant for WorkbenchDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
-        match &context.parent() {
-            Source | Module(..) => Ok(()),
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+        use ScopeType::*;
+        let scope = Scope(Workbench, self.keyword_ref.clone());
+        let parent = &context.parent();
+        match parent.ty() {
+            Source | Module => Ok(()),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
-        context.scope(Workbench(self.keyword_ref.clone()), |context| {
-            self.body.grant(context)
-        })
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Workbench(self.keyword_ref.clone())
+        context.scope(scope, |context| self.body.grant(context))
     }
 }
 
 impl Grant for FunctionDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
+        use ScopeType::*;
+        let scope = Scope(Function, self.keyword_ref.clone());
         let parent = &context.parent();
-        match parent {
-            Source | Module(..) => Ok(()),
-            Workbench(..) => {
+        match parent.ty() {
+            Source | Module => Ok(()),
+            Workbench => {
                 use Visibility::*;
                 match self.visibility {
                     Private | PrivateUse(..) => Ok(()),
                     Public | Deleted => {
-                        context.error(self, StatementNotSupportedError::new(&self.scope(), parent))
+                        context.error(self, StatementNotSupportedError::new(&scope, parent))
                     }
                 }
             }
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
-        context.scope(Function(self.keyword_ref.clone()), |context| {
-            self.body.grant(context)
-        })
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Function(self.keyword_ref.clone())
+        context.scope(scope, |context| self.body.grant(context))
     }
 }
 
 impl Grant for InitDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
-        match &context.parent() {
-            Workbench(..) => Ok(()),
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+        use ScopeType::*;
+        let scope = Scope(Init, self.keyword_ref.clone());
+        let parent = &context.parent();
+        match parent.ty() {
+            Workbench => Ok(()),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
-        context.scope(Init(self.keyword_ref.clone()), |context| {
-            self.body.grant(context)
-        })
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Init(self.keyword_ref.clone())
+        context.scope(scope, |context| self.body.grant(context))
     }
 }
 
 impl Grant for ReturnStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
-        let parent = context.parent();
-        match &parent {
-            Function(..) => Ok(()),
-            If(..) => {
-                if context.find(|k| matches!(k, Scope::Function(..))) {
+        use ScopeType::*;
+        let scope = Scope(Return, self.src_ref());
+        let parent = &context.parent();
+        match parent.ty() {
+            Function => Ok(()),
+            If => {
+                if context.find(|scope| matches!(scope.ty(), Function)) {
                     Ok(())
                 } else {
-                    context.error(
-                        self,
-                        StatementNotSupportedError::new(&self.scope(), &parent),
-                    )
+                    context.error(self, StatementNotSupportedError::new(&scope, parent))
                 }
             }
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Return(self.src_ref())
     }
 }
 
 impl Grant for IfStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
-        match &context.parent() {
-            Source | Workbench(..) | Function(..) | If(..) | ExpressionStatement(..) => Ok(()),
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+        use ScopeType::*;
+        let scope = Scope(If, self.src_ref());
+        let parent = &context.parent();
+        match &context.parent().ty() {
+            Source | Workbench | Function | If | ExpressionStatement => Ok(()),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
-        context.scope(If(self.src_ref()), |context| self.body.grant(context))?;
+        context.scope(Scope(If, self.body.src_ref()), |context| {
+            self.body.grant(context)
+        })?;
         if let Some(body_else) = &self.body_else {
-            context.scope(If(self.src_ref()), |context| body_else.grant(context))?;
+            context.scope(Scope(If, body_else.src_ref()), |context| {
+                body_else.grant(context)
+            })?;
         }
         if let Some(next_if) = &self.next_if {
-            context.scope(If(self.src_ref()), |context| next_if.grant(context))?;
+            context.scope(Scope(If, next_if.src_ref()), |context| {
+                next_if.grant(context)
+            })?;
         }
         Ok(())
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::If(self.src_ref())
     }
 }
 
 impl Grant for AssignmentStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use {Qualifier::*, Scope::*, Visibility::*};
+        use {Qualifier::*, ScopeType::*, Visibility::*};
+        let scope = Scope(
+            match (&self.assignment.visibility, &self.assignment.qualifier()) {
+                (Private | PrivateUse(_), Value) => ValueAssignment,
+                (Public, Const) => PubAssignment,
+                (Private, Const) => ConstAssignment,
+                (_, Prop) => PropAssignment,
+                _ => unreachable!(),
+            },
+            self.src_ref(),
+        );
         let parent = context.parent();
-        let grant = match (&self.assignment.visibility, self.assignment.qualifier()) {
-            (Private | PrivateUse(_), Value) => {
+        let grant = match scope.0 {
+            ValueAssignment => {
                 matches!(
-                    parent,
-                    Source | Function(..) | Workbench(..) | Init(..) | ExpressionStatement(..)
+                    parent.ty(),
+                    Source | Function | Workbench | Init | ExpressionStatement
                 )
             }
-            (Public, _) => matches!(parent, Source | Module(..)),
-            (_, Const) => matches!(parent, Source | Module(..) | Workbench(..)),
-            (_, Prop) => matches!(parent, Workbench(..)),
-            (Deleted, _) => false,
+            PubAssignment => matches!(parent.ty(), Source | Module),
+            ConstAssignment => matches!(parent.ty(), Source | Module | Workbench),
+            PropAssignment => matches!(parent.ty(), Workbench),
+            _ => unreachable!(),
         };
 
         if !grant {
-            context.error(
-                self,
-                StatementNotSupportedError::new(&self.scope(), &parent),
-            )?;
+            context.error(self, StatementNotSupportedError::new(&scope, &parent))?;
         }
         Ok(())
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Assignment(
-            self.src_ref(),
-            self.assignment.visibility.clone(),
-            self.assignment.qualifier(),
-        )
     }
 }
 
 impl Grant for Body {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
+        use ScopeType::*;
+        let scope = Scope(Body, self.src_ref());
         let parent = &context.parent();
-        match parent {
-            Source | Module(..) | Function(..) | Init(..) | If(..) | ExpressionStatement(..) => {
-                Ok(())
-            }
-            Workbench(..) => {
+        match parent.ty() {
+            Source | Module | Function | Init | If | ExpressionStatement => Ok(()),
+            Workbench => {
                 if let Err(err) = self.check_workbench_body(parent, context) {
                     context.error(self, err)?;
                 }
                 Ok(())
             }
-            parent => context.error(self, StatementNotSupportedError::new(&self.scope(), parent)),
+            _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
 
-        self.iter()
-            .try_for_each(|statement| statement.grant(context))
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Body(self.src_ref(), None)
+        self.statements.grant(context)
     }
 }
 
@@ -377,54 +322,45 @@ impl Body {
 
 impl Grant for UseStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
+        use {ScopeType::*, Visibility::*};
+        let scope = Scope(
+            match self.visibility {
+                Private | PrivateUse(..) => Use,
+                Public => PubUse,
+                _ => unreachable!(),
+            },
+            self.src_ref(),
+        );
         let parent = &context.parent();
-        let grant = match parent {
-            Source | Module(..) => true,
-            Workbench(..) | Function(..) | ExpressionStatement(..) | Body(..) | Init(..) => {
-                match self.visibility {
-                    Visibility::Private | Visibility::PrivateUse(_) => true,
-                    Visibility::Public => false,
-                    Visibility::Deleted => unreachable!(),
-                }
-            }
+        let grant = match parent.ty() {
+            Source | Module => true,
+            Workbench | Function | ExpressionStatement | Body | Init => match scope.0 {
+                Use => true,
+                PubUse => false,
+                _ => unreachable!(),
+            },
             _ => false,
         };
 
         if !grant {
-            context.error(self, StatementNotSupportedError::new(&self.scope(), parent))?;
+            context.error(self, StatementNotSupportedError::new(&scope, parent))?;
         }
         Ok(())
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Use(self.src_ref(), self.visibility.clone())
     }
 }
 
 impl Grant for ExpressionStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Scope::*;
+        use ScopeType::*;
+        let scope = Scope(ExpressionStatement, self.src_ref());
         let parent = &context.parent();
         if !matches!(
-            parent,
-            Source
-                | Workbench(..)
-                | Function(..)
-                | If(..)
-                | StatementList(..)
-                | Init(..)
-                | ExpressionStatement(..)
+            parent.ty(),
+            Source | Workbench | Function | If | StatementList | Init | ExpressionStatement
         ) {
-            context.error(self, StatementNotSupportedError::new(&self.scope(), parent))?;
+            context.error(self, StatementNotSupportedError::new(&scope, parent))?;
         }
-        context.scope(Scope::ExpressionStatement(self.src_ref()), |context| {
-            self.expression.grant(context)
-        })
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::ExpressionStatement(self.src_ref())
+        context.scope(scope, |context| self.expression.grant(context))
     }
 }
 
@@ -433,16 +369,12 @@ impl Grant for Expression {
         use FormatStringInner::*;
 
         {
+            use ScopeType::*;
             let parent = &context.parent();
-            use Scope::*;
-            match parent {
-                Workbench(..)
-                | Function(..)
-                | If(..)
-                | StatementList(..)
-                | ExpressionStatement(..)
-                | Expression(..) => (),
-                _ => context.error(self, StatementNotSupportedError::new(&self.scope(), parent))?,
+            let scope = Scope(Expression, self.src_ref());
+            match parent.ty() {
+                Workbench | Function | If | StatementList | ExpressionStatement | Expression => (),
+                _ => context.error(self, StatementNotSupportedError::new(&scope, parent))?,
             }
         }
 
@@ -507,9 +439,5 @@ impl Grant for Expression {
                     .try_for_each(|exp| exp.grant(context))
             }
         }
-    }
-
-    fn scope(&self) -> Scope {
-        Scope::Expression(self.src_ref())
     }
 }

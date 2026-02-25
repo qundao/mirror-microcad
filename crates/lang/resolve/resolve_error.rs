@@ -174,6 +174,7 @@ impl StatementNotSupportedError {
             outer: parent.to_str(),
             outer_span: parent.src_ref().as_miette_span(),
             allowed_parents: node
+                .ty()
                 .allowed_parents()
                 .iter()
                 .map(|scope| scope.to_str())

@@ -13,17 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 79:3: Public constant assignment is not allowed within initializer
+  × error: 79:3: Public assignment is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:79:3]
  78 │ sketch K() { init(l:Length) {
     ·              ──┬─
     ·                ╰── Within this initializer
  79 │   pub a = l; // error
     ·   ────┬────
-    ·       ╰── This public constant assignment is not allowed
+    ·       ╰── This public assignment is not allowed
  80 │ } } K(1cm);
     ╰────
-  help: public constant assignment is only allowed within source file or module
+  help: public assignment is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

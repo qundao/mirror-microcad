@@ -13,17 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 47:3: Use statement is not allowed within initializer
+  × error: 47:3: Public use statement is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:47:3]
  46 │ sketch K() { init(l:Length) {
     ·              ──┬─
     ·                ╰── Within this initializer
  47 │   pub use std; // error
     ·   ─────┬─────
-    ·        ╰── This use statement is not allowed
+    ·        ╰── This public use statement is not allowed
  48 │ } } K(1cm);
     ╰────
-  help: use statement is only allowed within source file or module
+  help: public use statement is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
