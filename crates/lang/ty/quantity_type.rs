@@ -84,8 +84,9 @@ impl std::ops::Div for QuantityType {
         }
 
         match (self, rhs) {
+            (QuantityType::Area, QuantityType::Length)
+            | (QuantityType::Volume, QuantityType::Area) => QuantityType::Length,
             (QuantityType::Volume, QuantityType::Length) => QuantityType::Area,
-            (QuantityType::Volume, QuantityType::Area) => QuantityType::Length,
             (_, _) => QuantityType::Invalid,
         }
     }
