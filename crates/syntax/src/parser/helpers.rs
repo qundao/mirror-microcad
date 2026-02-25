@@ -3,7 +3,7 @@
 
 use crate::Span;
 use crate::ast::{BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator};
-use crate::parser::{Error, Extra, ParserInput, STRUCTURAL_TOKENS};
+use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
@@ -74,24 +74,44 @@ where
 /// Used for error recovery
 pub fn ignore_till_matched_curly<'tokens>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
-    none_of(STRUCTURAL_TOKENS)
-        .repeated()
-        .ignore_then(nested_delimiters(
-            Token::SigilOpenCurlyBracket,
-            Token::SigilCloseCurlyBracket,
-            [
-                (
-                    Token::SigilOpenSquareBracket,
-                    Token::SigilCloseSquareBracket,
-                ),
-                (Token::SigilOpenBracket, Token::SigilCloseBracket),
-            ],
-            |_| (),
-        ))
-        .boxed()
+    nested_delimiters(
+        Token::SigilOpenCurlyBracket,
+        Token::SigilCloseCurlyBracket,
+        [
+            (
+                Token::SigilOpenSquareBracket,
+                Token::SigilCloseSquareBracket,
+            ),
+            (Token::SigilOpenBracket, Token::SigilCloseBracket),
+        ],
+        |_| (),
+    )
+    .ignored()
+    .boxed()
 }
 
-/// Ignore tokens, until we hit a semicolon
+/// Ignore tokens, until we hit the end of a pair or nested brackets
+///
+/// Used for error recovery
+pub fn ignore_till_matched_brackets<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Extra<'tokens>> {
+    nested_delimiters(
+        Token::SigilOpenBracket,
+        Token::SigilCloseBracket,
+        [
+            (
+                Token::SigilOpenSquareBracket,
+                Token::SigilCloseSquareBracket,
+            ),
+            (Token::SigilOpenCurlyBracket, Token::SigilCloseCurlyBracket),
+        ],
+        |_| (),
+    )
+    .ignored()
+    .boxed()
+}
+
+/// Ignore tokens, until we hit a semicolon, without consuming the semicolon
 ///
 /// Used for error recovery
 pub fn ignore_till_semi<'tokens>()
@@ -99,7 +119,7 @@ pub fn ignore_till_semi<'tokens>()
     none_of(Token::SigilSemiColon)
         .repeated()
         .at_least(1)
-        .then(just(Token::SigilSemiColon))
+        .then(just(Token::SigilSemiColon).rewind())
         .ignored()
         .boxed()
 }
@@ -149,6 +169,41 @@ where
             },
         )
         .boxed()
+}
+
+/// Error recovery parser for places where a single significant token is expected.
+///
+/// Matches anything but a semicolon or whitespace,
+/// if a semicolon or whitespace is encountered, no tokens will be consumed
+pub fn recovery_expect_any<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Full<Error<'tokens>, S, Ctx>>
++ 'tokens
++ Clone
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
+    recovery_expect_any_except(&[])
+}
+
+/// Same as `recovery_expect_any` but excluding certain tokens
+pub fn recovery_expect_any_except<'tokens, S, Ctx>(
+    except: &'tokens [Token<'tokens>],
+) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Full<Error<'tokens>, S, Ctx>>
++ 'tokens
++ Clone
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
+    none_of(Token::SigilSemiColon)
+        .filter(|t: &Token| t.kind() != "whitespace" && !except.contains(t))
+        .ignored()
+        .or(one_of(Token::SigilSemiColon)
+            .ignored()
+            .or(one_of(except).ignored())
+            .or(whitespace_parser())
+            .rewind())
 }
 
 pub trait ParserExt<'src, I, O, E = extra::Default>: Parser<'src, I, O, E>

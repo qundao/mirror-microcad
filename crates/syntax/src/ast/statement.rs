@@ -134,6 +134,7 @@ pub struct UseName {
 pub enum UseStatementPart {
     Identifier(Identifier),
     Glob(Span),
+    Error(Span),
 }
 
 /// A return statement
@@ -152,6 +153,16 @@ pub struct ArgumentsDefinition {
     pub span: Span,
     pub extras: ItemExtras,
     pub arguments: Vec<ArgumentDefinition>,
+}
+
+impl ArgumentsDefinition {
+    pub(crate) fn dummy(span: Span) -> Self {
+        ArgumentsDefinition {
+            span,
+            extras: ItemExtras::default(),
+            arguments: Vec::default(),
+        }
+    }
 }
 
 /// A definition of a single of a workbench definition or function definition

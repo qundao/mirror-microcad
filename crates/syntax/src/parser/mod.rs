@@ -110,18 +110,8 @@ fn parser<'tokens>()
     }
     .boxed();
 
-    let block_recovery = just(Token::SigilOpenCurlyBracket)
-        .then(
-            none_of(Token::SigilCloseCurlyBracket)
-                .repeated()
-                .then(just(Token::SigilCloseCurlyBracket)),
-        )
-        .map_with(|_, e| StatementList {
-            span: e.span(),
-            statements: vec![Statement::Error(e.span())],
-            tail: None,
-            extras: ItemExtras::default(),
-        });
+    let block_recovery =
+        ignore_till_matched_curly().map_with(|_, e| StatementList::dummy(e.span()));
 
     let block = whitespace_parser()
         .or_not()
@@ -377,17 +367,7 @@ fn parser<'tokens>()
         ],
         |_| (),
     )
-    .map_with(|_, e| {
-        (
-            vec![TupleItem {
-                span: e.span(),
-                name: None,
-                value: Expression::Error(e.span()),
-                extras: ItemExtras::default(),
-            }],
-            ItemExtras::default(),
-        )
-    });
+    .map_with(|_, e| (vec![TupleItem::dummy(e.span())], ItemExtras::default()));
 
     let tuple_body = identifier_parser
         .clone()
@@ -453,13 +433,11 @@ fn parser<'tokens>()
                         )
                     },
                 )
-                .recover_with(via_parser(tuple_recovery.clone().map_with(|_, e| {
-                    ArgumentList {
-                        span: e.span(),
-                        extras: ItemExtras::default(),
-                        arguments: Vec::new(),
-                    }
-                }))),
+                .recover_with(via_parser(
+                    tuple_recovery
+                        .clone()
+                        .map_with(|_, e| ArgumentList::dummy(e.span())),
+                )),
         )
         .with_extras()
         .map_with(|((name, arguments), extras), e| Call {
@@ -593,14 +571,31 @@ fn parser<'tokens>()
             .then(
                 just(Token::SigilColon)
                     .then_maybe_whitespace()
-                    .ignore_then(type_parser.clone())
+                    .ignore_then(
+                        type_parser.clone().recover_with(via_parser(
+                            recovery_expect_any_except(&[
+                                Token::SigilComma,
+                                Token::OperatorAssignment,
+                                Token::SigilCloseBracket,
+                            ])
+                            .map_with(|_, e| Type::dummy(e.span())),
+                        )),
+                    )
                     .then_maybe_whitespace()
                     .or_not(),
             )
             .then(
                 just(Token::OperatorAssignment)
                     .then_maybe_whitespace()
-                    .ignore_then(expression_parser.clone())
+                    .ignore_then(
+                        expression_parser.clone().recover_with(via_parser(
+                            recovery_expect_any_except(&[
+                                Token::SigilComma,
+                                Token::SigilCloseBracket,
+                            ])
+                            .map_with(|_, e| Expression::Error(e.span())),
+                        )),
+                    )
                     .then_maybe_whitespace()
                     .or_not(),
             )
@@ -641,6 +636,11 @@ fn parser<'tokens>()
                     )
                 },
             )
+            .recover_with(via_parser(
+                ignore_till_matched_brackets()
+                    .or(none_of(STRUCTURAL_TOKENS).repeated())
+                    .map_with(|_, e| ArgumentsDefinition::dummy(e.span())),
+            ))
             .boxed();
 
         let module = doc_comment
@@ -649,7 +649,12 @@ fn parser<'tokens>()
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordMod).map_with(|_, e| e.span()))
             .then_whitespace()
-            .then(identifier_parser.clone())
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[Token::SigilOpenCurlyBracket])
+                        .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
             .then_maybe_whitespace()
             .then(
                 block
@@ -674,10 +679,17 @@ fn parser<'tokens>()
             )
             .boxed();
 
-        let use_parts = identifier_parser
+        let use_part = identifier_parser
             .clone()
             .map(UseStatementPart::Identifier)
             .or(just(Token::OperatorMultiply).map_with(|_, e| UseStatementPart::Glob(e.span())))
+            .recover_with(via_parser(
+                recovery_expect_any_except(&[Token::SigilDoubleColon])
+                    .map_with(|_, e| UseStatementPart::Error(e.span())),
+            ))
+            .boxed();
+
+        let use_parts = use_part
             .separated_by(just(Token::SigilDoubleColon))
             .at_least(1)
             .collect::<Vec<_>>()
@@ -699,7 +711,9 @@ fn parser<'tokens>()
                 whitespace_parser()
                     .then(just(Token::KeywordAs))
                     .then_whitespace()
-                    .ignore_then(identifier_parser.clone())
+                    .ignore_then(identifier_parser.clone().recover_with(via_parser(
+                        recovery_expect_any().map_with(|_, e| Identifier::dummy(e.span())),
+                    )))
                     .or_not(),
             )
             .with_extras()
@@ -714,7 +728,7 @@ fn parser<'tokens>()
             })
             .boxed();
 
-        let workspace_kind = select_ref! {
+        let workbench_kind = select_ref! {
             Token::KeywordSketch => WorkbenchKind::Sketch,
             Token::KeywordPart => WorkbenchKind::Part,
             Token::KeywordOp => WorkbenchKind::Op,
@@ -740,13 +754,21 @@ fn parser<'tokens>()
                 })
             })
             .boxed();
-        let workspace = doc_comment
+        let workbench = doc_comment
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
-            .then(workspace_kind.map_with(|kind, e| (kind, e.span())))
+            .then(workbench_kind.map_with(|kind, e| (kind, e.span())))
             .then_whitespace()
-            .then(identifier_parser.clone())
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[
+                        Token::SigilOpenCurlyBracket,
+                        Token::SigilOpenBracket,
+                    ])
+                    .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
             .then_maybe_whitespace()
             .then(arguments.clone())
             .then_maybe_whitespace()
@@ -798,7 +820,15 @@ fn parser<'tokens>()
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordFn).map_with(|_, e| e.span()))
             .then_whitespace()
-            .then(identifier_parser.clone())
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[
+                        Token::SigilOpenCurlyBracket,
+                        Token::SigilOpenBracket,
+                    ])
+                    .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
             .then_maybe_whitespace()
             .then(arguments.clone())
             .then_maybe_whitespace()
@@ -901,14 +931,19 @@ fn parser<'tokens>()
                 reserved_keyword
                     .then_ignore(not_assigment)
                     .clone()
-                    .ignore_then(ignore_till_matched_curly().or(ignore_till_semi())),
+                    .ignore_then(
+                        none_of(STRUCTURAL_TOKENS)
+                            .repeated()
+                            .then_ignore(ignore_till_matched_curly())
+                            .or(ignore_till_semi().then_ignore(just(Token::SigilSemiColon))),
+                    ),
             ))
             .map_with(|_, e| Statement::Error(e.span()))
             .boxed();
 
-        let with_semi = assignment
-            .or(return_statement)
+        let with_semi = return_statement
             .or(use_statement)
+            .or(assignment)
             .or(expression)
             .then_maybe_whitespace()
             .boxed();
@@ -917,16 +952,25 @@ fn parser<'tokens>()
             .or(inner_doc_statement)
             .or(doc_statement)
             .or(init)
-            .or(workspace)
+            .or(workbench)
             .or(module)
             .or(comment)
             .or(if_expression)
-            .then_maybe_whitespace()
             .boxed();
 
         without_semi
             .or(reserved_keyword_statement)
-            .or(with_semi.then_ignore(just(Token::SigilSemiColon).labelled("semicolon")))
+            .or(with_semi.then_ignore(
+                just(Token::SigilSemiColon)
+                    .labelled("semicolon")
+                    .ignored()
+                    .recover_with(via_parser(
+                        none_of(STRUCTURAL_TOKENS)
+                            .repeated()
+                            .then_ignore(just(Token::SigilSemiColon)),
+                    )),
+            ))
+            .boxed()
             .labelled("statement")
     });
 
@@ -1364,8 +1408,10 @@ fn parser<'tokens>()
         or_and.labelled("expression").boxed()
     });
 
-    statement_list_parser.map_with(move |statements, ex| SourceFile {
-        span: ex.span(),
-        statements,
-    })
+    statement_list_parser
+        .then_ignore(end())
+        .map_with(move |statements, ex| SourceFile {
+            span: ex.span(),
+            statements,
+        })
 }
