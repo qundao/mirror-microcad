@@ -8,13 +8,29 @@ use microcad_builtin_proc_macros::builtin_mod;
 /// Module for built-in string functions.
 #[builtin_mod]
 pub mod string {
-    use microcad_builtin_proc_macros::builtin_fn;
-    use microcad_core::Integer;
-    use microcad_lang::{diag::PushDiag, resolve::Symbol, value::Value};
+    use microcad_lang::{diag::PushDiag, parameter, resolve::Symbol, value::Value};
 
     /// Return the count of characters in a string.
-    #[builtin_fn]
-    pub fn count(s: String) -> Integer {
-        (s.chars().count() as Integer).into()
+    pub fn len() -> Symbol {
+        Symbol::new_builtin_fn(
+            "len",
+            [parameter!(s: String)].into_iter(),
+            &|_params, args, ctx| {
+                let (_, arg) = args.get_single()?;
+                Ok(match &arg.value {
+                    Value::String(s) => s.chars().count().into(),
+                    _ => {
+                        ctx.error(
+                            arg,
+                            microcad_lang::eval::EvalError::BuiltinError(
+                                "Value is not a string.".into(),
+                            ),
+                        )?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
     }
 }
