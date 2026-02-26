@@ -46,8 +46,8 @@ std::debug::assert_eq([ std::array::rev([1,2,3]), [3,2,1] ]);
 
 You can sort the elements in an array using `std::sort()`.
 
-[![test](.test/array_helper_sort.svg)](.test/array_helper_sort.log)
+[![test](.test/array_helper_sorted.svg)](.test/array_helper_sorted.log)
 
-```µcad,array_helper_sort#todo
-std::debug::assert_eq([ std::sore([3,1,2]), [1,2,3] ]);
+```µcad,array_helper_sorted
+std::debug::assert_eq([ std::array::sorted([3,1,2]), [1,2,3] ]);
 ```
