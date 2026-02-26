@@ -103,29 +103,48 @@ pub fn builtin_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(item as ItemFn);
-
-    let mod_name = &input.sig.ident;
+    use syn::*;
+    let input = parse_macro_input!(item as ItemMod);
+    let mod_name = &input.ident;
     let mod_name_str = mod_name.to_string();
     let vis = &input.vis;
 
-    // 1. Parse the function body to find the [fn1, fn2] list
-    // We expect the body to be exactly one expression: an array.
-    let symbols = if let Some(syn::Stmt::Expr(syn::Expr::Array(syn::ExprArray { elems, .. }), _)) =
-        input.block.stmts.first()
-    {
-        elems.iter().map(|expr| {
-            quote! { .symbol(#expr()) }
-        })
-    } else {
-        panic!("Expected a list of functions in square brackets, e.g., [count, len]");
-    };
+    let mut registrations = Vec::new();
 
-    // 2. Generate the ModuleBuilder boilerplate
+    // Look through the items inside the module block
+    if let Some((_, items)) = &input.content {
+        for item in items {
+            match item {
+                // Handle: pub const Z: Value = ...
+                Item::Const(c) => {
+                    let name = &c.ident;
+                    let name_str = name.to_string();
+                    let expr = &c.expr;
+                    registrations.push(quote! { .pub_const(#name_str, #expr) });
+                }
+                // Handle: #[builtin_fn] fn name(...)
+                Item::Fn(f) => {
+                    // We only register it if it has the builtin_fn attribute
+                    let name = &f.sig.ident;
+                    match f.vis {
+                        Visibility::Public(_) => {
+                            registrations.push(quote! { .symbol(#mod_name::#name()) })
+                        }
+                        _ => {}
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
+    // Generate the builder function and keep the original module items
     let expanded = quote! {
-        #vis fn #mod_name() -> Symbol {
+        #input
+
+        pub fn #mod_name() -> microcad_lang::resolve::Symbol {
             crate::ModuleBuilder::new(#mod_name_str)
-                #(#symbols)*
+                #(#registrations)*
                 .build()
         }
     };
