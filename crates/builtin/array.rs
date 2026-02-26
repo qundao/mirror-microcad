@@ -94,4 +94,26 @@ pub mod array {
             None,
         )
     }
+
+    /// Return a sorted version of this array
+    pub fn sorted() -> Symbol {
+        Symbol::new_builtin_fn(
+            "sorted",
+            [].into_iter(),
+            &|_params, args, ctx| {
+                let arg = args.get_single()?;
+                Ok(match &arg.1.value {
+                    Value::Array(a) => a.sorted().into(),
+                    _ => {
+                        ctx.error(
+                            arg.1,
+                            EvalError::BuiltinError("Value is not an array.".into()),
+                        )?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
+    }
 }
