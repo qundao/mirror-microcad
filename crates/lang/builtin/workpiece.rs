@@ -24,7 +24,6 @@ pub enum BuiltinWorkbenchKind {
 }
 
 impl BuiltinWorkbenchKind {
-
     /// return kind name
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -147,7 +146,12 @@ pub trait BuiltinWorkbenchDefinition {
                 ArgumentMatch::find_multi_match(args, params)?
                     .args
                     .iter()
-                    .map(|tuple| Self::model(Creator::new(context.current_symbol(), tuple.clone())))
+                    .map(|tuple| {
+                        Self::model(Creator::new(
+                            context.current_symbol().expect("Some call to a symbol"),
+                            tuple.clone(),
+                        ))
+                    })
                     .collect::<Models>()
                     .to_multiplicity(SrcRef(None)),
             ))

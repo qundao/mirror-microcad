@@ -112,16 +112,56 @@ impl Eval<Models> for StatementList {
         let mut models = Models::default();
         let mut output_type = OutputType::NotDetermined;
 
+        // Check if we are in a workbench and try to get the workbench kind.
+        let kind = context
+            .current_symbol()
+            .map(|symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        let frame = context.stack.current_frame().expect("Some stack frame");
+                        match frame {
+                            StackFrame::Workbench(..) => Some(workbench_definition.kind.value),
+                            _ => None,
+                        }
+                    }
+                    SymbolDef::SourceFile(_) | SymbolDef::Builtin(_) => None,
+                    _ => unreachable!(),
+                })
+            })
+            .unwrap_or_default();
+
         for statement in self.iter() {
             if let Some(model) = statement.eval(context)? {
                 output_type = output_type.merge(&model.deduce_output_type());
+
+                // We are in a workbench. Check if the workbench kind matches the current output type.
+                if let Some(kind) = kind {
+                    let expected_output_type = match kind {
+                        WorkbenchKind::Part => OutputType::Geometry3D,
+                        WorkbenchKind::Sketch => OutputType::Geometry2D,
+                        WorkbenchKind::Operation => OutputType::NotDetermined,
+                    };
+
+                    if expected_output_type != OutputType::NotDetermined
+                        && output_type != expected_output_type
+                    {
+                        context.error(
+                            statement,
+                            EvalError::WorkbenchInvalidOutput {
+                                kind,
+                                produced: output_type,
+                                expected: expected_output_type,
+                            },
+                        )?;
+                    }
+                }
+
                 if output_type == OutputType::InvalidMixed {
                     context.error(statement, EvalError::CannotMixGeometry)?;
                 }
                 models.push(model);
             }
         }
-        models.deduce_output_type();
         Ok(models)
     }
 }

@@ -219,8 +219,12 @@ pub enum EvalError {
     WarnEmptyWorkbench(String, Identifier),
 
     /// This error happens if the workbench produced a different output type.
-    #[error("The {0} workbench produced a 2D output, but expected {2} output.")]
-    WorkbenchInvalidOutput(WorkbenchKind, OutputType, OutputType),
+    #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]
+    WorkbenchInvalidOutput {
+        kind: WorkbenchKind,
+        produced: OutputType,
+        expected: OutputType,
+    },
 
     /// This error happens if the workbench produced a different output type.
     #[error("The {0} workbench will produce no {1} output.")]
