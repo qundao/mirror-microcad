@@ -33,7 +33,7 @@ fn type_of() -> Symbol {
         &|_, args, _| {
             if let Ok(arg) = args.get_single() {
                 let ty = arg.1.ty();
-                return Ok(Value::String(ty.to_string()));
+                return Ok(ty.to_string().into());
             }
             Ok(Value::None)
         },
@@ -48,7 +48,7 @@ fn to_string() -> Symbol {
         [].into_iter(),
         &|_, args, _| {
             let (_, arg) = args.get_single()?;
-            Ok(Value::String(arg.value.to_string()))
+            Ok(arg.value.to_string().into())
         },
         None,
     )
