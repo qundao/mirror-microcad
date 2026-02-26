@@ -42,7 +42,7 @@ i = 3;
 
 ```µcad,types_primitive_string
 text = "Hello µcad!";
-std::debug::assert_eq([std::count(text), 11]);
+std::debug::assert_eq([std::array::count(text), 11]);
 
 // logging
 std::print(text);
