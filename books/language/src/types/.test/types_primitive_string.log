@@ -8,7 +8,7 @@
 -- Code --
 
   44:   text = "Hello µcad!";
-  45:   std::debug::assert_eq([std::string::count(text), 11]);
+  45:   std::debug::assert_eq([std::string::len(text), 11]);
   46:   
   47:   // logging
   48:   std::print(text);

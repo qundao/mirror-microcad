@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**165** tests have been evaluated with version **0.3.0** of microcad.
+**166** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -12,10 +12,11 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/argument_match_collision_init.svg)](.test/argument_match_collision_init.log) | [argument_match_collision_init](argument_match.md) |
 | [![test](.test/argument_match_short_collision.svg)](.test/argument_match_short_collision.log) | [argument_match_short_collision](argument_match.md) |
 | [![test](.test/argument_match_short_id.svg)](.test/argument_match_short_id.log) | [argument_match_short_id](argument_match.md) |
-| [![test](.test/array_helper_count.svg)](.test/array_helper_count.log) | [array_helper_count](array_helpers.md) |
-| [![test](.test/array_helper_head.svg)](.test/array_helper_head.log) | [array_helper_head](array_helpers.md) |
+| [![test](.test/array_helper_contains.svg)](.test/array_helper_contains.log) | [array_helper_contains](array_helpers.md) |
+| [![test](.test/array_helper_first.svg)](.test/array_helper_first.log) | [array_helper_first](array_helpers.md) |
+| [![test](.test/array_helper_len.svg)](.test/array_helper_len.log) | [array_helper_len](array_helpers.md) |
 | [![test](.test/array_helper_rev.svg)](.test/array_helper_rev.log) | [array_helper_rev](array_helpers.md) |
-| [![test](.test/array_helper_sort.svg)](.test/array_helper_sort.log) | [array_helper_sort](array_helpers.md) |
+| [![test](.test/array_helper_sorted.svg)](.test/array_helper_sorted.log) | [array_helper_sorted](array_helpers.md) |
 | [![test](.test/array_helper_tail.svg)](.test/array_helper_tail.log) | [array_helper_tail](array_helpers.md) |
 | [![test](.test/auto_convert.svg)](.test/auto_convert.log) | [auto_convert](auto_convert.md) |
 | [![test](statement_usage/.test/body_assignment_const.svg)](statement_usage/.test/body_assignment_const.log) | [body_assignment_const](statement_usage/body.md) |
