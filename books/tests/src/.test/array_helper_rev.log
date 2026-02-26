@@ -1,0 +1,16 @@
+﻿
+-- Test --
+        Test name: array_helper_rev
+  Expected result: ok
+      Source file: ../books/tests/src/array_helpers.md:42
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  42:   std::debug::assert_eq([ std::array::rev([1,2,3]), [3,2,1] ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK

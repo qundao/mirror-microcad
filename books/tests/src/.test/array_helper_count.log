@@ -7,7 +7,7 @@
 
 -- Code --
 
-  12:   std::debug::assert_eq([ std::count([1,2,3]), 3 ]);
+  12:   std::debug::assert_eq([ std::array::count([1,2,3]), 3 ]);
 
 -- No Output --
 -- No Errors --
