@@ -48,6 +48,11 @@ impl Array {
             self.ty.clone(),
         )
     }
+
+    /// Return a reversed version of the array.
+    pub fn rev(&self) -> Array {
+        Array::from_values(self.items.iter().rev().cloned().collect(), self.ty.clone())
+    }
 }
 
 impl PartialEq for Array {
