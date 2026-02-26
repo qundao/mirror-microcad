@@ -30,7 +30,7 @@ the units of the operands in an expression like the following examples show.
 
 [![test](.test/expression_quantity.svg)](.test/expression_quantity.log)
 
-```µcad,expression_quantity#todo
+```µcad,expression_quantity
 use std::debug::assert_eq;
 
 // an integer multiplied with another one remains a integer
