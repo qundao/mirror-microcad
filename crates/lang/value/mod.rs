@@ -22,6 +22,7 @@ mod value_list;
 pub use argument_value::*;
 pub use argument_value_list::*;
 pub use array::*;
+use derive_more::From;
 pub use matrix::*;
 pub use parameter_value::*;
 pub use parameter_value_list::*;
@@ -38,7 +39,7 @@ use microcad_core::*;
 pub(crate) type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
 /// A variant value with attached source code reference.
-#[derive(Clone, Default, PartialEq)]
+#[derive(Clone, Default, PartialEq, From)]
 pub enum Value {
     /// Invalid value (used for error handling).
     #[default]
@@ -594,18 +595,6 @@ impl From<Size2> for Value {
     }
 }
 
-impl From<Quantity> for Value {
-    fn from(qty: Quantity) -> Self {
-        Self::Quantity(qty)
-    }
-}
-
-impl From<String> for Value {
-    fn from(value: String) -> Self {
-        Self::String(value)
-    }
-}
-
 impl From<Color> for Value {
     fn from(color: Color) -> Self {
         Self::Tuple(Box::new(color.into()))
@@ -615,12 +604,6 @@ impl From<Color> for Value {
 impl FromIterator<Value> for Value {
     fn from_iter<T: IntoIterator<Item = Value>>(iter: T) -> Self {
         Self::Array(iter.into_iter().collect())
-    }
-}
-
-impl From<Model> for Value {
-    fn from(model: Model) -> Self {
-        Self::Model(model)
     }
 }
 
