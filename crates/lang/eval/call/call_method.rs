@@ -27,31 +27,23 @@ impl CallMethod for Array {
         _: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Value> {
-        match id.single_identifier().expect("Single id").id().as_str() {
-            "count" => Ok(Value::Integer(self.len() as i64)),
-            "all_equal" => {
-                let is_equal = match self.first() {
-                    Some(first) => self[1..].iter().all(|x| x == first),
-                    None => true,
-                };
-                Ok(Value::Bool(is_equal))
-            }
-            "is_ascending" => {
-                let is_ascending = self.as_slice().windows(2).all(|w| w[0] <= w[1]);
-                Ok(Value::Bool(is_ascending))
-            }
-            "is_descending" => {
-                let is_descending = self.as_slice().windows(2).all(|w| w[0] >= w[1]);
-                Ok(Value::Bool(is_descending))
-            }
-            "head" => Ok(self.head()),
-            "tail" => Ok(Value::Array(self.tail())),
-            "rev" => Ok(Value::Array(self.rev())),
-            _ => {
-                context.error(id, EvalError::UnknownMethod(id.clone()))?;
-                Ok(Value::None)
-            }
-        }
+        Ok(
+            match id.single_identifier().expect("Single id").id().as_str() {
+                "count" => self.len().into(),
+                "first" | "head" => self.first(), // Keep head method as deprecated method.
+                "last" => self.last(),
+                "tail" => self.tail().into(),
+                "rev" => self.rev().into(),
+                "sorted" => self.sorted().into(),
+                "all_equal" => self.all_equal().into(),
+                "is_ascending" => self.is_ascending().into(),
+                "is_descending" => self.is_descending().into(),
+                _ => {
+                    context.error(id, EvalError::UnknownMethod(id.clone()))?;
+                    Value::None
+                }
+            },
+        )
     }
 }
 
@@ -114,7 +106,7 @@ impl CallMethod for Value {
             Value::String(_) => eval_todo!(context, id, "call_method for String"),
             Value::Tuple(_) => eval_todo!(context, id, "call_method for Tuple"),
             Value::Matrix(_) => eval_todo!(context, id, "call_method for Matrix"),
-            Value::Array(list) => list.call_method(id, args, context),
+            Value::Array(array) => array.call_method(id, args, context),
             Value::Model(model) => Ok(model
                 .call_method(id, args, context)?
                 .map(Value::Model)

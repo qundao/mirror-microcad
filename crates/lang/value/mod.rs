@@ -571,6 +571,12 @@ impl TryFrom<&Value> for Mat3 {
     }
 }
 
+impl From<usize> for Value {
+    fn from(value: usize) -> Self {
+        Value::Integer(value as Integer)
+    }
+}
+
 impl From<f32> for Value {
     fn from(f: f32) -> Self {
         Value::Quantity((f as Scalar).into())
