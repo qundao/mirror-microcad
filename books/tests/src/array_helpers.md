@@ -59,6 +59,6 @@ You can sort the elements in an array using `std::array::contains(x)`.
 [![test](.test/array_helper_contains.svg)](.test/array_helper_contains.log)
 
 ```µcad,array_helper_contains
-std::debug::assert_eq([ std::array::contains(arr = [3,1,2], x = 1), true ]);
-std::debug::assert_eq([ std::array::contains(arr = [3,1,2], x = 4), false ]);
+std::debug::assert_eq([ std::array::contains([3,1,2], 1), true ]);
+std::debug::assert_eq([ std::array::contains([3,1,2], 4), false ]);
 ```
