@@ -68,11 +68,11 @@ pub use std::ops;
 use std::debug;
 debug::assert(true);
 
-part my_part3d() { Sphere(radius=1mm); }
-part my_part2d() { Circle(radius=1mm); }
+part MyPart3d() { Sphere(radius=1mm); }
+sketch MySketch2d() { Circle(radius=1mm); }
 
-x = my_part2d();
-y = my_part3d();
+x = MySketch2d();
+y = MyPart3d();
 z = baz(-1.0);
 ```
 
