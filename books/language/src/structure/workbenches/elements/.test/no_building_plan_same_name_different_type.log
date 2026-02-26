@@ -52,6 +52,14 @@
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+  × error: 139:5: The Sketch workbench produced a Undetermined output, but expected a 2D output.
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:5]
+ 138 │ 
+ 139 │     Circle(radius = radius + thickness) - Circle(radius)
+     ·     ──────────────────────────┬─────────────────────────
+     ·                               ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
+ 140 │ }
+     ╰────
 Expected error(s) which did not occur in line(s): 135
 -- Test Result --
 TODO (SHALL FAIL)

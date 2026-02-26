@@ -16,6 +16,14 @@
 
 -- No Output --
 -- Errors --
+  × error: 34:5: The Sketch workbench produced a 3D output, but expected a 2D output.
+    ╭─[../books/language/src/structure/workbenches/types/sketches.md:34:5]
+ 33 │     use std::geo3d::*;
+ 34 │     Sphere(radius) - Cube(size = radius);  // error: Sphere and Cube are 3D
+    ·     ──────────────────┬─────────────────
+    ·                       ╰── The Sketch workbench produced a 3D output, but expected a 2D output.
+ 35 │ }
+    ╰────
   ⚠ warning: 68:10: Unused local Cylinder.
     ╭─[../crates/std/lib/std/geo3d.µcad:68:10]
  67 │ /// * with radius `r` and height `h`: `Cylinder(r = 10.0mm, h = 5.0mm)`
@@ -32,7 +40,6 @@
      ·            ╰── Unused local Torus.
  109 │     std::geo2d::Circle(radius = minor_radius)
      ╰────
-Expected error(s) which did not occur in line(s): 34
 Unexpected warnings(s) which did occur in line(s): 68, 108
 -- Test Result --
 TODO (SHALL FAIL)
