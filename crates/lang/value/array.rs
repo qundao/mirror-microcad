@@ -53,6 +53,30 @@ impl Array {
     pub fn rev(&self) -> Array {
         Array::from_values(self.items.iter().rev().cloned().collect(), self.ty.clone())
     }
+
+    /// Return a sorted version of this array.
+    ///
+    /// Only primitive types (quantities, integers, bools and string) can be sorted.
+    pub fn sorted(&self) -> Array {
+        let mut items = self.items.clone();
+        match self.ty {
+            Type::Integer | Type::Quantity(..) | Type::String | Type::Bool => {
+                items.sort_by(|a, b| {
+                    assert_eq!(a.ty(), b.ty());
+                    match (a, b) {
+                        (Value::Quantity(a), Value::Quantity(b)) => a.value.total_cmp(&b.value),
+                        (Value::Integer(a), Value::Integer(b)) => a.cmp(b),
+                        (Value::Bool(a), Value::Bool(b)) => a.cmp(b),
+                        (Value::String(a), Value::String(b)) => a.cmp(b),
+                        _ => unreachable!(),
+                    }
+                })
+            }
+            _ => {}
+        };
+
+        Array::from_values(items, self.ty.clone())
+    }
 }
 
 impl PartialEq for Array {
