@@ -31,11 +31,11 @@ fn type_of() -> Symbol {
         "type_of",
         [].into_iter(),
         &|_, args, _| {
-            if let Ok(arg) = args.get_single() {
-                let ty = arg.1.ty();
-                return Ok(ty.to_string().into());
-            }
-            Ok(Value::None)
+            Ok(if let Ok((_, arg)) = args.get_single() {
+                arg.value.ty().to_string().into()
+            } else {
+                Value::None
+            })
         },
         None,
     )
@@ -47,8 +47,11 @@ fn to_string() -> Symbol {
         "to_string",
         [].into_iter(),
         &|_, args, _| {
-            let (_, arg) = args.get_single()?;
-            Ok(arg.value.to_string().into())
+            Ok(if let Ok((_, arg)) = args.get_single() {
+                arg.value.to_string().into()
+            } else {
+                Value::None
+            })
         },
         None,
     )
@@ -61,12 +64,12 @@ pub fn builtin_module() -> Symbol {
         .symbol(log::log())
         .symbol(array::array())
         .symbol(string::string())
+        .symbol(math::math())
+        .symbol(color::color())
         .symbol(type_of())
         .symbol(to_string())
         .symbol(print::print())
         .symbol(ops::ops())
-        .symbol(math::math())
-        .symbol(color::color())
         .symbol(import::import())
         .symbol(geo2d::geo2d())
         .symbol(geo3d::geo3d())
