@@ -80,28 +80,6 @@ impl WorkbenchDefinition {
                 log::trace!("Run body`{id:?}` {kind}", id = self.id, kind = self.kind);
                 model.append_children(self.body.statements.eval(context)?);
 
-                // We have to deduce the output type of this model, otherwise the model is incomplete.
-                {
-                    let model_ = model.borrow();
-                    match &*model_.element {
-                        Element::Workpiece(workpiece) => {
-                            let output_type = model.deduce_output_type();
-
-                            let result = workpiece.check_output_type(output_type);
-                            match result {
-                                Ok(()) => {}
-                                Err(EvalError::WorkbenchNoOutput(..)) => {
-                                    context.warning(&self.src_ref(), result.expect_err("Error"))?;
-                                }
-                                result => {
-                                    context.error(&self.src_ref(), result.expect_err("Error"))?;
-                                }
-                            }
-                        }
-                        _ => panic!("A workbench must produce a workpiece."),
-                    }
-                }
-
                 Ok(model)
             },
         )

@@ -47,8 +47,8 @@ impl EvalContext {
     }
 
     /// Current symbol, panics if there no current symbol.
-    pub(crate) fn current_symbol(&self) -> Symbol {
-        self.stack.current_symbol().expect("Some symbol")
+    pub(crate) fn current_symbol(&self) -> Option<Symbol> {
+        self.stack.current_symbol()
     }
 
     /// Create a new context from a source file.

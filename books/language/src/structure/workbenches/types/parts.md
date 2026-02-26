@@ -24,10 +24,9 @@ You will get an error if you generate a 2D model with a part:
 
 [![test](.test/part_2d.svg)](.test/part_2d.log)
 
-```µcad,part_2d#todo_fail
-sketch MyPart( radius: Length) {
-    use std::geo2d::*;
-    Circle(radius) - Rect(radius);  // error: Circle and Rect are 2D
+```µcad,part_2d#fail
+part MyPart( radius: Length) {
+    std::geo2d::Circle(radius); // error: Circle is not a 3D primitive
 }
 
 MyPart(1cm);

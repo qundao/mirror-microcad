@@ -22,11 +22,11 @@
   68:   use std::debug;
   69:   debug::assert(true);
   70:   
-  71:   part my_part3d() { Sphere(radius=1mm); }
-  72:   part my_part2d() { Circle(radius=1mm); }
+  71:   part MyPart3d() { Sphere(radius=1mm); }
+  72:   sketch MySketch2d() { Circle(radius=1mm); }
   73:   
-  74:   x = my_part2d();
-  75:   y = my_part3d();
+  74:   x = MySketch2d();
+  75:   y = MyPart3d();
   76:   z = baz(-1.0);
 
 -- No Output --
@@ -34,22 +34,22 @@
   ⚠ warning: 74:1: Unused local x.
     ╭─[../books/tests/src/use.md:74:1]
  73 │ 
- 74 │ x = my_part2d();
+ 74 │ x = MySketch2d();
     · ┬
     · ╰── Unused local x.
- 75 │ y = my_part3d();
+ 75 │ y = MyPart3d();
     ╰────
   ⚠ warning: 75:1: Unused local y.
     ╭─[../books/tests/src/use.md:75:1]
- 74 │ x = my_part2d();
- 75 │ y = my_part3d();
+ 74 │ x = MySketch2d();
+ 75 │ y = MyPart3d();
     · ┬
     · ╰── Unused local y.
  76 │ z = baz(-1.0);
     ╰────
   ⚠ warning: 76:1: Unused local z.
     ╭─[../books/tests/src/use.md:76:1]
- 75 │ y = my_part3d();
+ 75 │ y = MyPart3d();
  76 │ z = baz(-1.0);
     · ┬
     · ╰── Unused local z.
