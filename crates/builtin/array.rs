@@ -5,7 +5,9 @@
 
 use microcad_lang::{diag::PushDiag, eval::EvalError, resolve::Symbol, value::Value};
 
-/// Module for built-logging.
+/// Module for  built-in array functions.
+///
+/// These functions are only supposed to work with [`Value::Array`].
 pub fn array() -> Symbol {
     crate::ModuleBuilder::new("array")
         .symbol(count())
@@ -15,7 +17,7 @@ pub fn array() -> Symbol {
         .build()
 }
 
-/// Return the count of elements in an array or string.
+/// Return the count of elements in an array.
 fn count() -> Symbol {
     Symbol::new_builtin_fn(
         "count",
@@ -23,7 +25,6 @@ fn count() -> Symbol {
         &|_params, args, ctx| {
             let arg = args.get_single()?;
             Ok(match &arg.1.value {
-                Value::String(s) => Value::Integer(s.chars().count() as i64),
                 Value::Array(a) => Value::Integer(a.len() as i64),
                 _ => {
                     ctx.error(arg.1, EvalError::BuiltinError("Value has no count.".into()))?;
@@ -43,11 +44,8 @@ fn head() -> Symbol {
         &|_params, args, ctx| {
             let arg = args.get_single()?;
             Ok(match &arg.1.value {
-                Value::String(s) if !s.is_empty() => {
-                    Value::String(s.chars().next().unwrap_or_default().to_string())
-                }
                 Value::Array(a) if !a.is_empty() => a.head(),
-                Value::String(_) | Value::Array(_) => {
+                Value::Array(_) => {
                     ctx.error(arg.1, EvalError::BuiltinError("Value is empty.".into()))?;
                     Value::None
                 }
@@ -69,7 +67,6 @@ fn tail() -> Symbol {
         &|_params, args, ctx| {
             let arg = args.get_single()?;
             Ok(match &arg.1.value {
-                Value::String(s) => Value::String(s.chars().skip(1).collect()),
                 Value::Array(a) => Value::Array(a.tail()),
                 _ => {
                     ctx.error(arg.1, EvalError::BuiltinError("Value has no tail.".into()))?;

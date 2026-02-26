@@ -17,6 +17,7 @@ mod import;
 mod log;
 mod math;
 mod print;
+mod string;
 
 pub use microcad_lang::builtin::{
     Exporter, ExporterAccess, ExporterRegistry, Importer, ImporterRegistry, ModuleBuilder, Symbol,
@@ -59,6 +60,7 @@ pub fn builtin_module() -> Symbol {
         .symbol(debug::debug())
         .symbol(log::log())
         .symbol(array::array())
+        .symbol(string::string())
         .symbol(type_of())
         .symbol(to_string())
         .symbol(print::print())

@@ -17,3 +17,7 @@ pub use __builtin::to_string;
 pub mod array {
     pub use __builtin::array::*;
 }
+
+pub mod string {
+    pub use __builtin::string::*;
+}
