@@ -35,6 +35,7 @@ impl Type {
             "Volume" => Ok(Type::Quantity(QuantityType::Volume)),
             "Weight" => Ok(Type::Quantity(QuantityType::Weight)),
             "Density" => Ok(Type::Quantity(QuantityType::Density)),
+            "Model" => Ok(Type::Model),
             _ => Err(ParseError::UnknownType(Refer::new(ty.to_string(), src_ref))),
         }
     }
