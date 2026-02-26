@@ -8,7 +8,6 @@ mod derive;
 use derive::derive_workbench_definition;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{ItemFn, parse_macro_input};
 
 #[proc_macro_derive(BuiltinPrimitive2D)]
 pub fn derive_primitive2d(input: TokenStream) -> TokenStream {
@@ -107,7 +106,6 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as ItemMod);
     let mod_name = &input.ident;
     let mod_name_str = mod_name.to_string();
-    let vis = &input.vis;
 
     let mut registrations = Vec::new();
 
@@ -119,8 +117,12 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
                 Item::Const(c) => {
                     let name = &c.ident;
                     let name_str = name.to_string();
-                    let expr = &c.expr;
-                    registrations.push(quote! { .pub_const(#name_str, #expr) });
+                    match c.vis {
+                        Visibility::Public(_) => {
+                            registrations.push(quote! { .pub_const(#name_str, #mod_name::#name) });
+                        }
+                        _ => {}
+                    }
                 }
                 // Handle: #[builtin_fn] fn name(...)
                 Item::Fn(f) => {
