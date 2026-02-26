@@ -4,7 +4,6 @@
 //! Built-in color module `__builtin::color`.
 
 use microcad_builtin_proc_macros::builtin_mod;
-use microcad_core::Color;
 
 #[builtin_mod]
 pub mod color {

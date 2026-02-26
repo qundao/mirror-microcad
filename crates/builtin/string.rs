@@ -10,7 +10,7 @@ use microcad_builtin_proc_macros::builtin_mod;
 pub mod string {
     use microcad_builtin_proc_macros::builtin_fn;
     use microcad_core::Integer;
-    use microcad_lang::{diag::PushDiag, eval::EvalError, resolve::Symbol, value::Value};
+    use microcad_lang::{diag::PushDiag, resolve::Symbol, value::Value};
 
     /// Return the count of characters in a string.
     #[builtin_fn]
