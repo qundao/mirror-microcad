@@ -1,0 +1,16 @@
+﻿
+-- Test --
+        Test name: array_helper_sorted
+  Expected result: ok
+      Source file: ../books/tests/src/array_helpers.md:52
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  52:   std::debug::assert_eq([ std::array::sorted([3,1,2]), [1,2,3] ]);
+
+-- No Output --
+-- No Errors --
+-- No Model --
+-- Test Result --
+OK
