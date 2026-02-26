@@ -14,17 +14,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 40:5: Constant assigment is not allowed within function
+  × error: 40:5: Constant assignment is not allowed within function
     ╭─[../books/language/src/assignments/pub.md:40:5]
  39 │ fn f() {
     · ─┬
     ·  ╰── Within this function
  40 │     const MY_CONST = 1;     // error: not allowed in functions
     ·     ─────────┬────────
-    ·              ╰── This constant assigment is not allowed
+    ·              ╰── This constant assignment is not allowed
  41 │ }
     ╰────
-  help: constant assigment is only allowed within source root, module definition or workbench definition
+  help: constant assignment is only allowed within source file, module or workbench
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

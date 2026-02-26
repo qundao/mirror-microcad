@@ -36,7 +36,7 @@ mod eval_error;
 mod expression;
 mod format_string;
 mod function;
-mod grant;
+
 mod init;
 mod literal;
 mod locals;
@@ -56,7 +56,6 @@ pub use eval_context::*;
 pub use eval_error::*;
 pub use output::*;
 
-use grant::*;
 use locals::*;
 use statements::*;
 

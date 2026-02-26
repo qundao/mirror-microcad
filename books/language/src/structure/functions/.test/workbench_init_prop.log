@@ -29,13 +29,18 @@
 
 -- No Output --
 -- Errors --
-  × error: 81:9: Assignment statement not available here
+  × error: 81:9: Property assignment is not allowed within initializer
     ╭─[../books/language/src/structure/functions/workbench_functions.md:81:9]
+ 79 │ 
  80 │     init(diameter: Length) { 
+    ·     ──┬─
+    ·       ╰── Within this initializer
  81 │         prop radius = diameter/2; // error: prop not allowed in init
     ·         ────────────┬───────────
-    ·                     ╰── Assignment statement not available here
+    ·                     ╰── This property assignment is not allowed
  82 │     }
     ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

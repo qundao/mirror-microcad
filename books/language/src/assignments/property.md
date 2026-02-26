@@ -55,7 +55,7 @@ std::debug::assert_eq([ MySketch(5cm).diameter, 10cm ])
 
 [![test](.test/prop_assignment_initializer.svg)](.test/prop_assignment_initializer.log)
 
-```µcad,prop_assignment_initializer#todo_fail
+```µcad,prop_assignment_initializer#fail
 sketch MySketch(radius: Length) {
     init() { 
         radius = 1; 

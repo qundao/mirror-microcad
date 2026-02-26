@@ -2,32 +2,32 @@
 -- Test --
         Test name: assignment_shadow
   Expected result: fail
-      Source file: ../books/language/src/assignments/value.md:90
+      Source file: ../books/language/src/assignments/value.md:79
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  90:   a = 5;      // warning: unused local
-  91:   a = a * 2;  // error: a already defined in this scope
+  79:   a = 5;      // warning: unused local
+  80:   a = a * 2;  // error: a already defined in this scope
 
 -- No Output --
 -- Errors --
-  × error: 91:1: Value a already in defined: 5
-    ╭─[../books/language/src/assignments/value.md:91:1]
- 90 │ a = 5;      // warning: unused local
+  × error: 80:1: Value a already in defined: 5
+    ╭─[../books/language/src/assignments/value.md:80:1]
+ 79 │ a = 5;      // warning: unused local
     · ┬
     · ╰── Previously defined here
- 91 │ a = a * 2;  // error: a already defined in this scope
+ 80 │ a = a * 2;  // error: a already defined in this scope
     · ────┬────
     ·     ╰── a is already defined
     ╰────
   help: Values in microcad are immutable
-  ⚠ warning: 90:1: Unused local a.
-    ╭─[../books/language/src/assignments/value.md:90:1]
- 90 │ a = 5;      // warning: unused local
+  ⚠ warning: 79:1: Unused local a.
+    ╭─[../books/language/src/assignments/value.md:79:1]
+ 79 │ a = 5;      // warning: unused local
     · ┬
     · ╰── Unused local a.
- 91 │ a = a * 2;  // error: a already defined in this scope
+ 80 │ a = a * 2;  // error: a already defined in this scope
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

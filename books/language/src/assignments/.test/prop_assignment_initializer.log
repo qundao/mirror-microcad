@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: prop_assignment_initializer
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/assignments/property.md:59
         Test path: ../books/language/src/assignments/.test
 
@@ -17,7 +17,20 @@
   66:   MySketch(5cm)
 
 -- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 62
+-- Errors --
+  × error: 62:9: Property assignment is not allowed within initializer
+    ╭─[../books/language/src/assignments/property.md:62:9]
+ 59 │ sketch MySketch(radius: Length) {
+ 60 │     init() { 
+    ·     ──┬─
+    ·       ╰── Within this initializer
+ 61 │         radius = 1; 
+ 62 │         prop diameter = radius * 2; // error: not in initializer
+    ·         ─────────────┬────────────
+    ·                      ╰── This property assignment is not allowed
+ 63 │     }
+    ╰────
+  help: property assignment is only allowed within workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED

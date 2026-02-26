@@ -6,7 +6,6 @@ use crate::{eval::*, model::*, syntax::*};
 impl InitDefinition {
     /// Evaluate a call to the init definition
     pub fn eval(&self, non_property_args: Tuple, context: &mut EvalContext) -> EvalResult<()> {
-        self.grant(context)?;
         let model = context.get_model()?;
         context.scope(StackFrame::Init(non_property_args.into()), |context| {
             let _: Value = self.body.statements.eval(context)?;

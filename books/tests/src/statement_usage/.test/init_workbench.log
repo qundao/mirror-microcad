@@ -7,26 +7,23 @@
 
 -- Code --
 
-   6:   sketch K() { init(l:Length) { // warning
+   6:   sketch K() { init(l:Length) {
    7:     sketch F() {} // error
    8:   } } K(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 7:10: sketch statement not available here
-   ╭─[../books/tests/src/statement_usage/init.md:7:10]
- 6 │ sketch K() { init(l:Length) { // warning
+  × error: 7:10: Workbench is not allowed within initializer
+   ╭─[../books/tests/src/statement_usage/init.md:7:3]
+ 6 │ sketch K() { init(l:Length) {
+   ·              ──┬─
+   ·                ╰── Within this initializer
  7 │   sketch F() {} // error
-   ·          ┬
-   ·          ╰── sketch statement not available here
+   ·   ───┬──
+   ·      ╰── This workbench is not allowed
  8 │ } } K(1cm);
    ╰────
-  ⚠ warning: 6:19: Unused local l.
-   ╭─[../books/tests/src/statement_usage/init.md:6:19]
- 6 │ sketch K() { init(l:Length) { // warning
-   ·                   ┬
-   ·                   ╰── Unused local l.
- 7 │   sketch F() {} // error
-   ╰────
+  help: workbench is only allowed within source file or module
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

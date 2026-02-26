@@ -13,21 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 71:3: Assignment statement not available here
+  × error: 71:3: Constant assignment is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:71:3]
  70 │ sketch K() { init(l:Length) {
+    ·              ──┬─
+    ·                ╰── Within this initializer
  71 │   const B = l; // error
     ·   ─────┬─────
-    ·        ╰── Assignment statement not available here
+    ·        ╰── This constant assignment is not allowed
  72 │ } } K(1cm);
     ╰────
-  × error: 71:3: Symbol B not found.
-    ╭─[../books/tests/src/statement_usage/init.md:71:3]
- 70 │ sketch K() { init(l:Length) {
- 71 │   const B = l; // error
-    ·   ─────┬─────
-    ·        ╰── Symbol B not found.
- 72 │ } } K(1cm);
-    ╰────
+  help: constant assignment is only allowed within source file, module or workbench
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
