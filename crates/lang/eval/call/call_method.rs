@@ -46,6 +46,7 @@ impl CallMethod for Array {
             }
             "head" => Ok(self.head()),
             "tail" => Ok(Value::Array(self.tail())),
+            "rev" => Ok(Value::Array(self.rev())),
             _ => {
                 context.error(id, EvalError::UnknownMethod(id.clone()))?;
                 Ok(Value::None)

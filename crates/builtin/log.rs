@@ -3,7 +3,7 @@
 
 use microcad_lang::{diag::*, eval::*, parameter, resolve::*, value::*};
 
-/// Module for built-logging.
+/// Module for built-in logging.
 pub fn log() -> Symbol {
     crate::ModuleBuilder::new("log")
         .symbol(todo())

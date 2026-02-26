@@ -7,7 +7,7 @@
 
 -- Code --
 
-  32:   std::debug::assert_eq([ std::tail([1,2,3]), [2,3] ]);
+  32:   std::debug::assert_eq([ std::array::tail([1,2,3]), [2,3] ]);
 
 -- No Output --
 -- No Errors --

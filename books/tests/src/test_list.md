@@ -14,7 +14,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/argument_match_short_id.svg)](.test/argument_match_short_id.log) | [argument_match_short_id](argument_match.md) |
 | [![test](.test/array_helper_count.svg)](.test/array_helper_count.log) | [array_helper_count](array_helpers.md) |
 | [![test](.test/array_helper_head.svg)](.test/array_helper_head.log) | [array_helper_head](array_helpers.md) |
-| [![test](.test/array_helper_reverse.svg)](.test/array_helper_reverse.log) | [array_helper_reverse](array_helpers.md) |
+| [![test](.test/array_helper_rev.svg)](.test/array_helper_rev.log) | [array_helper_rev](array_helpers.md) |
 | [![test](.test/array_helper_sort.svg)](.test/array_helper_sort.log) | [array_helper_sort](array_helpers.md) |
 | [![test](.test/array_helper_tail.svg)](.test/array_helper_tail.log) | [array_helper_tail](array_helpers.md) |
 | [![test](.test/auto_convert.svg)](.test/auto_convert.log) | [auto_convert](auto_convert.md) |
