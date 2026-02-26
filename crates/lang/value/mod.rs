@@ -601,6 +601,12 @@ impl From<Color> for Value {
     }
 }
 
+impl From<Vec3> for Value {
+    fn from(v: Vec3) -> Self {
+        Self::Tuple(Box::new(v.into()))
+    }
+}
+
 impl FromIterator<Value> for Value {
     fn from_iter<T: IntoIterator<Item = Value>>(iter: T) -> Self {
         Self::Array(iter.into_iter().collect())
