@@ -37,7 +37,6 @@ pub(crate) fn orient_z_to(target: Vec3) -> Mat3 {
 
 #[builtin_mod]
 pub mod math {
-
     use cgmath::SquareMatrix;
     use microcad_core::{Integer, Mat3, Scalar, Vec3};
     use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
