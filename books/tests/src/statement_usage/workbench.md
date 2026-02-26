@@ -66,9 +66,9 @@ sketch K() {
 
 [![test](.test/workbench_marker.svg)](.test/workbench_marker.log)
 
-```µcad,workbench_marker
+```µcad,workbench_marker#fail
 sketch K() {
-  @input
+  @input // error: Input marker is not allowed here.
 } K();
 ```
 
