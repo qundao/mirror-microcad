@@ -37,43 +37,61 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
 
 #[proc_macro_attribute]
 pub fn builtin_fn(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    // 1. Parse the input function
     let input = parse_macro_input!(item as ItemFn);
 
-    let name = &input.sig.ident;
-    let name_str = name.to_string();
+    let fn_name = &input.sig.ident;
+    let fn_name_str = fn_name.to_string();
     let body = &input.block;
     let vis = &input.vis;
-    let attrs = &input.attrs;
 
-    // 1. Extract arguments from the function signature
-    let mut arg_names = Vec::new();
-    let mut arg_types = Vec::new();
+    let mut param_definitions = Vec::new();
+    let mut arg_extractions = Vec::new();
+    use syn::*;
 
     for arg in &input.sig.inputs {
-        if let syn::FnArg::Typed(pat_type) = arg {
-            if let syn::Pat::Ident(pat_ident) = &*pat_type.pat {
-                arg_names.push(&pat_ident.ident);
-                // We assume the type name matches the Value enum variant (e.g., String, Integer)
-                if let syn::Type::Path(type_path) = &*pat_type.ty {
-                    if let Some(segment) = type_path.path.segments.last() {
-                        arg_types.push(&segment.ident);
-                    }
+        if let FnArg::Typed(pat_type) = arg {
+            if let Pat::Ident(pat_ident) = &*pat_type.pat {
+                let name = &pat_ident.ident;
+                let name_str = name.to_string();
+
+                // Extract the type (e.g., Angle, String)
+                if let Type::Path(type_path) = &*pat_type.ty {
+                    let ty = &type_path.path.segments.last().unwrap().ident;
+
+                    // 1. Create the parameter! macro calls
+                    param_definitions.push(quote! {
+                        parameter!(#name: #ty)
+                    });
+
+                    // 2. Create the extraction logic inside the match
+                    arg_extractions.push(quote! {
+                        let #name: #ty = matched_args.get(#name_str);
+                    });
                 }
             }
         }
     }
 
-    // 2. Rebuild the function with the boilerplate included
-    let expanded = quote::quote! {
-        #(#attrs)*
-        #vis fn #name() -> Symbol {
+    let expanded = quote! {
+        #vis fn #fn_name() -> Symbol {
+            use microcad_lang::parameter;
             Symbol::new_builtin_fn(
-                #name_str,
-                [].into_iter(),
-                &|_params, args, ctx| {
-                    let arg = args.get_single()?;
-                    #body
+                #fn_name_str,
+                [
+                    #(#param_definitions),*
+                ].into_iter(),
+                &|params, args, ctx| {
+                    match microcad_lang::eval::ArgumentMatch::find_match(args, params) {
+                        Ok(matched_args) => {
+                            use microcad_lang::builtin::ValueAccess;
+                            #(#arg_extractions)*
+                            Ok(#body)
+                        }
+                        Err(err) => {
+                            ctx.error(args, err)?;
+                            Ok(Value::None)
+                        }
+                    }
                 },
                 None,
             )

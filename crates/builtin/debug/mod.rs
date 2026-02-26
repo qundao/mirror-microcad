@@ -5,14 +5,11 @@ mod assert;
 
 pub use assert::*;
 
+use microcad_builtin_proc_macros::builtin_mod;
 use microcad_lang::resolve::*;
 
 /// Module for built-in debugging.
-pub fn debug() -> Symbol {
-    crate::ModuleBuilder::new("debug")
-        .symbol(assert())
-        .symbol(assert_eq())
-        .symbol(assert_valid())
-        .symbol(assert_invalid())
-        .build()
+#[builtin_mod]
+pub fn debug() {
+    [assert, assert_eq, assert_valid, assert_invalid]
 }
