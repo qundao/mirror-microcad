@@ -41,38 +41,34 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let mod_name = &input.ident;
     let mod_name_str = mod_name.to_string();
 
-    let mut registrations = Vec::new();
+    let items = input
+        .content
+        .as_ref()
+        .map(|(_, items)| items.clone())
+        .unwrap_or_default();
 
-    // Look through the items inside the module block
-    if let Some((_, items)) = &input.content {
-        for item in items {
+    let registrations = items
+        .iter()
+        .filter_map(|item| {
             match item {
-                // Handle: pub const Z: Value = ...
-                Item::Const(c) => {
+                // Match only public constants
+                Item::Const(c) if matches!(c.vis, Visibility::Public(_)) => {
                     let name = &c.ident;
                     let name_str = name.to_string();
-                    match c.vis {
-                        Visibility::Public(_) => {
-                            registrations.push(quote! { .pub_const(#name_str, #mod_name::#name) });
-                        }
-                        _ => {}
-                    }
+                    Some(quote! { .pub_const(#name_str, #mod_name::#name) })
                 }
-                // Handle: #[builtin_fn] fn name(...)
-                Item::Fn(f) => {
-                    // We only register it if it has the builtin_fn attribute
+
+                // Match only public functions
+                Item::Fn(f) if matches!(f.vis, Visibility::Public(_)) => {
                     let name = &f.sig.ident;
-                    match f.vis {
-                        Visibility::Public(_) => {
-                            registrations.push(quote! { .symbol(#mod_name::#name()) })
-                        }
-                        _ => {}
-                    }
+                    Some(quote! { .symbol(#mod_name::#name()) })
                 }
-                _ => {}
+
+                // Skip everything else (Private items or different Item types)
+                _ => None,
             }
-        }
-    }
+        })
+        .collect::<Vec<_>>();
 
     // Generate the builder function and keep the original module items
     let expanded = quote! {
