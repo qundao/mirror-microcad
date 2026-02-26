@@ -131,8 +131,20 @@ pub mod array {
             "contains",
             [parameter!(arr), parameter!(x)].into_iter(),
             &|_params, args, ctx| {
-                let arr = args.get_value("arr")?;
-                let x = args.get_value("x")?;
+                let arr = match args.get_value("arr") {
+                    Err(_) => args
+                        .get_by_index(0)
+                        .map(|(_, arg)| arg.value.clone())
+                        .unwrap_or_default(),
+                    Ok(arr) => arr.clone(),
+                };
+                let x = match args.get_value("x") {
+                    Err(_) => args
+                        .get_by_index(1)
+                        .map(|(_, arg)| arg.value.clone())
+                        .unwrap_or_default(),
+                    Ok(arr) => arr.clone(),
+                };
 
                 Ok(match arr {
                     Value::Array(a) => a.contains(&x).into(),
