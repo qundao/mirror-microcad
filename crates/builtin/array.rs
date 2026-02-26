@@ -10,12 +10,18 @@ use microcad_builtin_proc_macros::builtin_mod;
 /// These functions are only supposed to work with [`Value::Array`].
 #[builtin_mod]
 pub mod array {
-    use microcad_lang::{diag::PushDiag, eval::EvalError, resolve::Symbol, value::Value};
+    use microcad_lang::{
+        diag::PushDiag,
+        eval::EvalError,
+        parameter,
+        resolve::Symbol,
+        value::{Value, ValueAccess},
+    };
 
-    /// Return the count of elements in an array.
-    pub fn count() -> Symbol {
+    /// Return the number of elements in an array.
+    pub fn len() -> Symbol {
         Symbol::new_builtin_fn(
-            "count",
+            "len",
             [].into_iter(),
             &|_params, args, ctx| {
                 let arg = args.get_single()?;
@@ -32,20 +38,23 @@ pub mod array {
     }
 
     /// Return the first element in an array or string.
-    pub fn head() -> Symbol {
+    pub fn first() -> Symbol {
         Symbol::new_builtin_fn(
-            "head",
+            "first",
             [].into_iter(),
             &|_params, args, ctx| {
                 let arg = args.get_single()?;
                 Ok(match &arg.1.value {
-                    Value::Array(a) if !a.is_empty() => a.head(),
+                    Value::Array(a) if !a.is_empty() => a.first(),
                     Value::Array(_) => {
                         ctx.error(arg.1, EvalError::BuiltinError("Value is empty.".into()))?;
                         Value::None
                     }
                     _ => {
-                        ctx.error(arg.1, EvalError::BuiltinError("Value has no head.".into()))?;
+                        ctx.error(
+                            arg.1,
+                            EvalError::BuiltinError("Value is not an array.".into()),
+                        )?;
                         Value::None
                     }
                 })
@@ -107,6 +116,29 @@ pub mod array {
                     _ => {
                         ctx.error(
                             arg.1,
+                            EvalError::BuiltinError("Value is not an array.".into()),
+                        )?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
+    }
+
+    pub fn contains() -> Symbol {
+        Symbol::new_builtin_fn(
+            "contains",
+            [parameter!(arr), parameter!(x)].into_iter(),
+            &|_params, args, ctx| {
+                let arr = args.get_value("arr")?;
+                let x = args.get_value("x")?;
+
+                Ok(match arr {
+                    Value::Array(a) => a.contains(&x).into(),
+                    _ => {
+                        ctx.error(
+                            args,
                             EvalError::BuiltinError("Value is not an array.".into()),
                         )?;
                         Value::None

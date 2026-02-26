@@ -35,10 +35,20 @@ impl Array {
     pub fn fetch(&self) -> Vec<Value> {
         self.items.iter().cloned().collect::<Vec<_>>()
     }
+}
 
+/// All builtin methods and builtin functions.
+///
+/// `len` and `contains` are already implemented and accessible via `impl Deref`.
+impl Array {
     /// Get the first element, or None
-    pub fn head(&self) -> Value {
-        self.items.iter().next().cloned().unwrap_or(Value::None)
+    pub fn first(&self) -> Value {
+        self.items.first().cloned().unwrap_or_default()
+    }
+
+    /// Get the last element, or None
+    pub fn last(&self) -> Value {
+        self.items.last().cloned().unwrap_or_default()
     }
 
     /// Get all elements but the first
@@ -76,6 +86,24 @@ impl Array {
         };
 
         Array::from_values(items, self.ty.clone())
+    }
+
+    /// Check if all items are equal.
+    pub fn all_equal(&self) -> bool {
+        match self.first() {
+            Value::None => true,
+            value => self[1..].iter().all(|x| *x == value),
+        }
+    }
+
+    /// Check if all items are sorted in ascending order.
+    pub fn is_ascending(&self) -> bool {
+        self.as_slice().windows(2).all(|w| w[0] <= w[1])
+    }
+
+    /// Check if all items are sorted in descending order.
+    pub fn is_descending(&self) -> bool {
+        self.as_slice().windows(2).all(|w| w[0] >= w[1])
     }
 }
 
