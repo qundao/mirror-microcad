@@ -43,7 +43,7 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
 ///
 /// Let's a look a built-in module `math`:
 ///
-/// ```rust
+/// ```rust,ignore
 /// #[builtin_mod]
 /// pub mod math {
 ///     pub const PI: Scalar = 3.14;
@@ -56,7 +56,7 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
 ///
 /// The `#[builtin_mod]` will auto-generate a `math` registration function:
 ///
-/// ```rust
+/// ```rust,ignore
 /// pub fn math() -> microcad_lang::resolve::Symbol {
 ///     crate::ModuleBuilder::new("math")
 ///         .pub_const("PI", math::PI)
