@@ -6,14 +6,14 @@ use microcad_builtin_proc_macros::builtin_mod;
 /// Module for built-in debugging.
 #[builtin_mod]
 pub mod debug {
-    use microcad_lang::builtin::ValueAccess;
-    use microcad_lang::diag::PushDiag;
-    use microcad_lang::eval::ArgumentMatch;
-    use microcad_lang::eval::EvalError;
-    use microcad_lang::parameter;
-    use microcad_lang::resolve::Symbol;
-    use microcad_lang::value::Target;
-    use microcad_lang::value::Value;
+    use microcad_lang::{
+        builtin::ValueAccess,
+        diag::PushDiag,
+        eval::{ArgumentMatch, EvalError},
+        parameter,
+        resolve::Symbol,
+        value::{Target, Value},
+    };
 
     pub fn assert() -> Symbol {
         Symbol::new_builtin_fn(
