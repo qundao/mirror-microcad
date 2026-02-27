@@ -16,64 +16,83 @@ mod debug;
 mod import;
 mod log;
 mod math;
-mod print;
 mod string;
 
+use microcad_builtin_proc_macros::builtin_mod;
 pub use microcad_lang::builtin::{
     Exporter, ExporterAccess, ExporterRegistry, Importer, ImporterRegistry, ModuleBuilder, Symbol,
 };
 
-use microcad_lang::{ty::Ty, value::*};
+/// µcad standard built-in module.
+#[builtin_mod]
+pub mod __builtin {
+    pub use crate::array::array;
+    pub use crate::color::color;
+    pub use crate::debug::debug;
+    pub use crate::geo2d::geo2d;
+    pub use crate::geo3d::geo3d;
+    pub use crate::import::import;
+    pub use crate::log::log;
+    pub use crate::math::math;
+    pub use crate::ops::ops;
+    pub use crate::string::string;
 
-/// Return type of argument.
-fn type_of() -> Symbol {
-    Symbol::new_builtin_fn(
-        "type_of",
-        [].into_iter(),
-        &|_, args, _| {
-            Ok(if let Ok((_, arg)) = args.get_single() {
-                arg.value.ty().to_string().into()
-            } else {
-                Value::None
-            })
-        },
-        None,
-    )
+    use microcad_lang::{resolve::Symbol, ty::Ty, value::Value};
+
+    /// Return type of argument.
+    pub fn type_of() -> Symbol {
+        Symbol::new_builtin_fn(
+            "type_of",
+            [].into_iter(),
+            &|_, args, _| {
+                Ok(if let Ok((_, arg)) = args.get_single() {
+                    arg.value.ty().to_string().into()
+                } else {
+                    Value::None
+                })
+            },
+            None,
+        )
+    }
+
+    /// Convert a value into a string.
+    pub fn to_string() -> Symbol {
+        Symbol::new_builtin_fn(
+            "to_string",
+            [].into_iter(),
+            &|_, args, _| {
+                Ok(if let Ok((_, arg)) = args.get_single() {
+                    arg.value.to_string().into()
+                } else {
+                    Value::None
+                })
+            },
+            None,
+        )
+    }
+
+    /// Built-in print function.
+    pub fn print() -> Symbol {
+        Symbol::new_builtin_fn(
+            "print",
+            [microcad_lang::parameter!(x)].into_iter(),
+            &|_params, args, context| {
+                args.iter().try_for_each(
+                    |(_, arg)| -> Result<(), microcad_lang::eval::EvalError> {
+                        context.print(format!("{value}", value = arg.value));
+                        Ok(())
+                    },
+                )?;
+                Ok(Value::None)
+            },
+            None,
+        )
+    }
 }
 
-/// Convert a value into a string.
-fn to_string() -> Symbol {
-    Symbol::new_builtin_fn(
-        "to_string",
-        [].into_iter(),
-        &|_, args, _| {
-            Ok(if let Ok((_, arg)) = args.get_single() {
-                arg.value.to_string().into()
-            } else {
-                Value::None
-            })
-        },
-        None,
-    )
-}
-
-/// Build the standard module
+/// Build the standard module.
 pub fn builtin_module() -> Symbol {
-    ModuleBuilder::new("__builtin")
-        .symbol(debug::debug())
-        .symbol(log::log())
-        .symbol(array::array())
-        .symbol(string::string())
-        .symbol(math::math())
-        .symbol(color::color())
-        .symbol(type_of())
-        .symbol(to_string())
-        .symbol(print::print())
-        .symbol(ops::ops())
-        .symbol(import::import())
-        .symbol(geo2d::geo2d())
-        .symbol(geo3d::geo3d())
-        .build()
+    __builtin()
 }
 
 /// Get built-in importers.
