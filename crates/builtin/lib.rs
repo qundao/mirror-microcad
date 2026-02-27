@@ -90,10 +90,7 @@ pub mod __builtin {
     }
 }
 
-/// Build the standard module.
-pub fn builtin_module() -> Symbol {
-    __builtin()
-}
+pub use __builtin as builtin_module;
 
 /// Get built-in importers.
 pub fn builtin_importers() -> ImporterRegistry {
