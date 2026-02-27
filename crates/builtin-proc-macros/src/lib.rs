@@ -37,17 +37,15 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     use syn::*;
-    let input = parse_macro_input!(item as ItemMod);
-    let mod_name = &input.ident;
+    let item_mod = parse_macro_input!(item as ItemMod);
+    let mod_name = &item_mod.ident;
     let mod_name_str = mod_name.to_string();
 
-    let items = input
+    let registrations = item_mod
         .content
         .as_ref()
-        .map(|(_, items)| items.clone())
-        .unwrap_or_default();
-
-    let registrations = items
+        .map(|(_, items)| items)
+        .expect("Some inline module")
         .iter()
         .filter_map(|item| {
             match item {
@@ -71,15 +69,13 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
         .collect::<Vec<_>>();
 
     // Generate the builder function and keep the original module items
-    let expanded = quote! {
-        #input
+    TokenStream::from(quote! {
+        #item_mod
 
         pub fn #mod_name() -> microcad_lang::resolve::Symbol {
             crate::ModuleBuilder::new(#mod_name_str)
                 #(#registrations)*
                 .build()
         }
-    };
-
-    TokenStream::from(expanded)
+    })
 }
