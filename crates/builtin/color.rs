@@ -5,27 +5,61 @@
 
 use microcad_builtin_proc_macros::builtin_mod;
 
+/// µcad built-in color module.
 #[builtin_mod]
 pub mod color {
     use microcad_core::{Scalar, color::Color};
     use microcad_lang::{parameter, resolve::*, value::*};
 
+    /// Red color.
     pub const RED: Color = Color::RED;
+
+    /// Blue color.
     pub const BLUE: Color = Color::BLUE;
+
+    /// Green color.
     pub const GREEN: Color = Color::GREEN;
+
+    /// Yellow color.
     pub const YELLOW: Color = Color::YELLOW;
+
+    /// Cyan color.
     pub const CYAN: Color = Color::CYAN;
+
+    /// Magenta color.
     pub const MAGENTA: Color = Color::MAGENTA;
+
+    /// Black color.
     pub const BLACK: Color = Color::BLACK;
+
+    /// White color.
     pub const WHITE: Color = Color::WHITE;
+
+    /// Gray color.
     pub const GRAY: Color = Color::GRAY;
+
+    /// Orange color.
     pub const ORANGE: Color = Color::ORANGE;
+
+    /// Purple color.
     pub const PURPLE: Color = Color::PURPLE;
+
+    /// Pink color.
     pub const PINK: Color = Color::PINK;
+
+    /// Brown color.
     pub const BROWN: Color = Color::BROWN;
+
+    /// Lime color.
     pub const LIME: Color = Color::LIME;
+
+    /// Teal color.
     pub const TEAL: Color = Color::TEAL;
+
+    /// Navy color.
     pub const NAVY: Color = Color::NAVY;
+
+    /// Transparent (fully transparent) color.
     pub const TRANSPARENT: Color = Color::TRANSPARENT;
 
     /// Create a color from red, green and blue.

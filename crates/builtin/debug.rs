@@ -15,6 +15,7 @@ pub mod debug {
         value::{Target, Value},
     };
 
+    /// Assertion with an optional message.
     pub fn assert() -> Symbol {
         Symbol::new_builtin_fn(
             "assert",
@@ -61,6 +62,7 @@ pub mod debug {
         }
     }
 
+    /// Assert equal.
     pub fn assert_eq() -> Symbol {
         Symbol::new_builtin_fn(
             "assert_eq",
@@ -112,6 +114,7 @@ pub mod debug {
         )
     }
 
+    /// Assert that a symbol is valid.
     pub fn assert_valid() -> Symbol {
         Symbol::new_builtin_fn(
             "assert_valid",
@@ -148,6 +151,7 @@ pub mod debug {
         )
     }
 
+    /// Assert that a symbol is invalid.
     pub fn assert_invalid() -> Symbol {
         Symbol::new_builtin_fn(
             "assert_invalid",

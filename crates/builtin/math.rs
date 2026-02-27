@@ -35,15 +35,23 @@ pub(crate) fn orient_z_to(target: Vec3) -> Mat3 {
     Mat3::from_axis_angle(rotation_axis, angle)
 }
 
+/// µcad math built-in module.
 #[builtin_mod]
 pub mod math {
     use cgmath::SquareMatrix;
     use microcad_core::{Integer, Mat3, Scalar, Vec3};
     use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
+    /// Pi.
     pub const PI: Scalar = std::f64::consts::PI;
+
+    /// X unit vector.
     pub const X: Vec3 = Vec3::new(1.0, 0.0, 0.0);
+
+    /// Y unit vector.
     pub const Y: Vec3 = Vec3::new(0.0, 1.0, 0.0);
+
+    /// Z unit vector.
     pub const Z: Vec3 = Vec3::new(0.0, 0.0, 1.0);
 
     /// Absolute value abs(x)
