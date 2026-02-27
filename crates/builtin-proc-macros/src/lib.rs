@@ -98,6 +98,11 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
                     let name = &f.sig.ident;
                     Some(quote! { .symbol(#mod_name::#name()) })
                 }
+                // Match `pub use foo::bar` statements.
+                Item::Use(u) if matches!(u.vis, Visibility::Public(_)) => {
+                    let tree = &u.tree;
+                    Some(quote! { .symbol(#tree()) })
+                }
 
                 // Skip everything else (Private items or different Item types)
                 _ => None,
@@ -109,6 +114,7 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     TokenStream::from(quote! {
         #item_mod
 
+        #[allow(missing_docs)]
         pub fn #mod_name() -> microcad_lang::resolve::Symbol {
             crate::ModuleBuilder::new(#mod_name_str)
                 #(#registrations)*
