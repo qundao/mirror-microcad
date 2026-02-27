@@ -34,6 +34,43 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
     derive_workbench_definition(input, "Operation", "Geometry3D")
 }
 
+/// Attribute macro used to declare a µcad builtin module.
+///
+/// It automatically generate its symbol registration function of the same name.
+/// This macro is designed to reduce boilerplate when defining built-in modules in µcad.
+///
+/// # Example
+///
+/// Let's a look a built-in module `math`:
+///
+/// ```rust
+/// #[builtin_mod]
+/// pub mod math {
+///     pub const PI: Scalar = 3.14;
+///
+///     pub fn int() -> Symbol {
+///         // ...
+///     }
+/// }
+/// ```
+///
+/// The `#[builtin_mod]` will auto-generate a `math` registration function:
+///
+/// ```rust
+/// pub fn math() -> microcad_lang::resolve::Symbol {
+///     crate::ModuleBuilder::new("math")
+///         .pub_const("PI", math::PI)
+///         .symbol(math::add())
+///         .build()
+/// }
+/// ```
+///
+///
+/// # Conditions
+///
+/// - Private items are ignored.
+/// - Non-const / non-function items are ignored.
+/// - The module must be **inline** (`mod name { ... }`).
 #[proc_macro_attribute]
 pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     use syn::*;
