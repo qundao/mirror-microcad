@@ -126,6 +126,7 @@ pub mod array {
         )
     }
 
+    /// Check if an array contains an element.
     pub fn contains() -> Symbol {
         Symbol::new_builtin_fn(
             "contains",

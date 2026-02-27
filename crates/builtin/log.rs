@@ -8,6 +8,7 @@ use microcad_builtin_proc_macros::builtin_mod;
 pub mod log {
     use microcad_lang::{diag::*, eval::*, parameter, resolve::*, value::*};
 
+    /// Log error.
     pub fn error() -> Symbol {
         Symbol::new_builtin_fn(
             "error",
@@ -26,6 +27,7 @@ pub mod log {
         )
     }
 
+    /// Log warning.
     pub fn warning() -> Symbol {
         Symbol::new_builtin_fn(
             "warning",
@@ -44,6 +46,7 @@ pub mod log {
         )
     }
 
+    /// Log info message.
     pub fn info() -> Symbol {
         Symbol::new_builtin_fn(
             "info",
@@ -60,6 +63,7 @@ pub mod log {
         )
     }
 
+    /// Log todo message. Will throw an error when reached.
     pub fn todo() -> Symbol {
         Symbol::new_builtin_fn(
             "todo",
