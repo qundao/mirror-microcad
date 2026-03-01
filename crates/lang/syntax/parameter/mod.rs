@@ -13,7 +13,7 @@ pub use parameter_list::*;
 #[derive(Clone, Default)]
 pub struct Parameter {
     /// Name of the parameter
-    pub id: Identifier,
+    pub(crate) id: Identifier,
     /// Type of the parameter or `None`
     pub specified_type: Option<TypeAnnotation>,
     /// default value of the parameter or `None`
@@ -62,7 +62,7 @@ impl Parameter {
                     context.error(
                         &self.src_ref,
                         EvalError::TypeMismatch {
-                            id: self.id.clone(),
+                            id: self.id(),
                             expected: specified_type.ty(),
                             found: value.ty(),
                         },
@@ -78,6 +78,12 @@ impl Parameter {
     }
 }
 
+impl Identifiable for Parameter {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
+    }
+}
+
 impl SrcReferrer for Parameter {
     fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
@@ -86,7 +92,7 @@ impl SrcReferrer for Parameter {
 
 impl OrdMapValue<Identifier> for Parameter {
     fn key(&self) -> Option<Identifier> {
-        Some(self.id.clone())
+        Some(self.id())
     }
 }
 

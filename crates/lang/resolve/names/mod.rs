@@ -60,13 +60,13 @@ impl Names for Statement {
 
 impl Names for WorkbenchDefinition {
     fn names(&self) -> NameList {
-        self.plan.names().add_as_name(&self.id)
+        self.plan.names().add_as_name(self.id_ref())
     }
 }
 
 impl Names for ParameterList {
     fn names(&self) -> NameList {
-        NameList::from_iter(self.iter().map(|param| &param.id)).merge_many(
+        NameList::from_iter(self.iter().map(|param| param.id_ref())).merge_many(
             self.iter()
                 .filter_map(|param| param.default_value.as_ref())
                 .map(|expr| expr.names()),
@@ -121,9 +121,9 @@ impl Names for Assignment {
     fn names(&self) -> NameList {
         let names = self.expression.names();
         if matches!(self.qualifier(), Qualifier::Const) {
-            names.add_as_name(&self.id)
+            names.add_as_name(self.id_ref())
         } else {
-            names.add_local(&self.id)
+            names.add_local(self.id_ref())
         }
     }
 }

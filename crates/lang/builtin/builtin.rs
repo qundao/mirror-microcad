@@ -13,7 +13,7 @@ pub type BuiltinFn =
 #[derive(Clone)]
 pub struct Builtin {
     /// Name of the builtin function
-    pub id: Identifier,
+    pub(crate) id: Identifier,
 
     /// Optional parameter value list to check the builtin signature.
     pub parameters: ParameterValueList,
@@ -26,6 +26,12 @@ pub struct Builtin {
 
     /// Functor which returns documentation of this function
     pub doc: Option<DocBlock>,
+}
+
+impl Identifiable for Builtin {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
+    }
 }
 
 /// Kind of the built-in.
@@ -59,13 +65,6 @@ impl std::fmt::Display for BuiltinKind {
 impl std::fmt::Debug for Builtin {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "__builtin::{}", &self.id)
-    }
-}
-
-impl Builtin {
-    /// Return identifier.
-    pub fn id(&self) -> Identifier {
-        self.id.clone()
     }
 }
 

@@ -9,7 +9,7 @@ use crate::{src_ref::*, syntax::*};
 #[derive(Clone)]
 pub struct Marker {
     /// Marker name, e.g. `input`
-    pub id: Identifier,
+    pub(crate) id: Identifier,
     /// Source code reference
     pub src_ref: SrcRef,
 }
@@ -18,6 +18,12 @@ impl Marker {
     /// Returns true if the marker is an input placeholder
     pub fn is_input_placeholder(&self) -> bool {
         &self.id == "input"
+    }
+}
+
+impl Identifiable for Marker {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
     }
 }
 

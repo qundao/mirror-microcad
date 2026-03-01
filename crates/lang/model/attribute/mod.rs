@@ -23,9 +23,24 @@ use microcad_core::{Color, Size2};
 #[derive(Clone, Debug)]
 pub struct CustomCommand {
     /// Attribute id.
-    pub id: Identifier,
+    id: Identifier,
     /// Argument tuple.
     pub arguments: Box<Tuple>,
+}
+
+impl CustomCommand {
+    pub(crate) fn new(id: Identifier, arguments: Tuple) -> CustomCommand {
+        CustomCommand {
+            id,
+            arguments: arguments.into(),
+        }
+    }
+}
+
+impl Identifiable for CustomCommand {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
+    }
 }
 
 impl std::fmt::Display for CustomCommand {
@@ -60,7 +75,7 @@ impl Attribute {
             Attribute::Size(_) => Identifier::no_ref("size"),
             Attribute::Export(_) => Identifier::no_ref("export"),
             Attribute::Measure(_) => Identifier::no_ref("measure"),
-            Attribute::Custom(attr) => attr.id.clone(),
+            Attribute::Custom(attr) => attr.id(),
         }
     }
 

@@ -152,16 +152,16 @@ impl StackFrame {
                     format!("{:?} (source)", source.filename())
                 }
                 SymbolDef::Module(def) => {
-                    format!("{:?}{full_name} (module)", def.id)
+                    format!("{:?}{full_name} (module)", def.id_ref())
                 }
                 SymbolDef::Workbench(def) => {
-                    format!("{:?}{full_name} (workbench)", def.id)
+                    format!("{:?}{full_name} (workbench)", def.id_ref())
                 }
                 SymbolDef::Function(def) => {
-                    format!("{:?}{full_name} (function)", def.id)
+                    format!("{:?}{full_name} (function)", def.id_ref())
                 }
                 SymbolDef::Builtin(builtin) => {
-                    format!("{:?}{full_name} (builtin)", builtin.id)
+                    format!("{:?}{full_name} (builtin)", builtin.id_ref())
                 }
                 SymbolDef::Alias(visibility, id, name) => {
                     format!("{visibility}{id:?}{full_name} -> {name:?} (alias)")

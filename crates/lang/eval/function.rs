@@ -11,10 +11,10 @@ impl CallTrait for FunctionDefinition {
             Ok(matches) => {
                 let mut result: Vec<Value> = Vec::new();
                 for args in matches.args {
-                    let value: Value = context.scope(
-                        StackFrame::Function(self.id.clone(), args.into()),
-                        |context| self.body.statements.eval(context),
-                    )?;
+                    let value: Value = context
+                        .scope(StackFrame::Function(self.id(), args.into()), |context| {
+                            self.body.statements.eval(context)
+                        })?;
                     result.push(value.un_return());
                 }
                 if result.len() == 1 {

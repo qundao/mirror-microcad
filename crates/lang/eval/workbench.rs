@@ -20,7 +20,7 @@ impl WorkbenchDefinition {
     ) -> EvalResult<Model> {
         log::debug!(
             "Evaluating model of `{id:?}` {kind}",
-            id = self.id,
+            id = self.id_ref(),
             kind = self.kind
         );
 
@@ -36,8 +36,8 @@ impl WorkbenchDefinition {
         let missing: Vec<_> = self
             .plan
             .iter()
-            .filter(|param| !properties.iter().any(|(id, _)| param.id == *id))
-            .map(|param| param.id.clone())
+            .filter(|param| !properties.iter().any(|(id, _)| param.id_ref() == id))
+            .map(|param| param.id())
             .collect();
         missing
             .into_iter()
@@ -60,7 +60,7 @@ impl WorkbenchDefinition {
         .build();
 
         context.scope(
-            StackFrame::Workbench(model, self.id.clone(), Default::default()),
+            StackFrame::Workbench(model, self.id(), Default::default()),
             |context| {
                 let model = context.get_model()?;
 
@@ -68,7 +68,7 @@ impl WorkbenchDefinition {
                 if let Some(init) = init {
                     log::trace!(
                         "Initializing`{id:?}` {kind}",
-                        id = self.id,
+                        id = self.id_ref(),
                         kind = self.kind
                     );
                     if let Err(err) = init.eval(non_properties.into_iter().collect(), context) {
@@ -77,7 +77,11 @@ impl WorkbenchDefinition {
                 }
 
                 // At this point, all properties must have a value
-                log::trace!("Run body`{id:?}` {kind}", id = self.id, kind = self.kind);
+                log::trace!(
+                    "Run body`{id:?}` {kind}",
+                    id = self.id_ref(),
+                    kind = self.kind
+                );
                 model.append_children(self.body.statements.eval(context)?);
 
                 Ok(model)
@@ -103,7 +107,7 @@ impl WorkbenchDefinition {
         log::debug!(
             "{call} workbench {kind} {id:?}({arguments:?})",
             call = crate::mark!(CALL),
-            id = self.id,
+            id = self.id_ref(),
             kind = self.kind
         );
 
@@ -188,7 +192,7 @@ impl WorkbenchDefinition {
                     arguments,
                     EvalError::AmbiguousInitialization {
                         src_ref: call_src_ref,
-                        name: self.id.clone(),
+                        name: self.id(),
                         actual_params: arguments.to_string(),
                         ambiguous_params: ambiguous,
                     },
@@ -230,7 +234,7 @@ impl WorkbenchDefinition {
                 arguments,
                 EvalError::NoInitializationFound {
                     src_ref: call_src_ref,
-                    name: self.id.clone(),
+                    name: self.id(),
                     actual_params: arguments.to_string(),
                     possible_params: self.possible_params(),
                 },

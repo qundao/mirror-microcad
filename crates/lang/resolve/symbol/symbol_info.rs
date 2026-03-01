@@ -22,7 +22,7 @@ pub struct ParameterInfo {
 impl From<&Parameter> for ParameterInfo {
     fn from(param: &Parameter) -> Self {
         Self {
-            id: param.id.to_string(),
+            id: param.id().to_string(),
             ty: param.specified_type.clone().map(|ty| ty.to_string()),
             def: param.default_value.clone().map(|def| def.to_string()),
         }
@@ -82,7 +82,7 @@ impl SymbolInfo {
 impl From<&Rc<Assignment>> for SymbolInfo {
     fn from(def: &Rc<Assignment>) -> Self {
         SymbolInfo {
-            id: def.id.to_string(),
+            id: def.id().to_string(),
             kind: "Assignment".into(),
             doc: def.doc(),
             signatures: vec![],
@@ -106,7 +106,7 @@ impl From<&Rc<SourceFile>> for SymbolInfo {
 impl From<&Rc<ModuleDefinition>> for SymbolInfo {
     fn from(def: &Rc<ModuleDefinition>) -> Self {
         SymbolInfo {
-            id: def.id.to_string(),
+            id: def.id().to_string(),
             kind: "ModuleDefinition".into(),
             doc: def.doc(),
             signatures: vec![],
@@ -118,7 +118,7 @@ impl From<&Rc<ModuleDefinition>> for SymbolInfo {
 impl From<&Rc<WorkbenchDefinition>> for SymbolInfo {
     fn from(def: &Rc<WorkbenchDefinition>) -> Self {
         SymbolInfo {
-            id: def.id.to_string(),
+            id: def.id().to_string(),
             kind: def.kind.to_string(),
             doc: def.doc(),
             signatures: def
@@ -136,7 +136,7 @@ impl From<&Rc<WorkbenchDefinition>> for SymbolInfo {
 impl From<&Rc<FunctionDefinition>> for SymbolInfo {
     fn from(def: &Rc<FunctionDefinition>) -> Self {
         SymbolInfo {
-            id: def.id.to_string(),
+            id: def.id().to_string(),
             kind: "Function".into(),
             doc: def.doc(),
             signatures: vec![SignatureInfo {
@@ -151,7 +151,7 @@ impl From<&Rc<FunctionDefinition>> for SymbolInfo {
 impl From<&Rc<Builtin>> for SymbolInfo {
     fn from(def: &Rc<Builtin>) -> Self {
         SymbolInfo {
-            id: def.id.to_string(),
+            id: def.id().to_string(),
             kind: "Builtin".into(),
             doc: def.doc.clone(),
             signatures: vec![SignatureInfo {

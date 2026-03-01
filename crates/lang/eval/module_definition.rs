@@ -6,7 +6,7 @@ use crate::eval::*;
 impl Eval for ModuleDefinition {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         context.scope(
-            StackFrame::Module(self.id.clone(), Default::default()),
+            StackFrame::Module(self.id(), Default::default()),
             |context| {
                 if let Some(body) = &self.body {
                     body.statements.eval(context)
