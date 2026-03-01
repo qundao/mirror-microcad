@@ -24,9 +24,9 @@ pub enum AttributeCommand {
     },
 }
 
-impl AttributeCommand {
-    /// Qualified name of the attribute command
-    pub fn name(&self) -> &Identifier {
+impl Identifiable for AttributeCommand {
+    /// Id of the attribute command
+    fn id_ref(&self) -> &Identifier {
         match self {
             AttributeCommand::Ident(name) => name,
             AttributeCommand::Call(call) => call

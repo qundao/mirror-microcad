@@ -40,11 +40,27 @@ pub use literal::*;
 pub use module::*;
 pub use parameter::*;
 pub use qualifier::*;
-pub use r#use::*;
 pub use source_file::*;
 pub use statement::*;
 pub use type_annotation::*;
+pub use r#use::*;
 pub use visibility::*;
 pub use workbench::*;
 
 use crate::tree_display::*;
+
+/// Access identifier
+pub trait Identifiable {
+    /// Get clone of the identifier.
+    fn id(&self) -> Identifier {
+        self.id_ref().clone()
+    }
+
+    /// Get reference to the identifier.
+    fn id_ref(&self) -> &Identifier;
+
+    /// Get identifier as string.
+    fn id_as_str(&self) -> &str {
+        self.id_ref().0.as_str()
+    }
+}

@@ -15,7 +15,7 @@ pub struct Assignment {
     /// Assignee qualifier
     pub qualifier: Qualifier,
     /// Assignee
-    pub id: Identifier,
+    pub(crate) id: Identifier,
     /// Type of the assignee
     pub specified_type: Option<TypeAnnotation>,
     /// Value to assign
@@ -53,6 +53,12 @@ impl Assignment {
             Visibility::Public => Qualifier::Const,
             Visibility::Deleted => unreachable!(),
         }
+    }
+}
+
+impl Identifiable for Assignment {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
     }
 }
 

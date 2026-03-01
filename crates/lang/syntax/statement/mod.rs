@@ -75,10 +75,10 @@ impl std::fmt::Display for Statement {
                 write!(f, "{w}")
             }
             Self::Module(m) => {
-                write!(f, "{}", m.id)
+                write!(f, "{}", m.id_ref())
             }
-            Self::Function(_f) => {
-                write!(f, "{}", _f.id)
+            Self::Function(f_) => {
+                write!(f, "{}", f_.id_ref())
             }
             Self::Init(mi) => {
                 write!(f, "{mi}")
@@ -102,10 +102,10 @@ impl std::fmt::Debug for Statement {
                 write!(f, "{w:?}")
             }
             Self::Module(m) => {
-                write!(f, "{:?}", m.id)
+                write!(f, "{:?}", m.id_ref())
             }
-            Self::Function(_f) => {
-                write!(f, "{:?}", _f.id)
+            Self::Function(f_) => {
+                write!(f, "{:?}", f_.id_ref())
             }
             Self::Init(mi) => {
                 write!(f, "{mi:?}")

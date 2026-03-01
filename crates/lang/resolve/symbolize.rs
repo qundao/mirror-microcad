@@ -39,7 +39,7 @@ impl Symbolize<Symbol> for ModuleDefinition {
             symbol
         } else if let Some(parent_path) = parent.source_path() {
             let mut symbol =
-                context.symbolize_file(self.visibility.clone(), parent_path, &self.id)?;
+                context.symbolize_file(self.visibility.clone(), parent_path, self.id_ref())?;
             symbol.set_parent(parent.clone());
             symbol
         } else {
@@ -77,13 +77,13 @@ impl Symbolize<Option<(Identifier, Symbol)>> for Statement {
         context: &mut ResolveContext,
     ) -> ResolveResult<Option<(Identifier, Symbol)>> {
         match self {
-            Statement::Workbench(wd) => Ok(Some((wd.id.clone(), wd.symbolize(parent, context)?))),
-            Statement::Module(md) => Ok(Some((md.id.clone(), md.symbolize(parent, context)?))),
-            Statement::Function(fd) => Ok(Some((fd.id.clone(), fd.symbolize(parent, context)?))),
+            Statement::Workbench(wd) => Ok(Some((wd.id(), wd.symbolize(parent, context)?))),
+            Statement::Module(md) => Ok(Some((md.id(), md.symbolize(parent, context)?))),
+            Statement::Function(fd) => Ok(Some((fd.id(), fd.symbolize(parent, context)?))),
             Statement::Use(us) => us.symbolize(parent, context),
             Statement::Assignment(a) => Ok(a
                 .symbolize(parent, context)?
-                .map(|symbol| (a.assignment.id.clone(), symbol))),
+                .map(|symbol| (a.assignment.id(), symbol))),
             // Not producing any symbols
             Statement::Init(_)
             | Statement::Return(_)
@@ -137,7 +137,10 @@ impl Symbolize for AssignmentStatement {
                 if !parent.can_const() {
                     None
                 } else {
-                    log::trace!("Declaring private const expression: {}", self.assignment.id);
+                    log::trace!(
+                        "Declaring private const expression: {}",
+                        self.assignment.id_ref()
+                    );
                     Some(Some(Symbol::new(
                         SymbolDef::Assignment(self.assignment.clone()),
                         Some(parent.clone()),

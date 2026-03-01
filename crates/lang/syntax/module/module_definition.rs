@@ -15,7 +15,7 @@ pub struct ModuleDefinition {
     /// Visibility of the module.
     pub visibility: Visibility,
     /// Name of the module.
-    pub id: Identifier,
+    pub(crate) id: Identifier,
     /// Module body. ('None' if file module)
     pub body: Option<Body>,
 }
@@ -28,6 +28,12 @@ impl ModuleDefinition {
             id,
             ..Default::default()
         })
+    }
+}
+
+impl Identifiable for ModuleDefinition {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
     }
 }
 
