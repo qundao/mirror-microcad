@@ -37,7 +37,7 @@ pub mod __builtin {
     pub use crate::ops::ops;
     pub use crate::string::string;
 
-    use microcad_lang::{resolve::Symbol, ty::Ty, value::Value};
+    use microcad_lang::{diag::PushDiag, eval::EvalError, resolve::Symbol, ty::Ty, value::Value};
 
     /// Return type of argument.
     pub fn type_of() -> Symbol {
@@ -84,6 +84,28 @@ pub mod __builtin {
                     },
                 )?;
                 Ok(Value::None)
+            },
+            None,
+        )
+    }
+
+    /// Return the count of elements in an array or string.
+    ///
+    /// Note: This symbol might be deprecated in the future.
+    pub fn count() -> Symbol {
+        Symbol::new_builtin_fn(
+            "count",
+            [].into_iter(),
+            &|_params, args, ctx| {
+                let arg = args.get_single()?;
+                Ok(match &arg.1.value {
+                    Value::String(s) => Value::Integer(s.chars().count() as i64),
+                    Value::Array(a) => Value::Integer(a.len() as i64),
+                    _ => {
+                        ctx.error(arg.1, EvalError::BuiltinError("Value has no count.".into()))?;
+                        Value::None
+                    }
+                })
             },
             None,
         )
