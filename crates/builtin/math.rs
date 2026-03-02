@@ -37,6 +37,7 @@ pub(crate) fn orient_z_to(target: Vec3) -> Mat3 {
 
 /// µcad math built-in module.
 #[builtin_mod]
+#[allow(clippy::module_inception)]
 pub mod math {
     use cgmath::SquareMatrix;
     use microcad_core::{Integer, Mat3, Scalar, Vec3};

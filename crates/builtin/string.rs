@@ -7,6 +7,7 @@ use microcad_builtin_proc_macros::builtin_mod;
 
 /// Module for built-in string functions.
 #[builtin_mod]
+#[allow(clippy::module_inception)]
 pub mod string {
     use microcad_lang::{diag::PushDiag, parameter, resolve::Symbol, value::Value};
 

@@ -5,6 +5,7 @@ use microcad_builtin_proc_macros::builtin_mod;
 
 /// Module for built-in debugging.
 #[builtin_mod]
+#[allow(clippy::module_inception)]
 pub mod debug {
     use microcad_lang::{
         builtin::ValueAccess,

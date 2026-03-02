@@ -37,7 +37,7 @@ pub mod __builtin {
     pub use crate::ops::ops;
     pub use crate::string::string;
 
-    use microcad_lang::{diag::PushDiag, eval::EvalError, resolve::Symbol, ty::Ty, value::Value};
+    use microcad_lang::{resolve::Symbol, ty::Ty, value::Value};
 
     /// Return type of argument.
     pub fn type_of() -> Symbol {

@@ -9,6 +9,7 @@ use microcad_builtin_proc_macros::builtin_mod;
 ///
 /// These functions are only supposed to work with [`Value::Array`].
 #[builtin_mod]
+#[allow(clippy::module_inception)]
 pub mod array {
     use microcad_lang::{
         diag::PushDiag,

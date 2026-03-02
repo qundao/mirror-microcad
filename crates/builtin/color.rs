@@ -7,6 +7,7 @@ use microcad_builtin_proc_macros::builtin_mod;
 
 /// µcad built-in color module.
 #[builtin_mod]
+#[allow(clippy::module_inception)]
 pub mod color {
     use microcad_core::{Scalar, color::Color};
     use microcad_lang::{parameter, resolve::*, value::*};
