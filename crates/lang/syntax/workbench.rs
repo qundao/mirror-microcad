@@ -43,7 +43,7 @@ pub struct WorkbenchDefinition {
     /// Workbench kind.
     pub kind: Refer<WorkbenchKind>,
     /// Workbench name.
-    pub id: Identifier,
+    pub(crate) id: Identifier,
     /// Workbench's building plan.
     pub plan: ParameterList,
     /// Workbench body
@@ -56,6 +56,12 @@ impl WorkbenchDefinition {
             .chain(self.inits().map(|init| &init.parameters))
             .map(|params| format!("{}( {})", self.id, params))
             .collect()
+    }
+}
+
+impl Identifiable for WorkbenchDefinition {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
     }
 }
 

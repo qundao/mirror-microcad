@@ -11,7 +11,7 @@ pub use identifier_list::*;
 use miette::SourceSpan;
 pub use qualified_name::*;
 
-use crate::{parse::*, src_ref::*, syntax::*, Id};
+use crate::{Id, parse::*, src_ref::*, syntax::*};
 
 /// µcad identifier
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -34,6 +34,22 @@ pub trait SingleIdentifier {
     /// Returns true if the element only includes a single identifier.
     fn is_single_identifier(&self) -> bool {
         self.single_identifier().is_some()
+    }
+}
+
+/// Identifier accessor.
+pub trait Identifiable {
+    /// Get clone of the identifier.
+    fn id(&self) -> Identifier {
+        self.id_ref().clone()
+    }
+
+    /// Get reference to the identifier.
+    fn id_ref(&self) -> &Identifier;
+
+    /// Get identifier as string.
+    fn id_as_str(&self) -> &str {
+        self.id_ref().0.as_str()
     }
 }
 
@@ -138,15 +154,24 @@ impl Identifier {
     /// check if this is a valid identifier (contains only `A`-`Z`, `a`-`z` or `_`)
     pub fn validate(self) -> ParseResult<Self> {
         let str = self.0.as_str();
-        
+
         let Some(start) = str.chars().next() else {
-            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+            return Err(ParseError::InvalidIdentifier(Refer::new(
+                self.0.as_str().into(),
+                self.src_ref(),
+            )));
         };
         if start != '_' && !start.is_ascii_alphabetic() {
-            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+            return Err(ParseError::InvalidIdentifier(Refer::new(
+                self.0.as_str().into(),
+                self.src_ref(),
+            )));
         }
         if !str.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
-            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+            return Err(ParseError::InvalidIdentifier(Refer::new(
+                self.0.as_str().into(),
+                self.src_ref(),
+            )));
         }
         Ok(self)
     }

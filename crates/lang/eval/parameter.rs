@@ -16,7 +16,7 @@ impl Eval<ParameterValue> for Parameter {
                     context.error(
                         self,
                         EvalError::TypeMismatch {
-                            id: self.id.clone(),
+                            id: self.id(),
                             expected: specified_type.ty(),
                             found: default_value.ty(),
                         },
@@ -58,7 +58,7 @@ impl Eval<ParameterValueList> for ParameterList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ParameterValueList> {
         let mut values = ParameterValueList::default();
         for parameter in self.iter() {
-            values.insert(parameter.id.clone(), parameter.eval(context)?)?;
+            values.insert(parameter.id(), parameter.eval(context)?)?;
         }
 
         Ok(values)

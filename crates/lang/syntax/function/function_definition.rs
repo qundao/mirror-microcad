@@ -15,11 +15,17 @@ pub struct FunctionDefinition {
     /// Visibility
     pub visibility: Visibility,
     /// Name of the function
-    pub id: Identifier,
+    pub(crate) id: Identifier,
     /// Function signature
     pub signature: FunctionSignature,
     /// Function body
     pub body: Body,
+}
+
+impl Identifiable for FunctionDefinition {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
+    }
 }
 
 impl SrcReferrer for FunctionDefinition {

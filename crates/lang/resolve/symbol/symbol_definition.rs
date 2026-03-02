@@ -39,12 +39,12 @@ impl SymbolDef {
     pub fn id(&self) -> Identifier {
         match &self {
             Self::Root => Identifier::none(),
-            Self::Workbench(w) => w.id.clone(),
-            Self::Module(m) => m.id.clone(),
-            Self::Function(f) => f.id.clone(),
+            Self::Workbench(w) => w.id(),
+            Self::Module(m) => m.id(),
+            Self::Function(f) => f.id(),
             Self::SourceFile(s) => s.id(),
             Self::Builtin(m) => m.id(),
-            Self::Assignment(a) => a.id.clone(),
+            Self::Assignment(a) => a.id(),
             Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => id.clone(),
             Self::UseAll(..) => Identifier::none(),
             #[cfg(test)]

@@ -122,22 +122,19 @@ impl Eval for QualifiedName {
                 SymbolDef::SourceFile(_) => Ok(Value::None),
 
                 SymbolDef::Module(ns) => {
-                    context.error(self, EvalError::UnexpectedNested("mod", ns.id.clone()))?;
+                    context.error(self, EvalError::UnexpectedNested("mod", ns.id()))?;
                     Ok(Value::None)
                 }
                 SymbolDef::Workbench(w) => {
-                    context.error(
-                        self,
-                        EvalError::UnexpectedNested(w.kind.as_str(), w.id.clone()),
-                    )?;
+                    context.error(self, EvalError::UnexpectedNested(w.kind.as_str(), w.id()))?;
                     Ok(Value::None)
                 }
                 SymbolDef::Function(f) => {
-                    context.error(self, EvalError::UnexpectedNested("function", f.id.clone()))?;
+                    context.error(self, EvalError::UnexpectedNested("function", f.id()))?;
                     Ok(Value::None)
                 }
                 SymbolDef::Builtin(bm) => {
-                    context.error(self, EvalError::UnexpectedNested("builtin", bm.id.clone()))?;
+                    context.error(self, EvalError::UnexpectedNested("builtin", bm.id()))?;
                     Ok(Value::None)
                 }
                 SymbolDef::Alias(_, id, _) => {
