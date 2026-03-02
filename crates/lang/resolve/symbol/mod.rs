@@ -211,6 +211,16 @@ impl Symbol {
         self.inner.borrow().children.iter().try_for_each(f)
     }
 
+    /// Try to apply a FnMut for each child.
+    pub(crate) fn try_children_sorted<E: std::error::Error>(
+        &self,
+        f: impl FnMut((&Identifier, &Symbol)) -> Result<(), E>,
+    ) -> Result<(), E> {
+        let mut children = self.inner.borrow().children.clone();
+        children.sort_by(|id1, _, id2, _| id1.cmp(id2));
+        children.iter().try_for_each(f)
+    }
+
     /// Apply a FnMut for each child.
     pub fn with_children(&self, f: impl FnMut((&Identifier, &Symbol))) {
         self.inner.borrow().children.iter().for_each(f)
@@ -697,9 +707,15 @@ impl Symbol {
         }
         if children {
             writeln!(f)?;
-            self.try_children(|(id, child)| {
-                child.print_symbol(f, Some(id), state.indented(), true)
-            })?;
+            if state.debug {
+                self.try_children(|(id, child)| {
+                    child.print_symbol(f, Some(id), state.indented(), true)
+                })?;
+            } else {
+                self.try_children_sorted(|(id, child)| {
+                    child.print_symbol(f, Some(id), state.indented(), true)
+                })?;
+            }
         }
         Ok(())
     }
@@ -776,7 +792,11 @@ impl Info for Symbol {
 impl TreeDisplay for Symbol {
     fn tree_print(&self, f: &mut std::fmt::Formatter, state: TreeState) -> std::fmt::Result {
         if self.is_root() {
-            self.try_children(|(_, symbol)| symbol.tree_print(f, TreeState::new_debug(1)))
+            if state.debug {
+                self.try_children(|(_, symbol)| symbol.tree_print(f, state))
+            } else {
+                self.try_children_sorted(|(_, symbol)| symbol.tree_print(f, state))
+            }
         } else {
             self.print_symbol(f, Some(&self.id()), state, true)
         }
