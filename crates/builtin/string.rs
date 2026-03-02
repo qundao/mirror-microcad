@@ -11,10 +11,34 @@ use microcad_builtin_proc_macros::builtin_mod;
 pub mod string {
     use microcad_lang::{diag::PushDiag, parameter, resolve::Symbol, value::Value};
 
-    /// Return the count of characters in a string.
+    /// Return the length a string.
     pub fn len() -> Symbol {
         Symbol::new_builtin_fn(
             "len",
+            [parameter!(s: String)].into_iter(),
+            &|_params, args, ctx| {
+                let (_, arg) = args.get_single()?;
+                Ok(match &arg.value {
+                    Value::String(s) => s.chars().count().into(),
+                    _ => {
+                        ctx.error(
+                            arg,
+                            microcad_lang::eval::EvalError::BuiltinError(
+                                "Value is not a string.".into(),
+                            ),
+                        )?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
+    }
+
+    /// Return the count of characters in a string.
+    pub fn count() -> Symbol {
+        Symbol::new_builtin_fn(
+            "count",
             [parameter!(s: String)].into_iter(),
             &|_params, args, ctx| {
                 let (_, arg) = args.get_single()?;
