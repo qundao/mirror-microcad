@@ -14,6 +14,10 @@ pub use __builtin::log;
 pub use __builtin::color;
 pub use __builtin::to_string;
 
+// To be deprecated
+pub use __builtin::count;
+
+
 pub mod array {
     pub use __builtin::array::*;
 }
