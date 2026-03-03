@@ -67,7 +67,7 @@ impl DeduceResult for StatementList {
         let mut result = Type::Invalid;
         let mut result_src_ref = None;
         for statement in &self.0 {
-            /*            if let Some(result_src_ref) = result_src_ref {
+            if let Some(result_src_ref) = result_src_ref {
                 context.error(
                     statement,
                     EvalError::UnexpectedResult {
@@ -76,7 +76,7 @@ impl DeduceResult for StatementList {
                     },
                 )?;
                 break;
-            }*/
+            }
             match statement.deduce_result(context)? {
                 Type::Model | Type::Invalid => (),
                 r => {
