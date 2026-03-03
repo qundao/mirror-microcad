@@ -87,6 +87,29 @@ pub mod array {
     }
 
     /// Return everything but the first element in an array or string.
+    pub fn last() -> Symbol {
+        Symbol::new_builtin_fn(
+            "last",
+            [].into_iter(),
+            &|_params, args, ctx| {
+                let arg = args.get_single()?;
+                Ok(match &arg.1.value {
+                    Value::Array(a) if !a.is_empty() => a.last(),
+                    Value::Array(a) => {
+                        ctx.error(arg.1, EvalError::BuiltinError("Value is empty.".into()))?;
+                        Value::None
+                    }
+                    _ => {
+                        ctx.error(arg.1, EvalError::BuiltinError("Value has no tail.".into()))?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
+    }
+
+    /// Return everything but the first element in an array or string.
     pub fn tail() -> Symbol {
         Symbol::new_builtin_fn(
             "tail",
