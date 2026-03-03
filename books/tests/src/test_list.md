@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**168** tests have been evaluated with version **0.3.0** of microcad.
+**169** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -16,6 +16,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/array_helper_first.svg)](.test/array_helper_first.log) | [array_helper_first](array_helpers.md) |
 | [![test](.test/array_helper_is_ascending.svg)](.test/array_helper_is_ascending.log) | [array_helper_is_ascending](array_helpers.md) |
 | [![test](.test/array_helper_is_descending.svg)](.test/array_helper_is_descending.log) | [array_helper_is_descending](array_helpers.md) |
+| [![test](.test/array_helper_last.svg)](.test/array_helper_last.log) | [array_helper_last](array_helpers.md) |
 | [![test](.test/array_helper_len.svg)](.test/array_helper_len.log) | [array_helper_len](array_helpers.md) |
 | [![test](.test/array_helper_rev.svg)](.test/array_helper_rev.log) | [array_helper_rev](array_helpers.md) |
 | [![test](.test/array_helper_sorted.svg)](.test/array_helper_sorted.log) | [array_helper_sorted](array_helpers.md) |
