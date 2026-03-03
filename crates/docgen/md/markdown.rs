@@ -1,51 +1,11 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Microcad micro markdown parser and writer
+//! Generate a single markdown file for symbol.
 
 use derive_more::{Deref, DerefMut};
 
-/// A markdown section with heading and lines.
-#[derive(Debug, Clone, Default)]
-pub struct Section {
-    /// A heading, displayed with a `#` prefix in markdown.
-    pub heading: String,
-    /// Section level.
-    pub level: i64,
-    /// The section content
-    pub content: Vec<String>,
-}
-
-impl Section {
-    /// Append lines to this section
-    pub fn append(&mut self, mut lines: Vec<String>) {
-        self.content.append(&mut lines);
-    }
-
-    /// A section with `n` levels deeper.
-    pub fn nested(&self, n: i64) -> Section {
-        Section {
-            heading: self.heading.clone(),
-            level: self.level + n,
-            content: self.content.clone(),
-        }
-    }
-}
-
-impl std::fmt::Display for Section {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        // 1. Render the heading if it exists
-        let hashes = "#".repeat(self.level as usize);
-        writeln!(f, "{} {}\n", hashes, self.heading)?;
-
-        // 2. Render the content lines
-        for line in &self.content {
-            writeln!(f, "{}", line)?;
-        }
-
-        Ok(())
-    }
-}
+use crate::md::Section;
 
 /// Markdown struct, represented as a linear list of sections.
 #[derive(Debug, Default, Clone, Deref, DerefMut)]
@@ -126,6 +86,13 @@ impl Markdown {
     /// Nest another markdown
     pub fn nest(&mut self, md: Markdown, n: i64) {
         self.0.extend(md.0.into_iter().map(|s| s.nested(n)));
+    }
+
+    /// Write markdown to file.
+    pub fn write(&self, path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+        use std::io::Write;
+        let mut file = std::fs::File::create(path)?;
+        file.write_all(self.to_string().as_bytes())
     }
 }
 

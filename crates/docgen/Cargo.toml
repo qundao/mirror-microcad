@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [package]
-name = "microcad-markdown-support"
-description = "µcad Markdown Support"
-documentation = "https://docs.rs/microcad-markdown-support"
+name = "microcad-docgen"
+description = "µcad Documentation Generators"
+documentation = "https://docs.rs/microcad-docgen"
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true
@@ -17,7 +17,7 @@ version.workspace = true
 path = "lib.rs"
 
 [[bin]]
-name = "microcad-mdbook-generator"
+name = "microcad-docgen"
 path = "main.rs"
 
 [dependencies]

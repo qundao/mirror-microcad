@@ -5,58 +5,63 @@
 
 use std::path::PathBuf;
 
-use microcad_lang::{diag::*, eval::*, model::Model, tree_display::*};
+use clap_complete::generator;
+use microcad_builtin::Symbol;
+use microcad_docgen::*;
+use microcad_lang::diag::*;
 
 use crate::{
     Cli,
-    commands::{Resolve, RunCommand},
+    commands::{Parse, Resolve, RunCommand},
 };
 
 #[derive(clap::Parser)]
 pub struct Doc {
-    #[clap(flatten)]
-    pub resolve: Resolve,
+    /// Input µcad file.
+    input: Option<std::path::PathBuf>,
 
-    /// Print model tree.
+    /// Build documentation for an external library.
+    lib: Option<String>,
+
+    /// Generator (md (default), mdbook).
+    generator: Option<String>,
+
+    /// Output path for markdown book
     #[clap(long)]
     pub output_path: Option<std::path::PathBuf>,
 }
 
-impl RunCommand<()> for Doc {
-    fn run(&self, cli: &Cli) -> miette::Result<()> {
-        // run prior parse step
-        let context = self.resolve.run(cli)?;
+impl Doc {
+    /// Generator from arguments
+    fn generator(&self) -> Box<dyn DocGen> {
+        let name = self.generator.clone().unwrap_or("md".to_string());
 
-        let output_path = self
-            .output_path
-            .clone()
-            .unwrap_or(PathBuf::from("./doc").join(self.resolve.parse.input_name()));
-
-        match context.has_errors() {
-            true => {
-                eprintln!("Resolve failed:");
-                eprintln!("{}", context.diagnosis());
-                eprintln!("Documentation could not generated!");
-                return Ok(());
+        match name.as_str() {
+            "md" => Box::new(Md {
+                _output_file: self.output_path.clone(),
+            }),
+            "mdbook" => Box::new(MdBook {
+                path: self.output_path.clone().unwrap_or_default(),
+            }),
+            _ => {
+                panic!("No generator with name `{name}`");
             }
-            false => log::info!("Successfully resolved!"),
         }
+    }
 
-        let start = std::time::Instant::now();
+    /// Resolve symbol from arguments
+    fn symbol(&self) -> Symbol {
+        todo!()
+    }
+}
 
-        use microcad_markdown_support::book::BookWriter;
-        let book_writer = BookWriter::new(output_path);
-        book_writer
-            .write(&context.root)
-            .map_err(|err| miette::miette!("{err}"))?;
+impl RunCommand<()> for Doc {
+    fn run(&self, _cli: &Cli) -> miette::Result<()> {
+        let generator = self.generator();
+        let symbol = self.symbol();
 
-        if cli.time {
-            eprintln!(
-                "Doc generation Time: {}",
-                Cli::time_to_string(&start.elapsed())
-            );
-        }
-
-        Ok(())
+        Ok(generator
+            .doc_gen(&symbol)
+            .map_err(|err| miette::miette!("{err}"))?)
     }
 }

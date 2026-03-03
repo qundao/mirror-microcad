@@ -1,12 +1,7 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad Markdown support library
-
-use std::{io::Write, path::Path};
-
-pub mod book;
-mod md;
+//! Microcad micro markdown parser and writer
 
 use microcad_lang::{
     builtin::{BuiltinKind, BuiltinWorkbenchKind},
@@ -18,7 +13,7 @@ use microcad_lang::{
     },
 };
 
-use crate::md::{Markdown, Section};
+use crate::md::{self, Markdown, Section};
 
 /// Add an extra `#` to each heading line.
 fn indent_header_lines(lines: Vec<String>) -> Vec<String> {
@@ -325,13 +320,3 @@ impl ToMd for Symbol {
         md
     }
 }
-
-pub trait WriteMdFile: ToMd {
-    fn write_md(&self, path: impl AsRef<Path>) -> std::io::Result<()> {
-        let mut file = std::fs::File::create(path)?;
-        let md = self.to_md();
-        file.write_all(md.to_string().as_bytes())
-    }
-}
-
-impl WriteMdFile for Symbol {}

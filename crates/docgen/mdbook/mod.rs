@@ -7,22 +7,17 @@ use std::io::Write;
 
 use microcad_lang::resolve::{FullyQualify, Symbol, SymbolDef};
 
-use thiserror::Error;
+use crate::{DocGen, md::ToMd};
 
-use crate::WriteMdFile;
-
-pub struct BookWriter {
-    path: std::path::PathBuf,
+/// Mdbook generator.
+///
+/// Read mdbook documentation: https://rust-lang.github.io/mdBook/
+pub struct MdBook {
+    /// Output path.
+    pub path: std::path::PathBuf,
 }
 
-#[derive(Debug, Error)]
-pub enum BookWriteError {
-    /// IO error
-    #[error("IO error: {0}")]
-    IoError(#[from] std::io::Error),
-}
-
-impl BookWriter {
+impl MdBook {
     pub fn new(path: impl AsRef<std::path::Path>) -> Self {
         Self {
             path: path.as_ref().to_path_buf(),
@@ -85,7 +80,7 @@ impl BookWriter {
         }
 
         fn recurse<'a>(
-            self_: &BookWriter,
+            self_: &MdBook,
             writer: &mut impl std::fmt::Write,
             symbols: impl IntoIterator<Item = &'a Symbol>,
             depth: usize,
@@ -154,7 +149,7 @@ impl BookWriter {
             let path = self.path.join("src").join(Self::symbol_path(&symbol));
             std::fs::create_dir_all(&path.parent().expect("A parent"))?;
             println!("{}", path.display());
-            symbol.write_md(&path)
+            symbol.to_md().write(path)
         })
     }
 
@@ -172,8 +167,10 @@ impl BookWriter {
         file.write(buffer.as_bytes())?;
         Ok(())
     }
+}
 
-    pub fn write(&self, symbol: &Symbol) -> std::io::Result<()> {
+impl DocGen for MdBook {
+    fn doc_gen(&self, symbol: &microcad_lang::resolve::Symbol) -> std::io::Result<()> {
         std::fs::create_dir_all(&self.path.join("src"))?;
 
         self.write_book_toml()?;
