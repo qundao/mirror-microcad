@@ -109,6 +109,34 @@ pub mod array {
         )
     }
 
+    /// Return the first element in an array or string.
+    ///
+    /// Note this function is supposed to be deprecated in the future.
+    pub fn head() -> Symbol {
+        Symbol::new_builtin_fn(
+            "head",
+            [].into_iter(),
+            &|_params, args, ctx| {
+                let arg = args.get_single()?;
+                Ok(match &arg.1.value {
+                    Value::Array(a) if !a.is_empty() => a.first(),
+                    Value::Array(_) => {
+                        ctx.error(arg.1, EvalError::BuiltinError("Value is empty.".into()))?;
+                        Value::None
+                    }
+                    _ => {
+                        ctx.error(
+                            arg.1,
+                            EvalError::BuiltinError("Value is not an array.".into()),
+                        )?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
+    }
+
     /// Return everything but the first element in an array or string.
     pub fn tail() -> Symbol {
         Symbol::new_builtin_fn(

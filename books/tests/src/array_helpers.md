@@ -22,16 +22,6 @@ You can get the first element of an array using `std::array::first()`.
 std::debug::assert_eq([ std::array::first([1,2,3]), 1 ]);
 ```
 
-## `tail`
-
-You can get the tail of an array using `std::array::first()` and `std::array::tail()`.
-
-[![test](.test/array_helper_tail.svg)](.test/array_helper_tail.log)
-
-```µcad,array_helper_tail
-std::debug::assert_eq([ std::array::tail([1,2,3]), [2,3] ]);
-```
-
 ## `last`
 
 You can get the first element of an array using `std::array::last()`.
@@ -40,6 +30,28 @@ You can get the first element of an array using `std::array::last()`.
 
 ```µcad,array_helper_last
 std::debug::assert_eq([ std::array::last([1,2,3]), 3 ]);
+```
+
+## `head`
+
+Get the first element of an array.
+
+> [!NOTE] this function is supposed to be deprected. Use `first` instead.
+
+[![test](.test/array_helper_head.svg)](.test/array_helper_head.log)
+
+```µcad,array_helper_head
+std::debug::assert_eq([ std::array::head([1,2,3]), 1 ]);
+```
+
+## `tail`
+
+You can get the tail of an array using `std::array::first()` and `std::array::tail()`.
+
+[![test](.test/array_helper_tail.svg)](.test/array_helper_tail.log)
+
+```µcad,array_helper_tail
+std::debug::assert_eq([ std::array::tail([1,2,3]), [2,3] ]);
 ```
 
 ## `rev`
