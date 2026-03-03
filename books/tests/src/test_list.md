@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**170** tests have been evaluated with version **0.3.0** of microcad.
+**185** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -54,14 +54,24 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](.test/function_if_result.svg)](.test/function_if_result.log) | [function_if_result](function.md) |
 | [![test](statement_usage/.test/function_init.svg)](statement_usage/.test/function_init.log) | [function_init](statement_usage/function.md) |
 | [![test](.test/function_missing.svg)](.test/function_missing.log) | [function_missing](function.md) |
+| [![test](.test/function_missing_result.svg)](.test/function_missing_result.log) | [function_missing_result](result.md) |
 | [![test](.test/function_mixed.svg)](.test/function_mixed.log) | [function_mixed](function.md) |
+| [![test](.test/function_model.svg)](.test/function_model.log) | [function_model](result.md) |
+| [![test](.test/function_model_property.svg)](.test/function_model_property.log) | [function_model_property](result.md) |
+| [![test](.test/function_model_property_return.svg)](.test/function_model_property_return.log) | [function_model_property_return](result.md) |
+| [![test](.test/function_model_result.svg)](.test/function_model_result.log) | [function_model_result](result.md) |
+| [![test](.test/function_model_return.svg)](.test/function_model_return.log) | [function_model_return](result.md) |
 | [![test](statement_usage/.test/function_module.svg)](statement_usage/.test/function_module.log) | [function_module](statement_usage/function.md) |
+| [![test](.test/function_ok.svg)](.test/function_ok.log) | [function_ok](result.md) |
 | [![test](statement_usage/.test/function_pub_use.svg)](statement_usage/.test/function_pub_use.log) | [function_pub_use](statement_usage/function.md) |
 | [![test](statement_usage/.test/function_return.svg)](statement_usage/.test/function_return.log) | [function_return](statement_usage/function.md) |
 | [![test](.test/function_return_value.svg)](.test/function_return_value.log) | [function_return_value](function.md) |
+| [![test](.test/function_unexpected_result.svg)](.test/function_unexpected_result.log) | [function_unexpected_result](result.md) |
 | [![test](statement_usage/.test/function_use.svg)](statement_usage/.test/function_use.log) | [function_use](statement_usage/function.md) |
 | [![test](.test/function_value.svg)](.test/function_value.log) | [function_value](function.md) |
 | [![test](statement_usage/.test/function_workbench.svg)](statement_usage/.test/function_workbench.log) | [function_workbench](statement_usage/function.md) |
+| [![test](.test/function_wrong_result.svg)](.test/function_wrong_result.log) | [function_wrong_result](result.md) |
+| [![test](.test/function_wrong_return.svg)](.test/function_wrong_return.log) | [function_wrong_return](result.md) |
 | [![test](.test/group.svg)](.test/group.log) | [group](semicolon.md) |
 | [![test](.test/group_assignment.svg)](.test/group_assignment.log) | [group_assignment](semicolon.md) |
 | [![test](statement_usage/.test/init_assignment_const.svg)](statement_usage/.test/init_assignment_const.log) | [init_assignment_const](statement_usage/init.md) |
@@ -125,7 +135,10 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/pre_init_workbench.svg)](statement_usage/.test/pre_init_workbench.log) | [pre_init_workbench](statement_usage/pre-init.md) |
 | [![test](.test/reserved_keywords.svg)](.test/reserved_keywords.log) | [reserved_keywords](reserved_keywords.md) |
 | [![test](.test/scopes.svg)](.test/scopes.log) | [scopes](scopes.md) |
+| [![test](.test/sketch.svg)](.test/sketch.log) | [sketch](result.md) |
 | [![test](.test/sketch_missing_semicolon.svg)](.test/sketch_missing_semicolon.log) | [sketch_missing_semicolon](semicolon.md) |
+| [![test](.test/sketch_return.svg)](.test/sketch_return.log) | [sketch_return](result.md) |
+| [![test](.test/sketch_value.svg)](.test/sketch_value.log) | [sketch_value](result.md) |
 | [![test](.test/sketch_with_body.svg)](.test/sketch_with_body.log) | [sketch_with_body](semicolon.md) |
 | [![test](.test/sketch_with_empty_body.svg)](.test/sketch_with_empty_body.log) | [sketch_with_empty_body](semicolon.md) |
 | [![test](statement_usage/.test/source_assignment_const.svg)](statement_usage/.test/source_assignment_const.log) | [source_assignment_const](statement_usage/source.md) |
@@ -134,6 +147,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/source_assignment_var.svg)](statement_usage/.test/source_assignment_var.log) | [source_assignment_var](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_expression.svg)](statement_usage/.test/source_expression.log) | [source_expression](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_expression_model.svg)](statement_usage/.test/source_expression_model.log) | [source_expression_model](statement_usage/source.md) |
+| [![test](.test/source_file.svg)](.test/source_file.log) | [source_file](result.md) |
+| [![test](.test/source_file_value.svg)](.test/source_file_value.log) | [source_file_value](result.md) |
 | [![test](statement_usage/.test/source_function.svg)](statement_usage/.test/source_function.log) | [source_function](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_if.svg)](statement_usage/.test/source_if.log) | [source_if](statement_usage/source.md) |
 | [![test](statement_usage/.test/source_init.svg)](statement_usage/.test/source_init.log) | [source_init](statement_usage/source.md) |
