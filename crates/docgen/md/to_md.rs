@@ -8,7 +8,7 @@ use microcad_lang::{
     doc::Doc,
     resolve::*,
     syntax::{
-        FunctionDefinition, InitDefinition, ModuleDefinition, SourceFile, Visibility,
+        FunctionDefinition, Identifiable, InitDefinition, ModuleDefinition, SourceFile, Visibility,
         WorkbenchDefinition,
     },
 };
@@ -60,7 +60,7 @@ impl ToMd for FunctionDefinition {
         use microcad_lang::doc::Doc;
         md::Markdown::new(&format!(
             "# `{}`\n{}",
-            self.id,
+            self.id(),
             indent_header_lines(self.doc().fetch_lines()).join("\n")
         ))
     }
@@ -68,19 +68,19 @@ impl ToMd for FunctionDefinition {
 
 impl ToMd for ModuleDefinition {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.id, fetch_doc(self)))
+        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
     }
 }
 
 impl ToMd for WorkbenchDefinition {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.id, fetch_doc(self)))
+        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
     }
 }
 
 impl ToMd for microcad_lang::builtin::Builtin {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.id, fetch_doc(self)))
+        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
     }
 }
 
