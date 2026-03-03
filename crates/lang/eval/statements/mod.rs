@@ -103,23 +103,7 @@ impl Eval<Models> for StatementList {
         let mut models = Models::default();
         let mut output_type = OutputType::NotDetermined;
 
-        // Check if we are in a workbench and try to get the workbench kind.
-        let kind = context
-            .current_symbol()
-            .map(|symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(workbench_definition) => {
-                        let frame = context.stack.current_frame().expect("Some stack frame");
-                        match frame {
-                            StackFrame::Workbench(..) => Some(workbench_definition.kind.value),
-                            _ => None,
-                        }
-                    }
-                    SymbolDef::SourceFile(_) | SymbolDef::Builtin(_) => None,
-                    _ => unreachable!(),
-                })
-            })
-            .unwrap_or_default();
+        let kind = context.current_workbench_kind();
 
         for statement in self.iter() {
             if let Some(model) = statement.eval(context)? {

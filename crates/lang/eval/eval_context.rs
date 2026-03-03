@@ -51,6 +51,23 @@ impl EvalContext {
         self.stack.current_symbol()
     }
 
+    pub(crate) fn current_workbench_kind(&self) -> Option<WorkbenchKind> {
+        // Check if we are in a workbench and try to get the workbench kind.
+        self.current_symbol()
+            .map(|symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        let frame = self.stack.current_frame().expect("Some stack frame");
+                        match frame {
+                            StackFrame::Workbench(..) => Some(workbench_definition.kind.value),
+                            _ => None,
+                        }
+                    }
+                    _ => None,
+                })
+            })
+            .unwrap_or_default()
+    }
     /// Create a new context from a source file.
     pub fn from_source(
         root: Rc<SourceFile>,
