@@ -18,12 +18,6 @@ impl Eval<Option<Model>> for Body {
     }
 }
 
-impl Eval<Models> for Body {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Models> {
-        self.statements.eval(context)
-    }
-}
-
 impl Eval<Model> for Body {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Model> {
         context.scope(StackFrame::Body(SymbolMap::default()), |context| {

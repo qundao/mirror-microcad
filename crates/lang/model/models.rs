@@ -66,7 +66,7 @@ impl Models {
     pub fn deduce_output_type(&self) -> OutputType {
         self.iter().map(|model| model.deduce_output_type()).fold(
             OutputType::NotDetermined,
-            |result_output_type, model_output_type| result_output_type.merge(&model_output_type),
+            |result_output_type, model_output_type| result_output_type.merge(model_output_type),
         )
     }
 }

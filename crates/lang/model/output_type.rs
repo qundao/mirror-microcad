@@ -21,18 +21,12 @@ pub enum OutputType {
 
 impl OutputType {
     /// Merge this output type with another.
-    pub fn merge(&self, other: &Self) -> OutputType {
+    pub fn merge(self, other: Self) -> OutputType {
         match (self, other) {
-            (OutputType::NotDetermined, output_type) => *output_type,
-            (OutputType::Geometry2D, OutputType::NotDetermined)
-            | (OutputType::Geometry2D, OutputType::Geometry2D)
-            | (OutputType::Geometry3D, OutputType::NotDetermined)
-            | (OutputType::Geometry3D, OutputType::Geometry3D) => *self,
-            (OutputType::Geometry2D, OutputType::Geometry3D)
-            | (OutputType::Geometry3D, OutputType::Geometry2D)
-            | (OutputType::Geometry2D, OutputType::InvalidMixed)
-            | (OutputType::Geometry3D, OutputType::InvalidMixed)
-            | (OutputType::InvalidMixed, _) => OutputType::InvalidMixed,
+            (OutputType::NotDetermined, other) => other,
+            (OutputType::Geometry2D, OutputType::NotDetermined | OutputType::Geometry2D)
+            | (OutputType::Geometry3D, OutputType::NotDetermined | OutputType::Geometry3D) => self,
+            _ => OutputType::InvalidMixed,
         }
     }
 }
@@ -46,7 +40,7 @@ impl std::fmt::Debug for OutputType {
                 Self::NotDetermined => crate::invalid!(UNKNOWN),
                 Self::Geometry2D => "2D",
                 Self::Geometry3D => "3D",
-                Self::InvalidMixed => crate::invalid_no_ansi!(OUTPUT),
+                Self::InvalidMixed => crate::invalid!(OUTPUT),
             }
         )
     }
@@ -61,7 +55,7 @@ impl std::fmt::Display for OutputType {
                 Self::NotDetermined => "Undetermined",
                 Self::Geometry2D => "2D",
                 Self::Geometry3D => "3D",
-                Self::InvalidMixed => crate::invalid_no_ansi!(OUTPUT),
+                Self::InvalidMixed => "Mixed",
             }
         )
     }

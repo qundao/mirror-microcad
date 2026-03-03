@@ -68,6 +68,7 @@ impl EvalContext {
             })
             .unwrap_or_default()
     }
+
     /// Create a new context from a source file.
     pub fn from_source(
         root: Rc<SourceFile>,

@@ -107,7 +107,7 @@ impl Eval<Models> for StatementList {
 
         for statement in self.iter() {
             if let Some(model) = statement.eval(context)? {
-                output_type = output_type.merge(&model.deduce_output_type());
+                output_type = output_type.merge(model.deduce_output_type());
 
                 // We are in a workbench. Check if the workbench kind matches the current output type.
                 if let Some(kind) = kind {

@@ -614,6 +614,15 @@ impl FromIterator<Value> for Value {
     }
 }
 
+impl From<Option<Model>> for Value {
+    fn from(model: Option<Model>) -> Self {
+        match model {
+            Some(model) => Self::Model(model),
+            None => Self::None,
+        }
+    }
+}
+
 impl AttributesAccess for Value {
     fn get_attributes_by_id(&self, id: &Identifier) -> Vec<crate::model::Attribute> {
         match self {
