@@ -95,7 +95,7 @@ impl BookWriter {
                 .try_for_each(|symbol| self_._generate_summary(writer, symbol, depth))
         }
 
-        use microcad_lang::builtin::{BuiltinKind, BuiltinWorkbenchKind};
+        use microcad_lang::builtin::BuiltinKind;
 
         let path = Self::symbol_path(symbol);
 
@@ -103,17 +103,6 @@ impl BookWriter {
         let depth = depth + 1;
 
         let children: Vec<_> = symbol.iter().filter(|symbol| symbol.is_public()).collect();
-
-        let aliases: Vec<_> = children
-            .iter()
-            .filter(|symbol| symbol.with_def(|def| matches!(def, SymbolDef::Alias(..))))
-            .cloned()
-            .collect();
-
-        if !aliases.is_empty() {
-            entry(writer, "Aliases", "use.md", depth)?;
-            // TODO Generate alias md file.
-        }
 
         let modules: Vec<_> = children
             .iter()
@@ -125,105 +114,17 @@ impl BookWriter {
             .collect();
 
         if !modules.is_empty() {
-            entry(writer, "Modules", "mod.md", depth)?;
-            let depth = depth + 1;
             recurse(self, writer, modules.into_iter(), depth)?;
         }
 
-        let sketches: Vec<_> = children
+        // All workbenches (including built-ins) are in separate file.
+        let workbenches: Vec<_> = children
             .iter()
             .filter(|symbol| {
                 symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(workbench_definition) => {
-                        matches!(
-                            workbench_definition.kind.value,
-                            microcad_lang::syntax::WorkbenchKind::Sketch
-                        )
-                    }
+                    SymbolDef::Workbench(_) => true,
                     SymbolDef::Builtin(builtin) => match &builtin.kind {
-                        BuiltinKind::Function => false,
-                        BuiltinKind::Workbench(w) => match w {
-                            BuiltinWorkbenchKind::Primitive2D => true,
-                            _ => false,
-                        },
-                    },
-                    _ => false,
-                })
-            })
-            .collect();
-
-        if !sketches.is_empty() {
-            entry(writer, "Sketches", "sketch.md", depth)?;
-            let depth = depth + 1;
-            recurse(self, writer, sketches.into_iter(), depth)?;
-        }
-
-        // Parts defined in µcad or built-in parts.
-        let parts: Vec<_> = children
-            .iter()
-            .filter(|symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(workbench_definition) => {
-                        matches!(
-                            workbench_definition.kind.value,
-                            microcad_lang::syntax::WorkbenchKind::Part
-                        )
-                    }
-                    SymbolDef::Builtin(builtin) => match &builtin.kind {
-                        BuiltinKind::Function => false,
-                        BuiltinKind::Workbench(w) => match w {
-                            BuiltinWorkbenchKind::Primitive3D => true,
-                            _ => false,
-                        },
-                    },
-                    _ => false,
-                })
-            })
-            .collect();
-
-        if !parts.is_empty() {
-            entry(writer, "Parts", "part.md", depth)?;
-            let depth = depth + 1;
-            recurse(self, writer, parts.into_iter(), depth)?;
-        }
-
-        let ops: Vec<_> = children
-            .iter()
-            .filter(|symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(workbench_definition) => {
-                        matches!(
-                            workbench_definition.kind.value,
-                            microcad_lang::syntax::WorkbenchKind::Operation
-                        )
-                    }
-                    SymbolDef::Builtin(builtin) => match &builtin.kind {
-                        BuiltinKind::Function => false,
-                        BuiltinKind::Workbench(w) => match w {
-                            BuiltinWorkbenchKind::Operation | BuiltinWorkbenchKind::Transform => {
-                                true
-                            }
-                            _ => false,
-                        },
-                    },
-                    _ => false,
-                })
-            })
-            .collect();
-
-        if !ops.is_empty() {
-            entry(writer, "Operations", "op.md", depth)?;
-            let depth = depth + 1;
-            recurse(self, writer, ops.into_iter(), depth)?;
-        }
-
-        let functions: Vec<_> = children
-            .iter()
-            .filter(|symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Function(_) => true,
-                    SymbolDef::Builtin(builtin) => match &builtin.kind {
-                        BuiltinKind::Function => true,
+                        BuiltinKind::Workbench(_) => true,
                         _ => false,
                     },
                     _ => false,
@@ -231,18 +132,8 @@ impl BookWriter {
             })
             .collect();
 
-        if !functions.is_empty() {
-            entry(
-                writer,
-                "Functions",
-                Self::symbol_path(symbol)
-                    .parent()
-                    .expect("Parent")
-                    .join("fn.md"),
-                depth,
-            )?;
-            let depth = depth + 1;
-            recurse(self, writer, functions.into_iter(), depth)?;
+        if !workbenches.is_empty() {
+            recurse(self, writer, workbenches.into_iter(), depth)?;
         }
 
         Ok(())
