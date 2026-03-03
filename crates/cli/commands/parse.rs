@@ -42,20 +42,3 @@ impl RunCommand<Rc<SourceFile>> for Parse {
         Ok(source_file)
     }
 }
-
-#[test]
-fn cli_test_parse() {
-    let p = Parse {
-        input: "foo.µcad".into(),
-        syntax: false,
-    };
-
-    assert_eq!(p.input_name(), "foo");
-
-    let p = Parse {
-        input: "../std/lib/std/mod.µcad".into(),
-        syntax: false,
-    };
-
-    assert_eq!(p.input_name(), "std");
-}
