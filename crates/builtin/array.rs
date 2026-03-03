@@ -149,6 +149,50 @@ pub mod array {
         )
     }
 
+    /// Check if all items are sorted in ascending order.
+    pub fn is_ascending() -> Symbol {
+        Symbol::new_builtin_fn(
+            "is_ascending",
+            [].into_iter(),
+            &|_params, args, ctx| {
+                let arg = args.get_single()?;
+                Ok(match &arg.1.value {
+                    Value::Array(a) => a.is_ascending().into(),
+                    _ => {
+                        ctx.error(
+                            arg.1,
+                            EvalError::BuiltinError("Value is not an array.".into()),
+                        )?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
+    }
+
+    /// Check if all items are sorted in descending order.
+    pub fn is_descending() -> Symbol {
+        Symbol::new_builtin_fn(
+            "is_descending",
+            [].into_iter(),
+            &|_params, args, ctx| {
+                let arg = args.get_single()?;
+                Ok(match &arg.1.value {
+                    Value::Array(a) => a.is_descending().into(),
+                    _ => {
+                        ctx.error(
+                            arg.1,
+                            EvalError::BuiltinError("Value is not an array.".into()),
+                        )?;
+                        Value::None
+                    }
+                })
+            },
+            None,
+        )
+    }
+
     /// Check if an array contains an element.
     pub fn contains() -> Symbol {
         Symbol::new_builtin_fn(
