@@ -94,6 +94,16 @@ microcad export ./examples/bricks/brick
 
 This will export the geometry into a `brick.stl` file.
 
+## Generate documentation
+
+You can generate documentation with `microcad doc` for source files.
+
+### Generate mdbook for built-in library
+
+```sh
+microcad doc -g mdbook __builtin --output books/builtin
+```
+
 ## Resources
 
 * Documentation: <https://docs.microcad.xyz/language/book/index.html>
