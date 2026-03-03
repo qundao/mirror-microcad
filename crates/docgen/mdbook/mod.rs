@@ -146,9 +146,15 @@ impl MdBook {
 
     fn write_symbol(&self, symbol: &Symbol) -> std::io::Result<()> {
         symbol.riter().try_for_each(|symbol| {
-            let path = self.path.join("src").join(Self::symbol_path(&symbol));
+            let path = &self.path.join("src").join(Self::symbol_path(&symbol));
             std::fs::create_dir_all(&path.parent().expect("A parent"))?;
-            symbol.to_md().write(path)
+            symbol.with_def(|def| match def {
+                SymbolDef::Root
+                | SymbolDef::SourceFile(_)
+                | SymbolDef::Module(_)
+                | SymbolDef::Workbench(_) => symbol.to_md().write(path),
+                _ => Ok(()),
+            })
         })
     }
 
