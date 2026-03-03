@@ -22,8 +22,8 @@ pub struct Doc {
     generator: Option<String>,
 
     /// Output path for markdown book
-    #[clap(long)]
-    pub output_path: Option<std::path::PathBuf>,
+    #[arg(short = 'o', long)]
+    output: Option<std::path::PathBuf>,
 }
 
 impl Doc {
@@ -33,10 +33,10 @@ impl Doc {
 
         match name.as_str() {
             "md" => Ok(Box::new(Md {
-                _output_file: self.output_path.clone(),
+                _output_file: self.output.clone(),
             })),
             "mdbook" => Ok(Box::new(MdBook {
-                path: self.output_path.clone().unwrap_or_default(),
+                path: self.output.clone().unwrap_or_default(),
             })),
             _ => Err(miette::miette!("No generator with name `{name}`")),
         }
