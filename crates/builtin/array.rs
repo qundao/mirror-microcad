@@ -3,7 +3,7 @@
 
 //! µcad builtin array functions.
 
-use microcad_lang::{diag::PushDiag, eval::EvalError, resolve::Symbol, value::Value};
+use microcad_lang::{diag::*, eval::*, resolve::*, ty::*, value::*};
 
 /// Module for  built-in array functions.
 ///
@@ -32,6 +32,7 @@ fn count() -> Symbol {
                 }
             })
         },
+        &|_| Ok(Type::Integer),
         None,
     )
 }
@@ -55,6 +56,17 @@ fn head() -> Symbol {
                 }
             })
         },
+        &|params| {
+            if params.len() == 1 {
+                if let Type::Array(ty) = params.iter().next().expect("internal error").1.ty() {
+                    Ok(*ty)
+                } else {
+                    todo!("not an array")
+                }
+            } else {
+                todo!("wrong number of parameters")
+            }
+        },
         None,
     )
 }
@@ -73,6 +85,13 @@ fn tail() -> Symbol {
                     Value::None
                 }
             })
+        },
+        &|params| {
+            if params.len() == 1 {
+                Ok(params.iter().next().expect("internal error").1.ty())
+            } else {
+                todo!("wrong number of parameters")
+            }
         },
         None,
     )
@@ -96,6 +115,7 @@ fn rev() -> Symbol {
                 }
             })
         },
+        &|params| Ok(params.iter().next().expect("internal error").1.ty()),
         None,
     )
 }

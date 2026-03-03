@@ -328,6 +328,43 @@ pub enum EvalError {
         )]
         src_ref: SrcRef,
     },
+
+    /// Unexpected result value
+    #[error("Unexpected result value")]
+    UnexpectedResult {
+        #[label("Unexpected result value (missed a semicolon?)")]
+        result: SrcRef,
+        #[label(primary, "This statement ")]
+        statement: SrcRef,
+    },
+
+    /// Unexpected result statement
+    #[error("Unexpected result statement")]
+    UnexpectedRootResult {
+        #[label("Unexpected result statement (missed a semicolon?)")]
+        statement: SrcRef,
+    },
+
+    /// Different results in bodies on same control path
+    #[error("Control paths with different results")]
+    DifferentResults {
+        ty_body: Type,
+        #[label("This body results in '{ty_body}'")]
+        src_body: SrcRef,
+        ty_else: Type,
+        #[label(primary, "But this body results in '{ty_else}'")]
+        src_else: SrcRef,
+    },
+
+    #[error("Unexpected result type ")]
+    UnexpectedResultType {
+        ty_sig: Type,
+        #[label("But function is declared with return type '{ty_sig}'")]
+        src_sig: SrcRef,
+        ty_body: Type,
+        #[label(primary, "The body results in '{ty_body}'")]
+        src_body: SrcRef,
+    },
 }
 
 /// Result type of any evaluation.

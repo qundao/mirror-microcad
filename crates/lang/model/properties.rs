@@ -60,3 +60,20 @@ pub trait PropertiesAccess {
     /// Set or create properties with the given ids and values.
     fn add_properties(&mut self, props: Properties);
 }
+
+impl PropertiesAccess for Properties {
+    fn get_property(&self, id: &Identifier) -> Option<&Value> {
+        self.get(id)
+    }
+
+    fn set_property(&mut self, id: Identifier, value: Value) -> Option<Value> {
+        self.insert(id, value)
+    }
+    fn get_properties(&self) -> Option<&Properties> {
+        Some(&self)
+    }
+
+    fn add_properties(&mut self, props: Properties) {
+        self.extend(props.iter().map(|(id, prop)| (id.clone(), prop.clone())));
+    }
+}

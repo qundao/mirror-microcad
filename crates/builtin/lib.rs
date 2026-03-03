@@ -23,7 +23,7 @@ pub use microcad_lang::builtin::{
     Exporter, ExporterAccess, ExporterRegistry, Importer, ImporterRegistry, ModuleBuilder, Symbol,
 };
 
-use microcad_lang::{ty::Ty, value::*};
+use microcad_lang::{ty::*, value::*};
 
 /// Return type of argument.
 fn type_of() -> Symbol {
@@ -37,6 +37,7 @@ fn type_of() -> Symbol {
             }
             Ok(Value::None)
         },
+        &|_| Ok(Type::String),
         None,
     )
 }
@@ -50,6 +51,7 @@ fn to_string() -> Symbol {
             let (_, arg) = args.get_single()?;
             Ok(Value::String(arg.value.to_string()))
         },
+        &|_| Ok(Type::String),
         None,
     )
 }

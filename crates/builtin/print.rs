@@ -3,7 +3,7 @@
 
 //! Builtin print method
 
-use microcad_lang::{eval::*, parameter, resolve::*, value::*};
+use microcad_lang::{eval::*, parameter, resolve::*, ty::*, value::*};
 
 pub fn print() -> Symbol {
     Symbol::new_builtin_fn(
@@ -17,6 +17,7 @@ pub fn print() -> Symbol {
                 })?;
             Ok(Value::None)
         },
+        &|_| Ok(Type::Invalid),
         None,
     )
 }

@@ -65,6 +65,8 @@ pub enum Value {
     ConstExpression(Rc<Expression>),
     /// for assert_valid() and assert_invalid()
     Target(Target),
+    /// Naked type (without value).
+    Type(Type),
 }
 
 impl Value {
@@ -153,6 +155,24 @@ impl Value {
             value => value.clone(),
         }
     }
+
+    pub fn default_from_type(ty: &Type) -> Self {
+        match ty {
+            Type::Invalid => Value::None,
+            Type::Integer => Value::Integer(0),
+            Type::Quantity(qty) => Value::Quantity(Quantity {
+                value: 0.0,
+                quantity_type: qty.clone(),
+            }),
+            Type::String => Value::String(String::new()),
+            Type::Bool => Value::Bool(false),
+            Type::Array(aty) => Value::Array(Array::new(aty)),
+            Type::Tuple(tty) => Value::Tuple(Tuple::default_from_type(tty).into()),
+            Type::Matrix(mty) => Value::Matrix(Matrix::default_from_type(mty).into()),
+            Type::Model => todo!(),
+            Type::Target => todo!(),
+        }
+    }
 }
 
 impl PartialOrd for Value {
@@ -190,6 +210,7 @@ impl crate::ty::Ty for Value {
             Value::Model(_) => Type::Model,
             Value::Return(r) => r.ty(),
             Value::Target(..) => Type::Target,
+            Value::Type(ty) => ty.clone(),
         }
     }
 }
@@ -403,6 +424,7 @@ impl std::fmt::Display for Value {
             Value::Return(r) => write!(f, "{r}"),
             Value::ConstExpression(e) => write!(f, "{e}"),
             Value::Target(target) => write!(f, "{target}"),
+            Value::Type(ty) => write!(f, "{ty}"),
         }
     }
 }
@@ -422,6 +444,7 @@ impl std::fmt::Debug for Value {
             Value::Return(r) => write!(f, "->{r:?}"),
             Value::ConstExpression(e) => write!(f, "{e:?}"),
             Value::Target(target) => write!(f, "{target:?}"),
+            Value::Type(ty) => write!(f, "{ty:?}"),
         }
     }
 }
@@ -441,6 +464,7 @@ impl std::hash::Hash for Value {
             Value::Return(value) => value.hash(state),
             Value::ConstExpression(expression) => expression.to_string().hash(state), // TODO: Is this correct?
             Value::Target(target) => target.hash(state),
+            Value::Type(ty) => ty.hash(state),
         }
     }
 }

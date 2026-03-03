@@ -1,8 +1,8 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::io::IsTerminal;
 use crate::{diag::*, resolve::*};
+use std::io::IsTerminal;
 
 /// Handler for diagnostics.
 #[derive(Default)]
@@ -39,7 +39,7 @@ impl Default for DiagRenderOptions {
     fn default() -> Self {
         DiagRenderOptions {
             color: std::env::var("NO_COLOR").as_deref().unwrap_or("0") == "0",
-            unicode: std::io::stdout().is_terminal() && std::io::stderr().is_terminal()
+            unicode: std::io::stdout().is_terminal() && std::io::stderr().is_terminal(),
         }
     }
 }
@@ -126,10 +126,7 @@ impl PushDiag for DiagHandler {
     fn push_diag(&mut self, diag: Diagnostic) -> DiagResult<()> {
         if let Some(error_limit) = self.error_limit {
             if self.error_count >= error_limit && !self.error_limit_reached {
-                self.error(
-                    &SrcRef(None),
-                    DiagError::ErrorLimitReached(error_limit),
-                )?;
+                self.error(&SrcRef(None), DiagError::ErrorLimitReached(error_limit))?;
                 self.error_limit_reached = true;
             }
             return Err(DiagError::ErrorLimitReached(error_limit));

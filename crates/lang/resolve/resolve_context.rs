@@ -51,9 +51,7 @@ impl ResolveContext {
             diag,
             ..Default::default()
         };
-        match context.load(builtin,
-            ResolveMode::Checked,
-        ) {
+        match context.load(builtin, ResolveMode::Checked) {
             Ok(()) => Ok(context),
             Err(err) => {
                 context.error(&err.src_ref(), err)?;
@@ -62,11 +60,7 @@ impl ResolveContext {
         }
     }
 
-    fn load(
-        &mut self,
-        builtin: Option<Symbol>,
-        mode: ResolveMode,
-    ) -> ResolveResult<()> {
+    fn load(&mut self, builtin: Option<Symbol>, mode: ResolveMode) -> ResolveResult<()> {
         self.symbolize()?;
         log::trace!("Symbolized Context:\n{self:?}");
         if let Some(builtin) = builtin {
@@ -288,6 +282,8 @@ impl ResolveContext {
 fn test_update_sub_mod() {
     use crate::eval::*;
 
+    let _ = env_logger::try_init();
+
     std::fs::copy(
         "../../tests/test_files/update_files/sub/sub_0.µcad",
         "../../tests/test_files/update_files/sub/sub.µcad",
@@ -319,7 +315,7 @@ fn test_update_sub_mod() {
         Default::default(),
     );
     context.eval().expect("test error");
-    assert!(!context.has_errors());
+    assert!(!context.has_errors(), "{context:?}");
 }
 
 #[test]

@@ -3,7 +3,7 @@
 
 //! Function definition syntax element
 
-use crate::{src_ref::*, syntax::*};
+use crate::{src_ref::*, syntax::*, ty::*};
 
 /// Function definition
 #[derive(Clone)]
@@ -20,6 +20,16 @@ pub struct FunctionDefinition {
     pub signature: FunctionSignature,
     /// Function body
     pub body: Body,
+}
+
+impl FunctionDefinition {
+    pub(crate) fn return_type(&self) -> Type {
+        self.signature
+            .return_type
+            .as_ref()
+            .map(|ty| ty.ty())
+            .unwrap_or(Type::Invalid)
+    }
 }
 
 impl Identifiable for FunctionDefinition {

@@ -18,6 +18,9 @@ pub enum Element {
     /// A workpiece is created by workbenches.
     Workpiece(Workpiece),
 
+    /// Helper used to deduce result values
+    Properties(WorkbenchKind, Properties),
+
     /// A built-in workpiece.
     ///
     /// A workpiece is created by workbenches.
@@ -55,9 +58,10 @@ impl Element {
                     builtin_workpiece.output_type
                 }
             },
-            Element::Group | Element::Multiplicity | Element::InputPlaceholder => {
-                OutputType::NotDetermined
-            }
+            Element::Group
+            | Element::Multiplicity
+            | Element::InputPlaceholder
+            | Element::Properties(..) => OutputType::NotDetermined,
         }
     }
 
@@ -70,6 +74,10 @@ impl Element {
             },
             Element::Multiplicity | Element::Group | Element::InputPlaceholder => false,
             Element::Workpiece(workpiece) => match workpiece.kind {
+                WorkbenchKind::Part | WorkbenchKind::Sketch => false,
+                WorkbenchKind::Operation => true,
+            },
+            Element::Properties(kind, ..) => match kind {
                 WorkbenchKind::Part | WorkbenchKind::Sketch => false,
                 WorkbenchKind::Operation => true,
             },
@@ -100,6 +108,7 @@ impl std::hash::Hash for Element {
             Element::BuiltinWorkpiece(builtin_workpiece) => {
                 builtin_workpiece.computed_hash().hash(state)
             }
+            Element::Properties(..) => unreachable!(),
         }
     }
 }
@@ -108,6 +117,7 @@ impl PropertiesAccess for Element {
     fn get_property(&self, id: &Identifier) -> Option<&Value> {
         match self {
             Self::Workpiece(workpiece) => workpiece.get_property(id),
+            Self::Properties(.., props) => props.get_property(id),
             _ => unreachable!("not a workpiece element"),
         }
     }
@@ -115,6 +125,7 @@ impl PropertiesAccess for Element {
     fn set_property(&mut self, id: Identifier, value: Value) -> Option<Value> {
         match self {
             Self::Workpiece(workpiece) => workpiece.set_property(id, value),
+            Self::Properties(.., props) => props.set_property(id, value),
             _ => unreachable!("not a workpiece element"),
         }
     }
@@ -122,14 +133,18 @@ impl PropertiesAccess for Element {
     fn get_properties(&self) -> Option<&Properties> {
         match self {
             Self::Workpiece(workpiece) => workpiece.get_properties(),
+            Self::Properties(.., props) => props.get_properties(),
             _ => None,
         }
     }
 
-    fn add_properties(&mut self, props: Properties) {
+    fn add_properties(&mut self, properties: Properties) {
         match self {
             Self::Workpiece(workpiece) => {
-                workpiece.add_properties(props);
+                workpiece.add_properties(properties);
+            }
+            Self::Properties(.., props) => {
+                props.add_properties(properties);
             }
             _ => unreachable!("not a workpiece element"),
         }

@@ -18,6 +18,21 @@ pub enum Matrix {
     Matrix4(microcad_core::Mat4),
 }
 
+impl Matrix {
+    pub fn default_from_type(ty: &MatrixType) -> Self {
+        match (ty.rows, ty.columns) {
+            (2, 2) => Matrix::Matrix2(microcad_core::Mat2::new(1.0, 0.0, 0.0, 1.0)),
+            (3, 3) => Matrix::Matrix3(microcad_core::Mat3::new(
+                1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0,
+            )),
+            (4, 5) => Matrix::Matrix4(microcad_core::Mat4::new(
+                1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
+            )),
+            _ => unreachable!("invalid matrix type"),
+        }
+    }
+}
+
 impl Ty for Matrix {
     fn ty(&self) -> Type {
         match self {

@@ -175,6 +175,7 @@ pub trait BuiltinWorkbenchDefinition {
             parameters: Self::parameters(),
             kind: BuiltinKind::Workbench(Self::kind()),
             f: Self::function(),
+            r: &|_| Ok(Type::Model),
             doc: Self::doc(),
         })
     }

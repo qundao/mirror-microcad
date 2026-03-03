@@ -83,6 +83,7 @@ impl Symbol {
         name: &'static str,
         parameters: impl Iterator<Item = (Identifier, ParameterValue)>,
         f: &'static BuiltinFn,
+        r: &'static BuiltinResultFn,
         doc: Option<&'static str>,
     ) -> Symbol {
         Self::new_builtin(Builtin {
@@ -90,6 +91,7 @@ impl Symbol {
             parameters: parameters.collect(),
             kind: BuiltinKind::Function,
             f,
+            r,
             doc: doc.map(DocBlock::new_builtin),
         })
     }
@@ -214,6 +216,16 @@ impl Symbol {
     /// Apply a FnMut for each child.
     pub fn with_children(&self, f: impl FnMut((&Identifier, &Symbol))) {
         self.inner.borrow().children.iter().for_each(f)
+    }
+
+    /// Return list of all children.
+    pub fn children(&self) -> Vec<(Identifier, Symbol)> {
+        self.inner
+            .borrow()
+            .children
+            .iter()
+            .map(|(id, symbol)| (id.clone(), symbol.clone()))
+            .collect()
     }
 
     /// Create a vector of cloned children.

@@ -29,7 +29,7 @@ sketch S( width: Length ) {
     init( width: Length ) { width=width; }
 }
 
-S(width=10cm); // error: short form cannot be used here because of ambiguity
+S(width=10cm); // error: same parameter name cannot be used here because of ambiguity
 ```
 
 [![test](.test/argument_match_collision_init.svg)](.test/argument_match_collision_init.log)

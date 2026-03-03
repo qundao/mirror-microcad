@@ -3,11 +3,14 @@
 
 //! Builtin evaluation entity
 
-use crate::{builtin::*, eval::*, syntax::*, value::*};
+use crate::{builtin::*, eval::*, resolve::*, syntax::*, value::*};
 
 /// Builtin function type
 pub type BuiltinFn =
     dyn Fn(&ParameterValueList, &ArgumentValueList, &mut EvalContext) -> EvalResult<Value>;
+
+/// Builtin function result type deduction
+pub type BuiltinResultFn = dyn Fn(&ParameterValueList) -> ResolveResult<Type>;
 
 /// Builtin function struct
 #[derive(Clone)]
@@ -23,6 +26,9 @@ pub struct Builtin {
 
     /// Functor to evaluate this function
     pub f: &'static BuiltinFn,
+
+    /// Functor to deduce result type from parameters
+    pub r: &'static BuiltinResultFn,
 
     /// Functor which returns documentation of this function
     pub doc: Option<DocBlock>,

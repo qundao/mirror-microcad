@@ -34,18 +34,17 @@ impl ComputedHash for Workpiece {
 
 impl PropertiesAccess for Workpiece {
     fn get_property(&self, id: &Identifier) -> Option<&Value> {
-        self.properties.get(id)
+        self.properties.get_property(id)
     }
 
     fn set_property(&mut self, id: Identifier, value: Value) -> Option<Value> {
-        self.properties.insert(id, value)
+        self.properties.set_property(id, value)
     }
     fn get_properties(&self) -> Option<&Properties> {
-        Some(&self.properties)
+        self.properties.get_properties()
     }
 
     fn add_properties(&mut self, props: Properties) {
-        self.properties
-            .extend(props.iter().map(|(id, prop)| (id.clone(), prop.clone())));
+        self.properties.add_properties(props);
     }
 }

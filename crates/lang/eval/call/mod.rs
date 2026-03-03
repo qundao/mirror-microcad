@@ -37,6 +37,7 @@ impl Eval<ArgumentValueList> for ArgumentList {
 ///
 /// Used to prevent the evaluation of `QualifiedName`.
 /// `assert_valid()` and `assert_invalid()` need these untouched.
+#[derive(Default)]
 pub struct ArgumentValueListRaw(ArgumentValueList);
 
 impl From<ArgumentValueListRaw> for ArgumentValueList {

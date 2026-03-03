@@ -29,6 +29,10 @@ impl ModuleDefinition {
             ..Default::default()
         })
     }
+
+    pub fn id(&self) -> Identifier {
+        self.id.clone()
+    }
 }
 
 impl Identifiable for ModuleDefinition {

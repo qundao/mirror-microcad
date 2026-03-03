@@ -61,6 +61,22 @@ impl Tuple {
         }
     }
 
+    pub fn default_from_type(ty: &TupleType) -> Self {
+        Tuple {
+            named: ty
+                .named
+                .iter()
+                .map(|(id, ty)| (id.clone(), Value::default_from_type(ty)))
+                .collect(),
+            unnamed: ty
+                .unnamed
+                .iter()
+                .map(|ty| (ty.clone(), Value::default_from_type(ty)))
+                .collect(),
+            src_ref: SrcRef(None),
+        }
+    }
+
     /// Insert new (or overwrite existing) value into tuple
     pub fn insert(&mut self, id: Identifier, value: Value) {
         if id.is_empty() {

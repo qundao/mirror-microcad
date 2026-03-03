@@ -104,7 +104,7 @@ impl std::ops::Div for Type {
             (Type::Array(array_type), ty) => *array_type / ty,
             (Type::Tuple(_), _) => todo!(),
             (Type::Matrix(_), _) | (_, Type::Matrix(_)) => todo!(),
-            (lhs, rhs) => unimplemented!("Division for {lhs} * {rhs}"),
+            (lhs, rhs) => unimplemented!("Division for {lhs} / {rhs}"),
         }
     }
 }

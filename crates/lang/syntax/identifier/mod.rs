@@ -11,7 +11,7 @@ pub use identifier_list::*;
 use miette::SourceSpan;
 pub use qualified_name::*;
 
-use crate::{parse::*, src_ref::*, syntax::*, Id};
+use crate::{Id, parse::*, src_ref::*, syntax::*};
 
 /// µcad identifier
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -138,15 +138,24 @@ impl Identifier {
     /// check if this is a valid identifier (contains only `A`-`Z`, `a`-`z` or `_`)
     pub fn validate(self) -> ParseResult<Self> {
         let str = self.0.as_str();
-        
+
         let Some(start) = str.chars().next() else {
-            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+            return Err(ParseError::InvalidIdentifier(Refer::new(
+                self.0.as_str().into(),
+                self.src_ref(),
+            )));
         };
         if start != '_' && !start.is_ascii_alphabetic() {
-            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+            return Err(ParseError::InvalidIdentifier(Refer::new(
+                self.0.as_str().into(),
+                self.src_ref(),
+            )));
         }
         if !str.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
-            return Err(ParseError::InvalidIdentifier(Refer::new(self.0.as_str().into(), self.src_ref())));
+            return Err(ParseError::InvalidIdentifier(Refer::new(
+                self.0.as_str().into(),
+                self.src_ref(),
+            )));
         }
         Ok(self)
     }

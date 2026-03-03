@@ -4,7 +4,7 @@
 //! Built-in color module `__builtin::color`.
 
 use microcad_core::{Color, Scalar};
-use microcad_lang::{parameter, resolve::*, value::*};
+use microcad_lang::{parameter, resolve::*, ty::*, value::*};
 
 /// Create a color from red, green and blue.
 fn rgb() -> Symbol {
@@ -26,6 +26,7 @@ fn rgb() -> Symbol {
                 .into(),
             )))
         },
+        &|_| Ok(Type::Tuple(TupleType::new_color().into())),
         None,
     )
 }
@@ -50,6 +51,7 @@ fn rgba() -> Symbol {
             )
             .into())
         },
+        &|_| Ok(Type::Tuple(TupleType::new_color().into())),
         None,
     )
 }

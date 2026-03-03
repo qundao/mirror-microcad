@@ -19,10 +19,10 @@ pub struct Array {
 
 impl Array {
     /// Create new list
-    pub fn new(ty: Type) -> Self {
+    pub fn new(ty: &Type) -> Self {
         Self {
             items: ValueList::default(),
-            ty,
+            ty: ty.clone(),
         }
     }
 
@@ -240,7 +240,7 @@ fn test_array_debug() {
     let val1 = Value::Target(Target::new("my::name1".into(), Some("my::target1".into())));
     let val2 = Value::Target(Target::new("my::name2".into(), None));
 
-    let mut array = Array::new(Type::Target);
+    let mut array = Array::new(&Type::Target);
     array.push(val1);
     array.push(val2);
 

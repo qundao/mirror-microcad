@@ -3,7 +3,7 @@
 
 //! µcad builtin string functions.
 
-use microcad_lang::{diag::PushDiag, eval::EvalError, resolve::Symbol, value::Value};
+use microcad_lang::{diag::*, eval::*, resolve::*, ty::*, value::*};
 
 /// Module for built-in string functions.
 pub fn string() -> Symbol {
@@ -28,6 +28,7 @@ fn count() -> Symbol {
                 }
             })
         },
+        &|_| Ok(Type::Integer),
         None,
     )
 }

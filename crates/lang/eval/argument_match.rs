@@ -76,6 +76,16 @@ pub struct MultiMatchResult {
     pub priority: Priority,
 }
 
+impl MultiMatchResult {
+    pub(crate) fn multi_type(&self, ty: Type) -> Type {
+        if self.args.len() > 1 {
+            Type::Array(ty.into())
+        } else {
+            ty
+        }
+    }
+}
+
 impl<'a> ArgumentMatch<'a> {
     /// Match a `ParameterList` with an `ArgumentValueList` into a tuple.
     ///
@@ -319,7 +329,10 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Return the multipliers' ids in the arguments.
-    fn multipliers(args: &impl ValueAccess, params: &ParameterValueList) -> IdentifierList {
+    pub(crate) fn multipliers(
+        args: &impl ValueAccess,
+        params: &ParameterValueList,
+    ) -> IdentifierList {
         let mut result: IdentifierList = params
             .iter()
             .filter_map(|(id, param)| {

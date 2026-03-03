@@ -60,7 +60,7 @@ fn f() {
 
 ```µcad,function_if
 fn f() {
-  if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
+  if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1mm); }
 } f();
 ```
 
