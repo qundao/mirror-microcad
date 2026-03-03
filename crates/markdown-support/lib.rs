@@ -99,7 +99,25 @@ impl ToMd for SymbolDef {
 
 impl ToMd for Symbol {
     fn to_md(&self) -> md::Markdown {
-        self.with_def(|def| def.to_md())
+        // Print one line description of a symbol
+        fn get_oneline(symbol: &Symbol) -> String {
+            match symbol.doc().fetch_lines().first() {
+                Some(line) => format!("`{}`: {line}", symbol.id()),
+                None => format!("`{}`", symbol.id()),
+            }
+        }
+
+        let mut md = self.with_def(|def| def.to_md());
+
+        if let Some(first_section) = md.first_mut() {
+            first_section.append(
+                self.iter()
+                    .map(|symbol| format!("- {}", get_oneline(&symbol)))
+                    .collect(),
+            );
+        }
+
+        md
     }
 }
 

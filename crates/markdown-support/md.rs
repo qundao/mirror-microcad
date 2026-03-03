@@ -3,6 +3,8 @@
 
 //! Microcad micro markdown parser and writer
 
+use derive_more::{Deref, DerefMut};
+
 /// A markdown section with heading and lines.
 #[derive(Debug, Clone, Default)]
 pub struct Section {
@@ -12,6 +14,13 @@ pub struct Section {
     pub level: i64,
     /// The section content
     pub content: Vec<String>,
+}
+
+impl Section {
+    /// Append lines to this section
+    pub fn append(&mut self, mut lines: Vec<String>) {
+        self.content.append(&mut lines);
+    }
 }
 
 impl std::fmt::Display for Section {
@@ -29,11 +38,12 @@ impl std::fmt::Display for Section {
     }
 }
 
-#[derive(Debug, Default, Clone)]
+/// Markdown struct, represented as a linear list of sections.
+#[derive(Debug, Default, Clone, Deref, DerefMut)]
 pub struct Markdown(Vec<Section>);
 
 impl Markdown {
-    pub fn new(s: &str) -> Markdown {
+    pub fn new(s: &str) -> Self {
         let mut sections = Vec::new();
         // Start with a default section (Level 1) for any leading text
         let mut current_section = Section {
@@ -76,7 +86,7 @@ impl Markdown {
             sections.push(current_section);
         }
 
-        Markdown(sections)
+        Self(sections)
     }
 
     fn parse_heading(line: &str) -> Option<(i64, String)> {
@@ -98,7 +108,13 @@ impl Markdown {
         }
         None
     }
+
+    /// Add a new section.
+    pub fn add_section(&mut self, section: Section) {
+        self.0.push(section)
+    }
 }
+
 impl std::fmt::Display for Markdown {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for (i, section) in self.0.iter().enumerate() {

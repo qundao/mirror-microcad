@@ -142,8 +142,8 @@ impl Doc for SymbolDef {
             SymbolDef::Function(function_definition) => function_definition.outer_doc(),
             SymbolDef::Assignment(assignment) => assignment.outer_doc(),
             SymbolDef::Builtin(builtin) => builtin.outer_doc(),
-            SymbolDef::Constant(..) => todo!(),
-            SymbolDef::Alias(..) => todo!(),
+            //SymbolDef::Constant(..) => todo!(),
+            //SymbolDef::Alias(..) => todo!(),
             _ => DocBlock::default(),
         }
     }

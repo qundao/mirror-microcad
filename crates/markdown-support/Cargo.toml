@@ -25,6 +25,7 @@ toml = { version = "0.9", features = ["serde"] }
 serde = "1.0"
 thiserror = "2.0"
 clap = { version = "4", features = ["derive"] }
+derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
 
 
 microcad-lang = { workspace = true }
