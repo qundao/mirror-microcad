@@ -62,3 +62,25 @@ You can sort the elements in an array using `std::array::contains(x)`.
 std::debug::assert_eq([ std::array::contains([3,1,2], 1), true ]);
 std::debug::assert_eq([ std::array::contains([3,1,2], 4), false ]);
 ```
+
+## `is_ascending`
+
+You can sort the elements in an array using `std::array::is_ascensing(x)`.
+
+[![test](.test/array_helper_is_ascending.svg)](.test/array_helper_is_ascending.log)
+
+```µcad,array_helper_is_ascending
+std::debug::assert_eq([ std::array::is_ascending([1,2,3]), true ]);
+std::debug::assert_eq([ std::array::is_ascending([3,2,1]), false ]);
+```
+
+## `is_descending`
+
+You can sort the elements in an array using `std::array::is_descending(x)`.
+
+[![test](.test/array_helper_is_descending.svg)](.test/array_helper_is_descending.log)
+
+```µcad,array_helper_is_descending
+std::debug::assert_eq([ std::array::is_descending([1,2,3]), false ]);
+std::debug::assert_eq([ std::array::is_descending([3,2,1]), true ]);
+```
