@@ -28,6 +28,8 @@ pub enum Type {
     Model,
     /// used for assert_valid() and assert_invalid()
     Target,
+    /// Return type
+    Return(Box<Type>),
 }
 
 impl Type {
@@ -128,6 +130,7 @@ impl std::fmt::Display for Type {
             Self::Matrix(t) => write!(f, "{t}"),
             Self::Model => write!(f, "Model"),
             Self::Target => write!(f, "Target"),
+            Self::Return(r) => write!(f, "Return({r})"),
         }
     }
 }
@@ -145,6 +148,7 @@ impl std::fmt::Debug for Type {
             Self::Matrix(t) => write!(f, "{t}"),
             Self::Model => write!(f, "Models"),
             Self::Target => write!(f, "Target"),
+            Self::Return(r) => write!(f, "Return({r})"),
         }
     }
 }

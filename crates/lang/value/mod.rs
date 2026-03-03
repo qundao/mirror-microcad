@@ -171,6 +171,7 @@ impl Value {
             Type::Matrix(mty) => Value::Matrix(Matrix::default_from_type(mty).into()),
             Type::Model => todo!(),
             Type::Target => todo!(),
+            Type::Return(r) => Value::Return(Self::default_from_type(r).into()),
         }
     }
 }

@@ -78,7 +78,7 @@ impl DeduceResult for StatementList {
                 break;
             }
             match statement.deduce_result(context)? {
-                Type::Model | Type::Invalid => (),
+                Type::Model | Type::Invalid | Type::Return(..) => (),
                 r => {
                     result = r;
                     result_src_ref = Some(statement.src_ref())
@@ -286,7 +286,9 @@ impl DeduceResult for InitDefinition {
 impl DeduceResult for ReturnStatement {
     fn deduce_result(&self, context: &mut EvalContext) -> EvalResult<Type> {
         if let Some(result) = &self.result {
-            result.deduce_result(context)
+            result
+                .deduce_result(context)
+                .map(|ty| Type::Return(ty.into()))
         } else {
             Ok(Type::Invalid).inspect(|ty| log::trace!("deduced ReturnStatement: {ty}"))
         }
