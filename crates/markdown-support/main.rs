@@ -6,7 +6,7 @@ extern crate microcad_markdown_support;
 use microcad_markdown_support::*;
 
 fn main() -> std::io::Result<()> {
-    let book_writer = book::BookWriter::new("./mdbook_test");
+    let book_writer = book::BookWriter::new("./target/mdbook_test");
 
     let builtin = microcad_builtin::builtin_module();
     book_writer.write(&builtin)
