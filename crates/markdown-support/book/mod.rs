@@ -95,6 +95,8 @@ impl BookWriter {
                 .try_for_each(|symbol| self_._generate_summary(writer, symbol, depth))
         }
 
+        use microcad_lang::builtin::{BuiltinKind, BuiltinWorkbenchKind};
+
         let path = Self::symbol_path(symbol);
 
         entry(writer, symbol.id(), path, depth)?;
@@ -138,6 +140,13 @@ impl BookWriter {
                             microcad_lang::syntax::WorkbenchKind::Sketch
                         )
                     }
+                    SymbolDef::Builtin(builtin) => match &builtin.kind {
+                        BuiltinKind::Function => false,
+                        BuiltinKind::Workbench(w) => match w {
+                            BuiltinWorkbenchKind::Primitive2D => true,
+                            _ => false,
+                        },
+                    },
                     _ => false,
                 })
             })
@@ -149,6 +158,7 @@ impl BookWriter {
             recurse(self, writer, sketches.into_iter(), depth)?;
         }
 
+        // Parts defined in µcad or built-in parts.
         let parts: Vec<_> = children
             .iter()
             .filter(|symbol| {
@@ -159,6 +169,13 @@ impl BookWriter {
                             microcad_lang::syntax::WorkbenchKind::Part
                         )
                     }
+                    SymbolDef::Builtin(builtin) => match &builtin.kind {
+                        BuiltinKind::Function => false,
+                        BuiltinKind::Workbench(w) => match w {
+                            BuiltinWorkbenchKind::Primitive3D => true,
+                            _ => false,
+                        },
+                    },
                     _ => false,
                 })
             })
@@ -180,6 +197,15 @@ impl BookWriter {
                             microcad_lang::syntax::WorkbenchKind::Operation
                         )
                     }
+                    SymbolDef::Builtin(builtin) => match &builtin.kind {
+                        BuiltinKind::Function => false,
+                        BuiltinKind::Workbench(w) => match w {
+                            BuiltinWorkbenchKind::Operation | BuiltinWorkbenchKind::Transform => {
+                                true
+                            }
+                            _ => false,
+                        },
+                    },
                     _ => false,
                 })
             })
@@ -193,11 +219,28 @@ impl BookWriter {
 
         let functions: Vec<_> = children
             .iter()
-            .filter(|symbol| symbol.with_def(|def| matches!(def, SymbolDef::Function(..))))
+            .filter(|symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Function(_) => true,
+                    SymbolDef::Builtin(builtin) => match &builtin.kind {
+                        BuiltinKind::Function => true,
+                        _ => false,
+                    },
+                    _ => false,
+                })
+            })
             .collect();
 
         if !functions.is_empty() {
-            entry(writer, "Functions", "fn.md", depth)?;
+            entry(
+                writer,
+                "Functions",
+                Self::symbol_path(symbol)
+                    .parent()
+                    .expect("Parent")
+                    .join("fn.md"),
+                depth,
+            )?;
             let depth = depth + 1;
             recurse(self, writer, functions.into_iter(), depth)?;
         }
