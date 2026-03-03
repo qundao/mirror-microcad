@@ -49,14 +49,13 @@ impl DocBlock {
         }
     }
 
-    /// Remove `///` comment marks and return them as string.
-    pub fn fetch_text(&self) -> String {
+    /// Remove `///` comment marks and return each line as string.
+    pub fn fetch_lines(&self) -> Vec<String> {
         self.0
             .iter()
             .filter_map(|s| s.strip_prefix("/// ").or(s.strip_prefix("///")))
-            .map(|s| s.trim_end())
+            .map(|s| s.trim_end().to_string())
             .collect::<Vec<_>>()
-            .join("\n")
     }
 }
 
@@ -117,14 +116,14 @@ fn doc_block_fetch_text() {
         "/// Line one".to_string(),
         "/// Line two ".to_string(), // Note the trailing space
     ]));
-    assert_eq!(doc1.fetch_text(), "Line one\nLine two");
+    assert_eq!(doc1.fetch_lines().join("\n"), "Line one\nLine two");
 
     // Test 2: Mixed prefixes (with and without space)
     let doc2 = DocBlock(Refer::none(vec![
         "///Space".to_string(),
         "///No space".to_string(),
     ]));
-    assert_eq!(doc2.fetch_text(), "Space\nNo space");
+    assert_eq!(doc2.fetch_lines().join("\n"), "Space\nNo space");
 
     // Test 3: Lines that don't start with '///' should be ignored
     let doc3 = DocBlock(Refer::none(vec![
@@ -132,9 +131,9 @@ fn doc_block_fetch_text() {
         "Invalid line".to_string(),
         "/// Also valid".to_string(),
     ]));
-    assert_eq!(doc3.fetch_text(), "Valid\nAlso valid");
+    assert_eq!(doc3.fetch_lines().join("\n"), "Valid\nAlso valid");
 
     // Test 4: Empty DocBlock
     let doc_empty = DocBlock::default();
-    assert_eq!(doc_empty.fetch_text(), "");
+    assert_eq!(doc_empty.fetch_lines().join("\n"), "");
 }

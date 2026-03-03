@@ -9,12 +9,31 @@ pub mod book;
 mod md;
 
 use microcad_lang::{
+    doc::Doc,
     resolve::*,
     syntax::{
-        FunctionDefinition, InitDefinition, ModuleDefinition, SourceFile, StatementList,
-        WorkbenchDefinition,
+        FunctionDefinition, InitDefinition, ModuleDefinition, SourceFile, WorkbenchDefinition,
     },
 };
+
+/// Add an extra `#` to each heading line.
+fn indent_header_lines(lines: Vec<String>) -> Vec<String> {
+    lines
+        .into_iter()
+        .map(|s| {
+            if s.starts_with("#") {
+                format!("#{s}")
+            } else {
+                s
+            }
+        })
+        .collect()
+}
+
+/// Fetch documentation as string with indented headers. (Markdown hack)
+fn fetch_doc(doc: &impl Doc) -> String {
+    indent_header_lines(doc.doc().fetch_lines()).join("\n")
+}
 
 pub trait ToMd {
     fn to_md(&self) -> md::Markdown;
@@ -22,22 +41,16 @@ pub trait ToMd {
 
 impl ToMd for InitDefinition {
     fn to_md(&self) -> md::Markdown {
-        use microcad_lang::doc::Doc;
-        md::Markdown::new(&format!(
-            "# `{}`\n{}",
-            self.to_string(),
-            self.doc().fetch_text()
-        ))
+        md::Markdown::new(&format!("# `{}`\n{}", self.to_string(), fetch_doc(self)))
     }
 }
 
 impl ToMd for SourceFile {
     fn to_md(&self) -> md::Markdown {
-        use microcad_lang::doc::Doc;
         md::Markdown::new(&format!(
             "# `{}`\n{}",
             self.filename_as_str(),
-            self.doc().fetch_text()
+            fetch_doc(self)
         ))
     }
 }
@@ -45,28 +58,29 @@ impl ToMd for SourceFile {
 impl ToMd for FunctionDefinition {
     fn to_md(&self) -> md::Markdown {
         use microcad_lang::doc::Doc;
-        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+        md::Markdown::new(&format!(
+            "# `{}`\n{}",
+            self.id,
+            indent_header_lines(self.doc().fetch_lines()).join("\n")
+        ))
     }
 }
 
 impl ToMd for ModuleDefinition {
     fn to_md(&self) -> md::Markdown {
-        use microcad_lang::doc::Doc;
-        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+        md::Markdown::new(&format!("# `{}`\n{}", self.id, fetch_doc(self)))
     }
 }
 
 impl ToMd for WorkbenchDefinition {
     fn to_md(&self) -> md::Markdown {
-        use microcad_lang::doc::Doc;
-        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+        md::Markdown::new(&format!("# `{}`\n{}", self.id, fetch_doc(self)))
     }
 }
 
 impl ToMd for microcad_lang::builtin::Builtin {
     fn to_md(&self) -> md::Markdown {
-        use microcad_lang::doc::Doc;
-        md::Markdown::new(&format!("# `{}`\n{}", self.id, self.doc().fetch_text()))
+        md::Markdown::new(&format!("# `{}`\n{}", self.id, fetch_doc(self)))
     }
 }
 
@@ -93,7 +107,6 @@ pub trait WriteMdFile: ToMd {
     fn write_md(&self, path: impl AsRef<Path>) -> std::io::Result<()> {
         let mut file = std::fs::File::create(path)?;
         let md = self.to_md();
-        println!("{md}");
         file.write_all(md.to_string().as_bytes())
     }
 }
