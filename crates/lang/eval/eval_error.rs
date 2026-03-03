@@ -334,7 +334,7 @@ pub enum EvalError {
     UnexpectedResult {
         #[label("Unexpected result value (missed a semicolon?)")]
         result: SrcRef,
-        #[label(primary, "This statement ")]
+        #[label(primary, "Here is another one in the same code path")]
         statement: SrcRef,
     },
 
