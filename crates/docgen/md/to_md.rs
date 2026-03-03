@@ -100,8 +100,15 @@ impl ToMd for SymbolDef {
 impl ToMd for Symbol {
     fn to_md(&self) -> md::Markdown {
         // Print one line description of a workbench
-        fn workbench_line(symbol: &Symbol) -> String {
-            let link = format!("- [`{id}`]({id}.md)", id = symbol.id());
+        fn symbol_one_line_item(symbol: &Symbol) -> String {
+            let id = symbol.id();
+            let link = format!(
+                "- [`{id}`]({filename})",
+                filename = symbol.with_def(|def| match def {
+                    SymbolDef::Module(_) | SymbolDef::SourceFile(_) => format!("{id}/README.md"),
+                    _ => format!("{id}.md"),
+                })
+            );
             match symbol.doc().fetch_lines().first() {
                 Some(line) => format!("{link}: {line}"),
                 None => link,
@@ -112,8 +119,7 @@ impl ToMd for Symbol {
 
         {
             use microcad_lang::syntax::WorkbenchKind;
-
-            fn workbench_list<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
+            fn symbol_list<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
             where
                 P: FnMut(&Symbol) -> bool,
             {
@@ -128,14 +134,22 @@ impl ToMd for Symbol {
                         level: 2,
                         content: symbols
                             .iter()
-                            .map(|symbol| workbench_line(symbol))
+                            .map(|symbol| symbol_one_line_item(symbol))
                             .collect(),
                     });
                 }
             }
 
+            // Generate list of sub-modules
+            symbol_list(self, &mut md, "Sub-modules", |symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Module(_) | SymbolDef::SourceFile(_) => true,
+                    _ => false,
+                })
+            });
+
             // Generate list of sketches
-            workbench_list(self, &mut md, "Sketches", |symbol| {
+            symbol_list(self, &mut md, "Sketches", |symbol| {
                 symbol.with_def(|def| match def {
                     SymbolDef::Workbench(workbench_definition) => {
                         match &workbench_definition.kind.value {
@@ -148,7 +162,7 @@ impl ToMd for Symbol {
             });
 
             // Parts
-            workbench_list(self, &mut md, "Parts", |symbol| {
+            symbol_list(self, &mut md, "Parts", |symbol| {
                 symbol.with_def(|def| match def {
                     SymbolDef::Workbench(workbench_definition) => {
                         match &workbench_definition.kind.value {
@@ -161,7 +175,7 @@ impl ToMd for Symbol {
             });
 
             // Operations
-            workbench_list(self, &mut md, "Operations", |symbol| {
+            symbol_list(self, &mut md, "Operations", |symbol| {
                 symbol.with_def(|def| match def {
                     SymbolDef::Workbench(workbench_definition) => {
                         match &workbench_definition.kind.value {
@@ -174,7 +188,7 @@ impl ToMd for Symbol {
             });
 
             // Built-in 2D primitives
-            workbench_list(self, &mut md, "Built-in 2D primitives", |symbol| {
+            symbol_list(self, &mut md, "Built-in 2D primitives", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
                         SymbolDef::Builtin(builtin) => match &builtin.kind {
@@ -187,7 +201,7 @@ impl ToMd for Symbol {
             });
 
             // Built-in 3D primitives
-            workbench_list(self, &mut md, "Built-in 3D primitives", |symbol| {
+            symbol_list(self, &mut md, "Built-in 3D primitives", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
                         SymbolDef::Builtin(builtin) => match &builtin.kind {
@@ -200,7 +214,7 @@ impl ToMd for Symbol {
             });
 
             // Built-in operations
-            workbench_list(self, &mut md, "Built-in operations", |symbol| {
+            symbol_list(self, &mut md, "Built-in operations", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
                         SymbolDef::Builtin(builtin) => match &builtin.kind {
@@ -213,7 +227,7 @@ impl ToMd for Symbol {
             });
 
             // Built-in transformations
-            workbench_list(self, &mut md, "Built-in transformations", |symbol| {
+            symbol_list(self, &mut md, "Built-in transformations", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
                         SymbolDef::Builtin(builtin) => match &builtin.kind {
