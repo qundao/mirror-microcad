@@ -5,7 +5,10 @@
 
 use std::io::Write;
 
-use microcad_lang::resolve::{FullyQualify, Symbol, SymbolDef};
+use microcad_lang::{
+    builtin::BuiltinKind,
+    resolve::{FullyQualify, Symbol, SymbolDef},
+};
 
 use crate::{DocGen, md::ToMd};
 
@@ -153,6 +156,10 @@ impl MdBook {
                 | SymbolDef::SourceFile(_)
                 | SymbolDef::Module(_)
                 | SymbolDef::Workbench(_) => symbol.to_md().write(path),
+                SymbolDef::Builtin(builtin) => match &builtin.kind {
+                    BuiltinKind::Function => Ok(()),
+                    BuiltinKind::Workbench(_) => symbol.to_md().write(path),
+                },
                 _ => Ok(()),
             })
         })
