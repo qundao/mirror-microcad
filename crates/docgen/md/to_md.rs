@@ -105,8 +105,8 @@ impl ToMd for Symbol {
             let link = format!(
                 "- [`{id}`]({filename})",
                 filename = symbol.with_def(|def| match def {
-                    SymbolDef::Module(_) | SymbolDef::SourceFile(_) => format!("{id}/README.md"),
-                    _ => format!("{id}.md"),
+                    SymbolDef::Module(_) | SymbolDef::SourceFile(_) => format!("./{id}"),
+                    _ => format!("./{id}.md"),
                 })
             );
             match symbol.doc().fetch_lines().first() {
