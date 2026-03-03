@@ -111,15 +111,8 @@ impl Eval<Models> for StatementList {
 
                 // We are in a workbench. Check if the workbench kind matches the current output type.
                 if let Some(kind) = kind {
-                    let expected_output_type = match kind {
-                        WorkbenchKind::Part => OutputType::Geometry3D,
-                        WorkbenchKind::Sketch => OutputType::Geometry2D,
-                        WorkbenchKind::Operation => OutputType::NotDetermined,
-                    };
-
-                    if expected_output_type != OutputType::NotDetermined
-                        && output_type != expected_output_type
-                    {
+                    let expected_output_type = kind.into();
+                    if ![OutputType::NotDetermined, output_type].contains(&expected_output_type) {
                         context.error(
                             statement,
                             EvalError::WorkbenchInvalidOutput {

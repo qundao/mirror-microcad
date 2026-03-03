@@ -3,6 +3,8 @@
 
 //! Export attribute.
 
+use crate::syntax::*;
+
 /// The output type of the [`crate::model::Model`].
 #[derive(Clone, Copy, Default, PartialEq)]
 pub enum OutputType {
@@ -62,5 +64,15 @@ impl std::fmt::Display for OutputType {
                 Self::InvalidMixed => crate::invalid_no_ansi!(OUTPUT),
             }
         )
+    }
+}
+
+impl From<WorkbenchKind> for OutputType {
+    fn from(kind: WorkbenchKind) -> Self {
+        match kind {
+            WorkbenchKind::Part => OutputType::Geometry3D,
+            WorkbenchKind::Sketch => OutputType::Geometry2D,
+            WorkbenchKind::Operation => OutputType::NotDetermined,
+        }
     }
 }
