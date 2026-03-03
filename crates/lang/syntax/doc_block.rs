@@ -19,7 +19,7 @@ impl DocBlock {
     /// Create new doc block for builtin.
     pub fn new_builtin(comment: &str) -> Self {
         Self(Refer::none(
-            comment.lines().map(|s| s.to_string()).collect(),
+            comment.lines().map(|s| format!("/// {s}")).collect(),
         ))
     }
 
