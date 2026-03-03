@@ -5270,6 +5270,7 @@ dependencies = [
  "log",
  "microcad-builtin",
  "microcad-core",
+ "microcad-docgen",
  "microcad-export",
  "microcad-lang",
  "microcad-std",
@@ -5325,6 +5326,19 @@ dependencies = [
  "manifold-rs",
  "miette",
  "strum 0.27.2",
+ "thiserror 2.0.18",
+ "toml",
+]
+
+[[package]]
+name = "microcad-docgen"
+version = "0.3.0"
+dependencies = [
+ "clap",
+ "derive_more 2.1.1",
+ "microcad-builtin",
+ "microcad-lang",
+ "serde",
  "thiserror 2.0.18",
  "toml",
 ]
@@ -5431,18 +5445,6 @@ dependencies = [
  "tower-lsp",
  "tracing",
  "tracing-subscriber",
-]
-
-[[package]]
-name = "microcad-markdown-support"
-version = "0.3.0"
-dependencies = [
- "clap",
- "microcad-builtin",
- "microcad-lang",
- "serde",
- "thiserror 2.0.18",
- "toml",
 ]
 
 [[package]]
