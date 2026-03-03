@@ -16,10 +16,6 @@ version.workspace = true
 [lib]
 path = "lib.rs"
 
-[[bin]]
-name = "microcad-docgen"
-path = "main.rs"
-
 [dependencies]
 toml = { version = "0.9", features = ["serde"] }
 serde = "1.0"
