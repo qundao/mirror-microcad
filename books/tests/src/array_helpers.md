@@ -32,6 +32,16 @@ You can get the tail of an array using `std::array::first()` and `std::array::ta
 std::debug::assert_eq([ std::array::tail([1,2,3]), [2,3] ]);
 ```
 
+## `last`
+
+You can get the first element of an array using `std::array::last()`.
+
+[![test](.test/array_helper_last.svg)](.test/array_helper_last.log)
+
+```µcad,array_helper_last
+std::debug::assert_eq([ std::array::last([1,2,3]), 3 ]);
+```
+
 ## `rev`
 
 You can reverse the order the elements in an array using `std::array::rev()`.
