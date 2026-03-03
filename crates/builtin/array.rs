@@ -95,7 +95,7 @@ pub mod array {
                 let arg = args.get_single()?;
                 Ok(match &arg.1.value {
                     Value::Array(a) if !a.is_empty() => a.last(),
-                    Value::Array(a) => {
+                    Value::Array(_) => {
                         ctx.error(arg.1, EvalError::BuiltinError("Value is empty.".into()))?;
                         Value::None
                     }
