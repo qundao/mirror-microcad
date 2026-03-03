@@ -160,9 +160,7 @@ pub trait BuiltinWorkbenchDefinition {
 
     /// Workbench function
     fn doc() -> Option<DocBlock> {
-        let doc = Self::help().map(DocBlock::new_builtin);
-        println!("{doc:?}");
-        doc
+        Self::help().map(DocBlock::new_builtin)
     }
 
     /// Part initialization parameters

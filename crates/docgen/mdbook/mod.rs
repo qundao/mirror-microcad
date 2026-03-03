@@ -148,7 +148,6 @@ impl MdBook {
         symbol.riter().try_for_each(|symbol| {
             let path = self.path.join("src").join(Self::symbol_path(&symbol));
             std::fs::create_dir_all(&path.parent().expect("A parent"))?;
-            println!("{}", path.display());
             symbol.to_md().write(path)
         })
     }
