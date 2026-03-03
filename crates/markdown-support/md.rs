@@ -21,6 +21,15 @@ impl Section {
     pub fn append(&mut self, mut lines: Vec<String>) {
         self.content.append(&mut lines);
     }
+
+    /// A section with `n` levels deeper.
+    pub fn nested(&self, n: i64) -> Section {
+        Section {
+            heading: self.heading.clone(),
+            level: self.level + n,
+            content: self.content.clone(),
+        }
+    }
 }
 
 impl std::fmt::Display for Section {
@@ -112,6 +121,11 @@ impl Markdown {
     /// Add a new section.
     pub fn add_section(&mut self, section: Section) {
         self.0.push(section)
+    }
+
+    /// Nest another markdown
+    pub fn nest(&mut self, md: Markdown, n: i64) {
+        self.0.extend(md.0.into_iter().map(|s| s.nested(n)));
     }
 }
 

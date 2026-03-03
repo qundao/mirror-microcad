@@ -9,12 +9,16 @@ pub mod book;
 mod md;
 
 use microcad_lang::{
+    builtin::{BuiltinKind, BuiltinWorkbenchKind},
     doc::Doc,
     resolve::*,
     syntax::{
-        FunctionDefinition, InitDefinition, ModuleDefinition, SourceFile, WorkbenchDefinition,
+        FunctionDefinition, InitDefinition, ModuleDefinition, SourceFile, Visibility,
+        WorkbenchDefinition,
     },
 };
+
+use crate::md::{Markdown, Section};
 
 /// Add an extra `#` to each heading line.
 fn indent_header_lines(lines: Vec<String>) -> Vec<String> {
@@ -35,6 +39,7 @@ fn fetch_doc(doc: &impl Doc) -> String {
     indent_header_lines(doc.doc().fetch_lines()).join("\n")
 }
 
+/// Trait to fetch markdown.
 pub trait ToMd {
     fn to_md(&self) -> md::Markdown;
 }
@@ -99,8 +104,8 @@ impl ToMd for SymbolDef {
 
 impl ToMd for Symbol {
     fn to_md(&self) -> md::Markdown {
-        // Print one line description of a symbol
-        fn get_oneline(symbol: &Symbol) -> String {
+        // Print one line description of a workbench
+        fn workbench_line(symbol: &Symbol) -> String {
             let link = format!("- [`{id}`]({id}.md)", id = symbol.id());
             match symbol.doc().fetch_lines().first() {
                 Some(line) => format!("{link}: {line}"),
@@ -110,8 +115,211 @@ impl ToMd for Symbol {
 
         let mut md = self.with_def(|def| def.to_md());
 
-        if let Some(first_section) = md.first_mut() {
-            first_section.append(self.iter().map(|symbol| get_oneline(&symbol)).collect());
+        {
+            use microcad_lang::syntax::WorkbenchKind;
+
+            fn workbench_list<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
+            where
+                P: FnMut(&Symbol) -> bool,
+            {
+                let symbols: Vec<_> = symbol
+                    .iter()
+                    .filter(|symbol| symbol.is_public())
+                    .filter(p)
+                    .collect();
+                if !symbols.is_empty() {
+                    md.add_section(Section {
+                        heading: heading.to_string(),
+                        level: 2,
+                        content: symbols
+                            .iter()
+                            .map(|symbol| workbench_line(symbol))
+                            .collect(),
+                    });
+                }
+            }
+
+            // Generate list of sketches
+            workbench_list(self, &mut md, "Sketches", |symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        match &workbench_definition.kind.value {
+                            WorkbenchKind::Sketch => true,
+                            _ => false,
+                        }
+                    }
+                    _ => false,
+                })
+            });
+
+            // Parts
+            workbench_list(self, &mut md, "Parts", |symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        match &workbench_definition.kind.value {
+                            WorkbenchKind::Part => true,
+                            _ => false,
+                        }
+                    }
+                    _ => false,
+                })
+            });
+
+            // Operations
+            workbench_list(self, &mut md, "Operations", |symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Workbench(workbench_definition) => {
+                        match &workbench_definition.kind.value {
+                            WorkbenchKind::Operation => true,
+                            _ => false,
+                        }
+                    }
+                    _ => false,
+                })
+            });
+
+            // Built-in 2D primitives
+            workbench_list(self, &mut md, "Built-in 2D primitives", |symbol| {
+                symbol.with_def(|def| -> bool {
+                    match def {
+                        SymbolDef::Builtin(builtin) => match &builtin.kind {
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive2D) => true,
+                            _ => false,
+                        },
+                        _ => false,
+                    }
+                })
+            });
+
+            // Built-in 3D primitives
+            workbench_list(self, &mut md, "Built-in 3D primitives", |symbol| {
+                symbol.with_def(|def| -> bool {
+                    match def {
+                        SymbolDef::Builtin(builtin) => match &builtin.kind {
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive3D) => true,
+                            _ => false,
+                        },
+                        _ => false,
+                    }
+                })
+            });
+
+            // Built-in operations
+            workbench_list(self, &mut md, "Built-in operations", |symbol| {
+                symbol.with_def(|def| -> bool {
+                    match def {
+                        SymbolDef::Builtin(builtin) => match &builtin.kind {
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Operation) => true,
+                            _ => false,
+                        },
+                        _ => false,
+                    }
+                })
+            });
+
+            // Built-in transformations
+            workbench_list(self, &mut md, "Built-in transformations", |symbol| {
+                symbol.with_def(|def| -> bool {
+                    match def {
+                        SymbolDef::Builtin(builtin) => match &builtin.kind {
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Transform) => true,
+                            _ => false,
+                        },
+                        _ => false,
+                    }
+                })
+            });
+
+            fn inline_symbol_md<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
+            where
+                P: FnMut(&Symbol) -> bool,
+            {
+                let symbols: Vec<_> = symbol
+                    .iter()
+                    .filter(|symbol| symbol.is_public())
+                    .filter(p)
+                    .collect();
+                if !symbols.is_empty() {
+                    md.add_section(Section {
+                        heading: heading.to_string(),
+                        level: 2,
+                        content: vec![],
+                    });
+                    symbols.iter().for_each(|symbol| md.nest(symbol.to_md(), 2));
+                }
+            }
+
+            // Functions
+            inline_symbol_md(self, &mut md, "Functions", |symbol| {
+                symbol.with_def(|def| matches!(def, SymbolDef::Function(_)))
+            });
+
+            // Built-in functions
+            inline_symbol_md(self, &mut md, "Built-in functions", |symbol| {
+                symbol.with_def(|def| match def {
+                    SymbolDef::Builtin(builtin) => match builtin.kind {
+                        BuiltinKind::Function => true,
+                        _ => false,
+                    },
+                    _ => false,
+                })
+            });
+
+            // Constants
+            {
+                let constants: Vec<_> = self
+                    .iter()
+                    .filter_map(|symbol| {
+                        symbol.with_def(|def| match def {
+                            SymbolDef::Constant(visibility, identifier, value) => {
+                                match visibility {
+                                    Visibility::Public => Some((identifier.clone(), value.clone())),
+                                    _ => None,
+                                }
+                            }
+                            _ => None,
+                        })
+                    })
+                    .collect();
+
+                if !constants.is_empty() {
+                    md.add_section(Section {
+                        heading: "Constants".to_string(),
+                        level: 2,
+                        content: constants
+                            .into_iter()
+                            .map(|(identifier, value)| format!("- `{identifier}` = `{value}`"))
+                            .collect(),
+                    });
+                }
+            }
+
+            // Aliases
+            {
+                let aliases: Vec<_> = self
+                    .iter()
+                    .filter_map(|symbol| {
+                        symbol.with_def(|def| match def {
+                            SymbolDef::Alias(visibility, identifier, name) => match visibility {
+                                Visibility::Public => Some((identifier.clone(), name.clone())),
+                                _ => None,
+                            },
+                            _ => None,
+                        })
+                    })
+                    .collect();
+
+                if !aliases.is_empty() {
+                    md.add_section(Section {
+                        heading: "Aliases".to_string(),
+                        level: 2,
+                        content: aliases
+                            .into_iter()
+                            .map(|(identifier, name)| format!("- `{identifier}` => `{name}`"))
+                            .collect(),
+                    });
+                }
+            }
         }
 
         md
