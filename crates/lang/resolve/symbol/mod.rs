@@ -165,7 +165,7 @@ impl Symbol {
     /// Get any child with the given `id`.
     /// # Arguments
     /// - `id`: Anticipated *id* of the possible child.
-    pub(super) fn get_child(&self, id: &Identifier) -> Option<Symbol> {
+    pub fn get_child(&self, id: &Identifier) -> Option<Symbol> {
         self.inner.borrow().children.get(id).cloned()
     }
 
