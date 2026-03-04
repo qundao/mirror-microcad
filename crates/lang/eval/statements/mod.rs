@@ -19,14 +19,10 @@ pub use use_statement::*;
 impl Eval for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match self {
-            Self::Use(u) => {
-                u.eval(context)?;
-                Ok(Value::None)
-            }
-            Self::Assignment(a) => {
-                a.eval(context)?;
-                Ok(Value::None)
-            }
+            Self::Use(u) => u.eval(context),
+            Self::Value(v) => v.eval(context),
+            Self::Const(c) => c.eval(context),
+            Self::Prop(p) => p.eval(context),
             Self::If(i) => i.eval(context),
             Self::Expression(e) => e.eval(context),
             Self::Return(r) => r.eval(context),

@@ -62,7 +62,9 @@ impl Grant for Statement {
             If(statement) => statement.grant(context),
             Init(statement) => statement.grant(context),
             Return(statement) => statement.grant(context),
-            Assignment(statement) => statement.grant(context),
+            Value(statement) => statement.grant(context),
+            Const(statement) => statement.grant(context),
+            Prop(statement) => statement.grant(context),
             Module(statement) => statement.grant(context),
             Workbench(statement) => statement.grant(context),
             Function(statement) => statement.grant(context),
@@ -169,37 +171,55 @@ impl Grant for IfStatement {
     }
 }
 
-impl Grant for AssignmentStatement {
+impl Grant for ValueAssignment {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use {Qualifier::*, ScopeType::*, Visibility::*};
-        let scope = Scope(
-            match (&self.assignment.visibility, &self.assignment.qualifier()) {
-                (Private | PrivateUse(_), Value) => ValueAssignment,
-                (Public, Const) => PubAssignment,
-                (Private, Const) => ConstAssignment,
-                (_, Prop) => PropAssignment,
-                _ => unreachable!(),
-            },
-            self.src_ref(),
-        );
+        use ScopeType::*;
+        let scope = Scope(ValueAssignment, self.src_ref());
         let parent = context.parent();
-        let grant = match scope.0 {
-            ValueAssignment => {
-                matches!(
-                    parent.ty(),
-                    Source | Function | Workbench | Init | ExpressionStatement
-                )
-            }
-            PubAssignment => matches!(parent.ty(), Source | Module),
-            ConstAssignment => matches!(parent.ty(), Source | Module | Workbench),
-            PropAssignment => matches!(parent.ty(), Workbench),
-            _ => unreachable!(),
-        };
-
+        let grant = matches!(
+            parent.ty(),
+            Source | Function | Workbench | Init | ExpressionStatement
+        );
         if !grant {
             context.error(self, StatementNotSupportedError::new(&scope, &parent))?;
         }
         Ok(())
+    }
+}
+
+impl Grant for ConstAssignment {
+    fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
+        use {ScopeType::*, Visibility::*};
+        let scope = Scope(ValueAssignment, self.src_ref());
+        let parent = context.parent();
+        let grant = match &self.visibility {
+            Private | PrivateUse(..) => matches!(parent.ty(), Source | Module | Workbench),
+            Public => matches!(parent.ty(), Source | Module),
+            Deleted => unreachable!(),
+        };
+        if !grant {
+            context.error(self, StatementNotSupportedError::new(&scope, &parent))?;
+        }
+        Ok(())
+    }
+}
+
+impl Grant for PropAssignment {
+    fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
+        use ScopeType::*;
+        let scope = Scope(PropAssignment, self.src_ref());
+        let parent = context.parent();
+        let grant = matches!(parent.ty(), Workbench);
+        if !grant {
+            context.error(self, StatementNotSupportedError::new(&scope, &parent))?;
+        }
+        Ok(())
+    }
+}
+
+impl<T: Grant> Grant for AssignmentStatement<T> {
+    fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
+        self.assignment.grant(context)
     }
 }
 
@@ -254,7 +274,7 @@ impl Body {
             };
 
             for (n, stmt) in self.iter().enumerate() {
-                use {Qualifier::*, Statement::*, Visibility::*};
+                use {Statement::*, Visibility::*};
                 match stmt {
                     // ignore inits
                     Init(_) => (),
@@ -272,34 +292,32 @@ impl Body {
                     }
 
                     // Some assignments are post init statements
-                    Assignment(a_stmt) => match a_stmt.assignment.qualifier() {
-                        Const => {
-                            if matches!(a_stmt.assignment.visibility, Public) {
-                                context.error(a_stmt, IllegalWorkbenchStatement)?;
-                            }
-                            if n > first_init_pos && n < last_init_pos {
+                    Statement::Const(a_stmt) => {
+                        if matches!(a_stmt.visibility, Public) {
+                            context.error(a_stmt, IllegalWorkbenchStatement)?;
+                        }
+                        if n > first_init_pos && n < last_init_pos {
+                            context.error(a_stmt, code_between_err(stmt))?;
+                        }
+                    }
+                    Statement::Value(a_stmt) => {
+                        if n < last_init_pos {
+                            if n > first_init_pos {
                                 context.error(a_stmt, code_between_err(stmt))?;
+                            } else {
+                                context.error(a_stmt, code_before_err(stmt))?;
                             }
                         }
-                        Value => {
-                            if n < last_init_pos {
-                                if n > first_init_pos {
-                                    context.error(a_stmt, code_between_err(stmt))?;
-                                } else {
-                                    context.error(a_stmt, code_before_err(stmt))?;
-                                }
+                    }
+                    Statement::Prop(a_stmt) => {
+                        if n < last_init_pos {
+                            if n > first_init_pos {
+                                context.error(a_stmt, code_between_err(stmt))?;
+                            } else {
+                                context.error(a_stmt, code_before_err(stmt))?;
                             }
                         }
-                        Prop => {
-                            if n < last_init_pos {
-                                if n > first_init_pos {
-                                    context.error(a_stmt, code_between_err(stmt))?;
-                                } else {
-                                    context.error(a_stmt, code_before_err(stmt))?;
-                                }
-                            }
-                        }
-                    },
+                    }
 
                     // Post init statements
                     If(_) | InnerAttribute(_) | InnerDocComment(_) | Expression(_)

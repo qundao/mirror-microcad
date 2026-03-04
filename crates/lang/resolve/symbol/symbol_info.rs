@@ -79,8 +79,8 @@ impl SymbolInfo {
     }
 }
 
-impl From<&Rc<Assignment>> for SymbolInfo {
-    fn from(def: &Rc<Assignment>) -> Self {
+impl From<&Rc<ConstAssignment>> for SymbolInfo {
+    fn from(def: &Rc<ConstAssignment>) -> Self {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "Assignment".into(),

@@ -18,7 +18,7 @@ pub enum SymbolDef {
     /// Function symbol.
     Function(Rc<FunctionDefinition>),
     /// Assignment.
-    Assignment(Rc<Assignment>),
+    Assignment(Rc<ConstAssignment>),
     /// Builtin symbol.
     Builtin(Rc<Builtin>),
     /// Constant.

@@ -76,21 +76,18 @@ impl Symbolize<Option<(Identifier, Symbol)>> for Statement {
         parent: &Symbol,
         context: &mut ResolveContext,
     ) -> ResolveResult<Option<(Identifier, Symbol)>> {
+        use Statement::*;
         match self {
-            Statement::Workbench(wd) => Ok(Some((wd.id(), wd.symbolize(parent, context)?))),
-            Statement::Module(md) => Ok(Some((md.id(), md.symbolize(parent, context)?))),
-            Statement::Function(fd) => Ok(Some((fd.id(), fd.symbolize(parent, context)?))),
-            Statement::Use(us) => us.symbolize(parent, context),
-            Statement::Assignment(a) => Ok(a
+            Workbench(wd) => Ok(Some((wd.id(), wd.symbolize(parent, context)?))),
+            Module(md) => Ok(Some((md.id(), md.symbolize(parent, context)?))),
+            Function(fd) => Ok(Some((fd.id(), fd.symbolize(parent, context)?))),
+            Use(us) => us.symbolize(parent, context),
+            Const(c) => Ok(c
                 .symbolize(parent, context)?
-                .map(|symbol| (a.assignment.id(), symbol))),
+                .map(|symbol| (c.assignment.id(), symbol))),
             // Not producing any symbols
-            Statement::Init(_)
-            | Statement::Return(_)
-            | Statement::If(_)
-            | Statement::InnerAttribute(_)
-            | Statement::InnerDocComment(_)
-            | Statement::Expression(_) => Ok(None),
+            Init(_) | Return(_) | If(_) | InnerAttribute(_) | InnerDocComment(_) | Value(_)
+            | Prop(_) | Expression(_) => Ok(None),
         }
     }
 }
@@ -117,50 +114,32 @@ impl Symbolize<Symbol> for FunctionDefinition {
     }
 }
 
-impl Symbolize for AssignmentStatement {
+impl Symbolize for ConstAssignment {
     fn symbolize(
         &self,
         parent: &Symbol,
         _context: &mut ResolveContext,
     ) -> ResolveResult<Option<Symbol>> {
-        let symbol = match (&self.assignment.visibility, self.assignment.qualifier()) {
-            // properties do not have a visibility
-            (_, Qualifier::Prop) => {
-                if !parent.can_prop() {
-                    None
-                } else {
-                    Some(None)
-                }
-            }
-            // constants will be symbols (`pub` shall equal `pub const`)
-            (_, Qualifier::Const) | (Visibility::Public, Qualifier::Value) => {
+        match self.visibility {
+            Visibility::Public => {
                 if !parent.can_const() {
-                    None
+                    Ok(None)
                 } else {
-                    log::trace!(
-                        "Declaring private const expression: {}",
-                        self.assignment.id_ref()
-                    );
-                    Some(Some(Symbol::new(
-                        SymbolDef::Assignment(self.assignment.clone()),
+                    log::trace!("Declaring private const expression: {}", self.id_ref());
+                    Ok(Some(Symbol::new(
+                        SymbolDef::Assignment(self.clone().into()),
                         Some(parent.clone()),
                     )))
                 }
             }
-            // value go on stack
-            (Visibility::Private | Visibility::PrivateUse(_), Qualifier::Value) => {
-                if self.assignment.visibility == Visibility::Private && !parent.can_value() {
-                    None
+            Visibility::Private | Visibility::PrivateUse(_) => {
+                if self.visibility == Visibility::Private && !parent.can_value() {
+                    Ok(None)
                 } else {
-                    Some(None)
+                    Ok(None)
                 }
             }
-            (Visibility::Deleted, _) => unreachable!(),
-        };
-
-        match symbol {
-            Some(symbol) => Ok(symbol),
-            None => Ok(None),
+            Visibility::Deleted => unreachable!(),
         }
     }
 }

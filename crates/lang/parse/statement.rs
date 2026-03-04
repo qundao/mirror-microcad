@@ -14,19 +14,7 @@ impl FromAst for Assignment {
                 .as_ref()
                 .map(|doc| DocBlock::from_ast(doc, context))
                 .transpose()?,
-            visibility: node
-                .visibility
-                .as_ref()
-                .map(|v| Visibility::from_ast(v, context))
-                .transpose()?
-                .unwrap_or_default(),
             id: Identifier::from_ast(&node.name, context)?,
-            qualifier: node
-                .qualifier
-                .as_ref()
-                .map(|q| Qualifier::from_ast(q, context))
-                .transpose()?
-                .unwrap_or_default(),
             specified_type: node
                 .ty
                 .as_ref()
@@ -38,13 +26,68 @@ impl FromAst for Assignment {
     }
 }
 
-impl FromAst for AssignmentStatement {
+impl FromAst for ValueAssignment {
+    type AstNode = ast::Assignment;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(Assignment::from_ast(node, context)?.into())
+    }
+}
+
+impl FromAst for ConstAssignment {
+    type AstNode = ast::Assignment;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        let visibility = node
+            .visibility
+            .as_ref()
+            .map(|v| Visibility::from_ast(v, context))
+            .transpose()?
+            .unwrap_or_default();
+        let assignment = Assignment::from_ast(node, context)?;
+        Ok(ConstAssignment::new(visibility, assignment))
+    }
+}
+
+impl FromAst for PropAssignment {
+    type AstNode = ast::Assignment;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(Assignment::from_ast(node, context)?.into())
+    }
+}
+
+impl FromAst for AssignmentStatement<ValueAssignment> {
     type AstNode = ast::Assignment;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
-            assignment: Rc::new(Assignment::from_ast(node, context)?),
+            assignment: Rc::new(ValueAssignment::from_ast(node, context)?),
+            src_ref: context.src_ref(&node.span),
+        })
+    }
+}
+
+impl FromAst for AssignmentStatement<ConstAssignment> {
+    type AstNode = ast::Assignment;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(AssignmentStatement {
+            attribute_list: AttributeList::from_ast(&node.attributes, context)?,
+            assignment: Rc::new(ConstAssignment::from_ast(node, context)?),
+            src_ref: context.src_ref(&node.span),
+        })
+    }
+}
+
+impl FromAst for AssignmentStatement<PropAssignment> {
+    type AstNode = ast::Assignment;
+
+    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+        Ok(AssignmentStatement {
+            attribute_list: AttributeList::from_ast(&node.attributes, context)?,
+            assignment: Rc::new(PropAssignment::from_ast(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -120,7 +163,12 @@ impl FromAst for Statement {
                 Statement::InnerDocComment(InnerDocComment::from_ast(i, context)?)
             }
             ast::Statement::Assignment(a) => {
-                Statement::Assignment(AssignmentStatement::from_ast(a, context)?)
+                use ast::AssignmentQualifier::*;
+                match a.qualifier {
+                    None => Statement::Value(ValueAssignment::from_ast(a, context)?),
+                    Some(Const) => Statement::Const(ConstAssignment::from_ast(a, context)?),
+                    Some(Prop) => Statement::Prop(PropAssignment::from_ast(a, context)?),
+                }
             }
             ast::Statement::Comment(_) => unreachable!("comments are filtered out"),
             ast::Statement::Error(span) => {

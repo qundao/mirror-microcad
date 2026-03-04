@@ -52,7 +52,9 @@ impl Names for Statement {
 
             Statement::Use(u) => u.names(),
             Statement::Return(r) => r.names(),
-            Statement::Assignment(a) => a.names(),
+            Statement::Value(v) => v.names(),
+            Statement::Const(c) => c.names(),
+            Statement::Prop(p) => p.names(),
             Statement::Expression(e) => e.names(),
         }
     }
@@ -111,20 +113,27 @@ impl Names for IfStatement {
     }
 }
 
-impl Names for AssignmentStatement {
+impl<T: Names> Names for AssignmentStatement<T> {
     fn names(&self) -> NameList {
         self.assignment.names()
     }
 }
 
-impl Names for Assignment {
+impl Names for ValueAssignment {
     fn names(&self) -> NameList {
-        let names = self.expression.names();
-        if matches!(self.qualifier(), Qualifier::Const) {
-            names.add_as_name(self.id_ref())
-        } else {
-            names.add_local(self.id_ref())
-        }
+        self.expression.names().add_local(self.id_ref())
+    }
+}
+
+impl Names for ConstAssignment {
+    fn names(&self) -> NameList {
+        self.expression.names().add_as_name(self.id_ref())
+    }
+}
+
+impl Names for PropAssignment {
+    fn names(&self) -> NameList {
+        self.expression.names().add_local(self.id_ref())
     }
 }
 

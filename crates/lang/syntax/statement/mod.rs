@@ -42,8 +42,12 @@ pub enum Statement {
     /// Inner doc comment: `//! Text`.
     InnerDocComment(InnerDocComment),
 
-    /// Assignment statement.
-    Assignment(AssignmentStatement),
+    /// Value Assignment statement.
+    Value(ValueAssignment),
+    /// Constant Assignment statement.
+    Const(ConstAssignment),
+    /// Property Assignment statement.
+    Prop(PropAssignment),
     /// Expression statement.
     Expression(ExpressionStatement),
 }
@@ -62,7 +66,9 @@ impl SrcReferrer for Statement {
             Self::InnerAttribute(i) => i.src_ref(),
             Self::InnerDocComment(i) => i.src_ref(),
 
-            Self::Assignment(a) => a.src_ref(),
+            Self::Value(a) => a.src_ref(),
+            Self::Const(a) => a.src_ref(),
+            Self::Prop(a) => a.src_ref(),
             Self::Expression(e) => e.src_ref(),
         }
     }
@@ -90,7 +96,9 @@ impl std::fmt::Display for Statement {
             Self::InnerAttribute(i) => write!(f, "{i}"),
             Self::InnerDocComment(i) => write!(f, "{i}"),
 
-            Self::Assignment(a) => write!(f, "{a}"),
+            Self::Value(v) => write!(f, "{v}"),
+            Self::Const(c) => write!(f, "{c}"),
+            Self::Prop(p) => write!(f, "{p}"),
             Self::Expression(e) => write!(f, "{e}"),
         }
     }
@@ -117,7 +125,9 @@ impl std::fmt::Debug for Statement {
             Self::InnerAttribute(i) => write!(f, "{i:?}"),
             Self::InnerDocComment(i) => write!(f, "{i:?}"),
 
-            Self::Assignment(a) => write!(f, "{a:?}"),
+            Self::Value(v) => write!(f, "{v:?}"),
+            Self::Const(c) => write!(f, "{c:?}"),
+            Self::Prop(p) => write!(f, "{p:?}"),
             Self::Expression(e) => write!(f, "{e:?}"),
         }
     }
@@ -138,7 +148,9 @@ impl TreeDisplay for Statement {
             Self::InnerAttribute(i) => i.tree_print(f, depth),
             Self::InnerDocComment(i) => i.tree_print(f, depth),
 
-            Self::Assignment(a) => a.tree_print(f, depth),
+            Self::Value(v) => v.tree_print(f, depth),
+            Self::Const(c) => c.tree_print(f, depth),
+            Self::Prop(p) => p.tree_print(f, depth),
             Self::Expression(e) => e.tree_print(f, depth),
         }
     }

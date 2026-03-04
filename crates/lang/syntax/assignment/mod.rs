@@ -3,17 +3,20 @@
 
 //! µcad assignment syntax element
 
+mod const_assignment;
+mod prop_assignment;
+mod value_assignment;
+
 use crate::{src_ref::*, syntax::*, ty::*};
+pub use const_assignment::*;
+pub use prop_assignment::*;
+pub use value_assignment::*;
 
 /// Assignment specifying an identifier, type and value
 #[derive(Clone)]
 pub struct Assignment {
     /// Documentation.
     pub doc: Option<DocBlock>,
-    /// Value's visibility
-    pub visibility: Visibility,
-    /// Assignee qualifier
-    pub qualifier: Qualifier,
     /// Assignee
     pub(crate) id: Identifier,
     /// Type of the assignee
@@ -28,8 +31,6 @@ impl Assignment {
     /// Create new assignment.
     pub fn new(
         doc: Option<DocBlock>,
-        visibility: Visibility,
-        qualifier: Qualifier,
         id: Identifier,
         specified_type: Option<TypeAnnotation>,
         expression: Expression,
@@ -37,21 +38,10 @@ impl Assignment {
     ) -> Self {
         Self {
             doc,
-            visibility,
-            qualifier,
             id,
             specified_type,
             expression,
             src_ref,
-        }
-    }
-
-    /// Get qualifier (makes `pub` => `pub const`)
-    pub fn qualifier(&self) -> Qualifier {
-        match self.visibility {
-            Visibility::Private | Visibility::PrivateUse(_) => self.qualifier,
-            Visibility::Public => Qualifier::Const,
-            Visibility::Deleted => unreachable!(),
         }
     }
 }
@@ -73,21 +63,12 @@ impl std::fmt::Display for Assignment {
         match &self.specified_type {
             Some(t) => write!(
                 f,
-                "{vis}{qual}{id}: {ty} = {expr}",
-                vis = self.visibility,
-                qual = self.qualifier,
+                "{id}: {ty} = {expr}",
                 id = self.id,
                 ty = t.ty(),
                 expr = self.expression
             ),
-            None => write!(
-                f,
-                "{vis}{qual}{id} = {expr}",
-                vis = self.visibility,
-                qual = self.qualifier,
-                id = self.id,
-                expr = self.expression
-            ),
+            None => write!(f, "{id} = {expr}", id = self.id, expr = self.expression),
         }
     }
 }
@@ -97,33 +78,13 @@ impl std::fmt::Debug for Assignment {
         match &self.specified_type {
             Some(t) => write!(
                 f,
-                "{vis}{qual}{id:?}: {ty:?} = {expr:?}",
-                vis = self.visibility,
-                qual = self.qualifier,
+                "{id:?}: {ty:?} = {expr:?}",
                 id = self.id,
                 ty = t.ty(),
                 expr = self.expression
             ),
-            None => write!(f, "{} = {}", self.id, self.expression),
+            None => write!(f, "{id:?} = {expr:?}", id = self.id, expr = self.expression),
         }
-    }
-}
-
-impl TreeDisplay for Assignment {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(
-            f,
-            "{:depth$}Assignment {vis}{qual}'{id}':",
-            "",
-            vis = self.visibility,
-            qual = self.qualifier,
-            id = self.id
-        )?;
-        depth.indent();
-        if let Some(specified_type) = &self.specified_type {
-            specified_type.tree_print(f, depth)?;
-        }
-        self.expression.tree_print(f, depth)
     }
 }
 

@@ -23,8 +23,8 @@ pub trait UseLocally {
     fn use_symbols_of(&mut self, name: &QualifiedName) -> EvalResult<Symbol>;
 }
 
-impl Eval<()> for UseStatement {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<()> {
+impl Eval for UseStatement {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         if !context.is_module() {
             log::trace!("Evaluating use statement: {self}");
             match &self.decl {
@@ -45,6 +45,6 @@ impl Eval<()> for UseStatement {
                 }
             }
         }
-        Ok(())
+        Ok(Value::None)
     }
 }
