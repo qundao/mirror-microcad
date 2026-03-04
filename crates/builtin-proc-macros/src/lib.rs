@@ -140,7 +140,7 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     })
 }
 
-// Represents: x: Scalar = 3.0
+/// Helper struct to parse `parameters` of `builtin_fn` proc macro.
 struct BuiltinParam {
     name: Ident,
     ty: Option<Type>,
@@ -172,21 +172,40 @@ impl Parse for BuiltinParam {
     }
 }
 
+/// The `#[builtin_fn(...)]` attribute is used to define a built-in function in the `builtin` crate. 
+/// 
+/// It automates the boilerplate of parameter definition and documentation.
+/// 
+/// # Example
+/// 
+/// ```rust,ignore
+/// /// Some function
+/// #[builtin_fn(x)]
+/// pub fn foo_function() -> Symbol {
+///     |_params, args, ctx| { ... } 
+/// }
+/// ```
+/// 
+/// The example above will expand to:
+/// 
+/// ```rust,ignore
+/// /// Some function
+/// pub fn foo_function() -> crate::Symbol {
+///     crate::Symbol::new_builtin_fn(
+///         stringify!(foo_function),
+///         vec![parameter!(x)].into_iter(),
+///         |_params, args, ctx| { ... } ,
+///         Some("Some function"),
+///    )
+/// }
+/// ```
 #[proc_macro_attribute]
 pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     use syn::*;
 
+    // Parse builtin_fn attributes.
     let parser = punctuated::Punctuated::<BuiltinParam, Token![,]>::parse_terminated;
     let attrs = parse_macro_input!(attr with parser);
-
-    // Parse the function
-    let input_fn = parse_macro_input!(item as ItemFn);
-
-    let fn_name = &input_fn.sig.ident;
-    let fn_vis = &input_fn.vis;
-    let fn_attrs = &input_fn.attrs;
-    let fn_docs = get_doc_comment(fn_attrs);
-    let fn_body = &input_fn.block; // This is the closure returned by the user
 
     // Generate the parameter! calls
     let params = attrs.iter().map(|p| {
@@ -201,6 +220,14 @@ pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
             (None, None)       => quote! { parameter!(#name_ident) },
         }
     });
+
+    // Parse the function
+    let input_fn = parse_macro_input!(item as ItemFn);
+    let fn_name = &input_fn.sig.ident;
+    let fn_vis = &input_fn.vis;
+    let fn_attrs = &input_fn.attrs;
+    let fn_docs = get_doc_comment(fn_attrs);
+    let fn_body = &input_fn.block; // This is the closure returned by the user
 
     TokenStream::from(quote! {
         #(#fn_attrs)*
