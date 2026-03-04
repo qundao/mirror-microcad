@@ -8,8 +8,8 @@ use microcad_lang::{
     doc::Doc,
     resolve::*,
     syntax::{
-        FunctionDefinition, Identifiable, InitDefinition, ModuleDefinition, SourceFile, Visibility,
-        WorkbenchDefinition,
+        FunctionDefinition, Identifiable, InitDefinition, Initialized, ModuleDefinition,
+        SourceFile, Visibility, WorkbenchDefinition,
     },
 };
 
@@ -41,13 +41,13 @@ pub trait ToMd {
 
 impl ToMd for InitDefinition {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self, fetch_doc(self)))
+        md::Markdown::new(&format!("# {}\n{}", self.signature(), fetch_doc(self)))
     }
 }
 
 impl ToMd for SourceFile {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
+        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 
@@ -55,7 +55,7 @@ impl ToMd for FunctionDefinition {
     fn to_md(&self) -> md::Markdown {
         use microcad_lang::doc::Doc;
         md::Markdown::new(&format!(
-            "# `{}`\n{}",
+            "# {}\n{}",
             self.id(),
             indent_header_lines(self.doc().fetch_lines()).join("\n")
         ))
@@ -64,19 +64,24 @@ impl ToMd for FunctionDefinition {
 
 impl ToMd for ModuleDefinition {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
+        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 
 impl ToMd for WorkbenchDefinition {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
+        let mut md = md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)));
+        self.inits().for_each(|init| {
+            md.nest(init.to_md(), 1);
+        });
+
+        md
     }
 }
 
 impl ToMd for microcad_lang::builtin::Builtin {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
+        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 
@@ -111,28 +116,28 @@ impl ToMd for Symbol {
             }
         }
 
+        use microcad_lang::syntax::WorkbenchKind;
+        fn symbol_list<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
+        where
+            P: FnMut(&Symbol) -> bool,
+        {
+            let symbols: Vec<_> = symbol
+                .iter()
+                .filter(|symbol| symbol.is_public())
+                .filter(p)
+                .collect();
+            if !symbols.is_empty() {
+                md.add_section(Section {
+                    heading: heading.to_string(),
+                    level: 2,
+                    content: symbols.iter().map(symbol_one_line_item).collect(),
+                });
+            }
+        }
+
         let mut md = self.with_def(|def| def.to_md());
 
         {
-            use microcad_lang::syntax::WorkbenchKind;
-            fn symbol_list<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
-            where
-                P: FnMut(&Symbol) -> bool,
-            {
-                let symbols: Vec<_> = symbol
-                    .iter()
-                    .filter(|symbol| symbol.is_public())
-                    .filter(p)
-                    .collect();
-                if !symbols.is_empty() {
-                    md.add_section(Section {
-                        heading: heading.to_string(),
-                        level: 2,
-                        content: symbols.iter().map(symbol_one_line_item).collect(),
-                    });
-                }
-            }
-
             // Generate list of sub-modules
             symbol_list(self, &mut md, "Sub-modules", |symbol| {
                 symbol
