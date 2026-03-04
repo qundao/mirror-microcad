@@ -32,44 +32,36 @@ fn generate_arguments(
     })
 }
 
-fn get_doc_comment(attrs: &[Attribute]) -> String {
-    attrs.iter().filter_map(|attr| 
-        // Parse the meta of the attribute
-        if attr.path().is_ident("doc") 
-            && let Meta::NameValue(nv) = &attr.meta
-            && let Expr::Lit(ExprLit{ lit: Lit::Str(lit_str), ..}) = &nv.value {
-            // Return the string value, e.g., "Doc test"
-            Some(String::from(lit_str.value().trim()))
-        } else {
-            None
-        }
-    ).collect::<Vec<_>>().join("\n")
-}
-
 fn generate_help(input: &DeriveInput) -> String {
     fn type_to_string(ty: &Type) -> String {
         quote!(#ty).to_string()
     }
 
-    let mut help = get_doc_comment(&input.attrs);
+    let mut help = crate::get_doc_comment(&input.attrs);
     let args = match &input.data {
         Data::Struct(ds) => match &ds.fields {
             Fields::Named(fields_named) => {
                 help += "\n\n# Arguments\n";
-                fields_named.named.iter().map(|field| 
-                    format!("- `{name}: {ty}`: {doc}", 
-                        name = field.ident.as_ref().expect("Ident"),
-                        ty = type_to_string(&field.ty),
-                        doc = get_doc_comment(&field.attrs)
-                    )
-                ).collect()
-            },
-            _ => vec![]
-        }
-        _ => vec![]
-    }.join("\n");
+                fields_named
+                    .named
+                    .iter()
+                    .map(|field| {
+                        format!(
+                            "- `{name}: {ty}`: {doc}",
+                            name = field.ident.as_ref().expect("Ident"),
+                            ty = type_to_string(&field.ty),
+                            doc = crate::get_doc_comment(&field.attrs)
+                        )
+                    })
+                    .collect()
+            }
+            _ => vec![],
+        },
+        _ => vec![],
+    }
+    .join("\n");
     help += args.as_str();
-    
+
     help
 }
 
@@ -81,7 +73,7 @@ pub(crate) fn derive_workbench_definition(
     let input = parse_macro_input!(input as DeriveInput);
     let name = input.ident.clone();
 
-    use convert_case::{Casing, Case};
+    use convert_case::{Case, Casing};
 
     // Operations are lower case.
     let id = if kind == "Operation" {
