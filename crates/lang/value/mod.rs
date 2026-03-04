@@ -33,7 +33,7 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{model::*, rc::*, src_ref::SrcRef, syntax::*, ty::*};
+use crate::{model::*, src_ref::SrcRef, syntax::*, ty::*};
 use microcad_core::*;
 
 pub(crate) type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
@@ -62,8 +62,6 @@ pub enum Value {
     Model(Model),
     /// Return value
     Return(Box<Value>),
-    /// Unevaluated const expression.
-    ConstExpression(Rc<Expression>),
     /// for assert_valid() and assert_invalid()
     Target(Target),
 }
@@ -180,7 +178,7 @@ impl PartialOrd for Value {
 impl crate::ty::Ty for Value {
     fn ty(&self) -> Type {
         match self {
-            Value::None | Value::ConstExpression(_) => Type::Invalid,
+            Value::None => Type::Invalid,
             Value::Integer(_) => Type::Integer,
             Value::Quantity(q) => q.ty(),
             Value::Bool(_) => Type::Bool,
@@ -402,7 +400,6 @@ impl std::fmt::Display for Value {
             Value::Matrix(m) => write!(f, "{m}"),
             Value::Model(n) => write!(f, "{n}"),
             Value::Return(r) => write!(f, "{r}"),
-            Value::ConstExpression(e) => write!(f, "{e}"),
             Value::Target(target) => write!(f, "{target}"),
         }
     }
@@ -421,7 +418,6 @@ impl std::fmt::Debug for Value {
             Value::Matrix(m) => write!(f, "{m:?}"),
             Value::Model(n) => write!(f, "\n {n:?}"),
             Value::Return(r) => write!(f, "->{r:?}"),
-            Value::ConstExpression(e) => write!(f, "{e:?}"),
             Value::Target(target) => write!(f, "{target:?}"),
         }
     }
@@ -440,7 +436,6 @@ impl std::hash::Hash for Value {
             Value::Matrix(matrix) => matrix.hash(state),
             Value::Model(model) => model.hash(state),
             Value::Return(value) => value.hash(state),
-            Value::ConstExpression(expression) => expression.to_string().hash(state), // TODO: Is this correct?
             Value::Target(target) => target.hash(state),
         }
     }
