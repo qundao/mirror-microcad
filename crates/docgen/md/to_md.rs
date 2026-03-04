@@ -53,12 +53,7 @@ impl ToMd for SourceFile {
 
 impl ToMd for FunctionDefinition {
     fn to_md(&self) -> md::Markdown {
-        use microcad_lang::doc::Doc;
-        md::Markdown::new(&format!(
-            "# {}\n{}",
-            self.id(),
-            indent_header_lines(self.doc().fetch_lines()).join("\n")
-        ))
+        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 

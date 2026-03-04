@@ -8,19 +8,40 @@ mod section;
 mod to_md;
 
 pub use markdown::Markdown;
-use microcad_builtin::Symbol;
 pub use section::Section;
 pub use to_md::ToMd;
 
 use crate::DocGen;
+use microcad_builtin::Symbol;
+use microcad_lang::resolve::{FullyQualify, SymbolDef};
 
-/// Markdown generator.
+/// Markdown generator that generates a markdown documentation file for each source file.
 pub struct Md {
-    pub _output_file: Option<std::path::PathBuf>,
+    pub output_path: Option<std::path::PathBuf>,
+}
+
+impl Md {
+    /// Return path
+    pub fn symbol_md_file_path(&self, symbol: &Symbol) -> std::path::PathBuf {
+        let path: std::path::PathBuf = symbol
+            .full_name()
+            .iter()
+            .skip(1)
+            .map(|id| id.to_string())
+            .collect();
+        self.output_path.clone().unwrap_or_default().join(path)
+    }
+
+    pub fn write_md_file(&self, symbol: &Symbol) -> std::io::Result<()> {
+        symbol.to_md().write(self.symbol_md_file_path(symbol))
+    }
 }
 
 impl DocGen for Md {
-    fn doc_gen(&self, _symbol: &Symbol) -> std::io::Result<()> {
-        todo!()
+    fn doc_gen(&self, symbol: &Symbol) -> std::io::Result<()> {
+        symbol
+            .riter()
+            .filter(|symbol| symbol.with_def(|def| matches!(def, SymbolDef::SourceFile(_))))
+            .try_for_each(|symbol| self.write_md_file(&symbol))
     }
 }
