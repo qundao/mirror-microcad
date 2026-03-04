@@ -5,6 +5,7 @@
 
 use microcad_builtin::Symbol;
 use microcad_docgen::*;
+use microcad_lang::syntax::Identifier;
 
 use crate::{
     Cli,
@@ -56,7 +57,12 @@ impl Doc {
         }
 
         let context = self.resolve.run(cli)?;
-        Ok(context.root)
+        let symbol = context
+            .root
+            .get_child(&Identifier::no_ref("mod")) // FIXME. This symbol should have same name as its parent directory (e.g. `std`)
+            .expect("Symbol");
+
+        Ok(symbol)
     }
 }
 
