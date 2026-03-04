@@ -151,10 +151,9 @@ impl MdBook {
             let path = &self.path.join("src").join(Self::symbol_path(&symbol));
             std::fs::create_dir_all(path.parent().expect("A parent"))?;
             symbol.with_def(|def| match def {
-                SymbolDef::Root
-                | SymbolDef::SourceFile(_)
-                | SymbolDef::Module(_)
-                | SymbolDef::Workbench(_) => symbol.to_md().write(path),
+                SymbolDef::SourceFile(_) | SymbolDef::Module(_) | SymbolDef::Workbench(_) => {
+                    symbol.to_md().write(path)
+                }
                 SymbolDef::Builtin(builtin) => match &builtin.kind {
                     BuiltinKind::Function => Ok(()),
                     BuiltinKind::Workbench(_) => symbol.to_md().write(path),
