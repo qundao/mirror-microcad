@@ -8,7 +8,7 @@ mod derive;
 use derive::derive_workbench_definition;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::*;
+use syn::{parse::{Parse, ParseStream}, *};
 
 /// Get all doc comments as concetenated string.
 fn get_doc_comment(attrs: &[Attribute]) -> String {
@@ -140,11 +140,43 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     })
 }
 
+// Represents: x: Scalar = 3.0
+struct BuiltinParam {
+    name: Ident,
+    ty: Option<Type>,
+    default_value: Option<Expr>,
+}
+
+impl Parse for BuiltinParam {
+    fn parse(input: ParseStream) -> Result<Self> {
+        // 1. Parse the mandatory name (e.g., 'x')
+        let name: Ident = input.parse()?;
+
+        // 2. Look for an optional ':' followed by a Type
+        let ty = if input.peek(Token![:]) {
+            let _colon: Token![:] = input.parse()?;
+            Some(input.parse::<Type>()?)
+        } else {
+            None
+        };
+
+        // 3. Look for an optional '=' followed by an Expression
+        let default_value = if input.peek(Token![=]) {
+            let _eq: Token![=] = input.parse()?;
+            Some(input.parse::<Expr>()?)
+        } else {
+            None
+        };
+
+        Ok(BuiltinParam { name, ty, default_value })
+    }
+}
+
 #[proc_macro_attribute]
 pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     use syn::*;
 
-    let parser = punctuated::Punctuated::<Meta, Token![,]>::parse_terminated;
+    let parser = punctuated::Punctuated::<BuiltinParam, Token![,]>::parse_terminated;
     let attrs = parse_macro_input!(attr with parser);
 
     // Parse the function
@@ -156,13 +188,17 @@ pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     let fn_docs = get_doc_comment(fn_attrs);
     let fn_body = &input_fn.block; // This is the closure returned by the user
 
-    // Convert attribute arguments into parameter!() calls
-    let params = attrs.iter().map(|arg| {
-        if let Meta::Path(path) = &arg {
-            let ident = path.get_ident().unwrap();
-            quote! { parameter!(#ident) }
-        } else {
-            panic!("Expected parameter name in builtin_fn attribute");
+    // Generate the parameter! calls
+    let params = attrs.iter().map(|p| {
+        let name_ident = &p.name;
+        
+        // Handle optional types/defaults in your parameter! macro
+        // Assuming your parameter! macro supports these fields:
+        match (&p.ty, &p.default_value) {
+            (Some(t), Some(d)) => quote! { parameter!(#name_ident: #t = #d) },
+            (Some(t), None)    => quote! { parameter!(#name_ident: #t) },
+            (None, Some(d))    => quote! { parameter!(#name_ident = #d) },
+            (None, None)       => quote! { parameter!(#name_ident) },
         }
     });
 

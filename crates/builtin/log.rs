@@ -7,76 +7,61 @@ use microcad_builtin_proc_macros::builtin_mod;
 #[builtin_mod]
 #[allow(clippy::module_inception)]
 pub mod log {
-    use microcad_lang::{diag::*, eval::*, parameter, resolve::*, value::*};
+    use microcad_builtin_proc_macros::builtin_fn;
+    use microcad_lang::{diag::*, eval::*, parameter, value::*};
 
     /// Log error.
+    #[builtin_fn(x)]
     pub fn error() -> Symbol {
-        Symbol::new_builtin_fn(
-            "error",
-            [parameter!(x)].into_iter(),
-            &|_, args, context| {
-                args.iter()
-                    .try_for_each(|(_, arg)| -> Result<(), DiagError> {
-                        context.error(
-                            args,
-                            EvalError::BuiltinError(format!("{value}", value = arg.value)),
-                        )
-                    })?;
-                Ok(Value::None)
-            },
-            None,
-        )
+        |_, args, context| {
+            args.iter()
+                .try_for_each(|(_, arg)| -> Result<(), DiagError> {
+                    context.error(
+                        args,
+                        EvalError::BuiltinError(format!("{value}", value = arg.value)),
+                    )
+                })?;
+            Ok(Value::None)
+        }
     }
 
     /// Log warning.
+    #[builtin_fn(x)]
     pub fn warning() -> Symbol {
-        Symbol::new_builtin_fn(
-            "warning",
-            [parameter!(x)].into_iter(),
-            &|_, args, context| {
-                args.iter()
-                    .try_for_each(|(_, arg)| -> Result<(), DiagError> {
-                        context.warning(
-                            args,
-                            EvalError::BuiltinError(format!("{value}", value = arg.value)),
-                        )
-                    })?;
-                Ok(Value::None)
-            },
-            None,
-        )
+        |_, args, context| {
+            args.iter()
+                .try_for_each(|(_, arg)| -> Result<(), DiagError> {
+                    context.warning(
+                        args,
+                        EvalError::BuiltinError(format!("{value}", value = arg.value)),
+                    )
+                })?;
+            Ok(Value::None)
+        }
     }
 
     /// Log info message.
+    #[builtin_fn(x)]
     pub fn info() -> Symbol {
-        Symbol::new_builtin_fn(
-            "info",
-            [parameter!(x)].into_iter(),
-            &|_, args, context| {
-                args.iter()
-                    .try_for_each(|(_, arg)| -> Result<(), EvalError> {
-                        context.info(args, format!("{value}", value = arg.value));
-                        Ok(())
-                    })?;
-                Ok(Value::None)
-            },
-            None,
-        )
+        |_, args, context| {
+            args.iter()
+                .try_for_each(|(_, arg)| -> Result<(), EvalError> {
+                    context.info(args, format!("{value}", value = arg.value));
+                    Ok(())
+                })?;
+            Ok(Value::None)
+        }
     }
 
     /// Log todo message. Will throw an error when reached.
+    #[builtin_fn(x)]
     pub fn todo() -> Symbol {
-        Symbol::new_builtin_fn(
-            "todo",
-            [parameter!(x)].into_iter(),
-            &|_, args, context| {
-                args.iter()
-                    .try_for_each(|(_, arg)| -> Result<(), DiagError> {
-                        context.error(args, EvalError::Todo(format!("{value}", value = arg.value)))
-                    })?;
-                Ok(Value::None)
-            },
-            None,
-        )
+        |_, args, context| {
+            args.iter()
+                .try_for_each(|(_, arg)| -> Result<(), DiagError> {
+                    context.error(args, EvalError::Todo(format!("{value}", value = arg.value)))
+                })?;
+            Ok(Value::None)
+        }
     }
 }

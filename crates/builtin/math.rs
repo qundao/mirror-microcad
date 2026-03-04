@@ -241,54 +241,36 @@ pub mod math {
     }
 
     /// Rotate around X, Y, Z (in that order).
+    #[builtin_fn(x: Angle, y: Angle, z: Angle)]
     pub fn rotate_xyz() -> Symbol {
-        Symbol::new_builtin_fn(
-            "rotate_xyz",
-            [
-                parameter!(x: Angle),
-                parameter!(y: Angle),
-                parameter!(z: Angle),
-            ]
-            .into_iter(),
-            &|params, args, ctx| match ArgumentMatch::find_match(args, params) {
-                Ok(args) => {
-                    let (x_matrix, y_matrix, z_matrix) = rotation_matrices_xyz(&args);
-                    Ok(Value::Matrix(Box::new(Matrix::Matrix3(
-                        x_matrix * y_matrix * z_matrix,
-                    ))))
-                }
-                Err(err) => {
-                    ctx.error(args, err)?;
-                    Ok(Value::None)
-                }
-            },
-            None,
-        )
+        |params, args, ctx| match ArgumentMatch::find_match(args, params) {
+            Ok(args) => {
+                let (x_matrix, y_matrix, z_matrix) = rotation_matrices_xyz(&args);
+                Ok(Value::Matrix(Box::new(Matrix::Matrix3(
+                    x_matrix * y_matrix * z_matrix,
+                ))))
+            }
+            Err(err) => {
+                ctx.error(args, err)?;
+                Ok(Value::None)
+            }
+        }
     }
 
     /// Rotate around Z, Y, X (in that order).
+    #[builtin_fn(x: Angle, y: Angle, z: Angle)]
     pub fn rotate_zyx() -> Symbol {
-        Symbol::new_builtin_fn(
-            "rotate_zyx",
-            [
-                parameter!(x: Angle),
-                parameter!(y: Angle),
-                parameter!(z: Angle),
-            ]
-            .into_iter(),
-            &|params, args, ctx| match ArgumentMatch::find_match(args, params) {
-                Ok(args) => {
-                    let (x_matrix, y_matrix, z_matrix) = rotation_matrices_xyz(&args);
-                    Ok(Value::Matrix(Box::new(Matrix::Matrix3(
-                        z_matrix * y_matrix * x_matrix,
-                    ))))
-                }
-                Err(err) => {
-                    ctx.error(args, err)?;
-                    Ok(Value::None)
-                }
-            },
-            None,
-        )
+        |params, args, ctx| match ArgumentMatch::find_match(args, params) {
+            Ok(args) => {
+                let (x_matrix, y_matrix, z_matrix) = rotation_matrices_xyz(&args);
+                Ok(Value::Matrix(Box::new(Matrix::Matrix3(
+                    z_matrix * y_matrix * x_matrix,
+                ))))
+            }
+            Err(err) => {
+                ctx.error(args, err)?;
+                Ok(Value::None)
+            }
+        }
     }
 }
