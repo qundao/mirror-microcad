@@ -877,20 +877,6 @@ fn parser<'tokens>()
             .labelled("if statement")
             .boxed();
 
-        let doc_statement = select_ref! {
-            Token::DocComment(comment) => comment,
-        }
-        .repeated()
-        .at_least(1)
-        .collect::<Vec<_>>()
-        .map_with(|lines, e| Comment {
-            span: e.span(),
-            lines: lines.into_iter().map(|s| s.as_ref().into()).collect(),
-        })
-        .labelled("doc-comment")
-        .map(Statement::Comment)
-        .boxed();
-
         let inner_doc_statement = select_ref! {
             Token::InnerDocComment(comment) => String::from(comment.as_ref()),
         }
@@ -950,7 +936,6 @@ fn parser<'tokens>()
 
         let without_semi = function
             .or(inner_doc_statement)
-            .or(doc_statement)
             .or(init)
             .or(workbench)
             .or(module)

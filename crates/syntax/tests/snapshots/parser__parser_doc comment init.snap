@@ -12,23 +12,22 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Comment(
-                    Comment {
-                        span: 0..15,
-                        lines: [
-                            "/// Doc comment",
-                        ],
-                    },
-                ),
                 Init(
                     InitDefinition {
-                        span: 20..28,
+                        span: 0..28,
                         keyword_span: 20..24,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
                         },
-                        doc: None,
+                        doc: Some(
+                            Comment {
+                                span: 0..20,
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            },
+                        ),
                         arguments: ArgumentsDefinition {
                             span: 25..25,
                             extras: ItemExtras {
