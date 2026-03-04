@@ -9,7 +9,7 @@ use microcad_lang::{
     resolve::*,
     syntax::{
         FunctionDefinition, Identifiable, InitDefinition, Initialized, ModuleDefinition,
-        SourceFile, Visibility, WorkbenchDefinition,
+        ParameterList, SourceFile, Visibility, WorkbenchDefinition,
     },
 };
 
@@ -68,9 +68,27 @@ impl ToMd for ModuleDefinition {
     }
 }
 
+impl ToMd for ParameterList {
+    fn to_md(&self) -> md::Markdown {
+        if self.is_empty() {
+            md::Markdown::default()
+        } else {
+            md::Markdown::new(&format!(
+                "# Parameters\n{}",
+                self.iter()
+                    .map(|param| format!("- {}", param.to_string()))
+                    .collect::<Vec<String>>()
+                    .join("\n")
+            ))
+        }
+    }
+}
+
 impl ToMd for WorkbenchDefinition {
     fn to_md(&self) -> md::Markdown {
         let mut md = md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)));
+        md.nest(self.plan.to_md(), 1);
+
         self.inits().for_each(|init| {
             md.nest(init.to_md(), 1);
         });
