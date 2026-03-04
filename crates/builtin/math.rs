@@ -40,6 +40,7 @@ pub(crate) fn orient_z_to(target: Vec3) -> Mat3 {
 #[allow(clippy::module_inception)]
 pub mod math {
     use cgmath::SquareMatrix;
+    use microcad_builtin_proc_macros::builtin_fn;
     use microcad_core::{Integer, Mat3, Scalar, Vec3};
     use microcad_lang::{diag::*, eval::*, parameter, resolve::*, ty::*, value::*};
 
@@ -56,81 +57,68 @@ pub mod math {
     pub const Z: Vec3 = Vec3::new(0.0, 0.0, 1.0);
 
     /// Absolute value abs(x)
+    #[builtin_fn(x)]
     pub fn abs() -> Symbol {
-        Symbol::new_builtin_fn(
-            "abs",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| {
-                let (_, arg) = args.get_single()?;
-                Ok(match &arg.value {
-                    Value::Integer(i) => Value::Integer(i.abs()),
-                    Value::Quantity(q) => {
-                        Value::Quantity(Quantity::new(q.value.abs(), q.quantity_type.clone()))
-                    }
-                    value => {
-                        ctx.error(
-                            arg,
-                            EvalError::BuiltinError(format!("Cannot calculate abs({value})")),
-                        )?;
-                        Value::None
-                    }
-                })
-            },
-            None,
-        )
+        |_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::Integer(i) => Value::Integer(i.abs()),
+                Value::Quantity(q) => {
+                    Value::Quantity(Quantity::new(q.value.abs(), q.quantity_type.clone()))
+                }
+                value => {
+                    ctx.error(
+                        arg,
+                        EvalError::BuiltinError(format!("Cannot calculate abs({value})")),
+                    )?;
+                    Value::None
+                }
+            })
+        }
     }
 
-    /// Square root sqrt(x).
+    /// Calculate the square root `sqrt(x)`.
+    #[builtin_fn(x)]
     pub fn sqrt() -> Symbol {
-        Symbol::new_builtin_fn(
-            "sqrt",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| {
-                let (_, arg) = args.get_single()?;
-                Ok(match &arg.value {
-                    Value::Integer(i) => (*i as Scalar).sqrt().into(),
-                    Value::Quantity(q) => {
-                        Value::Quantity(Quantity::new(q.value.sqrt(), q.quantity_type.clone()))
-                    }
-                    value => {
-                        ctx.error(
-                            arg,
-                            EvalError::BuiltinError(format!("Cannot calculate sqrt({value})")),
-                        )?;
-                        Value::None
-                    }
-                })
-            },
-            None,
-        )
+        |_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::Integer(i) => (*i as Scalar).sqrt().into(),
+                Value::Quantity(q) => {
+                    Value::Quantity(Quantity::new(q.value.sqrt(), q.quantity_type.clone()))
+                }
+                value => {
+                    ctx.error(
+                        arg,
+                        EvalError::BuiltinError(format!("Cannot calculate sqrt({value})")),
+                    )?;
+                    Value::None
+                }
+            })
+        }
     }
 
     /// Cast some Quantity into an Integer.
+    #[builtin_fn(x)]
     pub fn int() -> Symbol {
-        Symbol::new_builtin_fn(
-            "int",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| {
-                let (_, arg) = args.get_single()?;
-                Ok(match &arg.value {
-                    Value::Integer(i) => Value::Integer(*i),
-                    Value::Quantity(q) => Value::Integer(q.value.floor() as Integer),
-                    value => {
-                        ctx.error(
-                            arg,
-                            EvalError::BuiltinError(format!("Cannot calculate int({value})")),
-                        )?;
-                        Value::None
-                    }
-                })
-            },
-            None,
-        )
+        |_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::Integer(i) => Value::Integer(*i),
+                Value::Quantity(q) => Value::Integer(q.value.floor() as Integer),
+                value => {
+                    ctx.error(
+                        arg,
+                        EvalError::BuiltinError(format!("Cannot calculate int({value})")),
+                    )?;
+                    Value::None
+                }
+            })
+        }
     }
 
     /// Implementation for a builtin trigonometric function.
     fn trigonometric(
-        name: &str,
         args: &ArgumentValueList,
         ctx: &mut EvalContext,
         f: impl FnOnce(f64) -> f64,
@@ -149,7 +137,9 @@ pub mod math {
             value => {
                 ctx.error(
                     arg,
-                    EvalError::BuiltinError(format!("Cannot calculate {name}({value})")),
+                    EvalError::BuiltinError(format!(
+                        "Value must be a scalar, angle or integer. Got {value}"
+                    )),
                 )?;
                 Value::None
             }
@@ -157,63 +147,39 @@ pub mod math {
     }
 
     /// Calculate cos(x).
+    #[builtin_fn(x)]
     pub fn cos() -> Symbol {
-        Symbol::new_builtin_fn(
-            "cos",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| trigonometric("cos", args, ctx, |v| v.cos()),
-            None,
-        )
+        |_params, args, ctx| trigonometric(args, ctx, |v| v.cos())
     }
 
     /// Calculate sin(x).
+    #[builtin_fn(x)]
     pub fn sin() -> Symbol {
-        Symbol::new_builtin_fn(
-            "sin",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| trigonometric("sin", args, ctx, |v| v.sin()),
-            None,
-        )
+        |_params, args, ctx| trigonometric(args, ctx, |v| v.sin())
     }
 
     /// Calculate tan(x).
+    #[builtin_fn(x)]
     pub fn tan() -> Symbol {
-        Symbol::new_builtin_fn(
-            "tan",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| trigonometric("tan", args, ctx, |v| v.tan()),
-            None,
-        )
+        |_params, args, ctx| trigonometric(args, ctx, |v| v.tan())
     }
 
     /// Calculate acos(x).
+    #[builtin_fn(x)]
     pub fn acos() -> Symbol {
-        Symbol::new_builtin_fn(
-            "acos",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| trigonometric("acos", args, ctx, |v| v.acos()),
-            None,
-        )
+        |_params, args, ctx| trigonometric(args, ctx, |v| v.acos())
     }
 
     /// Calculate asin(x).
+    #[builtin_fn(x)]
     pub fn asin() -> Symbol {
-        Symbol::new_builtin_fn(
-            "asin",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| trigonometric("asin", args, ctx, |v| v.asin()),
-            None,
-        )
+        |_params, args, ctx| trigonometric(args, ctx, |v| v.asin())
     }
 
     /// Calculate atan(x).
+    #[builtin_fn(x)]
     pub fn atan() -> Symbol {
-        Symbol::new_builtin_fn(
-            "atan",
-            [parameter!(x)].into_iter(),
-            &|_params, args, ctx| trigonometric("atan", args, ctx, |v| v.atan()),
-            None,
-        )
+        |_params, args, ctx| trigonometric(args, ctx, |v| v.atan())
     }
 
     /// Helper function to get an angle from a field in an argument list.
