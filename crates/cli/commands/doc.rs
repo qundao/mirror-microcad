@@ -37,7 +37,7 @@ impl Doc {
 
         match name.as_str() {
             "md" => Ok(Box::new(Md {
-                _output_file: self.output.clone(),
+                output_path: self.output.clone(),
             })),
             "mdbook" => Ok(Box::new(MdBook {
                 path: self.output.clone().unwrap_or_default(),
@@ -57,10 +57,9 @@ impl Doc {
         }
 
         let context = self.resolve.run(cli)?;
-        let symbol = context
-            .root
-            .get_child(&Identifier::no_ref("mod")) // FIXME. This symbol should have same name as its parent directory (e.g. `std`)
-            .expect("Symbol");
+        let symbol = context.root;
+        //.get_child(&Identifier::no_ref("mod")) // FIXME. This symbol should have same name as its parent directory (e.g. `std`)
+        //.expect("Symbol");
 
         Ok(symbol)
     }
