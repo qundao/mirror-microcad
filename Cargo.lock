@@ -5336,6 +5336,7 @@ version = "0.3.0"
 dependencies = [
  "clap",
  "derive_more 2.1.1",
+ "log",
  "microcad-builtin",
  "microcad-lang",
  "serde",
