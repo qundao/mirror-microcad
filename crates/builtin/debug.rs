@@ -13,7 +13,6 @@ pub mod debug {
         diag::PushDiag,
         eval::{ArgumentMatch, EvalError},
         parameter,
-        resolve::Symbol,
         value::{Target, Value},
     };
 

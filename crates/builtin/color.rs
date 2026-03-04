@@ -11,7 +11,7 @@ use microcad_builtin_proc_macros::builtin_mod;
 pub mod color {
     use microcad_builtin_proc_macros::builtin_fn;
     use microcad_core::{Scalar, color::Color};
-    use microcad_lang::{parameter, resolve::*, value::*};
+    use microcad_lang::{parameter, value::*};
 
     /// Red color.
     pub const RED: Color = Color::RED;
