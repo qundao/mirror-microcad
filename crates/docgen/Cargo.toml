@@ -20,6 +20,7 @@ path = "lib.rs"
 toml = { version = "0.9", features = ["serde"] }
 serde = "1.0"
 thiserror = "2.0"
+log = "0.4"
 clap = { version = "4", features = ["derive"] }
 derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
 
