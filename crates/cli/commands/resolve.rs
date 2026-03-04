@@ -67,9 +67,10 @@ impl RunCommand<ResolveContext> for Resolve {
 
         if cli.is_resolve() {
             if context.has_errors() {
-                eprint!("{}", context.diagnosis());
+                eprintln!("Resolved with errors!");
+            } else {
+                eprintln!("Resolved successfully!");
             }
-            eprintln!("Resolved successfully!");
         }
 
         Ok(context)

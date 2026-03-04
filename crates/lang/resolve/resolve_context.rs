@@ -433,12 +433,13 @@ impl std::fmt::Display for ResolveContext {
                 )?;
             }
         } else {
-            writeln!(f, "Resolved symbols:\n{}", self.root)?;
+            writeln!(f, "Resolved symbols:")?;
+            self.root.tree_print(f, TreeState::new_display())?;
         }
         if self.has_errors() {
             writeln!(
                 f,
-                "{err} error(s) and {warn} warning(s) so far:\n{diag}",
+                "{diag}{err} error(s) and {warn} warning(s) so far.",
                 err = self.error_count(),
                 warn = self.warning_count(),
                 diag = self.diagnosis()
