@@ -82,8 +82,8 @@ impl RunCommand<()> for Doc {
     fn run(&self, _cli: &Cli) -> miette::Result<()> {
         let generator = self.generator()?;
         let symbol = self.symbol()?;
-        Ok(generator
+        generator
             .doc_gen(&symbol)
-            .map_err(|err| miette::miette!("{err}"))?)
+            .map_err(|err| miette::miette!("{err}"))
     }
 }

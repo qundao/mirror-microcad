@@ -41,7 +41,7 @@ pub trait ToMd {
 
 impl ToMd for InitDefinition {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# `{}`\n{}", self.to_string(), fetch_doc(self)))
+        md::Markdown::new(&format!("# `{}`\n{}", self, fetch_doc(self)))
     }
 }
 
@@ -132,30 +132,22 @@ impl ToMd for Symbol {
                     md.add_section(Section {
                         heading: heading.to_string(),
                         level: 2,
-                        content: symbols
-                            .iter()
-                            .map(|symbol| symbol_one_line_item(symbol))
-                            .collect(),
+                        content: symbols.iter().map(symbol_one_line_item).collect(),
                     });
                 }
             }
 
             // Generate list of sub-modules
             symbol_list(self, &mut md, "Sub-modules", |symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Module(_) | SymbolDef::SourceFile(_) => true,
-                    _ => false,
-                })
+                symbol
+                    .with_def(|def| matches!(def, SymbolDef::Module(_) | SymbolDef::SourceFile(_)))
             });
 
             // Generate list of sketches
             symbol_list(self, &mut md, "Sketches", |symbol| {
                 symbol.with_def(|def| match def {
                     SymbolDef::Workbench(workbench_definition) => {
-                        match &workbench_definition.kind.value {
-                            WorkbenchKind::Sketch => true,
-                            _ => false,
-                        }
+                        matches!(&workbench_definition.kind.value, WorkbenchKind::Sketch)
                     }
                     _ => false,
                 })
@@ -165,10 +157,7 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Parts", |symbol| {
                 symbol.with_def(|def| match def {
                     SymbolDef::Workbench(workbench_definition) => {
-                        match &workbench_definition.kind.value {
-                            WorkbenchKind::Part => true,
-                            _ => false,
-                        }
+                        matches!(&workbench_definition.kind.value, WorkbenchKind::Part)
                     }
                     _ => false,
                 })
@@ -178,10 +167,7 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Operations", |symbol| {
                 symbol.with_def(|def| match def {
                     SymbolDef::Workbench(workbench_definition) => {
-                        match &workbench_definition.kind.value {
-                            WorkbenchKind::Operation => true,
-                            _ => false,
-                        }
+                        matches!(&workbench_definition.kind.value, WorkbenchKind::Operation)
                     }
                     _ => false,
                 })
@@ -191,10 +177,10 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in 2D primitives", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => match &builtin.kind {
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive2D) => true,
-                            _ => false,
-                        },
+                        SymbolDef::Builtin(builtin) => matches!(
+                            &builtin.kind,
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive2D)
+                        ),
                         _ => false,
                     }
                 })
@@ -204,10 +190,10 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in 3D primitives", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => match &builtin.kind {
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive3D) => true,
-                            _ => false,
-                        },
+                        SymbolDef::Builtin(builtin) => matches!(
+                            &builtin.kind,
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive3D)
+                        ),
                         _ => false,
                     }
                 })
@@ -217,10 +203,10 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in operations", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => match &builtin.kind {
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Operation) => true,
-                            _ => false,
-                        },
+                        SymbolDef::Builtin(builtin) => matches!(
+                            &builtin.kind,
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Operation)
+                        ),
                         _ => false,
                     }
                 })
@@ -230,10 +216,10 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in transformations", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => match &builtin.kind {
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Transform) => true,
-                            _ => false,
-                        },
+                        SymbolDef::Builtin(builtin) => matches!(
+                            &builtin.kind,
+                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Transform)
+                        ),
                         _ => false,
                     }
                 })
@@ -266,10 +252,7 @@ impl ToMd for Symbol {
             // Built-in functions
             inline_symbol_md(self, &mut md, "Built-in functions", |symbol| {
                 symbol.with_def(|def| match def {
-                    SymbolDef::Builtin(builtin) => match builtin.kind {
-                        BuiltinKind::Function => true,
-                        _ => false,
-                    },
+                    SymbolDef::Builtin(builtin) => matches!(builtin.kind, BuiltinKind::Function),
                     _ => false,
                 })
             });
@@ -280,11 +263,8 @@ impl ToMd for Symbol {
                     .iter()
                     .filter_map(|symbol| {
                         symbol.with_def(|def| match def {
-                            SymbolDef::Constant(visibility, identifier, value) => {
-                                match visibility {
-                                    Visibility::Public => Some((identifier.clone(), value.clone())),
-                                    _ => None,
-                                }
+                            SymbolDef::Constant(Visibility::Public, identifier, value) => {
+                                Some((identifier.clone(), value.clone()))
                             }
                             _ => None,
                         })
@@ -309,10 +289,9 @@ impl ToMd for Symbol {
                     .iter()
                     .filter_map(|symbol| {
                         symbol.with_def(|def| match def {
-                            SymbolDef::Alias(visibility, identifier, name) => match visibility {
-                                Visibility::Public => Some((identifier.clone(), name.clone())),
-                                _ => None,
-                            },
+                            SymbolDef::Alias(Visibility::Public, identifier, name) => {
+                                Some((identifier.clone(), name.clone()))
+                            }
                             _ => None,
                         })
                     })

@@ -37,7 +37,7 @@ impl MdBook {
     /// Generate the toml file for the book
     fn write_book_toml(&self) -> std::io::Result<()> {
         let mut file = std::fs::File::create(self.path.join("book.toml"))?;
-        file.write(self.generate_book_toml_string().as_bytes())?;
+        file.write_all(self.generate_book_toml_string().as_bytes())?;
         Ok(())
     }
 
@@ -121,10 +121,9 @@ impl MdBook {
             .filter(|symbol| {
                 symbol.with_def(|def| match def {
                     SymbolDef::Workbench(_) => true,
-                    SymbolDef::Builtin(builtin) => match &builtin.kind {
-                        BuiltinKind::Workbench(_) => true,
-                        _ => false,
-                    },
+                    SymbolDef::Builtin(builtin) => {
+                        matches!(&builtin.kind, BuiltinKind::Workbench(_))
+                    }
                     _ => false,
                 })
             })
@@ -150,7 +149,7 @@ impl MdBook {
     fn write_symbol(&self, symbol: &Symbol) -> std::io::Result<()> {
         symbol.riter().try_for_each(|symbol| {
             let path = &self.path.join("src").join(Self::symbol_path(&symbol));
-            std::fs::create_dir_all(&path.parent().expect("A parent"))?;
+            std::fs::create_dir_all(path.parent().expect("A parent"))?;
             symbol.with_def(|def| match def {
                 SymbolDef::Root
                 | SymbolDef::SourceFile(_)
@@ -175,15 +174,15 @@ impl MdBook {
         // 3. Call generate_summary. We map the fmt::Error to an io::Error.
 
         self.generate_summary(&mut buffer, symbol)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-        file.write(buffer.as_bytes())?;
+            .map_err(std::io::Error::other)?;
+        file.write_all(buffer.as_bytes())?;
         Ok(())
     }
 }
 
 impl DocGen for MdBook {
     fn doc_gen(&self, symbol: &microcad_lang::resolve::Symbol) -> std::io::Result<()> {
-        std::fs::create_dir_all(&self.path.join("src"))?;
+        std::fs::create_dir_all(self.path.join("src"))?;
 
         self.write_book_toml()?;
         self.write_summary(symbol)?;
