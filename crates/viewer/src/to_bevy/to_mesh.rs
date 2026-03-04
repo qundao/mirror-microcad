@@ -325,11 +325,3 @@ impl ToBevyMesh for Bounds3D {
         mesh
     }
 }
-
-impl ToBevyMesh for microcad_builtin::geo2d::Text {
-    type Parameters = f32;
-
-    fn to_bevy_mesh(&self, _: Self::Parameters) -> Mesh {
-        self.render(&RenderResolution::medium()).to_bevy_mesh(0.0)
-    }
-}

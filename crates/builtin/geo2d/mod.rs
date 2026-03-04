@@ -14,31 +14,20 @@ mod sinusoidal_gear;
 mod text;
 mod thread_profile;
 
-pub use circle::*;
-pub use involute_gear::*;
-pub use line::*;
-pub use ngon::*;
-pub use rect::*;
-pub use rounded_rect::*;
-pub use sector::*;
-pub use sinusoidal_gear::*;
-pub use text::*;
-pub use thread_profile::*;
-
 use microcad_lang::builtin::*;
 
 /// Module for built-in 2D geometries.
 pub fn geo2d() -> Symbol {
     crate::ModuleBuilder::new("geo2d")
-        .builtin::<Circle>()
-        .builtin::<InvoluteGearProfile>()
-        .builtin::<Line>()
-        .builtin::<Ngon>()
-        .builtin::<Sector>()
-        .builtin::<Rect>()
-        .builtin::<RoundedRect>()
-        .builtin::<SinusoidalGearProfile>()
-        .builtin::<Text>()
-        .builtin::<ThreadProfile>()
+        .builtin::<circle::Circle>()
+        .builtin::<involute_gear::InvoluteGearProfile>()
+        .builtin::<line::Line>()
+        .builtin::<ngon::Ngon>()
+        .builtin::<sector::Sector>()
+        .builtin::<rect::Rect>()
+        .builtin::<rounded_rect::RoundedRect>()
+        .builtin::<sinusoidal_gear::SinusoidalGearProfile>()
+        .builtin::<text::Text>()
+        .builtin::<thread_profile::ThreadProfile>()
         .build()
 }

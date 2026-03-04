@@ -51,9 +51,7 @@ impl ResolveContext {
             diag,
             ..Default::default()
         };
-        match context.load(builtin,
-            ResolveMode::Checked,
-        ) {
+        match context.load(builtin, ResolveMode::Checked) {
             Ok(()) => Ok(context),
             Err(err) => {
                 context.error(&err.src_ref(), err)?;
@@ -62,11 +60,7 @@ impl ResolveContext {
         }
     }
 
-    fn load(
-        &mut self,
-        builtin: Option<Symbol>,
-        mode: ResolveMode,
-    ) -> ResolveResult<()> {
+    fn load(&mut self, builtin: Option<Symbol>, mode: ResolveMode) -> ResolveResult<()> {
         self.symbolize()?;
         log::trace!("Symbolized Context:\n{self:?}");
         if let Some(builtin) = builtin {
@@ -207,7 +201,7 @@ impl ResolveContext {
             "Symbols never used in ANY code:\n{}",
             unchecked
                 .iter()
-                .map(|symbol| format!("{symbol:?}"))
+                .map(|symbol| format!("{symbol}"))
                 .collect::<Vec<_>>()
                 .join("\n")
         );
@@ -422,7 +416,8 @@ impl std::fmt::Debug for ResolveContext {
 impl std::fmt::Display for ResolveContext {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if let Some(unchecked) = &self.unchecked {
-            writeln!(f, "Resolved & checked symbols:\n{}", self.root)?;
+            writeln!(f, "Resolved & checked symbols:")?;
+            self.root.tree_print(f, TreeState::new_display())?;
             if unchecked.is_empty() {
                 writeln!(f, "All symbols are referenced.\n{}", self.root)?;
             } else {

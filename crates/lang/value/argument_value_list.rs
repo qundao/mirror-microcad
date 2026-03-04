@@ -41,6 +41,11 @@ impl ArgumentValueList {
         let arg = self.map.iter().find(|(_, arg)| arg.value.ty() == *ty);
         arg.map(|arg| (&arg.0, &arg.1))
     }
+
+    /// Get value by index.
+    pub fn get_by_index(&self, index: usize) -> Option<&(Identifier, ArgumentValue)> {
+        self.map.get(index)
+    }
 }
 
 impl ValueAccess for ArgumentValueList {

@@ -3,78 +3,109 @@
 
 //! Built-in color module `__builtin::color`.
 
-use microcad_core::{Color, Scalar};
-use microcad_lang::{parameter, resolve::*, value::*};
+use microcad_builtin_proc_macros::builtin_mod;
 
-/// Create a color from red, green and blue.
-fn rgb() -> Symbol {
-    Symbol::new_builtin_fn(
-        "rgb",
-        [
-            parameter!(r: Scalar),
-            parameter!(g: Scalar),
-            parameter!(b: Scalar),
-        ]
-        .into_iter(),
-        &|_params, args, _| {
-            Ok(Value::Tuple(Box::new(
-                Color::rgb(
+/// µcad built-in color module.
+#[builtin_mod]
+#[allow(clippy::module_inception)]
+pub mod color {
+    use microcad_core::{Scalar, color::Color};
+    use microcad_lang::{parameter, resolve::*, value::*};
+
+    /// Red color.
+    pub const RED: Color = Color::RED;
+
+    /// Blue color.
+    pub const BLUE: Color = Color::BLUE;
+
+    /// Green color.
+    pub const GREEN: Color = Color::GREEN;
+
+    /// Yellow color.
+    pub const YELLOW: Color = Color::YELLOW;
+
+    /// Cyan color.
+    pub const CYAN: Color = Color::CYAN;
+
+    /// Magenta color.
+    pub const MAGENTA: Color = Color::MAGENTA;
+
+    /// Black color.
+    pub const BLACK: Color = Color::BLACK;
+
+    /// White color.
+    pub const WHITE: Color = Color::WHITE;
+
+    /// Gray color.
+    pub const GRAY: Color = Color::GRAY;
+
+    /// Orange color.
+    pub const ORANGE: Color = Color::ORANGE;
+
+    /// Purple color.
+    pub const PURPLE: Color = Color::PURPLE;
+
+    /// Pink color.
+    pub const PINK: Color = Color::PINK;
+
+    /// Brown color.
+    pub const BROWN: Color = Color::BROWN;
+
+    /// Lime color.
+    pub const LIME: Color = Color::LIME;
+
+    /// Teal color.
+    pub const TEAL: Color = Color::TEAL;
+
+    /// Navy color.
+    pub const NAVY: Color = Color::NAVY;
+
+    /// Transparent (fully transparent) color.
+    pub const TRANSPARENT: Color = Color::TRANSPARENT;
+
+    /// Create a color from red, green and blue.
+    pub fn rgb() -> Symbol {
+        Symbol::new_builtin_fn(
+            "rgb",
+            [
+                parameter!(r: Scalar),
+                parameter!(g: Scalar),
+                parameter!(b: Scalar),
+            ]
+            .into_iter(),
+            &|_params, args, _| {
+                Ok(Color::rgb(
                     args.get::<Scalar>("r") as f32,
                     args.get::<Scalar>("g") as f32,
                     args.get::<Scalar>("b") as f32,
                 )
-                .into(),
-            )))
-        },
-        None,
-    )
-}
+                .into())
+            },
+            None,
+        )
+    }
 
-/// Create a color from red, green, blue and alpha.
-fn rgba() -> Symbol {
-    Symbol::new_builtin_fn(
-        "rgba",
-        [
-            parameter!(r: Scalar),
-            parameter!(g: Scalar),
-            parameter!(b: Scalar),
-            parameter!(a: Scalar),
-        ]
-        .into_iter(),
-        &|_params, args, _| {
-            Ok(Color::rgba(
-                args.get::<Scalar>("r") as f32,
-                args.get::<Scalar>("g") as f32,
-                args.get::<Scalar>("b") as f32,
-                args.get::<Scalar>("a") as f32,
-            )
-            .into())
-        },
-        None,
-    )
-}
-
-/// Built-in color module.
-pub fn color() -> Symbol {
-    crate::ModuleBuilder::new("color")
-        .symbol(rgb())
-        .symbol(rgba())
-        .pub_const("RED", Color::RED)
-        .pub_const("BLUE", Color::BLUE)
-        .pub_const("GREEN", Color::GREEN)
-        .pub_const("YELLOW", Color::YELLOW)
-        .pub_const("CYAN", Color::CYAN)
-        .pub_const("MAGENTA", Color::MAGENTA)
-        .pub_const("BLACK", Color::BLACK)
-        .pub_const("WHITE", Color::WHITE)
-        .pub_const("GRAY", Color::GRAY)
-        .pub_const("ORANGE", Color::ORANGE)
-        .pub_const("PURPLE", Color::PURPLE)
-        .pub_const("PINK", Color::PINK)
-        .pub_const("BROWN", Color::BROWN)
-        .pub_const("LIME", Color::LIME)
-        .pub_const("TEAL", Color::TEAL)
-        .pub_const("NAVY", Color::NAVY)
-        .pub_const("TRANSPARENT", Color::TRANSPARENT)
-        .build()
+    /// Create a color from red, green, blue and alpha.
+    pub fn rgba() -> Symbol {
+        Symbol::new_builtin_fn(
+            "rgba",
+            [
+                parameter!(r: Scalar),
+                parameter!(g: Scalar),
+                parameter!(b: Scalar),
+                parameter!(a: Scalar),
+            ]
+            .into_iter(),
+            &|_params, args, _| {
+                Ok(Color::rgba(
+                    args.get::<Scalar>("r") as f32,
+                    args.get::<Scalar>("g") as f32,
+                    args.get::<Scalar>("b") as f32,
+                    args.get::<Scalar>("a") as f32,
+                )
+                .into())
+            },
+            None,
+        )
+    }
 }

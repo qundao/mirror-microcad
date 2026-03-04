@@ -13,11 +13,5 @@ pub use __builtin::debug;
 pub use __builtin::log;
 pub use __builtin::color;
 pub use __builtin::to_string;
-
-pub mod array {
-    pub use __builtin::array::*;
-}
-
-pub mod string {
-    pub use __builtin::string::*;
-}
+pub use __builtin::array;
+pub use __builtin::string;
