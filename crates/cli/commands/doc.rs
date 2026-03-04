@@ -72,6 +72,6 @@ impl RunCommand<()> for Doc {
         let symbol = self.symbol(cli)?;
         Ok(generator
             .doc_gen(&symbol)
-            .map_err(|err| miette::miette!("{err}")))
+            .map_err(|err| miette::miette!("{err}"))?)
     }
 }
