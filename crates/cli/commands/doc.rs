@@ -5,7 +5,6 @@
 
 use microcad_builtin::Symbol;
 use microcad_docgen::*;
-use microcad_lang::syntax::Identifier;
 
 use crate::{
     Cli,
@@ -69,8 +68,8 @@ impl RunCommand<()> for Doc {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         let generator = self.generator()?;
         let symbol = self.symbol(cli)?;
-        Ok(generator
+        generator
             .doc_gen(&symbol)
-            .map_err(|err| miette::miette!("{err}"))?)
+            .map_err(|err| miette::miette!("{err}"))
     }
 }

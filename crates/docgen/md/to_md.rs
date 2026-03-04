@@ -71,7 +71,7 @@ impl ToMd for ParameterList {
             md::Markdown::new(&format!(
                 "# Parameters\n{}",
                 self.iter()
-                    .map(|param| format!("- {}", param.to_string()))
+                    .map(|param| format!("- {}", param))
                     .collect::<Vec<String>>()
                     .join("\n")
             ))
