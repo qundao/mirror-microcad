@@ -104,6 +104,12 @@ You can generate documentation with `microcad doc` for source files.
 microcad doc -g mdbook __builtin --output books/builtin
 ```
 
+### Generate mdbook for µcad standard library
+
+```sh
+microcad doc -g mdbook 'crates/std/lib/std/mod.µcad' --no-std --output books/std`
+```
+
 ## Resources
 
 * Documentation: <https://docs.microcad.xyz/language/book/index.html>
