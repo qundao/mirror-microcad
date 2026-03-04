@@ -3,6 +3,8 @@
 
 //! Symbolizing of syntax definitions.
 
+use std::rc::Rc;
+
 use crate::{resolve::*, syntax::*};
 
 pub(super) trait Symbolize<T = Option<Symbol>> {
@@ -95,23 +97,17 @@ impl Symbolize<Option<(Identifier, Symbol)>> for Statement {
     }
 }
 
-impl Symbolize<Symbol> for WorkbenchDefinition {
+impl Symbolize<Symbol> for Rc<WorkbenchDefinition> {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
-        let symbol = Symbol::new(
-            SymbolDef::Workbench(self.clone().into()),
-            Some(parent.clone()),
-        );
+        let symbol = Symbol::new(SymbolDef::Workbench(self.clone()), Some(parent.clone()));
         symbol.set_children(self.body.symbolize(&symbol, context)?);
         Ok(symbol)
     }
 }
 
-impl Symbolize<Symbol> for FunctionDefinition {
+impl Symbolize<Symbol> for Rc<FunctionDefinition> {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
-        let symbol = Symbol::new(
-            SymbolDef::Function((*self).clone().into()),
-            Some(parent.clone()),
-        );
+        let symbol = Symbol::new(SymbolDef::Function(self.clone()), Some(parent.clone()));
         symbol.set_children(self.body.symbolize(&symbol, context)?);
         Ok(symbol)
     }
