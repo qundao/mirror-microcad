@@ -47,11 +47,7 @@ impl ToMd for InitDefinition {
 
 impl ToMd for SourceFile {
     fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!(
-            "# `{}`\n{}",
-            self.filename_as_str(),
-            fetch_doc(self)
-        ))
+        md::Markdown::new(&format!("# `{}`\n{}", self.id(), fetch_doc(self)))
     }
 }
 
