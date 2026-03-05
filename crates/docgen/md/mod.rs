@@ -23,12 +23,9 @@ pub struct Md {
 impl Md {
     /// Return path
     pub fn symbol_md_file_path(&self, symbol: &Symbol) -> std::path::PathBuf {
-        let path: std::path::PathBuf = symbol
-            .full_name()
-            .iter()
-            .skip(1)
-            .map(|id| id.to_string())
-            .collect();
+        let mut path: std::path::PathBuf =
+            symbol.full_name().iter().map(|id| id.to_string()).collect();
+        path.set_extension("md");
         self.output_path.clone().unwrap_or_default().join(path)
     }
 
