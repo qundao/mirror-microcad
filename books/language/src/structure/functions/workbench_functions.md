@@ -13,10 +13,10 @@ sketch PunchedDisk(radius: Length) {
     use std::geo2d::Circle;
 
     // function to calculate inner from radius
-    fn inner() { radius/2 }
+    fn inner(radius: Length) { radius/2 }
 
     // generate donut (and call inner)
-    Circle(radius) - Circle(radius = inner());
+    Circle(radius) - Circle(radius = inner(radius));
 }
 
 PunchedDisk(1cm);
