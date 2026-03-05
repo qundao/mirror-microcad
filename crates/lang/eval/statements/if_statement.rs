@@ -5,7 +5,7 @@
 
 use crate::{eval::*, model::*, syntax::*, value::*};
 
-impl Eval<Value> for IfStatement {
+impl Eval<Value> for IfExpression {
     fn eval(&self, context: &mut crate::eval::EvalContext) -> crate::eval::EvalResult<Value> {
         log::debug!("Evaluating if statement to value: {self}");
 
@@ -35,7 +35,7 @@ impl Eval<Value> for IfStatement {
     }
 }
 
-impl Eval<Option<Model>> for IfStatement {
+impl Eval<Option<Model>> for IfExpression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         log::debug!("Evaluating if statement to model: {self}");
 

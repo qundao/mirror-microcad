@@ -7,7 +7,7 @@ use crate::{src_ref::*, syntax::*};
 
 /// If statement.
 #[derive(Clone)]
-pub struct IfStatement {
+pub struct IfExpression {
     /// If condition.
     pub cond: Expression,
     /// Body if `true`.
@@ -15,12 +15,12 @@ pub struct IfStatement {
     /// Body if `false`.
     pub body_else: Option<Body>,
     /// Next if statement: `else if x == 1`.
-    pub next_if: Option<Box<IfStatement>>,
+    pub next_if: Option<Box<IfExpression>>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }
 
-impl IfStatement {
+impl IfExpression {
     /// Checks if all branches of the if statement are set
     pub fn is_complete(&self) -> bool {
         if let Some(next_if) = &self.next_if {
@@ -31,13 +31,13 @@ impl IfStatement {
     }
 }
 
-impl SrcReferrer for IfStatement {
+impl SrcReferrer for IfExpression {
     fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
     }
 }
 
-impl std::fmt::Display for IfStatement {
+impl std::fmt::Display for IfExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "if {cond} {body}", cond = self.cond, body = self.body)?;
         if let Some(next) = &self.next_if {
@@ -50,7 +50,7 @@ impl std::fmt::Display for IfStatement {
     }
 }
 
-impl std::fmt::Debug for IfStatement {
+impl std::fmt::Debug for IfExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(
             f,
@@ -68,7 +68,7 @@ impl std::fmt::Debug for IfStatement {
     }
 }
 
-impl TreeDisplay for IfStatement {
+impl TreeDisplay for IfExpression {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}IfStatement:", "")?;
         depth.indent();

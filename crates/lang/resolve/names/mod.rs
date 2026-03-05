@@ -102,7 +102,7 @@ impl Names for ReturnStatement {
     }
 }
 
-impl Names for IfStatement {
+impl Names for IfExpression {
     fn names(&self) -> NameList {
         let mut result = NameList::default();
         result.merge_in_place(self.cond.names());

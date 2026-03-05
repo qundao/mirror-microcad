@@ -35,7 +35,7 @@ pub enum Expression {
     /// A body: `{}`.
     Body(Body),
     /// An if statement: `if {} else {}`.
-    If(Box<IfStatement>),
+    If(Box<IfExpression>),
     /// A call: `ops::subtract()`.
     Call(Call),
     /// A qualified name: `foo::bar`.

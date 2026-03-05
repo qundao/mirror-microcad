@@ -179,7 +179,7 @@ impl FromAst for Expression {
                     context.src_ref(&access.span),
                 ),
             },
-            ast::Expression::If(i) => Expression::If(Box::new(IfStatement::from_ast(i, context)?)),
+            ast::Expression::If(i) => Expression::If(Box::new(IfExpression::from_ast(i, context)?)),
             ast::Expression::Error(span) => {
                 return Err(ParseError::InvalidExpression {
                     src_ref: context.src_ref(span),

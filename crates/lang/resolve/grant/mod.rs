@@ -143,7 +143,7 @@ impl Grant for ReturnStatement {
     }
 }
 
-impl Grant for IfStatement {
+impl Grant for IfExpression {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(If, self.src_ref());

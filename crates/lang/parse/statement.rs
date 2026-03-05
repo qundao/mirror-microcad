@@ -50,17 +50,17 @@ impl FromAst for AssignmentStatement {
     }
 }
 
-impl FromAst for IfStatement {
+impl FromAst for IfExpression {
     type AstNode = ast::If;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        Ok(IfStatement {
+        Ok(IfExpression {
             cond: Expression::from_ast(&node.condition, context)?,
             body: Body::from_ast(&node.body, context)?,
             next_if: node
                 .next_if
                 .as_ref()
-                .map(|next| IfStatement::from_ast(next, context))
+                .map(|next| IfExpression::from_ast(next, context))
                 .transpose()?
                 .map(Box::new),
             body_else: node
@@ -99,7 +99,7 @@ impl FromAst for Statement {
             ast::Statement::Expression(ast::ExpressionStatement {
                 expression: ast::Expression::If(if_statement),
                 ..
-            }) => Statement::If(IfStatement::from_ast(if_statement, context)?),
+            }) => Statement::If(IfExpression::from_ast(if_statement, context)?),
             ast::Statement::Expression(statement) => {
                 Statement::Expression(ExpressionStatement::from_ast(statement, context)?)
             }

@@ -36,7 +36,7 @@ pub enum Statement {
     /// Return statement
     Return(ReturnStatement),
     /// If statement
-    If(IfStatement),
+    If(IfExpression),
     /// Inner attribute statement: `#![size = std::A4]`.
     InnerAttribute(Attribute),
     /// Inner doc comment: `//! Text`.
