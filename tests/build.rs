@@ -27,6 +27,18 @@ fn main() {
         }
     }
 
+    // Generate builtin mdbook
+    {
+        use microcad_docgen::{DocGen, MdBook};
+        MdBook {
+            path: "../books/builtin".into(),
+        }
+        .doc_gen(&microcad_builtin::builtin_module())
+        .expect("No error");
+    }
+
+    // 
+
     // update test banners in markdown books
     use update_md_banner::*;
     println!("cargo:warning=updating test banners...");
@@ -34,6 +46,7 @@ fn main() {
 
     // generate rust tests from µcad code in markdown books
     println!("cargo:warning=generating mdbooks...");
+    update_book("builtin").expect("test generation failed");
     update_book("tests").expect("test generation failed");
     update_book("language").expect("test generation failed");
     update_book("tutorials").expect("test generation failed");
