@@ -12,11 +12,20 @@
   40:   init(l:Length) {} } K();
 
 -- No Output --
--- No Errors --
+-- Errors --
+  ⚠ warning: 39:7: Unused global symbol std.
+    ╭─[../books/tests/src/statement_usage/pre-init.md:39:7]
+ 38 │ sketch K() { 
+ 39 │   use std;
+    ·       ─┬─
+    ·        ╰── Unused global symbol std.
+ 40 │ init(l:Length) {} } K();
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 39
 -- Model --
   Group (root) ->
     Workpiece(sketch) pre_init_use::K() ->
 
 Export error: Render error: Nothing to render
 -- Test Result --
-OK
+OK (BUT WARNINGS)

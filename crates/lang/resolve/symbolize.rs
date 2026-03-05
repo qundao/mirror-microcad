@@ -177,9 +177,6 @@ impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
         parent: &Symbol,
         _: &mut ResolveContext,
     ) -> ResolveResult<Option<(Identifier, Symbol)>> {
-        if !parent.is_module() {
-            return Ok(None);
-        }
         match &self.decl {
             UseDeclaration::Use(name) => {
                 let identifier = name.last().expect("Identifier");

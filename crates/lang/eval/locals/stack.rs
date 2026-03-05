@@ -95,8 +95,8 @@ impl Stack {
         }
     }
 
-    /// Get name of current workbench.
-    pub fn current_workbench_name(&self) -> Option<QualifiedName> {
+    /// Get name of current workbench or function.
+    pub fn current_call_name(&self) -> Option<QualifiedName> {
         self.0
             .iter()
             .rev()
@@ -113,7 +113,7 @@ impl Stack {
                 true
             })
             .find_map(|(n, frame)| match frame {
-                StackFrame::Workbench(_, id, _) => Some(
+                StackFrame::Workbench(_, id, _) | StackFrame::Function(id, _) => Some(
                     QualifiedName::new(vec![id.clone()], id.src_ref())
                         .with_prefix(&self.current_module_name()),
                 ),
@@ -263,6 +263,7 @@ impl Locals for Stack {
             .0
             .iter()
             .rev()
+            .take_while(|frame| !matches!(frame, StackFrame::Call { .. }))
             .find(|frame| matches!(frame, StackFrame::Workbench(_, _, _)))
         {
             Some(StackFrame::Workbench(model, _, _)) => Ok(model.clone()),

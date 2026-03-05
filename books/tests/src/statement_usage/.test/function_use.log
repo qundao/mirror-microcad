@@ -12,7 +12,16 @@
   40:   } f();
 
 -- No Output --
--- No Errors --
+-- Errors --
+  ⚠ warning: 39:7: Unused global symbol std.
+    ╭─[../books/tests/src/statement_usage/function.md:39:7]
+ 38 │ fn f() {
+ 39 │   use std;
+    ·       ─┬─
+    ·        ╰── Unused global symbol std.
+ 40 │ } f();
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 39
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)
