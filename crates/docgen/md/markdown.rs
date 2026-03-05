@@ -36,7 +36,7 @@ impl Markdown {
 
             if let Some((level, title)) = heading_info {
                 // If the current section has content or a title, save it
-                if !current_section.content.is_empty() || !current_section.heading.is_empty() {
+                if !current_section.is_empty() {
                     sections.push(current_section);
                 }
 
@@ -51,7 +51,7 @@ impl Markdown {
             }
         }
 
-        if !current_section.content.is_empty() || !current_section.heading.is_empty() {
+        if !current_section.is_empty() {
             sections.push(current_section);
         }
 

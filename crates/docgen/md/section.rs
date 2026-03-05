@@ -23,6 +23,11 @@ impl Section {
             content: self.content.clone(),
         }
     }
+
+    /// Returns `false` if this section has a heading and a content.
+    pub fn is_empty(&self) -> bool {
+        self.heading.is_empty() && self.content.is_empty()
+    }
 }
 
 impl std::fmt::Display for Section {
