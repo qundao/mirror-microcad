@@ -4,6 +4,7 @@
 //! µcad markdown test
 
 use anyhow::anyhow;
+use microcad_lang::syntax::Identifier;
 
 /// markdown test main
 fn main() {
@@ -27,9 +28,10 @@ fn main() {
         }
     }
 
+    use microcad_docgen::{DocGen, MdBook};
+
     // Generate builtin mdbook
     {
-        use microcad_docgen::{DocGen, MdBook};
         MdBook {
             path: "../books/builtin".into(),
         }
@@ -37,7 +39,31 @@ fn main() {
         .expect("No error");
     }
 
-    // 
+    // Generate std mdbook
+    {
+        MdBook {
+            path: "../books/std".into(),
+        }
+        .doc_gen(&{
+            let root = microcad_lang::syntax::SourceFile::load("../crates/std/lib/std/mod.µcad")
+                .expect("No error");
+            let search_paths: Vec<std::path::PathBuf> = vec![];
+
+            // Resolve std
+            let context = microcad_lang::resolve::ResolveContext::create(
+                root,
+                &search_paths,
+                Some(microcad_builtin::builtin_module()),
+                microcad_lang::diag::DiagHandler::default(),
+            )
+            .expect("No error");
+            context
+                .root
+                .get_child(&Identifier::no_ref("mod")) // FIXME: This should be named "std"
+                .expect("std file")
+        })
+        .expect("No error");
+    }
 
     // update test banners in markdown books
     use update_md_banner::*;
@@ -47,6 +73,7 @@ fn main() {
     // generate rust tests from µcad code in markdown books
     println!("cargo:warning=generating mdbooks...");
     update_book("builtin").expect("test generation failed");
+    update_book("std").expect("test generation failed");
     update_book("tests").expect("test generation failed");
     update_book("language").expect("test generation failed");
     update_book("tutorials").expect("test generation failed");

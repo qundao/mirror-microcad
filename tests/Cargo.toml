@@ -29,6 +29,7 @@ microcad_test_tools = { path = "microcad_test_tools", version = "0" }
 [build-dependencies]
 microcad-builtin = { workspace = true }
 microcad-docgen = { workspace = true }
+microcad-lang = { workspace = true }
 microcad_markdown_test = { path = "microcad_markdown_test", version = "0" }
 microcad_test_tools = { path = "microcad_test_tools", version = "0" }
 update_copyright = { path = "update-copyright", version = "0" }

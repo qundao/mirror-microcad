@@ -31,7 +31,17 @@ impl MdBook {
     fn generate_book_toml_string(&self) -> String {
         let book_toml: toml::Value =
             toml::de::from_str(include_str!("book.toml")).expect("Valid toml");
-        toml::ser::to_string(&book_toml).expect("No error")
+        let str = toml::ser::to_string(&book_toml).expect("No error");
+        format!(
+            r#"# Copyright © 2026 The µcad authors <info@ucad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# NOTE: Auto-generated code. 
+# This markdown book has been generated from µcad source via `microcad-docgen`.
+# Changes in the book might be overwritten.
+{str}
+"#
+        )
     }
 
     /// Generate the toml file for the book
