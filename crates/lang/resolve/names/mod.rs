@@ -48,7 +48,6 @@ impl Names for Statement {
             Statement::InnerDocComment(_) => NameList::default(),
 
             Statement::Init(i) => i.names().drop_locals(),
-            Statement::If(i) => i.names().drop_locals(),
 
             Statement::Use(u) => u.names(),
             Statement::Return(r) => r.names(),

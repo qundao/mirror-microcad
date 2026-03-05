@@ -20,7 +20,6 @@ impl Eval for Statement {
                 a.eval(context)?;
                 Ok(Value::None)
             }
-            Self::If(i) => i.eval(context),
             Self::Expression(e) => e.eval(context),
             Self::Return(r) => r.eval(context),
 
@@ -46,7 +45,6 @@ impl Eval<Option<Model>> for Statement {
                 a.eval(context)?;
                 None
             }
-            Self::If(i) => i.eval(context)?,
             Self::Expression(e) => e.eval(context)?,
 
             Self::Workbench(..)

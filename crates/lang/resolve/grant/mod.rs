@@ -59,7 +59,6 @@ impl Grant for Statement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use Statement::*;
         match self {
-            If(statement) => statement.grant(context),
             Init(statement) => statement.grant(context),
             Return(statement) => statement.grant(context),
             Assignment(statement) => statement.grant(context),
@@ -302,8 +301,7 @@ impl Body {
                     },
 
                     // Post init statements
-                    If(_) | InnerAttribute(_) | InnerDocComment(_) | Expression(_)
-                    | Function(_) => {
+                    InnerAttribute(_) | InnerDocComment(_) | Expression(_) | Function(_) => {
                         // RULE: No code between initializers
                         if n < last_init_pos {
                             if n > first_init_pos {

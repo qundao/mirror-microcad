@@ -33,8 +33,6 @@ pub enum Statement {
     Use(UseStatement),
     /// Return statement
     Return(ReturnStatement),
-    /// If statement
-    If(IfExpression),
     /// Inner attribute statement: `#![size = std::A4]`.
     InnerAttribute(Attribute),
     /// Inner doc comment: `//! Text`.
@@ -56,7 +54,6 @@ impl SrcReferrer for Statement {
 
             Self::Use(us) => us.src_ref(),
             Self::Return(r) => r.src_ref(),
-            Self::If(i) => i.src_ref(),
             Self::InnerAttribute(i) => i.src_ref(),
             Self::InnerDocComment(i) => i.src_ref(),
 
@@ -84,7 +81,6 @@ impl std::fmt::Display for Statement {
 
             Self::Use(u) => write!(f, "{u};"),
             Self::Return(r) => write!(f, "{r};"),
-            Self::If(i) => write!(f, "{i}"),
             Self::InnerAttribute(i) => write!(f, "{i}"),
             Self::InnerDocComment(i) => write!(f, "{i}"),
 
@@ -111,7 +107,6 @@ impl std::fmt::Debug for Statement {
 
             Self::Use(u) => write!(f, "{u:?};"),
             Self::Return(r) => write!(f, "{r:?};"),
-            Self::If(i) => write!(f, "{i:?}"),
             Self::InnerAttribute(i) => write!(f, "{i:?}"),
             Self::InnerDocComment(i) => write!(f, "{i:?}"),
 
@@ -132,7 +127,6 @@ impl TreeDisplay for Statement {
 
             Self::Use(u) => u.tree_print(f, depth),
             Self::Return(r) => r.tree_print(f, depth),
-            Self::If(i) => i.tree_print(f, depth),
             Self::InnerAttribute(i) => i.tree_print(f, depth),
             Self::InnerDocComment(i) => i.tree_print(f, depth),
 

@@ -96,10 +96,6 @@ impl FromAst for Statement {
             ast::Statement::Use(statement) => {
                 Statement::Use(UseStatement::from_ast(statement, context)?)
             }
-            ast::Statement::Expression(ast::ExpressionStatement {
-                expression: ast::Expression::If(if_statement),
-                ..
-            }) => Statement::If(IfExpression::from_ast(if_statement, context)?),
             ast::Statement::Expression(statement) => {
                 Statement::Expression(ExpressionStatement::from_ast(statement, context)?)
             }
