@@ -30,11 +30,6 @@ impl Array {
     pub fn from_values(items: ValueList, ty: Type) -> Self {
         Self { items, ty }
     }
-
-    /// Fetch all values as `Vec<Value>`
-    pub fn fetch(&self) -> Vec<Value> {
-        self.items.iter().cloned().collect::<Vec<_>>()
-    }
 }
 
 /// All builtin methods and builtin functions.
