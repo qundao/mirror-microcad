@@ -57,7 +57,6 @@ pub use eval_error::*;
 pub use output::*;
 
 use locals::*;
-use statements::*;
 
 use crate::{diag::*, resolve::*, src_ref::*, syntax::*, ty::*, value::*};
 

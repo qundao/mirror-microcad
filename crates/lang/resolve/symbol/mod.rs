@@ -246,11 +246,6 @@ impl Symbol {
             .collect()
     }
 
-    /// True if symbol has any children
-    pub(crate) fn is_empty(&self) -> bool {
-        self.inner.borrow().children.is_empty()
-    }
-
     /// Get parent symbol.
     pub(crate) fn get_parent(&self) -> Option<Symbol> {
         self.inner.borrow().parent.clone()
@@ -390,6 +385,7 @@ impl Symbol {
             self.inner.borrow().def,
             SymbolDef::SourceFile(..)
                 | SymbolDef::Module(..)
+                | SymbolDef::Function(..)
                 | SymbolDef::Workbench(..)
                 | SymbolDef::UseAll(..)
                 | SymbolDef::Alias(..)

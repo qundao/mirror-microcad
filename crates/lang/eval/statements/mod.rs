@@ -12,17 +12,10 @@ mod expression_statement;
 mod if_statement;
 mod marker;
 mod return_statement;
-mod use_statement;
-
-pub use use_statement::*;
 
 impl Eval for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match self {
-            Self::Use(u) => {
-                u.eval(context)?;
-                Ok(Value::None)
-            }
             Self::Assignment(a) => {
                 a.eval(context)?;
                 Ok(Value::None)
@@ -36,6 +29,7 @@ impl Eval for Statement {
             | Self::Function(..)
             | Self::InnerAttribute(..)
             | Self::InnerDocComment(..)
+            | Self::Use(..)
             | Self::Init(..) => Ok(Value::None),
         }
     }
@@ -48,10 +42,6 @@ impl Eval<Option<Model>> for Statement {
                 m.eval(context)?;
                 None
             }
-            Self::Use(u) => {
-                u.eval(context)?;
-                None
-            }
             Self::Assignment(a) => {
                 a.eval(context)?;
                 None
@@ -61,6 +51,7 @@ impl Eval<Option<Model>> for Statement {
 
             Self::Workbench(..)
             | Self::Function(..)
+            | Self::Use(..)
             | Self::Init(..)
             | Self::Return(..)
             | Self::InnerAttribute(..)

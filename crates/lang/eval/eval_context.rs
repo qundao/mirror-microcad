@@ -210,7 +210,7 @@ impl EvalContext {
         );
         self.root.deny_super(name)?;
 
-        if self.stack.current_workbench_name().is_some() {
+        if self.stack.current_call_name().is_some() {
             if let Some(id) = name.single_identifier() {
                 match self.get_property(id) {
                     Ok(value) => {
@@ -236,7 +236,7 @@ impl EvalContext {
         name: &QualifiedName,
         target: LookupTarget,
     ) -> ResolveResult<Symbol> {
-        if let Some(workbench) = &self.stack.current_workbench_name() {
+        if let Some(workbench) = &self.stack.current_call_name() {
             log::trace!(
                 "{lookup} for symbol '{name:?}' in current workbench '{workbench:?}'",
                 lookup = crate::mark!(LOOKUP)
@@ -267,19 +267,6 @@ impl EvalContext {
         }
     }
 
-    /// Check if current stack frame is code
-    fn is_code(&self) -> bool {
-        !matches!(self.stack.current_frame(), Some(StackFrame::Module(..)))
-    }
-
-    /// Check if current stack frame is a module
-    pub(crate) fn is_module(&self) -> bool {
-        matches!(
-            self.stack.current_frame(),
-            Some(StackFrame::Module(..) | StackFrame::Source(..))
-        )
-    }
-
     fn lookup_within(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
         self.root.lookup_within(
             name,
@@ -291,37 +278,6 @@ impl EvalContext {
     /// Symbol table accessor.
     pub fn root(&self) -> &Symbol {
         &self.root
-    }
-}
-
-impl UseLocally for EvalContext {
-    fn use_symbol(&mut self, name: &QualifiedName, id: Option<Identifier>) -> EvalResult<Symbol> {
-        log::debug!("Using symbol {name:?}");
-
-        let symbol = self.lookup(name, LookupTarget::Any)?;
-        if self.is_code() {
-            self.stack.put_local(id, symbol.clone())?;
-            log::trace!("Local Stack:\n{:?}", self.stack);
-        }
-
-        Ok(symbol)
-    }
-
-    fn use_symbols_of(&mut self, name: &QualifiedName) -> EvalResult<Symbol> {
-        log::debug!("Using all symbols in {name:?}");
-
-        let symbol = self.lookup(name, LookupTarget::Any)?;
-        if symbol.is_empty() {
-            Err(EvalError::NoSymbolsToUse(symbol.full_name()))
-        } else {
-            if self.is_code() {
-                symbol.try_children(|(id, symbol)| {
-                    self.stack.put_local(Some(id.clone()), symbol.clone())
-                })?;
-                log::trace!("Local Stack:\n{:?}", self.stack);
-            }
-            Ok(symbol)
-        }
     }
 }
 
