@@ -3202,17 +3202,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "examples_tests"
-version = "0.3.0"
-dependencies = [
- "env_logger",
- "log",
- "microcad_test_tools",
- "miette",
- "regex",
-]
-
-[[package]]
 name = "exr"
 version = "1.74.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5481,10 +5470,10 @@ dependencies = [
  "anyhow",
  "ctor",
  "env_logger",
- "examples_tests",
  "log",
  "microcad-builtin",
  "microcad-core",
+ "microcad-docgen",
  "microcad-export",
  "microcad-lang",
  "microcad_markdown_test",
