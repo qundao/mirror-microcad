@@ -139,8 +139,8 @@ impl StackFrame {
             };
             let entry = symbol.with_def(|def| match def {
                 SymbolDef::Root => unreachable!("<ROOT> cannot be a local"),
-                SymbolDef::Constant(visibility, id, value) => {
-                    format!("{visibility}{id:?} = {value:?}{full_name} (constant)",)
+                SymbolDef::Constant(id, value) => {
+                    format!("{id:?} = {value:?}{full_name} (constant)",)
                 }
                 SymbolDef::Assignment(a) => {
                     format!("{a}{full_name} (assignment)")

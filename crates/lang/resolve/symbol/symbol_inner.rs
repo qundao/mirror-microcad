@@ -41,7 +41,7 @@ impl SrcReferrer for SymbolInner {
             SymbolDef::Function(f) => f.src_ref(),
             SymbolDef::Builtin(_) => SrcRef(None),
             SymbolDef::Assignment(a) => a.src_ref(),
-            SymbolDef::Constant(_, id, _) | SymbolDef::Argument(id, _) => id.src_ref(),
+            SymbolDef::Constant(id, ..) | SymbolDef::Argument(id, _) => id.src_ref(),
             SymbolDef::Alias(_, id, _) => id.src_ref(),
             SymbolDef::UseAll(_, name) => name.src_ref(),
             #[cfg(test)]

@@ -242,7 +242,7 @@ impl Locals for Stack {
     fn set_local_value(&mut self, id: Identifier, value: Value) -> EvalResult<()> {
         self.put_local(
             Some(id.clone()),
-            Symbol::new(SymbolDef::Constant(Visibility::Private, id, value), None),
+            Symbol::new(SymbolDef::Constant(id, value), None),
         )
     }
 
@@ -334,12 +334,7 @@ impl std::fmt::Debug for Stack {
 fn local_stack() {
     let mut stack = Stack::default();
 
-    let make_int = |id, value| {
-        Symbol::new(
-            SymbolDef::Constant(Visibility::Private, id, Value::Integer(value)),
-            None,
-        )
-    };
+    let make_int = |id, value| Symbol::new(SymbolDef::Constant(id, Value::Integer(value)), None);
 
     let fetch_int = |stack: &Stack, id: &str| -> Option<i64> {
         match stack.fetch_symbol(&id.into()) {

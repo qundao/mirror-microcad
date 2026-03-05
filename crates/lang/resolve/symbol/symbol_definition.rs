@@ -22,7 +22,7 @@ pub enum SymbolDef {
     /// Builtin symbol.
     Builtin(Rc<Builtin>),
     /// Constant.
-    Constant(Visibility, Identifier, Value),
+    Constant(Identifier, Value),
     /// Argument value.
     Argument(Identifier, Value),
     /// Alias of a pub use statement.
@@ -45,7 +45,7 @@ impl SymbolDef {
             Self::SourceFile(s) => s.id(),
             Self::Builtin(m) => m.id(),
             Self::Assignment(a) => a.id(),
-            Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => id.clone(),
+            Self::Constant(id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => id.clone(),
             Self::UseAll(..) => Identifier::none(),
             #[cfg(test)]
             Self::Tester(id) => id.clone(),
@@ -58,9 +58,8 @@ impl SymbolDef {
             Self::Root => Visibility::Private,
             Self::SourceFile(..) | Self::Builtin(..) => Visibility::Public,
 
-            Self::Argument(..) => Visibility::Private,
+            Self::Argument(..) | Self::Constant(..) => Visibility::Private,
 
-            Self::Constant(visibility, ..) => visibility.clone(),
             Self::Module(md) => md.visibility.clone(),
             Self::Workbench(wd) => wd.visibility.clone(),
             Self::Function(fd) => fd.visibility.clone(),
@@ -100,7 +99,7 @@ impl SymbolDef {
             Self::Function(fd) => fd.src_ref().source_hash(),
             Self::Builtin(_) => 0,
             Self::Assignment(a) => a.src_ref.source_hash(),
-            Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => {
+            Self::Constant(id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => {
                 id.src_ref().source_hash()
             }
             Self::UseAll(_, name) => name.src_ref().source_hash(),
@@ -175,10 +174,8 @@ impl Info for SymbolDef {
             Self::Builtin(bi) => bi.into(),
             Self::Assignment(a) => a.into(),
 
-            Self::Constant(visibility, id, value) => {
-                SymbolInfo::new_constant(visibility, id, value)
-            }
-            Self::Argument(id, value) => SymbolInfo::new_arg(id, value),
+            Self::Constant(id, ..) => SymbolInfo::new_constant(id),
+            Self::Argument(id, ..) => SymbolInfo::new_arg(id),
 
             Self::Alias(..) => unimplemented!(),
             Self::UseAll(..) => unimplemented!(),

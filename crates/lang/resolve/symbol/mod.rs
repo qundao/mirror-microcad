@@ -33,7 +33,6 @@ pub struct Symbol {
 impl Symbol {
     /// Create new symbol without children.
     /// # Arguments
-    /// - `visibility`: Visibility of the symbol
     /// - `def`: Symbol definition
     /// - `parent`: Symbol's parent symbol or none for root
     pub(crate) fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
@@ -53,7 +52,7 @@ impl Symbol {
     /// - `visibility`: Visibility of the symbol
     /// - `def`: Symbol definition
     /// - `parent`: Symbol's parent symbol or none for root
-    pub(super) fn new_with_visibility(
+    pub(crate) fn new_with_visibility(
         visibility: Visibility,
         def: SymbolDef,
         parent: Option<Symbol>,

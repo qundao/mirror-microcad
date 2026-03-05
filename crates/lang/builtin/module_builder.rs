@@ -33,17 +33,13 @@ impl ModuleBuilder {
         self.symbol(T::symbol())
     }
 
-    /// Add a constant.
-    pub fn constant(self, visibility: Visibility, name: &str, value: impl Into<Value>) -> Self {
-        self.symbol(Symbol::new(
-            SymbolDef::Constant(visibility, name.into(), value.into()),
-            None,
-        ))
-    }
-
     /// Add a public constant.
     pub fn pub_const(self, name: &str, value: impl Into<Value>) -> Self {
-        self.constant(Visibility::Public, name, value)
+        self.symbol(Symbol::new_with_visibility(
+            Visibility::Public,
+            SymbolDef::Constant(name.into(), value.into()),
+            None,
+        ))
     }
 
     /// Return our module symbol.
