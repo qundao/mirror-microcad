@@ -7,14 +7,12 @@ use crate::{rc::*, src_ref::*, syntax::*};
 
 mod assignment_statement;
 mod expression_statement;
-mod if_statement;
 mod inner_doc_comment;
 mod return_statement;
 mod statement_list;
 
 pub use assignment_statement::*;
 pub use expression_statement::*;
-pub use if_statement::*;
 pub use inner_doc_comment::*;
 pub use return_statement::*;
 pub use statement_list::*;

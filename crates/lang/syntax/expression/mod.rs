@@ -4,11 +4,13 @@
 //! µcad syntax elements related to expressions
 
 mod array_expression;
+mod if_expression;
 mod marker;
 mod range_expression;
 mod tuple_expression;
 
 pub use array_expression::*;
+pub use if_expression::*;
 pub use marker::*;
 pub use range_expression::*;
 pub use tuple_expression::*;
