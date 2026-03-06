@@ -89,7 +89,6 @@ impl Symbolize<Option<(Identifier, Symbol)>> for Statement {
             // Not producing any symbols
             Statement::Init(_)
             | Statement::Return(_)
-            | Statement::If(_)
             | Statement::InnerAttribute(_)
             | Statement::InnerDocComment(_)
             | Statement::Expression(_) => Ok(None),
