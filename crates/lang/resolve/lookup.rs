@@ -56,7 +56,7 @@ impl LookupTarget {
                         }
                     },
                 },
-                SymbolDef::Constant(..) | SymbolDef::Assignment(..) | SymbolDef::Argument(..) => {
+                SymbolDef::Value(..) | SymbolDef::Assignment(..) => {
                     matches!(self, Self::Any | Self::AnyButMethod | Self::Value)
                 }
                 SymbolDef::Alias(..) | SymbolDef::UseAll(..) => {

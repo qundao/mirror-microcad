@@ -215,7 +215,7 @@ impl EvalContext {
                 match self.get_property(id) {
                     Ok(value) => {
                         log::trace!("{found} property '{name:?}'", found = crate::mark!(FOUND));
-                        return Ok(Symbol::new(SymbolDef::Constant(id.clone(), value), None));
+                        return Ok(Symbol::new(SymbolDef::Value(id.clone(), value), None));
                     }
                     Err(err) => return Err(err),
                 }

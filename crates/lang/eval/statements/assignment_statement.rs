@@ -64,7 +64,7 @@ impl Eval<()> for AssignmentStatement {
             LookupTarget::Value,
         ) {
             let err = symbol.with_def_mut(|def| match def {
-                SymbolDef::Constant(id, value) => {
+                SymbolDef::Value(id, value) => {
                     if value.is_invalid() {
                         *value = new_value.clone();
                         None

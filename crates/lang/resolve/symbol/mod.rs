@@ -356,7 +356,7 @@ impl Symbol {
     /// Overwrite any value in this symbol
     pub(crate) fn set_value(&self, new_value: Value) -> ResolveResult<()> {
         let is_a_value = match &mut self.inner.borrow_mut().def {
-            SymbolDef::Constant(.., value) => {
+            SymbolDef::Value(.., value) => {
                 *value = new_value;
                 true
             }

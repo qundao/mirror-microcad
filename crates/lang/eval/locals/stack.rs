@@ -242,16 +242,14 @@ impl Locals for Stack {
     fn set_local_value(&mut self, id: Identifier, value: Value) -> EvalResult<()> {
         self.put_local(
             Some(id.clone()),
-            Symbol::new(SymbolDef::Constant(id, value), None),
+            Symbol::new(SymbolDef::Value(id, value), None),
         )
     }
 
     fn get_local_value(&self, id: &Identifier) -> EvalResult<Value> {
         match self.fetch_symbol(id) {
             Ok(symbol) => symbol.with_def(|def| match def {
-                SymbolDef::Constant(.., value) | SymbolDef::Argument(.., value) => {
-                    Ok(value.clone())
-                }
+                SymbolDef::Value(.., value) => Ok(value.clone()),
                 _ => Err(EvalError::LocalNotFound(id.clone())),
             }),
             Err(_) => Err(EvalError::LocalNotFound(id.clone())),
@@ -334,12 +332,12 @@ impl std::fmt::Debug for Stack {
 fn local_stack() {
     let mut stack = Stack::default();
 
-    let make_int = |id, value| Symbol::new(SymbolDef::Constant(id, Value::Integer(value)), None);
+    let make_int = |id, value| Symbol::new(SymbolDef::Value(id, Value::Integer(value)), None);
 
     let fetch_int = |stack: &Stack, id: &str| -> Option<i64> {
         match stack.fetch_symbol(&id.into()) {
             Ok(node) => node.with_def(|def| match def {
-                SymbolDef::Constant(.., Value::Integer(value)) => Some(*value),
+                SymbolDef::Value(.., Value::Integer(value)) => Some(*value),
                 _ => todo!("error"),
             }),
             _ => None,
