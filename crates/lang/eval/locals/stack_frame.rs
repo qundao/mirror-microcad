@@ -139,14 +139,11 @@ impl StackFrame {
             };
             let entry = symbol.with_def(|def| match def {
                 SymbolDef::Root => unreachable!("<ROOT> cannot be a local"),
-                SymbolDef::Constant(visibility, id, value) => {
-                    format!("{visibility}{id:?} = {value:?}{full_name} (constant)",)
+                SymbolDef::Value(id, value) => {
+                    format!("{id:?} = {value:?}{full_name} (local value)",)
                 }
                 SymbolDef::Assignment(a) => {
                     format!("{a}{full_name} (assignment)")
-                }
-                SymbolDef::Argument(id, value) => {
-                    format!("{id:?} = {value:?}{full_name} (argument)")
                 }
                 SymbolDef::SourceFile(source) => {
                     format!("{:?} (source)", source.filename())

@@ -384,6 +384,24 @@ impl IntoIterator for Tuple {
     }
 }
 
+impl From<Tuple> for TupleExpression {
+    fn from(val: Tuple) -> Self {
+        assert!(val.unnamed.is_empty());
+        let mut map: crate::ord_map::OrdMap<Identifier, Argument> = Default::default();
+        val.named_iter()
+            .map(|(id, value)| Argument {
+                id: Some(id.clone()),
+                expression: value.clone().into(),
+                src_ref: SrcRef(None),
+            })
+            .for_each(|arg| map.try_push(arg).expect("fck"));
+        TupleExpression {
+            args: ArgumentList(Refer::none(map)),
+            src_ref: SrcRef(None),
+        }
+    }
+}
+
 impl<'a> TryFrom<&'a Value> for &'a Tuple {
     type Error = ValueError;
 

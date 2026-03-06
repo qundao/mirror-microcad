@@ -21,14 +21,13 @@ pub enum SymbolDef {
     Assignment(Rc<Assignment>),
     /// Builtin symbol.
     Builtin(Rc<Builtin>),
-    /// Constant.
-    Constant(Visibility, Identifier, Value),
-    /// Argument value.
-    Argument(Identifier, Value),
     /// Alias of a pub use statement.
     Alias(Visibility, Identifier, QualifiedName),
     /// Use all available symbols in the module with the given name.
     UseAll(Visibility, QualifiedName),
+    /// Evaluated value.
+    Value(Identifier, Value),
+
     /// Just a dummy for testing
     #[cfg(test)]
     Tester(Identifier),
@@ -45,7 +44,7 @@ impl SymbolDef {
             Self::SourceFile(s) => s.id(),
             Self::Builtin(m) => m.id(),
             Self::Assignment(a) => a.id(),
-            Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => id.clone(),
+            Self::Value(id, _) | Self::Alias(_, id, _) => id.clone(),
             Self::UseAll(..) => Identifier::none(),
             #[cfg(test)]
             Self::Tester(id) => id.clone(),
@@ -58,9 +57,8 @@ impl SymbolDef {
             Self::Root => Visibility::Private,
             Self::SourceFile(..) | Self::Builtin(..) => Visibility::Public,
 
-            Self::Argument(..) => Visibility::Private,
+            Self::Value(..) => Visibility::Private,
 
-            Self::Constant(visibility, ..) => visibility.clone(),
             Self::Module(md) => md.visibility.clone(),
             Self::Workbench(wd) => wd.visibility.clone(),
             Self::Function(fd) => fd.visibility.clone(),
@@ -81,9 +79,8 @@ impl SymbolDef {
             Self::Function(..) => "function",
             Self::SourceFile(..) => "source file",
             Self::Builtin(b) => b.kind.as_str(),
-            Self::Constant(..) => "constant",
+            Self::Value(..) => "constant",
             Self::Assignment(..) => "assignment",
-            Self::Argument(..) => "argument",
             Self::Alias(..) => "alias",
             Self::UseAll(..) => "use-all",
             #[cfg(test)]
@@ -100,9 +97,7 @@ impl SymbolDef {
             Self::Function(fd) => fd.src_ref().source_hash(),
             Self::Builtin(_) => 0,
             Self::Assignment(a) => a.src_ref.source_hash(),
-            Self::Constant(_, id, _) | Self::Argument(id, _) | Self::Alias(_, id, _) => {
-                id.src_ref().source_hash()
-            }
+            Self::Value(id, _) | Self::Alias(_, id, _) => id.src_ref().source_hash(),
             Self::UseAll(_, name) => name.src_ref().source_hash(),
             #[cfg(test)]
             Self::Tester(..) => 0,
@@ -120,9 +115,8 @@ impl std::fmt::Display for SymbolDef {
             | Self::Function(..)
             | Self::SourceFile(..)
             | Self::Builtin(..) => write!(f, "({kind})"),
-            Self::Constant(.., value) => write!(f, "({kind}) = {value}"),
+            Self::Value(.., value) => write!(f, "({kind}) = {value}"),
             Self::Assignment(.., value) => write!(f, "({kind}) = {value}"),
-            Self::Argument(.., value) => write!(f, "({kind}) = {value}"),
             Self::Alias(.., name) => write!(f, "({kind}) => {name}"),
             Self::UseAll(.., name) => write!(f, "({kind}) => {name}"),
             #[cfg(test)]
@@ -141,9 +135,8 @@ impl std::fmt::Debug for SymbolDef {
             | Self::Function(..)
             | Self::SourceFile(..)
             | Self::Builtin(..) => write!(f, "({kind})"),
-            Self::Constant(.., value) => write!(f, "({kind}) = {value}"),
+            Self::Value(.., value) => write!(f, "({kind}) = {value}"),
             Self::Assignment(.., expr) => write!(f, "({kind}) = {expr:?}"),
-            Self::Argument(.., value) => write!(f, "({kind}) = {value}"),
             Self::Alias(.., name) => write!(f, "({kind}) => {name:?}"),
             Self::UseAll(.., name) => write!(f, "({kind}) => {name:?}"),
             #[cfg(test)]
@@ -175,10 +168,7 @@ impl Info for SymbolDef {
             Self::Builtin(bi) => bi.into(),
             Self::Assignment(a) => a.into(),
 
-            Self::Constant(visibility, id, value) => {
-                SymbolInfo::new_constant(visibility, id, value)
-            }
-            Self::Argument(id, value) => SymbolInfo::new_arg(id, value),
+            Self::Value(id, ..) => SymbolInfo::new_local(id),
 
             Self::Alias(..) => unimplemented!(),
             Self::UseAll(..) => unimplemented!(),

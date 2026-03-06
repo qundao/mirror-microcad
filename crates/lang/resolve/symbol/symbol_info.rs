@@ -63,17 +63,10 @@ pub struct SymbolInfo {
 }
 
 impl SymbolInfo {
-    pub(super) fn new_constant(_: &Visibility, id: &Identifier, _: &Value) -> Self {
+    pub(super) fn new_local(id: &Identifier) -> Self {
         SymbolInfo {
             id: id.to_string(),
-            kind: "Constant".into(),
-            ..Default::default()
-        }
-    }
-
-    pub(super) fn new_arg(_d: &Identifier, _: &Value) -> Self {
-        SymbolInfo {
-            kind: "Argument".into(),
+            kind: "local value".into(),
             ..Default::default()
         }
     }
