@@ -277,7 +277,7 @@ impl ToMd for Symbol {
                     .iter()
                     .filter_map(|symbol| {
                         symbol.with_def(|def| match def {
-                            SymbolDef::Constant(Visibility::Public, identifier, value) => {
+                            SymbolDef::Value(identifier, value) => {
                                 Some((identifier.clone(), value.clone()))
                             }
                             _ => None,
