@@ -8,6 +8,23 @@ mod derive;
 use derive::derive_workbench_definition;
 use proc_macro::TokenStream;
 use quote::quote;
+use syn::{parse::{Parse, ParseStream}, *};
+
+/// Get all doc comments as concetenated string.
+fn get_doc_comment(attrs: &[Attribute]) -> String {
+    attrs.iter().filter_map(|attr| 
+        // Parse the meta of the attribute
+        if attr.path().is_ident("doc") 
+            && let syn::Meta::NameValue(nv) = &attr.meta
+            && let syn::Expr::Lit(ExprLit{ lit: Lit::Str(lit_str), ..}) = &nv.value {
+            // Return the string value, e.g., "Doc test"
+            Some(String::from(lit_str.value().trim()))
+        } else {
+            None
+        }
+    ).collect::<Vec<_>>().join("\n")
+}
+
 
 #[proc_macro_derive(BuiltinPrimitive2D)]
 pub fn derive_primitive2d(input: TokenStream) -> TokenStream {
@@ -119,6 +136,108 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
             crate::ModuleBuilder::new(#mod_name_str)
                 #(#registrations)*
                 .build()
+        }
+    })
+}
+
+/// Helper struct to parse `parameters` of `builtin_fn` proc macro.
+struct BuiltinParam {
+    name: Ident,
+    ty: Option<Type>,
+    default_value: Option<Expr>,
+}
+
+impl Parse for BuiltinParam {
+    fn parse(input: ParseStream) -> Result<Self> {
+        // 1. Parse the mandatory name (e.g., 'x')
+        let name: Ident = input.parse()?;
+
+        // 2. Look for an optional ':' followed by a Type
+        let ty = if input.peek(Token![:]) {
+            let _colon: Token![:] = input.parse()?;
+            Some(input.parse::<Type>()?)
+        } else {
+            None
+        };
+
+        // 3. Look for an optional '=' followed by an Expression
+        let default_value = if input.peek(Token![=]) {
+            let _eq: Token![=] = input.parse()?;
+            Some(input.parse::<Expr>()?)
+        } else {
+            None
+        };
+
+        Ok(BuiltinParam { name, ty, default_value })
+    }
+}
+
+/// The `#[builtin_fn(...)]` attribute is used to define a built-in function in the `builtin` crate. 
+/// 
+/// It automates the boilerplate of parameter definition and documentation.
+/// 
+/// # Example
+/// 
+/// ```rust,ignore
+/// /// Some function
+/// #[builtin_fn(x)]
+/// pub fn foo_function() -> Symbol {
+///     |_params, args, ctx| { ... } 
+/// }
+/// ```
+/// 
+/// The example above will expand to:
+/// 
+/// ```rust,ignore
+/// /// Some function
+/// pub fn foo_function() -> crate::Symbol {
+///     crate::Symbol::new_builtin_fn(
+///         stringify!(foo_function),
+///         vec![parameter!(x)].into_iter(),
+///         |_params, args, ctx| { ... } ,
+///         Some("Some function"),
+///    )
+/// }
+/// ```
+#[proc_macro_attribute]
+pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
+    use syn::*;
+
+    // Parse builtin_fn attributes.
+    let parser = punctuated::Punctuated::<BuiltinParam, Token![,]>::parse_terminated;
+    let attrs = parse_macro_input!(attr with parser);
+
+    // Generate the parameter! calls
+    let params = attrs.iter().map(|p| {
+        let name_ident = &p.name;
+        
+        // Handle optional types/defaults in your parameter! macro
+        // Assuming your parameter! macro supports these fields:
+        match (&p.ty, &p.default_value) {
+            (Some(t), Some(d)) => quote! { parameter!(#name_ident: #t = #d) },
+            (Some(t), None)    => quote! { parameter!(#name_ident: #t) },
+            (None, Some(d))    => quote! { parameter!(#name_ident = #d) },
+            (None, None)       => quote! { parameter!(#name_ident) },
+        }
+    });
+
+    // Parse the function
+    let input_fn = parse_macro_input!(item as ItemFn);
+    let fn_name = &input_fn.sig.ident;
+    let fn_vis = &input_fn.vis;
+    let fn_attrs = &input_fn.attrs;
+    let fn_docs = get_doc_comment(fn_attrs);
+    let fn_body = &input_fn.block; // This is the closure returned by the user
+
+    TokenStream::from(quote! {
+        #(#fn_attrs)*
+        #fn_vis fn #fn_name() -> crate::Symbol {
+            crate::Symbol::new_builtin_fn(
+                stringify!(#fn_name),
+                vec![#(#params),*].into_iter(),
+                &#fn_body,
+                Some(#fn_docs),
+            )
         }
     })
 }

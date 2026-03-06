@@ -3,32 +3,23 @@
 
 //! Built-in import function.
 
+use microcad_builtin_proc_macros::builtin_fn;
 use microcad_lang::{builtin::*, diag::*, eval::*, value::*};
 
-use crate::Symbol;
-
 /// `__builtin::import` function to import data from files.
+#[builtin_fn(filename: String, id: String = String::new())]
 pub fn import() -> Symbol {
-    Symbol::new_builtin_fn(
-        "import",
-        [
-            parameter!(filename: String),
-            parameter!(id: String = String::new()),
-        ]
-        .into_iter(),
-        &|parameter_values, argument_values, context| match ArgumentMatch::find_match(
-            argument_values,
-            parameter_values,
-        ) {
-            Ok(arg_map) => {
-                let search_paths = context.search_paths().clone();
-                context.import(&arg_map, &search_paths)
-            }
-            Err(err) => {
-                context.error(argument_values, err)?;
-                Ok(Value::None)
-            }
-        },
-        None,
-    )
+    |parameter_values, argument_values, context| match ArgumentMatch::find_match(
+        argument_values,
+        parameter_values,
+    ) {
+        Ok(arg_map) => {
+            let search_paths = context.search_paths().clone();
+            context.import(&arg_map, &search_paths)
+        }
+        Err(err) => {
+            context.error(argument_values, err)?;
+            Ok(Value::None)
+        }
+    }
 }

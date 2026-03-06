@@ -28,6 +28,13 @@ pub struct InitDefinition {
     pub src_ref: SrcRef,
 }
 
+impl InitDefinition {
+    /// Return signature with parameters if this init.
+    pub fn signature(&self) -> String {
+        format!("init({parameters}) ", parameters = self.parameters)
+    }
+}
+
 impl Doc for InitDefinition {
     fn doc(&self) -> Option<DocBlock> {
         self.doc.clone()
@@ -42,7 +49,7 @@ impl SrcReferrer for InitDefinition {
 
 impl std::fmt::Display for InitDefinition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "init({parameters}) ", parameters = self.parameters)?;
+        write!(f, "{}", self.signature())?;
         write!(f, "{body}", body = self.body)
     }
 }

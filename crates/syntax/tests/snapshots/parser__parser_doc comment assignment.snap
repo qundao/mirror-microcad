@@ -12,22 +12,21 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Comment(
-                    Comment {
-                        span: 0..15,
-                        lines: [
-                            "/// Doc comment",
-                        ],
-                    },
-                ),
                 Assignment(
                     Assignment {
-                        span: 20..25,
+                        span: 0..25,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
                         },
-                        doc: None,
+                        doc: Some(
+                            Comment {
+                                span: 0..20,
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            },
+                        ),
                         attributes: [],
                         visibility: None,
                         qualifier: None,

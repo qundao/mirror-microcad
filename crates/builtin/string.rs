@@ -9,53 +9,46 @@ use microcad_builtin_proc_macros::builtin_mod;
 #[builtin_mod]
 #[allow(clippy::module_inception)]
 pub mod string {
-    use microcad_lang::{diag::PushDiag, parameter, resolve::Symbol, value::Value};
+    use microcad_builtin_proc_macros::builtin_fn;
+    use microcad_lang::{diag::PushDiag, parameter, value::Value};
 
     /// Return the length a string.
+    #[builtin_fn(s: String)]
     pub fn len() -> Symbol {
-        Symbol::new_builtin_fn(
-            "len",
-            [parameter!(s: String)].into_iter(),
-            &|_params, args, ctx| {
-                let (_, arg) = args.get_single()?;
-                Ok(match &arg.value {
-                    Value::String(s) => s.chars().count().into(),
-                    _ => {
-                        ctx.error(
-                            arg,
-                            microcad_lang::eval::EvalError::BuiltinError(
-                                "Value is not a string.".into(),
-                            ),
-                        )?;
-                        Value::None
-                    }
-                })
-            },
-            None,
-        )
+        |_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::String(s) => s.chars().count().into(),
+                _ => {
+                    ctx.error(
+                        arg,
+                        microcad_lang::eval::EvalError::BuiltinError(
+                            "Value is not a string.".into(),
+                        ),
+                    )?;
+                    Value::None
+                }
+            })
+        }
     }
 
     /// Return the count of characters in a string.
+    #[builtin_fn(s: String)]
     pub fn count() -> Symbol {
-        Symbol::new_builtin_fn(
-            "count",
-            [parameter!(s: String)].into_iter(),
-            &|_params, args, ctx| {
-                let (_, arg) = args.get_single()?;
-                Ok(match &arg.value {
-                    Value::String(s) => s.chars().count().into(),
-                    _ => {
-                        ctx.error(
-                            arg,
-                            microcad_lang::eval::EvalError::BuiltinError(
-                                "Value is not a string.".into(),
-                            ),
-                        )?;
-                        Value::None
-                    }
-                })
-            },
-            None,
-        )
+        |_params, args, ctx| {
+            let (_, arg) = args.get_single()?;
+            Ok(match &arg.value {
+                Value::String(s) => s.chars().count().into(),
+                _ => {
+                    ctx.error(
+                        arg,
+                        microcad_lang::eval::EvalError::BuiltinError(
+                            "Value is not a string.".into(),
+                        ),
+                    )?;
+                    Value::None
+                }
+            })
+        }
     }
 }

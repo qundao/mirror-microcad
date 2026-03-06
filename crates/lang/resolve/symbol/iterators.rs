@@ -32,13 +32,13 @@ impl Iterator for Children {
     }
 }
 
-/// Iterator that recursively iterates over children of a symbol.
+/// Iterator that recursively iterates over children of a symbol, including the symbol itself.
 pub struct RecurseChildren {
     stack: Symbols,
 }
 
 impl RecurseChildren {
-    /// Create recursive children iterator from symbol (inluding symbol itself).
+    /// Create recursive children iterator from symbol (including symbol itself).
     pub(crate) fn new(symbol: Symbol) -> Self {
         Self {
             stack: vec![symbol].into(),

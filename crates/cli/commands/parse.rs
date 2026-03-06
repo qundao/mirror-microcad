@@ -10,7 +10,7 @@ use microcad_lang::{rc::*, syntax::*, tree_display::*};
 #[derive(clap::Parser)]
 pub struct Parse {
     /// Input µcad file.
-    input: std::path::PathBuf,
+    pub input: std::path::PathBuf,
 
     /// Print syntax tree.
     #[clap(long)]

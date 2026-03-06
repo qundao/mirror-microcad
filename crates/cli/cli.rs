@@ -78,6 +78,9 @@ impl Cli {
             Commands::Completions(completions) => {
                 completions.run(self)?;
             }
+            Commands::Doc(doc) => {
+                doc.run(self)?;
+            }
         }
 
         if self.time {

@@ -9,8 +9,9 @@ use microcad_builtin_proc_macros::builtin_mod;
 #[builtin_mod]
 #[allow(clippy::module_inception)]
 pub mod color {
+    use microcad_builtin_proc_macros::builtin_fn;
     use microcad_core::{Scalar, color::Color};
-    use microcad_lang::{parameter, resolve::*, value::*};
+    use microcad_lang::{parameter, value::*};
 
     /// Red color.
     pub const RED: Color = Color::RED;
@@ -64,48 +65,29 @@ pub mod color {
     pub const TRANSPARENT: Color = Color::TRANSPARENT;
 
     /// Create a color from red, green and blue.
+    #[builtin_fn(r: Scalar, g: Scalar, b: Scalar)]
     pub fn rgb() -> Symbol {
-        Symbol::new_builtin_fn(
-            "rgb",
-            [
-                parameter!(r: Scalar),
-                parameter!(g: Scalar),
-                parameter!(b: Scalar),
-            ]
-            .into_iter(),
-            &|_params, args, _| {
-                Ok(Color::rgb(
-                    args.get::<Scalar>("r") as f32,
-                    args.get::<Scalar>("g") as f32,
-                    args.get::<Scalar>("b") as f32,
-                )
-                .into())
-            },
-            None,
-        )
+        |_params, args, _| {
+            Ok(Color::rgb(
+                args.get::<Scalar>("r") as f32,
+                args.get::<Scalar>("g") as f32,
+                args.get::<Scalar>("b") as f32,
+            )
+            .into())
+        }
     }
 
     /// Create a color from red, green, blue and alpha.
+    #[builtin_fn(r: Scalar, g: Scalar, b: Scalar, a: Scalar)]
     pub fn rgba() -> Symbol {
-        Symbol::new_builtin_fn(
-            "rgba",
-            [
-                parameter!(r: Scalar),
-                parameter!(g: Scalar),
-                parameter!(b: Scalar),
-                parameter!(a: Scalar),
-            ]
-            .into_iter(),
-            &|_params, args, _| {
-                Ok(Color::rgba(
-                    args.get::<Scalar>("r") as f32,
-                    args.get::<Scalar>("g") as f32,
-                    args.get::<Scalar>("b") as f32,
-                    args.get::<Scalar>("a") as f32,
-                )
-                .into())
-            },
-            None,
-        )
+        |_params, args, _| {
+            Ok(Color::rgba(
+                args.get::<Scalar>("r") as f32,
+                args.get::<Scalar>("g") as f32,
+                args.get::<Scalar>("b") as f32,
+                args.get::<Scalar>("a") as f32,
+            )
+            .into())
+        }
     }
 }

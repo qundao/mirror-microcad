@@ -12,23 +12,22 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Comment(
-                    Comment {
-                        span: 0..15,
-                        lines: [
-                            "/// Doc comment",
-                        ],
-                    },
-                ),
                 Workbench(
                     WorkbenchDefinition {
-                        span: 20..85,
+                        span: 0..85,
                         keyword_span: 20..24,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
                         },
-                        doc: None,
+                        doc: Some(
+                            Comment {
+                                span: 0..20,
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            },
+                        ),
                         kind: Part,
                         attributes: [],
                         visibility: None,

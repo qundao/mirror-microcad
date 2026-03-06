@@ -7,52 +7,44 @@ use microcad_builtin_proc_macros::builtin_mod;
 #[builtin_mod]
 #[allow(clippy::module_inception)]
 pub mod debug {
+    use microcad_builtin_proc_macros::builtin_fn;
     use microcad_lang::{
         builtin::ValueAccess,
         diag::PushDiag,
         eval::{ArgumentMatch, EvalError},
         parameter,
-        resolve::Symbol,
         value::{Target, Value},
     };
 
     /// Assertion with an optional message.
+    #[builtin_fn(v: Bool, message: String = String::new())]
     pub fn assert() -> Symbol {
-        Symbol::new_builtin_fn(
-            "assert",
-            [
-                parameter!(v : Bool),                        // Parameter with any type
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter(),
-            &|params, args, context| {
-                match ArgumentMatch::find_multi_match(args, params) {
-                    Ok(multi_args) => {
-                        for a in multi_args.args {
-                            let v: bool = a.get("v");
-                            if !v {
-                                let message: String = a.get("message");
-                                context.error(
-                                    args,
-                                    EvalError::AssertionFailed(if message.is_empty() {
-                                        format!("{v}")
-                                    } else {
-                                        message
-                                    }),
-                                )?;
-                            }
+        |params, args, context| {
+            match ArgumentMatch::find_multi_match(args, params) {
+                Ok(multi_args) => {
+                    for a in multi_args.args {
+                        let v: bool = a.get("v");
+                        if !v {
+                            let message: String = a.get("message");
+                            context.error(
+                                args,
+                                EvalError::AssertionFailed(if message.is_empty() {
+                                    format!("{v}")
+                                } else {
+                                    message
+                                }),
+                            )?;
                         }
                     }
-                    Err(err) => {
-                        // Called `assert` with no or more than 2 parameters
-                        context.error(args, err)?
-                    }
                 }
+                Err(err) => {
+                    // Called `assert` with no or more than 2 parameters
+                    context.error(args, err)?
+                }
+            }
 
-                Ok(Value::None)
-            },
-            None,
-        )
+            Ok(Value::None)
+        }
     }
 
     fn all_equal<T: PartialEq + std::fmt::Debug>(mut iter: impl Iterator<Item = T>) -> bool {
@@ -64,130 +56,106 @@ pub mod debug {
     }
 
     /// Assert equal.
+    #[builtin_fn(array, message: String = String::new())]
     pub fn assert_eq() -> Symbol {
-        Symbol::new_builtin_fn(
-            "assert_eq",
-            [
-                parameter!(array),                           // Parameter with any type
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter(),
-            &|params, args, context| {
-                match ArgumentMatch::find_multi_match(args, params) {
-                    Ok(multi_args) => {
-                        for array in multi_args.args {
-                            let array_value = &array.get_value("array").expect("missing parameter");
+        |params, args, context| {
+            match ArgumentMatch::find_multi_match(args, params) {
+                Ok(multi_args) => {
+                    for array in multi_args.args {
+                        let array_value = &array.get_value("array").expect("missing parameter");
 
-                            if let Value::Array(exprs) = array_value {
-                                if !all_equal(exprs.iter()) {
-                                    let message: String = array.get("message");
-                                    context.error(
-                                        args,
-                                        EvalError::AssertionFailed(if message.is_empty() {
-                                            format!("Values differ: {exprs}")
-                                        } else {
-                                            "{message}".to_string()
-                                        }),
-                                    )?;
-                                }
-                            } else {
+                        if let Value::Array(exprs) = array_value {
+                            if !all_equal(exprs.iter()) {
                                 let message: String = array.get("message");
                                 context.error(
                                     args,
                                     EvalError::AssertionFailed(if message.is_empty() {
-                                        format!("Invalid: {array_value}")
+                                        format!("Values differ: {exprs}")
                                     } else {
                                         "{message}".to_string()
                                     }),
                                 )?;
                             }
+                        } else {
+                            let message: String = array.get("message");
+                            context.error(
+                                args,
+                                EvalError::AssertionFailed(if message.is_empty() {
+                                    format!("Invalid: {array_value}")
+                                } else {
+                                    "{message}".to_string()
+                                }),
+                            )?;
                         }
                     }
-                    Err(err) => {
-                        // Called `assert` with no or more than 2 parameters
-                        context.error(args, err)?
-                    }
                 }
+                Err(err) => {
+                    // Called `assert` with no or more than 2 parameters
+                    context.error(args, err)?
+                }
+            }
 
-                Ok(Value::None)
-            },
-            None,
-        )
+            Ok(Value::None)
+        }
     }
 
     /// Assert that a symbol is valid.
+    #[builtin_fn(target: Target, message: String = String::new())]
     pub fn assert_valid() -> Symbol {
-        Symbol::new_builtin_fn(
-            "assert_valid",
-            [
-                parameter!(target: Target),                  // Parameter name
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter(),
-            &|params, args, context| {
-                match ArgumentMatch::find_multi_match(args, params) {
-                    Ok(multi_args) => {
-                        for arg in multi_args.args {
-                            let target = arg.get::<Target>("target");
-                            if target.target.is_none() {
-                                context.error(
-                                    &arg,
-                                    EvalError::AssertionFailed(format!(
-                                        "Symbol `{}` not found.",
-                                        target.name
-                                    )),
-                                )?;
-                            }
+        |params, args, context| {
+            match ArgumentMatch::find_multi_match(args, params) {
+                Ok(multi_args) => {
+                    for arg in multi_args.args {
+                        let target = arg.get::<Target>("target");
+                        if target.target.is_none() {
+                            context.error(
+                                &arg,
+                                EvalError::AssertionFailed(format!(
+                                    "Symbol `{}` not found.",
+                                    target.name
+                                )),
+                            )?;
                         }
                     }
-                    Err(err) => {
-                        // Called `assert` with no or more than 2 parameters
-                        context.error(args, err)?
-                    }
                 }
+                Err(err) => {
+                    // Called `assert` with no or more than 2 parameters
+                    context.error(args, err)?
+                }
+            }
 
-                Ok(Value::None)
-            },
-            None,
-        )
+            Ok(Value::None)
+        }
     }
 
     /// Assert that a symbol is invalid.
+    #[builtin_fn(target: Target, message: String = String::new())]
     pub fn assert_invalid() -> Symbol {
-        Symbol::new_builtin_fn(
-            "assert_invalid",
-            [
-                parameter!(target: Target),                  // Parameter name
-                parameter!(message: String = String::new()), // Optional message
-            ]
-            .into_iter(),
-            &|params, args, context| {
-                match ArgumentMatch::find_multi_match(args, params) {
-                    Ok(multi_args) => {
-                        for arg in multi_args.args {
-                            let target = arg.get::<Target>("target");
-                            if let Some(query) = target.target {
-                                log::trace!("target_name: {query}, {}", target.name);
-                                context.error(
-                                    &arg,
-                                    EvalError::AssertionFailed(format!(
-                                        "Found valid symbol '{name}' within module '{base}'.",
-                                        name = target.name,
-                                        base = query.base(&target.name)
-                                    )),
-                                )?;
-                            }
+        |params, args, context| {
+            match ArgumentMatch::find_multi_match(args, params) {
+                Ok(multi_args) => {
+                    for arg in multi_args.args {
+                        let target = arg.get::<Target>("target");
+                        if let Some(query) = target.target {
+                            log::trace!("target_name: {query}, {}", target.name);
+                            context.error(
+                                &arg,
+                                EvalError::AssertionFailed(format!(
+                                    "Found valid symbol '{name}' within module '{base}'.",
+                                    name = target.name,
+                                    base = query.base(&target.name)
+                                )),
+                            )?;
                         }
                     }
-                    Err(err) => {
-                        // Called `assert` with no or more than 2 parameters
-                        context.error(args, err)?
-                    }
                 }
+                Err(err) => {
+                    // Called `assert` with no or more than 2 parameters
+                    context.error(args, err)?
+                }
+            }
 
-                Ok(Value::None)
-            },
-            None,
-        )
+            Ok(Value::None)
+        }
     }
 }
