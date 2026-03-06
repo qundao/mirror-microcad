@@ -8,7 +8,7 @@ impl Eval for TupleExpression {
         let (unnamed, named): (Vec<_>, _) = Eval::<ArgumentValueList>::eval(&self.args, context)?
             .iter()
             .map(|(id, arg)| (id.clone(), arg.value.clone()))
-            .partition(|(id, _)| id.is_none());
+            .partition(|(id, _)| id.is_empty());
 
         // check unnamed for ambiguous types
         let mut h = std::collections::HashSet::new();

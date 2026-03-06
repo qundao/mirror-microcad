@@ -122,6 +122,18 @@ impl IntoIterator for Array {
     }
 }
 
+impl From<Array> for ArrayExpression {
+    fn from(val: Array) -> Self {
+        ArrayExpression {
+            inner: ArrayExpressionInner::List(
+                val.iter().map(|value| value.clone().into()).collect(),
+            ),
+            src_ref: SrcRef(None),
+            unit: Unit::None,
+        }
+    }
+}
+
 impl TryFrom<ValueList> for Array {
     type Error = ValueError;
     fn try_from(items: ValueList) -> ValueResult<Array> {

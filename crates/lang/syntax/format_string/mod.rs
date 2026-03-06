@@ -57,6 +57,15 @@ impl SrcReferrer for FormatString {
     }
 }
 
+impl From<Refer<String>> for FormatString {
+    fn from(value: Refer<String>) -> Self {
+        FormatString(Refer {
+            src_ref: value.src_ref.clone(),
+            value: vec![FormatStringInner::String(value)],
+        })
+    }
+}
+
 impl std::fmt::Display for FormatString {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, r#"""#)?;

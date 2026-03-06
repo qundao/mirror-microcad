@@ -33,7 +33,7 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{model::*, src_ref::SrcRef, syntax::*, ty::*};
+use crate::{model::*, src_ref::*, syntax::*, ty::*};
 use microcad_core::*;
 
 pub(crate) type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
@@ -619,6 +619,23 @@ impl AttributesAccess for Value {
         match self {
             Value::Model(model) => model.get_attributes_by_id(id),
             _ => Vec::default(),
+        }
+    }
+}
+
+impl From<Value> for Expression {
+    fn from(val: Value) -> Self {
+        match val {
+            Value::Quantity(Quantity {
+                value,
+                quantity_type: QuantityType::Scalar,
+            }) => Expression::Literal(Literal::Number(NumberLiteral(
+                value,
+                Unit::None,
+                SrcRef(None),
+            ))),
+            Value::Tuple(t) => Expression::TupleExpression((*t).into()),
+            _ => unimplemented!(),
         }
     }
 }
