@@ -72,37 +72,13 @@ pub struct Inits<'a>(std::slice::Iter<'a, Statement>);
 /// Interface for elements which have *initializers*.
 pub trait Initialized<'a> {
     /// return iterator of body statements.
-    fn statements(&'a self) -> std::slice::Iter<'a, Statement>;
+    fn statements(&'a self) -> impl Iterator<Item = &'a Statement> + 'a;
 
     /// Return iterator over all initializers.
-    fn inits(&'a self) -> Inits<'a>
-    where
-        Self: std::marker::Sized,
-    {
-        Inits::new(self)
-    }
-}
-
-impl<'a> Inits<'a> {
-    /// Create new init for a part.
-    pub fn new(def: &'a impl Initialized<'a>) -> Self {
-        Self(def.statements())
-    }
-}
-
-impl<'a> Iterator for Inits<'a> {
-    type Item = &'a InitDefinition;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        for statement in self.0.by_ref() {
-            match statement {
-                Statement::Init(init_definition) => {
-                    return Some(init_definition);
-                }
-                _ => continue,
-            }
-        }
-
-        None
+    fn inits(&'a self) -> impl Iterator<Item = &'a InitDefinition> + 'a {
+        self.statements().filter_map(|statement| match statement {
+            Statement::Init(init) => Some(init.as_ref()),
+            _ => None,
+        })
     }
 }

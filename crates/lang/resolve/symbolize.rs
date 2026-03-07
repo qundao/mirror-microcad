@@ -53,7 +53,7 @@ impl Symbolize<SymbolMap> for StatementList {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<SymbolMap> {
         let mut symbols = SymbolMap::default();
         // Iterate over all statement fetch definitions
-        for statement in &self.0 {
+        for statement in self.iter() {
             if let Some((id, symbol)) = statement.symbolize(parent, context)? {
                 if let Some(alt) = symbols.insert(id.clone(), symbol) {
                     context.error(

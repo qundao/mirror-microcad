@@ -66,7 +66,7 @@ impl DeduceResult for StatementList {
     fn deduce_result(&self, context: &mut EvalContext) -> EvalResult<Type> {
         let mut result = Type::Invalid;
         let mut result_src_ref = None;
-        for statement in &self.0 {
+        for statement in self.iter() {
             if let Some(result_src_ref) = result_src_ref {
                 context.error(
                     statement,

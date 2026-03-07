@@ -237,7 +237,7 @@ impl Body {
         }
         if let (Some((first_init_pos, first_init)), Some((last_init_pos, last_init))) = (
             self.iter().enumerate().find_map(find_init),
-            self.iter().enumerate().rev().find_map(find_init),
+            self.iter().enumerate().filter_map(find_init).last(),
         ) {
             use ResolveError::*;
             let code_before_err = |stmt: &Statement| StatementNotAllowedPriorInitializers {
