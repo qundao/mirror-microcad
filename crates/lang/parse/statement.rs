@@ -147,14 +147,20 @@ impl FromAst for StatementList {
     type AstNode = ast::StatementList;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        Ok(StatementList(
-            node.statements
+        Ok(StatementList {
+            statements: node
+                .statements
                 .iter()
-                .chain(node.tail.iter().map(|tail| tail.as_ref()))
                 .filter(|statement| !matches!(statement, ast::Statement::Comment(_)))
                 .map(|statement| Statement::from_ast(statement, context))
                 .collect::<Result<Vec<_>, _>>()?,
-        ))
+            tail: node
+                .tail
+                .as_deref()
+                .map(|statement| Statement::from_ast(statement, context))
+                .transpose()?
+                .map(Box::new),
+        })
     }
 }
 
