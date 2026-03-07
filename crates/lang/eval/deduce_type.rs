@@ -66,25 +66,41 @@ impl DeduceResult for StatementList {
     fn deduce_result(&self, context: &mut EvalContext) -> EvalResult<Type> {
         let mut result = Type::Invalid;
         let mut result_src_ref = None;
-        for statement in self.iter() {
-            if let Some(result_src_ref) = result_src_ref {
-                context.error(
-                    statement,
-                    EvalError::UnexpectedResult {
-                        result: result_src_ref,
-                        statement: statement.src_ref(),
-                    },
-                )?;
-                break;
-            }
+        for statement in &self.statements {
             match statement.deduce_result(context)? {
-                Type::Model | Type::Invalid | Type::Return(..) => (),
-                r => {
+                r @ Type::Return(..) => {
+                    if let Some(result_src_ref) = result_src_ref.clone() {
+                        context.error(
+                            statement,
+                            EvalError::UnexpectedResult {
+                                result: result_src_ref,
+                                statement: statement.src_ref(),
+                            },
+                        )?;
+                        break;
+                    }
+
                     result = r;
                     result_src_ref = Some(statement.src_ref())
-                }
+                },
+                _ => (),
             }
         }
+
+        if let Some(tail) = self.tail.as_deref() {
+            if let Some(result_src_ref) = result_src_ref {
+                context.error(
+                    tail,
+                    EvalError::UnexpectedResult {
+                        result: result_src_ref,
+                        statement: tail.src_ref(),
+                    },
+                )?;
+            }
+            result = tail.deduce_result(context)?;
+            result_src_ref = Some(tail.src_ref())
+        }
+
         Ok(result).inspect(|ty| log::trace!("deduced StatementList: {ty}"))
     }
 }
