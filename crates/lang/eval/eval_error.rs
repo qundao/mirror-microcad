@@ -49,10 +49,6 @@ pub enum EvalError {
     #[error("No symbols found to use in {0}")]
     NoSymbolsToUse(QualifiedName),
 
-    /// Symbol was not expected to be found (e.g. `assert_invalid`).
-    #[error("Unexpectedly found symbol {0}")]
-    SymbolFound(QualifiedName),
-
     /// The symbol cannot be called, e.g. when it is a source file or a module.
     #[error("Symbol `{0}` cannot be called.")]
     SymbolCannotBeCalled(QualifiedName),

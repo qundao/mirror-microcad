@@ -26,8 +26,6 @@ pub enum Type {
     Matrix(MatrixType),
     /// Model.
     Model,
-    /// used for assert_valid() and assert_invalid()
-    Target,
 }
 
 impl Type {
@@ -127,7 +125,6 @@ impl std::fmt::Display for Type {
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
             Self::Model => write!(f, "Model"),
-            Self::Target => write!(f, "Target"),
         }
     }
 }
@@ -144,7 +141,6 @@ impl std::fmt::Debug for Type {
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
             Self::Model => write!(f, "Models"),
-            Self::Target => write!(f, "Target"),
         }
     }
 }

@@ -51,8 +51,6 @@ pub enum BuiltinTypeHelper {
     Bool,
     /// Color type.
     Color,
-    /// used for assert_valid() and assert_invalid()
-    Target,
 }
 
 impl From<BuiltinTypeHelper> for Type {
@@ -69,7 +67,6 @@ impl From<BuiltinTypeHelper> for Type {
             BuiltinTypeHelper::String => Type::String,
             BuiltinTypeHelper::Bool => Type::Bool,
             BuiltinTypeHelper::Color => Type::Tuple(TupleType::new_color().into()),
-            BuiltinTypeHelper::Target => Type::Target,
         }
     }
 }
@@ -101,8 +98,6 @@ pub enum BuiltinValueHelper {
     Bool(bool),
     /// Color type
     Color(Color),
-    /// Name (for assert_valid() and assert_invalid()
-    Name(Target),
 }
 
 impl From<BuiltinValueHelper> for Value {
@@ -129,7 +124,6 @@ impl From<BuiltinValueHelper> for Value {
             BuiltinValueHelper::String(s) => Value::String(s),
             BuiltinValueHelper::Bool(b) => Value::Bool(b),
             BuiltinValueHelper::Color(c) => c.into(),
-            BuiltinValueHelper::Name(t) => t.into(),
         }
     }
 }

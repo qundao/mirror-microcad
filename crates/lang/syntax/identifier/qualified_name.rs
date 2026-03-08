@@ -3,6 +3,7 @@
 
 use crate::{src_ref::*, syntax::*};
 use derive_more::{Deref, DerefMut};
+use microcad_syntax::tokens::SpannedToken;
 use miette::SourceSpan;
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,

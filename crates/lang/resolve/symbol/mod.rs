@@ -436,9 +436,7 @@ impl Symbol {
     pub(super) fn source_hash(&self) -> u64 {
         self.inner.borrow().def.source_hash()
     }
-}
 
-impl Symbol {
     pub(crate) fn is_used(&self) -> bool {
         self.inner.borrow().used.get().is_some()
     }
