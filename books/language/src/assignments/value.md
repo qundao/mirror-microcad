@@ -45,19 +45,19 @@ assert_eq([ a, 5 ]);
     // define b within scope #1
     b = a * 2;
     // of course b is available at this point
-    assert_valid( b );
+    assert(is_valid("b"));
 
     // scope #2
     {
         // b is available in scope #2 because #2 is within #1
-        assert_valid( b );
+        assert(is_valid("b"));
     }
 }
 
 // a is still available
-assert_valid(a);
+assert(is_valid("a"));
 // b not known here anymore
-assert_invalid(b);
+assert(!is_valid("b"));
 ```
 
 ## Restrictions

@@ -6,30 +6,32 @@
 
 ```µcad,scopes
 a = 1;
+use __builtin::debug::assert;
+use __builtin::debug::is_valid;
 
-__builtin::debug::assert_valid(a);
-__builtin::debug::assert_invalid(b);
-__builtin::debug::assert_invalid(c);
+assert(is_valid("a"));
+assert(!is_valid("b"));
+assert(!is_valid("c"));
 
 {
-    __builtin::debug::assert_valid(a);
-    __builtin::debug::assert_invalid(b);
-    __builtin::debug::assert_invalid(c);
+    assert(is_valid("a"));
+    assert(!is_valid("b"));
+    assert(!is_valid("c"));
 
     b = 2;
 
-    __builtin::debug::assert_valid(a);
-    __builtin::debug::assert_valid(b);
-    __builtin::debug::assert_invalid(c);
+    assert(is_valid("a"));
+    assert(is_valid("b"));
+    assert(!is_valid("c"));
 
     c = 3;
 
-    __builtin::debug::assert_valid(a);
-    __builtin::debug::assert_valid(b);
-    __builtin::debug::assert_valid(c);
+    assert(is_valid("a"));
+    assert(is_valid("b"));
+    assert(is_valid("c"));
 };
 
-__builtin::debug::assert_valid(a);
-__builtin::debug::assert_invalid(b);
-__builtin::debug::assert_invalid(c);
+assert(is_valid("a"));
+assert(!is_valid("b"));
+assert(!is_valid("c"));
 ```

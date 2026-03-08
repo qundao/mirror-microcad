@@ -14,8 +14,12 @@ mod my {
     }
 }
 
-__builtin::debug::assert_valid(my::mod_public::const_public);
-__builtin::debug::assert_invalid(my::mod_public::const_private);
-__builtin::debug::assert_invalid(my::mod_private::const_public);
-__builtin::debug::assert_invalid(my::mod_private::const_private);
+use __builtin::debug::assert;
+use __builtin::debug::is_valid;
+
+
+assert(is_valid("my::mod_public::const_public"));
+assert(!is_valid("my::mod_public::const_private"));
+assert(!is_valid("my::private_public::const_public"));
+assert(!is_valid("my::private_public::const_private"));
 ```
