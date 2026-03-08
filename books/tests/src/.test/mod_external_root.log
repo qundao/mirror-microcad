@@ -8,7 +8,7 @@
 -- Code --
 
    6:   mod external;
-   7:   std::debug::assert_valid(external::a);
+   7:   std::debug::assert(std::debug::is_valid("external::a"));
 
 -- No Output --
 -- No Errors --

@@ -2,15 +2,15 @@
 -- Test --
         Test name: use_as_test
   Expected result: ok
-      Source file: ../books/tests/src/use.md:47
+      Source file: ../books/tests/src/use.md:48
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  47:   use std::geo2d::*; 
-  48:   use Rect as Cap;
-  49:   
-  50:   Cap(width=1mm,height=1mm);
+  48:   use std::geo2d::*; 
+  49:   use Rect as Cap;
+  50:   
+  51:   Cap(width=1mm,height=1mm);
 
 -- No Output --
 -- No Errors --

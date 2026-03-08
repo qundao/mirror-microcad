@@ -2,67 +2,67 @@
 -- Test --
         Test name: use_statement_test
   Expected result: ok
-      Source file: ../books/tests/src/use.md:56
+      Source file: ../books/tests/src/use.md:57
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  56:   // use symbol `circle` in file `geo2d.µcad`
-  57:   use std::geo2d::Circle;
-  58:   // use all symbols in file `geo3d.µcad`
-  59:   use std::geo3d::*;
-  60:   // alias `bar` in `std/text/foo.µcad` into `baz`
-  61:   use std::math::abs as baz;
-  62:   // use print from `std/module.µcad`
-  63:   use std::print;
-  64:   // public use operation from `std/module.µcad`
-  65:   pub use std::ops;
-  66:   
-  67:   // use debug from `std/module.µcad`
-  68:   use std::debug;
-  69:   debug::assert(true);
-  70:   
-  71:   part MyPart3d() { Sphere(radius=1mm); }
-  72:   sketch MySketch2d() { Circle(radius=1mm); }
-  73:   
-  74:   x = MySketch2d();
-  75:   y = MyPart3d();
-  76:   z = baz(-1.0);
+  57:   // use symbol `circle` in file `geo2d.µcad`
+  58:   use std::geo2d::Circle;
+  59:   // use all symbols in file `geo3d.µcad`
+  60:   use std::geo3d::*;
+  61:   // alias `bar` in `std/text/foo.µcad` into `baz`
+  62:   use std::math::abs as baz;
+  63:   // use print from `std/module.µcad`
+  64:   use std::print;
+  65:   // public use operation from `std/module.µcad`
+  66:   pub use std::ops;
+  67:   
+  68:   // use debug from `std/module.µcad`
+  69:   use std::debug;
+  70:   debug::assert(true);
+  71:   
+  72:   part MyPart3d() { Sphere(radius=1mm); }
+  73:   sketch MySketch2d() { Circle(radius=1mm); }
+  74:   
+  75:   x = MySketch2d();
+  76:   y = MyPart3d();
+  77:   z = baz(-1.0);
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 74:1: Unused local x.
-    ╭─[../books/tests/src/use.md:74:1]
- 73 │ 
- 74 │ x = MySketch2d();
+  ⚠ warning: 75:1: Unused local x.
+    ╭─[../books/tests/src/use.md:75:1]
+ 74 │ 
+ 75 │ x = MySketch2d();
     · ┬
     · ╰── Unused local x.
- 75 │ y = MyPart3d();
+ 76 │ y = MyPart3d();
     ╰────
-  ⚠ warning: 75:1: Unused local y.
-    ╭─[../books/tests/src/use.md:75:1]
- 74 │ x = MySketch2d();
- 75 │ y = MyPart3d();
+  ⚠ warning: 76:1: Unused local y.
+    ╭─[../books/tests/src/use.md:76:1]
+ 75 │ x = MySketch2d();
+ 76 │ y = MyPart3d();
     · ┬
     · ╰── Unused local y.
- 76 │ z = baz(-1.0);
+ 77 │ z = baz(-1.0);
     ╰────
-  ⚠ warning: 76:1: Unused local z.
-    ╭─[../books/tests/src/use.md:76:1]
- 75 │ y = MyPart3d();
- 76 │ z = baz(-1.0);
+  ⚠ warning: 77:1: Unused local z.
+    ╭─[../books/tests/src/use.md:77:1]
+ 76 │ y = MyPart3d();
+ 77 │ z = baz(-1.0);
     · ┬
     · ╰── Unused local z.
     ╰────
-  ⚠ warning: 63:5: Unused global symbol std::print.
-    ╭─[../books/tests/src/use.md:63:5]
- 62 │ // use print from `std/module.µcad`
- 63 │ use std::print;
+  ⚠ warning: 64:5: Unused global symbol std::print.
+    ╭─[../books/tests/src/use.md:64:5]
+ 63 │ // use print from `std/module.µcad`
+ 64 │ use std::print;
     ·     ─────┬────
     ·          ╰── Unused global symbol std::print.
- 64 │ // public use operation from `std/module.µcad`
+ 65 │ // public use operation from `std/module.µcad`
     ╰────
-Unexpected warnings(s) which did occur in line(s): 63, 74, 75, 76
+Unexpected warnings(s) which did occur in line(s): 64, 75, 76, 77
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)
