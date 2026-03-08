@@ -4,7 +4,10 @@
 //! Builder pattern to build built-in modules.
 
 use crate::{
-    builtin::BuiltinWorkbenchDefinition, resolve::*, src_ref::*, syntax::*, ty::Ty, value::Value,
+    builtin::{Builtin, BuiltinWorkbenchDefinition},
+    resolve::*,
+    syntax::*,
+    value::Value,
 };
 
 /// Builder pattern to build built-in modules.
@@ -38,23 +41,13 @@ impl ModuleBuilder {
     /// Add a public constant.
     pub fn pub_const(self, id: &str, value: impl Into<Value>) -> Self {
         let value = value.into();
-        self.symbol(Symbol::new_with_visibility(
-            Visibility::Public,
-            SymbolDef::Assignment(
-                Assignment::new(
-                    // TODO: add doc
-                    None,
-                    Visibility::Public,
-                    Qualifier::Const,
-                    id.into(),
-                    Some(TypeAnnotation(Refer::none(value.ty()))),
-                    value.into(),
-                    SrcRef(None),
-                )
-                .into(),
-            ),
-            None,
-        ))
+        self.symbol(Symbol::new_builtin(Builtin::Constant(
+            super::BuiltinConstant {
+                id: Identifier::no_ref(id),
+                value,
+                doc: None,
+            },
+        )))
     }
 
     /// Return our module symbol.
