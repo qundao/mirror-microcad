@@ -45,6 +45,10 @@ pub enum EvalError {
     #[error("Symbol {0} not found.")]
     SymbolNotFound(QualifiedName),
 
+    /// Symbol not found.
+    #[error("Symbol {0} is not a {1}")]
+    TargetNotFound(QualifiedName, LookupTarget),
+
     /// Given symbol has not children which can be used.
     #[error("No symbols found to use in {0}")]
     NoSymbolsToUse(QualifiedName),

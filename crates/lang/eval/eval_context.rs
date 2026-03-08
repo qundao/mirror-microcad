@@ -385,8 +385,15 @@ impl Lookup<EvalError> for EvalContext {
                         | EvalError::ResolveError(ResolveError::ExternalPathNotFound(_))
                         | EvalError::ResolveError(ResolveError::SymbolIsPrivate(_))
                         | EvalError::ResolveError(ResolveError::NulHash)
-                        | EvalError::ResolveError(ResolveError::WrongTarget),
                     ) => (),
+                    Err(EvalError::ResolveError(ResolveError::WrongTarget)) =>                
+                    {
+                        log::debug!(
+                            "{not_found} {target} '{name:?}'",
+                            not_found = crate::mark!(NOT_FOUND!)
+                        );
+                        errors.push((origin,EvalError::TargetNotFound(name.clone(), target)));
+                    }
                     Err(err) => errors.push((origin, err)),
                 }
                 (oks, ambiguities, errors)

@@ -4,7 +4,7 @@
 use crate::{resolve::*, syntax::*};
 
 /// Target of symbol to look up.
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum LookupTarget {
     /// Lookup for any symbol
     Any,
