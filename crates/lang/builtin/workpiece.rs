@@ -4,36 +4,10 @@
 //! Builtin function evaluation entity
 
 use custom_debug::Debug;
-use strum::Display;
 
 use crate::{
     builtin::*, eval::*, model::*, render::*, resolve::*, src_ref::*, syntax::*, value::*,
 };
-
-/// The kind of the built-in workbench determines its output.
-#[derive(Debug, Clone, Display, PartialEq)]
-pub enum BuiltinWorkbenchKind {
-    /// A parametric 2D primitive.
-    Primitive2D,
-    /// A parametric 3D primitive.
-    Primitive3D,
-    /// An affine transformation.
-    Transform,
-    /// An operation on a model.
-    Operation,
-}
-
-impl BuiltinWorkbenchKind {
-    /// return kind name
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            BuiltinWorkbenchKind::Primitive2D => "primitive-2d",
-            BuiltinWorkbenchKind::Primitive3D => "primitive-3d",
-            BuiltinWorkbenchKind::Transform => "transform",
-            BuiltinWorkbenchKind::Operation => "operator",
-        }
-    }
-}
 
 /// The return value when calling a built-in workpiece.
 pub enum BuiltinWorkpieceOutput {
@@ -170,12 +144,12 @@ pub trait BuiltinWorkbenchDefinition {
 
     /// Create builtin symbol
     fn symbol() -> Symbol {
-        Symbol::new_builtin(Builtin {
+        Symbol::new_builtin(Builtin::Workbench(BuiltinWorkbench {
             id: Identifier::no_ref(Self::id()),
             parameters: Self::parameters(),
-            kind: BuiltinKind::Workbench(Self::kind()),
+            kind: Self::kind(),
             f: Self::function(),
             doc: Self::doc(),
-        })
+        }))
     }
 }

@@ -17,16 +17,7 @@ pub(crate) use symbols::*;
 
 use symbol_inner::*;
 
-use crate::{
-    builtin::*,
-    rc::*,
-    resolve::{names::name_list::NameList, *},
-    src_ref::*,
-    syntax::*,
-    tree_display::*,
-    ty::*,
-    value::*,
-};
+use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*, value::*};
 
 /// Symbol
 #[derive(Clone)]
@@ -81,7 +72,7 @@ impl Symbol {
     /// - `parameters`: Optional parameter list
     /// - `f`: The builtin function
     pub(crate) fn new_builtin(builtin: Builtin) -> Symbol {
-        Symbol::new(SymbolDef::Builtin(Rc::new(builtin)), None)
+        Symbol::new(SymbolDef::Builtin(builtin), None)
     }
 
     /// New builtin function as symbol.
@@ -91,13 +82,12 @@ impl Symbol {
         f: &'static BuiltinFn,
         doc: Option<&'static str>,
     ) -> Symbol {
-        Self::new_builtin(Builtin {
+        Self::new_builtin(Builtin::Function(BuiltinFunction {
             id: Identifier::no_ref(name),
             parameters: parameters.collect(),
-            kind: BuiltinKind::Function,
             f,
             doc: doc.map(DocBlock::new_builtin),
-        })
+        }))
     }
 
     /// Replace inner of a symbol with the inner of another.
@@ -113,14 +103,6 @@ impl Symbol {
 }
 
 impl Symbol {
-    /// Search all ids which require target mode (e.g. `assert_valid`)
-    pub(super) fn search_target_mode_ids(&self) -> IdentifierSet {
-        self.riter()
-            .filter(|symbol| symbol.is_target_mode())
-            .map(|symbol| symbol.id())
-            .collect()
-    }
-
     /// Return a list of unused private symbols
     ///
     /// Use this after eval for any useful result.
@@ -612,19 +594,6 @@ impl Symbol {
             .extend(from_children.iter().map(|(k, v)| (k.clone(), v.clone())));
         // return symbols collected from self
         Ok(from_self)
-    }
-
-    /// Returns `true` if builtin symbol uses parameter of type Name
-    ///
-    /// (for assert_valid() and assert_invalid())
-    pub(crate) fn is_target_mode(&self) -> bool {
-        self.with_def(|def| match def {
-            SymbolDef::Builtin(builtin) => builtin
-                .parameters
-                .values()
-                .any(|param| param.ty() == Type::Target),
-            _ => false,
-        })
     }
 
     /// Search down the symbol tree for a qualified name.

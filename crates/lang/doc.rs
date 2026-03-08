@@ -120,7 +120,12 @@ impl Doc for Assignment {
 
 impl Doc for Builtin {
     fn outer_doc(&self) -> DocBlock {
-        self.doc.as_ref().cloned().unwrap_or_default()
+        match self {
+            Builtin::Function(builtin_function) => builtin_function.doc.clone(),
+            Builtin::Workbench(builtin_workbench) => builtin_workbench.doc.clone(),
+            Builtin::Constant(builtin_constant) => builtin_constant.doc.clone(),
+        }
+        .unwrap_or_default()
     }
 }
 

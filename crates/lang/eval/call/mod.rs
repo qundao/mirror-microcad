@@ -92,12 +92,7 @@ impl Eval for Call {
         };
 
         // evaluate arguments
-        let args: ArgumentValueList = if symbol.is_target_mode() {
-            // for assert_valid() and assert_invalid()
-            Eval::<ArgumentValueListRaw>::eval(&self.argument_list, context)?.into()
-        } else {
-            self.argument_list.eval(context)?
-        };
+        let args: ArgumentValueList = self.argument_list.eval(context)?;
 
         log::debug!(
             "{call} {name:?}({args:?})",

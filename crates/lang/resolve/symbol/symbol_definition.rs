@@ -1,10 +1,12 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use derive_more::From;
+
 use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, value::*};
 
 /// Symbol definition
-#[derive(Clone, Default)]
+#[derive(Clone, Default, From)]
 pub enum SymbolDef {
     /// Project's root symbol.
     #[default]
@@ -20,7 +22,7 @@ pub enum SymbolDef {
     /// Assignment.
     Assignment(Rc<Assignment>),
     /// Builtin symbol.
-    Builtin(Rc<Builtin>),
+    Builtin(Builtin),
     /// Alias of a pub use statement.
     Alias(Visibility, Identifier, QualifiedName),
     /// Use all available symbols in the module with the given name.
@@ -78,7 +80,7 @@ impl SymbolDef {
             Self::Module(..) => "module",
             Self::Function(..) => "function",
             Self::SourceFile(..) => "source file",
-            Self::Builtin(b) => b.kind.as_str(),
+            Self::Builtin(..) => "built-in",
             Self::Value(..) => "constant",
             Self::Assignment(..) => "assignment",
             Self::Alias(..) => "alias",

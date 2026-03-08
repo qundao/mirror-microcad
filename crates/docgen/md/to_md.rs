@@ -4,7 +4,7 @@
 //! Microcad micro markdown parser and writer
 
 use microcad_lang::{
-    builtin::{BuiltinKind, BuiltinWorkbenchKind},
+    builtin::{Builtin, BuiltinWorkbenchKind},
     doc::Doc,
     resolve::*,
     syntax::{
@@ -191,10 +191,9 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in 2D primitives", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => matches!(
-                            &builtin.kind,
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive2D)
-                        ),
+                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
+                            matches!(&wb.kind, BuiltinWorkbenchKind::Primitive2D)
+                        }
                         _ => false,
                     }
                 })
@@ -204,10 +203,9 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in 3D primitives", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => matches!(
-                            &builtin.kind,
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Primitive3D)
-                        ),
+                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
+                            matches!(&wb.kind, BuiltinWorkbenchKind::Primitive3D)
+                        }
                         _ => false,
                     }
                 })
@@ -217,10 +215,9 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in operations", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => matches!(
-                            &builtin.kind,
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Operation)
-                        ),
+                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
+                            matches!(&wb.kind, BuiltinWorkbenchKind::Operation)
+                        }
                         _ => false,
                     }
                 })
@@ -230,10 +227,9 @@ impl ToMd for Symbol {
             symbol_list(self, &mut md, "Built-in transformations", |symbol| {
                 symbol.with_def(|def| -> bool {
                     match def {
-                        SymbolDef::Builtin(builtin) => matches!(
-                            &builtin.kind,
-                            BuiltinKind::Workbench(BuiltinWorkbenchKind::Transform)
-                        ),
+                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
+                            matches!(&wb.kind, BuiltinWorkbenchKind::Transform)
+                        }
                         _ => false,
                     }
                 })
@@ -266,7 +262,7 @@ impl ToMd for Symbol {
             // Built-in functions
             inline_symbol_md(self, &mut md, "Built-in functions", |symbol| {
                 symbol.with_def(|def| match def {
-                    SymbolDef::Builtin(builtin) => matches!(builtin.kind, BuiltinKind::Function),
+                    SymbolDef::Builtin(Builtin::Function(_)) => true,
                     _ => false,
                 })
             });
