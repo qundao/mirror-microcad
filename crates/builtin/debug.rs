@@ -13,8 +13,6 @@ pub mod debug {
         diag::PushDiag,
         eval::{ArgumentMatch, EvalContext, EvalError, EvalResult},
         parameter,
-        src_ref::SrcReferrer,
-        syntax::{Identifier, QualifiedName},
         value::Value,
     };
 
