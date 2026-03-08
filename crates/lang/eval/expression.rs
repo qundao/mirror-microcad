@@ -120,7 +120,7 @@ impl Eval for QualifiedName {
                 SymbolDef::Value(.., value) => Ok(value.clone()),
                 SymbolDef::Assignment(a) => a.eval(context),
                 SymbolDef::SourceFile(_) => Ok(Value::None),
-
+                SymbolDef::Builtin(crate::builtin::Builtin::Constant(c)) => Ok(c.value.clone()),
                 SymbolDef::Module(ns) => {
                     context.error(self, EvalError::UnexpectedNested("mod", ns.id()))?;
                     Ok(Value::None)

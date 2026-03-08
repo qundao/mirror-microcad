@@ -82,10 +82,14 @@ impl BuiltinWorkbenchKind {
     }
 }
 
+/// A builtin constant.
 #[derive(Debug, Clone)]
 pub struct BuiltinConstant {
+    /// Name of the constant.
     pub id: Identifier,
+    /// The actual value.
     pub value: Value,
+    /// Documentation.
     pub doc: Option<DocBlock>,
 }
 
