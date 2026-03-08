@@ -12,10 +12,6 @@ Assertion with an optional message.
 
 Assert equal.
 
-### assert_valid
+### is_valid
 
-Assert that a symbol is valid.
-
-### assert_invalid
-
-Assert that a symbol is invalid.
+Assert that a qualified name is a valid symbol.
