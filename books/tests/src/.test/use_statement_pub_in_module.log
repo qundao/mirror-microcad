@@ -2,22 +2,22 @@
 -- Test --
         Test name: use_statement_pub_in_module
   Expected result: ok
-      Source file: ../books/tests/src/use.md:104
+      Source file: ../books/tests/src/use.md:105
         Test path: ../books/tests/src/.test
 
 -- Code --
 
- 104:   mod my {
- 105:       mod name {
- 106:           pub mod space {
- 107:               pub use std::geo2d::*;
- 108:           }
- 109:       }
- 110:       pub use name::space::*;
- 111:   }
- 112:   
- 113:   my::Circle(radius = 4mm);
- 114:   my::Rect(size = 40mm);
+ 105:   mod my {
+ 106:       mod name {
+ 107:           pub mod space {
+ 108:               pub use std::geo2d::*;
+ 109:           }
+ 110:       }
+ 111:       pub use name::space::*;
+ 112:   }
+ 113:   
+ 114:   my::Circle(radius = 4mm);
+ 115:   my::Rect(size = 40mm);
 
 -- No Output --
 -- No Errors --

@@ -18,10 +18,14 @@
   14:       }
   15:   }
   16:   
-  17:   __builtin::debug::assert_valid(my::mod_public::const_public);
-  18:   __builtin::debug::assert_invalid(my::mod_public::const_private);
-  19:   __builtin::debug::assert_invalid(my::mod_private::const_public);
-  20:   __builtin::debug::assert_invalid(my::mod_private::const_private);
+  17:   use __builtin::debug::assert;
+  18:   use __builtin::debug::is_valid;
+  19:   
+  20:   
+  21:   assert(is_valid("my::mod_public::const_public"));
+  22:   assert(!is_valid("my::mod_public::const_private"));
+  23:   assert(!is_valid("my::private_public::const_public"));
+  24:   assert(!is_valid("my::private_public::const_private"));
 
 -- No Output --
 -- Errors --

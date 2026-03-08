@@ -9,40 +9,41 @@
 
    6:   // use debug from `std/module.µcad`
    7:   use std::debug::assert;
-   8:   assert(true);
-   9:   
-  10:   // use all symbols from std::debug for test checks
-  11:   use std::debug::*;
-  12:   
-  13:   // use symbol `circle` in file `geo2d.µcad`
-  14:   use std::geo2d::Circle;
-  15:   assert_valid(Circle);
-  16:   
-  17:   // use all symbols in file `geo3d.µcad`
-  18:   use std::geo3d::*;
-  19:   assert_valid(Sphere);
-  20:   assert_valid(Cube);
-  21:   
-  22:   // alias `Circle` in `std/geo2d/mod.µcad` into `foo`
-  23:   use std::geo2d::Circle as foo;
-  24:   assert_valid(foo);
-  25:   
-  26:   // use print from `std/module.µcad`
-  27:   use std::print;
-  28:   assert_valid(print);
-  29:   print("Hello");
-  30:   
-  31:   // public use operation from `std/module.µcad`
-  32:   pub use std::ops;
-  33:   assert_valid(ops);
-  34:   assert_valid(use_test::ops);
-  35:   
-  36:   part MyPart() {
-  37:       Circle(radius=1);
-  38:       Sphere(radius=1);
-  39:   }
-  40:   
-  41:   assert_valid(MyPart);
+   8:   use std::debug::is_valid;
+   9:   assert(true);
+  10:   
+  11:   // use all symbols from std::debug for test checks
+  12:   use std::debug::*;
+  13:   
+  14:   // use symbol `circle` in file `geo2d.µcad`
+  15:   use std::geo2d::Circle;
+  16:   assert(is_valid("Circle"));
+  17:   
+  18:   // use all symbols in file `geo3d.µcad`
+  19:   use std::geo3d::*;
+  20:   assert(is_valid("Sphere"));
+  21:   assert(is_valid("Cube"));
+  22:   
+  23:   // alias `Circle` in `std/geo2d/mod.µcad` into `foo`
+  24:   use std::geo2d::Circle as foo;
+  25:   assert(is_valid("foo"));
+  26:   
+  27:   // use print from `std/module.µcad`
+  28:   use std::print;
+  29:   assert(is_valid("print"));
+  30:   print("Hello");
+  31:   
+  32:   // public use operation from `std/module.µcad`
+  33:   pub use std::ops;
+  34:   assert(is_valid("ops"));
+  35:   assert(is_valid("use_test::ops"));
+  36:   
+  37:   part MyPart() {
+  38:       Circle(radius=1);
+  39:       Sphere(radius=1);
+  40:   }
+  41:   
+  42:   assert(is_valid("MyPart"));
 
 -- Output --
 Hello
