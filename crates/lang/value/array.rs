@@ -293,16 +293,3 @@ impl std::ops::Not for Array {
         Ok(Value::Array(items.try_into()?))
     }
 }
-
-#[test]
-fn test_array_debug() {
-    let val1 = Value::Target(Target::new("my::name1".into(), Some("my::target1".into())));
-    let val2 = Value::Target(Target::new("my::name2".into(), None));
-
-    let mut array = Array::new(Type::Target);
-    array.push(val1);
-    array.push(val2);
-
-    log::info!("{array}");
-    log::info!("{array:?}");
-}

@@ -13,7 +13,6 @@ mod matrix;
 mod parameter_value;
 mod parameter_value_list;
 mod quantity;
-mod target;
 mod tuple;
 mod value_access;
 mod value_error;
@@ -27,7 +26,6 @@ pub use matrix::*;
 pub use parameter_value::*;
 pub use parameter_value_list::*;
 pub use quantity::*;
-pub use target::*;
 pub use tuple::*;
 pub use value_access::*;
 pub use value_error::*;
@@ -62,8 +60,6 @@ pub enum Value {
     Model(Model),
     /// Return value
     Return(Box<Value>),
-    /// for assert_valid() and assert_invalid()
-    Target(Target),
 }
 
 impl Value {
@@ -188,7 +184,6 @@ impl crate::ty::Ty for Value {
             Value::Matrix(matrix) => matrix.ty(),
             Value::Model(_) => Type::Model,
             Value::Return(r) => r.ty(),
-            Value::Target(..) => Type::Target,
         }
     }
 }
@@ -400,7 +395,6 @@ impl std::fmt::Display for Value {
             Value::Matrix(m) => write!(f, "{m}"),
             Value::Model(n) => write!(f, "{n}"),
             Value::Return(r) => write!(f, "{r}"),
-            Value::Target(target) => write!(f, "{target}"),
         }
     }
 }
@@ -418,7 +412,6 @@ impl std::fmt::Debug for Value {
             Value::Matrix(m) => write!(f, "{m:?}"),
             Value::Model(n) => write!(f, "\n {n:?}"),
             Value::Return(r) => write!(f, "->{r:?}"),
-            Value::Target(target) => write!(f, "{target:?}"),
         }
     }
 }
@@ -436,7 +429,6 @@ impl std::hash::Hash for Value {
             Value::Matrix(matrix) => matrix.hash(state),
             Value::Model(model) => model.hash(state),
             Value::Return(value) => value.hash(state),
-            Value::Target(target) => target.hash(state),
         }
     }
 }

@@ -120,26 +120,3 @@ impl FromIterator<(Identifier, ArgumentValue)> for ArgumentValueList {
         }
     }
 }
-
-#[test]
-fn test_argument_value_debug() {
-    let arg1 = ArgumentValue::new(
-        Value::Target(Target::new("my::name1".into(), Some("my::target1".into()))),
-        Some("id1".into()),
-        SrcRef(None),
-    );
-
-    let arg2 = ArgumentValue::new(
-        Value::Target(Target::new("my::name2".into(), None)),
-        Some("id2".into()),
-        SrcRef(None),
-    );
-
-    let mut args = ArgumentValueList::default();
-
-    args.push(("id1".into(), arg1));
-    args.push(("id2".into(), arg2));
-
-    log::info!("{args}");
-    log::info!("{args:?}");
-}

@@ -33,53 +33,6 @@ impl Eval<ArgumentValueList> for ArgumentList {
     }
 }
 
-/// Alternative evaluation type.
-///
-/// Used to prevent the evaluation of `QualifiedName`.
-/// `assert_valid()` and `assert_invalid()` need these untouched.
-pub struct ArgumentValueListRaw(ArgumentValueList);
-
-impl From<ArgumentValueListRaw> for ArgumentValueList {
-    fn from(value: ArgumentValueListRaw) -> Self {
-        value.0
-    }
-}
-
-impl Eval<ArgumentValueListRaw> for ArgumentList {
-    /// Evaluate into a [`ArgumentValueList`].
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValueListRaw> {
-        let arguments = self
-            .iter()
-            .map(|arg| {
-                (
-                    arg.id.clone().unwrap_or(Identifier::none()),
-                    if let Expression::QualifiedName(name) = &arg.expression {
-                        Ok(ArgumentValue::new(
-                            Value::Target(Target::new(
-                                name.un_super(),
-                                match context.lookup(name, LookupTarget::Any) {
-                                    Ok(symbol) => Some(symbol.full_name()),
-                                    Err(_) => None,
-                                },
-                            )),
-                            arg.id.clone(),
-                            arg.src_ref.clone(),
-                        ))
-                    } else {
-                        arg.eval(context)
-                    },
-                )
-            })
-            .map(|(id, arg)| match arg {
-                Ok(arg) => Ok((id.clone(), arg)),
-                Err(err) => Err(err),
-            })
-            .collect::<EvalResult<_>>()?;
-
-        Ok(ArgumentValueListRaw(arguments))
-    }
-}
-
 impl Eval for Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         // find self in symbol table by own name

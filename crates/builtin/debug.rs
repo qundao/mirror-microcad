@@ -13,6 +13,7 @@ pub mod debug {
         diag::PushDiag,
         eval::{ArgumentMatch, EvalError},
         parameter,
+        syntax::{Identifier, QualifiedName},
         value::Value,
     };
 
@@ -99,23 +100,38 @@ pub mod debug {
         }
     }
 
-    /// Assert that a symbol is valid.
-    #[builtin_fn(id: String, message: String = String::new())]
-    pub fn assert_valid() -> Symbol {
+    /// Assert that a qualified name is a valid symbol.
+    #[builtin_fn(name: String, message: String = String::new())]
+    pub fn is_valid() -> Symbol {
         |params, args, context| {
-            //context.lookup(syntax::QualifiedName::)
+            match ArgumentMatch::find_match(args, params) {
+                Ok(args) => {
+                    let name: String = args.get("name");
 
-            Ok(Value::None)
-        }
-    }
-
-    /// Assert that a symbol is invalid.
-    #[builtin_fn(id: String, message: String = String::new())]
-    pub fn assert_invalid() -> Symbol {
-        |params, args, context| {
-            //context.lookup(syntax::QualifiedName::)
-
-            Ok(Value::None)
+                    // Hack split input string and construct a qualified name.
+                    let name = QualifiedName::new(
+                        name.split("::").map(|s| Identifier::no_ref(&s)).collect(),
+                        microcad_lang::src_ref::SrcRef(None),
+                    );
+                    use microcad_lang::resolve::Lookup;
+                    Ok(match context
+                        .lookup(&name, microcad_lang::resolve::LookupTarget::AnyButMethod)
+                    {
+                        Ok(_) => true,
+                        Err(EvalError::SymbolNotFound(_)) => false,
+                        Err(err) => {
+                            context.error(&args, err)?;
+                            false
+                        }
+                    }
+                    .into())
+                }
+                Err(err) => {
+                    // Called `assert` with no or more than 2 parameters
+                    context.error(args, err)?;
+                    Ok(Value::None)
+                }
+            }
         }
     }
 }
