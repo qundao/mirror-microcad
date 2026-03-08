@@ -176,19 +176,6 @@ impl ResolveContext {
         log::trace!("Checking symbol table");
         self.mode = ResolveMode::Failed;
 
-        let exclude_ids = self.root.search_target_mode_ids();
-        log::trace!("Excluding target mode ids: {exclude_ids}");
-
-        if let Err(err) = self
-            .root
-            .iter()
-            .try_for_each(|symbol| symbol.check(self, &exclude_ids))
-        {
-            self.error(&err.src_ref(), err)?;
-        } else if !self.has_errors() {
-            self.mode = ResolveMode::Checked;
-        }
-
         log::info!("Symbol table OK!");
 
         let unchecked = self

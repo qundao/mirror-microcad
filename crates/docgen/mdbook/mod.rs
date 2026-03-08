@@ -6,7 +6,7 @@
 use std::io::Write;
 
 use microcad_lang::{
-    builtin::BuiltinKind,
+    builtin::Builtin,
     resolve::{FullyQualify, Symbol, SymbolDef},
 };
 
@@ -103,8 +103,6 @@ impl MdBook {
                 .try_for_each(|symbol| self_._generate_summary(writer, symbol, depth))
         }
 
-        use microcad_lang::builtin::BuiltinKind;
-
         let path = Self::symbol_path(symbol);
 
         entry(writer, symbol.id(), path, depth)?;
@@ -130,10 +128,7 @@ impl MdBook {
             .iter()
             .filter(|symbol| {
                 symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(_) => true,
-                    SymbolDef::Builtin(builtin) => {
-                        matches!(&builtin.kind, BuiltinKind::Workbench(_))
-                    }
+                    SymbolDef::Workbench(_) | SymbolDef::Builtin(Builtin::Workbench(_)) => true,
                     _ => false,
                 })
             })
@@ -161,13 +156,10 @@ impl MdBook {
             let path = &self.path.join("src").join(Self::symbol_path(&symbol));
             std::fs::create_dir_all(path.parent().expect("A parent"))?;
             symbol.with_def(|def| match def {
-                SymbolDef::SourceFile(_) | SymbolDef::Module(_) | SymbolDef::Workbench(_) => {
-                    symbol.to_md().write(path)
-                }
-                SymbolDef::Builtin(builtin) => match &builtin.kind {
-                    BuiltinKind::Function => Ok(()),
-                    BuiltinKind::Workbench(_) => symbol.to_md().write(path),
-                },
+                SymbolDef::SourceFile(_)
+                | SymbolDef::Module(_)
+                | SymbolDef::Workbench(_)
+                | SymbolDef::Builtin(Builtin::Workbench(_)) => symbol.to_md().write(path),
                 _ => Ok(()),
             })
         })

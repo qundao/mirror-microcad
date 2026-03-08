@@ -141,16 +141,14 @@ impl From<&Rc<FunctionDefinition>> for SymbolInfo {
     }
 }
 
-impl From<&Rc<Builtin>> for SymbolInfo {
-    fn from(def: &Rc<Builtin>) -> Self {
+impl From<&Builtin> for SymbolInfo {
+    fn from(def: &Builtin) -> Self {
+        use crate::doc::Doc;
         SymbolInfo {
             id: def.id().to_string(),
             kind: "Builtin".into(),
-            doc: def.doc.clone(),
-            signatures: vec![SignatureInfo {
-                params: def.parameters.iter().map(|p| p.into()).collect(),
-                doc: def.doc.clone(),
-            }],
+            doc: Some(def.doc()),
+            signatures: vec![],
             src_ref: SrcRef(None),
         }
     }

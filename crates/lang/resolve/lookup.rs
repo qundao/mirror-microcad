@@ -41,11 +41,11 @@ impl LookupTarget {
                 SymbolDef::Function(..) => {
                     matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
                 }
-                SymbolDef::Builtin(b) => match &b.kind {
-                    crate::builtin::BuiltinKind::Function => {
+                SymbolDef::Builtin(b) => match b {
+                    crate::builtin::Builtin::Function(..) => {
                         matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
                     }
-                    crate::builtin::BuiltinKind::Workbench(bwk) => match bwk {
+                    crate::builtin::Builtin::Workbench(bwk) => match bwk.kind {
                         crate::builtin::BuiltinWorkbenchKind::Primitive2D
                         | crate::builtin::BuiltinWorkbenchKind::Primitive3D => {
                             matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
@@ -55,6 +55,9 @@ impl LookupTarget {
                             matches!(self, Self::Any | Self::Method)
                         }
                     },
+                    &crate::builtin::Builtin::Constant(_) => {
+                        matches!(self, Self::Any | Self::AnyButMethod | Self::Value)
+                    }
                 },
                 SymbolDef::Value(..) | SymbolDef::Assignment(..) => {
                     matches!(self, Self::Any | Self::AnyButMethod | Self::Value)

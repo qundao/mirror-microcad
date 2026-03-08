@@ -13,7 +13,7 @@ pub mod debug {
         diag::PushDiag,
         eval::{ArgumentMatch, EvalError},
         parameter,
-        value::{Target, Value},
+        value::Value,
     };
 
     /// Assertion with an optional message.
@@ -100,60 +100,20 @@ pub mod debug {
     }
 
     /// Assert that a symbol is valid.
-    #[builtin_fn(target: Target, message: String = String::new())]
+    #[builtin_fn(id: String, message: String = String::new())]
     pub fn assert_valid() -> Symbol {
         |params, args, context| {
-            match ArgumentMatch::find_multi_match(args, params) {
-                Ok(multi_args) => {
-                    for arg in multi_args.args {
-                        let target = arg.get::<Target>("target");
-                        if target.target.is_none() {
-                            context.error(
-                                &arg,
-                                EvalError::AssertionFailed(format!(
-                                    "Symbol `{}` not found.",
-                                    target.name
-                                )),
-                            )?;
-                        }
-                    }
-                }
-                Err(err) => {
-                    // Called `assert` with no or more than 2 parameters
-                    context.error(args, err)?
-                }
-            }
+            //context.lookup(syntax::QualifiedName::)
 
             Ok(Value::None)
         }
     }
 
     /// Assert that a symbol is invalid.
-    #[builtin_fn(target: Target, message: String = String::new())]
+    #[builtin_fn(id: String, message: String = String::new())]
     pub fn assert_invalid() -> Symbol {
         |params, args, context| {
-            match ArgumentMatch::find_multi_match(args, params) {
-                Ok(multi_args) => {
-                    for arg in multi_args.args {
-                        let target = arg.get::<Target>("target");
-                        if let Some(query) = target.target {
-                            log::trace!("target_name: {query}, {}", target.name);
-                            context.error(
-                                &arg,
-                                EvalError::AssertionFailed(format!(
-                                    "Found valid symbol '{name}' within module '{base}'.",
-                                    name = target.name,
-                                    base = query.base(&target.name)
-                                )),
-                            )?;
-                        }
-                    }
-                }
-                Err(err) => {
-                    // Called `assert` with no or more than 2 parameters
-                    context.error(args, err)?
-                }
-            }
+            //context.lookup(syntax::QualifiedName::)
 
             Ok(Value::None)
         }
