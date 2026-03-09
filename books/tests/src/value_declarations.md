@@ -49,7 +49,7 @@ mod module {
                 assert_eq([super::pub_value, 2]);
                 assert_eq([value, 3]);
                 assert_eq([pub_value, 4]);
-                assert(!is_valid("param"));
+                assert_invalid("param");
                 assert_eq([sketch_local, 6]);
                 assert_eq([alt_param, 7]);
                 assert_eq([init_local, 8]);
@@ -65,8 +65,8 @@ mod module {
             assert_eq([pub_value, 4]);
             assert_eq([param, 5]);
             assert_eq([sketch_local, 6]);
-            assert(!is_valid("alt_param"));
-            assert(!is_valid("init_local"));
+            assert_invalid("alt_param");
+            assert_invalid("init_local");
             assert_eq([property, 9]);
 
             function();
@@ -77,7 +77,7 @@ mod module {
             assert_eq([super::pub_value, 2]);
             assert_eq([value, 3]);
             assert_eq([pub_value, 4]);
-            assert(!is_valid("param"));
+            assert_invalid("param");
             // assert_invalid(Workbench);
             assert_eq([fn_param, 10]);
 
@@ -88,10 +88,10 @@ mod module {
     pub fn function(fn_param = 11) {
         assert_eq([value, 1]);
         assert_eq([pub_value, 2]);
-        assert(!is_valid("pub_sub_module::value"));
+        assert_invalid("pub_sub_module::value");
         assert_eq([pub_sub_module::pub_value, 4]);
-        assert(!is_valid("Workbench"));
-        assert(!is_valid("PrivateWorkbench"));
+        assert_invalid("Workbench");
+        assert_invalid("PrivateWorkbench");
         assert_eq([fn_param, 11]);
         
         return 0;
@@ -99,11 +99,11 @@ mod module {
 }
 
 // source file code 
-assert(!is_valid("module::value"));
+assert_invalid("module::value");
 assert_eq([module::pub_value, 2]);
-assert(!is_valid("module::pub_sub_module::value"));
+assert_invalid("module::pub_sub_module::value");
 assert_eq([module::pub_sub_module::pub_value, 4]);
 assert_eq([module::pub_sub_module::Workbench(p=5).property, 9]);
-assert(!is_valid("module::pub_sub_module::PrivateWorkbench"));
+assert_invalid("module::pub_sub_module::PrivateWorkbench");
 assert_eq([module::function(), 0]);
 ```
