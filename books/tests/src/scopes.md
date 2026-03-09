@@ -6,32 +6,32 @@
 
 ```µcad,scopes
 a = 1;
-use __builtin::debug::assert;
-use __builtin::debug::is_valid;
+use __builtin::debug::assert_valid;
+use __builtin::debug::assert_invalid;
 
-assert(is_valid("a"));
-assert(!is_valid("b"));
-assert(!is_valid("c"));
+assert_valid("a");
+assert_invalid("b");
+assert_invalid("c");
 
 {
-    assert(is_valid("a"));
-    assert(!is_valid("b"));
-    assert(!is_valid("c"));
+    assert_valid("a");
+    assert_invalid("b");
+    assert_invalid("c");
 
     b = 2;
 
-    assert(is_valid("a"));
-    assert(is_valid("b"));
-    assert(!is_valid("c"));
+    assert_valid("a");
+    assert_valid("b");
+    assert_invalid("c");
 
     c = 3;
 
-    assert(is_valid("a"));
-    assert(is_valid("b"));
-    assert(is_valid("c"));
+    assert_valid("a");
+    assert_valid("b");
+    assert_valid("c");
 };
 
-assert(is_valid("a"));
-assert(!is_valid("b"));
-assert(!is_valid("c"));
+assert_valid("a");
+assert_invalid("b");
+assert_invalid("c");
 ```

@@ -5,7 +5,8 @@
 ```µcad,use_test
 // use debug from `std/module.µcad`
 use std::debug::assert;
-use std::debug::is_valid;
+use std::debug::assert_valid;
+use std::debug::assert_invalid;
 assert(true);
 
 // use all symbols from std::debug for test checks
@@ -13,33 +14,33 @@ use std::debug::*;
 
 // use symbol `circle` in file `geo2d.µcad`
 use std::geo2d::Circle;
-assert(is_valid("Circle"));
+assert_valid("Circle");
 
 // use all symbols in file `geo3d.µcad`
 use std::geo3d::*;
-assert(is_valid("Sphere"));
-assert(is_valid("Cube"));
+assert_valid("Sphere");
+assert_valid("Cube");
 
 // alias `Circle` in `std/geo2d/mod.µcad` into `foo`
 use std::geo2d::Circle as foo;
-assert(is_valid("foo"));
+assert_valid("foo");
 
 // use print from `std/module.µcad`
 use std::print;
-assert(is_valid("print"));
+assert_valid("print");
 print("Hello");
 
 // public use operation from `std/module.µcad`
 pub use std::ops;
-assert(is_valid("ops"));
-assert(is_valid("use_test::ops"));
+assert_valid("ops");
+assert_valid("use_test::ops");
 
 part MyPart() {
     Circle(radius=1);
     Sphere(radius=1);
 }
 
-assert(is_valid("MyPart"));
+assert_valid("MyPart");
 ```
 
 [![test](.test/use_as_test.svg)](.test/use_as_test.log)
