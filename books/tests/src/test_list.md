@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**185** tests have been evaluated with version **0.3.0** of microcad.
+**187** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -89,6 +89,8 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](statement_usage/.test/init_use.svg)](statement_usage/.test/init_use.log) | [init_use](statement_usage/init.md) |
 | [![test](statement_usage/.test/init_workbench.svg)](statement_usage/.test/init_workbench.log) | [init_workbench](statement_usage/init.md) |
 | [![test](.test/locals_unused.svg)](.test/locals_unused.log) | [locals_unused](locals.md) |
+| [![test](.test/marker_cannot_deduced_output.svg)](.test/marker_cannot_deduced_output.log) | [marker_cannot_deduced_output](workbench.md) |
+| [![test](.test/marker_wrong_output.svg)](.test/marker_wrong_output.log) | [marker_wrong_output](workbench.md) |
 | [![test](.test/method_call.svg)](.test/method_call.log) | [method_call](method_call.md) |
 | [![test](.test/mod_external.svg)](.test/mod_external.log) | [mod_external](mod_file.md) |
 | [![test](.test/mod_external_root.svg)](.test/mod_external_root.log) | [mod_external_root](mod_file.md) |

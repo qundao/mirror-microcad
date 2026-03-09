@@ -16,7 +16,7 @@ f();
 
 ```µcad,function_param_return
 // function definition with parameter
-fn f(n: Integer) {
+fn f(n: Integer) -> Integer {
     return n * 2; 
 }
 

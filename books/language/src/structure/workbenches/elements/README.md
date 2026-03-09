@@ -38,7 +38,7 @@ sketch Wheel(radius: Length) {
     }
 
     // Function (sub routine)
-    fn into_diameter(r: Length) {
+    fn into_diameter(r: Length) -> Length {
         return r * FACTOR;
     }
 

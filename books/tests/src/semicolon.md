@@ -35,8 +35,8 @@ use std::ops::translate;
 
 [![test](.test/sketch_with_empty_body.svg)](.test/sketch_with_empty_body.log)
 
-```µcad,sketch_with_empty_body#warn
-{}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
+```µcad,sketch_with_empty_body#fail
+{}.std::ops::translate(x = 5mm) // error: Calling operation on empty geometry
 ```
 
 [![test](.test/sketch_with_body.svg)](.test/sketch_with_body.log)
@@ -51,7 +51,7 @@ Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
 
 ```µcad,empty_op#fail
 std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
-{}.std::ops::translate(x = 3.0mm);  // warning: Calling operation on empty geometry
+{}.std::ops::translate(x = 3.0mm);  // error: Calling operation on empty geometry
 ```
 
 [![test](.test/group.svg)](.test/group.log)

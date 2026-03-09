@@ -18,7 +18,7 @@ sketch Wheel(radius: Length) {
     init(diameter: Length) { radius = into_radius(diameter); }
 
     // function
-    fn into_radius( diameter: Length ) {
+    fn into_radius( diameter: Length ) -> Length {
         // use constant FACTOR from init code
         diameter / FACTOR
     }

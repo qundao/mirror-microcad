@@ -72,7 +72,7 @@ mod module {
             function();
         }
 
-        fn function(fn_param = 10) {
+        fn function(fn_param = 10) -> Integer {
             assert_eq([super::value, 1]);
             assert_eq([super::pub_value, 2]);
             assert_eq([value, 3]);
@@ -85,7 +85,7 @@ mod module {
         }
     }
 
-    pub fn function(fn_param = 11) {
+    pub fn function(fn_param = 11) -> Integer {
         assert_eq([value, 1]);
         assert_eq([pub_value, 2]);
         assert_invalid(pub_sub_module::value);

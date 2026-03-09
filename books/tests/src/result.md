@@ -34,9 +34,9 @@ A source file is a module, but all top-level statements which are not `use`, `co
 ```µcad,source_file
 use std::geo2d::*;
 1;
-Circle(1mm);
+Circle(radius=1mm);
 2;
-Circle(2mm);
+Circle(radius=2mm);
 3;
 ```
 
@@ -44,12 +44,12 @@ They can have mixed code which shall not end in a value result.
 
 [![test](.test/source_file_value.svg)](.test/source_file_value.log)
 
-```µcad,source_file_value
+```µcad,source_file_value#fail
 use std::geo2d::*;
 1;
-Circle(1mm);
+Circle(radius=1mm);
 2;
-Circle(2mm);
+Circle(radius=2mm);
 3       // error
 ```
 
@@ -63,9 +63,9 @@ Same with workbenches but models are not returned but accumulated into a Group:
 sketch S() {
     use std::geo2d::*;
     1;
-    Circle(1mm);
+    Circle(radius=1mm);
     2;
-    Circle(2mm);
+    Circle(radius=2mm);
     3;
 }
 S();
@@ -79,6 +79,7 @@ Workbenches cannot end with a value result.
 sketch S() {
     1 // error
 }
+S();
 ```
 
 Workbenches cannot have `return` statements.
@@ -89,6 +90,7 @@ Workbenches cannot have `return` statements.
 sketch T() {
     return 1; // error
 }
+T();
 ```
 
 ## Functions
@@ -110,7 +112,7 @@ Functions can NOT generate models.
 
 ```µcad,function_model#fail
 fn f() {
-    std::geo2d::Circle(1mm); // error
+    std::geo2d::Circle(radius=1mm); // error
 }
 f();
 ```
@@ -121,7 +123,7 @@ Functions can NOT result in models.
 
 ```µcad,function_model_result#fail
 fn f() -> Model  {  // error: Model cannot be used as return type of a function
-    std::geo2d::Circle(1mm) // error
+    std::geo2d::Circle(radius=1mm) // error
 }
 f();
 ```
@@ -132,7 +134,7 @@ Functions can NOT return models.
 
 ```µcad,function_model_return#fail
 fn f() -> Model  {  // error: Model cannot be used as return type of a function
-    return std::geo2d::Circle(1mm); // error
+    return std::geo2d::Circle(radius=1mm); // error
 }
 f();
 ```
@@ -143,7 +145,7 @@ Functions can read model properties.
 
 ```µcad,function_model_property
 fn f() -> Length {
-    Circle(2mm).radius
+    std::geo2d::Circle(radius=2mm).radius
 }
 f();
 ```
@@ -154,7 +156,7 @@ Functions can return model properties.
 
 ```µcad,function_model_property_return
 fn f() -> Length {
-    return Circle(2mm).radius;
+    return std::geo2d::Circle(radius=2mm).radius;
 }
 f();
 ```

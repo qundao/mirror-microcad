@@ -46,7 +46,7 @@ you will get an error:
 [![test](.test/missed_property.svg)](.test/missed_property.log)
 
 ```µcad,missed_property#fail
-sketch Wheel(radius: Length, thickness = 5mm) {
+sketch Wheel(radius: Length, thickness = 5mm) {   // error: no model produced
     use std::geo2d::Circle;
 
     init( thickness: Length ) { } // error: misses to set radius from building plan

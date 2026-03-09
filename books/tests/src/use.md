@@ -79,7 +79,7 @@ z = baz(-1.0);
 [![test](.test/use_local.svg)](.test/use_local.log)
 
 ```µcad,use_local
-fn f() {
+fn f() -> Scalar {
     use std::math::abs;
     x = abs(-1.0);
     return x;
@@ -90,7 +90,7 @@ f();
 [![test](.test/use_all_local.svg)](.test/use_all_local.log)
 
 ```µcad,use_all_local
-fn f() {
+fn f() -> Scalar {
     use std::math::*;
     x = abs(-1.0);
     return x;
