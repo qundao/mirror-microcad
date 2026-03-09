@@ -30,14 +30,14 @@ Ok(
                             span: 9..14,
                             name: "Wheel",
                         },
-                        arguments: ArgumentsDefinition {
+                        plan: ParameterList {
                             span: 15..43,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            arguments: [
-                                ArgumentDefinition {
+                            parameters: [
+                                Parameter {
                                     span: 15..29,
                                     extras: ItemExtras {
                                         leading: [],
@@ -57,7 +57,7 @@ Ok(
                                     ),
                                     default: None,
                                 },
-                                ArgumentDefinition {
+                                Parameter {
                                     span: 30..43,
                                     extras: ItemExtras {
                                         leading: [],

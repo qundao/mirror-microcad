@@ -72,13 +72,13 @@ Ok(
                             span: 30..33,
                             name: "Foo",
                         },
-                        arguments: ArgumentsDefinition {
+                        plan: ParameterList {
                             span: 34..34,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            arguments: [],
+                            parameters: [],
                         },
                         body: StatementList {
                             span: 46..89,

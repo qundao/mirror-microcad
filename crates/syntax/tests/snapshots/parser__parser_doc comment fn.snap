@@ -33,13 +33,13 @@ Ok(
                             span: 23..26,
                             name: "Foo",
                         },
-                        arguments: ArgumentsDefinition {
+                        arguments: ParameterList {
                             span: 27..27,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            arguments: [],
+                            parameters: [],
                         },
                         return_type: None,
                         body: StatementList {

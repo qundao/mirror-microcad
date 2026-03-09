@@ -26,14 +26,14 @@ Ok(
                             span: 3..6,
                             name: "foo",
                         },
-                        arguments: ArgumentsDefinition {
+                        arguments: ParameterList {
                             span: 7..16,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            arguments: [
-                                ArgumentDefinition {
+                            parameters: [
+                                Parameter {
                                     span: 7..16,
                                     extras: ItemExtras {
                                         leading: [],
