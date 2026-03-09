@@ -49,7 +49,7 @@ impl Doc for InitDefinition {
 
 impl Doc for StatementList {
     fn inner_doc(&self) -> DocBlock {
-        if self.is_empty() {
+        if self.statements.is_empty() {
             DocBlock::default()
         } else {
             let src_ref = SrcRef::merge_all(self.iter());

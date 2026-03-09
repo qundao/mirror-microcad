@@ -114,14 +114,14 @@ impl WorkbenchDefinition {
         // prepare empty result model
         let mut models = Models::default();
 
-        // match all initializations starting with the building plan
+        // match all initializations (starting with building plan)
         let matches: Vec<_> = std::iter::once((
             None,
             self.plan
                 .eval(context)
                 .and_then(|params| ArgumentMatch::find_multi_match(arguments, &params)),
         ))
-        // chain the inits
+        // then chain the initializers
         .chain(self.inits().map(|init| {
             (
                 Some(init),
@@ -131,8 +131,8 @@ impl WorkbenchDefinition {
             )
         }))
         // debug inspection of all matches/non-matches
-        .inspect(|(i, m)| {
-            let result = match m {
+        .inspect(|(init, result)| {
+            let result = match result {
                 Ok(m) => format!(
                     "{match_} [{priority:>10}]",
                     priority = m.priority,
@@ -140,46 +140,69 @@ impl WorkbenchDefinition {
                 ),
                 Err(_) => crate::mark!(NO_MATCH),
             };
-            if let Some(i) = i {
-                log::debug!("{result} {}::init({})", symbol.full_name(), i.parameters)
+            if let Some(init) = init {
+                log::debug!("{result} {}::init({})", symbol.full_name(), init.parameters)
             } else {
                 log::debug!("{result} {}({})", symbol.full_name(), self.plan)
             }
         })
         // filter out non-matching
-        .filter_map(|(i, m)| if let Ok(m) = m { Some((i, m)) } else { None })
+        .filter_map(|(init, result)| result.ok().map(|res| (init, res)))
         .collect();
 
         // find hightest priority matches
-        let matches = Priority::high_to_low().iter().find_map(|priority| {
-            let matches: Vec<_> = matches
-                .iter()
-                .filter(|(_, m)| m.priority == *priority)
-                .collect();
-            if matches.is_empty() {
-                None
-            } else {
-                Some(matches)
-            }
-        });
+        let matches = Priority::high_to_low()
+            .iter()
+            .find_map(|priority| {
+                let matches: Vec<_> = matches
+                    .iter()
+                    .filter(|(_, m)| m.priority == *priority)
+                    .collect();
+                if matches.is_empty() {
+                    None
+                } else {
+                    Some(matches)
+                }
+            })
+            .unwrap_or(vec![]);
 
-        if let Some(mut matches) = matches {
-            if matches.len() > 1 {
+        match matches.len() {
+            1 => {
+                let matched = matches.first().expect("error");
+                log::debug!(
+                    "{match_} {what}: {}",
+                    matched
+                        .1
+                        .args
+                        .iter()
+                        .map(|m| format!("{m:?}"))
+                        .collect::<Vec<_>>()
+                        .join("\n"),
+                    what = if matched.0.is_none() {
+                        "Building plan"
+                    } else {
+                        "Initializer"
+                    },
+                    match_ = crate::mark!(MATCH!)
+                );
+
+                // evaluate models for all multiplicity matches
+                for arguments in matched.1.args.iter() {
+                    models.push(self.eval_to_model(
+                        call_src_ref.clone(),
+                        Creator::new(symbol.clone(), arguments.clone()),
+                        matched.0,
+                        context,
+                    )?);
+                }
+            }
+            2.. => {
+                let name = symbol.full_name();
                 let ambiguous = matches
                     .iter()
                     .map(|(init, _)| match init {
-                        Some(init) => {
-                            format!(
-                                "{name}::init({params})",
-                                name = symbol.full_name(),
-                                params = init.parameters
-                            )
-                        }
-                        None => format!(
-                            "{name:?}({params})",
-                            name = symbol.full_name(),
-                            params = self.plan
-                        ),
+                        Some(init) => format!("{name}::init({})", init.parameters),
+                        None => format!("{name:?}({})", self.plan),
                     })
                     .collect::<Vec<_>>();
                 log::debug!(
@@ -197,49 +220,23 @@ impl WorkbenchDefinition {
                         ambiguous_params: ambiguous,
                     },
                 )?;
-            } else if let Some(matched) = matches.pop() {
-                let what = if matched.0.is_none() {
-                    "Building plan"
-                } else {
-                    "Initializer"
-                };
-                log::debug!(
-                    "{match_} {what}: {}",
-                    matched
-                        .1
-                        .args
-                        .iter()
-                        .map(|m| format!("{m:?}"))
-                        .collect::<Vec<_>>()
-                        .join("\n"),
-                    match_ = crate::mark!(MATCH!)
-                );
-
-                // evaluate models for all multiplicity matches
-                for arguments in matched.1.args.iter() {
-                    models.push(self.eval_to_model(
-                        call_src_ref.clone(),
-                        Creator::new(symbol.clone(), arguments.clone()),
-                        matched.0,
-                        context,
-                    )?);
-                }
             }
-        } else {
-            log::debug!(
-                "{match_} Neither the building plan nor any initializer matches arguments",
-                match_ = crate::mark!(NO_MATCH!)
-            );
-            context.error(
-                arguments,
-                EvalError::NoInitializationFound {
-                    src_ref: call_src_ref,
-                    name: self.id(),
-                    actual_params: arguments.to_string(),
-                    possible_params: self.possible_params(),
-                },
-            )?;
-        }
+            0 => {
+                log::debug!(
+                    "{match_} Neither the building plan nor any initializer matches arguments",
+                    match_ = crate::mark!(NO_MATCH!)
+                );
+                context.error(
+                    arguments,
+                    EvalError::NoInitializationFound {
+                        src_ref: call_src_ref,
+                        name: self.id(),
+                        actual_params: arguments.to_string(),
+                        possible_params: self.possible_params(),
+                    },
+                )?;
+            }
+        };
 
         Ok(models.to_multiplicity(self.src_ref()))
     }
