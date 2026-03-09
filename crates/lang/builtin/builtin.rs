@@ -101,7 +101,7 @@ impl Identifiable for BuiltinConstant {
 }
 
 /// Builtin enum
-#[derive(Clone)]
+#[derive(Clone, derive_more::From)]
 pub enum Builtin {
     /// Builtin function.
     Function(BuiltinFunction),

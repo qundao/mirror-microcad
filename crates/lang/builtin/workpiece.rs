@@ -144,12 +144,12 @@ pub trait BuiltinWorkbenchDefinition {
 
     /// Create builtin symbol
     fn symbol() -> Symbol {
-        Symbol::new_builtin(Builtin::Workbench(BuiltinWorkbench {
+        Symbol::new_builtin(BuiltinWorkbench {
             id: Identifier::no_ref(Self::id()),
             parameters: Self::parameters(),
             kind: Self::kind(),
             f: Self::function(),
             doc: Self::doc(),
-        }))
+        })
     }
 }
