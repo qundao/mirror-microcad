@@ -71,8 +71,8 @@ impl Symbol {
     /// - `id`: Name of the symbol
     /// - `parameters`: Optional parameter list
     /// - `f`: The builtin function
-    pub(crate) fn new_builtin(builtin: Builtin) -> Symbol {
-        Symbol::new(SymbolDef::Builtin(builtin), None)
+    pub(crate) fn new_builtin(builtin: impl Into<Builtin>) -> Symbol {
+        Symbol::new(SymbolDef::Builtin(builtin.into()), None)
     }
 
     /// New builtin function as symbol.
@@ -82,12 +82,12 @@ impl Symbol {
         f: &'static BuiltinFn,
         doc: Option<&'static str>,
     ) -> Symbol {
-        Self::new_builtin(Builtin::Function(BuiltinFunction {
+        Self::new_builtin(BuiltinFunction {
             id: Identifier::no_ref(name),
             parameters: parameters.collect(),
             f,
             doc: doc.map(DocBlock::new_builtin),
-        }))
+        })
     }
 
     /// Replace inner of a symbol with the inner of another.
