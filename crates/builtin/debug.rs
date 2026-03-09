@@ -103,12 +103,12 @@ pub mod debug {
 
     fn _is_valid(
         src_ref: impl SrcReferrer,
-        name: &String,
+        name: &str,
         context: &mut EvalContext,
     ) -> EvalResult<bool> {
         // Hack split input string and construct a qualified name.
         let name = QualifiedName::new(
-            name.split("::").map(|s| Identifier::no_ref(s)).collect(),
+            name.split("::").map(Identifier::no_ref).collect(),
             microcad_lang::src_ref::SrcRef(None),
         );
         use microcad_lang::resolve::Lookup;
@@ -120,8 +120,7 @@ pub mod debug {
                     context.error(&src_ref, err)?;
                     false
                 }
-            }
-            .into(),
+            },
         )
     }
 
