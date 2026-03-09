@@ -63,12 +63,6 @@ impl std::fmt::Display for Literal {
     }
 }
 
-impl From<Literal> for Value {
-    fn from(literal: Literal) -> Self {
-        literal.value()
-    }
-}
-
 impl TreeDisplay for Literal {
     fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
         write!(f, "{:depth$}Literal: ", "")?;

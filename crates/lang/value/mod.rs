@@ -615,23 +615,6 @@ impl AttributesAccess for Value {
     }
 }
 
-impl From<Value> for Expression {
-    fn from(val: Value) -> Self {
-        match val {
-            Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Scalar,
-            }) => Expression::Literal(Literal::Number(NumberLiteral(
-                value,
-                Unit::None,
-                SrcRef(None),
-            ))),
-            Value::Tuple(t) => Expression::TupleExpression((*t).into()),
-            _ => unimplemented!(),
-        }
-    }
-}
-
 #[cfg(test)]
 fn integer(value: i64) -> Value {
     Value::Integer(value)
