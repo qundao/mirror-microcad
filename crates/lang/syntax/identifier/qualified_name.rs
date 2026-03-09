@@ -3,7 +3,6 @@
 
 use crate::{src_ref::*, syntax::*};
 use derive_more::{Deref, DerefMut};
-use microcad_syntax::tokens::SpannedToken;
 use miette::SourceSpan;
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,
@@ -171,10 +170,6 @@ impl QualifiedName {
 
     pub(crate) fn count_super(&self) -> usize {
         self.iter().take_while(|id| id.is_super()).count()
-    }
-
-    pub(crate) fn un_super(&self) -> Self {
-        self.iter().filter(|id| !id.is_super()).cloned().collect()
     }
 }
 

@@ -261,10 +261,7 @@ impl ToMd for Symbol {
 
             // Built-in functions
             inline_symbol_md(self, &mut md, "Built-in functions", |symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Builtin(Builtin::Function(_)) => true,
-                    _ => false,
-                })
+                symbol.with_def(|def| matches!(def, SymbolDef::Builtin(Builtin::Function(_))))
             });
 
             // Constants

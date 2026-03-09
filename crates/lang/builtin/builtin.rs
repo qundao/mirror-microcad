@@ -45,6 +45,7 @@ pub struct BuiltinWorkbench {
     /// Functor to evaluate this function
     pub f: &'static BuiltinFn,
 
+    /// Builtin workbench kind.
     pub kind: BuiltinWorkbenchKind,
 
     /// Functor which returns documentation of this function
