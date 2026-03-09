@@ -11,8 +11,9 @@ pub mod debug {
     use microcad_lang::{
         builtin::ValueAccess,
         diag::PushDiag,
-        eval::{ArgumentMatch, EvalError},
+        eval::{ArgumentMatch, EvalContext, EvalError, EvalResult},
         parameter,
+        src_ref::SrcReferrer,
         syntax::{Identifier, QualifiedName},
         value::Value,
     };
@@ -100,7 +101,31 @@ pub mod debug {
         }
     }
 
-    /// Assert that a qualified name is a valid symbol.
+    fn _is_valid(
+        src_ref: impl SrcReferrer,
+        name: &String,
+        context: &mut EvalContext,
+    ) -> EvalResult<bool> {
+        // Hack split input string and construct a qualified name.
+        let name = QualifiedName::new(
+            name.split("::").map(|s| Identifier::no_ref(s)).collect(),
+            microcad_lang::src_ref::SrcRef(None),
+        );
+        use microcad_lang::resolve::Lookup;
+        Ok(
+            match context.lookup(&name, microcad_lang::resolve::LookupTarget::AnyButMethod) {
+                Ok(_) => true,
+                Err(EvalError::SymbolNotFound(_)) => false,
+                Err(err) => {
+                    context.error(&src_ref, err)?;
+                    false
+                }
+            }
+            .into(),
+        )
+    }
+
+    /// Check if a qualified name is a valid symbol.
     #[builtin_fn(name: String, message: String = String::new())]
     pub fn is_valid() -> Symbol {
         |params, args, context| {
@@ -108,23 +133,67 @@ pub mod debug {
                 Ok(args) => {
                     let name: String = args.get("name");
 
-                    // Hack split input string and construct a qualified name.
-                    let name = QualifiedName::new(
-                        name.split("::").map(|s| Identifier::no_ref(s)).collect(),
-                        microcad_lang::src_ref::SrcRef(None),
-                    );
-                    use microcad_lang::resolve::Lookup;
-                    Ok(match context
-                        .lookup(&name, microcad_lang::resolve::LookupTarget::AnyButMethod)
-                    {
-                        Ok(_) => true,
-                        Err(EvalError::SymbolNotFound(_)) => false,
-                        Err(err) => {
-                            context.error(&args, err)?;
-                            false
-                        }
+                    Ok(_is_valid(args, &name, context)?.into())
+                }
+                Err(err) => {
+                    // Called `assert` with no or more than 2 parameters
+                    context.error(args, err)?;
+                    Ok(Value::None)
+                }
+            }
+        }
+    }
+
+    /// Assert if the name string is a valid symbol.
+    #[builtin_fn(name: String, message: String = String::new())]
+    pub fn assert_valid() -> Symbol {
+        |params, args, context| {
+            match ArgumentMatch::find_match(args, params) {
+                Ok(args) => {
+                    let name: String = args.get("name");
+                    if !_is_valid(&args, &name, context)? {
+                        let message: String = args.get("message");
+                        context.error(
+                            &args,
+                            EvalError::AssertionFailed(if message.is_empty() {
+                                String::new()
+                            } else {
+                                message
+                            }),
+                        )?;
                     }
-                    .into())
+
+                    Ok(Value::None)
+                }
+                Err(err) => {
+                    // Called `assert` with no or more than 2 parameters
+                    context.error(args, err)?;
+                    Ok(Value::None)
+                }
+            }
+        }
+    }
+
+    /// Assert if the name string is an invalid symbol.
+    #[builtin_fn(name: String, message: String = String::new())]
+    pub fn assert_invalid() -> Symbol {
+        |params, args, context| {
+            match ArgumentMatch::find_match(args, params) {
+                Ok(args) => {
+                    let name: String = args.get("name");
+                    if _is_valid(&args, &name, context)? {
+                        let message: String = args.get("message");
+                        context.error(
+                            &args,
+                            EvalError::AssertionFailed(if message.is_empty() {
+                                String::new()
+                            } else {
+                                message
+                            }),
+                        )?;
+                    }
+
+                    Ok(Value::None)
                 }
                 Err(err) => {
                     // Called `assert` with no or more than 2 parameters
