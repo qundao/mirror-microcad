@@ -701,9 +701,9 @@ fn parser<'tokens>()
             })
             .boxed();
 
-        let use_statement = visibility
-            .then_whitespace()
-            .or_not()
+        let use_statement = attribute_parser
+            .clone()
+            .then(visibility.then_whitespace().or_not())
             .then_ignore(just(Token::KeywordUse))
             .then_whitespace()
             .then(use_parts)
@@ -717,11 +717,12 @@ fn parser<'tokens>()
                     .or_not(),
             )
             .with_extras()
-            .map_with(|(((visibility, name), use_as), extras), e| {
+            .map_with(|((((attributes, visibility), name), use_as), extras), e| {
                 Statement::Use(UseStatement {
                     span: e.span(),
-                    extras,
+                    attributes,
                     visibility,
+                    extras,
                     name,
                     use_as,
                 })
@@ -737,22 +738,26 @@ fn parser<'tokens>()
 
         let init = doc_comment
             .clone()
+            .then(attribute_parser.clone())
             .then(just(Token::KeywordInit).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
             .then(arguments.clone())
             .then_maybe_whitespace()
             .then(block.clone())
             .with_extras()
-            .map_with(|((((doc, keyword_span), arguments), body), extras), e| {
-                Statement::Init(InitDefinition {
-                    span: e.span(),
-                    keyword_span,
-                    extras,
-                    doc,
-                    arguments,
-                    body,
-                })
-            })
+            .map_with(
+                |(((((doc, attributes), keyword_span), arguments), body), extras), e| {
+                    Statement::Init(InitDefinition {
+                        span: e.span(),
+                        keyword_span,
+                        extras,
+                        doc,
+                        attributes,
+                        arguments,
+                        body,
+                    })
+                },
+            )
             .boxed();
         let workbench = doc_comment
             .clone()

@@ -104,6 +104,7 @@ pub struct InitDefinition {
     pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
+    pub attributes: Vec<Attribute>,
     pub arguments: ArgumentsDefinition,
     pub body: StatementList,
 }
@@ -113,6 +114,7 @@ pub struct InitDefinition {
 #[allow(missing_docs)]
 pub struct UseStatement {
     pub span: Span,
+    pub attributes: Vec<Attribute>,
     pub extras: ItemExtras,
     pub visibility: Option<Visibility>,
     pub name: UseName,
