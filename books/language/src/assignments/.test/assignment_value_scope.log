@@ -20,27 +20,27 @@
   45:       // define b within scope #1
   46:       b = a * 2;
   47:       // of course b is available at this point
-  48:       assert(is_valid("b"));
+  48:       assert_valid("b");
   49:   
   50:       // scope #2
   51:       {
   52:           // b is available in scope #2 because #2 is within #1
-  53:           assert(is_valid("b"));
+  53:           assert_valid("b");
   54:       }
   55:   }
   56:   
   57:   // a is still available
-  58:   assert(is_valid("a"));
+  58:   assert_valid("a");
   59:   // b not known here anymore
-  60:   assert(!is_valid("b"));
+  60:   assert_invalid("b");
 
 -- Parse Error --
   × error: 59:1: Expected comment, semicolon or end of input
     ╭─[../books/language/src/assignments/value.md:59:1]
  58 │ // a is still available
- 59 │ assert(is_valid("a"));
-    · ───┬──
-    ·    ╰── unexpected identifier
+ 59 │ assert_valid("a");
+    · ──────┬─────
+    ·       ╰── unexpected identifier
  60 │ // b not known here anymore
     ╰────
 
