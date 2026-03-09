@@ -110,7 +110,7 @@ pub mod debug {
 
                     // Hack split input string and construct a qualified name.
                     let name = QualifiedName::new(
-                        name.split("::").map(|s| Identifier::no_ref(&s)).collect(),
+                        name.split("::").map(|s| Identifier::no_ref(s)).collect(),
                         microcad_lang::src_ref::SrcRef(None),
                     );
                     use microcad_lang::resolve::Lookup;

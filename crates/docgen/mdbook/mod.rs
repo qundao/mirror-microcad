@@ -127,9 +127,11 @@ impl MdBook {
         let workbenches: Vec<_> = children
             .iter()
             .filter(|symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(_) | SymbolDef::Builtin(Builtin::Workbench(_)) => true,
-                    _ => false,
+                symbol.with_def(|def| {
+                    matches!(
+                        def,
+                        SymbolDef::Workbench(_) | SymbolDef::Builtin(Builtin::Workbench(_))
+                    )
                 })
             })
             .collect();
