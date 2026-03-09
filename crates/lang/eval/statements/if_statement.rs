@@ -3,9 +3,9 @@
 
 //! If statement evaluation.
 
-use crate::{eval::*, model::*, syntax::*, value::*};
+use crate::{eval::*, syntax::*, value::*};
 
-impl Eval<Value> for IfStatement {
+impl Eval for IfStatement {
     fn eval(&self, context: &mut crate::eval::EvalContext) -> crate::eval::EvalResult<Value> {
         log::debug!("Evaluating if statement to value: {self}");
 
@@ -13,12 +13,12 @@ impl Eval<Value> for IfStatement {
         match cond {
             Value::Bool(true) => Ok(self.body.eval(context)?),
             Value::Bool(false) => {
-                if let Some(body) = &self.body_else {
-                    Ok(body.eval(context)?)
-                } else if let Some(next) = &self.next_if {
+                if let Some(next) = &self.next_if {
                     next.eval(context)
+                } else if let Some(body) = &self.body_else {
+                    Ok(body.eval(context)?)
                 } else {
-                    Ok(Value::None)
+                    unreachable!("missing else (MISSED IN RESOLVE)")
                 }
             }
             _ => {
@@ -30,36 +30,6 @@ impl Eval<Value> for IfStatement {
                     },
                 )?;
                 Ok(Value::None)
-            }
-        }
-    }
-}
-
-impl Eval<Option<Model>> for IfStatement {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
-        log::debug!("Evaluating if statement to model: {self}");
-
-        let cond = self.cond.eval(context)?;
-        match cond {
-            Value::Bool(true) => Ok(self.body.eval(context)?),
-            Value::Bool(false) => {
-                if let Some(body) = &self.body_else {
-                    Ok(body.eval(context)?)
-                } else if let Some(next) = &self.next_if {
-                    next.eval(context)
-                } else {
-                    Ok(None)
-                }
-            }
-            _ => {
-                context.error(
-                    self,
-                    EvalError::IfConditionIsNotBool {
-                        condition: cond.to_string(),
-                        src_ref: self.cond.src_ref(),
-                    },
-                )?;
-                Ok(None)
             }
         }
     }

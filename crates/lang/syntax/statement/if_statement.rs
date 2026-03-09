@@ -70,7 +70,7 @@ impl std::fmt::Debug for IfStatement {
 
 impl TreeDisplay for IfStatement {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}IfStatement:", "")?;
+        writeln!(f, "{:depth$}IfExpression:", "")?;
         depth.indent();
         writeln!(f, "{:depth$}Condition:", "")?;
         self.cond.tree_print(f, depth.indented())?;

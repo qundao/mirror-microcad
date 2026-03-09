@@ -223,16 +223,15 @@ pub enum EvalError {
     WarnEmptyWorkbench(String, Identifier),
 
     /// This error happens if the workbench produced a different output type.
-    #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]
+    #[error("The {kind} cannot produce a {produced} output")]
     WorkbenchInvalidOutput {
         kind: WorkbenchKind,
         produced: OutputType,
-        expected: OutputType,
     },
 
     /// This error happens if the workbench produced a different output type.
-    #[error("The {0} workbench will produce no {1} output.")]
-    WorkbenchNoOutput(WorkbenchKind, OutputType),
+    #[error("The {0} workbench produces no (valid) model.")]
+    WorkbenchNoOutput(WorkbenchKind),
 
     /// Unexpected source file in expression
     #[error("Unexpected source file {0} in expression")]
@@ -332,6 +331,9 @@ pub enum EvalError {
         )]
         src_ref: SrcRef,
     },
+
+    #[error("Workbench returning result (and model) not allowed.")]
+    WorkbenchValueResult,
 }
 
 /// Result type of any evaluation.

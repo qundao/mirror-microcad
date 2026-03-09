@@ -46,6 +46,7 @@
         "rustfmt",
         "rustmod",
         "signum",
+        "slint",
         "spiralize",
         "thirdparty",
         "thiserror",

@@ -81,8 +81,8 @@ impl std::fmt::Display for Statement {
                 write!(f, "{mi}")
             }
 
-            Self::Use(u) => write!(f, "{u};"),
-            Self::Return(r) => write!(f, "{r};"),
+            Self::Use(u) => write!(f, "{u}"),
+            Self::Return(r) => write!(f, "{r}"),
             Self::InnerAttribute(i) => write!(f, "{i}"),
             Self::InnerDocComment(i) => write!(f, "{i}"),
 

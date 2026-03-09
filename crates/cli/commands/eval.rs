@@ -3,11 +3,11 @@
 
 //! µcad CLI eval commands
 
-use microcad_lang::{diag::*, eval::*, model::Model, tree_display::*};
+use microcad_lang::{diag::*, eval::*, model::Model, tree_display::*, value::Value};
 
 use crate::{
-    commands::{Resolve, RunCommand},
     Cli,
+    commands::{Resolve, RunCommand},
 };
 
 #[derive(clap::Parser)]
@@ -49,7 +49,7 @@ impl RunCommand<(EvalContext, Option<Model>)> for Eval {
         }
 
         match result {
-            Result::Ok(Some(model)) => {
+            Result::Ok(Value::Model(model)) => {
                 if cli.is_eval() {
                     eprintln!("Created model!");
                 }
@@ -58,7 +58,7 @@ impl RunCommand<(EvalContext, Option<Model>)> for Eval {
                 }
                 Ok((context, Some(model)))
             }
-            Result::Ok(None) => {
+            Result::Ok(_) => {
                 if cli.is_eval() {
                     eprintln!("No output model!");
                 }

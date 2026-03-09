@@ -41,9 +41,7 @@ impl TreeDisplay for FunctionDefinition {
         if let Some(doc) = &self.doc {
             doc.tree_print(f, depth)?;
         }
-        writeln!(f, "{:depth$}Signature:", "")?;
         self.signature.tree_print(f, depth)?;
-        writeln!(f, "{:depth$}Body:", "")?;
         self.body.tree_print(f, depth)
     }
 }

@@ -3,6 +3,7 @@
 
 use microcad_lang::resolve::Sources;
 use microcad_lang::src_ref::{Refer, SrcReferrer};
+use microcad_lang::value::Value;
 use microcad_lang::{
     eval::{Capture, EvalContext},
     model::Model,
@@ -190,8 +191,8 @@ pub fn run_test(env: Option<TestEnv>) {
                     // check if test awaited to succeed but failed at evaluation
                     match (eval, context.has_errors(), env.todo()) {
                         // test expected to succeed and succeeds with no errors
-                        (Ok(model), false, false) => {
-                            report_model(&mut env, model);
+                        (Ok(Value::Model(model)), false, false) => {
+                            report_model(&mut env, Some(model));
                             if err_warn {
                                 match env.mode() {
                                     "warn" => {
@@ -209,6 +210,8 @@ pub fn run_test(env: Option<TestEnv>) {
                                 env.result(TestResult::Ok)
                             }
                         }
+                        // no model
+                        (Ok(_), false, false) => report_model(&mut env, None),
                         // test is todo but succeeds with no errors
                         (Ok(_), false, true) => {
                             env.result(TestResult::NotTodo);

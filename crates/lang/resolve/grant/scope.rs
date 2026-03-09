@@ -3,13 +3,18 @@
 
 //! Check wether a statement is legally placed.
 
-use crate::src_ref::{SrcRef, SrcReferrer};
+use crate::{
+    src_ref::{SrcRef, SrcReferrer},
+    syntax::WorkbenchKind,
+};
 
 #[derive(Copy, Clone, PartialEq)]
 pub(crate) enum ScopeType {
     Source,
     Module,
-    Workbench,
+    Sketch,
+    Part,
+    Op,
     Function,
     Init,
     If,
@@ -32,7 +37,9 @@ impl ScopeType {
         match self {
             Source => "source file",
             Module => "module",
-            Workbench => "workbench",
+            Sketch => "sketch",
+            Part => "part",
+            Op => "op",
             Function => "function",
             Init => "initializer",
             If => "if statement",
@@ -53,21 +60,39 @@ impl ScopeType {
         use ScopeType::*;
         match self {
             Source => &[],
-            Module | Workbench => &[Source, Module],
-            Function => &[Source, Module, Workbench],
-            Init => &[Workbench],
-            If => &[Source, Workbench, Function, If, Expression],
-            StatementList => &[Source, Module, Workbench, Function],
+            Module | Sketch | Part | Op => &[Source, Module],
+            Function => &[Source, Module, Sketch, Part, Op],
+            Init => &[Sketch, Part, Op],
+            If => &[Source, Sketch, Part, Op, Function, If, Expression],
+            StatementList => &[Source, Module, Sketch, Part, Op, Function],
             Return => &[Function],
-            ValueAssignment => &[Source, Module, Workbench, Function],
-            ConstAssignment => &[Source, Module, Workbench],
-            PropAssignment => &[Workbench],
+            ValueAssignment => &[Source, Module, Sketch, Part, Op, Function],
+            ConstAssignment => &[Source, Module, Sketch, Part, Op],
+            PropAssignment => &[Sketch, Part, Op],
             PubAssignment => &[Source, Module],
-            Body => &[Source, Module, Workbench, Function],
-            Use => &[Source, Module, Workbench, Function],
+            Body => &[Source, Module, Sketch, Part, Op, Function],
+            Use => &[Source, Module, Sketch, Part, Op, Function],
             PubUse => &[Source, Module],
-            ExpressionStatement => &[Source, Workbench, Function, If, StatementList, Expression],
-            Expression => &[Source, Workbench, Function, If, StatementList, Expression],
+            ExpressionStatement => &[
+                Source,
+                Sketch,
+                Part,
+                Op,
+                Function,
+                If,
+                StatementList,
+                Expression,
+            ],
+            Expression => &[
+                Source,
+                Sketch,
+                Part,
+                Op,
+                Function,
+                If,
+                StatementList,
+                Expression,
+            ],
         }
     }
 }
@@ -88,5 +113,15 @@ impl Scope {
 
     pub(crate) fn ty(&self) -> ScopeType {
         self.0
+    }
+}
+
+impl From<WorkbenchKind> for ScopeType {
+    fn from(kind: WorkbenchKind) -> Self {
+        match kind {
+            WorkbenchKind::Part => ScopeType::Part,
+            WorkbenchKind::Sketch => ScopeType::Sketch,
+            WorkbenchKind::Operation => ScopeType::Op,
+        }
     }
 }

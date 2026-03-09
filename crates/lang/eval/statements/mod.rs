@@ -15,16 +15,14 @@ mod return_statement;
 
 impl Eval for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        log::trace!("Evaluating statement: {self}");
         match self {
-            Self::Assignment(a) => {
-                a.eval(context)?;
-                Ok(Value::None)
-            }
+            Self::Assignment(a) => a.eval(context),
+            Self::Module(m) => m.eval(context),
             Self::Expression(e) => e.eval(context),
             Self::Return(r) => r.eval(context),
 
             Self::Workbench(..)
-            | Self::Module(..)
             | Self::Function(..)
             | Self::InnerAttribute(..)
             | Self::InnerDocComment(..)
@@ -34,51 +32,88 @@ impl Eval for Statement {
     }
 }
 
-impl Eval<Option<Model>> for Statement {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
-        let model: Option<Model> = match self {
-            Self::Module(m) => {
-                m.eval(context)?;
-                None
-            }
-            Self::Assignment(a) => {
-                a.eval(context)?;
-                None
-            }
-            Self::Expression(e) => e.eval(context)?,
+impl Eval for StatementList {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        let mut models = Models::default();
+        let mut output_type = OutputType::NotDetermined;
 
-            Self::Workbench(..)
-            | Self::Function(..)
-            | Self::Use(..)
-            | Self::Init(..)
-            | Self::Return(..)
-            | Self::InnerAttribute(..)
-            | Self::InnerDocComment(..) => None,
+        let mut last_statement_result = None;
+        let result = self
+            .statements
+            .iter()
+            .find_map(|statement| {
+                match statement.eval(context) {
+                    // early return
+                    ret @ Ok(Value::Return(..)) => Some(ret),
+                    // accumulate any models
+                    Ok(Value::Model(model)) => match output_type {
+                        OutputType::InvalidMixed => Some(
+                            context
+                                .error(statement, EvalError::CannotMixGeometry)
+                                .map(|_| Value::None)
+                                .map_err(EvalError::DiagError),
+                        ),
+                        _ => {
+                            output_type = output_type.merge(model.deduce_output_type());
+                            if OutputType::InvalidMixed != output_type {
+                                models.push(model);
+                                None
+                            } else {
+                                Some(
+                                    context
+                                        .error(statement, EvalError::CannotMixGeometry)
+                                        .map(|_| Value::None)
+                                        .map_err(EvalError::DiagError),
+                                )
+                            }
+                        }
+                    },
+                    // continue while no result
+                    Ok(Value::None) => None,
+                    Ok(value) => {
+                        if let Statement::Expression(stmt) = statement {
+                            if matches!(stmt.expression, Expression::If(..)) {
+                                assert!(last_statement_result.is_none());
+                                last_statement_result = Some(value);
+                            }
+                        }
+                        None
+                    }
+                    Err(err) => Some(Err(err)),
+                }
+            })
+            .unwrap_or(Ok(Value::None))?;
+
+        // HACK: last_statement_result is not needed if if statement ends in tail
+        let tail = self.tail_expression();
+        let result = if let Some(last_statement_result) = last_statement_result {
+            assert!(tail.is_none(), "{:?} {last_statement_result}", tail);
+            last_statement_result
+        } else {
+            // see if there is any result in tail
+            tail.map(|exp| exp.eval(context)).unwrap_or(Ok(result))?
         };
 
-        if let Some(ref model) = model {
-            if model.deduce_output_type() == OutputType::InvalidMixed {
-                context.error(self, EvalError::CannotMixGeometry)?;
+        match (result, models.is_empty()) {
+            (Value::None, false) => Ok(Value::Model(
+                ModelBuilder::new(Element::Group, self.src_ref())
+                    .add_children(models)?
+                    .build(),
+            )),
+            (result @ Value::Model(..), _) => Ok(result),
+            (_, false) => {
+                context.error(
+                    &tail.map(|t| t.src_ref()).unwrap_or(self.src_ref()),
+                    EvalError::WorkbenchValueResult,
+                )?;
+                Ok(Value::Model(
+                    ModelBuilder::new(Element::Group, self.src_ref())
+                        .add_children(models)?
+                        .build(),
+                ))
             }
+            (result, _) => Ok(result),
         }
-
-        Ok(model)
-    }
-}
-
-impl Eval<Value> for StatementList {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        let mut result = Value::None;
-        for statement in self.iter() {
-            log::trace!("Evaluating statement: {statement}");
-            match statement.eval(context)? {
-                Value::Return(result) => {
-                    return Ok(Value::Return(result));
-                }
-                value => result = value,
-            }
-        }
-        Ok(result)
     }
 }
 
@@ -93,41 +128,5 @@ impl Eval<Attributes> for StatementList {
         }
 
         Ok(Attributes(attributes))
-    }
-}
-
-impl Eval<Models> for StatementList {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Models> {
-        let mut models = Models::default();
-        let mut output_type = OutputType::NotDetermined;
-
-        let kind = context.current_workbench_kind();
-
-        for statement in self.iter() {
-            if let Some(model) = statement.eval(context)? {
-                output_type = output_type.merge(model.deduce_output_type());
-
-                // We are in a workbench. Check if the workbench kind matches the current output type.
-                if let Some(kind) = kind {
-                    let expected_output_type = kind.into();
-                    if ![OutputType::NotDetermined, output_type].contains(&expected_output_type) {
-                        context.error(
-                            statement,
-                            EvalError::WorkbenchInvalidOutput {
-                                kind,
-                                produced: output_type,
-                                expected: expected_output_type,
-                            },
-                        )?;
-                    }
-                }
-
-                if output_type == OutputType::InvalidMixed {
-                    context.error(statement, EvalError::CannotMixGeometry)?;
-                }
-                models.push(model);
-            }
-        }
-        Ok(models)
     }
 }

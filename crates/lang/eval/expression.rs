@@ -253,10 +253,10 @@ impl Eval for Expression {
             }
             Self::MethodCall(lhs, method_call, _) => method_call.eval(context, lhs),
             Self::Call(call) => call.eval(context),
-            Self::Body(body) => Ok(Eval::<Option<Model>>::eval(body, context)?.into()),
-            Self::If(if_) => Ok(Eval::<Option<Model>>::eval(if_.as_ref(), context)?.into()),
+            Self::Body(body) => body.eval(context),
+            Self::If(if_) => if_.eval(context),
             Self::QualifiedName(qualified_name) => qualified_name.eval(context),
-            Self::Marker(marker) => Ok(marker.eval(context)?.map(Value::Model).unwrap_or_default()),
+            Self::Marker(marker) => marker.eval(context),
             // Access a property `x` of an expression `circle.x`
             Self::PropertyAccess(lhs, id, src_ref) => {
                 let value: Value = lhs.eval(context)?;
@@ -294,14 +294,5 @@ impl Eval for Expression {
                 Ok(Value::None)
             }
         }
-    }
-}
-
-impl Eval<Option<Model>> for Expression {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
-        Ok(match self.eval(context)? {
-            Value::Model(model) => Some(model),
-            _ => None,
-        })
     }
 }

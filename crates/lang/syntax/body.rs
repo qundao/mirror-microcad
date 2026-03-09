@@ -26,8 +26,8 @@ impl SrcReferrer for Body {
 impl std::fmt::Display for Body {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, " {{")?;
-        writeln!(f, "{}", self.statements)?;
-        writeln!(f, "}}")?;
+        write!(f, "{}", self.statements)?;
+        write!(f, "}}")?;
         Ok(())
     }
 }
@@ -35,8 +35,11 @@ impl std::fmt::Display for Body {
 impl std::fmt::Debug for Body {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, " {{")?;
-        writeln!(f, "{:?}", self.statements)?;
-        writeln!(f, "}}")?;
+        write!(f, "{:?}", self.statements.statements)?;
+        self.tail_expression()
+            .map(|exp| writeln!(f, "{exp:?}"))
+            .unwrap_or(Ok(()))?;
+        write!(f, "}}")?;
         Ok(())
     }
 }
@@ -45,8 +48,6 @@ impl TreeDisplay for Body {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}Body:", "")?;
         depth.indent();
-        self.statements
-            .iter()
-            .try_for_each(|s| s.tree_print(f, depth))
+        self.statements.tree_print(f, depth)
     }
 }

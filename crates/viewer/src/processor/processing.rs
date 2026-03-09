@@ -8,6 +8,7 @@ use microcad_lang::{
     model::Model,
     render::{GeometryOutput, RenderContext, RenderWithContext},
     syntax::SourceFile,
+    value::Value,
 };
 
 use crate::{
@@ -138,13 +139,14 @@ impl Processor {
                 );
 
                 match eval_context.eval() {
-                    Ok(model) => {
-                        self.context.model = model;
+                    Ok(Value::Model(model)) => {
+                        self.context.model = Some(model);
                         if eval_context.has_errors() {
                             self.state_change(ProcessingState::Error);
                             return Err(miette::miette!("Eval error"));
                         }
                     }
+                    Ok(_) => todo!("error"),
                     Err(err) => {
                         log::error!("Eval error {err}");
                         self.state_change(ProcessingState::Error);

@@ -47,7 +47,9 @@ impl Grant for StatementList {
         let scope = Scope(StatementList, self.src_ref());
         let parent = &context.parent();
         match parent.ty() {
-            Source | Module | Workbench | Function | Init | If | ExpressionStatement => Ok(()),
+            Source | Module | Sketch | Part | Op | Function | Init | If | ExpressionStatement => {
+                Ok(())
+            }
             _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
         self.iter()
@@ -78,7 +80,7 @@ impl Grant for Statement {
 impl Grant for WorkbenchDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
-        let scope = Scope(Workbench, self.keyword_ref.clone());
+        let scope = Scope((*self.kind).into(), self.keyword_ref.clone());
         let parent = &context.parent();
         match parent.ty() {
             Source | Module => Ok(()),
@@ -95,7 +97,7 @@ impl Grant for FunctionDefinition {
         let parent = &context.parent();
         match parent.ty() {
             Source | Module => Ok(()),
-            Workbench => {
+            Sketch | Part | Op => {
                 use Visibility::*;
                 match self.visibility {
                     Private | PrivateUse(..) => Ok(()),
@@ -116,7 +118,7 @@ impl Grant for InitDefinition {
         let scope = Scope(Init, self.keyword_ref.clone());
         let parent = &context.parent();
         match parent.ty() {
-            Workbench => Ok(()),
+            Sketch | Part | Op => Ok(()),
             _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
         context.scope(scope, |context| self.body.grant(context))
@@ -148,7 +150,7 @@ impl Grant for IfStatement {
         let scope = Scope(If, self.src_ref());
         let parent = &context.parent();
         match &context.parent().ty() {
-            Source | Workbench | Function | If | ExpressionStatement => Ok(()),
+            Source | Sketch | Part | Op | Function | If | ExpressionStatement => Ok(()),
             _ => context.error(self, StatementNotSupportedError::new(&scope, parent)),
         }?;
         context.scope(Scope(If, self.body.src_ref()), |context| {
@@ -186,12 +188,12 @@ impl Grant for AssignmentStatement {
             ValueAssignment => {
                 matches!(
                     parent.ty(),
-                    Source | Function | Workbench | Init | ExpressionStatement
+                    Source | Function | Sketch | Part | Op | Init | ExpressionStatement
                 )
             }
             PubAssignment => matches!(parent.ty(), Source | Module),
-            ConstAssignment => matches!(parent.ty(), Source | Module | Workbench),
-            PropAssignment => matches!(parent.ty(), Workbench),
+            ConstAssignment => matches!(parent.ty(), Source | Module | Sketch | Part | Op),
+            PropAssignment => matches!(parent.ty(), Sketch | Part | Op),
             _ => unreachable!(),
         };
 
@@ -209,7 +211,7 @@ impl Grant for Body {
         let parent = &context.parent();
         match parent.ty() {
             Source | Module | Function | Init | If | ExpressionStatement => Ok(()),
-            Workbench => {
+            Sketch | Part | Op => {
                 if let Err(err) = self.check_workbench_body(parent, context) {
                     context.error(self, err)?;
                 }
@@ -332,7 +334,7 @@ impl Grant for UseStatement {
         let parent = &context.parent();
         let grant = match parent.ty() {
             Source | Module => true,
-            Workbench | Function | ExpressionStatement | Body | Init => match scope.0 {
+            Sketch | Part | Op | Function | ExpressionStatement | Body | Init => match scope.0 {
                 Use => true,
                 PubUse => false,
                 _ => unreachable!(),
@@ -354,7 +356,15 @@ impl Grant for ExpressionStatement {
         let parent = &context.parent();
         if !matches!(
             parent.ty(),
-            Source | Workbench | Function | If | StatementList | Init | ExpressionStatement
+            Source
+                | Sketch
+                | Part
+                | Op
+                | Function
+                | If
+                | StatementList
+                | Init
+                | ExpressionStatement
         ) {
             context.error(self, StatementNotSupportedError::new(&scope, parent))?;
         }
@@ -366,19 +376,28 @@ impl Grant for Expression {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use FormatStringInner::*;
 
+        let scope = Scope(ScopeType::Expression, self.src_ref());
         {
             use ScopeType::*;
             let parent = &context.parent();
-            let scope = Scope(Expression, self.src_ref());
             match parent.ty() {
-                Workbench | Function | If | StatementList | ExpressionStatement | Expression => (),
+                Sketch | Part | Op | Function | If | StatementList | ExpressionStatement
+                | Expression => (),
                 _ => context.error(self, StatementNotSupportedError::new(&scope, parent))?,
             }
         }
 
         use Expression::*;
         match self {
-            Invalid | Expression::Literal(..) | QualifiedName(..) | Marker(..) => Ok(()),
+            Invalid | Expression::Literal(..) | QualifiedName(..) => Ok(()),
+            Marker(..) => {
+                if let Some(workbench) = context.current_workbench() {
+                    if workbench.0 != ScopeType::Op {
+                        context.error(self, StatementNotSupportedError::new(&scope, &workbench))?;
+                    }
+                }
+                Ok(())
+            }
             FormatString(fs) => {
                 fs.0.iter()
                     .filter_map(|fs| {

@@ -21,8 +21,8 @@ impl Assignment {
     }
 }
 
-impl Eval<()> for AssignmentStatement {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<()> {
+impl Eval for AssignmentStatement {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         log::debug!("Evaluating assignment statement:\n{self}");
 
         let assignment = &self.assignment;
@@ -31,7 +31,7 @@ impl Eval<()> for AssignmentStatement {
         let new_value: Value = assignment.expression.eval(context)?;
         if let Err(err) = assignment.type_check(new_value.ty()) {
             context.error(self, err)?;
-            return Ok(());
+            return Ok(Value::None);
         }
 
         // apply any attributes to model value
@@ -135,11 +135,11 @@ impl Eval<()> for AssignmentStatement {
             }
         }
 
-        Ok(())
+        Ok(Value::None)
     }
 }
 
-impl Eval<Value> for Assignment {
+impl Eval for Assignment {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         self.expression.eval(context)
     }

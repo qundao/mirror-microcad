@@ -11,13 +11,13 @@ impl WorkbenchDefinition {
     /// - `arguments`: Single argument tuple (will not be multiplied).
     /// - `init`: Initializer to call with given `arguments`.
     /// - `context`: Current evaluation context.
-    fn eval_to_model<'a>(
+    fn eval_model<'a>(
         &'a self,
         call_src_ref: SrcRef,
         creator: Creator,
         init: Option<&'a InitDefinition>,
         context: &mut EvalContext,
-    ) -> EvalResult<Model> {
+    ) -> EvalResult<Value> {
         log::debug!(
             "Evaluating model of `{id:?}` {kind}",
             id = self.id_ref(),
@@ -82,9 +82,27 @@ impl WorkbenchDefinition {
                     id = self.id_ref(),
                     kind = self.kind
                 );
-                model.append_children(self.body.statements.eval(context)?);
 
-                Ok(model)
+                match self.body.statements.eval(context)? {
+                    Value::None => (),
+                    Value::Model(m) => {
+                        let produced = m.deduce_output_type();
+                        let expected = (*self.kind).into();
+                        if OutputType::NotDetermined != expected && produced != expected {
+                            context.error(
+                                &self,
+                                EvalError::WorkbenchInvalidOutput {
+                                    kind: *self.kind,
+                                    produced,
+                                },
+                            )?;
+                        }
+                        model.append(m)
+                    }
+                    _ => unreachable!("Value result in workbench (MISSED IN RESOLVE)"),
+                }
+
+                Ok(Value::Model(model))
             },
         )
     }
@@ -188,12 +206,31 @@ impl WorkbenchDefinition {
 
                 // evaluate models for all multiplicity matches
                 for arguments in matched.1.args.iter() {
-                    models.push(self.eval_to_model(
+                    match self.eval_model(
                         call_src_ref.clone(),
                         Creator::new(symbol.clone(), arguments.clone()),
                         matched.0,
                         context,
-                    )?);
+                    )? {
+                        Value::None => {
+                            context.error(self, EvalError::WorkbenchNoOutput(*self.kind))?
+                        }
+                        Value::Model(model) => {
+                            let produced = model.deduce_output_type();
+                            let expected: OutputType = (*self.kind).into();
+                            if expected != OutputType::NotDetermined && produced != expected {
+                                context.error(
+                                    self,
+                                    EvalError::WorkbenchInvalidOutput {
+                                        kind: *self.kind,
+                                        produced,
+                                    },
+                                )?
+                            }
+                            models.push(model)
+                        }
+                        _ => unreachable!("value result in workbench (MISSED IN RESOLVE)"),
+                    }
                 }
             }
             2.. => {

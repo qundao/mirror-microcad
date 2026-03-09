@@ -66,7 +66,7 @@ impl Identifiable for WorkbenchDefinition {
 }
 
 impl<'a> Initialized<'a> for WorkbenchDefinition {
-    fn statements(&'a self) -> impl Iterator<Item = &Statement> {
+    fn statements(&'a self) -> impl Iterator<Item = &'a Statement> {
         self.body.statements.iter()
     }
 }

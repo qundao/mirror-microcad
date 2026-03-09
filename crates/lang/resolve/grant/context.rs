@@ -40,4 +40,13 @@ impl<'a> GrantContext<'a> {
     pub(super) fn find<F: FnMut(&Scope) -> bool>(&self, f: F) -> bool {
         self.stack.iter().any(f)
     }
+
+    pub(super) fn current_workbench(&self) -> Option<Scope> {
+        use ScopeType::*;
+        self.stack
+            .iter()
+            .rev()
+            .find(|scope| matches!(scope.0, Sketch | Part | Op))
+            .cloned()
+    }
 }

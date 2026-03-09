@@ -46,7 +46,7 @@ impl std::fmt::Debug for UseStatement {
             Visibility::Public => write!(f, "pub use ")?,
             Visibility::Deleted => unreachable!(),
         }
-        write!(f, "{:?}", self.decl)?;
+        write!(f, "{:?};", self.decl)?;
         Ok(())
     }
 }

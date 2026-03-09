@@ -82,13 +82,10 @@ impl Model {
     /// Append a single model as child.
     ///
     /// Also tries to set the output type if it has not been determined yet.
-    pub fn append(&self, model: Model) -> Model {
+    pub fn append(&self, model: Model) {
         model.borrow_mut().parent = Some(self.clone());
-
         let mut self_ = self.0.borrow_mut();
         self_.children.push(model.clone());
-
-        model
     }
 
     /// Append multiple models as children.

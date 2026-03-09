@@ -223,6 +223,8 @@ impl TreeDisplay for Value {
 
 impl TreeDisplay for Expression {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
+        writeln!(f, "{:depth$}Expression:", "")?;
+        depth.indent();
         match self {
             Expression::Literal(literal) => literal.tree_print(f, depth),
             Expression::FormatString(format_string) => format_string.tree_print(f, depth),

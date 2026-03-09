@@ -3,14 +3,14 @@
 
 use crate::{eval::*, model::*};
 
-impl Eval<Option<Model>> for Marker {
-    fn eval(&self, _: &mut EvalContext) -> EvalResult<Option<Model>> {
+impl Eval for Marker {
+    fn eval(&self, _: &mut EvalContext) -> EvalResult<Value> {
         if self.is_input_placeholder() {
-            Ok(Some(
+            Ok(Value::Model(
                 ModelBuilder::new(Element::InputPlaceholder, self.src_ref()).build(),
             ))
         } else {
-            Ok(None)
+            Ok(Value::None)
         }
     }
 }

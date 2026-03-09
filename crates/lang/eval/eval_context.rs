@@ -98,41 +98,38 @@ impl EvalContext {
     }
 
     /// Evaluate context into a value.
-    pub fn eval(&mut self) -> EvalResult<Option<Model>> {
+    pub fn eval(&mut self) -> EvalResult<Value> {
         if self.diag.error_count() > 0 {
             log::error!("Aborting evaluation because of prior resolve errors!");
             return Err(EvalError::ResolveFailed);
         }
-        let model: Model = self.sources.root().eval(self)?;
-        log::trace!("Post-evaluation context:\n{self:?}");
-        log::trace!("Evaluated Model:\n{}", FormatTree(&model));
+        let value = self.sources.root().eval(self)?;
+        if let Value::Model(model) = &value {
+            log::trace!("Post-evaluation context:\n{self:?}");
+            log::trace!("Evaluated Model:\n{}", FormatTree(model));
 
-        let unused = self
-            .root
-            .unused_private()
-            .iter()
-            .map(|symbol| {
-                (
-                    match self.sources.get_code(&symbol) {
-                        Ok(id) => id,
-                        Err(_) => symbol.id().to_string(),
-                    },
-                    symbol.src_ref(),
-                )
-            })
-            // intermediate hasp storage to avoid duplicates
-            .collect::<indexmap::IndexMap<_, _>>();
+            let unused = self
+                .root
+                .unused_private()
+                .iter()
+                .map(|symbol| {
+                    (
+                        match self.sources.get_code(&symbol) {
+                            Ok(id) => id,
+                            Err(_) => symbol.id().to_string(),
+                        },
+                        symbol.src_ref(),
+                    )
+                })
+                // intermediate hasp storage to avoid duplicates
+                .collect::<indexmap::IndexMap<_, _>>();
 
-        unused.into_iter().try_for_each(|(id, src_ref)| {
-            self.warning(&src_ref, EvalError::UnusedGlobalSymbol(id))
-        })?;
-
-        if model.has_no_output() {
-            // TODO Check if we can simply return Some(model) even if there is no output.
-            Ok(None)
-        } else {
-            Ok(Some(model))
+            unused.into_iter().try_for_each(|(id, src_ref)| {
+                self.warning(&src_ref, EvalError::UnusedGlobalSymbol(id))
+            })?;
         }
+
+        Ok(value)
     }
 
     /// Run the closure `f` within the given `stack_frame`.

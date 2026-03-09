@@ -100,12 +100,6 @@ impl CallMethod for Value {
         context: &mut EvalContext,
     ) -> EvalResult<Value> {
         match self {
-            Value::Integer(_) => eval_todo!(context, id, "call_method for Integer"),
-            Value::Quantity(_) => eval_todo!(context, id, "call_method for Quantity"),
-            Value::Bool(_) => eval_todo!(context, id, "call_method for Bool"),
-            Value::String(_) => eval_todo!(context, id, "call_method for String"),
-            Value::Tuple(_) => eval_todo!(context, id, "call_method for Tuple"),
-            Value::Matrix(_) => eval_todo!(context, id, "call_method for Matrix"),
             Value::Array(array) => array.call_method(id, args, context),
             Value::Model(model) => Ok(model
                 .call_method(id, args, context)?

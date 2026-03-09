@@ -1,11 +1,11 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{eval::*, model::*};
+use crate::eval::*;
 
 impl Eval for ExpressionStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        log::debug!("Evaluating expression statement to value:\n{self}");
+        log::debug!("Evaluating expression statementto value:\n{self}");
 
         let value: Value = self.expression.eval(context)?;
         match value {
@@ -17,26 +17,7 @@ impl Eval for ExpressionStatement {
                     .append(&mut attributes.clone());
                 Ok(Value::Model(model))
             }
-            Value::None => Ok(Value::None),
-            _ => {
-                if !self.attribute_list.is_empty() {
-                    context.error(
-                        &self.attribute_list,
-                        AttributeError::CannotAssignAttribute(self.expression.to_string()),
-                    )?;
-                }
-                Ok(value)
-            }
+            _ => Ok(value),
         }
-    }
-}
-
-impl Eval<Option<Model>> for ExpressionStatement {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
-        log::debug!("Evaluating expression statement to models:\n{self}");
-        Ok(match self.eval(context)? {
-            Value::Model(model) => Some(model),
-            _ => None,
-        })
     }
 }

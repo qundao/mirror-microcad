@@ -3,7 +3,7 @@
 
 use crate::eval::*;
 
-impl Eval<Value> for ReturnStatement {
+impl Eval for ReturnStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         log::debug!("Evaluating return statement to value: {self}");
         if let Some(result) = &self.result {
