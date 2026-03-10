@@ -416,8 +416,8 @@ impl std::fmt::Debug for Value {
             Value::Array(a) => write!(f, "Array({a:?})"),
             Value::Tuple(t) => write!(f, "Tuple({t:?})"),
             Value::Matrix(m) => write!(f, "Matrix({m:?})"),
-            Value::Model(n) => write!(f, "\n Model({n:?})"),
-            Value::Return(r) => write!(f, "->({r:?})"),
+            Value::Model(n) => write!(f, "Model({n:?})"),
+            Value::Return(r) => write!(f, "Return({r:?})"),
             Value::Target(target) => write!(f, "Target({target:?})"),
         }
     }

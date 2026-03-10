@@ -233,16 +233,17 @@ impl std::fmt::Display for Model {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{id}{element}{is_root} ->",
+            "{id}{element} ({output_type}{is_root})",
             id = match &self.borrow().id {
                 Some(id) => format!("{id}: "),
                 None => String::new(),
             },
+            output_type = self.deduce_output_type(),
             element = *self.borrow().element,
             is_root = if self.parents().next().is_some() {
                 ""
             } else {
-                " (root)"
+                "/root"
             }
         )
     }
@@ -254,16 +255,17 @@ impl std::fmt::Debug for Model {
             f,
             "{}",
             crate::shorten!(format!(
-                "{id}{element}{is_root} ->",
+                "{id}{element} ({kind}{is_root})",
                 id = match &self.borrow().id {
                     Some(id) => format!("{id:?}: "),
                     None => String::new(),
                 },
                 element = *self.borrow().element,
+                kind = self.deduce_output_type(),
                 is_root = if self.parents().next().is_some() {
                     ""
                 } else {
-                    " (root)"
+                    ", root"
                 }
             ))
         )
@@ -283,7 +285,7 @@ impl TreeDisplay for Model {
         };
         let self_ = self.borrow();
         if let Some(output) = &self_.output {
-            writeln!(f, "{:tree_state$}{signature} {output}", "",)?;
+            writeln!(f, "{:tree_state$}{signature} -> {output}", "",)?;
         } else {
             writeln!(f, "{:tree_state$}{signature}", "",)?;
         }
