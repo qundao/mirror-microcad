@@ -238,7 +238,7 @@ pub fn run_test(env: Option<TestEnv>) {
                     }
                 }
             },
-            "no-test" => (),
+            "ignore" | "ignore_fail" | "ignore_todo" | "ignore_todo_fail" => (),
             _ => unreachable!(),
         }
     }
