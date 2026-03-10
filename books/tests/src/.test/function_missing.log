@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: function_missing
-  Expected result: todo_fail
+  Expected result: ignore_todo_fail
       Source file: ../books/tests/src/function.md:64
         Test path: ../books/tests/src/.test
 

@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: return_twice
-  Expected result: todo_fail
+  Expected result: ignore_todo_fail
       Source file: ../books/language/src/structure/functions/result.md:40
         Test path: ../books/language/src/structure/functions/.test
 

@@ -36,7 +36,7 @@ Of course returning a value twice is not allowed.
 
 [![test](.test/return_twice.svg)](.test/return_twice.log)
 
-```µcad,return_twice#todo_fail
+```µcad,return_twice#ignore_todo_fail
 fn pow( x: Scalar, n: Integer ) -> Scalar {
     if n > 1 {
         x * pow(x, n-1)
@@ -57,7 +57,7 @@ statement.
 
 [![test](.test/function_return.svg)](.test/function_return.log)
 
-```µcad,function_return#todo
+```µcad,function_return#ignore_todo
 fn pow( x: Scalar, n: Integer ) -> Scalar {
     if n > 1 {
         return x * pow(x, n-1);

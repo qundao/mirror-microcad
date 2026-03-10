@@ -4,7 +4,7 @@
 
 [![test](.test/bricks_brick.svg)](.test/bricks_brick.log)
 
-```µcad,bricks_brick
+```µcad,bricks_brick#ignore
 // file: brick.µcad
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later

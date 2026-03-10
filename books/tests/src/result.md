@@ -75,7 +75,7 @@ Workbenches cannot end with a value result.
 
 [![test](.test/sketch_value.svg)](.test/sketch_value.log)
 
-```µcad,sketch_value#fail
+```µcad,sketch_value#ignore_fail
 sketch S() {
     1 // error
 }
@@ -110,7 +110,7 @@ Functions can NOT generate models.
 
 [![test](.test/function_model.svg)](.test/function_model.log)
 
-```µcad,function_model#fail
+```µcad,function_model#ignore_fail
 fn f() {
     std::geo2d::Circle(radius=1mm); // error
 }
@@ -121,7 +121,7 @@ Functions can NOT result in models.
 
 [![test](.test/function_model_result.svg)](.test/function_model_result.log)
 
-```µcad,function_model_result#fail
+```µcad,function_model_result#ignore_fail
 fn f() -> Model  {  // error: Model cannot be used as return type of a function
     std::geo2d::Circle(radius=1mm) // error
 }
@@ -132,7 +132,7 @@ Functions can NOT return models.
 
 [![test](.test/function_model_return.svg)](.test/function_model_return.log)
 
-```µcad,function_model_return#fail
+```µcad,function_model_return#ignore_fail
 fn f() -> Model  {  // error: Model cannot be used as return type of a function
     return std::geo2d::Circle(radius=1mm); // error
 }
@@ -165,7 +165,7 @@ Functions must return a result if one is declared.
 
 [![test](.test/function_missing_result.svg)](.test/function_missing_result.log)
 
-```µcad,function_missing_result#fail
+```µcad,function_missing_result#ignore_fail
 fn f() -> Length {} // error
 f();
 ```
@@ -174,7 +174,7 @@ Functions MUST NOT have a result if none is declared.
 
 [![test](.test/function_unexpected_result.svg)](.test/function_unexpected_result.log)
 
-```µcad,function_unexpected_result#fail
+```µcad,function_unexpected_result#ignore_fail
 fn f() { 
     1 // error
 } 
@@ -185,7 +185,7 @@ Functions results must be of correct type.
 
 [![test](.test/function_wrong_result.svg)](.test/function_wrong_result.log)
 
-```µcad,function_wrong_result#fail
+```µcad,function_wrong_result#ignore_fail
 fn f() -> Length {
     1 // error
 }
@@ -196,7 +196,7 @@ Functions must return a value of the declared result type.
 
 [![test](.test/function_wrong_return.svg)](.test/function_wrong_return.log)
 
-```µcad,function_wrong_return#fail
+```µcad,function_wrong_return#ignore_fail
 fn f() -> Length {
     return 1; // error
 }

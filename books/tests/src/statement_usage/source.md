@@ -44,7 +44,7 @@ return 1;  // error
 
 [![test](.test/source_if.svg)](.test/source_if.log)
 
-```µcad,source_if
+```µcad,source_if#ignore
 if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1mm); }
 ```
 

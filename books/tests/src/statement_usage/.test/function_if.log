@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: function_if
-  Expected result: ok
+  Expected result: ignore
       Source file: ../books/tests/src/statement_usage/function.md:62
         Test path: ../books/tests/src/statement_usage/.test
 

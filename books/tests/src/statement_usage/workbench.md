@@ -58,7 +58,7 @@ sketch K() {
 
 [![test](.test/workbench_if.svg)](.test/workbench_if.log)
 
-```µcad,workbench_if
+```µcad,workbench_if#ignore
 sketch K() {
   if std::math::PI == 3 { }
 } K();

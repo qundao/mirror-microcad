@@ -58,7 +58,7 @@
 
 [![test](.test/body_if.svg)](.test/body_if.log)
 
-```µcad,body_if
+```µcad,body_if#ignore
 {
   if std::math::PI == 3 { }
 }

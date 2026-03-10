@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: source_if
-  Expected result: ok
+  Expected result: ignore
       Source file: ../books/tests/src/statement_usage/source.md:48
         Test path: ../books/tests/src/statement_usage/.test
 

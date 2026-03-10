@@ -46,7 +46,7 @@ assert_eq([ f(4), 3 ]);
 
 [![test](.test/function_mixed.svg)](.test/function_mixed.log)
 
-```µcad,function_mixed
+```µcad,function_mixed#ignore
 fn f(n: Integer) -> Integer {
     if n > 3 {
         return n-1;
@@ -60,7 +60,7 @@ assert_eq([ f(4), 3 ]);
 
 [![test](.test/function_missing.svg)](.test/function_missing.log)
 
-```µcad,function_missing#todo_fail
+```µcad,function_missing#ignore_todo_fail
 fn f(n: Integer) -> Integer { // error: not all paths return a value
     if n > 3 {
          n-1

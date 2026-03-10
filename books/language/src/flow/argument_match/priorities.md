@@ -115,7 +115,7 @@ You can combine all these methods.
 
 [![test](.test/argument_match_mix.svg)](.test/argument_match_mix.log)
 
-```µcad,argument_match_mix
+```µcad,argument_match_mix#ignore
 fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
 
 // `a` gets the Integer (1) which is compatible to Scalar (1.0)

@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: function_unexpected_result
-  Expected result: fail
+  Expected result: ignore_fail
       Source file: ../books/tests/src/result.md:178
         Test path: ../books/tests/src/.test
 

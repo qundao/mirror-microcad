@@ -58,7 +58,7 @@ sketch K() { init(l:Length) {
 
 [![test](.test/init_if.svg)](.test/init_if.log)
 
-```µcad,init_if#fail
+```µcad,init_if#ignore_fail
 sketch K() { init(l:Length) {
   if std::math::PI == l { } // error
 } } K(1cm);

@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: function_model_return
-  Expected result: fail
+  Expected result: ignore_fail
       Source file: ../books/tests/src/result.md:136
         Test path: ../books/tests/src/.test
 

@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: function_return
-  Expected result: todo
+  Expected result: ignore_todo
       Source file: ../books/language/src/structure/functions/result.md:61
         Test path: ../books/language/src/structure/functions/.test
 

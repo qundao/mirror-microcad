@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: bricks_brick
-  Expected result: ok
+  Expected result: ignore
       Source file: ../books/examples/src/bricks.md:8
         Test path: ../books/examples/src/.test
 

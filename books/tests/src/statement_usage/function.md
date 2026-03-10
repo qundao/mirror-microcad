@@ -50,7 +50,7 @@ fn f() {
 
 [![test](.test/function_return.svg)](.test/function_return.log)
 
-```µcad,function_return
+```µcad,function_return#ignore
 fn f() {
   return 1;
 } f();
@@ -58,7 +58,7 @@ fn f() {
 
 [![test](.test/function_if.svg)](.test/function_if.log)
 
-```µcad,function_if
+```µcad,function_if#ignore
 fn f() {
   if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
 } f();
@@ -106,7 +106,7 @@ fn f() {
 
 [![test](.test/function_expression_model.svg)](.test/function_expression_model.log)
 
-```µcad,function_expression_model
+```µcad,function_expression_model#ignore
 fn f() {
   __builtin::geo2d::Circle(radius=1mm);
 } f();

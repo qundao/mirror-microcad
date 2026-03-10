@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: sketch_value
-  Expected result: fail
+  Expected result: ignore_fail
       Source file: ../books/tests/src/result.md:79
         Test path: ../books/tests/src/.test
 

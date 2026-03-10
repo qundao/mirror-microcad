@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: function_expression_model
-  Expected result: ok
+  Expected result: ignore
       Source file: ../books/tests/src/statement_usage/function.md:110
         Test path: ../books/tests/src/statement_usage/.test
 

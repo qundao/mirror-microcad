@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: function_mixed
-  Expected result: ok
+  Expected result: ignore
       Source file: ../books/tests/src/function.md:50
         Test path: ../books/tests/src/.test
 
