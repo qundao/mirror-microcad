@@ -54,15 +54,5 @@
     · ┬
     · ╰── Unused local z.
     ╰────
-  ⚠ warning: 63:5: Unused global symbol std::print.
-    ╭─[../books/tests/src/use.md:63:5]
- 62 │ // use print from `std/module.µcad`
- 63 │ use std::print;
-    ·     ─────┬────
-    ·          ╰── Unused global symbol std::print.
- 64 │ // public use operation from `std/module.µcad`
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 63, 74, 75, 76
+Unexpected warnings(s) which did occur in line(s): 74, 75, 76
 -- No Model --
--- Test Result --
-OK (BUT WARNINGS)

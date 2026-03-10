@@ -23,8 +23,8 @@
     ╰────
 Unexpected warnings(s) which did occur in line(s): 87
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_assignment_var::K() ->
+  Group (2D/root)
+    Workpiece(sketch) workbench_assignment_var::K() (2D)
 
 Export error: Render error: Nothing to render
 -- Test Result --

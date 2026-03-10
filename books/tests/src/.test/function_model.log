@@ -1,0 +1,14 @@
+﻿
+-- Test --
+        Test name: function_model
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:114
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 114:   fn f() {
+ 115:       std::geo2d::Circle(radius=1mm); // error
+ 116:   }
+ 117:   f();
+

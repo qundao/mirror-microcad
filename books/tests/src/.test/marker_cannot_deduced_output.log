@@ -1,0 +1,36 @@
+﻿
+-- Test --
+        Test name: marker_cannot_deduced_output
+  Expected result: ok
+      Source file: ../books/tests/src/workbench.md:6
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+   6:   op operation() {
+   7:       std::geo2d::Circle(r=1mm);
+   8:       @input;
+   9:   }
+  10:   
+  11:   std::geo2d::Circle(r=1mm).operation();
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (2D/root)
+    Workpiece(op) marker_cannot_deduced_output::operation() (2D)
+      Group (2D)
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) (2D)
+          - center = (x=0mm, y=0mm)
+          - radius = 1mm
+          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+            Primitive2D __builtin::geo2d::Circle(radius=1mm) (2D)
+        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) (2D)
+          - center = (x=0mm, y=0mm)
+          - radius = 1mm
+          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+            Primitive2D __builtin::geo2d::Circle(radius=1mm) (2D)
+
+Export of "../books/tests/src/.test/marker_cannot_deduced_output-out.svg" successful.
+-- Test Result --
+OK

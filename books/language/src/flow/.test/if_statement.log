@@ -22,14 +22,16 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Group ->
-      Workpiece(sketch) std::geo2d::Hexagon(radius=5mm) ->
+  Group (2D/root)
+    Group (2D)
+      Workpiece(sketch) std::geo2d::Hexagon(radius=5mm) (2D)
         - radius = 5mm
-        Workpiece(sketch) std::geo2d::Ngon(n=6, radius=5mm) ->
-          - n = 6
-          - radius = 5mm
-          Primitive2D __builtin::geo2d::Ngon(n=6, radius=5mm) ->
+        Group (2D)
+          Workpiece(sketch) std::geo2d::Ngon(n=6, radius=5mm) (2D)
+            - n = 6
+            - radius = 5mm
+            Group (2D)
+              Primitive2D __builtin::geo2d::Ngon(n=6, radius=5mm) (2D)
 
 Export of "../books/language/src/flow/.test/if_statement-out.svg" successful.
 -- Test Result --

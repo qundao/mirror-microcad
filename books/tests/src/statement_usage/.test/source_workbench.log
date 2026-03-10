@@ -12,8 +12,8 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) source_workbench::F() ->
+  Group (2D/root)
+    Workpiece(sketch) source_workbench::F() (2D)
 
 Export error: Render error: Nothing to render
 -- Test Result --

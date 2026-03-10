@@ -18,15 +18,5 @@
 -- Output --
 Hello
 
--- Errors --
-  ⚠ warning: 8:5: Unused global symbol my_module.
-   ╭─[../books/language/src/assignments/pub.md:8:5]
- 8 │ mod my_module {
-   ·     ────┬────
-   ·         ╰── Unused global symbol my_module.
- 9 │     pub mod sub_module {
-   ╰────
-Unexpected warnings(s) which did occur in line(s): 8
+-- No Errors --
 -- No Model --
--- Test Result --
-OK (BUT WARNINGS)

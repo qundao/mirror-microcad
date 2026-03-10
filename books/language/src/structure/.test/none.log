@@ -13,30 +13,34 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(part) std::geo3d::Sphere(radius=40mm) ->
+  Group (3D/root)
+    Workpiece(part) std::geo3d::Sphere(radius=40mm) (3D)
       - radius = 40mm
-      Primitive3D __builtin::geo3d::Sphere(radius=40mm) ->
-    Workpiece(part) std::geo3d::Cube(size=40mm) ->
+      Group (3D)
+        Primitive3D __builtin::geo3d::Sphere(radius=40mm) (3D)
+    Workpiece(part) std::geo3d::Cube(size=40mm) (3D)
       - size_x = 40mm
       - size_y = 40mm
       - size_z = 40mm
-      Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20mm) ->
+      Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-20mm) (3D)
         - x = 0mm
         - y = 0mm
         - z = -20mm
-        Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20mm) ->
-          Workpiece(op) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) ->
-            - height = 40mm
-            - scale = (x=1, y=1)
-            - twist = 0rad
-            Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) ->
-              Workpiece(sketch) std::geo2d::Rect(height=40mm, width=40mm) ->
-                - height = 40mm
-                - width = 40mm
-                - x = -20mm
-                - y = -20mm
-                Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) ->
+        Group (3D)
+          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20mm) (3D)
+            Workpiece(op) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) (3D)
+              - height = 40mm
+              - scale = (x=1, y=1)
+              - twist = 0rad
+              Group (3D)
+                Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                  Workpiece(sketch) std::geo2d::Rect(height=40mm, width=40mm) (2D)
+                    - height = 40mm
+                    - width = 40mm
+                    - x = -20mm
+                    - y = -20mm
+                    Group (2D)
+                      Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) (2D)
 
 Export of "../books/language/src/structure/.test/none-out.stl" successful.
 -- Test Result --

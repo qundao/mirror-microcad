@@ -17,7 +17,7 @@
     ╭─[../books/tests/src/statement_usage/pre-init.md:23:6]
  22 │ sketch K() { 
     · ───┬──
-    ·    ╰── Inside this workbench
+    ·    ╰── Inside this sketch
  23 │   fn f() {} f();   // error
     ·      ┬
     ·      ╰── This statement is not allowed
@@ -29,7 +29,7 @@
     ╭─[../books/tests/src/statement_usage/pre-init.md:23:13]
  22 │ sketch K() { 
     · ───┬──
-    ·    ╰── Inside this workbench
+    ·    ╰── Inside this sketch
  23 │   fn f() {} f();   // error
     ·             ─┬─
     ·              ╰── This statement is not allowed

@@ -19,7 +19,7 @@
   86:       }
   87:   
   88:       // Accessing property in a function is ok
-  89:       fn inner() { radius/2 }
+  89:       fn inner() -> Length { radius/2 }
   90:   
   91:       Circle(radius) - Circle(radius = inner());
   92:   }
@@ -40,7 +40,7 @@
     ·                     ╰── This property assignment is not allowed
  82 │     }
     ╰────
-  help: property assignment is only allowed within workbench
+  help: property assignment is only allowed within sketch, part or op
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

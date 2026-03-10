@@ -22,15 +22,16 @@
    ╰────
 Unexpected warnings(s) which did occur in line(s): 6
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) method_call::Sketch(scale=4) ->
+  Group (2D/root)
+    Workpiece(sketch) method_call::Sketch(scale=4) (2D)
       - scale = 4
-      Workpiece(sketch) std::geo2d::Rect(size=160mm) ->
+      Workpiece(sketch) std::geo2d::Rect(size=160mm) (2D)
         - height = 160mm
         - width = 160mm
         - x = -80mm
         - y = -80mm
-        Primitive2D __builtin::geo2d::Rect(height=160mm, width=160mm, x=-80mm, y=-80mm) ->
+        Group (2D)
+          Primitive2D __builtin::geo2d::Rect(height=160mm, width=160mm, x=-80mm, y=-80mm) (2D)
 
 Export of "../books/tests/src/.test/method_call-out.svg" successful.
 -- Test Result --

@@ -8,7 +8,7 @@
 -- Code --
 
   18:   // function definition with parameter
-  19:   fn f(n: Integer) {
+  19:   fn f(n: Integer) -> Integer {
   20:       return n * 2; 
   21:   }
   22:   
@@ -19,5 +19,3 @@
 -- No Output --
 -- No Errors --
 -- No Model --
--- Test Result --
-OK

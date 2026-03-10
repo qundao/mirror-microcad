@@ -32,7 +32,7 @@
      ·              ╰── This constant assignment is not allowed
  146 │ }
      ╰────
-  help: constant assignment is only allowed within source file, module or workbench
+  help: constant assignment is only allowed within source file, module, sketch, part or op
   × error: 151:9: Constant assignment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:151:9]
  149 │ sketch MySketch() {
@@ -44,7 +44,7 @@
      ·                  ╰── This constant assignment is not allowed
  152 │     }
      ╰────
-  help: constant assignment is only allowed within source file, module or workbench
+  help: constant assignment is only allowed within source file, module, sketch, part or op
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

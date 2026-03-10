@@ -1,0 +1,14 @@
+﻿
+-- Test --
+        Test name: function_wrong_result
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:189
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 189:   fn f() -> Length {
+ 190:       1 // error
+ 191:   }
+ 192:   f();
+

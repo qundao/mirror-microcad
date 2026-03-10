@@ -16,13 +16,13 @@
 
 -- No Output --
 -- Errors --
-  × error: 34:5: The Sketch workbench produced a 3D output, but expected a 2D output.
-    ╭─[../books/language/src/structure/workbenches/types/sketches.md:34:5]
+  × error: 32:8: The Sketch cannot produce a 3D output
+    ╭─[../books/language/src/structure/workbenches/types/sketches.md:32:8]
+ 32 │ sketch MySketch( radius: Length) {
+    ·        ────┬───
+    ·            ╰── The Sketch cannot produce a 3D output
  33 │     use std::geo3d::*;
- 34 │     Sphere(radius) - Cube(size = radius);  // error: Sphere and Cube are 3D
-    ·     ──────────────────┬─────────────────
-    ·                       ╰── The Sketch workbench produced a 3D output, but expected a 2D output.
- 35 │ }
     ╰────
+Expected error(s) which did not occur in line(s): 34
 -- Test Result --
-FAILS AS EXPECTED (BUT IS TODO)
+TODO (SHALL FAIL)

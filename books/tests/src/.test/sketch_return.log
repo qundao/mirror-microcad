@@ -1,0 +1,30 @@
+﻿
+-- Test --
+        Test name: sketch_return
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:90
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  90:   sketch T() {
+  91:       return 1; // error
+  92:   }
+  93:   T();
+
+-- No Output --
+-- Errors --
+  × error: 91:5: Return statement is not allowed within sketch
+    ╭─[../books/tests/src/result.md:91:5]
+ 90 │ sketch T() {
+    · ───┬──
+    ·    ╰── Within this sketch
+ 91 │     return 1; // error
+    ·     ────┬───
+    ·         ╰── This return statement is not allowed
+ 92 │ }
+    ╰────
+  help: return statement is only allowed within function
+Evaluation aborted because of prior resolve errors!
+-- Test Result --
+FAILS AS EXPECTED

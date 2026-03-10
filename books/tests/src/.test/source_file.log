@@ -1,0 +1,34 @@
+﻿
+-- Test --
+        Test name: source_file
+  Expected result: ok
+      Source file: ../books/tests/src/result.md:35
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  35:   use std::geo2d::*;
+  36:   1;
+  37:   Circle(radius=1mm);
+  38:   2;
+  39:   Circle(radius=2mm);
+  40:   3;
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (2D/root)
+    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) (2D)
+      - center = (x=0mm, y=0mm)
+      - radius = 1mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+        Primitive2D __builtin::geo2d::Circle(radius=1mm) (2D)
+    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2mm) (2D)
+      - center = (x=0mm, y=0mm)
+      - radius = 2mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+        Primitive2D __builtin::geo2d::Circle(radius=2mm) (2D)
+
+Export of "../books/tests/src/.test/source_file-out.svg" successful.
+-- Test Result --
+OK

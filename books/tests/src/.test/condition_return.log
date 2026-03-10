@@ -7,7 +7,7 @@
 
 -- Code --
 
-   6:   fn f(x: Integer) {
+   6:   fn f(x: Integer) -> String  {
    7:       if x == 5 or x == 4 {
    8:           return "match";
    9:       } else if x > 0 and x < 4 {
@@ -24,5 +24,3 @@ match
 
 -- No Errors --
 -- No Model --
--- Test Result --
-OK

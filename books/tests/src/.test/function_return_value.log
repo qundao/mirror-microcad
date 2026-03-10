@@ -2,20 +2,18 @@
 -- Test --
         Test name: function_return_value
   Expected result: ok
-      Source file: ../books/tests/src/function.md:28
+      Source file: ../books/tests/src/function.md:24
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  28:   fn f(n: Scalar) {
-  29:       return n+1;
-  30:   }
-  31:   use std::debug::*;
-  32:   assert_eq([ f(1), 2 ]);
-  33:   assert_eq([ f(4), 5 ]);
+  24:   fn f(n: Integer) -> Integer {
+  25:       return n+1;
+  26:   }
+  27:   use std::debug::*;
+  28:   assert_eq([ f(1), 2 ]);
+  29:   assert_eq([ f(4), 5 ]);
 
 -- No Output --
 -- No Errors --
 -- No Model --
--- Test Result --
-OK

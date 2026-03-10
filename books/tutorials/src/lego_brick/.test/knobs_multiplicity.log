@@ -15,27 +15,27 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Circle(center=(x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm]), diameter=4.8mm) ->
+  Group (2D/root)
+    Workpiece(sketch) std::geo2d::Circle(center=(x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm]), diameter=4.8mm) (2D)
       - center = (x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm])
       - radius = 2.4mm
-      Multiplicity ->
-        Transform __builtin::ops::translate(x=-12mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=-4mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=4mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=12mm, y=-4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=-12mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=-4mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
-        Transform __builtin::ops::translate(x=12mm, y=4mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) ->
+      Multiplicity (2D)
+        Transform __builtin::ops::translate(x=-12mm, y=-4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
+        Transform __builtin::ops::translate(x=-4mm, y=-4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
+        Transform __builtin::ops::translate(x=4mm, y=-4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
+        Transform __builtin::ops::translate(x=12mm, y=-4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
+        Transform __builtin::ops::translate(x=-12mm, y=4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
+        Transform __builtin::ops::translate(x=-4mm, y=4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
+        Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
+        Transform __builtin::ops::translate(x=12mm, y=4mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) (2D)
 
 Export of "../books/tutorials/src/lego_brick/.test/knobs_multiplicity-out.svg" successful.
 -- Test Result --

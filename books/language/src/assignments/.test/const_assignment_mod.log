@@ -32,8 +32,8 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) const_assignment_mod::my_module::MySketch(text=Hello my_module) ->
+  Group (2D/root)
+    Workpiece(sketch) const_assignment_mod::my_module::MySketch(text=Hello my_module) (2D)
       - text = Hello my_module
 
 Export error: Render error: Nothing to render

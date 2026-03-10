@@ -15,13 +15,14 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(height=1mm, width=1mm) ->
+  Group (2D/root)
+    Workpiece(sketch) std::geo2d::Rect(height=1mm, width=1mm) (2D)
       - height = 1mm
       - width = 1mm
       - x = -0.5mm
       - y = -0.5mm
-      Primitive2D __builtin::geo2d::Rect(height=1mm, width=1mm, x=-0.5mm, y=-0.5mm) ->
+      Group (2D)
+        Primitive2D __builtin::geo2d::Rect(height=1mm, width=1mm, x=-0.5mm, y=-0.5mm) (2D)
 
 Export of "../books/tests/src/.test/use_as_test-out.svg" successful.
 -- Test Result --

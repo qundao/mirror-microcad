@@ -22,8 +22,8 @@
     ╰────
 Unexpected warnings(s) which did occur in line(s): 38
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) init_use::K(l=10mm) ->
+  Group (2D/root)
+    Workpiece(sketch) init_use::K(l=10mm) (2D)
 
 Export error: Render error: Nothing to render
 -- Test Result --

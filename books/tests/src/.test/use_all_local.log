@@ -7,7 +7,7 @@
 
 -- Code --
 
-  93:   fn f() {
+  93:   fn f() -> Scalar {
   94:       use std::math::*;
   95:       x = abs(-1.0);
   96:       return x;
@@ -17,5 +17,3 @@
 -- No Output --
 -- No Errors --
 -- No Model --
--- Test Result --
-OK

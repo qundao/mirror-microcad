@@ -1,0 +1,12 @@
+﻿
+-- Test --
+        Test name: function_missing_result
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:169
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 169:   fn f() -> Length {} // error
+ 170:   f();
+

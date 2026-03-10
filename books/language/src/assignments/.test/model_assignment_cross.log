@@ -17,7 +17,7 @@
  18 │ m = std::geo2d::Circle(radius = 10mm);   // assign the model of a circle into m
  19 │ std::geo2d::Circle(radius = m);   // error: cannot use m as value
     · ───────────────┬──────────────
-    ·                ╰── Got: Circle( radius = m: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) (root) -> )
+    ·                ╰── Got: Circle( radius = m: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) (2D/root) )
     ╰────
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))

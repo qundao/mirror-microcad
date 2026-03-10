@@ -19,24 +19,28 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+  Group (3D/root)
+    Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) (3D)
       - height = 20mm
       - scale = (x=1, y=1)
       - twist = 0rad
-      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Operation subtract() ->
-          Group ->
-            Workpiece(sketch) std::geo2d::Hexagon(radius=20mm) ->
-              - radius = 20mm
-              Workpiece(sketch) std::geo2d::Ngon(n=6, radius=20mm) ->
-                - n = 6
+      Group (3D)
+        Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+          Operation subtract() (2D)
+            Group (2D)
+              Workpiece(sketch) std::geo2d::Hexagon(radius=20mm) (2D)
                 - radius = 20mm
-                Primitive2D __builtin::geo2d::Ngon(n=6, radius=20mm) ->
-            Workpiece(sketch) std::geo2d::Ngon(n=5, radius=10mm) ->
-              - n = 5
-              - radius = 10mm
-              Primitive2D __builtin::geo2d::Ngon(n=5, radius=10mm) ->
+                Group (2D)
+                  Workpiece(sketch) std::geo2d::Ngon(n=6, radius=20mm) (2D)
+                    - n = 6
+                    - radius = 20mm
+                    Group (2D)
+                      Primitive2D __builtin::geo2d::Ngon(n=6, radius=20mm) (2D)
+              Workpiece(sketch) std::geo2d::Ngon(n=5, radius=10mm) (2D)
+                - n = 5
+                - radius = 10mm
+                Group (2D)
+                  Primitive2D __builtin::geo2d::Ngon(n=5, radius=10mm) (2D)
 
 Export of "../books/examples/src/.test/ngons-out.stl" successful.
 -- Test Result --

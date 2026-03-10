@@ -68,197 +68,221 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::translate(x=0mm, y=50mm, z=0mm) ->
+  Group (3D/root)
+    Workpiece(op) std::ops::translate(x=0mm, y=50mm, z=0mm) (3D)
       - x = 0mm
       - y = 50mm
       - z = 0mm
       #[export = "lower.stl" with exporter `stl`]
-      Transform __builtin::ops::translate(x=0mm, y=50mm, z=0mm) ->
-        Workpiece(part) bike_pack_mount::Lower() ->
-          Workpiece(part) bike_pack_mount::Mount(height=15mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) ->
-            - height = 15mm
-            - rack_rail_diameter = 10.5mm
-            - rack_rail_distance = 100mm
-            - screw_distance = 94mm
-            - screw_hole_diameter = 6mm
-            Operation subtract() ->
-              Group ->
-                Operation subtract() ->
-                  Group ->
-                    Workpiece(op) std::ops::extrude(height=15mm, scale=(x=1, y=1), twist=0rad) ->
-                      - height = 15mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=15mm, scale_x=1, scale_y=1, twist=0rad) ->
-                        Workpiece(sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) ->
-                          - height = 23.5mm
-                          - radius = 3mm
-                          - width = 130mm
-                          Workpiece(sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) ->
-                            - height = 23.5mm
-                            - radius_bottom_left = 3mm
-                            - radius_bottom_right = 3mm
-                            - radius_top_left = 3mm
-                            - radius_top_right = 3mm
-                            - width = 130mm
-                            - x = -65mm
-                            - y = -11.75mm
-                            Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) ->
-                    Workpiece(op) std::ops::extrude(height=25mm, scale=(x=1, y=1), twist=0rad) ->
-                      - height = 25mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=25mm, scale_x=1, scale_y=1, twist=0rad) ->
-                        screws: Workpiece(sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) ->
-                          - center = (x=[-47mm, 47mm], y=0mm)
-                          - radius = 3mm
-                          Multiplicity ->
-                            Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                            Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                Workpiece(part) bike_pack_mount::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) ->
-                  - rack_rail_diameter = 10.5mm
-                  - rack_rail_distance = 100mm
-                  Workpiece(op) std::ops::translate(x=0mm, y=-15mm, z=0mm) ->
-                    - x = 0mm
-                    - y = -15mm
-                    - z = 0mm
-                    Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) ->
-                      Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) ->
-                        - v = (x=0, y=1, z=0)
-                        Transform __builtin::ops::orient(x=0, y=1, z=0) ->
-                          Workpiece(op) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) ->
-                            - height = 40mm
+      Group (3D)
+        Transform __builtin::ops::translate(x=0mm, y=50mm, z=0mm) (3D)
+          Workpiece(part) bike_pack_mount::Lower() (3D)
+            Group (3D)
+              Workpiece(part) bike_pack_mount::Mount(height=15mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) (3D)
+                - height = 15mm
+                - rack_rail_diameter = 10.5mm
+                - rack_rail_distance = 100mm
+                - screw_distance = 94mm
+                - screw_hole_diameter = 6mm
+                Group (3D)
+                  Operation subtract() (3D)
+                    Group (3D)
+                      Operation subtract() (3D)
+                        Group (3D)
+                          Workpiece(op) std::ops::extrude(height=15mm, scale=(x=1, y=1), twist=0rad) (3D)
+                            - height = 15mm
                             - scale = (x=1, y=1)
                             - twist = 0rad
-                            Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) ->
-                              Group ->
-                                Multiplicity ->
-                                  Workpiece(op) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
-                                    - x = -55.25mm
-                                    - y = 0mm
-                                    - z = 0mm
-                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
-                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
-                                          - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                  Workpiece(op) std::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
-                                    - x = 55.25mm
-                                    - y = 0mm
-                                    - z = 0mm
-                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
-                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
-                                          - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-    Workpiece(op) std::ops::translate(x=0mm, y=-50mm, z=0mm) ->
+                            Group (3D)
+                              Operation __builtin::ops::extrude(height=15mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                Workpiece(sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) (2D)
+                                  - height = 23.5mm
+                                  - radius = 3mm
+                                  - width = 130mm
+                                  Group (2D)
+                                    Workpiece(sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) (2D)
+                                      - height = 23.5mm
+                                      - radius_bottom_left = 3mm
+                                      - radius_bottom_right = 3mm
+                                      - radius_top_left = 3mm
+                                      - radius_top_right = 3mm
+                                      - width = 130mm
+                                      - x = -65mm
+                                      - y = -11.75mm
+                                      Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) (2D)
+                          Workpiece(op) std::ops::extrude(height=25mm, scale=(x=1, y=1), twist=0rad) (3D)
+                            - height = 25mm
+                            - scale = (x=1, y=1)
+                            - twist = 0rad
+                            Group (3D)
+                              Operation __builtin::ops::extrude(height=25mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                screws: Workpiece(sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) (2D)
+                                  - center = (x=[-47mm, 47mm], y=0mm)
+                                  - radius = 3mm
+                                  Multiplicity (2D)
+                                    Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) (2D)
+                                      Primitive2D __builtin::geo2d::Circle(radius=3mm) (2D)
+                                    Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) (2D)
+                                      Primitive2D __builtin::geo2d::Circle(radius=3mm) (2D)
+                      Workpiece(part) bike_pack_mount::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) (3D)
+                        - rack_rail_diameter = 10.5mm
+                        - rack_rail_distance = 100mm
+                        Group (3D)
+                          Workpiece(op) std::ops::translate(x=0mm, y=-15mm, z=0mm) (3D)
+                            - x = 0mm
+                            - y = -15mm
+                            - z = 0mm
+                            Group (3D)
+                              Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) (3D)
+                                Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) (3D)
+                                  - v = (x=0, y=1, z=0)
+                                  Group (3D)
+                                    Transform __builtin::ops::orient(x=0, y=1, z=0) (3D)
+                                      Workpiece(op) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) (3D)
+                                        - height = 40mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Group (3D)
+                                          Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                            Group (2D)
+                                              Multiplicity (2D)
+                                                Workpiece(op) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) (2D)
+                                                  - x = -55.25mm
+                                                  - y = 0mm
+                                                  - z = 0mm
+                                                  Group (2D)
+                                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) (2D)
+                                                      Operation __builtin::ops::hull() (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) (2D)
+                                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
+                                                          - radius = 5.25mm
+                                                          Multiplicity (2D)
+                                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
+                                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
+                                                Workpiece(op) std::ops::translate(x=55.25mm, y=0mm, z=0mm) (2D)
+                                                  - x = 55.25mm
+                                                  - y = 0mm
+                                                  - z = 0mm
+                                                  Group (2D)
+                                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) (2D)
+                                                      Operation __builtin::ops::hull() (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) (2D)
+                                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
+                                                          - radius = 5.25mm
+                                                          Multiplicity (2D)
+                                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
+                                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
+    Workpiece(op) std::ops::translate(x=0mm, y=-50mm, z=0mm) (3D)
       - x = 0mm
       - y = -50mm
       - z = 0mm
       #[export = "upper.stl" with exporter `stl`]
-      Transform __builtin::ops::translate(x=0mm, y=-50mm, z=0mm) ->
-        Workpiece(part) bike_pack_mount::Upper() ->
-          Workpiece(part) bike_pack_mount::Mount(height=55mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) ->
-            - height = 55mm
-            - rack_rail_diameter = 10.5mm
-            - rack_rail_distance = 100mm
-            - screw_distance = 94mm
-            - screw_hole_diameter = 6mm
-            Operation subtract() ->
-              Group ->
-                Operation subtract() ->
-                  Group ->
-                    Workpiece(op) std::ops::extrude(height=55mm, scale=(x=1, y=1), twist=0rad) ->
-                      - height = 55mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=55mm, scale_x=1, scale_y=1, twist=0rad) ->
-                        Workpiece(sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) ->
-                          - height = 23.5mm
-                          - radius = 3mm
-                          - width = 130mm
-                          Workpiece(sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) ->
-                            - height = 23.5mm
-                            - radius_bottom_left = 3mm
-                            - radius_bottom_right = 3mm
-                            - radius_top_left = 3mm
-                            - radius_top_right = 3mm
-                            - width = 130mm
-                            - x = -65mm
-                            - y = -11.75mm
-                            Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) ->
-                    Workpiece(op) std::ops::extrude(height=65mm, scale=(x=1, y=1), twist=0rad) ->
-                      - height = 65mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=65mm, scale_x=1, scale_y=1, twist=0rad) ->
-                        screws: Workpiece(sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) ->
-                          - center = (x=[-47mm, 47mm], y=0mm)
-                          - radius = 3mm
-                          Multiplicity ->
-                            Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                            Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                Workpiece(part) bike_pack_mount::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) ->
-                  - rack_rail_diameter = 10.5mm
-                  - rack_rail_distance = 100mm
-                  Workpiece(op) std::ops::translate(x=0mm, y=-15mm, z=0mm) ->
-                    - x = 0mm
-                    - y = -15mm
-                    - z = 0mm
-                    Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) ->
-                      Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) ->
-                        - v = (x=0, y=1, z=0)
-                        Transform __builtin::ops::orient(x=0, y=1, z=0) ->
-                          Workpiece(op) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) ->
-                            - height = 40mm
+      Group (3D)
+        Transform __builtin::ops::translate(x=0mm, y=-50mm, z=0mm) (3D)
+          Workpiece(part) bike_pack_mount::Upper() (3D)
+            Group (3D)
+              Workpiece(part) bike_pack_mount::Mount(height=55mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) (3D)
+                - height = 55mm
+                - rack_rail_diameter = 10.5mm
+                - rack_rail_distance = 100mm
+                - screw_distance = 94mm
+                - screw_hole_diameter = 6mm
+                Group (3D)
+                  Operation subtract() (3D)
+                    Group (3D)
+                      Operation subtract() (3D)
+                        Group (3D)
+                          Workpiece(op) std::ops::extrude(height=55mm, scale=(x=1, y=1), twist=0rad) (3D)
+                            - height = 55mm
                             - scale = (x=1, y=1)
                             - twist = 0rad
-                            Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) ->
-                              Group ->
-                                Multiplicity ->
-                                  Workpiece(op) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
-                                    - x = -55.25mm
-                                    - y = 0mm
-                                    - z = 0mm
-                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
-                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
-                                          - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                  Workpiece(op) std::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
-                                    - x = 55.25mm
-                                    - y = 0mm
-                                    - z = 0mm
-                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
-                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
-                                          - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
+                            Group (3D)
+                              Operation __builtin::ops::extrude(height=55mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                Workpiece(sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) (2D)
+                                  - height = 23.5mm
+                                  - radius = 3mm
+                                  - width = 130mm
+                                  Group (2D)
+                                    Workpiece(sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) (2D)
+                                      - height = 23.5mm
+                                      - radius_bottom_left = 3mm
+                                      - radius_bottom_right = 3mm
+                                      - radius_top_left = 3mm
+                                      - radius_top_right = 3mm
+                                      - width = 130mm
+                                      - x = -65mm
+                                      - y = -11.75mm
+                                      Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) (2D)
+                          Workpiece(op) std::ops::extrude(height=65mm, scale=(x=1, y=1), twist=0rad) (3D)
+                            - height = 65mm
+                            - scale = (x=1, y=1)
+                            - twist = 0rad
+                            Group (3D)
+                              Operation __builtin::ops::extrude(height=65mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                screws: Workpiece(sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) (2D)
+                                  - center = (x=[-47mm, 47mm], y=0mm)
+                                  - radius = 3mm
+                                  Multiplicity (2D)
+                                    Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) (2D)
+                                      Primitive2D __builtin::geo2d::Circle(radius=3mm) (2D)
+                                    Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) (2D)
+                                      Primitive2D __builtin::geo2d::Circle(radius=3mm) (2D)
+                      Workpiece(part) bike_pack_mount::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) (3D)
+                        - rack_rail_diameter = 10.5mm
+                        - rack_rail_distance = 100mm
+                        Group (3D)
+                          Workpiece(op) std::ops::translate(x=0mm, y=-15mm, z=0mm) (3D)
+                            - x = 0mm
+                            - y = -15mm
+                            - z = 0mm
+                            Group (3D)
+                              Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) (3D)
+                                Workpiece(op) std::ops::orient(v=(x=0, y=1, z=0)) (3D)
+                                  - v = (x=0, y=1, z=0)
+                                  Group (3D)
+                                    Transform __builtin::ops::orient(x=0, y=1, z=0) (3D)
+                                      Workpiece(op) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) (3D)
+                                        - height = 40mm
+                                        - scale = (x=1, y=1)
+                                        - twist = 0rad
+                                        Group (3D)
+                                          Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                            Group (2D)
+                                              Multiplicity (2D)
+                                                Workpiece(op) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) (2D)
+                                                  - x = -55.25mm
+                                                  - y = 0mm
+                                                  - z = 0mm
+                                                  Group (2D)
+                                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) (2D)
+                                                      Operation __builtin::ops::hull() (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) (2D)
+                                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
+                                                          - radius = 5.25mm
+                                                          Multiplicity (2D)
+                                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
+                                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
+                                                Workpiece(op) std::ops::translate(x=55.25mm, y=0mm, z=0mm) (2D)
+                                                  - x = 55.25mm
+                                                  - y = 0mm
+                                                  - z = 0mm
+                                                  Group (2D)
+                                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) (2D)
+                                                      Operation __builtin::ops::hull() (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) (2D)
+                                                          - center = (x=[-0.5mm, 0.5mm], y=0mm)
+                                                          - radius = 5.25mm
+                                                          Multiplicity (2D)
+                                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
+                                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) (2D)
+                                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) (2D)
 
 Export of "../books/examples/src/.test/bike_pack_mount-out.stl" successful.
 -- Test Result --

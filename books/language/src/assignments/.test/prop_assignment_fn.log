@@ -25,7 +25,7 @@
     ·                  ╰── This property assignment is not allowed
  35 │ }
     ╰────
-  help: property assignment is only allowed within workbench
+  help: property assignment is only allowed within sketch, part or op
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

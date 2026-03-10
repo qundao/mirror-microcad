@@ -23,8 +23,8 @@
     ╰────
 Unexpected warnings(s) which did occur in line(s): 39
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) pre_init_use::K() ->
+  Group (2D/root)
+    Workpiece(sketch) pre_init_use::K() (2D)
 
 Export error: Render error: Nothing to render
 -- Test Result --

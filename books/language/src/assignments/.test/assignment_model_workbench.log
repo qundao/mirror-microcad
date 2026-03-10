@@ -20,7 +20,7 @@
     ╭─[../books/language/src/assignments/model.md:51:5]
  50 │ sketch MySketch() {
     · ───┬──
-    ·    ╰── Inside this workbench
+    ·    ╰── Inside this sketch
  51 │     a = std::geo2d::Circle(radius = 1mm);   // error
     ·     ──────────────────┬─────────────────
     ·                       ╰── This statement is not allowed

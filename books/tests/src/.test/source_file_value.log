@@ -1,0 +1,27 @@
+﻿
+-- Test --
+        Test name: source_file_value
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:48
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  48:   use std::geo2d::*;
+  49:   1;
+  50:   Circle(radius=1mm);
+  51:   2;
+  52:   Circle(radius=2mm);
+  53:   3       // error
+
+-- No Output --
+-- Errors --
+  × error: 53:1: Workbench returning result (and model) not allowed.
+    ╭─[../books/tests/src/result.md:53:1]
+ 52 │ Circle(radius=2mm);
+ 53 │ 3       // error
+    · ┬
+    · ╰── Workbench returning result (and model) not allowed.
+    ╰────
+-- Test Result --
+FAILS AS EXPECTED

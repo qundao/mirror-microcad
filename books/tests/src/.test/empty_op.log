@@ -8,23 +8,23 @@
 -- Code --
 
   53:   std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
-  54:   {}.std::ops::translate(x = 3.0mm);  // warning: Calling operation on empty geometry
+  54:   {}.std::ops::translate(x = 3.0mm);  // error: Calling operation on empty geometry
 
 -- No Output --
 -- Errors --
-  × error: 53:1: Symbol std::ops::translate not found.
+  × error: 53:1: Symbol std::ops::translate is not a function
     ╭─[../books/tests/src/semicolon.md:53:1]
  53 │ std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
     · ───────────────┬──────────────
-    ·                ╰── Symbol std::ops::translate not found.
- 54 │ {}.std::ops::translate(x = 3.0mm);  // warning: Calling operation on empty geometry
+    ·                ╰── Symbol std::ops::translate is not a function
+ 54 │ {}.std::ops::translate(x = 3.0mm);  // error: Calling operation on empty geometry
     ╰────
-  ⚠ warning: 54:2: This expression statement did not produce any model
-    ╭─[../books/tests/src/semicolon.md:54:2]
+  × error: 54:4: Unknown method `std::ops::translate`
+    ╭─[../books/tests/src/semicolon.md:54:4]
  53 │ std::ops::translate(x = 3.0mm); // error: Cannot call operation without workpiece. 
- 54 │ {}.std::ops::translate(x = 3.0mm);  // warning: Calling operation on empty geometry
-    ·  ▲
-    ·  ╰── This expression statement did not produce any model
+ 54 │ {}.std::ops::translate(x = 3.0mm);  // error: Calling operation on empty geometry
+    ·    ─────────┬─────────
+    ·             ╰── Unknown method `std::ops::translate`
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

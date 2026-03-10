@@ -1,0 +1,14 @@
+﻿
+-- Test --
+        Test name: function_wrong_return
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:200
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 200:   fn f() -> Length {
+ 201:       return 1; // error
+ 202:   }
+ 203:   f();
+

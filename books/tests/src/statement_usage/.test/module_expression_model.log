@@ -23,7 +23,7 @@
      ·                     ╰── This expression statement is not allowed
  112 │ }
      ╰────
-  help: expression statement is only allowed within source file, workbench, function, if statement, statement list or expression
+  help: expression statement is only allowed within source file, sketch, part, op, function, if statement, statement list or expression
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

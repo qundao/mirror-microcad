@@ -16,13 +16,13 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(op) op_example::nop() ->
-      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+  Group (2D/root)
+    Workpiece(op) op_example::nop() (2D)
+      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) (2D)
         - center = (x=0mm, y=0mm)
         - radius = 10mm
-        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+          Primitive2D __builtin::geo2d::Circle(radius=10mm) (2D)
 
 Export of "../books/language/src/structure/workbenches/types/.test/op_example-out.svg" successful.
 -- Test Result --

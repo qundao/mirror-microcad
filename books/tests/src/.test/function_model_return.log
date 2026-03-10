@@ -1,0 +1,14 @@
+﻿
+-- Test --
+        Test name: function_model_return
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:136
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 136:   fn f() -> Model  {  // error: Model cannot be used as return type of a function
+ 137:       return std::geo2d::Circle(radius=1mm); // error
+ 138:   }
+ 139:   f();
+

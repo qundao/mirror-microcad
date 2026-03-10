@@ -37,11 +37,4 @@
 
 -- No Output --
 -- No Errors --
--- Model --
-  Group (root) ->
-    Group ->
-
-Could not determine output type.
-Nothing will be exported.
--- Test Result --
-OK
+-- No Model --

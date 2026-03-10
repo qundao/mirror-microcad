@@ -1,0 +1,17 @@
+﻿
+-- Test --
+        Test name: function_ok
+  Expected result: ok
+      Source file: ../books/tests/src/result.md:103
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 103:   fn f() -> Length { 1mm }
+ 104:   fn g() {}
+ 105:   f();
+ 106:   g();
+
+-- No Output --
+-- No Errors --
+-- No Model --

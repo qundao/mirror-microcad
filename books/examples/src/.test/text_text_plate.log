@@ -37,33 +37,35 @@
     ╰────
 Unexpected warnings(s) which did occur in line(s): 48
 -- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+  Group (3D/root)
+    Workpiece(op) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) (3D)
       - height = 2mm
       - scale = (x=1, y=1)
       - twist = 0rad
-      Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(sketch) text_text_plate::TextPlate(height=10mm, text=Hello µcad) ->
-          - height = 10mm
-          - text = Hello µcad
-          Operation subtract() ->
-            Group ->
-              plate: Workpiece(sketch) std::geo2d::RoundedRect(radius=20mm, size=60mm) ->
-                - height = 60mm
-                - radius_bottom_left = 20mm
-                - radius_bottom_right = 20mm
-                - radius_top_left = 20mm
-                - radius_top_right = 20mm
-                - width = 60mm
-                - x = -30mm
-                - y = -30mm
-                Primitive2D __builtin::geo2d::RoundedRect(height=60mm, radius_bottom_left=20mm, radius_bottom_right=20mm, radius_top_left=20mm, radius_top_right=20mm, width=60mm, x=-30mm, y=-30mm) ->
-              letters: Operation __builtin::ops::center() ->
-                Workpiece(sketch) std::geo2d::Text(font_file=, height=10mm, text=Hello µcad) ->
-                  - font_file = 
-                  - height = 10mm
-                  - text = Hello µcad
-                  Primitive2D __builtin::geo2d::Text(font_file=, height=10mm, text=Hello µcad) ->
+      Group (3D)
+        Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+          Workpiece(sketch) text_text_plate::TextPlate(height=10mm, text=Hello µcad) (2D)
+            - height = 10mm
+            - text = Hello µcad
+            Operation subtract() (2D)
+              Group (2D)
+                plate: Workpiece(sketch) std::geo2d::RoundedRect(radius=20mm, size=60mm) (2D)
+                  - height = 60mm
+                  - radius_bottom_left = 20mm
+                  - radius_bottom_right = 20mm
+                  - radius_top_left = 20mm
+                  - radius_top_right = 20mm
+                  - width = 60mm
+                  - x = -30mm
+                  - y = -30mm
+                  Primitive2D __builtin::geo2d::RoundedRect(height=60mm, radius_bottom_left=20mm, radius_bottom_right=20mm, radius_top_left=20mm, radius_top_right=20mm, width=60mm, x=-30mm, y=-30mm) (2D)
+                letters: Operation __builtin::ops::center() (2D)
+                  Workpiece(sketch) std::geo2d::Text(font_file=, height=10mm, text=Hello µcad) (2D)
+                    - font_file = 
+                    - height = 10mm
+                    - text = Hello µcad
+                    Group (2D)
+                      Primitive2D __builtin::geo2d::Text(font_file=, height=10mm, text=Hello µcad) (2D)
 
 Export of "../books/examples/src/.test/text_text_plate-out.stl" successful.
 -- Test Result --

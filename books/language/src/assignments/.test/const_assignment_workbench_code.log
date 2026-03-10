@@ -15,8 +15,8 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) const_assignment_workbench_code::MySketch() ->
+  Group (2D/root)
+    Workpiece(sketch) const_assignment_workbench_code::MySketch() (2D)
 
 Export error: Render error: Nothing to render
 -- Test Result --

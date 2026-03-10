@@ -27,7 +27,7 @@
      ·                  ╰── This constant assignment is not allowed
  168 │     }
      ╰────
-  help: constant assignment is only allowed within source file, module or workbench
+  help: constant assignment is only allowed within source file, module, sketch, part or op
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

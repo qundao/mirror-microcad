@@ -20,7 +20,7 @@
      ╭─[../books/language/src/assignments/value.md:118:5]
  117 │ sketch MySketch() {
      · ───┬──
-     ·    ╰── Inside this workbench
+     ·    ╰── Inside this sketch
  118 │     a = 1;   // error
      ·     ──┬──
      ·       ╰── This statement is not allowed

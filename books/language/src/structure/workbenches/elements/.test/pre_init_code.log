@@ -15,7 +15,7 @@
   18:       init(diameter: Length) { radius = into_radius(diameter); }
   19:   
   20:       // function
-  21:       fn into_radius( diameter: Length ) {
+  21:       fn into_radius( diameter: Length ) -> Length {
   22:           // use constant FACTOR from init code
   23:           diameter / FACTOR
   24:       }
@@ -31,16 +31,5 @@
   34:   std::debug::assert_eq([ Wheel(radius = 5cm).diameter, 10cm ]);
 
 -- No Output --
--- Errors --
-  ⚠ warning: 21:8: Unused global symbol into_radius.
-    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:21:8]
- 20 │     // function
- 21 │     fn into_radius( diameter: Length ) {
-    ·        ─────┬─────
-    ·             ╰── Unused global symbol into_radius.
- 22 │         // use constant FACTOR from init code
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 21
+-- No Errors --
 -- No Model --
--- Test Result --
-OK (BUT WARNINGS)

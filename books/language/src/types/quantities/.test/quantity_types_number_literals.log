@@ -26,15 +26,5 @@
     · ──┬──
     ·   ╰── Unused local width.
     ╰────
-  ⚠ warning: 15:4: Unused global symbol f.
-    ╭─[../books/language/src/types/quantities/README.md:15:4]
- 14 │ // use as *default* value in parameter list
- 15 │ fn f( height = 1m ) {}
-    ·    ┬
-    ·    ╰── Unused global symbol f.
- 16 │ 
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 15, 19
+Unexpected warnings(s) which did occur in line(s): 19
 -- No Model --
--- Test Result --
-OK (BUT WARNINGS)

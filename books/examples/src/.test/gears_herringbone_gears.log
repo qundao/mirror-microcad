@@ -55,706 +55,804 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::reflect(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+  Group (3D/root)
+    Workpiece(op) std::ops::reflect(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) (3D)
       - n = (x=1, y=0, z=0)
       - x = 0mm
       - y = 0mm
       - z = 0mm
-      Operation __builtin::ops::reflect(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
-        gear1: Workpiece(part) gears_herringbone_gears::Gear(teeth=90) ->
+      Operation __builtin::ops::reflect(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) (3D)
+        gear1: Workpiece(part) gears_herringbone_gears::Gear(teeth=90) (3D)
           - module = 1.5mm
           - outer_radius = 69mm
           - pitch_radius = 67.5mm
           - teeth = 90
           - tooth_angle = 0.06981317007977rad
           - tooth_distance = 4.71238898038469mm
-          Operation union() ->
-            Group ->
-              web: Operation __builtin::ops::center() ->
-                Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
-                  - height = 14.13716694115407mm
-                  - scale = (x=1, y=1)
-                  - twist = 0rad
-                  Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
-                    Group ->
-                      Operation subtract() ->
-                        Group ->
-                          Operation subtract() ->
-                            Group ->
-                              disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) ->
+          Group (3D)
+            Operation union() (3D)
+              Group (3D)
+                web: Operation __builtin::ops::center() (3D)
+                  Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) (3D)
+                    - height = 14.13716694115407mm
+                    - scale = (x=1, y=1)
+                    - twist = 0rad
+                    Group (3D)
+                      Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                        Group (2D)
+                          Operation subtract() (2D)
+                            Group (2D)
+                              Operation subtract() (2D)
+                                Group (2D)
+                                  disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) (2D)
+                                    - center = (x=0mm, y=0mm)
+                                    - radius = 61.5mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                      Primitive2D __builtin::geo2d::Circle(radius=61.5mm) (2D)
+                                  holes: Multiplicity (2D)
+                                    Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) (2D)
+                                      - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                                      Group (2D)
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                          Operation subtract() (2D)
+                                            Group (2D)
+                                              sector: Workpiece(op) std::ops::buffer(distance=7.38mm) (2D)
+                                                - distance = 7.38mm
+                                                Group (2D)
+                                                  Operation __builtin::ops::buffer(distance=7.38mm) (2D)
+                                                    Workpiece(op) std::ops::buffer(distance=-9.225mm) (2D)
+                                                      - distance = -9.225mm
+                                                      Group (2D)
+                                                        Operation __builtin::ops::buffer(distance=-9.225mm) (2D)
+                                                          Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) (2D)
+                                                            - end = 0.62831853071796rad
+                                                            - radius = 61.5mm
+                                                            - start = -0.62831853071796rad
+                                                            Group (2D)
+                                                              Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) (2D)
+                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 15mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                    Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) (2D)
+                                      - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
+                                      Group (2D)
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                          Operation subtract() (2D)
+                                            Group (2D)
+                                              sector: Workpiece(op) std::ops::buffer(distance=7.38mm) (2D)
+                                                - distance = 7.38mm
+                                                Group (2D)
+                                                  Operation __builtin::ops::buffer(distance=7.38mm) (2D)
+                                                    Workpiece(op) std::ops::buffer(distance=-9.225mm) (2D)
+                                                      - distance = -9.225mm
+                                                      Group (2D)
+                                                        Operation __builtin::ops::buffer(distance=-9.225mm) (2D)
+                                                          Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) (2D)
+                                                            - end = 0.62831853071796rad
+                                                            - radius = 61.5mm
+                                                            - start = -0.62831853071796rad
+                                                            Group (2D)
+                                                              Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) (2D)
+                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 15mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                    Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) (2D)
+                                      - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
+                                      Group (2D)
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                          Operation subtract() (2D)
+                                            Group (2D)
+                                              sector: Workpiece(op) std::ops::buffer(distance=7.38mm) (2D)
+                                                - distance = 7.38mm
+                                                Group (2D)
+                                                  Operation __builtin::ops::buffer(distance=7.38mm) (2D)
+                                                    Workpiece(op) std::ops::buffer(distance=-9.225mm) (2D)
+                                                      - distance = -9.225mm
+                                                      Group (2D)
+                                                        Operation __builtin::ops::buffer(distance=-9.225mm) (2D)
+                                                          Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) (2D)
+                                                            - end = 0.62831853071796rad
+                                                            - radius = 61.5mm
+                                                            - start = -0.62831853071796rad
+                                                            Group (2D)
+                                                              Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) (2D)
+                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 15mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                    Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) (2D)
+                                      - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
+                                      Group (2D)
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) (2D)
+                                          Operation subtract() (2D)
+                                            Group (2D)
+                                              sector: Workpiece(op) std::ops::buffer(distance=7.38mm) (2D)
+                                                - distance = 7.38mm
+                                                Group (2D)
+                                                  Operation __builtin::ops::buffer(distance=7.38mm) (2D)
+                                                    Workpiece(op) std::ops::buffer(distance=-9.225mm) (2D)
+                                                      - distance = -9.225mm
+                                                      Group (2D)
+                                                        Operation __builtin::ops::buffer(distance=-9.225mm) (2D)
+                                                          Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) (2D)
+                                                            - end = 0.62831853071796rad
+                                                            - radius = 61.5mm
+                                                            - start = -0.62831853071796rad
+                                                            Group (2D)
+                                                              Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) (2D)
+                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 15mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                    Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) (2D)
+                                      - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
+                                      Group (2D)
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                          Operation subtract() (2D)
+                                            Group (2D)
+                                              sector: Workpiece(op) std::ops::buffer(distance=7.38mm) (2D)
+                                                - distance = 7.38mm
+                                                Group (2D)
+                                                  Operation __builtin::ops::buffer(distance=7.38mm) (2D)
+                                                    Workpiece(op) std::ops::buffer(distance=-9.225mm) (2D)
+                                                      - distance = -9.225mm
+                                                      Group (2D)
+                                                        Operation __builtin::ops::buffer(distance=-9.225mm) (2D)
+                                                          Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) (2D)
+                                                            - end = 0.62831853071796rad
+                                                            - radius = 61.5mm
+                                                            - start = -0.62831853071796rad
+                                                            Group (2D)
+                                                              Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) (2D)
+                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                - center = (x=0mm, y=0mm)
+                                                - radius = 15mm
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                              hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                                - module = 2.5mm
+                                - outer_radius = 11.25mm
+                                - pitch_radius = 8.75mm
+                                - pressure_angle = 0rad
+                                - teeth = 7
+                                - tooth_angle = 0.89759790102566rad
+                                - tooth_distance = 7.85398163397448mm
+                                Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) (3D)
+                  - n = (x=-0, y=-0, z=-1)
+                  - x = 0mm
+                  - y = 0mm
+                  - z = 0mm
+                  Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) (3D)
+                    Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.06981317007977rad) (3D)
+                      - height = 9.42477796076938mm
+                      - scale = (x=1, y=1)
+                      - twist = 0.06981317007977rad
+                      Group (3D)
+                        Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.06981317007977rad) (3D)
+                          Operation subtract() (2D)
+                            Group (2D)
+                              gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=90) (2D)
+                                - module = 1.5mm
+                                - outer_radius = 69mm
+                                - pitch_radius = 67.5mm
+                                - pressure_angle = 0rad
+                                - teeth = 90
+                                - tooth_angle = 0.06981317007977rad
+                                - tooth_distance = 4.71238898038469mm
+                                Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=90) (2D)
+                              disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) (2D)
                                 - center = (x=0mm, y=0mm)
                                 - radius = 61.5mm
-                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                  Primitive2D __builtin::geo2d::Circle(radius=61.5mm) ->
-                              holes: Multiplicity ->
-                                Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
-                                  - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(op) std::ops::buffer(distance=7.38mm) ->
-                                          - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(op) std::ops::buffer(distance=-9.225mm) ->
-                                              - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
-                                                  - end = 0.62831853071796rad
-                                                  - radius = 61.5mm
-                                                  - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                          - center = (x=0mm, y=0mm)
-                                          - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
-                                  - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(op) std::ops::buffer(distance=7.38mm) ->
-                                          - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(op) std::ops::buffer(distance=-9.225mm) ->
-                                              - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
-                                                  - end = 0.62831853071796rad
-                                                  - radius = 61.5mm
-                                                  - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                          - center = (x=0mm, y=0mm)
-                                          - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
-                                  - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(op) std::ops::buffer(distance=7.38mm) ->
-                                          - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(op) std::ops::buffer(distance=-9.225mm) ->
-                                              - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
-                                                  - end = 0.62831853071796rad
-                                                  - radius = 61.5mm
-                                                  - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                          - center = (x=0mm, y=0mm)
-                                          - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
-                                  - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(op) std::ops::buffer(distance=7.38mm) ->
-                                          - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(op) std::ops::buffer(distance=-9.225mm) ->
-                                              - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
-                                                  - end = 0.62831853071796rad
-                                                  - radius = 61.5mm
-                                                  - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                          - center = (x=0mm, y=0mm)
-                                          - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
-                                  - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(op) std::ops::buffer(distance=7.38mm) ->
-                                          - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(op) std::ops::buffer(distance=-9.225mm) ->
-                                              - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
-                                                  - end = 0.62831853071796rad
-                                                  - radius = 61.5mm
-                                                  - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                          - center = (x=0mm, y=0mm)
-                                          - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                          hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-                            - module = 2.5mm
-                            - outer_radius = 11.25mm
-                            - pitch_radius = 8.75mm
-                            - pressure_angle = 0rad
-                            - teeth = 7
-                            - tooth_angle = 0.89759790102566rad
-                            - tooth_distance = 7.85398163397448mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-              rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
-                - n = (x=-0, y=-0, z=-1)
-                - x = 0mm
-                - y = 0mm
-                - z = 0mm
-                Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                  Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.06981317007977rad) ->
-                    - height = 9.42477796076938mm
-                    - scale = (x=1, y=1)
-                    - twist = 0.06981317007977rad
-                    Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.06981317007977rad) ->
-                      Operation subtract() ->
-                        Group ->
-                          gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=90) ->
-                            - module = 1.5mm
-                            - outer_radius = 69mm
-                            - pitch_radius = 67.5mm
-                            - pressure_angle = 0rad
-                            - teeth = 90
-                            - tooth_angle = 0.06981317007977rad
-                            - tooth_distance = 4.71238898038469mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=90) ->
-                          disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) ->
-                            - center = (x=0mm, y=0mm)
-                            - radius = 61.5mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=61.5mm) ->
-    Multiplicity ->
-      Workpiece(op) std::ops::translate(angle=2.0943951023932rad, distance=114mm) ->
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                  Primitive2D __builtin::geo2d::Circle(radius=61.5mm) (2D)
+    Multiplicity (3D)
+      Workpiece(op) std::ops::translate(angle=2.0943951023932rad, distance=114mm) (3D)
         - x = -56.99999999999997mm
         - y = 98.726896031426mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=-56.99999999999997mm, y=98.726896031426mm, z=0mm) ->
-          Workpiece(op) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) ->
-            - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
-            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) ->
-              gear2: Workpiece(part) gears_herringbone_gears::Gear(teeth=60) ->
-                - module = 1.5mm
-                - outer_radius = 46.5mm
-                - pitch_radius = 45mm
-                - teeth = 60
-                - tooth_angle = 0.10471975511966rad
-                - tooth_distance = 4.71238898038469mm
-                Operation union() ->
-                  Group ->
-                    web: Operation __builtin::ops::center() ->
-                      Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
-                        - height = 14.13716694115407mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
-                          Group ->
-                            Operation subtract() ->
-                              Group ->
-                                Operation subtract() ->
-                                  Group ->
-                                    disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
-                                      - center = (x=0mm, y=0mm)
-                                      - radius = 39mm
-                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-                                    holes: Multiplicity ->
-                                      Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-                                  - module = 2.5mm
-                                  - outer_radius = 11.25mm
-                                  - pitch_radius = 8.75mm
-                                  - pressure_angle = 0rad
-                                  - teeth = 7
-                                  - tooth_angle = 0.89759790102566rad
-                                  - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-                    rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
-                      - n = (x=-0, y=-0, z=-1)
-                      - x = 0mm
-                      - y = 0mm
-                      - z = 0mm
-                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) ->
-                          - height = 9.42477796076938mm
-                          - scale = (x=1, y=1)
-                          - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) ->
-                            Operation subtract() ->
-                              Group ->
-                                gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
-                                  - module = 1.5mm
-                                  - outer_radius = 46.5mm
-                                  - pitch_radius = 45mm
-                                  - pressure_angle = 0rad
-                                  - teeth = 60
-                                  - tooth_angle = 0.10471975511966rad
-                                  - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
-                                disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
-                                  - center = (x=0mm, y=0mm)
-                                  - radius = 39mm
-                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-      Workpiece(op) std::ops::translate(angle=4.18879020478639rad, distance=114mm) ->
+        Group (3D)
+          Transform __builtin::ops::translate(x=-56.99999999999997mm, y=98.726896031426mm, z=0mm) (3D)
+            Workpiece(op) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) (3D)
+              - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
+              Group (3D)
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) (3D)
+                  gear2: Workpiece(part) gears_herringbone_gears::Gear(teeth=60) (3D)
+                    - module = 1.5mm
+                    - outer_radius = 46.5mm
+                    - pitch_radius = 45mm
+                    - teeth = 60
+                    - tooth_angle = 0.10471975511966rad
+                    - tooth_distance = 4.71238898038469mm
+                    Group (3D)
+                      Operation union() (3D)
+                        Group (3D)
+                          web: Operation __builtin::ops::center() (3D)
+                            Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) (3D)
+                              - height = 14.13716694115407mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Group (3D)
+                                Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                  Group (2D)
+                                    Operation subtract() (2D)
+                                      Group (2D)
+                                        Operation subtract() (2D)
+                                          Group (2D)
+                                            disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) (2D)
+                                              - center = (x=0mm, y=0mm)
+                                              - radius = 39mm
+                                              Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                Primitive2D __builtin::geo2d::Circle(radius=39mm) (2D)
+                                            holes: Multiplicity (2D)
+                                              Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                        hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                                          - module = 2.5mm
+                                          - outer_radius = 11.25mm
+                                          - pitch_radius = 8.75mm
+                                          - pressure_angle = 0rad
+                                          - teeth = 7
+                                          - tooth_angle = 0.89759790102566rad
+                                          - tooth_distance = 7.85398163397448mm
+                                          Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                          rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) (3D)
+                            - n = (x=-0, y=-0, z=-1)
+                            - x = 0mm
+                            - y = 0mm
+                            - z = 0mm
+                            Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) (3D)
+                              Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) (3D)
+                                - height = 9.42477796076938mm
+                                - scale = (x=1, y=1)
+                                - twist = 0.10471975511966rad
+                                Group (3D)
+                                  Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) (3D)
+                                    Operation subtract() (2D)
+                                      Group (2D)
+                                        gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) (2D)
+                                          - module = 1.5mm
+                                          - outer_radius = 46.5mm
+                                          - pitch_radius = 45mm
+                                          - pressure_angle = 0rad
+                                          - teeth = 60
+                                          - tooth_angle = 0.10471975511966rad
+                                          - tooth_distance = 4.71238898038469mm
+                                          Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) (2D)
+                                        disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) (2D)
+                                          - center = (x=0mm, y=0mm)
+                                          - radius = 39mm
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                            Primitive2D __builtin::geo2d::Circle(radius=39mm) (2D)
+      Workpiece(op) std::ops::translate(angle=4.18879020478639rad, distance=114mm) (3D)
         - x = -57.00000000000005mm
         - y = -98.72689603142598mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=-57.00000000000005mm, y=-98.72689603142598mm, z=0mm) ->
-          Workpiece(op) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) ->
-            - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
-            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) ->
-              gear2: Workpiece(part) gears_herringbone_gears::Gear(teeth=60) ->
-                - module = 1.5mm
-                - outer_radius = 46.5mm
-                - pitch_radius = 45mm
-                - teeth = 60
-                - tooth_angle = 0.10471975511966rad
-                - tooth_distance = 4.71238898038469mm
-                Operation union() ->
-                  Group ->
-                    web: Operation __builtin::ops::center() ->
-                      Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
-                        - height = 14.13716694115407mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
-                          Group ->
-                            Operation subtract() ->
-                              Group ->
-                                Operation subtract() ->
-                                  Group ->
-                                    disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
-                                      - center = (x=0mm, y=0mm)
-                                      - radius = 39mm
-                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-                                    holes: Multiplicity ->
-                                      Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-                                  - module = 2.5mm
-                                  - outer_radius = 11.25mm
-                                  - pitch_radius = 8.75mm
-                                  - pressure_angle = 0rad
-                                  - teeth = 7
-                                  - tooth_angle = 0.89759790102566rad
-                                  - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-                    rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
-                      - n = (x=-0, y=-0, z=-1)
-                      - x = 0mm
-                      - y = 0mm
-                      - z = 0mm
-                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) ->
-                          - height = 9.42477796076938mm
-                          - scale = (x=1, y=1)
-                          - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) ->
-                            Operation subtract() ->
-                              Group ->
-                                gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
-                                  - module = 1.5mm
-                                  - outer_radius = 46.5mm
-                                  - pitch_radius = 45mm
-                                  - pressure_angle = 0rad
-                                  - teeth = 60
-                                  - tooth_angle = 0.10471975511966rad
-                                  - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
-                                disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
-                                  - center = (x=0mm, y=0mm)
-                                  - radius = 39mm
-                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-      Workpiece(op) std::ops::translate(angle=6.28318530717959rad, distance=114mm) ->
+        Group (3D)
+          Transform __builtin::ops::translate(x=-57.00000000000005mm, y=-98.72689603142598mm, z=0mm) (3D)
+            Workpiece(op) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) (3D)
+              - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
+              Group (3D)
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) (3D)
+                  gear2: Workpiece(part) gears_herringbone_gears::Gear(teeth=60) (3D)
+                    - module = 1.5mm
+                    - outer_radius = 46.5mm
+                    - pitch_radius = 45mm
+                    - teeth = 60
+                    - tooth_angle = 0.10471975511966rad
+                    - tooth_distance = 4.71238898038469mm
+                    Group (3D)
+                      Operation union() (3D)
+                        Group (3D)
+                          web: Operation __builtin::ops::center() (3D)
+                            Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) (3D)
+                              - height = 14.13716694115407mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Group (3D)
+                                Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                  Group (2D)
+                                    Operation subtract() (2D)
+                                      Group (2D)
+                                        Operation subtract() (2D)
+                                          Group (2D)
+                                            disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) (2D)
+                                              - center = (x=0mm, y=0mm)
+                                              - radius = 39mm
+                                              Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                Primitive2D __builtin::geo2d::Circle(radius=39mm) (2D)
+                                            holes: Multiplicity (2D)
+                                              Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                        hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                                          - module = 2.5mm
+                                          - outer_radius = 11.25mm
+                                          - pitch_radius = 8.75mm
+                                          - pressure_angle = 0rad
+                                          - teeth = 7
+                                          - tooth_angle = 0.89759790102566rad
+                                          - tooth_distance = 7.85398163397448mm
+                                          Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                          rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) (3D)
+                            - n = (x=-0, y=-0, z=-1)
+                            - x = 0mm
+                            - y = 0mm
+                            - z = 0mm
+                            Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) (3D)
+                              Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) (3D)
+                                - height = 9.42477796076938mm
+                                - scale = (x=1, y=1)
+                                - twist = 0.10471975511966rad
+                                Group (3D)
+                                  Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) (3D)
+                                    Operation subtract() (2D)
+                                      Group (2D)
+                                        gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) (2D)
+                                          - module = 1.5mm
+                                          - outer_radius = 46.5mm
+                                          - pitch_radius = 45mm
+                                          - pressure_angle = 0rad
+                                          - teeth = 60
+                                          - tooth_angle = 0.10471975511966rad
+                                          - tooth_distance = 4.71238898038469mm
+                                          Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) (2D)
+                                        disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) (2D)
+                                          - center = (x=0mm, y=0mm)
+                                          - radius = 39mm
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                            Primitive2D __builtin::geo2d::Circle(radius=39mm) (2D)
+      Workpiece(op) std::ops::translate(angle=6.28318530717959rad, distance=114mm) (3D)
         - x = 114mm
         - y = -0.00000000000003mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=114mm, y=-0.00000000000003mm, z=0mm) ->
-          Workpiece(op) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) ->
-            - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
-            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) ->
-              gear2: Workpiece(part) gears_herringbone_gears::Gear(teeth=60) ->
-                - module = 1.5mm
-                - outer_radius = 46.5mm
-                - pitch_radius = 45mm
-                - teeth = 60
-                - tooth_angle = 0.10471975511966rad
-                - tooth_distance = 4.71238898038469mm
-                Operation union() ->
-                  Group ->
-                    web: Operation __builtin::ops::center() ->
-                      Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
-                        - height = 14.13716694115407mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
-                          Group ->
-                            Operation subtract() ->
-                              Group ->
-                                Operation subtract() ->
-                                  Group ->
-                                    disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
-                                      - center = (x=0mm, y=0mm)
-                                      - radius = 39mm
-                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-                                    holes: Multiplicity ->
-                                      Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
-                                        - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(op) std::ops::buffer(distance=4.68mm) ->
-                                                - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(op) std::ops::buffer(distance=-5.85mm) ->
-                                                    - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
-                                                        - end = 0.62831853071796rad
-                                                        - radius = 39mm
-                                                        - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
-                                                - center = (x=0mm, y=0mm)
-                                                - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-                                  - module = 2.5mm
-                                  - outer_radius = 11.25mm
-                                  - pitch_radius = 8.75mm
-                                  - pressure_angle = 0rad
-                                  - teeth = 7
-                                  - tooth_angle = 0.89759790102566rad
-                                  - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
-                    rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
-                      - n = (x=-0, y=-0, z=-1)
-                      - x = 0mm
-                      - y = 0mm
-                      - z = 0mm
-                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) ->
-                          - height = 9.42477796076938mm
-                          - scale = (x=1, y=1)
-                          - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) ->
-                            Operation subtract() ->
-                              Group ->
-                                gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
-                                  - module = 1.5mm
-                                  - outer_radius = 46.5mm
-                                  - pitch_radius = 45mm
-                                  - pressure_angle = 0rad
-                                  - teeth = 60
-                                  - tooth_angle = 0.10471975511966rad
-                                  - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
-                                disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
-                                  - center = (x=0mm, y=0mm)
-                                  - radius = 39mm
-                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
+        Group (3D)
+          Transform __builtin::ops::translate(x=114mm, y=-0.00000000000003mm, z=0mm) (3D)
+            Workpiece(op) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) (3D)
+              - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
+              Group (3D)
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) (3D)
+                  gear2: Workpiece(part) gears_herringbone_gears::Gear(teeth=60) (3D)
+                    - module = 1.5mm
+                    - outer_radius = 46.5mm
+                    - pitch_radius = 45mm
+                    - teeth = 60
+                    - tooth_angle = 0.10471975511966rad
+                    - tooth_distance = 4.71238898038469mm
+                    Group (3D)
+                      Operation union() (3D)
+                        Group (3D)
+                          web: Operation __builtin::ops::center() (3D)
+                            Workpiece(op) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) (3D)
+                              - height = 14.13716694115407mm
+                              - scale = (x=1, y=1)
+                              - twist = 0rad
+                              Group (3D)
+                                Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+                                  Group (2D)
+                                    Operation subtract() (2D)
+                                      Group (2D)
+                                        Operation subtract() (2D)
+                                          Group (2D)
+                                            disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) (2D)
+                                              - center = (x=0mm, y=0mm)
+                                              - radius = 39mm
+                                              Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                Primitive2D __builtin::geo2d::Circle(radius=39mm) (2D)
+                                            holes: Multiplicity (2D)
+                                              Workpiece(op) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                              Workpiece(op) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) (2D)
+                                                - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
+                                                Group (2D)
+                                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                                                    Operation subtract() (2D)
+                                                      Group (2D)
+                                                        sector: Workpiece(op) std::ops::buffer(distance=4.68mm) (2D)
+                                                          - distance = 4.68mm
+                                                          Group (2D)
+                                                            Operation __builtin::ops::buffer(distance=4.68mm) (2D)
+                                                              Workpiece(op) std::ops::buffer(distance=-5.85mm) (2D)
+                                                                - distance = -5.85mm
+                                                                Group (2D)
+                                                                  Operation __builtin::ops::buffer(distance=-5.85mm) (2D)
+                                                                    Workpiece(sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) (2D)
+                                                                      - end = 0.62831853071796rad
+                                                                      - radius = 39mm
+                                                                      - start = -0.62831853071796rad
+                                                                      Group (2D)
+                                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) (2D)
+                                                        Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) (2D)
+                                                          - center = (x=0mm, y=0mm)
+                                                          - radius = 15mm
+                                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) (2D)
+                                        hub: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                                          - module = 2.5mm
+                                          - outer_radius = 11.25mm
+                                          - pitch_radius = 8.75mm
+                                          - pressure_angle = 0rad
+                                          - teeth = 7
+                                          - tooth_angle = 0.89759790102566rad
+                                          - tooth_distance = 7.85398163397448mm
+                                          Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) (2D)
+                          rim: Workpiece(op) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) (3D)
+                            - n = (x=-0, y=-0, z=-1)
+                            - x = 0mm
+                            - y = 0mm
+                            - z = 0mm
+                            Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) (3D)
+                              Workpiece(op) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) (3D)
+                                - height = 9.42477796076938mm
+                                - scale = (x=1, y=1)
+                                - twist = 0.10471975511966rad
+                                Group (3D)
+                                  Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) (3D)
+                                    Operation subtract() (2D)
+                                      Group (2D)
+                                        gear_profile: Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) (2D)
+                                          - module = 1.5mm
+                                          - outer_radius = 46.5mm
+                                          - pitch_radius = 45mm
+                                          - pressure_angle = 0rad
+                                          - teeth = 60
+                                          - tooth_angle = 0.10471975511966rad
+                                          - tooth_distance = 4.71238898038469mm
+                                          Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) (2D)
+                                        disc: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) (2D)
+                                          - center = (x=0mm, y=0mm)
+                                          - radius = 39mm
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                                            Primitive2D __builtin::geo2d::Circle(radius=39mm) (2D)
 
 Export of "../books/examples/src/.test/gears_herringbone_gears-out.stl" successful.
 -- Test Result --

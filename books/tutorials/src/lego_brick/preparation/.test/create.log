@@ -19,8 +19,8 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) create::YourSketch() ->
+  Group (2D/root)
+    Workpiece(sketch) create::YourSketch() (2D)
 
 Export error: Render error: Nothing to render
 -- Test Result --

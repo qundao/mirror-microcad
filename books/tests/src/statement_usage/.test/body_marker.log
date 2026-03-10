@@ -14,9 +14,7 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Group ->
-      InputPlaceholder ->
+  InputPlaceholder (Undetermined/root)
 
 Could not determine output type.
 Nothing will be exported.

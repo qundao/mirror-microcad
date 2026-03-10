@@ -18,51 +18,59 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::translate(x=-4mm, y=-4mm, z=0mm) ->
+  Group (2D/root)
+    Workpiece(op) std::ops::translate(x=-4mm, y=-4mm, z=0mm) (2D)
       - x = -4mm
       - y = -4mm
       - z = 0mm
-      Transform __builtin::ops::translate(x=-4mm, y=-4mm, z=0mm) ->
-        r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
-          - height = 2mm
-          - width = 2mm
-          - x = -1mm
-          - y = -1mm
-          Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
-    Workpiece(op) std::ops::translate(x=-4mm, y=4mm, z=0mm) ->
+      Group (2D)
+        Transform __builtin::ops::translate(x=-4mm, y=-4mm, z=0mm) (2D)
+          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) (2D)
+            - height = 2mm
+            - width = 2mm
+            - x = -1mm
+            - y = -1mm
+            Group (2D)
+              Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) (2D)
+    Workpiece(op) std::ops::translate(x=-4mm, y=4mm, z=0mm) (2D)
       - x = -4mm
       - y = 4mm
       - z = 0mm
-      Transform __builtin::ops::translate(x=-4mm, y=4mm, z=0mm) ->
-        r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
-          - height = 2mm
-          - width = 2mm
-          - x = -1mm
-          - y = -1mm
-          Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
-    Workpiece(op) std::ops::translate(x=4mm, y=-4mm, z=0mm) ->
+      Group (2D)
+        Transform __builtin::ops::translate(x=-4mm, y=4mm, z=0mm) (2D)
+          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) (2D)
+            - height = 2mm
+            - width = 2mm
+            - x = -1mm
+            - y = -1mm
+            Group (2D)
+              Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) (2D)
+    Workpiece(op) std::ops::translate(x=4mm, y=-4mm, z=0mm) (2D)
       - x = 4mm
       - y = -4mm
       - z = 0mm
-      Transform __builtin::ops::translate(x=4mm, y=-4mm, z=0mm) ->
-        r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
-          - height = 2mm
-          - width = 2mm
-          - x = -1mm
-          - y = -1mm
-          Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
-    Workpiece(op) std::ops::translate(x=4mm, y=4mm, z=0mm) ->
+      Group (2D)
+        Transform __builtin::ops::translate(x=4mm, y=-4mm, z=0mm) (2D)
+          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) (2D)
+            - height = 2mm
+            - width = 2mm
+            - x = -1mm
+            - y = -1mm
+            Group (2D)
+              Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) (2D)
+    Workpiece(op) std::ops::translate(x=4mm, y=4mm, z=0mm) (2D)
       - x = 4mm
       - y = 4mm
       - z = 0mm
-      Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) ->
-        r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
-          - height = 2mm
-          - width = 2mm
-          - x = -1mm
-          - y = -1mm
-          Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
+      Group (2D)
+        Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) (2D)
+          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) (2D)
+            - height = 2mm
+            - width = 2mm
+            - x = -1mm
+            - y = -1mm
+            Group (2D)
+              Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) (2D)
 
 Export of "../books/language/src/flow/argument_match/.test/no_multiplicity-out.svg" successful.
 -- Test Result --

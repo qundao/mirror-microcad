@@ -10,7 +10,7 @@
   36:   sketch PunchedDisk(radius: Length) {
   37:       use std::geo2d::Circle;
   38:   
-  39:       pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
+  39:       pub fn inner() -> Length { radius/2 }   // error: cant use pub fn inside workbench
   40:   
   41:       Circle(radius) - Circle(radius = inner());
   42:   }
@@ -19,19 +19,19 @@
 
 -- No Output --
 -- Errors --
-  × error: 39:12: Function is not allowed within workbench
+  × error: 39:12: Function is not allowed within sketch
     ╭─[../books/language/src/structure/functions/workbench_functions.md:39:9]
  36 │ sketch PunchedDisk(radius: Length) {
     · ───┬──
-    ·    ╰── Within this workbench
+    ·    ╰── Within this sketch
  37 │     use std::geo2d::Circle;
  38 │ 
- 39 │     pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
+ 39 │     pub fn inner() -> Length { radius/2 }   // error: cant use pub fn inside workbench
     ·         ─┬
     ·          ╰── This function is not allowed
  40 │ 
     ╰────
-  help: function is only allowed within source file, module or workbench
+  help: function is only allowed within source file, module, sketch, part or op
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

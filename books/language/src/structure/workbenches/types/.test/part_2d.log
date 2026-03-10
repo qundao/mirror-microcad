@@ -7,21 +7,20 @@
 
 -- Code --
 
-  28:   part MyPart( radius: Length) {
-  29:       std::geo2d::Circle(radius); // error: Circle is not a 3D primitive
+  28:   part MyPart( radius: Length) {  // error: part cannot produce 2D 
+  29:       std::geo2d::Circle(radius); // Circle is not a 3D primitive
   30:   }
   31:   
   32:   MyPart(1cm);
 
 -- No Output --
 -- Errors --
-  × error: 29:5: The Part workbench produced a 2D output, but expected a 3D output.
-    ╭─[../books/language/src/structure/workbenches/types/parts.md:29:5]
- 28 │ part MyPart( radius: Length) {
- 29 │     std::geo2d::Circle(radius); // error: Circle is not a 3D primitive
-    ·     ─────────────┬────────────
-    ·                  ╰── The Part workbench produced a 2D output, but expected a 3D output.
- 30 │ }
+  × error: 28:6: The Part cannot produce a 2D output
+    ╭─[../books/language/src/structure/workbenches/types/parts.md:28:6]
+ 28 │ part MyPart( radius: Length) {  // error: part cannot produce 2D 
+    ·      ───┬──
+    ·         ╰── The Part cannot produce a 2D output
+ 29 │     std::geo2d::Circle(radius); // Circle is not a 3D primitive
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

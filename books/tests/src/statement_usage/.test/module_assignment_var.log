@@ -23,7 +23,7 @@
     ·     ╰── This value assignment is not allowed
  88 │ }
     ╰────
-  help: value assignment is only allowed within source file, module, workbench or function
+  help: value assignment is only allowed within source file, module, sketch, part, op or function
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

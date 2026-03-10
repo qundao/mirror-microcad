@@ -17,7 +17,7 @@
     ╭─[../books/tests/src/statement_usage/pre-init.md:95:3]
  94 │ sketch K() {
     · ───┬──
-    ·    ╰── Inside this workbench
+    ·    ╰── Inside this sketch
  95 │   prop a = 1; // error
     ·   ─────┬────
     ·        ╰── This statement is not allowed

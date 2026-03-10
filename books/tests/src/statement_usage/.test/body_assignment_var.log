@@ -22,11 +22,4 @@
  96 │ }
     ╰────
 Unexpected warnings(s) which did occur in line(s): 95
--- Model --
-  Group (root) ->
-    Group ->
-
-Could not determine output type.
-Nothing will be exported.
--- Test Result --
-OK (BUT WARNINGS)
+-- No Model --

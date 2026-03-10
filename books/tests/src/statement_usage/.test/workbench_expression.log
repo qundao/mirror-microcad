@@ -14,8 +14,8 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_expression::K() ->
+  Group (2D/root)
+    Workpiece(sketch) workbench_expression::K() (2D)
 
 Export error: Render error: Nothing to render
 -- Test Result --

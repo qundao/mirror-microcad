@@ -12,8 +12,8 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
+  Group (2D/root)
+    Primitive2D __builtin::geo2d::Circle(radius=1mm) (2D)
 
 Export of "../books/tests/src/statement_usage/.test/source_expression_model-out.svg" successful.
 -- Test Result --

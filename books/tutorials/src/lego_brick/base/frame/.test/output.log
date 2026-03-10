@@ -13,13 +13,14 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    outer: Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
+  Group (2D/root)
+    outer: Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) (2D)
       - height = 15.8mm
       - width = 31.8mm
       - x = -15.9mm
       - y = -7.9mm
-      Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) ->
+      Group (2D)
+        Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) (2D)
 
 Export of "../books/tutorials/src/lego_brick/base/frame/.test/output-out.svg" successful.
 -- Test Result --

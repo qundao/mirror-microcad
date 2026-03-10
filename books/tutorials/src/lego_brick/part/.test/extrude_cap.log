@@ -19,18 +19,20 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+  Group (3D/root)
+    Workpiece(op) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) (3D)
       - height = 1mm
       - scale = (x=1, y=1)
       - twist = 0rad
-      Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) ->
-          - height = 31.8mm
-          - width = 15.8mm
-          - x = -7.9mm
-          - y = -15.9mm
-          Primitive2D __builtin::geo2d::Rect(height=31.8mm, width=15.8mm, x=-7.9mm, y=-15.9mm) ->
+      Group (3D)
+        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+          Workpiece(sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) (2D)
+            - height = 31.8mm
+            - width = 15.8mm
+            - x = -7.9mm
+            - y = -15.9mm
+            Group (2D)
+              Primitive2D __builtin::geo2d::Rect(height=31.8mm, width=15.8mm, x=-7.9mm, y=-15.9mm) (2D)
 
 Export of "../books/tutorials/src/lego_brick/part/.test/extrude_cap-out.stl" successful.
 -- Test Result --

@@ -1,0 +1,29 @@
+﻿
+-- Test --
+        Test name: marker_wrong_output
+  Expected result: ok
+      Source file: ../books/tests/src/workbench.md:17
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  17:   op operation() {  
+  18:     @input;  
+  19:     std::geo3d::Sphere(r=1mm)  
+  20:   }  
+  21:     
+  22:   std::geo2d::Circle(r=1mm).operation();
+
+-- No Output --
+-- No Errors --
+-- Model --
+  Group (3D/root)
+    Workpiece(op) marker_wrong_output::operation() (3D)
+      Workpiece(part) std::geo3d::Sphere(radius=1mm) (3D)
+        - radius = 1mm
+        Group (3D)
+          Primitive3D __builtin::geo3d::Sphere(radius=1mm) (3D)
+
+Export of "../books/tests/src/.test/marker_wrong_output-out.stl" successful.
+-- Test Result --
+OK

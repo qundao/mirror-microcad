@@ -1,32 +1,21 @@
 ﻿
 -- Test --
         Test name: sketch_with_empty_body
-  Expected result: warn
+  Expected result: fail
       Source file: ../books/tests/src/semicolon.md:39
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  39:   {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
+  39:   {}.std::ops::translate(x = 5mm) // error: Calling operation on empty geometry
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 39:2: This expression statement did not produce any model
-    ╭─[../books/tests/src/semicolon.md:39:2]
- 39 │ {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
-    ·  ▲
-    ·  ╰── This expression statement did not produce any model
+  × error: 39:4: Unknown method `std::ops::translate`
+    ╭─[../books/tests/src/semicolon.md:39:4]
+ 39 │ {}.std::ops::translate(x = 5mm) // error: Calling operation on empty geometry
+    ·    ─────────┬─────────
+    ·             ╰── Unknown method `std::ops::translate`
     ╰────
--- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::translate(x=5mm, y=0mm, z=0mm) ->
-      - x = 5mm
-      - y = 0mm
-      - z = 0mm
-      Transform __builtin::ops::translate(x=5mm, y=0mm, z=0mm) ->
-        Group ->
-
-Could not determine output type.
-Nothing will be exported.
 -- Test Result --
-OK
+FAILS AS EXPECTED

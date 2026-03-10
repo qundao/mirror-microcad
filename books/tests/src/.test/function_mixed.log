@@ -2,23 +2,18 @@
 -- Test --
         Test name: function_mixed
   Expected result: ok
-      Source file: ../books/tests/src/function.md:54
+      Source file: ../books/tests/src/function.md:50
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  54:   fn f(n: Scalar) {
-  55:       if n > 3 {
-  56:           return n-1;
-  57:       }
-  58:       n+1
-  59:   }
-  60:   use std::debug::*;
-  61:   assert_eq([ f(1), 2 ]);
-  62:   assert_eq([ f(4), 3 ]);
+  50:   fn f(n: Integer) -> Integer {
+  51:       if n > 3 {
+  52:           return n-1;
+  53:       }
+  54:       n+1
+  55:   }
+  56:   use std::debug::*;
+  57:   assert_eq([ f(1), 2 ]);
+  58:   assert_eq([ f(4), 3 ]);
 
--- No Output --
--- No Errors --
--- No Model --
--- Test Result --
-OK

@@ -1,0 +1,17 @@
+﻿
+-- Test --
+        Test name: function_model_property_return
+  Expected result: ok
+      Source file: ../books/tests/src/result.md:158
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 158:   fn f() -> Length {
+ 159:       return std::geo2d::Circle(radius=2mm).radius;
+ 160:   }
+ 161:   f();
+
+-- No Output --
+-- No Errors --
+-- No Model --

@@ -32,81 +32,93 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+  Group (3D/root)
+    Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) (3D)
       - height = 4mm
       - scale = (x=1, y=1)
       - twist = 0rad
       #[color = rgba(0, 1, 0, 1)]
-      Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(op) std::ops::translate(x=-110mm, y=0mm, z=0mm) ->
-          - x = -110mm
-          - y = 0mm
-          - z = 0mm
-          Transform __builtin::ops::translate(x=-110mm, y=0mm, z=0mm) ->
-            Operation __builtin::ops::center() ->
-              Workpiece(sketch) std::geo2d::Text(font_file=, height=80mm, text=µcad) ->
-                - font_file = 
-                - height = 80mm
-                - text = µcad
-                Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=µcad) ->
-    Workpiece(op) std::ops::extrude(height=12mm, scale=(x=1, y=1), twist=0rad) ->
+      Group (3D)
+        Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+          Workpiece(op) std::ops::translate(x=-110mm, y=0mm, z=0mm) (2D)
+            - x = -110mm
+            - y = 0mm
+            - z = 0mm
+            Group (2D)
+              Transform __builtin::ops::translate(x=-110mm, y=0mm, z=0mm) (2D)
+                Operation __builtin::ops::center() (2D)
+                  Workpiece(sketch) std::geo2d::Text(font_file=, height=80mm, text=µcad) (2D)
+                    - font_file = 
+                    - height = 80mm
+                    - text = µcad
+                    Group (2D)
+                      Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=µcad) (2D)
+    Workpiece(op) std::ops::extrude(height=12mm, scale=(x=1, y=1), twist=0rad) (3D)
       - height = 12mm
       - scale = (x=1, y=1)
       - twist = 0rad
       #[color = rgba(1, 0, 0, 1)]
-      Operation __builtin::ops::extrude(height=12mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(sketch) text_love::Heart(size=40mm) ->
-          - size = 40mm
-          Operation union() ->
-            Group ->
-              Multiplicity ->
-                Workpiece(op) std::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                  - x = 13.33333333333334mm
-                  - y = 13.33333333333334mm
-                  - z = 0mm
-                  Transform __builtin::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
-                      - center = (x=0mm, y=0mm)
-                      - radius = 20mm
-                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-                Workpiece(op) std::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                  - x = -13.33333333333334mm
-                  - y = 13.33333333333334mm
-                  - z = 0mm
-                  Transform __builtin::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
-                      - center = (x=0mm, y=0mm)
-                      - radius = 20mm
-                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-              Workpiece(op) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->
-                - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
-                Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
-                  Workpiece(sketch) std::geo2d::Rect(size=40mm) ->
-                    - height = 40mm
-                    - width = 40mm
-                    - x = -20mm
-                    - y = -20mm
-                    Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) ->
-    Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+      Group (3D)
+        Operation __builtin::ops::extrude(height=12mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+          Workpiece(sketch) text_love::Heart(size=40mm) (2D)
+            - size = 40mm
+            Group (2D)
+              Operation union() (2D)
+                Group (2D)
+                  Multiplicity (2D)
+                    Workpiece(op) std::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) (2D)
+                      - x = 13.33333333333334mm
+                      - y = 13.33333333333334mm
+                      - z = 0mm
+                      Group (2D)
+                        Transform __builtin::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) (2D)
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) (2D)
+                            - center = (x=0mm, y=0mm)
+                            - radius = 20mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                              Primitive2D __builtin::geo2d::Circle(radius=20mm) (2D)
+                    Workpiece(op) std::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) (2D)
+                      - x = -13.33333333333334mm
+                      - y = 13.33333333333334mm
+                      - z = 0mm
+                      Group (2D)
+                        Transform __builtin::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) (2D)
+                          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) (2D)
+                            - center = (x=0mm, y=0mm)
+                            - radius = 20mm
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) (2D)
+                              Primitive2D __builtin::geo2d::Circle(radius=20mm) (2D)
+                  Workpiece(op) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) (2D)
+                    - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
+                    Group (2D)
+                      Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) (2D)
+                        Workpiece(sketch) std::geo2d::Rect(size=40mm) (2D)
+                          - height = 40mm
+                          - width = 40mm
+                          - x = -20mm
+                          - y = -20mm
+                          Group (2D)
+                            Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) (2D)
+    Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) (3D)
       - height = 4mm
       - scale = (x=1, y=1)
       - twist = 0rad
       #[color = rgba(0, 0, 1, 1)]
-      Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(op) std::ops::translate(x=90mm, y=0mm, z=0mm) ->
-          - x = 90mm
-          - y = 0mm
-          - z = 0mm
-          Transform __builtin::ops::translate(x=90mm, y=0mm, z=0mm) ->
-            Operation __builtin::ops::center() ->
-              Workpiece(sketch) std::geo2d::Text(font_file=, height=80mm, text=PTF) ->
-                - font_file = 
-                - height = 80mm
-                - text = PTF
-                Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=PTF) ->
+      Group (3D)
+        Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) (3D)
+          Workpiece(op) std::ops::translate(x=90mm, y=0mm, z=0mm) (2D)
+            - x = 90mm
+            - y = 0mm
+            - z = 0mm
+            Group (2D)
+              Transform __builtin::ops::translate(x=90mm, y=0mm, z=0mm) (2D)
+                Operation __builtin::ops::center() (2D)
+                  Workpiece(sketch) std::geo2d::Text(font_file=, height=80mm, text=PTF) (2D)
+                    - font_file = 
+                    - height = 80mm
+                    - text = PTF
+                    Group (2D)
+                      Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=PTF) (2D)
 
 Export of "../books/examples/src/.test/text_love-out.stl" successful.
 -- Test Result --

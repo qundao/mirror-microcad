@@ -1,0 +1,14 @@
+﻿
+-- Test --
+        Test name: function_unexpected_result
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:178
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+ 178:   fn f() { 
+ 179:       1 // error
+ 180:   } 
+ 181:   f();
+

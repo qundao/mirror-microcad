@@ -2,24 +2,22 @@
 -- Test --
         Test name: function_if_result
   Expected result: ok
-      Source file: ../books/tests/src/function.md:39
+      Source file: ../books/tests/src/function.md:35
         Test path: ../books/tests/src/.test
 
 -- Code --
 
-  39:   fn f(n: Scalar) {
-  40:       if n > 3 {
-  41:           n-1
-  42:       } else {
-  43:           n+1
-  44:       }
-  45:   }
-  46:   use std::debug::*;
-  47:   assert_eq([ f(1), 2 ]);
-  48:   assert_eq([ f(4), 3 ]);
+  35:   fn f(n: Integer) -> Integer {
+  36:       if n > 3 {
+  37:           n-1
+  38:       } else {
+  39:           n+1
+  40:       }
+  41:   }
+  42:   use std::debug::*;
+  43:   assert_eq([ f(1), 2 ]);
+  44:   assert_eq([ f(4), 3 ]);
 
 -- No Output --
 -- No Errors --
 -- No Model --
--- Test Result --
-OK

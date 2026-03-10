@@ -1,0 +1,14 @@
+﻿
+-- Test --
+        Test name: sketch_value
+  Expected result: fail
+      Source file: ../books/tests/src/result.md:79
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  79:   sketch S() {
+  80:       1 // error
+  81:   }
+  82:   S();
+

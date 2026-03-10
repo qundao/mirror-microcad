@@ -13,13 +13,17 @@
 
 -- No Output --
 -- Errors --
-  × error: 71:3: The Sketch workbench produced a Undetermined output, but expected a 2D output.
-    ╭─[../books/tests/src/statement_usage/workbench.md:71:3]
+  × error: 71:4: Expression is not allowed within sketch
+    ╭─[../books/tests/src/statement_usage/workbench.md:71:4]
  70 │ sketch K() {
+    · ───┬──
+    ·    ╰── Within this sketch
  71 │   @input // error: Input marker is not allowed here.
-    ·   ─────────────────────────┬────────────────────────
-    ·                            ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
+    ·    ──┬──
+    ·      ╰── This expression is not allowed
  72 │ } K();
     ╰────
+  help: expression is only allowed within source file, sketch, part, op, function, if statement, statement list or expression
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

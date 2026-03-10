@@ -25,11 +25,4 @@
     ·                              ╰── a is zero
  44 │ } else {
     ╰────
--- Model --
-  Group (root) ->
-    Group ->
-
-Could not determine output type.
-Nothing will be exported.
--- Test Result --
-OK
+-- No Model --

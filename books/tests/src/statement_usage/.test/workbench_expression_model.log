@@ -14,9 +14,10 @@
 -- No Output --
 -- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_expression_model::K() ->
-      Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
+  Group (2D/root)
+    Workpiece(sketch) workbench_expression_model::K() (2D)
+      Group (2D)
+        Primitive2D __builtin::geo2d::Circle(radius=1mm) (2D)
 
 Export of "../books/tests/src/statement_usage/.test/workbench_expression_model-out.svg" successful.
 -- Test Result --
