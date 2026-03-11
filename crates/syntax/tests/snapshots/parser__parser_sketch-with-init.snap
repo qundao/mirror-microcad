@@ -110,17 +110,14 @@ Ok(
                                                 trailing: [],
                                             },
                                             statements: [
-                                                Assignment(
-                                                    Assignment {
+                                                LocalAssignment(
+                                                    LocalAssignment {
                                                         span: 68..89,
                                                         extras: ItemExtras {
                                                             leading: [],
                                                             trailing: [],
                                                         },
-                                                        doc: None,
                                                         attributes: [],
-                                                        visibility: None,
-                                                        qualifier: None,
                                                         name: Identifier {
                                                             span: 68..74,
                                                             name: "radius",

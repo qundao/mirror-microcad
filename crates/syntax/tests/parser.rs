@@ -87,9 +87,14 @@ use test_case::test_case;
     }"#
 )]
 #[test_case(
-    "doc comment assignment",
+    "doc comment const",
     r#"/// Doc comment
-    a = 1;"#
+    const A = 1;"#
+)]
+#[test_case(
+    "doc comment property",
+    r#"/// Doc comment
+    prop a = 1;"#
 )]
 #[test_case(
     "doc comment mod",
@@ -147,7 +152,7 @@ use test_case::test_case;
 #[test_case("array list units", "a = [1, 2]mm;")]
 #[test_case("array range units", "a = [1..3]mm;")]
 #[test_case("const", "const FOO = 1;")]
-#[test_case("pub assignment", "pub foo = 1;")]
+#[test_case("pub const assignment", "pub const FOO = 1;")]
 #[test_case(
     "attribute assignment",
     r##"#[color = "#FF00FF"]

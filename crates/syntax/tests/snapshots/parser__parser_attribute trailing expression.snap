@@ -30,16 +30,13 @@ Ok(
                                 },
                                 commands: [
                                     Assignment(
-                                        Assignment {
+                                        LocalAssignment {
                                             span: 2..19,
                                             extras: ItemExtras {
                                                 leading: [],
                                                 trailing: [],
                                             },
-                                            doc: None,
                                             attributes: [],
-                                            visibility: None,
-                                            qualifier: None,
                                             name: Identifier {
                                                 span: 2..7,
                                                 name: "color",

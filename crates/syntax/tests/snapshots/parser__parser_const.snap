@@ -12,9 +12,10 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Assignment(
-                    Assignment {
+                Const(
+                    ConstAssignment {
                         span: 0..13,
+                        keyword_span: 0..5,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
@@ -22,9 +23,6 @@ Ok(
                         doc: None,
                         attributes: [],
                         visibility: None,
-                        qualifier: Some(
-                            Const,
-                        ),
                         name: Identifier {
                             span: 6..9,
                             name: "FOO",

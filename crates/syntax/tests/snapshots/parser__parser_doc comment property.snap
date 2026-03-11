@@ -4,48 +4,46 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..26,
+        span: 0..31,
         statements: StatementList {
-            span: 0..26,
+            span: 0..31,
             extras: ItemExtras {
                 leading: [],
                 trailing: [],
             },
             statements: [
-                Comment(
-                    Comment {
-                        span: 0..15,
-                        lines: [
-                            "/// Doc comment",
-                        ],
-                    },
-                ),
-                Assignment(
-                    Assignment {
-                        span: 20..25,
+                Property(
+                    PropertyAssignment {
+                        span: 0..30,
+                        keyword_span: 20..24,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
                         },
-                        doc: None,
+                        doc: Some(
+                            Comment {
+                                span: 0..20,
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            },
+                        ),
                         attributes: [],
-                        visibility: None,
-                        qualifier: None,
                         name: Identifier {
-                            span: 20..21,
+                            span: 25..26,
                             name: "a",
                         },
                         ty: None,
                         value: Literal(
                             Literal {
-                                span: 24..25,
+                                span: 29..30,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
                                 },
                                 literal: Integer(
                                     IntegerLiteral {
-                                        span: 24..25,
+                                        span: 29..30,
                                         value: 1,
                                     },
                                 ),
