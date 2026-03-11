@@ -3,9 +3,9 @@
 
 /// A part called `Lid` with three parameters.
 part Lid(
-    thickness = 1.6mm,
-    inner_diameter = 16.0cm,
-    height = 20.0mm,
+    thickness: Length = 1.6mm,
+    inner_diameter: Length = 16.0cm,
+    height: Length = 20.0mm,
 ) {
     // Calculate the outer diameter
     outer_diameter = 2.0 * thickness + inner_diameter;

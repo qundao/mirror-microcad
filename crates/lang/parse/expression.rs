@@ -148,12 +148,18 @@ impl FromAst for Expression {
             ast::Expression::BinaryOperation(binop) => Expression::BinaryOp {
                 lhs: Box::new(Expression::from_ast(&binop.lhs, context)?),
                 rhs: Box::new(Expression::from_ast(&binop.rhs, context)?),
-                op: binop.operation.as_str().into(),
+                op: Refer::new(
+                    binop.operation.operation.as_str().into(),
+                    context.src_ref(&binop.operation.span),
+                ),
                 src_ref: context.src_ref(&binop.span),
             },
             ast::Expression::UnaryOperation(unop) => Expression::UnaryOp {
                 rhs: Box::new(Expression::from_ast(&unop.rhs, context)?),
-                op: unop.operation.as_str().into(),
+                op: Refer::new(
+                    unop.operation.operation.as_str().into(),
+                    context.src_ref(&unop.operation.span),
+                ),
                 src_ref: context.src_ref(&unop.span),
             },
             ast::Expression::Block(b) => Expression::Body(Body::from_ast(b, context)?),

@@ -99,7 +99,7 @@ pub enum ResolveError {
     StatementNotSupported(#[from] StatementNotSupportedError),
 
     /// Resolve check failed
-    #[error("Resolve failed")]
+    #[error("Resolve failed: {0}")]
     ResolveCheckFailed(SrcRef),
 
     /// Symbol is private

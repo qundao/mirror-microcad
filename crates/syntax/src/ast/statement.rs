@@ -156,6 +156,7 @@ pub enum UseStatementPart {
 #[allow(missing_docs)]
 pub struct Return {
     pub span: Span,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub value: Option<Expression>,
 }

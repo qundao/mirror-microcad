@@ -206,6 +206,7 @@ impl FromAst for ReturnStatement {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(ReturnStatement {
+            keyword_ref: context.src_ref(&node.keyword_span),
             result: node
                 .value
                 .as_ref()

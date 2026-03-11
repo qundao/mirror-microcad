@@ -124,19 +124,20 @@ pub fn ignore_till_semi<'tokens>()
         .boxed()
 }
 
-pub fn binop<'tokens, I>(
+pub fn binop<'tokens, I, Op>(
     params: I,
-    tokens: &'static [Token<'static>],
+    tokens: Op,
 ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Expression, Extra<'tokens>> + Clone
 where
     I: Parser<'tokens, ParserInput<'tokens, 'tokens>, Expression, Extra<'tokens>> + Clone + 'tokens,
+    Op: Parser<'tokens, ParserInput<'tokens, 'tokens>, Operator, Extra<'tokens>> + Clone + 'tokens,
 {
     params
         .clone()
         .foldl_with(
             whitespace_parser()
                 .or_not()
-                .ignore_then(one_of(tokens))
+                .ignore_then(tokens)
                 .then_maybe_whitespace()
                 .then(params)
                 .repeated(),
@@ -144,25 +145,9 @@ where
                 Expression::BinaryOperation(BinaryOperation {
                     span: e.span(),
                     lhs: lhs.into(),
-                    operation: match op {
-                        Token::OperatorAdd => Operator::Add,
-                        Token::OperatorSubtract => Operator::Subtract,
-                        Token::OperatorMultiply => Operator::Multiply,
-                        Token::OperatorDivide => Operator::Divide,
-                        Token::OperatorUnion => Operator::Union,
-                        Token::OperatorIntersect => Operator::Intersect,
-                        Token::OperatorPowerXor => Operator::PowerXor,
-                        Token::OperatorGreaterThan => Operator::GreaterThan,
-                        Token::OperatorLessThan => Operator::LessThan,
-                        Token::OperatorGreaterEqual => Operator::GreaterEqual,
-                        Token::OperatorLessEqual => Operator::LessEqual,
-                        Token::OperatorNear => Operator::Near,
-                        Token::OperatorEqual => Operator::Equal,
-                        Token::OperatorNotEqual => Operator::NotEqual,
-                        Token::OperatorAnd => Operator::And,
-                        Token::OperatorOr => Operator::Or,
-                        Token::OperatorXor => Operator::Xor,
-                        _ => unreachable!(),
+                    operation: Operator {
+                        span: op.span,
+                        operation: op.operation,
                     },
                     rhs: rhs.into(),
                 })

@@ -50,7 +50,9 @@ impl SrcRef {
 
     /// Return a span for the source reference as expected by miette
     pub fn as_miette_span(&self) -> Option<SourceSpan> {
-        self.0.as_ref().map(|s| SourceSpan::new(s.range.start.into(), s.range.len()))
+        self.0
+            .as_ref()
+            .map(|s| SourceSpan::new(s.range.start.into(), s.range.len()))
     }
 
     /// Return a reference with a given line offset.
@@ -61,7 +63,9 @@ impl SrcRef {
 
 impl From<SrcRef> for SourceSpan {
     fn from(value: SrcRef) -> Self {
-        value.as_miette_span().unwrap_or(SourceSpan::new(0.into(), 0))
+        value
+            .as_miette_span()
+            .unwrap_or(SourceSpan::new(0.into(), 0))
     }
 }
 
@@ -96,6 +100,12 @@ impl SrcRefInner {
 impl From<SrcRefInner> for SourceSpan {
     fn from(value: SrcRefInner) -> Self {
         SourceSpan::new(value.range.start.into(), value.range.len())
+    }
+}
+
+impl From<SrcRefInner> for SrcRef {
+    fn from(value: SrcRefInner) -> Self {
+        SrcRef(Some(Box::new(value)))
     }
 }
 

@@ -14,8 +14,11 @@ use tower_lsp::{
         DidCloseTextDocumentParams, DidOpenTextDocumentParams, DidSaveTextDocumentParams,
         DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportPartialResult,
         DocumentDiagnosticReportResult, ExecuteCommandParams, InitializeParams, InitializeResult,
-        InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport, ServerCapabilities,
-        TextDocumentSyncCapability, TextDocumentSyncKind, Url,
+        InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport,
+        SemanticTokensFullOptions, SemanticTokensLegend, SemanticTokensOptions,
+        SemanticTokensParams, SemanticTokensPartialResult, SemanticTokensResult,
+        SemanticTokensServerCapabilities, ServerCapabilities, TextDocumentSyncCapability,
+        TextDocumentSyncKind, Url,
     },
 };
 
@@ -68,6 +71,19 @@ impl LanguageServer for Backend {
                 diagnostic_provider: Some(DiagnosticServerCapabilities::Options(
                     DiagnosticOptions::default(),
                 )),
+                semantic_tokens_provider: Some(
+                    SemanticTokensServerCapabilities::SemanticTokensOptions(
+                        SemanticTokensOptions {
+                            full: Some(SemanticTokensFullOptions::Bool(true)),
+                            range: Some(false),
+                            legend: SemanticTokensLegend {
+                                token_types: LEGEND_TYPES.into(),
+                                token_modifiers: LEGEND_MODIFIERS.into(),
+                            },
+                            ..SemanticTokensOptions::default()
+                        },
+                    ),
+                ),
                 ..Default::default()
             },
         })
@@ -161,6 +177,25 @@ impl LanguageServer for Backend {
         }
     }
 
+    async fn semantic_tokens_full(
+        &self,
+        params: SemanticTokensParams,
+    ) -> Result<Option<SemanticTokensResult>> {
+        self.send_lsp(ProcessorRequest::GetFullSemanticTokens(
+            params.text_document.uri,
+        ));
+
+        // Wait for response
+        if let Ok(ProcessorResponse::SemanticTokens(url, result)) = self.processor.recv_response() {
+            log::info!("Semantic tokens received! for {url}");
+            Ok(Some(result))
+        } else {
+            Ok(Some(SemanticTokensResult::Partial(
+                SemanticTokensPartialResult::default(),
+            )))
+        }
+    }
+
     async fn execute_command(
         &self,
         params: ExecuteCommandParams,
@@ -232,7 +267,10 @@ impl LanguageServer for Backend {
 
 use clap::Parser;
 
-use crate::processor::{ProcessorRequest, ProcessorResponse, WorkspaceSettings};
+use crate::processor::{
+    ProcessorRequest, ProcessorResponse, WorkspaceSettings,
+    semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
+};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
