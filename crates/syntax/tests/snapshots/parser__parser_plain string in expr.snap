@@ -43,7 +43,10 @@ Ok(
                                         ),
                                     },
                                 ),
-                                operation: Add,
+                                operation: Operator {
+                                    span: 33..35,
+                                    operation: Add,
+                                },
                                 rhs: Literal(
                                     Literal {
                                         span: 36..37,

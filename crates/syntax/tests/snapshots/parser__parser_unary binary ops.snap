@@ -31,7 +31,10 @@ Ok(
                                             leading: [],
                                             trailing: [],
                                         },
-                                        operation: Minus,
+                                        operation: UnaryOperator {
+                                            span: 0..1,
+                                            operation: Minus,
+                                        },
                                         rhs: ArrayList(
                                             ArrayListExpression {
                                                 span: 1..4,
@@ -68,7 +71,10 @@ Ok(
                                         ),
                                     },
                                 ),
-                                operation: NotEqual,
+                                operation: Operator {
+                                    span: 4..7,
+                                    operation: NotEqual,
+                                },
                                 rhs: ArrayList(
                                     ArrayListExpression {
                                         span: 8..11,

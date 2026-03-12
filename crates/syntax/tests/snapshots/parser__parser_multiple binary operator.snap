@@ -45,7 +45,10 @@ Ok(
                                                         ),
                                                     },
                                                 ),
-                                                operation: Add,
+                                                operation: Operator {
+                                                    span: 2..3,
+                                                    operation: Add,
+                                                },
                                                 rhs: Literal(
                                                     Literal {
                                                         span: 3..4,
@@ -63,7 +66,10 @@ Ok(
                                                 ),
                                             },
                                         ),
-                                        operation: Multiply,
+                                        operation: Operator {
+                                            span: 5..6,
+                                            operation: Multiply,
+                                        },
                                         rhs: Literal(
                                             Literal {
                                                 span: 6..7,
@@ -81,7 +87,10 @@ Ok(
                                         ),
                                     },
                                 ),
-                                operation: Add,
+                                operation: Operator {
+                                    span: 7..8,
+                                    operation: Add,
+                                },
                                 rhs: Literal(
                                     Literal {
                                         span: 8..9,

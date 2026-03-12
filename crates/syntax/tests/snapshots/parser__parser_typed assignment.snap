@@ -50,7 +50,10 @@ Ok(
                                         ],
                                     },
                                 ),
-                                operation: Multiply,
+                                operation: Operator {
+                                    span: 13..15,
+                                    operation: Multiply,
+                                },
                                 rhs: Literal(
                                     Literal {
                                         span: 16..19,

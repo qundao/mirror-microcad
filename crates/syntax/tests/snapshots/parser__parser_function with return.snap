@@ -73,6 +73,7 @@ Ok(
                                 Return(
                                     Return {
                                         span: 29..41,
+                                        keyword_span: 29..35,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],
@@ -96,7 +97,10 @@ Ok(
                                                             ],
                                                         },
                                                     ),
-                                                    operation: Multiply,
+                                                    operation: Operator {
+                                                        span: 37..39,
+                                                        operation: Multiply,
+                                                    },
                                                     rhs: Literal(
                                                         Literal {
                                                             span: 40..41,

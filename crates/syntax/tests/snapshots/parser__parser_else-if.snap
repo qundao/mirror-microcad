@@ -23,6 +23,7 @@ Ok(
                         expression: If(
                             If {
                                 span: 0..35,
+                                if_span: 0..2,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
@@ -45,7 +46,10 @@ Ok(
                                                 ],
                                             },
                                         ),
-                                        operation: GreaterThan,
+                                        operation: Operator {
+                                            span: 4..6,
+                                            operation: GreaterThan,
+                                        },
                                         rhs: Literal(
                                             Literal {
                                                 span: 7..8,
@@ -98,9 +102,13 @@ Ok(
                                         ),
                                     ),
                                 },
+                                next_if_span: Some(
+                                    15..19,
+                                ),
                                 next_if: Some(
                                     If {
                                         span: 20..35,
+                                        if_span: 20..22,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],
@@ -123,7 +131,10 @@ Ok(
                                                         ],
                                                     },
                                                 ),
-                                                operation: LessThan,
+                                                operation: Operator {
+                                                    span: 24..26,
+                                                    operation: LessThan,
+                                                },
                                                 rhs: Literal(
                                                     Literal {
                                                         span: 27..29,
@@ -176,10 +187,13 @@ Ok(
                                                 ),
                                             ),
                                         },
+                                        next_if_span: None,
                                         next_if: None,
+                                        else_span: None,
                                         else_body: None,
                                     },
                                 ),
+                                else_span: None,
                                 else_body: None,
                             },
                         ),

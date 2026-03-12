@@ -85,7 +85,10 @@ Ok(
                                         ),
                                     },
                                 ),
-                                operation: Equal,
+                                operation: Operator {
+                                    span: 6..9,
+                                    operation: Equal,
+                                },
                                 rhs: ArrayList(
                                     ArrayListExpression {
                                         span: 10..17,

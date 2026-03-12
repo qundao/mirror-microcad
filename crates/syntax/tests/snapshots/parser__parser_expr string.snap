@@ -60,7 +60,10 @@ Ok(
                                                             ],
                                                         },
                                                     ),
-                                                    operation: Add,
+                                                    operation: Operator {
+                                                        span: 13..15,
+                                                        operation: Add,
+                                                    },
                                                     rhs: QualifiedName(
                                                         QualifiedName {
                                                             span: 16..23,

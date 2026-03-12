@@ -42,7 +42,10 @@ Ok(
                                                 ],
                                             },
                                         ),
-                                        operation: PowerXor,
+                                        operation: Operator {
+                                            span: 1..2,
+                                            operation: PowerXor,
+                                        },
                                         rhs: Literal(
                                             Literal {
                                                 span: 2..3,
@@ -60,7 +63,10 @@ Ok(
                                         ),
                                     },
                                 ),
-                                operation: Add,
+                                operation: Operator {
+                                    span: 3..5,
+                                    operation: Add,
+                                },
                                 rhs: BinaryOperation(
                                     BinaryOperation {
                                         span: 6..9,
@@ -79,7 +85,10 @@ Ok(
                                                 ],
                                             },
                                         ),
-                                        operation: PowerXor,
+                                        operation: Operator {
+                                            span: 7..8,
+                                            operation: PowerXor,
+                                        },
                                         rhs: Literal(
                                             Literal {
                                                 span: 8..9,

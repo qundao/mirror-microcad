@@ -141,7 +141,10 @@ Ok(
                                                                         ],
                                                                     },
                                                                 ),
-                                                                operation: Divide,
+                                                                operation: Operator {
+                                                                    span: 85..87,
+                                                                    operation: Divide,
+                                                                },
                                                                 rhs: Literal(
                                                                     Literal {
                                                                         span: 88..89,
