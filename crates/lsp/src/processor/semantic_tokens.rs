@@ -148,8 +148,7 @@ impl TokenContext {
         let tokens = statements
             .iter()
             .map(|stmt| self.parse_statement(stmt))
-            .map(Result::ok)
-            .flatten()
+            .flat_map(Result::ok)
             .flatten()
             .collect::<Vec<_>>();
         Ok(tokens)
@@ -193,7 +192,7 @@ impl TokenContext {
             }
             Expression::Call(call) => self.parse_call(call)?,
             Expression::TupleExpression(tuple) => self.parse_tuple_expression(tuple)?,
-            Expression::ArrayExpression(array_expr) => self.parse_array_expression(&array_expr)?,
+            Expression::ArrayExpression(array_expr) => self.parse_array_expression(array_expr)?,
             Expression::Body(body) => self.parse_statement_list(body)?,
             Expression::If(if_stmt) => self.parse_if_stmt(if_stmt)?,
             Expression::Marker(marker) => self.parse_marker(marker)?,
@@ -492,7 +491,7 @@ impl TokenContext {
                     &[],
                 )?),
                 FormatStringInner::FormatExpression(expr) => {
-                    tokens.extend(self.parse_format_expression(&expr)?)
+                    tokens.extend(self.parse_format_expression(expr)?)
                 }
             }
         }
@@ -671,7 +670,7 @@ impl TokenContext {
             &[SemanticTokenModifier::DEFINITION],
         )?);
         if let Some(body) = &module_definition.body {
-            tokens.extend(self.parse_statement_list(&body)?);
+            tokens.extend(self.parse_statement_list(body)?);
         }
         Ok(tokens)
     }

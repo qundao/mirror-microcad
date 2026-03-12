@@ -124,14 +124,14 @@ impl FromAst for IfStatement {
             next_if_ref: node
                 .next_if_span
                 .as_ref()
-                .map(|span| context.src_ref(&span)),
+                .map(|span| context.src_ref(span)),
             next_if: node
                 .next_if
                 .as_ref()
                 .map(|next| IfStatement::from_ast(next, context))
                 .transpose()?
                 .map(Box::new),
-            else_ref: node.else_span.as_ref().map(|span| context.src_ref(&span)),
+            else_ref: node.else_span.as_ref().map(|span| context.src_ref(span)),
             body_else: node
                 .else_body
                 .as_ref()
