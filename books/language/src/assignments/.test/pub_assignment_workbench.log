@@ -22,8 +22,8 @@
     · ───┬──
     ·    ╰── Within this workbench
  27 │     pub TEXT = "Hello";  // error
-    ·     ─────────┬────────
-    ·              ╰── This public assignment is not allowed
+    ·     ────────┬────────
+    ·             ╰── This public assignment is not allowed
  28 │     std::print(TEXT);
     ╰────
   help: public assignment is only allowed within source file or module
