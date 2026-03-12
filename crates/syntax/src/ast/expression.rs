@@ -312,10 +312,13 @@ pub enum Element {
 #[allow(missing_docs)]
 pub struct If {
     pub span: Span,
+    pub if_span: Span,
     pub extras: ItemExtras,
     pub condition: Box<Expression>,
     pub body: StatementList,
+    pub next_if_span: Option<Span>,
     pub next_if: Option<Box<If>>,
+    pub else_span: Option<Span>,
     pub else_body: Option<StatementList>,
 }
 

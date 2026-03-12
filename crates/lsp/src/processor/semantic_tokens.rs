@@ -370,16 +370,11 @@ impl TokenContext {
 
     fn parse_use(&mut self, use_statement: &UseStatement) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
-        let kwrd_ref = *(use_statement.src_ref.0)
-            .clone()
-            .ok_or_else(|| miette::miette!("Source reference for 'use' keyword not specified"))?;
-
-        let start = kwrd_ref.range.start;
-        let kwrd_ref = src_ref::SrcRef::from(src_ref::SrcRefInner {
-            range: start..start + 4,
-            ..kwrd_ref
-        });
-        tokens.push(self.output_semantic_token(kwrd_ref, SemanticTokenType::KEYWORD, &[])?);
+        tokens.push(self.output_semantic_token(
+            use_statement.keyword_ref.clone(),
+            SemanticTokenType::KEYWORD,
+            &[],
+        )?);
         tokens.extend(self.parse_use_decl(&use_statement.decl)?);
         Ok(tokens)
     }
@@ -630,20 +625,31 @@ impl TokenContext {
 
     fn parse_if_stmt(&mut self, if_stmt: &IfStatement) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
-        let kwrd_ref = *(if_stmt.src_ref().0)
-            .ok_or_else(|| miette::miette!("Source reference for 'if' keyword not specified"))?;
-        let start = kwrd_ref.range.start;
-        let kwrd_ref = src_ref::SrcRef::from(src_ref::SrcRefInner {
-            range: start..start + 2,
-            ..kwrd_ref
-        });
-        tokens.push(self.output_semantic_token(kwrd_ref, SemanticTokenType::KEYWORD, &[])?);
+        tokens.push(self.output_semantic_token(
+            if_stmt.if_ref.clone(),
+            SemanticTokenType::KEYWORD,
+            &[],
+        )?);
         tokens.extend(self.parse_expression(&if_stmt.cond)?);
         tokens.extend(self.parse_statement_list(&if_stmt.body)?);
-        if let Some(next_if) = &if_stmt.next_if {
+        if let Some(next_if) = &if_stmt.next_if
+            && let Some(next_if_ref) = &if_stmt.next_if_ref
+        {
+            tokens.push(self.output_semantic_token(
+                next_if_ref.clone(),
+                SemanticTokenType::KEYWORD,
+                &[],
+            )?);
             tokens.extend(self.parse_if_stmt(next_if)?);
         }
-        if let Some(body) = &if_stmt.body_else {
+        if let Some(body) = &if_stmt.body_else
+            && let Some(else_ref) = &if_stmt.else_ref
+        {
+            tokens.push(self.output_semantic_token(
+                else_ref.clone(),
+                SemanticTokenType::KEYWORD,
+                &[],
+            )?);
             tokens.extend(self.parse_statement_list(body)?);
         }
         Ok(tokens)

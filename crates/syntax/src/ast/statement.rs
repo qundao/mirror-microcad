@@ -127,6 +127,7 @@ pub struct InitDefinition {
 pub struct UseStatement {
     pub span: Span,
     pub attributes: Vec<Attribute>,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub visibility: Option<Visibility>,
     pub name: UseName,
