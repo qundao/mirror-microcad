@@ -1354,21 +1354,24 @@ fn parser<'tokens>()
             .boxed();
 
         if_inner.define(
-            just(Token::KeywordIf).map_with(|_, e| e.span())
+            just(Token::KeywordIf)
+                .map_with(|_, e| e.span())
                 .then_whitespace()
                 .then(expression_parser.clone())
                 .then_maybe_whitespace()
                 .then(block.clone())
                 .then_maybe_whitespace()
                 .then(
-                    just(Token::KeywordElse).map_with(|_, e| e.span())
+                    just(Token::KeywordElse)
+                        .map_with(|_, e| e.span())
                         .then_maybe_whitespace()
                         .then(if_inner.clone())
                         .map(|(span, inner)| (span, Box::new(inner)))
                         .or_not(),
                 )
                 .then(
-                    just(Token::KeywordElse).map_with(|_, e| e.span())
+                    just(Token::KeywordElse)
+                        .map_with(|_, e| e.span())
                         .then_maybe_whitespace()
                         .then(block.clone())
                         .or_not(),
@@ -1376,8 +1379,12 @@ fn parser<'tokens>()
                 .with_extras()
                 .map_with(
                     |(((((if_span, condition), body), next_if), else_body), extras), e| {
-                        let (next_if_span, next_if) = next_if.map(|(span, if_expr)| (Some(span), Some(if_expr))).unwrap_or((None, None));
-                        let (else_span, else_body) = else_body.map(|(span, body)| (Some(span), Some(body))).unwrap_or((None, None));
+                        let (next_if_span, next_if) = next_if
+                            .map(|(span, if_expr)| (Some(span), Some(if_expr)))
+                            .unwrap_or((None, None));
+                        let (else_span, else_body) = else_body
+                            .map(|(span, body)| (Some(span), Some(body)))
+                            .unwrap_or((None, None));
                         If {
                             span: e.span(),
                             if_span,
@@ -1389,7 +1396,8 @@ fn parser<'tokens>()
                             else_span,
                             else_body,
                         }
-                    })
+                    },
+                )
                 .boxed(),
         );
         let if_expression = if_inner
@@ -1513,62 +1521,27 @@ fn parser<'tokens>()
 
         let binary_param = element_access.or(unary_expression.clone());
 
-        let near_operator_parser = select_ref! {
-            Token::OperatorNear = e => Operator { span: e.span(), operation: OperatorType::Near },
-        };
-        let near = binop(binary_param, near_operator_parser);
-        let xor_operator_parser = select_ref! {
-            Token::OperatorPowerXor = e => Operator { span: e.span(), operation: OperatorType::PowerXor },
-            Token::OperatorXor = e => Operator { span: e.span(), operation: OperatorType::Xor },
-        };
-        let xor = binop(near, xor_operator_parser);
-        let union_intersect_operator_parser = select_ref! {
-            Token::OperatorUnion = e => Operator { span: e.span(), operation: OperatorType::Union },
-            Token::OperatorIntersect = e => Operator { span: e.span(), operation: OperatorType::Intersect },
-        };
-        let union_intersect = binop(xor, union_intersect_operator_parser);
-        let mul_div_operator_parser = select_ref! {
-            Token::OperatorMultiply = e => Operator { span: e.span(), operation: OperatorType::Multiply },
-            Token::OperatorDivide = e => Operator { span: e.span(), operation: OperatorType::Divide },
-        };
+        let near = binop(binary_param, &[Token::OperatorNear]);
+        let xor = binop(near, &[Token::OperatorPowerXor, Token::OperatorXor]);
+        let union_intersect = binop(xor, &[Token::OperatorUnion, Token::OperatorIntersect]);
         let mul_div = binop(
             union_intersect,
-            mul_div_operator_parser,
+            &[Token::OperatorMultiply, Token::OperatorDivide],
         );
-        let add_sub_operator_parser = select_ref! {
-            Token::OperatorAdd = e => Operator { span: e.span(), operation: OperatorType::Add },
-            Token::OperatorSubtract = e => Operator { span: e.span(), operation: OperatorType::Subtract },
-        };
-        let add_sub = binop(mul_div, add_sub_operator_parser);
-        let less_greater_eq_operator_parser = select_ref! {
-            Token::OperatorLessEqual = e => Operator { span: e.span(), operation: OperatorType::LessEqual },
-            Token::OperatorGreaterEqual = e => Operator { span: e.span(), operation: OperatorType::GreaterEqual },
-        };
+        let add_sub = binop(mul_div, &[Token::OperatorAdd, Token::OperatorSubtract]);
         let less_greater_eq = binop(
             add_sub,
-            less_greater_eq_operator_parser,
+            &[Token::OperatorLessEqual, Token::OperatorGreaterEqual],
         );
-        let less_greater_operator_parser = select_ref! {
-            Token::OperatorLessThan = e => Operator { span: e.span(), operation: OperatorType::LessThan },
-            Token::OperatorGreaterThan = e => Operator { span: e.span(), operation: OperatorType::GreaterThan },
-        };
         let less_greater = binop(
             less_greater_eq,
-            less_greater_operator_parser,
+            &[Token::OperatorLessThan, Token::OperatorGreaterThan],
         );
-        let eq_neq_operator_parser = select_ref! {
-            Token::OperatorEqual = e => Operator { span: e.span(), operation: OperatorType::Equal },
-            Token::OperatorNotEqual = e => Operator { span: e.span(), operation: OperatorType::NotEqual },
-        };
         let eq_neq = binop(
             less_greater,
-            eq_neq_operator_parser,
+            &[Token::OperatorEqual, Token::OperatorNotEqual],
         );
-        let or_and_operator_parser = select_ref! {
-            Token::OperatorOr = e => Operator { span: e.span(), operation: OperatorType::Or },
-            Token::OperatorAnd = e => Operator { span: e.span(), operation: OperatorType::And },
-        };
-        let or_and = binop(eq_neq, or_and_operator_parser);
+        let or_and = binop(eq_neq, &[Token::OperatorOr, Token::OperatorAnd]);
 
         or_and.labelled("expression").boxed()
     });
