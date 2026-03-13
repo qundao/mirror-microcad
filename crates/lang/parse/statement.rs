@@ -4,6 +4,7 @@
 use crate::{parse::*, parser::*, rc::*, syntax::*};
 use microcad_syntax::ast;
 
+/// Note: These constructors are a workaround until the assignment in microcad-lang is split up
 impl Assignment {
     fn from_ast_local(
         node: &ast::LocalAssignment,
@@ -34,7 +35,7 @@ impl Assignment {
                 .as_ref()
                 .map(|doc| DocBlock::from_ast(doc, context))
                 .transpose()?,
-            visibility: Visibility::Private, // Bug: this should be Public
+            visibility: Visibility::Private,
             id: Identifier::from_ast(&node.name, context)?,
             qualifier: Qualifier::Prop,
             specified_type: node
@@ -76,6 +77,7 @@ impl Assignment {
     }
 }
 
+/// Note: These constructors are a workaround until the assignment in microcad-lang is split up
 impl AssignmentStatement {
     fn from_ast_local(
         node: &ast::LocalAssignment,

@@ -558,6 +558,53 @@ fn parser<'tokens>()
             .map(Statement::Const)
             .labelled("const assignment");
 
+        // A pub assignment without the `const` keyword will eventually become a const assignment
+        let pub_assignment_inner = doc_comment
+            .clone()
+            .then(attribute_parser.clone())
+            .then(just(Token::KeywordPub).map_with(|_, e| e.span()))
+            .then_maybe_whitespace()
+            .then(identifier_parser.clone())
+            .then_maybe_whitespace()
+            .then(
+                just(Token::SigilColon)
+                    .then_maybe_whitespace()
+                    .ignore_then(type_parser.clone())
+                    .then_maybe_whitespace()
+                    .or_not(),
+            )
+            .then_ignore(just(Token::OperatorAssignment))
+            .then_maybe_whitespace()
+            .then(
+                expression_parser.clone().recover_with(via_parser(
+                    semi_recovery
+                        .clone()
+                        .map_with(|_, e| Expression::Error(e.span())),
+                )),
+            )
+            .with_extras()
+            .map_with(
+                |((((((doc, attributes), keyword_span), name), ty), value), extras), e| {
+                    ConstAssignment {
+                        span: e.span(),
+                        keyword_span,
+                        extras,
+                        doc,
+                        attributes,
+                        visibility: Some(Visibility::Public),
+                        name,
+                        value: Box::new(value),
+                        ty,
+                    }
+                },
+            )
+            .boxed();
+
+        let pub_assignment = pub_assignment_inner
+            .clone()
+            .map(Statement::Const)
+            .labelled("pub const assignment");
+
         let property_assignment_inner = doc_comment
             .clone()
             .then(attribute_parser.clone())
@@ -1014,6 +1061,7 @@ fn parser<'tokens>()
         let with_semi = return_statement
             .or(use_statement)
             .or(const_assignment)
+            .or(pub_assignment)
             .or(property_assignment)
             .or(local_assignment)
             .or(expression)

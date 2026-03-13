@@ -12,9 +12,10 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Assignment(
-                    Assignment {
+                Const(
+                    ConstAssignment {
                         span: 0..11,
+                        keyword_span: 0..3,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
@@ -24,10 +25,9 @@ Ok(
                         visibility: Some(
                             Public,
                         ),
-                        qualifier: None,
                         name: Identifier {
                             span: 4..7,
-                            name: "foo",
+                            name: "FOO",
                         },
                         ty: None,
                         value: Literal(
