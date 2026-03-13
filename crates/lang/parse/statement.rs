@@ -4,10 +4,53 @@
 use crate::{parse::*, parser::*, rc::*, syntax::*};
 use microcad_syntax::ast;
 
-impl FromAst for Assignment {
-    type AstNode = ast::Assignment;
+impl Assignment {
+    fn from_ast_local(
+        node: &ast::LocalAssignment,
+        context: &ParseContext,
+    ) -> Result<Self, ParseError> {
+        Ok(Assignment {
+            doc: None,
+            visibility: Visibility::Private,
+            id: Identifier::from_ast(&node.name, context)?,
+            qualifier: Qualifier::Value,
+            specified_type: node
+                .ty
+                .as_ref()
+                .map(|ty| TypeAnnotation::from_ast(ty, context))
+                .transpose()?,
+            expression: Expression::from_ast(&node.value, context)?,
+            src_ref: context.src_ref(&node.span),
+        })
+    }
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast_prop(
+        node: &ast::PropertyAssignment,
+        context: &ParseContext,
+    ) -> Result<Self, ParseError> {
+        Ok(Assignment {
+            doc: node
+                .doc
+                .as_ref()
+                .map(|doc| DocBlock::from_ast(doc, context))
+                .transpose()?,
+            visibility: Visibility::Private, // Bug: this should be Public
+            id: Identifier::from_ast(&node.name, context)?,
+            qualifier: Qualifier::Prop,
+            specified_type: node
+                .ty
+                .as_ref()
+                .map(|ty| TypeAnnotation::from_ast(ty, context))
+                .transpose()?,
+            expression: Expression::from_ast(&node.value, context)?,
+            src_ref: context.src_ref(&node.span),
+        })
+    }
+
+    fn from_ast_const(
+        node: &ast::ConstAssignment,
+        context: &ParseContext,
+    ) -> Result<Self, ParseError> {
         Ok(Assignment {
             doc: node
                 .doc
@@ -21,12 +64,7 @@ impl FromAst for Assignment {
                 .transpose()?
                 .unwrap_or_default(),
             id: Identifier::from_ast(&node.name, context)?,
-            qualifier: node
-                .qualifier
-                .as_ref()
-                .map(|q| Qualifier::from_ast(q, context))
-                .transpose()?
-                .unwrap_or_default(),
+            qualifier: Qualifier::Const,
             specified_type: node
                 .ty
                 .as_ref()
@@ -38,13 +76,36 @@ impl FromAst for Assignment {
     }
 }
 
-impl FromAst for AssignmentStatement {
-    type AstNode = ast::Assignment;
-
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+impl AssignmentStatement {
+    fn from_ast_local(
+        node: &ast::LocalAssignment,
+        context: &ParseContext,
+    ) -> Result<Self, ParseError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
-            assignment: Rc::new(Assignment::from_ast(node, context)?),
+            assignment: Rc::new(Assignment::from_ast_local(node, context)?),
+            src_ref: context.src_ref(&node.span),
+        })
+    }
+
+    fn from_ast_prop(
+        node: &ast::PropertyAssignment,
+        context: &ParseContext,
+    ) -> Result<Self, ParseError> {
+        Ok(AssignmentStatement {
+            attribute_list: AttributeList::from_ast(&node.attributes, context)?,
+            assignment: Rc::new(Assignment::from_ast_prop(node, context)?),
+            src_ref: context.src_ref(&node.span),
+        })
+    }
+
+    fn from_ast_const(
+        node: &ast::ConstAssignment,
+        context: &ParseContext,
+    ) -> Result<Self, ParseError> {
+        Ok(AssignmentStatement {
+            attribute_list: AttributeList::from_ast(&node.attributes, context)?,
+            assignment: Rc::new(Assignment::from_ast_const(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -119,8 +180,14 @@ impl FromAst for Statement {
             ast::Statement::InnerDocComment(i) => {
                 Statement::InnerDocComment(InnerDocComment::from_ast(i, context)?)
             }
-            ast::Statement::Assignment(a) => {
-                Statement::Assignment(AssignmentStatement::from_ast(a, context)?)
+            ast::Statement::LocalAssignment(a) => {
+                Statement::Assignment(AssignmentStatement::from_ast_local(a, context)?)
+            }
+            ast::Statement::Property(a) => {
+                Statement::Assignment(AssignmentStatement::from_ast_prop(a, context)?)
+            }
+            ast::Statement::Const(a) => {
+                Statement::Assignment(AssignmentStatement::from_ast_const(a, context)?)
             }
             ast::Statement::Comment(_) => unreachable!("comments are filtered out"),
             ast::Statement::Error(span) => {
