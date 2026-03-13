@@ -88,7 +88,7 @@ Ok(
                                                     },
                                                 ),
                                                 operation: Operator {
-                                                    span: 22..24,
+                                                    span: 23..24,
                                                     operation: Add,
                                                 },
                                                 rhs: Literal(

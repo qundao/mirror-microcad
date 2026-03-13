@@ -56,7 +56,7 @@ Ok(
                                                                     },
                                                                 ),
                                                                 operation: Operator {
-                                                                    span: 2..4,
+                                                                    span: 3..4,
                                                                     operation: Add,
                                                                 },
                                                                 rhs: Literal(
@@ -81,7 +81,7 @@ Ok(
                                                             },
                                                         ),
                                                         operation: Operator {
-                                                            span: 7..9,
+                                                            span: 8..9,
                                                             operation: Add,
                                                         },
                                                         rhs: BinaryOperation(
@@ -107,7 +107,7 @@ Ok(
                                                                     },
                                                                 ),
                                                                 operation: Operator {
-                                                                    span: 13..15,
+                                                                    span: 14..15,
                                                                     operation: Divide,
                                                                 },
                                                                 rhs: Literal(
@@ -134,7 +134,7 @@ Ok(
                                                     },
                                                 ),
                                                 operation: Operator {
-                                                    span: 20..22,
+                                                    span: 21..22,
                                                     operation: Subtract,
                                                 },
                                                 rhs: BinaryOperation(
@@ -160,7 +160,7 @@ Ok(
                                                             },
                                                         ),
                                                         operation: Operator {
-                                                            span: 28..30,
+                                                            span: 29..30,
                                                             operation: Multiply,
                                                         },
                                                         rhs: Literal(
@@ -187,7 +187,7 @@ Ok(
                                             },
                                         ),
                                         operation: Operator {
-                                            span: 34..36,
+                                            span: 35..36,
                                             operation: Add,
                                         },
                                         rhs: Literal(
@@ -212,7 +212,7 @@ Ok(
                                     },
                                 ),
                                 operation: Operator {
-                                    span: 39..41,
+                                    span: 40..41,
                                     operation: Subtract,
                                 },
                                 rhs: Literal(

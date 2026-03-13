@@ -40,7 +40,7 @@ Ok(
                                     },
                                 ),
                                 operation: Operator {
-                                    span: 6..8,
+                                    span: 7..8,
                                     operation: Add,
                                 },
                                 rhs: Literal(

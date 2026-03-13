@@ -107,7 +107,7 @@ Ok(
                                                     },
                                                 ),
                                                 operation: Operator {
-                                                    span: 41..43,
+                                                    span: 42..43,
                                                     operation: Multiply,
                                                 },
                                                 rhs: Literal(

@@ -72,7 +72,7 @@ Ok(
                                     },
                                 ),
                                 operation: Operator {
-                                    span: 4..7,
+                                    span: 5..7,
                                     operation: NotEqual,
                                 },
                                 rhs: ArrayList(

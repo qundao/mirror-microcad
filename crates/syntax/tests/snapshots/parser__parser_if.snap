@@ -47,7 +47,7 @@ Ok(
                                             },
                                         ),
                                         operation: Operator {
-                                            span: 4..6,
+                                            span: 5..6,
                                             operation: GreaterThan,
                                         },
                                         rhs: Literal(

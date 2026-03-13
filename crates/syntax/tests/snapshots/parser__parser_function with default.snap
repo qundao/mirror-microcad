@@ -124,7 +124,7 @@ Ok(
                                                     },
                                                 ),
                                                 operation: Operator {
-                                                    span: 29..31,
+                                                    span: 30..31,
                                                     operation: Divide,
                                                 },
                                                 rhs: QualifiedName(

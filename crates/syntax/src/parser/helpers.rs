@@ -138,8 +138,7 @@ where
         .foldl_with(
             whitespace_parser()
                 .or_not()
-                .ignore_then(one_of(tokens))
-                .map_with(|op, e| Operator {
+                .ignore_then(one_of(tokens).map_with(|op, e| Operator {
                     span: e.span(),
                     operation: match op {
                         Token::OperatorAdd => OperatorType::Add,
@@ -161,7 +160,7 @@ where
                         Token::OperatorXor => OperatorType::Xor,
                         _ => unreachable!(),
                     },
-                })
+                }))
                 .then_maybe_whitespace()
                 .then(params)
                 .repeated(),

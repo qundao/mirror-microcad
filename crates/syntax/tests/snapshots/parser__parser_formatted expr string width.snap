@@ -61,7 +61,7 @@ Ok(
                                                         },
                                                     ),
                                                     operation: Operator {
-                                                        span: 18..20,
+                                                        span: 19..20,
                                                         operation: Subtract,
                                                     },
                                                     rhs: QualifiedName(

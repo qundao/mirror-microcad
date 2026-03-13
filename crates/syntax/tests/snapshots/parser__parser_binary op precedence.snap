@@ -64,7 +64,7 @@ Ok(
                                     },
                                 ),
                                 operation: Operator {
-                                    span: 3..5,
+                                    span: 4..5,
                                     operation: Add,
                                 },
                                 rhs: BinaryOperation(
