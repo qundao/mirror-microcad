@@ -63,7 +63,7 @@ pub struct WorkbenchDefinition {
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
-    pub arguments: ArgumentsDefinition,
+    pub plan: ParameterList,
     pub body: StatementList,
 }
 
@@ -91,7 +91,7 @@ pub struct FunctionDefinition {
     pub doc: Option<Comment>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
-    pub arguments: ArgumentsDefinition,
+    pub arguments: ParameterList,
     pub return_type: Option<Type>,
     pub body: StatementList,
 }
@@ -104,7 +104,8 @@ pub struct InitDefinition {
     pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
-    pub arguments: ArgumentsDefinition,
+    pub attributes: Vec<Attribute>,
+    pub parameters: ParameterList,
     pub body: StatementList,
 }
 
@@ -113,6 +114,7 @@ pub struct InitDefinition {
 #[allow(missing_docs)]
 pub struct UseStatement {
     pub span: Span,
+    pub attributes: Vec<Attribute>,
     pub extras: ItemExtras,
     pub visibility: Option<Visibility>,
     pub name: UseName,
@@ -146,29 +148,29 @@ pub struct Return {
     pub value: Option<Expression>,
 }
 
-/// A definition of the arguments of a workbench definition or function definition
+/// A parameter list of a workbench definition or function definition
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub struct ArgumentsDefinition {
+pub struct ParameterList {
     pub span: Span,
     pub extras: ItemExtras,
-    pub arguments: Vec<ArgumentDefinition>,
+    pub parameters: Vec<Parameter>,
 }
 
-impl ArgumentsDefinition {
+impl ParameterList {
     pub(crate) fn dummy(span: Span) -> Self {
-        ArgumentsDefinition {
+        ParameterList {
             span,
             extras: ItemExtras::default(),
-            arguments: Vec::default(),
+            parameters: Vec::default(),
         }
     }
 }
 
-/// A definition of a single of a workbench definition or function definition
+/// A parameter for a workbench definition or function definition
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub struct ArgumentDefinition {
+pub struct Parameter {
     pub span: Span,
     pub extras: ItemExtras,
     pub name: Identifier,

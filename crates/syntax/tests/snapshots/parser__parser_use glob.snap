@@ -15,6 +15,7 @@ Ok(
                 Use(
                     UseStatement {
                         span: 0..15,
+                        attributes: [],
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],

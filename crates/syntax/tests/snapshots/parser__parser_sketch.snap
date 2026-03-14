@@ -28,14 +28,14 @@ Ok(
                             span: 7..12,
                             name: "Wheel",
                         },
-                        arguments: ArgumentsDefinition {
+                        plan: ParameterList {
                             span: 13..27,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            arguments: [
-                                ArgumentDefinition {
+                            parameters: [
+                                Parameter {
                                     span: 13..27,
                                     extras: ItemExtras {
                                         leading: [],

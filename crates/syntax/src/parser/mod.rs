@@ -564,7 +564,7 @@ fn parser<'tokens>()
             .labelled("comment")
             .boxed();
 
-        let arguments_inner = whitespace_parser()
+        let parameter_list_inner = whitespace_parser()
             .or_not()
             .ignore_then(identifier_parser.clone())
             .then_maybe_whitespace()
@@ -600,7 +600,7 @@ fn parser<'tokens>()
                     .or_not(),
             )
             .with_extras()
-            .map_with(|(((name, ty), default), extras), e| ArgumentDefinition {
+            .map_with(|(((name, ty), default), extras), e| Parameter {
                 span: e.span(),
                 extras,
                 name,
@@ -613,13 +613,13 @@ fn parser<'tokens>()
             .collect::<Vec<_>>()
             .boxed();
 
-        let arguments = arguments_inner
+        let parameter_list = parameter_list_inner
             .then_maybe_whitespace()
             .with_extras()
-            .map_with(|(arguments, extras), e| ArgumentsDefinition {
+            .map_with(|(parameters, extras), e| ParameterList {
                 span: e.span(),
                 extras,
-                arguments,
+                parameters,
             })
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
@@ -630,7 +630,7 @@ fn parser<'tokens>()
                         ParseErrorKind::UnclosedBracket {
                             open,
                             end,
-                            kind: "function arguments",
+                            kind: "function parameters",
                             close_token: Token::SigilCloseBracket,
                         },
                     )
@@ -639,7 +639,7 @@ fn parser<'tokens>()
             .recover_with(via_parser(
                 ignore_till_matched_brackets()
                     .or(none_of(STRUCTURAL_TOKENS).repeated())
-                    .map_with(|_, e| ArgumentsDefinition::dummy(e.span())),
+                    .map_with(|_, e| ParameterList::dummy(e.span())),
             ))
             .boxed();
 
@@ -701,9 +701,9 @@ fn parser<'tokens>()
             })
             .boxed();
 
-        let use_statement = visibility
-            .then_whitespace()
-            .or_not()
+        let use_statement = attribute_parser
+            .clone()
+            .then(visibility.then_whitespace().or_not())
             .then_ignore(just(Token::KeywordUse))
             .then_whitespace()
             .then(use_parts)
@@ -717,11 +717,12 @@ fn parser<'tokens>()
                     .or_not(),
             )
             .with_extras()
-            .map_with(|(((visibility, name), use_as), extras), e| {
+            .map_with(|((((attributes, visibility), name), use_as), extras), e| {
                 Statement::Use(UseStatement {
                     span: e.span(),
-                    extras,
+                    attributes,
                     visibility,
+                    extras,
                     name,
                     use_as,
                 })
@@ -737,22 +738,26 @@ fn parser<'tokens>()
 
         let init = doc_comment
             .clone()
+            .then(attribute_parser.clone())
             .then(just(Token::KeywordInit).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
-            .then(arguments.clone())
+            .then(parameter_list.clone())
             .then_maybe_whitespace()
             .then(block.clone())
             .with_extras()
-            .map_with(|((((doc, keyword_span), arguments), body), extras), e| {
-                Statement::Init(InitDefinition {
-                    span: e.span(),
-                    keyword_span,
-                    extras,
-                    doc,
-                    arguments,
-                    body,
-                })
-            })
+            .map_with(
+                |(((((doc, attributes), keyword_span), arguments), body), extras), e| {
+                    Statement::Init(InitDefinition {
+                        span: e.span(),
+                        keyword_span,
+                        extras,
+                        doc,
+                        attributes,
+                        parameters: arguments,
+                        body,
+                    })
+                },
+            )
             .boxed();
         let workbench = doc_comment
             .clone()
@@ -770,7 +775,7 @@ fn parser<'tokens>()
                 )),
             )
             .then_maybe_whitespace()
-            .then(arguments.clone())
+            .then(parameter_list.clone())
             .then_maybe_whitespace()
             .then(block.clone())
             .with_extras()
@@ -795,7 +800,7 @@ fn parser<'tokens>()
                         attributes,
                         visibility,
                         name,
-                        arguments,
+                        plan: arguments,
                         body,
                     })
                 },
@@ -830,7 +835,7 @@ fn parser<'tokens>()
                 )),
             )
             .then_maybe_whitespace()
-            .then(arguments.clone())
+            .then(parameter_list.clone())
             .then_maybe_whitespace()
             .then(
                 just(Token::SigilSingleArrow)

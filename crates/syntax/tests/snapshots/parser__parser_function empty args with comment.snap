@@ -26,7 +26,7 @@ Ok(
                             span: 3..6,
                             name: "foo",
                         },
-                        arguments: ArgumentsDefinition {
+                        arguments: ParameterList {
                             span: 7..17,
                             extras: ItemExtras {
                                 leading: [
@@ -41,7 +41,7 @@ Ok(
                                 ],
                                 trailing: [],
                             },
-                            arguments: [],
+                            parameters: [],
                         },
                         return_type: None,
                         body: StatementList {

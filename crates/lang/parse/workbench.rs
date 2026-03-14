@@ -33,7 +33,7 @@ impl FromAst for Rc<WorkbenchDefinition> {
                 .unwrap_or_default(),
             kind: Refer::new(node.kind.into(), context.src_ref(&node.span)),
             id: Identifier::from_ast(&node.name, context)?,
-            plan: ParameterList::from_ast(&node.arguments, context)?,
+            plan: ParameterList::from_ast(&node.plan, context)?,
             body: Body::from_ast(&node.body, context)?,
         }))
     }

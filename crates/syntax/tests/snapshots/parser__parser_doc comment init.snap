@@ -28,13 +28,14 @@ Ok(
                                 ],
                             },
                         ),
-                        arguments: ArgumentsDefinition {
+                        attributes: [],
+                        parameters: ParameterList {
                             span: 25..25,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            arguments: [],
+                            parameters: [],
                         },
                         body: StatementList {
                             span: 27..27,

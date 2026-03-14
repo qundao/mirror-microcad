@@ -5,7 +5,7 @@ use crate::{ord_map::*, parse::*, parser::*};
 use microcad_syntax::ast;
 
 impl FromAst for Parameter {
-    type AstNode = ast::ArgumentDefinition;
+    type AstNode = ast::Parameter;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(Parameter {
@@ -26,19 +26,16 @@ impl FromAst for Parameter {
 }
 
 impl FromAst for ParameterList {
-    type AstNode = ast::ArgumentsDefinition;
+    type AstNode = ast::ParameterList;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         let mut parameters: OrdMap<_, _> = Default::default();
 
-        for param in &node.arguments {
+        for param in &node.parameters {
             let param = Parameter::from_ast(param, context)?;
             parameters
                 .try_push(param)
-                .map_err(|(previous, id)| ParseError::DuplicateArgument {
-                    previous,
-                    id,
-                })?;
+                .map_err(|(previous, id)| ParseError::DuplicateArgument { previous, id })?;
         }
         Ok(ParameterList(Refer::new(
             parameters,
