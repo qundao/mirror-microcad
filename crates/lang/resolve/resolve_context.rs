@@ -176,6 +176,12 @@ impl ResolveContext {
         log::trace!("Checking symbol table");
         self.mode = ResolveMode::Failed;
 
+        if let Err(err) = self.root.iter().try_for_each(|symbol| symbol.check(self)) {
+            self.error(&err.src_ref(), err)?;
+        } else if !self.has_errors() {
+            self.mode = ResolveMode::Checked;
+        }
+
         log::info!("Symbol table OK!");
 
         let unchecked = self
