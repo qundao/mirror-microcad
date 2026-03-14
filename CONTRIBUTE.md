@@ -38,6 +38,11 @@ Although the technology is evolving rapidly, our rationale is therefore as follo
   Issues and pull requests must be labeled, and contributors must state which LLM and which prompts have been used.
   Large-scale contributions that are obviously LLM-generated are generally considered AI slop and will not be accepted.
 
+* If you use an LLM to create code because you can't make the changes yourself, you won't be able to properly judge or review the generated work.
+  This will result in you shifting the work onto others.
+  Such changes are unlikely to be accepted.
+  Only submit changes that you fully understand and can justify.
+
 * LLM-generated bug reports are likely to be closed.
 
 * We expect contributed code to have working tests and clear documentation.
