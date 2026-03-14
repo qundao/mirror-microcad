@@ -24,6 +24,14 @@
  104 │ } K();
      ╰────
   help: public assignment is only allowed within source file or module
+  × error: 103:7: Symbol a not found while resolving.
+     ╭─[../books/tests/src/statement_usage/workbench.md:103:7]
+ 102 │ sketch K() {
+ 103 │   pub a = 1; // error
+     ·       ┬
+     ·       ╰── Symbol a not found while resolving.
+ 104 │ } K();
+     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

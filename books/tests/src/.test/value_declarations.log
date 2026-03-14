@@ -101,15 +101,15 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 39:16: Unused global symbol PrivateWorkbench.
-    ╭─[../books/tests/src/value_declarations.md:39:16]
- 38 │         // private workbench
- 39 │         sketch PrivateWorkbench() {}
-    ·                ────────┬───────
-    ·                        ╰── Unused global symbol PrivateWorkbench.
- 40 │ 
+  × error: 43:19: Symbol sketch_local not found while resolving.
+    ╭─[../books/tests/src/value_declarations.md:43:19]
+ 42 │         pub sketch Workbench(param = 5) {
+ 43 │             const sketch_local = 6;
+    ·                   ──────┬─────
+    ·                         ╰── Symbol sketch_local not found while resolving.
+ 44 │ 
     ╰────
-Unexpected warnings(s) which did occur in line(s): 39
--- No Model --
+Unexpected error(s) which did occur in line(s): 43
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-OK (BUT WARNINGS)
+FAILS

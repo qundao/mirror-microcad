@@ -12,11 +12,16 @@
   80:   } K();
 
 -- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) workbench_assignment_const::K() ->
-
-Export error: Render error: Nothing to render
+-- Errors --
+  × error: 79:9: Symbol B not found while resolving.
+    ╭─[../books/tests/src/statement_usage/workbench.md:79:9]
+ 78 │ sketch K() {
+ 79 │   const B = 1;
+    ·         ┬
+    ·         ╰── Symbol B not found while resolving.
+ 80 │ } K();
+    ╰────
+Unexpected error(s) which did occur in line(s): 79
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-OK
+FAILS

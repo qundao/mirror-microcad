@@ -32,6 +32,14 @@
  80 │ init(l:Length) {} } K();
     ╰────
   help: public assignment is only allowed within source file or module
+  × error: 79:7: Symbol p not found while resolving.
+    ╭─[../books/tests/src/statement_usage/pre-init.md:79:7]
+ 78 │ sketch K() { 
+ 79 │   pub p = 1;  // error
+    ·       ┬
+    ·       ╰── Symbol p not found while resolving.
+ 80 │ init(l:Length) {} } K();
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

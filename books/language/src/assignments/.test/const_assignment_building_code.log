@@ -14,7 +14,14 @@
  111:   MySketch();
 
 -- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 109
+-- Errors --
+  × error: 109:11: Symbol MY_CONST not found while resolving.
+     ╭─[../books/language/src/assignments/const.md:109:11]
+ 108 │     init(_: Integer) {}
+ 109 │     const MY_CONST = 1;   // error: not allowed in building code
+     ·           ────┬───
+     ·               ╰── Symbol MY_CONST not found while resolving.
+ 110 │ }
+     ╰────
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED (BUT IS TODO)

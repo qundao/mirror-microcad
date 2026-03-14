@@ -12,11 +12,16 @@
   72:   init(l:Length) {} } K();
 
 -- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) pre_init_assignment_const::K() ->
-
-Export error: Render error: Nothing to render
+-- Errors --
+  × error: 71:9: Symbol B not found while resolving.
+    ╭─[../books/tests/src/statement_usage/pre-init.md:71:9]
+ 70 │ sketch K() { 
+ 71 │   const B = 1;
+    ·         ┬
+    ·         ╰── Symbol B not found while resolving.
+ 72 │ init(l:Length) {} } K();
+    ╰────
+Unexpected error(s) which did occur in line(s): 71
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-OK
+FAILS

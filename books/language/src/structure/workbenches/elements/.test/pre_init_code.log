@@ -32,15 +32,15 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 21:8: Unused global symbol into_radius.
-    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:21:8]
- 20 │     // function
- 21 │     fn into_radius( diameter: Length ) {
-    ·        ─────┬─────
-    ·             ╰── Unused global symbol into_radius.
- 22 │         // use constant FACTOR from init code
+  × error: 15:11: Symbol FACTOR not found while resolving.
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:15:11]
+ 14 │     // init code
+ 15 │     const FACTOR = 2.0;
+    ·           ───┬──
+    ·              ╰── Symbol FACTOR not found while resolving.
+ 16 │ 
     ╰────
-Unexpected warnings(s) which did occur in line(s): 21
--- No Model --
+Unexpected error(s) which did occur in line(s): 15
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-OK (BUT WARNINGS)
+FAILS

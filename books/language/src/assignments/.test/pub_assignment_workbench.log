@@ -27,6 +27,14 @@
  28 │     std::print(TEXT);
     ╰────
   help: public assignment is only allowed within source file or module
+  × error: 27:9: Symbol TEXT not found while resolving.
+    ╭─[../books/language/src/assignments/pub.md:27:9]
+ 26 │ sketch MySketch() {
+ 27 │     pub TEXT = "Hello";  // error
+    ·         ──┬─
+    ·           ╰── Symbol TEXT not found while resolving.
+ 28 │     std::print(TEXT);
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

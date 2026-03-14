@@ -28,21 +28,6 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 6:5: Unused global symbol my.
-   ╭─[../books/tests/src/visibility.md:6:5]
- 6 │ mod my {
-   ·     ─┬
-   ·      ╰── Unused global symbol my.
- 7 │     mod mod_private {
-   ╰────
-  ⚠ warning: 7:9: Unused global symbol mod_private.
-   ╭─[../books/tests/src/visibility.md:7:9]
- 6 │ mod my {
- 7 │     mod mod_private {
-   ·         ─────┬─────
-   ·              ╰── Unused global symbol mod_private.
- 8 │         pub const_public = 1;
-   ╰────
   ⚠ warning: 13:9: Unused global symbol const const_private = 1.
     ╭─[../books/tests/src/visibility.md:13:9]
  12 │         pub const_public = 1;
@@ -51,7 +36,7 @@
     ·                    ╰── Unused global symbol const const_private = 1.
  14 │     }
     ╰────
-Unexpected warnings(s) which did occur in line(s): 6, 7, 13
+Unexpected warnings(s) which did occur in line(s): 13
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

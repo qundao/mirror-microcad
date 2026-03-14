@@ -20,15 +20,17 @@
   54:   
   55:   MySketch();
 
--- Output --
-Hello
-
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(sketch) const_assignment_workbench::MySketch() ->
-      - text = Hello
-
-Export error: Render error: Nothing to render
+-- No Output --
+-- Errors --
+  × error: 46:11: Symbol TEXT not found while resolving.
+    ╭─[../books/language/src/assignments/const.md:46:11]
+ 45 │     // constant assignment in initialization code
+ 46 │     const TEXT = "Hello";
+    ·           ──┬─
+    ·             ╰── Symbol TEXT not found while resolving.
+ 47 │ 
+    ╰────
+Unexpected error(s) which did occur in line(s): 46
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
-OK
+FAILS

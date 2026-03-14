@@ -24,6 +24,14 @@
  8 │ } f();
    ╰────
   help: workbench is only allowed within source file or module
+  × error: 7:10: Symbol S not found while resolving.
+   ╭─[../books/tests/src/statement_usage/function.md:7:10]
+ 6 │ fn f() {
+ 7 │   sketch S() {} // error
+   ·          ┬
+   ·          ╰── Symbol S not found while resolving.
+ 8 │ } f();
+   ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

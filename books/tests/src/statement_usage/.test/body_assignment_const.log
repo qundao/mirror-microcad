@@ -23,6 +23,14 @@
     · ╰──── Within this expression statement
     ╰────
   help: constant assignment is only allowed within source file, module or workbench
+  × error: 79:9: Symbol B not found while resolving.
+    ╭─[../books/tests/src/statement_usage/body.md:79:9]
+ 78 │ {
+ 79 │   const B = 1; // error
+    ·         ┬
+    ·         ╰── Symbol B not found while resolving.
+ 80 │ }
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

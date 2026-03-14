@@ -20,17 +20,21 @@
 
 -- No Output --
 -- Errors --
-  × error: 53:12: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:53:5]
- 52 │     init( diameter: Length ) { radius = diameter / 2; }
- 53 │     Circle(radius + thickness) - Circle(radius)
-    ·     ─────────────┬────────────
-    ·                  ╰── Got: Circle( 15mm )
- 54 │ }
+  × error: 50:15: Symbol radius not found while resolving.
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:50:15]
+ 49 │ 
+ 50 │     const _ = radius * 2;   // error: cannot use radius from building plan
+    ·               ───┬──
+    ·                  ╰── Symbol radius not found while resolving.
+ 51 │ 
     ╰────
-  help: Ambiguous initializations:
-        	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
-        	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-Expected error(s) which did not occur in line(s): 50
+  × error: 50:11: Symbol _ not found while resolving.
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:50:11]
+ 49 │ 
+ 50 │     const _ = radius * 2;   // error: cannot use radius from building plan
+    ·           ┬
+    ·           ╰── Symbol _ not found while resolving.
+ 51 │ 
+    ╰────
 -- Test Result --
-TODO (SHALL FAIL)
+FAILS AS EXPECTED (BUT IS TODO)

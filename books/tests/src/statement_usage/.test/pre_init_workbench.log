@@ -32,6 +32,14 @@
  8 │ init(l:Length) {} } K();
    ╰────
   help: workbench is only allowed within source file or module
+  × error: 7:10: Symbol F not found while resolving.
+   ╭─[../books/tests/src/statement_usage/pre-init.md:7:10]
+ 6 │ sketch K() { 
+ 7 │   sketch F() {}  // error
+   ·          ┬
+   ·          ╰── Symbol F not found while resolving.
+ 8 │ init(l:Length) {} } K();
+   ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

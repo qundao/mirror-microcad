@@ -18,6 +18,12 @@
     ·              ╰── This property assignment is not allowed here
     ╰────
   help: property assignment is only allowed within workbench
+  × error: 25:17: Symbol radius not found while resolving.
+    ╭─[../books/language/src/assignments/property.md:25:17]
+ 25 │ prop diameter = radius * 2; // error: not in source file
+    ·                 ───┬──
+    ·                    ╰── Symbol radius not found while resolving.
+    ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

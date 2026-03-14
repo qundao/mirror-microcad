@@ -31,12 +31,13 @@
 
 -- No Output --
 -- Errors --
-  × error: 31:1: Symbol math::pow not found.
+  × error: 31:1: Symbol math::pow not found while resolving.
     ╭─[../books/language/src/structure/functions/module_functions.md:31:1]
  30 │ math::square(2.0);
  31 │ math::pow(2.0, 5);  // error: pow is private
-    · ────────┬────────
-    ·         ╰── Symbol math::pow not found.
+    · ────┬────
+    ·     ╰── Symbol math::pow not found while resolving.
     ╰────
+Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

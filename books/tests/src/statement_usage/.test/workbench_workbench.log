@@ -24,6 +24,14 @@
  8 │ } K();
    ╰────
   help: workbench is only allowed within source file or module
+  × error: 7:10: Symbol F not found while resolving.
+   ╭─[../books/tests/src/statement_usage/workbench.md:7:10]
+ 6 │ sketch K() {
+ 7 │   sketch F() {} F(); // error
+   ·          ┬
+   ·          ╰── Symbol F not found while resolving.
+ 8 │ } K();
+   ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED
