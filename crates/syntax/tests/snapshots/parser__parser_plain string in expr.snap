@@ -30,17 +30,17 @@ Ok(
                         ty: None,
                         value: BinaryOperation(
                             BinaryOperation {
-                                span: 32..37,
+                                span: 4..37,
                                 lhs: Literal(
                                     Literal {
-                                        span: 32..33,
+                                        span: 4..33,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],
                                         },
                                         literal: String(
                                             StringLiteral {
-                                                span: 32..33,
+                                                span: 4..33,
                                                 content: "plain string int expression",
                                             },
                                         ),

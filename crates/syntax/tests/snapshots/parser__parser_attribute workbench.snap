@@ -49,14 +49,14 @@ Ok(
                                             ty: None,
                                             value: Literal(
                                                 Literal {
-                                                    span: 18..19,
+                                                    span: 10..19,
                                                     extras: ItemExtras {
                                                         leading: [],
                                                         trailing: [],
                                                     },
                                                     literal: String(
                                                         StringLiteral {
-                                                            span: 18..19,
+                                                            span: 10..19,
                                                             content: "#FF00FF",
                                                         },
                                                     ),

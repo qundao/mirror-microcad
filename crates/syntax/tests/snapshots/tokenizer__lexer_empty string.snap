@@ -26,31 +26,9 @@ expression: "lex(input).collect::<Vec<_>>()"
         ),
     },
     SpannedToken {
-        span: 4..33,
+        span: 4..6,
         token: LiteralString(
-            "plain string int expression",
-        ),
-    },
-    SpannedToken {
-        span: 33..34,
-        token: Whitespace(
-            " ",
-        ),
-    },
-    SpannedToken {
-        span: 34..35,
-        token: OperatorAdd,
-    },
-    SpannedToken {
-        span: 35..36,
-        token: Whitespace(
-            " ",
-        ),
-    },
-    SpannedToken {
-        span: 36..37,
-        token: LiteralInt(
-            "1",
+            "",
         ),
     },
 ]

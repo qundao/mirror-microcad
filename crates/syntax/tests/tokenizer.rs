@@ -17,6 +17,7 @@ use test_case::test_case;
 #[test_case("basic addition, no space", "1+1")]
 #[test_case("assignment", "a = b * 2")]
 #[test_case("plain string", r#""plain string""#)]
+#[test_case("empty string", r#"a = """#)]
 #[test_case("plain string in expr", r#"a = "plain string int expression" + 1"#)]
 #[test_case(
     "multi-line string",

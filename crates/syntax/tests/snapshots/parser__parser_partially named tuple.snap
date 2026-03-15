@@ -30,7 +30,7 @@ Ok(
                                 },
                                 values: [
                                     TupleItem {
-                                        span: 3..4,
+                                        span: 1..4,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],
@@ -38,14 +38,14 @@ Ok(
                                         name: None,
                                         value: Literal(
                                             Literal {
-                                                span: 3..4,
+                                                span: 1..4,
                                                 extras: ItemExtras {
                                                     leading: [],
                                                     trailing: [],
                                                 },
                                                 literal: String(
                                                     StringLiteral {
-                                                        span: 3..4,
+                                                        span: 1..4,
                                                         content: "a",
                                                     },
                                                 ),

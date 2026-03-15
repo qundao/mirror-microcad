@@ -4,9 +4,9 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 25..26,
+        span: 0..26,
         statements: StatementList {
-            span: 25..26,
+            span: 0..26,
             extras: ItemExtras {
                 leading: [],
                 trailing: [],
@@ -15,7 +15,7 @@ Ok(
             tail: Some(
                 Expression(
                     ExpressionStatement {
-                        span: 25..26,
+                        span: 0..26,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
@@ -23,7 +23,7 @@ Ok(
                         attributes: [],
                         expression: String(
                             FormatString {
-                                span: 25..26,
+                                span: 0..26,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],

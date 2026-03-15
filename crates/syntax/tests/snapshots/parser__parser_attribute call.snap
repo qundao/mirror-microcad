@@ -69,14 +69,14 @@ Ok(
                                                             },
                                                             value: Literal(
                                                                 Literal {
-                                                                    span: 24..25,
+                                                                    span: 14..25,
                                                                     extras: ItemExtras {
                                                                         leading: [],
                                                                         trailing: [],
                                                                     },
                                                                     literal: String(
                                                                         StringLiteral {
-                                                                            span: 24..25,
+                                                                            span: 14..25,
                                                                             content: "fill:none",
                                                                         },
                                                                     ),
