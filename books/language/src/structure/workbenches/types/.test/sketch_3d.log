@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: sketch_3d
-  Expected result: todo_fail
+  Expected result: fail
       Source file: ../books/language/src/structure/workbenches/types/sketches.md:32
         Test path: ../books/language/src/structure/workbenches/types/.test
 
@@ -25,4 +25,4 @@
  35 │ }
     ╰────
 -- Test Result --
-FAILS AS EXPECTED (BUT IS TODO)
+FAILS AS EXPECTED

@@ -28,7 +28,7 @@ You will get an error if you generate a 3D model with a sketch:
 
 [![test](.test/sketch_3d.svg)](.test/sketch_3d.log)
 
-```µcad,sketch_3d#todo_fail
+```µcad,sketch_3d#fail
 sketch MySketch( radius: Length) {
     use std::geo3d::*;
     Sphere(radius) - Cube(size = radius);  // error: Sphere and Cube are 3D
