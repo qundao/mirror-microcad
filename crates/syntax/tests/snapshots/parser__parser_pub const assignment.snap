@@ -4,54 +4,42 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..20,
+        span: 0..18,
         statements: StatementList {
-            span: 0..20,
+            span: 0..18,
             extras: ItemExtras {
                 leading: [],
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..19,
+                Const(
+                    ConstAssignment {
+                        span: 0..17,
+                        keyword_span: 4..9,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
                         },
-                        attributes: [
-                            Attribute {
-                                span: 0..14,
-                                is_inner: false,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                commands: [
-                                    Ident(
-                                        Identifier {
-                                            span: 2..8,
-                                            name: "export",
-                                        },
-                                    ),
-                                ],
-                            },
-                        ],
+                        doc: None,
+                        attributes: [],
+                        visibility: Some(
+                            Public,
+                        ),
                         name: Identifier {
-                            span: 14..15,
-                            name: "a",
+                            span: 10..13,
+                            name: "FOO",
                         },
                         ty: None,
                         value: Literal(
                             Literal {
-                                span: 18..19,
+                                span: 16..17,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
                                 },
                                 literal: Integer(
                                     IntegerLiteral {
-                                        span: 18..19,
+                                        span: 16..17,
                                         value: 1,
                                     },
                                 ),

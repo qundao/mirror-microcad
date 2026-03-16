@@ -469,19 +469,8 @@ fn parser<'tokens>()
             .map(Statement::Expression)
             .boxed();
 
-        let assignment_qualifier = select_ref! {
-            Token::KeywordConst => AssignmentQualifier::Const,
-            Token::KeywordProp => AssignmentQualifier::Prop,
-        }
-        .then_whitespace()
-        .or_not()
-        .boxed();
-
-        let assignment_inner = doc_comment
+        let local_assignment_inner = attribute_parser
             .clone()
-            .then(attribute_parser.clone())
-            .then(visibility.then_whitespace().or_not())
-            .then(assignment_qualifier)
             .then(identifier_parser.clone())
             .then_maybe_whitespace()
             .then(
@@ -502,15 +491,60 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |(((((((doc, attributes), visibility), qualifier), name), ty), value), extras),
+                |((((attributes, name), ty), value), extras), e| LocalAssignment {
+                    span: e.span(),
+                    extras,
+                    attributes,
+                    name,
+                    value: Box::new(value),
+                    ty,
+                },
+            )
+            .boxed();
+
+        let local_assignment = local_assignment_inner
+            .clone()
+            .map(Statement::LocalAssignment)
+            .labelled("local assignment");
+
+        let const_assignment_inner = doc_comment
+            .clone()
+            .then(attribute_parser.clone())
+            .then(visibility.then_whitespace().or_not())
+            .then(just(Token::KeywordConst).map_with(|_, e| e.span()))
+            .then_maybe_whitespace()
+            .then(identifier_parser.clone())
+            .then_maybe_whitespace()
+            .then(
+                just(Token::SigilColon)
+                    .then_maybe_whitespace()
+                    .ignore_then(type_parser.clone())
+                    .then_maybe_whitespace()
+                    .or_not(),
+            )
+            .then_ignore(just(Token::OperatorAssignment))
+            .then_maybe_whitespace()
+            .then(
+                expression_parser.clone().recover_with(via_parser(
+                    semi_recovery
+                        .clone()
+                        .map_with(|_, e| Expression::Error(e.span())),
+                )),
+            )
+            .with_extras()
+            .map_with(
+                |(
+                    ((((((doc, attributes), visibility), keyword_span), name), ty), value),
+                    extras,
+                ),
                  e| {
-                    Assignment {
+                    ConstAssignment {
                         span: e.span(),
+                        keyword_span,
                         extras,
                         doc,
                         attributes,
                         visibility,
-                        qualifier,
                         name,
                         value: Box::new(value),
                         ty,
@@ -519,13 +553,105 @@ fn parser<'tokens>()
             )
             .boxed();
 
-        let assignment = assignment_inner
+        let const_assignment = const_assignment_inner
             .clone()
-            .map(Statement::Assignment)
-            .labelled("assignment");
+            .map(Statement::Const)
+            .labelled("const assignment");
+
+        // A pub assignment without the `const` keyword will eventually become a const assignment
+        let pub_assignment_inner = doc_comment
+            .clone()
+            .then(attribute_parser.clone())
+            .then(just(Token::KeywordPub).map_with(|_, e| e.span()))
+            .then_maybe_whitespace()
+            .then(identifier_parser.clone())
+            .then_maybe_whitespace()
+            .then(
+                just(Token::SigilColon)
+                    .then_maybe_whitespace()
+                    .ignore_then(type_parser.clone())
+                    .then_maybe_whitespace()
+                    .or_not(),
+            )
+            .then_ignore(just(Token::OperatorAssignment))
+            .then_maybe_whitespace()
+            .then(
+                expression_parser.clone().recover_with(via_parser(
+                    semi_recovery
+                        .clone()
+                        .map_with(|_, e| Expression::Error(e.span())),
+                )),
+            )
+            .with_extras()
+            .map_with(
+                |((((((doc, attributes), keyword_span), name), ty), value), extras), e| {
+                    ConstAssignment {
+                        span: e.span(),
+                        keyword_span,
+                        extras,
+                        doc,
+                        attributes,
+                        visibility: Some(Visibility::Public),
+                        name,
+                        value: Box::new(value),
+                        ty,
+                    }
+                },
+            )
+            .boxed();
+
+        let pub_assignment = pub_assignment_inner
+            .clone()
+            .map(Statement::Const)
+            .labelled("pub const assignment");
+
+        let property_assignment_inner = doc_comment
+            .clone()
+            .then(attribute_parser.clone())
+            .then(just(Token::KeywordProp).map_with(|_, e| e.span()))
+            .then_maybe_whitespace()
+            .then(identifier_parser.clone())
+            .then_maybe_whitespace()
+            .then(
+                just(Token::SigilColon)
+                    .then_maybe_whitespace()
+                    .ignore_then(type_parser.clone())
+                    .then_maybe_whitespace()
+                    .or_not(),
+            )
+            .then_ignore(just(Token::OperatorAssignment))
+            .then_maybe_whitespace()
+            .then(
+                expression_parser.clone().recover_with(via_parser(
+                    semi_recovery
+                        .clone()
+                        .map_with(|_, e| Expression::Error(e.span())),
+                )),
+            )
+            .with_extras()
+            .map_with(
+                |((((((doc, attributes), keyword_span), name), ty), value), extras), e| {
+                    PropertyAssignment {
+                        span: e.span(),
+                        keyword_span,
+                        extras,
+                        doc,
+                        attributes,
+                        name,
+                        value: Box::new(value),
+                        ty,
+                    }
+                },
+            )
+            .boxed();
+
+        let property_assignment = property_assignment_inner
+            .clone()
+            .map(Statement::Property)
+            .labelled("property assignment");
 
         attribute_parser.define({
-            let attribute_command = assignment_inner
+            let attribute_command = local_assignment_inner
                 .clone()
                 .map(AttributeCommand::Assignment)
                 .or(call_inner.clone().map(AttributeCommand::Call))
@@ -934,7 +1060,10 @@ fn parser<'tokens>()
 
         let with_semi = return_statement
             .or(use_statement)
-            .or(assignment)
+            .or(const_assignment)
+            .or(pub_assignment)
+            .or(property_assignment)
+            .or(local_assignment)
             .or(expression)
             .then_maybe_whitespace()
             .boxed();

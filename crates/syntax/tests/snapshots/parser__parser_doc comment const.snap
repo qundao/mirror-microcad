@@ -4,17 +4,18 @@ expression: parse(tokens.as_slice())
 ---
 Ok(
     SourceFile {
-        span: 0..26,
+        span: 0..32,
         statements: StatementList {
-            span: 0..26,
+            span: 0..32,
             extras: ItemExtras {
                 leading: [],
                 trailing: [],
             },
             statements: [
-                Assignment(
-                    Assignment {
-                        span: 0..25,
+                Const(
+                    ConstAssignment {
+                        span: 0..31,
+                        keyword_span: 20..25,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],
@@ -29,22 +30,21 @@ Ok(
                         ),
                         attributes: [],
                         visibility: None,
-                        qualifier: None,
                         name: Identifier {
-                            span: 20..21,
-                            name: "a",
+                            span: 26..27,
+                            name: "A",
                         },
                         ty: None,
                         value: Literal(
                             Literal {
-                                span: 24..25,
+                                span: 30..31,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
                                 },
                                 literal: Integer(
                                     IntegerLiteral {
-                                        span: 24..25,
+                                        span: 30..31,
                                         value: 1,
                                     },
                                 ),

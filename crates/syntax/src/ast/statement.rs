@@ -8,14 +8,22 @@ use crate::ast::{Call, Expression, Identifier, ItemExtras, StatementList, Type};
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub enum Statement {
+    /// Workbench statement producing a symbol.
     Workbench(WorkbenchDefinition),
+    /// Module statement producing a symbol.
     Module(ModuleDefinition),
+    /// Function statement producing a symbol.
     Function(FunctionDefinition),
-    Init(InitDefinition),
+    /// Use statement producing a symbol.
     Use(UseStatement),
+    /// Const statement producing a symbol.
+    Const(ConstAssignment),
+
+    Init(InitDefinition),
     Return(Return),
     InnerAttribute(Attribute),
-    Assignment(Assignment),
+    LocalAssignment(LocalAssignment),
+    Property(PropertyAssignment),
     Expression(ExpressionStatement),
     InnerDocComment(Comment),
     Comment(Comment),
@@ -25,19 +33,23 @@ pub enum Statement {
 impl Statement {
     /// Get the span for the statement
     pub fn span(&self) -> Span {
+        use Statement::*;
+
         match self {
-            Statement::Workbench(st) => st.span.clone(),
-            Statement::Module(st) => st.span.clone(),
-            Statement::Function(st) => st.span.clone(),
-            Statement::Init(st) => st.span.clone(),
-            Statement::Use(st) => st.span.clone(),
-            Statement::Return(st) => st.span.clone(),
-            Statement::InnerAttribute(st) => st.span.clone(),
-            Statement::Assignment(st) => st.span.clone(),
-            Statement::Expression(st) => st.span.clone(),
-            Statement::InnerDocComment(st) => st.span.clone(),
-            Statement::Comment(st) => st.span.clone(),
-            Statement::Error(span) => span.clone(),
+            Workbench(st) => st.span.clone(),
+            Module(st) => st.span.clone(),
+            Function(st) => st.span.clone(),
+            Use(st) => st.span.clone(),
+            Const(st) => st.span.clone(),
+            Init(st) => st.span.clone(),
+            Return(st) => st.span.clone(),
+            InnerAttribute(st) => st.span.clone(),
+            LocalAssignment(st) => st.span.clone(),
+            Property(st) => st.span.clone(),
+            Expression(st) => st.span.clone(),
+            InnerDocComment(st) => st.span.clone(),
+            Comment(st) => st.span.clone(),
+            Error(span) => span.clone(),
         }
     }
 }
@@ -193,7 +205,7 @@ pub struct Attribute {
 #[allow(missing_docs)]
 pub enum AttributeCommand {
     Ident(Identifier),
-    Assignment(Assignment),
+    Assignment(LocalAssignment),
     Call(Call),
 }
 
@@ -205,16 +217,42 @@ pub enum AssignmentQualifier {
     Prop,
 }
 
-/// An assignment statement
+/// A local assignment statement: `a = 42;`
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub struct Assignment {
+pub struct LocalAssignment {
     pub span: Span,
+    pub extras: ItemExtras,
+    pub attributes: Vec<Attribute>,
+    pub name: Identifier,
+    pub ty: Option<Type>,
+    pub value: Box<Expression>,
+}
+
+/// A const assignment: `const A = 42` / `pub A = 32`
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct ConstAssignment {
+    pub span: Span,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub qualifier: Option<AssignmentQualifier>,
+    pub name: Identifier,
+    pub ty: Option<Type>,
+    pub value: Box<Expression>,
+}
+
+/// A property assignment: `prop A = 42`
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct PropertyAssignment {
+    pub span: Span,
+    pub keyword_span: Span,
+    pub extras: ItemExtras,
+    pub doc: Option<Comment>,
+    pub attributes: Vec<Attribute>,
     pub name: Identifier,
     pub ty: Option<Type>,
     pub value: Box<Expression>,

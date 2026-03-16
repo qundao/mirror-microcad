@@ -42,17 +42,14 @@ Ok(
                                     trailing: [],
                                 },
                                 statements: [
-                                    Assignment(
-                                        Assignment {
+                                    LocalAssignment(
+                                        LocalAssignment {
                                             span: 38..43,
                                             extras: ItemExtras {
                                                 leading: [],
                                                 trailing: [],
                                             },
-                                            doc: None,
                                             attributes: [],
-                                            visibility: None,
-                                            qualifier: None,
                                             name: Identifier {
                                                 span: 38..39,
                                                 name: "a",
