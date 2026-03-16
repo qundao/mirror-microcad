@@ -45,11 +45,11 @@
     ·     ╰── Arguments match by identifier but have incompatible types: x: String != Scalar
  10 │ f("");      // error
     ╰────
-  × error: 10:4: Missing arguments: x
-    ╭─[../books/tests/src/auto_convert.md:10:4]
+  × error: 10:3: Missing arguments: x
+    ╭─[../books/tests/src/auto_convert.md:10:3]
   9 │ f(x="");    // error
  10 │ f("");      // error
-    ·    ┬
+    ·   ─┬
     ·    ╰── Missing arguments: x
  11 │ f(1.0);
     ╰────
@@ -69,11 +69,11 @@
     ·     ╰── Arguments match by identifier but have incompatible types: x: String != Integer
  19 │ g("");      // error
     ╰────
-  × error: 19:4: Missing arguments: x
-    ╭─[../books/tests/src/auto_convert.md:19:4]
+  × error: 19:3: Missing arguments: x
+    ╭─[../books/tests/src/auto_convert.md:19:3]
  18 │ g(x="");    // error
  19 │ g("");      // error
-    ·    ┬
+    ·   ─┬
     ·    ╰── Missing arguments: x
  20 │ g(1.0);     // error
     ╰────

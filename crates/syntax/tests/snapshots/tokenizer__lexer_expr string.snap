@@ -4,7 +4,7 @@ expression: "lex(input).collect::<Vec<_>>()"
 ---
 [
     SpannedToken {
-        span: 35..36,
+        span: 0..1,
         token: FormatStringStart,
     },
     SpannedToken {

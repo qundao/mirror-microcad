@@ -27,14 +27,14 @@ Ok(
                         ty: None,
                         value: Literal(
                             Literal {
-                                span: 8..11,
+                                span: 4..11,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
                                 },
                                 literal: Error(
                                     LiteralError {
-                                        span: 8..11,
+                                        span: 4..11,
                                         kind: Untypable,
                                     },
                                 ),

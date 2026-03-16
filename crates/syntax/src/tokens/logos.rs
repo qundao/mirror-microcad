@@ -5,6 +5,7 @@ use crate::tokens::{LexerError, SpannedToken};
 use logos::internal::LexerInternal;
 use logos::{Lexer, Logos};
 use std::borrow::Cow;
+use crate::Span;
 
 #[derive(Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
@@ -168,7 +169,10 @@ pub enum NormalToken<'a> {
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum QuoteVariant<'a> {
-    String(Vec<SpannedToken<StringToken<'a>>>),
+    String {
+        span: Span,
+        contents: Vec<SpannedToken<StringToken<'a>>>,
+    },
     Unit,
 }
 
@@ -209,13 +213,18 @@ fn string_token_callback<'a>(
         return Ok(QuoteVariant::Unit);
     }
 
+    let span_start = lex.span().start;
     let mut string_lexer = lex.clone().morph::<StringToken>();
     let mut tokens = Vec::new();
     while let Some(token) = string_lexer.next() {
         match token {
             Ok(StringToken::Quote) => {
                 *lex = string_lexer.morph();
-                return Ok(QuoteVariant::String(tokens));
+                let span_end = lex.span().end;
+                return Ok(QuoteVariant::String {
+                    span: span_start..span_end,
+                    contents: tokens,
+                });
             }
             Err(e) => {
                 let start = lex.span().start;
@@ -301,9 +310,9 @@ fn format_token_callback<'a>(
                 with_format = true;
                 break;
             }
-            Ok(NormalToken::Quote(QuoteVariant::String(content))) => {
+            Ok(NormalToken::Quote(QuoteVariant::String { contents, .. })) => {
                 let start = lex.span().start;
-                let end = content
+                let end = contents
                     .first()
                     .map(|t| t.span.start)
                     .unwrap_or_else(|| expression_lexer.span().start);

@@ -154,21 +154,21 @@ fn map_normal_token(token: SpannedToken<NormalToken>) -> impl Iterator<Item = Sp
         NormalToken::Quote(QuoteVariant::Unit) => {
             Either::Left(once(SpannedToken::new(token.span, Token::SigilQuote)))
         }
-        NormalToken::Quote(QuoteVariant::String(tokens)) => {
-            Either::Right(match get_literal_string(&tokens) {
+        NormalToken::Quote(QuoteVariant::String { span, contents }) => {
+            Either::Right(match get_literal_string(&contents) {
                 Some(literal) => Box::new(once(SpannedToken::new(
-                    token.span,
+                    span,
                     Token::LiteralString(literal.into()),
                 )))
                     as Box<dyn Iterator<Item = SpannedToken<Token>>>,
                 None => Box::new(
                     once(SpannedToken::new(
-                        token.span.start..(token.span.start + 1),
+                        span.start..(span.start + 1),
                         Token::FormatStringStart,
                     ))
-                    .chain(tokens.into_iter().flat_map(map_string_token))
+                    .chain(contents.into_iter().flat_map(map_string_token))
                     .chain(once(SpannedToken::new(
-                        (token.span.end - 1)..token.span.end,
+                        (span.end - 1)..span.end,
                         Token::FormatStringEnd,
                     ))),
                 ) as Box<dyn Iterator<Item = SpannedToken<Token>>>,

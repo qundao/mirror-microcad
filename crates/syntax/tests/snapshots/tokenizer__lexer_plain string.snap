@@ -1,10 +1,10 @@
 ---
 source: crates/syntax/tests/tokenizer.rs
-expression: lex(input)
+expression: "lex(input).collect::<Vec<_>>()"
 ---
 [
     SpannedToken {
-        span: 13..14,
+        span: 0..14,
         token: LiteralString(
             "plain string",
         ),
