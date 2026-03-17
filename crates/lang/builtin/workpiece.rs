@@ -4,10 +4,9 @@
 //! Builtin function evaluation entity
 
 use custom_debug::Debug;
+use microcad_lang_base::SrcRef;
 
-use crate::{
-    builtin::*, eval::*, model::*, render::*, resolve::*, src_ref::*, syntax::*, value::*,
-};
+use crate::{builtin::*, eval::*, model::*, render::*, resolve::*, syntax::*, value::*};
 
 /// The return value when calling a built-in workpiece.
 pub enum BuiltinWorkpieceOutput {
@@ -113,7 +112,7 @@ pub trait BuiltinWorkbenchDefinition {
         &|params, args, context| {
             log::trace!(
                 "Built-in workbench {call} {id:?}({args})",
-                call = crate::mark!(CALL),
+                call = microcad_lang_base::mark!(CALL),
                 id = Self::id()
             );
             Ok(Value::Model(

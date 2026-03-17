@@ -1,9 +1,10 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{diag::*, resolve::*, syntax::*, tree_display::FormatTree, value::*};
+use crate::{resolve::*, syntax::*, value::*};
 use derive_more::{Deref, DerefMut};
 use indexmap::IndexMap;
+use microcad_lang_base::{FormatTree, WriteToFile};
 
 /// Map Id to SymbolNode reference
 #[derive(Default, Clone, Deref, DerefMut)]

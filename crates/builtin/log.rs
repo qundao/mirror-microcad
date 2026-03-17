@@ -8,7 +8,8 @@ use microcad_builtin_proc_macros::builtin_mod;
 #[allow(clippy::module_inception)]
 pub mod log {
     use microcad_builtin_proc_macros::builtin_fn;
-    use microcad_lang::{diag::*, eval::*, parameter, value::*};
+    use microcad_lang::{eval::*, parameter, value::*};
+    use microcad_lang_base::{DiagError, PushDiag};
 
     /// Log error.
     #[builtin_fn(x)]

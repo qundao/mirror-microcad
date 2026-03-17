@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use derive_more::From;
+use microcad_lang_base::SrcReferrer;
+use std::rc::Rc;
 
-use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, value::*};
+use crate::{builtin::*, resolve::*, syntax::*, value::*};
 
 /// Symbol definition
 #[derive(Clone, Default, From)]

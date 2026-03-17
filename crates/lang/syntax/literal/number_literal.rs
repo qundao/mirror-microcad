@@ -3,7 +3,9 @@
 
 //! Number literal syntax element
 
-use crate::{src_ref::*, syntax::*, ty::*, value::*};
+use microcad_lang_base::{SrcRef, SrcReferrer};
+
+use crate::{syntax::*, ty::*, value::*};
 
 /// Number literal.
 #[derive(Clone, PartialEq)]

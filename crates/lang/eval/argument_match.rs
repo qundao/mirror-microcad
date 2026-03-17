@@ -5,6 +5,8 @@
 
 use crate::{eval::*, value::*};
 
+use microcad_lang_base::SrcReferrer;
+
 /// Match priorities
 ///
 /// Argument matching in µcad is complex and comes in several priority layers.
@@ -172,7 +174,7 @@ impl<'a> ArgumentMatch<'a> {
                     let (id, _) = self.params.swap_remove(n);
                     log::trace!(
                         "{found} parameter by id: {id:?}",
-                        found = crate::mark!(MATCH)
+                        found = microcad_lang_base::mark!(MATCH)
                     );
                     self.priority.set_once(priority);
                     self.result.insert((*id).clone(), arg.value.clone());
@@ -239,7 +241,7 @@ impl<'a> ArgumentMatch<'a> {
                 if same_type.next().is_none() {
                     log::trace!(
                         "{found} parameter by type: {id:?}",
-                        found = crate::mark!(MATCH)
+                        found = microcad_lang_base::mark!(MATCH)
                     );
                     self.priority.set_once(priority);
                     self.result.insert(id.clone(), arg.value.clone());
@@ -268,7 +270,7 @@ impl<'a> ArgumentMatch<'a> {
                 if def.ty() == param.ty() {
                     log::trace!(
                         "{found} argument by default: {id:?} = {def}",
-                        found = crate::mark!(MATCH)
+                        found = microcad_lang_base::mark!(MATCH)
                     );
                     self.priority.set_once(priority);
                     self.result.insert((*id).clone(), def.clone());

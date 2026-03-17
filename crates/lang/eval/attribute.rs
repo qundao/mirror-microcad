@@ -9,6 +9,7 @@ use crate::{
     parameter,
     syntax::{self, *},
 };
+use microcad_lang_base::{PushDiag, SrcRef};
 use miette::Diagnostic;
 use std::str::FromStr;
 

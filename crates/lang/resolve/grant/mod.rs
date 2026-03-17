@@ -6,8 +6,9 @@
 mod context;
 mod scope;
 
-use crate::src_ref::{SrcRef, SrcReferrer};
 use crate::{resolve::*, syntax::*};
+use microcad_lang_base::{DiagResult, PushDiag, SrcRef, SrcReferrer};
+
 pub(crate) use context::*;
 pub(crate) use scope::*;
 

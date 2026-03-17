@@ -3,7 +3,9 @@
 
 //! Parameter value evaluation entity
 
-use crate::{src_ref::*, ty::*, value::*};
+use microcad_lang_base::SrcReferrer;
+
+use crate::{ty::*, value::*};
 
 /// Parameter value is the result of evaluating a parameter
 #[derive(Clone, Default)]
@@ -80,6 +82,8 @@ impl SrcReferrer for ParameterValue {
 
 #[test]
 fn test_is_list_of() {
-    assert!(Type::Array(Box::new(QuantityType::Scalar.into()))
-        .is_array_of(&QuantityType::Scalar.into()));
+    assert!(
+        Type::Array(Box::new(QuantityType::Scalar.into()))
+            .is_array_of(&QuantityType::Scalar.into())
+    );
 }

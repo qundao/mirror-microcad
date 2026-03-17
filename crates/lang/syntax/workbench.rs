@@ -3,8 +3,9 @@
 
 //! Workbench definition syntax element
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 use custom_debug::Debug;
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use strum::Display;
 
 /// Kind of a [`WorkbenchDefinition`].

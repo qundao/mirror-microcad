@@ -3,7 +3,8 @@
 
 //! µcad source file representation
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
 /// µcad source file
@@ -45,9 +46,9 @@ impl SourceFile {
     }
     /// Return filename of loaded file or `<no file>`
     pub fn filename(&self) -> std::path::PathBuf {
-        self.filename
-            .clone()
-            .unwrap_or(std::path::PathBuf::from(crate::invalid_no_ansi!(SOURCE)))
+        self.filename.clone().unwrap_or(std::path::PathBuf::from(
+            microcad_lang_base::invalid_no_ansi!(SOURCE),
+        ))
     }
 
     /// Return filename of loaded file or `<no file>`
@@ -65,7 +66,7 @@ impl SourceFile {
         self.filename
             .as_ref()
             .map(|f| f.to_str().expect("File name error {filename:?}"))
-            .unwrap_or(crate::invalid!(SOURCE))
+            .unwrap_or(microcad_lang_base::invalid!(SOURCE))
     }
 
     /// Return the module name from the file name
@@ -133,7 +134,7 @@ impl TreeDisplay for SourceFile {
 }
 
 impl SrcReferrer for SourceFile {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         SrcRef::new(0..self.num_lines(), 0, 0, self.hash)
     }
 }
@@ -166,8 +167,8 @@ impl MietteSourceFile<'static> {
     /// Create an invalid source file for when we can't load the source
     pub fn invalid() -> Self {
         MietteSourceFile {
-            source: crate::invalid_no_ansi!(FILE),
-            name: crate::invalid_no_ansi!(FILE).into(),
+            source: microcad_lang_base::invalid_no_ansi!(FILE),
+            name: microcad_lang_base::invalid_no_ansi!(FILE).into(),
             line_offset: 0,
         }
     }

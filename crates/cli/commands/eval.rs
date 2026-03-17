@@ -3,11 +3,12 @@
 
 //! µcad CLI eval commands
 
-use microcad_lang::{diag::*, eval::*, model::Model, tree_display::*};
+use microcad_lang::{eval::*, model::Model};
+use microcad_lang_base::{Diag, FormatTree};
 
 use crate::{
-    commands::{Resolve, RunCommand},
     Cli,
+    commands::{Resolve, RunCommand},
 };
 
 #[derive(clap::Parser)]

@@ -3,6 +3,8 @@
 
 //! Workbench definition syntax element evaluation
 
+use microcad_lang_base::{SrcRef, SrcReferrer};
+
 use crate::{eval::*, model::*, render::Hashed, syntax::*};
 
 impl WorkbenchDefinition {
@@ -106,7 +108,7 @@ impl WorkbenchDefinition {
     ) -> EvalResult<Model> {
         log::debug!(
             "{call} workbench {kind} {id:?}({arguments:?})",
-            call = crate::mark!(CALL),
+            call = microcad_lang_base::mark!(CALL),
             id = self.id_ref(),
             kind = self.kind
         );
@@ -136,9 +138,9 @@ impl WorkbenchDefinition {
                 Ok(m) => format!(
                     "{match_} [{priority:>10}]",
                     priority = m.priority,
-                    match_ = crate::mark!(MATCH)
+                    match_ = microcad_lang_base::mark!(MATCH)
                 ),
-                Err(_) => crate::mark!(NO_MATCH),
+                Err(_) => microcad_lang_base::mark!(NO_MATCH),
             };
             if let Some(i) = i {
                 log::debug!("{result} {}::init({})", symbol.full_name(), i.parameters)
@@ -186,7 +188,7 @@ impl WorkbenchDefinition {
                     "{match_} Ambiguous initialization: {name}({arguments})\nCould be one of:\n{ambiguous}",
                     name = symbol.full_name(),
                     ambiguous = ambiguous.join("\n"),
-                    match_ = crate::mark!(AMBIGUOUS)
+                    match_ = microcad_lang_base::mark!(AMBIGUOUS)
                 );
                 context.error(
                     arguments,
@@ -212,7 +214,7 @@ impl WorkbenchDefinition {
                         .map(|m| format!("{m:?}"))
                         .collect::<Vec<_>>()
                         .join("\n"),
-                    match_ = crate::mark!(MATCH!)
+                    match_ = microcad_lang_base::mark!(MATCH!)
                 );
 
                 // evaluate models for all multiplicity matches
@@ -228,7 +230,7 @@ impl WorkbenchDefinition {
         } else {
             log::debug!(
                 "{match_} Neither the building plan nor any initializer matches arguments",
-                match_ = crate::mark!(NO_MATCH!)
+                match_ = microcad_lang_base::mark!(NO_MATCH!)
             );
             context.error(
                 arguments,

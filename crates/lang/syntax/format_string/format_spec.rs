@@ -3,7 +3,7 @@
 
 //! Format Specification syntax element
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// Format specification.
 #[derive(Clone, Default, PartialEq)]

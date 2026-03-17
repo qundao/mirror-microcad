@@ -3,12 +3,9 @@
 
 //! Doc trait.
 
-use crate::{
-    builtin::Builtin,
-    resolve::*,
-    src_ref::{Refer, SrcRef},
-    syntax::*,
-};
+use crate::{builtin::Builtin, resolve::*, syntax::*};
+
+use microcad_lang_base::{Refer, SrcRef};
 
 /// Documentation trait to fetch documentation from a [Symbol].
 ///

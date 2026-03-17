@@ -3,7 +3,7 @@
 
 //! Check wether a statement is legally placed.
 
-use crate::src_ref::{SrcRef, SrcReferrer};
+use microcad_lang_base::{SrcRef, SrcReferrer};
 
 #[derive(Copy, Clone, PartialEq)]
 pub(crate) enum ScopeType {

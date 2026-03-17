@@ -3,7 +3,9 @@
 
 //! If statement syntax elements.
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// If statement.
 #[derive(Clone)]

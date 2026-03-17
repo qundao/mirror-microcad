@@ -3,7 +3,9 @@
 
 //! Method call syntax elements.
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// Method call syntax entity.
 #[derive(Clone)]

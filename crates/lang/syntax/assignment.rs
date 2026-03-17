@@ -3,7 +3,9 @@
 
 //! µcad assignment syntax element
 
-use crate::{src_ref::*, syntax::*, ty::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::{syntax::*, ty::*};
 
 /// Assignment specifying an identifier, type and value
 #[derive(Clone)]

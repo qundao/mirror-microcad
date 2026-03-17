@@ -3,7 +3,8 @@
 
 //! Import values from TOML
 
-use microcad_lang::{builtin::*, src_ref::*, value::*, Id};
+use microcad_lang::{builtin::*, value::*};
+use microcad_lang_base::{Id, SrcRef};
 
 /// Import TOML files into a tuple.
 pub struct TomlImporter;
@@ -52,7 +53,7 @@ impl Importer for TomlImporter {
 }
 
 impl FileIoInterface for TomlImporter {
-    fn id(&self) -> microcad_lang::Id {
+    fn id(&self) -> Id {
         Id::new("toml")
     }
 }

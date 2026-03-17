@@ -4,8 +4,9 @@
 //! Body syntax element.
 
 use derive_more::Deref;
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 
 /// [StatementList] from inside `{}` brackets.
 #[derive(Clone, Default, Deref)]

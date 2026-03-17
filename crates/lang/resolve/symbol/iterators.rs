@@ -63,10 +63,8 @@ impl Iterator for RecurseChildren {
 
 #[test]
 fn test_recurse_children() {
-    use crate::rc::*;
-
     let mut root = Symbol::new(
-        SymbolDef::SourceFile(Rc::new(SourceFile::new(
+        SymbolDef::SourceFile(std::rc::Rc::new(SourceFile::new(
             None,
             StatementList::default(),
             String::new(),

@@ -99,9 +99,9 @@ impl Diagnostic {
         match &src_ref {
             SrcRef(None) => writeln!(f, "{}: {}", self.level(), self.message())?,
             SrcRef(Some(_)) => {
-                let miette_source = match source_by_hash.get_by_hash(hash) {
+                let miette_source = match source_by_hash.get_str_by_hash(hash) {
                     Some(source) => MietteSourceFile {
-                        source,
+                        source: &source,
                         name: make_relative(
                             &source_by_hash
                                 .get_filename_by_hash(hash)

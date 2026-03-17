@@ -1,6 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_lang_base::SrcRef;
+
 use crate::{eval::*, model::*};
 
 /// Frame in [Stack] for *local variables*, *aliases* (*use statements*) and *calls*.
@@ -169,10 +171,8 @@ impl StackFrame {
                 #[cfg(test)]
                 SymbolDef::Tester(id) => format!("{id:?} (tester)"),
             });
-            if cfg!(feature = "ansi-color") && symbol.is_used() {
+            if symbol.is_used() {
                 writeln!(f, "{:depth$}- {entry}", "")?;
-            } else {
-                color_print::cwriteln!(f, "{:depth$}- <#606060>{entry}</>", "",)?;
             }
         }
 
@@ -207,7 +207,7 @@ impl StackFrame {
                         filename = source_file
                             .as_ref()
                             .map(|sf| sf.filename_as_str())
-                            .unwrap_or(crate::invalid!(FILE)),
+                            .unwrap_or(microcad_lang_base::invalid!(FILE)),
                     )?;
                 }
             }

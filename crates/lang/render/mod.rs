@@ -15,17 +15,17 @@ pub use attribute::*;
 pub use cache::*;
 pub use context::*;
 pub use hash::*;
+use microcad_lang_base::FormatTree;
 pub use output::*;
 
 use cgmath::SquareMatrix;
-use miette::Diagnostic;
 use microcad_core::*;
+use miette::Diagnostic;
 use thiserror::Error;
 
 use crate::{
     builtin::{BuiltinWorkbenchKind, BuiltinWorkpiece, BuiltinWorkpieceOutput},
     model::*,
-    tree_display::FormatTree,
 };
 
 /// An error that occurred during rendering.

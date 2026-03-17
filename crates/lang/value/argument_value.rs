@@ -3,7 +3,9 @@
 
 //! Argument value evaluation entity
 
-use crate::{src_ref::*, syntax::*, ty::*, value::*};
+use microcad_lang_base::{SrcRef, SrcReferrer};
+
+use crate::{syntax::*, ty::*, value::*};
 
 /// Argument value.
 #[derive(Clone)]

@@ -9,6 +9,8 @@ mod symbol_map;
 mod symbols;
 
 use indexmap::IndexSet;
+use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
 pub use iterators::*;
 pub use symbol_definition::*;
 pub use symbol_info::*;
@@ -17,7 +19,7 @@ pub(crate) use symbols::*;
 
 use symbol_inner::*;
 
-use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*, value::*};
+use crate::{builtin::*, resolve::*, syntax::*, value::*};
 
 /// Symbol
 #[derive(Clone)]
@@ -657,7 +659,7 @@ impl Symbol {
         let visibility = self.visibility();
         let hash = self.source_hash();
         let depth = state.depth;
-        if state.debug && cfg!(feature = "ansi-color") {
+        if state.debug {
             if self.is_used() {
                 write!(
                     f,
@@ -808,7 +810,7 @@ impl Lookup for Symbol {
     fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
         log::trace!(
             "{lookup} for global symbol '{name:?}'",
-            lookup = crate::mark!(LOOKUP)
+            lookup = microcad_lang_base::mark!(LOOKUP)
         );
         self.deny_super(name)?;
 
@@ -819,7 +821,7 @@ impl Lookup for Symbol {
                 } else {
                     log::trace!(
                         "{not_found} global symbol: {name:?}",
-                        not_found = crate::mark!(NOT_FOUND),
+                        not_found = microcad_lang_base::mark!(NOT_FOUND),
                     );
                     return Err(ResolveError::WrongTarget);
                 }
@@ -827,14 +829,14 @@ impl Lookup for Symbol {
             Err(err) => {
                 log::trace!(
                     "{not_found} global symbol: {name:?}",
-                    not_found = crate::mark!(NOT_FOUND),
+                    not_found = microcad_lang_base::mark!(NOT_FOUND),
                 );
                 return Err(err)?;
             }
         };
         log::trace!(
             "{found} global symbol: {symbol:?}",
-            found = crate::mark!(FOUND),
+            found = microcad_lang_base::mark!(FOUND),
         );
         Ok(symbol)
     }

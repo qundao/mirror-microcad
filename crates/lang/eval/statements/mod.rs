@@ -5,6 +5,8 @@
 // Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_lang_base::PushDiag;
+
 use crate::{eval::*, model::*};
 
 mod assignment_statement;

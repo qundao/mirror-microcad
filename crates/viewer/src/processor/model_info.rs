@@ -9,8 +9,8 @@ use microcad_core::*;
 use microcad_lang::{
     model::{Model, OutputType},
     render::ComputedHash,
-    src_ref::{SrcRef, SrcReferrer},
 };
+use microcad_lang_base::{SrcRef, SrcReferrer};
 
 use crate::{ToBevy, processor::registry};
 

@@ -10,10 +10,11 @@ mod tuple_expression;
 
 pub use array_expression::*;
 pub use marker::*;
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 pub use range_expression::*;
 pub use tuple_expression::*;
 
-use crate::{src_ref::*, syntax::*, value::*};
+use crate::{syntax::*, value::*};
 
 /// List of expressions.
 pub type ListExpression = Vec<Expression>;
@@ -120,7 +121,7 @@ impl SingleIdentifier for Expression {
 }
 
 impl SrcReferrer for Expression {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         match self {
             Self::Invalid => SrcRef(None),
             Self::Literal(l) => l.src_ref(),
@@ -277,7 +278,7 @@ impl TreeDisplay for Expression {
             Expression::If(if_) => if_.tree_print(f, depth),
             Expression::QualifiedName(qualified_name) => qualified_name.tree_print(f, depth),
             Expression::Marker(marker) => marker.tree_print(f, depth),
-            Expression::Invalid => write!(f, "{}", crate::invalid!(EXPRESSION)),
+            Expression::Invalid => write!(f, "{}", microcad_lang_base::invalid!(EXPRESSION)),
         }
     }
 }

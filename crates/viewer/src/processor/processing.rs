@@ -4,11 +4,11 @@
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
 use microcad_lang::{
-    diag::Diag,
     model::Model,
     render::{GeometryOutput, RenderContext, RenderWithContext},
     syntax::SourceFile,
 };
+use microcad_lang_base::Diag;
 
 use crate::{
     processor::{
@@ -127,7 +127,7 @@ impl Processor {
                     source_file.clone(),
                     &self.context.search_paths,
                     Some(microcad_builtin::builtin_module()),
-                    microcad_lang::diag::DiagHandler::default(),
+                    microcad_lang_base::DiagHandler::default(),
                 )?;
 
                 let mut eval_context = microcad_lang::eval::EvalContext::new(

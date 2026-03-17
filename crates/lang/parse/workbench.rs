@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{parse::*, parser::*, rc::*, syntax::*};
+use crate::{parse::*, parser::*, syntax::*};
 use microcad_syntax::ast;
 
 impl From<ast::WorkbenchKind> for WorkbenchKind {
@@ -13,11 +13,11 @@ impl From<ast::WorkbenchKind> for WorkbenchKind {
         }
     }
 }
-impl FromAst for Rc<WorkbenchDefinition> {
+impl FromAst for std::rc::Rc<WorkbenchDefinition> {
     type AstNode = ast::WorkbenchDefinition;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        Ok(Rc::new(WorkbenchDefinition {
+        Ok(std::rc::Rc::new(WorkbenchDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: node
                 .doc

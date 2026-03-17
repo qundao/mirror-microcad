@@ -1,7 +1,11 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{builtin::*, rc::*, src_ref::*, syntax::*, value::*};
+use std::rc::Rc;
+
+use microcad_lang_base::{SrcRef, SrcReferrer};
+
+use crate::{builtin::*, syntax::*, value::*};
 
 /// Retrieve symbol information.
 pub trait Info {

@@ -3,7 +3,8 @@
 
 //! µcad CLI resolve command.
 
-use microcad_lang::{diag::*, resolve::*};
+use microcad_lang::resolve::*;
+use microcad_lang_base::{Diag, DiagHandler};
 
 use crate::*;
 

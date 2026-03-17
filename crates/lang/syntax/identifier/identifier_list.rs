@@ -1,8 +1,9 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 
 /// A list of identifiers
 ///
@@ -19,7 +20,7 @@ impl IdentifierList {
 }
 
 impl SrcReferrer for IdentifierList {
-    fn src_ref(&self) -> identifier::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.0.src_ref()
     }
 }

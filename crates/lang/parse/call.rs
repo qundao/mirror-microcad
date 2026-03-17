@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{ord_map::*, parse::*, parser::*, syntax::*};
+use microcad_lang_base::Refer;
 use microcad_syntax::ast;
 
 impl FromAst for Call {
@@ -25,10 +26,7 @@ impl FromAst for ArgumentList {
         for arg in &node.arguments {
             argument_list
                 .try_push(Argument::from_ast(arg, context)?)
-                .map_err(|(previous, id)| ParseError::DuplicateArgument {
-                    previous,
-                    id,
-                })?;
+                .map_err(|(previous, id)| ParseError::DuplicateArgument { previous, id })?;
         }
         Ok(argument_list)
     }

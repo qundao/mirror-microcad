@@ -3,7 +3,9 @@
 
 //! Return statement syntax elements.
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// Return statement.
 #[derive(Clone)]
@@ -27,7 +29,7 @@ impl std::fmt::Display for ReturnStatement {
         if let Some(result) = &self.result {
             write!(f, "{result}")
         } else {
-            write!(f, crate::invalid_no_ansi!(RESULT))
+            write!(f, microcad_lang_base::invalid_no_ansi!(RESULT))
         }
     }
 }
@@ -37,7 +39,7 @@ impl std::fmt::Debug for ReturnStatement {
         if let Some(result) = &self.result {
             write!(f, "{result:?}")
         } else {
-            write!(f, crate::invalid!(RESULT))
+            write!(f, microcad_lang_base::invalid!(RESULT))
         }
     }
 }

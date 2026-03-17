@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, syntax::*};
+use microcad_lang_base::{Refer, SrcRef};
 use microcad_syntax::ast;
 use microcad_syntax::ast::LiteralErrorKind;
 use std::str::FromStr;
@@ -64,10 +65,7 @@ impl std::str::FromStr for NumberLiteral {
                 error: LiteralErrorKind::Float(e),
                 src_ref: SrcRef::default(),
             })?;
-        let unit = s
-            .get(num_bytes..)
-            .map(Unit::from_str)
-            .transpose()?;
+        let unit = s.get(num_bytes..).map(Unit::from_str).transpose()?;
         Ok(NumberLiteral(
             value,
             unit.unwrap_or_default(),
@@ -148,7 +146,10 @@ impl std::str::FromStr for Unit {
             "g/m³" => Ok(Self::GramPerMeter3),
 
             // Unknown
-            _ => Err(ParseError::UnknownUnit(Refer::new(s.into(), SrcRef::default()))),
+            _ => Err(ParseError::UnknownUnit(Refer::new(
+                s.into(),
+                SrcRef::default(),
+            ))),
         }
     }
 }

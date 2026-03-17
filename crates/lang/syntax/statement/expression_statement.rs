@@ -3,7 +3,9 @@
 
 //! Expression statement syntax elements
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// An assignment statement, e.g. `#[aux] s = Sphere(3.0mm);`.
 #[derive(Clone)]

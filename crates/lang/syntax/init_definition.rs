@@ -3,7 +3,9 @@
 
 //! Initialization definition syntax element
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// Workbench *initializer* definition
 ///

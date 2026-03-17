@@ -3,7 +3,7 @@
 
 //! Documentation block syntax element
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// Retrieve doc from symbol definition.
 pub trait Doc {
@@ -77,7 +77,7 @@ impl TreeDisplay for DocBlock {
             f,
             "{:depth$}DocBlock: '{}'",
             "",
-            crate::shorten!(self.0.first().cloned().unwrap_or_default())
+            microcad_lang_base::shorten!(self.0.first().cloned().unwrap_or_default())
         )
     }
 }

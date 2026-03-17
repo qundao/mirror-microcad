@@ -1,6 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_lang_base::SrcReferrer;
+
 use crate::{eval::*, model::*, resolve::*};
 
 /// A stack with a list of stack frames.
@@ -164,7 +166,7 @@ impl Stack {
             frame.print_stack(f, source_by_hash, idx)?;
         }
         if none {
-            writeln!(f, crate::invalid!(STACK))?
+            writeln!(f, microcad_lang_base::invalid!(STACK))?
         }
         Ok(())
     }
@@ -178,7 +180,7 @@ impl Lookup<EvalError> for Stack {
     fn lookup(&self, name: &QualifiedName, _: LookupTarget) -> EvalResult<Symbol> {
         log::trace!(
             "{lookup} for local symbol '{name:?}'",
-            lookup = crate::mark!(LOOKUP)
+            lookup = microcad_lang_base::mark!(LOOKUP)
         );
         self.deny_super(name)?;
 
@@ -191,7 +193,7 @@ impl Lookup<EvalError> for Stack {
                 Err(err) => {
                     log::trace!(
                         "{not_found} local symbol: {name:?}",
-                        not_found = crate::mark!(NOT_FOUND),
+                        not_found = microcad_lang_base::mark!(NOT_FOUND),
                     );
                     return Err(err);
                 }
@@ -203,14 +205,14 @@ impl Lookup<EvalError> for Stack {
             Ok(symbol) => {
                 log::trace!(
                     "{found} local symbol: {symbol:?}",
-                    found = crate::mark!(FOUND),
+                    found = microcad_lang_base::mark!(FOUND),
                 );
                 Ok(symbol)
             }
             Err(err) => {
                 log::trace!(
                     "{not_found} local symbol: {name:?}",
-                    not_found = crate::mark!(NOT_FOUND),
+                    not_found = microcad_lang_base::mark!(NOT_FOUND),
                 );
                 Err(err)
             }
@@ -317,7 +319,7 @@ impl Locals for Stack {
 impl std::fmt::Debug for Stack {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if self.0.is_empty() {
-            writeln!(f, crate::invalid!(STACK))
+            writeln!(f, microcad_lang_base::invalid!(STACK))
         } else {
             for (n, locals) in self.0.iter().enumerate() {
                 locals.print_locals(f, n, 0)?;

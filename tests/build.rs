@@ -54,7 +54,7 @@ fn main() {
                 root,
                 &search_paths,
                 Some(microcad_builtin::builtin_module()),
-                microcad_lang::diag::DiagHandler::default(),
+                microcad_lang_base::DiagHandler::default(),
             )
             .expect("No error");
             context

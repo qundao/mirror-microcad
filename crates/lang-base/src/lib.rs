@@ -16,9 +16,11 @@ pub type Id = compact_str::CompactString;
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
-pub use diag::{Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, PushDiag};
+pub use diag::{
+    Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Level, PushDiag,
+};
 pub use rc::{Rc, RcMut};
-pub use src_ref::{SrcRef, SrcRefInner, SrcReferrer};
+pub use src_ref::{Refer, SrcRef, SrcRefInner, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 /// A compatibility layer for using SourceFile with miette
@@ -64,8 +66,8 @@ impl SourceCode for MietteSourceFile<'_> {
 
 /// Trait that can fetch for a file by it's hash value.
 pub trait GetSourceStrByHash {
-    /// Find a source file by it's hash value.
-    fn get_by_hash<'a>(&self, hash: u64) -> Option<&'a str>;
+    /// Get a source string by it's hash value.
+    fn get_str_by_hash<'a>(&'a self, hash: u64) -> Option<&'a str>;
 
     /// Get filename by hash
     fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf>;

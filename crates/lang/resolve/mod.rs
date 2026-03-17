@@ -6,13 +6,13 @@
 //! After parsing a source file (see [`mod@crate::parse`]) it must be resolved to get a symbol out of it:
 //!
 //! ```no_run
-//! use microcad_lang::{syntax::*, parse::*, resolve::*, diag::*};
+//! use microcad_lang::{syntax::*, parse::*, resolve::*};
 //! let source_file = SourceFile::load("my.µcad").expect("parsing success");
 //! let mut context = ResolveContext::create(
 //!     source_file,
 //!     &["./std/lib"],
 //!     None,
-//!     DiagHandler::default(),
+//!     microcad_lang_base::DiagHandler::default(),
 //! ).unwrap();
 //! ```
 //!
@@ -27,7 +27,7 @@ mod sources;
 mod symbol;
 mod symbolize;
 
-use crate::{diag::*, syntax::*};
+use crate::syntax::*;
 pub use externals::*;
 pub use lookup::*;
 pub use resolve_context::*;

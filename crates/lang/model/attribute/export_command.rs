@@ -6,11 +6,11 @@
 use crate::{
     builtin::{ExportError, Exporter},
     model::Model,
-    rc::RcMut,
     render::{RenderCache, RenderContext},
     value::Value,
 };
 use microcad_core::RenderResolution;
+use microcad_lang_base::RcMut;
 
 /// Export attribute, e.g. `#[export: "output.svg"]`.
 #[derive(Clone)]
@@ -36,7 +36,7 @@ impl ExportCommand {
             RenderContext::new(model, self.resolution.clone(), Some(render_cache), None)?;
         log::trace!(
             "Pre-rendered model:\n{}",
-            crate::tree_display::FormatTree(model)
+            microcad_lang_base::FormatTree(model)
         );
 
         use crate::render::RenderWithContext;

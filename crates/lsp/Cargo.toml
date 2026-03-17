@@ -30,6 +30,7 @@ tracing = "0.1"
 tracing-subscriber = "0.3"
 
 microcad-lang = { workspace = true }
+microcad-lang-base = { workspace = true }
 microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
 microcad-export = { workspace = true }

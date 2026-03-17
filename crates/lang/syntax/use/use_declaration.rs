@@ -3,7 +3,8 @@
 
 //! Use statement syntax element.
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use strum::IntoStaticStr;
 
 /// Use declaration.

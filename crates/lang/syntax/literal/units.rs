@@ -3,7 +3,9 @@
 
 //! µcad unit syntax element.
 
-use crate::{syntax::*, ty::*};
+use microcad_lang_base::{TreeDisplay, TreeState};
+
+use crate::ty::*;
 
 /// Definition of type & scale of numbers.
 #[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

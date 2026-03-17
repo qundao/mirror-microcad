@@ -3,8 +3,9 @@
 
 //! Attribute syntax entities.
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// *Command syntax* within an attribute.
 #[derive(Clone)]
@@ -121,7 +122,7 @@ impl std::fmt::Debug for Attribute {
 }
 
 impl SrcReferrer for Attribute {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
     }
 }

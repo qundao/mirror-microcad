@@ -3,9 +3,10 @@
 
 //! Builtin evaluation entity
 
+use microcad_lang_base::PushDiag;
 use strum::Display;
 
-use crate::{diag::PushDiag, eval::*, syntax::*, value::*};
+use crate::{eval::*, syntax::*, value::*};
 
 /// Builtin function type
 pub type BuiltinFn =
@@ -156,7 +157,7 @@ impl CallTrait for Builtin {
             Builtin::Workbench(w) => w.call(args, context),
             Builtin::Constant(c) => {
                 context.error(
-                    &crate::src_ref::SrcRef(None),
+                    &microcad_lang_base::SrcRef(None),
                     EvalError::BuiltinError(format!(
                         "Built-in constant `{}` cannot be called.",
                         c.id()

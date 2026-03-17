@@ -5,6 +5,8 @@
 
 use std::rc::Rc;
 
+use microcad_lang_base::PushDiag;
+
 use crate::{resolve::*, syntax::*};
 
 pub(super) trait Symbolize<T = Option<Symbol>> {

@@ -144,7 +144,7 @@ macro_rules! parameter {
         (
             $crate::builtin::Identifier::no_ref(stringify!($id)),
             $crate::value::ParameterValue {
-                src_ref: $crate::src_ref::SrcRef(None),
+                src_ref: microcad_lang_base::SrcRef(None),
                 ..Default::default()
             },
         )
@@ -154,7 +154,7 @@ macro_rules! parameter {
             $crate::syntax::Identifier::no_ref(stringify!($id)),
             $crate::value::ParameterValue {
                 specified_type: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
-                src_ref: $crate::src_ref::SrcRef(None),
+                src_ref: microcad_lang_base::SrcRef(None),
                 ..Default::default()
             },
         )
@@ -165,7 +165,7 @@ macro_rules! parameter {
             $crate::value::ParameterValue {
                 specified_type: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
                 default_value: Some($crate::builtin::BuiltinValueHelper::$ty($value).into()),
-                src_ref: $crate::src_ref::SrcRef(None),
+                src_ref: microcad_lang_base::SrcRef(None),
             },
         )
     };
@@ -190,7 +190,7 @@ macro_rules! argument {
             ArgumentValue::new(
                 $crate::builtin::BuiltinValueHelper::$ty($value).into(),
                 None,
-                $crate::src_ref::SrcRef(None),
+                microcad_lang_base::SrcRef(None),
             ),
         )
     };
@@ -200,7 +200,7 @@ macro_rules! argument {
             ArgumentValue::new(
                 $crate::builtin::BuiltinValueHelper::$ty($value).into(),
                 None,
-                $crate::src_ref::SrcRef(None),
+                microcad_lang_base::SrcRef(None),
             ),
         )
     };

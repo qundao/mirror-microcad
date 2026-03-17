@@ -3,7 +3,7 @@
 
 //! Inner doc syntax element impl.
 
-use crate::{src_ref::*, tree_display::*};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// Inner doc syntax element: `//!`.
 ///

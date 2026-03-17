@@ -4,8 +4,9 @@
 //! Builtin boolean operations.
 
 use microcad_core::{BooleanOp, Geometry2D};
+use microcad_lang_base::SrcRef;
 
-use crate::{builtin::*, model::*, render::*, src_ref::SrcRef, value::Tuple};
+use crate::{builtin::*, model::*, render::*, value::Tuple};
 
 impl Operation for BooleanOp {
     fn process_2d(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {

@@ -4,7 +4,8 @@
 //! Scalable Vector Graphics (SVG) export
 
 use microcad_core::{Color, Scalar};
-use microcad_lang::{Id, builtin::*, model::*, parameter, render::RenderError, value::*};
+use microcad_lang::{builtin::*, model::*, parameter, render::RenderError, value::*};
+use microcad_lang_base::Id;
 
 /// SVG Exporter.
 pub struct SvgExporter;

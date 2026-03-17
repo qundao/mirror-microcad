@@ -8,8 +8,7 @@ mod format_spec;
 
 pub use format_expression::*;
 pub use format_spec::*;
-
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// Format string item.
 #[derive(Debug, Clone, PartialEq)]
@@ -21,7 +20,7 @@ pub enum FormatStringInner {
 }
 
 impl SrcReferrer for FormatStringInner {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         match self {
             FormatStringInner::String(s) => s.src_ref(),
             FormatStringInner::FormatExpression(e) => e.src_ref(),
@@ -52,7 +51,7 @@ impl FormatString {
 }
 
 impl SrcReferrer for FormatString {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.0.src_ref.clone()
     }
 }

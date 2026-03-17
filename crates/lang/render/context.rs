@@ -6,8 +6,9 @@
 use std::sync::mpsc;
 
 use microcad_core::RenderResolution;
+use microcad_lang_base::RcMut;
 
-use crate::{model::Model, rc::RcMut, render::*};
+use crate::{model::Model, render::*};
 
 /// Our progress sender.
 pub type ProgressTx = mpsc::Sender<f32>;

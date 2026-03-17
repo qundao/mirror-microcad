@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{parse::*, parser::*, rc::*, syntax::*};
+use crate::{parse::*, parser::*, syntax::*};
 use microcad_syntax::ast;
 
 /// Note: These constructors are a workaround until the assignment in microcad-lang is split up
@@ -85,7 +85,7 @@ impl AssignmentStatement {
     ) -> Result<Self, ParseError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
-            assignment: Rc::new(Assignment::from_ast_local(node, context)?),
+            assignment: std::rc::Rc::new(Assignment::from_ast_local(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -96,7 +96,7 @@ impl AssignmentStatement {
     ) -> Result<Self, ParseError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
-            assignment: Rc::new(Assignment::from_ast_prop(node, context)?),
+            assignment: std::rc::Rc::new(Assignment::from_ast_prop(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -107,7 +107,7 @@ impl AssignmentStatement {
     ) -> Result<Self, ParseError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
-            assignment: Rc::new(Assignment::from_ast_const(node, context)?),
+            assignment: std::rc::Rc::new(Assignment::from_ast_const(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -159,9 +159,9 @@ impl FromAst for Statement {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(match node {
-            ast::Statement::Module(module) => {
-                Statement::Module(Rc::new(ModuleDefinition::from_ast(module, context)?))
-            }
+            ast::Statement::Module(module) => Statement::Module(std::rc::Rc::new(
+                ModuleDefinition::from_ast(module, context)?,
+            )),
             ast::Statement::Use(statement) => {
                 Statement::Use(UseStatement::from_ast(statement, context)?)
             }
@@ -173,13 +173,13 @@ impl FromAst for Statement {
                 Statement::Expression(ExpressionStatement::from_ast(statement, context)?)
             }
             ast::Statement::Workbench(w) => {
-                Statement::Workbench(<Rc<WorkbenchDefinition>>::from_ast(w, context)?)
+                Statement::Workbench(<std::rc::Rc<WorkbenchDefinition>>::from_ast(w, context)?)
             }
             ast::Statement::Function(f) => {
-                Statement::Function(Rc::new(FunctionDefinition::from_ast(f, context)?))
+                Statement::Function(std::rc::Rc::new(FunctionDefinition::from_ast(f, context)?))
             }
             ast::Statement::Init(i) => {
-                Statement::Init(Rc::new(InitDefinition::from_ast(i, context)?))
+                Statement::Init(std::rc::Rc::new(InitDefinition::from_ast(i, context)?))
             }
             ast::Statement::Return(r) => Statement::Return(ReturnStatement::from_ast(r, context)?),
             ast::Statement::InnerAttribute(a) => {

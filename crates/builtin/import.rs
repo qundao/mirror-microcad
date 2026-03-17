@@ -4,7 +4,8 @@
 //! Built-in import function.
 
 use microcad_builtin_proc_macros::builtin_fn;
-use microcad_lang::{builtin::*, diag::*, eval::*, value::*};
+use microcad_lang::{builtin::*, eval::*, value::*};
+use microcad_lang_base::PushDiag;
 
 /// `__builtin::import` function to import data from files.
 #[builtin_fn(filename: String, id: String = String::new())]

@@ -41,10 +41,10 @@ impl std::fmt::Debug for OutputType {
             f,
             "{}",
             match &self {
-                Self::NotDetermined => crate::invalid!(UNKNOWN),
+                Self::NotDetermined => microcad_lang_base::invalid!(UNKNOWN),
                 Self::Geometry2D => "2D",
                 Self::Geometry3D => "3D",
-                Self::InvalidMixed => crate::invalid_no_ansi!(OUTPUT),
+                Self::InvalidMixed => microcad_lang_base::invalid_no_ansi!(OUTPUT),
             }
         )
     }
@@ -59,7 +59,7 @@ impl std::fmt::Display for OutputType {
                 Self::NotDetermined => "Undetermined",
                 Self::Geometry2D => "2D",
                 Self::Geometry3D => "3D",
-                Self::InvalidMixed => crate::invalid_no_ansi!(OUTPUT),
+                Self::InvalidMixed => microcad_lang_base::invalid_no_ansi!(OUTPUT),
             }
         )
     }

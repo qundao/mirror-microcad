@@ -3,7 +3,9 @@
 
 //! Format expression syntax element
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// Format expression including format specification.
 #[allow(dead_code)]
