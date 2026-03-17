@@ -14,8 +14,6 @@ pub(super) struct SymbolInner {
     pub(super) parent: Option<Symbol>,
     /// Symbol's children
     pub(super) children: SymbolMap,
-    /// Flag if this symbol has been checked after resolving
-    pub(super) checked: std::cell::OnceCell<()>,
     /// Flag if this symbol was in use
     pub(super) used: std::cell::OnceCell<()>,
 }
