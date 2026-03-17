@@ -5415,6 +5415,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-lang-base"
+version = "0.3.0"
+dependencies = [
+ "color-print",
+ "compact_str",
+ "derive_more 2.1.1",
+ "log",
+ "microcad-core",
+ "miette",
+ "pathdiff",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "microcad-lsp"
 version = "0.3.0"
 dependencies = [

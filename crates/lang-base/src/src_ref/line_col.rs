@@ -1,0 +1,17 @@
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/// Line and column within a source code file
+#[derive(Clone, Debug, Default)]
+pub struct LineCol {
+    /// Line number (1..)
+    pub line: usize,
+    /// Column number (1..)
+    pub col: usize,
+}
+
+impl std::fmt::Display for LineCol {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}:{}", self.line, self.col)
+    }
+}
