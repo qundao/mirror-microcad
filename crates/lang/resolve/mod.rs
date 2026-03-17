@@ -21,7 +21,6 @@
 mod externals;
 mod grant;
 mod lookup;
-mod names;
 mod resolve_context;
 mod resolve_error;
 mod sources;
@@ -37,7 +36,6 @@ pub use sources::*;
 pub use symbol::*;
 
 use grant::*;
-use names::*;
 
 /// Trait for items which can be fully qualified.
 pub trait FullyQualify {

@@ -69,9 +69,6 @@ impl ResolveContext {
         }
         if matches!(mode, ResolveMode::Resolved | ResolveMode::Checked) {
             self.resolve()?;
-            if matches!(mode, ResolveMode::Checked) {
-                self.check()?;
-            }
         }
         Ok(())
     }
@@ -169,42 +166,6 @@ impl ResolveContext {
             .iter()
             .filter(|symbol| !symbol.is_deleted())
             .any(|symbol| symbol.has_links())
-    }
-
-    /// check names in all symbols
-    pub fn check(&mut self) -> ResolveResult<()> {
-        log::trace!("Checking symbol table");
-        self.mode = ResolveMode::Failed;
-
-        if let Err(err) = self
-            .root
-            .iter()
-            .try_for_each(|symbol| symbol.check(self, &IdentifierSet::default()))
-        {
-            self.error(&err.src_ref(), err)?;
-        } else if !self.has_errors() {
-            self.mode = ResolveMode::Checked;
-        }
-
-        log::info!("Symbol table OK!");
-
-        let unchecked = self
-            .root
-            .riter()
-            .filter(|symbol| symbol.is_checked())
-            .collect::<Symbols>();
-
-        log::trace!(
-            "Symbols never used in ANY code:\n{}",
-            unchecked
-                .iter()
-                .map(|symbol| format!("{symbol}"))
-                .collect::<Vec<_>>()
-                .join("\n")
-        );
-        self.unchecked = Some(unchecked);
-
-        Ok(())
     }
 
     /// Load file into source cache and symbolize it into a symbol.

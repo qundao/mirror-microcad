@@ -49,8 +49,6 @@ impl std::fmt::Debug for QualifiedNames {
     }
 }
 
-pub(crate) type QualifiedNameSet = indexmap::IndexSet<QualifiedName>;
-
 impl FromIterator<QualifiedName> for QualifiedNames {
     fn from_iter<T: IntoIterator<Item = QualifiedName>>(iter: T) -> Self {
         Self(iter.into_iter().collect())

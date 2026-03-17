@@ -658,17 +658,16 @@ impl Symbol {
         let hash = self.source_hash();
         let depth = state.depth;
         if state.debug && cfg!(feature = "ansi-color") {
-            let checked = if self.is_checked() { " ✓" } else { "" };
             if self.is_used() {
                 write!(
                     f,
-                    "{:depth$}{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}{checked}",
+                    "{:depth$}{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}",
                     "",
                 )?;
             } else {
                 color_print::cwrite!(
                     f,
-                    "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>{checked}",
+                    "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>",
                     "",
                 )?;
             }
@@ -833,7 +832,6 @@ impl Lookup for Symbol {
                 return Err(err)?;
             }
         };
-        symbol.set_check();
         log::trace!(
             "{found} global symbol: {symbol:?}",
             found = crate::mark!(FOUND),
