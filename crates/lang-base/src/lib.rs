@@ -16,6 +16,11 @@ pub type Id = compact_str::CompactString;
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
+pub use diag::{Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, PushDiag};
+pub use rc::{Rc, RcMut};
+pub use src_ref::{SrcRef, SrcRefInner, SrcReferrer};
+pub use tree_display::{FormatTree, TreeDisplay, TreeState};
+
 /// A compatibility layer for using SourceFile with miette
 pub struct MietteSourceFile<'a> {
     source: &'a str,
@@ -282,9 +287,21 @@ macro_rules! invalid_no_ansi {
     };
 }
 
+#[macro_export]
 #[cfg(not(feature = "ansi-color"))]
 macro_rules! invalid {
     ($x:literal) => {
         invalid_no_ansi!($x)
     };
+}
+
+/// Trait to write something with Display trait into a file.
+pub trait WriteToFile: std::fmt::Display {
+    /// Write something to a file.
+    fn write_to_file(&self, filename: &impl AsRef<std::path::Path>) -> std::io::Result<()> {
+        use std::io::Write;
+        let file = std::fs::File::create(filename)?;
+        let mut writer = std::io::BufWriter::new(file);
+        write!(writer, "{self}")
+    }
 }
