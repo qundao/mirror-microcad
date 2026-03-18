@@ -1,8 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{resolve::*, src_ref::*};
+use crate::resolve::*;
 use custom_debug::Debug;
+use microcad_lang_base::{SrcRef, SrcReferrer};
 
 /// Symbol content
 #[derive(Default, Debug, Clone)]
@@ -14,8 +15,6 @@ pub(super) struct SymbolInner {
     pub(super) parent: Option<Symbol>,
     /// Symbol's children
     pub(super) children: SymbolMap,
-    /// Flag if this symbol has been checked after resolving
-    pub(super) checked: std::cell::OnceCell<()>,
     /// Flag if this symbol was in use
     pub(super) used: std::cell::OnceCell<()>,
 }

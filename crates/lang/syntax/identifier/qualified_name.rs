@@ -1,8 +1,9 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use miette::SourceSpan;
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,
@@ -48,8 +49,6 @@ impl std::fmt::Debug for QualifiedNames {
         )
     }
 }
-
-pub(crate) type QualifiedNameSet = indexmap::IndexSet<QualifiedName>;
 
 impl FromIterator<QualifiedName> for QualifiedNames {
     fn from_iter<T: IntoIterator<Item = QualifiedName>>(iter: T) -> Self {
@@ -217,7 +216,7 @@ fn dissolve_super() {
 impl std::fmt::Display for QualifiedName {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if self.is_empty() {
-            write!(f, crate::invalid_no_ansi!(NAME))
+            write!(f, microcad_lang_base::invalid_no_ansi!(NAME))
         } else {
             write!(
                 f,
@@ -234,7 +233,7 @@ impl std::fmt::Display for QualifiedName {
 impl std::fmt::Debug for QualifiedName {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if self.is_empty() {
-            write!(f, crate::invalid!(NAME))
+            write!(f, microcad_lang_base::invalid!(NAME))
         } else {
             write!(
                 f,

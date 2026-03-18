@@ -3,7 +3,9 @@
 
 //! Tuple expression.
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
 #[derive(Clone, Default, PartialEq)]
@@ -15,7 +17,7 @@ pub struct TupleExpression {
 }
 
 impl SrcReferrer for TupleExpression {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
     }
 }

@@ -3,6 +3,8 @@
 
 //! Argument value evaluation entity
 
+use microcad_lang_base::{PushDiag, SrcRef};
+
 use crate::{eval::*, model::Model, syntax::*};
 
 /// Trait for calling methods of values

@@ -10,7 +10,8 @@ use microcad_builtin_proc_macros::builtin_mod;
 #[allow(clippy::module_inception)]
 pub mod string {
     use microcad_builtin_proc_macros::builtin_fn;
-    use microcad_lang::{diag::PushDiag, parameter, value::Value};
+    use microcad_lang::{parameter, value::Value};
+    use microcad_lang_base::PushDiag;
 
     /// Return the length a string.
     #[builtin_fn(s: String)]

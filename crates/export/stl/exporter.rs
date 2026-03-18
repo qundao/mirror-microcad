@@ -4,11 +4,12 @@
 //! STL exporter.
 
 use microcad_lang::{
-    Id,
     builtin::{ExportError, Exporter, FileIoInterface},
     model::{Model, OutputType},
     value::Value,
 };
+
+use microcad_lang_base::Id;
 
 use crate::stl::{StlWriter, WriteStl};
 

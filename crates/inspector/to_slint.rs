@@ -6,6 +6,7 @@
 use crate::*;
 
 use microcad_lang::model::{Creator, Element, Model};
+use microcad_lang_base::SrcReferrer;
 use slint::ToSharedString;
 
 pub trait ItemsFromTree<T, D = usize>: Sized
@@ -99,7 +100,7 @@ impl ItemsFromTree<Model> for ModelTreeModelItem {
 
 impl ItemsFromTree<Symbol> for SymbolTreeModelItem {
     fn _from_tree(symbol: &Symbol, items: &mut Vec<Self>, depth: usize) {
-        use microcad_lang::src_ref::SrcReferrer;
+        use microcad_lang_base::SrcReferrer;
 
         items.push(Self {
             depth: depth as i32,

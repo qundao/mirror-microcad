@@ -10,6 +10,7 @@ mod call_trait;
 
 pub use call_method::*;
 pub use call_trait::*;
+use microcad_lang_base::SrcReferrer;
 
 use crate::{eval::*, syntax::*, value::*};
 
@@ -50,7 +51,7 @@ impl Eval for Call {
         log::debug!(
             "{call} {name:?}({args:?})",
             name = self.name,
-            call = crate::mark!(CALL),
+            call = microcad_lang_base::mark!(CALL),
         );
 
         match context.scope(

@@ -3,6 +3,8 @@
 
 //! µcad value related evaluation entities
 
+use microcad_lang_base::PushDiag;
+
 use crate::{eval::*, syntax::*};
 
 impl Eval<ArgumentValue> for Argument {

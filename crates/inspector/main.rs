@@ -8,8 +8,8 @@
 use clap::Parser;
 
 use microcad_lang::resolve::{FullyQualify, Symbol, SymbolInfo};
-use microcad_lang::src_ref::{Refer, SrcRef, SrcReferrer};
 use microcad_lang::syntax::*;
+use microcad_lang_base::{Refer, SrcRef};
 
 use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
@@ -105,7 +105,7 @@ impl Inspector {
                     source_file,
                     &self.args.search_paths,
                     Some(microcad_builtin::builtin_module()),
-                    microcad_lang::diag::DiagHandler::default(),
+                    microcad_lang_base::DiagHandler::default(),
                 )?;
 
                 tx.send(ViewModelRequest::SetSymbolTree({
@@ -142,32 +142,34 @@ impl Inspector {
             }
         });
 
-        thread::spawn(move || loop {
-            if let Ok(request) = rx.recv() {
-                weak.upgrade_in_event_loop(move |main_window| match request {
-                    ViewModelRequest::SetSourceCode { code, hash } => {
-                        let items = to_slint::split_source_code(&code);
-                        main_window.set_source_code_model(to_slint::model_rc_from_items(items));
+        thread::spawn(move || {
+            loop {
+                if let Ok(request) = rx.recv() {
+                    weak.upgrade_in_event_loop(move |main_window| match request {
+                        ViewModelRequest::SetSourceCode { code, hash } => {
+                            let items = to_slint::split_source_code(&code);
+                            main_window.set_source_code_model(to_slint::model_rc_from_items(items));
 
-                        main_window.set_state(VM_State {
-                            current_source_hash: hash_to_shared_string(hash),
-                            current_line: 1,
-                        });
-                        main_window.set_source_code(code.into());
-                    }
-                    ViewModelRequest::SetSymbolTree(items) => {
-                        main_window.set_symbol_tree(to_slint::model_rc_from_items(items))
-                    }
-                    ViewModelRequest::SetModelTree(items) => {
-                        main_window.set_model_tree(to_slint::model_rc_from_items(items))
-                    }
-                    ViewModelRequest::SetCurrentLine(line) => {
-                        let mut state = main_window.get_state();
-                        state.current_line = line as i32;
-                        main_window.set_state(state);
-                    }
-                })
-                .expect("No error");
+                            main_window.set_state(VM_State {
+                                current_source_hash: hash_to_shared_string(hash),
+                                current_line: 1,
+                            });
+                            main_window.set_source_code(code.into());
+                        }
+                        ViewModelRequest::SetSymbolTree(items) => {
+                            main_window.set_symbol_tree(to_slint::model_rc_from_items(items))
+                        }
+                        ViewModelRequest::SetModelTree(items) => {
+                            main_window.set_model_tree(to_slint::model_rc_from_items(items))
+                        }
+                        ViewModelRequest::SetCurrentLine(line) => {
+                            let mut state = main_window.get_state();
+                            state.current_line = line as i32;
+                            main_window.set_state(state);
+                        }
+                    })
+                    .expect("No error");
+                }
             }
         });
 

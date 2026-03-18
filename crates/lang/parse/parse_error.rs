@@ -3,9 +3,10 @@
 
 //! Parser errors
 
-use miette::{Diagnostic, SourceCode};
 use crate::{parse::*, ty::*};
+use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_syntax::ast::LiteralErrorKind;
+use miette::{Diagnostic, SourceCode};
 use thiserror::Error;
 
 /// Parsing errors
@@ -13,34 +14,19 @@ use thiserror::Error;
 #[allow(missing_docs)]
 pub enum ParseError {
     #[error("Error parsing floating point literal: {0}")]
-    ParseFloatError(
-        #[label("{0}")]
-        Refer<std::num::ParseFloatError>
-    ),
+    ParseFloatError(#[label("{0}")] Refer<std::num::ParseFloatError>),
 
     #[error("Error parsing integer literal: {0}")]
-    ParseIntError(
-        #[label("{0}")]
-        Refer<std::num::ParseIntError>
-    ),
+    ParseIntError(#[label("{0}")] Refer<std::num::ParseIntError>),
 
     #[error("Unknown unit: {0}")]
-    UnknownUnit(
-        #[label("Unknown unit")]
-        Refer<String>
-    ),
+    UnknownUnit(#[label("Unknown unit")] Refer<String>),
 
     #[error("Unexpected token")]
-    UnexpectedToken(
-        #[label("Unexpected token")]
-        SrcRef
-    ),
+    UnexpectedToken(#[label("Unexpected token")] SrcRef),
 
     #[error("Missing type or value for definition parameter: {0}")]
-    ParameterMissingTypeOrValue(
-        #[label("Missing type or value")]
-        Identifier
-    ),
+    ParameterMissingTypeOrValue(#[label("Missing type or value")] Identifier),
 
     #[error("Duplicate argument: {id}")]
     DuplicateArgument {
@@ -82,22 +68,13 @@ pub enum ParseError {
     InvalidIdentifier(Refer<String>),
 
     #[error("Element is not available")]
-    NotAvailable(
-        #[label("Element is not available")]
-        SrcRef
-    ),
+    NotAvailable(#[label("Element is not available")] SrcRef),
 
     #[error("Unknown type: {0}")]
-    UnknownType(
-        #[label("Unknown type")]
-        Refer<String>
-    ),
+    UnknownType(#[label("Unknown type")] Refer<String>),
 
     #[error("If expression must return a value in all cases")]
-    IncompleteIfExpression(
-        #[label("Incomplete if expression")]
-        SrcRef
-    ),
+    IncompleteIfExpression(#[label("Incomplete if expression")] SrcRef),
 
     /// Matrix type with invalid dimensions
     #[error("Invalid matrix type: {0}")]
@@ -144,9 +121,9 @@ impl SrcReferrer for ParseError {
     fn src_ref(&self) -> SrcRef {
         match self {
             ParseError::ParameterMissingTypeOrValue(id)
-            | ParseError::DuplicateArgument{id, ..}
-            | ParseError::DuplicateIdentifier{id, ..}
-            | ParseError::DuplicateTupleIdentifier{id, ..} => id.src_ref(),
+            | ParseError::DuplicateArgument { id, .. }
+            | ParseError::DuplicateIdentifier { id, .. }
+            | ParseError::DuplicateTupleIdentifier { id, .. } => id.src_ref(),
             ParseError::UnexpectedToken(src_ref)
             | ParseError::NotAvailable(src_ref)
             | ParseError::IncompleteIfExpression(src_ref)
@@ -161,7 +138,7 @@ impl SrcReferrer for ParseError {
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             ParseError::InvalidIdentifier(id) => id.src_ref(),
             ParseError::UnknownUnit(unit) => unit.src_ref(),
-            ParseError::DuplicateTupleType{ty, ..} => ty.src_ref(),
+            ParseError::DuplicateTupleType { ty, .. } => ty.src_ref(),
             ParseError::UnknownType(ty) => ty.src_ref(),
             ParseError::InvalidMatrixType(ty) => ty.src_ref(),
             ParseError::AstParser(err) => err.src_ref(),

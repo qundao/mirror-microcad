@@ -1,0 +1,35 @@
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-lang-base"
+description = "µcad language basics"
+documentation = "https://docs.rs/microcad-lang-base"
+authors.workspace = true
+version.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+
+[dependencies]
+color-print = { version = "0.3", optional = true }
+compact_str = "0.9.0"
+derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
+log = "0.4"
+microcad-core = { workspace = true }
+miette = { version = "7.6.0", features = ["derive", "fancy"] }
+pathdiff = "0.2"
+thiserror = "2.0.17"
+
+[lints.rust]
+missing_docs = "warn"
+
+[lints.clippy]
+unwrap_used = "warn"
+
+[features]
+default = ["ansi-color"]
+ansi-color = ["dep:color-print"]

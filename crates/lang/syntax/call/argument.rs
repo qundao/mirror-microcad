@@ -3,7 +3,9 @@
 
 //! A single argument
 
-use crate::{ord_map::*, src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::{ord_map::*, syntax::*};
 
 /// Argument in a [`Call`].
 #[derive(Clone, PartialEq)]

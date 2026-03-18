@@ -8,11 +8,12 @@ use std::fmt::Write;
 use geo::line_string;
 use microcad_core::{Geometries2D, Geometry2D, Transformed2D, mat4_to_mat3};
 use microcad_lang::{
-    Id,
     builtin::{ExportError, Exporter, FileIoInterface},
     model::{Model, OutputType},
     value::Value,
 };
+use microcad_lang_base::Id;
+
 use wkt::ToWkt;
 
 /// WKT Exporter.

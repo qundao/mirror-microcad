@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang::resolve::Sources;
-use microcad_lang::src_ref::{Refer, SrcReferrer};
 use microcad_lang::{
     eval::{Capture, EvalContext},
     model::Model,
     syntax::SourceFile,
 };
+use microcad_lang_base::{Diag, DiagRenderOptions, Diagnostic, Refer, SrcReferrer, FormatTree};
 use microcad_test_tools::test_env::*;
 use miette::Report;
 use std::rc::Rc;
@@ -20,7 +20,7 @@ pub fn init() {
 #[allow(dead_code, clippy::too_many_arguments)]
 pub fn run_test(env: Option<TestEnv>) {
     if let Some(mut env) = env {
-        use microcad_lang::{diag::*, syntax::*};
+        use microcad_lang::syntax::*;
         use std::fs;
 
         crate::markdown_test::init();
@@ -260,10 +260,7 @@ fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
 fn report_model(env: &mut TestEnv, model: Option<Model>) {
     use microcad_core::RenderResolution;
     use microcad_export::{stl::StlExporter, svg::SvgExporter};
-    use microcad_lang::{
-        model::{ExportCommand as Export, OutputType},
-        tree_display::FormatTree,
-    };
+    use microcad_lang::model::{ExportCommand as Export, OutputType};
 
     // print model
     if let Some(model) = model {

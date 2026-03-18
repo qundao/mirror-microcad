@@ -31,8 +31,9 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{model::*, src_ref::*, syntax::*, ty::*};
+use crate::{model::*, syntax::*, ty::*};
 use microcad_core::*;
+use microcad_lang_base::{SrcRef, invalid, invalid_no_ansi};
 
 pub(crate) type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
@@ -385,7 +386,7 @@ impl std::ops::BitAnd for Value {
 impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Value::None => write!(f, crate::invalid_no_ansi!(VALUE)),
+            Value::None => write!(f, invalid_no_ansi!(VALUE)),
             Value::Integer(n) => write!(f, "{n}"),
             Value::Quantity(q) => write!(f, "{q}"),
             Value::Bool(b) => write!(f, "{b}"),
@@ -402,7 +403,7 @@ impl std::fmt::Display for Value {
 impl std::fmt::Debug for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Value::None => write!(f, crate::invalid!(VALUE)),
+            Value::None => write!(f, invalid!(VALUE)),
             Value::Integer(n) => write!(f, "{n}"),
             Value::Quantity(q) => write!(f, "{q:?}"),
             Value::Bool(b) => write!(f, "{b}"),

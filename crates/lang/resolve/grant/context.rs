@@ -3,6 +3,7 @@
 
 use crate::resolve::*;
 use derive_more::{Deref, DerefMut};
+use microcad_lang_base::DiagResult;
 
 /// Grant Context
 #[derive(Deref, DerefMut)]

@@ -9,6 +9,8 @@ mod symbol_map;
 mod symbols;
 
 use indexmap::IndexSet;
+use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
 pub use iterators::*;
 pub use symbol_definition::*;
 pub use symbol_info::*;
@@ -17,7 +19,7 @@ pub(crate) use symbols::*;
 
 use symbol_inner::*;
 
-use crate::{builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*, value::*};
+use crate::{builtin::*, resolve::*, syntax::*, value::*};
 
 /// Symbol
 #[derive(Clone)]
@@ -424,101 +426,6 @@ impl Symbol {
 
 // check
 impl Symbol {
-    /// Mark this symbol as *checked*.
-    pub(super) fn set_check(&self) {
-        let _ = self.inner.borrow().checked.set(());
-    }
-
-    pub(super) fn is_checked(&self) -> bool {
-        self.inner.borrow().checked.get().is_some()
-    }
-
-    /// check names in symbol definition
-    pub(super) fn check(
-        &self,
-        context: &mut ResolveContext,
-        exclude_ids: &IdentifierSet,
-    ) -> ResolveResult<()> {
-        if !matches!(self.visibility.take(), Visibility::Deleted) {
-            // get names of symbol definitions
-            let names = match &self.inner.borrow().def {
-                SymbolDef::SourceFile(sf) => sf.names(),
-                SymbolDef::Module(m) => m.names(),
-                SymbolDef::Workbench(wb) => wb.names(),
-                SymbolDef::Function(f) => f.names(),
-                SymbolDef::Assignment(a) => a.names(),
-                SymbolDef::Alias(_, _, name) | SymbolDef::UseAll(_, name) => {
-                    NameList::from(name)
-                    // log::error!("Resolve Context: {name}\n{context:?}");
-                    // return Err(ResolveError::ResolveCheckFailed(name.src_ref()));
-                }
-                _ => Default::default(),
-            };
-
-            if !names.is_empty() {
-                log::debug!("checking symbols:\n{names:?}");
-                // lookup names
-                names
-                    .iter()
-                    .filter(|name| {
-                        exclude_ids.contains(name.last().expect("symbol with empty name"))
-                    })
-                    // search in symbol table
-                    .try_for_each(|name| {
-                        match context.root.lookup(name, LookupTarget::Any) {
-                            Ok(_) => Ok::<_, ResolveError>(()),
-                            Err(err) => {
-                                // get name of current module
-                                let module = match context.root.search(&self.module_name(), false) {
-                                    Ok(module) => module,
-                                    Err(err) => {
-                                        context.error(&self.id(), err)?;
-                                        return Ok(());
-                                    }
-                                };
-                                // search within current module
-                                if context
-                                    .root
-                                    .lookup_within(name, &module, LookupTarget::Module)
-                                    .is_err()
-                                {
-                                    context.error(name, err)?;
-                                }
-                                Ok(())
-                            }
-                        }
-                    })?;
-            }
-
-            // check children
-            let children = self.inner.borrow().children.clone();
-            children
-                .values()
-                .try_for_each(|symbol| symbol.check(context, exclude_ids))
-        } else {
-            Ok(())
-        }
-    }
-
-    fn module_name(&self) -> QualifiedName {
-        match self.is_module() {
-            true => {
-                if let Some(parent) = &self.get_parent() {
-                    parent.module_name().with_suffix(&self.id())
-                } else {
-                    QualifiedName::from_id(self.id())
-                }
-            }
-            false => {
-                if let Some(parent) = &self.get_parent() {
-                    parent.module_name()
-                } else {
-                    unreachable!("root must be source file")
-                }
-            }
-        }
-    }
-
     pub(super) fn source_hash(&self) -> u64 {
         self.inner.borrow().def.source_hash()
     }
@@ -657,18 +564,17 @@ impl Symbol {
         let visibility = self.visibility();
         let hash = self.source_hash();
         let depth = state.depth;
-        if state.debug && cfg!(feature = "ansi-color") {
-            let checked = if self.is_checked() { " ✓" } else { "" };
+        if state.debug {
             if self.is_used() {
                 write!(
                     f,
-                    "{:depth$}{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}{checked}",
+                    "{:depth$}{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}",
                     "",
                 )?;
             } else {
                 color_print::cwrite!(
                     f,
-                    "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>{checked}",
+                    "{:depth$}<#606060>{visibility:?}{id:?} {def:?} [{full_name:?}] #{hash:#x}</>",
                     "",
                 )?;
             }
@@ -809,7 +715,7 @@ impl Lookup for Symbol {
     fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
         log::trace!(
             "{lookup} for global symbol '{name:?}'",
-            lookup = crate::mark!(LOOKUP)
+            lookup = microcad_lang_base::mark!(LOOKUP)
         );
         self.deny_super(name)?;
 
@@ -820,7 +726,7 @@ impl Lookup for Symbol {
                 } else {
                     log::trace!(
                         "{not_found} global symbol: {name:?}",
-                        not_found = crate::mark!(NOT_FOUND),
+                        not_found = microcad_lang_base::mark!(NOT_FOUND),
                     );
                     return Err(ResolveError::WrongTarget);
                 }
@@ -828,15 +734,14 @@ impl Lookup for Symbol {
             Err(err) => {
                 log::trace!(
                     "{not_found} global symbol: {name:?}",
-                    not_found = crate::mark!(NOT_FOUND),
+                    not_found = microcad_lang_base::mark!(NOT_FOUND),
                 );
                 return Err(err)?;
             }
         };
-        symbol.set_check();
         log::trace!(
             "{found} global symbol: {symbol:?}",
-            found = crate::mark!(FOUND),
+            found = microcad_lang_base::mark!(FOUND),
         );
         Ok(symbol)
     }

@@ -5,7 +5,9 @@
 
 use std::collections::HashMap;
 
-use crate::{src_ref::*, ty::*, value::*};
+use microcad_lang_base::SrcReferrer;
+
+use crate::{ty::*, value::*};
 
 /// Tuple with named values
 ///

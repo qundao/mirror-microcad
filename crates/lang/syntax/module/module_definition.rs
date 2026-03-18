@@ -3,7 +3,11 @@
 
 //! Module definition syntax element.
 
-use crate::{rc::*, src_ref::*, syntax::*};
+use std::rc::Rc;
+
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// Module definition.
 #[derive(Clone, Default)]

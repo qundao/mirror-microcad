@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{diag::*, resolve::*};
+use crate::{GetSourceStrByHash, diag::*};
 use derive_more::{Deref, DerefMut};
 
 /// Source file diagnostics.
@@ -18,7 +18,7 @@ impl DiagList {
     pub fn pretty_print(
         &self,
         f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceByHash,
+        source_by_hash: &impl GetSourceStrByHash,
         line_offset: usize,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {

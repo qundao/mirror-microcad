@@ -10,12 +10,8 @@
 use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
-use microcad_lang::{
-    diag::{self, PushDiag},
-    eval,
-    src_ref::{self, SrcReferrer},
-    syntax,
-};
+use microcad_lang::{eval, syntax};
+use microcad_lang_base::{DiagHandler, PushDiag, Refer, SrcRef, SrcReferrer};
 use miette::IntoDiagnostic;
 use tower_lsp::lsp_types::{
     Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, SemanticTokens,
@@ -48,7 +44,7 @@ pub enum ProcessorResponse {
     SemanticTokens(Url, SemanticTokensResult),
 }
 
-fn src_ref_to_lsp_range(src_ref: src_ref::SrcRef) -> Option<tower_lsp::lsp_types::Range> {
+fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<tower_lsp::lsp_types::Range> {
     match src_ref.0 {
         Some(src_ref_inner) => {
             use tower_lsp::lsp_types::{Position, Range};
@@ -76,12 +72,12 @@ pub struct WorkspaceSettings {
 enum Context {
     #[default]
     None,
-    Parse(Box<diag::DiagHandler>),
+    Parse(Box<DiagHandler>),
     Eval(Box<eval::EvalContext>),
 }
 
 impl Context {
-    fn diag(&self) -> Option<&diag::DiagHandler> {
+    fn diag(&self) -> Option<&DiagHandler> {
         match self {
             Context::None => None,
             Context::Parse(diag_handler) => Some(diag_handler),
@@ -145,9 +141,9 @@ impl Processor {
             }
 
             Err(err) => {
-                let mut diag = diag::DiagHandler::default();
+                let mut diag = DiagHandler::default();
                 let src_ref = err.src_ref();
-                diag.push_diag(diag::Diagnostic::Error(src_ref::Refer::new(
+                diag.push_diag(microcad_lang_base::Diagnostic::Error(Refer::new(
                     err.into(),
                     src_ref,
                 )))?;
@@ -184,10 +180,10 @@ impl Processor {
             },
 
             Err(errors) => {
-                let mut diag = diag::DiagHandler::default();
+                let mut diag = DiagHandler::default();
                 for err in errors {
                     let src_ref = err.src_ref();
-                    diag.push_diag(diag::Diagnostic::Error(src_ref::Refer::new(
+                    diag.push_diag(microcad_lang_base::Diagnostic::Error(Refer::new(
                         err.into(),
                         src_ref,
                     )))?;
@@ -214,14 +210,14 @@ impl Processor {
                         match src_ref_to_lsp_range(diag.src_ref()) {
                             Some(range) => {
                                 let severity = match diag.level() {
-                                    microcad_lang::diag::Level::Trace => DiagnosticSeverity::HINT,
-                                    microcad_lang::diag::Level::Info => {
+                                    microcad_lang_base::Level::Trace => DiagnosticSeverity::HINT,
+                                    microcad_lang_base::Level::Info => {
                                         DiagnosticSeverity::INFORMATION
                                     }
-                                    microcad_lang::diag::Level::Warning => {
+                                    microcad_lang_base::Level::Warning => {
                                         DiagnosticSeverity::WARNING
                                     }
-                                    microcad_lang::diag::Level::Error => DiagnosticSeverity::ERROR,
+                                    microcad_lang_base::Level::Error => DiagnosticSeverity::ERROR,
                                 };
 
                                 Some(Diagnostic::new(

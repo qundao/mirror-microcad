@@ -87,7 +87,7 @@ Even if using *anonymous scopes* this does not change.
 ```µcad,assignment_shadow_scope#todo
 a = 5;
 {
-    a = a * 2;   // error: a already defined within parent scope
+    a = a * 2; 
     std::debug::assert_eq([ a, 10 ]);
 }
 ```

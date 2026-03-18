@@ -13,11 +13,11 @@ use microcad_builtin_proc_macros::builtin_mod;
 pub mod array {
     use microcad_builtin_proc_macros::builtin_fn;
     use microcad_lang::{
-        diag::PushDiag,
         eval::EvalError,
         parameter,
         value::{Value, ValueAccess},
     };
+    use microcad_lang_base::PushDiag;
 
     /// Return the number of elements in an array.
     #[builtin_fn(x)]

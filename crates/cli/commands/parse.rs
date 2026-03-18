@@ -5,7 +5,9 @@
 
 use crate::*;
 
-use microcad_lang::{rc::*, syntax::*, tree_display::*};
+use microcad_lang::syntax::*;
+use microcad_lang_base::FormatTree;
+use std::rc::Rc;
 
 #[derive(clap::Parser)]
 pub struct Parse {

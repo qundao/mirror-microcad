@@ -6,25 +6,17 @@
 mod identifier_list;
 mod qualified_name;
 
-use derive_more::{Deref, DerefMut};
+use derive_more::Deref;
 pub use identifier_list::*;
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use miette::SourceSpan;
 pub use qualified_name::*;
 
-use crate::{Id, parse::*, src_ref::*, syntax::*};
+use crate::{Id, parse::*};
 
 /// µcad identifier
 #[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Identifier(pub Refer<Id>);
-
-#[derive(Deref, DerefMut, Default)]
-pub(crate) struct IdentifierSet(indexmap::IndexSet<Identifier>);
-
-impl std::iter::FromIterator<Identifier> for IdentifierSet {
-    fn from_iter<T: IntoIterator<Item = Identifier>>(iter: T) -> Self {
-        IdentifierSet(indexmap::IndexSet::from_iter(iter))
-    }
-}
 
 /// Check if the element only includes one identifier
 pub trait SingleIdentifier {
@@ -270,7 +262,7 @@ impl<'a> From<&'a Identifier> for &'a str {
 impl std::fmt::Display for Identifier {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if self.is_empty() {
-            write!(f, crate::invalid_no_ansi!(ID))
+            write!(f, microcad_lang_base::invalid_no_ansi!(ID))
         } else {
             write!(f, "{}", self.0)
         }
@@ -280,7 +272,7 @@ impl std::fmt::Display for Identifier {
 impl std::fmt::Debug for Identifier {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if self.is_empty() {
-            write!(f, "{}", crate::invalid!(ID))
+            write!(f, "{}", microcad_lang_base::invalid!(ID))
         } else {
             write!(f, "{}", self.0)
         }
@@ -296,32 +288,6 @@ impl PartialEq<str> for Identifier {
 impl TreeDisplay for Identifier {
     fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}Identifier: {}", "", self.id())
-    }
-}
-
-impl std::fmt::Display for IdentifierSet {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.iter()
-                .map(|id| id.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
-    }
-}
-
-impl std::fmt::Debug for IdentifierSet {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.iter()
-                .map(|id| format!("{id:?}"))
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
     }
 }
 

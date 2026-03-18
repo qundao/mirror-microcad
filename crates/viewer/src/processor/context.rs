@@ -3,7 +3,8 @@
 
 //! The context of geometry processor.
 
-use microcad_lang::{model::Model, rc::RcMut, render::RenderCache, syntax::SourceFile};
+use microcad_lang::{model::Model, render::RenderCache, syntax::SourceFile};
+use microcad_lang_base::RcMut;
 
 use crate::{config, processor::registry::InstanceRegistry};
 

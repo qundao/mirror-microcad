@@ -114,7 +114,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
         log::trace!(
             "{lookup} for symbol '{name:?}' within '{within}'",
             within = within.full_name(),
-            lookup = crate::mark!(LOOKUP)
+            lookup = microcad_lang_base::mark!(LOOKUP)
         );
         match (self.lookup(name, target), within.search(name, true)) {
             // found both
@@ -141,7 +141,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
                 log::trace!(
                     "{found} symbol '{name:?}' within '{within}'",
                     within = within.full_name(),
-                    found = crate::mark!(FOUND)
+                    found = microcad_lang_base::mark!(FOUND)
                 );
                 Ok(symbol)
             }
@@ -150,7 +150,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
                 log::trace!(
                     "{not_found} symbol '{name:?}' within '{within}'",
                     within = within.full_name(),
-                    not_found = crate::mark!(NOT_FOUND)
+                    not_found = microcad_lang_base::mark!(NOT_FOUND)
                 );
                 Err(err)
             }
@@ -183,7 +183,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
         if name.count_super() > 0 {
             log::trace!(
                 "{not_found} '{name:?}' is not canonical",
-                not_found = crate::mark!(NOT_FOUND),
+                not_found = microcad_lang_base::mark!(NOT_FOUND),
             );
             return Err(ResolveError::SymbolNotFound(name.clone()));
         }

@@ -4,15 +4,16 @@
 //! Range expression
 
 use derive_more::Deref;
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 
 /// Range start.
 #[derive(Clone, Default, Deref, PartialEq)]
 pub struct RangeFirst(pub Box<Expression>);
 
 impl SrcReferrer for RangeFirst {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.0.src_ref()
     }
 }
@@ -42,7 +43,7 @@ impl TreeDisplay for RangeFirst {
 pub struct RangeLast(pub Box<Expression>);
 
 impl SrcReferrer for RangeLast {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.0.src_ref()
     }
 }
@@ -79,7 +80,7 @@ pub struct RangeExpression {
 }
 
 impl SrcReferrer for RangeExpression {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
     }
 }

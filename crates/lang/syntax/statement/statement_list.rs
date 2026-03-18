@@ -3,8 +3,9 @@
 
 //! Statement list syntax element.
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 use derive_more::Deref;
+use microcad_lang_base::{SrcRef, SrcReferrer};
 
 /// A list of statements.
 #[derive(Clone, Default, Deref)]

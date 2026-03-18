@@ -5,8 +5,9 @@
 
 #![allow(missing_docs)]
 
+use crate::parse::*;
+use microcad_lang_base::SrcRef;
 use microcad_syntax::Span;
-use crate::{parse::*, src_ref::*};
 
 #[derive(Clone)]
 pub struct LineIndex {

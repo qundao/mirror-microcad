@@ -3,8 +3,9 @@
 
 //! List of expression
 
-use crate::{src_ref::*, syntax::*};
+use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// Inner of an [`ArrayExpression`].
 #[derive(Clone, PartialEq)]
@@ -102,7 +103,7 @@ pub struct ArrayExpression {
 }
 
 impl SrcReferrer for ArrayExpression {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> microcad_lang_base::SrcRef {
         self.src_ref.clone()
     }
 }

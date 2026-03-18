@@ -51,6 +51,7 @@ url = "2.5.7"
 wkt = "0.14"
 
 microcad-lang = { workspace = true }
+microcad-lang-base = { workspace = true }
 microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
 microcad-viewer-ipc = { workspace = true }

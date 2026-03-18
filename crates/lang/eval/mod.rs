@@ -54,11 +54,12 @@ pub use attribute::*;
 pub use call::*;
 pub use eval_context::*;
 pub use eval_error::*;
+use microcad_lang_base::PushDiag;
 pub use output::*;
 
 use locals::*;
 
-use crate::{diag::*, resolve::*, src_ref::*, syntax::*, ty::*, value::*};
+use crate::{resolve::*, syntax::*, ty::*, value::*};
 
 /// Evaluation trait.
 ///

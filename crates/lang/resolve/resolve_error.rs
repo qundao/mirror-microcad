@@ -8,8 +8,8 @@ use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
 use crate::resolve::grant::Scope;
-use crate::src_ref::{SrcRef, SrcReferrer};
-use crate::{diag::*, parse::*, syntax::*};
+use crate::{parse::*, syntax::*};
+use microcad_lang_base::{DiagError, SrcRef, SrcReferrer};
 
 fn capitalize_first(s: &str) -> String {
     let mut c = s.chars();

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*, syntax::*};
+use microcad_lang_base::Refer;
 use microcad_syntax::ast;
 use microcad_syntax::ast::{Element, LiteralKind};
 

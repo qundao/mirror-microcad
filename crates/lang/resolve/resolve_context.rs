@@ -3,7 +3,15 @@
 
 //! Resolve Context
 
-use crate::{diag::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*};
+#[cfg(test)]
+use std::rc::Rc;
+
+use microcad_lang_base::{
+    Diag, DiagHandler, DiagResult, Diagnostic, GetSourceStrByHash, PushDiag, SrcReferrer,
+    TreeDisplay, TreeState, WriteToFile,
+};
+
+use crate::{resolve::*, syntax::*};
 
 /// Resolve Context
 #[derive(Default)]
@@ -41,7 +49,7 @@ pub enum ResolveMode {
 impl ResolveContext {
     /// Load resolve and check a source file and referenced files.
     pub fn create(
-        root: Rc<SourceFile>,
+        root: std::rc::Rc<SourceFile>,
         search_paths: &[impl AsRef<std::path::Path>],
         builtin: Option<Symbol>,
         diag: DiagHandler,
@@ -69,9 +77,6 @@ impl ResolveContext {
         }
         if matches!(mode, ResolveMode::Resolved | ResolveMode::Checked) {
             self.resolve()?;
-            if matches!(mode, ResolveMode::Checked) {
-                self.check()?;
-            }
         }
         Ok(())
     }
@@ -169,42 +174,6 @@ impl ResolveContext {
             .iter()
             .filter(|symbol| !symbol.is_deleted())
             .any(|symbol| symbol.has_links())
-    }
-
-    /// check names in all symbols
-    pub fn check(&mut self) -> ResolveResult<()> {
-        log::trace!("Checking symbol table");
-        self.mode = ResolveMode::Failed;
-
-        if let Err(err) = self
-            .root
-            .iter()
-            .try_for_each(|symbol| symbol.check(self, &IdentifierSet::default()))
-        {
-            self.error(&err.src_ref(), err)?;
-        } else if !self.has_errors() {
-            self.mode = ResolveMode::Checked;
-        }
-
-        log::info!("Symbol table OK!");
-
-        let unchecked = self
-            .root
-            .riter()
-            .filter(|symbol| symbol.is_checked())
-            .collect::<Symbols>();
-
-        log::trace!(
-            "Symbols never used in ANY code:\n{}",
-            unchecked
-                .iter()
-                .map(|symbol| format!("{symbol}"))
-                .collect::<Vec<_>>()
-                .join("\n")
-        );
-        self.unchecked = Some(unchecked);
-
-        Ok(())
     }
 
     /// Load file into source cache and symbolize it into a symbol.
@@ -359,6 +328,16 @@ impl WriteToFile for ResolveContext {}
 impl PushDiag for ResolveContext {
     fn push_diag(&mut self, diag: Diagnostic) -> DiagResult<()> {
         self.diag.push_diag(diag)
+    }
+}
+
+impl GetSourceStrByHash for ResolveContext {
+    fn get_str_by_hash<'a>(&'a self, hash: u64) -> Option<&'a str> {
+        self.sources.get_str_by_hash(hash)
+    }
+
+    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
+        self.sources.get_filename_by_hash(hash)
     }
 }
 

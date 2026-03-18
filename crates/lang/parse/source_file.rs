@@ -1,7 +1,8 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{parse::*, parser::*, rc::*, tree_display::*};
+use crate::{parse::*, parser::*};
+use microcad_lang_base::{FormatTree, SrcReferrer};
 use microcad_syntax::ast;
 use std::fs::read_to_string;
 
@@ -9,7 +10,7 @@ impl SourceFile {
     /// Load µcad source file from given `path`
     pub fn load(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
-    ) -> Result<Rc<Self>, ParseErrorsWithSource> {
+    ) -> Result<std::rc::Rc<Self>, ParseErrorsWithSource> {
         let (source, error) = Self::load_with_name(&path, Self::name_from_path(&path));
         match error {
             Some(error) => Err(error),
@@ -21,12 +22,12 @@ impl SourceFile {
     pub fn load_with_name(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
         name: QualifiedName,
-    ) -> (Rc<Self>, Option<ParseErrorsWithSource>) {
+    ) -> (std::rc::Rc<Self>, Option<ParseErrorsWithSource>) {
         let path = path.as_ref();
         log::trace!(
             "{load} file {path} [{name}]",
             path = path.display(),
-            load = crate::mark!(LOAD)
+            load = microcad_lang_base::mark!(LOAD)
         );
 
         let buf = match read_to_string(path) {
@@ -36,7 +37,7 @@ impl SourceFile {
                 let mut source_file =
                     SourceFile::new(None, StatementList::default(), String::new(), 0);
                 source_file.name = name;
-                return (Rc::new(source_file), Some(error.into()));
+                return (std::rc::Rc::new(source_file), Some(error.into()));
             }
         };
 
@@ -48,7 +49,7 @@ impl SourceFile {
             source_file.name
         );
 
-        (Rc::new(source_file), errors)
+        (std::rc::Rc::new(source_file), errors)
     }
 
     /// Create `SourceFile` from string
@@ -57,11 +58,11 @@ impl SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
-    ) -> Result<Rc<Self>, Vec<ParseError>> {
+    ) -> Result<std::rc::Rc<Self>, Vec<ParseError>> {
         let (source, error) = Self::load_inner(name, path, source_str);
         match error {
             Some(error) => Err(error.errors),
-            None => Ok(Rc::new(source)),
+            None => Ok(std::rc::Rc::new(source)),
         }
     }
 
@@ -71,9 +72,9 @@ impl SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
-    ) -> (Rc<Self>, Option<Vec<ParseError>>) {
+    ) -> (std::rc::Rc<Self>, Option<Vec<ParseError>>) {
         let (source, error) = Self::load_inner(name, path, source_str);
-        (Rc::new(source), error.map(|err| err.errors))
+        (std::rc::Rc::new(source), error.map(|err| err.errors))
     }
 
     fn load_inner(
@@ -81,7 +82,10 @@ impl SourceFile {
         path: impl AsRef<std::path::Path>,
         source_str: &str,
     ) -> (Self, Option<ParseErrorsWithSource>) {
-        log::trace!("{load} source from string", load = crate::mark!(LOAD));
+        log::trace!(
+            "{load} source from string",
+            load = microcad_lang_base::mark!(LOAD)
+        );
         let parse_context = ParseContext::new(source_str);
 
         let dummy_source = || {

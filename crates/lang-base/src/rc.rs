@@ -6,10 +6,6 @@
 use derive_more::{Deref, DerefMut};
 pub use std::rc::Rc;
 
-#[cfg(feature = "debug-cell")]
-use debug_cell::RefCell;
-
-#[cfg(not(feature = "debug-cell"))]
 use std::cell::RefCell;
 
 /// Just a short cut definition

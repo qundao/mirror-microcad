@@ -3,7 +3,9 @@
 
 //! Function signature syntax element
 
-use crate::{src_ref::*, syntax::*};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// Parameters and return type of a function
 #[derive(Clone)]

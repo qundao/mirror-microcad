@@ -1,7 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{parse::*, parser::*, src_ref::*, ty::*};
+use crate::{parse::*, parser::*, ty::*};
+use microcad_lang_base::SrcRef;
 use microcad_syntax::ast;
 use std::str::FromStr;
 

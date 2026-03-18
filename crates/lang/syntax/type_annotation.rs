@@ -3,7 +3,9 @@
 
 //! µcad Type annotation.
 
-use crate::{src_ref::*, syntax::*, ty::*};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::ty::*;
 
 /// Type within source code.
 #[derive(Clone, PartialEq)]

@@ -1,8 +1,8 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::syntax::MietteSourceFile;
-use crate::{diag::*, resolve::*, src_ref::*};
+use crate::{GetSourceStrByHash, MietteSourceFile};
+use crate::{diag::*, src_ref::*};
 use miette::SourceCode;
 
 /// Diagnostic message with source code reference attached.
@@ -77,13 +77,12 @@ impl Diagnostic {
     pub fn pretty_print(
         &self,
         mut f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceByHash,
+        source_by_hash: &impl GetSourceStrByHash,
         line_offset: usize,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
-
-        let source_file = source_by_hash.get_by_hash(src_ref.source_hash());
+        let hash = src_ref.source_hash();
 
         fn make_relative(path: &std::path::Path) -> String {
             let current_dir = std::env::current_dir().expect("current dir");
@@ -100,10 +99,18 @@ impl Diagnostic {
         match &src_ref {
             SrcRef(None) => writeln!(f, "{}: {}", self.level(), self.message())?,
             SrcRef(Some(_)) => {
-                let miette_source = source_file
-                    .as_ref()
-                    .map(|s| s.miette_source(make_relative(&s.filename()), line_offset))
-                    .unwrap_or_else(|_| MietteSourceFile::invalid());
+                let miette_source = match source_by_hash.get_str_by_hash(hash) {
+                    Some(source) => MietteSourceFile {
+                        source: &source,
+                        name: make_relative(
+                            &source_by_hash
+                                .get_filename_by_hash(hash)
+                                .unwrap_or_default(),
+                        ),
+                        line_offset,
+                    },
+                    None => MietteSourceFile::invalid(),
+                };
                 let wrapper = DiagnosticWrapper {
                     diagnostic: self,
                     source: miette_source,
@@ -120,12 +127,13 @@ impl Diagnostic {
     /// Pretty print the diagnostics to a string, see `pretty_print` for more information
     pub fn to_pretty_string(
         &self,
-        source_by_hash: &impl GetSourceByHash,
+        source_by_hash: &impl GetSourceStrByHash,
         line_offset: usize,
         options: &DiagRenderOptions,
     ) -> String {
         let mut buff = String::new();
-        self.pretty_print(&mut buff, source_by_hash, line_offset, options).expect("format to string can't fail");
+        self.pretty_print(&mut buff, source_by_hash, line_offset, options)
+            .expect("format to string can't fail");
         buff
     }
 }

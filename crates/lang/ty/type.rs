@@ -116,7 +116,7 @@ impl From<QuantityType> for Type {
 impl std::fmt::Display for Type {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::Invalid => write!(f, crate::invalid_no_ansi!(TYPE)),
+            Self::Invalid => write!(f, microcad_lang_base::invalid_no_ansi!(TYPE)),
             Self::Integer => write!(f, "Integer"),
             Self::Quantity(quantity) => write!(f, "{quantity}"),
             Self::String => write!(f, "String"),
@@ -132,7 +132,7 @@ impl std::fmt::Display for Type {
 impl std::fmt::Debug for Type {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::Invalid => write!(f, crate::invalid!(TYPE)),
+            Self::Invalid => write!(f, microcad_lang_base::invalid!(TYPE)),
             Self::Integer => write!(f, "Integer"),
             Self::Quantity(quantity) => write!(f, "{quantity}"),
             Self::String => write!(f, "String"),

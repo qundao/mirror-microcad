@@ -3,7 +3,11 @@
 
 //! Assignment statement syntax elements
 
-use crate::{rc::*, src_ref::*, syntax::*};
+use std::rc::Rc;
+
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use crate::syntax::*;
 
 /// An assignment statement, e.g. `#[aux] s = Sphere(3.0mm);`.
 #[derive(Clone)]

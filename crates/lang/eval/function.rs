@@ -3,6 +3,8 @@
 
 //! µcad Function call evaluation
 
+use microcad_lang_base::PushDiag;
+
 use crate::{eval::*, syntax::*, value::*};
 
 impl CallTrait for FunctionDefinition {

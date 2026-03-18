@@ -6,6 +6,7 @@
 #![allow(unused, unused_assignments)]
 
 use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
+use microcad_lang_base::{DiagError, SrcRef};
 use miette::Diagnostic;
 use thiserror::Error;
 

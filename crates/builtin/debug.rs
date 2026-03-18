@@ -10,13 +10,12 @@ pub mod debug {
     use microcad_builtin_proc_macros::builtin_fn;
     use microcad_lang::{
         builtin::ValueAccess,
-        diag::PushDiag,
         eval::{ArgumentMatch, EvalContext, EvalError, EvalResult},
         parameter,
-        src_ref::SrcReferrer,
         syntax::{Identifier, QualifiedName},
         value::Value,
     };
+    use microcad_lang_base::{PushDiag, SrcReferrer};
 
     /// Assertion with an optional message.
     #[builtin_fn(v: Bool, message: String = String::new())]
@@ -109,7 +108,7 @@ pub mod debug {
         // Hack split input string and construct a qualified name.
         let name = QualifiedName::new(
             name.split("::").map(Identifier::no_ref).collect(),
-            microcad_lang::src_ref::SrcRef(None),
+            microcad_lang_base::SrcRef(None),
         );
         use microcad_lang::resolve::Lookup;
         Ok(

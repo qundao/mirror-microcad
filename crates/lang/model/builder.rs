@@ -3,7 +3,9 @@
 
 //! Model builder.
 
-use crate::{eval::*, model::*, src_ref::SrcRef};
+use crate::{eval::*, model::*};
+
+use microcad_lang_base::SrcRef;
 
 /// A builder pattern to build models.
 #[derive(Default)]

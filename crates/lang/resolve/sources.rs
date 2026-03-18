@@ -4,9 +4,10 @@
 //! Source file cache
 
 use derive_more::Deref;
+use microcad_lang_base::{GetSourceStrByHash, SrcReferrer};
 
-use crate::{parse::*, rc::*, resolve::*, src_ref::*, syntax::*};
-use std::collections::HashMap;
+use crate::{parse::*, resolve::*, syntax::*};
+use std::{collections::HashMap, rc::Rc};
 
 /// Register of loaded source files and their syntax trees.
 ///
@@ -312,6 +313,20 @@ pub(super) struct ReplacedSourceFile {
 pub trait GetSourceByHash {
     /// Find a project file by it's hash value.
     fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<SourceFile>>;
+}
+
+impl GetSourceStrByHash for Sources {
+    fn get_str_by_hash<'a>(&'a self, hash: u64) -> Option<&'a str> {
+        self.by_hash
+            .get(&hash)
+            .map(|index| self.source_files[*index].source.as_str())
+    }
+
+    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
+        self.by_hash
+            .get(&hash)
+            .map(|index| self.source_files[*index].filename())
+    }
 }
 
 impl GetSourceByHash for Sources {

@@ -1,9 +1,12 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    builtin::*, diag::*, eval::*, model::*, rc::*, resolve::*, syntax::*, tree_display::*,
+use microcad_lang_base::{
+    Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceStrByHash, PushDiag,
+    SrcReferrer, TreeDisplay, TreeState,
 };
+
+use crate::{builtin::*, eval::*, model::*, resolve::*, syntax::*};
 
 /// *Context* for *evaluation* of a resolved µcad file.
 ///
@@ -53,7 +56,7 @@ impl EvalContext {
 
     /// Create a new context from a source file.
     pub fn from_source(
-        root: Rc<SourceFile>,
+        root: std::rc::Rc<SourceFile>,
         builtin: Option<Symbol>,
         search_paths: &[impl AsRef<std::path::Path>],
         output: Box<dyn Output>,
@@ -206,7 +209,7 @@ impl EvalContext {
     fn lookup_property(&self, name: &QualifiedName) -> EvalResult<Symbol> {
         log::trace!(
             "{lookup} for property {name:?}",
-            lookup = crate::mark!(LOOKUP)
+            lookup = microcad_lang_base::mark!(LOOKUP)
         );
         self.root.deny_super(name)?;
 
@@ -214,7 +217,10 @@ impl EvalContext {
             if let Some(id) = name.single_identifier() {
                 match self.get_property(id) {
                     Ok(value) => {
-                        log::trace!("{found} property '{name:?}'", found = crate::mark!(FOUND));
+                        log::trace!(
+                            "{found} property '{name:?}'",
+                            found = microcad_lang_base::mark!(FOUND)
+                        );
                         return Ok(Symbol::new(SymbolDef::Value(id.clone(), value), None));
                     }
                     Err(err) => return Err(err),
@@ -223,7 +229,7 @@ impl EvalContext {
         }
         log::trace!(
             "{not_found} Property '{name:?}'",
-            not_found = crate::mark!(NOT_FOUND)
+            not_found = microcad_lang_base::mark!(NOT_FOUND)
         );
         Err(EvalError::NoPropertyId(name.clone()))
     }
@@ -236,21 +242,21 @@ impl EvalContext {
         if let Some(workbench) = &self.stack.current_call_name() {
             log::trace!(
                 "{lookup} for symbol '{name:?}' in current workbench '{workbench:?}'",
-                lookup = crate::mark!(LOOKUP)
+                lookup = microcad_lang_base::mark!(LOOKUP)
             );
             self.deny_super(name)?;
             match self.root.lookup_within_name(name, workbench, target) {
                 Ok(symbol) => {
                     log::trace!(
                         "{found} symbol in current module: {symbol:?}",
-                        found = crate::mark!(FOUND),
+                        found = microcad_lang_base::mark!(FOUND),
                     );
                     Ok(symbol)
                 }
                 Err(err) => {
                     log::trace!(
                         "{not_found} symbol '{name:?}': {err}",
-                        not_found = crate::mark!(NOT_FOUND)
+                        not_found = microcad_lang_base::mark!(NOT_FOUND)
                     );
                     Err(err)
                 }
@@ -258,7 +264,7 @@ impl EvalContext {
         } else {
             log::trace!(
                 "{not_found} No current workbench",
-                not_found = crate::mark!(NOT_FOUND)
+                not_found = microcad_lang_base::mark!(NOT_FOUND)
             );
             Err(ResolveError::SymbolNotFound(name.clone()))
         }
@@ -394,7 +400,7 @@ impl Lookup<EvalError> for EvalContext {
                     .map(|(origin, err)| format!("{origin}: {err}"))
                     .collect::<Vec<_>>()
                     .join("\n"),
-                ambiguous = crate::mark!(AMBIGUOUS)
+                ambiguous = microcad_lang_base::mark!(AMBIGUOUS)
             );
             return Err(ambiguities.remove(0).1);
         }
@@ -412,7 +418,7 @@ impl Lookup<EvalError> for EvalContext {
                 if found.iter().all(|(_, x)| x == symbol) {
                     log::debug!(
                         "{found} symbol '{name:?}' in {origin}",
-                        found = crate::mark!(FOUND!)
+                        found = microcad_lang_base::mark!(FOUND!)
                     );
                     symbol.set_used();
                     Ok(symbol.clone())
@@ -421,7 +427,7 @@ impl Lookup<EvalError> for EvalContext {
                         found.iter().map(|(_, symbol)| symbol.full_name()).collect();
                     log::debug!(
                         "{ambiguous} symbol '{name:?}' in {others:?}:\n{self:?}",
-                        ambiguous = crate::mark!(AMBIGUOUS),
+                        ambiguous = microcad_lang_base::mark!(AMBIGUOUS),
                     );
                     Err(EvalError::AmbiguousSymbol(name.clone(), others))
                 }
@@ -429,7 +435,7 @@ impl Lookup<EvalError> for EvalContext {
             None => {
                 log::debug!(
                     "{not_found} Symbol '{name:?}'",
-                    not_found = crate::mark!(NOT_FOUND!)
+                    not_found = microcad_lang_base::mark!(NOT_FOUND!)
                 );
                 Err(EvalError::SymbolNotFound(name.clone()))
             }
@@ -441,7 +447,7 @@ impl Lookup<EvalError> for EvalContext {
     }
 }
 
-impl Diag for EvalContext {
+impl microcad_lang_base::Diag for EvalContext {
     fn fmt_diagnosis(&self, f: &mut dyn std::fmt::Write) -> std::fmt::Result {
         self.diag.pretty_print(f, self)
     }
@@ -477,8 +483,18 @@ impl PushDiag for EvalContext {
 }
 
 impl GetSourceByHash for EvalContext {
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<SourceFile>> {
         self.sources.get_by_hash(hash)
+    }
+}
+
+impl GetSourceStrByHash for EvalContext {
+    fn get_str_by_hash<'a>(&'a self, hash: u64) -> Option<&'a str> {
+        self.sources.get_str_by_hash(hash)
+    }
+
+    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
+        self.sources.get_filename_by_hash(hash)
     }
 }
 
@@ -538,14 +554,14 @@ impl ImporterRegistryAccess for EvalContext {
 }
 
 impl ExporterAccess for EvalContext {
-    fn exporter_by_id(&self, id: &crate::Id) -> Result<Rc<dyn Exporter>, ExportError> {
+    fn exporter_by_id(&self, id: &crate::Id) -> Result<std::rc::Rc<dyn Exporter>, ExportError> {
         self.exporters.exporter_by_id(id)
     }
 
     fn exporter_by_filename(
         &self,
         filename: &std::path::Path,
-    ) -> Result<Rc<dyn Exporter>, ExportError> {
+    ) -> Result<std::rc::Rc<dyn Exporter>, ExportError> {
         self.exporters.exporter_by_filename(filename)
     }
 }

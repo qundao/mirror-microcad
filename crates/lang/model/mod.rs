@@ -28,16 +28,12 @@ pub use properties::*;
 pub use workpiece::*;
 
 use derive_more::{Deref, DerefMut};
-
 use microcad_core::{BooleanOp, Integer};
+use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState, WriteToFile};
 
 use crate::{
-    diag::WriteToFile,
-    rc::RcMut,
     render::{ComputedHash, HashId},
-    src_ref::SrcReferrer,
     syntax::Identifier,
-    tree_display::*,
     value::Value,
 };
 
@@ -227,7 +223,7 @@ impl PartialEq for Model {
 }
 
 impl SrcReferrer for Model {
-    fn src_ref(&self) -> crate::src_ref::SrcRef {
+    fn src_ref(&self) -> SrcRef {
         self.borrow().src_ref()
     }
 }
@@ -256,7 +252,7 @@ impl std::fmt::Debug for Model {
         write!(
             f,
             "{}",
-            crate::shorten!(format!(
+            microcad_lang_base::shorten!(format!(
                 "{id}{element}{is_root} ->",
                 id = match &self.borrow().id {
                     Some(id) => format!("{id:?}: "),

@@ -5,8 +5,9 @@
 
 mod parameter_list;
 
-use crate::{diag::*, eval::*, ord_map::*, src_ref::*, syntax::*, ty::*, value::*};
+use crate::{eval::*, ord_map::*, syntax::*, ty::*, value::*};
 
+use microcad_lang_base::{PushDiag, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 pub use parameter_list::*;
 
 /// A parameter of a parameter list.

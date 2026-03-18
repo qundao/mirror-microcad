@@ -34,6 +34,7 @@ rust-embed = "8.9"
 miette = { version = "7.6.0", features = ["fancy"] }
 
 microcad-lang = { workspace = true }
+microcad-lang-base = { workspace = true }
 microcad-core = { workspace = true }
 microcad-builtin = { workspace = true }
 microcad-export = { workspace = true }

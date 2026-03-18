@@ -3,8 +3,9 @@
 
 //! Object properties.
 
-use crate::{syntax::*, tree_display::*, value::*};
+use crate::{syntax::*, value::*};
 use derive_more::{Deref, DerefMut};
+use microcad_lang_base::{TreeDisplay, TreeState};
 use std::collections::BTreeMap;
 
 /// A list of object properties.
