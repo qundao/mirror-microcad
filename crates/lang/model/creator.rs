@@ -3,7 +3,10 @@
 
 //! Creator of work pieces.
 
-use crate::{resolve::*, value::Tuple};
+use crate::{
+    symbol::{Info, Symbol, SymbolInfo},
+    value::Tuple,
+};
 
 /// A creator is the origin  
 #[derive(Debug, Clone)]

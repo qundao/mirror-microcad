@@ -124,9 +124,3 @@ impl TreeDisplay for WorkbenchDefinition {
         self.body.tree_print(f, depth)
     }
 }
-
-impl Doc for WorkbenchDefinition {
-    fn doc(&self) -> Option<DocBlock> {
-        self.doc.clone()
-    }
-}

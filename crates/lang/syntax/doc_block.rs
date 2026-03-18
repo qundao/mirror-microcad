@@ -5,12 +5,6 @@
 
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
-/// Retrieve doc from symbol definition.
-pub trait Doc {
-    /// Return documentation
-    fn doc(&self) -> Option<DocBlock>;
-}
-
 /// Block of documentation comments, starting with `/// `.
 #[derive(Clone, Debug, Default)]
 pub struct DocBlock(pub Refer<Vec<String>>);

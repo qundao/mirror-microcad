@@ -1,6 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! µcad symbol tree.
+
 mod iterators;
 mod symbol_definition;
 mod symbol_info;
@@ -101,6 +103,23 @@ impl Symbol {
             .iter()
             .for_each(|(_, child)| child.inner.borrow_mut().parent = Some(self.clone()));
         self.inner.replace(replacement.inner.take());
+    }
+
+    /// Get fully qualified name.
+    pub fn full_name(&self) -> QualifiedName {
+        let id = self.id();
+        match &self.get_parent() {
+            Some(parent) => {
+                let mut name = parent.full_name();
+                name.push(id);
+                name
+            }
+
+            None => {
+                let src_ref = id.src_ref();
+                QualifiedName::new(vec![id], src_ref)
+            }
+        }
     }
 }
 
@@ -601,25 +620,6 @@ impl Symbol {
     }
 }
 
-impl FullyQualify for Symbol {
-    /// Get fully qualified name.
-    fn full_name(&self) -> QualifiedName {
-        let id = self.id();
-        match &self.get_parent() {
-            Some(parent) => {
-                let mut name = parent.full_name();
-                name.push(id);
-                name
-            }
-
-            None => {
-                let src_ref = id.src_ref();
-                QualifiedName::new(vec![id], src_ref)
-            }
-        }
-    }
-}
-
 impl SrcReferrer for Symbol {
     fn src_ref(&self) -> SrcRef {
         if self.src_ref.is_none() {
@@ -677,37 +677,6 @@ impl TreeDisplay for Symbol {
             self.print_symbol(f, Some(&self.id()), state, true)
         }
     }
-}
-
-#[test]
-fn test_symbol_resolve() {
-    let root = SourceFile::load_from_str(
-        Some("root"),
-        "",
-        "
-        use my; 
-        x = my::target;
-
-        use my::target; 
-        x = target;
-        ",
-    )
-    .expect("parse error");
-
-    let my = SourceFile::load_from_str(
-        Some("my"),
-        "",
-        "
-        pub const target = 1;
-        ",
-    )
-    .expect("parse error");
-
-    let mut context =
-        ResolveContext::test_create(root, ResolveMode::Symbolized).expect("resolve error");
-    context.test_add_file(my);
-    log::trace!("{context:?}");
-    context.resolve().expect("resolve error");
 }
 
 impl Lookup for Symbol {

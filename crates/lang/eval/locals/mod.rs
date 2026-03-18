@@ -7,7 +7,7 @@ mod stack_frame;
 pub use stack::*;
 pub use stack_frame::*;
 
-use crate::{eval::*, model::*, syntax::*};
+use crate::{eval::*, model::*, symbol::Symbol, syntax::*};
 
 /// Trait to manage the *locals*.
 ///

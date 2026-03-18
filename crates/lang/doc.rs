@@ -3,7 +3,11 @@
 
 //! Doc trait.
 
-use crate::{builtin::Builtin, resolve::*, syntax::*};
+use crate::{
+    builtin::Builtin,
+    symbol::{Symbol, SymbolDef},
+    syntax::*,
+};
 
 use microcad_lang_base::{Refer, SrcRef};
 

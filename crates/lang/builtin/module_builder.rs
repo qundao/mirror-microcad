@@ -5,7 +5,7 @@
 
 use crate::{
     builtin::{BuiltinConstant, BuiltinWorkbenchDefinition},
-    resolve::*,
+    symbol::{Symbol, SymbolDef},
     syntax::*,
     value::Value,
 };

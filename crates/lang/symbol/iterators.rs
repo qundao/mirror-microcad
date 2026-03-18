@@ -3,7 +3,7 @@
 
 //! Symbol iterators
 
-use crate::resolve::*;
+use crate::symbol::{Symbol, Symbols};
 
 /// Iterator over children of a symbol.
 pub struct Children {
@@ -63,6 +63,9 @@ impl Iterator for RecurseChildren {
 
 #[test]
 fn test_recurse_children() {
+    use crate::symbol::SymbolDef;
+    use crate::syntax::*;
+
     let mut root = Symbol::new(
         SymbolDef::SourceFile(std::rc::Rc::new(SourceFile::new(
             None,

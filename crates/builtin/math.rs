@@ -42,7 +42,7 @@ pub mod math {
     use cgmath::SquareMatrix;
     use microcad_builtin_proc_macros::builtin_fn;
     use microcad_core::{Integer, Mat3, Scalar, Vec3};
-    use microcad_lang::{eval::*, parameter, resolve::*, ty::*, value::*};
+    use microcad_lang::{eval::*, parameter, symbol::Symbol, ty::*, value::*};
     use microcad_lang_base::PushDiag;
 
     /// Pi.

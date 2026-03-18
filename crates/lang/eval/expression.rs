@@ -3,7 +3,11 @@
 
 use microcad_lang_base::{PushDiag, SrcReferrer};
 
-use crate::{eval::*, model::*};
+use crate::{
+    eval::*,
+    model::*,
+    symbol::{Symbol, SymbolDef},
+};
 
 impl Eval for RangeFirst {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {

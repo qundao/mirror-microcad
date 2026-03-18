@@ -99,9 +99,3 @@ impl std::fmt::Debug for ModuleDefinition {
         )
     }
 }
-
-impl Doc for ModuleDefinition {
-    fn doc(&self) -> Option<DocBlock> {
-        self.doc.clone()
-    }
-}

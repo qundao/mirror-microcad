@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use microcad_lang_base::{SrcRef, SrcReferrer};
 
-use crate::{builtin::*, syntax::*, value::*};
+use crate::{builtin::*, doc::Doc, syntax::*, value::*};
 
 /// Retrieve symbol information.
 pub trait Info {
@@ -81,7 +81,7 @@ impl From<&Rc<Assignment>> for SymbolInfo {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "Assignment".into(),
-            doc: def.doc(),
+            doc: Some(def.doc()),
             signatures: vec![],
             src_ref: def.src_ref(),
         }
@@ -93,7 +93,7 @@ impl From<&Rc<SourceFile>> for SymbolInfo {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "SourceFile".into(),
-            doc: def.doc(),
+            doc: Some(def.doc()),
             signatures: vec![],
             src_ref: def.src_ref(),
         }
@@ -105,7 +105,7 @@ impl From<&Rc<ModuleDefinition>> for SymbolInfo {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "ModuleDefinition".into(),
-            doc: def.doc(),
+            doc: Some(def.doc()),
             signatures: vec![],
             src_ref: def.src_ref(),
         }
@@ -117,12 +117,12 @@ impl From<&Rc<WorkbenchDefinition>> for SymbolInfo {
         SymbolInfo {
             id: def.id().to_string(),
             kind: def.kind.to_string(),
-            doc: def.doc(),
+            doc: Some(def.doc()),
             signatures: def
                 .inits()
                 .map(|init| SignatureInfo {
                     params: init.parameters.iter().map(|p| p.into()).collect(),
-                    doc: init.doc(),
+                    doc: Some(init.doc()),
                 })
                 .collect(),
             src_ref: def.src_ref(),
@@ -135,10 +135,10 @@ impl From<&Rc<FunctionDefinition>> for SymbolInfo {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "Function".into(),
-            doc: def.doc(),
+            doc: Some(def.doc()),
             signatures: vec![SignatureInfo {
                 params: def.signature.parameters.iter().map(|p| p.into()).collect(),
-                doc: def.doc(),
+                doc: Some(def.doc()),
             }],
             src_ref: def.src_ref(),
         }

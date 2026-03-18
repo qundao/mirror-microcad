@@ -1,7 +1,11 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{resolve::*, syntax::*};
+use crate::{
+    resolve::*,
+    symbol::{Symbol, SymbolDef},
+    syntax::*,
+};
 
 /// Target of symbol to look up.
 #[derive(Clone, Copy)]

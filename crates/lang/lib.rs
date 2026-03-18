@@ -23,6 +23,7 @@ pub mod parse;
 pub mod parser;
 pub mod render;
 pub mod resolve;
+pub mod symbol;
 pub mod syntax;
 pub mod ty;
 pub mod value;

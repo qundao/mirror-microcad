@@ -4,8 +4,7 @@
 use microcad_lang_base::PushDiag;
 use microcad_lang_base::SrcReferrer;
 
-use crate::eval::*;
-use crate::value::*;
+use crate::{eval::*, symbol::SymbolDef, value::*};
 
 impl Assignment {
     /// Check if the specified type matches the found type.

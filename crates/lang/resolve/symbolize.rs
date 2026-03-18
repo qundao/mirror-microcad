@@ -7,7 +7,11 @@ use std::rc::Rc;
 
 use microcad_lang_base::PushDiag;
 
-use crate::{resolve::*, syntax::*};
+use crate::{
+    resolve::*,
+    symbol::{Symbol, SymbolDef, SymbolMap},
+    syntax::*,
+};
 
 pub(super) trait Symbolize<T = Option<Symbol>> {
     /// Create symbol from definition.

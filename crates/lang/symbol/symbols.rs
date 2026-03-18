@@ -1,8 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::resolve::*;
 use derive_more::{Deref, DerefMut};
+
+use crate::symbol::Symbol;
 
 /// List of qualified names which can pe displayed
 #[derive(Deref, DerefMut, Default)]

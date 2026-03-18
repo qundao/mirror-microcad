@@ -5,7 +5,15 @@ use derive_more::From;
 use microcad_lang_base::SrcReferrer;
 use std::rc::Rc;
 
-use crate::{builtin::*, resolve::*, syntax::*, value::*};
+use crate::{
+    builtin::*,
+    symbol::{Info, SymbolInfo},
+    syntax::{
+        Assignment, FunctionDefinition, Identifiable, ModuleDefinition, QualifiedName, SourceFile,
+        Visibility, WorkbenchDefinition,
+    },
+    value::*,
+};
 
 /// Symbol definition
 #[derive(Clone, Default, From)]
@@ -145,18 +153,6 @@ impl std::fmt::Debug for SymbolDef {
             Self::UseAll(.., name) => write!(f, "({kind}) => {name:?}"),
             #[cfg(test)]
             Self::Tester(id) => write!(f, "({kind}) => {id:?}"),
-        }
-    }
-}
-
-impl Doc for SymbolDef {
-    fn doc(&self) -> Option<DocBlock> {
-        match self {
-            Self::SourceFile(sf) => sf.doc(),
-            Self::Module(md) => md.doc(),
-            Self::Workbench(wd) => wd.doc(),
-            Self::Function(fd) => fd.doc(),
-            _ => None,
         }
     }
 }

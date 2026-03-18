@@ -8,7 +8,7 @@ mod mdbook;
 
 /// Documentation generator for a symbol.
 pub trait DocGen {
-    fn doc_gen(&self, symbol: &microcad_lang::resolve::Symbol) -> std::io::Result<()>;
+    fn doc_gen(&self, symbol: &microcad_lang::symbol::Symbol) -> std::io::Result<()>;
 }
 
 /// Single markdown generator.

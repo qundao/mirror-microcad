@@ -6,7 +6,7 @@
 use microcad_lang::{
     builtin::{Builtin, BuiltinWorkbenchKind},
     doc::Doc,
-    resolve::*,
+    symbol::{Symbol, SymbolDef},
     syntax::{
         FunctionDefinition, Identifiable, InitDefinition, Initialized, ModuleDefinition,
         ParameterList, SourceFile, Visibility, WorkbenchDefinition,

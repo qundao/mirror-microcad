@@ -139,12 +139,6 @@ impl SrcReferrer for SourceFile {
     }
 }
 
-impl Doc for SourceFile {
-    fn doc(&self) -> Option<DocBlock> {
-        self.doc.clone()
-    }
-}
-
 #[test]
 fn load_source_file_wrong_location() {
     let source_file = SourceFile::load("I do not exist.µcad");

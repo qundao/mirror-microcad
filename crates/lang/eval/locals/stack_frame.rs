@@ -3,7 +3,11 @@
 
 use microcad_lang_base::SrcRef;
 
-use crate::{eval::*, model::*};
+use crate::{
+    eval::*,
+    model::*,
+    symbol::{Symbol, SymbolDef, SymbolMap},
+};
 
 /// Frame in [Stack] for *local variables*, *aliases* (*use statements*) and *calls*.
 ///

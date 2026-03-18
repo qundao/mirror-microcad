@@ -13,7 +13,7 @@ pub use to_md::ToMd;
 
 use crate::DocGen;
 use microcad_builtin::Symbol;
-use microcad_lang::resolve::{FullyQualify, SymbolDef};
+use microcad_lang::symbol::SymbolDef;
 
 /// Markdown generator that generates a markdown documentation file for each source file.
 pub struct Md {

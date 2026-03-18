@@ -131,7 +131,7 @@ impl From<BuiltinValueHelper> for Value {
 // Re-export symbols
 pub use crate::model::Operation;
 pub use crate::parameter;
-pub use crate::resolve::Symbol;
+pub use crate::symbol::Symbol;
 pub use crate::syntax::Identifier;
 pub use crate::value::ParameterValue;
 pub use crate::value::ParameterValueList;

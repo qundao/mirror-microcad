@@ -6,7 +6,7 @@ use microcad_lang_base::{
     SrcReferrer, TreeDisplay, TreeState,
 };
 
-use crate::{builtin::*, eval::*, model::*, resolve::*, syntax::*};
+use crate::{builtin::*, eval::*, model::*, symbol::SymbolDef, syntax::*};
 
 /// *Context* for *evaluation* of a resolved µcad file.
 ///

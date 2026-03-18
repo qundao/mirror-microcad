@@ -1,7 +1,12 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{resolve::*, syntax::*, value::*};
+use crate::{
+    resolve::{ResolveContext, ResolveResult},
+    symbol::{Symbol, SymbolDef},
+    syntax::*,
+    value::*,
+};
 use derive_more::{Deref, DerefMut};
 use indexmap::IndexMap;
 use microcad_lang_base::{FormatTree, WriteToFile};

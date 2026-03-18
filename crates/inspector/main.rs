@@ -7,7 +7,6 @@
 
 use clap::Parser;
 
-use microcad_lang::resolve::{FullyQualify, Symbol, SymbolInfo};
 use microcad_lang::syntax::*;
 use microcad_lang_base::{Refer, SrcRef};
 

@@ -132,8 +132,8 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
         #item_mod
 
         #[allow(missing_docs)]
-        pub fn #mod_name() -> microcad_lang::resolve::Symbol {
-            crate::ModuleBuilder::new(#mod_name_str)
+        pub fn #mod_name() -> microcad_lang::symbol::Symbol {
+            microcad_lang::builtin::ModuleBuilder::new(#mod_name_str)
                 #(#registrations)*
                 .build()
         }

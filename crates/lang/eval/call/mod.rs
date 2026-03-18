@@ -12,7 +12,7 @@ pub use call_method::*;
 pub use call_trait::*;
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, syntax::*, value::*};
+use crate::{eval::*, symbol::SymbolDef, syntax::*, value::*};
 
 use thiserror::Error;
 

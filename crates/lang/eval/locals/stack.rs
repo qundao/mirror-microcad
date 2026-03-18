@@ -3,7 +3,11 @@
 
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, model::*, resolve::*};
+use crate::{
+    eval::*,
+    model::*,
+    symbol::{Symbol, SymbolDef},
+};
 
 /// A stack with a list of stack frames.
 ///
@@ -332,6 +336,7 @@ impl std::fmt::Debug for Stack {
 #[test]
 #[allow(clippy::unwrap_used)]
 fn local_stack() {
+    use crate::symbol::SymbolMap;
     let mut stack = Stack::default();
 
     let make_int = |id, value| Symbol::new(SymbolDef::Value(id, Value::Integer(value)), None);

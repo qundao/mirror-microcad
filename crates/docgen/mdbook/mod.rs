@@ -5,10 +5,8 @@
 
 use std::io::Write;
 
-use microcad_lang::{
-    builtin::Builtin,
-    resolve::{FullyQualify, Symbol, SymbolDef},
-};
+use microcad_builtin::Symbol;
+use microcad_lang::{builtin::Builtin, symbol::SymbolDef};
 
 use crate::{DocGen, md::ToMd};
 
@@ -184,7 +182,7 @@ impl MdBook {
 }
 
 impl DocGen for MdBook {
-    fn doc_gen(&self, symbol: &microcad_lang::resolve::Symbol) -> std::io::Result<()> {
+    fn doc_gen(&self, symbol: &Symbol) -> std::io::Result<()> {
         std::fs::create_dir_all(self.path.join("src"))?;
 
         self.write_book_toml()?;

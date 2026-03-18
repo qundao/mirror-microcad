@@ -3,7 +3,7 @@
 
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, model::*};
+use crate::{eval::*, model::*, symbol::SymbolMap};
 
 /// Evaluate the body into a value.
 impl Eval<Value> for Body {

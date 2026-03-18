@@ -61,9 +61,3 @@ impl std::fmt::Debug for FunctionDefinition {
         write!(f, "fn {:?}{:?}", self.id, self.signature)
     }
 }
-
-impl Doc for FunctionDefinition {
-    fn doc(&self) -> Option<DocBlock> {
-        self.doc.clone()
-    }
-}

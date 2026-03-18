@@ -7,7 +7,7 @@
 
 use microcad_lang_base::PushDiag;
 
-use crate::{eval::*, model::*};
+use crate::{eval::*, model::*, symbol::SymbolDef};
 
 mod assignment_statement;
 mod expression_statement;

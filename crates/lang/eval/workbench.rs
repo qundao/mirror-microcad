@@ -6,7 +6,7 @@
 use microcad_core::hash::Hashed;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 
-use crate::{eval::*, model::*, syntax::*};
+use crate::{eval::*, model::*, symbol::Symbol, syntax::*};
 
 impl WorkbenchDefinition {
     /// Try to evaluate a single call into a [`Model`].

@@ -128,9 +128,3 @@ impl TreeDisplay for Assignment {
         self.expression.tree_print(f, depth)
     }
 }
-
-impl Doc for Assignment {
-    fn doc(&self) -> Option<DocBlock> {
-        self.doc.clone()
-    }
-}

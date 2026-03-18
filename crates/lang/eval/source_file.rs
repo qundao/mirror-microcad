@@ -3,7 +3,7 @@
 
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, model::*, syntax::*};
+use crate::{eval::*, model::*, symbol::SymbolMap, syntax::*};
 
 impl Eval for std::rc::Rc<SourceFile> {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {

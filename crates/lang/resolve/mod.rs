@@ -24,7 +24,6 @@ mod lookup;
 mod resolve_context;
 mod resolve_error;
 mod sources;
-mod symbol;
 mod symbolize;
 
 use crate::syntax::*;
@@ -33,7 +32,6 @@ pub use lookup::*;
 pub use resolve_context::*;
 pub use resolve_error::*;
 pub use sources::*;
-pub use symbol::*;
 
 use grant::*;
 

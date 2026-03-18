@@ -5,7 +5,11 @@
 
 use crate::*;
 
-use microcad_lang::model::{Creator, Element, Model};
+use microcad_builtin::Symbol;
+use microcad_lang::{
+    model::{Creator, Element, Model},
+    symbol::SymbolInfo,
+};
 use microcad_lang_base::SrcReferrer;
 use slint::ToSharedString;
 
@@ -72,7 +76,7 @@ impl From<SymbolInfo> for VM_SymbolInfo {
 
 impl From<Option<&Creator>> for VM_Creator {
     fn from(creator: Option<&Creator>) -> Self {
-        use microcad_lang::resolve::Info;
+        use microcad_lang::symbol::Info;
         match creator {
             Some(creator) => Self {
                 symbol: creator.symbol.info().into(),

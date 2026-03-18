@@ -7,7 +7,7 @@ use custom_debug::Debug;
 use microcad_core::hash::{ComputedHash, HashId, Hashed};
 use microcad_lang_base::SrcRef;
 
-use crate::{builtin::*, eval::*, model::*, render::*, resolve::*, syntax::*, value::*};
+use crate::{builtin::*, eval::*, model::*, render::*, syntax::*, value::*};
 
 /// The return value when calling a built-in workpiece.
 pub enum BuiltinWorkpieceOutput {

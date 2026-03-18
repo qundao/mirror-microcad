@@ -11,7 +11,11 @@ use microcad_lang_base::{
     TreeDisplay, TreeState, WriteToFile,
 };
 
-use crate::{resolve::*, syntax::*};
+use crate::{
+    resolve::*,
+    symbol::{Symbol, Symbols},
+    syntax::*,
+};
 
 /// Resolve Context
 #[derive(Default)]
@@ -82,7 +86,7 @@ impl ResolveContext {
     }
 
     #[cfg(test)]
-    pub(super) fn test_create(root: Rc<SourceFile>, mode: ResolveMode) -> ResolveResult<Self> {
+    pub(crate) fn test_create(root: Rc<SourceFile>, mode: ResolveMode) -> ResolveResult<Self> {
         let mut context = Self {
             sources: Sources::load(root.clone(), &[] as &[std::path::PathBuf])?,
             ..Default::default()

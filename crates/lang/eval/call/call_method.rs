@@ -5,7 +5,7 @@
 
 use microcad_lang_base::{PushDiag, SrcRef};
 
-use crate::{eval::*, model::Model, syntax::*};
+use crate::{eval::*, model::Model, symbol::SymbolDef, syntax::*};
 
 /// Trait for calling methods of values
 pub trait CallMethod<T = Value> {
