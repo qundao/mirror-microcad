@@ -28,14 +28,13 @@ pub use properties::*;
 pub use workpiece::*;
 
 use derive_more::{Deref, DerefMut};
-use microcad_core::{BooleanOp, Integer};
+use microcad_core::{
+    BooleanOp, Integer,
+    hash::{ComputedHash, HashId},
+};
 use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState, WriteToFile};
 
-use crate::{
-    render::{ComputedHash, HashId},
-    syntax::Identifier,
-    value::Value,
-};
+use crate::{syntax::Identifier, value::Value};
 
 /// A reference counted, mutable [`Model`].
 #[derive(Clone, Deref, DerefMut)]

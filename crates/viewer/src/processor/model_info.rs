@@ -5,11 +5,8 @@
 
 use bevy::{asset::uuid::Uuid, color::Color, reflect::TypePath, transform::components::Transform};
 
-use microcad_core::*;
-use microcad_lang::{
-    model::{Model, OutputType},
-    render::ComputedHash,
-};
+use microcad_core::{Bounds2D, Bounds3D, CalcBounds2D, CalcBounds3D, Length, hash::ComputedHash};
+use microcad_lang::model::{Model, OutputType};
 use microcad_lang_base::{SrcRef, SrcReferrer};
 
 use crate::{ToBevy, processor::registry};

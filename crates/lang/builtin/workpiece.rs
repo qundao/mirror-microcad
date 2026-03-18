@@ -4,6 +4,7 @@
 //! Builtin function evaluation entity
 
 use custom_debug::Debug;
+use microcad_core::hash::{ComputedHash, HashId, Hashed};
 use microcad_lang_base::SrcRef;
 
 use crate::{builtin::*, eval::*, model::*, render::*, resolve::*, syntax::*, value::*};
@@ -56,7 +57,7 @@ impl std::fmt::Display for BuiltinWorkpiece {
 }
 
 impl ComputedHash for BuiltinWorkpiece {
-    fn computed_hash(&self) -> crate::render::HashId {
+    fn computed_hash(&self) -> HashId {
         self.creator.computed_hash()
     }
 }

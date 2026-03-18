@@ -6,7 +6,6 @@
 mod attribute;
 mod cache;
 mod context;
-mod hash;
 mod output;
 
 use std::rc::Rc;
@@ -14,7 +13,6 @@ use std::rc::Rc;
 pub use attribute::*;
 pub use cache::*;
 pub use context::*;
-pub use hash::*;
 use microcad_lang_base::FormatTree;
 pub use output::*;
 

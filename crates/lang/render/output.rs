@@ -8,7 +8,7 @@ use std::{
     rc::Rc,
 };
 
-use microcad_core::*;
+use microcad_core::hash::{ComputedHash, HashId};
 
 use crate::{model::*, render::*};
 

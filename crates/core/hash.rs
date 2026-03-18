@@ -10,6 +10,9 @@ use derive_more::Deref;
 /// Render hash type.
 pub type HashId = u64;
 
+pub use rustc_hash::FxHashMap as HashMap;
+pub use rustc_hash::FxHashSet as HashSet;
+
 /// Trait to implement for typed that contain a pre-computed hash value.
 pub trait ComputedHash {
     /// Return computed hash value.

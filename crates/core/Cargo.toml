@@ -17,15 +17,16 @@ version.workspace = true
 path = "lib.rs"
 
 [dependencies]
+bytemuck = "1.24.0"
 cgmath = { version = "0.18", features = ["serde"] }
 derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
 geo = { version = "0.32", features = ["use-serde"] }
 log = "0.4"
 manifold-rs = { version = "0.6.4" }
+rustc-hash = "2.1.1"
 strum = { version = "0.27", features = ["derive"] }
 thiserror = "2.0"
 toml = "0.9"
-bytemuck = "1.24.0"
 miette = "7.6.0"
 
 [lints.rust]

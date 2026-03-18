@@ -3,7 +3,7 @@
 
 //! Element of a [`Model`].
 
-use crate::{builtin::*, model::*, render::ComputedHash, syntax::*, value::*};
+use crate::{builtin::*, model::*, syntax::*, value::*};
 use strum::IntoStaticStr;
 
 /// An element defines the entity of a [`Model`].

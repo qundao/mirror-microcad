@@ -3,7 +3,9 @@
 
 //! Work piece element
 
-use crate::{model::*, render::*, syntax::*, value::*};
+use microcad_core::hash::Hashed;
+
+use crate::{model::*, syntax::*, value::*};
 
 /// A workpiece is an element produced by a workbench.
 #[derive(Debug, Clone)]
@@ -27,7 +29,7 @@ impl std::fmt::Display for Workpiece {
 }
 
 impl ComputedHash for Workpiece {
-    fn computed_hash(&self) -> crate::render::HashId {
+    fn computed_hash(&self) -> HashId {
         self.creator.computed_hash()
     }
 }

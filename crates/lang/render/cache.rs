@@ -3,7 +3,8 @@
 
 //! Render cache.
 
-use crate::render::{GeometryOutput, HashId};
+use crate::render::GeometryOutput;
+use microcad_core::hash::{HashId, HashMap};
 
 /// An item in the [`RenderCache`].
 pub struct RenderCacheItem<T> {
@@ -58,7 +59,7 @@ pub struct RenderCache<T = GeometryOutput> {
     /// Maximum cost of a cache item before it is removed during garbage collection.
     max_cost: f64,
     /// The actual cache item store.
-    items: rustc_hash::FxHashMap<HashId, RenderCacheItem<T>>,
+    items: HashMap<HashId, RenderCacheItem<T>>,
 }
 
 impl<T> RenderCache<T> {
@@ -67,7 +68,7 @@ impl<T> RenderCache<T> {
         Self {
             current_time_stamp: 0,
             hits: 0,
-            items: rustc_hash::FxHashMap::default(),
+            items: HashMap::default(),
             max_cost: std::env::var("MICROCAD_CACHE_MAX_COST")
                 .ok()
                 .and_then(|s| s.parse::<f64>().ok())

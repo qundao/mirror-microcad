@@ -5,7 +5,7 @@
 
 use std::sync::mpsc;
 
-use microcad_core::RenderResolution;
+use microcad_core::{RenderResolution, hash::ComputedHash};
 use microcad_lang_base::RcMut;
 
 use crate::{model::Model, render::*};
