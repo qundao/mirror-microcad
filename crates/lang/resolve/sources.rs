@@ -316,7 +316,7 @@ pub trait GetSourceByHash {
 }
 
 impl GetSourceStrByHash for Sources {
-    fn get_str_by_hash<'a>(&'a self, hash: u64) -> Option<&'a str> {
+    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
         self.by_hash
             .get(&hash)
             .map(|index| self.source_files[*index].source.as_str())

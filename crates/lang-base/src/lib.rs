@@ -67,7 +67,7 @@ impl SourceCode for MietteSourceFile<'_> {
 /// Trait that can fetch for a file by it's hash value.
 pub trait GetSourceStrByHash {
     /// Get a source string by it's hash value.
-    fn get_str_by_hash<'a>(&'a self, hash: u64) -> Option<&'a str>;
+    fn get_str_by_hash(&self, hash: u64) -> Option<&str>;
 
     /// Get filename by hash
     fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf>;

@@ -336,7 +336,7 @@ impl PushDiag for ResolveContext {
 }
 
 impl GetSourceStrByHash for ResolveContext {
-    fn get_str_by_hash<'a>(&'a self, hash: u64) -> Option<&'a str> {
+    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
         self.sources.get_str_by_hash(hash)
     }
 
