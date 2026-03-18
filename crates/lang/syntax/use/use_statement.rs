@@ -13,6 +13,8 @@ use crate::{src_ref::*, syntax::*};
 /// ```
 #[derive(Clone)]
 pub struct UseStatement {
+    /// SrcRef of the `use` keyword
+    pub keyword_ref: SrcRef,
     /// export of use
     pub visibility: Visibility,
     /// Use declaration

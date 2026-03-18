@@ -28,7 +28,10 @@ Ok(
                                     leading: [],
                                     trailing: [],
                                 },
-                                operation: Not,
+                                operation: UnaryOperator {
+                                    span: 0..1,
+                                    operation: Not,
+                                },
                                 rhs: QualifiedName(
                                     QualifiedName {
                                         span: 1..6,

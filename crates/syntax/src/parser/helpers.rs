@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::Span;
-use crate::ast::{BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator};
+use crate::ast::{
+    BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator, OperatorType,
+};
 use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
@@ -136,34 +138,37 @@ where
         .foldl_with(
             whitespace_parser()
                 .or_not()
-                .ignore_then(one_of(tokens))
+                .ignore_then(one_of(tokens).map_with(|op, e| Operator {
+                    span: e.span(),
+                    operation: match op {
+                        Token::OperatorAdd => OperatorType::Add,
+                        Token::OperatorSubtract => OperatorType::Subtract,
+                        Token::OperatorMultiply => OperatorType::Multiply,
+                        Token::OperatorDivide => OperatorType::Divide,
+                        Token::OperatorUnion => OperatorType::Union,
+                        Token::OperatorIntersect => OperatorType::Intersect,
+                        Token::OperatorPowerXor => OperatorType::PowerXor,
+                        Token::OperatorGreaterThan => OperatorType::GreaterThan,
+                        Token::OperatorLessThan => OperatorType::LessThan,
+                        Token::OperatorGreaterEqual => OperatorType::GreaterEqual,
+                        Token::OperatorLessEqual => OperatorType::LessEqual,
+                        Token::OperatorNear => OperatorType::Near,
+                        Token::OperatorEqual => OperatorType::Equal,
+                        Token::OperatorNotEqual => OperatorType::NotEqual,
+                        Token::OperatorAnd => OperatorType::And,
+                        Token::OperatorOr => OperatorType::Or,
+                        Token::OperatorXor => OperatorType::Xor,
+                        _ => unreachable!(),
+                    },
+                }))
                 .then_maybe_whitespace()
                 .then(params)
                 .repeated(),
-            |lhs, (op, rhs), e| {
+            |lhs, (operation, rhs), e| {
                 Expression::BinaryOperation(BinaryOperation {
                     span: e.span(),
                     lhs: lhs.into(),
-                    operation: match op {
-                        Token::OperatorAdd => Operator::Add,
-                        Token::OperatorSubtract => Operator::Subtract,
-                        Token::OperatorMultiply => Operator::Multiply,
-                        Token::OperatorDivide => Operator::Divide,
-                        Token::OperatorUnion => Operator::Union,
-                        Token::OperatorIntersect => Operator::Intersect,
-                        Token::OperatorPowerXor => Operator::PowerXor,
-                        Token::OperatorGreaterThan => Operator::GreaterThan,
-                        Token::OperatorLessThan => Operator::LessThan,
-                        Token::OperatorGreaterEqual => Operator::GreaterEqual,
-                        Token::OperatorLessEqual => Operator::LessEqual,
-                        Token::OperatorNear => Operator::Near,
-                        Token::OperatorEqual => Operator::Equal,
-                        Token::OperatorNotEqual => Operator::NotEqual,
-                        Token::OperatorAnd => Operator::And,
-                        Token::OperatorOr => Operator::Or,
-                        Token::OperatorXor => Operator::Xor,
-                        _ => unreachable!(),
-                    },
+                    operation,
                     rhs: rhs.into(),
                 })
             },

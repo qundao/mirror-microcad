@@ -5,10 +5,19 @@ use crate::Span;
 use crate::ast::{Identifier, ItemExtras, Literal, SingleType, Statement, StringLiteral};
 use std::num::ParseIntError;
 
-/// An operator for binary operators
+/// An operator for binary operators, together with a span
+#[derive(Debug, PartialEq)]
+pub struct Operator {
+    /// The source span for the operator
+    pub span: Span,
+    /// The type of the operator
+    pub operation: OperatorType,
+}
+
+/// The type of the operator for binary operations
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub enum Operator {
+pub enum OperatorType {
     Add,
     Subtract,
     Multiply,
@@ -28,47 +37,56 @@ pub enum Operator {
     Xor,
 }
 
-impl Operator {
+impl OperatorType {
     /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
-            Operator::Add => "+",
-            Operator::Subtract => "-",
-            Operator::Multiply => "*",
-            Operator::Divide => "/",
-            Operator::Union => "|",
-            Operator::Intersect => "&",
-            Operator::PowerXor => "^",
-            Operator::GreaterThan => ">",
-            Operator::LessThan => "<",
-            Operator::GreaterEqual => "≥",
-            Operator::LessEqual => "≤",
-            Operator::Equal => "==",
-            Operator::Near => "~",
-            Operator::NotEqual => "!=",
-            Operator::And => "&",
-            Operator::Or => "|",
-            Operator::Xor => "^",
+            Self::Add => "+",
+            Self::Subtract => "-",
+            Self::Multiply => "*",
+            Self::Divide => "/",
+            Self::Union => "|",
+            Self::Intersect => "&",
+            Self::PowerXor => "^",
+            Self::GreaterThan => ">",
+            Self::LessThan => "<",
+            Self::GreaterEqual => "≥",
+            Self::LessEqual => "≤",
+            Self::Equal => "==",
+            Self::Near => "~",
+            Self::NotEqual => "!=",
+            Self::And => "&",
+            Self::Or => "|",
+            Self::Xor => "^",
         }
     }
 }
 
-/// An operator for unary operators
+/// An operator for unary operators, together with a span
+#[derive(Debug, PartialEq)]
+pub struct UnaryOperator {
+    /// The source span for the unary operator
+    pub span: Span,
+    /// The type of the unary operator
+    pub operation: UnaryOperatorType,
+}
+
+/// The type of the operator for unary operations
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub enum UnaryOperator {
+pub enum UnaryOperatorType {
     Minus,
     Plus,
     Not,
 }
 
-impl UnaryOperator {
+impl UnaryOperatorType {
     /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
-            UnaryOperator::Minus => "-",
-            UnaryOperator::Plus => "+",
-            UnaryOperator::Not => "!",
+            UnaryOperatorType::Minus => "-",
+            UnaryOperatorType::Plus => "+",
+            UnaryOperatorType::Not => "!",
         }
     }
 }
@@ -294,10 +312,13 @@ pub enum Element {
 #[allow(missing_docs)]
 pub struct If {
     pub span: Span,
+    pub if_span: Span,
     pub extras: ItemExtras,
     pub condition: Box<Expression>,
     pub body: StatementList,
+    pub next_if_span: Option<Span>,
     pub next_if: Option<Box<If>>,
+    pub else_span: Option<Span>,
     pub else_body: Option<StatementList>,
 }
 

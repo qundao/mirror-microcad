@@ -18,7 +18,14 @@ pub(crate) use symbols::*;
 use symbol_inner::*;
 
 use crate::{
-    builtin::*, rc::*, resolve::*, src_ref::*, syntax::*, tree_display::*, ty::*, value::*,
+    builtin::*,
+    rc::*,
+    resolve::{names::name_list::NameList, *},
+    src_ref::*,
+    syntax::*,
+    tree_display::*,
+    ty::*,
+    value::*,
 };
 
 /// Symbol
@@ -459,8 +466,9 @@ impl Symbol {
                 SymbolDef::Function(f) => f.names(),
                 SymbolDef::Assignment(a) => a.names(),
                 SymbolDef::Alias(_, _, name) | SymbolDef::UseAll(_, name) => {
-                    log::error!("Resolve Context:\n{context:?}");
-                    return Err(ResolveError::ResolveCheckFailed(name.src_ref()));
+                    NameList::from(name)
+                    // log::error!("Resolve Context: {name}\n{context:?}");
+                    // return Err(ResolveError::ResolveCheckFailed(name.src_ref()));
                 }
                 _ => Default::default(),
             };

@@ -3,7 +3,7 @@
 
 //! Collect names from within definitions.
 
-mod name_list;
+pub(crate) mod name_list;
 
 use crate::syntax::*;
 use name_list::*;

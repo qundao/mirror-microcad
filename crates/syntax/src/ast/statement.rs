@@ -127,6 +127,7 @@ pub struct InitDefinition {
 pub struct UseStatement {
     pub span: Span,
     pub attributes: Vec<Attribute>,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub visibility: Option<Visibility>,
     pub name: UseName,
@@ -156,6 +157,7 @@ pub enum UseStatementPart {
 #[allow(missing_docs)]
 pub struct Return {
     pub span: Span,
+    pub keyword_span: Span,
     pub extras: ItemExtras,
     pub value: Option<Expression>,
 }

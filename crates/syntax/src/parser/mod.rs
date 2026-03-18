@@ -333,9 +333,9 @@ fn parser<'tokens>()
     };
 
     let unary_operator_parser = select_ref! {
-        Token::OperatorSubtract => UnaryOperator::Minus,
-        Token::OperatorAdd => UnaryOperator::Plus,
-        Token::OperatorNot => UnaryOperator::Not,
+        Token::OperatorSubtract = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Minus },
+        Token::OperatorAdd = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Plus },
+        Token::OperatorNot = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Not },
     }
     .labelled("unary operator")
     .boxed();
@@ -830,7 +830,7 @@ fn parser<'tokens>()
         let use_statement = attribute_parser
             .clone()
             .then(visibility.then_whitespace().or_not())
-            .then_ignore(just(Token::KeywordUse))
+            .then(just(Token::KeywordUse).map_with(|_, e| e.span()))
             .then_whitespace()
             .then(use_parts)
             .then(
@@ -843,16 +843,19 @@ fn parser<'tokens>()
                     .or_not(),
             )
             .with_extras()
-            .map_with(|((((attributes, visibility), name), use_as), extras), e| {
-                Statement::Use(UseStatement {
-                    span: e.span(),
-                    attributes,
-                    visibility,
-                    extras,
-                    name,
-                    use_as,
-                })
-            })
+            .map_with(
+                |(((((attributes, visibility), keyword_span), name), use_as), extras), e| {
+                    Statement::Use(UseStatement {
+                        span: e.span(),
+                        attributes,
+                        visibility,
+                        keyword_span,
+                        extras,
+                        name,
+                        use_as,
+                    })
+                },
+            )
             .boxed();
 
         let workbench_kind = select_ref! {
@@ -934,12 +937,14 @@ fn parser<'tokens>()
             .boxed();
 
         let return_statement = just(Token::KeywordReturn)
+            .map_with(|_, e| e.span())
             .then_maybe_whitespace()
-            .ignore_then(expression_parser.clone().or_not())
+            .then(expression_parser.clone().or_not())
             .with_extras()
-            .map_with(|(value, extras), e| {
+            .map_with(|((keyword_span, value), extras), e| {
                 Statement::Return(Return {
                     span: e.span(),
+                    keyword_span,
                     extras,
                     value,
                 })
@@ -1350,33 +1355,47 @@ fn parser<'tokens>()
 
         if_inner.define(
             just(Token::KeywordIf)
+                .map_with(|_, e| e.span())
                 .then_whitespace()
-                .ignore_then(expression_parser.clone())
+                .then(expression_parser.clone())
                 .then_maybe_whitespace()
                 .then(block.clone())
                 .then_maybe_whitespace()
                 .then(
                     just(Token::KeywordElse)
+                        .map_with(|_, e| e.span())
                         .then_maybe_whitespace()
-                        .ignore_then(if_inner.clone())
-                        .map(Box::new)
+                        .then(if_inner.clone())
+                        .map(|(span, inner)| (span, Box::new(inner)))
                         .or_not(),
                 )
                 .then(
                     just(Token::KeywordElse)
+                        .map_with(|_, e| e.span())
                         .then_maybe_whitespace()
-                        .ignore_then(block.clone())
+                        .then(block.clone())
                         .or_not(),
                 )
                 .with_extras()
                 .map_with(
-                    |((((condition, body), next_if), else_body), extras), e| If {
-                        span: e.span(),
-                        extras,
-                        condition: Box::new(condition),
-                        body,
-                        next_if,
-                        else_body,
+                    |(((((if_span, condition), body), next_if), else_body), extras), e| {
+                        let (next_if_span, next_if) = next_if
+                            .map(|(span, if_expr)| (Some(span), Some(if_expr)))
+                            .unwrap_or((None, None));
+                        let (else_span, else_body) = else_body
+                            .map(|(span, body)| (Some(span), Some(body)))
+                            .unwrap_or((None, None));
+                        If {
+                            span: e.span(),
+                            if_span,
+                            extras,
+                            condition: Box::new(condition),
+                            body,
+                            next_if_span,
+                            next_if,
+                            else_span,
+                            else_body,
+                        }
                     },
                 )
                 .boxed(),

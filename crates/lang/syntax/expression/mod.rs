@@ -47,7 +47,7 @@ pub enum Expression {
         /// Left-hand side
         lhs: Box<Expression>,
         /// Operator  ('+', '-', '/', '*', '<', '>', '≤', '≥', '&', '|')
-        op: String,
+        op: Refer<String>,
         /// Right -hand side
         rhs: Box<Expression>,
         /// Source code reference
@@ -56,7 +56,7 @@ pub enum Expression {
     /// A unary operation: !a
     UnaryOp {
         /// Operator ('+', '-', '!')
-        op: String,
+        op: Refer<String>,
         /// Right -hand side
         rhs: Box<Expression>,
         /// Source code reference

@@ -16,6 +16,7 @@ Ok(
                     UseStatement {
                         span: 0..7,
                         attributes: [],
+                        keyword_span: 0..3,
                         extras: ItemExtras {
                             leading: [],
                             trailing: [],

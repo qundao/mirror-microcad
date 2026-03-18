@@ -17,7 +17,14 @@ use microcad_lang::{
     syntax,
 };
 use miette::IntoDiagnostic;
-use tower_lsp::lsp_types::{Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Url};
+use tower_lsp::lsp_types::{
+    Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, SemanticTokens,
+    SemanticTokensResult, Url,
+};
+
+use crate::processor::semantic_tokens::TokenContext;
+
+pub mod semantic_tokens;
 
 /// A processor request.
 ///
@@ -31,12 +38,14 @@ pub enum ProcessorRequest {
     UpdateDocument(Url),
     UpdateDocumentStr(Url, String),
     GetDocumentDiagnostics(Url),
+    GetFullSemanticTokens(Url),
 }
 
 /// A processor response.
 pub enum ProcessorResponse {
     /// Error messages and warnings for a specific document received.
     DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
+    SemanticTokens(Url, SemanticTokensResult),
 }
 
 fn src_ref_to_lsp_range(src_ref: src_ref::SrcRef) -> Option<tower_lsp::lsp_types::Range> {
@@ -105,6 +114,7 @@ impl Processor {
             ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
             ProcessorRequest::UpdateDocumentStr(url, doc) => self.update_document_str(&url, &doc),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
+            ProcessorRequest::GetFullSemanticTokens(url) => self.get_full_semantic_tokens(&url),
         }
     }
 
@@ -119,18 +129,20 @@ impl Processor {
             url.to_file_path()
                 .map_err(|_| miette::miette!("Error converting {url} to file path."))?,
         ) {
-            Ok(source_file) => match eval::EvalContext::from_source(
-                source_file,
-                Some(microcad_builtin::builtin_module()),
-                &self.workspace_settings.search_paths,
-                eval::Capture::new(),
-                microcad_builtin::builtin_exporters(),
-                microcad_builtin::builtin_importers(),
-                0,
-            ) {
-                Ok(eval) => Context::Eval(eval.into()),
-                Err(_) => todo!(),
-            },
+            Ok(source_file) => {
+                match eval::EvalContext::from_source(
+                    source_file,
+                    Some(microcad_builtin::builtin_module()),
+                    &self.workspace_settings.search_paths,
+                    eval::Capture::new(),
+                    microcad_builtin::builtin_exporters(),
+                    microcad_builtin::builtin_importers(),
+                    0,
+                ) {
+                    Ok(eval) => Context::Eval(eval.into()),
+                    Err(_) => todo!(),
+                }
+            }
 
             Err(err) => {
                 let mut diag = diag::DiagHandler::default();
@@ -187,52 +199,60 @@ impl Processor {
     }
 
     pub fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
-        if let Some(diag) = &self.context.diag() {
-            Ok(vec![ProcessorResponse::DocumentDiagnostics(
-                url.clone(),
-                FullDocumentDiagnosticReport {
-                    result_id: None,
-                    items: diag
-                        .diag_list
-                        .iter()
-                        .filter_map(|diag| {
-                            let message = diag.message();
-                            match src_ref_to_lsp_range(diag.src_ref()) {
-                                Some(range) => {
-                                    let severity = match diag.level() {
-                                        microcad_lang::diag::Level::Trace => {
-                                            DiagnosticSeverity::HINT
-                                        }
-                                        microcad_lang::diag::Level::Info => {
-                                            DiagnosticSeverity::INFORMATION
-                                        }
-                                        microcad_lang::diag::Level::Warning => {
-                                            DiagnosticSeverity::WARNING
-                                        }
-                                        microcad_lang::diag::Level::Error => {
-                                            DiagnosticSeverity::ERROR
-                                        }
-                                    };
+        let Some(diag) = &self.context.diag() else {
+            return Ok(vec![]);
+        };
+        Ok(vec![ProcessorResponse::DocumentDiagnostics(
+            url.clone(),
+            FullDocumentDiagnosticReport {
+                result_id: None,
+                items: diag
+                    .diag_list
+                    .iter()
+                    .filter_map(|diag| {
+                        let message = diag.message();
+                        match src_ref_to_lsp_range(diag.src_ref()) {
+                            Some(range) => {
+                                let severity = match diag.level() {
+                                    microcad_lang::diag::Level::Trace => DiagnosticSeverity::HINT,
+                                    microcad_lang::diag::Level::Info => {
+                                        DiagnosticSeverity::INFORMATION
+                                    }
+                                    microcad_lang::diag::Level::Warning => {
+                                        DiagnosticSeverity::WARNING
+                                    }
+                                    microcad_lang::diag::Level::Error => DiagnosticSeverity::ERROR,
+                                };
 
-                                    Some(Diagnostic::new(
-                                        range,
-                                        Some(severity),
-                                        None,
-                                        None,
-                                        message,
-                                        None,
-                                        None,
-                                    ))
-                                }
-                                None => None,
+                                Some(Diagnostic::new(
+                                    range,
+                                    Some(severity),
+                                    None,
+                                    None,
+                                    message,
+                                    None,
+                                    None,
+                                ))
                             }
-                        })
-                        .collect(),
-                },
-            )])
-        } else {
-            Ok(vec![])
-        }
+                            None => None,
+                        }
+                    })
+                    .collect(),
+            },
+        )])
+    }
+
+    fn get_full_semantic_tokens(&self, url: &Url) -> ProcessorResult {
+        let mut context = TokenContext::new(url)?;
+        let data = context.parse_semantic_tokens()?;
+
+        Ok(vec![ProcessorResponse::SemanticTokens(
+            url.clone(),
+            SemanticTokensResult::Tokens(SemanticTokens {
+                result_id: None, // TODO: support delta updates
+                data,
+            }),
+        )])
     }
 }
 

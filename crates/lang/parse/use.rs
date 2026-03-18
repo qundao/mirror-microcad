@@ -51,6 +51,7 @@ impl FromAst for UseStatement {
             .map(|visibility| Visibility::from_ast(visibility, context))
             .transpose()?;
         Ok(UseStatement {
+            keyword_ref: context.src_ref(&node.keyword_span),
             src_ref: context.src_ref(&node.span),
             visibility: visibility.unwrap_or_default(),
             decl,

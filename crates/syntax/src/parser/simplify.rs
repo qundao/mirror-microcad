@@ -1,13 +1,19 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::ast::{Expression, Literal, LiteralKind, UnaryOperation, UnaryOperator};
+use crate::ast::{
+    Expression, Literal, LiteralKind, UnaryOperation, UnaryOperator, UnaryOperatorType,
+};
 
 /// Merge negated numeric literals into negative numeric literals
 pub fn simplify_unary_op(op: UnaryOperation) -> Expression {
     match op {
         UnaryOperation {
-            operation: UnaryOperator::Minus,
+            operation:
+                UnaryOperator {
+                    operation: UnaryOperatorType::Minus,
+                    span: inner_span,
+                },
             rhs,
             span,
             extras,
@@ -37,7 +43,10 @@ pub fn simplify_unary_op(op: UnaryOperation) -> Expression {
                 literal: LiteralKind::Quantity(-int),
             }),
             rhs => Expression::UnaryOperation(UnaryOperation {
-                operation: UnaryOperator::Minus,
+                operation: UnaryOperator {
+                    span: inner_span,
+                    operation: UnaryOperatorType::Minus,
+                },
                 rhs: Box::new(rhs),
                 span,
                 extras,

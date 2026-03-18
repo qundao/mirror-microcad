@@ -23,6 +23,7 @@ Ok(
                         expression: If(
                             If {
                                 span: 0..19,
+                                if_span: 0..2,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
@@ -45,7 +46,10 @@ Ok(
                                                 ],
                                             },
                                         ),
-                                        operation: GreaterThan,
+                                        operation: Operator {
+                                            span: 5..6,
+                                            operation: GreaterThan,
+                                        },
                                         rhs: Literal(
                                             Literal {
                                                 span: 7..8,
@@ -113,7 +117,9 @@ Ok(
                                     ],
                                     tail: None,
                                 },
+                                next_if_span: None,
                                 next_if: None,
+                                else_span: None,
                                 else_body: None,
                             },
                         ),

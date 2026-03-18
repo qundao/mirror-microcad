@@ -123,7 +123,10 @@ Ok(
                                                         ],
                                                     },
                                                 ),
-                                                operation: Divide,
+                                                operation: Operator {
+                                                    span: 30..31,
+                                                    operation: Divide,
+                                                },
                                                 rhs: QualifiedName(
                                                     QualifiedName {
                                                         span: 32..33,

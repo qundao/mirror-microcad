@@ -8,12 +8,18 @@ use crate::{src_ref::*, syntax::*};
 /// If statement.
 #[derive(Clone)]
 pub struct IfStatement {
+    /// SrcRef of the `if` keyword.
+    pub if_ref: SrcRef,
     /// If condition.
     pub cond: Expression,
     /// Body if `true`.
     pub body: Body,
+    /// SrcRef of the `else` keyword, if present.
+    pub else_ref: Option<SrcRef>,
     /// Body if `false`.
     pub body_else: Option<Body>,
+    /// SrcRef of the `else[ if]` keyword, if present.
+    pub next_if_ref: Option<SrcRef>,
     /// Next if statement: `else if x == 1`.
     pub next_if: Option<Box<IfStatement>>,
     /// Source code reference.

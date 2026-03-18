@@ -118,14 +118,20 @@ impl FromAst for IfStatement {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(IfStatement {
+            if_ref: context.src_ref(&node.if_span),
             cond: Expression::from_ast(&node.condition, context)?,
             body: Body::from_ast(&node.body, context)?,
+            next_if_ref: node
+                .next_if_span
+                .as_ref()
+                .map(|span| context.src_ref(span)),
             next_if: node
                 .next_if
                 .as_ref()
                 .map(|next| IfStatement::from_ast(next, context))
                 .transpose()?
                 .map(Box::new),
+            else_ref: node.else_span.as_ref().map(|span| context.src_ref(span)),
             body_else: node
                 .else_body
                 .as_ref()
@@ -206,6 +212,7 @@ impl FromAst for ReturnStatement {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(ReturnStatement {
+            keyword_ref: context.src_ref(&node.keyword_span),
             result: node
                 .value
                 .as_ref()

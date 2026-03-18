@@ -8,6 +8,8 @@ use crate::{src_ref::*, syntax::*};
 /// Return statement.
 #[derive(Clone)]
 pub struct ReturnStatement {
+    /// SrcRef of the `return` keyword.
+    pub keyword_ref: SrcRef,
     /// Return value.
     pub result: Option<Expression>,
     /// Source code reference.
