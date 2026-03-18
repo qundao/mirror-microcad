@@ -179,8 +179,14 @@ impl SrcRef {
                 if lhs.source_file_hash == rhs.source_file_hash {
                     let source_file_hash = lhs.source_file_hash;
 
-                    if lhs.range.end > rhs.range.start || lhs.range.start > rhs.range.end {
-                        log::warn!("ranges not in correct order");
+                    if lhs.range == rhs.range {
+                        SrcRef(Some(lhs))
+                    } else if lhs.range.end > rhs.range.start || lhs.range.start > rhs.range.end {
+                        log::warn!(
+                            "ranges not in correct order: {lhs} vs {rhs} @ {source_file_hash}",
+                            lhs = lhs.at,
+                            rhs = rhs.at
+                        );
                         SrcRef(None)
                     } else {
                         SrcRef(Some(Box::new(SrcRefInner {
