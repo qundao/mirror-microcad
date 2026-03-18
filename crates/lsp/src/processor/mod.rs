@@ -210,14 +210,14 @@ impl Processor {
                         match src_ref_to_lsp_range(diag.src_ref()) {
                             Some(range) => {
                                 let severity = match diag.level() {
-                                    microcad_lang::diag::Level::Trace => DiagnosticSeverity::HINT,
-                                    microcad_lang::diag::Level::Info => {
+                                    microcad_lang_base::Level::Trace => DiagnosticSeverity::HINT,
+                                    microcad_lang_base::Level::Info => {
                                         DiagnosticSeverity::INFORMATION
                                     }
-                                    microcad_lang::diag::Level::Warning => {
+                                    microcad_lang_base::Level::Warning => {
                                         DiagnosticSeverity::WARNING
                                     }
-                                    microcad_lang::diag::Level::Error => DiagnosticSeverity::ERROR,
+                                    microcad_lang_base::Level::Error => DiagnosticSeverity::ERROR,
                                 };
 
                                 Some(Diagnostic::new(

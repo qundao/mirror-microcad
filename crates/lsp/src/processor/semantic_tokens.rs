@@ -1,7 +1,6 @@
 use std::rc::Rc;
 
 use microcad_lang::{
-    src_ref::{self, SrcReferrer},
     syntax::{
         Argument, ArrayExpression, ArrayExpressionInner, Assignment, AssignmentStatement,
         Attribute, AttributeCommand, AttributeList, Call, Expression, ExpressionStatement,
@@ -13,6 +12,8 @@ use microcad_lang::{
     },
     ty::{Ty, Type},
 };
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
+
 use tower_lsp::lsp_types::{SemanticToken, SemanticTokenModifier, SemanticTokenType, Url};
 
 use crate::processor::src_ref_to_lsp_range;
@@ -212,7 +213,7 @@ impl TokenContext {
 
     fn output_semantic_token(
         &mut self,
-        src_ref: src_ref::SrcRef,
+        src_ref: SrcRef,
         token_type: SemanticTokenType,
         modifiers: &[SemanticTokenModifier],
     ) -> miette::Result<SemanticToken> {
@@ -277,9 +278,9 @@ impl TokenContext {
 
     fn parse_unary_op(
         &mut self,
-        op: &src_ref::Refer<String>,
+        op: &Refer<String>,
         rhs: &Expression,
-        _src_ref: &src_ref::SrcRef,
+        _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(op.src_ref(), SemanticTokenType::OPERATOR, &[])?);
@@ -290,9 +291,9 @@ impl TokenContext {
     fn parse_binary_op(
         &mut self,
         lhs: &Expression,
-        op: &src_ref::Refer<String>,
+        op: &Refer<String>,
         rhs: &Expression,
-        _src_ref: &src_ref::SrcRef,
+        _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_expression(lhs)?);
@@ -322,7 +323,7 @@ impl TokenContext {
         &mut self,
         expression: &Expression,
         method_call: &MethodCall,
-        _src_ref: &src_ref::SrcRef,
+        _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_expression(expression)?);
@@ -518,7 +519,7 @@ impl TokenContext {
         &mut self,
         expression: &Expression,
         identifier: &Identifier,
-        src_ref: &src_ref::SrcRef,
+        src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(
@@ -539,7 +540,7 @@ impl TokenContext {
         &mut self,
         expression: &Expression,
         identifier: &Identifier,
-        _src_ref: &src_ref::SrcRef,
+        _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_expression(expression)?);
@@ -556,7 +557,7 @@ impl TokenContext {
         &mut self,
         expression: &Expression,
         expression1: &Expression,
-        _src_ref: &src_ref::SrcRef,
+        _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_expression(expression)?);
