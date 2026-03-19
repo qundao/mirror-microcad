@@ -2,7 +2,7 @@
 
 The following table lists all tests included in this documentation.
 
-**172** tests have been evaluated with version **0.3.0** of microcad.
+**171** tests have been evaluated with version **0.3.0** of microcad.
 
 Click on the test names to jump to file with the test or click the buttons to get the logs.
 
@@ -21,7 +21,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
 | [![test](types/collections/array/.test/array_operations.svg)](types/collections/array/.test/array_operations.log) | [array_operations](types/collections/array/operators.md) |
 | [![test](types/collections/array/.test/array_operator_not.svg)](types/collections/array/.test/array_operator_not.log) | [array_operator_not](types/collections/array/operators.md) |
 | [![test](types/collections/array/.test/array_unit_bundling.svg)](types/collections/array/.test/array_unit_bundling.log) | [array_unit_bundling](types/collections/array/) |
-| [![test](types/collections/array/.test/array_unit_bundling_except.svg)](types/collections/array/.test/array_unit_bundling_except.log) | [array_unit_bundling_except](types/collections/array/) |
 | [![test](types/collections/array/.test/arrays.svg)](types/collections/array/.test/arrays.log) | [arrays](types/collections/array/) |
 | [![test](assignments/.test/assignment.svg)](assignments/.test/assignment.log) | [assignment](assignments/) |
 | [![test](assignments/.test/assignment_model_module.svg)](assignments/.test/assignment_model_module.log) | [assignment_model_module](assignments/model.md) |

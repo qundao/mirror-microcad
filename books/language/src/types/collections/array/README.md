@@ -31,11 +31,3 @@ Array support *unit bundling*, which means the you can write a unit behind the b
 ```µcad,array_unit_bundling
 std::debug::assert_eq([ [1mm, 2mm, 3mm], [1, 2, 3]mm ]);
 ```
-
-Single elements of the array can have special units of the same type.
-
-[![test](.test/array_unit_bundling_except.svg)](.test/array_unit_bundling_except.log)
-
-```µcad,array_unit_bundling_except#todo
-std::debug::assert_eq([ [1mm, 2m, 3mm], [1, 2m, 3]mm ]);
-```
