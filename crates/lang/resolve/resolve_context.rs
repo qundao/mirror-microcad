@@ -95,14 +95,6 @@ impl ResolveContext {
         Ok(context)
     }
 
-    #[cfg(test)]
-    pub(super) fn test_add_file(&mut self, file: Rc<SourceFile>) {
-        let symbol = file
-            .symbolize(Visibility::Private, self)
-            .expect("symbolize");
-        self.root.add_symbol(symbol).expect("symbolize error");
-    }
-
     pub(crate) fn symbolize(&mut self) -> ResolveResult<()> {
         assert!(matches!(self.mode, ResolveMode::Loaded));
         self.mode = ResolveMode::Failed;
