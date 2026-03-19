@@ -24,7 +24,7 @@ lazy_static = "1.5"
 cgmath = "0.18"
 thiserror = "2.0"
 env_logger = "0.11"
-strum = { version = "0.27", features = ["derive"] }
+strum = { version = "0.28", features = ["derive"] }
 scan_dir = "0.3"
 delegate = "0.13"
 pathdiff = "0.2"
@@ -35,13 +35,13 @@ indexmap = "2"
 rustc-hash = "2.1.1"
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
 
+custom_debug = "0.6.2"
+derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
+round = "0.1.2"
+
 microcad-core = { workspace = true }
 microcad-syntax = { workspace = true }
 microcad-lang-base = { workspace = true }
-custom_debug = "0.6.2"
-derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
-debug-cell = { workspace = true, optional = true }
-round = "0.1.2"
 
 [lints.rust]
 missing_docs = "warn"
