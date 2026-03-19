@@ -37,6 +37,7 @@ PACKAGES=(
     "microcad-builtin-proc-macros"
     "microcad-builtin"
     "microcad-std"
+    "microcad-docgen"
     "microcad"
     "microcad-viewer-ipc"
     "microcad-viewer"
