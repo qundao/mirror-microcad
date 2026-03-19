@@ -30,6 +30,7 @@ fi
 PACKAGES=(
     "microcad-core"
     "microcad-syntax"
+    "microcad-lang-base"
     "microcad-lang"
     "microcad-export"
     "microcad-import"
