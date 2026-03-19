@@ -5271,7 +5271,7 @@ dependencies = [
 
 [[package]]
 name = "microcad"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "clap",
  "clap_complete",
@@ -5298,7 +5298,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-builtin"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "cgmath",
  "ctor",
@@ -5319,7 +5319,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-builtin-proc-macros"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "convert_case 0.11.0",
  "proc-macro2",
@@ -5329,7 +5329,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-core"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "bytemuck",
  "cgmath",
@@ -5346,7 +5346,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-docgen"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "clap",
  "derive_more 2.1.1",
@@ -5360,7 +5360,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-export"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "cgmath",
  "derive_more 2.1.1",
@@ -5377,7 +5377,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-import"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "microcad-core",
  "microcad-lang",
@@ -5390,7 +5390,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-inspector"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "clap",
  "crossbeam",
@@ -5413,7 +5413,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-lang"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "bytemuck",
  "cgmath",
@@ -5442,7 +5442,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-lang-base"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "color-print",
  "compact_str",
@@ -5456,7 +5456,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-lsp"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "clap",
  "crossbeam",
@@ -5480,7 +5480,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-std"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "dirs",
  "rust-embed",
@@ -5492,7 +5492,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-syntax"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "chumsky",
  "compact_str",
@@ -5506,7 +5506,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-tests"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "ctor",
@@ -5529,7 +5529,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-viewer"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "bevy",
  "bevy_mod_outline",
@@ -5560,7 +5560,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-viewer-ipc"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "crossbeam",
  "env_logger",
@@ -5577,7 +5577,7 @@ dependencies = [
 
 [[package]]
 name = "microcad_markdown_test"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "env_logger",
  "log",
@@ -5588,7 +5588,7 @@ dependencies = [
 
 [[package]]
 name = "microcad_test_tools"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "env_logger",
  "log",
@@ -8866,7 +8866,7 @@ checksum = "6d49784317cd0d1ee7ec5c716dd598ec5b4483ea832a2dced265471cc0f690ae"
 
 [[package]]
 name = "update_copyright"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "chrono",
  "clap",
@@ -8878,7 +8878,7 @@ dependencies = [
 
 [[package]]
 name = "update_md_banner"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "env_logger",
  "regex",
