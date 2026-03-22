@@ -3,7 +3,7 @@
 
 //! Parser errors
 
-use crate::{parse::*, ty::*};
+use crate::parse::*;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_syntax::ast::LiteralErrorKind;
 use miette::{Diagnostic, SourceCode};
@@ -13,20 +13,11 @@ use thiserror::Error;
 #[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
 pub enum ParseError {
-    #[error("Error parsing floating point literal: {0}")]
-    ParseFloatError(#[label("{0}")] Refer<std::num::ParseFloatError>),
-
     #[error("Error parsing integer literal: {0}")]
     ParseIntError(#[label("{0}")] Refer<std::num::ParseIntError>),
 
     #[error("Unknown unit: {0}")]
     UnknownUnit(#[label("Unknown unit")] Refer<String>),
-
-    #[error("Unexpected token")]
-    UnexpectedToken(#[label("Unexpected token")] SrcRef),
-
-    #[error("Missing type or value for definition parameter: {0}")]
-    ParameterMissingTypeOrValue(#[label("Missing type or value")] Identifier),
 
     #[error("Duplicate argument: {id}")]
     DuplicateArgument {
@@ -36,30 +27,6 @@ pub enum ParseError {
         previous: Identifier,
     },
 
-    #[error("Duplicate id: {id}")]
-    DuplicateIdentifier {
-        #[label(primary, "Duplicate identifier")]
-        id: Identifier,
-        #[label("Previous declaration")]
-        previous: Identifier,
-    },
-
-    #[error("Duplicate id in tuple: {id}")]
-    DuplicateTupleIdentifier {
-        #[label(primary, "Duplicate identifier")]
-        id: Identifier,
-        #[label("Previous declaration")]
-        previous: Identifier,
-    },
-
-    #[error("Duplicate unnamed type in tuple: {ty}")]
-    DuplicateTupleType {
-        #[label(primary, "Duplicate item")]
-        ty: Refer<Type>,
-        #[label("Previous declaration")]
-        previous: Refer<Type>,
-    },
-
     #[error("Loading of source file {1:?} failed: {2}")]
     LoadSource(SrcRef, std::path::PathBuf, std::io::Error),
 
@@ -67,14 +34,8 @@ pub enum ParseError {
     #[error("Invalid id '{0}'")]
     InvalidIdentifier(Refer<String>),
 
-    #[error("Element is not available")]
-    NotAvailable(#[label("Element is not available")] SrcRef),
-
     #[error("Unknown type: {0}")]
     UnknownType(#[label("Unknown type")] Refer<String>),
-
-    #[error("If expression must return a value in all cases")]
-    IncompleteIfExpression(#[label("Incomplete if expression")] SrcRef),
 
     /// Matrix type with invalid dimensions
     #[error("Invalid matrix type: {0}")]
@@ -120,25 +81,17 @@ pub type ParseResult<T> = Result<T, ParseError>;
 impl SrcReferrer for ParseError {
     fn src_ref(&self) -> SrcRef {
         match self {
-            ParseError::ParameterMissingTypeOrValue(id)
-            | ParseError::DuplicateArgument { id, .. }
-            | ParseError::DuplicateIdentifier { id, .. }
-            | ParseError::DuplicateTupleIdentifier { id, .. } => id.src_ref(),
-            ParseError::UnexpectedToken(src_ref)
-            | ParseError::NotAvailable(src_ref)
-            | ParseError::IncompleteIfExpression(src_ref)
-            | ParseError::LoadSource(src_ref, ..)
+            ParseError::DuplicateArgument { id, .. } => id.src_ref(),
+            ParseError::LoadSource(src_ref, ..)
             | ParseError::InvalidGlobPattern(src_ref)
             | ParseError::UseGlobAlias(src_ref)
             | ParseError::InvalidLiteral { src_ref, .. }
             | ParseError::InvalidExpression { src_ref }
             | ParseError::InvalidStatement { src_ref }
             | ParseError::InvalidRangeType { src_ref } => src_ref.clone(),
-            ParseError::ParseFloatError(parse_float_error) => parse_float_error.src_ref(),
             ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             ParseError::InvalidIdentifier(id) => id.src_ref(),
             ParseError::UnknownUnit(unit) => unit.src_ref(),
-            ParseError::DuplicateTupleType { ty, .. } => ty.src_ref(),
             ParseError::UnknownType(ty) => ty.src_ref(),
             ParseError::InvalidMatrixType(ty) => ty.src_ref(),
             ParseError::AstParser(err) => err.src_ref(),
