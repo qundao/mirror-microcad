@@ -42,6 +42,7 @@ round = "0.1.2"
 microcad-core = { workspace = true }
 microcad-syntax = { workspace = true }
 microcad-lang-base = { workspace = true }
+microcad-lang-proc-macros = { workspace = true }
 
 [lints.rust]
 missing_docs = "warn"
