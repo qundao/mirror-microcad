@@ -6,6 +6,7 @@
 use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Inner of an [`ArrayExpression`].
 #[derive(Clone, Debug, PartialEq)]
@@ -73,7 +74,7 @@ impl TreeDisplay for ArrayExpressionInner {
 }
 
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]`.
-#[derive(Default, Clone, Debug, Deref, DerefMut, PartialEq)]
+#[derive(Default, Clone, Debug, Deref, DerefMut, PartialEq, SrcReferrer)]
 pub struct ArrayExpression {
     /// Expression list.
     #[deref]
@@ -83,12 +84,6 @@ pub struct ArrayExpression {
     pub unit: Unit,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for ArrayExpression {
-    fn src_ref(&self) -> microcad_lang_base::SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for ArrayExpression {

@@ -6,12 +6,13 @@
 use crate::{eval::*, value::*};
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Collection of *argument values* (e.g. `( x=1, y=2 )`).
 ///
 /// Also provides methods to find a matching call
 /// between it and a given *parameter list*.
-#[derive(Clone, Debug, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Default, Deref, DerefMut, SrcReferrer)]
 pub struct ArgumentValueList {
     #[deref]
     #[deref_mut]
@@ -59,12 +60,6 @@ impl ValueAccess for ArgumentValueList {
 
     fn by_ty(&self, ty: &Type) -> Option<&Value> {
         self.get_by_type(ty).map(|(_, arg)| &arg.value)
-    }
-}
-
-impl SrcReferrer for ArgumentValueList {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

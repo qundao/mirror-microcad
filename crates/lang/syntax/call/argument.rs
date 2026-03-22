@@ -3,12 +3,13 @@
 
 //! A single argument
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{ord_map::*, syntax::*};
 
 /// Argument in a [`Call`].
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, SrcReferrer)]
 pub struct Argument {
     /// Name of the argument
     pub id: Option<Identifier>,
@@ -25,12 +26,6 @@ impl Argument {
             Some(name) => Some(name.clone()),
             None => self.expression.single_identifier().cloned(),
         }
-    }
-}
-
-impl SrcReferrer for Argument {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

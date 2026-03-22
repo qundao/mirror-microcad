@@ -3,19 +3,14 @@
 
 //! Inner doc syntax element impl.
 
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Inner doc syntax element: `//!`.
 ///
 /// A doc comment statement only contains one line of documentation.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct InnerDocComment(pub Refer<String>);
-
-impl SrcReferrer for InnerDocComment {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
-    }
-}
 
 impl std::fmt::Display for InnerDocComment {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

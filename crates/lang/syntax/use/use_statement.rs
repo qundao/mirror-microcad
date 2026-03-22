@@ -3,7 +3,8 @@
 
 //! Use statement syntax element.
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
@@ -13,7 +14,7 @@ use crate::syntax::*;
 /// ```ucad
 /// use std::*;
 /// ```
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct UseStatement {
     /// SrcRef of the `use` keyword
     pub keyword_ref: SrcRef,
@@ -23,12 +24,6 @@ pub struct UseStatement {
     pub decl: UseDeclaration,
     /// source code reference
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for UseStatement {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for UseStatement {

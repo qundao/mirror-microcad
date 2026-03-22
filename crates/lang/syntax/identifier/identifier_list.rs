@@ -3,25 +3,20 @@
 
 use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{Refer, SrcRef};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// A list of identifiers
 ///
 /// Used e.g. for multiple variable declarations.
 /// Cannot contain duplicates.
-#[derive(Default, Debug, Clone, PartialEq, Deref, DerefMut)]
+#[derive(Default, Debug, Clone, PartialEq, Deref, DerefMut, SrcReferrer)]
 pub struct IdentifierList(pub Refer<Vec<Identifier>>);
 
 impl IdentifierList {
     /// Create new identifier list
     pub fn new(identifiers: Vec<Identifier>, src_ref: SrcRef) -> Self {
         Self(Refer::new(identifiers, src_ref))
-    }
-}
-
-impl SrcReferrer for IdentifierList {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
     }
 }
 

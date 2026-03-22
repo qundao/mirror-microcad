@@ -4,19 +4,14 @@
 //! Range expression
 
 use derive_more::Deref;
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// Range start.
-#[derive(Clone, Debug, Default, Deref, PartialEq)]
+#[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
 pub struct RangeFirst(pub Box<Expression>);
-
-impl SrcReferrer for RangeFirst {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
-    }
-}
 
 impl std::fmt::Display for RangeFirst {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -33,14 +28,8 @@ impl TreeDisplay for RangeFirst {
 }
 
 /// Range end.
-#[derive(Clone, Debug, Default, Deref, PartialEq)]
+#[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
 pub struct RangeLast(pub Box<Expression>);
-
-impl SrcReferrer for RangeLast {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
-    }
-}
 
 impl std::fmt::Display for RangeLast {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -57,7 +46,7 @@ impl TreeDisplay for RangeLast {
 }
 
 /// Range expression, e.g. `a..b`.
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
 pub struct RangeExpression {
     /// First value in the range.
     pub first: RangeFirst,
@@ -65,12 +54,6 @@ pub struct RangeExpression {
     pub last: RangeLast,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for RangeExpression {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for RangeExpression {

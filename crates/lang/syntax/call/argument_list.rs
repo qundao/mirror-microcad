@@ -5,17 +5,12 @@
 
 use crate::{ord_map::*, syntax::*};
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// *Ordered map* of arguments in a [`Call`].
-#[derive(Clone, Debug, Default, Deref, DerefMut, PartialEq)]
+#[derive(Clone, Debug, Default, Deref, DerefMut, PartialEq, SrcReferrer)]
 pub struct ArgumentList(pub Refer<OrdMap<Identifier, Argument>>);
-
-impl SrcReferrer for ArgumentList {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
-    }
-}
 
 impl std::fmt::Display for ArgumentList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

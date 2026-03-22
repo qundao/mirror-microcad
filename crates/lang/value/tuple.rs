@@ -6,13 +6,14 @@
 use std::collections::HashMap;
 
 use microcad_lang_base::SrcReferrer;
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{ty::*, value::*};
 
 /// Tuple with named values
 ///
 /// Names are optional, which means Identifiers can be empty.
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
 pub struct Tuple {
     pub(crate) named: std::collections::HashMap<Identifier, Value>,
     pub(crate) unnamed: std::collections::HashMap<Type, Value>,
@@ -282,12 +283,6 @@ impl ValueAccess for Tuple {
 
     fn by_ty(&self, ty: &Type) -> Option<&Value> {
         self.unnamed.get(ty)
-    }
-}
-
-impl SrcReferrer for Tuple {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

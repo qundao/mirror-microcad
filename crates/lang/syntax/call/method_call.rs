@@ -3,12 +3,13 @@
 
 //! Method call syntax elements.
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// Method call syntax entity.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct MethodCall {
     /// Name of the method.
     pub name: QualifiedName,
@@ -16,12 +17,6 @@ pub struct MethodCall {
     pub argument_list: ArgumentList,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for MethodCall {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for MethodCall {

@@ -3,12 +3,13 @@
 
 //! µcad assignment syntax element
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{syntax::*, ty::*};
 
 /// Assignment specifying an identifier, type and value
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct Assignment {
     /// Documentation.
     pub doc: Option<DocBlock>,
@@ -27,27 +28,6 @@ pub struct Assignment {
 }
 
 impl Assignment {
-    /// Create new assignment.
-    pub fn new(
-        doc: Option<DocBlock>,
-        visibility: Visibility,
-        qualifier: Qualifier,
-        id: Identifier,
-        specified_type: Option<TypeAnnotation>,
-        expression: Expression,
-        src_ref: SrcRef,
-    ) -> Self {
-        Self {
-            doc,
-            visibility,
-            qualifier,
-            id,
-            specified_type,
-            expression,
-            src_ref,
-        }
-    }
-
     /// Get qualifier (makes `pub` => `pub const`)
     pub fn qualifier(&self) -> Qualifier {
         match self.visibility {
@@ -61,12 +41,6 @@ impl Assignment {
 impl Identifiable for Assignment {
     fn id_ref(&self) -> &Identifier {
         &self.id
-    }
-}
-
-impl SrcReferrer for Assignment {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

@@ -4,24 +4,19 @@
 //! Body syntax element.
 
 use derive_more::Deref;
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// [StatementList] from inside `{}` brackets.
-#[derive(Clone, Debug, Default, Deref)]
+#[derive(Clone, Debug, Default, Deref, SrcReferrer)]
 pub struct Body {
     /// Body statements.
     #[deref]
     pub statements: StatementList,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for Body {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for Body {

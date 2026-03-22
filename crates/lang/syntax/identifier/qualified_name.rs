@@ -4,11 +4,14 @@
 use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 use miette::SourceSpan;
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,
 /// e.g. `a::b::c`
-#[derive(Default, Clone, Debug, PartialEq, Hash, Eq, Ord, PartialOrd, DerefMut, Deref)]
+#[derive(
+    Default, Clone, Debug, PartialEq, Hash, Eq, Ord, PartialOrd, DerefMut, Deref, SrcReferrer,
+)]
 pub struct QualifiedName(Refer<Vec<Identifier>>);
 
 impl QualifiedName {
@@ -213,12 +216,6 @@ impl std::fmt::Display for QualifiedName {
                     .join("::")
             )
         }
-    }
-}
-
-impl SrcReferrer for QualifiedName {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
     }
 }
 

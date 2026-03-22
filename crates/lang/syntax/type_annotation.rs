@@ -3,19 +3,13 @@
 
 //! µcad Type annotation.
 
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
-
 use crate::ty::*;
+use microcad_lang_base::{Refer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Type within source code.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, SrcReferrer)]
 pub struct TypeAnnotation(pub Refer<Type>);
-
-impl SrcReferrer for TypeAnnotation {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
-    }
-}
 
 impl std::fmt::Display for TypeAnnotation {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

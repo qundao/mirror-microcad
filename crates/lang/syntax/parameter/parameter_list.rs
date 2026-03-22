@@ -5,10 +5,11 @@
 
 use crate::{ord_map::*, syntax::*};
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Parameter list
-#[derive(Clone, Debug, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Default, Deref, DerefMut, SrcReferrer)]
 pub struct ParameterList(pub Refer<OrdMap<Identifier, Parameter>>);
 
 impl ParameterList {
@@ -20,12 +21,6 @@ impl ParameterList {
     /// Return if given identifier is in parameter list
     pub fn contains_key(&self, id: &Identifier) -> bool {
         self.iter().any(|p| *id == p.id)
-    }
-}
-
-impl SrcReferrer for ParameterList {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
     }
 }
 

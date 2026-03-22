@@ -6,6 +6,7 @@
 use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// *Command syntax* within an attribute.
 #[derive(Clone, Debug)]
@@ -60,7 +61,7 @@ impl SrcReferrer for AttributeCommand {
 }
 
 /// An attribute item.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct Attribute {
     /// Attribute commands: `export = "test.stl", height(30mm)`.
     pub commands: Vec<AttributeCommand>,
@@ -102,12 +103,6 @@ impl std::fmt::Display for Attribute {
                 .join(", ")
         )?;
         writeln!(f, "]")
-    }
-}
-
-impl SrcReferrer for Attribute {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

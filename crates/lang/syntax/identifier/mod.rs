@@ -8,14 +8,15 @@ mod qualified_name;
 
 use derive_more::Deref;
 pub use identifier_list::*;
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 use miette::SourceSpan;
 pub use qualified_name::*;
 
 use crate::{Id, parse::*};
 
 /// µcad identifier
-#[derive(Default, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Default, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, SrcReferrer)]
 pub struct Identifier(pub Refer<Id>);
 
 /// Check if the element only includes one identifier
@@ -214,12 +215,6 @@ impl Identifier {
     }
 }
 
-impl SrcReferrer for Identifier {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
-    }
-}
-
 impl From<Identifier> for SourceSpan {
     fn from(value: Identifier) -> Self {
         value.src_ref().into()
@@ -283,6 +278,8 @@ impl TreeDisplay for Identifier {
 
 #[test]
 fn identifier_comparison() {
+    use microcad_lang_base::SrcRef;
+
     use crate::syntax::*;
 
     // same id but different src refs
@@ -296,6 +293,7 @@ fn identifier_comparison() {
 #[test]
 fn identifier_hash() {
     use crate::syntax::*;
+    use microcad_lang_base::SrcRef;
     use std::hash::{Hash, Hasher};
 
     // same id but different src refs

@@ -3,12 +3,13 @@
 
 //! If statement syntax elements.
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// If statement.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct IfStatement {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
@@ -36,12 +37,6 @@ impl IfStatement {
         } else {
             self.body_else.is_some()
         }
-    }
-}
-
-impl SrcReferrer for IfStatement {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

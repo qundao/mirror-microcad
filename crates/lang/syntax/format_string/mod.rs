@@ -9,6 +9,7 @@ mod format_spec;
 pub use format_expression::*;
 pub use format_spec::*;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format string item.
 #[derive(Debug, Clone, PartialEq)]
@@ -29,7 +30,7 @@ impl SrcReferrer for FormatStringInner {
 }
 
 /// Format string.
-#[derive(Default, Clone, Debug, PartialEq)]
+#[derive(Default, Clone, Debug, PartialEq, SrcReferrer)]
 pub struct FormatString(pub Refer<Vec<FormatStringInner>>);
 
 impl FormatString {
@@ -47,12 +48,6 @@ impl FormatString {
     /// Return the number of sections (inserted elements)
     pub fn section_count(&self) -> usize {
         self.0.len()
-    }
-}
-
-impl SrcReferrer for FormatString {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
     }
 }
 

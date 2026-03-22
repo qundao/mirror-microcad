@@ -3,7 +3,8 @@
 
 //! Initialization definition syntax element
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
@@ -16,7 +17,7 @@ use crate::syntax::*;
 ///     init(b: Length) { a = 2.0*b; } // The init definition
 /// }
 /// ```
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct InitDefinition {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
@@ -34,12 +35,6 @@ impl InitDefinition {
     /// Return signature with parameters if this init.
     pub fn signature(&self) -> String {
         format!("init({parameters}) ", parameters = self.parameters)
-    }
-}
-
-impl SrcReferrer for InitDefinition {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 
