@@ -11,7 +11,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer};
 ///
 /// Also provides methods to find a matching call
 /// between it and a given *parameter list*.
-#[derive(Clone, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Default, Deref, DerefMut)]
 pub struct ArgumentValueList {
     #[deref]
     #[deref_mut]
@@ -81,28 +81,6 @@ impl std::fmt::Display for ArgumentValueList {
                         format!("{id} = {}", val.value)
                     } else {
                         format!("{}", val.value)
-                    }
-                })
-                .collect::<Vec<_>>();
-            v.sort();
-            v.join(", ")
-        })
-    }
-}
-
-impl std::fmt::Debug for ArgumentValueList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", {
-            let mut v = self
-                .map
-                .iter()
-                .map(|(id, val)| {
-                    if !id.is_empty() {
-                        format!("{id:?} = {:?}", val.value)
-                    } else if let Some(id) = &val.inline_id {
-                        format!("{id:?} = {:?}", val.value)
-                    } else {
-                        format!("{:?}", val.value)
                     }
                 })
                 .collect::<Vec<_>>();

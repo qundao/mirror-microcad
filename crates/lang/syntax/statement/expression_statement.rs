@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// An assignment statement, e.g. `#[aux] s = Sphere(3.0mm);`.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ExpressionStatement {
     /// Optional attributes.
     pub attribute_list: AttributeList,
@@ -36,14 +36,5 @@ impl std::fmt::Display for ExpressionStatement {
             write!(f, "{} ", self.attribute_list)?;
         }
         write!(f, "{};", self.expression)
-    }
-}
-
-impl std::fmt::Debug for ExpressionStatement {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if !self.attribute_list.is_empty() {
-            write!(f, "{:?} ", self.attribute_list)?;
-        }
-        write!(f, "{:?};", self.expression)
     }
 }

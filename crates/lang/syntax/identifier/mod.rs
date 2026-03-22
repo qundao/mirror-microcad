@@ -15,7 +15,7 @@ pub use qualified_name::*;
 use crate::{Id, parse::*};
 
 /// µcad identifier
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Default, Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Identifier(pub Refer<Id>);
 
 /// Check if the element only includes one identifier
@@ -263,16 +263,6 @@ impl std::fmt::Display for Identifier {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if self.is_empty() {
             write!(f, microcad_lang_base::invalid_no_ansi!(ID))
-        } else {
-            write!(f, "{}", self.0)
-        }
-    }
-}
-
-impl std::fmt::Debug for Identifier {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        if self.is_empty() {
-            write!(f, "{}", microcad_lang_base::invalid!(ID))
         } else {
             write!(f, "{}", self.0)
         }

@@ -9,7 +9,7 @@ use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 ///
 /// Used e.g. for multiple variable declarations.
 /// Cannot contain duplicates.
-#[derive(Default, Clone, PartialEq, Deref, DerefMut)]
+#[derive(Default, Debug, Clone, PartialEq, Deref, DerefMut)]
 pub struct IdentifierList(pub Refer<Vec<Identifier>>);
 
 impl IdentifierList {
@@ -43,22 +43,6 @@ impl std::fmt::Display for IdentifierList {
             sorted
                 .iter()
                 .map(|id| id.to_string())
-                .collect::<Vec<_>>()
-                .join(",")
-        )
-    }
-}
-
-impl std::fmt::Debug for IdentifierList {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let mut sorted = self.0.clone();
-        sorted.sort();
-        write!(
-            f,
-            "{}",
-            sorted
-                .iter()
-                .map(|id| format!("{id:?}"))
                 .collect::<Vec<_>>()
                 .join(",")
         )

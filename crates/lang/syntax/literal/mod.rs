@@ -13,7 +13,7 @@ pub use units::*;
 use crate::{ty::*, value::Value};
 
 /// Literal of any kind.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum Literal {
     /// Integer literal
     Integer(Refer<i64>),

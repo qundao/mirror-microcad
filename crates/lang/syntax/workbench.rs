@@ -31,7 +31,7 @@ impl WorkbenchKind {
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct WorkbenchDefinition {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
@@ -83,20 +83,6 @@ impl std::fmt::Display for WorkbenchDefinition {
         write!(
             f,
             "{visibility}{kind} {id}({plan}) {body}",
-            visibility = self.visibility,
-            kind = self.kind,
-            id = self.id,
-            plan = self.plan,
-            body = self.body
-        )
-    }
-}
-
-impl std::fmt::Debug for WorkbenchDefinition {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{visibility}{kind} {id:?}({plan:?}) {body:?}",
             visibility = self.visibility,
             kind = self.kind,
             id = self.id,

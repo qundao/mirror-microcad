@@ -9,7 +9,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// Range start.
-#[derive(Clone, Default, Deref, PartialEq)]
+#[derive(Clone, Debug, Default, Deref, PartialEq)]
 pub struct RangeFirst(pub Box<Expression>);
 
 impl SrcReferrer for RangeFirst {
@@ -24,12 +24,6 @@ impl std::fmt::Display for RangeFirst {
     }
 }
 
-impl std::fmt::Debug for RangeFirst {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self.0)
-    }
-}
-
 impl TreeDisplay for RangeFirst {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}RangeStart:", "")?;
@@ -39,7 +33,7 @@ impl TreeDisplay for RangeFirst {
 }
 
 /// Range end.
-#[derive(Clone, Default, Deref, PartialEq)]
+#[derive(Clone, Debug, Default, Deref, PartialEq)]
 pub struct RangeLast(pub Box<Expression>);
 
 impl SrcReferrer for RangeLast {
@@ -54,12 +48,6 @@ impl std::fmt::Display for RangeLast {
     }
 }
 
-impl std::fmt::Debug for RangeLast {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self.0)
-    }
-}
-
 impl TreeDisplay for RangeLast {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}RangeLast:", "")?;
@@ -69,7 +57,7 @@ impl TreeDisplay for RangeLast {
 }
 
 /// Range expression, e.g. `a..b`.
-#[derive(Clone, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub struct RangeExpression {
     /// First value in the range.
     pub first: RangeFirst,
@@ -88,12 +76,6 @@ impl SrcReferrer for RangeExpression {
 impl std::fmt::Display for RangeExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}..{}", self.first, self.last)
-    }
-}
-
-impl std::fmt::Debug for RangeExpression {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}..{:?}", self.first, self.last)
     }
 }
 

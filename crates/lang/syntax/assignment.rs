@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::{syntax::*, ty::*};
 
 /// Assignment specifying an identifier, type and value
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Assignment {
     /// Documentation.
     pub doc: Option<DocBlock>,
@@ -90,23 +90,6 @@ impl std::fmt::Display for Assignment {
                 id = self.id,
                 expr = self.expression
             ),
-        }
-    }
-}
-
-impl std::fmt::Debug for Assignment {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match &self.specified_type {
-            Some(t) => write!(
-                f,
-                "{vis}{qual}{id:?}: {ty:?} = {expr:?}",
-                vis = self.visibility,
-                qual = self.qualifier,
-                id = self.id,
-                ty = t.ty(),
-                expr = self.expression
-            ),
-            None => write!(f, "{} = {}", self.id, self.expression),
         }
     }
 }

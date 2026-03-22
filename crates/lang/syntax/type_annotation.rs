@@ -8,7 +8,7 @@ use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::ty::*;
 
 /// Type within source code.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct TypeAnnotation(pub Refer<Type>);
 
 impl SrcReferrer for TypeAnnotation {
@@ -20,12 +20,6 @@ impl SrcReferrer for TypeAnnotation {
 impl std::fmt::Display for TypeAnnotation {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         self.0.fmt(f)
-    }
-}
-
-impl std::fmt::Debug for TypeAnnotation {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}", self.0)
     }
 }
 

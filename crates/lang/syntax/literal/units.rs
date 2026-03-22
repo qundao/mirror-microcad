@@ -8,7 +8,7 @@ use microcad_lang_base::{TreeDisplay, TreeState};
 use crate::ty::*;
 
 /// Definition of type & scale of numbers.
-#[derive(Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Default, Clone, Debug, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Unit {
     // Scalar
     /// No unit was given.

@@ -16,7 +16,7 @@ use crate::syntax::*;
 ///     init(b: Length) { a = 2.0*b; } // The init definition
 /// }
 /// ```
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct InitDefinition {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
@@ -47,13 +47,6 @@ impl std::fmt::Display for InitDefinition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.signature())?;
         write!(f, "{body}", body = self.body)
-    }
-}
-
-impl std::fmt::Debug for InitDefinition {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "init({parameters:?}) ", parameters = self.parameters)?;
-        write!(f, "{body:?}", body = self.body)
     }
 }
 

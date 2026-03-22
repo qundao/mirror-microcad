@@ -8,7 +8,7 @@ use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// *Command syntax* within an attribute.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum AttributeCommand {
     /// A bare name
     Ident(Identifier),
@@ -49,16 +49,6 @@ impl std::fmt::Display for AttributeCommand {
     }
 }
 
-impl std::fmt::Debug for AttributeCommand {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
-            AttributeCommand::Ident(name) => write!(f, "{name:?}"),
-            AttributeCommand::Call(call) => write!(f, "{call:?}"),
-            AttributeCommand::Assigment { name, value, .. } => write!(f, "{name:?} = {value:?}"),
-        }
-    }
-}
-
 impl SrcReferrer for AttributeCommand {
     fn src_ref(&self) -> SrcRef {
         match &self {
@@ -70,7 +60,7 @@ impl SrcReferrer for AttributeCommand {
 }
 
 /// An attribute item.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Attribute {
     /// Attribute commands: `export = "test.stl", height(30mm)`.
     pub commands: Vec<AttributeCommand>,
@@ -115,12 +105,6 @@ impl std::fmt::Display for Attribute {
     }
 }
 
-impl std::fmt::Debug for Attribute {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self}")
-    }
-}
-
 impl SrcReferrer for Attribute {
     fn src_ref(&self) -> SrcRef {
         self.src_ref.clone()
@@ -128,7 +112,7 @@ impl SrcReferrer for Attribute {
 }
 
 /// A list of attributes, e.g. `#foo #[bar, baz = 42]`
-#[derive(Clone, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Default, Deref, DerefMut)]
 pub struct AttributeList(Vec<Attribute>);
 
 impl From<Vec<Attribute>> for AttributeList {
@@ -140,12 +124,6 @@ impl From<Vec<Attribute>> for AttributeList {
 impl std::fmt::Display for AttributeList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.0.iter().try_for_each(|attr| writeln!(f, "{attr}"))
-    }
-}
-
-impl std::fmt::Debug for AttributeList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self}")
     }
 }
 

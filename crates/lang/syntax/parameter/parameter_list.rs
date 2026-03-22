@@ -8,7 +8,7 @@ use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// Parameter list
-#[derive(Clone, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Default, Deref, DerefMut)]
 pub struct ParameterList(pub Refer<OrdMap<Identifier, Parameter>>);
 
 impl ParameterList {
@@ -37,20 +37,6 @@ impl std::fmt::Display for ParameterList {
             self.0
                 .iter()
                 .map(|p| p.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
-    }
-}
-
-impl std::fmt::Debug for ParameterList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.0
-                .iter()
-                .map(|p| format!("{p:?}"))
                 .collect::<Vec<_>>()
                 .join(", ")
         )

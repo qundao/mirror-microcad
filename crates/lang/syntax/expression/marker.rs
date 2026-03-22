@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// Node marker, e.g. `@input`.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Marker {
     /// Marker name, e.g. `input`
     pub(crate) id: Identifier,
@@ -38,12 +38,6 @@ impl SrcReferrer for Marker {
 impl std::fmt::Display for Marker {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "@{}", self.id)
-    }
-}
-
-impl std::fmt::Debug for Marker {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "@{:?}", self.id)
     }
 }
 

@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// Method call syntax entity.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct MethodCall {
     /// Name of the method.
     pub name: QualifiedName,
@@ -27,12 +27,6 @@ impl SrcReferrer for MethodCall {
 impl std::fmt::Display for MethodCall {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}({})", self.name, self.argument_list)
-    }
-}
-
-impl std::fmt::Debug for MethodCall {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}({:?})", self.name, self.argument_list)
     }
 }
 

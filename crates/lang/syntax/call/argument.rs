@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::{ord_map::*, syntax::*};
 
 /// Argument in a [`Call`].
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Argument {
     /// Name of the argument
     pub id: Option<Identifier>,
@@ -45,15 +45,6 @@ impl std::fmt::Display for Argument {
         match self.id {
             Some(ref id) => write!(f, "{id} = {}", self.expression),
             None => write!(f, "{}", self.expression),
-        }
-    }
-}
-
-impl std::fmt::Debug for Argument {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self.id {
-            Some(ref id) => write!(f, "{id:?} = {:?}", self.expression),
-            None => write!(f, "{:?}", self.expression),
         }
     }
 }

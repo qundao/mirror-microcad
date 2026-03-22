@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// Return statement.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct ReturnStatement {
     /// SrcRef of the `return` keyword.
     pub keyword_ref: SrcRef,
@@ -30,16 +30,6 @@ impl std::fmt::Display for ReturnStatement {
             write!(f, "{result}")
         } else {
             write!(f, microcad_lang_base::invalid_no_ansi!(RESULT))
-        }
-    }
-}
-
-impl std::fmt::Debug for ReturnStatement {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        if let Some(result) = &self.result {
-            write!(f, "{result:?}")
-        } else {
-            write!(f, microcad_lang_base::invalid!(RESULT))
         }
     }
 }

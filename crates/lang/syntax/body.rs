@@ -9,7 +9,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// [StatementList] from inside `{}` brackets.
-#[derive(Clone, Default, Deref)]
+#[derive(Clone, Debug, Default, Deref)]
 pub struct Body {
     /// Body statements.
     #[deref]
@@ -28,15 +28,6 @@ impl std::fmt::Display for Body {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, " {{")?;
         writeln!(f, "{}", self.statements)?;
-        writeln!(f, "}}")?;
-        Ok(())
-    }
-}
-
-impl std::fmt::Debug for Body {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, " {{")?;
-        writeln!(f, "{:?}", self.statements)?;
         writeln!(f, "}}")?;
         Ok(())
     }

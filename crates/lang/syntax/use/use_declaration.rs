@@ -18,7 +18,7 @@ use strum::IntoStaticStr;
 /// use std::print as p;
 /// ```
 ///
-#[derive(Clone, IntoStaticStr)]
+#[derive(Clone, Debug, IntoStaticStr)]
 pub enum UseDeclaration {
     /// Import symbols given as qualified names: `use a, b`
     Use(QualifiedName),
@@ -45,18 +45,6 @@ impl std::fmt::Display for UseDeclaration {
             UseDeclaration::UseAll(name) => write!(f, "{name}::*"),
             UseDeclaration::UseAs(name, alias) => {
                 write!(f, "{name} as {alias}")
-            }
-        }
-    }
-}
-
-impl std::fmt::Debug for UseDeclaration {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            UseDeclaration::Use(name) => write!(f, "{name:?}"),
-            UseDeclaration::UseAll(name) => write!(f, "{name:?}::*"),
-            UseDeclaration::UseAs(name, alias) => {
-                write!(f, "{name:?} as {alias:?}")
             }
         }
     }

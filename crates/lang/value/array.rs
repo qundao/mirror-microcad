@@ -7,7 +7,7 @@ use crate::{ty::*, value::*};
 use derive_more::{Deref, DerefMut};
 
 /// Collection of values of the same type.
-#[derive(Clone, Deref, DerefMut)]
+#[derive(Clone, Debug, Deref, DerefMut)]
 pub struct Array {
     /// List of values
     #[deref]
@@ -144,21 +144,6 @@ impl std::fmt::Display for Array {
                 .items
                 .iter()
                 .map(|v| v.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
-    }
-}
-
-impl std::fmt::Debug for Array {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "[{items}]",
-            items = self
-                .items
-                .iter()
-                .map(|v| format!("{v:?}"))
                 .collect::<Vec<_>>()
                 .join(", ")
         )

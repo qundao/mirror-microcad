@@ -8,7 +8,7 @@ use microcad_lang_base::SrcReferrer;
 use crate::{ty::*, value::*};
 
 /// Parameter value is the result of evaluating a parameter
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct ParameterValue {
     /// Parameter type
     pub specified_type: Option<Type>,
@@ -59,16 +59,6 @@ impl std::fmt::Display for ParameterValue {
             write!(f, "{} = {def}", def.ty())?;
         } else if let Some(ty) = &self.specified_type {
             write!(f, "= {ty}")?;
-        }
-        Ok(())
-    }
-}
-impl std::fmt::Debug for ParameterValue {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(def) = &self.default_value {
-            write!(f, ": {ty:?} = {def:?}", ty = def.ty())?;
-        } else if let Some(ty) = &self.specified_type {
-            write!(f, "= {ty:?}")?;
         }
         Ok(())
     }

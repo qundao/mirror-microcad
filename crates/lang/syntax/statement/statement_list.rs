@@ -8,22 +8,13 @@ use derive_more::Deref;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 
 /// A list of statements.
-#[derive(Clone, Default, Deref)]
+#[derive(Clone, Debug, Default, Deref)]
 pub struct StatementList(pub Vec<Statement>);
 
 impl std::fmt::Display for StatementList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for statement in self.iter() {
             writeln!(f, "{statement}")?;
-        }
-        Ok(())
-    }
-}
-
-impl std::fmt::Debug for StatementList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        for statement in self.iter() {
-            writeln!(f, "{statement:?}")?;
         }
         Ok(())
     }

@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer};
 use crate::{syntax::*, ty::*, value::*};
 
 /// Number literal.
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct NumberLiteral(pub f64, pub Unit, pub SrcRef);
 
 impl NumberLiteral {

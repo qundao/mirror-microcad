@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// If statement.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct IfStatement {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
@@ -53,24 +53,6 @@ impl std::fmt::Display for IfStatement {
         }
         if let Some(body) = &self.body_else {
             writeln!(f, "else {body}")?;
-        }
-        Ok(())
-    }
-}
-
-impl std::fmt::Debug for IfStatement {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(
-            f,
-            "if {cond:?} {body:?}",
-            cond = self.cond,
-            body = self.body
-        )?;
-        if let Some(next) = &self.next_if {
-            writeln!(f, "else {next:?}")?;
-        }
-        if let Some(body) = &self.body_else {
-            writeln!(f, "else {body:?}")?;
         }
         Ok(())
     }

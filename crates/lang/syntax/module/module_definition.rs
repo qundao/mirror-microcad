@@ -10,7 +10,7 @@ use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
 use crate::syntax::*;
 
 /// Module definition.
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct ModuleDefinition {
     /// SrcRef of the `mod` keyword
     pub keyword_ref: SrcRef,
@@ -83,17 +83,6 @@ impl std::fmt::Display for ModuleDefinition {
         write!(
             f,
             "{visibility}mod {id}",
-            id = self.id,
-            visibility = self.visibility,
-        )
-    }
-}
-
-impl std::fmt::Debug for ModuleDefinition {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{visibility}mod {id:?}",
             id = self.id,
             visibility = self.visibility,
         )
