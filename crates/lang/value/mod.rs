@@ -109,17 +109,6 @@ impl Value {
         }
     }
 
-    /// Try to get boolean value.
-    ///
-    /// A `Value::None` will return false.
-    pub fn try_bool(&self) -> Result<bool, ValueError> {
-        match self {
-            Value::Bool(b) => Ok(*b),
-            Value::None => Ok(false),
-            value => Err(ValueError::CannotConvertToBool(value.to_string())),
-        }
-    }
-
     /// Try to convert to [`String`].
     pub fn try_string(&self) -> Result<String, ValueError> {
         match self {

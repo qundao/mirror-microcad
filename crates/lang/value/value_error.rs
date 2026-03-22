@@ -30,10 +30,6 @@ pub enum ValueError {
     #[error("Cannot convert value {0} to {1}")]
     CannotConvert(String, String),
 
-    /// Cannot convert value into boolean
-    #[error("Cannot convert value into boolean: {0}")]
-    CannotConvertToBool(String),
-
     /// Cannot concat two vec with different types
     #[error("Cannot concat two vec with different types {0} and {1}")]
     CannotCombineVecOfDifferentType(Type, Type),
