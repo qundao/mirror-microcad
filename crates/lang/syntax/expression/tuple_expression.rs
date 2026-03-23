@@ -3,23 +3,18 @@
 
 //! Tuple expression.
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
 pub struct TupleExpression {
     /// List of tuple members.
     pub args: ArgumentList,
     /// Source code reference
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for TupleExpression {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for TupleExpression {
