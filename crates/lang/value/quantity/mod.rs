@@ -14,7 +14,7 @@ pub use error::*;
 const OUTPUT_PRECISION: i32 = 14;
 
 /// A numeric value
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Quantity {
     /// The numeric value of the quantity.
     pub value: Scalar,
@@ -113,17 +113,6 @@ impl std::fmt::Display for Quantity {
             "{}{}",
             round::round(self.value, OUTPUT_PRECISION),
             self.quantity_type.base_unit()
-        )
-    }
-}
-
-impl std::fmt::Debug for Quantity {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{} ({})",
-            round::round(self.value, OUTPUT_PRECISION),
-            self.quantity_type,
         )
     }
 }

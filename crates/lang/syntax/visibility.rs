@@ -9,7 +9,7 @@ use crate::syntax::*;
 ///
 /// This is used to determine if an entity is public or private.
 /// By default, entities are private.
-#[derive(Clone, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq)]
 pub enum Visibility {
     /// Private visibility
     #[default]
@@ -29,17 +29,6 @@ impl std::fmt::Display for Visibility {
             Visibility::PrivateUse(_) => Ok(()),
             Visibility::Public => write!(f, "pub "),
             Visibility::Deleted => write!(f, "(deleted) "),
-        }
-    }
-}
-
-impl std::fmt::Debug for Visibility {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Visibility::Private => Ok(()),
-            Visibility::PrivateUse(name) => write!(f, "«{name}» "),
-            Visibility::Public => write!(f, "pub "),
-            Visibility::Deleted => write!(f, "❌ "),
         }
     }
 }

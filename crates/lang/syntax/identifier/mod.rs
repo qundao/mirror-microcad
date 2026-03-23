@@ -8,14 +8,15 @@ mod qualified_name;
 
 use derive_more::Deref;
 pub use identifier_list::*;
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 use miette::SourceSpan;
 pub use qualified_name::*;
 
 use crate::{Id, parse::*};
 
 /// µcad identifier
-#[derive(Default, Clone, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Default, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, SrcReferrer)]
 pub struct Identifier(pub Refer<Id>);
 
 /// Check if the element only includes one identifier
@@ -100,11 +101,6 @@ impl Identifier {
         *self.0 == "super"
     }
 
-    /// Check if this was created with none()
-    pub fn is_none(&self) -> bool {
-        self.0.src_ref().is_empty() && self.src_ref().is_empty()
-    }
-
     /// Make empty (invalid) id
     pub fn no_ref(id: &str) -> Self {
         Self(Refer::none(id.into()))
@@ -168,11 +164,6 @@ impl Identifier {
         Ok(self)
     }
 
-    /// Add given `prefix` to identifier to get `qualified name`.
-    pub fn with_prefix(&self, prefix: &QualifiedName) -> QualifiedName {
-        QualifiedName::from(self).with_prefix(prefix)
-    }
-
     /// Detect if the identifier matches a certain case.
     pub fn detect_case(&self) -> Case {
         let s = &self.0.value;
@@ -211,12 +202,6 @@ impl Identifier {
         }
 
         Case::Invalid
-    }
-}
-
-impl SrcReferrer for Identifier {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
     }
 }
 
@@ -269,16 +254,6 @@ impl std::fmt::Display for Identifier {
     }
 }
 
-impl std::fmt::Debug for Identifier {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        if self.is_empty() {
-            write!(f, "{}", microcad_lang_base::invalid!(ID))
-        } else {
-            write!(f, "{}", self.0)
-        }
-    }
-}
-
 impl PartialEq<str> for Identifier {
     fn eq(&self, other: &str) -> bool {
         *self.0 == other
@@ -293,6 +268,8 @@ impl TreeDisplay for Identifier {
 
 #[test]
 fn identifier_comparison() {
+    use microcad_lang_base::SrcRef;
+
     use crate::syntax::*;
 
     // same id but different src refs
@@ -306,6 +283,7 @@ fn identifier_comparison() {
 #[test]
 fn identifier_hash() {
     use crate::syntax::*;
+    use microcad_lang_base::SrcRef;
     use std::hash::{Hash, Hasher};
 
     // same id but different src refs

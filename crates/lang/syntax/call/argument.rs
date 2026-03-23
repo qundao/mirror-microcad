@@ -3,12 +3,13 @@
 
 //! A single argument
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{ord_map::*, syntax::*};
 
 /// Argument in a [`Call`].
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq, SrcReferrer)]
 pub struct Argument {
     /// Name of the argument
     pub id: Option<Identifier>,
@@ -28,12 +29,6 @@ impl Argument {
     }
 }
 
-impl SrcReferrer for Argument {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
-}
-
 impl OrdMapValue<Identifier> for Argument {
     fn key(&self) -> Option<Identifier> {
         self.id.clone()
@@ -45,15 +40,6 @@ impl std::fmt::Display for Argument {
         match self.id {
             Some(ref id) => write!(f, "{id} = {}", self.expression),
             None => write!(f, "{}", self.expression),
-        }
-    }
-}
-
-impl std::fmt::Debug for Argument {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self.id {
-            Some(ref id) => write!(f, "{id:?} = {:?}", self.expression),
-            None => write!(f, "{:?}", self.expression),
         }
     }
 }

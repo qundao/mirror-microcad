@@ -3,12 +3,13 @@
 
 //! Function signature syntax element
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// Parameters and return type of a function
-#[derive(Clone)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct FunctionSignature {
     /// Function's parameters
     pub parameters: ParameterList,
@@ -16,12 +17,6 @@ pub struct FunctionSignature {
     pub return_type: Option<TypeAnnotation>,
     /// Source code reference
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for FunctionSignature {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl FunctionSignature {
@@ -49,21 +44,6 @@ impl std::fmt::Display for FunctionSignature {
         write!(
             f,
             "({}){}",
-            self.parameters,
-            if let Some(ret) = &self.return_type {
-                format!("-> {ret}")
-            } else {
-                String::default()
-            }
-        )
-    }
-}
-
-impl std::fmt::Debug for FunctionSignature {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "({:?}){:?}",
             self.parameters,
             if let Some(ret) = &self.return_type {
                 format!("-> {ret}")

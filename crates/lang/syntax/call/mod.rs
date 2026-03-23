@@ -10,22 +10,13 @@ mod method_call;
 pub use argument::*;
 pub use argument_list::*;
 pub use method_call::*;
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::{model::*, syntax::*, value::*};
-
-/// Result of a call.
-pub enum CallResult {
-    /// Call returned models.
-    Models(Vec<Model>),
-    /// Call returned a single value.
-    Value(Value),
-    /// Call returned nothing.
-    None,
-}
+use crate::syntax::*;
 
 /// Call of a *workbench* or *function*.
-#[derive(Clone, Default)]
+#[derive(Clone, Debug, Default, SrcReferrer)]
 pub struct Call {
     /// Qualified name of the call.
     pub name: QualifiedName,
@@ -35,21 +26,9 @@ pub struct Call {
     pub src_ref: SrcRef,
 }
 
-impl SrcReferrer for Call {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
-}
-
 impl std::fmt::Display for Call {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}({})", self.name, self.argument_list)
-    }
-}
-
-impl std::fmt::Debug for Call {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}({:?})", self.name, self.argument_list)
     }
 }
 

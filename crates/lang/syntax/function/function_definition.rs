@@ -4,11 +4,12 @@
 //! Function definition syntax element
 
 use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::Identifiable;
 
 use crate::syntax::*;
 
 /// Function definition
-#[derive(Clone)]
+#[derive(Clone, Debug, Identifiable)]
 pub struct FunctionDefinition {
     /// SrcRef of the `fn` keyword
     pub keyword_ref: SrcRef,
@@ -22,12 +23,6 @@ pub struct FunctionDefinition {
     pub signature: FunctionSignature,
     /// Function body
     pub body: Body,
-}
-
-impl Identifiable for FunctionDefinition {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
 }
 
 impl SrcReferrer for FunctionDefinition {
@@ -53,11 +48,5 @@ impl TreeDisplay for FunctionDefinition {
 impl std::fmt::Display for FunctionDefinition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "fn {}{}", self.id, self.signature)
-    }
-}
-
-impl std::fmt::Debug for FunctionDefinition {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "fn {:?}{:?}", self.id, self.signature)
     }
 }

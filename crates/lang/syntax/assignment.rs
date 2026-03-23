@@ -3,12 +3,13 @@
 
 //! µcad assignment syntax element
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use crate::{syntax::*, ty::*};
 
 /// Assignment specifying an identifier, type and value
-#[derive(Clone)]
+#[derive(Clone, Debug, SrcReferrer, Identifiable)]
 pub struct Assignment {
     /// Documentation.
     pub doc: Option<DocBlock>,
@@ -27,27 +28,6 @@ pub struct Assignment {
 }
 
 impl Assignment {
-    /// Create new assignment.
-    pub fn new(
-        doc: Option<DocBlock>,
-        visibility: Visibility,
-        qualifier: Qualifier,
-        id: Identifier,
-        specified_type: Option<TypeAnnotation>,
-        expression: Expression,
-        src_ref: SrcRef,
-    ) -> Self {
-        Self {
-            doc,
-            visibility,
-            qualifier,
-            id,
-            specified_type,
-            expression,
-            src_ref,
-        }
-    }
-
     /// Get qualifier (makes `pub` => `pub const`)
     pub fn qualifier(&self) -> Qualifier {
         match self.visibility {
@@ -55,18 +35,6 @@ impl Assignment {
             Visibility::Public => Qualifier::Const,
             Visibility::Deleted => unreachable!(),
         }
-    }
-}
-
-impl Identifiable for Assignment {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
-}
-
-impl SrcReferrer for Assignment {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 
@@ -90,23 +58,6 @@ impl std::fmt::Display for Assignment {
                 id = self.id,
                 expr = self.expression
             ),
-        }
-    }
-}
-
-impl std::fmt::Debug for Assignment {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match &self.specified_type {
-            Some(t) => write!(
-                f,
-                "{vis}{qual}{id:?}: {ty:?} = {expr:?}",
-                vis = self.visibility,
-                qual = self.qualifier,
-                id = self.id,
-                ty = t.ty(),
-                expr = self.expression
-            ),
-            None => write!(f, "{} = {}", self.id, self.expression),
         }
     }
 }

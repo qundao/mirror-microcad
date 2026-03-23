@@ -3,12 +3,13 @@
 
 //! If statement syntax elements.
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// If statement.
-#[derive(Clone)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct IfStatement {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
@@ -39,12 +40,6 @@ impl IfStatement {
     }
 }
 
-impl SrcReferrer for IfStatement {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
-}
-
 impl std::fmt::Display for IfStatement {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "if {cond} {body}", cond = self.cond, body = self.body)?;
@@ -53,24 +48,6 @@ impl std::fmt::Display for IfStatement {
         }
         if let Some(body) = &self.body_else {
             writeln!(f, "else {body}")?;
-        }
-        Ok(())
-    }
-}
-
-impl std::fmt::Debug for IfStatement {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(
-            f,
-            "if {cond:?} {body:?}",
-            cond = self.cond,
-            body = self.body
-        )?;
-        if let Some(next) = &self.next_if {
-            writeln!(f, "else {next:?}")?;
-        }
-        if let Some(body) = &self.body_else {
-            writeln!(f, "else {body:?}")?;
         }
         Ok(())
     }

@@ -5,10 +5,11 @@
 
 use crate::{ord_map::*, syntax::*};
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Parameter list
-#[derive(Clone, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Default, Deref, DerefMut, SrcReferrer)]
 pub struct ParameterList(pub Refer<OrdMap<Identifier, Parameter>>);
 
 impl ParameterList {
@@ -23,12 +24,6 @@ impl ParameterList {
     }
 }
 
-impl SrcReferrer for ParameterList {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
-    }
-}
-
 impl std::fmt::Display for ParameterList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -37,20 +32,6 @@ impl std::fmt::Display for ParameterList {
             self.0
                 .iter()
                 .map(|p| p.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
-    }
-}
-
-impl std::fmt::Debug for ParameterList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.0
-                .iter()
-                .map(|p| format!("{p:?}"))
                 .collect::<Vec<_>>()
                 .join(", ")
         )

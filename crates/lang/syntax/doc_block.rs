@@ -3,10 +3,11 @@
 
 //! Documentation block syntax element
 
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Block of documentation comments, starting with `/// `.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, SrcReferrer)]
 pub struct DocBlock(pub Refer<Vec<String>>);
 
 impl DocBlock {
@@ -29,6 +30,7 @@ impl DocBlock {
             (true, false) => b.clone(),
             (false, true) => a.clone(),
             _ => {
+                use microcad_lang_base::SrcReferrer;
                 let merged =
                     a.0.iter()
                         .chain([String::default()].iter()) // Add an empty line
@@ -50,12 +52,6 @@ impl DocBlock {
             .filter_map(|s| s.strip_prefix("/// ").or(s.strip_prefix("///")))
             .map(|s| s.trim_end().to_string())
             .collect::<Vec<_>>()
-    }
-}
-
-impl SrcReferrer for DocBlock {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
     }
 }
 

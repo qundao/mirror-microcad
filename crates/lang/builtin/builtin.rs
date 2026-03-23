@@ -4,6 +4,7 @@
 //! Builtin evaluation entity
 
 use microcad_lang_base::PushDiag;
+use microcad_lang_proc_macros::Identifiable;
 use strum::Display;
 
 use crate::{eval::*, syntax::*, value::*};
@@ -13,7 +14,7 @@ pub type BuiltinFn =
     dyn Fn(&ParameterValueList, &ArgumentValueList, &mut EvalContext) -> EvalResult<Value>;
 
 /// Builtin function struct
-#[derive(Clone)]
+#[derive(Clone, Identifiable)]
 pub struct BuiltinFunction {
     /// Name of the builtin function
     pub(crate) id: Identifier,
@@ -28,14 +29,8 @@ pub struct BuiltinFunction {
     pub doc: Option<DocBlock>,
 }
 
-impl Identifiable for BuiltinFunction {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
-}
-
 /// Builtin workbench
-#[derive(Clone)]
+#[derive(Clone, Identifiable)]
 pub struct BuiltinWorkbench {
     /// Name of the builtin function
     pub(crate) id: Identifier,
@@ -51,12 +46,6 @@ pub struct BuiltinWorkbench {
 
     /// Functor which returns documentation of this function
     pub doc: Option<DocBlock>,
-}
-
-impl Identifiable for BuiltinWorkbench {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
 }
 
 /// The kind of the built-in workbench determines its output.
@@ -85,7 +74,7 @@ impl BuiltinWorkbenchKind {
 }
 
 /// A builtin constant.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Identifiable)]
 pub struct BuiltinConstant {
     /// Name of the constant.
     pub id: Identifier,
@@ -93,12 +82,6 @@ pub struct BuiltinConstant {
     pub value: Value,
     /// Documentation.
     pub doc: Option<DocBlock>,
-}
-
-impl Identifiable for BuiltinConstant {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
 }
 
 /// Builtin enum

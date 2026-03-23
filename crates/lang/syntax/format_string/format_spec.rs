@@ -3,10 +3,11 @@
 
 //! Format Specification syntax element
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format specification.
-#[derive(Clone, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
 pub struct FormatSpec {
     /// Precision for number formatting.
     pub precision: Option<u32>,
@@ -14,12 +15,6 @@ pub struct FormatSpec {
     pub width: Option<u32>,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for FormatSpec {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for FormatSpec {
@@ -30,12 +25,6 @@ impl std::fmt::Display for FormatSpec {
             (Some(width), None) => write!(f, "0{width}"),
             _ => Ok(()),
         }
-    }
-}
-
-impl std::fmt::Debug for FormatSpec {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{self}")
     }
 }
 

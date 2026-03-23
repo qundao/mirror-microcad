@@ -6,12 +6,13 @@
 use crate::{eval::*, value::*};
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Collection of *argument values* (e.g. `( x=1, y=2 )`).
 ///
 /// Also provides methods to find a matching call
 /// between it and a given *parameter list*.
-#[derive(Clone, Default, Deref, DerefMut)]
+#[derive(Clone, Debug, Default, Deref, DerefMut, SrcReferrer)]
 pub struct ArgumentValueList {
     #[deref]
     #[deref_mut]
@@ -62,12 +63,6 @@ impl ValueAccess for ArgumentValueList {
     }
 }
 
-impl SrcReferrer for ArgumentValueList {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
-}
-
 impl std::fmt::Display for ArgumentValueList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", {
@@ -81,28 +76,6 @@ impl std::fmt::Display for ArgumentValueList {
                         format!("{id} = {}", val.value)
                     } else {
                         format!("{}", val.value)
-                    }
-                })
-                .collect::<Vec<_>>();
-            v.sort();
-            v.join(", ")
-        })
-    }
-}
-
-impl std::fmt::Debug for ArgumentValueList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", {
-            let mut v = self
-                .map
-                .iter()
-                .map(|(id, val)| {
-                    if !id.is_empty() {
-                        format!("{id:?} = {:?}", val.value)
-                    } else if let Some(id) = &val.inline_id {
-                        format!("{id:?} = {:?}", val.value)
-                    } else {
-                        format!("{:?}", val.value)
                     }
                 })
                 .collect::<Vec<_>>();

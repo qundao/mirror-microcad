@@ -6,9 +6,10 @@
 use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Inner of an [`ArrayExpression`].
-#[derive(Clone, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum ArrayExpressionInner {
     /// List: `a,b,c`.
     List(ListExpression),
@@ -31,23 +32,6 @@ impl std::fmt::Display for ArrayExpressionInner {
                 ArrayExpressionInner::List(expressions) => expressions
                     .iter()
                     .map(|c| c.to_string())
-                    .collect::<Vec<_>>()
-                    .join(", "),
-                ArrayExpressionInner::Range(range_expression) => range_expression.to_string(),
-            }
-        )
-    }
-}
-
-impl std::fmt::Debug for ArrayExpressionInner {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match &self {
-                ArrayExpressionInner::List(expressions) => expressions
-                    .iter()
-                    .map(|c| format!("{c:?}"))
                     .collect::<Vec<_>>()
                     .join(", "),
                 ArrayExpressionInner::Range(range_expression) => range_expression.to_string(),
@@ -90,7 +74,7 @@ impl TreeDisplay for ArrayExpressionInner {
 }
 
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]`.
-#[derive(Default, Clone, Deref, DerefMut, PartialEq)]
+#[derive(Default, Clone, Debug, Deref, DerefMut, PartialEq, SrcReferrer)]
 pub struct ArrayExpression {
     /// Expression list.
     #[deref]
@@ -102,21 +86,9 @@ pub struct ArrayExpression {
     pub src_ref: SrcRef,
 }
 
-impl SrcReferrer for ArrayExpression {
-    fn src_ref(&self) -> microcad_lang_base::SrcRef {
-        self.src_ref.clone()
-    }
-}
-
 impl std::fmt::Display for ArrayExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "[{}]{}", self.inner, self.unit)
-    }
-}
-
-impl std::fmt::Debug for ArrayExpression {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "[{:?}]{}", self.inner, self.unit)
     }
 }
 

@@ -6,6 +6,7 @@
 use crate::syntax::*;
 use custom_debug::Debug;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::Identifiable;
 use strum::Display;
 
 /// Kind of a [`WorkbenchDefinition`].
@@ -31,7 +32,7 @@ impl WorkbenchKind {
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Clone)]
+#[derive(Clone, Debug, Identifiable)]
 pub struct WorkbenchDefinition {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
@@ -60,12 +61,6 @@ impl WorkbenchDefinition {
     }
 }
 
-impl Identifiable for WorkbenchDefinition {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
-}
-
 impl<'a> Initialized<'a> for WorkbenchDefinition {
     fn statements(&'a self) -> std::slice::Iter<'a, Statement> {
         self.body.statements.iter()
@@ -83,20 +78,6 @@ impl std::fmt::Display for WorkbenchDefinition {
         write!(
             f,
             "{visibility}{kind} {id}({plan}) {body}",
-            visibility = self.visibility,
-            kind = self.kind,
-            id = self.id,
-            plan = self.plan,
-            body = self.body
-        )
-    }
-}
-
-impl std::fmt::Debug for WorkbenchDefinition {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{visibility}{kind} {id:?}({plan:?}) {body:?}",
             visibility = self.visibility,
             kind = self.kind,
             id = self.id,

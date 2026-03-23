@@ -3,27 +3,15 @@
 
 use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{Refer, SrcRef};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// A list of identifiers
 ///
 /// Used e.g. for multiple variable declarations.
 /// Cannot contain duplicates.
-#[derive(Default, Clone, PartialEq, Deref, DerefMut)]
+#[derive(Default, Debug, Clone, PartialEq, Deref, DerefMut, SrcReferrer)]
 pub struct IdentifierList(pub Refer<Vec<Identifier>>);
-
-impl IdentifierList {
-    /// Create new identifier list
-    pub fn new(identifiers: Vec<Identifier>, src_ref: SrcRef) -> Self {
-        Self(Refer::new(identifiers, src_ref))
-    }
-}
-
-impl SrcReferrer for IdentifierList {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
-    }
-}
 
 impl FromIterator<Identifier> for IdentifierList {
     fn from_iter<T: IntoIterator<Item = Identifier>>(iter: T) -> Self {
@@ -43,22 +31,6 @@ impl std::fmt::Display for IdentifierList {
             sorted
                 .iter()
                 .map(|id| id.to_string())
-                .collect::<Vec<_>>()
-                .join(",")
-        )
-    }
-}
-
-impl std::fmt::Debug for IdentifierList {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let mut sorted = self.0.clone();
-        sorted.sort();
-        write!(
-            f,
-            "{}",
-            sorted
-                .iter()
-                .map(|id| format!("{id:?}"))
                 .collect::<Vec<_>>()
                 .join(",")
         )

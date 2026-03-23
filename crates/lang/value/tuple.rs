@@ -6,13 +6,14 @@
 use std::collections::HashMap;
 
 use microcad_lang_base::SrcReferrer;
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{ty::*, value::*};
 
 /// Tuple with named values
 ///
 /// Names are optional, which means Identifiers can be empty.
-#[derive(Clone, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
 pub struct Tuple {
     pub(crate) named: std::collections::HashMap<Identifier, Value>,
     pub(crate) unnamed: std::collections::HashMap<Type, Value>,
@@ -285,12 +286,6 @@ impl ValueAccess for Tuple {
     }
 }
 
-impl SrcReferrer for Tuple {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
-}
-
 // TODO impl FromIterator instead
 impl<T> From<std::slice::Iter<'_, (&'static str, T)>> for Tuple
 where
@@ -477,25 +472,6 @@ impl std::fmt::Display for Tuple {
                     .iter()
                     .map(|(id, v)| format!("{id}={v}"))
                     .chain(self.unnamed.values().map(|v| format!("{v}")))
-                    .collect::<Vec<String>>();
-                items.sort();
-                items.join(", ")
-            }
-        )
-    }
-}
-
-impl std::fmt::Debug for Tuple {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "({items})",
-            items = {
-                let mut items = self
-                    .named
-                    .iter()
-                    .map(|(id, v)| format!("{id:?}={v:?}"))
-                    .chain(self.unnamed.values().map(|v| format!("{v:?}")))
                     .collect::<Vec<String>>();
                 items.sort();
                 items.join(", ")

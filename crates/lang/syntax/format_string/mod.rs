@@ -9,6 +9,7 @@ mod format_spec;
 pub use format_expression::*;
 pub use format_spec::*;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format string item.
 #[derive(Debug, Clone, PartialEq)]
@@ -29,7 +30,7 @@ impl SrcReferrer for FormatStringInner {
 }
 
 /// Format string.
-#[derive(Default, Clone, PartialEq)]
+#[derive(Default, Clone, Debug, PartialEq, SrcReferrer)]
 pub struct FormatString(pub Refer<Vec<FormatStringInner>>);
 
 impl FormatString {
@@ -50,12 +51,6 @@ impl FormatString {
     }
 }
 
-impl SrcReferrer for FormatString {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
-    }
-}
-
 impl From<Refer<String>> for FormatString {
     fn from(value: Refer<String>) -> Self {
         FormatString(Refer {
@@ -72,20 +67,6 @@ impl std::fmt::Display for FormatString {
             match elem {
                 FormatStringInner::String(s) => write!(f, "{}", s.value)?,
                 FormatStringInner::FormatExpression(expr) => write!(f, "{expr}")?,
-            }
-        }
-        write!(f, r#"""#)?;
-        Ok(())
-    }
-}
-
-impl std::fmt::Debug for FormatString {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, r#"""#)?;
-        for elem in &*self.0 {
-            match elem {
-                FormatStringInner::String(s) => write!(f, "{}", s.value)?,
-                FormatStringInner::FormatExpression(expr) => write!(f, "{expr:?}")?,
             }
         }
         write!(f, r#"""#)?;

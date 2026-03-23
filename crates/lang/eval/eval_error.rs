@@ -46,10 +46,6 @@ pub enum EvalError {
     #[error("Symbol {0} not found.")]
     SymbolNotFound(QualifiedName),
 
-    /// Given symbol has not children which can be used.
-    #[error("No symbols found to use in {0}")]
-    NoSymbolsToUse(QualifiedName),
-
     /// The symbol cannot be called, e.g. when it is a source file or a module.
     #[error("Symbol `{0}` cannot be called.")]
     SymbolCannotBeCalled(QualifiedName),
@@ -80,14 +76,6 @@ pub enum EvalError {
         /// Found number of arguments
         found: usize,
     },
-
-    /// Invalid argument type.
-    #[error("Invalid argument type: {0}")]
-    InvalidArgumentType(Type),
-
-    /// Unexpected argument.
-    #[error("Unexpected argument: {0}: {1}")]
-    UnexpectedArgument(Identifier, Type),
 
     /// Assertion failed.
     #[error("Assertion failed: {0}")]
@@ -126,25 +114,9 @@ pub enum EvalError {
     #[error("Parsing error {0}")]
     ParseError(#[from] ParseError),
 
-    /// Statement is not supported in this context.
-    #[error("{0} statement not available here")]
-    StatementNotSupported(&'static str),
-
-    /// Properties are not initialized.
-    #[error("Properties have not been initialized: {0}")]
-    UninitializedProperties(IdentifierList),
-
     /// Unexpected element within expression.
     #[error("Unexpected {0} {1} within expression")]
     UnexpectedNested(&'static str, Identifier),
-
-    /// No variables allowed in definition
-    #[error("No variables allowed in {0}")]
-    NoVariablesAllowedIn(&'static str),
-
-    /// Error when evaluating attributes.
-    #[error("Attribute error: {0}")]
-    AttributeError(#[from] AttributeError),
 
     /// Missing arguments
     #[error("Missing arguments: {0}")]
@@ -161,10 +133,6 @@ pub enum EvalError {
     /// Builtin error
     #[error("Builtin error: {0}")]
     BuiltinError(String),
-
-    /// Parameter not found by type in ParameterValueList
-    #[error("Parameter not found by type '{0}'")]
-    ParameterByTypeNotFound(Type),
 
     /// Trying to use multiplicity where it is not allowed
     #[error("Multiplicity not allowed '{0}'")]
@@ -211,10 +179,6 @@ pub enum EvalError {
     #[error("This expression statement did not produce any model")]
     EmptyModelExpression,
 
-    /// Workbench with empty body - suspicious!
-    #[error("{0} {1} has empty body")]
-    WarnEmptyWorkbench(String, Identifier),
-
     /// This error happens if the workbench produced a different output type.
     #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]
     WorkbenchInvalidOutput {
@@ -223,42 +187,18 @@ pub enum EvalError {
         expected: OutputType,
     },
 
-    /// This error happens if the workbench produced a different output type.
-    #[error("The {0} workbench will produce no {1} output.")]
-    WorkbenchNoOutput(WorkbenchKind, OutputType),
-
-    /// Unexpected source file in expression
-    #[error("Unexpected source file {0} in expression")]
-    InvalidSelfReference(Identifier),
-
     /// Resolve Error
     #[error("Resolve error: {0}")]
     #[diagnostic(transparent)]
     ResolveError(ResolveError),
 
-    /// Unexpected source file in expression
-    #[error("{0} is not operation.")]
-    NotAnOperation(QualifiedName),
-
-    /// Calling an operation on an empty geometry, e.g.: `{}.op()`.
-    #[error("Calling operation on empty geometry")]
-    OperationOnEmptyGeometry,
-
     /// Cannot call operation without workpiece, e.g. `op()`.
     #[error("Cannot call operation without workpiece.")]
     CannotCallOperationWithoutWorkpiece,
 
-    /// Function missing return statement
-    #[error("Missing return statement in {0}")]
-    MissingReturn(QualifiedName),
-
     /// There is no model in this workbench
     #[error("Missing model in workbench")]
     NoModelInWorkbench,
-
-    /// Found a symbol and a property with that name
-    #[error("Found a symbol and a property with names {0} and {1}")]
-    AmbiguousProperty(QualifiedName, Identifier),
 
     /// Assignment failed because value already has been defined before.
     #[error("Value {name} already in defined: {value}")]
@@ -285,17 +225,6 @@ pub enum EvalError {
     SymbolIsPrivate {
         /// what was searched
         what: QualifiedName,
-        /// where it was searched
-        within: QualifiedName,
-    },
-
-    /// Found symbol but it's not visible to user
-    #[error("Symbol {what} (aliased from {alias}) is private from within {within}")]
-    SymbolBehindAliasIsPrivate {
-        /// what was searched
-        what: QualifiedName,
-        /// the alias in between
-        alias: QualifiedName,
         /// where it was searched
         within: QualifiedName,
     },

@@ -3,12 +3,13 @@
 
 //! Node marker syntax element
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use crate::syntax::*;
 
 /// Node marker, e.g. `@input`.
-#[derive(Clone)]
+#[derive(Clone, Debug, SrcReferrer, Identifiable)]
 pub struct Marker {
     /// Marker name, e.g. `input`
     pub(crate) id: Identifier,
@@ -23,27 +24,9 @@ impl Marker {
     }
 }
 
-impl Identifiable for Marker {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
-}
-
-impl SrcReferrer for Marker {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
-}
-
 impl std::fmt::Display for Marker {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "@{}", self.id)
-    }
-}
-
-impl std::fmt::Debug for Marker {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "@{:?}", self.id)
     }
 }
 

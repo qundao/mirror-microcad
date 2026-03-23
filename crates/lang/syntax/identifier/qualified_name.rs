@@ -4,11 +4,14 @@
 use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 use miette::SourceSpan;
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,
 /// e.g. `a::b::c`
-#[derive(Default, Clone, PartialEq, Hash, Eq, Ord, PartialOrd, DerefMut, Deref)]
+#[derive(
+    Default, Clone, Debug, PartialEq, Hash, Eq, Ord, PartialOrd, DerefMut, Deref, SrcReferrer,
+)]
 pub struct QualifiedName(Refer<Vec<Identifier>>);
 
 impl QualifiedName {
@@ -19,7 +22,7 @@ impl QualifiedName {
 }
 
 /// List of *qualified names* which can be displayed.
-#[derive(Deref)]
+#[derive(Debug, Deref)]
 pub struct QualifiedNames(Vec<QualifiedName>);
 
 impl std::fmt::Display for QualifiedNames {
@@ -30,20 +33,6 @@ impl std::fmt::Display for QualifiedNames {
             self.0
                 .iter()
                 .map(|name| name.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
-    }
-}
-
-impl std::fmt::Debug for QualifiedNames {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.0
-                .iter()
-                .map(|name| format!("{:?}", name.to_string()))
                 .collect::<Vec<_>>()
                 .join(", ")
         )
@@ -227,29 +216,6 @@ impl std::fmt::Display for QualifiedName {
                     .join("::")
             )
         }
-    }
-}
-
-impl std::fmt::Debug for QualifiedName {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        if self.is_empty() {
-            write!(f, microcad_lang_base::invalid!(NAME))
-        } else {
-            write!(
-                f,
-                "{}",
-                self.iter()
-                    .map(|id| format!("{id:?}"))
-                    .collect::<Vec<_>>()
-                    .join("::")
-            )
-        }
-    }
-}
-
-impl SrcReferrer for QualifiedName {
-    fn src_ref(&self) -> SrcRef {
-        self.0.src_ref()
     }
 }
 

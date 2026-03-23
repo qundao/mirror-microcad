@@ -29,3 +29,5 @@ pub mod ty;
 pub mod value;
 
 pub(crate) use microcad_lang_base::Id;
+
+pub(crate) use crate::syntax::{Identifiable, Identifier};

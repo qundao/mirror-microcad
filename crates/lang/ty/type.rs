@@ -6,7 +6,7 @@
 use crate::ty::*;
 
 /// µcad Basic Types
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum Type {
     /// Invalid type (used for error handling)
     Invalid,
@@ -125,22 +125,6 @@ impl std::fmt::Display for Type {
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
             Self::Model => write!(f, "Model"),
-        }
-    }
-}
-
-impl std::fmt::Debug for Type {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::Invalid => write!(f, microcad_lang_base::invalid!(TYPE)),
-            Self::Integer => write!(f, "Integer"),
-            Self::Quantity(quantity) => write!(f, "{quantity}"),
-            Self::String => write!(f, "String"),
-            Self::Bool => write!(f, "Bool"),
-            Self::Array(t) => write!(f, "[{t}]"),
-            Self::Tuple(t) => write!(f, "{t}"),
-            Self::Matrix(t) => write!(f, "{t}"),
-            Self::Model => write!(f, "Models"),
         }
     }
 }

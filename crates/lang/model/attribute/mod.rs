@@ -18,9 +18,10 @@ pub use resolution_attribute::ResolutionAttribute;
 use crate::{syntax::*, value::*};
 
 use microcad_core::{Color, Size2};
+use microcad_lang_proc_macros::Identifiable;
 
 /// A custom command attribute from an exporter, e.g.: `svg = (style = "fill:none")`
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Identifiable)]
 pub struct CustomCommand {
     /// Attribute id.
     id: Identifier,
@@ -34,12 +35,6 @@ impl CustomCommand {
             id,
             arguments: arguments.into(),
         }
-    }
-}
-
-impl Identifiable for CustomCommand {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
     }
 }
 

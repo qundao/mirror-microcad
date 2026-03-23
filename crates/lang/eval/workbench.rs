@@ -173,13 +173,13 @@ impl WorkbenchDefinition {
                     .map(|(init, _)| match init {
                         Some(init) => {
                             format!(
-                                "{name}::init({params})",
+                                "{name}::{init}",
                                 name = symbol.full_name(),
-                                params = init.parameters
+                                init = init.signature()
                             )
                         }
                         None => format!(
-                            "{name:?}({params})",
+                            "{name}({params})",
                             name = symbol.full_name(),
                             params = self.plan
                         ),

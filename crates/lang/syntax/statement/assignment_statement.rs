@@ -5,12 +5,13 @@
 
 use std::rc::Rc;
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// An assignment statement, e.g. `#[aux] s = Sphere(3.0mm);`.
-#[derive(Clone)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct AssignmentStatement {
     /// List of attributes.
     pub attribute_list: AttributeList,
@@ -18,12 +19,6 @@ pub struct AssignmentStatement {
     pub assignment: Rc<Assignment>,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl SrcReferrer for AssignmentStatement {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl TreeDisplay for AssignmentStatement {
@@ -38,14 +33,5 @@ impl std::fmt::Display for AssignmentStatement {
             write!(f, "{} ", self.attribute_list)?;
         }
         write!(f, "{};", self.assignment)
-    }
-}
-
-impl std::fmt::Debug for AssignmentStatement {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if !self.attribute_list.is_empty() {
-            write!(f, "{:?} ", self.attribute_list)?;
-        }
-        write!(f, "{:?};", self.assignment)
     }
 }
