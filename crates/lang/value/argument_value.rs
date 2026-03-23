@@ -40,13 +40,4 @@ impl ArgumentValue {
             src_ref,
         }
     }
-
-    /// If argument is an array returns the inner type
-    pub fn ty_inner(&self) -> Type {
-        if let Type::Array(ty) = self.ty() {
-            ty.as_ref().clone()
-        } else {
-            Type::Invalid
-        }
-    }
 }
