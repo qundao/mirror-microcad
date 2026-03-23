@@ -32,7 +32,6 @@ impl Stack {
                 | StackFrame::Workbench(_, _, locals)
                 | StackFrame::Init(locals)
                 | StackFrame::Body(locals)
-                | StackFrame::Module(_, locals)
                 | StackFrame::Function(_, locals) => {
                     let op = if locals.insert(id.clone(), symbol).is_some() {
                         "Added"
@@ -81,7 +80,7 @@ impl Stack {
             let mut module_name = QualifiedName::default();
             for (n, frame) in self.0.iter().rev().enumerate() {
                 match frame {
-                    StackFrame::Source(id, ..) | StackFrame::Module(id, ..) => {
+                    StackFrame::Source(id, ..) => {
                         module_name.insert(0, id.clone());
                     }
                     StackFrame::Call { symbol, .. } => {
@@ -289,11 +288,7 @@ impl Locals for Stack {
                         return Ok(local.clone());
                     }
                 }
-                // stop stack lookup at calls
-                StackFrame::Module(_, _) => {
-                    log::trace!("stop at call frame");
-                    break;
-                }
+
                 // skip any of these
                 StackFrame::Call {
                     symbol: _,

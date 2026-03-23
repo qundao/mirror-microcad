@@ -3,7 +3,7 @@
 
 //! Model builder.
 
-use crate::{eval::*, model::*};
+use crate::model::*;
 
 use microcad_lang_base::SrcRef;
 
@@ -30,9 +30,9 @@ impl ModelBuilder {
     }
 
     /// Add multiple children to the model if it matches.
-    pub fn add_children(mut self, mut children: Models) -> EvalResult<Self> {
+    pub fn add_children(mut self, mut children: Models) -> Self {
         self.children.append(&mut children);
-        Ok(self)
+        self
     }
 
     /// Set model attributes.

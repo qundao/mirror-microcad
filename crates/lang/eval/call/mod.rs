@@ -14,8 +14,6 @@ use microcad_lang_base::SrcReferrer;
 
 use crate::{eval::*, symbol::SymbolDef, syntax::*, value::*};
 
-use thiserror::Error;
-
 impl Eval<ArgumentValueList> for ArgumentList {
     /// Evaluate into a [`ArgumentValueList`].
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValueList> {
@@ -91,21 +89,4 @@ impl Eval for Call {
             }
         }
     }
-}
-
-/// An error that occurred when looking for matching arguments between a call and a parameter definition.
-#[derive(Error, Debug)]
-pub enum MatchError {
-    /// Duplicated argument.
-    #[error("Duplicated argument: {0}")]
-    DuplicatedArgument(Identifier),
-    /// Occurs when a parameter was given in a call but not in the definition.
-    #[error("Parameter `{0}` is not defined.")]
-    ParameterNotDefined(Identifier),
-    /// Mismatching type.
-    #[error("Type mismatch for parameter `{0}`: expected `{1}`, got {2}")]
-    PositionalArgumentTypeMismatch(Identifier, Type, Type),
-    /// Parameter required by definition but given in the call.
-    #[error("Missing parameter: {0}")]
-    MissingParameter(Identifier),
 }

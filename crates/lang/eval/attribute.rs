@@ -19,10 +19,6 @@ use thiserror::Error;
 /// Error type for attributes.
 #[derive(Debug, Error, Diagnostic)]
 pub enum AttributeError {
-    /// Unknown attribute.
-    #[error("Attribute not supported: {0}")]
-    NotSupported(Identifier),
-
     /// Attribute cannot be assigned to an expression.
     #[error("Cannot assign attribute to expression `{0}`")]
     CannotAssignAttribute(String),

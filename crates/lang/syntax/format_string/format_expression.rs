@@ -3,12 +3,13 @@
 
 //! Format expression syntax element
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::syntax::*;
 
 /// Format expression including format specification.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, SrcReferrer)]
 pub struct FormatExpression {
     /// Format specifier
     pub spec: Option<FormatSpec>,
@@ -36,12 +37,6 @@ impl std::fmt::Display for FormatExpression {
         } else {
             write!(f, "{{{}}}", self.expression)
         }
-    }
-}
-
-impl SrcReferrer for FormatExpression {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

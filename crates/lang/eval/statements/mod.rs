@@ -40,10 +40,6 @@ impl Eval for Statement {
 impl Eval<Option<Model>> for Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         let model: Option<Model> = match self {
-            Self::Module(m) => {
-                m.eval(context)?;
-                None
-            }
             Self::Assignment(a) => {
                 a.eval(context)?;
                 None
@@ -52,6 +48,7 @@ impl Eval<Option<Model>> for Statement {
             Self::Expression(e) => e.eval(context)?,
 
             Self::Workbench(..)
+            | Self::Module(..)
             | Self::Function(..)
             | Self::Use(..)
             | Self::Init(..)

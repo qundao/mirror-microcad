@@ -4,7 +4,7 @@
 //! µcad CLI eval commands
 
 use microcad_lang::{eval::*, model::Model};
-use microcad_lang_base::{Diag, FormatTree};
+use microcad_lang_base::{Diag, FormatTree, Stdout};
 
 use crate::{
     Cli,

@@ -24,8 +24,6 @@ use crate::{
 pub enum StackFrame {
     /// Source file with locals.
     Source(Identifier, SymbolMap),
-    /// Module scope with locals.
-    Module(Identifier, SymbolMap),
     /// initializer scope with locals.
     Init(SymbolMap),
     /// Part scope with locals.
@@ -49,7 +47,7 @@ impl StackFrame {
     /// Get identifier if available or panic.
     pub fn id(&self) -> Option<Identifier> {
         match self {
-            StackFrame::Source(id, _) | StackFrame::Module(id, _) => Some(id.clone()),
+            StackFrame::Source(id, _) => Some(id.clone()),
             _ => None,
         }
     }
@@ -66,7 +64,6 @@ impl StackFrame {
     pub fn kind_str(&self) -> &'static str {
         match self {
             StackFrame::Source(..) => "source",
-            StackFrame::Module(..) => "module",
             StackFrame::Init(..) => "init",
             StackFrame::Workbench(..) => "workbench",
             StackFrame::Body(..) => "body",
@@ -79,7 +76,6 @@ impl StackFrame {
     pub fn locals(&self) -> Option<&SymbolMap> {
         match self {
             StackFrame::Source(_, locals)
-            | StackFrame::Module(_, locals)
             | StackFrame::Init(locals)
             | StackFrame::Workbench(.., locals)
             | StackFrame::Body(locals)
@@ -97,10 +93,6 @@ impl StackFrame {
         let locals = match self {
             StackFrame::Source(id, locals) => {
                 writeln!(f, "{:depth$}[{idx}] Source: {id:?}", "")?;
-                locals
-            }
-            StackFrame::Module(id, locals) => {
-                writeln!(f, "{:depth$}[{idx}] Module: {id:?}", "")?;
                 locals
             }
             StackFrame::Init(locals) => {

@@ -3,19 +3,12 @@
 
 //! Resolve Context
 
-#[cfg(test)]
-use std::rc::Rc;
-
 use microcad_lang_base::{
     Diag, DiagHandler, DiagResult, Diagnostic, GetSourceStrByHash, PushDiag, SrcReferrer,
     TreeDisplay, TreeState, WriteToFile,
 };
 
-use crate::{
-    resolve::*,
-    symbol::{Symbol, Symbols},
-    syntax::*,
-};
+use crate::{resolve::*, symbol::Symbol, syntax::*};
 
 /// Resolve Context
 #[derive(Default)]
@@ -26,28 +19,6 @@ pub struct ResolveContext {
     pub(crate) sources: Sources,
     /// Diagnostic handler.
     pub(crate) diag: DiagHandler,
-    /// Unchecked symbols.
-    ///
-    /// Filled by [check()] with symbols which are not in use in ANY checked code.
-    unchecked: Option<Symbols>,
-    /// Signals resolve stage.
-    mode: ResolveMode,
-}
-
-/// Select what {ResolveContext::create()] automatically does.
-#[derive(Default, PartialEq, PartialOrd)]
-pub enum ResolveMode {
-    /// Failed context.
-    Failed,
-    /// Only load the sources.
-    #[default]
-    Loaded,
-    /// Create symbol table.
-    Symbolized,
-    /// Resolve symbol table.
-    Resolved,
-    /// Check symbol table.
-    Checked,
 }
 
 impl ResolveContext {
@@ -63,7 +34,7 @@ impl ResolveContext {
             diag,
             ..Default::default()
         };
-        match context.load(builtin, ResolveMode::Checked) {
+        match context.load(builtin) {
             Ok(()) => Ok(context),
             Err(err) => {
                 context.error(&err.src_ref(), err)?;
@@ -72,33 +43,19 @@ impl ResolveContext {
         }
     }
 
-    fn load(&mut self, builtin: Option<Symbol>, mode: ResolveMode) -> ResolveResult<()> {
+    fn load(&mut self, builtin: Option<Symbol>) -> ResolveResult<()> {
         self.symbolize()?;
         log::trace!("Symbolized Context:\n{self:?}");
         if let Some(builtin) = builtin {
             log::trace!("Added builtin library {id}.", id = builtin.id());
             self.root.add_symbol(builtin)?;
         }
-        if matches!(mode, ResolveMode::Resolved | ResolveMode::Checked) {
-            self.resolve()?;
-        }
+        self.resolve()?;
+
         Ok(())
     }
 
-    #[cfg(test)]
-    pub(crate) fn test_create(root: Rc<SourceFile>, mode: ResolveMode) -> ResolveResult<Self> {
-        let mut context = Self {
-            sources: Sources::load(root.clone(), &[] as &[std::path::PathBuf])?,
-            ..Default::default()
-        };
-        context.load(None, mode)?;
-        Ok(context)
-    }
-
     pub(crate) fn symbolize(&mut self) -> ResolveResult<()> {
-        assert!(matches!(self.mode, ResolveMode::Loaded));
-        self.mode = ResolveMode::Failed;
-
         let named_symbols = self
             .sources
             .clone()
@@ -121,15 +78,10 @@ impl ResolveContext {
             }
         }
 
-        self.mode = ResolveMode::Symbolized;
-
         Ok(())
     }
 
     pub(super) fn resolve(&mut self) -> ResolveResult<()> {
-        assert!(matches!(self.mode, ResolveMode::Symbolized));
-        self.mode = ResolveMode::Failed;
-
         // resolve std as first
         if let Some(std) = self.root.get_child(&Identifier::no_ref("std")) {
             std.resolve(self)?;
@@ -160,8 +112,6 @@ impl ResolveContext {
         }
         log::debug!("Resolved symbol table:\n{self:?}");
 
-        self.mode = ResolveMode::Resolved;
-
         Ok(())
     }
 
@@ -186,137 +136,6 @@ impl ResolveContext {
         symbol.set_src_ref(id.src_ref());
         Ok(symbol)
     }
-
-    /// Create a symbol out of all sources (without resolving them)
-    /// Return `true` if context has been resolved (or checked as well)
-    pub fn is_checked(&self) -> bool {
-        self.mode >= ResolveMode::Checked
-    }
-
-    /// Reload one or more existing files and re-resolve the symbol table.
-    pub fn reload_files(&mut self, files: &[impl AsRef<std::path::Path>]) -> ResolveResult<()> {
-        // prepare for any error
-        self.mode = ResolveMode::Failed;
-
-        // reload existing source files in source cache
-        let replaced = files
-            .iter()
-            .map(|path| self.sources.update_file(path.as_ref()))
-            .collect::<ResolveResult<Vec<_>>>()?;
-
-        // replace the source file within the symbol table
-        replaced.iter().try_for_each(|rep| {
-            self.root
-                .riter()
-                .filter(|symbol| symbol.is_source())
-                .find(|symbol| symbol.source_hash() == rep.old.hash)
-                .map(|mut symbol| -> ResolveResult<()> {
-                    symbol.replace(rep.new.symbolize(Visibility::Public, self)?);
-                    Ok(())
-                })
-                .expect("symbol of file could not be found")
-        })?;
-
-        // search for aliases and symbols from the replaced file
-        replaced.iter().for_each(|rep| {
-            self.root.riter().for_each(|symbol| {
-                // check for alias or use-all (from use statements)
-                if let Some(link) = symbol.get_link() {
-                    // check if it points into the old source file
-                    if link.starts_with(&rep.old.name) {
-                        // then reset visibility so that it will get re-resolved.
-                        symbol.reset_visibility();
-                    }
-                } else if symbol.source_hash() == rep.old.hash {
-                    // delete any non-link symbol which is related to the old source file
-                    symbol.delete();
-                }
-            });
-        });
-
-        // re-resolve
-        self.mode = ResolveMode::Symbolized;
-        self.resolve()
-    }
-}
-
-#[test]
-fn test_update_sub_mod() {
-    use crate::eval::*;
-
-    std::fs::copy(
-        "../../tests/test_files/update_files/sub/sub_0.µcad",
-        "../../tests/test_files/update_files/sub/sub.µcad",
-    )
-    .expect("test error");
-
-    let root =
-        SourceFile::load("../../tests/test_files/update_files/sub/top.µcad").expect("test error");
-    let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
-
-    eprintln!("{context:?}");
-
-    std::fs::copy(
-        "../../tests/test_files/update_files/sub/sub_1.µcad",
-        "../../tests/test_files/update_files/sub/sub.µcad",
-    )
-    .expect("test error");
-
-    context
-        .reload_files(&["../../tests/test_files/update_files/sub/sub.µcad"])
-        .expect("test error");
-
-    eprintln!("{context:?}");
-
-    let mut context = EvalContext::new(
-        context,
-        Stdout::new(),
-        Default::default(),
-        Default::default(),
-    );
-    context.eval().expect("test error");
-    assert!(!context.has_errors());
-}
-
-#[test]
-fn test_update_top_mod() {
-    use crate::eval::*;
-
-    let _ = env_logger::try_init();
-
-    std::fs::copy(
-        "../../tests/test_files/update_files/top/top_0.µcad",
-        "../../tests/test_files/update_files/top/top.µcad",
-    )
-    .expect("test error");
-
-    let root =
-        SourceFile::load("../../tests/test_files/update_files/top/top.µcad").expect("test error");
-    let mut context = ResolveContext::test_create(root, ResolveMode::Checked).expect("test error");
-
-    eprintln!("{context:?}");
-
-    std::fs::copy(
-        "../../tests/test_files/update_files/top/top_1.µcad",
-        "../../tests/test_files/update_files/top/top.µcad",
-    )
-    .expect("test error");
-
-    context
-        .reload_files(&["../../tests/test_files/update_files/top/top.µcad"])
-        .expect("test error");
-
-    eprintln!("{context:?}");
-
-    let mut context = EvalContext::new(
-        context,
-        Stdout::new(),
-        Default::default(),
-        Default::default(),
-    );
-    context.eval().expect("test error");
-    eprintln!("{}", context.diagnosis());
-    assert!(!context.has_errors());
 }
 
 impl WriteToFile for ResolveContext {}
@@ -378,36 +197,16 @@ impl std::fmt::Debug for ResolveContext {
             writeln!(f, "\n{err_count} error(s):\n")?;
             self.diag.pretty_print(f, &self.sources)?;
         }
-        if let Some(unchecked) = &self.unchecked {
-            writeln!(f, "\nUnchecked:\n{unchecked}")?;
-        }
+
         Ok(())
     }
 }
 
 impl std::fmt::Display for ResolveContext {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(unchecked) = &self.unchecked {
-            writeln!(f, "Resolved & checked symbols:")?;
-            self.root.tree_print(f, TreeState::new_display())?;
-            if unchecked.is_empty() {
-                writeln!(f, "All symbols are referenced.\n{}", self.root)?;
-            } else {
-                writeln!(
-                    f,
-                    "Unreferenced symbols:\n{}\n",
-                    unchecked
-                        .iter()
-                        .filter(|symbol| !symbol.is_deleted())
-                        .map(|symbol| symbol.full_name().to_string())
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                )?;
-            }
-        } else {
-            writeln!(f, "Resolved symbols:")?;
-            self.root.tree_print(f, TreeState::new_display())?;
-        }
+        writeln!(f, "Resolved symbols:")?;
+        self.root.tree_print(f, TreeState::new_display())?;
+
         if self.has_errors() {
             writeln!(
                 f,

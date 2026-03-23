@@ -3,12 +3,13 @@
 
 //! Argument value evaluation entity
 
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_base::SrcRef;
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{syntax::*, ty::*, value::*};
 
 /// Argument value.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct ArgumentValue {
     /// *value* of the argument.
     pub value: Value,
@@ -16,12 +17,6 @@ pub struct ArgumentValue {
     pub inline_id: Option<Identifier>,
     /// Source code reference.
     src_ref: SrcRef,
-}
-
-impl SrcReferrer for ArgumentValue {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl std::fmt::Display for ArgumentValue {

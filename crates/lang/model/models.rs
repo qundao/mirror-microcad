@@ -26,7 +26,6 @@ impl Models {
             Some(model) => model,
             None => ModelBuilder::new(Element::Multiplicity, src_ref)
                 .add_children(self.clone())
-                .expect("No error")
                 .build(),
         }
     }
@@ -44,12 +43,10 @@ impl Models {
                 .add_children(
                     [ModelBuilder::new(Element::Group, SrcRef(None))
                         .add_children(self.clone())
-                        .expect("No error")
                         .build()]
                     .into_iter()
                     .collect(),
                 )
-                .expect("No error")
                 .build(),
         }
     }

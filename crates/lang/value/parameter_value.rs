@@ -3,12 +3,12 @@
 
 //! Parameter value evaluation entity
 
-use microcad_lang_base::SrcReferrer;
+use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{ty::*, value::*};
 
 /// Parameter value is the result of evaluating a parameter
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, SrcReferrer)]
 pub struct ParameterValue {
     /// Parameter type
     pub specified_type: Option<Type>,
@@ -61,12 +61,6 @@ impl std::fmt::Display for ParameterValue {
             write!(f, "= {ty}")?;
         }
         Ok(())
-    }
-}
-
-impl SrcReferrer for ParameterValue {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
     }
 }
 

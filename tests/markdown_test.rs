@@ -2,12 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang::resolve::Sources;
-use microcad_lang::{
-    eval::{Capture, EvalContext},
-    model::Model,
-    syntax::SourceFile,
+use microcad_lang::{eval::EvalContext, model::Model, syntax::SourceFile};
+use microcad_lang_base::{
+    Capture, Diag, DiagRenderOptions, Diagnostic, FormatTree, Refer, SrcReferrer,
 };
-use microcad_lang_base::{Diag, DiagRenderOptions, Diagnostic, Refer, SrcReferrer, FormatTree};
 use microcad_test_tools::test_env::*;
 use miette::Report;
 use std::rc::Rc;
