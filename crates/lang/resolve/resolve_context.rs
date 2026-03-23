@@ -19,24 +19,6 @@ pub struct ResolveContext {
     pub(crate) sources: Sources,
     /// Diagnostic handler.
     pub(crate) diag: DiagHandler,
-    /// Signals resolve stage.
-    mode: ResolveMode,
-}
-
-/// Select what {ResolveContext::create()] automatically does.
-#[derive(Default, PartialEq, PartialOrd)]
-pub enum ResolveMode {
-    /// Failed context.
-    Failed,
-    /// Only load the sources.
-    #[default]
-    Loaded,
-    /// Create symbol table.
-    Symbolized,
-    /// Resolve symbol table.
-    Resolved,
-    /// Check symbol table.
-    Checked,
 }
 
 impl ResolveContext {
@@ -52,7 +34,7 @@ impl ResolveContext {
             diag,
             ..Default::default()
         };
-        match context.load(builtin, ResolveMode::Checked) {
+        match context.load(builtin) {
             Ok(()) => Ok(context),
             Err(err) => {
                 context.error(&err.src_ref(), err)?;
@@ -61,23 +43,19 @@ impl ResolveContext {
         }
     }
 
-    fn load(&mut self, builtin: Option<Symbol>, mode: ResolveMode) -> ResolveResult<()> {
+    fn load(&mut self, builtin: Option<Symbol>) -> ResolveResult<()> {
         self.symbolize()?;
         log::trace!("Symbolized Context:\n{self:?}");
         if let Some(builtin) = builtin {
             log::trace!("Added builtin library {id}.", id = builtin.id());
             self.root.add_symbol(builtin)?;
         }
-        if matches!(mode, ResolveMode::Resolved | ResolveMode::Checked) {
-            self.resolve()?;
-        }
+        self.resolve()?;
+
         Ok(())
     }
 
     pub(crate) fn symbolize(&mut self) -> ResolveResult<()> {
-        assert!(matches!(self.mode, ResolveMode::Loaded));
-        self.mode = ResolveMode::Failed;
-
         let named_symbols = self
             .sources
             .clone()
@@ -100,15 +78,10 @@ impl ResolveContext {
             }
         }
 
-        self.mode = ResolveMode::Symbolized;
-
         Ok(())
     }
 
     pub(super) fn resolve(&mut self) -> ResolveResult<()> {
-        assert!(matches!(self.mode, ResolveMode::Symbolized));
-        self.mode = ResolveMode::Failed;
-
         // resolve std as first
         if let Some(std) = self.root.get_child(&Identifier::no_ref("std")) {
             std.resolve(self)?;
@@ -138,8 +111,6 @@ impl ResolveContext {
             log::info!("Resolve failed after {passes_needed} passes.");
         }
         log::debug!("Resolved symbol table:\n{self:?}");
-
-        self.mode = ResolveMode::Resolved;
 
         Ok(())
     }
