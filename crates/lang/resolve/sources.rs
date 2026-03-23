@@ -189,17 +189,6 @@ impl Sources {
         self.get_by_hash(referrer.src_ref().source_hash())
     }
 
-    /// Return a string describing the given source code position.
-    pub fn ref_str(&self, referrer: &impl SrcReferrer) -> String {
-        format!(
-            "{}:{}",
-            self.get_by_src_ref(referrer)
-                .expect("Source file not found")
-                .filename_as_str(),
-            referrer.src_ref(),
-        )
-    }
-
     /// Find a project file by it's file path.
     pub fn get_by_path(&self, path: &std::path::Path) -> ResolveResult<Rc<SourceFile>> {
         let path = path.to_path_buf();
@@ -210,39 +199,12 @@ impl Sources {
         }
     }
 
-    /// Get *qualified name* of a file by *hash value*.
-    pub fn get_name_by_hash(&self, hash: u64) -> ResolveResult<&QualifiedName> {
-        match self.get_by_hash(hash) {
-            Ok(file) => self.externals.get_name(&file.filename()),
-            Err(err) => Err(err),
-        }
-    }
-
     /// Return code at referrer.
     pub fn get_code(&self, referrer: &impl SrcReferrer) -> ResolveResult<String> {
         Ok(self
             .get_by_src_ref(referrer)?
             .get_code(&referrer.src_ref())
             .to_string())
-    }
-
-    /// Find a project file by the qualified name which represents the file path.
-    pub fn get_by_name(&self, name: &QualifiedName) -> ResolveResult<Rc<SourceFile>> {
-        if let Some(index) = self.by_name.get(name) {
-            Ok(self.source_files[*index].clone())
-        } else {
-            // if not found in symbol tree we try to find an external file to load
-            match self.externals.fetch_external(name) {
-                Ok((name, path)) => {
-                    if self.get_by_path(&path).is_err() {
-                        return Err(ResolveError::SymbolMustBeLoaded(name, path));
-                    }
-                }
-                Err(ResolveError::ExternalSymbolNotFound(_)) => (),
-                Err(err) => return Err(err),
-            }
-            Err(ResolveError::SymbolNotFound(name.clone()))
-        }
     }
 
     fn name_from_index(&self, index: usize) -> Option<QualifiedName> {
@@ -280,33 +242,6 @@ impl Sources {
             None => Ok(source_file),
         }
     }
-
-    /// Reload an existing file
-    pub(super) fn update_file(
-        &mut self,
-        path: impl AsRef<std::path::Path>,
-    ) -> ResolveResult<ReplacedSourceFile> {
-        let path = path.as_ref().canonicalize()?.to_path_buf();
-        log::trace!("update_file: {path:?}");
-        if let Some(index) = self.by_path.get(&path).copied() {
-            let old = self.source_files[index].clone();
-            let name = old.name.clone();
-            let (new, error) = SourceFile::load_with_name(path, name);
-            self.insert(new.clone());
-            log::trace!("new sources:\n{self:?}");
-            match error {
-                Some(error) => Err(error.into()),
-                None => Ok(ReplacedSourceFile { new, old }),
-            }
-        } else {
-            Err(ResolveError::FileNotFound(path))
-        }
-    }
-}
-
-pub(super) struct ReplacedSourceFile {
-    pub(super) old: Rc<SourceFile>,
-    pub(super) new: Rc<SourceFile>,
 }
 
 /// Trait that can fetch for a file by it's hash value.
