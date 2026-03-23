@@ -6,6 +6,7 @@
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
 mod diag;
+mod output;
 mod rc;
 mod src_ref;
 mod tree_display;
@@ -19,6 +20,7 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 pub use diag::{
     Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Level, PushDiag,
 };
+pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
 pub use src_ref::{Refer, SrcRef, SrcRefInner, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};

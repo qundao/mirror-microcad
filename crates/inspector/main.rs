@@ -120,7 +120,7 @@ impl Inspector {
 
                 let mut eval_context = microcad_lang::eval::EvalContext::new(
                     resolve_context,
-                    microcad_lang::eval::Stdout::new(),
+                    microcad_lang_base::Stdout::new(),
                     microcad_builtin::builtin_exporters(),
                     microcad_builtin::builtin_importers(),
                 );

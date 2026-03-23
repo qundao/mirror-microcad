@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{
-    Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceStrByHash, PushDiag,
+    Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceStrByHash, Output, PushDiag,
     SrcReferrer, TreeDisplay, TreeState,
 };
 
@@ -315,7 +315,7 @@ impl Default for EvalContext {
             root: Default::default(),
             sources: Default::default(),
             stack: Default::default(),
-            output: Stdout::new(),
+            output: microcad_lang_base::Stdout::new(),
             exporters: Default::default(),
             importers: Default::default(),
             diag: Default::default(),

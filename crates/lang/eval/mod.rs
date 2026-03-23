@@ -40,7 +40,6 @@ mod function;
 mod init;
 mod literal;
 mod locals;
-mod output;
 mod parameter;
 mod source_file;
 mod statements;
@@ -52,10 +51,9 @@ pub use attribute::*;
 pub use call::*;
 pub use eval_context::*;
 pub use eval_error::*;
-use microcad_lang_base::PushDiag;
-pub use output::*;
 
 use locals::*;
+use microcad_lang_base::PushDiag;
 
 use crate::{resolve::*, syntax::*, ty::*, value::*};
 
