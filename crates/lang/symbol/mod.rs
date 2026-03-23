@@ -94,17 +94,6 @@ impl Symbol {
         })
     }
 
-    /// Replace inner of a symbol with the inner of another.
-    pub(super) fn replace(&mut self, replacement: Symbol) {
-        replacement
-            .inner
-            .borrow()
-            .children
-            .iter()
-            .for_each(|(_, child)| child.inner.borrow_mut().parent = Some(self.clone()));
-        self.inner.replace(replacement.inner.take());
-    }
-
     /// Get fully qualified name.
     pub fn full_name(&self) -> QualifiedName {
         let id = self.id();
@@ -309,11 +298,6 @@ impl Symbol {
             inner: self.inner.clone(),
         }
     }
-
-    pub(crate) fn reset_visibility(&self) {
-        self.visibility
-            .replace(self.with_def(|def| def.visibility()));
-    }
 }
 
 // definition dependent
@@ -346,10 +330,6 @@ impl Symbol {
 
     fn is_root(&self) -> bool {
         matches!(self.inner.borrow().def, SymbolDef::Root)
-    }
-
-    pub(crate) fn is_source(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::SourceFile(..))
     }
 
     pub(crate) fn is_module(&self) -> bool {
@@ -410,13 +390,6 @@ impl Symbol {
 
     pub(super) fn is_alias(&self) -> bool {
         matches!(self.inner.borrow().def, SymbolDef::Alias(..))
-    }
-
-    pub(super) fn get_link(&self) -> Option<QualifiedName> {
-        self.with_def(|def| match def {
-            SymbolDef::UseAll(_, name) | SymbolDef::Alias(.., name) => Some(name.clone()),
-            _ => None,
-        })
     }
 
     pub(super) fn has_links(&self) -> bool {

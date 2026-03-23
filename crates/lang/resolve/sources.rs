@@ -18,9 +18,6 @@ use std::{collections::HashMap, rc::Rc};
 /// but not by it's qualified name.
 #[derive(Default, Deref)]
 pub struct Sources {
-    /// External files read from search path.
-    externals: Externals,
-
     by_hash: HashMap<u64, usize>,
     by_path: HashMap<std::path::PathBuf, usize>,
     by_name: HashMap<QualifiedName, usize>,
@@ -54,15 +51,9 @@ impl Sources {
         by_name.insert(root.name.clone(), 0);
         source_files.push(root.clone());
 
-        // search for external source files
-        let externals = Externals::new(search_paths)?;
-
-        log::trace!("Externals:\n{externals}");
-
         // load all external source files into cache
-        externals
-            .iter()
-            .try_for_each(|(name, path)| -> Result<(), ParseErrorsWithSource> {
+        Externals::new(search_paths)?.iter().try_for_each(
+            |(name, path)| -> Result<(), ParseErrorsWithSource> {
                 let (source_file, error) = SourceFile::load_with_name(path.clone(), name.clone());
                 let index = source_files.len();
                 by_hash.insert(source_file.hash, index);
@@ -73,10 +64,10 @@ impl Sources {
                     Some(error) => Err(error),
                     None => Ok(()),
                 }
-            })?;
+            },
+        )?;
 
         Ok(Self {
-            externals,
             root,
             source_files,
             by_hash,
