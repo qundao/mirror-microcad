@@ -101,11 +101,6 @@ impl Identifier {
         *self.0 == "super"
     }
 
-    /// Check if this was created with none()
-    pub fn is_none(&self) -> bool {
-        self.0.src_ref().is_empty() && self.src_ref().is_empty()
-    }
-
     /// Make empty (invalid) id
     pub fn no_ref(id: &str) -> Self {
         Self(Refer::none(id.into()))
@@ -167,11 +162,6 @@ impl Identifier {
             )));
         }
         Ok(self)
-    }
-
-    /// Add given `prefix` to identifier to get `qualified name`.
-    pub fn with_prefix(&self, prefix: &QualifiedName) -> QualifiedName {
-        QualifiedName::from(self).with_prefix(prefix)
     }
 
     /// Detect if the identifier matches a certain case.

@@ -13,13 +13,6 @@ use microcad_lang_proc_macros::SrcReferrer;
 #[derive(Default, Debug, Clone, PartialEq, Deref, DerefMut, SrcReferrer)]
 pub struct IdentifierList(pub Refer<Vec<Identifier>>);
 
-impl IdentifierList {
-    /// Create new identifier list
-    pub fn new(identifiers: Vec<Identifier>, src_ref: SrcRef) -> Self {
-        Self(Refer::new(identifiers, src_ref))
-    }
-}
-
 impl FromIterator<Identifier> for IdentifierList {
     fn from_iter<T: IntoIterator<Item = Identifier>>(iter: T) -> Self {
         let v: Vec<_> = iter.into_iter().collect();
