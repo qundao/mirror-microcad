@@ -19,16 +19,6 @@ pub struct Argument {
     pub src_ref: SrcRef,
 }
 
-impl Argument {
-    /// Returns the name, if self.name is some. If self.name is None, try to extract the name from the expression
-    pub fn derived_name(&self) -> Option<Identifier> {
-        match &self.id {
-            Some(name) => Some(name.clone()),
-            None => self.expression.single_identifier().cloned(),
-        }
-    }
-}
-
 impl OrdMapValue<Identifier> for Argument {
     fn key(&self) -> Option<Identifier> {
         self.id.clone()
