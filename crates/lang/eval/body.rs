@@ -24,7 +24,7 @@ impl Eval<Model> for Body {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Model> {
         context.scope(StackFrame::Body(SymbolMap::default()), |context| {
             Ok(ModelBuilder::new(Element::Group, self.src_ref())
-                .add_children(self.statements.eval(context)?)?
+                .add_children(self.statements.eval(context)?)
                 .attributes(self.statements.eval(context)?)
                 .build())
         })

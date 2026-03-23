@@ -20,7 +20,7 @@ impl Eval<Model> for std::rc::Rc<SourceFile> {
             StackFrame::Source(self.id(), SymbolMap::default()),
             |context| {
                 let model = ModelBuilder::new(Element::Group, self.src_ref())
-                    .add_children(self.statements.eval(context)?)?
+                    .add_children(self.statements.eval(context)?)
                     .attributes(self.statements.eval(context)?)
                     .build();
                 Ok(model)
