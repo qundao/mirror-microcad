@@ -277,11 +277,6 @@ impl EvalContext {
             target,
         )
     }
-
-    /// Symbol table accessor.
-    pub fn root(&self) -> &Symbol {
-        &self.root
-    }
 }
 
 impl Locals for EvalContext {
