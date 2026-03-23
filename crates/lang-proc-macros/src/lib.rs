@@ -1,4 +1,4 @@
-// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 extern crate proc_macro;
@@ -48,11 +48,11 @@ pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
                 }
             }
             // Unit structs are not supported.
-            Fields::Unit => Error::new_spanned(&name, format!("Unit structs are not supported"))
-                .to_compile_error(),
+            Fields::Unit => {
+                Error::new_spanned(name, "Unit structs are not supported").to_compile_error()
+            }
         },
-        _ => Error::new_spanned(&name, format!("Unions and enums are not supported"))
-            .to_compile_error(),
+        _ => Error::new_spanned(name, "Unions and enums are not supported").to_compile_error(),
     }
     .into()
 }
@@ -83,15 +83,14 @@ pub fn derive_id(input: TokenStream) -> TokenStream {
                 }
             }
             Fields::Unnamed(_) => {
-                Error::new_spanned(&name, format!("Unnamed structs are not supported"))
-                    .to_compile_error()
+                Error::new_spanned(name, "Unnamed structs are not supported").to_compile_error()
             }
             // Unit structs not supported.
-            Fields::Unit => Error::new_spanned(&name, format!("Unit structs are not supported"))
-                .to_compile_error(),
+            Fields::Unit => {
+                Error::new_spanned(name, "Unit structs are not supported").to_compile_error()
+            }
         },
-        _ => Error::new_spanned(&name, format!("Unions and enums are not supported"))
-            .to_compile_error(),
+        _ => Error::new_spanned(name, "Unions and enums are not supported").to_compile_error(),
     }
     .into()
 }

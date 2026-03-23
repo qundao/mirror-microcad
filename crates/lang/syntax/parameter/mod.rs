@@ -7,7 +7,7 @@ mod parameter_list;
 
 use crate::{ord_map::*, syntax::*};
 
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 pub use parameter_list::*;
 
