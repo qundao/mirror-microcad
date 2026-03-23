@@ -72,23 +72,9 @@ impl QualifiedName {
         self.0.len() > 1
     }
 
-    /// Returns true if name contains exactly one id
-    pub fn is_id(&self) -> bool {
-        self.0.len() == 1
-    }
-
     /// Tells if self is in a specified module
     pub fn is_within(&self, module: &QualifiedName) -> bool {
         self.starts_with(module)
-    }
-
-    /// Returns `true` if this name is in builtin module
-    pub fn is_builtin(&self) -> bool {
-        if let Some(first) = self.first() {
-            first == "__builtin"
-        } else {
-            false
-        }
     }
 
     /// remove the first name from path
@@ -118,17 +104,6 @@ impl QualifiedName {
         }
     }
 
-    /// return basename, `std::geo2d` returns `std`
-    pub fn basename(&self) -> Option<Self> {
-        let mut s = self.clone();
-        if s.len() >= 2 {
-            s.pop();
-            Some(s)
-        } else {
-            None
-        }
-    }
-
     /// Return the base of the given relative name.
     pub fn base(&self, relative: &Self) -> Self {
         if self == relative {
@@ -147,13 +122,6 @@ impl QualifiedName {
         let mut full_name = prefix.clone();
         full_name.append(&mut self.clone());
         full_name
-    }
-
-    /// Add a given identifier as suffix.
-    pub fn with_suffix(&self, suffix: &Identifier) -> Self {
-        let mut name = self.clone();
-        name.push(suffix.clone());
-        name
     }
 
     pub(crate) fn count_super(&self) -> usize {
