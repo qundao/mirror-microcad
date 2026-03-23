@@ -12,7 +12,15 @@
   80:   }
 
 -- No Output --
--- No Errors --
+-- Errors --
+  ⚠ warning: 78:5: Unused global symbol k.
+    ╭─[../books/tests/src/statement_usage/module.md:78:5]
+ 78 │ mod k {
+    ·     ┬
+    ·     ╰── Unused global symbol k.
+ 79 │   pub p = 1;
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 78
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

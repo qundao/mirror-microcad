@@ -12,7 +12,23 @@
   72:   }
 
 -- No Output --
--- No Errors --
+-- Errors --
+  ⚠ warning: 70:5: Unused global symbol k.
+    ╭─[../books/tests/src/statement_usage/module.md:70:5]
+ 70 │ mod k {
+    ·     ┬
+    ·     ╰── Unused global symbol k.
+ 71 │   const B = 1;
+    ╰────
+  ⚠ warning: 71:3: Unused global symbol const B = 1.
+    ╭─[../books/tests/src/statement_usage/module.md:71:3]
+ 70 │ mod k {
+ 71 │   const B = 1;
+    ·   ─────┬─────
+    ·        ╰── Unused global symbol const B = 1.
+ 72 │ }
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 70, 71
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)

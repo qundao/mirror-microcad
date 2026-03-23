@@ -13,7 +13,15 @@
   12:   }
 
 -- No Output --
--- No Errors --
+-- Errors --
+  ⚠ warning: 9:5: Unused global symbol my_module.
+    ╭─[../books/language/src/structure/modules/inline_modules.md:9:5]
+  9 │ mod my_module {
+    ·     ────┬────
+    ·         ╰── Unused global symbol my_module.
+ 10 │     // e.g. define a constant
+    ╰────
+Unexpected warnings(s) which did occur in line(s): 9
 -- No Model --
 -- Test Result --
-OK
+OK (BUT WARNINGS)
