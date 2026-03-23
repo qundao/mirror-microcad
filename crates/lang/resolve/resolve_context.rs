@@ -8,11 +8,7 @@ use microcad_lang_base::{
     TreeDisplay, TreeState, WriteToFile,
 };
 
-use crate::{
-    resolve::*,
-    symbol::{Symbol, Symbols},
-    syntax::*,
-};
+use crate::{resolve::*, symbol::Symbol, syntax::*};
 
 /// Resolve Context
 #[derive(Default)]
@@ -23,10 +19,6 @@ pub struct ResolveContext {
     pub(crate) sources: Sources,
     /// Diagnostic handler.
     pub(crate) diag: DiagHandler,
-    /// Unchecked symbols.
-    ///
-    /// Filled by [check()] with symbols which are not in use in ANY checked code.
-    unchecked: Option<Symbols>,
     /// Signals resolve stage.
     mode: ResolveMode,
 }
@@ -234,36 +226,16 @@ impl std::fmt::Debug for ResolveContext {
             writeln!(f, "\n{err_count} error(s):\n")?;
             self.diag.pretty_print(f, &self.sources)?;
         }
-        if let Some(unchecked) = &self.unchecked {
-            writeln!(f, "\nUnchecked:\n{unchecked}")?;
-        }
+
         Ok(())
     }
 }
 
 impl std::fmt::Display for ResolveContext {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(unchecked) = &self.unchecked {
-            writeln!(f, "Resolved & checked symbols:")?;
-            self.root.tree_print(f, TreeState::new_display())?;
-            if unchecked.is_empty() {
-                writeln!(f, "All symbols are referenced.\n{}", self.root)?;
-            } else {
-                writeln!(
-                    f,
-                    "Unreferenced symbols:\n{}\n",
-                    unchecked
-                        .iter()
-                        .filter(|symbol| !symbol.is_deleted())
-                        .map(|symbol| symbol.full_name().to_string())
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                )?;
-            }
-        } else {
-            writeln!(f, "Resolved symbols:")?;
-            self.root.tree_print(f, TreeState::new_display())?;
-        }
+        writeln!(f, "Resolved symbols:")?;
+        self.root.tree_print(f, TreeState::new_display())?;
+
         if self.has_errors() {
             writeln!(
                 f,
