@@ -36,17 +36,11 @@ pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
                 }
             }
             // Unit structs not supported.
-            Fields::Unit => {
-                return Error::new_spanned(&name, format!("Unit structs are not supported"))
-                    .to_compile_error()
-                    .into();
-            }
+            Fields::Unit => Error::new_spanned(&name, format!("Unit structs are not supported"))
+                .to_compile_error(),
         },
-        _ => {
-            return Error::new_spanned(&name, format!("Unions and enums are not supported"))
-                .to_compile_error()
-                .into();
-        }
+        _ => Error::new_spanned(&name, format!("Unions and enums are not supported"))
+            .to_compile_error(),
     }
     .into()
 }
