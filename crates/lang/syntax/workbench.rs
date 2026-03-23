@@ -6,6 +6,7 @@
 use crate::syntax::*;
 use custom_debug::Debug;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::Identifiable;
 use strum::Display;
 
 /// Kind of a [`WorkbenchDefinition`].
@@ -31,7 +32,7 @@ impl WorkbenchKind {
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Identifiable)]
 pub struct WorkbenchDefinition {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
@@ -57,12 +58,6 @@ impl WorkbenchDefinition {
             .chain(self.inits().map(|init| &init.parameters))
             .map(|params| format!("{}( {})", self.id, params))
             .collect()
-    }
-}
-
-impl Identifiable for WorkbenchDefinition {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
     }
 }
 

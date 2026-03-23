@@ -4,12 +4,12 @@
 //! Node marker syntax element
 
 use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
-use microcad_lang_proc_macros::SrcReferrer;
+use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use crate::syntax::*;
 
 /// Node marker, e.g. `@input`.
-#[derive(Clone, Debug, SrcReferrer)]
+#[derive(Clone, Debug, SrcReferrer, Identifiable)]
 pub struct Marker {
     /// Marker name, e.g. `input`
     pub(crate) id: Identifier,
@@ -21,12 +21,6 @@ impl Marker {
     /// Returns true if the marker is an input placeholder
     pub fn is_input_placeholder(&self) -> bool {
         &self.id == "input"
-    }
-}
-
-impl Identifiable for Marker {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
     }
 }
 

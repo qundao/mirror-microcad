@@ -5,13 +5,14 @@
 
 mod parameter_list;
 
-use crate::{eval::*, ord_map::*, syntax::*, ty::*, value::*};
+use crate::{ord_map::*, syntax::*};
 
-use microcad_lang_base::{PushDiag, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 pub use parameter_list::*;
 
 /// A parameter of a parameter list.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, SrcReferrer, Identifiable)]
 pub struct Parameter {
     /// Name of the parameter
     pub(crate) id: Identifier,
@@ -21,74 +22,6 @@ pub struct Parameter {
     pub default_value: Option<Expression>,
     /// Source code reference
     pub src_ref: SrcRef,
-}
-
-impl Parameter {
-    /// Create new parameter
-    pub fn new(
-        id: Identifier,
-        specified_type: Option<TypeAnnotation>,
-        default_value: Option<Expression>,
-        src_ref: SrcRef,
-    ) -> Self {
-        assert!(!id.is_empty());
-        Self {
-            id,
-            specified_type,
-            default_value,
-            src_ref,
-        }
-    }
-
-    /// Create a new parameter without any SrcRef's
-    pub fn no_ref(id: &str, ty: Type) -> Self {
-        Self {
-            id: Identifier::no_ref(id),
-            specified_type: Some(TypeAnnotation(Refer::none(ty))),
-            default_value: None,
-            src_ref: SrcRef(None),
-        }
-    }
-
-    /// Evaluate default value considering specified type
-    ///
-    /// If there is no default value, returns `Value::None` without raising an error.
-    pub fn eval_default_value(&self, context: &mut EvalContext) -> crate::eval::EvalResult<Value> {
-        use crate::eval::Eval;
-
-        match (&self.specified_type, &self.default_value) {
-            (Some(specified_type), Some(default_value)) => {
-                let value: Value = default_value.eval(context)?;
-                if specified_type.ty() != value.ty() {
-                    context.error(
-                        &self.src_ref,
-                        EvalError::TypeMismatch {
-                            id: self.id(),
-                            expected: specified_type.ty(),
-                            found: value.ty(),
-                        },
-                    )?;
-                    Ok(Value::None)
-                } else {
-                    Ok(value)
-                }
-            }
-            (None, Some(default_value)) => Ok(default_value.eval(context)?),
-            _ => Ok(Value::None),
-        }
-    }
-}
-
-impl Identifiable for Parameter {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
-}
-
-impl SrcReferrer for Parameter {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
-    }
 }
 
 impl OrdMapValue<Identifier> for Parameter {

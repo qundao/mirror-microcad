@@ -4,11 +4,12 @@
 //! Function definition syntax element
 
 use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::Identifiable;
 
 use crate::syntax::*;
 
 /// Function definition
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Identifiable)]
 pub struct FunctionDefinition {
     /// SrcRef of the `fn` keyword
     pub keyword_ref: SrcRef,
@@ -22,12 +23,6 @@ pub struct FunctionDefinition {
     pub signature: FunctionSignature,
     /// Function body
     pub body: Body,
-}
-
-impl Identifiable for FunctionDefinition {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
 }
 
 impl SrcReferrer for FunctionDefinition {

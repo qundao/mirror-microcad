@@ -4,12 +4,12 @@
 //! µcad assignment syntax element
 
 use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
-use microcad_lang_proc_macros::SrcReferrer;
+use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use crate::{syntax::*, ty::*};
 
 /// Assignment specifying an identifier, type and value
-#[derive(Clone, Debug, SrcReferrer)]
+#[derive(Clone, Debug, SrcReferrer, Identifiable)]
 pub struct Assignment {
     /// Documentation.
     pub doc: Option<DocBlock>,
@@ -35,12 +35,6 @@ impl Assignment {
             Visibility::Public => Qualifier::Const,
             Visibility::Deleted => unreachable!(),
         }
-    }
-}
-
-impl Identifiable for Assignment {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
     }
 }
 

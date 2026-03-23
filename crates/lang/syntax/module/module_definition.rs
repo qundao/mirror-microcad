@@ -6,11 +6,12 @@
 use std::rc::Rc;
 
 use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::Identifiable;
 
 use crate::syntax::*;
 
 /// Module definition.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Identifiable)]
 pub struct ModuleDefinition {
     /// SrcRef of the `mod` keyword
     pub keyword_ref: SrcRef,
@@ -32,12 +33,6 @@ impl ModuleDefinition {
             id,
             ..Default::default()
         })
-    }
-}
-
-impl Identifiable for ModuleDefinition {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
     }
 }
 
