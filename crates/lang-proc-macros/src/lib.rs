@@ -7,6 +7,17 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn::*;
 
+/// Derives the `SrcReferrer` trait for structs.
+///
+/// This macro supports two types of data structures:
+/// 1. **Named Structs**: Automatically implements `src_ref()` by cloning a field
+///    named `src_ref`.
+/// 2. **Unnamed (Tuple) Structs**: Automatically implements `src_ref()` by
+///    delegating to the first element (`self.0`). The first element must
+///    implement the `SrcReferrer` trait.
+///
+/// # Panics
+/// Will fail to compile if applied to Enums, Unions, or Unit structs.
 #[proc_macro_derive(SrcReferrer)]
 pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
@@ -46,6 +57,14 @@ pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
     .into()
 }
 
+/// Derives the `Identifiable` trait for named structs.
+///
+/// This macro implements `id_ref()` by returning a reference to an `id` field.
+/// The `id` field must be of type `crate::Identifier`.
+///
+/// # Constraints
+/// - Only works on **Named Structs**.
+/// - Does **not** support Tuple structs, Unit structs, Enums, or Unions.
 #[proc_macro_derive(Identifiable)]
 pub fn derive_id(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
