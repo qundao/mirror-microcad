@@ -54,15 +54,14 @@ pub struct ParseContext<'source> {
 
 impl<'source> ParseContext<'source> {
     pub fn new(source: &'source str) -> Self {
-        let source_file_hash = {
-            use std::hash::{Hash, Hasher};
-            let mut hasher = rustc_hash::FxHasher::default();
-            source.hash(&mut hasher);
-            hasher.finish()
-        };
         ParseContext {
             source,
-            source_file_hash,
+            source_file_hash: {
+                use std::hash::{Hash, Hasher};
+                let mut hasher = rustc_hash::FxHasher::default();
+                source.hash(&mut hasher);
+                hasher.finish()
+            },
             line_index: LineIndex::new(source),
         }
     }
