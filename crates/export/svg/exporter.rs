@@ -144,7 +144,7 @@ impl SvgExporter {
 }
 
 impl Exporter for SvgExporter {
-    fn model_parameters(&self) -> microcad_lang::value::ParameterValueList {
+    fn model_parameters(&self) -> microcad_lang::eval::ParameterValueList {
         [
             parameter!(style: String = String::new()),
             parameter!(fill: String = String::new()),

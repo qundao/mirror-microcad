@@ -3,7 +3,7 @@
 
 //! Argument match trait
 
-use crate::{eval::*, value::*};
+use crate::eval::*;
 
 use microcad_lang_base::SrcReferrer;
 

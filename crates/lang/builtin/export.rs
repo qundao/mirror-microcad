@@ -3,9 +3,11 @@
 
 //! Model export
 
-use std::rc::Rc;
+use crate::{
+    Id, builtin::file_io::*, eval::*, model::*, parameter, render::RenderError, value::Value,
+};
 use miette::Diagnostic;
-use crate::{Id, builtin::file_io::*, model::*, parameter, render::RenderError, value::*};
+use std::rc::Rc;
 
 use thiserror::Error;
 

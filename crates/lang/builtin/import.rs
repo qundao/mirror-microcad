@@ -3,9 +3,9 @@
 
 //! Value importer
 
-use std::rc::Rc;
+use crate::{Id, builtin::file_io::*, eval::ParameterValueList, syntax::*, value::*};
 use miette::{Diagnostic, Report};
-use crate::{builtin::file_io::*, syntax::*, value::*, Id};
+use std::rc::Rc;
 
 use thiserror::Error;
 
