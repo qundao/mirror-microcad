@@ -3,10 +3,10 @@
 
 //! A single argument
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::{OrdMapValue, SrcRef, TreeDisplay, TreeState};
 use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::{ord_map::*, syntax::*};
+use crate::syntax::*;
 
 /// Argument in a [`Call`].
 #[derive(Clone, Debug, PartialEq, SrcReferrer)]

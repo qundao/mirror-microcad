@@ -3,9 +3,9 @@
 
 //! Parameter list syntax element
 
-use crate::{ord_map::*, syntax::*};
+use crate::syntax::*;
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Refer, TreeDisplay, TreeState};
+use microcad_lang_base::{OrdMap, Refer, TreeDisplay, TreeState};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Parameter list

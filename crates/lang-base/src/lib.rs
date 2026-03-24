@@ -6,6 +6,7 @@
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
 mod diag;
+mod ord_map;
 mod output;
 mod rc;
 mod src_ref;
@@ -20,6 +21,7 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 pub use diag::{
     Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Level, PushDiag,
 };
+pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
 pub use src_ref::{Refer, SrcRef, SrcRefInner, SrcReferrer};
