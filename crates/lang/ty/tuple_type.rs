@@ -8,8 +8,10 @@ use crate::{syntax::*, ty::*};
 /// (Partially named) tuple (e.g. `(n: Scalar, m: String, Integer)`)
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct TupleType {
-    pub(crate) named: std::collections::HashMap<Identifier, Type>,
-    pub(crate) unnamed: std::collections::HashSet<Type>,
+    /// Named fields
+    pub named: microcad_core::hash::HashMap<Identifier, Type>,
+    /// Unnamed fields
+    pub unnamed: microcad_core::hash::HashSet<Type>,
 }
 
 impl TupleType {
@@ -198,16 +200,18 @@ fn test_tuple_type_match() {
                 Type::Array(Box::new(Type::Integer)),
             ),
         ]
-        .into(),
-        unnamed: [].into(),
+        .into_iter()
+        .collect(),
+        unnamed: Default::default(),
     };
     let params = TupleType {
         named: [
             (Identifier::no_ref("x"), Type::Integer),
             (Identifier::no_ref("y"), Type::Integer),
         ]
-        .into(),
-        unnamed: [].into(),
+        .into_iter()
+        .collect(),
+        unnamed: Default::default(),
     };
     assert!(args.is_matching(&params));
 }
