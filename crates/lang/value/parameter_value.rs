@@ -27,14 +27,6 @@ impl ParameterValue {
             src_ref,
         }
     }
-
-    /// Check if type of this parameter value matches the given one
-    pub fn type_matches(&self, ty: &Type) -> bool {
-        match &self.specified_type {
-            Some(t) => t == ty,
-            None => true, // Accept any type if none is specified
-        }
-    }
 }
 
 impl Ty for ParameterValue {

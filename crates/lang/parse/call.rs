@@ -1,8 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{ord_map::*, parse::*, parser::*, syntax::*};
-use microcad_lang_base::Refer;
+use crate::{parse::*, parser::*, syntax::*};
+use microcad_lang_base::{OrdMap, Refer};
 use microcad_syntax::ast;
 
 impl FromAst for Call {

@@ -18,7 +18,6 @@ pub mod builtin;
 pub mod doc;
 pub mod eval;
 pub mod model;
-pub mod ord_map;
 pub mod parse;
 pub mod parser;
 pub mod render;

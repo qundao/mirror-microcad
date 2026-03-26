@@ -1,7 +1,6 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::collections::{HashMap, HashSet};
 use crate::{parse::*, parser::*, syntax::*, ty::*};
 use microcad_syntax::ast;
 
@@ -19,13 +18,13 @@ impl FromAst for TupleType {
                     let value = Type::from_ast(value, context)?;
                     Ok((name, value))
                 })
-                .collect::<Result<HashMap<_, _>, _>>()?,
+                .collect::<Result<microcad_core::hash::HashMap<_, _>, _>>()?,
             unnamed: node
                 .inner
                 .iter()
                 .filter_map(|(name, value)| name.is_none().then_some(value))
                 .map(|value| Type::from_ast(value, context))
-                .collect::<Result<HashSet<_>, _>>()?,
+                .collect::<Result<microcad_core::hash::HashSet<_>, _>>()?,
         })
     }
 }

@@ -7,7 +7,8 @@ use microcad_syntax::ast;
 use std::str::FromStr;
 
 impl Type {
-    fn parse_str(ty: &str, src_ref: SrcRef) -> ParseResult<Self> {
+    /// Parse a type from &str
+    pub fn parse_str(ty: &str, src_ref: SrcRef) -> ParseResult<Self> {
         if let Some(dimensions) = ty.strip_prefix("Matrix") {
             let (x, y) = dimensions
                 .split_once('x')

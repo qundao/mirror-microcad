@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use microcad_lang_base::{SrcRef, SrcReferrer};
 
-use crate::{builtin::*, doc::Doc, syntax::*, value::*};
+use crate::{builtin::*, doc::Doc, syntax::*};
 
 /// Retrieve symbol information.
 pub trait Info {
