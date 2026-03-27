@@ -5,7 +5,7 @@ cargo update
 cargo clippy
 source ./scripts/delete_test_results.sh
 
-cargo test
+COPYRIGHT_CHECK=1 cargo test 
 
 source ./scripts/update_books.sh
 
