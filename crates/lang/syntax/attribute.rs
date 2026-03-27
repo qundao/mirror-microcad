@@ -16,12 +16,12 @@ pub enum AttributeCommand {
     /// A command with optional arguments: `width(offset = 30mm)`.
     Call(Call),
     /// An assignment: `color = "red"`.
-    Assigment {
+    Assignment {
         /// Source code reference.
         src_ref: SrcRef,
-        /// Name of the assigment.
+        /// Name of the assignment.
         name: Identifier,
-        /// Value name of the assigment.
+        /// Value name of the assignment.
         value: Expression,
     },
 }
@@ -35,7 +35,7 @@ impl Identifiable for AttributeCommand {
                 .name
                 .as_identifier()
                 .expect("non-identifier attribute call"),
-            AttributeCommand::Assigment { name, .. } => name,
+            AttributeCommand::Assignment { name, .. } => name,
         }
     }
 }
@@ -45,7 +45,7 @@ impl std::fmt::Display for AttributeCommand {
         match &self {
             AttributeCommand::Ident(name) => write!(f, "{name}"),
             AttributeCommand::Call(call) => write!(f, "{call}"),
-            AttributeCommand::Assigment { name, value, .. } => write!(f, "{name} = {value}"),
+            AttributeCommand::Assignment { name, value, .. } => write!(f, "{name} = {value}"),
         }
     }
 }
@@ -55,7 +55,7 @@ impl SrcReferrer for AttributeCommand {
         match &self {
             AttributeCommand::Ident(name) => name.src_ref(),
             AttributeCommand::Call(call) => call.src_ref(),
-            AttributeCommand::Assigment { src_ref, .. } => src_ref.clone(),
+            AttributeCommand::Assignment { src_ref, .. } => src_ref.clone(),
         }
     }
 }

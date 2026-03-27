@@ -1036,7 +1036,7 @@ fn parser<'tokens>()
         .map(Statement::InnerDocComment)
         .boxed();
 
-        let not_assigment = whitespace_parser()
+        let not_assignment = whitespace_parser()
             .or_not()
             .then(none_of([
                 Token::OperatorAssignment,
@@ -1049,7 +1049,7 @@ fn parser<'tokens>()
 
         let reserved_keyword_statement = reserved_keyword
             .clone()
-            .then_ignore(not_assigment.clone())
+            .then_ignore(not_assignment.clone())
             .try_map_with(|kind, e| {
                 Err::<(), _>(Rich::custom(
                     e.span(),
@@ -1059,7 +1059,7 @@ fn parser<'tokens>()
             .ignored()
             .recover_with(via_parser(
                 reserved_keyword
-                    .then_ignore(not_assigment)
+                    .then_ignore(not_assignment)
                     .clone()
                     .ignore_then(
                         none_of(STRUCTURAL_TOKENS)
