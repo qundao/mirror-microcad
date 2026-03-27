@@ -25,7 +25,7 @@ impl FromAst for FunctionDefinition {
             body: Body::from_ast(&node.body, context)?,
             signature: FunctionSignature {
                 src_ref: context.src_ref(&node.span),
-                parameters: ParameterList::from_ast(&node.arguments, context)?,
+                parameters: ParameterList::from_ast(&node.parameters, context)?,
                 return_type: node
                     .return_type
                     .as_ref()
