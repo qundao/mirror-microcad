@@ -115,9 +115,10 @@ pub struct FunctionDefinition {
     pub keyword_span: Span,
     pub extras: ItemExtras,
     pub doc: Option<Comment>,
+    pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: Identifier,
-    pub arguments: ParameterList,
+    pub parameters: ParameterList,
     pub return_type: Option<Type>,
     pub body: StatementList,
 }
