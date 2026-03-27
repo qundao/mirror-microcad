@@ -21,12 +21,13 @@ Ok(
                             trailing: [],
                         },
                         doc: None,
+                        attributes: [],
                         visibility: None,
                         name: Identifier {
                             span: 3..6,
                             name: "foo",
                         },
-                        arguments: ParameterList {
+                        parameters: ParameterList {
                             span: 7..27,
                             extras: ItemExtras {
                                 leading: [],
