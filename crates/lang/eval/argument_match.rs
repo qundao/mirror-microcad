@@ -110,7 +110,7 @@ impl<'a> ArgumentMatch<'a> {
         let mut am = Self {
             arguments: arguments.iter().map(|(id, v)| (id, v)).collect(),
             params: params.iter().collect(),
-            result: Tuple::new_named(std::collections::HashMap::new(), arguments.src_ref()),
+            result: Tuple::new_named(microcad_core::hash::HashMap::default(), arguments.src_ref()),
             priority: Priority::None,
         };
 

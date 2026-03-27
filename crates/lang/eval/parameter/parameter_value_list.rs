@@ -6,10 +6,11 @@
 use crate::eval::*;
 use compact_str::CompactStringExt;
 use derive_more::Deref;
+use microcad_core::hash::HashMap;
 
 /// List of parameter values
 #[derive(Clone, Debug, Default, Deref)]
-pub struct ParameterValueList(std::collections::HashMap<Identifier, ParameterValue>);
+pub struct ParameterValueList(HashMap<Identifier, ParameterValue>);
 
 impl ParameterValueList {
     /// Push parameter value

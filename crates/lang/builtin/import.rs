@@ -4,6 +4,7 @@
 //! Value importer
 
 use crate::{Id, builtin::file_io::*, eval::ParameterValueList, syntax::*, value::*};
+use microcad_core::hash::HashMap;
 use miette::{Diagnostic, Report};
 use std::rc::Rc;
 
@@ -58,7 +59,7 @@ pub trait Importer: FileIoInterface {
 #[derive(Default)]
 pub struct ImporterRegistry {
     io: FileIoRegistry<Rc<dyn Importer + 'static>>,
-    cache: std::collections::HashMap<(String, String), Value>,
+    cache: HashMap<(String, String), Value>,
 }
 
 impl ImporterRegistry {

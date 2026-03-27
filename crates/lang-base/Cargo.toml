@@ -19,10 +19,11 @@ color-print = { version = "0.3", optional = true }
 compact_str = "0.9.0"
 derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
 log = "0.4"
-microcad-core = { workspace = true }
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
 pathdiff = "0.2"
 thiserror = "2.0.17"
+
+microcad-core = { workspace = true }
 
 [lints.rust]
 missing_docs = "warn"

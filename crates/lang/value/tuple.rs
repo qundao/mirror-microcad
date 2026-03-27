@@ -3,7 +3,7 @@
 
 //! Named tuple evaluation entity
 
-use std::collections::HashMap;
+use microcad_core::hash::HashMap;
 
 use microcad_lang_base::SrcReferrer;
 use microcad_lang_proc_macros::SrcReferrer;
@@ -15,8 +15,8 @@ use crate::{ty::*, value::*};
 /// Names are optional, which means Identifiers can be empty.
 #[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
 pub struct Tuple {
-    pub(crate) named: std::collections::HashMap<Identifier, Value>,
-    pub(crate) unnamed: std::collections::HashMap<Type, Value>,
+    pub(crate) named: HashMap<Identifier, Value>,
+    pub(crate) unnamed: HashMap<Type, Value>,
     pub(crate) src_ref: SrcRef,
 }
 
@@ -56,7 +56,10 @@ macro_rules! create_tuple {
 
 impl Tuple {
     /// Create new named tuple.
-    pub fn new_named(named: std::collections::HashMap<Identifier, Value>, src_ref: SrcRef) -> Self {
+    pub fn new_named(
+        named: microcad_core::hash::HashMap<Identifier, Value>,
+        src_ref: SrcRef,
+    ) -> Self {
         Self {
             named,
             unnamed: HashMap::default(),
@@ -145,12 +148,12 @@ impl Tuple {
         value: Value,
         op: impl Fn(Value, Value) -> ValueResult,
     ) -> ValueResult<Self> {
-        let mut named = HashMap::new();
+        let mut named = HashMap::default();
         for (key, lhs_val) in self.named {
             named.insert(key, op(lhs_val, value.clone()).unwrap_or_default());
         }
 
-        let mut unnamed = HashMap::new();
+        let mut unnamed = HashMap::default();
         for (key, lhs_val) in self.unnamed {
             unnamed.insert(key, op(lhs_val, value.clone()).unwrap_or_default());
         }
@@ -164,12 +167,12 @@ impl Tuple {
 
     /// Transform each value in the tuple.
     pub fn transform(self, op: impl Fn(Value) -> ValueResult) -> ValueResult<Self> {
-        let mut named = HashMap::new();
+        let mut named = HashMap::default();
         for (key, value) in self.named {
             named.insert(key, op(value).unwrap_or_default());
         }
 
-        let mut unnamed = HashMap::new();
+        let mut unnamed = HashMap::default();
         for (key, value) in self.unnamed {
             unnamed.insert(key, op(value).unwrap_or_default());
         }

@@ -1,6 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_core::hash::HashSet;
 use microcad_lang_base::{
     Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceStrByHash, Output, PushDiag,
     SrcReferrer, TreeDisplay, TreeState,
@@ -455,11 +456,11 @@ impl microcad_lang_base::Diag for EvalContext {
         self.diag.error_count()
     }
 
-    fn error_lines(&self) -> std::collections::HashSet<usize> {
+    fn error_lines(&self) -> HashSet<usize> {
         self.diag.error_lines()
     }
 
-    fn warning_lines(&self) -> std::collections::HashSet<usize> {
+    fn warning_lines(&self) -> HashSet<usize> {
         self.diag.warning_lines()
     }
 }

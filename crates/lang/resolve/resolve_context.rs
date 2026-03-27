@@ -3,6 +3,7 @@
 
 //! Resolve Context
 
+use microcad_core::hash::HashSet;
 use microcad_lang_base::{
     Diag, DiagHandler, DiagResult, Diagnostic, GetSourceStrByHash, PushDiag, SrcReferrer,
     TreeDisplay, TreeState, WriteToFile,
@@ -169,11 +170,11 @@ impl Diag for ResolveContext {
         self.diag.error_count()
     }
 
-    fn error_lines(&self) -> std::collections::HashSet<usize> {
+    fn error_lines(&self) -> HashSet<usize> {
         self.diag.error_lines()
     }
 
-    fn warning_lines(&self) -> std::collections::HashSet<usize> {
+    fn warning_lines(&self) -> HashSet<usize> {
         self.diag.warning_lines()
     }
 }

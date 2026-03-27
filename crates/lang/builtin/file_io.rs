@@ -3,7 +3,9 @@
 
 //! Builtin FileIoInterface
 
-use std::{collections::HashMap, rc::Rc};
+use std::rc::Rc;
+
+use microcad_core::hash::HashMap;
 
 use crate::Id;
 
@@ -21,9 +23,9 @@ pub trait FileIoInterface {
 /// Registry to store file IO handlers by id and by file extension.
 pub(crate) struct FileIoRegistry<T> {
     /// File IO by ID.
-    by_id: std::collections::HashMap<Id, T>,
+    by_id: HashMap<Id, T>,
     /// File IO by file extension.
-    by_file_extension: std::collections::HashMap<Id, Vec<T>>,
+    by_file_extension: HashMap<Id, Vec<T>>,
 }
 
 impl<T> Default for FileIoRegistry<T> {
