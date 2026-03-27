@@ -163,7 +163,7 @@ impl Diag for ResolveContext {
     }
 
     fn warning_count(&self) -> u32 {
-        self.diag.error_count()
+        self.diag.warning_count()
     }
 
     fn error_count(&self) -> u32 {
