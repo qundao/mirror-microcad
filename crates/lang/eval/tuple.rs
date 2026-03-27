@@ -11,7 +11,7 @@ impl Eval for TupleExpression {
             .partition(|(id, _)| id.is_empty());
 
         // check unnamed for ambiguous types
-        let mut h = std::collections::HashSet::new();
+        let mut h = microcad_core::hash::HashSet::default();
         unnamed
             .iter()
             .map(|(_, value)| value.ty())
