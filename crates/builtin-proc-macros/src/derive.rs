@@ -125,7 +125,7 @@ pub(crate) fn derive_workbench_definition(
                                 })))
                             }
                         }
-                        fn parameters() -> microcad_lang::value::ParameterValueList {
+                        fn parameters() -> microcad_lang::eval::ParameterValueList {
                             [
                                 #(#parameters),*
                             ]

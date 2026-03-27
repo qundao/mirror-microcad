@@ -6,6 +6,7 @@
 use std::path::PathBuf;
 
 use crate::output::Output;
+use rustc_hash::FxHashSet as HashSet;
 
 /// Markdown test environment
 pub struct TestEnv {
@@ -282,12 +283,7 @@ impl TestEnv {
         }
     }
 
-    fn diff(
-        &mut self,
-        left: &std::collections::HashSet<usize>,
-        right: &std::collections::HashSet<usize>,
-        message: &str,
-    ) -> bool {
+    fn diff(&mut self, left: &HashSet<usize>, right: &HashSet<usize>, message: &str) -> bool {
         let mut diff = left.difference(right).collect::<Vec<_>>();
         if diff.is_empty() {
             true
@@ -310,10 +306,10 @@ impl TestEnv {
     /// Report wrong errors into log file.
     pub fn report_wrong_errors(
         &mut self,
-        error_lines: &std::collections::HashSet<usize>,
-        warning_lines: &std::collections::HashSet<usize>,
+        error_lines: &HashSet<usize>,
+        warning_lines: &HashSet<usize>,
     ) -> bool {
-        fn lines_with(code: &str, marker: &str, offset: usize) -> std::collections::HashSet<usize> {
+        fn lines_with(code: &str, marker: &str, offset: usize) -> HashSet<usize> {
             code.lines()
                 .enumerate()
                 .filter_map(|line| {

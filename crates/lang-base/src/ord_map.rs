@@ -5,6 +5,8 @@
 
 use std::ops::Index;
 
+use microcad_core::hash::HashMap;
+
 /// Trait a value in an `OrdMap` must implement.
 /// # Types
 /// `K`: key type
@@ -26,7 +28,7 @@ where
     /// vec to store values
     vec: Vec<V>,
     /// map to store key -> index of value in vec
-    map: std::collections::HashMap<K, usize>,
+    map: HashMap<K, usize>,
 }
 
 impl<K, V> Default for OrdMap<K, V>
@@ -58,15 +60,17 @@ where
     K: std::cmp::Eq + std::hash::Hash + Clone,
 {
     fn from(vec: Vec<V>) -> Self {
-        let mut map = std::collections::HashMap::new();
-        // TODO remove for loop use for_each and filter
-        for (i, item) in vec.iter().enumerate() {
-            if let Some(key) = item.key() {
-                map.insert(key, i);
-            }
+        Self {
+            map: vec
+                .iter()
+                .enumerate()
+                .filter_map(|(i, item)| match item.key() {
+                    Some(key) => Some((key, i)),
+                    None => None,
+                })
+                .collect(),
+            vec,
         }
-
-        Self { vec, map }
     }
 }
 

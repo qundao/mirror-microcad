@@ -51,6 +51,7 @@ pub use attribute::*;
 pub use call::*;
 pub use eval_context::*;
 pub use eval_error::*;
+pub use parameter::*;
 
 use locals::*;
 use microcad_lang_base::PushDiag;

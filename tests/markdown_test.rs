@@ -1,6 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_core::hash::HashSet;
 use microcad_lang::resolve::Sources;
 use microcad_lang::{eval::EvalContext, model::Model, syntax::SourceFile};
 use microcad_lang_base::{
@@ -64,8 +65,7 @@ pub fn run_test(env: Option<TestEnv>) {
             "fail" | "todo_fail" => match errors {
                 // test expected to fail failed at parsing?
                 Some(errors) => {
-                    use std::collections::HashSet;
-                    let mut error_lines = HashSet::new();
+                    let mut error_lines = HashSet::default();
                     for err in errors {
                         if let Some(line) = err.src_ref().line() {
                             error_lines.insert(line + env.offset() - 1);
@@ -76,7 +76,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
                     }
                     if env.has_error_markers() {
-                        if env.report_wrong_errors(&error_lines, &HashSet::new()) {
+                        if env.report_wrong_errors(&error_lines, &HashSet::default()) {
                             env.result(TestResult::FailWrong);
                             panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                         }

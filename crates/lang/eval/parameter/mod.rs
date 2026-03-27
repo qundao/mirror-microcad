@@ -3,6 +3,12 @@
 
 //! Parameter evaluation entity
 
+mod parameter_value;
+mod parameter_value_list;
+
+pub use parameter_value::ParameterValue;
+pub use parameter_value_list::ParameterValueList;
+
 use microcad_lang_base::SrcReferrer;
 
 use crate::{eval::*, syntax::*, ty::*, value::*};

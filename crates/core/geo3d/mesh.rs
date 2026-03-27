@@ -8,6 +8,8 @@ use crate::{
 use cgmath::{ElementWise, Vector3};
 use manifold_rs::{Manifold, Mesh};
 
+use crate::hash::HashMap;
+
 /// Triangle mesh
 #[derive(Default, Clone)]
 pub struct TriangleMesh {
@@ -144,8 +146,7 @@ impl TriangleMesh {
             )
         };
 
-        let mut vertex_map: std::collections::HashMap<(u32, u32, u32), u32> =
-            std::collections::HashMap::new();
+        let mut vertex_map: HashMap<(u32, u32, u32), u32> = HashMap::default();
         let mut new_positions: Vec<Vector3<f32>> = Vec::with_capacity(self.positions.len());
         let remap: Vec<u32> = self
             .positions

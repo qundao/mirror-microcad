@@ -6,6 +6,7 @@
 use crate::{resolve::*, syntax::*};
 use derive_more::Deref;
 
+use microcad_core::hash::HashMap;
 use microcad_lang_base::MICROCAD_EXTENSIONS;
 
 /// External files register.
@@ -13,7 +14,7 @@ use microcad_lang_base::MICROCAD_EXTENSIONS;
 /// A map of *qualified name* -> *source file path* which is generated at creation
 /// by scanning in the given `search_paths`.
 #[derive(Default, Deref)]
-pub struct Externals(std::collections::HashMap<QualifiedName, std::path::PathBuf>);
+pub struct Externals(HashMap<QualifiedName, std::path::PathBuf>);
 
 impl Externals {
     /// Creates externals list.
@@ -77,7 +78,7 @@ impl Externals {
     /// Searches for external source code files (*external modules*) in given *search paths*.
     fn search_externals(
         search_paths: &[impl AsRef<std::path::Path>],
-    ) -> ResolveResult<std::collections::HashMap<QualifiedName, std::path::PathBuf>> {
+    ) -> ResolveResult<HashMap<QualifiedName, std::path::PathBuf>> {
         search_paths
             .iter()
             .inspect(|p| log::trace!("Searching externals in: {:?}", p.as_ref()))

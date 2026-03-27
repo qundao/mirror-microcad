@@ -24,6 +24,7 @@ pub use level::*;
 use miette::Report;
 
 use crate::src_ref::*;
+use microcad_core::hash::HashSet;
 
 /// A trait to add diagnostics with different levels conveniently.
 pub trait PushDiag {
@@ -102,8 +103,8 @@ pub trait Diag {
     fn error_count(&self) -> u32;
 
     /// Return all lines with errors
-    fn error_lines(&self) -> std::collections::HashSet<usize>;
+    fn error_lines(&self) -> HashSet<usize>;
 
     /// Return all lines with warnings
-    fn warning_lines(&self) -> std::collections::HashSet<usize>;
+    fn warning_lines(&self) -> HashSet<usize>;
 }

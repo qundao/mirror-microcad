@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{GetSourceStrByHash, diag::*};
+use microcad_core::hash::HashSet;
 use std::io::IsTerminal;
 
 /// Handler for diagnostics.
@@ -87,7 +88,7 @@ impl DiagHandler {
     }
 
     /// return lines with errors
-    pub fn error_lines(&self) -> std::collections::HashSet<usize> {
+    pub fn error_lines(&self) -> HashSet<usize> {
         self.diag_list
             .iter()
             .filter_map(|d| {
@@ -101,7 +102,7 @@ impl DiagHandler {
     }
 
     /// return lines with warnings
-    pub fn warning_lines(&self) -> std::collections::HashSet<usize> {
+    pub fn warning_lines(&self) -> HashSet<usize> {
         self.diag_list
             .iter()
             .filter_map(|d| {

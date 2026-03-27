@@ -5,9 +5,13 @@
 
 #[macro_use]
 mod argument;
+mod argument_value;
+mod argument_value_list;
 mod call_method;
 mod call_trait;
 
+pub use argument_value::ArgumentValue;
+pub use argument_value_list::ArgumentValueList;
 pub use call_method::*;
 pub use call_trait::*;
 use microcad_lang_base::SrcReferrer;

@@ -3,7 +3,7 @@
 
 //! *Argument value list* evaluation entity.
 
-use crate::{eval::*, value::*};
+use crate::eval::*;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
