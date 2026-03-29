@@ -8,6 +8,7 @@ mod create;
 mod doc;
 mod eval;
 mod export;
+mod format;
 mod parse;
 mod resolve;
 mod watch;
@@ -18,6 +19,7 @@ pub use create::Create;
 pub use doc::Doc;
 pub use eval::Eval;
 pub use export::Export;
+pub use format::Format;
 pub use parse::Parse;
 pub use resolve::Resolve;
 pub use watch::Watch;
@@ -43,6 +45,9 @@ pub enum Commands {
 
     /// Watch a µcad file
     Watch(Watch),
+
+    /// Format a µcad file
+    Format(Format),
 
     /// Generate Markdown docs.
     Doc(Doc),

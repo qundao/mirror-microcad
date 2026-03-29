@@ -33,13 +33,15 @@ num-format = "0.4"
 rust-embed = "8.9"
 miette = { version = "7.6.0", features = ["fancy"] }
 
+microcad-builtin = { workspace = true }
+microcad-core = { workspace = true }
+microcad-docgen = { workspace = true }
+microcad-export = { workspace = true }
 microcad-lang = { workspace = true }
 microcad-lang-base = { workspace = true }
-microcad-core = { workspace = true }
-microcad-builtin = { workspace = true }
-microcad-export = { workspace = true }
+microcad-lang-format = { workspace = true }
 microcad-std = { workspace = true }
-microcad-docgen = { workspace = true }
+microcad-syntax = { workspace = true }
 
 [build-dependencies]
 walkdir = "2"
