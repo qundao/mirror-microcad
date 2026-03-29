@@ -21,21 +21,23 @@ Ok(
                             trailing: [],
                         },
                         attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 1..2,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 1..2,
-                                        value: 1,
-                                            raw: "1",
+                        expression: Bracketed(
+                            Literal(
+                                Literal {
+                                    span: 1..2,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
                                     },
-                                ),
-                            },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 1..2,
+                                            value: 1,
+                                            raw: "1",
+                                        },
+                                    ),
+                                },
+                            ),
                         ),
                     },
                 ),

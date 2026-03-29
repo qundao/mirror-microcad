@@ -1299,6 +1299,7 @@ fn parser<'tokens>()
                     )
                 },
             )
+            .map_with(|expression, e| Expression::Bracketed(Box::new(expression)))
             .boxed();
 
         let array_item = expression_parser
