@@ -47,6 +47,7 @@ Ok(
                                                                             QuantityLiteral {
                                                                                 span: 0..2,
                                                                                 value: 0.0,
+                                                                                raw: "0",
                                                                                 ty: SingleType {
                                                                                     span: 1..2,
                                                                                     name: "\"",
@@ -70,6 +71,7 @@ Ok(
                                                                             QuantityLiteral {
                                                                                 span: 5..7,
                                                                                 value: 1.0,
+                                                                                raw: "1",
                                                                                 ty: SingleType {
                                                                                     span: 6..7,
                                                                                     name: "%",
@@ -98,6 +100,7 @@ Ok(
                                                                             QuantityLiteral {
                                                                                 span: 10..13,
                                                                                 value: 2.0,
+                                                                                raw: "2",
                                                                                 ty: SingleType {
                                                                                     span: 11..13,
                                                                                     name: "mm",
@@ -121,6 +124,7 @@ Ok(
                                                                             QuantityLiteral {
                                                                                 span: 16..20,
                                                                                 value: 3.0,
+                                                                                raw: "3",
                                                                                 ty: SingleType {
                                                                                     span: 17..20,
                                                                                     name: "mm2",
@@ -151,6 +155,7 @@ Ok(
                                                                     QuantityLiteral {
                                                                         span: 23..28,
                                                                         value: 4.0,
+                                                                        raw: "4",
                                                                         ty: SingleType {
                                                                             span: 24..28,
                                                                             name: "mm³",
@@ -174,6 +179,7 @@ Ok(
                                                                     QuantityLiteral {
                                                                         span: 31..34,
                                                                         value: 1.0,
+                                                                        raw: "1",
                                                                         ty: SingleType {
                                                                             span: 32..34,
                                                                             name: "°",
@@ -201,6 +207,7 @@ Ok(
                                                     QuantityLiteral {
                                                         span: 37..39,
                                                         value: 1.0,
+                                                        raw: "1",
                                                         ty: SingleType {
                                                             span: 38..39,
                                                             name: "\"",
@@ -226,6 +233,7 @@ Ok(
                                             QuantityLiteral {
                                                 span: 42..44,
                                                 value: 2.0,
+                                                raw: "2",
                                                 ty: SingleType {
                                                     span: 43..44,
                                                     name: "'",

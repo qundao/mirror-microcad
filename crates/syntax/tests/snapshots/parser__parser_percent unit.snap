@@ -32,6 +32,7 @@ Ok(
                                     QuantityLiteral {
                                         span: 0..2,
                                         value: 1.0,
+                                        raw: "1",
                                         ty: SingleType {
                                             span: 1..2,
                                             name: "%",

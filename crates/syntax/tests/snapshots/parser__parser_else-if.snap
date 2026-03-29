@@ -61,6 +61,7 @@ Ok(
                                                     IntegerLiteral {
                                                         span: 7..8,
                                                         value: 1,
+                                                        raw: "1",
                                                     },
                                                 ),
                                             },
@@ -94,6 +95,7 @@ Ok(
                                                             IntegerLiteral {
                                                                 span: 11..12,
                                                                 value: 3,
+                                                                raw: "3",
                                                             },
                                                         ),
                                                     },
@@ -135,17 +137,31 @@ Ok(
                                                     span: 25..26,
                                                     operation: LessThan,
                                                 },
-                                                rhs: Literal(
-                                                    Literal {
+                                                rhs: UnaryOperation(
+                                                    UnaryOperation {
                                                         span: 27..29,
                                                         extras: ItemExtras {
                                                             leading: [],
                                                             trailing: [],
                                                         },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 27..29,
-                                                                value: -1,
+                                                        operation: UnaryOperator {
+                                                            span: 27..28,
+                                                            operation: Minus,
+                                                        },
+                                                        rhs: Literal(
+                                                            Literal {
+                                                                span: 28..29,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                literal: Integer(
+                                                                    IntegerLiteral {
+                                                                        span: 28..29,
+                                                                        value: 1,
+                                                                        raw: "1",
+                                                                    },
+                                                                ),
                                                             },
                                                         ),
                                                     },
@@ -179,6 +195,7 @@ Ok(
                                                                     IntegerLiteral {
                                                                         span: 32..33,
                                                                         value: 1,
+                                                                        raw: "1",
                                                                     },
                                                                 ),
                                                             },

@@ -41,6 +41,7 @@ Ok(
                                     IntegerLiteral {
                                         span: 10..11,
                                         value: 1,
+                                        raw: "1",
                                     },
                                 ),
                             },

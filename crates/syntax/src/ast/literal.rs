@@ -3,8 +3,8 @@
 
 use crate::Span;
 use crate::ast::{ItemExtras, SingleType};
+use compact_str::CompactString;
 use std::num::{ParseFloatError, ParseIntError};
-use std::ops::Neg;
 use thiserror::Error;
 
 /// A literal value
@@ -71,17 +71,7 @@ pub struct BoolLiteral {
 pub struct IntegerLiteral {
     pub span: Span,
     pub value: i64,
-}
-
-impl Neg for IntegerLiteral {
-    type Output = IntegerLiteral;
-
-    fn neg(self) -> Self::Output {
-        IntegerLiteral {
-            span: (self.span.start - 1)..self.span.end,
-            value: -self.value,
-        }
-    }
+    pub raw: CompactString,
 }
 
 /// An float literal without type
@@ -90,17 +80,7 @@ impl Neg for IntegerLiteral {
 pub struct FloatLiteral {
     pub span: Span,
     pub value: f64,
-}
-
-impl Neg for FloatLiteral {
-    type Output = FloatLiteral;
-
-    fn neg(self) -> Self::Output {
-        FloatLiteral {
-            span: (self.span.start - 1)..self.span.end,
-            value: -self.value,
-        }
-    }
+    pub raw: CompactString,
 }
 
 // A float literal with type
@@ -109,19 +89,8 @@ impl Neg for FloatLiteral {
 pub struct QuantityLiteral {
     pub span: Span,
     pub value: f64,
+    pub raw: CompactString,
     pub ty: SingleType,
-}
-
-impl Neg for QuantityLiteral {
-    type Output = QuantityLiteral;
-
-    fn neg(self) -> Self::Output {
-        QuantityLiteral {
-            span: (self.span.start - 1)..self.span.end,
-            value: -self.value,
-            ty: self.ty,
-        }
-    }
 }
 
 /// An error that can be encountered while parsing literal tokens

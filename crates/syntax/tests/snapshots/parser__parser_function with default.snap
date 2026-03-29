@@ -76,6 +76,7 @@ Ok(
                                                     QuantityLiteral {
                                                         span: 22..25,
                                                         value: 3.0,
+                                                        raw: "3",
                                                         ty: SingleType {
                                                             span: 23..25,
                                                             name: "mm",

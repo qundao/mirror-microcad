@@ -141,6 +141,7 @@ Ok(
                                                                             QuantityLiteral {
                                                                                 span: 64..68,
                                                                                 value: 10.0,
+                                                                                raw: "10",
                                                                                 ty: SingleType {
                                                                                     span: 66..68,
                                                                                     name: "mm",
@@ -173,6 +174,7 @@ Ok(
                                                                             QuantityLiteral {
                                                                                 span: 79..82,
                                                                                 value: 5.0,
+                                                                                raw: "5",
                                                                                 ty: SingleType {
                                                                                     span: 80..82,
                                                                                     name: "mm",

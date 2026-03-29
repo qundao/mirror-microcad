@@ -32,6 +32,7 @@ Ok(
                                     FloatLiteral {
                                         span: 0..2,
                                         value: 1.0,
+                                        raw: "1.",
                                     },
                                 ),
                             },

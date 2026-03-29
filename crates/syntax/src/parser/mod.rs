@@ -3,13 +3,11 @@
 
 mod error;
 mod helpers;
-mod simplify;
 
 use crate::Span;
 use crate::ast::*;
 use crate::parser::error::{ParseErrorKind, Rich};
 use crate::parser::helpers::*;
-use crate::parser::simplify::simplify_unary_op;
 use crate::tokens::*;
 
 use chumsky::input::{Input, MappedInput};
@@ -18,6 +16,8 @@ use chumsky::{Parser, extra, select_ref};
 pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
+
+use compact_str::ToCompactString;
 
 type Error<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
 type Extra<'tokens> = extra::Err<Error<'tokens>>;
@@ -262,6 +262,7 @@ fn parser<'tokens>()
                 match f64::from_str(x) {
                     Ok(value) => LiteralKind::Float(FloatLiteral {
                         value,
+                        raw: x.to_compact_string(),
                         span: e.span(),
                     }),
                     Err(err) => LiteralKind::Error(LiteralError {
@@ -274,6 +275,7 @@ fn parser<'tokens>()
                 match i64::from_str(x) {
                     Ok(value) => LiteralKind::Integer(IntegerLiteral {
                     value,
+                    raw: x.to_compact_string(),
                     span: e.span(),
                 }),
                     Err(err) => LiteralKind::Error(LiteralError {
@@ -306,6 +308,7 @@ fn parser<'tokens>()
                         LiteralKind::Quantity(QuantityLiteral {
                             span: e.span(),
                             value: float.value,
+                            raw: float.raw,
                             ty,
                         })
                     }
@@ -313,6 +316,7 @@ fn parser<'tokens>()
                         LiteralKind::Quantity(QuantityLiteral {
                             span: e.span(),
                             value: int.value as f64,
+                            raw: int.raw,
                             ty,
                         })
                     }
@@ -1510,13 +1514,14 @@ fn parser<'tokens>()
             .then_maybe_whitespace()
             .then(element_access.clone())
             .with_extras()
-            .map_with(|((op, rhs), extras), e| UnaryOperation {
-                span: e.span(),
-                extras,
-                operation: op,
-                rhs: rhs.into(),
+            .map_with(|((op, rhs), extras), e| {
+                Expression::UnaryOperation(UnaryOperation {
+                    span: e.span(),
+                    extras,
+                    operation: op,
+                    rhs: rhs.into(),
+                })
             })
-            .map(simplify_unary_op)
             .boxed();
 
         let binary_param = element_access.or(unary_expression.clone());
