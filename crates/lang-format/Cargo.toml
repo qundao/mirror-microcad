@@ -1,0 +1,19 @@
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-lang-format"
+description = "µcad language formatter"
+documentation = "https://docs.rs/microcad-lang-format"
+authors.workspace = true
+version.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+
+[dependencies]
+microcad-syntax = { workspace = true }
+pretty = "0.12"
