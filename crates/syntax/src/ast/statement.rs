@@ -63,6 +63,20 @@ pub enum WorkbenchKind {
     Op,
 }
 
+impl std::fmt::Display for WorkbenchKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match &self {
+                WorkbenchKind::Sketch => "sketch",
+                WorkbenchKind::Part => "part",
+                WorkbenchKind::Op => "op",
+            }
+        )
+    }
+}
+
 /// A definition of a workbench
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
