@@ -60,6 +60,7 @@ Ok(
                                                                     IntegerLiteral {
                                                                         span: 2..3,
                                                                         value: 1,
+                                                                        raw: "1",
                                                                     },
                                                                 ),
                                                             },
@@ -100,6 +101,7 @@ Ok(
                                                             IntegerLiteral {
                                                                 span: 9..10,
                                                                 value: 1,
+                                                                raw: "1",
                                                             },
                                                         ),
                                                     },
