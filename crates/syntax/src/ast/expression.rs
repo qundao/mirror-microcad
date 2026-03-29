@@ -96,6 +96,7 @@ impl UnaryOperatorType {
 #[allow(missing_docs)]
 pub enum Expression {
     Literal(Literal),
+    Bracketed(Box<Expression>),
     Tuple(TupleExpression),
     ArrayRange(ArrayRangeExpression),
     ArrayList(ArrayListExpression),
@@ -116,6 +117,7 @@ impl Expression {
     pub fn span(&self) -> Span {
         match self {
             Expression::Literal(ex) => ex.span(),
+            Expression::Bracketed(ex) => ex.span(),
             Expression::Tuple(ex) => ex.span.clone(),
             Expression::ArrayRange(ex) => ex.span.clone(),
             Expression::ArrayList(ex) => ex.span.clone(),
