@@ -69,6 +69,9 @@ impl Cli {
             Commands::Export(export) => {
                 export.run(self)?;
             }
+            Commands::Format(format) => {
+                format.run(self)?;
+            }
             Commands::Create(create) => {
                 create.run(self)?;
             }
