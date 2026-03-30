@@ -1499,7 +1499,9 @@ fn parser<'tokens>()
             .or(access_method)
             .or(access_tuple)
             .or(access_array)
-            .boxed();
+            .repeated()
+            .at_least(1)
+            .collect::<Vec<Element>>();
 
         let element_access = base
             .clone()
@@ -1508,11 +1510,11 @@ fn parser<'tokens>()
                     .or_not()
                     .ignore_then(access_item)
                     .repeated(),
-                |value, element, e| {
+                |value, element_chain, e| {
                     Expression::ElementAccess(ElementAccess {
                         span: e.span(),
                         value: value.into(),
-                        element,
+                        element_chain,
                     })
                 },
             )
