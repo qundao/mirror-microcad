@@ -133,16 +133,7 @@ impl Format for ast::ArrayRangeExpression {
         let a = f.arena;
         let inner_parts = vec![self.start.format(f), a.text(".."), self.end.format(f)];
 
-        let range_doc = a
-            .text("[")
-            .append(
-                a.softline() // This space only appears if the group breaks
-                    .append(a.intersperse(inner_parts, a.softline()))
-                    .nest(4), // Indent content if it wraps to a new line
-            )
-            .append(a.softline())
-            .append(a.text("]"))
-            .group();
+        let range_doc = a.intersperse(inner_parts, a.softline_()).brackets().group();
 
         format_with_extras(range_doc, &self.extras, f)
     }
@@ -152,15 +143,7 @@ impl Format for ast::ArrayListExpression {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         let items = self.items.iter().map(|item| item.format(f));
-        let array_doc = a
-            .text("[")
-            .append(
-                a.softline_()
-                    .append(a.intersperse(items, a.text(",")).append(a.softline_()))
-                    .nest(4),
-            )
-            .append(a.text("]"))
-            .group();
+        let array_doc = a.intersperse(items, a.text(",")).brackets().group();
 
         format_with_extras(array_doc, &self.extras, f)
     }
