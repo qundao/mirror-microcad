@@ -52,6 +52,27 @@ impl Statement {
             Error(span) => span.clone(),
         }
     }
+
+    /// Test if statement is supposed to end with a semicolon.
+    pub fn ends_with_semicolon(&self) -> bool {
+        match self {
+            Statement::Workbench(_) => false,
+            Statement::Module(_) => false,
+            Statement::Function(_) => false,
+            Statement::InnerAttribute(_) => false,
+            Statement::InnerDocComment(_) => false,
+            Statement::Comment(_) => false,
+            Statement::Init(_) => false,
+            Statement::Error(_) => false,
+
+            Statement::Use(_) => true,
+            Statement::Const(_) => true,
+            Statement::Return(_) => true,
+            Statement::LocalAssignment(_) => true,
+            Statement::Property(_) => true,
+            Statement::Expression(_) => true,
+        }
+    }
 }
 
 /// The possible type of workbenches
