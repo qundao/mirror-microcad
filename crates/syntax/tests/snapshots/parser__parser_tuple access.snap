@@ -39,12 +39,14 @@ Ok(
                                         ],
                                     },
                                 ),
-                                element: Tuple(
-                                    Identifier {
-                                        span: 4..7,
-                                        name: "bar",
-                                    },
-                                ),
+                                element_chain: [
+                                    Tuple(
+                                        Identifier {
+                                            span: 4..7,
+                                            name: "bar",
+                                        },
+                                    ),
+                                ],
                             },
                         ),
                     },

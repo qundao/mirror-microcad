@@ -69,6 +69,7 @@ Ok(
                                                     ),
                                                 },
                                             ),
+                                            0..5,
                                         ),
                                         operation: Operator {
                                             span: 5..6,
