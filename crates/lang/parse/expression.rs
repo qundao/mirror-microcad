@@ -102,7 +102,7 @@ impl FromAst for Expression {
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(match node {
             ast::Expression::Call(expr) => Expression::Call(Call::from_ast(expr, context)?),
-            ast::Expression::Bracketed(expr) => Expression::from_ast(expr, context)?,
+            ast::Expression::Bracketed(expr, _) => Expression::from_ast(expr, context)?,
             ast::Expression::Literal(ast::Literal {
                 literal: LiteralKind::String(s),
                 span,
