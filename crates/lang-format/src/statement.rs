@@ -36,15 +36,7 @@ impl Format for ast::ParameterList {
             a.text(",").append(a.space()),
         );
 
-        format_with_extras(
-            a.text("(")
-                .append(a.softline_())
-                .append(parameters)
-                .append(a.softline_())
-                .append(")"),
-            &self.extras,
-            f,
-        )
+        format_with_extras(parameters.parens(), &self.extras, f)
     }
 }
 

@@ -1,7 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{DocAllocator, DocBuilder, Format, Formatter, format_body, format_with_extras};
+use crate::{
+    DocAllocator, DocBuilder, Format, Formatter, format_assignment, format_body, format_with_extras,
+};
 
 use microcad_syntax::ast;
 
@@ -22,12 +24,7 @@ impl Format for ast::Expression {
         let a = f.arena;
         match &self {
             ast::Expression::Literal(literal) => literal.format(f),
-            ast::Expression::Bracketed(bracket, _) => a
-                .text("(")
-                .append(a.softline_())
-                .append(bracket.format(f))
-                .append(a.softline_())
-                .append(a.text(")")),
+            ast::Expression::Bracketed(bracket, _) => bracket.format(f).parens(),
             ast::Expression::Tuple(tuple_expression) => tuple_expression.format(f),
             ast::Expression::ArrayRange(array_range_expression) => array_range_expression.format(f),
             ast::Expression::ArrayList(array_list_expression) => array_list_expression.format(f),
@@ -119,16 +116,7 @@ impl Format for ast::TupleExpression {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         let items = self.values.iter().map(|item| item.format(f));
-        let tuple_doc = a
-            .text("(")
-            .append(
-                a.softline()
-                    .append(a.intersperse(items, a.text(",")).append(a.softline()))
-                    .nest(4),
-            )
-            .append(a.softline())
-            .append(a.text(")"))
-            .group();
+        let tuple_doc = a.intersperse(items, a.text(",")).parens();
 
         format_with_extras(tuple_doc, &self.extras, f)
     }
@@ -229,17 +217,11 @@ impl Format for ast::UnnamedArgument {
 impl Format for ast::NamedArgument {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
-
-        // Structure: "name: value"
-        let doc = self
-            .name
-            .format(f)
-            .append(a.space())
-            .append(a.text("="))
-            .append(a.space())
-            .append(self.value.format(f));
-
-        format_with_extras(doc, &self.extras, f)
+        format_with_extras(
+            format_assignment(&self.name, &None, Some(&self.value), f),
+            &self.extras,
+            f,
+        )
     }
 }
 
@@ -255,19 +237,10 @@ impl Format for ast::ArgumentList {
 
 impl Format for ast::Call {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
         let call_doc = self
             .name
             .format(f)
-            .append(a.text("("))
-            .append(
-                a.softline_()
-                    .append(self.arguments.format(f))
-                    .group()
-                    .nest(4),
-            )
-            .append(a.softline_())
-            .append(a.text(")"))
+            .append(self.arguments.format(f).parens())
             .group();
 
         format_with_extras(call_doc, &self.extras, f)
@@ -278,19 +251,31 @@ impl Format for ast::Element {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         match &self {
-            ast::Element::Attribute(identifier) => a.text("#").append(identifier.format(f)),
-            ast::Element::Tuple(identifier) => a.text(".").append(identifier.format(f)),
+            ast::Element::Attribute(identifier) => a
+                .text("#")
+                .append(identifier.format(f))
+                .append(a.softline_()),
+            ast::Element::Tuple(identifier) => a
+                .text(".")
+                .append(identifier.format(f))
+                .append(a.softline_()),
             ast::Element::Method(call) => a
                 .text(".")
-                .append(call.format(f))
-                .append(a.softline_())
-                .group(),
+                .append(call.format(f).append(a.softline_()).group().nest(4)),
             ast::Element::ArrayElement(expression) => a
                 .text("[")
-                .append(a.softline_())
+                .append(a.softline().append(expression.format(f)).nest(4))
                 .append(expression.format(f))
-                .append(a.softline_().append("]")),
+                .append(a.softline_().append("]"))
+                .group(),
         }
+    }
+}
+
+impl Format for Vec<ast::Element> {
+    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+        let a = f.arena;
+        a.intersperse(self.iter().map(|e| e.format(f)), a.hardline())
     }
 }
 
@@ -300,7 +285,7 @@ impl Format for ast::ElementAccess {
         self.value
             .format(f)
             .append(a.softline_())
-            .append(self.element.format(f))
+            .append(self.element_chain.format(f))
     }
 }
 
