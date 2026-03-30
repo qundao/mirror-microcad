@@ -216,7 +216,6 @@ impl Format for ast::UnnamedArgument {
 
 impl Format for ast::NamedArgument {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
         format_with_extras(
             format_assignment(&self.name, &None, Some(&self.value), f),
             &self.extras,
@@ -251,17 +250,9 @@ impl Format for ast::Element {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         match &self {
-            ast::Element::Attribute(identifier) => a
-                .text("#")
-                .append(identifier.format(f))
-                .append(a.softline_()),
-            ast::Element::Tuple(identifier) => a
-                .text(".")
-                .append(identifier.format(f))
-                .append(a.softline_()),
-            ast::Element::Method(call) => a
-                .text(".")
-                .append(call.format(f).append(a.softline_()).group().nest(4)),
+            ast::Element::Attribute(identifier) => a.text("#").append(identifier.format(f)),
+            ast::Element::Tuple(identifier) => a.text(".").append(identifier.format(f)),
+            ast::Element::Method(call) => a.text(".").append(call.format(f)),
             ast::Element::ArrayElement(expression) => a
                 .text("[")
                 .append(a.softline().append(expression.format(f)).nest(4))
