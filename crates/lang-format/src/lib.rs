@@ -76,19 +76,14 @@ pub(crate) fn format_body<'a>(body: &ast::StatementList, f: &Formatter<'a>) -> D
     let statements = body.format(f);
 
     match (&body.statements.is_empty(), &body.tail) {
-        (true, None) => a.text("{}"),
-        (true, Some(_)) => a
-            .text("{")
-            .append(a.softline())
-            .append(statements)
-            .append(a.softline())
-            .append(a.text("}"))
-            .group(),
+        (true, None) => a.nil().braces(),
+        (true, Some(_)) => statements.braces().group(),
         _ => a
-            .text("{")
-            .append(a.hardline().append(statements).nest(4))
+            .hardline()
+            .append(statements)
+            .nest(4)
             .append(a.hardline())
-            .append(a.text("}"))
+            .braces()
             .group(),
     }
 }
