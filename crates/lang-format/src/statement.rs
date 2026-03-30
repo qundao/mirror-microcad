@@ -187,15 +187,13 @@ impl Format for ast::Return {
 
 impl Format for ast::LocalAssignment {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
         format_with_extras(
-            self.attributes
-                .format(f)
-                .append(self.name.format(f))
-                .append(a.space())
-                .append("=")
-                .append(a.space())
-                .append(self.value.format(f)),
+            self.attributes.format(f).append(format_assignment(
+                &self.name,
+                &self.ty,
+                Some(&self.value),
+                f,
+            )),
             &self.extras,
             f,
         )
