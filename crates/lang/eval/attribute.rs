@@ -83,7 +83,7 @@ impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
                     }
                 }
             }
-            AttributeCommand::Assigment { value, .. } => {
+            AttributeCommand::Assignment { value, .. } => {
                 let value: Value = value.eval(context)?;
                 match value {
                     Value::String(filename) => {
@@ -166,7 +166,7 @@ impl Eval<Vec<CustomCommand>> for syntax::Attribute {
                         }
                     }
                 }
-                AttributeCommand::Assigment { name, .. } => {
+                AttributeCommand::Assignment { name, .. } => {
                     match context.exporters().exporter_by_id(name.id()) {
                         Ok(_) => {
                             commands.push(CustomCommand::new(command.id(), Default::default()))
@@ -188,7 +188,7 @@ impl Eval<Option<Color>> for syntax::AttributeCommand {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Color>> {
         match self {
             // Get color from a tuple or string.
-            AttributeCommand::Assigment { value, .. } => {
+            AttributeCommand::Assignment { value, .. } => {
                 let value: Value = value.eval(context)?;
                 match value {
                     // Color from string: color = "red"
@@ -224,7 +224,7 @@ impl Eval<Option<Color>> for syntax::AttributeCommand {
 impl Eval<Option<ResolutionAttribute>> for syntax::AttributeCommand {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<ResolutionAttribute>> {
         match self {
-            AttributeCommand::Assigment { value, .. } => {
+            AttributeCommand::Assignment { value, .. } => {
                 let value: Value = value.eval(context)?;
                 match value {
                     Value::Quantity(qty) => match qty.quantity_type {

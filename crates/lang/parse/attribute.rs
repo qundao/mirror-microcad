@@ -12,7 +12,7 @@ impl FromAst for AttributeCommand {
             ast::AttributeCommand::Ident(i) => {
                 AttributeCommand::Ident(Identifier::from_ast(i, context)?)
             }
-            ast::AttributeCommand::Assignment(a) => AttributeCommand::Assigment {
+            ast::AttributeCommand::Assignment(a) => AttributeCommand::Assignment {
                 name: Identifier::from_ast(&a.name, context)?,
                 value: Expression::from_ast(&a.value, context)?,
                 src_ref: context.src_ref(&a.span),

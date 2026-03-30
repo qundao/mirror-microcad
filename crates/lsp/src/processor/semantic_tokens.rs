@@ -465,7 +465,7 @@ impl TokenContext {
             AttributeCommand::Call(call) => {
                 tokens.extend(self.parse_call(call)?);
             }
-            AttributeCommand::Assigment { name, value, .. } => {
+            AttributeCommand::Assignment { name, value, .. } => {
                 tokens.push(self.output_semantic_token(
                     name.src_ref(),
                     SemanticTokenType::PROPERTY,

@@ -953,6 +953,7 @@ fn parser<'tokens>()
 
         let function = doc_comment
             .clone()
+            .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordFn).map_with(|_, e| e.span()))
             .then_whitespace()
@@ -979,7 +980,13 @@ fn parser<'tokens>()
             .with_extras()
             .map_with(
                 |(
-                    ((((((doc, visibility), keyword_span), name), arguments), return_type), body),
+                    (
+                        (
+                            (((((doc, attributes), visibility), keyword_span), name), arguments),
+                            return_type,
+                        ),
+                        body,
+                    ),
                     extras,
                 ),
                  e| {
@@ -988,9 +995,10 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
+                        attributes,
                         visibility,
                         name,
-                        arguments,
+                        parameters: arguments,
                         return_type,
                         body,
                     })
@@ -1028,7 +1036,7 @@ fn parser<'tokens>()
         .map(Statement::InnerDocComment)
         .boxed();
 
-        let not_assigment = whitespace_parser()
+        let not_assignment = whitespace_parser()
             .or_not()
             .then(none_of([
                 Token::OperatorAssignment,
@@ -1041,7 +1049,7 @@ fn parser<'tokens>()
 
         let reserved_keyword_statement = reserved_keyword
             .clone()
-            .then_ignore(not_assigment.clone())
+            .then_ignore(not_assignment.clone())
             .try_map_with(|kind, e| {
                 Err::<(), _>(Rich::custom(
                     e.span(),
@@ -1051,7 +1059,7 @@ fn parser<'tokens>()
             .ignored()
             .recover_with(via_parser(
                 reserved_keyword
-                    .then_ignore(not_assigment)
+                    .then_ignore(not_assignment)
                     .clone()
                     .ignore_then(
                         none_of(STRUCTURAL_TOKENS)
