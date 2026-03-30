@@ -296,7 +296,7 @@ pub struct Call {
 pub struct ElementAccess {
     pub span: Span,
     pub value: Box<Expression>,
-    pub element: Element,
+    pub element_chain: Vec<Element>,
 }
 
 /// The possible element access types
