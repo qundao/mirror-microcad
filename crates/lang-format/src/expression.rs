@@ -95,15 +95,9 @@ impl Format for ast::FormatString {
 
 impl Format for ast::TupleItem {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
         format_with_extras(
             match &self.name {
-                Some(name) => name
-                    .format(f)
-                    .append(a.space())
-                    .append(a.text("="))
-                    .append(a.space())
-                    .append(self.value.format(f)),
+                Some(name) => format_assignment(name, &None, Some(&self.value), f),
                 None => self.value.format(f),
             },
             &self.extras,
@@ -116,7 +110,7 @@ impl Format for ast::TupleExpression {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         let items = self.values.iter().map(|item| item.format(f));
-        let tuple_doc = a.intersperse(items, a.text(",")).parens();
+        let tuple_doc = a.intersperse(items, a.text(",").append(a.space())).parens();
 
         format_with_extras(tuple_doc, &self.extras, f)
     }
@@ -212,7 +206,9 @@ impl Format for ast::ArgumentList {
         let a = f.arena;
 
         let args = self.arguments.iter().map(|arg| arg.format(f));
-        let args = a.intersperse(args, a.text(",").append(a.softline()));
+        let args = a
+            .intersperse(args, a.text(",").append(a.softline().nest(4)))
+            .group();
         format_with_extras(args, &self.extras, f)
     }
 }

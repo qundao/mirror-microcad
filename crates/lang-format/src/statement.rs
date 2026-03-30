@@ -229,18 +229,20 @@ impl Format for ast::Attribute {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         let commands = a.intersperse(self.commands.iter().map(|c| c.format(f)), ",");
-        a.text(if self.is_inner { "#![" } else { "#[" })
-            .append(a.softline_())
-            .append(commands)
-            .append(a.softline_())
-            .append("]")
+        a.text(if self.is_inner { "#!" } else { "#" })
+            .append(commands.brackets())
     }
 }
 
 impl Format for Vec<ast::Attribute> {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
-        a.intersperse(self.iter().map(|attr| attr.format(f)), a.hardline())
+        if self.is_empty() {
+            a.nil()
+        } else {
+            a.intersperse(self.iter().map(|attr| attr.format(f)), a.hardline())
+                .append(a.hardline())
+        }
     }
 }
 
