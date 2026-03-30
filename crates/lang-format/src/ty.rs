@@ -50,11 +50,6 @@ impl Format for ast::TupleType {
             a.text(",").append(a.softline()), // Break here if line is too long
         );
 
-        // 3. Wrap in parentheses with nesting
-        a.text("(")
-            .append(a.softline().append(inner).nest(4))
-            .append(a.softline())
-            .append(a.text(")"))
-            .group()
+        inner.parens().group()
     }
 }
