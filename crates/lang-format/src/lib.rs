@@ -65,10 +65,14 @@ pub(crate) fn format_symbol_outer<'a>(
     let a = f.arena;
 
     let doc = match doc {
-        Some(doc) => doc.format(f),
+        Some(doc) => doc.format(f).append(a.hardline()),
         None => a.nil(),
     };
-    doc.append(attributes.format(f))
+    if attributes.is_empty() {
+        doc
+    } else {
+        doc.append(attributes.format(f).append(a.hardline()))
+    }
 }
 
 pub(crate) fn format_body<'a>(body: &ast::StatementList, f: &Formatter<'a>) -> DocBuilder<'a> {
