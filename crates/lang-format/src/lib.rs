@@ -73,32 +73,23 @@ pub(crate) fn format_symbol_outer<'a>(
 
 pub(crate) fn format_body<'a>(body: &ast::StatementList, f: &Formatter<'a>) -> DocBuilder<'a> {
     let a = f.arena;
+    let statements = body.format(f);
 
-    let statements = a.intersperse(
-        body.statements.iter().map(|statement| statement.format(f)),
-        a.hardline(),
-    );
-
-    match &body.tail {
-        Some(tail) => a
+    match (&body.statements.is_empty(), &body.tail) {
+        (true, None) => a.text("{}"),
+        (true, Some(_)) => a
+            .text("{")
+            .append(a.softline())
+            .append(statements)
+            .append(a.softline())
+            .append(a.text("}"))
+            .group(),
+        _ => a
             .text("{")
             .append(a.hardline().append(statements).nest(4))
-            .append(a.softline().append(tail.format(f)).nest(4))
             .append(a.hardline())
             .append(a.text("}"))
             .group(),
-        None => {
-            // If the body is empty, just return {}
-            if body.statements.is_empty() {
-                return a.text("{}");
-            }
-
-            a.text("{")
-                .append(a.hardline().append(statements).nest(4))
-                .append(a.hardline())
-                .append(a.text("}"))
-                .group()
-        }
     }
 }
 
