@@ -1299,7 +1299,7 @@ fn parser<'tokens>()
                     )
                 },
             )
-            .map_with(|expression, e| Expression::Bracketed(Box::new(expression)))
+            .map_with(|expression, e| Expression::Bracketed(Box::new(expression), e.span()))
             .boxed();
 
         let array_item = expression_parser
