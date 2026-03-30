@@ -165,28 +165,33 @@ impl FromAst for Expression {
                 src_ref: context.src_ref(&unop.span),
             },
             ast::Expression::Block(b) => Expression::Body(Body::from_ast(b, context)?),
-            ast::Expression::ElementAccess(access) => match &access.element {
-                Element::Attribute(a) => Expression::AttributeAccess(
-                    Box::new(Expression::from_ast(&access.value, context)?),
-                    Identifier::from_ast(a, context)?,
-                    context.src_ref(&access.span),
-                ),
-                Element::Tuple(t) => Expression::PropertyAccess(
-                    Box::new(Expression::from_ast(&access.value, context)?),
-                    Identifier::from_ast(t, context)?,
-                    context.src_ref(&access.span),
-                ),
-                Element::Method(m) => Expression::MethodCall(
-                    Box::new(Expression::from_ast(&access.value, context)?),
-                    MethodCall::from_ast(m, context)?,
-                    context.src_ref(&access.span),
-                ),
-                Element::ArrayElement(e) => Expression::ArrayElementAccess(
-                    Box::new(Expression::from_ast(&access.value, context)?),
-                    Box::new(Expression::from_ast(e, context)?),
-                    context.src_ref(&access.span),
-                ),
-            },
+            ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
+                Expression::from_ast(&access.value, context)?,
+                |acc, element| {
+                    Ok(match element {
+                        Element::Attribute(a) => Expression::AttributeAccess(
+                            Box::new(acc),
+                            Identifier::from_ast(a, context)?,
+                            context.src_ref(&access.span),
+                        ),
+                        Element::Tuple(t) => Expression::PropertyAccess(
+                            Box::new(acc),
+                            Identifier::from_ast(t, context)?,
+                            context.src_ref(&access.span),
+                        ),
+                        Element::Method(m) => Expression::MethodCall(
+                            Box::new(acc),
+                            MethodCall::from_ast(m, context)?,
+                            context.src_ref(&access.span),
+                        ),
+                        Element::ArrayElement(e) => Expression::ArrayElementAccess(
+                            Box::new(acc),
+                            Box::new(Expression::from_ast(e, context)?),
+                            context.src_ref(&access.span),
+                        ),
+                    })
+                },
+            )?,
             ast::Expression::If(i) => Expression::If(Box::new(IfStatement::from_ast(i, context)?)),
             ast::Expression::Error(span) => {
                 return Err(ParseError::InvalidExpression {
