@@ -39,36 +39,38 @@ Ok(
                                         ],
                                     },
                                 ),
-                                element: Method(
-                                    Call {
-                                        span: 4..9,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        name: QualifiedName {
-                                            span: 4..7,
+                                element_chain: [
+                                    Method(
+                                        Call {
+                                            span: 4..9,
                                             extras: ItemExtras {
                                                 leading: [],
                                                 trailing: [],
                                             },
-                                            parts: [
-                                                Identifier {
-                                                    span: 4..7,
-                                                    name: "bar",
+                                            name: QualifiedName {
+                                                span: 4..7,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
                                                 },
-                                            ],
-                                        },
-                                        arguments: ArgumentList {
-                                            span: 8..8,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
+                                                parts: [
+                                                    Identifier {
+                                                        span: 4..7,
+                                                        name: "bar",
+                                                    },
+                                                ],
                                             },
-                                            arguments: [],
+                                            arguments: ArgumentList {
+                                                span: 8..8,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                arguments: [],
+                                            },
                                         },
-                                    },
-                                ),
+                                    ),
+                                ],
                             },
                         ),
                     },

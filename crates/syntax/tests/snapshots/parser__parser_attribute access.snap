@@ -39,12 +39,14 @@ Ok(
                                         ],
                                     },
                                 ),
-                                element: Attribute(
-                                    Identifier {
-                                        span: 4..7,
-                                        name: "bar",
-                                    },
-                                ),
+                                element_chain: [
+                                    Attribute(
+                                        Identifier {
+                                            span: 4..7,
+                                            name: "bar",
+                                        },
+                                    ),
+                                ],
                             },
                         ),
                     },

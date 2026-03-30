@@ -39,24 +39,26 @@ Ok(
                                         ],
                                     },
                                 ),
-                                element: ArrayElement(
-                                    Literal(
-                                        Literal {
-                                            span: 4..5,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 4..5,
-                                                    value: 1,
-                                                    raw: "1",
+                                element_chain: [
+                                    ArrayElement(
+                                        Literal(
+                                            Literal {
+                                                span: 4..5,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
                                                 },
-                                            ),
-                                        },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 4..5,
+                                                        value: 1,
+                                                        raw: "1",
+                                                    },
+                                                ),
+                                            },
+                                        ),
                                     ),
-                                ),
+                                ],
                             },
                         ),
                     },
