@@ -22,7 +22,7 @@ impl Format for ast::Expression {
         let a = f.arena;
         match &self {
             ast::Expression::Literal(literal) => literal.format(f),
-            ast::Expression::Bracketed(bracket) => a
+            ast::Expression::Bracketed(bracket, _) => a
                 .text("(")
                 .append(a.softline_())
                 .append(bracket.format(f))
