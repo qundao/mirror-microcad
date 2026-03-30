@@ -137,7 +137,7 @@ impl Format for ast::UseStatement {
             .append(a.space())
             .append(self.name.format(f));
 
-        format_with_extras(doc, &self.extras, f).append(";")
+        format_with_extras(doc, &self.extras, f)
     }
 }
 
@@ -155,7 +155,7 @@ impl Format for ast::ConstAssignment {
                 f,
             ));
 
-        format_with_extras(doc, &self.extras, f).append(";")
+        format_with_extras(doc, &self.extras, f)
     }
 }
 
@@ -176,12 +176,10 @@ impl Format for ast::InitDefinition {
 impl Format for ast::Return {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
-        a.text("return")
-            .append(match &self.value {
-                Some(value) => a.space().append(value.format(f)),
-                None => a.nil(),
-            })
-            .append(";")
+        a.text("return").append(match &self.value {
+            Some(value) => a.space().append(value.format(f)),
+            None => a.nil(),
+        })
     }
 }
 
@@ -269,9 +267,7 @@ impl Format for ast::Statement {
             ast::Statement::Init(init_definition) => init_definition.format(f),
             ast::Statement::Return(r) => r.format(f),
             ast::Statement::InnerAttribute(attribute) => attribute.format(f),
-            ast::Statement::LocalAssignment(local_assignment) => {
-                local_assignment.format(f).append(";")
-            }
+            ast::Statement::LocalAssignment(local_assignment) => local_assignment.format(f),
             ast::Statement::Property(property_assignment) => property_assignment.format(f),
             ast::Statement::Expression(expression_statement) => expression_statement.format(f),
             ast::Statement::Error(_) => a.nil(),
@@ -279,13 +275,36 @@ impl Format for ast::Statement {
     }
 }
 
-impl Format for ast::StatementList {
+impl Format for Vec<ast::Statement> {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
 
         // Join statements with a hardline so they sit on separate lines
-        let statements = a.intersperse(self.statements.iter().map(|s| s.format(f)), a.hardline());
+        a.intersperse(
+            self.iter()
+                .map(|statement| match statement.ends_with_semicolon() {
+                    true => statement.format(f).append(";"),
+                    false => statement.format(f),
+                }),
+            a.hardline(),
+        )
+    }
+}
 
-        format_with_extras(statements, &self.extras, f)
+impl Format for ast::StatementList {
+    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+        let a = f.arena;
+        let statements = self.statements.format(f);
+        let doc = match (&self.statements.is_empty(), &self.tail) {
+            (true, None) => a.nil(),
+            (true, Some(tail)) => tail.format(f).group(),
+            (false, None) => statements.group(),
+            (false, Some(tail)) => statements
+                .append(a.hardline())
+                .append(tail.format(f))
+                .group(),
+        };
+
+        format_with_extras(doc, &self.extras, f)
     }
 }
