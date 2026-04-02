@@ -13,52 +13,50 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..10,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: BinaryOperation(
-                            BinaryOperation {
-                                span: 0..10,
-                                lhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 0..6,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 0..6,
-                                                name: "length",
-                                            },
-                                        ],
-                                    },
-                                ),
-                                operation: Add,
-                                rhs: Literal(
-                                    Literal {
-                                        span: 9..10,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        literal: Integer(
-                                            IntegerLiteral {
-                                                span: 9..10,
-                                                value: 1,
-                                            },
-                                        ),
-                                    },
-                                ),
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 0..10,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..10,
+                            lhs: QualifiedName(
+                                QualifiedName {
+                                    span: 0..6,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    parts: [
+                                        Identifier {
+                                            span: 0..6,
+                                            name: "length",
+                                        },
+                                    ],
+                                },
+                            ),
+                            operation: Add,
+                            rhs: Literal(
+                                Literal {
+                                    span: 9..10,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 9..10,
+                                            value: 1,
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

@@ -13,46 +13,44 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..5,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: Call(
-                            Call {
-                                span: 0..5,
+                ExpressionStatement {
+                    span: 0..5,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
+                    attributes: [],
+                    expression: Call(
+                        Call {
+                            span: 0..5,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            name: QualifiedName {
+                                span: 0..3,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
                                 },
-                                name: QualifiedName {
-                                    span: 0..3,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                parts: [
+                                    Identifier {
+                                        span: 0..3,
+                                        name: "foo",
                                     },
-                                    parts: [
-                                        Identifier {
-                                            span: 0..3,
-                                            name: "foo",
-                                        },
-                                    ],
-                                },
-                                arguments: ArgumentList {
-                                    span: 4..4,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
-                                    },
-                                    arguments: [],
-                                },
+                                ],
                             },
-                        ),
-                    },
-                ),
+                            arguments: ArgumentList {
+                                span: 4..4,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                arguments: [],
+                            },
+                        },
+                    ),
+                },
             ),
         },
     },

@@ -13,31 +13,29 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..2,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 0..2,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Float(
-                                    FloatLiteral {
-                                        span: 0..2,
-                                        value: 1.0,
-                                    },
-                                ),
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 0..2,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 0..2,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            literal: Float(
+                                FloatLiteral {
+                                    span: 0..2,
+                                    value: 1.0,
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

@@ -139,31 +139,29 @@ Ok(
                 ),
             ],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 33..36,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 33..36,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Float(
-                                    FloatLiteral {
-                                        span: 33..36,
-                                        value: 1000.0,
-                                    },
-                                ),
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 33..36,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 33..36,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            literal: Float(
+                                FloatLiteral {
+                                    span: 33..36,
+                                    value: 1000.0,
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

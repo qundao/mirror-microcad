@@ -13,31 +13,29 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 35..36,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 35..36,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: String(
-                                    StringLiteral {
-                                        span: 35..36,
-                                        content: "string \" with \" escaped \\ quotes",
-                                    },
-                                ),
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 35..36,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 35..36,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            literal: String(
+                                StringLiteral {
+                                    span: 35..36,
+                                    content: "string \" with \" escaped \\ quotes",
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

@@ -13,35 +13,33 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..8,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: QualifiedName(
-                            QualifiedName {
-                                span: 0..8,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                parts: [
-                                    Identifier {
-                                        span: 0..3,
-                                        name: "foo",
-                                    },
-                                    Identifier {
-                                        span: 5..8,
-                                        name: "bar",
-                                    },
-                                ],
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 0..8,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: QualifiedName(
+                        QualifiedName {
+                            span: 0..8,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            parts: [
+                                Identifier {
+                                    span: 0..3,
+                                    name: "foo",
+                                },
+                                Identifier {
+                                    span: 5..8,
+                                    name: "bar",
+                                },
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

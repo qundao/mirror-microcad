@@ -13,53 +13,51 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..6,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: ElementAccess(
-                            ElementAccess {
-                                span: 0..6,
-                                value: QualifiedName(
-                                    QualifiedName {
-                                        span: 0..3,
+                ExpressionStatement {
+                    span: 0..6,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
+                    attributes: [],
+                    expression: ElementAccess(
+                        ElementAccess {
+                            span: 0..6,
+                            value: QualifiedName(
+                                QualifiedName {
+                                    span: 0..3,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    parts: [
+                                        Identifier {
+                                            span: 0..3,
+                                            name: "foo",
+                                        },
+                                    ],
+                                },
+                            ),
+                            element: ArrayElement(
+                                Literal(
+                                    Literal {
+                                        span: 4..5,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],
                                         },
-                                        parts: [
-                                            Identifier {
-                                                span: 0..3,
-                                                name: "foo",
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 4..5,
+                                                value: 1,
                                             },
-                                        ],
+                                        ),
                                     },
                                 ),
-                                element: ArrayElement(
-                                    Literal(
-                                        Literal {
-                                            span: 4..5,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 4..5,
-                                                    value: 1,
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                ),
-                            },
-                        ),
-                    },
-                ),
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

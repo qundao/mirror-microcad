@@ -80,52 +80,50 @@ Ok(
                             },
                             statements: [],
                             tail: Some(
-                                Expression(
-                                    ExpressionStatement {
-                                        span: 40..45,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        attributes: [],
-                                        expression: BinaryOperation(
-                                            BinaryOperation {
-                                                span: 40..45,
-                                                lhs: QualifiedName(
-                                                    QualifiedName {
-                                                        span: 40..41,
-                                                        extras: ItemExtras {
-                                                            leading: [],
-                                                            trailing: [],
-                                                        },
-                                                        parts: [
-                                                            Identifier {
-                                                                span: 40..41,
-                                                                name: "a",
-                                                            },
-                                                        ],
-                                                    },
-                                                ),
-                                                operation: Multiply,
-                                                rhs: Literal(
-                                                    Literal {
-                                                        span: 44..45,
-                                                        extras: ItemExtras {
-                                                            leading: [],
-                                                            trailing: [],
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 44..45,
-                                                                value: 2,
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
+                                ExpressionStatement {
+                                    span: 40..45,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
                                     },
-                                ),
+                                    attributes: [],
+                                    expression: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 40..45,
+                                            lhs: QualifiedName(
+                                                QualifiedName {
+                                                    span: 40..41,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 40..41,
+                                                            name: "a",
+                                                        },
+                                                    ],
+                                                },
+                                            ),
+                                            operation: Multiply,
+                                            rhs: Literal(
+                                                Literal {
+                                                    span: 44..45,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 44..45,
+                                                            value: 2,
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
                             ),
                         },
                     },

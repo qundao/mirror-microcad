@@ -13,70 +13,68 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..7,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: ArrayRange(
-                            ArrayRangeExpression {
-                                span: 0..7,
+                ExpressionStatement {
+                    span: 0..7,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
+                    attributes: [],
+                    expression: ArrayRange(
+                        ArrayRangeExpression {
+                            span: 0..7,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            start: ArrayItem {
+                                span: 1..2,
                                 extras: ItemExtras {
                                     leading: [],
                                     trailing: [],
                                 },
-                                start: ArrayItem {
-                                    span: 1..2,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
-                                    },
-                                    expression: Literal(
-                                        Literal {
-                                            span: 1..2,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 1..2,
-                                                    value: 1,
-                                                },
-                                            ),
+                                expression: Literal(
+                                    Literal {
+                                        span: 1..2,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
-                                },
-                                end: ArrayItem {
-                                    span: 4..6,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
-                                    },
-                                    expression: Literal(
-                                        Literal {
-                                            span: 4..6,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 1..2,
+                                                value: 1,
                                             },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 4..6,
-                                                    value: 10,
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                                ty: None,
+                                        ),
+                                    },
+                                ),
                             },
-                        ),
-                    },
-                ),
+                            end: ArrayItem {
+                                span: 4..6,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                expression: Literal(
+                                    Literal {
+                                        span: 4..6,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 4..6,
+                                                value: 10,
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                            ty: None,
+                        },
+                    ),
+                },
             ),
         },
     },

@@ -13,26 +13,24 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..2,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: Tuple(
-                            TupleExpression {
-                                span: 0..2,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                values: [],
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 0..2,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: Tuple(
+                        TupleExpression {
+                            span: 0..2,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            values: [],
+                        },
+                    ),
+                },
             ),
         },
     },

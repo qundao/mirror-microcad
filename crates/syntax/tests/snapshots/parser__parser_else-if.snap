@@ -71,31 +71,29 @@ Ok(
                                     },
                                     statements: [],
                                     tail: Some(
-                                        Expression(
-                                            ExpressionStatement {
-                                                span: 11..12,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                attributes: [],
-                                                expression: Literal(
-                                                    Literal {
-                                                        span: 11..12,
-                                                        extras: ItemExtras {
-                                                            leading: [],
-                                                            trailing: [],
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 11..12,
-                                                                value: 3,
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
+                                        ExpressionStatement {
+                                            span: 11..12,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
                                             },
-                                        ),
+                                            attributes: [],
+                                            expression: Literal(
+                                                Literal {
+                                                    span: 11..12,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 11..12,
+                                                            value: 3,
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
                                     ),
                                 },
                                 next_if: Some(
@@ -149,31 +147,29 @@ Ok(
                                             },
                                             statements: [],
                                             tail: Some(
-                                                Expression(
-                                                    ExpressionStatement {
-                                                        span: 32..33,
-                                                        extras: ItemExtras {
-                                                            leading: [],
-                                                            trailing: [],
-                                                        },
-                                                        attributes: [],
-                                                        expression: Literal(
-                                                            Literal {
-                                                                span: 32..33,
-                                                                extras: ItemExtras {
-                                                                    leading: [],
-                                                                    trailing: [],
-                                                                },
-                                                                literal: Integer(
-                                                                    IntegerLiteral {
-                                                                        span: 32..33,
-                                                                        value: 1,
-                                                                    },
-                                                                ),
-                                                            },
-                                                        ),
+                                                ExpressionStatement {
+                                                    span: 32..33,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
                                                     },
-                                                ),
+                                                    attributes: [],
+                                                    expression: Literal(
+                                                        Literal {
+                                                            span: 32..33,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
+                                                            literal: Integer(
+                                                                IntegerLiteral {
+                                                                    span: 32..33,
+                                                                    value: 1,
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
                                             ),
                                         },
                                         next_if: None,

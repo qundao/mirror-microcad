@@ -13,66 +13,64 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..9,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: ElementAccess(
-                            ElementAccess {
-                                span: 0..9,
-                                value: QualifiedName(
-                                    QualifiedName {
-                                        span: 0..3,
+                ExpressionStatement {
+                    span: 0..9,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
+                    },
+                    attributes: [],
+                    expression: ElementAccess(
+                        ElementAccess {
+                            span: 0..9,
+                            value: QualifiedName(
+                                QualifiedName {
+                                    span: 0..3,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    parts: [
+                                        Identifier {
+                                            span: 0..3,
+                                            name: "foo",
+                                        },
+                                    ],
+                                },
+                            ),
+                            element: Method(
+                                Call {
+                                    span: 4..9,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    name: QualifiedName {
+                                        span: 4..7,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],
                                         },
                                         parts: [
                                             Identifier {
-                                                span: 0..3,
-                                                name: "foo",
+                                                span: 4..7,
+                                                name: "bar",
                                             },
                                         ],
                                     },
-                                ),
-                                element: Method(
-                                    Call {
-                                        span: 4..9,
+                                    arguments: ArgumentList {
+                                        span: 8..8,
                                         extras: ItemExtras {
                                             leading: [],
                                             trailing: [],
                                         },
-                                        name: QualifiedName {
-                                            span: 4..7,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            parts: [
-                                                Identifier {
-                                                    span: 4..7,
-                                                    name: "bar",
-                                                },
-                                            ],
-                                        },
-                                        arguments: ArgumentList {
-                                            span: 8..8,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            arguments: [],
-                                        },
+                                        arguments: [],
                                     },
-                                ),
-                            },
-                        ),
-                    },
-                ),
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

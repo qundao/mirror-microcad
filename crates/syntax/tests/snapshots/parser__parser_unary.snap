@@ -13,41 +13,39 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..6,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: UnaryOperation(
-                            UnaryOperation {
-                                span: 0..6,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                operation: Not,
-                                rhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 1..6,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 1..6,
-                                                name: "input",
-                                            },
-                                        ],
-                                    },
-                                ),
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 0..6,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: UnaryOperation(
+                        UnaryOperation {
+                            span: 0..6,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            operation: Not,
+                            rhs: QualifiedName(
+                                QualifiedName {
+                                    span: 1..6,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    parts: [
+                                        Identifier {
+                                            span: 1..6,
+                                            name: "input",
+                                        },
+                                    ],
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

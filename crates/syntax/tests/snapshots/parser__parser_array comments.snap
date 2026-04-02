@@ -13,90 +13,88 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..25,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: ArrayList(
-                            ArrayListExpression {
-                                span: 0..25,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                items: [
-                                    ArrayItem {
-                                        span: 1..12,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        expression: Literal(
-                                            Literal {
-                                                span: 1..12,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [
-                                                        Comment(
-                                                            Comment {
-                                                                span: 3..12,
-                                                                lines: [
-                                                                    "foo",
-                                                                ],
-                                                            },
-                                                        ),
-                                                    ],
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 1..2,
-                                                        value: 1,
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                    ArrayItem {
-                                        span: 13..24,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        expression: Literal(
-                                            Literal {
-                                                span: 13..24,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [
-                                                        Comment(
-                                                            Comment {
-                                                                span: 15..24,
-                                                                lines: [
-                                                                    "bar",
-                                                                ],
-                                                            },
-                                                        ),
-                                                    ],
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 13..14,
-                                                        value: 2,
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ],
-                                ty: None,
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 0..25,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: ArrayList(
+                        ArrayListExpression {
+                            span: 0..25,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            items: [
+                                ArrayItem {
+                                    span: 1..12,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    expression: Literal(
+                                        Literal {
+                                            span: 1..12,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [
+                                                    Comment(
+                                                        Comment {
+                                                            span: 3..12,
+                                                            lines: [
+                                                                "foo",
+                                                            ],
+                                                        },
+                                                    ),
+                                                ],
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 1..2,
+                                                    value: 1,
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                                ArrayItem {
+                                    span: 13..24,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    expression: Literal(
+                                        Literal {
+                                            span: 13..24,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [
+                                                    Comment(
+                                                        Comment {
+                                                            span: 15..24,
+                                                            lines: [
+                                                                "bar",
+                                                            ],
+                                                        },
+                                                    ),
+                                                ],
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 13..14,
+                                                    value: 2,
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ],
+                            ty: None,
+                        },
+                    ),
+                },
             ),
         },
     },

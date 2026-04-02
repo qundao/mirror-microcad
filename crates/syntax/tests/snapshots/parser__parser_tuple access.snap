@@ -13,42 +13,40 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..7,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: ElementAccess(
-                            ElementAccess {
-                                span: 0..7,
-                                value: QualifiedName(
-                                    QualifiedName {
-                                        span: 0..3,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 0..3,
-                                                name: "foo",
-                                            },
-                                        ],
-                                    },
-                                ),
-                                element: Tuple(
-                                    Identifier {
-                                        span: 4..7,
-                                        name: "bar",
-                                    },
-                                ),
-                            },
-                        ),
+                ExpressionStatement {
+                    span: 0..7,
+                    extras: ItemExtras {
+                        leading: [],
+                        trailing: [],
                     },
-                ),
+                    attributes: [],
+                    expression: ElementAccess(
+                        ElementAccess {
+                            span: 0..7,
+                            value: QualifiedName(
+                                QualifiedName {
+                                    span: 0..3,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    parts: [
+                                        Identifier {
+                                            span: 0..3,
+                                            name: "foo",
+                                        },
+                                    ],
+                                },
+                            ),
+                            element: Tuple(
+                                Identifier {
+                                    span: 4..7,
+                                    name: "bar",
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

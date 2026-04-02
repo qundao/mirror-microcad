@@ -50,31 +50,29 @@ Ok(
                             },
                             statements: [],
                             tail: Some(
-                                Expression(
-                                    ExpressionStatement {
-                                        span: 39..40,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        attributes: [],
-                                        expression: Literal(
-                                            Literal {
-                                                span: 39..40,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 39..40,
-                                                        value: 1,
-                                                    },
-                                                ),
-                                            },
-                                        ),
+                                ExpressionStatement {
+                                    span: 39..40,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
                                     },
-                                ),
+                                    attributes: [],
+                                    expression: Literal(
+                                        Literal {
+                                            span: 39..40,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 39..40,
+                                                    value: 1,
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
                             ),
                         },
                     },
