@@ -312,6 +312,31 @@ pub struct StatementList {
 }
 
 impl StatementList {
+    pub(crate) fn new(span: Span, extras: ItemExtras, mut statements: Vec<Statement>, mut tail: Option<Box<ExpressionStatement>>) -> Self {
+        // since `if` is the only expression that doesn't have a trailing semicolon, the parsing logic puts a trailing if expression in the statements
+        // and not as the tail expression. So here we check if we're dealing with that case and move it to the tail expression.
+        let tail_if_expr = statements
+            .pop_if(|statement | matches!(statement, Statement::Expression(ExpressionStatement{expression: Expression::If(_), ..})))
+            .map(|statement| {
+                let Statement::Expression(expr @ ExpressionStatement{expression: Expression::If(_), ..}) = statement else {
+                    unreachable!();
+                };
+                expr
+            });
+        if tail.is_none() && let Some(expr) = tail_if_expr {
+            tail = Some(Box::new(expr));
+        }
+
+        StatementList {
+            span,
+            extras,
+            statements,
+            tail,
+        }
+    }
+}
+
+impl StatementList {
     pub(crate) fn dummy(span: Span) -> Self {
         StatementList {
             span,

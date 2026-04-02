@@ -985,12 +985,12 @@ fn parser<'tokens>()
             .collect::<Vec<_>>()
             .then(trailing_expr)
             .with_extras()
-            .map_with(|((statements, tail), extras), e| StatementList {
-                span: e.span(),
+            .map_with(|((statements, tail), extras), e| StatementList::new(
+                e.span(),
                 extras,
                 statements,
                 tail,
-            })
+            ))
             .then_maybe_whitespace()
             .boxed()
     });
