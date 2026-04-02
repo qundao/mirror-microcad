@@ -157,8 +157,9 @@ impl FromAst for StatementList {
             tail: node
                 .tail
                 .as_deref()
-                .map(|statement| Statement::from_ast(statement, context))
+                .map(|expression| ExpressionStatement::from_ast(expression, context))
                 .transpose()?
+                .map(Statement::Expression)
                 .map(Box::new),
         })
     }

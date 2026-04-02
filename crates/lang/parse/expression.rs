@@ -224,19 +224,22 @@ macro_rules! tuple_expression {
         use $crate::parser::FromAst;
         let context = $crate::parser::ParseContext::new($code);
         let ast = $crate::parse::build_ast($code, &context).unwrap();
-        let statement = ast
+        let tuple = match (ast
             .statements
             .statements
-            .first()
-            .or(ast.statements.tail.as_deref())
-            .expect("empty source");
-        let tuple_expression = match statement {
-            ast::Statement::Expression(ast::ExpressionStatement {
+            .first(),
+            ast.statements.tail.as_deref()
+        ) {
+            (Some(ast::Statement::Expression(ast::ExpressionStatement {
                 expression: ast::Expression::Tuple(tuple),
                 ..
-            }) => tuple,
-            _ => panic!("non tuple source"),
+            })), _) => tuple,
+            (None, Some(ast::ExpressionStatement {
+                expression: ast::Expression::Tuple(tuple),
+                ..
+            })) => tuple,
+            _ => panic!("empty or non tuple source"),
         };
-        TupleExpression::from_ast(&tuple_expression, &context).unwrap()
+        TupleExpression::from_ast(&tuple, &context).unwrap()
     }};
 }

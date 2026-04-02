@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::Span;
-use crate::ast::{Identifier, ItemExtras, Literal, SingleType, Statement, StringLiteral};
+use crate::ast::{ExpressionStatement, Identifier, ItemExtras, Literal, SingleType, Statement, StringLiteral};
 use std::num::ParseIntError;
 
 /// An operator for binary operators
@@ -308,7 +308,7 @@ pub struct StatementList {
     pub span: Span,
     pub extras: ItemExtras,
     pub statements: Vec<Statement>,
-    pub tail: Option<Box<Statement>>,
+    pub tail: Option<Box<ExpressionStatement>>,
 }
 
 impl StatementList {

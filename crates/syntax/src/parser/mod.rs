@@ -972,7 +972,6 @@ fn parser<'tokens>()
                     expression,
                 },
             )
-            .map(Statement::Expression)
             .map(Box::new)
             .or_not()
             .then_maybe_whitespace()
