@@ -74,8 +74,8 @@ pub struct CodeBlockHeader {
 /// A code block header with, e.g.: `µcad#ok(hires)`
 impl CodeBlockHeader {
     /// Test banner to show test result and access logs.
-    fn test_banner_string(name: &str) -> String {
-        format!("[![test](.test/{name}.svg)](.test/{name}.log]")
+    pub fn test_banner_string(name: &str) -> String {
+        format!("[![test](.test/{name}.svg)](.test/{name}.log)")
     }
 
     pub(crate) fn is_test_banner(line: &str) -> bool {
@@ -230,12 +230,15 @@ impl CodeBlock {
 
         let header = CodeBlockHeader::parse(line, lines)?;
         let mut start_line_no = None;
+        lines.next();
 
         // Consume until closing backticks
         while let Some((idx, line)) = lines.next() {
             if start_line_no.is_none() {
-                start_line_no = Some(idx)
+                start_line_no = Some(idx);
             }
+
+            eprintln!("!!! {line}");
 
             if line.trim().starts_with("```") {
                 closed = true;
@@ -258,6 +261,6 @@ impl CodeBlock {
 
 impl std::fmt::Display for CodeBlock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "\n{}\n```", self.code)
+        writeln!(f, "{}\n{}\n```", self.header, self.code)
     }
 }
