@@ -5,14 +5,16 @@ mod code_block;
 mod markdown;
 mod paragraph;
 mod section;
+mod test;
 
 pub use code_block::CodeBlock;
 pub use markdown::{Markdown, MarkdownError};
 pub use paragraph::Paragraph;
 pub use section::Section;
+pub use test::Test;
 
 pub mod mdbook {
-    use std::{arch::x86_64::_MM_ROUND_MASK, collections::HashMap};
+    use std::collections::HashMap;
 
     use thiserror::Error;
 
