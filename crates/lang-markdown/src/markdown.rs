@@ -28,6 +28,9 @@ pub enum MarkdownError {
     #[error("Malformed header")]
     MalformedHeader,
 
+    #[error("Duplicated code block name: {0}")]
+    DuplicatedCodeBlockName(String),
+
     #[error("Missing fence")]
     MissingFence,
 }
@@ -44,8 +47,11 @@ impl std::str::FromStr for Markdown {
         let mut current_section = Section::default();
         let mut lines = input.lines().enumerate().peekable();
 
-        while let Some((_, line)) = lines.next() {
+        let mut code_block_names = std::collections::HashSet::new();
+
+        while let Some((idx, line)) = lines.next() {
             let trimmed = line.trim();
+
             if trimmed.is_empty() {
                 continue;
             }
@@ -67,7 +73,14 @@ impl std::str::FromStr for Markdown {
             }
             // 2. Code Blocks
             else if CodeBlockHeader::is_code_block_start(line) {
-                let block = CodeBlock::parse(&mut lines)?;
+                let block = CodeBlock::parse(line, &mut lines)?;
+                let block_name = block.name().clone();
+                if code_block_names.contains(block.name()) {
+                    return Err(MarkdownError::DuplicatedCodeBlockName(block_name));
+                } else {
+                    code_block_names.insert(block_name);
+                }
+
                 current_section.content.push(Paragraph::CodeBlock(block));
             }
             // 3. Tables
