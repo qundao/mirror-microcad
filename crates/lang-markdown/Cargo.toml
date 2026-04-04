@@ -1,0 +1,22 @@
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-lang-markdown"
+description = "µcad language markdown support"
+documentation = "https://docs.rs/microcad-lang-markdown"
+authors = ["Michael Winkelmann (michael@winkelmann.site)"]
+version.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+
+[dependencies]
+derive_more = { version = "2", features = ["deref", "deref_mut"] }
+thiserror = "2.0"
+
+microcad-lang-base = { workspace = true }
+microcad-lang-format = { workspace = true }
