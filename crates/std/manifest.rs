@@ -4,7 +4,7 @@
 //! Manifest for µcad standard library in `lib.toml`
 
 use serde::{Deserialize, Serialize};
-use std::io::{Read, Write};
+use std::io::Write;
 use thiserror::Error;
 
 /// Manifest error.
@@ -71,11 +71,7 @@ impl Manifest {
             });
         }
 
-        let mut file = std::fs::File::open(manifest_path)?;
-
-        let mut buf = String::new();
-        file.read_to_string(&mut buf)?;
-
+        let buf = std::fs::read_to_string(manifest_path)?;
         Ok(toml::from_str(&buf)?)
     }
 
