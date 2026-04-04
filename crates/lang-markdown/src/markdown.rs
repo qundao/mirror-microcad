@@ -74,7 +74,7 @@ impl std::str::FromStr for Markdown {
             // 2. Code Blocks
             else if CodeBlockHeader::is_code_block_start(line) {
                 let block = CodeBlock::parse(line, &mut lines)?;
-                let block_name = block.name().clone();
+                let block_name = block.name().to_string();
                 if code_block_names.contains(block.name()) {
                     return Err(MarkdownError::DuplicatedCodeBlockName(block_name));
                 } else {

@@ -5,7 +5,10 @@
 
 use std::str::FromStr;
 
-use crate::markdown::MarkdownError;
+use microcad_lang::syntax::SourceFile;
+use microcad_lang_base::Capture;
+
+use crate::{Test, markdown::MarkdownError};
 
 /// Markdown test result: `ok, fail, warn, todo` etc.
 #[derive(Debug, Clone, PartialEq)]
@@ -64,28 +67,8 @@ pub struct CodeBlockHeader {
     name: String,
     /// An optional test result
     test_result: Option<TestResult>,
-    /// Parameters if the code block inside `()`
+    /// Parameters of the code block inside `()`
     parameters: Vec<String>,
-}
-
-impl std::fmt::Display for CodeBlockHeader {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let name = &self.name;
-        match &self.test_result {
-            Some(test_result) => {
-                writeln!(f, "{}\n", Self::test_banner_string(name))?;
-                write!(f, "```µcad,{name}#{test_result}")?;
-            }
-            None => {
-                write!(f, "```µcad,{name}")?;
-            }
-        };
-
-        if !self.parameters.is_empty() {
-            write!(f, "({})", self.parameters.join(","))?;
-        }
-        Ok(())
-    }
 }
 
 /// A code block header with, e.g.: `µcad#ok(hires)`
@@ -180,6 +163,26 @@ impl CodeBlockHeader {
     }
 }
 
+impl std::fmt::Display for CodeBlockHeader {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let name = &self.name;
+        match &self.test_result {
+            Some(test_result) => {
+                writeln!(f, "{}\n", Self::test_banner_string(name))?;
+                write!(f, "```µcad,{name}#{test_result}")?;
+            }
+            None => {
+                write!(f, "```µcad,{name}")?;
+            }
+        };
+
+        if !self.parameters.is_empty() {
+            write!(f, "({})", self.parameters.join(","))?;
+        }
+        Ok(())
+    }
+}
+
 /// A code block starting inside ```
 #[derive(Debug, Clone, PartialEq)]
 pub struct CodeBlock {
@@ -187,16 +190,35 @@ pub struct CodeBlock {
     header: CodeBlockHeader,
     /// The actual code.
     code: String,
-    /// Start line
-    start_line_no: usize,
+    /// Line offset inside markdown file.
+    line_offset: usize,
 }
 
 impl CodeBlock {
     /// Return the name of this code block.
     ///
     /// Must be unique within a markdown file.
-    pub fn name(&self) -> &String {
+    pub fn name(&self) -> &str {
         &self.header.name
+    }
+
+    /// Return test result.
+    pub fn test_result(&self) -> &Option<TestResult> {
+        &self.header.test_result
+    }
+
+    pub fn code(&self) -> &str {
+        &self.code
+    }
+
+    pub fn line_offset(&self) -> usize {
+        self.line_offset
+    }
+
+    /// Return if code includes error or warning marker comments
+    pub fn has_error_markers(&self) -> bool {
+        self.code.lines().any(|line| line.contains("// error"))
+            || self.code.lines().any(|line| line.contains("// warning"))
     }
 
     pub(crate) fn parse(
@@ -229,7 +251,7 @@ impl CodeBlock {
         Ok(Self {
             header,
             code: code_lines.join("\n"),
-            start_line_no: start_line_no.expect("Some line"),
+            line_offset: start_line_no.expect("Some line"),
         })
     }
 }
