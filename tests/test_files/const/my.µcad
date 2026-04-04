@@ -1,3 +1,0 @@
-mod your;
-
-pub const X = your::Y;
