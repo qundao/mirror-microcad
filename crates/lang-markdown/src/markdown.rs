@@ -153,7 +153,7 @@ impl std::fmt::Display for Markdown {
             if i > 0 {
                 writeln!(f)?;
             }
-            write!(f, "{}", section)?;
+            write!(f, "{section}")?;
         }
         Ok(())
     }
