@@ -1,3 +1,0 @@
-fn f() { return 1; }
-
-pub const Y = f();
