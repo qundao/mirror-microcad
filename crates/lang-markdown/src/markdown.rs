@@ -85,15 +85,31 @@ impl std::str::FromStr for Markdown {
             }
             // 3. Tables
             else if trimmed.starts_with('|') {
+                let mut content = vec![line.to_string()];
+                while let Some((_, line)) = lines.next() {
+                    let trimmed = line.trim();
+                    if !trimmed.starts_with("|") {
+                        break;
+                    }
+                    content.push(line.to_string());
+                }
                 current_section
                     .content
-                    .push(Paragraph::Table(line.to_string()));
+                    .push(Paragraph::Table(content.join("\n").trim().to_string()));
             }
             // 4. Text
             else {
+                let mut content = vec![line.to_string()];
+                while let Some((_, line)) = lines.next() {
+                    let trimmed = line.trim();
+                    if trimmed.is_empty() {
+                        break;
+                    }
+                    content.push(line.to_string());
+                }
                 current_section
                     .content
-                    .push(Paragraph::Text(line.to_string()));
+                    .push(Paragraph::Text(content.join("\n").trim().to_string()));
             }
         }
 

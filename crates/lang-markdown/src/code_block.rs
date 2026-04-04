@@ -133,7 +133,7 @@ impl CodeBlockHeader {
         };
 
         // 5. Parse TestResult (#ok, #fail, etc.)
-        let mut test_result = None;
+        let mut test_result = Some(TestResult::Ok);
         if let Some(start) = hash_pos {
             let end = paren_pos.unwrap_or(meta.len());
             let status_str = meta[start + 1..end].trim();
@@ -167,6 +167,10 @@ impl std::fmt::Display for CodeBlockHeader {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let name = &self.name;
         match &self.test_result {
+            Some(TestResult::Ok) => {
+                writeln!(f, "{}\n", Self::test_banner_string(name))?;
+                write!(f, "```µcad,{name}")?;
+            }
             Some(test_result) => {
                 writeln!(f, "{}\n", Self::test_banner_string(name))?;
                 write!(f, "```µcad,{name}#{test_result}")?;
@@ -238,8 +242,6 @@ impl CodeBlock {
                 start_line_no = Some(idx);
             }
 
-            eprintln!("!!! {line}");
-
             if line.trim().starts_with("```") {
                 closed = true;
                 break;
@@ -261,6 +263,6 @@ impl CodeBlock {
 
 impl std::fmt::Display for CodeBlock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "{}\n{}\n```", self.header, self.code)
+        write!(f, "{}\n{}\n```", self.header, self.code)
     }
 }

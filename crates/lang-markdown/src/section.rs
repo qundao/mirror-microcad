@@ -37,6 +37,12 @@ impl std::fmt::Display for Section {
         writeln!(f, "{} {}\n", "#".repeat(self.level as usize), self.heading)?;
         self.content
             .iter()
-            .try_for_each(|line| writeln!(f, "{line}"))
+            .enumerate()
+            .try_for_each(|(i, paragraph)| {
+                if i > 0 {
+                    writeln!(f)?;
+                }
+                write!(f, "{paragraph}")
+            })
     }
 }
