@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::code_block::CodeBlock;
+use crate::{MarkdownError, code_block::CodeBlock};
 
 /// A paragraph. Each parameter ends with a new line.
 #[derive(Debug, Clone, PartialEq)]
