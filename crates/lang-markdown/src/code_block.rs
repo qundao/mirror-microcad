@@ -110,24 +110,23 @@ impl CodeBlockHeader {
     ///
     /// The test banner is ignored during parsing.
     pub(crate) fn parse(
+        line: &str,
         lines: &mut std::iter::Peekable<std::iter::Enumerate<std::str::Lines<'_>>>,
     ) -> Result<Self, MarkdownError> {
         // 1. Consume optional test banner and any subsequent empty lines
-        if let Some((_, line)) = lines.peek() {
-            if Self::is_test_banner(line.trim()) {
-                lines.next();
-                while let Some((_, next_line)) = lines.peek() {
-                    if next_line.trim().is_empty() {
-                        lines.next();
-                    } else {
-                        break;
-                    }
+        if Self::is_test_banner(line) {
+            lines.next();
+            while let Some((_, next_line)) = lines.peek() {
+                if next_line.trim().is_empty() {
+                    lines.next();
+                } else {
+                    break;
                 }
             }
         }
 
         // 2. Consume and validate the fence line (e.g., ```µcad,name#ok(param))
-        let (_, header_line) = lines.next().ok_or(MarkdownError::UnexpectedEOF)?;
+        let (_, header_line) = lines.peek().ok_or(MarkdownError::UnexpectedEOF)?;
         let trimmed = header_line.trim();
 
         if !trimmed.starts_with("```") {
@@ -193,12 +192,21 @@ pub struct CodeBlock {
 }
 
 impl CodeBlock {
+    /// Return the name of this code block.
+    ///
+    /// Must be unique within a markdown file.
+    pub fn name(&self) -> &String {
+        &self.header.name
+    }
+
     pub(crate) fn parse(
+        line: &str,
         lines: &mut std::iter::Peekable<std::iter::Enumerate<std::str::Lines<'_>>>,
     ) -> Result<Self, MarkdownError> {
         let mut code_lines = Vec::new();
         let mut closed = false;
-        let header = CodeBlockHeader::parse(lines)?;
+
+        let header = CodeBlockHeader::parse(line, lines)?;
         let mut start_line_no = None;
 
         // Consume until closing backticks

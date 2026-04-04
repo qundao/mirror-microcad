@@ -12,9 +12,11 @@ pub use paragraph::Paragraph;
 pub use section::Section;
 
 pub mod mdbook {
+    use std::{arch::x86_64::_MM_ROUND_MASK, collections::HashMap};
+
     use thiserror::Error;
 
-    use crate::{Markdown, MarkdownError};
+    use crate::{CodeBlock, Markdown, MarkdownError};
 
     #[derive(Debug, Error)]
     pub enum MdBookDirectoryError {
@@ -31,8 +33,13 @@ pub mod mdbook {
 
     /// Directory that contains a markdown book.
     pub struct MdBookDirectory {
+        pub name: String,
+
         /// Relative paths to `src` folder in md book folder
-        pub md_files: Vec<std::path::PathBuf>,
+        pub md_files: HashMap<std::path::PathBuf, Markdown>,
+
+        /// Source directory inside book, usually `src`.
+        pub src_path: std::path::PathBuf,
     }
 
     impl MdBookDirectory {
@@ -57,81 +64,47 @@ pub mod mdbook {
                 Self::visit_dirs(&src_path, &src_path, &mut md_files);
             }
 
-            Ok(Self { md_files })
-        }
+            let md_files = md_files
+                .iter()
+                .map(|md_file| {
+                    (
+                        md_file.clone(),
+                        Markdown::load(src_path.join(md_file))
+                            .expect(&format!("No error: {}", md_file.display())),
+                    )
+                })
+                .collect();
 
-        pub fn update_book(&self) -> Result<(), MdBookDirectoryError> {
-            self.md_files.iter().try_for_each(|md_file| {
-                let md = Markdown::update(md_file).map_err(|err| MdBookDirectoryError::Parse {
-                    file: md_file.clone(),
-                    err,
-                })?;
-                Ok(())
+            let name = root
+                .file_name()
+                .expect("Some directory name")
+                .to_str()
+                .expect("Valid string")
+                .to_string();
+
+            Ok(Self {
+                name,
+                src_path,
+                md_files,
             })
         }
 
-        /*
-        /// Return a test list table row.
-        pub fn table_row(&self, base_path: impl AsRef<std::path::Path>) -> String {
-            let base_path = base_path.as_ref();
-            let banner = &self.banner;
-            let input = &self.input;
-            let log = &self.log;
+        pub fn update_book(&self) -> Result<(), MdBookDirectoryError> {
+            self.md_files.iter().try_for_each(|(md_file, md)| {
+                md.write(md_file)
+                    .map_err(|err| MdBookDirectoryError::Parse {
+                        file: md_file.clone(),
+                        err,
+                    })
+            })
+        }
 
-            let e = &format!(
-                "wrong paths: {:?}\n{base_path:?}\n{banner:?}\n{input:?}\n{log:?}",
-                std::env::current_dir().expect("current dir")
-            );
-
-            use pathdiff::diff_paths;
-            let banner = diff_paths(banner, base_path).expect(e);
-            let input = diff_paths(input, base_path).expect(e);
-            let log = diff_paths(log, base_path).expect(e);
-
-            let banner = banner.to_str().expect(e);
-            let input = input.to_str().expect(e);
-            let log = log.to_str().expect(e);
-
-            let input = match input.strip_suffix("README.md") {
-                Some(input) => input,
-                None => input,
-            };
-
-            format!(
-                "| [![test]({banner})]({log}) | [{name}]({input}) |\n",
-                name = self.name,
-            )
-        }*/
-
-        pub fn generate_test_list(&self) -> Result<(), MdBookDirectoryError> {
-            todo!()
-            /*
-                        let count = tests.len();
-            let mut result = format!(
-                "# Test List
-
-The following table lists all tests included in this documentation.
-
-**{count}** tests have been evaluated with version **{version}** of microcad.
-
-Click on the test names to jump to file with the test or click the buttons to get the logs.
-
-| Result | Source | Name |
-|-------:|--------|------|
-",
-                version = env!("CARGO_PKG_VERSION")
-            );
-
-            {
-                let mut tests = tests.iter().collect::<Vec<_>>().clone();
-                tests.sort();
-                tests.iter().for_each(|test| {
-                    result.push_str(&test.table_row(path.as_ref().parent().expect("invalid path")));
-                });
-            }
-
-            result
-                     */
+        /// Returns an iterator over all code blocks in the entire document.
+        pub fn code_blocks(&self) -> impl Iterator<Item = (std::path::PathBuf, &CodeBlock)> {
+            self.md_files.iter().flat_map(|(md_file, md)| {
+                md.code_blocks()
+                    .map(|code_block| (md_file.clone(), code_block))
+            })
         }
 
         /// Helper to recursively find markdown files.
