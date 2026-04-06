@@ -61,7 +61,7 @@ impl MdBookDirectory {
                 (
                     md_file.clone(),
                     Markdown::load(src_path.join(md_file))
-                        .expect(&format!("No error: {}", md_file.display())),
+                        .unwrap_or_else(|_| panic!("No error: {}", md_file.display())),
                 )
             })
             .collect();
