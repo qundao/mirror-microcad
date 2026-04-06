@@ -5,7 +5,7 @@
 name = "microcad-lang-format"
 description = "µcad language formatter"
 documentation = "https://docs.rs/microcad-lang-format"
-authors.workspace = true
+authors = ["Michael Winkelmann (michael@winkelmann.site)"]
 version.workspace = true
 edition.workspace = true
 homepage.workspace = true
