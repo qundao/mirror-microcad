@@ -2,7 +2,6 @@
 
 Reflect along a line (2D) or a plane (3D).
 
-
 ## Arguments
 
 - `x: Length`: X position of the reflection point.

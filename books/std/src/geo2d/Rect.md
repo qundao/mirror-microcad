@@ -2,7 +2,6 @@
 
 Rectangle definition.
 
-
 ## Examples
 
 * Centered rect with width and height: `Rect(width = 10.0mm, height = 5.0mm);`

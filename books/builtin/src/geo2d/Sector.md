@@ -2,7 +2,6 @@
 
 Circle sector geometry (a pie shape) with start and end angle.
 
-
 ## Arguments
 
 - `radius: Length`: Radius of the circle.

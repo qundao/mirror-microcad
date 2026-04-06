@@ -2,7 +2,6 @@
 
 A parametric **sinusoidal spur gear** profile.
 
-
 ## Arguments
 
 - `module: Length`: Module (amplitude), teeth size.

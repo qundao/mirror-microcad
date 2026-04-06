@@ -2,7 +2,6 @@
 
 Mirror along a line (2D) or a plane (3D).
 
-
 ## Arguments
 
 - `x: Length`:

@@ -2,7 +2,6 @@
 
 Linear extrude operation.
 
-
 ## Arguments
 
 - `height: Length`: Extrusion height in mm (in Z direction).

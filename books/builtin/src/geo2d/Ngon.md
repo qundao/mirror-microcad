@@ -2,7 +2,6 @@
 
 Ngon primitive with radius.
 
-
 ## Arguments
 
 - `n: Integer`: Number of sides.

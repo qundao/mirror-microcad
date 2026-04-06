@@ -2,7 +2,6 @@
 
 A rectangle.
 
-
 ## Arguments
 
 - `x: Length`: X position (left side) of the rectangle.
