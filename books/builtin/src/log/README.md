@@ -1,8 +1,6 @@
 # log
 
-
 ## Built-in functions
-
 
 ### error
 

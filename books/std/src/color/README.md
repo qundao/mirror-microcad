@@ -1,8 +1,6 @@
 # color
 
-
 ## Built-in functions
-
 
 ### rgb
 

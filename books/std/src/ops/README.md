@@ -1,6 +1,5 @@
 # ops
 
-
 ## Operations
 
 - [`align`](./align.md): Align a geometry collection along an axis with a certain spacing.

@@ -1,6 +1,5 @@
 # geo3d
 
-
 ## Parts
 
 - [`Sphere`](./Sphere.md): Sphere definition

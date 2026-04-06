@@ -1,6 +1,5 @@
 # mod
 
-
 ## Sub-modules
 
 - [`geo2d`](./geo2d)
@@ -15,19 +14,15 @@
 
 ## Built-in functions
 
-
 ### print
 
-
 ### type_of
-
 
 ### import
 
 `__builtin::import` function to import data from files.
 
 ### to_string
-
 
 ## Aliases
 

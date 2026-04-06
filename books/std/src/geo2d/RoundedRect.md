@@ -19,6 +19,4 @@ A rounded rectangle.
 
 ## init(width: Length, height: Length, radius: Length)
 
-
 ## init(size: Length, radius: Length)
-

@@ -1,8 +1,6 @@
 # array
 
-
 ## Built-in functions
-
 
 ### len
 

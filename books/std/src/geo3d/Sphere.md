@@ -10,4 +10,3 @@ Examples:
 - radius: Length
 
 ## init(diameter: Length)
-

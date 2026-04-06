@@ -1,8 +1,6 @@
 # string
 
-
 ## Built-in functions
-
 
 ### len
 

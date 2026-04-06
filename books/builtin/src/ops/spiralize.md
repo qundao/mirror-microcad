@@ -1,8 +1,5 @@
 # spiralize
 
-
-
-
 ## Arguments
 
 - `height: Length`:

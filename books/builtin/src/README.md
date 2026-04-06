@@ -1,6 +1,5 @@
 # __builtin
 
-
 ## Sub-modules
 
 - [`array`](./array)
@@ -15,16 +14,12 @@
 
 ## Built-in functions
 
-
 ### import
 
 `__builtin::import` function to import data from files.
 
 ### type_of
 
-
 ### to_string
 
-
 ### print
-
