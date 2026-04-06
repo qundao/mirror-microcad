@@ -21,3 +21,6 @@ thiserror = "2.0"
 microcad-builtin = { workspace = true }
 microcad-lang-base = { workspace = true }
 microcad-lang-format = { workspace = true }
+
+[dev-dependencies]
+insta = "1.45.0"
