@@ -207,7 +207,8 @@ impl Format for ast::ArgumentList {
 
         let args = self.arguments.iter().map(|arg| arg.format(f));
         let args = a
-            .intersperse(args, a.text(",").append(a.softline().nest(4)))
+            .intersperse(args, a.text(",").append(a.softline()))
+            .nest(4)
             .group();
         format_with_extras(args, &self.extras, f)
     }
