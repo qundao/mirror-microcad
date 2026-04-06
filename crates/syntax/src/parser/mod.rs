@@ -353,7 +353,7 @@ fn parser<'tokens>()
     .collect::<Vec<_>>()
     .map_with(|lines, e| Comment {
         span: e.span(),
-        lines: lines.into_iter().map(|s| s.as_ref().into()).collect(),
+        inner: CommentInner::SingleLine(lines.into_iter().map(|s| s.as_ref().into()).collect()),
     })
     .labelled("doc-comment")
     .or_not()
@@ -1035,7 +1035,7 @@ fn parser<'tokens>()
         .collect::<Vec<_>>()
         .map_with(|lines, e| Comment {
             span: e.span(),
-            lines,
+            inner: CommentInner::SingleLine(lines.into_iter().collect()),
         })
         .labelled("inner doc-comment")
         .map(Statement::InnerDocComment)

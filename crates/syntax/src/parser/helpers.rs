@@ -3,7 +3,8 @@
 
 use crate::Span;
 use crate::ast::{
-    BinaryOperation, Comment, Expression, ItemExtra, ItemExtras, Operator, OperatorType,
+    BinaryOperation, Comment, CommentInner, Expression, ItemExtra, ItemExtras, Operator,
+    OperatorType,
 };
 use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;
@@ -27,13 +28,13 @@ where
     .collect::<Vec<_>>()
     .map_with(|lines, e| Comment {
         span: e.span(),
-        lines: lines.into_iter().map(|s| s.as_ref().into()).collect(),
+        inner: CommentInner::SingleLine(lines.into_iter().map(|s| s.as_ref().into()).collect()),
     })
     .boxed();
     let multi_line = select_ref! {
         Token::MultiLineComment(comment) = e => Comment {
             span: e.span(),
-            lines: vec![comment.as_ref().into()]
+            inner: CommentInner::MultiLine(comment.as_ref().into())
         }
     };
     let comment = single_line_comments

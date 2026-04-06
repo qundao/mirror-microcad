@@ -296,12 +296,21 @@ pub struct PropertyAssignment {
     pub value: Box<Expression>,
 }
 
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub enum CommentInner {
+    // A list of single line comments starting with `//`.
+    SingleLine(Vec<String>),
+    // Comments embraced with `/* ... */`.
+    MultiLine(String),
+}
+
 /// A single- or multi-line comment
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct Comment {
     pub span: Span,
-    pub lines: Vec<String>,
+    pub inner: CommentInner,
 }
 
 /// An optional visibility modifier that can be art of assignment and module, function and workbench definitions
