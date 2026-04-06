@@ -838,13 +838,14 @@ fn parser<'tokens>()
             .then_whitespace()
             .then(use_parts)
             .then(
-                whitespace_parser()
-                    .then(just(Token::KeywordAs))
-                    .then_whitespace()
-                    .ignore_then(identifier_parser.clone().recover_with(via_parser(
-                        recovery_expect_any().map_with(|_, e| Identifier::dummy(e.span())),
-                    )))
-                    .or_not(),
+                select_ref! {
+                    Token::KeywordAs => (),
+                }
+                .then_whitespace()
+                .ignore_then(identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any().map_with(|_, e| Identifier::dummy(e.span())),
+                )))
+                .or_not(),
             )
             .with_extras()
             .map_with(
