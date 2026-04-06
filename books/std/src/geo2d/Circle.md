@@ -12,4 +12,3 @@ Examples:
 - center = (x = 0mm, y = 0mm)
 
 ## init(diameter: Length, center = (x = 0mm, y = 0mm))
-

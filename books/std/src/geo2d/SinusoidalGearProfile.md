@@ -1,6 +1,5 @@
 # SinusoidalGearProfile
 
-
 ## Parameters
 
 - module: Length

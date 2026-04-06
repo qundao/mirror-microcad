@@ -1,6 +1,5 @@
 # geo2d
 
-
 ## Sketches
 
 - [`Circle`](./Circle.md): Circle definition with an offset.

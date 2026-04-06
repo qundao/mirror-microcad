@@ -1,8 +1,5 @@
 # align
 
-
-
-
 ## Arguments
 
 - `x: Scalar`: x Direction.

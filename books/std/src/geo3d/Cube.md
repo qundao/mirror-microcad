@@ -13,4 +13,3 @@ Examples:
 - size_z: Length
 
 ## init(size: Length)
-

@@ -15,6 +15,4 @@ Rectangle definition.
 
 ## init(width: Length, height: Length)
 
-
 ## init(size: Length)
-

@@ -1,8 +1,6 @@
 # math
 
-
 ## Built-in functions
-
 
 ### abs
 
@@ -41,7 +39,6 @@ Calculate asin(x).
 Calculate atan(x).
 
 ### rotate_around_axis
-
 
 ### rotate_xyz
 

@@ -1,6 +1,5 @@
 # ops
 
-
 ## Built-in operations
 
 - [`union`](./union.md)

@@ -9,4 +9,3 @@ Circle sector definition.
 - end: Angle
 
 ## init(radius: Length, angle: Angle, offset = 0°)
-

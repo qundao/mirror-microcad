@@ -1,6 +1,5 @@
 # geo2d
 
-
 ## Built-in 2D primitives
 
 - [`Circle`](./Circle.md): A circle at origin.
