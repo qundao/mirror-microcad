@@ -29,7 +29,11 @@ Ok(
                                         span: 0..6,
                                         extras: ItemExtras {
                                             leading: [],
-                                            trailing: [],
+                                            trailing: [
+                                                Whitespace(
+                                                    " ",
+                                                ),
+                                            ],
                                         },
                                         parts: [
                                             Identifier {

@@ -44,7 +44,11 @@ Ok(
                                 arguments: ArgumentList {
                                     span: 4..37,
                                     extras: ItemExtras {
-                                        leading: [],
+                                        leading: [
+                                            Whitespace(
+                                                "\n        ",
+                                            ),
+                                        ],
                                         trailing: [],
                                     },
                                     arguments: [
@@ -75,26 +79,35 @@ Ok(
                                         ),
                                         Unnamed(
                                             UnnamedArgument {
-                                                span: 16..32,
+                                                span: 16..37,
                                                 extras: ItemExtras {
                                                     leading: [
                                                         Comment(
                                                             Comment {
                                                                 span: 16..22,
-                                                                lines: [
-                                                                    "foo",
-                                                                ],
+                                                                inner: SingleLine(
+                                                                    [
+                                                                        "// foo",
+                                                                    ],
+                                                                ),
                                                             },
+                                                        ),
+                                                        Whitespace(
+                                                            "\n        ",
                                                         ),
                                                     ],
                                                     trailing: [],
                                                 },
                                                 value: Literal(
                                                     Literal {
-                                                        span: 31..32,
+                                                        span: 31..37,
                                                         extras: ItemExtras {
                                                             leading: [],
-                                                            trailing: [],
+                                                            trailing: [
+                                                                Whitespace(
+                                                                    "\n    ",
+                                                                ),
+                                                            ],
                                                         },
                                                         literal: Integer(
                                                             IntegerLiteral {

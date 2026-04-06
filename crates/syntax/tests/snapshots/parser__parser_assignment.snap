@@ -12,60 +12,67 @@ Ok(
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..9,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        name: Identifier {
-                            span: 0..1,
-                            name: "a",
-                        },
-                        ty: None,
-                        value: BinaryOperation(
-                            BinaryOperation {
-                                span: 4..9,
-                                lhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 4..5,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 4..5,
-                                                name: "b",
-                                            },
-                                        ],
-                                    },
-                                ),
-                                operation: Operator {
-                                    span: 6..7,
-                                    operation: Multiply,
-                                },
-                                rhs: Literal(
-                                    Literal {
-                                        span: 8..9,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        literal: Integer(
-                                            IntegerLiteral {
-                                                span: 8..9,
-                                                value: 2,
-                                                raw: "2",
-                                            },
-                                        ),
-                                    },
-                                ),
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 0..9,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
-                    },
+                            attributes: [],
+                            name: Identifier {
+                                span: 0..1,
+                                name: "a",
+                            },
+                            ty: None,
+                            value: BinaryOperation(
+                                BinaryOperation {
+                                    span: 4..9,
+                                    lhs: QualifiedName(
+                                        QualifiedName {
+                                            span: 4..5,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [
+                                                    Whitespace(
+                                                        " ",
+                                                    ),
+                                                ],
+                                            },
+                                            parts: [
+                                                Identifier {
+                                                    span: 4..5,
+                                                    name: "b",
+                                                },
+                                            ],
+                                        },
+                                    ),
+                                    operation: Operator {
+                                        span: 6..7,
+                                        operation: Multiply,
+                                    },
+                                    rhs: Literal(
+                                        Literal {
+                                            span: 8..9,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 8..9,
+                                                    value: 2,
+                                                    raw: "2",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

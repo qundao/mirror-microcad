@@ -44,9 +44,9 @@ Ok(
                                                         Comment(
                                                             Comment {
                                                                 span: 3..12,
-                                                                lines: [
+                                                                inner: MultiLine(
                                                                     "foo",
-                                                                ],
+                                                                ),
                                                             },
                                                         ),
                                                     ],
@@ -76,9 +76,9 @@ Ok(
                                                         Comment(
                                                             Comment {
                                                                 span: 15..24,
-                                                                lines: [
+                                                                inner: MultiLine(
                                                                     "bar",
-                                                                ],
+                                                                ),
                                                             },
                                                         ),
                                                     ],

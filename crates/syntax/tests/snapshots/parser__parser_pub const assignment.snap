@@ -12,41 +12,44 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Const(
-                    ConstAssignment {
-                        span: 0..17,
-                        keyword_span: 4..9,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        doc: None,
-                        attributes: [],
-                        visibility: Some(
-                            Public,
-                        ),
-                        name: Identifier {
-                            span: 10..13,
-                            name: "FOO",
-                        },
-                        ty: None,
-                        value: Literal(
-                            Literal {
-                                span: 16..17,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 16..17,
-                                        value: 1,
-                                        raw: "1",
-                                    },
-                                ),
+                (
+                    Const(
+                        ConstAssignment {
+                            span: 0..17,
+                            keyword_span: 4..9,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
-                    },
+                            doc: None,
+                            attributes: [],
+                            visibility: Some(
+                                Public,
+                            ),
+                            name: Identifier {
+                                span: 10..13,
+                                name: "FOO",
+                            },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 16..17,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 16..17,
+                                            value: 1,
+                                            raw: "1",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

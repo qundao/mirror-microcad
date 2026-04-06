@@ -12,72 +12,82 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Module(
-                    ModuleDefinition {
-                        span: 0..50,
-                        keyword_span: 20..23,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        doc: Some(
-                            Comment {
-                                span: 0..20,
-                                lines: [
-                                    "/// Doc comment",
-                                ],
+                (
+                    Module(
+                        ModuleDefinition {
+                            span: 0..50,
+                            keyword_span: 20..23,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
-                        attributes: [],
-                        visibility: None,
-                        name: Identifier {
-                            span: 24..27,
-                            name: "foo",
-                        },
-                        body: Some(
-                            StatementList {
-                                span: 38..49,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
+                            doc: Some(
+                                Comment {
+                                    span: 0..20,
+                                    inner: SingleLine(
+                                        [
+                                            "/// Doc comment",
+                                        ],
+                                    ),
                                 },
-                                statements: [
-                                    LocalAssignment(
-                                        LocalAssignment {
-                                            span: 38..43,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            attributes: [],
-                                            name: Identifier {
-                                                span: 38..39,
-                                                name: "a",
-                                            },
-                                            ty: None,
-                                            value: Literal(
-                                                Literal {
-                                                    span: 42..43,
+                            ),
+                            attributes: [],
+                            visibility: None,
+                            name: Identifier {
+                                span: 24..27,
+                                name: "foo",
+                            },
+                            body: Some(
+                                StatementList {
+                                    span: 38..49,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    statements: [
+                                        (
+                                            LocalAssignment(
+                                                LocalAssignment {
+                                                    span: 38..43,
                                                     extras: ItemExtras {
                                                         leading: [],
                                                         trailing: [],
                                                     },
-                                                    literal: Integer(
-                                                        IntegerLiteral {
+                                                    attributes: [],
+                                                    name: Identifier {
+                                                        span: 38..39,
+                                                        name: "a",
+                                                    },
+                                                    ty: None,
+                                                    value: Literal(
+                                                        Literal {
                                                             span: 42..43,
-                                                            value: 1,
-                                                            raw: "1",
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
+                                                            literal: Integer(
+                                                                IntegerLiteral {
+                                                                    span: 42..43,
+                                                                    value: 1,
+                                                                    raw: "1",
+                                                                },
+                                                            ),
                                                         },
                                                     ),
                                                 },
                                             ),
-                                        },
-                                    ),
-                                ],
-                                tail: None,
-                            },
-                        ),
-                    },
+                                            Some(
+                                                "\n    ",
+                                            ),
+                                        ),
+                                    ],
+                                    tail: None,
+                                },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

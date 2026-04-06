@@ -12,23 +12,26 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Module(
-                    ModuleDefinition {
-                        span: 0..8,
-                        keyword_span: 0..3,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
+                (
+                    Module(
+                        ModuleDefinition {
+                            span: 0..8,
+                            keyword_span: 0..3,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            doc: None,
+                            attributes: [],
+                            visibility: None,
+                            name: Identifier {
+                                span: 4..7,
+                                name: "foo",
+                            },
+                            body: None,
                         },
-                        doc: None,
-                        attributes: [],
-                        visibility: None,
-                        name: Identifier {
-                            span: 4..7,
-                            name: "foo",
-                        },
-                        body: None,
-                    },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

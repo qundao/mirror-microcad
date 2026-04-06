@@ -12,35 +12,38 @@ Ok(
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..11,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        name: Identifier {
-                            span: 0..1,
-                            name: "b",
-                        },
-                        ty: None,
-                        value: Literal(
-                            Literal {
-                                span: 4..11,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Error(
-                                    LiteralError {
-                                        span: 4..11,
-                                        kind: Untypable,
-                                    },
-                                ),
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 0..11,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
-                    },
+                            attributes: [],
+                            name: Identifier {
+                                span: 0..1,
+                                name: "b",
+                            },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 4..11,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Error(
+                                        LiteralError {
+                                            span: 4..11,
+                                            kind: Untypable,
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

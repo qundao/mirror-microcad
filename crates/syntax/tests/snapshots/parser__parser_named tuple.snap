@@ -75,10 +75,14 @@ Ok(
                                                 span: 21..26,
                                                 lhs: Literal(
                                                     Literal {
-                                                        span: 21..22,
+                                                        span: 21..23,
                                                         extras: ItemExtras {
                                                             leading: [],
-                                                            trailing: [],
+                                                            trailing: [
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ],
                                                         },
                                                         literal: Integer(
                                                             IntegerLiteral {

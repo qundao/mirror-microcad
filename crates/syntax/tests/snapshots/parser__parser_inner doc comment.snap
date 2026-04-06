@@ -12,14 +12,19 @@ Ok(
                 trailing: [],
             },
             statements: [
-                InnerDocComment(
-                    Comment {
-                        span: 0..42,
-                        lines: [
-                            "//! Doc comment1",
-                            "//! Doc comment2",
-                        ],
-                    },
+                (
+                    InnerDocComment(
+                        Comment {
+                            span: 0..42,
+                            inner: SingleLine(
+                                [
+                                    "//! Doc comment1",
+                                    "//! Doc comment2",
+                                ],
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

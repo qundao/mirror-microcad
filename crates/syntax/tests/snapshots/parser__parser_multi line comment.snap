@@ -12,75 +12,86 @@ Ok(
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..5,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        name: Identifier {
-                            span: 0..1,
-                            name: "a",
-                        },
-                        ty: None,
-                        value: Literal(
-                            Literal {
-                                span: 4..5,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 4..5,
-                                        value: 1,
-                                        raw: "1",
-                                    },
-                                ),
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 0..5,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
-                    },
-                ),
-                Comment(
-                    Comment {
-                        span: 7..44,
-                        lines: [
-                            "multi\n    line\n    comment",
-                        ],
-                    },
-                ),
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 49..54,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        name: Identifier {
-                            span: 49..50,
-                            name: "b",
-                        },
-                        ty: None,
-                        value: Literal(
-                            Literal {
-                                span: 53..54,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 53..54,
-                                        value: 2,
-                                        raw: "2",
-                                    },
-                                ),
+                            attributes: [],
+                            name: Identifier {
+                                span: 0..1,
+                                name: "a",
                             },
-                        ),
-                    },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 4..5,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 4..5,
+                                            value: 1,
+                                            raw: "1",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    Some(
+                        " ",
+                    ),
+                ),
+                (
+                    Comment(
+                        Comment {
+                            span: 7..44,
+                            inner: MultiLine(
+                                "multi\n    line\n    comment",
+                            ),
+                        },
+                    ),
+                    None,
+                ),
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 49..54,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            attributes: [],
+                            name: Identifier {
+                                span: 49..50,
+                                name: "b",
+                            },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 53..54,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 53..54,
+                                            value: 2,
+                                            raw: "2",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

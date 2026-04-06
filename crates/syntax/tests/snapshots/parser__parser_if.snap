@@ -12,119 +12,135 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Expression(
-                    ExpressionStatement {
-                        span: 0..19,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        expression: If(
-                            If {
-                                span: 0..19,
-                                if_span: 0..2,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                condition: BinaryOperation(
-                                    BinaryOperation {
-                                        span: 3..8,
-                                        lhs: QualifiedName(
-                                            QualifiedName {
-                                                span: 3..4,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                parts: [
-                                                    Identifier {
-                                                        span: 3..4,
-                                                        name: "a",
-                                                    },
-                                                ],
-                                            },
-                                        ),
-                                        operation: Operator {
-                                            span: 5..6,
-                                            operation: GreaterThan,
-                                        },
-                                        rhs: Literal(
-                                            Literal {
-                                                span: 7..8,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 7..8,
-                                                        value: 1,
-                                                        raw: "1",
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ),
-                                body: StatementList {
-                                    span: 11..18,
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 0..19,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            attributes: [],
+                            expression: If(
+                                If {
+                                    span: 0..19,
+                                    if_span: 0..2,
                                     extras: ItemExtras {
                                         leading: [],
                                         trailing: [],
                                     },
-                                    statements: [
-                                        Expression(
-                                            ExpressionStatement {
-                                                span: 11..16,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
+                                    condition: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 3..9,
+                                            lhs: QualifiedName(
+                                                QualifiedName {
+                                                    span: 3..4,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
+                                                        ],
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 3..4,
+                                                            name: "a",
+                                                        },
+                                                    ],
                                                 },
-                                                attributes: [],
-                                                expression: Call(
-                                                    Call {
+                                            ),
+                                            operation: Operator {
+                                                span: 5..6,
+                                                operation: GreaterThan,
+                                            },
+                                            rhs: Literal(
+                                                Literal {
+                                                    span: 7..9,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
+                                                        ],
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 7..8,
+                                                            value: 1,
+                                                            raw: "1",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    body: StatementList {
+                                        span: 11..18,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        statements: [
+                                            (
+                                                Expression(
+                                                    ExpressionStatement {
                                                         span: 11..16,
                                                         extras: ItemExtras {
                                                             leading: [],
                                                             trailing: [],
                                                         },
-                                                        name: QualifiedName {
-                                                            span: 11..14,
-                                                            extras: ItemExtras {
-                                                                leading: [],
-                                                                trailing: [],
-                                                            },
-                                                            parts: [
-                                                                Identifier {
-                                                                    span: 11..14,
-                                                                    name: "foo",
+                                                        attributes: [],
+                                                        expression: Call(
+                                                            Call {
+                                                                span: 11..16,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
                                                                 },
-                                                            ],
-                                                        },
-                                                        arguments: ArgumentList {
-                                                            span: 15..15,
-                                                            extras: ItemExtras {
-                                                                leading: [],
-                                                                trailing: [],
+                                                                name: QualifiedName {
+                                                                    span: 11..14,
+                                                                    extras: ItemExtras {
+                                                                        leading: [],
+                                                                        trailing: [],
+                                                                    },
+                                                                    parts: [
+                                                                        Identifier {
+                                                                            span: 11..14,
+                                                                            name: "foo",
+                                                                        },
+                                                                    ],
+                                                                },
+                                                                arguments: ArgumentList {
+                                                                    span: 15..15,
+                                                                    extras: ItemExtras {
+                                                                        leading: [],
+                                                                        trailing: [],
+                                                                    },
+                                                                    arguments: [],
+                                                                },
                                                             },
-                                                            arguments: [],
-                                                        },
+                                                        ),
                                                     },
                                                 ),
-                                            },
-                                        ),
-                                    ],
-                                    tail: None,
+                                                Some(
+                                                    " ",
+                                                ),
+                                            ),
+                                        ],
+                                        tail: None,
+                                    },
+                                    next_if_span: None,
+                                    next_if: None,
+                                    else_span: None,
+                                    else_body: None,
                                 },
-                                next_if_span: None,
-                                next_if: None,
-                                else_span: None,
-                                else_body: None,
-                            },
-                        ),
-                    },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

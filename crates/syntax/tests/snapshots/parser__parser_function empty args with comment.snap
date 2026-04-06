@@ -12,76 +12,79 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Function(
-                    FunctionDefinition {
-                        span: 0..22,
-                        keyword_span: 0..2,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        doc: None,
-                        attributes: [],
-                        visibility: None,
-                        name: Identifier {
-                            span: 3..6,
-                            name: "foo",
-                        },
-                        parameters: ParameterList {
-                            span: 7..17,
-                            extras: ItemExtras {
-                                leading: [
-                                    Comment(
-                                        Comment {
-                                            span: 7..17,
-                                            lines: [
-                                                "test",
-                                            ],
-                                        },
-                                    ),
-                                ],
-                                trailing: [],
-                            },
-                            parameters: [],
-                        },
-                        return_type: None,
-                        body: StatementList {
-                            span: 20..21,
+                (
+                    Function(
+                        FunctionDefinition {
+                            span: 0..22,
+                            keyword_span: 0..2,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            statements: [],
-                            tail: Some(
-                                Expression(
-                                    ExpressionStatement {
-                                        span: 20..21,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        attributes: [],
-                                        expression: Literal(
-                                            Literal {
-                                                span: 20..21,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 20..21,
-                                                        value: 2,
-                                                        raw: "2",
-                                                    },
+                            doc: None,
+                            attributes: [],
+                            visibility: None,
+                            name: Identifier {
+                                span: 3..6,
+                                name: "foo",
+                            },
+                            parameters: ParameterList {
+                                span: 7..17,
+                                extras: ItemExtras {
+                                    leading: [
+                                        Comment(
+                                            Comment {
+                                                span: 7..17,
+                                                inner: MultiLine(
+                                                    "test",
                                                 ),
                                             },
                                         ),
-                                    },
+                                    ],
+                                    trailing: [],
+                                },
+                                parameters: [],
+                            },
+                            return_type: None,
+                            body: StatementList {
+                                span: 20..21,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                statements: [],
+                                tail: Some(
+                                    Expression(
+                                        ExpressionStatement {
+                                            span: 20..21,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            attributes: [],
+                                            expression: Literal(
+                                                Literal {
+                                                    span: 20..21,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 20..21,
+                                                            value: 2,
+                                                            raw: "2",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
                                 ),
-                            ),
+                            },
                         },
-                    },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

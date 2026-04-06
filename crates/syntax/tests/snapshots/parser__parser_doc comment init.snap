@@ -12,41 +12,46 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Init(
-                    InitDefinition {
-                        span: 0..28,
-                        keyword_span: 20..24,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        doc: Some(
-                            Comment {
-                                span: 0..20,
-                                lines: [
-                                    "/// Doc comment",
-                                ],
-                            },
-                        ),
-                        attributes: [],
-                        parameters: ParameterList {
-                            span: 25..25,
+                (
+                    Init(
+                        InitDefinition {
+                            span: 0..28,
+                            keyword_span: 20..24,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            parameters: [],
-                        },
-                        body: StatementList {
-                            span: 27..27,
-                            extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                            doc: Some(
+                                Comment {
+                                    span: 0..20,
+                                    inner: SingleLine(
+                                        [
+                                            "/// Doc comment",
+                                        ],
+                                    ),
+                                },
+                            ),
+                            attributes: [],
+                            parameters: ParameterList {
+                                span: 25..25,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                parameters: [],
                             },
-                            statements: [],
-                            tail: None,
+                            body: StatementList {
+                                span: 27..27,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                statements: [],
+                                tail: None,
+                            },
                         },
-                    },
+                    ),
+                    None,
                 ),
             ],
             tail: None,
