@@ -12,44 +12,54 @@ Ok(
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..5,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        name: Identifier {
-                            span: 0..1,
-                            name: "a",
-                        },
-                        ty: None,
-                        value: Literal(
-                            Literal {
-                                span: 4..5,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 4..5,
-                                        value: 1,
-                                        raw: "1",
-                                    },
-                                ),
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 0..5,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
-                    },
+                            attributes: [],
+                            name: Identifier {
+                                span: 0..1,
+                                name: "a",
+                            },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 4..5,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 4..5,
+                                            value: 1,
+                                            raw: "1",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    Some(
+                        " ",
+                    ),
                 ),
-                Comment(
-                    Comment {
-                        span: 7..17,
-                        lines: [
-                            "comment",
-                        ],
-                    },
+                (
+                    Comment(
+                        Comment {
+                            span: 7..17,
+                            inner: SingleLine(
+                                [
+                                    "// comment",
+                                ],
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

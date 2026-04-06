@@ -26,26 +26,30 @@ Ok(
                                 span: 0..44,
                                 lhs: BinaryOperation(
                                     BinaryOperation {
-                                        span: 0..39,
+                                        span: 0..40,
                                         lhs: BinaryOperation(
                                             BinaryOperation {
-                                                span: 0..34,
+                                                span: 0..35,
                                                 lhs: BinaryOperation(
                                                     BinaryOperation {
-                                                        span: 0..20,
+                                                        span: 0..21,
                                                         lhs: BinaryOperation(
                                                             BinaryOperation {
-                                                                span: 0..7,
+                                                                span: 0..8,
                                                                 lhs: Literal(
                                                                     Literal {
-                                                                        span: 0..2,
+                                                                        span: 0..3,
                                                                         extras: ItemExtras {
                                                                             leading: [],
-                                                                            trailing: [],
+                                                                            trailing: [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
-                                                                                span: 0..2,
+                                                                                span: 0..3,
                                                                                 value: 0.0,
                                                                                 raw: "0",
                                                                                 ty: SingleType {
@@ -62,14 +66,18 @@ Ok(
                                                                 },
                                                                 rhs: Literal(
                                                                     Literal {
-                                                                        span: 5..7,
+                                                                        span: 5..8,
                                                                         extras: ItemExtras {
                                                                             leading: [],
-                                                                            trailing: [],
+                                                                            trailing: [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
-                                                                                span: 5..7,
+                                                                                span: 5..8,
                                                                                 value: 1.0,
                                                                                 raw: "1",
                                                                                 ty: SingleType {
@@ -88,17 +96,21 @@ Ok(
                                                         },
                                                         rhs: BinaryOperation(
                                                             BinaryOperation {
-                                                                span: 10..20,
+                                                                span: 10..21,
                                                                 lhs: Literal(
                                                                     Literal {
-                                                                        span: 10..13,
+                                                                        span: 10..14,
                                                                         extras: ItemExtras {
                                                                             leading: [],
-                                                                            trailing: [],
+                                                                            trailing: [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
-                                                                                span: 10..13,
+                                                                                span: 10..14,
                                                                                 value: 2.0,
                                                                                 raw: "2",
                                                                                 ty: SingleType {
@@ -115,14 +127,18 @@ Ok(
                                                                 },
                                                                 rhs: Literal(
                                                                     Literal {
-                                                                        span: 16..20,
+                                                                        span: 16..21,
                                                                         extras: ItemExtras {
                                                                             leading: [],
-                                                                            trailing: [],
+                                                                            trailing: [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
-                                                                                span: 16..20,
+                                                                                span: 16..21,
                                                                                 value: 3.0,
                                                                                 raw: "3",
                                                                                 ty: SingleType {
@@ -143,17 +159,21 @@ Ok(
                                                 },
                                                 rhs: BinaryOperation(
                                                     BinaryOperation {
-                                                        span: 23..34,
+                                                        span: 23..35,
                                                         lhs: Literal(
                                                             Literal {
-                                                                span: 23..28,
+                                                                span: 23..29,
                                                                 extras: ItemExtras {
                                                                     leading: [],
-                                                                    trailing: [],
+                                                                    trailing: [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
                                                                 },
                                                                 literal: Quantity(
                                                                     QuantityLiteral {
-                                                                        span: 23..28,
+                                                                        span: 23..29,
                                                                         value: 4.0,
                                                                         raw: "4",
                                                                         ty: SingleType {
@@ -170,14 +190,18 @@ Ok(
                                                         },
                                                         rhs: Literal(
                                                             Literal {
-                                                                span: 31..34,
+                                                                span: 31..35,
                                                                 extras: ItemExtras {
                                                                     leading: [],
-                                                                    trailing: [],
+                                                                    trailing: [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
                                                                 },
                                                                 literal: Quantity(
                                                                     QuantityLiteral {
-                                                                        span: 31..34,
+                                                                        span: 31..35,
                                                                         value: 1.0,
                                                                         raw: "1",
                                                                         ty: SingleType {
@@ -198,14 +222,18 @@ Ok(
                                         },
                                         rhs: Literal(
                                             Literal {
-                                                span: 37..39,
+                                                span: 37..40,
                                                 extras: ItemExtras {
                                                     leading: [],
-                                                    trailing: [],
+                                                    trailing: [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ],
                                                 },
                                                 literal: Quantity(
                                                     QuantityLiteral {
-                                                        span: 37..39,
+                                                        span: 37..40,
                                                         value: 1.0,
                                                         raw: "1",
                                                         ty: SingleType {

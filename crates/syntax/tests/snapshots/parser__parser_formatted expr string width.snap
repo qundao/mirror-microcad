@@ -50,7 +50,11 @@ Ok(
                                                             span: 9..18,
                                                             extras: ItemExtras {
                                                                 leading: [],
-                                                                trailing: [],
+                                                                trailing: [
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
+                                                                ],
                                                             },
                                                             parts: [
                                                                 Identifier {

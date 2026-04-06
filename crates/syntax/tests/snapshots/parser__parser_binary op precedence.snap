@@ -26,7 +26,7 @@ Ok(
                                 span: 0..9,
                                 lhs: BinaryOperation(
                                     BinaryOperation {
-                                        span: 0..3,
+                                        span: 0..4,
                                         lhs: QualifiedName(
                                             QualifiedName {
                                                 span: 0..1,
@@ -48,10 +48,14 @@ Ok(
                                         },
                                         rhs: Literal(
                                             Literal {
-                                                span: 2..3,
+                                                span: 2..4,
                                                 extras: ItemExtras {
                                                     leading: [],
-                                                    trailing: [],
+                                                    trailing: [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ],
                                                 },
                                                 literal: Integer(
                                                     IntegerLiteral {

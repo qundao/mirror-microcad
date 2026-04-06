@@ -12,46 +12,53 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Use(
-                    UseStatement {
-                        span: 0..26,
-                        attributes: [],
-                        keyword_span: 4..7,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        visibility: Some(
-                            Public,
-                        ),
-                        name: UseName {
-                            span: 8..16,
+                (
+                    Use(
+                        UseStatement {
+                            span: 0..26,
+                            attributes: [],
+                            keyword_span: 4..7,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            parts: [
-                                Identifier(
-                                    Identifier {
-                                        span: 8..11,
-                                        name: "foo",
-                                    },
-                                ),
-                                Identifier(
-                                    Identifier {
-                                        span: 13..16,
-                                        name: "bar",
-                                    },
-                                ),
-                            ],
-                        },
-                        use_as: Some(
-                            Identifier {
-                                span: 20..26,
-                                name: "foobar",
+                            visibility: Some(
+                                Public,
+                            ),
+                            name: UseName {
+                                span: 8..17,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [
+                                        Whitespace(
+                                            " ",
+                                        ),
+                                    ],
+                                },
+                                parts: [
+                                    Identifier(
+                                        Identifier {
+                                            span: 8..11,
+                                            name: "foo",
+                                        },
+                                    ),
+                                    Identifier(
+                                        Identifier {
+                                            span: 13..16,
+                                            name: "bar",
+                                        },
+                                    ),
+                                ],
                             },
-                        ),
-                    },
+                            use_as: Some(
+                                Identifier {
+                                    span: 20..26,
+                                    name: "foobar",
+                                },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

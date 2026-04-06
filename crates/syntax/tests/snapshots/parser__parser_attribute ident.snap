@@ -12,53 +12,56 @@ Ok(
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..19,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [
-                            Attribute {
-                                span: 0..14,
-                                is_inner: false,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 0..19,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            attributes: [
+                                Attribute {
+                                    span: 0..14,
+                                    is_inner: false,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    commands: [
+                                        Ident(
+                                            Identifier {
+                                                span: 2..8,
+                                                name: "export",
+                                            },
+                                        ),
+                                    ],
                                 },
-                                commands: [
-                                    Ident(
-                                        Identifier {
-                                            span: 2..8,
-                                            name: "export",
+                            ],
+                            name: Identifier {
+                                span: 14..15,
+                                name: "a",
+                            },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 18..19,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 18..19,
+                                            value: 1,
+                                            raw: "1",
                                         },
                                     ),
-                                ],
-                            },
-                        ],
-                        name: Identifier {
-                            span: 14..15,
-                            name: "a",
-                        },
-                        ty: None,
-                        value: Literal(
-                            Literal {
-                                span: 18..19,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
                                 },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 18..19,
-                                        value: 1,
-                                        raw: "1",
-                                    },
-                                ),
-                            },
-                        ),
-                    },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

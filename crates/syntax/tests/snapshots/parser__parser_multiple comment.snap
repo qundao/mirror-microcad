@@ -12,17 +12,21 @@ Ok(
                     Comment(
                         Comment {
                             span: 0..11,
-                            lines: [
-                                "comment1",
-                            ],
+                            inner: SingleLine(
+                                [
+                                    "// comment1",
+                                ],
+                            ),
                         },
                     ),
                     Comment(
                         Comment {
                             span: 16..27,
-                            lines: [
-                                "comment2",
-                            ],
+                            inner: SingleLine(
+                                [
+                                    "// comment2",
+                                ],
+                            ),
                         },
                     ),
                 ],

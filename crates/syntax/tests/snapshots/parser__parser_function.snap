@@ -12,128 +12,135 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Function(
-                    FunctionDefinition {
-                        span: 0..46,
-                        keyword_span: 0..2,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        doc: None,
-                        attributes: [],
-                        visibility: None,
-                        name: Identifier {
-                            span: 3..6,
-                            name: "foo",
-                        },
-                        parameters: ParameterList {
-                            span: 7..27,
+                (
+                    Function(
+                        FunctionDefinition {
+                            span: 0..46,
+                            keyword_span: 0..2,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            parameters: [
-                                Parameter {
-                                    span: 7..27,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [
-                                            Comment(
-                                                Comment {
-                                                    span: 17..27,
-                                                    lines: [
-                                                        "test",
-                                                    ],
-                                                },
-                                            ),
-                                        ],
-                                    },
-                                    name: Identifier {
-                                        span: 7..8,
-                                        name: "a",
-                                    },
-                                    ty: Some(
-                                        Single(
-                                            SingleType {
-                                                span: 10..16,
-                                                name: "Length",
-                                            },
-                                        ),
-                                    ),
-                                    default: None,
-                                },
-                            ],
-                        },
-                        return_type: Some(
-                            Single(
-                                SingleType {
-                                    span: 32..38,
-                                    name: "Length",
-                                },
-                            ),
-                        ),
-                        body: StatementList {
-                            span: 40..45,
-                            extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                            doc: None,
+                            attributes: [],
+                            visibility: None,
+                            name: Identifier {
+                                span: 3..6,
+                                name: "foo",
                             },
-                            statements: [],
-                            tail: Some(
-                                Expression(
-                                    ExpressionStatement {
-                                        span: 40..45,
+                            parameters: ParameterList {
+                                span: 7..27,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                parameters: [
+                                    Parameter {
+                                        span: 7..27,
                                         extras: ItemExtras {
                                             leading: [],
-                                            trailing: [],
-                                        },
-                                        attributes: [],
-                                        expression: BinaryOperation(
-                                            BinaryOperation {
-                                                span: 40..45,
-                                                lhs: QualifiedName(
-                                                    QualifiedName {
-                                                        span: 40..41,
-                                                        extras: ItemExtras {
-                                                            leading: [],
-                                                            trailing: [],
-                                                        },
-                                                        parts: [
-                                                            Identifier {
-                                                                span: 40..41,
-                                                                name: "a",
-                                                            },
-                                                        ],
-                                                    },
-                                                ),
-                                                operation: Operator {
-                                                    span: 42..43,
-                                                    operation: Multiply,
-                                                },
-                                                rhs: Literal(
-                                                    Literal {
-                                                        span: 44..45,
-                                                        extras: ItemExtras {
-                                                            leading: [],
-                                                            trailing: [],
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 44..45,
-                                                                value: 2,
-                                                                raw: "2",
-                                                            },
+                                            trailing: [
+                                                Comment(
+                                                    Comment {
+                                                        span: 17..27,
+                                                        inner: MultiLine(
+                                                            "test",
                                                         ),
                                                     },
                                                 ),
-                                            },
+                                            ],
+                                        },
+                                        name: Identifier {
+                                            span: 7..8,
+                                            name: "a",
+                                        },
+                                        ty: Some(
+                                            Single(
+                                                SingleType {
+                                                    span: 10..16,
+                                                    name: "Length",
+                                                },
+                                            ),
                                         ),
+                                        default: None,
+                                    },
+                                ],
+                            },
+                            return_type: Some(
+                                Single(
+                                    SingleType {
+                                        span: 32..38,
+                                        name: "Length",
                                     },
                                 ),
                             ),
+                            body: StatementList {
+                                span: 40..45,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                statements: [],
+                                tail: Some(
+                                    Expression(
+                                        ExpressionStatement {
+                                            span: 40..45,
+                                            extras: ItemExtras {
+                                                leading: [],
+                                                trailing: [],
+                                            },
+                                            attributes: [],
+                                            expression: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 40..45,
+                                                    lhs: QualifiedName(
+                                                        QualifiedName {
+                                                            span: 40..41,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
+                                                                ],
+                                                            },
+                                                            parts: [
+                                                                Identifier {
+                                                                    span: 40..41,
+                                                                    name: "a",
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                    operation: Operator {
+                                                        span: 42..43,
+                                                        operation: Multiply,
+                                                    },
+                                                    rhs: Literal(
+                                                        Literal {
+                                                            span: 44..45,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
+                                                            },
+                                                            literal: Integer(
+                                                                IntegerLiteral {
+                                                                    span: 44..45,
+                                                                    value: 2,
+                                                                    raw: "2",
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                ),
+                            },
                         },
-                    },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

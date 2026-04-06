@@ -12,77 +12,80 @@ Ok(
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..30,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [
-                            Attribute {
-                                span: 0..25,
-                                is_inner: false,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                commands: [
-                                    Assignment(
-                                        LocalAssignment {
-                                            span: 2..19,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            attributes: [],
-                                            name: Identifier {
-                                                span: 2..7,
-                                                name: "color",
-                                            },
-                                            ty: None,
-                                            value: Literal(
-                                                Literal {
-                                                    span: 10..19,
-                                                    extras: ItemExtras {
-                                                        leading: [],
-                                                        trailing: [],
-                                                    },
-                                                    literal: String(
-                                                        StringLiteral {
-                                                            span: 10..19,
-                                                            content: "#FF00FF",
-                                                        },
-                                                    ),
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 0..30,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
+                            },
+                            attributes: [
+                                Attribute {
+                                    span: 0..25,
+                                    is_inner: false,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    commands: [
+                                        Assignment(
+                                            LocalAssignment {
+                                                span: 2..19,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
                                                 },
-                                            ),
+                                                attributes: [],
+                                                name: Identifier {
+                                                    span: 2..7,
+                                                    name: "color",
+                                                },
+                                                ty: None,
+                                                value: Literal(
+                                                    Literal {
+                                                        span: 10..19,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        literal: String(
+                                                            StringLiteral {
+                                                                span: 10..19,
+                                                                content: "#FF00FF",
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    ],
+                                },
+                            ],
+                            name: Identifier {
+                                span: 25..26,
+                                name: "a",
+                            },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 29..30,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 29..30,
+                                            value: 1,
+                                            raw: "1",
                                         },
                                     ),
-                                ],
-                            },
-                        ],
-                        name: Identifier {
-                            span: 25..26,
-                            name: "a",
-                        },
-                        ty: None,
-                        value: Literal(
-                            Literal {
-                                span: 29..30,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
                                 },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 29..30,
-                                        value: 1,
-                                        raw: "1",
-                                    },
-                                ),
-                            },
-                        ),
-                    },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

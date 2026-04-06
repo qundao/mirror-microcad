@@ -12,81 +12,84 @@ Ok(
                 trailing: [],
             },
             statements: [
-                LocalAssignment(
-                    LocalAssignment {
-                        span: 0..12,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        attributes: [],
-                        name: Identifier {
-                            span: 0..1,
-                            name: "a",
-                        },
-                        ty: None,
-                        value: ArrayRange(
-                            ArrayRangeExpression {
-                                span: 4..12,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                start: ArrayItem {
-                                    span: 5..6,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
-                                    },
-                                    expression: Literal(
-                                        Literal {
-                                            span: 5..6,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 5..6,
-                                                    value: 1,
-                                                    raw: "1",
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                                end: ArrayItem {
-                                    span: 8..9,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
-                                    },
-                                    expression: Literal(
-                                        Literal {
-                                            span: 8..9,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 8..9,
-                                                    value: 3,
-                                                    raw: "3",
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                                ty: Some(
-                                    SingleType {
-                                        span: 10..12,
-                                        name: "mm",
-                                    },
-                                ),
+                (
+                    LocalAssignment(
+                        LocalAssignment {
+                            span: 0..12,
+                            extras: ItemExtras {
+                                leading: [],
+                                trailing: [],
                             },
-                        ),
-                    },
+                            attributes: [],
+                            name: Identifier {
+                                span: 0..1,
+                                name: "a",
+                            },
+                            ty: None,
+                            value: ArrayRange(
+                                ArrayRangeExpression {
+                                    span: 4..12,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    start: ArrayItem {
+                                        span: 5..6,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        expression: Literal(
+                                            Literal {
+                                                span: 5..6,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 5..6,
+                                                        value: 1,
+                                                        raw: "1",
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                    end: ArrayItem {
+                                        span: 8..9,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        expression: Literal(
+                                            Literal {
+                                                span: 8..9,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 8..9,
+                                                        value: 3,
+                                                        raw: "3",
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                    ty: Some(
+                                        SingleType {
+                                            span: 10..12,
+                                            name: "mm",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    None,
                 ),
             ],
             tail: None,

@@ -48,9 +48,9 @@ Ok(
                                             Comment(
                                                 Comment {
                                                     span: 4..16,
-                                                    lines: [
+                                                    inner: MultiLine(
                                                         "foobar",
-                                                    ],
+                                                    ),
                                                 },
                                             ),
                                         ],

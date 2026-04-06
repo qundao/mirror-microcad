@@ -12,33 +12,36 @@ Ok(
                 trailing: [],
             },
             statements: [
-                Use(
-                    UseStatement {
-                        span: 0..7,
-                        attributes: [],
-                        keyword_span: 0..3,
-                        extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
-                        },
-                        visibility: None,
-                        name: UseName {
-                            span: 4..7,
+                (
+                    Use(
+                        UseStatement {
+                            span: 0..7,
+                            attributes: [],
+                            keyword_span: 0..3,
                             extras: ItemExtras {
                                 leading: [],
                                 trailing: [],
                             },
-                            parts: [
-                                Identifier(
-                                    Identifier {
-                                        span: 4..7,
-                                        name: "foo",
-                                    },
-                                ),
-                            ],
+                            visibility: None,
+                            name: UseName {
+                                span: 4..7,
+                                extras: ItemExtras {
+                                    leading: [],
+                                    trailing: [],
+                                },
+                                parts: [
+                                    Identifier(
+                                        Identifier {
+                                            span: 4..7,
+                                            name: "foo",
+                                        },
+                                    ),
+                                ],
+                            },
+                            use_as: None,
                         },
-                        use_as: None,
-                    },
+                    ),
+                    None,
                 ),
             ],
             tail: None,
