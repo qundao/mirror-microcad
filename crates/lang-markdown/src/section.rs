@@ -34,15 +34,20 @@ impl Section {
 
 impl std::fmt::Display for Section {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "{} {}\n", "#".repeat(self.level as usize), self.heading)?;
-        self.content
-            .iter()
-            .enumerate()
-            .try_for_each(|(i, paragraph)| {
-                if i > 0 {
-                    writeln!(f)?;
-                }
-                write!(f, "{paragraph}")
-            })
+        write!(f, "{} {}\n", "#".repeat(self.level as usize), self.heading)?;
+        if self.is_empty() {
+            Ok(())
+        } else {
+            writeln!(f)?;
+            self.content
+                .iter()
+                .enumerate()
+                .try_for_each(|(i, paragraph)| {
+                    if i > 0 {
+                        writeln!(f)?;
+                    }
+                    write!(f, "{paragraph}")
+                })
+        }
     }
 }
