@@ -59,7 +59,7 @@ impl std::fmt::Display for TestResult {
 #[derive(Debug, Clone, PartialEq)]
 pub struct CodeBlockHeader {
     /// Name of the code block.
-    pub name: String,
+    pub name: Option<String>,
     /// An optional test result
     pub test_result: Option<TestResult>,
     /// Parameters of the code block inside `()`
@@ -87,21 +87,23 @@ impl CodeBlockHeader {
 
 impl std::fmt::Display for CodeBlockHeader {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let name = &self.name;
-        match &self.test_result {
-            Some(TestResult::Ok) => {
-                writeln!(f, "{}\n", Self::test_banner_string(name))?;
-                write!(f, "```µcad,{name}")?;
-            }
-            Some(test_result) => {
-                writeln!(f, "{}\n", Self::test_banner_string(name))?;
-                write!(f, "```µcad,{name}#{test_result}")?;
-            }
-            None => {
-                write!(f, "```µcad,{name}")?;
-            }
+        match &self.name {
+            Some(name) => writeln!(f, "{}\n", Self::test_banner_string(name))?,
+            None => {}
+        }
+
+        write!(f, "```µcad")?;
+        match &self.name {
+            Some(name) => write!(f, ",{name}")?,
+            None => {}
         };
 
+        match &self.test_result {
+            None | Some(TestResult::Ok) => {}
+            Some(test_result) => {
+                write!(f, "#{test_result}")?;
+            }
+        };
         if !self.parameters.is_empty() {
             write!(f, "({})", self.parameters.join(","))?;
         }
@@ -124,7 +126,7 @@ impl CodeBlock {
     /// Return the name of this code block.
     ///
     /// Must be unique within a markdown file.
-    pub fn name(&self) -> &str {
+    pub fn name(&self) -> &Option<String> {
         &self.header.name
     }
 
@@ -144,6 +146,10 @@ impl CodeBlock {
 
 impl std::fmt::Display for CodeBlock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}\n{}\n```", self.header, self.code)
+        writeln!(f, "{}", self.header)?;
+        if !self.code.is_empty() {
+            writeln!(f, "{}", self.code)?;
+        }
+        write!(f, "```")
     }
 }

@@ -34,7 +34,7 @@ impl Section {
 
 impl std::fmt::Display for Section {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {}\n", "#".repeat(self.level as usize), self.heading)?;
+        writeln!(f, "{} {}", "#".repeat(self.level as usize), self.heading)?;
         if self.content.is_empty() {
             Ok(())
         } else {

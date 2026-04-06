@@ -92,8 +92,9 @@ impl std::fmt::Display for Markdown {
 
 #[test]
 fn test_heading_parsing_and_display() {
-    let input = "# Top\nContent\n## Sub\nMore content";
+    let input = "# Top\nContent\n\n## Sub\nMore content";
     let md = Markdown::from_str(input).unwrap();
+    eprintln!("{md:#?}");
 
     assert_eq!(md.0.len(), 2);
     assert_eq!(md.0[0].level, 1);
