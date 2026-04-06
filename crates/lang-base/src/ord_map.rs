@@ -64,10 +64,7 @@ where
             map: vec
                 .iter()
                 .enumerate()
-                .filter_map(|(i, item)| match item.key() {
-                    Some(key) => Some((key, i)),
-                    None => None,
-                })
+                .filter_map(|(i, item)| item.key().map(|key| (key, i)))
                 .collect(),
             vec,
         }
