@@ -68,21 +68,25 @@ where
 impl Parse for CodeBlockHeader {
     fn parse(context: &mut ParseContext) -> Result<Self, ParseError> {
         // 1. Consume optional test banner and any subsequent empty lines
-        let line = context.current_line.as_ref().expect("A current line");
 
-        if Self::is_test_banner(line) {
-            context.lines.next();
+        let header_line = if Self::is_test_banner(context.current_line.expect("Some line")) {
+            context.next();
             while let Some((_, next_line)) = context.lines.peek() {
                 if next_line.trim().is_empty() {
-                    context.lines.next();
+                    context.next();
                 } else {
                     break;
                 }
             }
-        }
+            context
+                .lines
+                .peek()
+                .map(|(_, line)| line)
+                .ok_or(ParseError::UnexpectedEOF)?
+        } else {
+            context.current_line.expect("A current line")
+        };
 
-        // 2. Consume and validate the fence line (e.g., ```µcad,name#ok(param))
-        let (_, header_line) = context.lines.peek().ok_or(ParseError::UnexpectedEOF)?;
         let trimmed = header_line.trim();
         assert!(trimmed.starts_with("```"));
 
@@ -97,9 +101,9 @@ impl Parse for CodeBlockHeader {
         let name_end = hash_pos.or(paren_pos).unwrap_or(meta.len());
         let name_part = meta[..name_end].trim();
         let name = if let Some(comma_idx) = name_part.find(',') {
-            name_part[comma_idx + 1..].trim().to_string()
+            Some(name_part[comma_idx + 1..].trim().to_string())
         } else {
-            name_part.to_string()
+            None
         };
 
         // 5. Parse TestResult (#ok, #fail, etc.)
@@ -114,7 +118,7 @@ impl Parse for CodeBlockHeader {
         // 6. Parse Parameters ((hires, lowres))
         let mut parameters = Vec::new();
         if let Some(start) = paren_pos {
-            let end = meta.find(')').ok_or_else(|| ParseError::MalformedHeader)?;
+            let end = meta.find(')').ok_or(ParseError::MalformedHeader)?;
 
             parameters = meta[start + 1..end]
                 .split(',')
@@ -138,7 +142,6 @@ impl Parse for CodeBlock {
 
         let header = CodeBlockHeader::parse(context)?;
         let mut start_line_no = None;
-        context.next();
 
         // Consume until closing backticks
         while let Some((idx, line)) = context.next() {
@@ -197,11 +200,15 @@ impl Parse for Markdown {
             // 2. Code Blocks
             else if CodeBlockHeader::is_code_block_start(line) {
                 let block = CodeBlock::parse(context)?;
-                let block_name = block.name().to_string();
-                if code_block_names.contains(block.name()) {
-                    return Err(ParseError::DuplicatedCodeBlockName(block_name));
-                } else {
-                    code_block_names.insert(block_name);
+                match &block.name() {
+                    Some(block_name) => {
+                        if code_block_names.contains(block_name) {
+                            return Err(ParseError::DuplicatedCodeBlockName(block_name.clone()));
+                        } else {
+                            code_block_names.insert(block_name.clone());
+                        }
+                    }
+                    None => {}
                 }
 
                 current_section.content.push(Paragraph::CodeBlock(block));
@@ -209,7 +216,7 @@ impl Parse for Markdown {
             // 3. Tables
             else if trimmed.starts_with('|') {
                 let mut content = vec![line.to_string()];
-                while let Some((_, line)) = context.lines.next() {
+                while let Some((_, line)) = context.next() {
                     let trimmed = line.trim();
                     if !trimmed.starts_with("|") {
                         break;
