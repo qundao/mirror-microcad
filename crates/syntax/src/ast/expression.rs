@@ -324,13 +324,13 @@ pub struct If {
     pub else_body: Option<StatementList>,
 }
 
-/// A list of statements, with an optional "tail" expression
+/// A list of statements, with optional trailing whitespace kept and an optional "tail" expression
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct StatementList {
     pub span: Span,
     pub extras: ItemExtras,
-    pub statements: Vec<Statement>,
+    pub statements: Vec<(Statement, Option<String>)>,
     pub tail: Option<Box<Statement>>,
 }
 
