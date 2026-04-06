@@ -2,7 +2,6 @@
 
 Built-in line primitive.
 
-
 ## Arguments
 
 - `x0: Scalar`:

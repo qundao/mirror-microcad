@@ -4,16 +4,13 @@ A parametric **involute spur gear** profile.
 
 This type defines the geometric parameters for generating a 2D involute gear shape.
 
-
 ## See also
 
 - [`involute_gear_tooth`](#method.involute_gear_tooth): Generates a single gear tooth.
 
-
 ## References
 
 - [Involute Gear Geometry (Wikipedia)](https://en.wikipedia.org/wiki/Involute_gear)
-
 
 ## Arguments
 
