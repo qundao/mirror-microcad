@@ -3,7 +3,7 @@
 
 //! Generate a markdown book from a symbol tree.
 
-use std::io::Write;
+use std::{error::Error, io::Write};
 
 use microcad_builtin::Symbol;
 use microcad_lang::{builtin::Builtin, symbol::SymbolDef};
@@ -151,18 +151,21 @@ impl MdBook {
         self._generate_summary(writer, symbol, 0)
     }
 
-    fn write_symbol(&self, symbol: &Symbol) -> std::io::Result<()> {
-        symbol.riter().try_for_each(|symbol| {
-            let path = &self.path.join("src").join(Self::symbol_path(&symbol));
-            std::fs::create_dir_all(path.parent().expect("A parent"))?;
-            symbol.with_def(|def| match def {
-                SymbolDef::SourceFile(_)
-                | SymbolDef::Module(_)
-                | SymbolDef::Workbench(_)
-                | SymbolDef::Builtin(Builtin::Workbench(_)) => symbol.to_md().write(path),
-                _ => Ok(()),
+    fn write_symbol(&self, symbol: &Symbol) -> Result<(), Box<dyn Error>> {
+        Ok(symbol
+            .riter()
+            .try_for_each(|symbol| {
+                let path = &self.path.join("src").join(Self::symbol_path(&symbol));
+                std::fs::create_dir_all(path.parent().expect("A parent"))?;
+                symbol.with_def(|def| match def {
+                    SymbolDef::SourceFile(_)
+                    | SymbolDef::Module(_)
+                    | SymbolDef::Workbench(_)
+                    | SymbolDef::Builtin(Builtin::Workbench(_)) => symbol.to_md().write(path),
+                    _ => Ok(()),
+                })
             })
-        })
+            .map_err(|err| Box::new(err))?)
     }
 
     fn write_summary(&self, symbol: &Symbol) -> std::io::Result<()> {
@@ -182,7 +185,7 @@ impl MdBook {
 }
 
 impl DocGen for MdBook {
-    fn doc_gen(&self, symbol: &Symbol) -> std::io::Result<()> {
+    fn doc_gen(&self, symbol: &Symbol) -> Result<(), Box<dyn Error>> {
         std::fs::create_dir_all(self.path.join("src"))?;
 
         self.write_book_toml()?;

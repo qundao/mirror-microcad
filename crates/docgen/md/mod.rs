@@ -3,17 +3,14 @@
 
 //! Generate a single markdown file for symbol.
 
-mod markdown;
-mod section;
 mod to_md;
 
-pub use markdown::Markdown;
-pub use section::Section;
-pub use to_md::ToMd;
+use std::error::Error;
 
 use crate::DocGen;
 use microcad_builtin::Symbol;
 use microcad_lang::symbol::SymbolDef;
+pub(crate) use to_md::ToMd;
 
 /// Markdown generator that generates a markdown documentation file for each source file.
 pub struct Md {
@@ -29,13 +26,16 @@ impl Md {
         self.output_path.clone().unwrap_or_default().join(path)
     }
 
-    pub fn write_md_file(&self, symbol: &Symbol) -> std::io::Result<()> {
-        symbol.to_md().write(self.symbol_md_file_path(symbol))
+    pub fn write_md_file(&self, symbol: &Symbol) -> Result<(), Box<dyn Error>> {
+        Ok(symbol
+            .to_md()
+            .write(self.symbol_md_file_path(symbol))
+            .map_err(|err| Box::new(err))?)
     }
 }
 
 impl DocGen for Md {
-    fn doc_gen(&self, symbol: &Symbol) -> std::io::Result<()> {
+    fn doc_gen(&self, symbol: &Symbol) -> Result<(), Box<dyn Error>> {
         symbol
             .riter()
             .filter(|symbol| symbol.with_def(|def| matches!(def, SymbolDef::SourceFile(_))))
