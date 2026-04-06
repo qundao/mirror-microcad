@@ -64,8 +64,12 @@ where
     S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
     Ctx: 'tokens,
 {
-    comment_parser()
-        .map(ItemExtra::Comment)
+    // Inline the whitespace logic and the comment logic
+    let whitespace = select_ref! { Token::Whitespace(s) => ItemExtra::Whitespace(s.to_string()) };
+    let comment = comment_parser().map(ItemExtra::Comment);
+
+    comment
+        .or(whitespace)
         .repeated()
         .collect::<Vec<_>>()
         .boxed()

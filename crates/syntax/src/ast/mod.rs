@@ -52,5 +52,5 @@ pub struct ItemExtras {
 #[non_exhaustive]
 pub enum ItemExtra {
     Comment(Comment),
-    Whitespace(CompactString),
+    Whitespace(String),
 }
