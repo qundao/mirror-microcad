@@ -234,14 +234,3 @@ impl FromAst for StatementList {
         ))
     }
 }
-
-impl FromAst for Qualifier {
-    type AstNode = ast::AssignmentQualifier;
-
-    fn from_ast(node: &Self::AstNode, _context: &ParseContext) -> Result<Self, ParseError> {
-        Ok(match node {
-            ast::AssignmentQualifier::Const => Qualifier::Const,
-            ast::AssignmentQualifier::Prop => Qualifier::Prop,
-        })
-    }
-}
