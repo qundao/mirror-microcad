@@ -12,8 +12,7 @@ use microcad_lang::{
         ParameterList, SourceFile, Visibility, WorkbenchDefinition,
     },
 };
-
-use crate::md::{self, Markdown, Section};
+use microcad_lang_markdown::{Markdown, Paragraph, Section};
 
 /// Add an extra `#` to each heading line.
 fn indent_header_lines(lines: Vec<String>) -> Vec<String> {
@@ -34,41 +33,49 @@ fn fetch_doc(doc: &impl Doc) -> String {
     indent_header_lines(doc.doc().fetch_lines()).join("\n")
 }
 
-/// Trait to fetch markdown.
-pub trait ToMd {
-    fn to_md(&self) -> md::Markdown;
+/// Helper function to parse markdown from a string, but any occurring parse error will lead to a panic.
+///
+/// It is assumed that if the generated markdown is incorrect, it is an error in the generator, not on content side.
+fn parse(input: String) -> Markdown {
+    microcad_lang_markdown::parse(&input)
+        .expect("Internal Logic Error: Expected valid generated markdown.")
+}
+
+/// Trait to fetch markdown from a syntax element.
+pub(crate) trait ToMd {
+    fn to_md(&self) -> Markdown;
 }
 
 impl ToMd for InitDefinition {
-    fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# {}\n{}", self.signature(), fetch_doc(self)))
+    fn to_md(&self) -> Markdown {
+        parse(format!("# {}\n{}", self.signature(), fetch_doc(self)))
     }
 }
 
 impl ToMd for SourceFile {
-    fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
+    fn to_md(&self) -> Markdown {
+        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 
 impl ToMd for FunctionDefinition {
-    fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
+    fn to_md(&self) -> Markdown {
+        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 
 impl ToMd for ModuleDefinition {
-    fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
+    fn to_md(&self) -> Markdown {
+        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 
 impl ToMd for ParameterList {
-    fn to_md(&self) -> md::Markdown {
+    fn to_md(&self) -> Markdown {
         if self.is_empty() {
-            md::Markdown::default()
+            Markdown::default()
         } else {
-            md::Markdown::new(&format!(
+            parse(format!(
                 "# Parameters\n{}",
                 self.iter()
                     .map(|param| format!("- {}", param))
@@ -80,10 +87,9 @@ impl ToMd for ParameterList {
 }
 
 impl ToMd for WorkbenchDefinition {
-    fn to_md(&self) -> md::Markdown {
-        let mut md = md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)));
+    fn to_md(&self) -> Markdown {
+        let mut md = parse(format!("# {}\n{}", self.id(), fetch_doc(self)));
         md.nest(self.plan.to_md(), 1);
-
         self.inits().for_each(|init| {
             md.nest(init.to_md(), 1);
         });
@@ -93,26 +99,26 @@ impl ToMd for WorkbenchDefinition {
 }
 
 impl ToMd for microcad_lang::builtin::Builtin {
-    fn to_md(&self) -> md::Markdown {
-        md::Markdown::new(&format!("# {}\n{}", self.id(), fetch_doc(self)))
+    fn to_md(&self) -> Markdown {
+        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
     }
 }
 
 impl ToMd for SymbolDef {
-    fn to_md(&self) -> md::Markdown {
+    fn to_md(&self) -> Markdown {
         match &self {
             SymbolDef::SourceFile(source_file) => source_file.to_md(),
             SymbolDef::Module(module_definition) => module_definition.to_md(),
             SymbolDef::Workbench(workbench_definition) => workbench_definition.to_md(),
             SymbolDef::Function(function_definition) => function_definition.to_md(),
             SymbolDef::Builtin(builtin) => builtin.to_md(),
-            _ => md::Markdown::default(),
+            _ => Markdown::default(),
         }
     }
 }
 
 impl ToMd for Symbol {
-    fn to_md(&self) -> md::Markdown {
+    fn to_md(&self) -> Markdown {
         // Print one line description of a workbench
         fn symbol_one_line_item(symbol: &Symbol) -> String {
             let id = symbol.id();
@@ -143,7 +149,13 @@ impl ToMd for Symbol {
                 md.add_section(Section {
                     heading: heading.to_string(),
                     level: 2,
-                    content: symbols.iter().map(symbol_one_line_item).collect(),
+                    content: vec![Paragraph::Text(
+                        symbols
+                            .iter()
+                            .map(symbol_one_line_item)
+                            .collect::<Vec<_>>()
+                            .join("\n"),
+                    )],
                 });
             }
         }
@@ -282,10 +294,13 @@ impl ToMd for Symbol {
                     md.add_section(Section {
                         heading: "Constants".to_string(),
                         level: 2,
-                        content: constants
-                            .into_iter()
-                            .map(|(identifier, value)| format!("- `{identifier}` = `{value}`"))
-                            .collect(),
+                        content: vec![Paragraph::Text(
+                            constants
+                                .into_iter()
+                                .map(|(identifier, value)| format!("- `{identifier}` = `{value}`"))
+                                .collect::<Vec<_>>()
+                                .join("\n"),
+                        )],
                     });
                 }
             }
@@ -308,10 +323,13 @@ impl ToMd for Symbol {
                     md.add_section(Section {
                         heading: "Aliases".to_string(),
                         level: 2,
-                        content: aliases
-                            .into_iter()
-                            .map(|(identifier, name)| format!("- `{identifier}` => `{name}`"))
-                            .collect(),
+                        content: vec![Paragraph::Text(
+                            aliases
+                                .into_iter()
+                                .map(|(identifier, name)| format!("- `{identifier}` => `{name}`"))
+                                .collect::<Vec<_>>()
+                                .join("\n"),
+                        )],
                     });
                 }
             }

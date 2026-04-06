@@ -24,6 +24,6 @@ log = "0.4"
 clap = { version = "4", features = ["derive"] }
 derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
 
-
 microcad-lang = { workspace = true }
+microcad-lang-markdown = { workspace = true }
 microcad-builtin = { workspace = true }
