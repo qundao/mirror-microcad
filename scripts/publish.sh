@@ -32,6 +32,8 @@ PACKAGES=(
     "microcad-syntax"
     "microcad-lang-proc-macros"
     "microcad-lang-base"
+    "microcad-lang-format"
+    "microcad-lang-markdown"
     "microcad-lang"
     "microcad-export"
     "microcad-import"
