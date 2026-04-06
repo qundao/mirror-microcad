@@ -12,7 +12,6 @@ use chumsky::input::Input;
 use chumsky::inspector::Inspector;
 use chumsky::prelude::*;
 use chumsky::{IterParser, Parser, extra, select_ref};
-use compact_str::CompactString;
 
 pub fn comment_parser<'tokens, S, Ctx>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Comment, Full<Error<'tokens>, S, Ctx>> + 'tokens
@@ -45,7 +44,7 @@ where
     whitespace_parser().or_not().ignore_then(comment)
 }
 pub fn whitespace_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, CompactString, Full<Error<'tokens>, S, Ctx>>
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, String, Full<Error<'tokens>, S, Ctx>>
 + 'tokens
 + Clone
 where
@@ -53,7 +52,7 @@ where
     Ctx: 'tokens,
 {
     select_ref! {
-        Token::Whitespace(s) => CompactString::from(s.to_string())
+        Token::Whitespace(s) => s.to_string(),
     }
     .labelled("whitespace")
     .boxed()
