@@ -3,12 +3,7 @@
 
 //! A markdown code block.
 
-use std::str::FromStr;
-
-use microcad_lang::syntax::SourceFile;
-use microcad_lang_base::Capture;
-
-use crate::{Test, markdown::MarkdownError};
+use crate::parser::ParseError;
 
 /// Markdown test result: `ok, fail, warn, todo` etc.
 #[derive(Debug, Clone, PartialEq)]
@@ -28,7 +23,7 @@ pub enum TestResult {
 }
 
 impl std::str::FromStr for TestResult {
-    type Err = MarkdownError;
+    type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
@@ -38,7 +33,7 @@ impl std::str::FromStr for TestResult {
             "todo" => Ok(Self::Todo),
             "todo_fail" => Ok(Self::TodoFail),
             "todo_warn" => Ok(Self::TodoWarn),
-            s => Err(MarkdownError::InvalidTestResult(s.to_string())),
+            s => Err(ParseError::InvalidTestResult(s.to_string())),
         }
     }
 }
@@ -64,11 +59,11 @@ impl std::fmt::Display for TestResult {
 #[derive(Debug, Clone, PartialEq)]
 pub struct CodeBlockHeader {
     /// Name of the code block.
-    name: String,
+    pub name: String,
     /// An optional test result
-    test_result: Option<TestResult>,
+    pub test_result: Option<TestResult>,
     /// Parameters of the code block inside `()`
-    parameters: Vec<String>,
+    pub parameters: Vec<String>,
 }
 
 /// A code block header with, e.g.: `µcad#ok(hires)`
@@ -87,79 +82,6 @@ impl CodeBlockHeader {
             .iter()
             .any(|ext| line.starts_with(&format!("```{ext}")))
             || Self::is_test_banner(line)
-    }
-
-    /// Parse the header.
-    ///
-    /// The test banner is ignored during parsing.
-    pub(crate) fn parse(
-        line: &str,
-        lines: &mut std::iter::Peekable<std::iter::Enumerate<std::str::Lines<'_>>>,
-    ) -> Result<Self, MarkdownError> {
-        // 1. Consume optional test banner and any subsequent empty lines
-        if Self::is_test_banner(line) {
-            lines.next();
-            while let Some((_, next_line)) = lines.peek() {
-                if next_line.trim().is_empty() {
-                    lines.next();
-                } else {
-                    break;
-                }
-            }
-        }
-
-        // 2. Consume and validate the fence line (e.g., ```µcad,name#ok(param))
-        let (_, header_line) = lines.peek().ok_or(MarkdownError::UnexpectedEOF)?;
-        let trimmed = header_line.trim();
-
-        if !trimmed.starts_with("```") {
-            return Err(MarkdownError::MissingFence);
-        }
-
-        // Metadata is everything after "```"
-        let meta = &trimmed[3..];
-
-        // 3. Locate structural delimiters
-        let hash_pos = meta.find('#');
-        let paren_pos = meta.find('(');
-
-        // 4. Parse Name (supports "µcad,my_name" or just "my_name")
-        let name_end = hash_pos.or(paren_pos).unwrap_or(meta.len());
-        let name_part = meta[..name_end].trim();
-        let name = if let Some(comma_idx) = name_part.find(',') {
-            name_part[comma_idx + 1..].trim().to_string()
-        } else {
-            name_part.to_string()
-        };
-
-        // 5. Parse TestResult (#ok, #fail, etc.)
-        let mut test_result = Some(TestResult::Ok);
-        if let Some(start) = hash_pos {
-            let end = paren_pos.unwrap_or(meta.len());
-            let status_str = meta[start + 1..end].trim();
-
-            test_result = Some(TestResult::from_str(status_str)?);
-        }
-
-        // 6. Parse Parameters ((hires, lowres))
-        let mut parameters = Vec::new();
-        if let Some(start) = paren_pos {
-            let end = meta
-                .find(')')
-                .ok_or_else(|| MarkdownError::MalformedHeader)?;
-
-            parameters = meta[start + 1..end]
-                .split(',')
-                .map(|s| s.trim().to_string())
-                .filter(|s| !s.is_empty())
-                .collect();
-        }
-
-        Ok(Self {
-            name,
-            test_result,
-            parameters,
-        })
     }
 }
 
@@ -191,11 +113,11 @@ impl std::fmt::Display for CodeBlockHeader {
 #[derive(Debug, Clone, PartialEq)]
 pub struct CodeBlock {
     /// The header of code block starting with ```
-    header: CodeBlockHeader,
+    pub header: CodeBlockHeader,
     /// The actual code.
-    code: String,
+    pub code: String,
     /// Line offset inside markdown file.
-    line_offset: usize,
+    pub line_offset: usize,
 }
 
 impl CodeBlock {
@@ -217,47 +139,6 @@ impl CodeBlock {
 
     pub fn line_offset(&self) -> usize {
         self.line_offset
-    }
-
-    /// Return if code includes error or warning marker comments
-    pub fn has_error_markers(&self) -> bool {
-        self.code.lines().any(|line| line.contains("// error"))
-            || self.code.lines().any(|line| line.contains("// warning"))
-    }
-
-    pub(crate) fn parse(
-        line: &str,
-        lines: &mut std::iter::Peekable<std::iter::Enumerate<std::str::Lines<'_>>>,
-    ) -> Result<Self, MarkdownError> {
-        let mut code_lines = Vec::new();
-        let mut closed = false;
-
-        let header = CodeBlockHeader::parse(line, lines)?;
-        let mut start_line_no = None;
-        lines.next();
-
-        // Consume until closing backticks
-        while let Some((idx, line)) = lines.next() {
-            if start_line_no.is_none() {
-                start_line_no = Some(idx);
-            }
-
-            if line.trim().starts_with("```") {
-                closed = true;
-                break;
-            }
-            code_lines.push(line);
-        }
-
-        if !closed {
-            return Err(MarkdownError::UnexpectedEOF);
-        }
-
-        Ok(Self {
-            header,
-            code: code_lines.join("\n"),
-            line_offset: start_line_no.expect("Some line"),
-        })
     }
 }
 

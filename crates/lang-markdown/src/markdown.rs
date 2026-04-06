@@ -8,7 +8,7 @@ use std::str::FromStr;
 use derive_more::{Deref, DerefMut};
 use thiserror::Error;
 
-use crate::{CodeBlock, Paragraph, Section, code_block::CodeBlockHeader};
+use crate::{CodeBlock, Paragraph, ParseError, Section};
 
 #[derive(Error, Debug)]
 pub enum MarkdownError {
@@ -16,119 +16,34 @@ pub enum MarkdownError {
     #[error("IO error: {0}")]
     IoError(#[from] std::io::Error),
 
-    #[error("Unexpected end of file while parsing")]
-    UnexpectedEOF,
-
-    #[error("Malformed code block header: {0}")]
-    MalformedCodeBlock(String),
-
-    #[error("Invalid test result: {0}")]
-    InvalidTestResult(String),
-
-    #[error("Malformed header")]
-    MalformedHeader,
-
-    #[error("Duplicated code block name: {0}")]
-    DuplicatedCodeBlockName(String),
-
-    #[error("Missing fence")]
-    MissingFence,
+    #[error("Parse error: {0}")]
+    ParseError(#[from] ParseError),
 }
 
 /// Markdown struct, represented as a linear list of sections.
 #[derive(Debug, Default, Clone, Deref, DerefMut)]
 pub struct Markdown(Vec<Section>);
 
+impl Markdown {
+    pub fn new(sections: Vec<Section>) -> Self {
+        Self(sections)
+    }
+}
+
 impl std::str::FromStr for Markdown {
-    type Err = MarkdownError;
+    type Err = ParseError;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
-        let mut sections = Vec::new();
-        let mut current_section = Section::default();
-        let mut lines = input.lines().enumerate().peekable();
-
-        let mut code_block_names = std::collections::HashSet::new();
-
-        while let Some((idx, line)) = lines.next() {
-            let trimmed = line.trim();
-
-            if trimmed.is_empty() {
-                continue;
-            }
-
-            // 1. Headings
-            if trimmed.starts_with('#') {
-                if !current_section.heading.is_empty() || !current_section.content.is_empty() {
-                    sections.push(current_section);
-                }
-
-                let level = trimmed.chars().take_while(|&c| c == '#').count() as i64;
-                assert!(level > 0);
-
-                current_section = Section {
-                    heading: trimmed.trim_start_matches('#').trim().to_string(),
-                    level,
-                    content: Vec::new(),
-                };
-            }
-            // 2. Code Blocks
-            else if CodeBlockHeader::is_code_block_start(line) {
-                let block = CodeBlock::parse(line, &mut lines)?;
-                let block_name = block.name().to_string();
-                if code_block_names.contains(block.name()) {
-                    return Err(MarkdownError::DuplicatedCodeBlockName(block_name));
-                } else {
-                    code_block_names.insert(block_name);
-                }
-
-                current_section.content.push(Paragraph::CodeBlock(block));
-            }
-            // 3. Tables
-            else if trimmed.starts_with('|') {
-                let mut content = vec![line.to_string()];
-                while let Some((_, line)) = lines.next() {
-                    let trimmed = line.trim();
-                    if !trimmed.starts_with("|") {
-                        break;
-                    }
-                    content.push(line.to_string());
-                }
-                current_section
-                    .content
-                    .push(Paragraph::Table(content.join("\n").trim().to_string()));
-            }
-            // 4. Text
-            else {
-                let mut content = vec![line.to_string()];
-                while let Some((_, line)) = lines.next() {
-                    let trimmed = line.trim();
-                    if trimmed.is_empty() {
-                        break;
-                    }
-                    content.push(line.to_string());
-                }
-                current_section
-                    .content
-                    .push(Paragraph::Text(content.join("\n").trim().to_string()));
-            }
-        }
-
-        sections.push(current_section);
-        Ok(Self(sections))
+        crate::parse(input)
     }
 }
 
 impl Markdown {
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, MarkdownError> {
         let input = std::fs::read_to_string(path)?;
-        Markdown::from_str(&input)
+        Markdown::from_str(&input).map_err(|err| err.into())
     }
 
-    pub fn update(path: impl AsRef<std::path::Path>) -> Result<Self, MarkdownError> {
-        let md = Markdown::load(&path)?;
-        md.write(path)?;
-        Ok(md)
-    }
     /// Write markdown to file.
     pub fn write(&self, path: impl AsRef<std::path::Path>) -> Result<(), MarkdownError> {
         use std::io::Write;
@@ -166,7 +81,7 @@ impl std::fmt::Display for Markdown {
         for (i, section) in self.0.iter().enumerate() {
             // Add a newline between sections for readability,
             // but not before the very first one.
-            if i > 0 {
+            if i > 0 && !section.is_empty() {
                 writeln!(f)?;
             }
             write!(f, "{section}")?;
