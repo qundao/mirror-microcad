@@ -121,10 +121,7 @@ impl FromAst for IfStatement {
             if_ref: context.src_ref(&node.if_span),
             cond: Expression::from_ast(&node.condition, context)?,
             body: Body::from_ast(&node.body, context)?,
-            next_if_ref: node
-                .next_if_span
-                .as_ref()
-                .map(|span| context.src_ref(span)),
+            next_if_ref: node.next_if_span.as_ref().map(|span| context.src_ref(span)),
             next_if: node
                 .next_if
                 .as_ref()
