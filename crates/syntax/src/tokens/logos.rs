@@ -197,7 +197,7 @@ fn whitespace_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'
 }
 
 fn single_line_comment_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'a, str>> {
-    Some(lex.slice()[2..].trim().into())
+    Some(lex.slice().trim().into())
 }
 
 fn string_token_callback<'a>(
