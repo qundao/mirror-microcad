@@ -1,0 +1,28 @@
+---
+source: crates/lang-markdown/tests/parser.rs
+expression: "Markdown :: load(path).expect(\"No errors\")"
+---
+# Code blocks
+
+## Empty code block
+
+[![test](.test/test_empty.svg)](.test/test_empty.log)
+
+```µcad,test_empty
+```
+
+## Code block with failing test
+
+[![test](.test/test_fail.svg)](.test/test_fail.log)
+
+```µcad,test_fail#fail
+Circle(r = 42mm);
+```
+
+## Code block with parameters
+
+[![test](.test/test_params.svg)](.test/test_params.log)
+
+```µcad,test_params(hires)
+Rect(r = 42mm);
+```
