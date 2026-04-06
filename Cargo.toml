@@ -11,6 +11,8 @@ default-members = [
     "crates/import",
     "crates/lang",
     "crates/lang-base",
+    "crates/lang-format",
+    "crates/lang-markdown",
     "crates/lang-proc-macros",
     "crates/lsp",
     "crates/docgen",
@@ -32,6 +34,8 @@ members = [
     "crates/import",
     "crates/lang",
     "crates/lang-base",
+    "crates/lang-format",
+    "crates/lang-markdown",
     "crates/lang-proc-macros",
     "crates/lsp",
     "crates/docgen",
@@ -73,6 +77,8 @@ microcad-import = { path = "crates/import", version = "0.4.0" }
 microcad-export = { path = "crates/export", version = "0.4.0" }
 microcad-lang = { path = "crates/lang", version = "0.4.0" }
 microcad-lang-base = { path = "crates/lang-base", version = "0.4.0" }
+microcad-lang-format = { path = "crates/lang-format", version = "0.4.0" }
+microcad-lang-markdown = { path = "crates/lang-markdown", version = "0.4.0" }
 microcad-lang-proc-macros = { path = "crates/lang-proc-macros", version = "0.4.0" }
 microcad-docgen = { path = "crates/docgen", version = "0.4.0" }
 microcad-builtin = { path = "crates/builtin", version = "0.4.0" }
