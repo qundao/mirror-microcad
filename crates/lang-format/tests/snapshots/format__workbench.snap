@@ -1,0 +1,7 @@
+---
+source: crates/lang-format/tests/format.rs
+expression: "format_str(& source, FormatConfig :: default()).expect(\"No errors\")"
+---
+sketch MySketch(d: Length) {
+    Circle(42mm);
+}

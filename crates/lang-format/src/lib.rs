@@ -11,8 +11,23 @@ mod ty;
 pub(crate) type DocBuilder<'a> = pretty::DocBuilder<'a, Arena<'a>>;
 pub(crate) use pretty::{Arena, DocAllocator};
 
+pub struct FormatConfig {
+    pub max_width: usize,
+    pub indent_size: usize,
+}
+
+impl Default for FormatConfig {
+    fn default() -> Self {
+        Self {
+            max_width: 80,
+            indent_size: 4,
+        }
+    }
+}
+
 pub struct Formatter<'a> {
     arena: &'a Arena<'a>,
+    config: FormatConfig,
 }
 
 pub(crate) trait Format {
@@ -123,15 +138,21 @@ impl Format for ast::Identifier {
 impl Format for ast::Comment {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
-        let comment_lines = self.lines.iter().map(|line| a.text(format!("// {line}")));
-        a.intersperse(comment_lines, a.hardline()) // `hardline` assures line break.
+        match &self.inner {
+            ast::CommentInner::SingleLine(items) => {
+                let comment_lines = items.iter().map(|line| a.text(line.clone()));
+                a.intersperse(comment_lines, a.hardline()) // `hardline` assures line break.
+            }
+            ast::CommentInner::MultiLine(line) => a.text(line.clone()).append(a.softline()),
+        }
     }
 }
 
 impl Format for ast::ItemExtra {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        match self {
+        match &self {
             ast::ItemExtra::Comment(comment) => comment.format(f),
+            ast::ItemExtra::Whitespace(_) => f.arena.nil(),
             _ => todo!(),
         }
     }
@@ -144,10 +165,24 @@ impl Format for ast::SourceFile {
 }
 
 /// Format µcad source file.
-pub fn format(source_file: &ast::SourceFile) -> String {
+pub fn format(source_file: &ast::SourceFile, config: FormatConfig) -> String {
     let formatter = Formatter {
         arena: &Arena::new(),
+        config,
     };
 
-    source_file.format(&formatter).pretty(80).to_string()
+    source_file
+        .format(&formatter)
+        .pretty(formatter.config.max_width)
+        .to_string()
+}
+
+/// High-level API to format a &str containing µcad source code.
+pub fn format_str(
+    source: &str,
+    config: FormatConfig,
+) -> Result<String, Vec<microcad_syntax::ParseError>> {
+    let tokens: Vec<_> = microcad_syntax::lex(&source).collect();
+    let source_file = microcad_syntax::parse(&tokens)?;
+    Ok(format(&source_file, config))
 }

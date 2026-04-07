@@ -269,18 +269,28 @@ impl Format for ast::Statement {
     }
 }
 
-impl Format for Vec<ast::Statement> {
+impl Format for Vec<(ast::Statement, Option<String>)> {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
         let a = f.arena;
 
         // Join statements with a hardline so they sit on separate lines
         a.intersperse(
-            self.iter()
-                .map(|statement| match statement.ends_with_semicolon() {
-                    true => statement.format(f).append(";"),
+            self.iter().enumerate().map(|(i, (statement, whitespace))| {
+                match statement.ends_with_semicolon() {
+                    true => {
+                        let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
+                        statement.format(f).append(";").append(
+                            if whitespace.is_empty() || i >= self.len() - 1 {
+                                a.nil()
+                            } else {
+                                a.hardline()
+                            },
+                        )
+                    }
                     false => statement.format(f),
-                }),
-            a.hardline(),
+                }
+            }),
+            a.softline(),
         )
     }
 }

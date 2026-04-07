@@ -17,3 +17,6 @@ keywords.workspace = true
 [dependencies]
 microcad-syntax = { workspace = true }
 pretty = "0.12"
+
+[dev-dependencies]
+insta = "1.45.0"
