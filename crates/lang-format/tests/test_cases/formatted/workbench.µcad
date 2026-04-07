@@ -1,0 +1,30 @@
+sketch A(d: Length) {
+    Circle(d);
+}
+
+sketch A(a: Length, b: Length) {
+    Circle(d = a + b);
+}
+
+sketch B(d: Length) {
+    prop test = 3.0;
+    Circle(d);
+}
+
+sketch C(d: Length) {
+    prop test = 3.0;
+
+    Circle(d);
+}
+
+sketch D(
+    a: Length,
+    b: Length,
+    c: Length,
+    d: Length,
+    e: Length,
+) {
+    prop test = 3.0;
+
+    Circle(d);
+}
