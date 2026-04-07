@@ -24,7 +24,7 @@
     ╭─[../books/language/src/structure/workbenches/elements/init_code.md:53:5]
  52 │     init( diameter: Length ) { radius = diameter / 2; }
  53 │     Circle(radius + thickness) - Circle(radius)
-    ·     ─────────────┬────────────
+    ·     ─────────────┬─────────────
     ·                  ╰── Got: Circle( 15mm )
  54 │ }
     ╰────

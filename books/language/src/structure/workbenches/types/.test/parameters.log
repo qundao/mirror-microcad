@@ -38,8 +38,8 @@
     ╭─[../books/language/src/structure/workbenches/types/operations.md:66:8]
  65 │ op punch_disk(radius: Length) {
  66 │     if @input.count() == 1 {
-    ·        ─────────┬─────────
-    ·                 ╰── Not a boolean
+    ·        ──────────┬─────────
+    ·                  ╰── Not a boolean
  67 │         { 
     ╰────
 Unexpected error(s) which did occur in line(s): 66

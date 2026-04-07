@@ -28,16 +28,18 @@
  70 │ ╭─▶     init(diameter: Length) { 
  71 │ │           radius = diameter / 2;
  72 │ │           // thickness has been set automatically by the default in the building plan 
- 73 │ ├─▶     }
+ 73 │ │       }
+ 74 │ │       
+ 75 │ ├─▶     Circle(radius = radius + thickness) - Circle(radius)
     · ╰──── Building plan incomplete. Missing properties: thickness
- 74 │         
+ 76 │     }
     ╰────
   × error: 75:12: Workbench Circle cannot find initialization for those arguments
     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:75:5]
  74 │     
  75 │     Circle(radius = radius + thickness) - Circle(radius)
-    ·     ─────────────────┬─────────────────
-    ·                      ╰── Got: Circle( radius = <NO VALUE> )
+    ·     ──────────────────┬─────────────────
+    ·                       ╰── Got: Circle( radius = <NO VALUE> )
  76 │ }
     ╰────
   help: Possible initializations:

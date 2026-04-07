@@ -38,8 +38,8 @@
     ╭─[../books/language/src/structure/workbenches/types/operations.md:41:8]
  40 │     // check number of input models
  41 │     if @input.count() == 2 {
-    ·        ─────────┬─────────
-    ·                 ╰── Not a boolean
+    ·        ──────────┬─────────
+    ·                  ╰── Not a boolean
  42 │         // make hole by subtracting both inputs
     ╰────
 Unexpected error(s) which did occur in line(s): 41
