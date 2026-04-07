@@ -10,7 +10,10 @@ impl FromAst for DocBlock {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(DocBlock(Refer::new(
-            node.lines.clone(),
+            match &node.inner {
+                ast::CommentInner::SingleLine(items) => items.clone(),
+                ast::CommentInner::MultiLine(_) => unreachable!(),
+            },
             context.src_ref(&node.span),
         )))
     }
@@ -20,15 +23,19 @@ impl FromAst for InnerDocComment {
     type AstNode = ast::Comment;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        assert_eq!(node.lines.len(), 1, "There should not more than 1 line");
-        let line = node
-            .lines
-            .first()
-            .cloned()
-            .unwrap_or_default()
-            .trim()
-            .to_string();
+        match &node.inner {
+            ast::CommentInner::SingleLine(items) => {
+                assert_eq!(items.len(), 1, "There should no more than 1 line");
+                let line = items
+                    .first()
+                    .cloned()
+                    .unwrap_or_default()
+                    .trim()
+                    .to_string();
 
-        Ok(Self(Refer::new(line, context.src_ref(&node.span))))
+                Ok(Self(Refer::new(line, context.src_ref(&node.span))))
+            }
+            ast::CommentInner::MultiLine(_) => unreachable!(),
+        }
     }
 }

@@ -227,6 +227,7 @@ impl FromAst for StatementList {
         Ok(StatementList(
             node.statements
                 .iter()
+                .map(|(statement, _)| statement)
                 .chain(node.tail.iter().map(|tail| tail.as_ref()))
                 .filter(|statement| !matches!(statement, ast::Statement::Comment(_)))
                 .map(|statement| Statement::from_ast(statement, context))
