@@ -19,7 +19,7 @@ impl Format for ast::LiteralKind {
             ast::LiteralKind::Integer(lit) => lit.format(f),
             ast::LiteralKind::Float(lit) => lit.format(f),
             ast::LiteralKind::Quantity(lit) => lit.format(f),
-            ast::LiteralKind::Error(_) => unreachable!(),
+            ast::LiteralKind::Error(_) => f.arena.nil(),
         }
     }
 }

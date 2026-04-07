@@ -1,8 +1,11 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use std::collections::HashMap;
+
 use microcad_syntax::ast::{self, ItemExtras};
 
+mod error;
 mod expression;
 mod literal;
 mod statement;
@@ -11,6 +14,9 @@ mod ty;
 pub(crate) type DocBuilder<'a> = pretty::DocBuilder<'a, Arena<'a>>;
 pub(crate) use pretty::{Arena, DocAllocator};
 
+use crate::error::FormatError;
+
+#[derive(Debug, Clone)]
 pub struct FormatConfig {
     pub max_width: usize,
     pub indent_size: usize,
@@ -32,6 +38,17 @@ pub struct Formatter<'a> {
 
 pub(crate) trait Format {
     fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a>;
+
+    fn formatted_string(&self, config: FormatConfig) -> String {
+        let formatter = Formatter {
+            arena: &Arena::new(),
+            config,
+        };
+
+        self.format(&formatter)
+            .pretty(formatter.config.max_width)
+            .to_string()
+    }
 }
 
 pub(crate) fn format_with_extras<'a>(
@@ -165,24 +182,52 @@ impl Format for ast::SourceFile {
 }
 
 /// Format µcad source file.
-pub fn format(source_file: &ast::SourceFile, config: FormatConfig) -> String {
-    let formatter = Formatter {
-        arena: &Arena::new(),
-        config,
-    };
-
-    source_file
-        .format(&formatter)
-        .pretty(formatter.config.max_width)
-        .to_string()
+pub fn format(source_file: &ast::SourceFile, config: &FormatConfig) -> String {
+    source_file.formatted_string(config.clone())
 }
 
 /// High-level API to format a &str containing µcad source code.
-pub fn format_str(
-    source: &str,
-    config: FormatConfig,
-) -> Result<String, Vec<microcad_syntax::ParseError>> {
+pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, FormatError> {
     let tokens: Vec<_> = microcad_syntax::lex(&source).collect();
-    let source_file = microcad_syntax::parse(&tokens)?;
-    Ok(format(&source_file, config))
+    let source_file =
+        microcad_syntax::parse(&tokens).map_err(|err| FormatError::ParseErrors(err))?;
+    Ok(format(&source_file, &config))
+}
+
+/// High-level API to format an entire mdbook.
+///
+/// TODO: needs proper error handling.
+pub fn format_mdbook(
+    mdbook: &mut microcad_lang_markdown::MdBookDirectory,
+    config: &FormatConfig,
+) -> Result<(), FormatError> {
+    let mut errors_by_file: HashMap<std::path::PathBuf, Vec<FormatError>> = HashMap::new();
+
+    // 1. Iterate over code blocks. 'path' is the PathBuf of the .md file.
+    mdbook.code_blocks_mut().for_each(|(path, code_block)| {
+        if let Err(err) = format_str(&code_block.code, config) {
+            errors_by_file.entry(path.clone()).or_default().push(
+                FormatError::CodeBlockFormatError {
+                    name: code_block.name().as_ref().cloned().unwrap_or_default(),
+                    error: Box::new(err),
+                },
+            );
+        } else if let Ok(formatted) = format_str(&code_block.code, config) {
+            // Only update the code if formatting succeeded
+            code_block.code = formatted;
+        }
+    });
+
+    // 2. Persist the successfully formatted parts to disk
+    mdbook.save_all()?;
+
+    // 3. If we hit issues, return the map in the specific variant
+    if !errors_by_file.is_empty() {
+        return Err(FormatError::MdBookFormatError {
+            src_path: mdbook.src_path.clone(),
+            errors: errors_by_file,
+        });
+    }
+
+    Ok(())
 }
