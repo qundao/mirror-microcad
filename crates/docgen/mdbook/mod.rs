@@ -161,7 +161,7 @@ impl MdBook {
                     SymbolDef::SourceFile(_)
                     | SymbolDef::Module(_)
                     | SymbolDef::Workbench(_)
-                    | SymbolDef::Builtin(Builtin::Workbench(_)) => symbol.to_md().write(path),
+                    | SymbolDef::Builtin(Builtin::Workbench(_)) => symbol.to_md().save(path),
                     _ => Ok(()),
                 })
             })

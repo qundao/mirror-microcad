@@ -29,7 +29,7 @@ impl Md {
     pub fn write_md_file(&self, symbol: &Symbol) -> Result<(), Box<dyn Error>> {
         Ok(symbol
             .to_md()
-            .write(self.symbol_md_file_path(symbol))
+            .save(self.symbol_md_file_path(symbol))
             .map_err(|err| Box::new(err))?)
     }
 }
