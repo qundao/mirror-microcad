@@ -11,7 +11,7 @@ macro_rules! test_case {
                 .expect("No errors");
             insta::assert_snapshot!(
                 name,
-                format_str(&source, FormatConfig::default()).expect("No errors")
+                format_str(&source, &FormatConfig::default()).expect("No errors")
             );
         }
     };

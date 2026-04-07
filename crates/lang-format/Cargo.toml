@@ -15,8 +15,11 @@ license.workspace = true
 keywords.workspace = true
 
 [dependencies]
+microcad-lang-markdown = { workspace = true }
 microcad-syntax = { workspace = true }
+
 pretty = "0.12"
+thiserror = "2.0"
 
 [dev-dependencies]
 insta = "1.45.0"
