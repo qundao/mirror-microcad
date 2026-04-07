@@ -464,7 +464,7 @@ fn parser<'tokens>()
             .with_extras()
             .map_with(
                 |((attributes, expression), extras), e| ExpressionStatement {
-                    span: e.span(),
+                    span: e.span(), // FIXME: This should only return the span of attributes and expression
                     extras,
                     attributes,
                     expression,
