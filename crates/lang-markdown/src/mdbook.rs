@@ -53,8 +53,6 @@ impl MdBookDirectory {
             root.to_path_buf()
         };
 
-        println!("{root:?}");
-
         // 1. Validate book.toml existence
         if !root.join("book.toml").exists() {
             return Err(MdBookDirectoryError::NoMdBookDirectory(root));
