@@ -11,6 +11,10 @@ use crate::{CodeBlock, Markdown, MarkdownError};
 
 #[derive(Debug, Error)]
 pub enum MdBookDirectoryError {
+    /// Io Error
+    #[error("IO error: {0}")]
+    IoError(#[from] std::io::Error),
+
     /// The directory does not contain an mdbook.
     #[error("No mdbook in directory: {0}")]
     NoMdBookDirectory(std::path::PathBuf),
@@ -41,9 +45,19 @@ impl MdBookDirectory {
     pub fn new(path: impl AsRef<std::path::Path>) -> Result<Self, MdBookDirectoryError> {
         let root = path.as_ref();
 
+        let root = if root.ends_with("book.toml") {
+            root.parent()
+                .map(|path| path.to_path_buf())
+                .unwrap_or(std::env::current_dir()?)
+        } else {
+            root.to_path_buf()
+        };
+
+        println!("{root:?}");
+
         // 1. Validate book.toml existence
         if !root.join("book.toml").exists() {
-            return Err(MdBookDirectoryError::NoMdBookDirectory(root.to_path_buf()));
+            return Err(MdBookDirectoryError::NoMdBookDirectory(root));
         }
 
         // 2. Identify the src directory
@@ -80,12 +94,17 @@ impl MdBookDirectory {
         })
     }
 
+    pub fn abs_md_file(&self, md_file: impl AsRef<std::path::Path>) -> std::path::PathBuf {
+        self.src_path.join(md_file.as_ref())
+    }
+
     pub fn save_all(&self) -> Result<(), MdBookDirectoryError> {
         self.md_files.iter().try_for_each(|(md_file, md)| {
-            md.save(md_file).map_err(|err| MdBookDirectoryError::Parse {
-                file: md_file.clone(),
-                err,
-            })
+            md.save(self.abs_md_file(md_file))
+                .map_err(|err| MdBookDirectoryError::Parse {
+                    file: md_file.clone(),
+                    err,
+                })
         })
     }
 
