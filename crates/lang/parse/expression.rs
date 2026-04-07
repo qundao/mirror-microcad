@@ -241,6 +241,7 @@ macro_rules! tuple_expression {
             .statements
             .statements
             .first()
+            .map(|(statement, _)| statement)
             .or(ast.statements.tail.as_deref())
             .expect("empty source");
         let tuple_expression = match statement {
