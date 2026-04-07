@@ -120,19 +120,22 @@ pub fn format_mdbook(
     let mut errors_by_file: HashMap<std::path::PathBuf, Vec<FormatError>> = HashMap::new();
 
     // 1. Iterate over code blocks. 'path' is the PathBuf of the .md file.
-    mdbook.code_blocks_mut().for_each(|(path, code_block)| {
-        if let Err(err) = format_str(&code_block.code, config) {
-            errors_by_file.entry(path.clone()).or_default().push(
-                FormatError::CodeBlockFormatError {
-                    name: code_block.name().as_ref().cloned().unwrap_or_default(),
-                    error: Box::new(err),
-                },
-            );
-        } else if let Ok(formatted) = format_str(&code_block.code, config) {
-            // Only update the code if formatting succeeded
-            code_block.code = formatted;
-        }
-    });
+    mdbook
+        .code_blocks_mut()
+        .filter(|(_, code_block)| code_block.can_format())
+        .for_each(|(path, code_block)| {
+            if let Err(err) = format_str(&code_block.code, config) {
+                errors_by_file.entry(path.clone()).or_default().push(
+                    FormatError::CodeBlockFormatError {
+                        name: code_block.name().as_ref().cloned().unwrap_or_default(),
+                        error: Box::new(err),
+                    },
+                );
+            } else if let Ok(formatted) = format_str(&code_block.code, config) {
+                // Only update the code if formatting succeeded
+                code_block.code = formatted;
+            }
+        });
 
     // 2. Persist the successfully formatted parts to disk
     mdbook.save_all()?;
