@@ -80,13 +80,12 @@ impl MdBookDirectory {
         })
     }
 
-    pub fn update_book(&self) -> Result<(), MdBookDirectoryError> {
+    pub fn save_all(&self) -> Result<(), MdBookDirectoryError> {
         self.md_files.iter().try_for_each(|(md_file, md)| {
-            md.write(md_file)
-                .map_err(|err| MdBookDirectoryError::Parse {
-                    file: md_file.clone(),
-                    err,
-                })
+            md.save(md_file).map_err(|err| MdBookDirectoryError::Parse {
+                file: md_file.clone(),
+                err,
+            })
         })
     }
 
@@ -94,6 +93,16 @@ impl MdBookDirectory {
     pub fn code_blocks(&self) -> impl Iterator<Item = (std::path::PathBuf, &CodeBlock)> {
         self.md_files.iter().flat_map(|(md_file, md)| {
             md.code_blocks()
+                .map(|code_block| (md_file.clone(), code_block))
+        })
+    }
+
+    /// Returns an iterator over all code blocks in the entire document.
+    pub fn code_blocks_mut(
+        &mut self,
+    ) -> impl Iterator<Item = (std::path::PathBuf, &mut CodeBlock)> {
+        self.md_files.iter_mut().flat_map(|(md_file, md)| {
+            md.code_blocks_mut()
                 .map(|code_block| (md_file.clone(), code_block))
         })
     }

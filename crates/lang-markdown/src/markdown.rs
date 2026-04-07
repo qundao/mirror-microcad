@@ -45,7 +45,7 @@ impl Markdown {
     }
 
     /// Write markdown to file.
-    pub fn write(&self, path: impl AsRef<std::path::Path>) -> Result<(), MarkdownError> {
+    pub fn save(&self, path: impl AsRef<std::path::Path>) -> Result<(), MarkdownError> {
         use std::io::Write;
         let mut file = std::fs::File::create(path)?;
         Ok(file.write_all(self.to_string().as_bytes())?)
@@ -66,6 +66,20 @@ impl Markdown {
         self.0
             .iter() // Iterate over Vec<Section>
             .flat_map(|section| section.content.iter()) // Flatten Paragraphs
+            .filter_map(|paragraph| {
+                if let Paragraph::CodeBlock(block) = paragraph {
+                    Some(block)
+                } else {
+                    None
+                }
+            })
+    }
+
+    /// Returns an mut iterator over all code blocks in the entire document.
+    pub fn code_blocks_mut(&mut self) -> impl Iterator<Item = &mut CodeBlock> {
+        self.0
+            .iter_mut() // Iterate over Vec<Section>
+            .flat_map(|section| section.content.iter_mut()) // Flatten Paragraphs
             .filter_map(|paragraph| {
                 if let Paragraph::CodeBlock(block) = paragraph {
                     Some(block)
