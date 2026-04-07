@@ -19,7 +19,7 @@
     ·              ──┬─
     ·                ╰── Within this initializer
  63 │   if std::math::PI == l { } // error
-    ·   ─────────────────┬────────────────
+    ·   ─────────────────┬─────────────────
     ·                    ╰── This if statement is not allowed
  64 │ } } K(1cm);
     ╰────

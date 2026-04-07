@@ -12,8 +12,8 @@
   58:   a =; // error after a broken return statement
 
 -- Parse Error --
-  × error: 57:10: Expected comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
-  │ semicolon
+  × error: 57:10: Expected comment, something else, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  │ 'and' or semicolon
     ╭─[../books/tests/src/parser_recovery.md:57:10]
  57 │ return 1 2;// error, unexpected tokens after return statement
     ·          ┬

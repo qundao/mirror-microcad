@@ -34,8 +34,8 @@
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:5]
  138 │ 
  139 │     Circle(radius = radius + thickness) - Circle(radius)
-     ·     ─────────────────┬─────────────────
-     ·                      ╰── Got: Circle( radius = <NO VALUE> )
+     ·     ──────────────────┬─────────────────
+     ·                       ╰── Got: Circle( radius = <NO VALUE> )
  140 │ }
      ╰────
   help: Possible initializations:
@@ -45,9 +45,10 @@
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:43]
  138 │ 
  139 │     Circle(radius = radius + thickness) - Circle(radius)
-     ·                                           ───────┬──────
+     ·                                           ───────┬───────
      ·                                                  ╰── Got: Circle( radius = 1 )
  140 │ }
+ 141 │ // Use initializer
      ╰────
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
@@ -56,9 +57,10 @@
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:5]
  138 │ 
  139 │     Circle(radius = radius + thickness) - Circle(radius)
-     ·     ──────────────────────────┬─────────────────────────
+     ·     ──────────────────────────┬──────────────────────────
      ·                               ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
  140 │ }
+ 141 │ // Use initializer
      ╰────
 Expected error(s) which did not occur in line(s): 135
 -- Test Result --
