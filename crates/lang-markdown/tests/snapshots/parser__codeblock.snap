@@ -27,6 +27,14 @@ Circle(r = 42mm);
 Rect(r = 42mm);
 ```
 
+## Code block with test result and parameters
+
+[![test](.test/test_result_params.svg)](.test/test_result_params.log)
+
+```µcad,test_result_params#fail(no_format)
+Rect(r = 42mm);
+```
+
 ## Multi-line Code block
 
 [![test](.test/multi_line.svg)](.test/multi_line.log)
