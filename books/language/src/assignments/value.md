@@ -52,7 +52,7 @@ assert_eq([ a, 5 ]);
         // b is available in scope #2 because #2 is within #1
         assert_valid("b");
     }
-}
+};
 
 // a is still available
 assert_valid("a");

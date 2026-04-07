@@ -35,7 +35,7 @@ Hence, the following example will fail:
 
 [![test](.test/types_no_declaration.svg)](.test/types_no_declaration.log)
 
-```µcad,types_no_declaration#fail
+```µcad,types_no_declaration#fail(no_format)
 x: Length;         // parse_error
 ```
 
