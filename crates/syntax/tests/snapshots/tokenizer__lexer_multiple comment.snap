@@ -6,7 +6,7 @@ expression: "lex(input).collect::<Vec<_>>()"
     SpannedToken {
         span: 0..11,
         token: SingleLineComment(
-            "comment1",
+            "// comment1",
         ),
     },
     SpannedToken {
@@ -18,7 +18,7 @@ expression: "lex(input).collect::<Vec<_>>()"
     SpannedToken {
         span: 16..27,
         token: SingleLineComment(
-            "comment2",
+            "// comment2",
         ),
     },
 ]

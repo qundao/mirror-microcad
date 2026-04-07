@@ -40,7 +40,7 @@ expression: "lex(input).collect::<Vec<_>>()"
     SpannedToken {
         span: 6..16,
         token: SingleLineComment(
-            "comment",
+            "// comment",
         ),
     },
 ]
