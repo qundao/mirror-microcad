@@ -1,0 +1,10 @@
+---
+source: crates/lang-format/tests/format.rs
+assertion_line: 22
+expression: "format_str(& source, FormatConfig :: default()).expect(\"No errors\")"
+---
+// Leading comment
+
+call(foo);
+ // Trailing comment // Leading comment test;
+ // Trailing comment

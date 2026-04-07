@@ -1,0 +1,7 @@
+// Leading comment
+call(foo);
+// Trailing comment
+
+// Leading comment
+test;
+// Trailing comment

@@ -1,0 +1,7 @@
+---
+source: crates/lang-format/tests/format.rs
+assertion_line: 21
+expression: "format_str(& source, FormatConfig :: default()).expect(\"No errors\")"
+---
+std::geo2d::Circle(40mm).an_operation(100mm).foo(100).bar_op(100).test(100)
+.test(100).test(100).test(100).test(100);
