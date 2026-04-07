@@ -68,24 +68,15 @@ where
 impl Parse for CodeBlockHeader {
     fn parse(context: &mut ParseContext) -> Result<Self, ParseError> {
         // 1. Consume optional test banner and any subsequent empty lines
-
-        let header_line = if Self::is_test_banner(context.current_line.expect("Some line")) {
-            context.next();
-            while let Some((_, next_line)) = context.lines.peek() {
-                if next_line.trim().is_empty() {
-                    context.next();
-                } else {
+        if Self::is_test_banner(context.current_line.expect("Some line")) {
+            while let Some((_, next_line)) = context.next() {
+                if !next_line.trim().is_empty() {
                     break;
                 }
             }
-            context
-                .lines
-                .peek()
-                .map(|(_, line)| line)
-                .ok_or(ParseError::UnexpectedEOF)?
-        } else {
-            context.current_line.expect("A current line")
-        };
+        }
+
+        let header_line = context.current_line.expect("A current line");
 
         let trimmed = header_line.trim();
         assert!(trimmed.starts_with("```"));
