@@ -1,0 +1,13 @@
+{};
+
+{ a };
+
+{
+    foo;
+    bar;
+};
+
+{
+    prop statement;
+    foo;
+};

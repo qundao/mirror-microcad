@@ -1,3 +1,0 @@
-sketch MySketch(d: Length) {
-    Circle(42mm);
-}
