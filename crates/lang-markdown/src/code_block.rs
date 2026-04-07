@@ -142,6 +142,13 @@ impl CodeBlock {
     pub fn line_offset(&self) -> usize {
         self.line_offset
     }
+
+    /// Returns true if this code block can be formatted.
+    ///
+    /// A code block can be formatted if there is no `no_format` parameter given.
+    pub fn can_format(&self) -> bool {
+        !self.header.parameters.contains(&String::from("no_format"))
+    }
 }
 
 impl std::fmt::Display for CodeBlock {
