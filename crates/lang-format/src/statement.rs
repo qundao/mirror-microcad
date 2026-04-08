@@ -160,28 +160,29 @@ impl Format for ast::Statement {
 impl Format for Vec<(ast::Statement, Option<String>)> {
     fn format(&self, f: &FormatConfig) -> Node {
         // Join statements with a hardline so they sit on separate lines
-        Node::interspersed(
-            self.iter().enumerate().map(|(i, (statement, whitespace))| {
-                match statement.ends_with_semicolon() {
+        self.iter()
+            .flat_map(
+                |(statement, whitespace)| match statement.ends_with_semicolon() {
                     true => {
                         let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
                         let newline_count = whitespace.chars().filter(|&c| c == '\n').count();
                         vec![
                             statement.format(f),
                             ";".into(),
-                            if newline_count < 2 || i >= self.len() - 1 {
+                            if newline_count < 2 {
                                 Node::Nil
                             } else {
                                 Node::Hardline
                             },
+                            Node::Hardline,
                         ]
                         .into()
                     }
-                    false => statement.format(f),
-                }
-            }),
-            Node::Hardline,
-        )
+                    false => vec![statement.format(f), Node::Hardline],
+                },
+            )
+            .collect::<Vec<Node>>()
+            .into()
     }
 }
 
