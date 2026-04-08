@@ -13,3 +13,12 @@
     b = "another very long expression",
     c = "yet another very long expression",
 );
+
+(
+    foo = (
+        a = "a very long expression",
+        b = "another very long expression",
+        c = "yet another very long expression",
+    ),
+    bar = 2,
+);
