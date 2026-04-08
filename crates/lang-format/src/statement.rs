@@ -1,222 +1,115 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    DocAllocator, DocBuilder, Format, Formatter, format_assignment, format_body,
-    format_symbol_outer, format_with_extras,
-};
+use crate::{Format, FormatConfig, node::Node};
 
 use microcad_syntax::ast::{self, Visibility};
 
 impl Format for Option<ast::Visibility> {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
+    fn format(&self, _: &FormatConfig) -> Node {
         match &self {
-            Some(Visibility::Public) => a.text("pub").append(a.space()),
-            _ => a.nil(),
+            Some(Visibility::Public) => "pub ".into(),
+            _ => Node::Nil,
         }
     }
 }
 
 impl Format for ast::Parameter {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        format_with_extras(
-            format_assignment(&self.name, &self.ty, self.default.as_ref(), f),
-            &self.extras,
-            f,
-        )
+    fn format(&self, _: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::ParameterList {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let parameters = a.intersperse(
-            self.parameters.iter().map(|param| param.format(f)),
-            a.text(",").append(a.space()),
-        );
-
-        format_with_extras(parameters.parens(), &self.extras, f)
+    fn format(&self, _: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::WorkbenchKind {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        f.arena.text(self.to_string())
+    fn format(&self, _: &FormatConfig) -> Node {
+        self.to_string().into()
     }
 }
 
 impl Format for ast::WorkbenchDefinition {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let doc = format_symbol_outer(&self.doc, &self.attributes, f)
-            .append(self.visibility.format(f))
-            .append(self.kind.format(f))
-            .append(a.space())
-            .append(self.name.format(f))
-            .append(self.plan.format(f))
-            .append(a.space())
-            .append(format_body(&self.body, f));
-
-        format_with_extras(doc, &self.extras, f).append(a.hardline())
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::ModuleDefinition {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let doc = format_symbol_outer(&self.doc, &self.attributes, f)
-            .append(self.visibility.format(f))
-            .append("mod")
-            .append(a.space())
-            .append(self.name.format(f))
-            .append(match &self.body {
-                Some(body) => a.space().append(format_body(body, f)),
-                None => a.text(";"),
-            });
-
-        format_with_extras(doc, &self.extras, f).append(if self.body.is_some() {
-            a.hardline()
-        } else {
-            a.nil()
-        })
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::FunctionDefinition {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let doc = format_symbol_outer(&self.doc, &self.attributes, f)
-            .append(self.visibility.format(f))
-            .append("fn")
-            .append(a.space())
-            .append(self.name.format(f))
-            .append(a.space())
-            .append(self.parameters.format(f))
-            .append(a.space())
-            .append(format_body(&self.body, f));
-
-        format_with_extras(doc, &self.extras, f).append(a.hardline())
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::UseStatementPart {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::UseStatementPart::Identifier(identifier) => identifier.format(f),
-            ast::UseStatementPart::Glob(_) => f.arena.text("*"),
-            ast::UseStatementPart::Error(_) => f.arena.nil(),
+            ast::UseStatementPart::Glob(_) => "*".into(),
+            ast::UseStatementPart::Error(_) => Node::Nil,
         }
     }
 }
 
 impl Format for ast::UseName {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let parts = a.intersperse(self.parts.iter().map(|p| p.format(f)), "::");
-        format_with_extras(parts, &self.extras, f)
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::UseStatement {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let doc = self
-            .attributes
-            .format(f)
-            .append(self.visibility.format(f))
-            .append("use")
-            .append(a.space())
-            .append(self.name.format(f));
-
-        format_with_extras(doc, &self.extras, f)
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::ConstAssignment {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let doc = format_symbol_outer(&self.doc, &self.attributes, f)
-            .append(self.visibility.format(f))
-            .append("const")
-            .append(a.space())
-            .append(format_assignment(
-                &self.name,
-                &self.ty,
-                Some(self.value.as_ref()),
-                f,
-            ));
-
-        format_with_extras(doc, &self.extras, f)
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::InitDefinition {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let doc = format_symbol_outer(&self.doc, &self.attributes, f)
-            .append(a.space())
-            .append("init")
-            .append(self.parameters.format(f))
-            .append(a.space())
-            .append(format_body(&self.body, f));
-
-        format_with_extras(doc, &self.extras, f)
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::Return {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        a.text("return").append(match &self.value {
-            Some(value) => a.space().append(value.format(f)),
-            None => a.nil(),
-        })
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::LocalAssignment {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        format_with_extras(
-            self.attributes.format(f).append(format_assignment(
-                &self.name,
-                &self.ty,
-                Some(&self.value),
-                f,
-            )),
-            &self.extras,
-            f,
-        )
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::PropertyAssignment {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        format_symbol_outer(&self.doc, &self.attributes, f)
-            .append("prop")
-            .append(a.space())
-            .append(format_assignment(
-                &self.name,
-                &self.ty,
-                Some(self.value.as_ref()),
-                f,
-            ))
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::ExpressionStatement {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        format_with_extras(
-            self.attributes.format(f).append(self.expression.format(f)),
-            &self.extras,
-            f,
-        )
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::AttributeCommand {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::AttributeCommand::Ident(identifier) => identifier.format(f),
             ast::AttributeCommand::Assignment(local_assignment) => local_assignment.format(f),
@@ -226,35 +119,29 @@ impl Format for ast::AttributeCommand {
 }
 
 impl Format for ast::Attribute {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let commands = a.intersperse(self.commands.iter().map(|c| c.format(f)), ",");
-        a.text(if self.is_inner { "#!" } else { "#" })
-            .append(commands.brackets())
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for Vec<ast::Attribute> {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
+    fn format(&self, f: &FormatConfig) -> Node {
         if self.is_empty() {
-            a.nil()
+            Node::Nil
         } else {
-            a.intersperse(self.iter().map(|attr| attr.format(f)), a.hardline())
-                .append(a.hardline())
+            Node::interspersed(self.iter().map(|attr| attr.format(f)), Node::Hardline)
         }
     }
 }
 
 impl Format for ast::Statement {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
+    fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::Statement::Workbench(workbench_definition) => workbench_definition.format(f),
             ast::Statement::Module(module_definition) => module_definition.format(f),
             ast::Statement::Function(function_definition) => function_definition.format(f),
-            ast::Statement::InnerDocComment(comment) => comment.format(f).append(a.hardline()),
-            ast::Statement::Comment(comment) => comment.format(f),
+            ast::Statement::InnerDocComment(comment) => todo!(),
+            ast::Statement::Comment(comment) => todo!(),
 
             ast::Statement::Use(use_statement) => use_statement.format(f),
             ast::Statement::Const(const_assignment) => const_assignment.format(f),
@@ -264,51 +151,40 @@ impl Format for ast::Statement {
             ast::Statement::LocalAssignment(local_assignment) => local_assignment.format(f),
             ast::Statement::Property(property_assignment) => property_assignment.format(f),
             ast::Statement::Expression(expression_statement) => expression_statement.format(f),
-            ast::Statement::Error(_) => a.nil(),
+            ast::Statement::Error(_) => Node::Nil,
         }
     }
 }
 
 impl Format for Vec<(ast::Statement, Option<String>)> {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-
+    fn format(&self, f: &FormatConfig) -> Node {
         // Join statements with a hardline so they sit on separate lines
-        a.intersperse(
+        Node::interspersed(
             self.iter().enumerate().map(|(i, (statement, whitespace))| {
                 match statement.ends_with_semicolon() {
                     true => {
                         let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
-                        statement.format(f).append(";").append(
+                        vec![
+                            statement.format(f),
+                            ";".into(),
                             if whitespace.is_empty() || i >= self.len() - 1 {
-                                a.nil()
+                                Node::Nil
                             } else {
-                                a.hardline()
+                                Node::Hardline
                             },
-                        )
+                        ]
+                        .into()
                     }
                     false => statement.format(f),
                 }
             }),
-            a.softline(),
+            Node::Hardline,
         )
     }
 }
 
 impl Format for ast::StatementList {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        let statements = self.statements.format(f);
-        let doc = match (&self.statements.is_empty(), &self.tail) {
-            (true, None) => a.nil(),
-            (true, Some(tail)) => tail.format(f).group(),
-            (false, None) => statements.group(),
-            (false, Some(tail)) => statements
-                .append(a.hardline())
-                .append(tail.format(f))
-                .group(),
-        };
-
-        format_with_extras(doc, &self.extras, f)
+    fn format(&self, f: &FormatConfig) -> Node {
+        self.statements.format(f)
     }
 }

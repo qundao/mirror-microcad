@@ -3,18 +3,16 @@
 
 use std::collections::HashMap;
 
-use microcad_syntax::ast::{self, ItemExtras};
+use microcad_syntax::ast;
 
 mod error;
 mod expression;
 mod literal;
+mod node;
 mod statement;
 mod ty;
 
-pub(crate) type DocBuilder<'a> = pretty::DocBuilder<'a, Arena<'a>>;
-pub(crate) use pretty::{Arena, DocAllocator};
-
-use crate::error::FormatError;
+use crate::{error::FormatError, node::Node};
 
 #[derive(Debug, Clone)]
 pub struct FormatConfig {
@@ -31,32 +29,23 @@ impl Default for FormatConfig {
     }
 }
 
-pub struct Formatter<'a> {
-    arena: &'a Arena<'a>,
-    config: FormatConfig,
+pub(crate) trait Format {
+    fn format(&self, f: &FormatConfig) -> Node;
 }
 
-pub(crate) trait Format {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a>;
-
-    fn formatted_string(&self, config: FormatConfig) -> String {
-        let formatter = Formatter {
-            arena: &Arena::new(),
-            config,
-        };
-
-        self.format(&formatter)
-            .pretty(formatter.config.max_width)
-            .to_string()
+impl Format for ast::Identifier {
+    fn format(&self, _: &FormatConfig) -> Node {
+        self.name.clone().into()
     }
 }
 
+/*
 pub(crate) fn format_with_extras<'a>(
     doc: DocBuilder<'a>,
     extras: &ItemExtras,
-    f: &Formatter<'a>,
+    f: &FormatConfig<'a>,
 ) -> DocBuilder<'a> {
-    fn format_leading<'a>(extras: &ItemExtras, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format_leading<'a>(extras: &ItemExtras, f: &FormatConfig<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         if extras.leading.is_empty() {
             return a.nil();
@@ -70,7 +59,7 @@ pub(crate) fn format_with_extras<'a>(
         doc
     }
 
-    fn format_trailing<'a>(extras: &ItemExtras, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format_trailing<'a>(extras: &ItemExtras, f: &FormatConfig<'a>) -> DocBuilder<'a> {
         let a = f.arena;
         if extras.trailing.is_empty() {
             return a.nil();
@@ -92,7 +81,7 @@ pub(crate) fn format_with_extras<'a>(
 pub(crate) fn format_symbol_outer<'a>(
     doc: &Option<ast::Comment>,
     attributes: &Vec<ast::Attribute>,
-    f: &Formatter<'a>,
+    f: &FormatConfig<'a>,
 ) -> DocBuilder<'a> {
     let a = f.arena;
 
@@ -107,7 +96,7 @@ pub(crate) fn format_symbol_outer<'a>(
     }
 }
 
-pub(crate) fn format_body<'a>(body: &ast::StatementList, f: &Formatter<'a>) -> DocBuilder<'a> {
+pub(crate) fn format_body<'a>(body: &ast::StatementList, f: &FormatConfig<'a>) -> DocBuilder<'a> {
     let a = f.arena;
     let statements = body.format(f);
 
@@ -128,7 +117,7 @@ pub(crate) fn format_assignment<'a>(
     name: &ast::Identifier,
     ty: &Option<ast::Type>,
     value: Option<&ast::Expression>,
-    f: &Formatter<'a>,
+    f: &FormatConfig<'a>,
 ) -> DocBuilder<'a> {
     let a = f.arena;
     name.format(f)
@@ -146,14 +135,9 @@ pub(crate) fn format_assignment<'a>(
         })
 }
 
-impl Format for ast::Identifier {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        f.arena.text(self.name.clone())
-    }
-}
 
 impl Format for ast::Comment {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format(&self, f: &FormatConfig) -> Node {
         let a = f.arena;
         match &self.inner {
             ast::CommentInner::SingleLine(items) => {
@@ -166,7 +150,7 @@ impl Format for ast::Comment {
 }
 
 impl Format for ast::ItemExtra {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::ItemExtra::Comment(comment) => comment.format(f),
             ast::ItemExtra::Whitespace(_) => f.arena.nil(),
@@ -175,15 +159,17 @@ impl Format for ast::ItemExtra {
     }
 }
 
+*/
+
 impl Format for ast::SourceFile {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format(&self, f: &FormatConfig) -> Node {
         self.statements.format(f)
     }
 }
 
 /// Format µcad source file.
 pub fn format(source_file: &ast::SourceFile, config: &FormatConfig) -> String {
-    source_file.formatted_string(config.clone())
+    source_file.format(config).to_string()
 }
 
 /// High-level API to format a &str containing µcad source code.
