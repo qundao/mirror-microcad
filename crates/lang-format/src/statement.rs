@@ -104,7 +104,8 @@ impl Format for ast::PropertyAssignment {
 
 impl Format for ast::ExpressionStatement {
     fn format(&self, f: &FormatConfig) -> Node {
-        todo!()
+        //vec![self.attributes.format(f), self.expression.format(f)].into()
+        self.expression.format(f)
     }
 }
 
@@ -164,10 +165,11 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
                 match statement.ends_with_semicolon() {
                     true => {
                         let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
+                        let newline_count = whitespace.chars().filter(|&c| c == '\n').count();
                         vec![
                             statement.format(f),
                             ";".into(),
-                            if whitespace.is_empty() || i >= self.len() - 1 {
+                            if newline_count < 2 || i >= self.len() - 1 {
                                 Node::Nil
                             } else {
                                 Node::Hardline
