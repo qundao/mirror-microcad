@@ -111,6 +111,13 @@ impl Node {
         }
     }
 
+    pub fn indent(width: usize, node: impl Into<Node>) -> Self {
+        Node::Indent {
+            width,
+            node: Box::new(node.into()),
+        }
+    }
+
     pub fn contains_hardline(&self) -> bool {
         match &self {
             Node::Nil => false,

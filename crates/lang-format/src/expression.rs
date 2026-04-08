@@ -129,19 +129,12 @@ impl Format for ast::ArrayListExpression {
 
         if can_break {
             node!(
-                "[",
-                Node::Hardline,
-                Node::Indent {
-                    width: f.indent_width,
-                    node: Box::new(
-                        nodes
-                            .into_iter()
-                            .flat_map(|node| vec![node, ",".into(), Node::Hardline])
-                            .collect::<Vec<_>>()
-                            .into(),
-                    ),
-                },
-                "]"
+                node!("[", Node::Hardline),
+                Node::indent(
+                    f.indent_width,
+                    Node::interspersed(nodes, node!(",", Node::Hardline))
+                ),
+                node!(",", Node::Hardline, "]"),
             )
         } else {
             node!("[", Node::interspersed(nodes, ", "), "]")
