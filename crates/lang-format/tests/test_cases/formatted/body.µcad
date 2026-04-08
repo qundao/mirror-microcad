@@ -1,13 +1,19 @@
 {};
-
 { a };
 
 {
     foo;
-    bar;
+    a
 };
 
 {
-    prop statement;
     foo;
+    bar;
+    baz;
+};
+
+{
+    const TEST = 10;
+    foo;
+    bar;
 };

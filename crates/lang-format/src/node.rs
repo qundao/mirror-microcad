@@ -131,11 +131,11 @@ impl Node {
 }
 
 impl From<Vec<Node>> for Node {
-    fn from(value: Vec<Node>) -> Self {
-        match value.len() {
+    fn from(nodes: Vec<Node>) -> Self {
+        match nodes.len() {
             0 => Node::Nil,
-            1 => value.first().expect("Some node").clone(),
-            _ => Node::Group(Group { nodes: value }),
+            1 => nodes.first().expect("Some node").clone(),
+            _ => Node::Group(Group { nodes }),
         }
     }
 }

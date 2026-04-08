@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, node::Node};
+use crate::{Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast::{self, Visibility};
 
@@ -73,8 +73,14 @@ impl Format for ast::UseStatement {
 }
 
 impl Format for ast::ConstAssignment {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            self.visibility.format(f),
+            "const ",
+            self.name.format(f),
+            " = ",
+            self.value.format(f)
+        )
     }
 }
 
@@ -120,8 +126,13 @@ impl Format for ast::AttributeCommand {
 }
 
 impl Format for ast::Attribute {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            if self.is_inner { "#!" } else { "#" },
+            "[",
+            Node::interspersed(self.commands.iter().map(|attr| attr.format(f)), ", "),
+            "]"
+        )
     }
 }
 
@@ -161,14 +172,14 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
     fn format(&self, f: &FormatConfig) -> Node {
         // Join statements with a hardline so they sit on separate lines
         self.iter()
-            .flat_map(
+            .map(
                 |(statement, whitespace)| match statement.ends_with_semicolon() {
                     true => {
                         let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
                         let newline_count = whitespace.chars().filter(|&c| c == '\n').count();
-                        vec![
+                        node![
                             statement.format(f),
-                            ";".into(),
+                            ";",
                             if newline_count < 2 {
                                 Node::Nil
                             } else {
@@ -176,9 +187,8 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
                             },
                             Node::Hardline,
                         ]
-                        .into()
                     }
-                    false => vec![statement.format(f), Node::Hardline],
+                    false => node![statement.format(f), Node::Hardline],
                 },
             )
             .collect::<Vec<Node>>()
@@ -188,6 +198,13 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
 
 impl Format for ast::StatementList {
     fn format(&self, f: &FormatConfig) -> Node {
-        self.statements.format(f)
+        match (self.statements.is_empty(), &self.tail) {
+            (true, Some(tail)) => tail.format(f),
+            (false, Some(tail)) => {
+                node!(self.statements.format(f), tail.format(f), Node::Hardline)
+            }
+            (false, None) => self.statements.format(f),
+            (true, None) => Node::Nil,
+        }
     }
 }
