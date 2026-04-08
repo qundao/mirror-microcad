@@ -3,7 +3,7 @@
 
 use crate::{Format, FormatConfig, Node, node};
 
-use microcad_syntax::ast;
+use microcad_syntax::ast::{self, StatementList};
 
 impl Format for ast::Operator {
     fn format(&self, _: &FormatConfig) -> Node {
@@ -14,6 +14,19 @@ impl Format for ast::Operator {
 impl Format for ast::UnaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
         self.operation.as_str().into()
+    }
+}
+
+fn format_body(body: &ast::StatementList, f: &FormatConfig) -> Node {
+    match (body.statements.is_empty(), &body.tail) {
+        (true, Some(tail)) => node!("{ ", tail.format(f), " }"),
+        (true, None) => node!("{}"),
+        _ => node!(
+            "{",
+            Node::Hardline,
+            Node::indent(f.indent_width, body.format(f)),
+            "}"
+        ),
     }
 }
 
@@ -30,7 +43,7 @@ impl Format for ast::Expression {
             ast::Expression::Marker(identifier) => format!("@{}", identifier.name).into(),
             ast::Expression::BinaryOperation(binary_operation) => binary_operation.format(f),
             ast::Expression::UnaryOperation(unary_operation) => unary_operation.format(f),
-            ast::Expression::Block(_body) => todo!(),
+            ast::Expression::Block(body) => format_body(body, f),
             ast::Expression::Call(call) => call.format(f),
             ast::Expression::ElementAccess(element_access) => element_access.format(f),
             ast::Expression::If(i) => i.format(f),
