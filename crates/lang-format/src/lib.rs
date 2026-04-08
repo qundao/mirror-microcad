@@ -161,6 +161,20 @@ impl Format for ast::ItemExtra {
 
 */
 
+#[macro_export]
+macro_rules! node {
+    // Single element: node!(x)
+    ($node:expr) => {
+        $crate::Node::from($node)
+    };
+    // Multiple elements: node!(begin, body, end)
+    ($($node:expr),* $(,)?) => {
+        $crate::Node::from(vec![
+            $( $crate::Node::from($node) ),*
+        ])
+    };
+}
+
 impl Format for ast::SourceFile {
     fn format(&self, f: &FormatConfig) -> Node {
         self.statements.format(f)

@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, node::Node};
+use crate::{Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast;
 
@@ -128,8 +128,8 @@ impl Format for ast::ArrayListExpression {
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
 
         if can_break {
-            vec![
-                "[".into(),
+            node!(
+                "[",
                 Node::Hardline,
                 Node::Indent {
                     width: f.indent_width,
@@ -141,11 +141,10 @@ impl Format for ast::ArrayListExpression {
                             .into(),
                     ),
                 },
-                "]".into(),
-            ]
-            .into()
+                "]"
+            )
         } else {
-            vec!["[".into(), Node::interspersed(nodes, ", "), "]".into()].into()
+            node!("[", Node::interspersed(nodes, ", "), "]")
         }
     }
 }
