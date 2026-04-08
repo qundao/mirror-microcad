@@ -33,19 +33,19 @@ impl Format for ast::WorkbenchKind {
 }
 
 impl Format for ast::WorkbenchDefinition {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::ModuleDefinition {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::FunctionDefinition {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
@@ -61,43 +61,43 @@ impl Format for ast::UseStatementPart {
 }
 
 impl Format for ast::UseName {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::UseStatement {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::ConstAssignment {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::InitDefinition {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::Return {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::LocalAssignment {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::PropertyAssignment {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }
@@ -120,7 +120,7 @@ impl Format for ast::AttributeCommand {
 }
 
 impl Format for ast::Attribute {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _f: &FormatConfig) -> Node {
         todo!()
     }
 }

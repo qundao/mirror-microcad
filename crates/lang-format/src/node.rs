@@ -31,8 +31,11 @@ impl DocBuilder {
         self
     }
 
-    pub fn indent(mut self, node: impl Into<Node>) -> Self {
-        self.nodes.push(Node::Indent(Box::new(node.into())));
+    pub fn indent(mut self, width: usize, node: impl Into<Node>) -> Self {
+        self.nodes.push(Node::Indent {
+            width,
+            node: Box::new(node.into()),
+        });
         self
     }
 
@@ -81,7 +84,7 @@ pub enum Node {
     Text(CompactString),
     Hardline,
     Softline,
-    Indent(Box<Node>),
+    Indent { width: usize, node: Box<Node> },
     Group(Group),
 }
 
@@ -107,6 +110,22 @@ impl Node {
         }
 
         result.into()
+    }
+
+    pub fn estimate_width(&self) -> usize {
+        match &self {
+            Node::Nil => 0,
+            Node::Text(compact_string) => compact_string.len(),
+            Node::Hardline => 0,
+            Node::Softline => 1,
+            Node::Indent { width, node } => width + node.estimate_width(),
+            Node::Group(group) => group
+                .nodes
+                .iter()
+                .map(|node| node.estimate_width())
+                .max()
+                .unwrap_or_default(),
+        }
     }
 }
 
@@ -148,6 +167,7 @@ impl std::fmt::Display for Node {
         let mut state = RenderState {
             indent_level: 0,
             column: 0,
+            indent_pending: false,
         };
         self.render_recursive(f, &mut state)
     }
@@ -156,6 +176,7 @@ impl std::fmt::Display for Node {
 struct RenderState {
     indent_level: usize,
     column: usize,
+    indent_pending: bool,
 }
 
 impl Node {
@@ -166,16 +187,26 @@ impl Node {
     ) -> std::fmt::Result {
         match self {
             Node::Text(s) => {
+                if state.indent_pending {
+                    let spaces = " ".repeat(state.indent_level);
+                    write!(f, "{}", spaces)?;
+                    state.indent_pending = false;
+                }
                 write!(f, "{}", s)?;
                 state.column += s.len();
             }
             Node::Hardline => {
                 writeln!(f)?;
-                let spaces = " ".repeat(state.indent_level);
-                write!(f, "{}", spaces)?;
                 state.column = state.indent_level;
+                state.indent_pending = true;
             }
             Node::Group(group) => {
+                if state.indent_pending {
+                    let spaces = " ".repeat(state.indent_level);
+                    write!(f, "{}", spaces)?;
+                    state.indent_pending = false;
+                }
+
                 let len = group.nodes.len();
                 for (i, node) in group.nodes.iter().enumerate() {
                     node.render_recursive(f, state)?;
@@ -196,10 +227,10 @@ impl Node {
                     }
                 }
             }
-            Node::Indent(inner) => {
-                state.indent_level += 4;
-                inner.render_recursive(f, state)?;
-                state.indent_level -= 4;
+            Node::Indent { width, node } => {
+                state.indent_level += width;
+                node.render_recursive(f, state)?;
+                state.indent_level -= width;
             }
             _ => {}
         }
