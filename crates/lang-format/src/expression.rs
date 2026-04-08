@@ -82,7 +82,9 @@ impl Format for ast::TupleExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.values.iter().map(|item| item.format(f)).collect();
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = self.values.len() > 4 || width > f.max_width;
+        let can_break = self.values.len() > 4
+            || width > f.max_width
+            || nodes.iter().any(|node| node.contains_hardline());
 
         if can_break {
             vec![
@@ -123,7 +125,9 @@ impl Format for ast::ArrayListExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.items.iter().map(|item| item.format(f)).collect();
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        if width > f.max_width {
+        let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
+
+        if can_break {
             vec![
                 "[".into(),
                 Node::Hardline,
