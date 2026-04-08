@@ -70,14 +70,40 @@ impl Format for ast::FormatString {
 }
 
 impl Format for ast::TupleItem {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        match &self.name {
+            Some(name) => vec![name.format(f), " = ".into(), self.value.format(f)].into(),
+            None => self.value.format(f),
+        }
     }
 }
 
 impl Format for ast::TupleExpression {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        let nodes: Vec<Node> = self.values.iter().map(|item| item.format(f)).collect();
+        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
+        let can_break = self.values.len() > 4 || width > f.max_width;
+
+        if can_break {
+            vec![
+                "(".into(),
+                Node::Hardline,
+                Node::Indent {
+                    width: f.indent_width,
+                    node: Box::new(
+                        nodes
+                            .into_iter()
+                            .flat_map(|node| vec![node, ",".into(), Node::Hardline])
+                            .collect::<Vec<_>>()
+                            .into(),
+                    ),
+                },
+                ")".into(),
+            ]
+            .into()
+        } else {
+            vec!["(".into(), Node::interspersed(nodes, ", "), ")".into()].into()
+        }
     }
 }
 
@@ -95,11 +121,7 @@ impl Format for ast::ArrayRangeExpression {
 
 impl Format for ast::ArrayListExpression {
     fn format(&self, f: &FormatConfig) -> Node {
-        let nodes: Vec<Node> = self
-            .items
-            .iter()
-            .map(|item| item.expression.format(f))
-            .collect();
+        let nodes: Vec<Node> = self.items.iter().map(|item| item.format(f)).collect();
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         if width > f.max_width {
             vec![
