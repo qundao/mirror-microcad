@@ -37,3 +37,4 @@ macro_rules! unformatted_test_case {
 }
 
 formatted_test_case!(statement_list_whitespace);
+formatted_test_case!(array);

@@ -17,14 +17,14 @@ use crate::{error::FormatError, node::Node};
 #[derive(Debug, Clone)]
 pub struct FormatConfig {
     pub max_width: usize,
-    pub indent_size: usize,
+    pub indent_width: usize,
 }
 
 impl Default for FormatConfig {
     fn default() -> Self {
         Self {
             max_width: 80,
-            indent_size: 4,
+            indent_width: 4,
         }
     }
 }
