@@ -1,12 +1,12 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{DocAllocator, DocBuilder, Format, Formatter};
+use crate::{Format, FormatConfig, node::Node};
 
 use microcad_syntax::ast;
 
 impl Format for ast::Type {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
+    fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::Type::Single(single_type) => single_type.format(f),
             ast::Type::Array(array_type) => array_type.format(f),
@@ -16,40 +16,19 @@ impl Format for ast::Type {
 }
 
 impl Format for ast::SingleType {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        f.arena.as_string(self.name.to_string())
+    fn format(&self, f: &FormatConfig) -> Node {
+        self.name.to_string().into()
     }
 }
 
 impl Format for ast::ArrayType {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        a.text("[")
-            .append(self.inner.format(f))
-            .append(a.text("]"))
-            .group()
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }
 
 impl Format for ast::TupleType {
-    fn format<'a>(&self, f: &Formatter<'a>) -> DocBuilder<'a> {
-        let a = f.arena;
-        if self.inner.is_empty() {
-            return a.text("()");
-        }
-
-        let inner = a.intersperse(
-            self.inner.iter().map(|(id, ty)| match id {
-                Some(id) => id
-                    .format(f)
-                    .append(a.text(": "))
-                    .append(ty.format(f))
-                    .group(),
-                None => ty.format(f),
-            }),
-            a.text(",").append(a.softline()), // Break here if line is too long
-        );
-
-        inner.parens().group()
+    fn format(&self, f: &FormatConfig) -> Node {
+        todo!()
     }
 }

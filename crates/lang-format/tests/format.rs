@@ -10,7 +10,7 @@ macro_rules! formatted_test_case {
             let name = stringify!($name);
             let source = std::fs::read_to_string(format!("tests/test_cases/formatted/{name}.µcad"))
                 .expect("No errors");
-            assert_eq!(
+            pretty_assertions::assert_eq!(
                 source,
                 format_str(&source, &FormatConfig::default()).expect("No errors")
             );
