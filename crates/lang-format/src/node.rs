@@ -56,26 +56,9 @@ impl DocBuilder {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum BreakMode {
-    /// Forces all elements to stay on one line.
-    Never,
-    /// Forces each element onto its own line with indentation.
-    Always,
-    /// (Optional) The standard Wadler-Leijen style:
-    /// Break only if it exceeds max width.
-    Fit,
-}
-
-#[derive(Debug, Clone, PartialEq)]
 pub struct Group {
     /// The actual AST nodes (e.g., the elements of the array).
     pub nodes: Vec<Node>,
-
-    /// The "glue" placed between nodes (e.g., Node::Text(", ")).
-    pub separator: Option<Box<Node>>,
-
-    /// The structural strategy for this specific group.
-    pub break_mode: BreakMode,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -127,6 +110,17 @@ impl Node {
                 .unwrap_or_default(),
         }
     }
+
+    pub fn contains_hardline(&self) -> bool {
+        match &self {
+            Node::Nil => false,
+            Node::Text(compact_string) => compact_string.contains("\n"),
+            Node::Hardline => true,
+            Node::Softline => false,
+            Node::Indent { width: _, node } => node.contains_hardline(),
+            Node::Group(group) => group.nodes.iter().any(|node| node.contains_hardline()),
+        }
+    }
 }
 
 impl From<Vec<Node>> for Node {
@@ -134,11 +128,7 @@ impl From<Vec<Node>> for Node {
         match value.len() {
             0 => Node::Nil,
             1 => value.first().expect("Some node").clone(),
-            _ => Node::Group(Group {
-                nodes: value,
-                separator: None,
-                break_mode: BreakMode::Fit,
-            }),
+            _ => Node::Group(Group { nodes: value }),
         }
     }
 }
@@ -185,55 +175,44 @@ impl Node {
         f: &mut std::fmt::Formatter<'_>,
         state: &mut RenderState,
     ) -> std::fmt::Result {
+        fn write_pending_indent(
+            f: &mut std::fmt::Formatter<'_>,
+            state: &mut RenderState,
+        ) -> std::fmt::Result {
+            if state.indent_pending {
+                let spaces = " ".repeat(state.indent_level);
+                state.indent_pending = false;
+                write!(f, "{}", spaces)
+            } else {
+                Ok(())
+            }
+        }
+
         match self {
             Node::Text(s) => {
-                if state.indent_pending {
-                    let spaces = " ".repeat(state.indent_level);
-                    write!(f, "{}", spaces)?;
-                    state.indent_pending = false;
-                }
-                write!(f, "{}", s)?;
+                write_pending_indent(f, state)?;
                 state.column += s.len();
+                write!(f, "{}", s)
             }
             Node::Hardline => {
-                writeln!(f)?;
                 state.column = state.indent_level;
                 state.indent_pending = true;
+                writeln!(f)
             }
             Node::Group(group) => {
-                if state.indent_pending {
-                    let spaces = " ".repeat(state.indent_level);
-                    write!(f, "{}", spaces)?;
-                    state.indent_pending = false;
-                }
-
-                let len = group.nodes.len();
-                for (i, node) in group.nodes.iter().enumerate() {
-                    node.render_recursive(f, state)?;
-
-                    if i < len - 1 {
-                        if let Some(sep) = &group.separator {
-                            sep.render_recursive(f, state)?;
-                        }
-                        if group.break_mode == BreakMode::Always {
-                            Node::Hardline.render_recursive(f, state)?;
-                        }
-                    } else if group.break_mode == BreakMode::Always {
-                        // Trailing separator logic for multi-line
-                        if let Some(sep) = &group.separator {
-                            sep.render_recursive(f, state)?;
-                        }
-                        Node::Hardline.render_recursive(f, state)?;
-                    }
-                }
+                write_pending_indent(f, state)?;
+                group
+                    .nodes
+                    .iter()
+                    .try_for_each(|node| node.render_recursive(f, state))
             }
             Node::Indent { width, node } => {
                 state.indent_level += width;
                 node.render_recursive(f, state)?;
                 state.indent_level -= width;
+                Ok(())
             }
-            _ => {}
+            _ => Ok(()),
         }
-        Ok(())
     }
 }
