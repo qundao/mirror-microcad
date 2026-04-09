@@ -5,58 +5,6 @@ use compact_str::{CompactString, ToCompactString};
 
 use crate::node;
 
-pub struct DocBuilder {
-    nodes: Vec<Node>,
-}
-
-impl DocBuilder {
-    /// Start a new builder
-    pub fn new() -> Self {
-        Self { nodes: Vec::new() }
-    }
-
-    /// Add a raw text segment
-    pub fn text(mut self, text: impl Into<CompactString>) -> Self {
-        self.nodes.push(Node::Text(text.into()));
-        self
-    }
-
-    /// Add a hard line break (always breaks)
-    pub fn hardline(mut self) -> Self {
-        self.nodes.push(Node::Hardline);
-        self
-    }
-
-    /// Add a soft line break (breaks only if the group doesn't fit)
-    pub fn softline(mut self) -> Self {
-        self.nodes.push(Node::Softline);
-        self
-    }
-
-    pub fn indent(mut self, width: usize, node: impl Into<Node>) -> Self {
-        self.nodes.push(Node::Indent {
-            width,
-            node: Box::new(node.into()),
-        });
-        self
-    }
-
-    /// Wrap a set of nodes into a Group
-    pub fn group(mut self, inner: DocBuilder) -> Self {
-        self.nodes.push(inner.build_vec().into());
-        self
-    }
-
-    /// Finalize into a single Node (usually a Group or a list)
-    pub fn build(self) -> Node {
-        self.nodes.into()
-    }
-
-    fn build_vec(self) -> Vec<Node> {
-        self.nodes
-    }
-}
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct Group {
     /// The actual AST nodes (e.g., the elements of the array).
