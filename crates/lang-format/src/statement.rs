@@ -89,7 +89,7 @@ impl Format for ast::ModuleDefinition {
 impl Format for ast::FunctionDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
         let return_type = match &self.return_type {
-            Some(ty) => node!(f => "-> " ty),
+            Some(ty) => node!(f => "-> " ty " "),
             None => Node::Nil,
         };
 
