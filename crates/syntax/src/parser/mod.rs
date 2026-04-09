@@ -688,12 +688,6 @@ fn parser<'tokens>()
                 .boxed()
         });
 
-        let comment = comment_parser()
-            .map(Statement::Comment)
-            .then_maybe_whitespace()
-            .labelled("comment")
-            .boxed();
-
         let parameter_list_inner = whitespace_parser()
             .or_not()
             .ignore_then(identifier_parser.clone())
@@ -1091,7 +1085,6 @@ fn parser<'tokens>()
             .or(init)
             .or(workbench)
             .or(module)
-            .or(comment)
             .or(if_expression)
             .boxed();
 
