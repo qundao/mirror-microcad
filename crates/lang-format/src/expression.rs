@@ -234,9 +234,10 @@ impl Format for ast::Element {
 impl Format for Vec<ast::Element> {
     fn format(&self, f: &FormatConfig) -> Node {
         fn element_line_break(f: &FormatConfig, element: &ast::Element, is_last: bool) -> Node {
+            let hardline = element.format(f).contains_hardline();
             node!(f =>
                 element
-                if matches!(element.inner, ast::ElementInner::ArrayElement(_)) || is_last {
+                if matches!(element.inner, ast::ElementInner::ArrayElement(_)) || is_last || hardline {
                     Node::Nil
                 } else {
                     Node::Hardline
