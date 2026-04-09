@@ -1,8 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Span;
-use crate::ast::Identifier;
+use crate::{Span, ast};
 use compact_str::CompactString;
 
 /// The possible types
@@ -23,8 +22,10 @@ impl Type {
             Type::Tuple(ty) => ty.span.clone(),
         }
     }
+}
 
-    pub(crate) fn dummy(span: Span) -> Self {
+impl ast::Dummy for Type {
+    fn dummy(span: Span) -> Self {
         Type::Single(SingleType {
             span,
             name: CompactString::default(),
@@ -53,5 +54,5 @@ pub struct ArrayType {
 #[allow(missing_docs)]
 pub struct TupleType {
     pub span: Span,
-    pub inner: Vec<(Option<Identifier>, Type)>,
+    pub inner: Vec<(Option<ast::Identifier>, Type)>,
 }

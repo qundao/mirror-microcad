@@ -206,9 +206,9 @@ pub struct ParameterList {
     pub parameters: Vec<Parameter>,
 }
 
-impl ParameterList {
-    pub(crate) fn dummy(span: Span) -> Self {
-        ParameterList {
+impl ast::Dummy for ParameterList {
+    fn dummy(span: Span) -> Self {
+        Self {
             span,
             extras: ast::ItemExtras::default(),
             parameters: Vec::default(),
@@ -339,9 +339,9 @@ pub struct StatementList {
     pub tail: Option<Box<Statement>>,
 }
 
-impl StatementList {
-    pub(crate) fn dummy(span: Span) -> Self {
-        StatementList {
+impl ast::Dummy for StatementList {
+    fn dummy(span: Span) -> Self {
+        Self {
             span,
             extras: ast::ItemExtras::default(),
             statements: Vec::default(),

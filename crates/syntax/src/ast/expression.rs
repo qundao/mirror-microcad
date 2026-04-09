@@ -198,9 +198,9 @@ pub struct TupleItem {
     pub value: Expression,
 }
 
-impl TupleItem {
-    pub(crate) fn dummy(span: Span) -> Self {
-        TupleItem {
+impl ast::Dummy for TupleItem {
+    fn dummy(span: Span) -> Self {
+        Self {
             span: span.clone(),
             extras: ast::ItemExtras::default(),
             name: None,
@@ -339,9 +339,9 @@ pub struct ArgumentList {
     pub arguments: Vec<Argument>,
 }
 
-impl ArgumentList {
-    pub(crate) fn dummy(span: Span) -> Self {
-        ArgumentList {
+impl ast::Dummy for ArgumentList {
+    fn dummy(span: Span) -> Self {
+        Self {
             span,
             extras: ast::ItemExtras::default(),
             arguments: Vec::new(),
