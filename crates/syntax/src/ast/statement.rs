@@ -335,7 +335,7 @@ pub struct ExpressionStatement {
 pub struct StatementList {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub statements: Vec<(Statement, Option<String>)>,
+    pub statements: Vec<(Statement, Vec<ast::ItemExtra>)>,
     pub tail: Option<Box<Statement>>,
 }
 

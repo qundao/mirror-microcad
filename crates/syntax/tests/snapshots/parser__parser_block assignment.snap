@@ -97,9 +97,11 @@ Ok(
                                                         ),
                                                     },
                                                 ),
-                                                Some(
-                                                    " ",
-                                                ),
+                                                [
+                                                    Whitespace(
+                                                        " ",
+                                                    ),
+                                                ],
                                             ),
                                         ],
                                         tail: Some(
@@ -163,7 +165,7 @@ Ok(
                             ),
                         },
                     ),
-                    None,
+                    [],
                 ),
             ],
             tail: None,
