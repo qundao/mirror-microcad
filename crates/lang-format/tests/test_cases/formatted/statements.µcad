@@ -1,0 +1,4 @@
+use foo;
+use bar::foo as baz;
+
+use bar::*;
