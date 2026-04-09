@@ -16,7 +16,6 @@ pub enum Node {
     Nil,
     Text(CompactString),
     Hardline,
-    Softline,
     Indent { width: usize, node: Box<Node> },
     Group(Group),
 }
@@ -87,7 +86,6 @@ impl Node {
             Node::Nil => 0,
             Node::Text(compact_string) => compact_string.len(),
             Node::Hardline => 0,
-            Node::Softline => 1,
             Node::Indent { width, node } => width + node.estimate_width(),
             Node::Group(group) => group
                 .nodes
@@ -110,7 +108,6 @@ impl Node {
             Node::Nil => false,
             Node::Text(compact_string) => compact_string.contains("\n"),
             Node::Hardline => true,
-            Node::Softline => false,
             Node::Indent { width: _, node } => node.contains_hardline(),
             Node::Group(group) => group.nodes.iter().any(|node| node.contains_hardline()),
         }

@@ -183,8 +183,10 @@ impl Format for ast::PropertyAssignment {
 
 impl Format for ast::ExpressionStatement {
     fn format(&self, f: &FormatConfig) -> Node {
-        //vec![self.attributes.format(f), self.expression.format(f)].into()
-        self.expression.format(f)
+        node!(f => 
+            self.attributes
+            self.expression
+        )
     }
 }
 
@@ -263,7 +265,7 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
                     }
                     false => node!(
                         statement.format(f)
-                        if i >= self.len() - 1 || matches!(statement, ast::Statement::InnerDocComment(_)) {
+                        if i >= self.len() - 1 || matches!(statement, ast::Statement::InnerDocComment(_) | ast::Statement::Comment(_)) {
                             Node::Hardline
                         } else {
                             node!(Node::Hardline Node::Hardline)

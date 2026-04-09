@@ -1,0 +1,4 @@
+// A leading comment
+a; // A trailing Comment
+
+/* leading */ b /* trailing */;
