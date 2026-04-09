@@ -3,6 +3,8 @@
 
 use compact_str::{CompactString, ToCompactString};
 
+use crate::node;
+
 pub struct DocBuilder {
     nodes: Vec<Node>,
 }
@@ -95,6 +97,40 @@ impl Node {
         result.into()
     }
 
+    /// A list of items with an separator
+    pub fn list<I>(nodes: I, separator: impl Into<Node>, hardline: bool) -> Node
+    where
+        I: IntoIterator<Item = Node>,
+    {
+        let sep = separator.into();
+        if hardline {
+            nodes
+                .into_iter()
+                .flat_map(|node| vec![node, sep.clone(), Node::Hardline])
+                .collect::<Vec<_>>()
+                .into()
+        } else {
+            Node::interspersed(nodes, node!(sep, ' '))
+        }
+    }
+
+    /// A node embraced by `()`
+    pub fn braces(node: impl Into<Node>, indent_width: usize, hardline: bool) -> Node {
+        if hardline {
+            node!(
+                '(',
+                Node::Hardline,
+                Node::Indent {
+                    width: indent_width,
+                    node: Box::new(node.into()),
+                },
+                ')',
+            )
+        } else {
+            node!('(', node, ')')
+        }
+    }
+
     pub fn estimate_width(&self) -> usize {
         match &self {
             Node::Nil => 0,
@@ -148,6 +184,12 @@ impl From<String> for Node {
 
 impl From<&str> for Node {
     fn from(value: &str) -> Self {
+        Node::Text(value.to_compact_string())
+    }
+}
+
+impl From<char> for Node {
+    fn from(value: char) -> Self {
         Node::Text(value.to_compact_string())
     }
 }
