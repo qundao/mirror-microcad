@@ -41,6 +41,9 @@ Ok(
                                                 extras: ItemExtras {
                                                     leading: [],
                                                     trailing: [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
                                                         Comment(
                                                             Comment {
                                                                 span: 3..12,
@@ -73,6 +76,9 @@ Ok(
                                                 extras: ItemExtras {
                                                     leading: [],
                                                     trailing: [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
                                                         Comment(
                                                             Comment {
                                                                 span: 15..24,

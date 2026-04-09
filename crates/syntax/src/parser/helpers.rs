@@ -42,8 +42,9 @@ where
         .labelled("comment")
         .boxed();
 
-    whitespace_parser().or_not().ignore_then(comment)
+    comment
 }
+
 pub fn whitespace_parser<'tokens, S, Ctx>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, String, Full<Error<'tokens>, S, Ctx>>
 + 'tokens

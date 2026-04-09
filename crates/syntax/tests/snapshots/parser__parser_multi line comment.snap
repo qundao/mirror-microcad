@@ -45,6 +45,9 @@ Ok(
                         },
                     ),
                     [
+                        Whitespace(
+                            " ",
+                        ),
                         Comment(
                             Comment {
                                 span: 7..44,
