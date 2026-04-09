@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-use microcad_syntax::ast::{self, ItemExtra};
+use microcad_syntax::ast::{self, ItemExtras};
 
 mod error;
 mod expression;
@@ -14,11 +14,12 @@ mod ty;
 
 use crate::{error::FormatError, node::Node};
 
-impl Format for ItemExtra {
+impl Format for ast::ItemExtra {
     fn format(&self, f: &FormatConfig) -> Node {
+        use ast::ItemExtra::*;
         match &self {
-            ItemExtra::Comment(comment) => comment.format(f),
-            ItemExtra::Whitespace(ws) => ws
+            Comment(comment) => comment.format(f),
+            Whitespace(ws) => ws
                 .chars()
                 .filter(|c| *c == '\n')
                 .take(2)
@@ -30,12 +31,91 @@ impl Format for ItemExtra {
     }
 }
 
-pub(crate) fn format_extra_trailing(extras: &Vec<ItemExtra>, f: &FormatConfig) -> Node {
+pub(crate) fn format_extra_trailing(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
     extras
         .iter()
-        .map(|extra| extra.format(f))
+        .map(|extra| match &extra {
+            ast::ItemExtra::Comment(comment) => comment.format(f),
+            ast::ItemExtra::Whitespace(ws) => ws
+                .chars()
+                .filter(|c| *c == '\n')
+                .take(
+                    if extras
+                        .iter()
+                        .filter(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
+                        .count()
+                        >= 1
+                    {
+                        1
+                    } else {
+                        2
+                    },
+                )
+                .map(|_| Node::Hardline)
+                .collect::<Vec<_>>()
+                .into(),
+            _ => todo!(),
+        })
         .collect::<Vec<_>>()
         .into()
+}
+
+pub(crate) fn with_extras(
+    extras: &ast::ItemExtras,
+    f: &FormatConfig,
+    node: impl Into<Node>,
+) -> Node {
+    fn leading(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
+        extras
+            .iter()
+            .map(|extra| match &extra {
+                ast::ItemExtra::Comment(comment) => comment.format(f),
+                ast::ItemExtra::Whitespace(ws) => {
+                    let count = ws.chars().filter(|&c| c == '\n').count();
+                    if count >= 2 {
+                        Node::Hardline
+                    } else {
+                        Node::Nil
+                    }
+                }
+                _ => todo!(),
+            })
+            .collect::<Vec<_>>()
+            .into()
+    }
+
+    fn trailing(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
+        extras
+            .iter()
+            .map(|extra| match &extra {
+                ast::ItemExtra::Comment(comment) => comment.format(f),
+                ast::ItemExtra::Whitespace(ws) => {
+                    let count = ws.chars().filter(|&c| c == '\n').count();
+                    if count >= 2 {
+                        Node::Hardline
+                    } else {
+                        if extras
+                            .iter()
+                            .any(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
+                        {
+                            node!(' ')
+                        } else {
+                            Node::Nil
+                        }
+                    }
+                }
+                _ => todo!(),
+            })
+            .collect::<Vec<_>>()
+            .into()
+    }
+
+    let node = node.into();
+    node!(f =>
+        leading(&extras.leading, f)
+        node
+        trailing(&extras.trailing, f)
+    )
 }
 
 #[derive(Debug, Clone)]
@@ -90,7 +170,7 @@ impl Format for ast::Comment {
                 Node::Nil,
                 0,
             ),
-            ast::CommentInner::MultiLine(line) => node!("/*" Node::from(line.clone()) "*/"),
+            ast::CommentInner::MultiLine(line) => node!("/* " Node::from(line.clone()) " */"),
         }
     }
 }

@@ -1,4 +1,6 @@
-// A leading comment
-a; // A trailing Comment
+// Comment 1
 
-/* leading */ b /* trailing */;
+// Comment 2
+a; // Comment 3
+
+b /* Comment 4 */;
