@@ -42,9 +42,9 @@ impl Format for ast::Identifier {
 impl Format for ast::Comment {
     fn format(&self, _: &FormatConfig) -> Node {
         match &self.inner {
-            ast::CommentInner::SingleLine(items) => Node::interspersed(
+            ast::CommentInner::SingleLine(items) => Node::vlist(
                 items.into_iter().cloned().map(|item| item.into()),
-                Node::Hardline,
+                Node::Nil,
             ),
             ast::CommentInner::MultiLine(line) => node!("/*" Node::from(line.clone()) "*/"),
         }

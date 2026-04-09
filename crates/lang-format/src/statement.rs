@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, Node, node};
+use crate::{Format, FormatConfig, Node, expression::format_body, node};
 
 use microcad_syntax::ast::{self, Visibility};
 
@@ -47,8 +47,8 @@ impl Format for ast::WorkbenchDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(
             f =>
-            // self.doc
-            // self.attributes
+            self.doc
+            self.attributes
             self.visibility
             self.kind ' '
             self.name
@@ -60,13 +60,17 @@ impl Format for ast::WorkbenchDefinition {
 
 impl Format for ast::ModuleDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
+        let symbol_info = node!(f =>
+            self.doc
+            self.attributes
+            self.visibility
+        );
+
         match &self.body {
             Some(body) => {
                 node!(
                     f =>
-                    // self.doc
-                    // self.attributes
-                    self.visibility.format(f)
+                    symbol_info
                     "mod " self.name " "
                     crate::expression::format_body(&body, f)
                 )
@@ -74,9 +78,7 @@ impl Format for ast::ModuleDefinition {
             None => {
                 node!(
                     f =>
-                    // self.doc
-                    // self.attributes
-                    self.visibility
+                    symbol_info
                     "mod " self.name ";"
                 )
             }
@@ -86,12 +88,15 @@ impl Format for ast::ModuleDefinition {
 
 impl Format for ast::FunctionDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
+        let return_type = match &self.return_type {
+            Some(ty) => node!(f => "-> " ty),
+            None => Node::Nil,
+        };
+
         node!(f =>
-            //self.doc
-            //self.attributes
-            self.visibility
-            "fn " self.name
-            self.parameters " "
+            self.doc
+            self.attributes
+            self.visibility "fn " self.name self.parameters " " return_type
             crate::expression::format_body(&self.body, f)
         )
     }
@@ -109,7 +114,7 @@ impl Format for ast::UseStatementPart {
 
 impl Format for ast::UseName {
     fn format(&self, f: &FormatConfig) -> Node {
-        Node::interspersed(self.parts.iter().map(|part| part.format(f)), "::")
+        Node::hlist(self.parts.iter().map(|part| part.format(f)), "::")
     }
 }
 
@@ -129,8 +134,11 @@ impl Format for ast::ConstAssignment {
 }
 
 impl Format for ast::InitDefinition {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f => 
+            self.doc
+            self.attributes
+            "init" self.parameters " " format_body(&self.body, f))
     }
 }
 
@@ -144,8 +152,15 @@ impl Format for ast::Return {
 }
 
 impl Format for ast::LocalAssignment {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f =>
+            self.name
+            match &self.ty {
+                Some(ty) => node!(f => ": " ty),
+                None => Node::Nil,
+            }
+            " = " self.value
+        )
     }
 }
 
@@ -190,7 +205,7 @@ impl Format for ast::Attribute {
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
 
-        node!(prefix "[" Node::list(nodes, ", ", can_break) "]")
+        node!(prefix "[" Node::list(nodes, ',', can_break) "]")
     }
 }
 
@@ -199,7 +214,7 @@ impl Format for Vec<ast::Attribute> {
         if self.is_empty() {
             Node::Nil
         } else {
-            Node::interspersed(self.iter().map(|attr| attr.format(f)), Node::Hardline)
+            Node::vlist(self.iter().map(|attr| attr.format(f)), Node::Nil)
         }
     }
 }
@@ -211,7 +226,7 @@ impl Format for ast::Statement {
             ast::Statement::Module(module_definition) => module_definition.format(f),
             ast::Statement::Function(function_definition) => function_definition.format(f),
             ast::Statement::InnerDocComment(comment) => comment.format(f),
-            ast::Statement::Comment(comment) => todo!(),
+            ast::Statement::Comment(comment) => comment.format(f),
 
             ast::Statement::Use(use_statement) => use_statement.format(f),
             ast::Statement::Const(const_assignment) => const_assignment.format(f),
@@ -247,7 +262,7 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
                     }
                     false => node!(
                         statement.format(f)
-                        if i >= self.len() - 1 {
+                        if i >= self.len() - 1 || matches!(statement, ast::Statement::InnerDocComment(_)) {
                             Node::Hardline
                         } else {
                             node!(Node::Hardline Node::Hardline)

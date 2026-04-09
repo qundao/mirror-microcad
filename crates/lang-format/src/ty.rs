@@ -16,19 +16,19 @@ impl Format for ast::Type {
 }
 
 impl Format for ast::SingleType {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _: &FormatConfig) -> Node {
         self.name.to_string().into()
     }
 }
 
 impl Format for ast::ArrayType {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _: &FormatConfig) -> Node {
         todo!()
     }
 }
 
 impl Format for ast::TupleType {
-    fn format(&self, f: &FormatConfig) -> Node {
+    fn format(&self, _: &FormatConfig) -> Node {
         todo!()
     }
 }
