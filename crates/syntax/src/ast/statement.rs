@@ -25,7 +25,6 @@ pub enum Statement {
     Property(PropertyAssignment),
     Expression(ExpressionStatement),
     InnerDocComment(Comment),
-    Comment(Comment),
     Error(Span),
 }
 
@@ -47,7 +46,6 @@ impl Statement {
             Property(st) => st.span.clone(),
             Expression(st) => st.span.clone(),
             InnerDocComment(st) => st.span.clone(),
-            Comment(st) => st.span.clone(),
             Error(span) => span.clone(),
         }
     }
@@ -60,7 +58,6 @@ impl Statement {
             Statement::Function(_) => false,
             Statement::InnerAttribute(_) => false,
             Statement::InnerDocComment(_) => false,
-            Statement::Comment(_) => false,
             Statement::Init(_) => false,
             Statement::Error(_) => false,
 
