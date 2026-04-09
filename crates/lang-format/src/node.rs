@@ -5,23 +5,6 @@ use compact_str::{CompactString, ToCompactString};
 
 use crate::node;
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct Group {
-    /// The actual AST nodes (e.g., the elements of the array).
-    pub nodes: Vec<Node>,
-}
-
-impl Group {
-    pub fn new(nodes: Vec<Node>) -> Self {
-        Self {
-            nodes: nodes
-                .into_iter()
-                .filter(|node| !matches!(node, Node::Nil))
-                .collect(),
-        }
-    }
-}
-
 #[derive(Debug, Default, Clone, PartialEq)]
 pub enum Node {
     #[default]
@@ -32,7 +15,7 @@ pub enum Node {
         width: usize,
         node: Box<Node>,
     },
-    Group(Group),
+    Group(Vec<Node>),
 }
 
 impl Node {
@@ -103,7 +86,6 @@ impl Node {
             Node::Hardline => 0,
             Node::Indent { width, node } => width + node.estimate_width(),
             Node::Group(group) => group
-                .nodes
                 .iter()
                 .map(|node| node.estimate_width())
                 .max()
@@ -124,7 +106,7 @@ impl Node {
             Node::Text(compact_string) => compact_string.contains("\n"),
             Node::Hardline => true,
             Node::Indent { width: _, node } => node.contains_hardline(),
-            Node::Group(group) => group.nodes.iter().any(|node| node.contains_hardline()),
+            Node::Group(group) => group.iter().any(|node| node.contains_hardline()),
         }
     }
 
@@ -135,7 +117,6 @@ impl Node {
             Node::Hardline => true,
             Node::Indent { width: _, node } => node.ends_with_hardline(),
             Node::Group(group) => group
-                .nodes
                 .last()
                 .map(|node| node.ends_with_hardline())
                 .unwrap_or_default(),
@@ -145,10 +126,14 @@ impl Node {
 
 impl From<Vec<Node>> for Node {
     fn from(nodes: Vec<Node>) -> Self {
+        let nodes = nodes
+            .into_iter()
+            .filter(|node| !matches!(node, Node::Nil))
+            .collect::<Vec<_>>();
         match nodes.len() {
             0 => Node::Nil,
             1 => nodes.first().expect("Some node").clone(),
-            _ => Node::Group(Group::new(nodes)),
+            _ => Node::Group(nodes),
         }
     }
 }
@@ -228,7 +213,6 @@ impl Node {
             Node::Group(group) => {
                 write_pending_indent(f, state)?;
                 group
-                    .nodes
                     .iter()
                     .try_for_each(|node| node.render_recursive(f, state))
             }
