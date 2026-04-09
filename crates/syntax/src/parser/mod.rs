@@ -1470,19 +1470,19 @@ fn parser<'tokens>()
 
         let access_attribute = just(Token::SigilHash)
             .ignore_then(identifier_parser.clone())
-            .map(Element::Attribute)
+            .map(ElementInner::Attribute)
             .labelled("attribute access")
             .boxed();
 
         let access_tuple = just(Token::SigilDot)
             .ignore_then(identifier_parser.clone())
-            .map(Element::Tuple)
+            .map(ElementInner::Tuple)
             .labelled("tuple access")
             .boxed();
 
         let access_method = just(Token::SigilDot)
             .ignore_then(call_inner)
-            .map(Element::Method)
+            .map(ElementInner::Method)
             .labelled("method call")
             .boxed();
 
@@ -1493,7 +1493,7 @@ fn parser<'tokens>()
                 just(Token::SigilCloseSquareBracket),
             )
             .map(Box::new)
-            .map(Element::ArrayElement)
+            .map(ElementInner::ArrayElement)
             .labelled("array access")
             .boxed();
 
@@ -1501,6 +1501,12 @@ fn parser<'tokens>()
             .or(access_method)
             .or(access_tuple)
             .or(access_array)
+            .with_extras()
+            .map_with(|(inner, extras), e| Element {
+                span: e.span(),
+                inner,
+                extras,
+            })
             .repeated()
             .at_least(1)
             .collect::<Vec<Element>>();

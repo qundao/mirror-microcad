@@ -301,11 +301,19 @@ pub struct ElementAccess {
 /// The possible element access types
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub enum Element {
+pub enum ElementInner {
     Attribute(ast::Identifier),
     Tuple(ast::Identifier),
     Method(Call),
     ArrayElement(Box<Expression>),
+}
+
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct Element {
+    pub span: Span,
+    pub extras: ast::ItemExtras,
+    pub inner: ElementInner,
 }
 
 #[derive(Debug, PartialEq)]

@@ -40,24 +40,31 @@ Ok(
                                     },
                                 ),
                                 element_chain: [
-                                    ArrayElement(
-                                        Literal(
-                                            Literal {
-                                                span: 4..5,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 4..5,
-                                                        value: 1,
-                                                        raw: "1",
+                                    Element {
+                                        span: 3..6,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        inner: ArrayElement(
+                                            Literal(
+                                                Literal {
+                                                    span: 4..5,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
                                                     },
-                                                ),
-                                            },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 4..5,
+                                                            value: 1,
+                                                            raw: "1",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
                                         ),
-                                    ),
+                                    },
                                 ],
                             },
                         ),

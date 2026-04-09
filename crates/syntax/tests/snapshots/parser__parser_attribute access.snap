@@ -40,12 +40,19 @@ Ok(
                                     },
                                 ),
                                 element_chain: [
-                                    Attribute(
-                                        Identifier {
-                                            span: 4..7,
-                                            name: "bar",
+                                    Element {
+                                        span: 3..7,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        inner: Attribute(
+                                            Identifier {
+                                                span: 4..7,
+                                                name: "bar",
+                                            },
+                                        ),
+                                    },
                                 ],
                             },
                         ),
