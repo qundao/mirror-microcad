@@ -136,18 +136,7 @@ impl Format for ast::ArrayListExpression {
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
 
-        if can_break {
-            node!(
-                "[" Node::Hardline
-                    Node::indent(
-                        f.indent_width,
-                        Node::hlist(nodes, node!("," Node::Hardline))
-                    ) "," Node::Hardline
-                "]"
-            )
-        } else {
-            node!("[" Node::hlist(nodes, ", ") "]")
-        }
+        node!('[' Node::list(nodes, ',', can_break, f.indent_width) ']')
     }
 }
 
