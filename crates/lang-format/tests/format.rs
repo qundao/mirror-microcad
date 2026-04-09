@@ -6,13 +6,16 @@ macro_rules! formatted_test_case {
     ($name:ident) => {
         #[test]
         fn $name() {
-            use microcad_lang_format::{FormatConfig, format_str};
+            use microcad_lang_format::{FormatConfig, format};
             let name = stringify!($name);
             let source = std::fs::read_to_string(format!("tests/test_cases/formatted/{name}.µcad"))
                 .expect("No errors");
+            let source_file = microcad_syntax::parse_str(&source).expect("No errors");
+
             pretty_assertions::assert_eq!(
                 source,
-                format_str(&source, &FormatConfig::default()).expect("No errors")
+                format(&source_file, &FormatConfig::default()),
+                "Format error:\n{source_file:#?}",
             );
         }
     };
@@ -43,3 +46,4 @@ formatted_test_case!(body);
 formatted_test_case!(expression);
 formatted_test_case!(statements);
 formatted_test_case!(workbench);
+formatted_test_case!(extras);
