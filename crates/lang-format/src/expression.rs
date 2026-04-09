@@ -236,23 +236,28 @@ impl Format for ast::Call {
         with_extras(
             &self.extras,
             f,
-            node!(
-                f =>
-                self.name
-                self.arguments
+            node!(f =>
+                self.name self.arguments
             ),
         )
     }
 }
 
+impl Format for ast::ElementInner {
+    fn format(&self, f: &FormatConfig) -> Node {
+        use ast::ElementInner::*;
+        match &self {
+            Attribute(identifier) => node!(f => '#' identifier),
+            Tuple(identifier) => node!(f => '.' identifier),
+            Method(call) => node!(f => '.' call),
+            ArrayElement(expression) => node!(f => '[' expression ']'),
+        }
+    }
+}
+
 impl Format for ast::Element {
     fn format(&self, f: &FormatConfig) -> Node {
-        match &self {
-            ast::Element::Attribute(identifier) => node!(f => '#' identifier),
-            ast::Element::Tuple(identifier) => node!(f => '.' identifier),
-            ast::Element::Method(call) => node!(f => '.' call),
-            ast::Element::ArrayElement(expression) => node!(f => '[' expression ']'),
-        }
+        with_extras(&self.extras, f, self.inner.format(f))
     }
 }
 
@@ -261,7 +266,7 @@ impl Format for Vec<ast::Element> {
         fn element_line_break(f: &FormatConfig, element: &ast::Element, is_last: bool) -> Node {
             node!(f =>
                 element
-                if matches!(element, ast::Element::ArrayElement(_)) || is_last {
+                if matches!(element.inner, ast::ElementInner::ArrayElement(_)) || is_last {
                     Node::Nil
                 } else {
                     Node::Hardline
