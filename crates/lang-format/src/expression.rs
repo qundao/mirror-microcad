@@ -3,7 +3,7 @@
 
 use crate::{Format, FormatConfig, Node, node};
 
-use microcad_syntax::ast::{self, StatementList};
+use microcad_syntax::ast;
 
 impl Format for ast::Operator {
     fn format(&self, _: &FormatConfig) -> Node {
@@ -17,7 +17,7 @@ impl Format for ast::UnaryOperator {
     }
 }
 
-fn format_body(body: &ast::StatementList, f: &FormatConfig) -> Node {
+pub(crate) fn format_body(body: &ast::StatementList, f: &FormatConfig) -> Node {
     match (body.statements.is_empty(), &body.tail) {
         (true, Some(tail)) => node!("{ ", tail.format(f), " }"),
         (true, None) => node!("{}"),
@@ -34,7 +34,7 @@ impl Format for ast::Expression {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::Expression::Literal(literal) => literal.format(f),
-            ast::Expression::Bracketed(_bracket, _) => todo!(),
+            ast::Expression::Bracketed(bracket, _) => node!('(', bracket.format(f), ')'),
             ast::Expression::Tuple(tuple_expression) => tuple_expression.format(f),
             ast::Expression::ArrayRange(array_range_expression) => array_range_expression.format(f),
             ast::Expression::ArrayList(array_list_expression) => array_list_expression.format(f),
@@ -53,14 +53,18 @@ impl Format for ast::Expression {
 }
 
 impl Format for ast::StringPart {
-    fn format(&self, _: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        match &self {
+            ast::StringPart::Char(string_character) => string_character.format(f),
+            ast::StringPart::Content(string_literal) => string_literal.format(f),
+            ast::StringPart::Expression(string_expression) => string_expression.format(f),
+        }
     }
 }
 
 impl Format for ast::StringCharacter {
     fn format<'a>(&self, _: &FormatConfig) -> Node {
-        todo!()
+        self.character.into()
     }
 }
 
@@ -77,15 +81,22 @@ impl Format for ast::StringFormatSpecification {
 }
 
 impl Format for ast::FormatString {
-    fn format(&self, _: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            '"',
+            self.parts
+                .iter()
+                .map(|part| part.format(f))
+                .collect::<Vec<_>>(),
+            '"'
+        )
     }
 }
 
 impl Format for ast::TupleItem {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self.name {
-            Some(name) => vec![name.format(f), " = ".into(), self.value.format(f)].into(),
+            Some(name) => node!(f => name " = " self.value),
             None => self.value.format(f),
         }
     }
@@ -99,26 +110,7 @@ impl Format for ast::TupleExpression {
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 
-        if can_break {
-            vec![
-                "(".into(),
-                Node::Hardline,
-                Node::Indent {
-                    width: f.indent_width,
-                    node: Box::new(
-                        nodes
-                            .into_iter()
-                            .flat_map(|node| vec![node, ",".into(), Node::Hardline])
-                            .collect::<Vec<_>>()
-                            .into(),
-                    ),
-                },
-                ")".into(),
-            ]
-            .into()
-        } else {
-            vec!["(".into(), Node::interspersed(nodes, ", "), ")".into()].into()
-        }
+        Node::braces(Node::list(nodes, ',', can_break), f.indent_width, can_break)
     }
 }
 
@@ -167,14 +159,20 @@ impl Format for ast::QualifiedName {
 }
 
 impl Format for ast::BinaryOperation {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            self.lhs.format(f),
+            ' ',
+            self.operation.format(f),
+            ' ',
+            self.rhs.format(f)
+        )
     }
 }
 
 impl Format for ast::UnaryOperation {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(self.operation.format(f), self.rhs.format(f))
     }
 }
 
@@ -188,26 +186,36 @@ impl Format for ast::Argument {
 }
 
 impl Format for ast::UnnamedArgument {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        self.value.format(f)
     }
 }
 
 impl Format for ast::NamedArgument {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f => self.name " = " self.value)
     }
 }
 
 impl Format for ast::ArgumentList {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        let nodes: Vec<Node> = self.arguments.iter().map(|item| item.format(f)).collect();
+        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
+        let can_break = self.arguments.len() > 4
+            || width > f.max_width
+            || nodes.iter().any(|node| node.contains_hardline());
+
+        Node::braces(Node::list(nodes, ',', can_break), f.indent_width, can_break)
     }
 }
 
 impl Format for ast::Call {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            f =>
+            self.name
+            self.arguments
+        )
     }
 }
 

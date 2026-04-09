@@ -15,14 +15,25 @@ impl Format for Option<ast::Visibility> {
 }
 
 impl Format for ast::Parameter {
-    fn format(&self, _: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        match (&self.ty, &self.default) {
+            (None, None) => self.name.format(f),
+            (None, Some(def)) => node!(f => self.name " = " def),
+            (Some(ty), None) => node!(f => self.name ": " ty),
+            (Some(ty), Some(def)) => node!(f => self.name ": " ty " = " def),
+        }
     }
 }
 
 impl Format for ast::ParameterList {
-    fn format(&self, _: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        let nodes: Vec<Node> = self.parameters.iter().map(|item| item.format(f)).collect();
+        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
+        let can_break = self.parameters.len() > 4
+            || width > f.max_width
+            || nodes.iter().any(|node| node.contains_hardline());
+
+        Node::braces(Node::list(nodes, ',', can_break), f.indent_width, can_break)
     }
 }
 
@@ -33,20 +44,56 @@ impl Format for ast::WorkbenchKind {
 }
 
 impl Format for ast::WorkbenchDefinition {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            f =>
+            // self.doc
+            // self.attributes
+            self.visibility
+            self.kind ' '
+            self.name
+            self.plan ' '
+            crate::expression::format_body(&self.body, f)
+        )
     }
 }
 
 impl Format for ast::ModuleDefinition {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        match &self.body {
+            Some(body) => {
+                node!(
+                    f =>
+                    // self.doc
+                    // self.attributes
+                    self.visibility.format(f)
+                    "mod " self.name " "
+                    crate::expression::format_body(&body, f)
+                )
+            }
+            None => {
+                node!(
+                    f =>
+                    // self.doc
+                    // self.attributes
+                    self.visibility
+                    "mod " self.name ";"
+                )
+            }
+        }
     }
 }
 
 impl Format for ast::FunctionDefinition {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f =>
+            //self.doc
+            //self.attributes
+            self.visibility
+            "fn " self.name
+            self.parameters " "
+            crate::expression::format_body(&self.body, f)
+        )
     }
 }
 
@@ -54,33 +101,30 @@ impl Format for ast::UseStatementPart {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::UseStatementPart::Identifier(identifier) => identifier.format(f),
-            ast::UseStatementPart::Glob(_) => "*".into(),
+            ast::UseStatementPart::Glob(_) => '*'.into(),
             ast::UseStatementPart::Error(_) => Node::Nil,
         }
     }
 }
 
 impl Format for ast::UseName {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        Node::interspersed(self.parts.iter().map(|part| part.format(f)), "::")
     }
 }
 
 impl Format for ast::UseStatement {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            f => self.visibility "use " self.name
+            self.use_as.as_ref().map(|ident| node!(f => " as " ident))
+        )
     }
 }
 
 impl Format for ast::ConstAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(
-            self.visibility.format(f),
-            "const ",
-            self.name.format(f),
-            " = ",
-            self.value.format(f)
-        )
+        node!(f => self.visibility "const " self.name " = " self.value)
     }
 }
 
@@ -91,8 +135,11 @@ impl Format for ast::InitDefinition {
 }
 
 impl Format for ast::Return {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        match &self.value {
+            Some(value) => node!(f => "return " value),
+            None => "return".into(),
+        }
     }
 }
 
@@ -103,8 +150,19 @@ impl Format for ast::LocalAssignment {
 }
 
 impl Format for ast::PropertyAssignment {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(
+            f =>
+            // self.doc
+            // self.attributes
+            "prop "
+            self.name
+            match &self.ty {
+                Some(ty) => node!(f => ": " ty),
+                None => Node::Nil,
+            }
+            " = " self.value
+        )
     }
 }
 
@@ -172,8 +230,9 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
     fn format(&self, f: &FormatConfig) -> Node {
         // Join statements with a hardline so they sit on separate lines
         self.iter()
+            .enumerate()
             .map(
-                |(statement, whitespace)| match statement.ends_with_semicolon() {
+                |(i, (statement, whitespace))| match statement.ends_with_semicolon() {
                     true => {
                         let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
                         let newline_count = whitespace.chars().filter(|&c| c == '\n').count();
@@ -188,7 +247,14 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
                             Node::Hardline,
                         ]
                     }
-                    false => node![statement.format(f), Node::Hardline],
+                    false => node!(
+                        statement.format(f),
+                        if i >= self.len() - 1 {
+                            Node::Hardline
+                        } else {
+                            node!(Node::Hardline, Node::Hardline)
+                        }
+                    ),
                 },
             )
             .collect::<Vec<Node>>()

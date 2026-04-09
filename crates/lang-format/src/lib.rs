@@ -170,9 +170,35 @@ macro_rules! node {
     // Multiple elements: node!(begin, body, end)
     ($($node:expr),* $(,)?) => {
         $crate::Node::from(vec![
-            $( $crate::Node::from($node) ),*
+            $( $node.into() ),*
         ])
     };
+    // Multiple formatted elements: node!(f => begin, body, end)
+    ($f:ident => $($node:expr)*) => {
+        $crate::Node::from(vec![
+            $( $node.format($f) ),*
+        ])
+    };
+
+}
+
+impl<T> Format for T
+where
+    T: Into<Node> + Clone,
+{
+    fn format(&self, _f: &FormatConfig) -> Node {
+        self.clone().into()
+    }
+}
+
+// Blanket impl for Option
+impl<T: Format> Format for Option<T> {
+    fn format(&self, f: &FormatConfig) -> Node {
+        match self {
+            Some(inner) => inner.format(f),
+            None => Node::Nil, // Or whatever your "null" node is
+        }
+    }
 }
 
 impl Format for ast::SourceFile {
