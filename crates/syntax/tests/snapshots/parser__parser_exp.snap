@@ -39,9 +39,11 @@ Ok(
                             ),
                         },
                     ),
-                    Some(
-                        " ",
-                    ),
+                    [
+                        Whitespace(
+                            " ",
+                        ),
+                    ],
                 ),
                 (
                     Expression(
@@ -70,9 +72,11 @@ Ok(
                             ),
                         },
                     ),
-                    Some(
-                        " ",
-                    ),
+                    [
+                        Whitespace(
+                            " ",
+                        ),
+                    ],
                 ),
                 (
                     Expression(
@@ -101,9 +105,11 @@ Ok(
                             ),
                         },
                     ),
-                    Some(
-                        " ",
-                    ),
+                    [
+                        Whitespace(
+                            " ",
+                        ),
+                    ],
                 ),
                 (
                     Expression(
@@ -132,9 +138,11 @@ Ok(
                             ),
                         },
                     ),
-                    Some(
-                        " ",
-                    ),
+                    [
+                        Whitespace(
+                            " ",
+                        ),
+                    ],
                 ),
                 (
                     Expression(
@@ -163,9 +171,11 @@ Ok(
                             ),
                         },
                     ),
-                    Some(
-                        " ",
-                    ),
+                    [
+                        Whitespace(
+                            " ",
+                        ),
+                    ],
                 ),
             ],
             tail: Some(

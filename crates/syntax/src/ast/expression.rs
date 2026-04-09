@@ -1,10 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    Span,
-    ast::{self, StatementList},
-};
+use crate::{Span, ast};
 use std::num::ParseIntError;
 
 /// An operator for binary operators, together with a span
@@ -316,15 +313,6 @@ pub enum Element {
 pub struct Body {
     pub span: Span,
     pub statements: ast::StatementList,
-}
-
-impl Body {
-    pub(crate) fn dummy(span: Span) -> Self {
-        Self {
-            span: span.clone(),
-            statements: StatementList::dummy(span),
-        }
-    }
 }
 
 /// An if expression, can be used as either a statement or expression

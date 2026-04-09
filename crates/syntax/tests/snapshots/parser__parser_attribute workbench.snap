@@ -199,9 +199,11 @@ Ok(
                                                     ),
                                                 },
                                             ),
-                                            Some(
-                                                "\n    ",
-                                            ),
+                                            [
+                                                Whitespace(
+                                                    "\n    ",
+                                                ),
+                                            ],
                                         ),
                                     ],
                                     tail: None,
@@ -209,7 +211,7 @@ Ok(
                             },
                         },
                     ),
-                    None,
+                    [],
                 ),
             ],
             tail: None,
