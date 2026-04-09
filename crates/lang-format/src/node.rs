@@ -3,7 +3,29 @@
 
 use compact_str::{CompactString, ToCompactString};
 
-use crate::node;
+use crate::{FormatConfig, node};
+
+/// How to perform a line break
+pub enum BreakMode {
+    NoBreak,
+    WithIndent(usize),
+}
+
+impl BreakMode {
+    /// Determines the break strategy based on the format config
+    pub fn from_layout(nodes: &[Node], max_items: usize, f: &FormatConfig) -> Self {
+        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
+        let too_many_items = max_items > 0 && nodes.len() > max_items;
+        let too_wide = width > f.max_width;
+        let forced_break = nodes.iter().any(|node| node.contains_hardline());
+
+        if too_many_items || too_wide || forced_break {
+            Self::WithIndent(f.indent_width)
+        } else {
+            Self::NoBreak
+        }
+    }
+}
 
 #[derive(Debug, Default, Clone, PartialEq)]
 pub enum Node {
@@ -62,20 +84,14 @@ impl Node {
     }
 
     /// A list of items with an separator
-    pub fn list<I>(
-        nodes: I,
-        separator: impl Into<Node>,
-        hardline: bool,
-        indent_width: usize,
-    ) -> Node
+    pub fn list<I>(nodes: I, separator: impl Into<Node>, break_mode: BreakMode) -> Node
     where
         I: IntoIterator<Item = Node>,
     {
         let sep = separator.into();
-        if hardline {
-            Self::vlist(nodes, sep, indent_width)
-        } else {
-            Self::hlist(nodes, node!(sep ' '))
+        match break_mode {
+            BreakMode::NoBreak => Self::hlist(nodes, node!(sep ' ')),
+            BreakMode::WithIndent(indent_width) => Self::vlist(nodes, sep, indent_width),
         }
     }
 

@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, Node, format_extra_trailing, node};
+use crate::{BreakMode, Format, FormatConfig, Node, format_extra_trailing, node};
 
 use microcad_syntax::ast::{self, ItemExtra, Visibility};
 
@@ -30,13 +30,10 @@ impl Format for ast::Parameter {
 impl Format for ast::ParameterList {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.parameters.iter().map(|item| item.format(f)).collect();
-        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = self.parameters.len() > 4
-            || width > f.max_width
-            || nodes.iter().any(|node| node.contains_hardline());
+        let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
         node!(f, self.extras =>
-            '(' Node::list(nodes, ',', can_break, f.indent_width) ')'
+            '(' Node::list(nodes, ',', break_mode) ')'
         )
     }
 }
@@ -199,11 +196,10 @@ impl Format for ast::Attribute {
         };
 
         let nodes: Vec<Node> = self.commands.iter().map(|attr| attr.format(f)).collect();
-        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
+        let break_mode = BreakMode::from_layout(&nodes, 0, f);
 
         node!(f, self.extras =>
-            prefix Node::list(nodes, ',', can_break, 0) suffix
+            prefix Node::list(nodes, ',', break_mode) suffix
         )
     }
 }
