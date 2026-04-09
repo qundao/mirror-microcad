@@ -14,5 +14,7 @@ mod nested {
 
     fn function() {}
 
+    fn another_function(test: Length) -> Length { test }
+
     mod another_mod {}
 }
