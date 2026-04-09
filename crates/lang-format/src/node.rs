@@ -138,19 +138,54 @@ impl Node {
                 .unwrap_or_default(),
         }
     }
+
+    /// Compact nodes: Remove Nil nodes and concatenate adjacent Text ndoes
+    pub fn compact(nodes: Vec<Node>) -> Self {
+        // 1. Filter out Nil and
+        // 2. flatten nested Groups
+        // 3. Merge adjacent Text nodes
+        let mut compacted = Vec::with_capacity(nodes.len());
+
+        for node in nodes {
+            match (compacted.last_mut(), node) {
+                (_, Node::Nil) => continue,
+                // Merge adjacent text nodes into one
+                (Some(Node::Text(last)), Node::Text(next)) => {
+                    last.push_str(&next);
+                }
+                (_, Node::Group(group)) => {
+                    let flattened = Self::compact(group);
+                    match flattened {
+                        Node::Group(mut sub_vec) => compacted.append(&mut sub_vec),
+                        Node::Nil => continue,
+                        node => {
+                            if let (Some(Node::Text(last)), Node::Text(next)) =
+                                (compacted.last_mut(), &node)
+                            {
+                                last.push_str(next);
+                            } else {
+                                compacted.push(node);
+                            }
+                        }
+                    }
+                }
+                // Otherwise, add the node
+                (_, other) => compacted.push(other),
+            }
+        }
+
+        // 4. Handle the resulting length
+        match compacted.len() {
+            0 => Node::Nil,
+            1 => compacted.remove(0),
+            _ => Node::Group(compacted),
+        }
+    }
 }
 
 impl From<Vec<Node>> for Node {
     fn from(nodes: Vec<Node>) -> Self {
-        let nodes = nodes
-            .into_iter()
-            .filter(|node| !matches!(node, Node::Nil))
-            .collect::<Vec<_>>();
-        match nodes.len() {
-            0 => Node::Nil,
-            1 => nodes.first().expect("Some node").clone(),
-            _ => Node::Group(nodes),
-        }
+        Node::compact(nodes)
     }
 }
 
