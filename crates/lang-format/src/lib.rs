@@ -12,7 +12,10 @@ mod node;
 mod statement;
 mod ty;
 
-use crate::{error::FormatError, node::Node};
+pub(crate) use crate::{
+    error::FormatError,
+    node::{BreakMode, Node},
+};
 
 impl Format for ast::ItemExtra {
     fn format(&self, f: &FormatConfig) -> Node {

@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, Node, node};
+use crate::{BreakMode, Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast;
 
@@ -37,12 +37,8 @@ impl Format for ast::TupleType {
                 None => item.1.format(f),
             })
             .collect();
+        let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
-        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = nodes.len() > 4
-            || width > f.max_width
-            || nodes.iter().any(|node| node.contains_hardline());
-
-        node!('(' Node::list(nodes, ',', can_break, f.indent_width) ')')
+        node!('(' Node::list(nodes, ',', break_mode) ')')
     }
 }

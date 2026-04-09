@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, Node, node};
+use crate::{BreakMode, Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast;
 
@@ -117,13 +117,9 @@ impl Format for ast::TupleItem {
 impl Format for ast::TupleExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.values.iter().map(|item| item.format(f)).collect();
-        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = self.values.len() > 4
-            || width > f.max_width
-            || nodes.iter().any(|node| node.contains_hardline());
-
+        let break_mode = BreakMode::from_layout(&nodes, 4, f);
         node!(f, self.extras =>
-            '(' Node::list(nodes, ',', can_break, f.indent_width) ')'
+            '(' Node::list(nodes, ',', break_mode) ')'
         )
     }
 }
@@ -145,11 +141,10 @@ impl Format for ast::ArrayRangeExpression {
 impl Format for ast::ArrayListExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.items.iter().map(|item| item.format(f)).collect();
-        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
+        let break_mode = BreakMode::from_layout(&nodes, 0, f);
 
         node!(f, self.extras =>
-            '[' Node::list(nodes, ',', can_break, f.indent_width) ']'
+            '[' Node::list(nodes, ',', break_mode) ']'
         )
     }
 }
@@ -198,12 +193,9 @@ impl Format for ast::NamedArgument {
 impl Format for ast::ArgumentList {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.arguments.iter().map(|item| item.format(f)).collect();
-        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = self.arguments.len() > 4
-            || width > f.max_width
-            || nodes.iter().any(|node| node.contains_hardline());
+        let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
-        node!(f, self.extras => '(' Node::list(nodes, ',', can_break, f.indent_width) ')')
+        node!(f, self.extras => '(' Node::list(nodes, ',', break_mode) ')')
     }
 }
 
