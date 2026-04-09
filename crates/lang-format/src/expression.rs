@@ -207,25 +207,63 @@ impl Format for ast::Call {
 }
 
 impl Format for ast::Element {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        match &self {
+            ast::Element::Attribute(identifier) => node!(f => '#' identifier),
+            ast::Element::Tuple(identifier) => node!(f => '.' identifier),
+            ast::Element::Method(call) => node!(f => '.' call),
+            ast::Element::ArrayElement(expression) => node!(f => '[' expression ']'),
+        }
     }
 }
 
 impl Format for Vec<ast::Element> {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        fn element_line_break(f: &FormatConfig, element: &ast::Element, is_last: bool) -> Node {
+            node!(f =>
+                element
+                if matches!(element, ast::Element::ArrayElement(_)) || is_last {
+                    Node::Nil
+                } else {
+                    Node::Hardline
+                }
+            )
+        }
+
+        let nodes: Vec<Node> = self.iter().map(|item| item.format(f)).collect();
+        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
+        let can_break = nodes.len() > 3
+            || width > f.max_width
+            || nodes.iter().any(|node| node.contains_hardline());
+        if can_break {
+            node!(
+                Node::Hardline
+                Node::indent(f.indent_width, self.iter().enumerate().map(|(i, element)| element_line_break(f, element, i >= self.len() - 1)).collect::<Vec<_>>())
+            )
+        } else {
+            Node::hlist(nodes, Node::Nil)
+        }
     }
 }
 
 impl Format for ast::ElementAccess {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f => self.value self.element_chain)
     }
 }
 
 impl Format for ast::If {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f =>
+            "if " self.condition ' ' format_body(&self.body, f)
+            match &self.else_body {
+                Some(body) => node!(" else " format_body(body, f)),
+                None => Node::Nil,
+            }
+            match &self.next_if {
+                Some(next_if) => node!(f => ' '  next_if),
+                None => Node::Nil,
+            }
+        )
     }
 }

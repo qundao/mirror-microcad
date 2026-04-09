@@ -39,7 +39,7 @@ impl Format for ast::TupleType {
             .collect();
 
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = self.inner.len() > 4
+        let can_break = nodes.len() > 4
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 

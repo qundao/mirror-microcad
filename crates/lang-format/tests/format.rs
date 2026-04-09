@@ -40,6 +40,6 @@ formatted_test_case!(statement_list_whitespace);
 formatted_test_case!(array);
 formatted_test_case!(tuple);
 formatted_test_case!(body);
-formatted_test_case!(expr_op);
+formatted_test_case!(expression);
 formatted_test_case!(statements);
 formatted_test_case!(workbench);
