@@ -22,9 +22,9 @@ pub struct Identifier {
     pub name: CompactString,
 }
 
-impl Identifier {
-    pub(crate) fn dummy(span: Span) -> Self {
-        Identifier {
+impl Dummy for Identifier {
+    fn dummy(span: Span) -> Self {
+        Self {
             span,
             name: CompactString::default(),
         }
@@ -53,4 +53,11 @@ pub struct ItemExtras {
 pub enum ItemExtra {
     Comment(Comment),
     Whitespace(String),
+}
+
+/// Return a dummy of this syntax element.
+///
+/// Used for recovery.
+pub(crate) trait Dummy {
+    fn dummy(span: Span) -> Self;
 }
