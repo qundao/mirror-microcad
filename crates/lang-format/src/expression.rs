@@ -114,7 +114,7 @@ impl Format for ast::TupleExpression {
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 
-        Node::braces(Node::list(nodes, ',', can_break), f.indent_width, can_break)
+        node!('(' Node::list(nodes, ',', can_break, f.indent_width) ')')
     }
 }
 
@@ -203,7 +203,7 @@ impl Format for ast::ArgumentList {
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 
-        Node::braces(Node::list(nodes, ',', can_break), f.indent_width, can_break)
+        node!('(' Node::list(nodes, ',', can_break, f.indent_width) ')')
     }
 }
 
