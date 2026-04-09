@@ -245,7 +245,11 @@ impl Format for Vec<ast::Element> {
             )
         }
 
-        let nodes: Vec<Node> = self.iter().map(|item| item.format(f)).collect();
+        let nodes: Vec<Node> = self
+            .iter()
+            .enumerate()
+            .map(|(i, element)| element_line_break(f, element, i >= self.len() - 1))
+            .collect();
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = nodes.len() > 3
             || width > f.max_width
@@ -253,7 +257,7 @@ impl Format for Vec<ast::Element> {
         if can_break {
             node!(
                 Node::Hardline
-                Node::indent(f.indent_width, self.iter().enumerate().map(|(i, element)| element_line_break(f, element, i >= self.len() - 1)).collect::<Vec<_>>())
+                Node::indent(f.indent_width, nodes)
             )
         } else {
             Node::hlist(nodes, Node::Nil)
