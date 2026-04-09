@@ -40,36 +40,43 @@ Ok(
                                     },
                                 ),
                                 element_chain: [
-                                    Method(
-                                        Call {
-                                            span: 4..9,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            name: QualifiedName {
-                                                span: 4..7,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                parts: [
-                                                    Identifier {
-                                                        span: 4..7,
-                                                        name: "bar",
-                                                    },
-                                                ],
-                                            },
-                                            arguments: ArgumentList {
-                                                span: 8..8,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                arguments: [],
-                                            },
+                                    Element {
+                                        span: 3..9,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        inner: Method(
+                                            Call {
+                                                span: 4..9,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                name: QualifiedName {
+                                                    span: 4..7,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 4..7,
+                                                            name: "bar",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 8..8,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    arguments: [],
+                                                },
+                                            },
+                                        ),
+                                    },
                                 ],
                             },
                         ),

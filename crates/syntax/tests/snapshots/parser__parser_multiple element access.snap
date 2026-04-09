@@ -40,92 +40,120 @@ Ok(
                                     },
                                 ),
                                 element_chain: [
-                                    ArrayElement(
-                                        Literal(
-                                            Literal {
-                                                span: 4..5,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 4..5,
-                                                        value: 1,
-                                                        raw: "1",
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    ),
-                                    Attribute(
-                                        Identifier {
-                                            span: 7..10,
-                                            name: "bar",
+                                    Element {
+                                        span: 3..6,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
-                                    Tuple(
-                                        Identifier {
-                                            span: 11..14,
-                                            name: "asd",
-                                        },
-                                    ),
-                                    Method(
-                                        Call {
-                                            span: 15..22,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            name: QualifiedName {
-                                                span: 15..19,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                parts: [
-                                                    Identifier {
-                                                        span: 15..19,
-                                                        name: "call",
+                                        inner: ArrayElement(
+                                            Literal(
+                                                Literal {
+                                                    span: 4..5,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
                                                     },
-                                                ],
-                                            },
-                                            arguments: ArgumentList {
-                                                span: 20..21,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                arguments: [
-                                                    Unnamed(
-                                                        UnnamedArgument {
-                                                            span: 20..21,
-                                                            extras: ItemExtras {
-                                                                leading: [],
-                                                                trailing: [],
-                                                            },
-                                                            value: Literal(
-                                                                Literal {
-                                                                    span: 20..21,
-                                                                    extras: ItemExtras {
-                                                                        leading: [],
-                                                                        trailing: [],
-                                                                    },
-                                                                    literal: Integer(
-                                                                        IntegerLiteral {
-                                                                            span: 20..21,
-                                                                            value: 1,
-                                                                            raw: "1",
-                                                                        },
-                                                                    ),
-                                                                },
-                                                            ),
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 4..5,
+                                                            value: 1,
+                                                            raw: "1",
                                                         },
                                                     ),
-                                                ],
-                                            },
+                                                },
+                                            ),
+                                        ),
+                                    },
+                                    Element {
+                                        span: 6..10,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
                                         },
-                                    ),
+                                        inner: Attribute(
+                                            Identifier {
+                                                span: 7..10,
+                                                name: "bar",
+                                            },
+                                        ),
+                                    },
+                                    Element {
+                                        span: 10..14,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        inner: Tuple(
+                                            Identifier {
+                                                span: 11..14,
+                                                name: "asd",
+                                            },
+                                        ),
+                                    },
+                                    Element {
+                                        span: 14..22,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        inner: Method(
+                                            Call {
+                                                span: 15..22,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                name: QualifiedName {
+                                                    span: 15..19,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 15..19,
+                                                            name: "call",
+                                                        },
+                                                    ],
+                                                },
+                                                arguments: ArgumentList {
+                                                    span: 20..21,
+                                                    extras: ItemExtras {
+                                                        leading: [],
+                                                        trailing: [],
+                                                    },
+                                                    arguments: [
+                                                        Unnamed(
+                                                            UnnamedArgument {
+                                                                span: 20..21,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                value: Literal(
+                                                                    Literal {
+                                                                        span: 20..21,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Integer(
+                                                                            IntegerLiteral {
+                                                                                span: 20..21,
+                                                                                value: 1,
+                                                                                raw: "1",
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                },
+                                            },
+                                        ),
+                                    },
                                 ],
                             },
                         ),
