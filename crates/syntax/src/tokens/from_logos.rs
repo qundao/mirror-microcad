@@ -124,6 +124,9 @@ fn map_normal_token(token: SpannedToken<NormalToken>) -> impl Iterator<Item = Sp
         NormalToken::KeywordType => {
             Either::Left(once(SpannedToken::new(token.span, Token::KeywordType)))
         }
+        NormalToken::KeywordExtern => {
+            Either::Left(once(SpannedToken::new(token.span, Token::KeywordExtern)))
+        }
         NormalToken::Identifier(i) => {
             Either::Left(once(SpannedToken::new(token.span, Token::Identifier(i))))
         }

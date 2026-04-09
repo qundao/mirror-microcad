@@ -86,7 +86,8 @@ fn parser<'tokens>()
             Token::KeywordEnum |
             Token::KeywordStruct |
             Token::KeywordMatch |
-            Token::KeywordType
+            Token::KeywordType |
+            Token::KeywordExtern
         ) => token.kind(),
     }
     .boxed();
