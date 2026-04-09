@@ -77,60 +77,67 @@ Ok(
                                             ),
                                         },
                                     ),
-                                    body: StatementList {
-                                        span: 11..18,
-                                        extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
-                                        },
-                                        statements: [
-                                            (
-                                                Expression(
-                                                    ExpressionStatement {
-                                                        span: 11..16,
-                                                        extras: ItemExtras {
-                                                            leading: [],
-                                                            trailing: [],
-                                                        },
-                                                        attributes: [],
-                                                        expression: Call(
-                                                            Call {
-                                                                span: 11..16,
-                                                                extras: ItemExtras {
-                                                                    leading: [],
-                                                                    trailing: [],
-                                                                },
-                                                                name: QualifiedName {
-                                                                    span: 11..14,
-                                                                    extras: ItemExtras {
-                                                                        leading: [],
-                                                                        trailing: [],
-                                                                    },
-                                                                    parts: [
-                                                                        Identifier {
-                                                                            span: 11..14,
-                                                                            name: "foo",
-                                                                        },
-                                                                    ],
-                                                                },
-                                                                arguments: ArgumentList {
-                                                                    span: 15..15,
-                                                                    extras: ItemExtras {
-                                                                        leading: [],
-                                                                        trailing: [],
-                                                                    },
-                                                                    arguments: [],
-                                                                },
+                                    body: Body {
+                                        span: 9..19,
+                                        statements: StatementList {
+                                            span: 10..18,
+                                            extras: ItemExtras {
+                                                leading: [
+                                                    Whitespace(
+                                                        " ",
+                                                    ),
+                                                ],
+                                                trailing: [],
+                                            },
+                                            statements: [
+                                                (
+                                                    Expression(
+                                                        ExpressionStatement {
+                                                            span: 11..16,
+                                                            extras: ItemExtras {
+                                                                leading: [],
+                                                                trailing: [],
                                                             },
-                                                        ),
-                                                    },
+                                                            attributes: [],
+                                                            expression: Call(
+                                                                Call {
+                                                                    span: 11..16,
+                                                                    extras: ItemExtras {
+                                                                        leading: [],
+                                                                        trailing: [],
+                                                                    },
+                                                                    name: QualifiedName {
+                                                                        span: 11..14,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 11..14,
+                                                                                name: "foo",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                    arguments: ArgumentList {
+                                                                        span: 15..15,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        arguments: [],
+                                                                    },
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                    Some(
+                                                        " ",
+                                                    ),
                                                 ),
-                                                Some(
-                                                    " ",
-                                                ),
-                                            ),
-                                        ],
-                                        tail: None,
+                                            ],
+                                            tail: None,
+                                        },
                                     },
                                     next_if_span: None,
                                     next_if: None,

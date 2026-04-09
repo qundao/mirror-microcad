@@ -40,14 +40,17 @@ Ok(
                                 },
                                 parameters: [],
                             },
-                            body: StatementList {
-                                span: 27..27,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
+                            body: Body {
+                                span: 26..28,
+                                statements: StatementList {
+                                    span: 27..27,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    statements: [],
+                                    tail: None,
                                 },
-                                statements: [],
-                                tail: None,
                             },
                         },
                     ),

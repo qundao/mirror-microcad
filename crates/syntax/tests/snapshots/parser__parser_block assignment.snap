@@ -27,33 +27,96 @@ Ok(
                             },
                             ty: None,
                             value: Block(
-                                StatementList {
-                                    span: 5..21,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
-                                    },
-                                    statements: [
-                                        (
-                                            LocalAssignment(
-                                                LocalAssignment {
-                                                    span: 5..14,
+                                Body {
+                                    span: 4..22,
+                                    statements: StatementList {
+                                        span: 5..21,
+                                        extras: ItemExtras {
+                                            leading: [],
+                                            trailing: [],
+                                        },
+                                        statements: [
+                                            (
+                                                LocalAssignment(
+                                                    LocalAssignment {
+                                                        span: 5..14,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
+                                                        },
+                                                        attributes: [],
+                                                        name: Identifier {
+                                                            span: 5..6,
+                                                            name: "a",
+                                                        },
+                                                        ty: None,
+                                                        value: BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 9..14,
+                                                                lhs: Literal(
+                                                                    Literal {
+                                                                        span: 9..11,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
+                                                                        },
+                                                                        literal: Integer(
+                                                                            IntegerLiteral {
+                                                                                span: 9..10,
+                                                                                value: 1,
+                                                                                raw: "1",
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                                operation: Operator {
+                                                                    span: 11..12,
+                                                                    operation: Add,
+                                                                },
+                                                                rhs: Literal(
+                                                                    Literal {
+                                                                        span: 13..14,
+                                                                        extras: ItemExtras {
+                                                                            leading: [],
+                                                                            trailing: [],
+                                                                        },
+                                                                        literal: Integer(
+                                                                            IntegerLiteral {
+                                                                                span: 13..14,
+                                                                                value: 2,
+                                                                                raw: "2",
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                                Some(
+                                                    " ",
+                                                ),
+                                            ),
+                                        ],
+                                        tail: Some(
+                                            Expression(
+                                                ExpressionStatement {
+                                                    span: 16..21,
                                                     extras: ItemExtras {
                                                         leading: [],
                                                         trailing: [],
                                                     },
                                                     attributes: [],
-                                                    name: Identifier {
-                                                        span: 5..6,
-                                                        name: "a",
-                                                    },
-                                                    ty: None,
-                                                    value: BinaryOperation(
+                                                    expression: BinaryOperation(
                                                         BinaryOperation {
-                                                            span: 9..14,
-                                                            lhs: Literal(
-                                                                Literal {
-                                                                    span: 9..11,
+                                                            span: 16..21,
+                                                            lhs: QualifiedName(
+                                                                QualifiedName {
+                                                                    span: 16..17,
                                                                     extras: ItemExtras {
                                                                         leading: [],
                                                                         trailing: [
@@ -62,31 +125,30 @@ Ok(
                                                                             ),
                                                                         ],
                                                                     },
-                                                                    literal: Integer(
-                                                                        IntegerLiteral {
-                                                                            span: 9..10,
-                                                                            value: 1,
-                                                                            raw: "1",
+                                                                    parts: [
+                                                                        Identifier {
+                                                                            span: 16..17,
+                                                                            name: "a",
                                                                         },
-                                                                    ),
+                                                                    ],
                                                                 },
                                                             ),
                                                             operation: Operator {
-                                                                span: 11..12,
-                                                                operation: Add,
+                                                                span: 18..19,
+                                                                operation: Multiply,
                                                             },
                                                             rhs: Literal(
                                                                 Literal {
-                                                                    span: 13..14,
+                                                                    span: 20..21,
                                                                     extras: ItemExtras {
                                                                         leading: [],
                                                                         trailing: [],
                                                                     },
                                                                     literal: Integer(
                                                                         IntegerLiteral {
-                                                                            span: 13..14,
-                                                                            value: 2,
-                                                                            raw: "2",
+                                                                            span: 20..21,
+                                                                            value: 3,
+                                                                            raw: "3",
                                                                         },
                                                                     ),
                                                                 },
@@ -95,67 +157,8 @@ Ok(
                                                     ),
                                                 },
                                             ),
-                                            Some(
-                                                " ",
-                                            ),
                                         ),
-                                    ],
-                                    tail: Some(
-                                        Expression(
-                                            ExpressionStatement {
-                                                span: 16..21,
-                                                extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
-                                                },
-                                                attributes: [],
-                                                expression: BinaryOperation(
-                                                    BinaryOperation {
-                                                        span: 16..21,
-                                                        lhs: QualifiedName(
-                                                            QualifiedName {
-                                                                span: 16..17,
-                                                                extras: ItemExtras {
-                                                                    leading: [],
-                                                                    trailing: [
-                                                                        Whitespace(
-                                                                            " ",
-                                                                        ),
-                                                                    ],
-                                                                },
-                                                                parts: [
-                                                                    Identifier {
-                                                                        span: 16..17,
-                                                                        name: "a",
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ),
-                                                        operation: Operator {
-                                                            span: 18..19,
-                                                            operation: Multiply,
-                                                        },
-                                                        rhs: Literal(
-                                                            Literal {
-                                                                span: 20..21,
-                                                                extras: ItemExtras {
-                                                                    leading: [],
-                                                                    trailing: [],
-                                                                },
-                                                                literal: Integer(
-                                                                    IntegerLiteral {
-                                                                        span: 20..21,
-                                                                        value: 3,
-                                                                        raw: "3",
-                                                                    },
-                                                                ),
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    ),
+                                    },
                                 },
                             ),
                         },

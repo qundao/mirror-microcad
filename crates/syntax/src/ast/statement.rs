@@ -110,7 +110,7 @@ pub struct WorkbenchDefinition {
     pub visibility: Option<Visibility>,
     pub name: ast::Identifier,
     pub plan: ParameterList,
-    pub body: StatementList,
+    pub body: ast::Body,
 }
 
 /// A definition of a module
@@ -124,7 +124,7 @@ pub struct ModuleDefinition {
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: ast::Identifier,
-    pub body: Option<StatementList>,
+    pub body: Option<ast::Body>,
 }
 
 /// A definition of a function
@@ -140,7 +140,7 @@ pub struct FunctionDefinition {
     pub name: ast::Identifier,
     pub parameters: ParameterList,
     pub return_type: Option<ast::Type>,
-    pub body: StatementList,
+    pub body: ast::Body,
 }
 
 /// An init definition for a workbench
@@ -153,7 +153,7 @@ pub struct InitDefinition {
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub parameters: ParameterList,
-    pub body: StatementList,
+    pub body: ast::Body,
 }
 
 /// A use statement that imports an item from an external library

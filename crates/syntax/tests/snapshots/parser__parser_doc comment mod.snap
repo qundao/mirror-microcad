@@ -38,51 +38,58 @@ Ok(
                                 name: "foo",
                             },
                             body: Some(
-                                StatementList {
-                                    span: 38..49,
-                                    extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
-                                    },
-                                    statements: [
-                                        (
-                                            LocalAssignment(
-                                                LocalAssignment {
-                                                    span: 38..43,
-                                                    extras: ItemExtras {
-                                                        leading: [],
-                                                        trailing: [],
-                                                    },
-                                                    attributes: [],
-                                                    name: Identifier {
-                                                        span: 38..39,
-                                                        name: "a",
-                                                    },
-                                                    ty: None,
-                                                    value: Literal(
-                                                        Literal {
-                                                            span: 42..43,
-                                                            extras: ItemExtras {
-                                                                leading: [],
-                                                                trailing: [],
-                                                            },
-                                                            literal: Integer(
-                                                                IntegerLiteral {
-                                                                    span: 42..43,
-                                                                    value: 1,
-                                                                    raw: "1",
-                                                                },
-                                                            ),
+                                Body {
+                                    span: 28..50,
+                                    statements: StatementList {
+                                        span: 29..49,
+                                        extras: ItemExtras {
+                                            leading: [
+                                                Whitespace(
+                                                    "\n        ",
+                                                ),
+                                            ],
+                                            trailing: [],
+                                        },
+                                        statements: [
+                                            (
+                                                LocalAssignment(
+                                                    LocalAssignment {
+                                                        span: 38..43,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [],
                                                         },
-                                                    ),
-                                                },
+                                                        attributes: [],
+                                                        name: Identifier {
+                                                            span: 38..39,
+                                                            name: "a",
+                                                        },
+                                                        ty: None,
+                                                        value: Literal(
+                                                            Literal {
+                                                                span: 42..43,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                literal: Integer(
+                                                                    IntegerLiteral {
+                                                                        span: 42..43,
+                                                                        value: 1,
+                                                                        raw: "1",
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                                Some(
+                                                    "\n    ",
+                                                ),
                                             ),
-                                            Some(
-                                                "\n    ",
-                                            ),
-                                        ),
-                                    ],
-                                    tail: None,
+                                        ],
+                                        tail: None,
+                                    },
                                 },
                             ),
                         },
