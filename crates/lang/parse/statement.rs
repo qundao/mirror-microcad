@@ -194,7 +194,6 @@ impl FromAst for Statement {
             ast::Statement::Const(a) => {
                 Statement::Assignment(AssignmentStatement::from_ast_const(a, context)?)
             }
-            ast::Statement::Comment(_) => unreachable!("comments are filtered out"),
             ast::Statement::Error(span) => {
                 return Err(ParseError::InvalidStatement {
                     src_ref: context.src_ref(span),
@@ -229,7 +228,6 @@ impl FromAst for StatementList {
                 .iter()
                 .map(|(statement, _)| statement)
                 .chain(node.tail.iter().map(|tail| tail.as_ref()))
-                .filter(|statement| !matches!(statement, ast::Statement::Comment(_)))
                 .map(|statement| Statement::from_ast(statement, context))
                 .collect::<Result<Vec<_>, _>>()?,
         ))
