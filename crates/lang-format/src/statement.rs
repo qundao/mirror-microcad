@@ -33,7 +33,7 @@ impl Format for ast::ParameterList {
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 
-        Node::braces(Node::list(nodes, ',', can_break), f.indent_width, can_break)
+        node!('(' Node::list(nodes, ',', can_break, f.indent_width) ')')
     }
 }
 
@@ -206,7 +206,7 @@ impl Format for ast::Attribute {
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
 
-        node!(prefix Node::list(nodes, ',', can_break) suffix)
+        node!(prefix Node::list(nodes, ',', can_break, 0) suffix)
     }
 }
 
@@ -215,7 +215,7 @@ impl Format for Vec<ast::Attribute> {
         if self.is_empty() {
             Node::Nil
         } else {
-            Node::vlist(self.iter().map(|attr| attr.format(f)), Node::Nil)
+            Node::vlist(self.iter().map(|attr| attr.format(f)), Node::Nil, 0)
         }
     }
 }

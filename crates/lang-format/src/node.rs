@@ -45,45 +45,40 @@ impl Node {
         result.into()
     }
 
-    pub fn vlist<I>(nodes: I, separator: impl Into<Node>) -> Node
+    pub fn vlist<I>(nodes: I, separator: impl Into<Node>, indent_width: usize) -> Node
     where
         I: IntoIterator<Item = Node>,
     {
         let sep = separator.into();
-        nodes
+        let nodes: Node = nodes
             .into_iter()
             .flat_map(|node| vec![node, sep.clone(), Node::Hardline])
             .collect::<Vec<_>>()
-            .into()
+            .into();
+        match indent_width {
+            0 => nodes,
+            width => node!(
+                Node::Hardline
+                Node::Indent { width, node: Box::new(nodes) }
+            ),
+        }
     }
 
     /// A list of items with an separator
-    pub fn list<I>(nodes: I, separator: impl Into<Node>, hardline: bool) -> Node
+    pub fn list<I>(
+        nodes: I,
+        separator: impl Into<Node>,
+        hardline: bool,
+        indent_width: usize,
+    ) -> Node
     where
         I: IntoIterator<Item = Node>,
     {
         let sep = separator.into();
         if hardline {
-            Self::vlist(nodes, sep)
+            Self::vlist(nodes, sep, indent_width)
         } else {
             Self::hlist(nodes, node!(sep ' '))
-        }
-    }
-
-    /// A node embraced by `()`
-    pub fn braces(node: impl Into<Node>, indent_width: usize, hardline: bool) -> Node {
-        let node: Node = node.into();
-        if hardline {
-            node!(
-                '(' Node::Hardline
-                    Node::Indent {
-                        width: indent_width,
-                        node: Box::new(node),
-                    }
-                ')'
-            )
-        } else {
-            node!('(' node ')')
         }
     }
 

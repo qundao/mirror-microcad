@@ -45,6 +45,7 @@ impl Format for ast::Comment {
             ast::CommentInner::SingleLine(items) => Node::vlist(
                 items.into_iter().cloned().map(|item| item.into()),
                 Node::Nil,
+                0,
             ),
             ast::CommentInner::MultiLine(line) => node!("/*" Node::from(line.clone()) "*/"),
         }
