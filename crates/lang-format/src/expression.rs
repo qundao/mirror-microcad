@@ -17,15 +17,18 @@ impl Format for ast::UnaryOperator {
     }
 }
 
-pub(crate) fn format_body(body: &ast::StatementList, f: &FormatConfig) -> Node {
-    match (body.statements.is_empty(), &body.tail) {
-        (true, Some(tail)) => node!("{ " tail.format(f) " }"),
-        (true, None) => node!("{}"),
-        _ => node!(
-            "{" Node::Hardline
-                Node::indent(f.indent_width, body.format(f))
-            "}"
-        ),
+impl Format for ast::Body {
+    fn format(&self, f: &FormatConfig) -> Node {
+        let body = &self.statements;
+        match (body.statements.is_empty(), &body.tail) {
+            (true, Some(tail)) => node!("{ " tail.format(f) " }"),
+            (true, None) => node!("{}"),
+            _ => node!(
+                "{" Node::Hardline
+                    Node::indent(f.indent_width, body.format(f))
+                "}"
+            ),
+        }
     }
 }
 
@@ -42,7 +45,7 @@ impl Format for ast::Expression {
             ast::Expression::Marker(identifier) => format!("@{}", identifier.name).into(),
             ast::Expression::BinaryOperation(binary_operation) => binary_operation.format(f),
             ast::Expression::UnaryOperation(unary_operation) => unary_operation.format(f),
-            ast::Expression::Block(body) => format_body(body, f),
+            ast::Expression::Block(body) => body.format(f),
             ast::Expression::Call(call) => call.format(f),
             ast::Expression::ElementAccess(element_access) => element_access.format(f),
             ast::Expression::If(i) => i.format(f),
@@ -255,15 +258,9 @@ impl Format for ast::ElementAccess {
 impl Format for ast::If {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f =>
-            "if " self.condition ' ' format_body(&self.body, f)
-            match &self.else_body {
-                Some(body) => node!(" else " format_body(body, f)),
-                None => Node::Nil,
-            }
-            match &self.next_if {
-                Some(next_if) => node!(f => ' '  next_if),
-                None => Node::Nil,
-            }
+            "if " self.condition ' ' self.body
+            self.else_body.as_ref().map(|body| node!(f => " else " body))
+            self.next_if.as_ref().map(|next_if| node!(f => ' ' next_if))
         )
     }
 }

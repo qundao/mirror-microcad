@@ -11,12 +11,16 @@ pub struct Group {
     pub nodes: Vec<Node>,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Default, Clone, PartialEq)]
 pub enum Node {
+    #[default]
     Nil,
     Text(CompactString),
     Hardline,
-    Indent { width: usize, node: Box<Node> },
+    Indent {
+        width: usize,
+        node: Box<Node>,
+    },
     Group(Group),
 }
 
