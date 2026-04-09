@@ -31,6 +31,26 @@ impl Format for ast::ItemExtra {
     }
 }
 
+impl Format for Vec<ast::ItemExtra> {
+    fn format(&self, f: &FormatConfig) -> Node {
+        self.iter()
+            .map(|extra| match &extra {
+                ast::ItemExtra::Comment(comment) => comment.format(f),
+                ast::ItemExtra::Whitespace(ws) => {
+                    let count = ws.chars().filter(|&c| c == '\n').count();
+                    if count >= 2 {
+                        Node::Hardline
+                    } else {
+                        Node::Nil
+                    }
+                }
+                _ => todo!(),
+            })
+            .collect::<Vec<_>>()
+            .into()
+    }
+}
+
 pub(crate) fn format_extra_trailing(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
     extras
         .iter()
@@ -65,61 +85,15 @@ pub(crate) fn with_extras(
     f: &FormatConfig,
     node: impl Into<Node>,
 ) -> Node {
-    fn leading(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
-        extras
-            .iter()
-            .map(|extra| match &extra {
-                ast::ItemExtra::Comment(comment) => comment.format(f),
-                ast::ItemExtra::Whitespace(ws) => {
-                    let count = ws.chars().filter(|&c| c == '\n').count();
-                    if count >= 2 {
-                        Node::Hardline
-                    } else {
-                        Node::Nil
-                    }
-                }
-                _ => todo!(),
-            })
-            .collect::<Vec<_>>()
-            .into()
-    }
-
-    fn trailing(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
-        let ws_node = match extras
-            .iter()
-            .filter(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
-            .count()
-            >= 1
-        {
-            true => node!(' '),
-            false => Node::Nil,
-        };
-
-        node!(
-            ws_node
-            extras
-                .iter()
-                .map(|extra| match &extra {
-                    ast::ItemExtra::Comment(comment) => comment.format(f),
-                    ast::ItemExtra::Whitespace(ws) => {
-                        let count = ws.chars().filter(|&c| c == '\n').count();
-                        if count >= 2 {
-                            Node::Hardline
-                        } else {
-                            Node::Nil
-                        }
-                    }
-                    _ => todo!(),
-                })
-                .collect::<Vec<_>>()
-        )
-    }
-
     let node = node.into();
     node!(f =>
-        leading(&extras.leading, f)
+        extras.leading
         node
-        trailing(&extras.trailing, f)
+        match &extras.trailing.iter().any(|extra| matches!(extra, ast::ItemExtra::Comment(_))) {
+            true => node!(' '),
+            false => Node::Nil,
+        }
+        extras.trailing
     )
 }
 

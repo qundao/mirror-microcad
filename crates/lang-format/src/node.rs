@@ -11,6 +11,17 @@ pub struct Group {
     pub nodes: Vec<Node>,
 }
 
+impl Group {
+    pub fn new(nodes: Vec<Node>) -> Self {
+        Self {
+            nodes: nodes
+                .into_iter()
+                .filter(|node| !matches!(node, Node::Nil))
+                .collect(),
+        }
+    }
+}
+
 #[derive(Debug, Default, Clone, PartialEq)]
 pub enum Node {
     #[default]
@@ -116,6 +127,20 @@ impl Node {
             Node::Group(group) => group.nodes.iter().any(|node| node.contains_hardline()),
         }
     }
+
+    pub fn ends_with_hardline(&self) -> bool {
+        match &self {
+            Node::Nil => false,
+            Node::Text(compact_string) => compact_string.ends_with("\n"),
+            Node::Hardline => true,
+            Node::Indent { width: _, node } => node.ends_with_hardline(),
+            Node::Group(group) => group
+                .nodes
+                .last()
+                .map(|node| node.ends_with_hardline())
+                .unwrap_or_default(),
+        }
+    }
 }
 
 impl From<Vec<Node>> for Node {
@@ -123,7 +148,7 @@ impl From<Vec<Node>> for Node {
         match nodes.len() {
             0 => Node::Nil,
             1 => nodes.first().expect("Some node").clone(),
-            _ => Node::Group(Group { nodes }),
+            _ => Node::Group(Group::new(nodes)),
         }
     }
 }
