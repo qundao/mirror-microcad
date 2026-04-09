@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: types_no_declaration
-  Expected result: fail
+  Expected result: fail(no_format)
       Source file: ../books/language/src/types/README.md:39
         Test path: ../books/language/src/types/.test
 
@@ -9,13 +9,3 @@
 
   39:   x: Length;         // parse_error
 
--- Parse Error --
-  × error: 40:10: Expected '='
-    ╭─[../books/language/src/types/README.md:40:10]
- 40 │ x: Length;         // parse_error
-    ·          ┬
-    ·          ╰── unexpected ;
-    ╰────
-
--- Test Result --
-FAILS AS EXPECTED
