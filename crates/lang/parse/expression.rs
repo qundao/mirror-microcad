@@ -4,7 +4,6 @@
 use crate::{parse::*, parser::*, syntax::*};
 use microcad_lang_base::Refer;
 use microcad_syntax::ast;
-use microcad_syntax::ast::{Element, LiteralKind};
 
 impl FromAst for RangeFirst {
     type AstNode = ast::ArrayItem;
@@ -104,7 +103,7 @@ impl FromAst for Expression {
             ast::Expression::Call(expr) => Expression::Call(Call::from_ast(expr, context)?),
             ast::Expression::Bracketed(expr, _) => Expression::from_ast(expr, context)?,
             ast::Expression::Literal(ast::Literal {
-                literal: LiteralKind::String(s),
+                literal: ast::LiteralKind::String(s),
                 span,
                 ..
             }) => Expression::FormatString(FormatString(Refer::new(
@@ -168,23 +167,25 @@ impl FromAst for Expression {
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
                 Expression::from_ast(&access.value, context)?,
                 |acc, element| {
-                    Ok(match element {
-                        Element::Attribute(a) => Expression::AttributeAccess(
+                    use ast::ElementInner::*;
+
+                    Ok(match &element.inner {
+                        Attribute(a) => Expression::AttributeAccess(
                             Box::new(acc),
                             Identifier::from_ast(a, context)?,
                             context.src_ref(&access.span),
                         ),
-                        Element::Tuple(t) => Expression::PropertyAccess(
+                        Tuple(t) => Expression::PropertyAccess(
                             Box::new(acc),
                             Identifier::from_ast(t, context)?,
                             context.src_ref(&access.span),
                         ),
-                        Element::Method(m) => Expression::MethodCall(
+                        Method(m) => Expression::MethodCall(
                             Box::new(acc),
                             MethodCall::from_ast(m, context)?,
                             context.src_ref(&access.span),
                         ),
-                        Element::ArrayElement(e) => Expression::ArrayElementAccess(
+                        ArrayElement(e) => Expression::ArrayElementAccess(
                             Box::new(acc),
                             Box::new(Expression::from_ast(e, context)?),
                             context.src_ref(&access.span),
