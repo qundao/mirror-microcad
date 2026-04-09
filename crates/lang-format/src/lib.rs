@@ -194,13 +194,23 @@ macro_rules! node {
             $( $crate::Node::from($node) ),*
         ])
     };
+    // Multiple formatted elements with extras: node!(f => begin, body, end)
+    ($f:ident, $extras:expr => $($node:expr)*) => {
+        $crate::with_extras(
+            &$extras,
+            $f,
+            $crate::Node::from(vec![
+                $( $node.format($f) ),*
+            ])
+
+        )
+    };
     // Multiple formatted elements: node!(f => begin, body, end)
     ($f:ident => $($node:expr)*) => {
         $crate::Node::from(vec![
             $( $node.format($f) ),*
         ])
     };
-
 }
 
 /// Format µcad source file.

@@ -1,14 +1,13 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, node::Node};
+use crate::{Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast;
 
 impl Format for ast::Literal {
     fn format(&self, f: &FormatConfig) -> Node {
-        self.literal.format(f)
-        // TODO: With extras
+        node!(f, self.extras => self.literal)
     }
 }
 

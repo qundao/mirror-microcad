@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, Node, format_extra_trailing, node, with_extras};
+use crate::{Format, FormatConfig, Node, format_extra_trailing, node};
 
 use microcad_syntax::ast::{self, ItemExtra, Visibility};
 
@@ -16,15 +16,13 @@ impl Format for Option<ast::Visibility> {
 
 impl Format for ast::Parameter {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
+        node!(f, self.extras =>
             match (&self.ty, &self.default) {
                 (None, None) => self.name.format(f),
                 (None, Some(def)) => node!(f => self.name " = " def),
                 (Some(ty), None) => node!(f => self.name ": " ty),
                 (Some(ty), Some(def)) => node!(f => self.name ": " ty " = " def),
-            },
+            }
         )
     }
 }
@@ -37,10 +35,8 @@ impl Format for ast::ParameterList {
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 
-        with_extras(
-            &self.extras,
-            f,
-            node!('(' Node::list(nodes, ',', can_break, f.indent_width) ')'),
+        node!(f, self.extras =>
+            '(' Node::list(nodes, ',', can_break, f.indent_width) ')'
         )
     }
 }
@@ -53,38 +49,26 @@ impl Format for ast::WorkbenchKind {
 
 impl Format for ast::WorkbenchDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(
-                f =>
-                self.doc
-                self.attributes
-                self.visibility
-                self.kind ' '
-                self.name
-                self.plan ' '
-                self.body
-            ),
+        node!(f, self.extras =>
+            self.doc
+            self.attributes
+            self.visibility self.kind ' ' self.name
+            self.plan ' '
+            self.body
         )
     }
 }
 
 impl Format for ast::ModuleDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f =>
-                self.doc
-                self.attributes
-                self.visibility
-                "mod " self.name
-                match &self.body {
-                    Some(body) => node!(f => " " body),
-                    None => node!(';')
-                }
-            ),
+        node!(f, self.extras =>
+            self.doc
+            self.attributes
+            self.visibility "mod " self.name
+            match &self.body {
+                Some(body) => node!(f => ' ' body),
+                None => node!(';')
+            }
         )
     }
 }
@@ -96,15 +80,11 @@ impl Format for ast::FunctionDefinition {
             None => Node::Nil,
         };
 
-        with_extras(
-            &self.extras,
-            f,
-            node!(f =>
-                self.doc
-                self.attributes
-                self.visibility "fn " self.name self.parameters " " return_type
-                self.body
-            ),
+        node!(f, self.extras =>
+            self.doc
+            self.attributes
+            self.visibility "fn " self.name self.parameters " " return_type
+            self.body
         )
     }
 }
@@ -121,111 +101,81 @@ impl Format for ast::UseStatementPart {
 
 impl Format for ast::UseName {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            Node::hlist(self.parts.iter().map(|part| part.format(f)), "::"),
+        node!(f, self.extras =>
+            Node::hlist(self.parts.iter().map(|part| part.format(f)), "::")
         )
     }
 }
 
 impl Format for ast::UseStatement {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(
-                f => self.visibility "use " self.name
-                self.use_as.as_ref().map(|ident| node!(f => " as " ident))
-            ),
+        node!(f, self.extras =>
+            self.visibility "use " self.name
+            self.use_as.as_ref().map(|ident| node!(f => " as " ident))
         )
     }
 }
 
 impl Format for ast::ConstAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f => self.visibility "const " self.name " = " self.value),
+        node!(f, self.extras =>
+            self.visibility "const " self.name " = " self.value
         )
     }
 }
 
 impl Format for ast::InitDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f =>
-                self.doc
-                self.attributes
-                "init" self.parameters " " self.body
-            ),
+        node!(f, self.extras =>
+            self.doc
+            self.attributes
+            "init" self.parameters " " self.body
         )
     }
 }
 
 impl Format for ast::Return {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
+        node!(f, self.extras =>
+            "return"
             match &self.value {
-                Some(value) => node!(f => "return " value),
-                None => "return".into(),
-            },
+                Some(value) => node!(f => ' ' value),
+                None => Node::Nil
+            }
         )
     }
 }
 
 impl Format for ast::LocalAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f =>
-                self.name
-                match &self.ty {
-                    Some(ty) => node!(f => ": " ty),
-                    None => Node::Nil,
-                }
-                " = " self.value
-            ),
+        node!(f, self.extras =>
+            self.name
+            match &self.ty {
+                Some(ty) => node!(f => ": " ty),
+                None => Node::Nil,
+            }
+            " = " self.value
         )
     }
 }
 
 impl Format for ast::PropertyAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(
-                f =>
-                // self.doc
-                // self.attributes
-                "prop "
-                self.name
-                match &self.ty {
-                    Some(ty) => node!(f => ": " ty),
-                    None => Node::Nil,
-                }
-                " = " self.value
-            ),
+        node!(f, self.extras =>
+            self.doc
+            self.attributes
+            "prop " self.name
+            self.ty.as_ref().map(|ty| node!(f => ": " ty))
+            " = " self.value
         )
     }
 }
 
 impl Format for ast::ExpressionStatement {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f =>
-                self.attributes
-                self.expression
-            ),
+        node!(f, self.extras =>
+            self.attributes
+            self.expression
         )
     }
 }
@@ -252,10 +202,8 @@ impl Format for ast::Attribute {
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
 
-        with_extras(
-            &self.extras,
-            f,
-            node!(prefix Node::list(nodes, ',', can_break, 0) suffix),
+        node!(f, self.extras =>
+            prefix Node::list(nodes, ',', can_break, 0) suffix
         )
     }
 }
@@ -317,9 +265,7 @@ impl Format for Vec<(ast::Statement, Vec<ItemExtra>)> {
 
 impl Format for ast::StatementList {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
+        node!(f, self.extras =>
             match (self.statements.is_empty(), &self.tail) {
                 (true, Some(tail)) => tail.format(f),
                 (false, Some(tail)) => {
@@ -330,7 +276,7 @@ impl Format for ast::StatementList {
                 }
                 (false, None) => self.statements.format(f),
                 (true, None) => Node::Nil,
-            },
+            }
         )
     }
 }
