@@ -1,8 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Span;
-use crate::ast::{Call, Expression, Identifier, ItemExtras, StatementList, Type};
+use crate::{Span, ast};
 
 /// A µcad statements
 #[derive(Debug, PartialEq)]
@@ -104,12 +103,12 @@ impl std::fmt::Display for WorkbenchKind {
 pub struct WorkbenchDefinition {
     pub span: Span,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub doc: Option<Comment>,
     pub kind: WorkbenchKind,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: Identifier,
+    pub name: ast::Identifier,
     pub plan: ParameterList,
     pub body: StatementList,
 }
@@ -120,11 +119,11 @@ pub struct WorkbenchDefinition {
 pub struct ModuleDefinition {
     pub span: Span,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: Identifier,
+    pub name: ast::Identifier,
     pub body: Option<StatementList>,
 }
 
@@ -134,13 +133,13 @@ pub struct ModuleDefinition {
 pub struct FunctionDefinition {
     pub span: Span,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: Identifier,
+    pub name: ast::Identifier,
     pub parameters: ParameterList,
-    pub return_type: Option<Type>,
+    pub return_type: Option<ast::Type>,
     pub body: StatementList,
 }
 
@@ -150,7 +149,7 @@ pub struct FunctionDefinition {
 pub struct InitDefinition {
     pub span: Span,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub parameters: ParameterList,
@@ -164,10 +163,10 @@ pub struct UseStatement {
     pub span: Span,
     pub attributes: Vec<Attribute>,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub visibility: Option<Visibility>,
     pub name: UseName,
-    pub use_as: Option<Identifier>,
+    pub use_as: Option<ast::Identifier>,
 }
 
 /// The name of the item being imported
@@ -175,7 +174,7 @@ pub struct UseStatement {
 #[allow(missing_docs)]
 pub struct UseName {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub parts: Vec<UseStatementPart>,
 }
 
@@ -183,7 +182,7 @@ pub struct UseName {
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub enum UseStatementPart {
-    Identifier(Identifier),
+    Identifier(ast::Identifier),
     Glob(Span),
     Error(Span),
 }
@@ -194,8 +193,8 @@ pub enum UseStatementPart {
 pub struct Return {
     pub span: Span,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
-    pub value: Option<Expression>,
+    pub extras: ast::ItemExtras,
+    pub value: Option<ast::Expression>,
 }
 
 /// A parameter list of a workbench definition or function definition
@@ -203,7 +202,7 @@ pub struct Return {
 #[allow(missing_docs)]
 pub struct ParameterList {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub parameters: Vec<Parameter>,
 }
 
@@ -211,7 +210,7 @@ impl ParameterList {
     pub(crate) fn dummy(span: Span) -> Self {
         ParameterList {
             span,
-            extras: ItemExtras::default(),
+            extras: ast::ItemExtras::default(),
             parameters: Vec::default(),
         }
     }
@@ -222,10 +221,10 @@ impl ParameterList {
 #[allow(missing_docs)]
 pub struct Parameter {
     pub span: Span,
-    pub extras: ItemExtras,
-    pub name: Identifier,
-    pub ty: Option<Type>,
-    pub default: Option<Expression>,
+    pub extras: ast::ItemExtras,
+    pub name: ast::Identifier,
+    pub ty: Option<ast::Type>,
+    pub default: Option<ast::Expression>,
 }
 
 /// An attribute that can be attached to a statement
@@ -234,7 +233,7 @@ pub struct Parameter {
 pub struct Attribute {
     pub span: Span,
     pub is_inner: bool,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub commands: Vec<AttributeCommand>,
 }
 
@@ -242,9 +241,9 @@ pub struct Attribute {
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub enum AttributeCommand {
-    Ident(Identifier),
+    Ident(ast::Identifier),
     Assignment(LocalAssignment),
-    Call(Call),
+    Call(ast::Call),
 }
 
 /// An optional qualifier that can be part of an [`Assignment`]
@@ -260,11 +259,11 @@ pub enum AssignmentQualifier {
 #[allow(missing_docs)]
 pub struct LocalAssignment {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub attributes: Vec<Attribute>,
-    pub name: Identifier,
-    pub ty: Option<Type>,
-    pub value: Box<Expression>,
+    pub name: ast::Identifier,
+    pub ty: Option<ast::Type>,
+    pub value: Box<ast::Expression>,
 }
 
 /// A const assignment: `const A = 42` / `pub A = 32`
@@ -273,13 +272,13 @@ pub struct LocalAssignment {
 pub struct ConstAssignment {
     pub span: Span,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: Identifier,
-    pub ty: Option<Type>,
-    pub value: Box<Expression>,
+    pub name: ast::Identifier,
+    pub ty: Option<ast::Type>,
+    pub value: Box<ast::Expression>,
 }
 
 /// A property assignment: `prop A = 42`
@@ -288,12 +287,12 @@ pub struct ConstAssignment {
 pub struct PropertyAssignment {
     pub span: Span,
     pub keyword_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub doc: Option<Comment>,
     pub attributes: Vec<Attribute>,
-    pub name: Identifier,
-    pub ty: Option<Type>,
-    pub value: Box<Expression>,
+    pub name: ast::Identifier,
+    pub ty: Option<ast::Type>,
+    pub value: Box<ast::Expression>,
 }
 
 #[derive(Debug, PartialEq)]
@@ -325,7 +324,28 @@ pub enum Visibility {
 #[allow(missing_docs)]
 pub struct ExpressionStatement {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub attributes: Vec<Attribute>,
-    pub expression: Expression,
+    pub expression: ast::Expression,
+}
+
+/// A list of statements, with optional trailing whitespace kept and an optional "tail" expression
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct StatementList {
+    pub span: Span,
+    pub extras: ast::ItemExtras,
+    pub statements: Vec<(Statement, Option<String>)>,
+    pub tail: Option<Box<Statement>>,
+}
+
+impl StatementList {
+    pub(crate) fn dummy(span: Span) -> Self {
+        StatementList {
+            span,
+            extras: ast::ItemExtras::default(),
+            statements: Vec::default(),
+            tail: None,
+        }
+    }
 }

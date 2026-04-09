@@ -1,8 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Span;
-use crate::ast::{Identifier, ItemExtras, Literal, SingleType, Statement, StringLiteral};
+use crate::{Span, ast};
 use std::num::ParseIntError;
 
 /// An operator for binary operators, together with a span
@@ -95,17 +94,17 @@ impl UnaryOperatorType {
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub enum Expression {
-    Literal(Literal),
+    Literal(ast::Literal),
     Bracketed(Box<Expression>, Span),
     Tuple(TupleExpression),
     ArrayRange(ArrayRangeExpression),
     ArrayList(ArrayListExpression),
     String(FormatString),
     QualifiedName(QualifiedName),
-    Marker(Identifier),
+    Marker(ast::Identifier),
     BinaryOperation(BinaryOperation),
     UnaryOperation(UnaryOperation),
-    Block(StatementList),
+    Block(ast::StatementList),
     Call(Call),
     ElementAccess(ElementAccess),
     If(If),
@@ -140,7 +139,7 @@ impl Expression {
 #[allow(missing_docs)]
 pub struct FormatString {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub parts: Vec<StringPart>,
 }
 
@@ -149,7 +148,7 @@ pub struct FormatString {
 #[allow(missing_docs)]
 pub enum StringPart {
     Char(StringCharacter),
-    Content(StringLiteral),
+    Content(ast::StringLiteral),
     Expression(StringExpression),
 }
 
@@ -166,7 +165,7 @@ pub struct StringCharacter {
 #[allow(missing_docs)]
 pub struct StringExpression {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub expression: Box<Expression>,
     pub specification: Box<StringFormatSpecification>,
 }
@@ -194,8 +193,8 @@ impl StringFormatSpecification {
 #[allow(missing_docs)]
 pub struct TupleItem {
     pub span: Span,
-    pub extras: ItemExtras,
-    pub name: Option<Identifier>,
+    pub extras: ast::ItemExtras,
+    pub name: Option<ast::Identifier>,
     pub value: Expression,
 }
 
@@ -203,7 +202,7 @@ impl TupleItem {
     pub(crate) fn dummy(span: Span) -> Self {
         TupleItem {
             span: span.clone(),
-            extras: ItemExtras::default(),
+            extras: ast::ItemExtras::default(),
             name: None,
             value: Expression::Error(span),
         }
@@ -215,7 +214,7 @@ impl TupleItem {
 #[allow(missing_docs)]
 pub struct TupleExpression {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub values: Vec<TupleItem>,
 }
 
@@ -224,10 +223,10 @@ pub struct TupleExpression {
 #[allow(missing_docs)]
 pub struct ArrayRangeExpression {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub start: Box<ArrayItem>,
     pub end: Box<ArrayItem>,
-    pub ty: Option<SingleType>,
+    pub ty: Option<ast::SingleType>,
 }
 
 /// An array specified as a list of items
@@ -235,9 +234,9 @@ pub struct ArrayRangeExpression {
 #[allow(missing_docs)]
 pub struct ArrayListExpression {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub items: Vec<ArrayItem>,
-    pub ty: Option<SingleType>,
+    pub ty: Option<ast::SingleType>,
 }
 
 /// An item that can be part of an array expression
@@ -245,7 +244,7 @@ pub struct ArrayListExpression {
 #[allow(missing_docs)]
 pub struct ArrayItem {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub expression: Expression,
 }
 
@@ -254,8 +253,8 @@ pub struct ArrayItem {
 #[allow(missing_docs)]
 pub struct QualifiedName {
     pub span: Span,
-    pub extras: ItemExtras,
-    pub parts: Vec<Identifier>,
+    pub extras: ast::ItemExtras,
+    pub parts: Vec<ast::Identifier>,
 }
 
 /// A binary operation
@@ -273,7 +272,7 @@ pub struct BinaryOperation {
 #[allow(missing_docs)]
 pub struct UnaryOperation {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub operation: UnaryOperator,
     pub rhs: Box<Expression>,
 }
@@ -283,7 +282,7 @@ pub struct UnaryOperation {
 #[allow(missing_docs)]
 pub struct Call {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub name: QualifiedName,
     pub arguments: ArgumentList,
 }
@@ -303,10 +302,17 @@ pub struct ElementAccess {
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub enum Element {
-    Attribute(Identifier),
-    Tuple(Identifier),
+    Attribute(ast::Identifier),
+    Tuple(ast::Identifier),
     Method(Call),
     ArrayElement(Box<Expression>),
+}
+
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct Body {
+    span: Span,
+    statements: ast::StatementList,
 }
 
 /// An if expression, can be used as either a statement or expression
@@ -315,34 +321,13 @@ pub enum Element {
 pub struct If {
     pub span: Span,
     pub if_span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub condition: Box<Expression>,
-    pub body: StatementList,
+    pub body: ast::StatementList,
     pub next_if_span: Option<Span>,
     pub next_if: Option<Box<If>>,
     pub else_span: Option<Span>,
-    pub else_body: Option<StatementList>,
-}
-
-/// A list of statements, with optional trailing whitespace kept and an optional "tail" expression
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct StatementList {
-    pub span: Span,
-    pub extras: ItemExtras,
-    pub statements: Vec<(Statement, Option<String>)>,
-    pub tail: Option<Box<Statement>>,
-}
-
-impl StatementList {
-    pub(crate) fn dummy(span: Span) -> Self {
-        StatementList {
-            span,
-            extras: ItemExtras::default(),
-            statements: Vec::default(),
-            tail: None,
-        }
-    }
+    pub else_body: Option<ast::StatementList>,
 }
 
 /// A list of arguments to a function call
@@ -350,7 +335,7 @@ impl StatementList {
 #[allow(missing_docs)]
 pub struct ArgumentList {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub arguments: Vec<Argument>,
 }
 
@@ -358,7 +343,7 @@ impl ArgumentList {
     pub(crate) fn dummy(span: Span) -> Self {
         ArgumentList {
             span,
-            extras: ItemExtras::default(),
+            extras: ast::ItemExtras::default(),
             arguments: Vec::new(),
         }
     }
@@ -374,7 +359,7 @@ pub enum Argument {
 
 impl Argument {
     /// The name of the argument, if specified
-    pub fn name(&self) -> Option<&Identifier> {
+    pub fn name(&self) -> Option<&ast::Identifier> {
         match self {
             Argument::Unnamed(_) => None,
             Argument::Named(arg) => Some(&arg.name),
@@ -403,7 +388,7 @@ impl Argument {
 #[allow(missing_docs)]
 pub struct UnnamedArgument {
     pub span: Span,
-    pub extras: ItemExtras,
+    pub extras: ast::ItemExtras,
     pub value: Expression,
 }
 
@@ -412,7 +397,7 @@ pub struct UnnamedArgument {
 #[allow(missing_docs)]
 pub struct NamedArgument {
     pub span: Span,
-    pub extras: ItemExtras,
-    pub name: Identifier,
+    pub extras: ast::ItemExtras,
+    pub name: ast::Identifier,
     pub value: Expression,
 }
