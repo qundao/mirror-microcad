@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, Node, node, with_extras};
+use crate::{Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast;
 
@@ -73,10 +73,8 @@ impl Format for ast::StringCharacter {
 
 impl Format for ast::StringExpression {
     fn format<'a>(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f => '{' self.specification self.expression '}'),
+        node!(f, self.extras =>
+            '{' self.specification self.expression '}'
         )
     }
 }
@@ -94,30 +92,24 @@ impl Format for ast::StringFormatSpecification {
 
 impl Format for ast::FormatString {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(
-                '"'
-                self.parts
-                    .iter()
-                    .map(|part| part.format(f))
-                    .collect::<Vec<_>>()
-                '"'
-            ),
+        node!(f, self.extras =>
+            '"'
+            self.parts
+                .iter()
+                .map(|part| part.format(f))
+                .collect::<Vec<_>>()
+            '"'
         )
     }
 }
 
 impl Format for ast::TupleItem {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
+        node!(f, self.extras =>
             match &self.name {
                 Some(name) => node!(f => name " = " self.value),
-                None => self.value.format(f),
-            },
+                None => node!(f => self.value)
+            }
         )
     }
 }
@@ -130,26 +122,22 @@ impl Format for ast::TupleExpression {
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 
-        with_extras(
-            &self.extras,
-            f,
-            node!('(' Node::list(nodes, ',', can_break, f.indent_width) ')'),
+        node!(f, self.extras =>
+            '(' Node::list(nodes, ',', can_break, f.indent_width) ')'
         )
     }
 }
 
 impl Format for ast::ArrayItem {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(&self.extras, f, self.expression.format(f))
+        node!(f, self.extras => self.expression)
     }
 }
 
 impl Format for ast::ArrayRangeExpression {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f => '[' self.start ".." self.end ']'),
+        node!(f, self.extras =>
+            '[' self.start ".." self.end ']'
         )
     }
 }
@@ -160,24 +148,16 @@ impl Format for ast::ArrayListExpression {
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
 
-        with_extras(
-            &self.extras,
-            f,
-            node!('[' Node::list(nodes, ',', can_break, f.indent_width) ']'),
+        node!(f, self.extras =>
+            '[' Node::list(nodes, ',', can_break, f.indent_width) ']'
         )
     }
 }
 
 impl Format for ast::QualifiedName {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            self.parts
-                .iter()
-                .map(|identifier| identifier.name.clone())
-                .collect::<Vec<_>>()
-                .join("::"),
+        node!(f, self.extras =>
+            Node::hlist(self.parts.iter().map(|identifier| identifier.format(f)), "::")
         )
     }
 }
@@ -205,13 +185,13 @@ impl Format for ast::Argument {
 
 impl Format for ast::UnnamedArgument {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(&self.extras, f, self.value.format(f))
+        node!(f, self.extras => self.value)
     }
 }
 
 impl Format for ast::NamedArgument {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(&self.extras, f, node!(f => self.name " = " self.value))
+        node!(f, self.extras => self.name " = " self.value)
     }
 }
 
@@ -223,23 +203,13 @@ impl Format for ast::ArgumentList {
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
 
-        with_extras(
-            &self.extras,
-            f,
-            node!('(' Node::list(nodes, ',', can_break, f.indent_width) ')'),
-        )
+        node!(f, self.extras => '(' Node::list(nodes, ',', can_break, f.indent_width) ')')
     }
 }
 
 impl Format for ast::Call {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f =>
-                self.name self.arguments
-            ),
-        )
+        node!(f, self.extras => self.name self.arguments)
     }
 }
 
@@ -257,7 +227,7 @@ impl Format for ast::ElementInner {
 
 impl Format for ast::Element {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(&self.extras, f, self.inner.format(f))
+        node!(f, self.extras => self.inner)
     }
 }
 
@@ -298,14 +268,10 @@ impl Format for ast::ElementAccess {
 
 impl Format for ast::If {
     fn format(&self, f: &FormatConfig) -> Node {
-        with_extras(
-            &self.extras,
-            f,
-            node!(f =>
-                "if " self.condition ' ' self.body
-                self.else_body.as_ref().map(|body| node!(f => " else " body))
-                self.next_if.as_ref().map(|next_if| node!(f => ' ' next_if))
-            ),
+        node!(f, self.extras =>
+            "if " self.condition ' ' self.body
+            self.else_body.as_ref().map(|body| node!(f => " else " body))
+            self.next_if.as_ref().map(|next_if| node!(f => ' ' next_if))
         )
     }
 }
