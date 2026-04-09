@@ -234,6 +234,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 }
             },
             "no-test" => (),
+            "fail(no_format)" => (), // HOTFIX
             _ => unreachable!(),
         }
     }
