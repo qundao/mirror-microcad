@@ -1,9 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Format, FormatConfig, Node, expression::format_body, node};
+use crate::{Format, FormatConfig, Node, format_extra_trailing, node};
 
-use microcad_syntax::ast::{self, Visibility};
+use microcad_syntax::ast::{self, ItemExtra, Visibility};
 
 impl Format for Option<ast::Visibility> {
     fn format(&self, _: &FormatConfig) -> Node {
@@ -53,7 +53,7 @@ impl Format for ast::WorkbenchDefinition {
             self.kind ' '
             self.name
             self.plan ' '
-            crate::expression::format_body(&self.body, f)
+            self.body
         )
     }
 }
@@ -71,8 +71,7 @@ impl Format for ast::ModuleDefinition {
                 node!(
                     f =>
                     symbol_info
-                    "mod " self.name " "
-                    crate::expression::format_body(&body, f)
+                    "mod " self.name " " body
                 )
             }
             None => {
@@ -97,7 +96,7 @@ impl Format for ast::FunctionDefinition {
             self.doc
             self.attributes
             self.visibility "fn " self.name self.parameters " " return_type
-            crate::expression::format_body(&self.body, f)
+            self.body
         )
     }
 }
@@ -135,10 +134,11 @@ impl Format for ast::ConstAssignment {
 
 impl Format for ast::InitDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => 
+        node!(f =>
             self.doc
             self.attributes
-            "init" self.parameters " " format_body(&self.body, f))
+            "init" self.parameters " " self.body
+        )
     }
 }
 
@@ -183,7 +183,7 @@ impl Format for ast::PropertyAssignment {
 
 impl Format for ast::ExpressionStatement {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => 
+        node!(f =>
             self.attributes
             self.expression
         )
@@ -202,8 +202,12 @@ impl Format for ast::AttributeCommand {
 
 impl Format for ast::Attribute {
     fn format(&self, f: &FormatConfig) -> Node {
-        let (prefix, suffix) = if self.is_inner { ("#![", node!(']' Node::Hardline)) } else { ("#[", node!(']')) };
-        
+        let (prefix, suffix) = if self.is_inner {
+            ("#![", node!(']' Node::Hardline))
+        } else {
+            ("#[", node!(']'))
+        };
+
         let nodes: Vec<Node> = self.commands.iter().map(|attr| attr.format(f)).collect();
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
@@ -244,23 +248,17 @@ impl Format for ast::Statement {
     }
 }
 
-impl Format for Vec<(ast::Statement, Option<String>)> {
+impl Format for Vec<(ast::Statement, Vec<ItemExtra>)> {
     fn format(&self, f: &FormatConfig) -> Node {
         // Join statements with a hardline so they sit on separate lines
         self.iter()
             .enumerate()
             .map(
-                |(i, (statement, whitespace))| match statement.ends_with_semicolon() {
+                |(i, (statement, extras))| match statement.ends_with_semicolon() {
                     true => {
-                        let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
-                        let newline_count = whitespace.chars().filter(|&c| c == '\n').count();
                         node!(
                             statement.format(f) ";"
-                            if newline_count < 2 {
-                                Node::Hardline
-                            } else {
-                                node!(Node::Hardline Node::Hardline)
-                            }
+                            format_extra_trailing(extras, f)
                         )
                     }
                     false => node!(

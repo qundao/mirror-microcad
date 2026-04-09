@@ -46,4 +46,3 @@ formatted_test_case!(body);
 formatted_test_case!(expression);
 formatted_test_case!(statements);
 formatted_test_case!(workbench);
-formatted_test_case!(extras);

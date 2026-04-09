@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-use microcad_syntax::ast;
+use microcad_syntax::ast::{self, ItemExtra};
 
 mod error;
 mod expression;
@@ -13,6 +13,30 @@ mod statement;
 mod ty;
 
 use crate::{error::FormatError, node::Node};
+
+impl Format for ItemExtra {
+    fn format(&self, f: &FormatConfig) -> Node {
+        match &self {
+            ItemExtra::Comment(comment) => comment.format(f),
+            ItemExtra::Whitespace(ws) => ws
+                .chars()
+                .filter(|c| *c == '\n')
+                .take(2)
+                .map(|_| Node::Hardline)
+                .collect::<Vec<_>>()
+                .into(),
+            _ => todo!(),
+        }
+    }
+}
+
+pub(crate) fn format_extra_trailing(extras: &Vec<ItemExtra>, f: &FormatConfig) -> Node {
+    extras
+        .iter()
+        .map(|extra| extra.format(f))
+        .collect::<Vec<_>>()
+        .into()
+}
 
 #[derive(Debug, Clone)]
 pub struct FormatConfig {
@@ -31,46 +55,6 @@ impl Default for FormatConfig {
 
 pub(crate) trait Format {
     fn format(&self, f: &FormatConfig) -> Node;
-}
-
-impl Format for ast::Identifier {
-    fn format(&self, _: &FormatConfig) -> Node {
-        self.name.clone().into()
-    }
-}
-
-impl Format for ast::Comment {
-    fn format(&self, _: &FormatConfig) -> Node {
-        match &self.inner {
-            ast::CommentInner::SingleLine(items) => Node::vlist(
-                items.into_iter().cloned().map(|item| item.into()),
-                Node::Nil,
-                0,
-            ),
-            ast::CommentInner::MultiLine(line) => node!("/*" Node::from(line.clone()) "*/"),
-        }
-    }
-}
-
-#[macro_export]
-macro_rules! node {
-    // Single element: node!(x)
-    ($node:expr) => {
-        $crate::Node::from($node)
-    };
-    // Multiple elements: node!(begin, body, end)
-    ($($node:expr)*) => {
-        $crate::Node::from(vec![
-            $( $crate::Node::from($node) ),*
-        ])
-    };
-    // Multiple formatted elements: node!(f => begin, body, end)
-    ($f:ident => $($node:expr)*) => {
-        $crate::Node::from(vec![
-            $( $node.format($f) ),*
-        ])
-    };
-
 }
 
 impl<T> Format for T
@@ -92,10 +76,51 @@ impl<T: Format> Format for Option<T> {
     }
 }
 
+impl Format for ast::Identifier {
+    fn format(&self, _: &FormatConfig) -> Node {
+        self.name.clone().into()
+    }
+}
+
+impl Format for ast::Comment {
+    fn format(&self, _: &FormatConfig) -> Node {
+        match &self.inner {
+            ast::CommentInner::SingleLine(items) => Node::vlist(
+                items.into_iter().cloned().map(|item| item.into()),
+                Node::Nil,
+                0,
+            ),
+            ast::CommentInner::MultiLine(line) => node!("/*" Node::from(line.clone()) "*/"),
+        }
+    }
+}
+
 impl Format for ast::SourceFile {
     fn format(&self, f: &FormatConfig) -> Node {
         self.statements.format(f)
     }
+}
+
+/// node! macro for syntactic suger.
+#[macro_export]
+macro_rules! node {
+    // Single element: node!(x)
+    ($node:expr) => {
+        $crate::Node::from($node)
+    };
+    // Multiple elements: node!(begin, body, end)
+    ($($node:expr)*) => {
+        $crate::Node::from(vec![
+            $( $crate::Node::from($node) ),*
+        ])
+    };
+    // Multiple formatted elements: node!(f => begin, body, end)
+    ($f:ident => $($node:expr)*) => {
+        $crate::Node::from(vec![
+            $( $node.format($f) ),*
+        ])
+    };
+
 }
 
 /// Format µcad source file.
