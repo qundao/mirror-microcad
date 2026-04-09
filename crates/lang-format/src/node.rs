@@ -75,7 +75,7 @@ pub enum Node {
 
 impl Node {
     /// Intersperses a separator between nodes from any iterable source.
-    pub fn interspersed<I>(nodes: I, separator: impl Into<Node>) -> Node
+    pub fn hlist<I>(nodes: I, separator: impl Into<Node>) -> Node
     where
         I: IntoIterator<Item = Node>,
     {
@@ -97,6 +97,18 @@ impl Node {
         result.into()
     }
 
+    pub fn vlist<I>(nodes: I, separator: impl Into<Node>) -> Node
+    where
+        I: IntoIterator<Item = Node>,
+    {
+        let sep = separator.into();
+        nodes
+            .into_iter()
+            .flat_map(|node| vec![node, sep.clone(), Node::Hardline])
+            .collect::<Vec<_>>()
+            .into()
+    }
+
     /// A list of items with an separator
     pub fn list<I>(nodes: I, separator: impl Into<Node>, hardline: bool) -> Node
     where
@@ -104,13 +116,9 @@ impl Node {
     {
         let sep = separator.into();
         if hardline {
-            nodes
-                .into_iter()
-                .flat_map(|node| vec![node, sep.clone(), Node::Hardline])
-                .collect::<Vec<_>>()
-                .into()
+            Self::vlist(nodes, sep)
         } else {
-            Node::interspersed(nodes, node!(sep ' '))
+            Self::hlist(nodes, node!(sep ' '))
         }
     }
 

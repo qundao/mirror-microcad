@@ -1,7 +1,0 @@
-//! Inner doc comment
-
-/// Outer doc comment
-sketch A() {
-    /// Init
-    init() {}
-}

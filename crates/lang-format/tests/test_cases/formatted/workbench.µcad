@@ -17,6 +17,11 @@ sketch C(d: Length) {
     Circle(d);
 }
 
+/// A doc comment
+/// Another doc comment
+#[some, attributes]
+#[color = RED]
+#[export("to_file.svg")]
 sketch D(
     a: Length,
     b: Length,
@@ -25,6 +30,8 @@ sketch D(
     e: Length,
 ) {
     prop test = 3.0;
+
+    init(a: Length) {}
 
     Circle(d);
 }

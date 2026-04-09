@@ -68,14 +68,19 @@ impl Format for ast::StringCharacter {
 }
 
 impl Format for ast::StringExpression {
-    fn format<'a>(&self, _: &FormatConfig) -> Node {
-        todo!()
+    fn format<'a>(&self, f: &FormatConfig) -> Node {
+        node!(f => '{' self.specification self.expression '}')
     }
 }
 
 impl Format for ast::StringFormatSpecification {
     fn format<'a>(&self, _f: &FormatConfig) -> Node {
-        todo!()
+        match (&self.precision, &self.width) {
+            (Some(Ok(width)), Some(Ok(precision))) => format!("0{width}.{precision}").into(),
+            (None, Some(Ok(precision))) => format!(".{precision}").into(),
+            (Some(Ok(width)), None) => format!("0{width}").into(),
+            _ => Node::Nil,
+        }
     }
 }
 
@@ -120,8 +125,8 @@ impl Format for ast::ArrayItem {
 }
 
 impl Format for ast::ArrayRangeExpression {
-    fn format(&self, _f: &FormatConfig) -> Node {
-        todo!()
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f => '[' self.start ".." self.end ']')
     }
 }
 
@@ -136,13 +141,12 @@ impl Format for ast::ArrayListExpression {
                 "[" Node::Hardline
                     Node::indent(
                         f.indent_width,
-                        Node::interspersed(nodes, node!("," Node::Hardline))
-                    )
-                "," Node::Hardline
+                        Node::hlist(nodes, node!("," Node::Hardline))
+                    ) "," Node::Hardline
                 "]"
             )
         } else {
-            node!("[" Node::interspersed(nodes, ", ") "]")
+            node!("[" Node::hlist(nodes, ", ") "]")
         }
     }
 }
