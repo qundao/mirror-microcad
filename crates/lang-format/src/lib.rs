@@ -105,9 +105,8 @@ pub fn format(source_file: &ast::SourceFile, config: &FormatConfig) -> String {
 
 /// High-level API to format a &str containing µcad source code.
 pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, FormatError> {
-    let tokens: Vec<_> = microcad_syntax::lex(&source).collect();
     let source_file =
-        microcad_syntax::parse(&tokens).map_err(|err| FormatError::ParseErrors(err))?;
+        microcad_syntax::parse_str(&source).map_err(|err| FormatError::ParseErrors(err))?;
     Ok(format(&source_file, &config))
 }
 
