@@ -19,12 +19,11 @@ impl Format for ast::UnaryOperator {
 
 pub(crate) fn format_body(body: &ast::StatementList, f: &FormatConfig) -> Node {
     match (body.statements.is_empty(), &body.tail) {
-        (true, Some(tail)) => node!("{ ", tail.format(f), " }"),
+        (true, Some(tail)) => node!("{ " tail.format(f) " }"),
         (true, None) => node!("{}"),
         _ => node!(
-            "{",
-            Node::Hardline,
-            Node::indent(f.indent_width, body.format(f)),
+            "{" Node::Hardline
+                Node::indent(f.indent_width, body.format(f))
             "}"
         ),
     }
@@ -34,7 +33,7 @@ impl Format for ast::Expression {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::Expression::Literal(literal) => literal.format(f),
-            ast::Expression::Bracketed(bracket, _) => node!('(', bracket.format(f), ')'),
+            ast::Expression::Bracketed(bracket, _) => node!('(' bracket.format(f) ')'),
             ast::Expression::Tuple(tuple_expression) => tuple_expression.format(f),
             ast::Expression::ArrayRange(array_range_expression) => array_range_expression.format(f),
             ast::Expression::ArrayList(array_list_expression) => array_list_expression.format(f),
@@ -83,11 +82,11 @@ impl Format for ast::StringFormatSpecification {
 impl Format for ast::FormatString {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(
-            '"',
+            '"'
             self.parts
                 .iter()
                 .map(|part| part.format(f))
-                .collect::<Vec<_>>(),
+                .collect::<Vec<_>>()
             '"'
         )
     }
@@ -134,15 +133,16 @@ impl Format for ast::ArrayListExpression {
 
         if can_break {
             node!(
-                node!("[", Node::Hardline),
-                Node::indent(
-                    f.indent_width,
-                    Node::interspersed(nodes, node!(",", Node::Hardline))
-                ),
-                node!(",", Node::Hardline, "]"),
+                "[" Node::Hardline
+                    Node::indent(
+                        f.indent_width,
+                        Node::interspersed(nodes, node!("," Node::Hardline))
+                    )
+                "," Node::Hardline
+                "]"
             )
         } else {
-            node!("[", Node::interspersed(nodes, ", "), "]")
+            node!("[" Node::interspersed(nodes, ", ") "]")
         }
     }
 }
@@ -160,19 +160,13 @@ impl Format for ast::QualifiedName {
 
 impl Format for ast::BinaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(
-            self.lhs.format(f),
-            ' ',
-            self.operation.format(f),
-            ' ',
-            self.rhs.format(f)
-        )
+        node!(f => self.lhs ' ' self.operation ' ' self.rhs)
     }
 }
 
 impl Format for ast::UnaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(self.operation.format(f), self.rhs.format(f))
+        node!(f => self.operation self.rhs)
     }
 }
 

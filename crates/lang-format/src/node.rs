@@ -110,24 +110,24 @@ impl Node {
                 .collect::<Vec<_>>()
                 .into()
         } else {
-            Node::interspersed(nodes, node!(sep, ' '))
+            Node::interspersed(nodes, node!(sep ' '))
         }
     }
 
     /// A node embraced by `()`
     pub fn braces(node: impl Into<Node>, indent_width: usize, hardline: bool) -> Node {
+        let node: Node = node.into();
         if hardline {
             node!(
-                '(',
-                Node::Hardline,
-                Node::Indent {
-                    width: indent_width,
-                    node: Box::new(node.into()),
-                },
-                ')',
+                '(' Node::Hardline
+                    Node::Indent {
+                        width: indent_width,
+                        node: Box::new(node),
+                    }
+                ')'
             )
         } else {
-            node!('(', node, ')')
+            node!('(' node ')')
         }
     }
 
