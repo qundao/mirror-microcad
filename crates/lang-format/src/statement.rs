@@ -185,12 +185,12 @@ impl Format for ast::AttributeCommand {
 
 impl Format for ast::Attribute {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(
-            if self.is_inner { "#!" } else { "#" },
-            "[",
-            Node::interspersed(self.commands.iter().map(|attr| attr.format(f)), ", "),
-            "]"
-        )
+        let prefix = if self.is_inner { "#!" } else { "#" };
+        let nodes: Vec<Node> = self.commands.iter().map(|attr| attr.format(f)).collect();
+        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
+        let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
+
+        node!(prefix "[" Node::list(nodes, ", ", can_break) "]")
     }
 }
 
@@ -210,7 +210,7 @@ impl Format for ast::Statement {
             ast::Statement::Workbench(workbench_definition) => workbench_definition.format(f),
             ast::Statement::Module(module_definition) => module_definition.format(f),
             ast::Statement::Function(function_definition) => function_definition.format(f),
-            ast::Statement::InnerDocComment(comment) => todo!(),
+            ast::Statement::InnerDocComment(comment) => comment.format(f),
             ast::Statement::Comment(comment) => todo!(),
 
             ast::Statement::Use(use_statement) => use_statement.format(f),
@@ -236,23 +236,21 @@ impl Format for Vec<(ast::Statement, Option<String>)> {
                     true => {
                         let whitespace = whitespace.as_ref().cloned().unwrap_or_default();
                         let newline_count = whitespace.chars().filter(|&c| c == '\n').count();
-                        node![
-                            statement.format(f),
-                            ";",
+                        node!(
+                            statement.format(f) ";"
                             if newline_count < 2 {
-                                Node::Nil
-                            } else {
                                 Node::Hardline
-                            },
-                            Node::Hardline,
-                        ]
+                            } else {
+                                node!(Node::Hardline Node::Hardline)
+                            }
+                        )
                     }
                     false => node!(
-                        statement.format(f),
+                        statement.format(f)
                         if i >= self.len() - 1 {
                             Node::Hardline
                         } else {
-                            node!(Node::Hardline, Node::Hardline)
+                            node!(Node::Hardline Node::Hardline)
                         }
                     ),
                 },
@@ -267,7 +265,10 @@ impl Format for ast::StatementList {
         match (self.statements.is_empty(), &self.tail) {
             (true, Some(tail)) => tail.format(f),
             (false, Some(tail)) => {
-                node!(self.statements.format(f), tail.format(f), Node::Hardline)
+                node!(
+                    self.statements.format(f)
+                    tail.format(f) Node::Hardline
+                )
             }
             (false, None) => self.statements.format(f),
             (true, None) => Node::Nil,
