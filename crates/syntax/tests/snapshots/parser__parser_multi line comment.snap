@@ -49,22 +49,23 @@ Ok(
                     ),
                 ),
                 (
-                    Comment(
-                        Comment {
-                            span: 7..44,
-                            inner: MultiLine(
-                                "multi\n    line\n    comment",
-                            ),
-                        },
-                    ),
-                    None,
-                ),
-                (
                     LocalAssignment(
                         LocalAssignment {
-                            span: 49..54,
+                            span: 7..54,
                             extras: ItemExtras {
-                                leading: [],
+                                leading: [
+                                    Comment(
+                                        Comment {
+                                            span: 7..44,
+                                            inner: MultiLine(
+                                                "multi\n    line\n    comment",
+                                            ),
+                                        },
+                                    ),
+                                    Whitespace(
+                                        "\n    ",
+                                    ),
+                                ],
                                 trailing: [],
                             },
                             attributes: [],
