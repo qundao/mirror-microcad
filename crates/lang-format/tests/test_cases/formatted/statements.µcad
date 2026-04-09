@@ -5,6 +5,8 @@ use bar::*;
 
 //! inner doc comments
 
+#![inner, attribute(), works = true]
+
 mod foo {}
 
 mod foo;

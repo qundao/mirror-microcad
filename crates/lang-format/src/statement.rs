@@ -200,12 +200,13 @@ impl Format for ast::AttributeCommand {
 
 impl Format for ast::Attribute {
     fn format(&self, f: &FormatConfig) -> Node {
-        let prefix = if self.is_inner { "#!" } else { "#" };
+        let (prefix, suffix) = if self.is_inner { ("#![", node!(']' Node::Hardline)) } else { ("#[", node!(']')) };
+        
         let nodes: Vec<Node> = self.commands.iter().map(|attr| attr.format(f)).collect();
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = width > f.max_width || nodes.iter().any(|node| node.contains_hardline());
 
-        node!(prefix "[" Node::list(nodes, ',', can_break) "]")
+        node!(prefix Node::list(nodes, ',', can_break) suffix)
     }
 }
 
