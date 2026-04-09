@@ -74,69 +74,72 @@ Ok(
                                     },
                                 ),
                             ),
-                            body: StatementList {
-                                span: 40..45,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                statements: [],
-                                tail: Some(
-                                    Expression(
-                                        ExpressionStatement {
-                                            span: 40..45,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            attributes: [],
-                                            expression: BinaryOperation(
-                                                BinaryOperation {
-                                                    span: 40..45,
-                                                    lhs: QualifiedName(
-                                                        QualifiedName {
-                                                            span: 40..41,
-                                                            extras: ItemExtras {
-                                                                leading: [],
-                                                                trailing: [
-                                                                    Whitespace(
-                                                                        " ",
-                                                                    ),
+                            body: Body {
+                                span: 39..46,
+                                statements: StatementList {
+                                    span: 40..45,
+                                    extras: ItemExtras {
+                                        leading: [],
+                                        trailing: [],
+                                    },
+                                    statements: [],
+                                    tail: Some(
+                                        Expression(
+                                            ExpressionStatement {
+                                                span: 40..45,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                attributes: [],
+                                                expression: BinaryOperation(
+                                                    BinaryOperation {
+                                                        span: 40..45,
+                                                        lhs: QualifiedName(
+                                                            QualifiedName {
+                                                                span: 40..41,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
+                                                                },
+                                                                parts: [
+                                                                    Identifier {
+                                                                        span: 40..41,
+                                                                        name: "a",
+                                                                    },
                                                                 ],
                                                             },
-                                                            parts: [
-                                                                Identifier {
-                                                                    span: 40..41,
-                                                                    name: "a",
-                                                                },
-                                                            ],
+                                                        ),
+                                                        operation: Operator {
+                                                            span: 42..43,
+                                                            operation: Multiply,
                                                         },
-                                                    ),
-                                                    operation: Operator {
-                                                        span: 42..43,
-                                                        operation: Multiply,
-                                                    },
-                                                    rhs: Literal(
-                                                        Literal {
-                                                            span: 44..45,
-                                                            extras: ItemExtras {
-                                                                leading: [],
-                                                                trailing: [],
+                                                        rhs: Literal(
+                                                            Literal {
+                                                                span: 44..45,
+                                                                extras: ItemExtras {
+                                                                    leading: [],
+                                                                    trailing: [],
+                                                                },
+                                                                literal: Integer(
+                                                                    IntegerLiteral {
+                                                                        span: 44..45,
+                                                                        value: 2,
+                                                                        raw: "2",
+                                                                    },
+                                                                ),
                                                             },
-                                                            literal: Integer(
-                                                                IntegerLiteral {
-                                                                    span: 44..45,
-                                                                    value: 2,
-                                                                    raw: "2",
-                                                                },
-                                                            ),
-                                                        },
-                                                    ),
-                                                },
-                                            ),
-                                        },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
                                     ),
-                                ),
+                                },
                             },
                         },
                     ),

@@ -110,29 +110,73 @@ fn parser<'tokens>()
     }
     .boxed();
 
+    statement_list_parser.define({
+        let trailing_expr = attribute_parser
+            .clone()
+            .then(expression_parser.clone())
+            .with_extras()
+            .map_with(
+                |((attributes, expression), extras), e| ExpressionStatement {
+                    span: e.span(),
+                    extras,
+                    attributes,
+                    expression,
+                },
+            )
+            .map(Statement::Expression)
+            .map(Box::new)
+            .or_not()
+            .then_maybe_whitespace()
+            .boxed();
+
+        whitespace_parser()
+            .or_not()
+            .ignore_then(statement_parser.clone())
+            .then(whitespace_parser().or_not())
+            .repeated()
+            .collect::<Vec<(Statement, Option<String>)>>()
+            .then(trailing_expr)
+            .with_extras()
+            .map_with(|((statements, tail), extras), e| StatementList {
+                span: e.span(),
+                extras,
+                statements,
+                tail,
+            })
+            .then_maybe_whitespace()
+            .boxed()
+    });
+
     let block_recovery =
         ignore_till_matched_curly().map_with(|_, e| StatementList::dummy(e.span()));
 
     let block = whitespace_parser()
         .or_not()
-        .ignore_then(statement_list_parser.clone())
-        .then_maybe_whitespace()
-        .delimited_with_spanned_error(
-            just(Token::SigilOpenCurlyBracket),
-            just(Token::SigilCloseCurlyBracket),
-            |err: Error, open, end| {
-                Rich::custom(
-                    err.span().clone(),
-                    ParseErrorKind::UnclosedBracket {
-                        open,
-                        end,
-                        kind: "code block",
-                        close_token: Token::SigilCloseCurlyBracket,
+        .ignore_then(
+            statement_list_parser
+                .clone()
+                .then_maybe_whitespace()
+                .delimited_with_spanned_error(
+                    just(Token::SigilOpenCurlyBracket),
+                    just(Token::SigilCloseCurlyBracket),
+                    |err: Error, open, end| {
+                        Rich::custom(
+                            err.span().clone(),
+                            ParseErrorKind::UnclosedBracket {
+                                open,
+                                end,
+                                kind: "code block",
+                                close_token: Token::SigilCloseCurlyBracket,
+                            },
+                        )
                     },
-                )
-            },
+                ),
         )
         .recover_with(via_parser(block_recovery))
+        .map_with(|statements, e| Body {
+            span: e.span(),
+            statements,
+        })
         .boxed();
 
     let identifier_parser = select_ref! { Token::Identifier(ident) = e => Identifier {
@@ -1102,43 +1146,6 @@ fn parser<'tokens>()
             ))
             .boxed()
             .labelled("statement")
-    });
-
-    statement_list_parser.define({
-        let trailing_expr = attribute_parser
-            .clone()
-            .then(expression_parser.clone())
-            .with_extras()
-            .map_with(
-                |((attributes, expression), extras), e| ExpressionStatement {
-                    span: e.span(),
-                    extras,
-                    attributes,
-                    expression,
-                },
-            )
-            .map(Statement::Expression)
-            .map(Box::new)
-            .or_not()
-            .then_maybe_whitespace()
-            .boxed();
-
-        whitespace_parser()
-            .or_not()
-            .ignore_then(statement_parser)
-            .then(whitespace_parser().or_not())
-            .repeated()
-            .collect::<Vec<(Statement, Option<String>)>>()
-            .then(trailing_expr)
-            .with_extras()
-            .map_with(|((statements, tail), extras), e| StatementList {
-                span: e.span(),
-                extras,
-                statements,
-                tail,
-            })
-            .then_maybe_whitespace()
-            .boxed()
     });
 
     expression_parser.define({

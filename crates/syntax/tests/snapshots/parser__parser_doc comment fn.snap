@@ -46,45 +46,52 @@ Ok(
                                 parameters: [],
                             },
                             return_type: None,
-                            body: StatementList {
-                                span: 39..45,
-                                extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
-                                },
-                                statements: [],
-                                tail: Some(
-                                    Expression(
-                                        ExpressionStatement {
-                                            span: 39..45,
-                                            extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
-                                            },
-                                            attributes: [],
-                                            expression: Literal(
-                                                Literal {
-                                                    span: 39..45,
-                                                    extras: ItemExtras {
-                                                        leading: [],
-                                                        trailing: [
-                                                            Whitespace(
-                                                                "\n    ",
-                                                            ),
-                                                        ],
-                                                    },
-                                                    literal: Integer(
-                                                        IntegerLiteral {
-                                                            span: 39..40,
-                                                            value: 1,
-                                                            raw: "1",
-                                                        },
-                                                    ),
-                                                },
+                            body: Body {
+                                span: 29..46,
+                                statements: StatementList {
+                                    span: 30..45,
+                                    extras: ItemExtras {
+                                        leading: [
+                                            Whitespace(
+                                                "\n        ",
                                             ),
-                                        },
+                                        ],
+                                        trailing: [],
+                                    },
+                                    statements: [],
+                                    tail: Some(
+                                        Expression(
+                                            ExpressionStatement {
+                                                span: 39..45,
+                                                extras: ItemExtras {
+                                                    leading: [],
+                                                    trailing: [],
+                                                },
+                                                attributes: [],
+                                                expression: Literal(
+                                                    Literal {
+                                                        span: 39..45,
+                                                        extras: ItemExtras {
+                                                            leading: [],
+                                                            trailing: [
+                                                                Whitespace(
+                                                                    "\n    ",
+                                                                ),
+                                                            ],
+                                                        },
+                                                        literal: Integer(
+                                                            IntegerLiteral {
+                                                                span: 39..40,
+                                                                value: 1,
+                                                                raw: "1",
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
                                     ),
-                                ),
+                                },
                             },
                         },
                     ),
