@@ -85,29 +85,34 @@ pub(crate) fn with_extras(
     }
 
     fn trailing(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
-        extras
+        let ws_node = match extras
             .iter()
-            .map(|extra| match &extra {
-                ast::ItemExtra::Comment(comment) => comment.format(f),
-                ast::ItemExtra::Whitespace(ws) => {
-                    let count = ws.chars().filter(|&c| c == '\n').count();
-                    if count >= 2 {
-                        Node::Hardline
-                    } else {
-                        if extras
-                            .iter()
-                            .any(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
-                        {
-                            node!(' ')
+            .filter(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
+            .count()
+            >= 1
+        {
+            true => node!(' '),
+            false => Node::Nil,
+        };
+
+        node!(
+            ws_node
+            extras
+                .iter()
+                .map(|extra| match &extra {
+                    ast::ItemExtra::Comment(comment) => comment.format(f),
+                    ast::ItemExtra::Whitespace(ws) => {
+                        let count = ws.chars().filter(|&c| c == '\n').count();
+                        if count >= 2 {
+                            Node::Hardline
                         } else {
                             Node::Nil
                         }
                     }
-                }
-                _ => todo!(),
-            })
-            .collect::<Vec<_>>()
-            .into()
+                    _ => todo!(),
+                })
+                .collect::<Vec<_>>()
+        )
     }
 
     let node = node.into();
