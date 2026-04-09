@@ -11,10 +11,10 @@
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 39:2: This expression statement did not produce any model
-    ╭─[../books/tests/src/semicolon.md:39:2]
+  ⚠ warning: 39:1: This expression statement did not produce any model
+    ╭─[../books/tests/src/semicolon.md:39:1]
  39 │ {}.std::ops::translate(x = 5mm) // warning: Calling operation on empty geometry
-    ·  ▲
+    · ─┬
     ·  ╰── This expression statement did not produce any model
     ╰────
 -- Model --
