@@ -3,7 +3,7 @@
 
 use std::collections::HashMap;
 
-use microcad_syntax::ast::{self, ItemExtras};
+use microcad_syntax::ast;
 
 mod error;
 mod expression;
