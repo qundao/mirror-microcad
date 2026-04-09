@@ -19,6 +19,9 @@ Ok(
                             ),
                         },
                     ),
+                    Whitespace(
+                        "\n    ",
+                    ),
                     Comment(
                         Comment {
                             span: 16..27,
