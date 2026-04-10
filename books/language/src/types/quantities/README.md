@@ -12,7 +12,7 @@ basically *floating point[^float] values* with physical *units* (e.g.  Meter, Li
 height = 1.4m;
 
 // use as *default* value in parameter list
-fn f( height = 1m ) {}
+fn f(height = 1m) {}
 
 // calculate a `Length` called `width` by multiplying the
 // `height` with `Scalar` `2` and add ten centimeters

@@ -46,7 +46,7 @@ Markdown may be used to shape sections or format text.
 /// ## Returns
 ///
 /// Output value.
-fn f( n: Integer ) -> Integer { n }
+fn f(n: Integer) -> Integer { n }
 
 // usual comment for non-symbols
 f(1);
@@ -80,7 +80,7 @@ Inner doc comments are used to document code inside a source file:
 ```µcad,inner_doc_comment
 //! This inner doc comment documents the whole source file.
 
-fn f( n: Integer ) -> Integer { n }
+fn f(n: Integer) -> Integer { n }
 
 f(1);
 ```

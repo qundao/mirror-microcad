@@ -20,8 +20,8 @@ use std::debug::*;
 
 a = 5;
 b = a * 2;
-assert_eq([ a, 5  ]);
-assert_eq([ b, 10 ]);
+assert_eq([a, 5]);
+assert_eq([b, 10]);
 ```
 
 ## Locality
@@ -38,7 +38,7 @@ use std::debug::*;
 
 // define a within scope #0
 a = 5;
-assert_eq([ a, 5 ]);
+assert_eq([a, 5]);
 
 // scope #1
 {
@@ -76,8 +76,8 @@ prohibited.
 [![test](.test/assignment_shadow.svg)](.test/assignment_shadow.log)
 
 ```µcad,assignment_shadow#fail
-a = 5;      // warning: unused local
-a = a * 2;  // error: a already defined in this scope
+a = 5; // warning: unused local
+a = a * 2; // error: a already defined in this scope
 ```
 
 Even if using *anonymous scopes* this does not change.
@@ -87,8 +87,8 @@ Even if using *anonymous scopes* this does not change.
 ```µcad,assignment_shadow_scope#todo
 a = 5;
 {
-    a = a * 2; 
-    std::debug::assert_eq([ a, 10 ]);
+    a = a * 2;
+    std::debug::assert_eq([a, 10]);
 }
 ```
 
@@ -115,8 +115,8 @@ Value assignments are not available in workbenches' initialization code:
 
 ```µcad,assignment_workbench#fail
 sketch MySketch() {
-    a = 1;   // error
-    init(_x : Scalar) {}
+    a = 1; // error
+    init(_x: Scalar) {}
 }
 
 MySketch();

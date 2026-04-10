@@ -20,7 +20,7 @@ Here is a simple example:
 ```µcad,if_statement
 use std::geo2d::*;
 
-x = 0;  // output changes if you change that value
+x = 0; // output changes if you change that value
 
 if x > 0 {
     Circle(radius = 5mm);

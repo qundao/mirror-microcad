@@ -14,8 +14,8 @@ This is different from the variables known in other programming languages.
 use std::math::sqrt;
 
 a = 2cm;
-b = 5cm; 
-c = sqrt(a*a + b*b);
+b = 5cm;
+c = sqrt(a * a + b * b);
 
 std::print("{c}");
 ```

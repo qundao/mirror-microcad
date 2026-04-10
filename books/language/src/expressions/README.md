@@ -10,7 +10,7 @@ assign it to a constant `v` with the following code:
 ```µcad,expression_multiply
 v = 5 * 4.0mm;
 
-std::debug::assert_eq([ v, 20mm ]);
+std::debug::assert_eq([v, 20mm]);
 ```
 
 The result of this expression would be `20mm` like the test (see `assert_eq`)
@@ -34,21 +34,21 @@ the units of the operands in an expression like the following examples show.
 use std::debug::assert_eq;
 
 // an integer multiplied with another one remains a integer
-assert_eq([ 5 * 4, 20 ]);
+assert_eq([5 * 4, 20]);
 
 // a scalar multiplied with another scalar or integer results in a scalar
-assert_eq([ 5.5 * 4.5, 24.75 ]);
-assert_eq([ 5.1 * 4, 20.4 ]);
-assert_eq([ 5 * 4.1, 20.5 ]);
+assert_eq([5.5 * 4.5, 24.75]);
+assert_eq([5.1 * 4, 20.4]);
+assert_eq([5 * 4.1, 20.5]);
 
 // a scalar multiplied with a length is a length
-assert_eq([ 5 * 4mm, 20mm ]);
+assert_eq([5 * 4mm, 20mm]);
 
 // two length multiplied with each another is an area
-assert_eq([ 5mm * 4mm, 0.2cm² ]);
+assert_eq([5mm * 4mm, 0.2cm²]);
 
 // dividing an area by a length is a length
-assert_eq([ 20mm² / 4mm, 5mm ]);
+assert_eq([20mm² / 4mm, 5mm]);
 ```
 
 ### Boolean results
@@ -59,7 +59,7 @@ Boolean operations (e.g. `!`, `>`, `==` or `&&`) lead to a boolean result.
 
 ```µcad,expression_boolean
 // Using logical operators lead to a boolean result
-std::debug::assert_eq([ 5mm > 4mm, true ]);
+std::debug::assert_eq([5mm > 4mm, true]);
 ```
 
 Even when using them with models:
@@ -68,7 +68,7 @@ Even when using them with models:
 
 ```µcad,expression_model#todo
 // Using logical operators between models too
-std::debug::assert_eq([ std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true ]);
+std::debug::assert_eq([std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true]);
 ```
 
 Only *Boolean expressions* (expressions with a boolean result) can be used to define conditions (see [if statement](../flow/conditions.md)).

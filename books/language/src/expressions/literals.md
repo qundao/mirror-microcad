@@ -6,9 +6,9 @@ In this section, we will look at some literals.
 [![test](.test/expression_literals.svg)](.test/expression_literals.log)
 
 ```µcad,expression_literals
-5;        // Scalar literal
-4.0mm;    // Quantity literal
-"Hello";  // String literal
+5; // Scalar literal
+4.0mm; // Quantity literal
+"Hello"; // String literal
 ```
 
 There are several types of literals:
@@ -49,7 +49,7 @@ with a sign (but without a unit).
 1.;
 -1200.0;
 12.0E+12;
-50%    // = 0.5
+50% // = 0.5
 ```
 
 ## Boolean Literals
@@ -81,12 +81,12 @@ you wanna draw something.
 [![test](.test/quantity_literal.svg)](.test/quantity_literal.log)
 
 ```µcad,quantity_literal
-4.0mm;   // 4 millimeters
-5l;      // 5 liters
-4m²;     // 4 square meters
-4m2;     // also 4 square meters
-10°;     // 10 degree angle
-10deg    // also 10 degree angle
+4.0mm; // 4 millimeters
+5l; // 5 liters
+4m²; // 4 square meters
+4m2; // also 4 square meters
+10°; // 10 degree angle
+10deg // also 10 degree angle
 ```
 
 You will find more details about quantities and units in [this section](../../types/quantities.md#quantity-literals).

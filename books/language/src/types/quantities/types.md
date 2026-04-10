@@ -27,7 +27,7 @@ The type `Scalar` contains a floating number (without any *unit*) and must be wr
 
 ```µcad,types_quantity_scalar
 zero = 0;
-pi =  3.1415;
+pi = 3.1415;
 percent = 55%;
 ```
 
@@ -43,7 +43,7 @@ centimeters = 100cm;
 meters = 1m;
 inches = 39.37007874015748in;
 
-std::debug::assert_eq([ millimeters, centimeters, meters, inches ]);
+std::debug::assert_eq([millimeters, centimeters, meters, inches]);
 ```
 
 ## Angle
@@ -60,7 +60,7 @@ degree_ = 180deg;
 grad = 200grad;
 turn = 0.5turns;
 
-std::debug::assert_eq([ degree, degree_, grad, turn, radian ]);
+std::debug::assert_eq([degree, degree_, grad, turn, radian]);
 ```
 
 ## Area
@@ -86,7 +86,7 @@ square_centimeter = 1000cm2;
 square_meter = 0.1m²;
 square_inch = 155in²;
 
-std::debug::assert_eq([ square_millimeter, square_centimeter ]);
+std::debug::assert_eq([square_millimeter, square_centimeter]);
 ```
 
 ## Volume

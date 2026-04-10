@@ -28,9 +28,9 @@ sketch Wheel(radius: Length, thickness = 5mm) {
     Circle(radius = radius + thickness) - Circle(radius)
 }
 // call with building plan
-Wheel(radius=1.5cm, thickness=2mm);
+Wheel(radius = 1.5cm, thickness = 2mm);
 // call with initializer and use default thickness
-Wheel(diameter=1.5cm);
+Wheel(diameter = 1.5cm);
 ```
 
 Output
@@ -49,9 +49,9 @@ you will get an error:
 sketch Wheel(radius: Length, thickness = 5mm) {
     use std::geo2d::Circle;
 
-    init( thickness: Length ) { } // error: misses to set radius from building plan
+    init(thickness: Length) {} // error: misses to set radius from building plan
 
-    Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
+    Circle(radius = radius + thickness) - Circle(radius) // error: radius is missing
 }
 Wheel(thickness = 1cm);
 ```
@@ -66,12 +66,12 @@ need to be set in the initializers.
 ```µcad,building_plan_defaults#todo
 sketch Wheel(radius: Length, thickness = 5mm) {
     use std::geo2d::Circle;
-    
-    init(diameter: Length) { 
+
+    init(diameter: Length) {
         radius = diameter / 2;
-        // thickness has been set automatically by the default in the building plan 
+        // thickness has been set automatically by the default in the building plan
     }
-    
+
     Circle(radius = radius + thickness) - Circle(radius)
 }
 
@@ -90,12 +90,12 @@ You cannot read building plan items from within initializers.
 ```µcad,no_building_plan_in_initializers#todo_fail
 sketch Wheel(radius: Length, thickness = 5mm) {
     use std::geo2d::Circle;
-    
-    init( diameter: Length, thickness = 5mm ) { 
-        _ = radius;            // error: cannot read radius here
+
+    init(diameter: Length, thickness = 5mm) {
+        _ = radius; // error: cannot read radius here
         radius = diameter / 2; // instead you need to set it
     }
-    
+
     Circle(radius = radius + thickness) - Circle(radius)
 }
 Wheel(diameter = 1cm);

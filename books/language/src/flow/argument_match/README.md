@@ -3,7 +3,7 @@
 To match *call arguments* with *function* or *workbench parameters*, µcad employs
 a process known as *argument matching*.
 
- > [!IMPORTANT]
+> [!IMPORTANT]
  > Parameters in µcad are **not positional** (which means their order is irrelevant)!
 
 Instead of having so-called positional arguments, µcad has *named arguments*, which means
@@ -13,9 +13,9 @@ Like `x` is in the following example:
 [![test](.test/call_match.svg)](.test/call_match.log)
 
 ```µcad,call_match
-fn f(x: Length) -> Length { x*2 }
+fn f(x: Length) -> Length { x * 2 }
 
-std::debug::assert_eq([ f( x = 10m ), 20m ]);
+std::debug::assert_eq([f(x = 10m), 20m]);
 ```
 
 Fortunately there are some facilities for your convenience, like:

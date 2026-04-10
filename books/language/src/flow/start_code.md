@@ -18,11 +18,11 @@ use std::geo2d::*;
 
 // 2. This is a module definition. It defines 'RADIUS' but doesn't generate any geometry.
 mod my_inner {
-    pub RADIUS = 10mm;
+    pub const RADIUS = 10mm;
 }
 
 // 3. Start code continues here.
-Circle( radius = my_inner::RADIUS );
+Circle(radius = my_inner::RADIUS);
 ```
 
 [^no_project]: In future µcad will get a package management and will have projects and toml files.

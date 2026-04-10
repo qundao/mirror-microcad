@@ -9,13 +9,13 @@ similarly to a key-value store.
 ```µcad,named_tuple_access
 use std::debug::assert_eq;
 
-tuple = (width=10cm, depth=10cm, volume=1l);
+tuple = (width = 10cm, depth = 10cm, volume = 1l);
 
-assert_eq([ tuple.width, 10cm ]);
-assert_eq([ tuple.depth, 10cm ]);
-assert_eq([ tuple.volume, 1l ]);
+assert_eq([tuple.width, 10cm]);
+assert_eq([tuple.depth, 10cm]);
+assert_eq([tuple.volume, 1l]);
 
-assert_eq([ tuple, (width=10cm, depth=10cm, volume=1l) ]);
+assert_eq([tuple, (width = 10cm, depth = 10cm, volume = 1l)]);
 ```
 
 ## Partially Named Tuples
@@ -40,7 +40,7 @@ The order of values have no consequences for equality.
 
 ```µcad,unnamed_tuple_order
 // these tuples are equal
-std::debug::assert_eq([ (1l, 10cm, 10cm²), (10cm, 10cm², 1l) ]);
+std::debug::assert_eq([(1l, 10cm, 10cm²), (10cm, 10cm², 1l)]);
 ```
 
 ## Arbitrary Units
@@ -51,7 +51,7 @@ Different units of values have no consequences for equality.
 
 ```µcad,unnamed_tuple_units
 // these tuples are equal
-std::debug::assert_eq([ (1000cm3, 100mm, 0.01m²), (10cm, 100cm², 1l) ]);
+std::debug::assert_eq([(1000cm3, 100mm, 0.01m²), (10cm, 100cm², 1l)]);
 ```
 
 ## Ambiguous Elements
@@ -61,5 +61,5 @@ Either names or types must be unique in a tuple.
 [![test](.test/unnamed_tuple_ambiguous.svg)](.test/unnamed_tuple_ambiguous.log)
 
 ```µcad,unnamed_tuple_ambiguous#fail
-(10cm, 10mm, 1m);  // error: ambiguous type Length
+(10cm, 10mm, 1m); // error: ambiguous type Length
 ```
