@@ -225,32 +225,13 @@ impl Format for ast::Element {
 
 impl Format for Vec<ast::Element> {
     fn format(&self, f: &FormatConfig) -> Node {
-        fn element_line_break(f: &FormatConfig, element: &ast::Element, is_last: bool) -> Node {
-            let has_hardline = element.format(f).ends_with_hardline();
-            node!(f =>
-                element
-                if matches!(element.inner, ast::ElementInner::ArrayElement(_)) || is_last || has_hardline {
-                    Node::Nil
-                } else {
-                    Node::Hardline
-                }
-            )
-        }
-
-        let nodes: Vec<Node> = self
-            .iter()
-            .enumerate()
-            .map(|(i, element)| element_line_break(f, element, i >= self.len() - 1))
-            .collect();
+        let nodes: Vec<Node> = self.iter().map(|element| node!(f => element)).collect();
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let can_break = nodes.len() > 3
             || width > f.max_width
             || nodes.iter().any(|node| node.contains_hardline());
         if can_break {
-            node!(
-                Node::Hardline
-                Node::indent(f.indent_width, nodes)
-            )
+            node!(Node::indent(f.indent_width, nodes))
         } else {
             Node::hlist(nodes, Node::Nil)
         }
