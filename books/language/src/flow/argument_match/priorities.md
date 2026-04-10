@@ -23,9 +23,9 @@ Matches when both the arguments and parameters are empty.
 [![test](.test/argument_match_empty.svg)](.test/argument_match_empty.log)
 
 ```µcad,argument_match_empty
-fn f() {}   // no parameters
+fn f() {} // no parameters
 
-f();        // no arguments
+f(); // no arguments
 ```
 
 ## Match Identifier
@@ -35,11 +35,11 @@ The following example demonstrates calling a function `f` with each argument spe
 [![test](.test/argument_match_id.svg)](.test/argument_match_id.log)
 
 ```µcad,argument_match_id
-fn f( width: Length, height: Length ) -> Area { width * height }
+fn f(width: Length, height: Length) -> Area { width * height }
 
-x = f(height = 2cm, width = 1cm);   // call f() with parameters in arbitrary order
+x = f(height = 2cm, width = 1cm); // call f() with parameters in arbitrary order
 
-std::debug::assert_eq([ x, 2cm² ]);
+std::debug::assert_eq([x, 2cm²]);
 ```
 
 ## Match Short Identifier
@@ -51,12 +51,12 @@ The short form consists of the first letter of each word separated by underscore
 [![test](.test/argument_match_short.svg)](.test/argument_match_short.log)
 
 ```µcad,argument_match_short
-fn f( width: Length, height: Length ) -> Area { width * height }
+fn f(width: Length, height: Length) -> Area { width * height }
 
 // use short identifiers
-std::debug::assert_eq([ f(w = 1cm, h = 2cm), 2cm² ]);
+std::debug::assert_eq([f(w = 1cm, h = 2cm), 2cm²]);
 // can be mixed
-std::debug::assert_eq([ f(w = 1cm, height = 2cm), 2cm² ]);
+std::debug::assert_eq([f(w = 1cm, height = 2cm), 2cm²]);
 ```
 
 Here are some usual examples of short identifiers:
@@ -78,7 +78,7 @@ Nameless values can be used if all parameter types of the called function
 [![test](.test/argument_match_type.svg)](.test/argument_match_type.log)
 
 ```µcad,argument_match_type
-fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
+fn f(a: Scalar, b: Length, c: Area) {} // warning: unused a,b,c
 // Who needs names?
 f(1.0, 2cm, 3cm²);
 ```
@@ -91,7 +91,7 @@ are not identical.
 [![test](.test/argument_match_type_compatible.svg)](.test/argument_match_type_compatible.log)
 
 ```µcad,argument_match_type_compatible
-fn f( a: Scalar, b: Length, c: Area ) {}  // warning: unused a,b,c
+fn f(a: Scalar, b: Length, c: Area) {} // warning: unused a,b,c
 // giving an integer `1` to a `Scalar` parameter `a`
 f(1, 2cm, 3cm²);
 ```
@@ -104,7 +104,7 @@ the default will be used.
 [![test](.test/argument_match_default.svg)](.test/argument_match_default.log)
 
 ```µcad,argument_match_default
-fn f( a = 1mm ) {}  // warning: unused a
+fn f(a = 1mm) {} // warning: unused a
 // a has default
 f();
 ```
@@ -116,11 +116,11 @@ You can combine all these methods.
 [![test](.test/argument_match_mix.svg)](.test/argument_match_mix.log)
 
 ```µcad,argument_match_mix
-fn f( a: Scalar, b: Length, c=2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
+fn f(a: Scalar, b: Length, c = 2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
 
 // `a` gets the Integer (1) which is compatible to Scalar (1.0)
 // `b` is named
 // `c` gets it's default
 // `d` does not need a name because `b` has one
-f(b=2cm, 1, 3cm);
+f(b = 2cm, 1, 3cm);
 ```

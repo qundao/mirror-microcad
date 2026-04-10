@@ -16,15 +16,15 @@ Arrays support the following operators.
 ```µcad,array_operations
 use std::debug::assert_eq;
 
-assert_eq([ [1, 2] + 2,        [3, 4] ]);
-assert_eq([ [1, 2] - 2,        [-1, 0] ]);
-assert_eq([ [-1.0, 2.0] * 2.0, [-2.0, 4.0] ]);
-assert_eq([ [1.0, 2.0] / 2.0,  [0.5, 1.0] ]);
-assert_eq([ -[-1.0, 1.0],      [1.0, -1.0] ]);
+assert_eq([[1, 2] + 2, [3, 4]]);
+assert_eq([[1, 2] - 2, [-1, 0]]);
+assert_eq([[-1.0, 2.0] * 2.0, [-2.0, 4.0]]);
+assert_eq([[1.0, 2.0] / 2.0, [0.5, 1.0]]);
+assert_eq([-[-1.0, 1.0], [1.0, -1.0]]);
 ```
 
 [![test](.test/array_operator_not.svg)](.test/array_operator_not.log)
 
 ```µcad,array_operator_not
-std::debug::assert_eq([ ![true, false], [false, true] ]);
+std::debug::assert_eq([![true, false], [false, true]]);
 ```

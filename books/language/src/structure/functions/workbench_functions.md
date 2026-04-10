@@ -13,7 +13,7 @@ sketch PunchedDisk(radius: Length) {
     use std::geo2d::Circle;
 
     // function to calculate inner from radius
-    fn inner(radius: Length) { radius/2 }
+    fn inner(radius: Length) { radius / 2 }
 
     // generate donut (and call inner)
     Circle(radius) - Circle(radius = inner(radius));
@@ -36,7 +36,7 @@ Trying to make them public with the keyword `pub` will result into an error:
 sketch PunchedDisk(radius: Length) {
     use std::geo2d::Circle;
 
-    pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
+    pub fn inner() { radius / 2 } // error: cant use pub fn inside workbench
 
     Circle(radius) - Circle(radius = inner());
 }
@@ -55,11 +55,11 @@ sketch PunchedDisk(radius: Length) {
     use std::geo2d::Circle;
 
     fn inner() {
-        prop hole = radius/2;  // error: prop not allowed in function
+        prop hole = radius / 2; // error: prop not allowed in function
         hole
     }
 
-    prop hole = radius/2;      // correct prop definition
+    prop hole = radius / 2; // correct prop definition
 
     Circle(radius) - Circle(radius = inner());
 }
@@ -77,20 +77,20 @@ using the `prop` keyword.
 sketch PunchedDisk(radius: Length) {
     use std::geo2d::Circle;
 
-    init(diameter: Length) { 
-        prop radius = diameter/2; // error: prop not allowed in init
+    init(diameter: Length) {
+        prop radius = diameter / 2; // error: prop not allowed in init
     }
-    
-    init(d: Length) { 
-        radius = d/2;             // correct way to set radius
+
+    init(d: Length) {
+        radius = d / 2; // correct way to set radius
     }
 
     // Accessing property in a function is ok
-    fn inner() { radius/2 }
+    fn inner() { radius / 2 }
 
     Circle(radius) - Circle(radius = inner());
 }
 
-PunchedDisk(diameter=1cm);
-PunchedDisk(d=1cm);
+PunchedDisk(diameter = 1cm);
+PunchedDisk(d = 1cm);
 ```

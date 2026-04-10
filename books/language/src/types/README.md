@@ -26,8 +26,8 @@ are quite handy:
 [![test](.test/types_def_vs_decl.svg)](.test/types_def_vs_decl.log)
 
 ```µcad,types_def_vs_decl
-x: Length = 4mm;   // explicit type declaration
-y = 4mm;           // implicit type declaration via units.
+x: Length = 4mm; // explicit type declaration
+y = 4mm; // implicit type declaration via units.
 ```
 
 Declarations without any initializations are *not allowed* in µcad.
@@ -46,8 +46,8 @@ you can declare the type only but also pass a default value:
 [![test](.test/types_bundles_functions.svg)](.test/types_bundles_functions.log)
 
 ```µcad,types_bundles_functions
-fn f(x = 4mm) {}       // use unit (with default)
-fn g(x: Length) {}     // use type (without default)
+fn f(x = 4mm) {} // use unit (with default)
+fn g(x: Length) {} // use type (without default)
 ```
 
 > [!NOTE]

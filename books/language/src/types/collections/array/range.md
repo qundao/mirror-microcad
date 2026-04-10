@@ -11,8 +11,8 @@ consecutive values.
 [![test](.test/range_expressions.svg)](.test/range_expressions.log)
 
 ```µcad,range_expressions
-std::debug::assert_eq([[1..5], [1,2,3,4,5]]);
-std::debug::assert_eq([[-2..2], [-2,-1,0,1,2]]);
+std::debug::assert_eq([[1..5], [1, 2, 3, 4, 5]]);
+std::debug::assert_eq([[-2..2], [-2, -1, 0, 1, 2]]);
 ```
 
 The order of the endpoints of a range is important.
@@ -20,8 +20,8 @@ The order of the endpoints of a range is important.
 [![test](.test/range_expressions_bad_order.svg)](.test/range_expressions_bad_order.log)
 
 ```µcad,range_expressions_bad_order#fail
-[6..1];  // error
-[2..-2];  // error
+[6..1]; // error
+[2..-2]; // error
 ```
 
 Only `Integer` can be used as endpoint.
@@ -29,5 +29,5 @@ Only `Integer` can be used as endpoint.
 [![test](.test/range_expressions_bad_type.svg)](.test/range_expressions_bad_type.log)
 
 ```µcad,range_expressions_bad_type#fail
-[1.0..2.0];  // parse_error
+[1.0..2.0]; // parse_error
 ```

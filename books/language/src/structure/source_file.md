@@ -56,7 +56,7 @@ Mixing 2D and 3D statements in the same file will result in an error:
 
 ```µcad,source_file_mixed#fail
 std::geo2d::Circle(radius = 1cm);
-std::geo3d::Sphere(radius = 1cm);  // error: can't mix 2D and 3D
+std::geo3d::Sphere(radius = 1cm); // error: can't mix 2D and 3D
 ```
 
 However, µcad programs can also be split across multiple files.

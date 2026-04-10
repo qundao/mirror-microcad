@@ -7,8 +7,8 @@ If you do not provide all parameters, you will get an error:
 [![test](.test/match_errors.svg)](.test/match_errors.log)
 
 ```µcad,match_errors#fail
-fn f( x: Length, y: Length, z: Length ) {}
-f( x=1cm, z=3cm); // error: y is missing here
+fn f(x: Length, y: Length, z: Length) {}
+f(x = 1cm, z = 3cm); // error: y is missing here
 ```
 
 ## Too Many Arguments
@@ -18,8 +18,8 @@ When you provide all parameters but some are redundant, you will get a error too
 [![test](.test/match_warnings.svg)](.test/match_warnings.log)
 
 ```µcad,match_warnings#fail
-fn f( x: Length, y: Length, z: Length ) {}
-f( x=1cm, y=2cm, v=5cm, z=3cm);  // error: Unexpected argument v
+fn f(x: Length, y: Length, z: Length) {}
+f(x = 1cm, y = 2cm, v = 5cm, z = 3cm); // error: Unexpected argument v
 ```
 
 ## Ambiguous Arguments
@@ -30,6 +30,6 @@ will get an error.
 [![test](.test/match_ambiguous.svg)](.test/match_ambiguous.log)
 
 ```µcad,match_ambiguous#fail
-fn f( x: Length, y: Length, z: Length ) {}
-f( x=1cm, 5cm, 3cm);  // error: Missing arguments y and z
+fn f(x: Length, y: Length, z: Length) {}
+f(x = 1cm, 5cm, 3cm); // error: Missing arguments y and z
 ```

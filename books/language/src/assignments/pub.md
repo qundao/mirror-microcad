@@ -7,7 +7,7 @@ Public assignments provide a value to the inner **and** the outer of a module.
 ```µcad,pub_assignment
 mod my_module {
     pub mod sub_module {
-        pub TEXT = "Hello";
+        pub const TEXT = "Hello";
     }
 }
 
@@ -24,7 +24,7 @@ Using `pub` is not allowed within workbenches:
 
 ```µcad,pub_assignment_workbench#fail
 sketch MySketch() {
-    pub TEXT = "Hello";  // error
+    pub const TEXT = "Hello"; // error
     std::print(TEXT);
 }
 
@@ -37,7 +37,7 @@ MySketch();
 
 ```µcad,pub_assignment_fn#fail
 fn f() {
-    const MY_CONST = 1;     // error: not allowed in functions
+    const MY_CONST = 1; // error: not allowed in functions
 }
 f();
 ```

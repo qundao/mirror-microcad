@@ -28,5 +28,5 @@ mod math {
 
 // call square in math
 math::square(2.0);
-math::pow(2.0, 5);  // error: pow is private
+math::pow(2.0, 5); // error: pow is private
 ```

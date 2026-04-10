@@ -17,10 +17,10 @@ f();
 ```µcad,function_param_return
 // function definition with parameter
 fn f(n: Integer) {
-    return n * 2; 
+    return n * 2;
 }
 
 // function calls with parameter (and result checks)
-std::debug::assert_eq([ f(1), 2 ]);
-std::debug::assert_eq([ f(2), 4 ]);
+std::debug::assert_eq([f(1), 2]);
+std::debug::assert_eq([f(2), 4]);
 ```

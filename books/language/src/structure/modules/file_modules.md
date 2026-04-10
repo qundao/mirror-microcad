@@ -9,7 +9,7 @@ can easily import this second file via its name `second`:
 
 ```µcad,file_modules_main
 mod second;
-second::f(); 
+second::f();
 ```
 
 [![test](.test/file_modules_second.svg)](.test/file_modules_second.log)

@@ -72,14 +72,14 @@ sketch Wheel(radius: Length, thickness = 5cm) {
     init(radius: Length, inner: Length) {
         thickness = radius - inner;
 
-        prop center = radius - inner;       // error: do not use prop here
+        prop center = radius - inner; // error: do not use prop here
     }
-    
-    prop center = radius - thickness / 2;   // here it's ok
+
+    prop center = radius - thickness / 2; // here it's ok
 }
 center = Wheel(radius = 1cm, inner = 0.5cm).center;
 
-std::debug::assert_eq([ center, 1.75cm ] );
+std::debug::assert_eq([center, 1.75cm]);
 ```
 
 Output
@@ -93,8 +93,7 @@ Also you may not use `prop` within initialization code.
 
 ```µcad,property_no_prop_in_init_code#fail
 sketch Wheel(outer: Length) {
-
-    prop max = 100;     // error: do not use prop here
+    prop max = 100; // error: do not use prop here
 
     init(inner: Length) {
         outer = inner * 2;
