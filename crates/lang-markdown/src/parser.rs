@@ -91,11 +91,9 @@ impl Parse for CodeBlockHeader {
         // 4. Parse Name (supports "µcad,my_name" or just "my_name")
         let name_end = hash_pos.or(paren_pos).unwrap_or(meta.len());
         let name_part = meta[..name_end].trim();
-        let name = if let Some(comma_idx) = name_part.find(',') {
-            Some(name_part[comma_idx + 1..].trim().to_string())
-        } else {
-            None
-        };
+        let name = name_part
+            .find(',')
+            .map(|comma_idx| name_part[comma_idx + 1..].trim().to_string());
 
         // 5. Parse TestResult (#ok, #fail, etc.)
         let mut test_result = Some(TestResult::Ok);
@@ -191,15 +189,12 @@ impl Parse for Markdown {
             // 2. Code Blocks
             else if CodeBlockHeader::is_code_block_start(line) {
                 let block = CodeBlock::parse(context)?;
-                match &block.name() {
-                    Some(block_name) => {
-                        if code_block_names.contains(block_name) {
-                            return Err(ParseError::DuplicatedCodeBlockName(block_name.clone()));
-                        } else {
-                            code_block_names.insert(block_name.clone());
-                        }
+                if let Some(block_name) = &block.name() {
+                    if code_block_names.contains(block_name) {
+                        return Err(ParseError::DuplicatedCodeBlockName(block_name.clone()));
+                    } else {
+                        code_block_names.insert(block_name.clone());
                     }
-                    None => {}
                 }
 
                 current_section.content.push(Paragraph::CodeBlock(block));

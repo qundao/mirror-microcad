@@ -87,16 +87,14 @@ impl CodeBlockHeader {
 
 impl std::fmt::Display for CodeBlockHeader {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self.name {
-            Some(name) => writeln!(f, "{}\n", Self::test_banner_string(name))?,
-            None => {}
+        if let Some(name) = &self.name {
+            writeln!(f, "{}\n", Self::test_banner_string(name))?
         }
 
         write!(f, "```µcad")?;
-        match &self.name {
-            Some(name) => write!(f, ",{name}")?,
-            None => {}
-        };
+        if let Some(name) = &self.name {
+            write!(f, ",{name}")?
+        }
 
         match &self.test_result {
             None | Some(TestResult::Ok) => {}
