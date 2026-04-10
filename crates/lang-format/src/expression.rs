@@ -268,7 +268,7 @@ impl Format for ast::If {
         node!(f, self.extras =>
             "if " self.condition ' ' self.body
             self.else_body.as_ref().map(|body| node!(f => " else " body))
-            self.next_if.as_ref().map(|next_if| node!(f => ' ' next_if))
+            self.next_if.as_ref().map(|next_if| node!(f => " else " next_if))
         )
     }
 }
