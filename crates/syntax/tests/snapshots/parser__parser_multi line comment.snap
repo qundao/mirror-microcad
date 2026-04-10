@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..55,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [
                 (
@@ -17,8 +21,12 @@ Ok(
                         LocalAssignment {
                             span: 0..5,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             name: Identifier {
@@ -30,8 +38,12 @@ Ok(
                                 Literal {
                                     span: 4..5,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Integer(
                                         IntegerLiteral {
@@ -44,30 +56,36 @@ Ok(
                             ),
                         },
                     ),
-                    [
-                        Whitespace(
-                            " ",
-                        ),
-                        Comment(
-                            Comment {
-                                span: 7..44,
-                                inner: MultiLine(
-                                    "multi\n    line\n    comment",
-                                ),
-                            },
-                        ),
-                        Whitespace(
-                            "\n    ",
-                        ),
-                    ],
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                            Comment(
+                                Comment {
+                                    span: 7..44,
+                                    inner: MultiLine(
+                                        "multi\n    line\n    comment",
+                                    ),
+                                },
+                            ),
+                            Whitespace(
+                                "\n    ",
+                            ),
+                        ],
+                    ),
                 ),
                 (
                     LocalAssignment(
                         LocalAssignment {
                             span: 49..54,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             name: Identifier {
@@ -79,8 +97,12 @@ Ok(
                                 Literal {
                                     span: 53..54,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Integer(
                                         IntegerLiteral {
@@ -93,7 +115,9 @@ Ok(
                             ),
                         },
                     ),
-                    [],
+                    TrailingExtras(
+                        [],
+                    ),
                 ),
             ],
             tail: None,

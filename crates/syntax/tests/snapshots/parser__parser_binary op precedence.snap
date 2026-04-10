@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..9,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [],
             tail: Some(
@@ -17,8 +21,12 @@ Ok(
                     ExpressionStatement {
                         span: 0..9,
                         extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
                         },
                         attributes: [],
                         expression: BinaryOperation(
@@ -31,8 +39,12 @@ Ok(
                                             QualifiedName {
                                                 span: 0..1,
                                                 extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
                                                 },
                                                 parts: [
                                                     Identifier {
@@ -50,12 +62,16 @@ Ok(
                                             Literal {
                                                 span: 2..4,
                                                 extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [
-                                                        Whitespace(
-                                                            " ",
-                                                        ),
-                                                    ],
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
+                                                        ],
+                                                    ),
                                                 },
                                                 literal: Integer(
                                                     IntegerLiteral {
@@ -79,8 +95,12 @@ Ok(
                                             QualifiedName {
                                                 span: 6..7,
                                                 extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
                                                 },
                                                 parts: [
                                                     Identifier {
@@ -98,8 +118,12 @@ Ok(
                                             Literal {
                                                 span: 8..9,
                                                 extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
                                                 },
                                                 literal: Integer(
                                                     IntegerLiteral {

@@ -43,9 +43,19 @@ pub struct SourceFile {
 #[derive(Debug, PartialEq, Default)]
 #[allow(missing_docs)]
 pub struct ItemExtras {
-    pub leading: Vec<ItemExtra>,
-    pub trailing: Vec<ItemExtra>,
+    pub leading: LeadingExtras,
+    pub trailing: TrailingExtras,
 }
+
+/// Extras that occur *before* a syntax element.
+#[derive(Debug, PartialEq, Default)]
+#[allow(missing_docs)]
+pub struct TrailingExtras(pub Vec<ItemExtra>);
+
+/// Extras that occur *after* a syntax element.
+#[derive(Debug, PartialEq, Default)]
+#[allow(missing_docs)]
+pub struct LeadingExtras(pub Vec<ItemExtra>);
 
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]

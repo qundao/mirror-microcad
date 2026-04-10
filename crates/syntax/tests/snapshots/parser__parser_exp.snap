@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..36,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [
                 (
@@ -17,16 +21,24 @@ Ok(
                         ExpressionStatement {
                             span: 0..5,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             expression: Literal(
                                 Literal {
                                     span: 0..5,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Float(
                                         FloatLiteral {
@@ -39,27 +51,37 @@ Ok(
                             ),
                         },
                     ),
-                    [
-                        Whitespace(
-                            " ",
-                        ),
-                    ],
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
                 ),
                 (
                     Expression(
                         ExpressionStatement {
                             span: 7..12,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             expression: Literal(
                                 Literal {
                                     span: 7..12,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Float(
                                         FloatLiteral {
@@ -72,27 +94,37 @@ Ok(
                             ),
                         },
                     ),
-                    [
-                        Whitespace(
-                            " ",
-                        ),
-                    ],
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
                 ),
                 (
                     Expression(
                         ExpressionStatement {
                             span: 14..18,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             expression: Literal(
                                 Literal {
                                     span: 14..18,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Float(
                                         FloatLiteral {
@@ -105,27 +137,37 @@ Ok(
                             ),
                         },
                     ),
-                    [
-                        Whitespace(
-                            " ",
-                        ),
-                    ],
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
                 ),
                 (
                     Expression(
                         ExpressionStatement {
                             span: 20..24,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             expression: Literal(
                                 Literal {
                                     span: 20..24,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Float(
                                         FloatLiteral {
@@ -138,27 +180,37 @@ Ok(
                             ),
                         },
                     ),
-                    [
-                        Whitespace(
-                            " ",
-                        ),
-                    ],
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
                 ),
                 (
                     Expression(
                         ExpressionStatement {
                             span: 26..31,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             expression: Literal(
                                 Literal {
                                     span: 26..31,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Float(
                                         FloatLiteral {
@@ -171,11 +223,13 @@ Ok(
                             ),
                         },
                     ),
-                    [
-                        Whitespace(
-                            " ",
-                        ),
-                    ],
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
                 ),
             ],
             tail: Some(
@@ -183,16 +237,24 @@ Ok(
                     ExpressionStatement {
                         span: 33..36,
                         extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
                         },
                         attributes: [],
                         expression: Literal(
                             Literal {
                                 span: 33..36,
                                 extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
                                 },
                                 literal: Float(
                                     FloatLiteral {

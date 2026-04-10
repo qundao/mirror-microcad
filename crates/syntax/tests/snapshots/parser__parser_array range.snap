@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..7,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [],
             tail: Some(
@@ -17,29 +21,45 @@ Ok(
                     ExpressionStatement {
                         span: 0..7,
                         extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
                         },
                         attributes: [],
                         expression: ArrayRange(
                             ArrayRangeExpression {
                                 span: 0..7,
                                 extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
                                 },
                                 start: ArrayItem {
                                     span: 1..2,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     expression: Literal(
                                         Literal {
                                             span: 1..2,
                                             extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
                                             },
                                             literal: Integer(
                                                 IntegerLiteral {
@@ -54,15 +74,23 @@ Ok(
                                 end: ArrayItem {
                                     span: 4..6,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     expression: Literal(
                                         Literal {
                                             span: 4..6,
                                             extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
                                             },
                                             literal: Integer(
                                                 IntegerLiteral {
