@@ -3,6 +3,14 @@
 
 use crate::{Span, ast};
 
+/// An inner doc block
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct InnerDocComment {
+    pub span: Span,
+    pub line: String,
+}
+
 /// A µcad statements
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
@@ -21,10 +29,10 @@ pub enum Statement {
     Init(InitDefinition),
     Return(Return),
     InnerAttribute(Attribute),
+    InnerDocComment(InnerDocComment),
     LocalAssignment(LocalAssignment),
     Property(PropertyAssignment),
     Expression(ExpressionStatement),
-    InnerDocComment(Comment),
     Error(Span),
 }
 
