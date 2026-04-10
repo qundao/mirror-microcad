@@ -127,7 +127,6 @@ fn parser<'tokens>()
             .map(Statement::Expression)
             .map(Box::new)
             .or_not()
-            .then_maybe_whitespace()
             .boxed();
 
         whitespace_parser()
@@ -144,7 +143,6 @@ fn parser<'tokens>()
                 statements,
                 tail,
             })
-            .then_maybe_whitespace()
             .boxed()
     });
 
@@ -153,26 +151,21 @@ fn parser<'tokens>()
 
     let block = whitespace_parser()
         .or_not()
-        .ignore_then(
-            statement_list_parser
-                .clone()
-                .then_maybe_whitespace()
-                .delimited_with_spanned_error(
-                    just(Token::SigilOpenCurlyBracket),
-                    just(Token::SigilCloseCurlyBracket),
-                    |err: Error, open, end| {
-                        Rich::custom(
-                            err.span().clone(),
-                            ParseErrorKind::UnclosedBracket {
-                                open,
-                                end,
-                                kind: "code block",
-                                close_token: Token::SigilCloseCurlyBracket,
-                            },
-                        )
+        .ignore_then(statement_list_parser.clone().delimited_with_spanned_error(
+            just(Token::SigilOpenCurlyBracket),
+            just(Token::SigilCloseCurlyBracket),
+            |err: Error, open, end| {
+                Rich::custom(
+                    err.span().clone(),
+                    ParseErrorKind::UnclosedBracket {
+                        open,
+                        end,
+                        kind: "code block",
+                        close_token: Token::SigilCloseCurlyBracket,
                     },
-                ),
-        )
+                )
+            },
+        ))
         .recover_with(via_parser(block_recovery))
         .map_with(|statements, e| Body {
             span: e.span(),
@@ -438,13 +431,10 @@ fn parser<'tokens>()
 
     let call_inner = qualified_name
         .clone()
-        .then_maybe_whitespace()
         .then(
-            whitespace_parser()
-                .or_not()
-                .ignore_then(tuple_body.clone())
+            tuple_body
+                .clone()
                 .with_extras()
-                .then_maybe_whitespace()
                 .map_with(|(arguments, extras), e| ArgumentList {
                     span: e.span(),
                     extras,
@@ -775,7 +765,6 @@ fn parser<'tokens>()
                 ty,
                 default,
             })
-            .then_maybe_whitespace()
             .separated_by(just(Token::SigilComma))
             .allow_trailing()
             .collect::<Vec<_>>()
@@ -914,7 +903,6 @@ fn parser<'tokens>()
             .then(just(Token::KeywordInit).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
             .then(parameter_list.clone())
-            .then_maybe_whitespace()
             .then(block.clone())
             .with_extras()
             .map_with(
@@ -1118,7 +1106,6 @@ fn parser<'tokens>()
             .or(property_assignment)
             .or(local_assignment)
             .or(expression)
-            .then_maybe_whitespace()
             .boxed();
 
         let without_semi = function
@@ -1253,7 +1240,6 @@ fn parser<'tokens>()
         let tuple = whitespace_parser()
             .or_not()
             .ignore_then(tuple_body.clone())
-            .then_maybe_whitespace()
             .with_extras()
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
@@ -1312,11 +1298,8 @@ fn parser<'tokens>()
 
         let array_range = array_item
             .clone()
-            .then_maybe_whitespace()
             .then_ignore(just(Token::SigilDoubleDot))
-            .then_maybe_whitespace()
             .then(array_item.clone())
-            .then_maybe_whitespace()
             .with_extras()
             .delimited_by(
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
@@ -1337,7 +1320,6 @@ fn parser<'tokens>()
 
         let array_list = array_item
             .clone()
-            .then_maybe_whitespace()
             .separated_by(just(Token::SigilComma).then_maybe_whitespace())
             .allow_trailing()
             .collect::<Vec<_>>()
@@ -1509,19 +1491,13 @@ fn parser<'tokens>()
 
         let element_access = base
             .clone()
-            .foldl_with(
-                whitespace_parser()
-                    .or_not()
-                    .ignore_then(access_item)
-                    .repeated(),
-                |value, element_chain, e| {
-                    Expression::ElementAccess(ElementAccess {
-                        span: e.span(),
-                        value: value.into(),
-                        element_chain,
-                    })
-                },
-            )
+            .foldl_with(access_item.repeated(), |value, element_chain, e| {
+                Expression::ElementAccess(ElementAccess {
+                    span: e.span(),
+                    value: value.into(),
+                    element_chain,
+                })
+            })
             .labelled("element access")
             .boxed();
 
