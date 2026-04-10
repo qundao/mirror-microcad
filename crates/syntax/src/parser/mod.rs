@@ -389,7 +389,8 @@ fn parser<'tokens>()
     .labelled("unary operator")
     .boxed();
 
-    let doc_comment = select_ref! {
+    // Parse for a DocBlock, starting with `///`
+    let doc_block = select_ref! {
         Token::DocComment(comment) => comment.to_string(),
     }
     .then_whitespace()
@@ -399,7 +400,7 @@ fn parser<'tokens>()
         span: e.span(),
         lines,
     })
-    .labelled("doc-comment")
+    .labelled("doc block")
     .boxed();
 
     let tuple_recovery = nested_delimiters(
@@ -554,7 +555,7 @@ fn parser<'tokens>()
             .map(Statement::LocalAssignment)
             .labelled("local assignment");
 
-        let const_assignment_inner = doc_comment
+        let const_assignment_inner = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
@@ -606,7 +607,7 @@ fn parser<'tokens>()
             .labelled("const assignment");
 
         // A pub assignment without the `const` keyword will eventually become a const assignment
-        let pub_assignment_inner = doc_comment
+        let pub_assignment_inner = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(just(Token::KeywordPub).map_with(|_, e| e.span()))
@@ -652,7 +653,7 @@ fn parser<'tokens>()
             .map(Statement::Const)
             .labelled("pub const assignment");
 
-        let property_assignment_inner = doc_comment
+        let property_assignment_inner = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(just(Token::KeywordProp).map_with(|_, e| e.span()))
@@ -810,7 +811,7 @@ fn parser<'tokens>()
             ))
             .boxed();
 
-        let module = doc_comment
+        let module = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
@@ -907,7 +908,7 @@ fn parser<'tokens>()
         }
         .boxed();
 
-        let init = doc_comment
+        let init = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(just(Token::KeywordInit).map_with(|_, e| e.span()))
@@ -930,7 +931,7 @@ fn parser<'tokens>()
                 },
             )
             .boxed();
-        let workbench = doc_comment
+        let workbench = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
@@ -993,7 +994,7 @@ fn parser<'tokens>()
             })
             .boxed();
 
-        let function = doc_comment
+        let function = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
@@ -1063,18 +1064,16 @@ fn parser<'tokens>()
             .labelled("if statement")
             .boxed();
 
-        let inner_doc_statement = select_ref! {
-            Token::InnerDocComment(comment) => String::from(comment.as_ref()),
+        let inner_doc_comment = select_ref! {
+            Token::InnerDocComment(comment) => comment.to_string(),
         }
-        .repeated()
-        .at_least(1)
-        .collect::<Vec<_>>()
-        .map_with(|lines, e| Comment {
-            span: e.span(),
-            inner: CommentInner::SingleLine(lines.into_iter().collect()),
+        .labelled("inner doc-block")
+        .map_with(|line, e| {
+            Statement::InnerDocComment(InnerDocComment {
+                span: e.span(),
+                line,
+            })
         })
-        .labelled("inner doc-comment")
-        .map(Statement::InnerDocComment)
         .boxed();
 
         let not_assigment = whitespace_parser()
@@ -1123,7 +1122,7 @@ fn parser<'tokens>()
             .boxed();
 
         let without_semi = function
-            .or(inner_doc_statement)
+            .or(inner_doc_comment)
             .or(init)
             .or(workbench)
             .or(module)

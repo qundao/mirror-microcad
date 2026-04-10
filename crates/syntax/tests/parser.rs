@@ -112,6 +112,7 @@ use test_case::test_case;
     "inner doc comment",
     r#"//! Doc comment1
     //! Doc comment2
+    //! Doc comment3
     "#
 )]
 #[test_case("tuple", "(1, 1 + 1)")]
