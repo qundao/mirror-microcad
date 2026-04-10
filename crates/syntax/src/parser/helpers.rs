@@ -37,12 +37,11 @@ where
             inner: CommentInner::MultiLine(comment.as_ref().into())
         }
     };
-    let comment = single_line_comments
+
+    single_line_comments
         .or(multi_line)
         .labelled("comment")
-        .boxed();
-
-    comment
+        .boxed()
 }
 
 pub fn whitespace_parser<'tokens, S, Ctx>()
