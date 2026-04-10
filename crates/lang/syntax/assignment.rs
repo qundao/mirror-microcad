@@ -12,7 +12,7 @@ use crate::{syntax::*, ty::*};
 #[derive(Clone, Debug, SrcReferrer, Identifiable)]
 pub struct Assignment {
     /// Documentation.
-    pub doc: Option<DocBlock>,
+    pub doc: DocBlock,
     /// Value's visibility
     pub visibility: Visibility,
     /// Assignee qualifier

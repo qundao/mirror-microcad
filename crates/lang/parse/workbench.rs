@@ -19,11 +19,7 @@ impl FromAst for std::rc::Rc<WorkbenchDefinition> {
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(std::rc::Rc::new(WorkbenchDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
-            doc: node
-                .doc
-                .as_ref()
-                .map(|doc| DocBlock::from_ast(doc, context))
-                .transpose()?,
+            doc: DocBlock::from_ast(&node.doc, context)?,
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
             visibility: node
                 .visibility

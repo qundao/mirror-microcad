@@ -10,7 +10,7 @@ impl FromAst for ModuleDefinition {
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(ModuleDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
-            doc: node.doc.as_ref().map(|doc| DocBlock::from_ast(doc, context)).transpose()?,
+            doc: DocBlock::from_ast(&node.doc, context)?,
             visibility: node
                 .visibility
                 .as_ref()

@@ -63,12 +63,16 @@ impl std::fmt::Display for DocBlock {
 
 impl TreeDisplay for DocBlock {
     fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        writeln!(
-            f,
-            "{:depth$}DocBlock: '{}'",
-            "",
-            microcad_lang_base::shorten!(self.0.first().cloned().unwrap_or_default())
-        )
+        if self.is_empty() {
+            Ok(())
+        } else {
+            writeln!(
+                f,
+                "{:depth$}DocBlock: '{}'",
+                "",
+                microcad_lang_base::shorten!(self.0.first().cloned().unwrap_or_default())
+            )
+        }
     }
 }
 #[test]

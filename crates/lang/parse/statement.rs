@@ -11,7 +11,7 @@ impl Assignment {
         context: &ParseContext,
     ) -> Result<Self, ParseError> {
         Ok(Assignment {
-            doc: None,
+            doc: DocBlock::default(),
             visibility: Visibility::Private,
             id: Identifier::from_ast(&node.name, context)?,
             qualifier: Qualifier::Value,
@@ -30,11 +30,7 @@ impl Assignment {
         context: &ParseContext,
     ) -> Result<Self, ParseError> {
         Ok(Assignment {
-            doc: node
-                .doc
-                .as_ref()
-                .map(|doc| DocBlock::from_ast(doc, context))
-                .transpose()?,
+            doc: DocBlock::from_ast(&node.doc, context)?,
             visibility: Visibility::Private,
             id: Identifier::from_ast(&node.name, context)?,
             qualifier: Qualifier::Prop,
@@ -53,11 +49,7 @@ impl Assignment {
         context: &ParseContext,
     ) -> Result<Self, ParseError> {
         Ok(Assignment {
-            doc: node
-                .doc
-                .as_ref()
-                .map(|doc| DocBlock::from_ast(doc, context))
-                .transpose()?,
+            doc: DocBlock::from_ast(&node.doc, context)?,
             visibility: node
                 .visibility
                 .as_ref()
