@@ -71,15 +71,7 @@ impl TokenContext {
         workbench: &WorkbenchDefinition,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
-        tokens.extend(
-            workbench
-                .doc
-                .clone()
-                .map(|doc| {
-                    self.output_semantic_token(doc.src_ref(), SemanticTokenType::COMMENT, &[])
-                })
-                .transpose()?,
-        );
+        tokens.extend(self.doc_token(&workbench.doc)?);
         tokens.extend(self.parse_attribute_list(&workbench.attribute_list)?);
         tokens.extend([
             self.output_semantic_token(
@@ -249,17 +241,24 @@ impl TokenContext {
         })
     }
 
+    fn doc_token(
+        &mut self,
+        doc_block: &microcad_lang::syntax::DocBlock,
+    ) -> miette::Result<Option<SemanticToken>> {
+        if doc_block.is_empty() {
+            Ok(None)
+        } else {
+            Ok(Some(self.output_semantic_token(
+                doc_block.src_ref(),
+                SemanticTokenType::COMMENT,
+                &[],
+            )?))
+        }
+    }
+
     fn parse_assignment(&mut self, assignment: &Assignment) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
-        tokens.extend(
-            assignment
-                .doc
-                .as_ref()
-                .map(|doc| {
-                    self.output_semantic_token(doc.src_ref(), SemanticTokenType::COMMENT, &[])
-                })
-                .transpose()?,
-        );
+        tokens.extend(self.doc_token(&assignment.doc)?);
         let id_type = match assignment.qualifier() {
             Qualifier::Const => SemanticTokenType::MACRO,
             Qualifier::Value => SemanticTokenType::VARIABLE,
@@ -684,13 +683,8 @@ impl TokenContext {
         function_definition: &FunctionDefinition,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
-        if let Some(doc) = &function_definition.doc {
-            tokens.push(self.output_semantic_token(
-                doc.src_ref(),
-                SemanticTokenType::COMMENT,
-                &[],
-            )?);
-        }
+        self.doc_token(&function_definition.doc)?;
+
         tokens.push(self.output_semantic_token(
             function_definition.keyword_ref.clone(),
             SemanticTokenType::KEYWORD,
@@ -711,13 +705,8 @@ impl TokenContext {
         init_definition: &InitDefinition,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
-        if let Some(doc) = &init_definition.doc {
-            tokens.push(self.output_semantic_token(
-                doc.src_ref(),
-                SemanticTokenType::COMMENT,
-                &[],
-            )?);
-        }
+        self.doc_token(&init_definition.doc)?;
+
         tokens.push(self.output_semantic_token(
             init_definition.keyword_ref.clone(),
             SemanticTokenType::KEYWORD,
