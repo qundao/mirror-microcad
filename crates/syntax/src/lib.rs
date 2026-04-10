@@ -24,5 +24,5 @@ pub use tokens::lex;
 
 /// Highlevel API to parse directly from a string
 pub fn parse_str(source: &str) -> Result<ast::SourceFile, Vec<ParseError>> {
-    parse(&lex(&source).collect::<Vec<_>>())
+    parse(&lex(source).collect::<Vec<_>>())
 }
