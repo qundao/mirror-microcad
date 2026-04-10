@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..27,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [
                 (
@@ -19,8 +23,12 @@ Ok(
                             attributes: [],
                             keyword_span: 4..7,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             visibility: Some(
                                 Public,
@@ -28,12 +36,16 @@ Ok(
                             name: UseName {
                                 span: 8..17,
                                 extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [
-                                        Whitespace(
-                                            " ",
-                                        ),
-                                    ],
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [
+                                            Whitespace(
+                                                " ",
+                                            ),
+                                        ],
+                                    ),
                                 },
                                 parts: [
                                     Identifier(
@@ -58,7 +70,9 @@ Ok(
                             ),
                         },
                     ),
-                    [],
+                    TrailingExtras(
+                        [],
+                    ),
                 ),
             ],
             tail: None,

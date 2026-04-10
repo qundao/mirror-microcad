@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..44,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [],
             tail: Some(
@@ -17,8 +21,12 @@ Ok(
                     ExpressionStatement {
                         span: 0..44,
                         extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
                         },
                         attributes: [],
                         expression: BinaryOperation(
@@ -40,12 +48,16 @@ Ok(
                                                                     Literal {
                                                                         span: 0..3,
                                                                         extras: ItemExtras {
-                                                                            leading: [],
-                                                                            trailing: [
-                                                                                Whitespace(
-                                                                                    " ",
-                                                                                ),
-                                                                            ],
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
+                                                                                ],
+                                                                            ),
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
@@ -68,12 +80,16 @@ Ok(
                                                                     Literal {
                                                                         span: 5..8,
                                                                         extras: ItemExtras {
-                                                                            leading: [],
-                                                                            trailing: [
-                                                                                Whitespace(
-                                                                                    " ",
-                                                                                ),
-                                                                            ],
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
+                                                                                ],
+                                                                            ),
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
@@ -101,12 +117,16 @@ Ok(
                                                                     Literal {
                                                                         span: 10..14,
                                                                         extras: ItemExtras {
-                                                                            leading: [],
-                                                                            trailing: [
-                                                                                Whitespace(
-                                                                                    " ",
-                                                                                ),
-                                                                            ],
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
+                                                                                ],
+                                                                            ),
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
@@ -129,12 +149,16 @@ Ok(
                                                                     Literal {
                                                                         span: 16..21,
                                                                         extras: ItemExtras {
-                                                                            leading: [],
-                                                                            trailing: [
-                                                                                Whitespace(
-                                                                                    " ",
-                                                                                ),
-                                                                            ],
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
+                                                                                ],
+                                                                            ),
                                                                         },
                                                                         literal: Quantity(
                                                                             QuantityLiteral {
@@ -164,12 +188,16 @@ Ok(
                                                             Literal {
                                                                 span: 23..29,
                                                                 extras: ItemExtras {
-                                                                    leading: [],
-                                                                    trailing: [
-                                                                        Whitespace(
-                                                                            " ",
-                                                                        ),
-                                                                    ],
+                                                                    leading: LeadingExtras(
+                                                                        [],
+                                                                    ),
+                                                                    trailing: TrailingExtras(
+                                                                        [
+                                                                            Whitespace(
+                                                                                " ",
+                                                                            ),
+                                                                        ],
+                                                                    ),
                                                                 },
                                                                 literal: Quantity(
                                                                     QuantityLiteral {
@@ -192,12 +220,16 @@ Ok(
                                                             Literal {
                                                                 span: 31..35,
                                                                 extras: ItemExtras {
-                                                                    leading: [],
-                                                                    trailing: [
-                                                                        Whitespace(
-                                                                            " ",
-                                                                        ),
-                                                                    ],
+                                                                    leading: LeadingExtras(
+                                                                        [],
+                                                                    ),
+                                                                    trailing: TrailingExtras(
+                                                                        [
+                                                                            Whitespace(
+                                                                                " ",
+                                                                            ),
+                                                                        ],
+                                                                    ),
                                                                 },
                                                                 literal: Quantity(
                                                                     QuantityLiteral {
@@ -224,12 +256,16 @@ Ok(
                                             Literal {
                                                 span: 37..40,
                                                 extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [
-                                                        Whitespace(
-                                                            " ",
-                                                        ),
-                                                    ],
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
+                                                        ],
+                                                    ),
                                                 },
                                                 literal: Quantity(
                                                     QuantityLiteral {
@@ -254,8 +290,12 @@ Ok(
                                     Literal {
                                         span: 42..44,
                                         extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
                                         },
                                         literal: Quantity(
                                             QuantityLiteral {

@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..7,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [],
             tail: Some(
@@ -17,8 +21,12 @@ Ok(
                     ExpressionStatement {
                         span: 0..7,
                         extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
                         },
                         attributes: [],
                         expression: ElementAccess(
@@ -28,8 +36,12 @@ Ok(
                                     QualifiedName {
                                         span: 0..3,
                                         extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
                                         },
                                         parts: [
                                             Identifier {
@@ -43,8 +55,12 @@ Ok(
                                     Element {
                                         span: 3..7,
                                         extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
                                         },
                                         inner: Tuple(
                                             Identifier {

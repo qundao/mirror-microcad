@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..17,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [],
             tail: Some(
@@ -17,31 +21,47 @@ Ok(
                     ExpressionStatement {
                         span: 0..17,
                         extras: ItemExtras {
-                            leading: [],
-                            trailing: [],
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
                         },
                         attributes: [],
                         expression: Tuple(
                             TupleExpression {
                                 span: 0..17,
                                 extras: ItemExtras {
-                                    leading: [],
-                                    trailing: [],
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
                                 },
                                 values: [
                                     TupleItem {
                                         span: 1..4,
                                         extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
                                         },
                                         name: None,
                                         value: Literal(
                                             Literal {
                                                 span: 1..4,
                                                 extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
                                                 },
                                                 literal: String(
                                                     StringLiteral {
@@ -55,8 +75,12 @@ Ok(
                                     TupleItem {
                                         span: 6..16,
                                         extras: ItemExtras {
-                                            leading: [],
-                                            trailing: [],
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
                                         },
                                         name: Some(
                                             Identifier {
@@ -68,8 +92,12 @@ Ok(
                                             Literal {
                                                 span: 15..16,
                                                 extras: ItemExtras {
-                                                    leading: [],
-                                                    trailing: [],
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
                                                 },
                                                 literal: Integer(
                                                     IntegerLiteral {

@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..20,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [
                 (
@@ -17,8 +21,12 @@ Ok(
                         LocalAssignment {
                             span: 0..19,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             attributes: [],
                             name: Identifier {
@@ -40,12 +48,16 @@ Ok(
                                         QualifiedName {
                                             span: 12..13,
                                             extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [
-                                                    Whitespace(
-                                                        " ",
-                                                    ),
-                                                ],
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ],
+                                                ),
                                             },
                                             parts: [
                                                 Identifier {
@@ -63,8 +75,12 @@ Ok(
                                         Literal {
                                             span: 16..19,
                                             extras: ItemExtras {
-                                                leading: [],
-                                                trailing: [],
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
                                             },
                                             literal: Quantity(
                                                 QuantityLiteral {
@@ -83,7 +99,9 @@ Ok(
                             ),
                         },
                     ),
-                    [],
+                    TrailingExtras(
+                        [],
+                    ),
                 ),
             ],
             tail: None,

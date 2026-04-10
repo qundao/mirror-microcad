@@ -3,8 +3,8 @@
 
 use crate::Span;
 use crate::ast::{
-    BinaryOperation, Comment, CommentInner, Expression, ItemExtra, ItemExtras, Operator,
-    OperatorType,
+    BinaryOperation, Comment, CommentInner, Expression, ItemExtra, ItemExtras, LeadingExtras,
+    Operator, OperatorType, TrailingExtras,
 };
 use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;
@@ -59,8 +59,8 @@ where
     .boxed()
 }
 
-pub fn extras_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Vec<ItemExtra>, Full<Error<'tokens>, S, Ctx>>
+pub fn leading_extras_parser<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, LeadingExtras, Full<Error<'tokens>, S, Ctx>>
 where
     S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
     Ctx: 'tokens,
@@ -73,6 +73,25 @@ where
         .or(whitespace)
         .repeated()
         .collect::<Vec<_>>()
+        .map(LeadingExtras)
+        .boxed()
+}
+
+pub fn trailing_extras_parser<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, TrailingExtras, Full<Error<'tokens>, S, Ctx>>
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
+    // Inline the whitespace logic and the comment logic
+    let whitespace = select_ref! { Token::Whitespace(s) => ItemExtra::Whitespace(s.to_string()) };
+    let comment = comment_parser().map(ItemExtra::Comment);
+
+    whitespace
+        .or(comment)
+        .repeated()
+        .collect::<Vec<_>>()
+        .map(TrailingExtras)
         .boxed()
 }
 
@@ -254,10 +273,9 @@ where
         self,
     ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (O, ItemExtras), Full<Error<'tokens>, S, Ctx>>
     {
-        extras_parser()
-            .then_maybe_whitespace()
+        leading_extras_parser()
             .then(self)
-            .then(extras_parser())
+            .then(trailing_extras_parser())
             .map(|((leading, res), trailing)| (res, ItemExtras { leading, trailing }))
             .boxed()
     }

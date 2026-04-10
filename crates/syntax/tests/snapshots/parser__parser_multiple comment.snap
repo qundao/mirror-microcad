@@ -8,32 +8,36 @@ Ok(
         statements: StatementList {
             span: 0..27,
             extras: ItemExtras {
-                leading: [
-                    Comment(
-                        Comment {
-                            span: 0..11,
-                            inner: SingleLine(
-                                [
-                                    "// comment1",
-                                ],
-                            ),
-                        },
-                    ),
-                    Whitespace(
-                        "\n    ",
-                    ),
-                    Comment(
-                        Comment {
-                            span: 16..27,
-                            inner: SingleLine(
-                                [
-                                    "// comment2",
-                                ],
-                            ),
-                        },
-                    ),
-                ],
-                trailing: [],
+                leading: LeadingExtras(
+                    [
+                        Comment(
+                            Comment {
+                                span: 0..11,
+                                inner: SingleLine(
+                                    [
+                                        "// comment1",
+                                    ],
+                                ),
+                            },
+                        ),
+                        Whitespace(
+                            "\n    ",
+                        ),
+                        Comment(
+                            Comment {
+                                span: 16..27,
+                                inner: SingleLine(
+                                    [
+                                        "// comment2",
+                                    ],
+                                ),
+                            },
+                        ),
+                    ],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [],
             tail: None,

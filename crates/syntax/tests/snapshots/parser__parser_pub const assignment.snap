@@ -8,8 +8,12 @@ Ok(
         statements: StatementList {
             span: 0..18,
             extras: ItemExtras {
-                leading: [],
-                trailing: [],
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
             },
             statements: [
                 (
@@ -18,8 +22,12 @@ Ok(
                             span: 0..17,
                             keyword_span: 4..9,
                             extras: ItemExtras {
-                                leading: [],
-                                trailing: [],
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
                             },
                             doc: None,
                             attributes: [],
@@ -35,8 +43,12 @@ Ok(
                                 Literal {
                                     span: 16..17,
                                     extras: ItemExtras {
-                                        leading: [],
-                                        trailing: [],
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
                                     },
                                     literal: Integer(
                                         IntegerLiteral {
@@ -49,7 +61,9 @@ Ok(
                             ),
                         },
                     ),
-                    [],
+                    TrailingExtras(
+                        [],
+                    ),
                 ),
             ],
             tail: None,
