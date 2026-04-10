@@ -54,7 +54,7 @@ impl Format for Vec<ast::ItemExtra> {
     }
 }
 
-pub(crate) fn format_extra_trailing(extras: &Vec<ast::ItemExtra>, f: &FormatConfig) -> Node {
+pub(crate) fn format_extra_trailing(extras: &[ast::ItemExtra], f: &FormatConfig) -> Node {
     extras
         .iter()
         .map(|extra| match &extra {
@@ -147,11 +147,9 @@ impl Format for ast::Identifier {
 impl Format for ast::Comment {
     fn format(&self, _: &FormatConfig) -> Node {
         match &self.inner {
-            ast::CommentInner::SingleLine(items) => Node::vlist(
-                items.into_iter().cloned().map(|item| item.into()),
-                Node::Nil,
-                0,
-            ),
+            ast::CommentInner::SingleLine(items) => {
+                Node::vlist(items.iter().cloned().map(|item| item.into()), Node::Nil, 0)
+            }
             ast::CommentInner::MultiLine(line) => node!("/* " Node::from(line.clone()) " */"),
         }
     }
@@ -197,19 +195,17 @@ macro_rules! node {
 
 /// Format µcad source file.
 pub fn format(source_file: &ast::SourceFile, config: &FormatConfig) -> String {
+    eprintln!("{:#?}", source_file.format(config));
     source_file.format(config).to_string()
 }
 
 /// High-level API to format a &str containing µcad source code.
 pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, FormatError> {
-    let source_file =
-        microcad_syntax::parse_str(&source).map_err(|err| FormatError::ParseErrors(err))?;
-    Ok(format(&source_file, &config))
+    let source_file = microcad_syntax::parse_str(source).map_err(FormatError::ParseErrors)?;
+    Ok(format(&source_file, config))
 }
 
 /// High-level API to format an entire mdbook.
-///
-/// TODO: needs proper error handling.
 pub fn format_mdbook(
     mdbook: &mut microcad_lang_markdown::MdBookDirectory,
     config: &FormatConfig,
@@ -222,12 +218,13 @@ pub fn format_mdbook(
         .filter(|(_, code_block)| code_block.can_format())
         .for_each(|(path, code_block)| {
             if let Err(err) = format_str(&code_block.code, config) {
-                errors_by_file.entry(path.clone()).or_default().push(
-                    FormatError::CodeBlockFormatError {
+                errors_by_file
+                    .entry(path.clone())
+                    .or_default()
+                    .push(FormatError::CodeBlock {
                         name: code_block.name().as_ref().cloned().unwrap_or_default(),
                         error: Box::new(err),
-                    },
-                );
+                    });
             } else if let Ok(formatted) = format_str(&code_block.code, config) {
                 // Only update the code if formatting succeeded
                 code_block.code = formatted;
@@ -239,7 +236,7 @@ pub fn format_mdbook(
 
     // 3. If we hit issues, return the map in the specific variant
     if !errors_by_file.is_empty() {
-        return Err(FormatError::MdBookFormatError {
+        return Err(FormatError::MdBook {
             src_path: mdbook.src_path.clone(),
             errors: errors_by_file,
         });
