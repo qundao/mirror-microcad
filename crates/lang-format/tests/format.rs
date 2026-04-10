@@ -21,24 +21,6 @@ macro_rules! formatted_test_case {
     };
 }
 
-// A test case whose format output does change.
-macro_rules! unformatted_test_case {
-    ($name:ident) => {
-        #[test]
-        fn $name() {
-            use microcad_lang_format::{FormatConfig, format_str};
-            let name = stringify!($name);
-            let source =
-                std::fs::read_to_string(format!("tests/test_cases/unformatted/{name}.µcad"))
-                    .expect("No errors");
-            insta::assert_snapshot!(
-                name,
-                format_str(&source, &FormatConfig::default()).expect("No errors")
-            );
-        }
-    };
-}
-
 formatted_test_case!(statement_list_whitespace);
 formatted_test_case!(array);
 formatted_test_case!(tuple);

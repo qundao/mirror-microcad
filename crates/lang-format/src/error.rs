@@ -13,7 +13,7 @@ pub enum FormatError {
 
     /// Error formatting a markdown code block
     #[error("Error formatting code block `{name}`: \n{error}")]
-    CodeBlockFormatError {
+    CodeBlock {
         name: String,
         error: Box<FormatError>,
     },
@@ -24,7 +24,7 @@ pub enum FormatError {
 
     /// Error formatting a markdown code block
     #[error("Error formatting mdbook in {src_path:?}: {errors:#?}")]
-    MdBookFormatError {
+    MdBook {
         src_path: std::path::PathBuf,
         errors: HashMap<std::path::PathBuf, Vec<FormatError>>,
     },
