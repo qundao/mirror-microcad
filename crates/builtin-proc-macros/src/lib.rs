@@ -11,7 +11,7 @@ use quote::quote;
 use syn::{parse::{Parse, ParseStream}, *};
 
 /// Get all doc comments as concetenated string.
-fn get_doc_comment(attrs: &[Attribute]) -> String {
+fn get_doc_block(attrs: &[Attribute]) -> String {
     attrs.iter().filter_map(|attr| 
         // Parse the meta of the attribute
         if attr.path().is_ident("doc") 
@@ -226,7 +226,7 @@ pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     let fn_name = &input_fn.sig.ident;
     let fn_vis = &input_fn.vis;
     let fn_attrs = &input_fn.attrs;
-    let fn_docs = get_doc_comment(fn_attrs);
+    let fn_docs = get_doc_block(fn_attrs);
     let fn_body = &input_fn.block; // This is the closure returned by the user
 
     TokenStream::from(quote! {

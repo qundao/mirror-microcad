@@ -37,7 +37,7 @@ fn generate_help(input: &DeriveInput) -> String {
         quote!(#ty).to_string()
     }
 
-    let mut help = crate::get_doc_comment(&input.attrs);
+    let mut help = crate::get_doc_block(&input.attrs);
     let args = match &input.data {
         Data::Struct(ds) => match &ds.fields {
             Fields::Named(fields_named) => {
@@ -50,7 +50,7 @@ fn generate_help(input: &DeriveInput) -> String {
                             "- `{name}: {ty}`: {doc}",
                             name = field.ident.as_ref().expect("Ident"),
                             ty = type_to_string(&field.ty),
-                            doc = crate::get_doc_comment(&field.attrs)
+                            doc = crate::get_doc_block(&field.attrs)
                         )
                     })
                     .collect()
