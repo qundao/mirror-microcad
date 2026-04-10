@@ -390,18 +390,16 @@ fn parser<'tokens>()
     .boxed();
 
     let doc_comment = select_ref! {
-        Token::DocComment(comment) => comment,
+        Token::DocComment(comment) => comment.to_string(),
     }
     .then_whitespace()
     .repeated()
-    .at_least(1)
     .collect::<Vec<_>>()
-    .map_with(|lines, e| Comment {
+    .map_with(|lines, e| DocBlock {
         span: e.span(),
-        inner: CommentInner::SingleLine(lines.into_iter().map(|s| s.as_ref().into()).collect()),
+        lines,
     })
     .labelled("doc-comment")
-    .or_not()
     .boxed();
 
     let tuple_recovery = nested_delimiters(
@@ -1068,7 +1066,6 @@ fn parser<'tokens>()
         let inner_doc_statement = select_ref! {
             Token::InnerDocComment(comment) => String::from(comment.as_ref()),
         }
-        .then_maybe_whitespace()
         .repeated()
         .at_least(1)
         .collect::<Vec<_>>()

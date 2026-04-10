@@ -29,7 +29,10 @@ Ok(
                                     [],
                                 ),
                             },
-                            doc: None,
+                            doc: DocBlock {
+                                span: 0..26,
+                                lines: [],
+                            },
                             attributes: [],
                             visibility: Some(
                                 Public,
@@ -73,7 +76,10 @@ Ok(
                                                                 ],
                                                             ),
                                                         },
-                                                        doc: None,
+                                                        doc: DocBlock {
+                                                            span: 14..14,
+                                                            lines: [],
+                                                        },
                                                         attributes: [],
                                                         visibility: None,
                                                         name: Identifier {

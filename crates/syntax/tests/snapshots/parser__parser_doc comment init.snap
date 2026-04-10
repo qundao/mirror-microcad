@@ -29,16 +29,12 @@ Ok(
                                     [],
                                 ),
                             },
-                            doc: Some(
-                                Comment {
-                                    span: 0..20,
-                                    inner: SingleLine(
-                                        [
-                                            "/// Doc comment",
-                                        ],
-                                    ),
-                                },
-                            ),
+                            doc: DocBlock {
+                                span: 0..20,
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            },
                             attributes: [],
                             parameters: ParameterList {
                                 span: 25..25,

@@ -101,7 +101,7 @@ pub struct WorkbenchDefinition {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub doc: Option<Comment>,
+    pub doc: DocBlock,
     pub kind: WorkbenchKind,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
@@ -117,7 +117,7 @@ pub struct ModuleDefinition {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub doc: Option<Comment>,
+    pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: ast::Identifier,
@@ -131,7 +131,7 @@ pub struct FunctionDefinition {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub doc: Option<Comment>,
+    pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: ast::Identifier,
@@ -147,7 +147,7 @@ pub struct InitDefinition {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub doc: Option<Comment>,
+    pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub parameters: ParameterList,
     pub body: ast::Body,
@@ -270,7 +270,7 @@ pub struct ConstAssignment {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub doc: Option<Comment>,
+    pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: ast::Identifier,
@@ -285,7 +285,7 @@ pub struct PropertyAssignment {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub doc: Option<Comment>,
+    pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub name: ast::Identifier,
     pub ty: Option<ast::Type>,
@@ -296,7 +296,7 @@ pub struct PropertyAssignment {
 #[allow(missing_docs)]
 pub enum CommentInner {
     // A list of single line comments starting with `//`.
-    SingleLine(Vec<String>),
+    SingleLine(String),
     // Comments embraced with `/* ... */`.
     MultiLine(String),
 }
@@ -307,6 +307,14 @@ pub enum CommentInner {
 pub struct Comment {
     pub span: Span,
     pub inner: CommentInner,
+}
+
+/// Lines of inner or outer doc block including prefix `///`/`//!`.
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct DocBlock {
+    pub span: Span,
+    pub lines: Vec<String>,
 }
 
 /// An optional visibility modifier that can be art of assignment and module, function and workbench definitions

@@ -23,18 +23,15 @@ where
     let single_line_comments = select_ref! {
         Token::SingleLineComment(comment) => comment
     }
-    .repeated()
-    .at_least(1)
-    .collect::<Vec<_>>()
-    .map_with(|lines, e| Comment {
+    .map_with(|line, e| Comment {
         span: e.span(),
-        inner: CommentInner::SingleLine(lines.into_iter().map(|s| s.as_ref().into()).collect()),
+        inner: CommentInner::SingleLine(line.to_string()),
     })
     .boxed();
     let multi_line = select_ref! {
         Token::MultiLineComment(comment) = e => Comment {
             span: e.span(),
-            inner: CommentInner::MultiLine(comment.as_ref().into())
+            inner: CommentInner::MultiLine(comment.to_string())
         }
     };
 
