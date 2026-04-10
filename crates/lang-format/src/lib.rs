@@ -17,73 +17,84 @@ pub(crate) use crate::{
     node::{BreakMode, Node},
 };
 
-impl Format for ast::ItemExtra {
-    fn format(&self, f: &FormatConfig) -> Node {
-        use ast::ItemExtra::*;
-        match &self {
-            Comment(comment) => comment.format(f),
-            Whitespace(ws) => ws
-                .chars()
-                .filter(|c| *c == '\n')
-                .take(2)
-                .map(|_| Node::Hardline)
-                .collect::<Vec<_>>()
-                .into(),
-            _ => todo!(),
-        }
-    }
-}
-
 impl Format for ast::LeadingExtras {
     fn format(&self, f: &FormatConfig) -> Node {
-        self.0
+        let node: Node = self
+            .0
             .iter()
-            .map(|extra| match &extra {
+            .enumerate()
+            .map(|(i, extra)| match &extra {
                 ast::ItemExtra::Comment(comment) => comment.format(f),
-                ast::ItemExtra::Whitespace(ws) => {
-                    let count = ws.chars().filter(|&c| c == '\n').count();
-                    if count >= 2 {
-                        Node::Hardline
-                    } else {
-                        Node::Nil
-                    }
-                }
+                ast::ItemExtra::Whitespace(ws) => ws
+                    .chars()
+                    .filter(|&c| c == '\n')
+                    .map(|_| Node::Hardline)
+                    .take(if i < self.0.len() - 1 { 2 } else { 0 })
+                    .collect::<Vec<Node>>()
+                    .into(),
                 _ => todo!(),
             })
             .collect::<Vec<_>>()
-            .into()
+            .into();
+
+        let trailing_ws = if let Some(ast::ItemExtra::Whitespace(ws)) = self.0.last()
+            && ws.contains('\n')
+            && !ws.contains(' ')
+            && self.0.len() > 1
+        {
+            node!(
+                ws.chars()
+                    .filter(|&c| c == '\n')
+                    .map(|_| Node::Hardline)
+                    .take(2)
+                    .collect::<Vec<Node>>()
+            )
+        } else {
+            Node::Nil
+        };
+
+        node!(f =>
+            node
+            trailing_ws
+        )
     }
 }
 
 impl Format for ast::TrailingExtras {
     fn format(&self, f: &FormatConfig) -> Node {
-        self.0
-            .iter()
-            .map(|extra| match &extra {
-                ast::ItemExtra::Comment(comment) => comment.format(f),
-                ast::ItemExtra::Whitespace(ws) => ws
+        let leading_ws = if let Some(ast::ItemExtra::Whitespace(ws)) = self.0.first()
+            && !ws.contains('\n')
+            && ws.contains(' ')
+            && self.0.len() > 1
+        {
+            node!(' ')
+        } else {
+            Node::Nil
+        };
+
+        node!(
+            leading_ws
+            self.0
+                .iter()
+                .map(|extra| match &extra {
+                    ast::ItemExtra::Comment(comment) => comment.format(f),
+                    ast::ItemExtra::Whitespace(ws) => ws
                     .chars()
-                    .filter(|c| *c == '\n')
-                    .take(
-                        if self
-                            .0
-                            .iter()
-                            .filter(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
-                            .count()
-                            >= 1
-                        {
-                            1
+                    .filter_map(|c| {
+                        if c == '\n' {
+                            Some(Node::Hardline)
                         } else {
-                            2
-                        },
-                    )
-                    .map(|_| Node::Hardline)
+                            None
+                        }
+                    })
+                    .take(2)
                     .collect::<Vec<_>>()
                     .into(),
                 _ => todo!(),
             })
             .collect::<Vec<_>>()
-            .into()
+
+        )
     }
 }
 
@@ -146,11 +157,19 @@ impl Format for ast::Identifier {
 impl Format for ast::Comment {
     fn format(&self, _: &FormatConfig) -> Node {
         match &self.inner {
-            ast::CommentInner::SingleLine(items) => {
-                Node::vlist(items.iter().cloned().map(|item| item.into()), Node::Nil, 0)
-            }
+            ast::CommentInner::SingleLine(line) => line.clone().into(),
             ast::CommentInner::MultiLine(line) => node!("/* " Node::from(line.clone()) " */"),
         }
+    }
+}
+
+impl Format for ast::DocBlock {
+    fn format(&self, _: &FormatConfig) -> Node {
+        Node::vlist(
+            self.lines.iter().cloned().map(|line| node!(line)),
+            Node::Nil,
+            0,
+        )
     }
 }
 

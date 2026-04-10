@@ -181,6 +181,12 @@ impl Format for ast::ExpressionStatement {
     }
 }
 
+impl Format for ast::InnerDocComment {
+    fn format(&self, _: &FormatConfig) -> Node {
+        self.line.clone().into()
+    }
+}
+
 impl Format for ast::AttributeCommand {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
@@ -245,7 +251,7 @@ impl Format for Vec<(ast::Statement, ast::TrailingExtras)> {
             .map(|(statement, extras)| {
                 node!(f =>
                     statement
-                    if statement.ends_with_semicolon() { node!(';') } else { Node::Hardline }
+                    if statement.ends_with_semicolon() { node!(';') } else { Node::Nil }
                     extras
                 )
             })
@@ -263,7 +269,6 @@ impl Format for ast::StatementList {
                     node!(f =>
                         self.statements
                         tail
-                        Node::Hardline
                     )
                 }
                 (false, None) => self.statements.format(f),
