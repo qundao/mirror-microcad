@@ -154,7 +154,7 @@ Ok(
                                                         ],
                                                     },
                                                     body: Body {
-                                                        span: 58..96,
+                                                        span: 57..96,
                                                         statements: StatementList {
                                                             span: 59..95,
                                                             extras: ItemExtras {
