@@ -37,7 +37,7 @@ pub struct WorkbenchDefinition {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
     /// Documentation.
-    pub doc: Option<DocBlock>,
+    pub doc: DocBlock,
     /// Workbench attributes.
     pub attribute_list: AttributeList,
     /// Visibility from outside modules.
@@ -98,9 +98,7 @@ impl TreeDisplay for WorkbenchDefinition {
             id = self.id
         )?;
         depth.indent();
-        if let Some(doc) = &self.doc {
-            doc.tree_print(f, depth)?;
-        }
+        self.doc.tree_print(f, depth)?;
         self.plan.tree_print(f, depth)?;
         self.body.tree_print(f, depth)
     }

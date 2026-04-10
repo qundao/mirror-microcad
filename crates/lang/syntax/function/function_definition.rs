@@ -14,7 +14,7 @@ pub struct FunctionDefinition {
     /// SrcRef of the `fn` keyword
     pub keyword_ref: SrcRef,
     /// Documentation.
-    pub doc: Option<DocBlock>,
+    pub doc: DocBlock,
     /// Visibility
     pub visibility: Visibility,
     /// Name of the function
@@ -35,9 +35,7 @@ impl TreeDisplay for FunctionDefinition {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}FunctionDefinition '{}':", "", self.id)?;
         depth.indent();
-        if let Some(doc) = &self.doc {
-            doc.tree_print(f, depth)?;
-        }
+        self.doc.tree_print(f, depth)?;
         writeln!(f, "{:depth$}Signature:", "")?;
         self.signature.tree_print(f, depth)?;
         writeln!(f, "{:depth$}Body:", "")?;

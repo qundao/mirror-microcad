@@ -22,7 +22,7 @@ pub struct InitDefinition {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Documentation.
-    pub doc: Option<DocBlock>,
+    pub doc: DocBlock,
     /// Parameter list for this init definition
     pub parameters: ParameterList,
     /// Body if the init definition
@@ -49,9 +49,7 @@ impl TreeDisplay for InitDefinition {
     fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
         writeln!(f, "{:depth$}InitDefinition:", "")?;
         depth.indent();
-        if let Some(doc) = &self.doc {
-            doc.tree_print(f, depth)?;
-        }
+        self.doc.tree_print(f, depth)?;
         self.parameters.tree_print(f, depth)?;
         self.body.tree_print(f, depth)
     }

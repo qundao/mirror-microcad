@@ -16,7 +16,7 @@ pub struct ModuleDefinition {
     /// SrcRef of the `mod` keyword
     pub keyword_ref: SrcRef,
     /// Outer documentation.
-    pub doc: Option<DocBlock>,
+    pub doc: DocBlock,
     /// Visibility of the module.
     pub visibility: Visibility,
     /// Name of the module.
@@ -53,9 +53,7 @@ impl TreeDisplay for ModuleDefinition {
                 visibility = self.visibility,
             )?;
             depth.indent();
-            if let Some(doc) = &self.doc {
-                doc.tree_print(f, depth)?;
-            }
+            self.doc.tree_print(f, depth)?;
             body.tree_print(f, depth)
         } else {
             writeln!(
@@ -65,9 +63,7 @@ impl TreeDisplay for ModuleDefinition {
                 id = self.id,
                 visibility = self.visibility,
             )?;
-            if let Some(doc) = &self.doc {
-                doc.tree_print(f, depth)?;
-            }
+            self.doc.tree_print(f, depth)?;
             Ok(())
         }
     }

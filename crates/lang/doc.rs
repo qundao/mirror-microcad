@@ -40,7 +40,7 @@ impl Doc for DocBlock {
 
 impl Doc for InitDefinition {
     fn outer_doc(&self) -> DocBlock {
-        self.doc.as_ref().cloned().unwrap_or_default()
+        self.doc.clone()
     }
 
     fn inner_doc(&self) -> DocBlock {
@@ -76,7 +76,7 @@ impl Doc for Body {
 
 impl Doc for ModuleDefinition {
     fn outer_doc(&self) -> DocBlock {
-        self.doc.as_ref().cloned().unwrap_or_default()
+        self.doc.clone()
     }
 
     fn inner_doc(&self) -> DocBlock {
@@ -89,7 +89,7 @@ impl Doc for ModuleDefinition {
 
 impl Doc for FunctionDefinition {
     fn outer_doc(&self) -> DocBlock {
-        self.doc.as_ref().cloned().unwrap_or_default()
+        self.doc.clone()
     }
 
     fn inner_doc(&self) -> DocBlock {
@@ -99,7 +99,7 @@ impl Doc for FunctionDefinition {
 
 impl Doc for WorkbenchDefinition {
     fn outer_doc(&self) -> DocBlock {
-        self.doc.as_ref().cloned().unwrap_or_default()
+        self.doc.clone()
     }
 
     fn inner_doc(&self) -> DocBlock {
@@ -115,7 +115,7 @@ impl Doc for SourceFile {
 
 impl Doc for Assignment {
     fn outer_doc(&self) -> DocBlock {
-        self.doc.as_ref().cloned().unwrap_or_default()
+        self.doc.clone()
     }
 }
 
