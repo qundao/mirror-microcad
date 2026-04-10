@@ -1,14 +1,14 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{BreakMode, Format, FormatConfig, Node, format_extra_trailing, node};
+use crate::{BreakMode, Format, FormatConfig, Node, node};
 
-use microcad_syntax::ast::{self, ItemExtra, Visibility};
+use microcad_syntax::ast;
 
 impl Format for Option<ast::Visibility> {
     fn format(&self, _: &FormatConfig) -> Node {
         match &self {
-            Some(Visibility::Public) => "pub ".into(),
+            Some(ast::Visibility::Public) => "pub ".into(),
             _ => Node::Nil,
         }
     }
@@ -107,6 +107,7 @@ impl Format for ast::UseName {
 impl Format for ast::UseStatement {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
+            self.attributes
             self.visibility "use " self.name
             self.use_as.as_ref().map(|ident| node!(f => " as " ident))
         )
@@ -116,6 +117,8 @@ impl Format for ast::UseStatement {
 impl Format for ast::ConstAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
+            self.doc
+            self.attributes
             self.visibility "const " self.name " = " self.value
         )
     }
@@ -146,6 +149,7 @@ impl Format for ast::Return {
 impl Format for ast::LocalAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
+            self.attributes
             self.name
             match &self.ty {
                 Some(ty) => node!(f => ": " ty),
@@ -234,26 +238,17 @@ impl Format for ast::Statement {
     }
 }
 
-impl Format for Vec<(ast::Statement, Vec<ItemExtra>)> {
+impl Format for Vec<(ast::Statement, ast::TrailingExtras)> {
     fn format(&self, f: &FormatConfig) -> Node {
         // Join statements with a hardline so they sit on separate lines
         self.iter()
-            .map(
-                |(statement, extras)| match statement.ends_with_semicolon() {
-                    true => {
-                        node!(
-                            statement.format(f) ";"
-                            if extras.iter().any(|extra| matches!(extra, ast::ItemExtra::Comment(_))) { " " } else { "" }
-                            format_extra_trailing(extras, f)
-                        )
-                    }
-                    false => node!(
-                        statement.format(f)
-                        Node::Hardline
-                        format_extra_trailing(extras, f)
-                    ),
-                },
-            )
+            .map(|(statement, extras)| {
+                node!(f =>
+                    statement
+                    if statement.ends_with_semicolon() { node!(';') } else { Node::Hardline }
+                    extras
+                )
+            })
             .collect::<Vec<Node>>()
             .into()
     }
@@ -265,9 +260,10 @@ impl Format for ast::StatementList {
             match (self.statements.is_empty(), &self.tail) {
                 (true, Some(tail)) => tail.format(f),
                 (false, Some(tail)) => {
-                    node!(
-                        self.statements.format(f)
-                        tail.format(f) Node::Hardline
+                    node!(f =>
+                        self.statements
+                        tail
+                        Node::Hardline
                     )
                 }
                 (false, None) => self.statements.format(f),

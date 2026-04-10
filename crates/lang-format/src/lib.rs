@@ -34,9 +34,10 @@ impl Format for ast::ItemExtra {
     }
 }
 
-impl Format for Vec<ast::ItemExtra> {
+impl Format for ast::LeadingExtras {
     fn format(&self, f: &FormatConfig) -> Node {
-        self.iter()
+        self.0
+            .iter()
             .map(|extra| match &extra {
                 ast::ItemExtra::Comment(comment) => comment.format(f),
                 ast::ItemExtra::Whitespace(ws) => {
@@ -54,33 +55,36 @@ impl Format for Vec<ast::ItemExtra> {
     }
 }
 
-pub(crate) fn format_extra_trailing(extras: &[ast::ItemExtra], f: &FormatConfig) -> Node {
-    extras
-        .iter()
-        .map(|extra| match &extra {
-            ast::ItemExtra::Comment(comment) => comment.format(f),
-            ast::ItemExtra::Whitespace(ws) => ws
-                .chars()
-                .filter(|c| *c == '\n')
-                .take(
-                    if extras
-                        .iter()
-                        .filter(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
-                        .count()
-                        >= 1
-                    {
-                        1
-                    } else {
-                        2
-                    },
-                )
-                .map(|_| Node::Hardline)
-                .collect::<Vec<_>>()
-                .into(),
-            _ => todo!(),
-        })
-        .collect::<Vec<_>>()
-        .into()
+impl Format for ast::TrailingExtras {
+    fn format(&self, f: &FormatConfig) -> Node {
+        self.0
+            .iter()
+            .map(|extra| match &extra {
+                ast::ItemExtra::Comment(comment) => comment.format(f),
+                ast::ItemExtra::Whitespace(ws) => ws
+                    .chars()
+                    .filter(|c| *c == '\n')
+                    .take(
+                        if self
+                            .0
+                            .iter()
+                            .filter(|extra| matches!(extra, ast::ItemExtra::Comment(_)))
+                            .count()
+                            >= 1
+                        {
+                            1
+                        } else {
+                            2
+                        },
+                    )
+                    .map(|_| Node::Hardline)
+                    .collect::<Vec<_>>()
+                    .into(),
+                _ => todo!(),
+            })
+            .collect::<Vec<_>>()
+            .into()
+    }
 }
 
 pub(crate) fn with_extras(
@@ -88,14 +92,9 @@ pub(crate) fn with_extras(
     f: &FormatConfig,
     node: impl Into<Node>,
 ) -> Node {
-    let node = node.into();
     node!(f =>
         extras.leading
-        node
-        match &extras.trailing.iter().any(|extra| matches!(extra, ast::ItemExtra::Comment(_))) {
-            true => node!(' '),
-            false => Node::Nil,
-        }
+        node.into()
         extras.trailing
     )
 }
@@ -195,7 +194,6 @@ macro_rules! node {
 
 /// Format µcad source file.
 pub fn format(source_file: &ast::SourceFile, config: &FormatConfig) -> String {
-    eprintln!("{:#?}", source_file.format(config));
     source_file.format(config).to_string()
 }
 
