@@ -115,9 +115,7 @@ Ok(
                                                                 Comment {
                                                                     span: 16..22,
                                                                     inner: SingleLine(
-                                                                        [
-                                                                            "// foo",
-                                                                        ],
+                                                                        "// foo",
                                                                     ),
                                                                 },
                                                             ),

@@ -29,7 +29,10 @@ Ok(
                                     [],
                                 ),
                             },
-                            doc: None,
+                            doc: DocBlock {
+                                span: 0..90,
+                                lines: [],
+                            },
                             kind: Part,
                             attributes: [
                                 Attribute {

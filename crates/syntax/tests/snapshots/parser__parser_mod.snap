@@ -29,7 +29,10 @@ Ok(
                                     [],
                                 ),
                             },
-                            doc: None,
+                            doc: DocBlock {
+                                span: 0..22,
+                                lines: [],
+                            },
                             attributes: [],
                             visibility: None,
                             name: Identifier {
@@ -71,7 +74,10 @@ Ok(
                                                                 ],
                                                             ),
                                                         },
-                                                        doc: None,
+                                                        doc: DocBlock {
+                                                            span: 10..10,
+                                                            lines: [],
+                                                        },
                                                         attributes: [],
                                                         visibility: None,
                                                         name: Identifier {

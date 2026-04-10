@@ -29,7 +29,10 @@ Ok(
                                     [],
                                 ),
                             },
-                            doc: None,
+                            doc: DocBlock {
+                                span: 0..130,
+                                lines: [],
+                            },
                             kind: Sketch,
                             attributes: [],
                             visibility: None,
@@ -108,7 +111,10 @@ Ok(
                                                             ],
                                                         ),
                                                     },
-                                                    doc: None,
+                                                    doc: DocBlock {
+                                                        span: 35..35,
+                                                        lines: [],
+                                                    },
                                                     attributes: [],
                                                     parameters: ParameterList {
                                                         span: 40..56,

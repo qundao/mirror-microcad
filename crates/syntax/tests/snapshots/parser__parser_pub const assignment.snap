@@ -29,7 +29,10 @@ Ok(
                                     [],
                                 ),
                             },
-                            doc: None,
+                            doc: DocBlock {
+                                span: 0..18,
+                                lines: [],
+                            },
                             attributes: [],
                             visibility: Some(
                                 Public,
