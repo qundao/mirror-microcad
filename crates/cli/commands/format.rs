@@ -23,7 +23,10 @@ impl RunCommand<()> for Format {
             let mut mdbook = microcad_lang_markdown::MdBookDirectory::new(&self.input)
                 .map_err(|err| miette!("{err}"))?;
             microcad_lang_format::format_mdbook(&mut mdbook, &config)
-                .map_err(|err| miette!("{err}"))
+                .map_err(|err| miette!("{err}"))?;
+
+            eprintln!("Formatted mdbook in {:?}", mdbook.src_path);
+            Ok(())
         } else {
             // Standard single-file formatting logic
             let source = std::fs::read_to_string(&self.input)
@@ -32,7 +35,7 @@ impl RunCommand<()> for Format {
             let formatted = microcad_lang_format::format_str(&source, &config)
                 .map_err(|err| miette!("{err}"))?;
 
-            println!("{formatted}");
+            eprintln!("{formatted}");
             Ok(())
         }
     }
