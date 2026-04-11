@@ -226,14 +226,10 @@ impl Format for ast::Element {
 impl Format for Vec<ast::Element> {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.iter().map(|element| node!(f => element)).collect();
-        let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
-        let can_break = nodes.len() > 3
-            || width > f.max_width
-            || nodes.iter().any(|node| node.contains_hardline());
-        if can_break {
-            node!(Node::indent(f.indent_width, nodes))
-        } else {
-            Node::hlist(nodes, Node::Nil)
+
+        match BreakMode::from_layout(&nodes, 3, f) {
+            BreakMode::NoBreak => Node::hlist(nodes, Node::Nil),
+            BreakMode::WithIndent(indent_width) => Node::indent(indent_width, nodes),
         }
     }
 }

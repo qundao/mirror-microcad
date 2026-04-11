@@ -126,19 +126,6 @@ impl Node {
         }
     }
 
-    pub fn ends_with_hardline(&self) -> bool {
-        match &self {
-            Node::Nil => false,
-            Node::Text(compact_string) => compact_string.ends_with("\n"),
-            Node::Hardline => true,
-            Node::Indent { width: _, node } => node.ends_with_hardline(),
-            Node::Group(group) => group
-                .last()
-                .map(|node| node.ends_with_hardline())
-                .unwrap_or_default(),
-        }
-    }
-
     /// Compact nodes: Remove Nil nodes and concatenate adjacent Text ndoes
     pub fn compact(nodes: Vec<Node>) -> Self {
         // 1. Filter out Nil and
