@@ -1,9 +1,9 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parse(tokens.as_slice())
+expression: parse(input).map(|doc| doc.ast)
 ---
 Ok(
-    SourceFile {
+    Source {
         span: 0..5,
         statements: StatementList {
             span: 0..5,
@@ -56,7 +56,7 @@ Ok(
                                         ),
                                     },
                                 ),
-                                operation: Operator {
+                                operation: BinaryOperator {
                                     span: 2..3,
                                     operation: Add,
                                 },

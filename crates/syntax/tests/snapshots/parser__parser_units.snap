@@ -1,9 +1,9 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parse(tokens.as_slice())
+expression: parse(input).map(|doc| doc.ast)
 ---
 Ok(
-    SourceFile {
+    Source {
         span: 0..44,
         statements: StatementList {
             span: 0..44,
@@ -72,7 +72,7 @@ Ok(
                                                                         ),
                                                                     },
                                                                 ),
-                                                                operation: Operator {
+                                                                operation: BinaryOperator {
                                                                     span: 3..4,
                                                                     operation: Add,
                                                                 },
@@ -106,7 +106,7 @@ Ok(
                                                                 ),
                                                             },
                                                         ),
-                                                        operation: Operator {
+                                                        operation: BinaryOperator {
                                                             span: 8..9,
                                                             operation: Add,
                                                         },
@@ -141,7 +141,7 @@ Ok(
                                                                         ),
                                                                     },
                                                                 ),
-                                                                operation: Operator {
+                                                                operation: BinaryOperator {
                                                                     span: 14..15,
                                                                     operation: Divide,
                                                                 },
@@ -177,7 +177,7 @@ Ok(
                                                         ),
                                                     },
                                                 ),
-                                                operation: Operator {
+                                                operation: BinaryOperator {
                                                     span: 21..22,
                                                     operation: Subtract,
                                                 },
@@ -212,7 +212,7 @@ Ok(
                                                                 ),
                                                             },
                                                         ),
-                                                        operation: Operator {
+                                                        operation: BinaryOperator {
                                                             span: 29..30,
                                                             operation: Multiply,
                                                         },
@@ -248,7 +248,7 @@ Ok(
                                                 ),
                                             },
                                         ),
-                                        operation: Operator {
+                                        operation: BinaryOperator {
                                             span: 35..36,
                                             operation: Add,
                                         },
@@ -282,7 +282,7 @@ Ok(
                                         ),
                                     },
                                 ),
-                                operation: Operator {
+                                operation: BinaryOperator {
                                     span: 40..41,
                                     operation: Subtract,
                                 },
