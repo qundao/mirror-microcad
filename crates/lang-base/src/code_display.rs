@@ -19,6 +19,7 @@ impl<'a> CodeFormatContext<'a> {
         write!(self, "{:indent$}", "")
     }
 
+    /// A nested block.
     pub fn nest<F>(&mut self, f: F) -> std::fmt::Result
     where
         F: FnOnce(&mut Self) -> std::fmt::Result,
@@ -28,16 +29,6 @@ impl<'a> CodeFormatContext<'a> {
         self.depth -= 1;
         result
     }
-}
-
-#[macro_export]
-macro_rules! indented {
-    ($dst:expr, $($arg:tt)*) => {
-        {
-            $dst.indent()?;
-            write!($dst, $($arg)*)
-        }
-    };
 }
 
 /// Trait to display valid µcad source code.
@@ -86,6 +77,7 @@ where
     }
 }
 
+/// Code display macro for a DSL.
 #[macro_export]
 macro_rules! code_display {
     // Overload 2: The Body (Vertical/Braced)
@@ -100,7 +92,7 @@ macro_rules! code_display {
                 )*
                 Ok(())
             })?;
-            microcad_lang_base::indented!($f, "}}")
+            $f.indent()?; write!($f, "}}")
         }
     };
 
