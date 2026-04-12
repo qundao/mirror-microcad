@@ -5,6 +5,7 @@
 
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
+mod code_display;
 mod diag;
 mod identifier;
 mod ord_map;
@@ -19,6 +20,7 @@ pub type Id = compact_str::CompactString;
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
+pub use code_display::*;
 pub use diag::{
     Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Level, PushDiag,
 };
