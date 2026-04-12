@@ -4,7 +4,6 @@
 #![allow(missing_docs)]
 
 use insta::assert_debug_snapshot;
-use microcad_syntax::lex;
 use microcad_syntax::parse;
 use test_case::test_case;
 
@@ -205,6 +204,5 @@ use test_case::test_case;
 #[test_case("un-typeable", r#"b = "sad"m3;"#)]
 #[test_case("binary op precedence", "a^2 + b^3")]
 fn test_parser(name: &str, input: &str) {
-    let tokens: Vec<_> = lex(input).collect();
-    assert_debug_snapshot!(format!("parser_{name}"), parse(tokens.as_slice()));
+    assert_debug_snapshot!(format!("parser_{name}"), parse(input).map(|doc| doc.ast));
 }

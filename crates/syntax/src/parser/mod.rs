@@ -49,7 +49,7 @@ fn input<'input, 'tokens>(
 /// Build an abstract syntax tree from a list of tokens
 pub fn parse<'tokens>(
     tokens: &'tokens [SpannedToken<Token<'tokens>>],
-) -> Result<SourceFile, Vec<ParseError>> {
+) -> Result<Source, Vec<ParseError>> {
     parser()
         .parse(input(tokens))
         .into_result()
@@ -66,8 +66,8 @@ const STRUCTURAL_TOKENS: &[Token] = &[
     Token::SigilSemiColon,
 ];
 
-fn parser<'tokens>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, SourceFile, Extra<'tokens>> {
+fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Source, Extra<'tokens>>
+{
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
@@ -1544,7 +1544,7 @@ fn parser<'tokens>()
 
     statement_list_parser
         .then_ignore(end())
-        .map_with(move |statements, ex| SourceFile {
+        .map_with(move |statements, ex| Source {
             span: ex.span(),
             statements,
         })

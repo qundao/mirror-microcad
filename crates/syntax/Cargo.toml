@@ -22,6 +22,8 @@ thiserror = "2.0.17"
 miette = "7.6.0"
 either = "1.15.0"
 
+microcad-lang-base = { workspace = true }
+
 [dev-dependencies]
 insta = { version = "1.45.0" }
 test-case = "3.3.1"

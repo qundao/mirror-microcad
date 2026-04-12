@@ -34,7 +34,7 @@ impl Dummy for Identifier {
 /// A µcad source file
 #[derive(Debug)]
 #[allow(missing_docs)]
-pub struct SourceFile {
+pub struct Source {
     pub span: Span,
     pub statements: StatementList,
 }
