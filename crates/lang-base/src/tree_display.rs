@@ -8,57 +8,6 @@ pub trait TreeDisplay {
     /// Write item into `f` and use `{:depth$}` syntax in front of your single line
     /// output to get proper indention.
     fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result;
-
-    /// Display as tree starting at depth `0`.
-    fn display_tree(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        self.tree_print(
-            f,
-            TreeState {
-                depth: 0,
-                debug: false,
-            },
-        )
-    }
-
-    /// Display as tree starting at given depth in debug mode
-    fn debug_tree(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        self.tree_print(
-            f,
-            TreeState {
-                depth: 0,
-                debug: true,
-            },
-        )
-    }
-
-    /// Display as tree starting at depth `0` into a file
-    fn write_tree(&self, f: &mut impl std::io::Write) -> std::io::Result<()> {
-        write!(
-            f,
-            "{}",
-            WriteFmt(|f| self.tree_print(
-                f,
-                TreeState {
-                    depth: 0,
-                    debug: false
-                }
-            ))
-        )
-    }
-}
-
-/// Helper to write into io from fmt writers
-struct WriteFmt<F>(pub F)
-where
-    F: Fn(&mut std::fmt::Formatter<'_>) -> std::fmt::Result;
-
-impl<F> std::fmt::Display for WriteFmt<F>
-where
-    F: Fn(&mut std::fmt::Formatter<'_>) -> std::fmt::Result,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0(f)
-    }
 }
 
 /// Indention size
