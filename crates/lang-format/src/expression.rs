@@ -133,7 +133,7 @@ impl Format for ast::ArrayItem {
 impl Format for ast::ArrayRangeExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
-            '[' self.start ".." self.end ']'
+            '[' self.start ".." self.end ']' self.ty
         )
     }
 }
@@ -142,9 +142,8 @@ impl Format for ast::ArrayListExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.items.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 0, f);
-
         node!(f, self.extras =>
-            '[' Node::list(nodes, ',', break_mode) ']'
+            '[' Node::list(nodes, ',', break_mode) ']' self.ty
         )
     }
 }
