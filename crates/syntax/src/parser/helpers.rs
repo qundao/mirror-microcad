@@ -3,8 +3,8 @@
 
 use crate::Span;
 use crate::ast::{
-    BinaryOperation, Comment, CommentInner, Expression, ItemExtra, ItemExtras, LeadingExtras,
-    Operator, OperatorType, TrailingExtras,
+    BinaryOperation, BinaryOperator, BinaryOperatorType, Comment, CommentInner, Expression,
+    ItemExtra, ItemExtras, LeadingExtras, TrailingExtras,
 };
 use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;
@@ -159,26 +159,26 @@ where
         .foldl_with(
             whitespace_parser()
                 .or_not()
-                .ignore_then(one_of(tokens).map_with(|op, e| Operator {
+                .ignore_then(one_of(tokens).map_with(|op, e| BinaryOperator {
                     span: e.span(),
                     operation: match op {
-                        Token::OperatorAdd => OperatorType::Add,
-                        Token::OperatorSubtract => OperatorType::Subtract,
-                        Token::OperatorMultiply => OperatorType::Multiply,
-                        Token::OperatorDivide => OperatorType::Divide,
-                        Token::OperatorUnion => OperatorType::Union,
-                        Token::OperatorIntersect => OperatorType::Intersect,
-                        Token::OperatorPowerXor => OperatorType::PowerXor,
-                        Token::OperatorGreaterThan => OperatorType::GreaterThan,
-                        Token::OperatorLessThan => OperatorType::LessThan,
-                        Token::OperatorGreaterEqual => OperatorType::GreaterEqual,
-                        Token::OperatorLessEqual => OperatorType::LessEqual,
-                        Token::OperatorNear => OperatorType::Near,
-                        Token::OperatorEqual => OperatorType::Equal,
-                        Token::OperatorNotEqual => OperatorType::NotEqual,
-                        Token::OperatorAnd => OperatorType::And,
-                        Token::OperatorOr => OperatorType::Or,
-                        Token::OperatorXor => OperatorType::Xor,
+                        Token::OperatorAdd => BinaryOperatorType::Add,
+                        Token::OperatorSubtract => BinaryOperatorType::Subtract,
+                        Token::OperatorMultiply => BinaryOperatorType::Multiply,
+                        Token::OperatorDivide => BinaryOperatorType::Divide,
+                        Token::OperatorUnion => BinaryOperatorType::Union,
+                        Token::OperatorIntersect => BinaryOperatorType::Intersect,
+                        Token::OperatorPowerXor => BinaryOperatorType::PowerXor,
+                        Token::OperatorGreaterThan => BinaryOperatorType::GreaterThan,
+                        Token::OperatorLessThan => BinaryOperatorType::LessThan,
+                        Token::OperatorGreaterEqual => BinaryOperatorType::GreaterEqual,
+                        Token::OperatorLessEqual => BinaryOperatorType::LessEqual,
+                        Token::OperatorNear => BinaryOperatorType::Near,
+                        Token::OperatorEqual => BinaryOperatorType::Equal,
+                        Token::OperatorNotEqual => BinaryOperatorType::NotEqual,
+                        Token::OperatorAnd => BinaryOperatorType::And,
+                        Token::OperatorOr => BinaryOperatorType::Or,
+                        Token::OperatorXor => BinaryOperatorType::Xor,
                         _ => unreachable!(),
                     },
                 }))

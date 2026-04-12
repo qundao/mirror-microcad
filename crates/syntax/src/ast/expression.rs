@@ -6,17 +6,17 @@ use std::num::ParseIntError;
 
 /// An operator for binary operators, together with a span
 #[derive(Debug, PartialEq)]
-pub struct Operator {
+pub struct BinaryOperator {
     /// The source span for the operator
     pub span: Span,
     /// The type of the operator
-    pub operation: OperatorType,
+    pub operation: BinaryOperatorType,
 }
 
 /// The type of the operator for binary operations
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
-pub enum OperatorType {
+pub enum BinaryOperatorType {
     Add,
     Subtract,
     Multiply,
@@ -36,7 +36,7 @@ pub enum OperatorType {
     Xor,
 }
 
-impl OperatorType {
+impl BinaryOperatorType {
     /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -71,7 +71,7 @@ pub struct UnaryOperator {
 }
 
 /// The type of the operator for unary operations
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
 pub enum UnaryOperatorType {
     Minus,
@@ -263,7 +263,7 @@ pub struct QualifiedName {
 pub struct BinaryOperation {
     pub span: Span,
     pub lhs: Box<Expression>,
-    pub operation: Operator,
+    pub operation: BinaryOperator,
     pub rhs: Box<Expression>,
 }
 
