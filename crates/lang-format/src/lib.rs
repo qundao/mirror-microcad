@@ -173,7 +173,7 @@ impl Format for ast::DocBlock {
     }
 }
 
-impl Format for ast::SourceFile {
+impl Format for ast::Source {
     fn format(&self, f: &FormatConfig) -> Node {
         self.statements.format(f)
     }
@@ -212,14 +212,14 @@ macro_rules! node {
 }
 
 /// Format µcad source file.
-pub fn format(source_file: &ast::SourceFile, config: &FormatConfig) -> String {
+pub fn format(source_file: &ast::Source, config: &FormatConfig) -> String {
     source_file.format(config).to_string()
 }
 
 /// High-level API to format a &str containing µcad source code.
 pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, FormatError> {
-    let source_file = microcad_syntax::parse_str(source).map_err(FormatError::ParseErrors)?;
-    Ok(format(&source_file, config))
+    let source_file = microcad_syntax::parse(source).map_err(FormatError::ParseErrors)?;
+    Ok(format(&source_file.ast, config))
 }
 
 /// High-level API to format an entire mdbook.

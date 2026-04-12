@@ -10,12 +10,12 @@ macro_rules! formatted_test_case {
             let name = stringify!($name);
             let source = std::fs::read_to_string(format!("tests/test_cases/formatted/{name}.µcad"))
                 .expect("No errors");
-            let source_file = microcad_syntax::parse_str(&source).expect("No errors");
+            let ast = microcad_syntax::parse(&source).expect("No errors").ast;
 
             pretty_assertions::assert_eq!(
                 source,
-                format(&source_file, &FormatConfig::default()),
-                "Format error:\n{source_file:#?}",
+                format(&ast, &FormatConfig::default()),
+                "Format error:\n{ast:#?}",
             );
         }
     };

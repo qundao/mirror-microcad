@@ -5,7 +5,7 @@ use crate::{BreakMode, Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast;
 
-impl Format for ast::Operator {
+impl Format for ast::BinaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
         self.operation.as_str().into()
     }
