@@ -31,6 +31,8 @@ pub use rc::{Rc, RcMut};
 pub use src_ref::{Refer, SrcRef, SrcRefInner, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
+pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
+
 /// A compatibility layer for using SourceFile with miette
 pub struct MietteSourceFile<'a> {
     source: &'a str,
