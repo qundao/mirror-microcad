@@ -4,15 +4,21 @@
 /// Default code format context
 #[derive(derive_more::Deref, derive_more::DerefMut)]
 pub struct CodeFormatContext<'a> {
-    /// Current indentation depth
+    /// Current depth
     pub depth: usize,
-    /// Formatter.
+
+    /// Writer.
     #[deref]
     #[deref_mut]
-    pub f: std::fmt::Formatter<'a>,
+    pub f: &'a mut dyn std::fmt::Write,
 }
 
 impl<'a> CodeFormatContext<'a> {
+    /// Create new code format context
+    pub fn new(f: &'a mut dyn std::fmt::Write) -> Self {
+        Self { depth: 0, f }
+    }
+
     /// Write indent
     pub fn indent(&mut self) -> std::fmt::Result {
         let indent = self.depth * 4;
@@ -88,7 +94,6 @@ macro_rules! code_display {
             $f.nest(|f| {
                 $(
                     $body.code_display(f)?;
-                    writeln!(f)?;
                 )*
                 Ok(())
             })?;
