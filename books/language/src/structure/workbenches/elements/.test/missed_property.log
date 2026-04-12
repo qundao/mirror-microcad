@@ -10,9 +10,9 @@
   49:   sketch Wheel(radius: Length, thickness = 5mm) {
   50:       use std::geo2d::Circle;
   51:   
-  52:       init( thickness: Length ) { } // error: misses to set radius from building plan
+  52:       init(thickness: Length) {} // error: misses to set radius from building plan
   53:   
-  54:       Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
+  54:       Circle(radius = radius + thickness) - Circle(radius) // error: radius is missing
   55:   }
   56:   Wheel(thickness = 1cm);
 
@@ -21,16 +21,16 @@
   × error: 52:5: Building plan incomplete. Missing properties: radius
     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:52:5]
  51 │     
- 52 │ ╭─▶     init( thickness: Length ) { } // error: misses to set radius from building plan
+ 52 │ ╭─▶     init(thickness: Length) {} // error: misses to set radius from building plan
  53 │ │   
- 54 │ ├─▶     Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
+ 54 │ ├─▶     Circle(radius = radius + thickness) - Circle(radius) // error: radius is missing
     · ╰──── Building plan incomplete. Missing properties: radius
  55 │     }
     ╰────
   × error: 54:12: Workbench Circle cannot find initialization for those arguments
     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:54:5]
  53 │ 
- 54 │     Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
+ 54 │     Circle(radius = radius + thickness) - Circle(radius) // error: radius is missing
     ·     ──────────────────┬─────────────────
     ·                       ╰── Got: Circle( radius = <NO VALUE> )
  55 │ }
@@ -41,9 +41,9 @@
   × error: 54:50: Workbench Circle cannot find initialization for those arguments
     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:54:43]
  53 │ 
- 54 │     Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
-    ·                                           ──────────────────────┬─────────────────────
-    ·                                                                 ╰── Got: Circle( radius = <NO VALUE> )
+ 54 │     Circle(radius = radius + thickness) - Circle(radius) // error: radius is missing
+    ·                                           ─────────────────────┬─────────────────────
+    ·                                                                ╰── Got: Circle( radius = <NO VALUE> )
  55 │ }
  56 │ Wheel(thickness = 1cm);
     ╰────
@@ -53,9 +53,9 @@
   × error: 54:5: The Sketch workbench produced a Undetermined output, but expected a 2D output.
     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:54:5]
  53 │ 
- 54 │     Circle(radius = radius + thickness) - Circle(radius)  // error: radius is missing
-    ·     ─────────────────────────────────────────┬────────────────────────────────────────
-    ·                                              ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
+ 54 │     Circle(radius = radius + thickness) - Circle(radius) // error: radius is missing
+    ·     ────────────────────────────────────────┬────────────────────────────────────────
+    ·                                             ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
  55 │ }
  56 │ Wheel(thickness = 1cm);
     ╰────

@@ -7,7 +7,7 @@
 
 -- Code --
 
-   9:   part MyPart( radius: Length ) {
+   9:   part MyPart(radius: Length) {
   10:       use std::geo3d::*;
   11:       Sphere(radius) - Cube(radius)
   12:   }

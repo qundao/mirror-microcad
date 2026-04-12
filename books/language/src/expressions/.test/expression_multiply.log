@@ -9,7 +9,7 @@
 
   11:   v = 5 * 4.0mm;
   12:   
-  13:   std::debug::assert_eq([ v, 20mm ]);
+  13:   std::debug::assert_eq([v, 20mm]);
 
 -- No Output --
 -- No Errors --

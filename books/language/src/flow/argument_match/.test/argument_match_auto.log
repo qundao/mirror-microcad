@@ -7,9 +7,9 @@
 
 -- Code --
 
-  11:   fn f(x: Integer, y: Integer) -> Integer { x*y }
+  11:   fn f(x: Integer, y: Integer) -> Integer { x * y }
   12:   x = 1;
-  13:   f(x, y=2); // matches because argument `x` matches the name of parameter `x`
+  13:   f(x, y = 2); // matches because argument `x` matches the name of parameter `x`
 
 -- No Output --
 -- No Errors --

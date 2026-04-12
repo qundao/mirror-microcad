@@ -9,7 +9,7 @@
 
    8:   mod my_module {
    9:       pub mod sub_module {
-  10:           pub TEXT = "Hello";
+  10:           pub const TEXT = "Hello";
   11:       }
   12:   }
   13:   

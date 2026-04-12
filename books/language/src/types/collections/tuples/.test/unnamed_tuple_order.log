@@ -8,7 +8,7 @@
 -- Code --
 
   42:   // these tuples are equal
-  43:   std::debug::assert_eq([ (1l, 10cm, 10cm²), (10cm, 10cm², 1l) ]);
+  43:   std::debug::assert_eq([(1l, 10cm, 10cm²), (10cm, 10cm², 1l)]);
 
 -- No Output --
 -- No Errors --

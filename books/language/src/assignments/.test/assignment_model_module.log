@@ -8,7 +8,7 @@
 -- Code --
 
   38:   mod my_module {
-  39:       a = std::geo2d::Circle(radius = 1mm);   // error
+  39:       a = std::geo2d::Circle(radius = 1mm); // error
   40:   }
 
 -- No Output --
@@ -18,7 +18,7 @@
  38 │ mod my_module {
     · ─┬─
     ·  ╰── Within this module
- 39 │     a = std::geo2d::Circle(radius = 1mm);   // error
+ 39 │     a = std::geo2d::Circle(radius = 1mm); // error
     ·     ──────────────────┬─────────────────
     ·                       ╰── This value assignment is not allowed
  40 │ }

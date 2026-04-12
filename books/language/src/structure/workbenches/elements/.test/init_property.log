@@ -24,9 +24,9 @@
   28:       Circle(radius = radius + thickness) - Circle(radius)
   29:   }
   30:   // call with building plan
-  31:   Wheel(radius=1.5cm, thickness=2mm);
+  31:   Wheel(radius = 1.5cm, thickness = 2mm);
   32:   // call with initializer and use default thickness
-  33:   Wheel(diameter=1.5cm);
+  33:   Wheel(diameter = 1.5cm);
 
 -- No Output --
 -- No Errors --

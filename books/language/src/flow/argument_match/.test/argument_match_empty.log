@@ -7,9 +7,9 @@
 
 -- Code --
 
-  26:   fn f() {}   // no parameters
+  26:   fn f() {} // no parameters
   27:   
-  28:   f();        // no arguments
+  28:   f(); // no arguments
 
 -- No Output --
 -- No Errors --

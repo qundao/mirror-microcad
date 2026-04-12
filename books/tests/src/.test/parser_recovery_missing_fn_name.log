@@ -23,7 +23,7 @@
     ╰────
 
 -- Parse Error --
-  × error: 28:4: Expected quantity type, comment, something else, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>',
+  × error: 28:4: Expected quantity type, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>',
   │ '==', '!=', 'or', 'and' or semicolon
     ╭─[../books/tests/src/parser_recovery.md:28:4]
  27 │ fn () { // error, no name

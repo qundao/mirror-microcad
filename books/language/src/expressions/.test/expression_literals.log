@@ -7,9 +7,9 @@
 
 -- Code --
 
-   9:   5;        // Scalar literal
-  10:   4.0mm;    // Quantity literal
-  11:   "Hello";  // String literal
+   9:   5; // Scalar literal
+  10:   4.0mm; // Quantity literal
+  11:   "Hello"; // String literal
 
 -- No Output --
 -- No Errors --

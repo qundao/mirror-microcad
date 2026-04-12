@@ -10,7 +10,7 @@
   38:   // call sketch Circle with a size and store object node in s
   39:   s = std::geo2d::Circle(diameter = 2cm);
   40:   
-  41:   std::debug::assert_eq([ s.radius, 1cm ]);
+  41:   std::debug::assert_eq([s.radius, 1cm]);
 
 -- No Output --
 -- No Errors --

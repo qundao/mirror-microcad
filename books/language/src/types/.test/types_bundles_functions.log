@@ -7,22 +7,22 @@
 
 -- Code --
 
-  49:   fn f(x = 4mm) {}       // use unit (with default)
-  50:   fn g(x: Length) {}     // use type (without default)
+  49:   fn f(x = 4mm) {} // use unit (with default)
+  50:   fn g(x: Length) {} // use type (without default)
 
 -- No Output --
 -- Errors --
   ⚠ warning: 49:4: Unused global symbol f.
     ╭─[../books/language/src/types/README.md:49:4]
- 49 │ fn f(x = 4mm) {}       // use unit (with default)
+ 49 │ fn f(x = 4mm) {} // use unit (with default)
     ·    ┬
     ·    ╰── Unused global symbol f.
- 50 │ fn g(x: Length) {}     // use type (without default)
+ 50 │ fn g(x: Length) {} // use type (without default)
     ╰────
   ⚠ warning: 50:4: Unused global symbol g.
     ╭─[../books/language/src/types/README.md:50:4]
- 49 │ fn f(x = 4mm) {}       // use unit (with default)
- 50 │ fn g(x: Length) {}     // use type (without default)
+ 49 │ fn f(x = 4mm) {} // use unit (with default)
+ 50 │ fn g(x: Length) {} // use type (without default)
     ·    ┬
     ·    ╰── Unused global symbol g.
     ╰────

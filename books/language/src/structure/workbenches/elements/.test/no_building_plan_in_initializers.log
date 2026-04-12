@@ -9,12 +9,12 @@
 
   91:   sketch Wheel(radius: Length, thickness = 5mm) {
   92:       use std::geo2d::Circle;
-  93:       
-  94:       init( diameter: Length, thickness = 5mm ) { 
-  95:           _ = radius;            // error: cannot read radius here
+  93:   
+  94:       init(diameter: Length, thickness = 5mm) {
+  95:           _ = radius; // error: cannot read radius here
   96:           radius = diameter / 2; // instead you need to set it
   97:       }
-  98:       
+  98:   
   99:       Circle(radius = radius + thickness) - Circle(radius)
  100:   }
  101:   Wheel(diameter = 1cm);

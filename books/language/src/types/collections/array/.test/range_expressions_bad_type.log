@@ -7,12 +7,12 @@
 
 -- Code --
 
-  32:   [1.0..2.0];  // parse_error
+  32:   [1.0..2.0]; // parse_error
 
 -- Parse Error --
   × error: 33:2: range expressions must be between integers
     ╭─[../books/language/src/types/collections/array/range.md:33:2]
- 33 │ [1.0..2.0];  // parse_error
+ 33 │ [1.0..2.0]; // parse_error
     ·  ─┬─
     ·   ╰── range expressions must be between integers
     ╰────

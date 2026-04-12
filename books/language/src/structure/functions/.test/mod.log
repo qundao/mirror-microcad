@@ -27,14 +27,14 @@
   28:   
   29:   // call square in math
   30:   math::square(2.0);
-  31:   math::pow(2.0, 5);  // error: pow is private
+  31:   math::pow(2.0, 5); // error: pow is private
 
 -- No Output --
 -- Errors --
   × error: 31:1: Symbol math::pow not found.
     ╭─[../books/language/src/structure/functions/module_functions.md:31:1]
  30 │ math::square(2.0);
- 31 │ math::pow(2.0, 5);  // error: pow is private
+ 31 │ math::pow(2.0, 5); // error: pow is private
     · ────────┬────────
     ·         ╰── Symbol math::pow not found.
     ╰────

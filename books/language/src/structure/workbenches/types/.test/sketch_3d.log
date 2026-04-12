@@ -7,9 +7,9 @@
 
 -- Code --
 
-  32:   sketch MySketch( radius: Length) {
+  32:   sketch MySketch(radius: Length) {
   33:       use std::geo3d::*;
-  34:       Sphere(radius) - Cube(size = radius);  // error: Sphere and Cube are 3D
+  34:       Sphere(radius) - Cube(size = radius); // error: Sphere and Cube are 3D
   35:   }
   36:   
   37:   MySketch(1cm);
@@ -19,7 +19,7 @@
   × error: 34:5: The Sketch workbench produced a 3D output, but expected a 2D output.
     ╭─[../books/language/src/structure/workbenches/types/sketches.md:34:5]
  33 │     use std::geo3d::*;
- 34 │     Sphere(radius) - Cube(size = radius);  // error: Sphere and Cube are 3D
+ 34 │     Sphere(radius) - Cube(size = radius); // error: Sphere and Cube are 3D
     ·     ──────────────────┬─────────────────
     ·                       ╰── The Sketch workbench produced a 3D output, but expected a 2D output.
  35 │ }

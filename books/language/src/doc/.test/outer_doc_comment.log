@@ -20,7 +20,7 @@
   46:   /// ## Returns
   47:   ///
   48:   /// Output value.
-  49:   fn f( n: Integer ) -> Integer { n }
+  49:   fn f(n: Integer) -> Integer { n }
   50:   
   51:   // usual comment for non-symbols
   52:   f(1);

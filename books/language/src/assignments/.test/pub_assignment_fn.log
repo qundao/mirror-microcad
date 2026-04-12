@@ -8,7 +8,7 @@
 -- Code --
 
   39:   fn f() {
-  40:       const MY_CONST = 1;     // error: not allowed in functions
+  40:       const MY_CONST = 1; // error: not allowed in functions
   41:   }
   42:   f();
 
@@ -19,7 +19,7 @@
  39 │ fn f() {
     · ─┬
     ·  ╰── Within this function
- 40 │     const MY_CONST = 1;     // error: not allowed in functions
+ 40 │     const MY_CONST = 1; // error: not allowed in functions
     ·     ─────────┬────────
     ·              ╰── This constant assignment is not allowed
  41 │ }

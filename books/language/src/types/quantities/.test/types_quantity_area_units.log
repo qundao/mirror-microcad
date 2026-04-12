@@ -12,7 +12,7 @@
   86:   square_meter = 0.1m²;
   87:   square_inch = 155in²;
   88:   
-  89:   std::debug::assert_eq([ square_millimeter, square_centimeter ]);
+  89:   std::debug::assert_eq([square_millimeter, square_centimeter]);
 
 -- No Output --
 -- Errors --

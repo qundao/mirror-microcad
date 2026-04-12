@@ -7,27 +7,27 @@
 
 -- Code --
 
-  79:   a = 5;      // warning: unused local
-  80:   a = a * 2;  // error: a already defined in this scope
+  79:   a = 5; // warning: unused local
+  80:   a = a * 2; // error: a already defined in this scope
 
 -- No Output --
 -- Errors --
   × error: 80:1: Value a already in defined: 5
     ╭─[../books/language/src/assignments/value.md:80:1]
- 79 │ a = 5;      // warning: unused local
+ 79 │ a = 5; // warning: unused local
     · ┬
     · ╰── Previously defined here
- 80 │ a = a * 2;  // error: a already defined in this scope
+ 80 │ a = a * 2; // error: a already defined in this scope
     · ────┬────
     ·     ╰── a is already defined
     ╰────
   help: Values in microcad are immutable
   ⚠ warning: 79:1: Unused local a.
     ╭─[../books/language/src/assignments/value.md:79:1]
- 79 │ a = 5;      // warning: unused local
+ 79 │ a = 5; // warning: unused local
     · ┬
     · ╰── Unused local a.
- 80 │ a = a * 2;  // error: a already defined in this scope
+ 80 │ a = a * 2; // error: a already defined in this scope
     ╰────
 -- Test Result --
 FAILS AS EXPECTED

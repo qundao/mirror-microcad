@@ -31,5 +31,5 @@ Array support *unit bundling*, which means the you can write a unit behind the b
 [![test](.test/array_unit_bundling.svg)](.test/array_unit_bundling.log)
 
 ```µcad,array_unit_bundling
-std::debug::assert_eq([[1mm, 2mm, 3mm], [1, 2, 3]]);
+std::debug::assert_eq([[1mm, 2mm, 3mm], [1, 2, 3]mm]);
 ```

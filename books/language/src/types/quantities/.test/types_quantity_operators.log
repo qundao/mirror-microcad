@@ -9,10 +9,10 @@
 
   13:   use std::debug::assert_eq;
   14:   
-  15:   assert_eq([ 6cm * 2cm, 12cm²  ]);
-  16:   assert_eq([ 6cm / 2cm, 3.0 ]);
-  17:   assert_eq([ 6cm + 2cm, 80mm ]);
-  18:   assert_eq([ 6cm - 2cm, 0.04m ]);
+  15:   assert_eq([6cm * 2cm, 12cm²]);
+  16:   assert_eq([6cm / 2cm, 3.0]);
+  17:   assert_eq([6cm + 2cm, 80mm]);
+  18:   assert_eq([6cm - 2cm, 0.04m]);
 
 -- No Output --
 -- No Errors --

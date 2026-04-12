@@ -7,13 +7,13 @@
 
 -- Code --
 
-  64:   (10cm, 10mm, 1m);  // error: ambiguous type Length
+  64:   (10cm, 10mm, 1m); // error: ambiguous type Length
 
 -- No Output --
 -- Errors --
   × error: 64:1: Ambiguous type 'Length' in tuple
     ╭─[../books/language/src/types/collections/tuples/README.md:64:1]
- 64 │ (10cm, 10mm, 1m);  // error: ambiguous type Length
+ 64 │ (10cm, 10mm, 1m); // error: ambiguous type Length
     · ────────┬───────
     ·         ╰─┤ Some unnamed values in this tuple share the same type 'Length'.
     ·           │ Maybe check the units or use identifiers in this tuple.

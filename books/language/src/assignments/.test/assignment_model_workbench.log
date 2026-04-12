@@ -8,8 +8,8 @@
 -- Code --
 
   50:   sketch MySketch() {
-  51:       a = std::geo2d::Circle(radius = 1mm);   // error
-  52:       init(_x : Scalar) {}
+  51:       a = std::geo2d::Circle(radius = 1mm); // error
+  52:       init(_x: Scalar) {}
   53:   }
   54:   
   55:   MySketch();
@@ -21,10 +21,10 @@
  50 │ sketch MySketch() {
     · ───┬──
     ·    ╰── Inside this workbench
- 51 │     a = std::geo2d::Circle(radius = 1mm);   // error
+ 51 │     a = std::geo2d::Circle(radius = 1mm); // error
     ·     ──────────────────┬─────────────────
     ·                       ╰── This statement is not allowed
- 52 │     init(_x : Scalar) {}
+ 52 │     init(_x: Scalar) {}
     ·     ──┬─
     ·       ╰── Before this initializer
  53 │ }

@@ -13,7 +13,7 @@
   38:   
   39:   // define a within scope #0
   40:   a = 5;
-  41:   assert_eq([ a, 5 ]);
+  41:   assert_eq([a, 5]);
   42:   
   43:   // scope #1
   44:   {

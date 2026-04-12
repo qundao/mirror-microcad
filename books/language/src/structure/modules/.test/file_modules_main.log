@@ -8,7 +8,7 @@
 -- Code --
 
   11:   mod second;
-  12:   second::f(); 
+  12:   second::f();
 
 -- No Output --
 -- No Errors --

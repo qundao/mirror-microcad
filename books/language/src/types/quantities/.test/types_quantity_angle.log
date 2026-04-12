@@ -14,7 +14,7 @@
   60:   grad = 200grad;
   61:   turn = 0.5turns;
   62:   
-  63:   std::debug::assert_eq([ degree, degree_, grad, turn, radian ]);
+  63:   std::debug::assert_eq([degree, degree_, grad, turn, radian]);
 
 -- No Output --
 -- No Errors --

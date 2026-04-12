@@ -7,7 +7,7 @@
 
 -- Code --
 
-  17:   fn print_length( length: Length ) {
+  17:   fn print_length(length: Length) {
   18:       std::print("{length}");
   19:   }
   20:   

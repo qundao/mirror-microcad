@@ -7,7 +7,7 @@
 
 -- Code --
 
-  11:   sketch MySketch( radius: Length) {
+  11:   sketch MySketch(radius: Length) {
   12:       use std::geo2d::*;
   13:       Circle(radius) - Rect(size = radius);
   14:   }

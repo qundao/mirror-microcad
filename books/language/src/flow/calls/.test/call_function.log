@@ -11,7 +11,7 @@
   24:   x = std::math::abs(-2);
   25:   
   26:   // check value
-  27:   std::debug::assert_eq( [x, 2] );
+  27:   std::debug::assert_eq([x, 2]);
 
 -- No Output --
 -- No Errors --

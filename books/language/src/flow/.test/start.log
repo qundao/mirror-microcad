@@ -12,11 +12,11 @@
   18:   
   19:   // 2. This is a module definition. It defines 'RADIUS' but doesn't generate any geometry.
   20:   mod my_inner {
-  21:       pub RADIUS = 10mm;
+  21:       pub const RADIUS = 10mm;
   22:   }
   23:   
   24:   // 3. Start code continues here.
-  25:   Circle( radius = my_inner::RADIUS );
+  25:   Circle(radius = my_inner::RADIUS);
 
 -- No Output --
 -- No Errors --

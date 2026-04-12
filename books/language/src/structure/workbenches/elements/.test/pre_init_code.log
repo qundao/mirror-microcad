@@ -27,8 +27,8 @@
   30:       std::geo2d::Circle(radius);
   31:   }
   32:   
-  33:   std::debug::assert_eq([ Wheel(radius = 5cm).radius, 5cm ]);
-  34:   std::debug::assert_eq([ Wheel(radius = 5cm).diameter, 10cm ]);
+  33:   std::debug::assert_eq([Wheel(radius = 5cm).radius, 5cm]);
+  34:   std::debug::assert_eq([Wheel(radius = 5cm).diameter, 10cm]);
 
 -- No Output --
 -- Errors --

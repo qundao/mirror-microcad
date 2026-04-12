@@ -21,8 +21,8 @@
   27:   w;
   28:   
   29:   // check if r is 5cm an thickness equals the default (1cm)
-  30:   std::debug::assert_eq( [w.radius, 1cm] );
-  31:   std::debug::assert_eq( [w.thickness, 5mm] );
+  30:   std::debug::assert_eq([w.radius, 1cm]);
+  31:   std::debug::assert_eq([w.thickness, 5mm]);
 
 -- No Output --
 -- No Errors --

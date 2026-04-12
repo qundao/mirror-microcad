@@ -8,8 +8,8 @@
 -- Code --
 
  117:   sketch MySketch() {
- 118:       a = 1;   // error
- 119:       init(_x : Scalar) {}
+ 118:       a = 1; // error
+ 119:       init(_x: Scalar) {}
  120:   }
  121:   
  122:   MySketch();
@@ -21,10 +21,10 @@
  117 │ sketch MySketch() {
      · ───┬──
      ·    ╰── Inside this workbench
- 118 │     a = 1;   // error
+ 118 │     a = 1; // error
      ·     ──┬──
      ·       ╰── This statement is not allowed
- 119 │     init(_x : Scalar) {}
+ 119 │     init(_x: Scalar) {}
      ·     ──┬─
      ·       ╰── Before this initializer
  120 │ }

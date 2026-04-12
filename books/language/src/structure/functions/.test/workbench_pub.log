@@ -10,7 +10,7 @@
   36:   sketch PunchedDisk(radius: Length) {
   37:       use std::geo2d::Circle;
   38:   
-  39:       pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
+  39:       pub fn inner() { radius / 2 } // error: cant use pub fn inside workbench
   40:   
   41:       Circle(radius) - Circle(radius = inner());
   42:   }
@@ -26,7 +26,7 @@
     ·    ╰── Within this workbench
  37 │     use std::geo2d::Circle;
  38 │ 
- 39 │     pub fn inner() { radius/2 }   // error: cant use pub fn inside workbench
+ 39 │     pub fn inner() { radius / 2 } // error: cant use pub fn inside workbench
     ·         ─┬
     ·          ╰── This function is not allowed
  40 │ 

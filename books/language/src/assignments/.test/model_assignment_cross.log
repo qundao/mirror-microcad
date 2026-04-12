@@ -7,15 +7,15 @@
 
 -- Code --
 
-  18:   m = std::geo2d::Circle(radius = 10mm);   // assign the model of a circle into m
-  19:   std::geo2d::Circle(radius = m);   // error: cannot use m as value
+  18:   m = std::geo2d::Circle(radius = 10mm); // assign the model of a circle into m
+  19:   std::geo2d::Circle(radius = m); // error: cannot use m as value
 
 -- No Output --
 -- Errors --
   × error: 19:20: Workbench Circle cannot find initialization for those arguments
     ╭─[../books/language/src/assignments/model.md:19:1]
- 18 │ m = std::geo2d::Circle(radius = 10mm);   // assign the model of a circle into m
- 19 │ std::geo2d::Circle(radius = m);   // error: cannot use m as value
+ 18 │ m = std::geo2d::Circle(radius = 10mm); // assign the model of a circle into m
+ 19 │ std::geo2d::Circle(radius = m); // error: cannot use m as value
     · ───────────────┬──────────────
     ·                ╰── Got: Circle( radius = m: Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) (root) -> )
     ╰────

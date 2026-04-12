@@ -9,7 +9,7 @@
 
   81:   //! This inner doc comment documents the whole source file.
   82:   
-  83:   fn f( n: Integer ) -> Integer { n }
+  83:   fn f(n: Integer) -> Integer { n }
   84:   
   85:   f(1);
 

@@ -7,11 +7,11 @@
 
 -- Code --
 
-  38:   fn f( width: Length, height: Length ) -> Area { width * height }
+  38:   fn f(width: Length, height: Length) -> Area { width * height }
   39:   
-  40:   x = f(height = 2cm, width = 1cm);   // call f() with parameters in arbitrary order
+  40:   x = f(height = 2cm, width = 1cm); // call f() with parameters in arbitrary order
   41:   
-  42:   std::debug::assert_eq([ x, 2cm² ]);
+  42:   std::debug::assert_eq([x, 2cm²]);
 
 -- No Output --
 -- No Errors --
