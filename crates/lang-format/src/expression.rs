@@ -59,7 +59,11 @@ impl Format for ast::StringPart {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::StringPart::Char(string_character) => string_character.format(f),
-            ast::StringPart::Content(string_literal) => string_literal.format(f),
+            ast::StringPart::Content(string_literal) =>
+            // Simply clone the content of the string literal, because we do not want to have quotes '"'
+            {
+                string_literal.content.clone().into()
+            }
             ast::StringPart::Expression(string_expression) => string_expression.format(f),
         }
     }
