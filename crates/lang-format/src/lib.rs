@@ -28,7 +28,7 @@ impl Format for ast::LeadingExtras {
                 ast::ItemExtra::Whitespace(ws) => ws
                     .chars()
                     .filter(|&c| c == '\n')
-                    .map(|_| Node::Hardline)
+                    .map(|_| if i > 0 { Node::Hardline } else { Node::Nil })
                     .take(if i < self.0.len() - 1 { 2 } else { 0 })
                     .collect::<Vec<Node>>()
                     .into(),
@@ -38,7 +38,7 @@ impl Format for ast::LeadingExtras {
             .into();
 
         let trailing_ws = if let Some(ast::ItemExtra::Whitespace(ws)) = self.0.last()
-            && ws.contains('\n')
+            && ws.starts_with('\n')
             && !ws.contains(' ')
             && self.0.len() > 1
         {
