@@ -5,6 +5,8 @@
 
 mod processor;
 
+use std::{path::PathBuf, sync::OnceLock};
+
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
     Client, LanguageServer, LspService, Server, async_trait,
@@ -26,29 +28,44 @@ use tower_lsp::{
 struct Backend {
     client: Client,
     processor: processor::ProcessorInterface,
-    viewer: ViewerProcessInterface,
+    viewer: OnceLock<ViewerProcessInterface>,
+    search_paths: Vec<PathBuf>,
 }
 
 impl Backend {
+    pub fn new(
+        client: Client,
+        processor: processor::ProcessorInterface,
+        search_paths: Vec<PathBuf>,
+    ) -> Self {
+        Backend {
+            client,
+            processor,
+            viewer: OnceLock::new(),
+            search_paths,
+        }
+    }
+
     fn send_lsp(&self, req: ProcessorRequest) {
         if let Err(err) = self.processor.send_request(req) {
             log::error!("Cannot send request to lsp processor: {err}")
         }
     }
-    fn send_viewer(&self, req: ViewerRequest) {
-        if let Err(err) = self.viewer.send_request(req) {
-            log::error!("Cannot send request to viewer: {err}")
-        }
+    fn send_viewer(&self, req: ViewerRequest) -> miette::Result<()> {
+        self.viewer
+            .get_or_init(|| ViewerProcessInterface::run(&self.search_paths, true))
+            .send_request(req)
+            .inspect_err(|err| log::error!("Cannot send request to viewer: {err}"))
     }
 
     async fn on_active_file_changed(&self, params: serde_json::Value) {
-        log::trace!("on_active_file_changed: {params:?}");
+        log::info!("on_active_file_changed: {params:?}");
         if let Ok(Some(uri)) = read_uri("uri", &params) {
             self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
             match uri.to_file_path() {
                 Ok(path) => {
                     log::info!("New active document: {:?}", path);
-                    self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
+                    let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
                 }
                 Err(()) => log::error!("Cannot parse URI: {uri}"),
             }
@@ -98,7 +115,7 @@ impl LanguageServer for Backend {
 
     async fn shutdown(&self) -> Result<()> {
         log::info!("shutdown");
-        self.send_viewer(ViewerRequest::Exit);
+        let _ = self.send_viewer(ViewerRequest::Exit);
         Ok(())
     }
 
@@ -132,7 +149,7 @@ impl LanguageServer for Backend {
             Ok(path) => {
                 log::info!("Did save: {path:?}");
                 self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
-                self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
+                let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
             }
             Err(_) => log::error!("Cannot parse URI: {uri}"),
         }
@@ -219,21 +236,18 @@ impl LanguageServer for Backend {
                         }
                     };
 
-                    if let Err(err) = self.viewer.send_request(ViewerRequest::Restore) {
+                    if let Err(err) = self.send_viewer(ViewerRequest::Restore) {
                         log::error!("Could not send request ViewerRequest::Show: {err}");
                         return Ok(Some(serde_json::json!({
                             "error": "Cannot show viewer: {err}"
                         })));
                     }
 
-                    if let Err(err) =
-                        self.viewer
-                            .send_request(ViewerRequest::ShowSourceCodeFromFile {
-                                path: uri
-                                    .to_file_path()
-                                    .expect("A valid URI containing a file path"),
-                            })
-                    {
+                    if let Err(err) = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile {
+                        path: uri
+                            .to_file_path()
+                            .expect("A valid URI containing a file path"),
+                    }) {
                         log::error!("{err}");
                         return Ok(Some(serde_json::json! ({"error": format!("{err}")})));
                     }
@@ -247,7 +261,7 @@ impl LanguageServer for Backend {
             }
             "microcad.minimizePreview" => {
                 log::info!("MinimizePreview received");
-                if let Err(err) = self.viewer.send_request(ViewerRequest::Minimize) {
+                if let Err(err) = self.send_viewer(ViewerRequest::Minimize) {
                     log::error!("Could not send request ViewerRequest::Minimize: {err}");
                     return Ok(Some(serde_json::json!({
                         "error": "Cannot minimize viewer: {err}"
@@ -353,15 +367,11 @@ async fn main() {
     let processor = processor::ProcessorInterface::run(WorkspaceSettings {
         search_paths: search_paths.clone(),
     });
-    let viewer = ViewerProcessInterface::run(&search_paths, true);
 
-    let (service, socket) = LspService::build(|client| Backend {
-        client,
-        processor,
-        viewer,
-    })
-    .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
-    .finish();
+    let (service, socket) =
+        LspService::build(|client| Backend::new(client, processor, search_paths))
+            .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
+            .finish();
     log::info!("LSP service has been created");
 
     if args.stdio {
