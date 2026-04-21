@@ -35,17 +35,20 @@ pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
 
 /// A compatibility layer for using SourceFile with miette
 pub struct MietteSourceFile<'a> {
-    source: &'a str,
-    name: String,
-    line_offset: usize,
+    /// The source text.
+    pub source: &'a str,
+    /// Name of of file
+    pub name: String,
+    /// Line offset (e.g. used when source comes from a markdown file).
+    pub line_offset: usize,
 }
 
 impl MietteSourceFile<'static> {
     /// Create an invalid source file for when we can't load the source
     pub fn invalid() -> Self {
         MietteSourceFile {
-            source: crate::invalid_no_ansi!(FILE),
-            name: crate::invalid_no_ansi!(FILE).into(),
+            source: "NO FILE",
+            name: "NO FILE".into(),
             line_offset: 0,
         }
     }
@@ -166,144 +169,6 @@ macro_rules! mark {
     };
     (NOT_FOUND) => {
         color_print::cformat!("<Y,k,s> NOT FOUND </>")
-    };
-}
-
-#[cfg(not(feature = "ansi-color"))]
-#[macro_export]
-macro_rules! found {
-    (FOUND) => {
-        "Found"
-    };
-    (FINAL) => {
-        "Found"
-    };
-    (INTERMEDIATE) => {
-        "Found"
-    };
-    (MATCH) => {
-        "Match"
-    };
-    (NO_MATCH) => {
-        "No Match"
-    };
-    (CALL) => {
-        "Call"
-    };
-    (LOOKUP) => {
-        "Lookup"
-    };
-    (LOAD) => {
-        "Loading"
-    };
-    (RESOLVE) => {
-        "Resolve"
-    };
-    (AMBIGUOUS) => {
-        "Ambiguous"
-    };
-    (NOT_FOUND) => {
-        "Not found"
-    };
-    (NOT_FOUND) => {
-        "Not found"
-    };
-}
-
-/// Generate string literal ` INVALID `*XXX*` ` with ANSI color.
-#[cfg(feature = "ansi-color")]
-#[macro_export]
-macro_rules! invalid {
-    (VALUE) => {
-        color_print::cstr!("<R!,k,s> NO VALUE </>")
-    };
-    (TYPE) => {
-        color_print::cstr!("<R!,k,s> NO TYPE </>")
-    };
-    (OUTPUT) => {
-        color_print::cstr!("<R!,k,s> NO OUTPUT </>")
-    };
-    (STACK) => {
-        color_print::cstr!("<W,k,s> EMPTY STACK </>")
-    };
-    (REF) => {
-        color_print::cstr!("<Y!,k,s> NO REF </>")
-    };
-    (FILE) => {
-        color_print::cstr!("<Y!,k,s> NO FILE </>")
-    };
-    (RESULT) => {
-        color_print::cstr!("<Y!,k,s> NO RESULT </>")
-    };
-    (LINE) => {
-        color_print::cstr!("<Y!,k,s> NO LINE </>")
-    };
-    (SOURCE) => {
-        color_print::cstr!("<C!,k,s> FROM STR </>")
-    };
-    (UNKNOWN) => {
-        color_print::cstr!("<M!,k,s> UNKNOWN </>")
-    };
-    (ID) => {
-        color_print::cstr!("<M!,k,s> NO ID </>")
-    };
-    (NAME) => {
-        color_print::cstr!("<M!,k,s> NO NAME </>")
-    };
-    (EXPRESSION) => {
-        color_print::cstr!("<R!,k,s> INVALID EXPRESSION </>")
-    };
-}
-
-/// Generate string literal `<INVALID `*XXX*`>`.
-#[macro_export]
-macro_rules! invalid_no_ansi {
-    (VALUE) => {
-        "<NO VALUE>"
-    };
-    (TYPE) => {
-        "<NO TYPE>"
-    };
-    (OUTPUT) => {
-        "<NO OUTPUT>"
-    };
-    (STACK) => {
-        "<EMPTY STACK>"
-    };
-    (REF) => {
-        "<NO REF>"
-    };
-    (FILE) => {
-        "<NO FILE>"
-    };
-    (RESULT) => {
-        "<NO RESULT>"
-    };
-    (LINE) => {
-        "<NO LINE>"
-    };
-    (SOURCE) => {
-        "<FROM STR>"
-    };
-    (UNKNOWN) => {
-        "<UNKNOWN>"
-    };
-    (ID) => {
-        "<NO ID>"
-    };
-    (NAME) => {
-        "<INVALID NAME>"
-    };
-    (EXPRESSION) => {
-        "<INVALID EXPRESSION>"
-    };
-}
-
-#[macro_export]
-#[cfg(not(feature = "ansi-color"))]
-macro_rules! invalid {
-    ($x:literal) => {
-        invalid_no_ansi!($x)
     };
 }
 
