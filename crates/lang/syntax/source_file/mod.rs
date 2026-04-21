@@ -4,8 +4,7 @@
 //! µcad source file representation
 
 use crate::syntax::*;
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
-use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
+use microcad_lang_base::{MietteSourceFile, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// µcad source file
 #[derive(Clone, Debug, Default)]
@@ -44,14 +43,14 @@ impl SourceFile {
             ..Default::default()
         }
     }
-    /// Return filename of loaded file or `<no file>`
+    /// Return filename of loaded file or `<NO FILE>`
     pub fn filename(&self) -> std::path::PathBuf {
-        self.filename.clone().unwrap_or(std::path::PathBuf::from(
-            microcad_lang_base::invalid_no_ansi!(SOURCE),
-        ))
+        self.filename
+            .clone()
+            .unwrap_or(std::path::PathBuf::from("<NO FILE>"))
     }
 
-    /// Return filename of loaded file or `<no file>`
+    /// Return filename of loaded file or `<NO FILE>`
     pub fn set_filename(&mut self, path: impl AsRef<std::path::Path>) {
         assert!(self.filename.is_none());
         self.filename = Some(
@@ -66,7 +65,7 @@ impl SourceFile {
         self.filename
             .as_ref()
             .map(|f| f.to_str().expect("File name error {filename:?}"))
-            .unwrap_or(microcad_lang_base::invalid!(SOURCE))
+            .unwrap_or("NO FILE")
     }
 
     /// Return the module name from the file name
@@ -97,6 +96,15 @@ impl SourceFile {
     /// Set file name.
     pub fn set_name(&mut self, name: QualifiedName) {
         self.name = name
+    }
+
+    /// Get a miette source adapter for the SourceFile
+    pub fn miette_source<'a>(&'a self, path: String, line_offset: usize) -> MietteSourceFile<'a> {
+        MietteSourceFile {
+            source: &self.source,
+            name: path,
+            line_offset,
+        }
     }
 }
 
@@ -139,57 +147,5 @@ fn load_source_file_wrong_location() {
         //assert_eq!(format!("{err}"), "Cannot load source file");
     } else {
         panic!("Does file exist?");
-    }
-}
-
-/// A compatibility layer for using SourceFile with miette
-pub struct MietteSourceFile<'a> {
-    source: &'a str,
-    name: String,
-    line_offset: usize,
-}
-
-impl MietteSourceFile<'static> {
-    /// Create an invalid source file for when we can't load the source
-    pub fn invalid() -> Self {
-        MietteSourceFile {
-            source: microcad_lang_base::invalid_no_ansi!(FILE),
-            name: microcad_lang_base::invalid_no_ansi!(FILE).into(),
-            line_offset: 0,
-        }
-    }
-}
-
-impl SourceFile {
-    /// Get a miette source adapter for the SourceFile
-    pub fn miette_source<'a>(&'a self, path: String, line_offset: usize) -> MietteSourceFile<'a> {
-        MietteSourceFile {
-            source: &self.source,
-            name: path,
-            line_offset,
-        }
-    }
-}
-
-impl SourceCode for MietteSourceFile<'_> {
-    fn read_span<'a>(
-        &'a self,
-        span: &SourceSpan,
-        context_lines_before: usize,
-        context_lines_after: usize,
-    ) -> Result<Box<dyn SpanContents<'a> + 'a>, MietteError> {
-        let inner_contents =
-            self.source
-                .read_span(span, context_lines_before, context_lines_after)?;
-        let contents = MietteSpanContents::new_named(
-            self.name.clone(),
-            inner_contents.data(),
-            *inner_contents.span(),
-            inner_contents.line() + self.line_offset,
-            inner_contents.column(),
-            inner_contents.line_count(),
-        )
-        .with_language("µcad");
-        Ok(Box::new(contents))
     }
 }

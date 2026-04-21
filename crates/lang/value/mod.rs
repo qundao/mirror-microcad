@@ -25,12 +25,12 @@ pub use value_list::*;
 
 use crate::{model::*, syntax::*, ty::*};
 use microcad_core::*;
-use microcad_lang_base::{SrcRef, invalid, invalid_no_ansi};
+use microcad_lang_base::SrcRef;
 
 pub(crate) type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
 /// A variant value with attached source code reference.
-#[derive(Clone, Default, PartialEq, From)]
+#[derive(Clone, Debug, Default, PartialEq, From)]
 pub enum Value {
     /// Invalid value (used for error handling).
     #[default]
@@ -367,7 +367,7 @@ impl std::ops::BitAnd for Value {
 impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Value::None => write!(f, invalid_no_ansi!(VALUE)),
+            Value::None => write!(f, "None"),
             Value::Integer(n) => write!(f, "{n}"),
             Value::Quantity(q) => write!(f, "{q}"),
             Value::Bool(b) => write!(f, "{b}"),
@@ -377,23 +377,6 @@ impl std::fmt::Display for Value {
             Value::Matrix(m) => write!(f, "{m}"),
             Value::Model(n) => write!(f, "{n}"),
             Value::Return(r) => write!(f, "{r}"),
-        }
-    }
-}
-
-impl std::fmt::Debug for Value {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Value::None => write!(f, invalid!(VALUE)),
-            Value::Integer(n) => write!(f, "{n}"),
-            Value::Quantity(q) => write!(f, "{q:?}"),
-            Value::Bool(b) => write!(f, "{b}"),
-            Value::String(s) => write!(f, "{s:?}"),
-            Value::Array(l) => write!(f, "{l:?}"),
-            Value::Tuple(t) => write!(f, "{t:?}"),
-            Value::Matrix(m) => write!(f, "{m:?}"),
-            Value::Model(n) => write!(f, "\n {n:?}"),
-            Value::Return(r) => write!(f, "->{r:?}"),
         }
     }
 }

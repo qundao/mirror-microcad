@@ -4,7 +4,7 @@
 //! Export attribute.
 
 /// The output type of the [`crate::model::Model`].
-#[derive(Clone, Copy, Default, PartialEq)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum OutputType {
     /// The output type has not yet been determined.
     #[default]
@@ -35,21 +35,6 @@ impl OutputType {
     }
 }
 
-impl std::fmt::Debug for OutputType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match &self {
-                Self::NotDetermined => microcad_lang_base::invalid!(UNKNOWN),
-                Self::Geometry2D => "2D",
-                Self::Geometry3D => "3D",
-                Self::InvalidMixed => microcad_lang_base::invalid_no_ansi!(OUTPUT),
-            }
-        )
-    }
-}
-
 impl std::fmt::Display for OutputType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -59,7 +44,7 @@ impl std::fmt::Display for OutputType {
                 Self::NotDetermined => "Undetermined",
                 Self::Geometry2D => "2D",
                 Self::Geometry3D => "3D",
-                Self::InvalidMixed => microcad_lang_base::invalid_no_ansi!(OUTPUT),
+                Self::InvalidMixed => "NO OUTPUT",
             }
         )
     }

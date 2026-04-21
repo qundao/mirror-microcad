@@ -173,7 +173,7 @@ fn dissolve_super() {
 impl std::fmt::Display for QualifiedName {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if self.is_empty() {
-            write!(f, microcad_lang_base::invalid_no_ansi!(NAME))
+            write!(f, "NO NAME")
         } else {
             write!(
                 f,

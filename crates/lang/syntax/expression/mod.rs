@@ -246,7 +246,7 @@ impl TreeDisplay for Expression {
             Expression::If(if_) => if_.tree_print(f, depth),
             Expression::QualifiedName(qualified_name) => qualified_name.tree_print(f, depth),
             Expression::Marker(marker) => marker.tree_print(f, depth),
-            Expression::Invalid => write!(f, "{}", microcad_lang_base::invalid!(EXPRESSION)),
+            Expression::Invalid => write!(f, "INVALID EXPRESSION"),
         }
     }
 }

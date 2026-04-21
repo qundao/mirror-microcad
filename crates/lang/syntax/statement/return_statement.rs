@@ -24,7 +24,7 @@ impl std::fmt::Display for ReturnStatement {
         if let Some(result) = &self.result {
             write!(f, "{result}")
         } else {
-            write!(f, microcad_lang_base::invalid_no_ansi!(RESULT))
+            write!(f, "NO RESULT")
         }
     }
 }

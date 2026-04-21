@@ -169,7 +169,7 @@ impl Stack {
             frame.print_stack(f, source_by_hash, idx)?;
         }
         if none {
-            writeln!(f, microcad_lang_base::invalid!(STACK))?
+            writeln!(f, "EMPTY STACK")?
         }
         Ok(())
     }
@@ -318,7 +318,7 @@ impl Locals for Stack {
 impl std::fmt::Debug for Stack {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if self.0.is_empty() {
-            writeln!(f, microcad_lang_base::invalid!(STACK))
+            writeln!(f, "EMPTY STACK")
         } else {
             for (n, locals) in self.0.iter().enumerate() {
                 locals.print_locals(f, n, 0)?;

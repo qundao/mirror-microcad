@@ -203,7 +203,7 @@ impl StackFrame {
                         filename = source_file
                             .as_ref()
                             .map(|sf| sf.filename_as_str())
-                            .unwrap_or(microcad_lang_base::invalid!(FILE)),
+                            .unwrap_or("NO FILE"),
                     )?;
                 }
             }
