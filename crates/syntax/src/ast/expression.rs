@@ -226,7 +226,7 @@ pub struct ArrayRangeExpression {
     pub extras: ast::ItemExtras,
     pub start: Box<ArrayItem>,
     pub end: Box<ArrayItem>,
-    pub ty: Option<ast::SingleType>,
+    pub unit: Option<ast::Unit>,
 }
 
 /// An array specified as a list of items
@@ -236,7 +236,7 @@ pub struct ArrayListExpression {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub items: Vec<ArrayItem>,
-    pub ty: Option<ast::SingleType>,
+    pub unit: Option<ast::Unit>,
 }
 
 /// An item that can be part of an array expression

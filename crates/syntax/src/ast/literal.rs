@@ -1,8 +1,11 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Span;
-use crate::ast::{ItemExtras, SingleType};
+use crate::{
+    Span,
+    ast::{ItemExtras, Unit},
+};
+
 use compact_str::CompactString;
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
@@ -90,7 +93,7 @@ pub struct QuantityLiteral {
     pub span: Span,
     pub value: f64,
     pub raw: CompactString,
-    pub ty: SingleType,
+    pub unit: Unit,
 }
 
 /// An error that can be encountered while parsing literal tokens

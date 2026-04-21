@@ -56,3 +56,11 @@ pub struct TupleType {
     pub span: Span,
     pub inner: Vec<(Option<ast::Identifier>, Type)>,
 }
+
+/// A µcad unit: mm, m³, %.
+#[derive(Debug, PartialEq, Hash, Eq)]
+#[allow(missing_docs)]
+pub struct Unit {
+    pub span: Span,
+    pub name: CompactString,
+}

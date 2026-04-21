@@ -64,7 +64,7 @@ Ok(
                                                                                 span: 0..3,
                                                                                 value: 0.0,
                                                                                 raw: "0",
-                                                                                ty: SingleType {
+                                                                                unit: Unit {
                                                                                     span: 1..2,
                                                                                     name: "\"",
                                                                                 },
@@ -96,7 +96,7 @@ Ok(
                                                                                 span: 5..8,
                                                                                 value: 1.0,
                                                                                 raw: "1",
-                                                                                ty: SingleType {
+                                                                                unit: Unit {
                                                                                     span: 6..7,
                                                                                     name: "%",
                                                                                 },
@@ -133,7 +133,7 @@ Ok(
                                                                                 span: 10..14,
                                                                                 value: 2.0,
                                                                                 raw: "2",
-                                                                                ty: SingleType {
+                                                                                unit: Unit {
                                                                                     span: 11..13,
                                                                                     name: "mm",
                                                                                 },
@@ -165,7 +165,7 @@ Ok(
                                                                                 span: 16..21,
                                                                                 value: 3.0,
                                                                                 raw: "3",
-                                                                                ty: SingleType {
+                                                                                unit: Unit {
                                                                                     span: 17..20,
                                                                                     name: "mm2",
                                                                                 },
@@ -204,7 +204,7 @@ Ok(
                                                                         span: 23..29,
                                                                         value: 4.0,
                                                                         raw: "4",
-                                                                        ty: SingleType {
+                                                                        unit: Unit {
                                                                             span: 24..28,
                                                                             name: "mm³",
                                                                         },
@@ -236,7 +236,7 @@ Ok(
                                                                         span: 31..35,
                                                                         value: 1.0,
                                                                         raw: "1",
-                                                                        ty: SingleType {
+                                                                        unit: Unit {
                                                                             span: 32..34,
                                                                             name: "°",
                                                                         },
@@ -272,7 +272,7 @@ Ok(
                                                         span: 37..40,
                                                         value: 1.0,
                                                         raw: "1",
-                                                        ty: SingleType {
+                                                        unit: Unit {
                                                             span: 38..39,
                                                             name: "\"",
                                                         },
@@ -302,7 +302,7 @@ Ok(
                                                 span: 42..44,
                                                 value: 2.0,
                                                 raw: "2",
-                                                ty: SingleType {
+                                                unit: Unit {
                                                     span: 43..44,
                                                     name: "'",
                                                 },

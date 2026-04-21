@@ -87,7 +87,7 @@ Ok(
                                                     span: 16..19,
                                                     value: 2.0,
                                                     raw: "2",
-                                                    ty: SingleType {
+                                                    unit: Unit {
                                                         span: 17..19,
                                                         name: "mm",
                                                     },

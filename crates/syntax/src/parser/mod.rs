@@ -224,17 +224,24 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             span: e.span(),
             name: ident.as_ref().into()
         },
-        Token::Unit(unit) = e => SingleType {
-            span: e.span(),
-            name: unit.as_ref().into()
-        },
-        Token::SigilQuote = e => SingleType {
-            span: e.span(),
-            name: r#"""#.into()
-        },
     }
     .labelled("quantity type")
     .boxed();
+
+    let unit = select_ref! {
+        Token::Identifier(ident) = e => Unit {
+            span: e.span(),
+            name: ident.as_ref().into()
+        },
+        Token::Unit(unit) = e => Unit {
+            span: e.span(),
+            name: unit.as_ref().into()
+        },
+        Token::SigilQuote = e => Unit {
+            span: e.span(),
+            name: r#"""#.into()
+        },
+    };
 
     type_parser.define({
         let single = single_type.clone().map(Type::Single);
@@ -338,24 +345,24 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
         .boxed();
 
         single_value
-            .then(single_type.clone().or_not())
+            .then(unit.clone().or_not())
             .with_extras()
             .try_map_with(|((literal, ty), extras), e| {
                 let literal = match (literal, ty) {
-                    (LiteralKind::Float(float), Some(ty)) => {
+                    (LiteralKind::Float(float), Some(unit)) => {
                         LiteralKind::Quantity(QuantityLiteral {
                             span: e.span(),
                             value: float.value,
                             raw: float.raw,
-                            ty,
+                            unit,
                         })
                     }
-                    (LiteralKind::Integer(int), Some(ty)) => {
+                    (LiteralKind::Integer(int), Some(unit)) => {
                         LiteralKind::Quantity(QuantityLiteral {
                             span: e.span(),
                             value: int.value as f64,
                             raw: int.raw,
-                            ty,
+                            unit,
                         })
                     }
                     (_, Some(_)) => LiteralKind::Error(LiteralError {
@@ -1305,14 +1312,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(single_type.clone().or_not())
-            .map_with(|(((start, end), extras), ty), e| {
+            .then(unit.clone().or_not())
+            .map_with(|(((start, end), extras), unit), e| {
                 Expression::ArrayRange(ArrayRangeExpression {
                     span: e.span(),
                     extras,
                     start: Box::new(start),
                     end: Box::new(end),
-                    ty,
+                    unit,
                 })
             })
             .labelled("array range")
@@ -1328,13 +1335,13 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(single_type.clone().or_not())
-            .map_with(|((items, extras), ty), e| {
+            .then(unit.clone().or_not())
+            .map_with(|((items, extras), unit), e| {
                 Expression::ArrayList(ArrayListExpression {
                     span: e.span(),
                     extras,
                     items,
-                    ty,
+                    unit,
                 })
             })
             .labelled("array")

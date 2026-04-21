@@ -154,7 +154,7 @@ Ok(
                                                                                             span: 59..63,
                                                                                             value: 10.0,
                                                                                             raw: "10",
-                                                                                            ty: SingleType {
+                                                                                            unit: Unit {
                                                                                                 span: 61..63,
                                                                                                 name: "mm",
                                                                                             },
@@ -195,7 +195,7 @@ Ok(
                                                                                             span: 74..77,
                                                                                             value: 5.0,
                                                                                             raw: "5",
-                                                                                            ty: SingleType {
+                                                                                            unit: Unit {
                                                                                                 span: 75..77,
                                                                                                 name: "mm",
                                                                                             },

@@ -109,8 +109,8 @@ Ok(
                                             ),
                                         },
                                     ],
-                                    ty: Some(
-                                        SingleType {
+                                    unit: Some(
+                                        Unit {
                                             span: 10..12,
                                             name: "mm",
                                         },

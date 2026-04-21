@@ -107,8 +107,8 @@ Ok(
                                                 ),
                                             },
                                         ],
-                                        ty: Some(
-                                            SingleType {
+                                        unit: Some(
+                                            Unit {
                                                 span: 5..6,
                                                 name: "\"",
                                             },
@@ -194,8 +194,8 @@ Ok(
                                                 ),
                                             },
                                         ],
-                                        ty: Some(
-                                            SingleType {
+                                        unit: Some(
+                                            Unit {
                                                 span: 15..17,
                                                 name: "cm",
                                             },

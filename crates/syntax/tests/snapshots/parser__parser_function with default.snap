@@ -110,7 +110,7 @@ Ok(
                                                             span: 22..25,
                                                             value: 3.0,
                                                             raw: "3",
-                                                            ty: SingleType {
+                                                            unit: Unit {
                                                                 span: 23..25,
                                                                 name: "mm",
                                                             },
