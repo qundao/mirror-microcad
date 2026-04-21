@@ -50,6 +50,6 @@ impl Format for ast::FloatLiteral {
 
 impl Format for ast::QuantityLiteral {
     fn format(&self, _: &FormatConfig) -> Node {
-        format!("{}{}", self.raw, self.ty.name).into()
+        format!("{}{}", self.raw, self.unit.name).into()
     }
 }

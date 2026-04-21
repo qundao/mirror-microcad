@@ -5,6 +5,12 @@ use crate::{BreakMode, Format, FormatConfig, Node, node};
 
 use microcad_syntax::ast;
 
+impl Format for ast::Unit {
+    fn format(&self, _: &FormatConfig) -> Node {
+        self.name.clone().into()
+    }
+}
+
 impl Format for ast::Type {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
