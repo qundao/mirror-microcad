@@ -23,8 +23,8 @@
     ╰────
 
 -- Parse Error --
-  × error: 38:4: Expected quantity type, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>',
-  │ '==', '!=', 'or', 'and' or semicolon
+  × error: 38:4: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  │ 'and' or semicolon
     ╭─[../books/tests/src/parser_recovery.md:38:4]
  37 │ sketch () { // error, no name
  38 │   1=; // error inside an if statement with missing params
