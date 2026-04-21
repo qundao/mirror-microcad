@@ -367,7 +367,7 @@ impl std::ops::BitAnd for Value {
 impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Value::None => write!(f, "None"),
+            Value::None => write!(f, "<NO VALUE>"),
             Value::Integer(n) => write!(f, "{n}"),
             Value::Quantity(q) => write!(f, "{q}"),
             Value::Bool(b) => write!(f, "{b}"),
