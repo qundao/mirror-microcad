@@ -120,7 +120,14 @@ impl LanguageServer for Backend {
         match uri.to_file_path() {
             Ok(path) => {
                 log::info!("Did open: {path:?}");
-                self.send_lsp(ProcessorRequest::AddDocument(uri))
+                self.send_lsp(ProcessorRequest::AddDocument(uri.clone()));
+                match uri.to_file_path() {
+                    Ok(path) => {
+                        log::info!("New active document: {:?}", path);
+                        self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
+                    }
+                    Err(()) => log::error!("Cannot parse URI: {uri}"),
+                }
             }
             Err(_) => log::error!("Cannot parse URI: {uri}"),
         }
