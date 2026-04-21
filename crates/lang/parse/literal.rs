@@ -45,7 +45,7 @@ impl FromAst for NumberLiteral {
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(NumberLiteral(
             node.value,
-            Unit::from_ast(&node.ty, context)?,
+            Unit::from_ast(&node.unit, context)?,
             context.src_ref(&node.span),
         ))
     }
@@ -75,7 +75,7 @@ impl std::str::FromStr for NumberLiteral {
 }
 
 impl FromAst for Unit {
-    type AstNode = ast::SingleType;
+    type AstNode = ast::Unit;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Unit::from_str(node.name.as_str()).map_err(|_| {

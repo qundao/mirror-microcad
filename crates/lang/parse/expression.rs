@@ -125,9 +125,9 @@ impl FromAst for Expression {
             ast::Expression::ArrayRange(a) => Expression::ArrayExpression(ArrayExpression {
                 inner: ArrayExpressionInner::Range(RangeExpression::from_ast(a, context)?),
                 unit: a
-                    .ty
+                    .unit
                     .as_ref()
-                    .map(|ty| Unit::from_ast(ty, context))
+                    .map(|unit| Unit::from_ast(unit, context))
                     .transpose()?
                     .unwrap_or_default(),
                 src_ref: context.src_ref(&a.span),
@@ -135,7 +135,7 @@ impl FromAst for Expression {
             ast::Expression::ArrayList(a) => Expression::ArrayExpression(ArrayExpression {
                 inner: ArrayExpressionInner::List(ListExpression::from_ast(a, context)?),
                 unit: a
-                    .ty
+                    .unit
                     .as_ref()
                     .map(|ty| Unit::from_ast(ty, context))
                     .transpose()?
