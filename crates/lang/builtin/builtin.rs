@@ -17,7 +17,7 @@ pub type BuiltinFn =
 #[derive(Clone, Identifiable)]
 pub struct BuiltinFunction {
     /// Name of the builtin function
-    pub(crate) id: Identifier,
+    pub id: Identifier,
 
     /// Optional parameter value list to check the builtin signature.
     pub parameters: ParameterValueList,
