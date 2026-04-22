@@ -74,7 +74,10 @@ impl Statement {
             Statement::Return(_) => true,
             Statement::LocalAssignment(_) => true,
             Statement::Property(_) => true,
-            Statement::Expression(_) => true,
+            Statement::Expression(e) => match &e.expression {
+                ast::Expression::Body(_) | ast::Expression::If(_) => false,
+                _ => true,
+            },
         }
     }
 }
