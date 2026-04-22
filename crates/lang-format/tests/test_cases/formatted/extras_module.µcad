@@ -1,0 +1,9 @@
+mod a {
+    // B
+    const C = "D";
+
+    // E
+    const F = "G";
+
+    // H
+}

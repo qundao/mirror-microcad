@@ -22,7 +22,18 @@ impl Format for ast::Body {
         let body = &self.statements;
 
         match (body.statements.is_empty(), &body.tail) {
-            (true, Some(tail)) => node!(f => "{ " tail " }"),
+            (true, Some(tail)) => {
+                let tail_node = tail.format(f);
+                if tail_node.contains_hardline() {
+                    node!(
+                        "{" Node::Hardline
+                            Node::indent(f.indent_width, tail_node)
+                        "}"
+                    )
+                } else {
+                    node!("{ " tail_node " }")
+                }
+            }
             (true, None) => node!("{}"),
             _ => node!(
                 "{" Node::Hardline
@@ -46,7 +57,7 @@ impl Format for ast::Expression {
             ast::Expression::Marker(identifier) => format!("@{}", identifier.name).into(),
             ast::Expression::BinaryOperation(binary_operation) => binary_operation.format(f),
             ast::Expression::UnaryOperation(unary_operation) => unary_operation.format(f),
-            ast::Expression::Block(body) => body.format(f),
+            ast::Expression::Body(body) => body.format(f),
             ast::Expression::Call(call) => call.format(f),
             ast::Expression::ElementAccess(element_access) => element_access.format(f),
             ast::Expression::If(i) => i.format(f),
