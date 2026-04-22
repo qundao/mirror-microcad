@@ -34,7 +34,7 @@ Ok(
                                 name: "a",
                             },
                             ty: None,
-                            value: Block(
+                            value: Body(
                                 Body {
                                     span: 4..22,
                                     statements: StatementList {

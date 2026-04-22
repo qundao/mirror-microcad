@@ -149,7 +149,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
     let block_recovery =
         ignore_till_matched_curly().map_with(|_, e| StatementList::dummy(e.span()));
 
-    let block = whitespace_parser()
+    let body = whitespace_parser()
         .or_not()
         .ignore_then(statement_list_parser.clone().delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
@@ -821,8 +821,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             )
             .then_maybe_whitespace()
             .then(
-                block
-                    .clone()
+                body.clone()
                     .map(Some)
                     .or(just(Token::SigilSemiColon).map(|_| None)),
             )
@@ -910,7 +909,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .then(just(Token::KeywordInit).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
             .then(parameter_list.clone())
-            .then(block.clone())
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |(((((doc, attributes), keyword_span), arguments), body), extras), e| {
@@ -944,7 +943,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .then_maybe_whitespace()
             .then(parameter_list.clone())
             .then_maybe_whitespace()
-            .then(block.clone())
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |(
@@ -1014,7 +1013,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                     .then_maybe_whitespace()
                     .or_not(),
             )
-            .then(block.clone())
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |(
@@ -1044,7 +1043,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             )
             .boxed();
 
-        let if_expression = attribute_parser
+        let if_statement = attribute_parser
             .clone()
             .then(if_inner.clone().map(Expression::If))
             .with_extras()
@@ -1057,6 +1056,21 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 })
             })
             .labelled("if statement")
+            .boxed();
+
+        let body_statement = attribute_parser
+            .clone()
+            .then(body.clone().map(Expression::Body))
+            .with_extras()
+            .map_with(|((attributes, expression), extras), e| {
+                Statement::Expression(ExpressionStatement {
+                    span: e.span(),
+                    extras,
+                    attributes,
+                    expression,
+                })
+            })
+            .labelled("body statement")
             .boxed();
 
         let inner_doc_comment = select_ref! {
@@ -1120,7 +1134,8 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .or(init)
             .or(workbench)
             .or(module)
-            .or(if_expression)
+            .or(if_statement)
+            .or(body_statement)
             .boxed();
 
         without_semi
@@ -1347,10 +1362,10 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .labelled("array")
             .boxed();
 
-        let block_expression = block
+        let body_expression = body
             .clone()
-            .map(Expression::Block)
-            .labelled("block expression")
+            .map(Expression::Body)
+            .labelled("body expression")
             .boxed();
 
         if_inner.define(
@@ -1359,7 +1374,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 .then_whitespace()
                 .then(expression_parser.clone())
                 .then_maybe_whitespace()
-                .then(block.clone())
+                .then(body.clone())
                 .then_maybe_whitespace()
                 .then(
                     just(Token::KeywordElse)
@@ -1373,7 +1388,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                     just(Token::KeywordElse)
                         .map_with(|_, e| e.span())
                         .then_maybe_whitespace()
-                        .then(block.clone())
+                        .then(body.clone())
                         .or_not(),
                 )
                 .with_extras()
@@ -1448,7 +1463,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .or(bracket_based)
             .or(array_range)
             .or(array_list)
-            .or(block_expression)
+            .or(body_expression)
             .or(if_expression)
             .or(qualified_name_expr)
             .boxed();
