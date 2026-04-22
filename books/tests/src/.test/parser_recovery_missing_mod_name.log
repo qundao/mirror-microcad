@@ -14,7 +14,7 @@
   50:   a =; // error after a mod with no name
 
 -- Parse Error --
-  × error: 47:5: Expected identifier
+  × error: 47:5: Expected something else, ';', comment, semicolon or identifier
     ╭─[../books/tests/src/parser_recovery.md:47:5]
  47 │ mod { // error, no name
     ·     ┬

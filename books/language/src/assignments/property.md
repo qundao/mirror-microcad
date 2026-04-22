@@ -12,7 +12,7 @@ sketch MySketch(radius: Length) {
     prop diameter = radius * 2;
     std::geo2d::Circle(radius);
 }
-std::debug::assert_eq([ MySketch(5cm).diameter, 10cm ])
+std::debug::assert_eq([MySketch(5cm).diameter, 10cm])
 ```
 
 ## Restrictions
@@ -44,11 +44,13 @@ f();
 ```µcad,prop_assignment_init#fail
 sketch MySketch(radius: Length) {
     prop diameter = radius * 2; // error: not in initialization code
-    
-    init() { radius = 1; }
+
+    init() {
+        radius = 1;
+    }
     std::geo2d::Circle(radius);
 }
-std::debug::assert_eq([ MySketch(5cm).diameter, 10cm ])
+std::debug::assert_eq([MySketch(5cm).diameter, 10cm])
 ```
 
 ### Not in initializers
@@ -57,8 +59,8 @@ std::debug::assert_eq([ MySketch(5cm).diameter, 10cm ])
 
 ```µcad,prop_assignment_initializer#fail
 sketch MySketch(radius: Length) {
-    init() { 
-        radius = 1; 
+    init() {
+        radius = 1;
         prop diameter = radius * 2; // error: not in initializer
     }
     std::geo2d::Circle(radius);

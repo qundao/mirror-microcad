@@ -58,7 +58,7 @@ sketch MySketch(x: Integer) {
     }
 }
 
-MySketch([-1,0,2]).align(X, 5mm);
+MySketch([-1, 0, 2]).align(X, 5mm);
 ```
 
 Output
@@ -88,7 +88,7 @@ sketch MySketch(x: Integer) {
     outer - Circle(radius = 3mm)
 }
 
-MySketch([-1,0,1]).align(X, 5mm);
+MySketch([-1, 0, 1]).align(X, 5mm);
 ```
 
 Output

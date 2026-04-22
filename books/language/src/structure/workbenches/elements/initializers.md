@@ -15,12 +15,12 @@ sketch Wheel(radius: Length, thickness = 5mm) {
     use std::geo2d::Circle;
 
     // initializer with diameter
-    init( diameter: Length, thickness = 5mm ) {
+    init(diameter: Length, thickness = 5mm) {
         // must set property `radius` from building plan
         radius = diameter / 2;
 
-        // `thickness` (from the building plan) does not need 
-        // to be set, because it was automatically set by 
+        // `thickness` (from the building plan) does not need
+        // to be set, because it was automatically set by
         // parameter of this initializer
     }
 
@@ -113,9 +113,9 @@ second time.
 sketch Wheel(radius: Length, thickness: Length) {
     use std::geo2d::Circle;
 
-    init( radius: Length ) {
+    init(radius: Length) {
         // radius property has already been set by building plan
-        radius = radius * 2;  // error: it cannot be set a second time
+        radius = radius * 2; // error: it cannot be set a second time
         thickness = 5mm;
     }
     Circle(radius = radius + thickness) - Circle(radius)
@@ -132,9 +132,10 @@ Types must match when using a name from building plan in initializer parameters.
 sketch Wheel(radius: Length, thickness: Length) {
     use std::geo2d::Circle;
 
-    init( radius: Scalar, outer: Length ) { // error: radius is already a Length in building plan
+    init(radius: Scalar, outer: Length) {
+        // error: radius is already a Length in building plan
         thickness = outer - (radius * 1mm);
-    }  
+    }
 
     Circle(radius = radius + thickness) - Circle(radius)
 }
@@ -152,9 +153,13 @@ It's not allowed to write any code between *initializers*.
 sketch Wheel(radius: Length, thickness = 5mm) {
     use std::geo2d::Circle;
 
-    init( width: Length, thickness = 5mm ) { radius = width / 2; }
+    init(width: Length, thickness = 5mm) {
+        radius = width / 2;
+    }
     radius = 1; // error: code between initializers not allowed
-    init( height: Length, thickness = 5mm ) { radius = height / 2; }
+    init(height: Length, thickness = 5mm) {
+        radius = height / 2;
+    }
 
     Circle(radius = radius + thickness) - Circle(radius)
 }

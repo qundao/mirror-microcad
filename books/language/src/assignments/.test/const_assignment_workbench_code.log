@@ -8,7 +8,7 @@
 -- Code --
 
  119:   sketch MySketch() {
- 120:       const MY_CONST = 1;   // allowed if no initializers
+ 120:       const MY_CONST = 1; // allowed if no initializers
  121:   }
  122:   MySketch();
 

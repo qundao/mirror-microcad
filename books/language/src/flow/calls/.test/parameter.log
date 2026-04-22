@@ -8,7 +8,7 @@
 -- Code --
 
   13:   // function with two parameters (`one` and `another`)
-  14:   fn f( one: Integer, another: Length ) { 
+  14:   fn f(one: Integer, another: Length) {
   15:       std::print("{one} {another}");
   16:   }
   17:   

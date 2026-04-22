@@ -36,11 +36,11 @@ In the following example `punshed_disk` awaits a group of exactly two children.
 
 ```µcad,input#todo
 // define operation which takes multiple items
-op punched_disk() { 
+op punched_disk() {
     // check number of input models
     if @input.count() == 2 {
         // make hole by subtracting both inputs
-        @input.subtract(); 
+        @input.subtract();
     } else {
         std::error("punched_disk must get exactly two objects");
     }
@@ -64,7 +64,7 @@ Like other workbenches operations can have parameters too:
 // define operation which takes multiple items
 op punch_disk(radius: Length) {
     if @input.count() == 1 {
-        { 
+        {
             @input;
             std::geo2d::Circle(radius);
         }.subtract();

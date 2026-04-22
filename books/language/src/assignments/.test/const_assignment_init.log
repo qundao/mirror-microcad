@@ -9,7 +9,7 @@
 
  165:   sketch MySketch() {
  166:       init(_: Integer) {
- 167:           const MY_CONST = 1;   // error: not allowed in initializers
+ 167:           const MY_CONST = 1; // error: not allowed in initializers
  168:       }
  169:   }
  170:   MySketch();
@@ -22,7 +22,7 @@
  166 │     init(_: Integer) {
      ·     ──┬─
      ·       ╰── Within this initializer
- 167 │         const MY_CONST = 1;   // error: not allowed in initializers
+ 167 │         const MY_CONST = 1; // error: not allowed in initializers
      ·         ─────────┬────────
      ·                  ╰── This constant assignment is not allowed
  168 │     }

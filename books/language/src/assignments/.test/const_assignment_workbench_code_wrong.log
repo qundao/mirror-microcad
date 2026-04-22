@@ -8,8 +8,8 @@
 -- Code --
 
  130:   sketch MySketch() {
- 131:       _i = 5;                 // any non const code
- 132:       const MY_CONST = 1;     // error: const not allowed then
+ 131:       _i = 5; // any non const code
+ 132:       const MY_CONST = 1; // error: const not allowed then
  133:   }
  134:   MySketch();
 

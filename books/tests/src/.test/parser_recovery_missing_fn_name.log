@@ -14,11 +14,12 @@
   30:   a =; // error after a function with no name
 
 -- Parse Error --
-  × error: 27:4: Expected identifier
-    ╭─[../books/tests/src/parser_recovery.md:27:4]
+  × error: 27:7: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  │ 'and' or semicolon
+    ╭─[../books/tests/src/parser_recovery.md:27:7]
  27 │ fn () { // error, no name
-    ·    ┬
-    ·    ╰── unexpected (
+    ·       ┬
+    ·       ╰── unexpected {
  28 │   1=; // error inside an if statement with missing params
     ╰────
 

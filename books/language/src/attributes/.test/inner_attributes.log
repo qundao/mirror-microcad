@@ -19,10 +19,10 @@
 -- Model --
   Group (root) ->
     Group ->
+      #[color = rgba(1, 0, 0, 1)]
       Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
         - center = (x=0mm, y=0mm)
         - radius = 20mm
-        #[color = rgba(1, 0, 0, 1)]
         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
           Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
       Workpiece(op) std::ops::translate(x=20mm, y=0mm, z=0mm) ->

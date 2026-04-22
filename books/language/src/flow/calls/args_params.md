@@ -11,7 +11,7 @@ Parameters in µcad always have a name which we often call *identifier* and a *t
 
 ```µcad,parameter
 // function with two parameters (`one` and `another`)
-fn f( one: Integer, another: Length ) { 
+fn f(one: Integer, another: Length) {
     std::print("{one} {another}");
 }
 
@@ -30,13 +30,13 @@ Each argument consists these elements:
 - an optional *unit* that suits the type (e.g. `mm` for `Length`, `m²` for `Area`)
 
 Parameter can have defaults.
-Then the notation changes and the type is deduced from the default value.  
+Then the notation changes and the type is deduced from the default value.
 
 [![test](.test/parameter_default.svg)](.test/parameter_default.log)
 
 ```µcad,parameter_default
 // function with two parameters (`one`, `another`, and `one_more`)
-fn f( one: Integer, another = 2m, one_more: Area ) { 
+fn f(one: Integer, another = 2m, one_more: Area) {
     std::print("{one} {another} {one_more}");
 }
 

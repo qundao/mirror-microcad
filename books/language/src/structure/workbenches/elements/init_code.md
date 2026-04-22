@@ -15,17 +15,19 @@ sketch Wheel(radius: Length) {
     const FACTOR = 2.0;
 
     // initializer
-    init(diameter: Length) { radius = into_radius(diameter); }
+    init(diameter: Length) {
+        radius = into_radius(diameter);
+    }
 
     // function
-    fn into_radius( diameter: Length ) {
+    fn into_radius(diameter: Length) {
         // use constant FACTOR from init code
         diameter / FACTOR
     }
 
     // set property diameter and use FACTOR from init code
     prop diameter = radius * FACTOR;
-    
+
     // code body
     std::geo2d::Circle(radius);
 }
@@ -47,9 +49,11 @@ If there are no initializers, the initialization code is just part of the
 sketch Wheel(radius: Length, thickness = 5mm) {
     use std::geo2d::Circle;
 
-    const _ = radius * 2;   // error: cannot use radius from building plan
+    const _ = radius * 2; // error: cannot use radius from building plan
 
-    init( diameter: Length ) { radius = diameter / 2; }
+    init(diameter: Length) {
+        radius = diameter / 2;
+    }
     Circle(radius + thickness) - Circle(radius)
 }
 

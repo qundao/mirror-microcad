@@ -11,7 +11,7 @@
  147:   kilogram = 1.0kg;
  148:   pound = 2.204623lb;
  149:   
- 150:   std::debug::assert_eq([ gram, kilogram ]);
+ 150:   std::debug::assert_eq([gram, kilogram]);
 
 -- No Output --
 -- Errors --

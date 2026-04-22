@@ -30,7 +30,11 @@ mod my {
 
         // define some public calculation function
         pub fn abs(x: Scalar) -> Scalar {
-            if x < 0 { return -x; } else { return x; }
+            if x < 0 {
+                return -x;
+            } else {
+                return x;
+            }
         }
     }
 }

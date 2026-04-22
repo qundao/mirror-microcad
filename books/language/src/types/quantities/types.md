@@ -150,5 +150,5 @@ gram = 1000.0g;
 kilogram = 1.0kg;
 pound = 2.204623lb;
 
-std::debug::assert_eq([ gram, kilogram ]);
+std::debug::assert_eq([gram, kilogram]);
 ```

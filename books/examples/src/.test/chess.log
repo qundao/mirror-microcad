@@ -30,14 +30,14 @@
   26:       { 
   27:           Cube(BASE_SIZE);
   28:           Cube(BASE_SIZE / sqrt(2)).rotate(45°);
-  29:       }.align(Z)
+  29:       }.align(Z);
   30:   }
   31:   
   32:   pub part Queen() {
   33:       { 
   34:           Cube(BASE_SIZE);
   35:           Sphere(diameter = BASE_SIZE / sqrt(2));
-  36:       }.align(Z)
+  36:       }.align(Z);
   37:   }
   38:   
   39:   pub part Bishop() {
@@ -61,7 +61,7 @@
   57:           height = BASE_SIZE/2;
   58:           r = Rect(BASE_SIZE);
   59:           (r - r.translate(x = height, y = height)).extrude(height);
-  60:       }.rotate([0,90]°).align(Z)
+  60:       }.rotate([0,90]°).align(Z);
   61:   }
   62:   
   63:   

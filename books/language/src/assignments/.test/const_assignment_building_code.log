@@ -9,7 +9,7 @@
 
  107:   sketch MySketch() {
  108:       init(_: Integer) {}
- 109:       const MY_CONST = 1;   // error: not allowed in building code
+ 109:       const MY_CONST = 1; // error: not allowed in building code
  110:   }
  111:   MySketch();
 

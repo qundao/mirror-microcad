@@ -33,20 +33,20 @@ Here are some examples of each operator:
 ```µcad,operator_examples
 use std::debug::assert_eq; // used for testing
 
-assert_eq([ -5,     0 - 5               ]); // Negation
-assert_eq([ 5 + 6,  11                  ]); // Addition
-assert_eq([ 5 - 6,  -1                  ]); // Subtraction
-assert_eq([ 5 * 6,  30                  ]); // Multiplication
-assert_eq([ 5 / 6,  0.83333333333333333 ]); // Division
-assert_eq([ 5 ^ 6,  15625               ]); // Power
-assert_eq([ true &  false, false        ]); // Logical AND
-assert_eq([ true |  false, true         ]); // Logical OR
-assert_eq([ 5 > 6,  false               ]); // Greater than
-assert_eq([ 5 >= 6, false               ]); // Greater or equal
-assert_eq([ 5 < 6,  true                ]); // Less than
-assert_eq([ 5 <= 6, true                ]); // Less or equal
-assert_eq([ 5 == 6, false               ]); // Equal
-assert_eq([ 5 != 6, true                ]); // Not equal
+assert_eq([-5, 0 - 5]); // Negation
+assert_eq([5 + 6, 11]); // Addition
+assert_eq([5 - 6, -1]); // Subtraction
+assert_eq([5 * 6, 30]); // Multiplication
+assert_eq([5 / 6, 0.83333333333333333]); // Division
+assert_eq([5 ^ 6, 15625]); // Power
+assert_eq([true & false, false]); // Logical AND
+assert_eq([true | false, true]); // Logical OR
+assert_eq([5 > 6, false]); // Greater than
+assert_eq([5 >= 6, false]); // Greater or equal
+assert_eq([5 < 6, true]); // Less than
+assert_eq([5 <= 6, true]); // Less or equal
+assert_eq([5 == 6, false]); // Equal
+assert_eq([5 != 6, true]); // Not equal
 ```
 
 ## Operators & Arrays

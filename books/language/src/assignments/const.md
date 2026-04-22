@@ -15,7 +15,6 @@ Constants can be placed in
 const TEXT = "Hello";
 
 mod my_module {
-    
     // constant assignment
     const TEXT = "Hello my_module";
 
@@ -26,13 +25,13 @@ mod my_module {
 
     // public workbench
     pub sketch MySketch(text: String) {
-        std::debug::assert_eq([ TEXT, text ]);
+        std::debug::assert_eq([TEXT, text]);
     }
 }
 
 my_module::MySketch("Hello my_module");
-std::debug::assert_eq([ my_module::f(), "Hello my_module" ]);
-std::debug::assert_eq([ TEXT, "Hello" ]);
+std::debug::assert_eq([my_module::f(), "Hello my_module"]);
+std::debug::assert_eq([TEXT, "Hello"]);
 ```
 
 Additionally, constant assignments are permitted in the *init code* of a
@@ -64,9 +63,9 @@ Constants are always written in `UPPER_CASE`.
 [![test](.test/const_assignment_uppercase.svg)](.test/const_assignment_uppercase.log)
 
 ```µcad,const_assignment_uppercase#todo_warn
-const A = 1;        // ok
-const a = 1;        // warning
-const MyValue = 1;  // warning
+const A = 1; // ok
+const a = 1; // warning
+const MyValue = 1; // warning
 const MY_VALUE = 1; // ok
 ```
 
@@ -79,21 +78,21 @@ A constant cannot be defined within the same module or workbench twice.
 ```µcad,const_assignment_shadow#fail
 mod module {
     const A = 5;
-    const A = 1;  // error: ambiguous identifier in this module
+    const A = 1; // error: ambiguous identifier in this module
 
     pub mod another_module {
-        const A = 5;   // ok
+        const A = 5; // ok
 
         pub fn a() -> Integer { A }
     }
 
     pub sketch Sketch() {
         const A = 5;
-        const A = 5;   // error: ambiguous identifier in this workbench
+        const A = 5; // error: ambiguous identifier in this workbench
     }
 }
 
-std::debug::assert_eq([ module::another_module::a(), 5 ]);
+std::debug::assert_eq([module::another_module::a(), 5]);
 module::Sketch();
 ```
 
@@ -106,7 +105,7 @@ Constant assignments cannot be used in building code (the code below any initial
 ```µcad,const_assignment_building_code#todo_fail
 sketch MySketch() {
     init(_: Integer) {}
-    const MY_CONST = 1;   // error: not allowed in building code
+    const MY_CONST = 1; // error: not allowed in building code
 }
 MySketch();
 ```
@@ -117,7 +116,7 @@ Constant assignments must be on top of the workbench code if initializers are no
 
 ```µcad,const_assignment_workbench_code
 sketch MySketch() {
-    const MY_CONST = 1;   // allowed if no initializers
+    const MY_CONST = 1; // allowed if no initializers
 }
 MySketch();
 ```
@@ -128,8 +127,8 @@ They cannot be placed below non constant assignments within in a workbench.
 
 ```µcad,const_assignment_workbench_code_wrong#todo_fail
 sketch MySketch() {
-    _i = 5;                 // any non const code
-    const MY_CONST = 1;     // error: const not allowed then
+    _i = 5; // any non const code
+    const MY_CONST = 1; // error: const not allowed then
 }
 MySketch();
 ```
@@ -142,7 +141,7 @@ Constant assignments cannot be used in functions.
 
 ```µcad,const_assignment_fn#fail
 fn f() {
-    const MY_CONST = 1;     // error: not allowed in functions
+    const MY_CONST = 1; // error: not allowed in functions
 }
 f();
 
@@ -164,7 +163,7 @@ Constant assignments cannot be used in initializers.
 ```µcad,const_assignment_init#fail
 sketch MySketch() {
     init(_: Integer) {
-        const MY_CONST = 1;   // error: not allowed in initializers
+        const MY_CONST = 1; // error: not allowed in initializers
     }
 }
 MySketch();

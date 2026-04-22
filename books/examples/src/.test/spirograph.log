@@ -59,7 +59,7 @@
   55:           PencilHole(offset = [start..n*2-1] * radius / n / 2);
   56:           PencilHole(offset = ([start..n*2-1] + 0.5) * radius / n / 2).rotate(-angle);
   57:           PencilHole(offset = ([start..n*2-1] + 1/3) * radius / n / 2).rotate(angle);
-  58:       }.rotate(90°)
+  58:       }.rotate(90°);
   59:   }
   60:   
   61:   #[export = "spirograph_frame.stl"]

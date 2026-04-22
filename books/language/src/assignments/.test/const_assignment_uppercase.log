@@ -7,9 +7,9 @@
 
 -- Code --
 
-  67:   const A = 1;        // ok
-  68:   const a = 1;        // warning
-  69:   const MyValue = 1;  // warning
+  67:   const A = 1; // ok
+  68:   const a = 1; // warning
+  69:   const MyValue = 1; // warning
   70:   const MY_VALUE = 1; // ok
 
 -- No Output --
