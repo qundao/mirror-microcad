@@ -1,0 +1,7 @@
+---
+source: crates/lang-format/tests/format.rs
+expression: "format(&ast, &FormatConfig::default())"
+---
+init() {
+    radius = 1;
+}
