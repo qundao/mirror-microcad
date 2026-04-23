@@ -38,19 +38,8 @@ impl Format for ast::LeadingExtras {
 
 impl Format for ast::TrailingExtras {
     fn format(&self, f: &FormatConfig) -> Node {
-        let leading_ws = if let Some(ast::ItemExtra::Whitespace(ws)) = self.0.first()
-            && !ws.contains('\n')
-            && ws.contains(' ')
-            && self.0.len() > 1
-        {
-            node!(' ')
-        } else {
-            Node::Nil
-        };
-
         let mut prev_newline = false;
         node!(
-            leading_ws
             self.0
                 .iter()
                 .map(|extra| match &extra {
@@ -58,24 +47,23 @@ impl Format for ast::TrailingExtras {
                         let node = comment.format(f);
                         prev_newline = node.contains_hardline();
                         node
-                    },
+                    }
                     ast::ItemExtra::Whitespace(ws) => ws
-                    .chars()
-                    .filter_map(|c| {
-                        if c == '\n' {
-                            Some(Node::Hardline)
-                        } else {
-                            None
-                        }
-                    })
-                    .skip(if prev_newline { 1 } else { 0})
-                    .take(2)
-                    .collect::<Vec<_>>()
-                    .into(),
-                _ => todo!(),
-            })
-            .collect::<Vec<_>>()
-
+                        .chars()
+                        .filter_map(|c| {
+                            if c == '\n' {
+                                Some(Node::Hardline)
+                            } else {
+                                None
+                            }
+                        })
+                        .skip(if prev_newline { 1 } else { 0 })
+                        .take(2)
+                        .collect::<Vec<_>>()
+                        .into(),
+                    _ => todo!(),
+                })
+                .collect::<Vec<_>>()
         )
     }
 }

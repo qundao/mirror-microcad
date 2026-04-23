@@ -66,7 +66,9 @@ impl Format for ast::Comment {
     fn format(&self, _: &FormatConfig) -> Node {
         match &self.inner {
             ast::CommentInner::SingleLine(line) => Node::SingleLineComment(line.into()),
-            ast::CommentInner::MultiLine(line) => node!("/* " Node::from(line.clone()) " */"),
+            ast::CommentInner::MultiLine(line) => {
+                node!(Node::Softline "/* " Node::from(line.clone()) " */")
+            }
         }
     }
 }

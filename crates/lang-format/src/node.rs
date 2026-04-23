@@ -35,6 +35,7 @@ pub enum Node {
     // A comment starting with `//`
     SingleLineComment(CompactString),
     Hardline,
+    Softline,
     Indent {
         width: usize,
         node: Box<Node>,
@@ -102,6 +103,7 @@ impl Node {
             Node::Nil => 0,
             Node::Text(compact_string) => compact_string.len(),
             Node::Hardline | Node::SingleLineComment(_) => 0,
+            Node::Softline => 1,
             Node::Indent { width, node } => width + node.estimate_width(),
             Node::Group(group) => group
                 .iter()
@@ -120,7 +122,7 @@ impl Node {
 
     pub fn contains_hardline(&self) -> bool {
         match &self {
-            Node::Nil => false,
+            Node::Nil | Node::Softline => false,
             Node::Text(compact_string) => compact_string.contains("\n"),
             Node::Hardline | Node::SingleLineComment(_) => true,
             Node::Indent { width: _, node } => node.contains_hardline(),
@@ -209,6 +211,7 @@ impl std::fmt::Display for Node {
             indent_level: 0,
             column: 0,
             indent_pending: false,
+            extra_pending: false,
         };
         self.render_recursive(f, &mut state)
     }
@@ -218,6 +221,7 @@ struct RenderState {
     indent_level: usize,
     column: usize,
     indent_pending: bool,
+    extra_pending: bool,
 }
 
 impl Node {
@@ -239,24 +243,50 @@ impl Node {
             }
         }
 
+        fn write_extra_pending(
+            f: &mut std::fmt::Formatter<'_>,
+            state: &mut RenderState,
+        ) -> std::fmt::Result {
+            if state.extra_pending {
+                state.extra_pending = false;
+                writeln!(f)
+            } else {
+                Ok(())
+            }
+        }
+
         match self {
             Node::Text(s) => {
+                write_extra_pending(f, state)?;
                 write_pending_indent(f, state)?;
                 state.column += s.len();
                 write!(f, "{s}")
             }
             Node::SingleLineComment(s) => {
+                write_extra_pending(f, state)?;
                 write_pending_indent(f, state)?;
+                if state.column as i32 - state.indent_level as i32 > 0 {
+                    write!(f, " ")?; // Leading ws
+                }
                 state.column += s.len();
                 state.indent_pending = true;
-                writeln!(f, "{s}")
+                state.extra_pending = true;
+                write!(f, "{s}")
             }
             Node::Hardline => {
                 state.column = state.indent_level;
                 state.indent_pending = true;
                 writeln!(f)
             }
+            Node::Softline => {
+                if state.column as i32 - state.indent_level as i32 > 0 {
+                    write!(f, " ") // Leading ws
+                } else {
+                    write!(f, "")
+                }
+            }
             Node::Group(group) => {
+                write_extra_pending(f, state)?;
                 write_pending_indent(f, state)?;
                 group
                     .iter()
