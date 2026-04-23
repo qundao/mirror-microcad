@@ -249,6 +249,7 @@ impl Node {
         ) -> std::fmt::Result {
             if state.extra_pending {
                 state.extra_pending = false;
+                state.column = state.indent_level;
                 writeln!(f)
             } else {
                 Ok(())
@@ -279,6 +280,7 @@ impl Node {
                 writeln!(f)
             }
             Node::Softline => {
+                write_pending_indent(f, state)?;
                 if state.column as i32 - state.indent_level as i32 > 0 {
                     write!(f, " ") // Leading ws
                 } else {
