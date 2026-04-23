@@ -118,12 +118,15 @@ liter = 1.0l;
 centiliter = 100.0cl;
 milliliter = 1000.0ml;
 
-std::debug::assert_eq([ cubic_millimeter,
-                        cubic_centimeter,
-                        cubic_meter,
-                        centiliter,
-                        milliliter
-                        ]);
+std::debug::assert_eq(
+    [
+        cubic_millimeter,
+        cubic_centimeter,
+        cubic_meter,
+        centiliter,
+        milliliter,
+    ],
+);
 ```
 
 ## Density
