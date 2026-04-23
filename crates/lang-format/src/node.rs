@@ -32,6 +32,8 @@ pub enum Node {
     #[default]
     Nil,
     Text(CompactString),
+    // A comment starting with `//`
+    SingleLineComment(CompactString),
     Hardline,
     Indent {
         width: usize,
@@ -99,7 +101,7 @@ impl Node {
         match &self {
             Node::Nil => 0,
             Node::Text(compact_string) => compact_string.len(),
-            Node::Hardline => 0,
+            Node::Hardline | Node::SingleLineComment(_) => 0,
             Node::Indent { width, node } => width + node.estimate_width(),
             Node::Group(group) => group
                 .iter()
@@ -120,7 +122,7 @@ impl Node {
         match &self {
             Node::Nil => false,
             Node::Text(compact_string) => compact_string.contains("\n"),
-            Node::Hardline => true,
+            Node::Hardline | Node::SingleLineComment(_) => true,
             Node::Indent { width: _, node } => node.contains_hardline(),
             Node::Group(group) => group.iter().any(|node| node.contains_hardline()),
         }
@@ -231,7 +233,7 @@ impl Node {
             if state.indent_pending {
                 let spaces = " ".repeat(state.indent_level);
                 state.indent_pending = false;
-                write!(f, "{}", spaces)
+                write!(f, "{spaces}")
             } else {
                 Ok(())
             }
@@ -241,7 +243,13 @@ impl Node {
             Node::Text(s) => {
                 write_pending_indent(f, state)?;
                 state.column += s.len();
-                write!(f, "{}", s)
+                write!(f, "{s}")
+            }
+            Node::SingleLineComment(s) => {
+                write_pending_indent(f, state)?;
+                state.column += s.len();
+                state.indent_pending = true;
+                writeln!(f, "{s}")
             }
             Node::Hardline => {
                 state.column = state.indent_level;
