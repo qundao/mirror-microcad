@@ -2,53 +2,53 @@
 -- Test --
         Test name: illegal_workbench_statement_sketch
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:44
+      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:46
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
-  44:   sketch Wheel(radius: Length) {
-  45:       sketch A() {}   // error
-  46:       part B() {}     // error
-  47:       op C() {}       // error
-  48:   }
+  46:   sketch Wheel(radius: Length) {
+  47:       sketch A() {} // error
+  48:       part B() {} // error
+  49:       op C() {} // error
+  50:   }
 
 -- No Output --
 -- Errors --
-  × error: 45:12: Workbench is not allowed within workbench
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:45:5]
- 44 │ sketch Wheel(radius: Length) {
+  × error: 47:12: Workbench is not allowed within workbench
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:47:5]
+ 46 │ sketch Wheel(radius: Length) {
     · ───┬──
     ·    ╰── Within this workbench
- 45 │     sketch A() {}   // error
+ 47 │     sketch A() {} // error
     ·     ───┬──
     ·        ╰── This workbench is not allowed
- 46 │     part B() {}     // error
+ 48 │     part B() {} // error
     ╰────
   help: workbench is only allowed within source file or module
-  × error: 46:10: Workbench is not allowed within workbench
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:46:5]
- 44 │ sketch Wheel(radius: Length) {
+  × error: 48:10: Workbench is not allowed within workbench
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:48:5]
+ 46 │ sketch Wheel(radius: Length) {
     · ───┬──
     ·    ╰── Within this workbench
- 45 │     sketch A() {}   // error
- 46 │     part B() {}     // error
+ 47 │     sketch A() {} // error
+ 48 │     part B() {} // error
     ·     ──┬─
     ·       ╰── This workbench is not allowed
- 47 │     op C() {}       // error
+ 49 │     op C() {} // error
     ╰────
   help: workbench is only allowed within source file or module
-  × error: 47:8: Workbench is not allowed within workbench
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:47:5]
- 44 │ sketch Wheel(radius: Length) {
+  × error: 49:8: Workbench is not allowed within workbench
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:49:5]
+ 46 │ sketch Wheel(radius: Length) {
     · ───┬──
     ·    ╰── Within this workbench
- 45 │     sketch A() {}   // error
- 46 │     part B() {}     // error
- 47 │     op C() {}       // error
+ 47 │     sketch A() {} // error
+ 48 │     part B() {} // error
+ 49 │     op C() {} // error
     ·     ─┬
     ·      ╰── This workbench is not allowed
- 48 │ }
+ 50 │ }
     ╰────
   help: workbench is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!

@@ -10,23 +10,25 @@
   47:   sketch Wheel(radius: Length, thickness = 5mm) {
   48:       use std::geo2d::Circle;
   49:   
-  50:       const _ = radius * 2;   // error: cannot use radius from building plan
+  50:       const _ = radius * 2; // error: cannot use radius from building plan
   51:   
-  52:       init( diameter: Length ) { radius = diameter / 2; }
-  53:       Circle(radius + thickness) - Circle(radius)
-  54:   }
-  55:   
-  56:   Wheel(radius = 1cm);
+  52:       init(diameter: Length) {
+  53:           radius = diameter / 2;
+  54:       }
+  55:       Circle(radius + thickness) - Circle(radius)
+  56:   }
+  57:   
+  58:   Wheel(radius = 1cm);
 
 -- No Output --
 -- Errors --
-  × error: 53:12: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:53:5]
- 52 │     init( diameter: Length ) { radius = diameter / 2; }
- 53 │     Circle(radius + thickness) - Circle(radius)
+  × error: 55:12: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:55:5]
+ 54 │     }
+ 55 │     Circle(radius + thickness) - Circle(radius)
     ·     ─────────────┬─────────────
     ·                  ╰── Got: Circle( 15mm )
- 54 │ }
+ 56 │ }
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))

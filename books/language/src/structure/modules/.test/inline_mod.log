@@ -9,7 +9,7 @@
 
    9:   mod my_module {
   10:       // e.g. define a constant
-  11:       pub VALUE = 1;
+  11:       pub const VALUE = 1;
   12:   }
 
 -- No Output --

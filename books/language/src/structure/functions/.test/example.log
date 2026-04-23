@@ -8,7 +8,7 @@
 -- Code --
 
   14:   // define function print_error with text as parameter of type String
-  15:   fn print_error( text: String ) {
+  15:   fn print_error(text: String) {
   16:       // code body
   17:       std::print("ERROR: {text}");
   18:   }

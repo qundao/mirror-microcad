@@ -2,53 +2,53 @@
 -- Test --
         Test name: const_assignment_shadow
   Expected result: fail
-      Source file: ../books/language/src/assignments/const.md:80
+      Source file: ../books/language/src/assignments/const.md:79
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  80:   mod module {
-  81:       const A = 5;
-  82:       const A = 1; // error: ambiguous identifier in this module
-  83:   
-  84:       pub mod another_module {
-  85:           const A = 5; // ok
-  86:   
-  87:           pub fn a() -> Integer { A }
-  88:       }
-  89:   
-  90:       pub sketch Sketch() {
-  91:           const A = 5;
-  92:           const A = 5; // error: ambiguous identifier in this workbench
-  93:       }
-  94:   }
-  95:   
-  96:   std::debug::assert_eq([module::another_module::a(), 5]);
-  97:   module::Sketch();
+  79:   mod module {
+  80:       const A = 5;
+  81:       const A = 1; // error: ambiguous identifier in this module
+  82:   
+  83:       pub mod another_module {
+  84:           const A = 5; // ok
+  85:   
+  86:           pub fn a() -> Integer { A }
+  87:       }
+  88:   
+  89:       pub sketch Sketch() {
+  90:           const A = 5;
+  91:           const A = 5; // error: ambiguous identifier in this workbench
+  92:       }
+  93:   }
+  94:   
+  95:   std::debug::assert_eq([module::another_module::a(), 5]);
+  96:   module::Sketch();
 
 -- No Output --
 -- Errors --
-  × error: 82:11: Ambiguous identifier 'A'
-    ╭─[../books/language/src/assignments/const.md:81:11]
- 80 │ mod module {
- 81 │     const A = 5;
+  × error: 81:11: Ambiguous identifier 'A'
+    ╭─[../books/language/src/assignments/const.md:80:11]
+ 79 │ mod module {
+ 80 │     const A = 5;
     ·           ┬
     ·           ╰── First usage of 'A'
- 82 │     const A = 1; // error: ambiguous identifier in this module
+ 81 │     const A = 1; // error: ambiguous identifier in this module
     ·           ┬
     ·           ╰── Ambiguous usage of 'A'
- 83 │ 
+ 82 │ 
     ╰────
-  × error: 92:15: Ambiguous identifier 'A'
-    ╭─[../books/language/src/assignments/const.md:91:15]
- 90 │     pub sketch Sketch() {
- 91 │         const A = 5;
+  × error: 91:15: Ambiguous identifier 'A'
+    ╭─[../books/language/src/assignments/const.md:90:15]
+ 89 │     pub sketch Sketch() {
+ 90 │         const A = 5;
     ·               ┬
     ·               ╰── First usage of 'A'
- 92 │         const A = 5; // error: ambiguous identifier in this workbench
+ 91 │         const A = 5; // error: ambiguous identifier in this workbench
     ·               ┬
     ·               ╰── Ambiguous usage of 'A'
- 93 │     }
+ 92 │     }
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

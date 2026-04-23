@@ -23,7 +23,7 @@
   88:       outer - Circle(radius = 3mm)
   89:   }
   90:   
-  91:   MySketch([-1,0,1]).align(X, 5mm);
+  91:   MySketch([-1, 0, 1]).align(X, 5mm);
 
 -- No Output --
 -- No Errors --

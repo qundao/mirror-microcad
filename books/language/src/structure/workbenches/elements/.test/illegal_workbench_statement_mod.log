@@ -2,26 +2,26 @@
 -- Test --
         Test name: illegal_workbench_statement_mod
   Expected result: fail
-      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:54
+      Source file: ../books/language/src/structure/workbenches/elements/building_code.md:56
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
-  54:   sketch Wheel(radius: Length) {
-  55:       mod m {}        // error
-  56:   }
+  56:   sketch Wheel(radius: Length) {
+  57:       mod m {} // error
+  58:   }
 
 -- No Output --
 -- Errors --
-  × error: 55:9: Module is not allowed within workbench
-    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:55:5]
- 54 │ sketch Wheel(radius: Length) {
+  × error: 57:9: Module is not allowed within workbench
+    ╭─[../books/language/src/structure/workbenches/elements/building_code.md:57:5]
+ 56 │ sketch Wheel(radius: Length) {
     · ───┬──
     ·    ╰── Within this workbench
- 55 │     mod m {}        // error
+ 57 │     mod m {} // error
     ·     ─┬─
     ·      ╰── This module is not allowed
- 56 │ }
+ 58 │ }
     ╰────
   help: module is only allowed within source file or module
 Evaluation aborted because of prior resolve errors!

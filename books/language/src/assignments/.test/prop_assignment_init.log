@@ -9,11 +9,13 @@
 
   45:   sketch MySketch(radius: Length) {
   46:       prop diameter = radius * 2; // error: not in initialization code
-  47:       
-  48:       init() { radius = 1; }
-  49:       std::geo2d::Circle(radius);
-  50:   }
-  51:   std::debug::assert_eq([ MySketch(5cm).diameter, 10cm ])
+  47:   
+  48:       init() {
+  49:           radius = 1;
+  50:       }
+  51:       std::geo2d::Circle(radius);
+  52:   }
+  53:   std::debug::assert_eq([MySketch(5cm).diameter, 10cm])
 
 -- No Output --
 -- Errors --
@@ -25,11 +27,11 @@
  46 │     prop diameter = radius * 2; // error: not in initialization code
     ·     ─────────────┬────────────
     ·                  ╰── This statement is not allowed
- 47 │     
- 48 │     init() { radius = 1; }
+ 47 │ 
+ 48 │     init() {
     ·     ──┬─
     ·       ╰── Before this initializer
- 49 │     std::geo2d::Circle(radius);
+ 49 │         radius = 1;
     ╰────
 Evaluation aborted because of prior resolve errors!
 -- Test Result --

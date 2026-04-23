@@ -16,24 +16,28 @@
   30:   
   31:           // define some public calculation function
   32:           pub fn abs(x: Scalar) -> Scalar {
-  33:               if x < 0 { return -x; } else { return x; }
-  34:           }
-  35:       }
-  36:   }
-  37:   
-  38:   // use the function and the constant
-  39:   x = my::math::abs(-1.0) * my::math::PI;
+  33:               if x < 0 {
+  34:                   return -x;
+  35:               } else {
+  36:                   return x;
+  37:               }
+  38:           }
+  39:       }
+  40:   }
+  41:   
+  42:   // use the function and the constant
+  43:   x = my::math::abs(-1.0) * my::math::PI;
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 39:1: Unused local x.
-    ╭─[../books/language/src/structure/modules/README.md:39:1]
- 38 │ // use the function and the constant
- 39 │ x = my::math::abs(-1.0) * my::math::PI;
+  ⚠ warning: 43:1: Unused local x.
+    ╭─[../books/language/src/structure/modules/README.md:43:1]
+ 42 │ // use the function and the constant
+ 43 │ x = my::math::abs(-1.0) * my::math::PI;
     · ┬
     · ╰── Unused local x.
     ╰────
-Unexpected warnings(s) which did occur in line(s): 39
+Unexpected warnings(s) which did occur in line(s): 43
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

@@ -21,7 +21,7 @@
   58:       }
   59:   }
   60:   
-  61:   MySketch([-1,0,2]).align(X, 5mm);
+  61:   MySketch([-1, 0, 2]).align(X, 5mm);
 
 -- No Output --
 -- No Errors --

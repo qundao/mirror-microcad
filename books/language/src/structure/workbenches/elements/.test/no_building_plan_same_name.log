@@ -10,9 +10,9 @@
  113:   sketch Wheel(radius: Length, thickness: Length) {
  114:       use std::geo2d::Circle;
  115:   
- 116:       init( radius: Length ) {
+ 116:       init(radius: Length) {
  117:           // radius property has already been set by building plan
- 118:           radius = radius * 2;  // error: it cannot be set a second time
+ 118:           radius = radius * 2; // error: it cannot be set a second time
  119:           thickness = 5mm;
  120:       }
  121:       Circle(radius = radius + thickness) - Circle(radius)
@@ -25,7 +25,7 @@
   × error: 118:9: Value radius already in defined: 10mm
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:118:9]
  117 │         // radius property has already been set by building plan
- 118 │         radius = radius * 2;  // error: it cannot be set a second time
+ 118 │         radius = radius * 2; // error: it cannot be set a second time
      ·         ─────────┬─────────┬
      ·                  │         ╰── Previously defined here
      ·                  ╰── radius is already defined
@@ -35,7 +35,7 @@
   × error: 118:9: Value radius already in defined: 10mm
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:118:9]
  117 │         // radius property has already been set by building plan
- 118 │         radius = radius * 2;  // error: it cannot be set a second time
+ 118 │         radius = radius * 2; // error: it cannot be set a second time
      ·         ───┬──┬
      ·            │  ╰── Previously defined here
      ·            ╰── radius is already defined
