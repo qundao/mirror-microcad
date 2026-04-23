@@ -17,132 +17,130 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..10,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Tuple(
-                            TupleExpression {
-                                span: 0..10,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                values: [
-                                    TupleItem {
-                                        span: 1..2,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        name: None,
-                                        value: Literal(
-                                            Literal {
-                                                span: 1..2,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 1..2,
-                                                        value: 1,
-                                                        raw: "1",
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                    TupleItem {
-                                        span: 4..9,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        name: None,
-                                        value: BinaryOperation(
-                                            BinaryOperation {
-                                                span: 4..9,
-                                                lhs: Literal(
-                                                    Literal {
-                                                        span: 4..6,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [
-                                                                    Whitespace(
-                                                                        " ",
-                                                                    ),
-                                                                ],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 4..5,
-                                                                value: 1,
-                                                                raw: "1",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                                operation: BinaryOperator {
-                                                    span: 6..7,
-                                                    operation: Add,
-                                                },
-                                                rhs: Literal(
-                                                    Literal {
-                                                        span: 8..9,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 8..9,
-                                                                value: 1,
-                                                                raw: "1",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ],
-                            },
+                ExpressionStatement {
+                    span: 0..10,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: Tuple(
+                        TupleExpression {
+                            span: 0..10,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            values: [
+                                TupleItem {
+                                    span: 1..2,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    name: None,
+                                    value: Literal(
+                                        Literal {
+                                            span: 1..2,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 1..2,
+                                                    value: 1,
+                                                    raw: "1",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                                TupleItem {
+                                    span: 4..9,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    name: None,
+                                    value: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 4..9,
+                                            lhs: Literal(
+                                                Literal {
+                                                    span: 4..6,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 4..5,
+                                                            value: 1,
+                                                            raw: "1",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                            operation: BinaryOperator {
+                                                span: 6..7,
+                                                operation: Add,
+                                            },
+                                            rhs: Literal(
+                                                Literal {
+                                                    span: 8..9,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 8..9,
+                                                            value: 1,
+                                                            raw: "1",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

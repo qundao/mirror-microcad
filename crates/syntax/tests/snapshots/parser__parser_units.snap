@@ -17,303 +17,301 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..44,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: BinaryOperation(
-                            BinaryOperation {
-                                span: 0..44,
-                                lhs: BinaryOperation(
-                                    BinaryOperation {
-                                        span: 0..40,
-                                        lhs: BinaryOperation(
-                                            BinaryOperation {
-                                                span: 0..35,
-                                                lhs: BinaryOperation(
-                                                    BinaryOperation {
-                                                        span: 0..21,
-                                                        lhs: BinaryOperation(
-                                                            BinaryOperation {
-                                                                span: 0..8,
-                                                                lhs: Literal(
-                                                                    Literal {
-                                                                        span: 0..3,
-                                                                        extras: ItemExtras {
-                                                                            leading: LeadingExtras(
-                                                                                [],
-                                                                            ),
-                                                                            trailing: TrailingExtras(
-                                                                                [
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ],
-                                                                            ),
-                                                                        },
-                                                                        literal: Quantity(
-                                                                            QuantityLiteral {
-                                                                                span: 0..3,
-                                                                                value: 0.0,
-                                                                                raw: "0",
-                                                                                unit: Unit {
-                                                                                    span: 1..2,
-                                                                                    name: "\"",
-                                                                                },
-                                                                            },
-                                                                        ),
-                                                                    },
-                                                                ),
-                                                                operation: BinaryOperator {
-                                                                    span: 3..4,
-                                                                    operation: Add,
-                                                                },
-                                                                rhs: Literal(
-                                                                    Literal {
-                                                                        span: 5..8,
-                                                                        extras: ItemExtras {
-                                                                            leading: LeadingExtras(
-                                                                                [],
-                                                                            ),
-                                                                            trailing: TrailingExtras(
-                                                                                [
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ],
-                                                                            ),
-                                                                        },
-                                                                        literal: Quantity(
-                                                                            QuantityLiteral {
-                                                                                span: 5..8,
-                                                                                value: 1.0,
-                                                                                raw: "1",
-                                                                                unit: Unit {
-                                                                                    span: 6..7,
-                                                                                    name: "%",
-                                                                                },
-                                                                            },
-                                                                        ),
-                                                                    },
-                                                                ),
-                                                            },
-                                                        ),
-                                                        operation: BinaryOperator {
-                                                            span: 8..9,
-                                                            operation: Add,
-                                                        },
-                                                        rhs: BinaryOperation(
-                                                            BinaryOperation {
-                                                                span: 10..21,
-                                                                lhs: Literal(
-                                                                    Literal {
-                                                                        span: 10..14,
-                                                                        extras: ItemExtras {
-                                                                            leading: LeadingExtras(
-                                                                                [],
-                                                                            ),
-                                                                            trailing: TrailingExtras(
-                                                                                [
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ],
-                                                                            ),
-                                                                        },
-                                                                        literal: Quantity(
-                                                                            QuantityLiteral {
-                                                                                span: 10..14,
-                                                                                value: 2.0,
-                                                                                raw: "2",
-                                                                                unit: Unit {
-                                                                                    span: 11..13,
-                                                                                    name: "mm",
-                                                                                },
-                                                                            },
-                                                                        ),
-                                                                    },
-                                                                ),
-                                                                operation: BinaryOperator {
-                                                                    span: 14..15,
-                                                                    operation: Divide,
-                                                                },
-                                                                rhs: Literal(
-                                                                    Literal {
-                                                                        span: 16..21,
-                                                                        extras: ItemExtras {
-                                                                            leading: LeadingExtras(
-                                                                                [],
-                                                                            ),
-                                                                            trailing: TrailingExtras(
-                                                                                [
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ],
-                                                                            ),
-                                                                        },
-                                                                        literal: Quantity(
-                                                                            QuantityLiteral {
-                                                                                span: 16..21,
-                                                                                value: 3.0,
-                                                                                raw: "3",
-                                                                                unit: Unit {
-                                                                                    span: 17..20,
-                                                                                    name: "mm2",
-                                                                                },
-                                                                            },
-                                                                        ),
-                                                                    },
-                                                                ),
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                                operation: BinaryOperator {
-                                                    span: 21..22,
-                                                    operation: Subtract,
-                                                },
-                                                rhs: BinaryOperation(
-                                                    BinaryOperation {
-                                                        span: 23..35,
-                                                        lhs: Literal(
-                                                            Literal {
-                                                                span: 23..29,
-                                                                extras: ItemExtras {
-                                                                    leading: LeadingExtras(
-                                                                        [],
-                                                                    ),
-                                                                    trailing: TrailingExtras(
-                                                                        [
-                                                                            Whitespace(
-                                                                                " ",
-                                                                            ),
-                                                                        ],
-                                                                    ),
-                                                                },
-                                                                literal: Quantity(
-                                                                    QuantityLiteral {
-                                                                        span: 23..29,
-                                                                        value: 4.0,
-                                                                        raw: "4",
-                                                                        unit: Unit {
-                                                                            span: 24..28,
-                                                                            name: "mm³",
-                                                                        },
-                                                                    },
-                                                                ),
-                                                            },
-                                                        ),
-                                                        operation: BinaryOperator {
-                                                            span: 29..30,
-                                                            operation: Multiply,
-                                                        },
-                                                        rhs: Literal(
-                                                            Literal {
-                                                                span: 31..35,
-                                                                extras: ItemExtras {
-                                                                    leading: LeadingExtras(
-                                                                        [],
-                                                                    ),
-                                                                    trailing: TrailingExtras(
-                                                                        [
-                                                                            Whitespace(
-                                                                                " ",
-                                                                            ),
-                                                                        ],
-                                                                    ),
-                                                                },
-                                                                literal: Quantity(
-                                                                    QuantityLiteral {
-                                                                        span: 31..35,
-                                                                        value: 1.0,
-                                                                        raw: "1",
-                                                                        unit: Unit {
-                                                                            span: 32..34,
-                                                                            name: "°",
-                                                                        },
-                                                                    },
-                                                                ),
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                        operation: BinaryOperator {
-                                            span: 35..36,
-                                            operation: Add,
-                                        },
-                                        rhs: Literal(
-                                            Literal {
-                                                span: 37..40,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [
-                                                            Whitespace(
-                                                                " ",
-                                                            ),
-                                                        ],
-                                                    ),
-                                                },
-                                                literal: Quantity(
-                                                    QuantityLiteral {
-                                                        span: 37..40,
-                                                        value: 1.0,
-                                                        raw: "1",
-                                                        unit: Unit {
-                                                            span: 38..39,
-                                                            name: "\"",
-                                                        },
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ),
-                                operation: BinaryOperator {
-                                    span: 40..41,
-                                    operation: Subtract,
-                                },
-                                rhs: Literal(
-                                    Literal {
-                                        span: 42..44,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        literal: Quantity(
-                                            QuantityLiteral {
-                                                span: 42..44,
-                                                value: 2.0,
-                                                raw: "2",
-                                                unit: Unit {
-                                                    span: 43..44,
-                                                    name: "'",
-                                                },
-                                            },
-                                        ),
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..44,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..44,
+                            lhs: BinaryOperation(
+                                BinaryOperation {
+                                    span: 0..40,
+                                    lhs: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 0..35,
+                                            lhs: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 0..21,
+                                                    lhs: BinaryOperation(
+                                                        BinaryOperation {
+                                                            span: 0..8,
+                                                            lhs: Literal(
+                                                                Literal {
+                                                                    span: 0..3,
+                                                                    extras: ItemExtras {
+                                                                        leading: LeadingExtras(
+                                                                            [],
+                                                                        ),
+                                                                        trailing: TrailingExtras(
+                                                                            [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    },
+                                                                    literal: Quantity(
+                                                                        QuantityLiteral {
+                                                                            span: 0..3,
+                                                                            value: 0.0,
+                                                                            raw: "0",
+                                                                            unit: Unit {
+                                                                                span: 1..2,
+                                                                                name: "\"",
+                                                                            },
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                            operation: BinaryOperator {
+                                                                span: 3..4,
+                                                                operation: Add,
+                                                            },
+                                                            rhs: Literal(
+                                                                Literal {
+                                                                    span: 5..8,
+                                                                    extras: ItemExtras {
+                                                                        leading: LeadingExtras(
+                                                                            [],
+                                                                        ),
+                                                                        trailing: TrailingExtras(
+                                                                            [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    },
+                                                                    literal: Quantity(
+                                                                        QuantityLiteral {
+                                                                            span: 5..8,
+                                                                            value: 1.0,
+                                                                            raw: "1",
+                                                                            unit: Unit {
+                                                                                span: 6..7,
+                                                                                name: "%",
+                                                                            },
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                    operation: BinaryOperator {
+                                                        span: 8..9,
+                                                        operation: Add,
+                                                    },
+                                                    rhs: BinaryOperation(
+                                                        BinaryOperation {
+                                                            span: 10..21,
+                                                            lhs: Literal(
+                                                                Literal {
+                                                                    span: 10..14,
+                                                                    extras: ItemExtras {
+                                                                        leading: LeadingExtras(
+                                                                            [],
+                                                                        ),
+                                                                        trailing: TrailingExtras(
+                                                                            [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    },
+                                                                    literal: Quantity(
+                                                                        QuantityLiteral {
+                                                                            span: 10..14,
+                                                                            value: 2.0,
+                                                                            raw: "2",
+                                                                            unit: Unit {
+                                                                                span: 11..13,
+                                                                                name: "mm",
+                                                                            },
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                            operation: BinaryOperator {
+                                                                span: 14..15,
+                                                                operation: Divide,
+                                                            },
+                                                            rhs: Literal(
+                                                                Literal {
+                                                                    span: 16..21,
+                                                                    extras: ItemExtras {
+                                                                        leading: LeadingExtras(
+                                                                            [],
+                                                                        ),
+                                                                        trailing: TrailingExtras(
+                                                                            [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    },
+                                                                    literal: Quantity(
+                                                                        QuantityLiteral {
+                                                                            span: 16..21,
+                                                                            value: 3.0,
+                                                                            raw: "3",
+                                                                            unit: Unit {
+                                                                                span: 17..20,
+                                                                                name: "mm2",
+                                                                            },
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                            operation: BinaryOperator {
+                                                span: 21..22,
+                                                operation: Subtract,
+                                            },
+                                            rhs: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 23..35,
+                                                    lhs: Literal(
+                                                        Literal {
+                                                            span: 23..29,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            },
+                                                            literal: Quantity(
+                                                                QuantityLiteral {
+                                                                    span: 23..29,
+                                                                    value: 4.0,
+                                                                    raw: "4",
+                                                                    unit: Unit {
+                                                                        span: 24..28,
+                                                                        name: "mm³",
+                                                                    },
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                    operation: BinaryOperator {
+                                                        span: 29..30,
+                                                        operation: Multiply,
+                                                    },
+                                                    rhs: Literal(
+                                                        Literal {
+                                                            span: 31..35,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            },
+                                                            literal: Quantity(
+                                                                QuantityLiteral {
+                                                                    span: 31..35,
+                                                                    value: 1.0,
+                                                                    raw: "1",
+                                                                    unit: Unit {
+                                                                        span: 32..34,
+                                                                        name: "°",
+                                                                    },
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    operation: BinaryOperator {
+                                        span: 35..36,
+                                        operation: Add,
+                                    },
+                                    rhs: Literal(
+                                        Literal {
+                                            span: 37..40,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ],
+                                                ),
+                                            },
+                                            literal: Quantity(
+                                                QuantityLiteral {
+                                                    span: 37..40,
+                                                    value: 1.0,
+                                                    raw: "1",
+                                                    unit: Unit {
+                                                        span: 38..39,
+                                                        name: "\"",
+                                                    },
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            operation: BinaryOperator {
+                                span: 40..41,
+                                operation: Subtract,
+                            },
+                            rhs: Literal(
+                                Literal {
+                                    span: 42..44,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Quantity(
+                                        QuantityLiteral {
+                                            span: 42..44,
+                                            value: 2.0,
+                                            raw: "2",
+                                            unit: Unit {
+                                                span: 43..44,
+                                                name: "'",
+                                            },
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

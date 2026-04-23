@@ -17,39 +17,37 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..35,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 0..35,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                literal: String(
-                                    StringLiteral {
-                                        span: 0..35,
-                                        content: "string { with } escaped bracket",
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..35,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 0..35,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            literal: String(
+                                StringLiteral {
+                                    span: 0..35,
+                                    content: "string { with } escaped bracket",
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

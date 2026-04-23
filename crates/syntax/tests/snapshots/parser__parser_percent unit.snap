@@ -17,44 +17,42 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..2,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 0..2,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                literal: Quantity(
-                                    QuantityLiteral {
-                                        span: 0..2,
-                                        value: 1.0,
-                                        raw: "1",
-                                        unit: Unit {
-                                            span: 1..2,
-                                            name: "%",
-                                        },
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..2,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 0..2,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            literal: Quantity(
+                                QuantityLiteral {
+                                    span: 0..2,
+                                    value: 1.0,
+                                    raw: "1",
+                                    unit: Unit {
+                                        span: 1..2,
+                                        name: "%",
+                                    },
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

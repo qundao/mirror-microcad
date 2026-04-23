@@ -233,40 +233,38 @@ Ok(
                 ),
             ],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 33..36,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 33..36,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                literal: Float(
-                                    FloatLiteral {
-                                        span: 33..36,
-                                        value: 1000.0,
-                                        raw: "1e3",
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 33..36,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 33..36,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            literal: Float(
+                                FloatLiteral {
+                                    span: 33..36,
+                                    value: 1000.0,
+                                    raw: "1e3",
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

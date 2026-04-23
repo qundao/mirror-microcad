@@ -137,71 +137,69 @@ Ok(
                                     },
                                     statements: [],
                                     tail: Some(
-                                        Expression(
-                                            ExpressionStatement {
-                                                span: 28..33,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                attributes: [],
-                                                expression: BinaryOperation(
-                                                    BinaryOperation {
-                                                        span: 28..33,
-                                                        lhs: QualifiedName(
-                                                            QualifiedName {
-                                                                span: 28..29,
-                                                                extras: ItemExtras {
-                                                                    leading: LeadingExtras(
-                                                                        [],
-                                                                    ),
-                                                                    trailing: TrailingExtras(
-                                                                        [
-                                                                            Whitespace(
-                                                                                " ",
-                                                                            ),
-                                                                        ],
-                                                                    ),
-                                                                },
-                                                                parts: [
-                                                                    Identifier {
-                                                                        span: 28..29,
-                                                                        name: "b",
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ),
-                                                        operation: BinaryOperator {
-                                                            span: 30..31,
-                                                            operation: Divide,
-                                                        },
-                                                        rhs: QualifiedName(
-                                                            QualifiedName {
-                                                                span: 32..33,
-                                                                extras: ItemExtras {
-                                                                    leading: LeadingExtras(
-                                                                        [],
-                                                                    ),
-                                                                    trailing: TrailingExtras(
-                                                                        [],
-                                                                    ),
-                                                                },
-                                                                parts: [
-                                                                    Identifier {
-                                                                        span: 32..33,
-                                                                        name: "a",
-                                                                    },
-                                                                ],
-                                                            },
-                                                        ),
-                                                    },
+                                        ExpressionStatement {
+                                            span: 28..33,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
                                                 ),
                                             },
-                                        ),
+                                            attributes: [],
+                                            expression: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 28..33,
+                                                    lhs: QualifiedName(
+                                                        QualifiedName {
+                                                            span: 28..29,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            },
+                                                            parts: [
+                                                                Identifier {
+                                                                    span: 28..29,
+                                                                    name: "b",
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                    operation: BinaryOperator {
+                                                        span: 30..31,
+                                                        operation: Divide,
+                                                    },
+                                                    rhs: QualifiedName(
+                                                        QualifiedName {
+                                                            span: 32..33,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [],
+                                                                ),
+                                                            },
+                                                            parts: [
+                                                                Identifier {
+                                                                    span: 32..33,
+                                                                    name: "a",
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
                                     ),
                                 },
                             },

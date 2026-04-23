@@ -124,7 +124,6 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                     expression,
                 },
             )
-            .map(Statement::Expression)
             .map(Box::new)
             .or_not()
             .boxed();
@@ -807,7 +806,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             ))
             .boxed();
 
-        let module = doc_block
+        let inline_module = doc_block
             .clone()
             .then(attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
@@ -820,11 +819,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 )),
             )
             .then_maybe_whitespace()
-            .then(
-                body.clone()
-                    .map(Some)
-                    .or(just(Token::SigilSemiColon).map(|_| None)),
-            )
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |((((((doc, attributes), visibility), keyword_span), name), body), extras), e| {
@@ -836,7 +831,36 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                         attributes,
                         visibility,
                         name,
-                        body,
+                        body: Some(body),
+                    })
+                },
+            )
+            .boxed();
+
+        let file_module = doc_block
+            .clone()
+            .then(attribute_parser.clone())
+            .then(visibility.then_whitespace().or_not())
+            .then(just(Token::KeywordMod).map_with(|_, e| e.span()))
+            .then_whitespace()
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[Token::SigilOpenCurlyBracket])
+                        .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
+            .with_extras()
+            .map_with(
+                |(((((doc, attributes), visibility), keyword_span), name), extras), e| {
+                    Statement::Module(ModuleDefinition {
+                        span: e.span(),
+                        keyword_span,
+                        extras,
+                        doc,
+                        attributes,
+                        visibility,
+                        name,
+                        body: None,
                     })
                 },
             )
@@ -1124,23 +1148,11 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .or(use_statement)
             .or(const_assignment)
             .or(pub_assignment)
+            .or(file_module)
             .or(property_assignment)
             .or(local_assignment)
             .or(expression)
-            .boxed();
-
-        let without_semi = function
-            .or(inner_doc_comment)
-            .or(init)
-            .or(workbench)
-            .or(module)
-            .or(if_statement)
-            .or(body_statement)
-            .boxed();
-
-        without_semi
-            .or(reserved_keyword_statement)
-            .or(with_semi.then_ignore(
+            .then_ignore(
                 just(Token::SigilSemiColon)
                     .labelled("semicolon")
                     .ignored()
@@ -1149,7 +1161,21 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                             .repeated()
                             .then_ignore(just(Token::SigilSemiColon)),
                     )),
-            ))
+            )
+            .boxed();
+
+        let without_semi = function
+            .or(inner_doc_comment)
+            .or(init)
+            .or(workbench)
+            .or(inline_module)
+            .or(if_statement)
+            .or(body_statement)
+            .boxed();
+
+        with_semi
+            .or(reserved_keyword_statement)
+            .or(without_semi)
             .boxed()
             .labelled("statement")
     });

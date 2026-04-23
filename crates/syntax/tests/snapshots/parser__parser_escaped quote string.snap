@@ -17,39 +17,37 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..36,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Literal(
-                            Literal {
-                                span: 0..36,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                literal: String(
-                                    StringLiteral {
-                                        span: 0..36,
-                                        content: "string \" with \" escaped \\ quotes",
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..36,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 0..36,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            literal: String(
+                                StringLiteral {
+                                    span: 0..36,
+                                    content: "string \" with \" escaped \\ quotes",
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

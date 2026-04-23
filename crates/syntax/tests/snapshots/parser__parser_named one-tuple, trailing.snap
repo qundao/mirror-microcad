@@ -17,72 +17,70 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..13,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Tuple(
-                            TupleExpression {
-                                span: 0..13,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                values: [
-                                    TupleItem {
-                                        span: 1..11,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        name: Some(
-                                            Identifier {
-                                                span: 1..7,
-                                                name: "length",
-                                            },
-                                        ),
-                                        value: Literal(
-                                            Literal {
-                                                span: 10..11,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 10..11,
-                                                        value: 1,
-                                                        raw: "1",
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ],
-                            },
+                ExpressionStatement {
+                    span: 0..13,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: Tuple(
+                        TupleExpression {
+                            span: 0..13,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            values: [
+                                TupleItem {
+                                    span: 1..11,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    name: Some(
+                                        Identifier {
+                                            span: 1..7,
+                                            name: "length",
+                                        },
+                                    ),
+                                    value: Literal(
+                                        Literal {
+                                            span: 10..11,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 10..11,
+                                                    value: 1,
+                                                    raw: "1",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

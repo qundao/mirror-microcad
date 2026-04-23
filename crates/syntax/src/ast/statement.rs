@@ -352,7 +352,7 @@ pub struct StatementList {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub statements: Vec<(Statement, ast::TrailingExtras)>,
-    pub tail: Option<Box<Statement>>,
+    pub tail: Option<Box<ExpressionStatement>>,
 }
 
 impl ast::Dummy for StatementList {

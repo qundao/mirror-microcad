@@ -17,72 +17,70 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..10,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: BinaryOperation(
-                            BinaryOperation {
-                                span: 0..10,
-                                lhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 0..6,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [
-                                                    Whitespace(
-                                                        " ",
-                                                    ),
-                                                ],
-                                            ),
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 0..6,
-                                                name: "length",
-                                            },
-                                        ],
-                                    },
-                                ),
-                                operation: BinaryOperator {
-                                    span: 7..8,
-                                    operation: Add,
-                                },
-                                rhs: Literal(
-                                    Literal {
-                                        span: 9..10,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        literal: Integer(
-                                            IntegerLiteral {
-                                                span: 9..10,
-                                                value: 1,
-                                                raw: "1",
-                                            },
-                                        ),
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..10,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..10,
+                            lhs: QualifiedName(
+                                QualifiedName {
+                                    span: 0..6,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [
+                                                Whitespace(
+                                                    " ",
+                                                ),
+                                            ],
+                                        ),
+                                    },
+                                    parts: [
+                                        Identifier {
+                                            span: 0..6,
+                                            name: "length",
+                                        },
+                                    ],
+                                },
+                            ),
+                            operation: BinaryOperator {
+                                span: 7..8,
+                                operation: Add,
+                            },
+                            rhs: Literal(
+                                Literal {
+                                    span: 9..10,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 9..10,
+                                            value: 1,
+                                            raw: "1",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

@@ -19,7 +19,7 @@ Ok(
                 (
                     Module(
                         ModuleDefinition {
-                            span: 0..8,
+                            span: 0..7,
                             keyword_span: 0..3,
                             extras: ItemExtras {
                                 leading: LeadingExtras(
