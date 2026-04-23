@@ -203,6 +203,15 @@ use test_case::test_case;
 #[test_case("array comments", r#"[1 /* foo */,2 /* bar */]"#)]
 #[test_case("un-typeable", r#"b = "sad"m3;"#)]
 #[test_case("binary op precedence", "a^2 + b^3")]
+#[test_case("inner attribute", r##"#![export]"##)]
+#[test_case(
+    "single trailing expr",
+    r#"pub part A() {
+        {
+            B(C);
+        }.align(D);
+    }"#
+)]
 fn test_parser(name: &str, input: &str) {
     assert_debug_snapshot!(format!("parser_{name}"), parse(input).map(|doc| doc.ast));
 }

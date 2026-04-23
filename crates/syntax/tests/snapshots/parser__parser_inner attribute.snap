@@ -1,0 +1,50 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input).map(|doc| doc.ast)
+---
+Ok(
+    Source {
+        span: 0..10,
+        statements: StatementList {
+            span: 0..10,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    InnerAttribute(
+                        Attribute {
+                            span: 0..10,
+                            is_inner: true,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            commands: [
+                                Ident(
+                                    Identifier {
+                                        span: 3..9,
+                                        name: "export",
+                                    },
+                                ),
+                            ],
+                        },
+                    ),
+                    TrailingExtras(
+                        [],
+                    ),
+                ),
+            ],
+            tail: None,
+        },
+    },
+)
