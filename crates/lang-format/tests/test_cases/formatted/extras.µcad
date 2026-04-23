@@ -10,3 +10,9 @@ foo
     .b(test)
     .c(test)
     .d(test);
+
+#![E] // F
+
+#[G] // H
+#[I] // J
+sketch K() {}

@@ -74,7 +74,7 @@ impl Node {
         let sep = separator.into();
         let nodes: Node = nodes
             .into_iter()
-            .flat_map(|node| vec![node, sep.clone(), Node::Hardline])
+            .map(|node| node!(node sep.clone() Node::Hardline))
             .collect::<Vec<_>>()
             .into();
         match indent_width {

@@ -206,17 +206,13 @@ impl Format for ast::AttributeCommand {
 
 impl Format for ast::Attribute {
     fn format(&self, f: &FormatConfig) -> Node {
-        let (prefix, suffix) = if self.is_inner {
-            ("#![", ']')
-        } else {
-            ("#[", ']')
-        };
+        let prefix = if self.is_inner { "#![" } else { "#[" };
 
         let nodes: Vec<Node> = self.commands.iter().map(|attr| attr.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 0, f);
 
         node!(f, self.extras =>
-            prefix Node::list(nodes, ',', break_mode) suffix
+            prefix Node::list(nodes, ',', break_mode) ']'
         )
     }
 }
@@ -226,7 +222,17 @@ impl Format for Vec<ast::Attribute> {
         if self.is_empty() {
             Node::Nil
         } else {
-            Node::vlist(self.iter().map(|attr| attr.format(f)), Node::Nil, 0)
+            self.iter()
+                .map(|attr| {
+                    let node = attr.format(f);
+                    if node.contains_hardline() {
+                        node
+                    } else {
+                        node!(node Node::Hardline)
+                    }
+                })
+                .collect::<Vec<_>>()
+                .into()
         }
     }
 }

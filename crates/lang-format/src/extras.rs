@@ -58,7 +58,7 @@ impl Format for ast::TrailingExtras {
                             }
                         })
                         .skip(if prev_newline { 1 } else { 0 })
-                        .take(2)
+                        .take(2) // Two white spaces maximum
                         .collect::<Vec<_>>()
                         .into(),
                     _ => todo!(),

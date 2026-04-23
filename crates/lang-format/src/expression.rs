@@ -43,11 +43,14 @@ impl Format for ast::Body {
                 }
             }
             (true, None) => node!("{}"),
-            _ => node!(
+            _ => {
+                let node = Node::indent(f.indent_width, body.format(f));
+                node!(
                 "{" Node::Hardline
-                    Node::indent(f.indent_width, body.format(f))
-                "}"
-            ),
+                    node.clone()
+                    if node.contains_hardline() { Node::Nil } else { Node::Hardline }
+                "}")
+            }
         }
     }
 }
@@ -266,8 +269,17 @@ impl Format for ast::If {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             "if " self.condition ' ' self.body
-            self.else_body.as_ref().map(|body| node!(f => " else " body))
-            self.next_if.as_ref().map(|next_if| node!(f => " else " next_if))
+            match &self.else_body {
+                Some(else_body) => node!(f => Node::Softline "else " else_body),
+                None => match &self.next_if {
+                    Some(_) => Node::Nil,
+                    None => Node::Hardline
+                }
+            }
+            match &self.next_if {
+                Some(next_if) => node!(f => Node::Softline "else " next_if),
+                None => Node::Nil
+            }
         )
     }
 }
