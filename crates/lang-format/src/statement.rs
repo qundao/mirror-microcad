@@ -56,16 +56,23 @@ impl Format for ast::WorkbenchDefinition {
     }
 }
 
-impl Format for ast::ModuleDefinition {
+impl Format for ast::InlineModule {
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f, self.extras =>
+            self.doc
+            self.attributes
+            self.visibility "mod " self.name ' '
+            self.body
+        )
+    }
+}
+
+impl Format for ast::FileModule {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
             self.attributes
             self.visibility "mod " self.name
-            match &self.body {
-                Some(body) => node!(f => ' ' body),
-                None => node!(';')
-            }
         )
     }
 }
@@ -200,9 +207,9 @@ impl Format for ast::AttributeCommand {
 impl Format for ast::Attribute {
     fn format(&self, f: &FormatConfig) -> Node {
         let (prefix, suffix) = if self.is_inner {
-            ("#![", node!(']' Node::Hardline))
+            ("#![", ']')
         } else {
-            ("#[", node!(']'))
+            ("#[", ']')
         };
 
         let nodes: Vec<Node> = self.commands.iter().map(|attr| attr.format(f)).collect();
@@ -228,7 +235,8 @@ impl Format for ast::Statement {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::Statement::Workbench(workbench_definition) => workbench_definition.format(f),
-            ast::Statement::Module(module_definition) => module_definition.format(f),
+            ast::Statement::InlineModule(inline_module) => inline_module.format(f),
+            ast::Statement::FileModule(file_module) => file_module.format(f),
             ast::Statement::Function(function_definition) => function_definition.format(f),
             ast::Statement::InnerDocComment(comment) => comment.format(f),
             ast::Statement::Use(use_statement) => use_statement.format(f),
