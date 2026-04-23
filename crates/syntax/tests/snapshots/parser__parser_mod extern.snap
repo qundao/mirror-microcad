@@ -17,8 +17,8 @@ Ok(
             },
             statements: [
                 (
-                    Module(
-                        ModuleDefinition {
+                    FileModule(
+                        FileModule {
                             span: 0..7,
                             keyword_span: 0..3,
                             extras: ItemExtras {
@@ -39,7 +39,6 @@ Ok(
                                 span: 4..7,
                                 name: "foo",
                             },
-                            body: None,
                         },
                     ),
                     TrailingExtras(

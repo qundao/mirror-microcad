@@ -17,8 +17,10 @@ pub struct InnerDocComment {
 pub enum Statement {
     /// Workbench statement producing a symbol.
     Workbench(WorkbenchDefinition),
-    /// Module statement producing a symbol.
-    Module(ModuleDefinition),
+    /// Inline Module: `mod foo {}`
+    InlineModule(InlineModule),
+    /// File Module: `mod foo;`.
+    FileModule(FileModule),
     /// Function statement producing a symbol.
     Function(FunctionDefinition),
     /// Use statement producing a symbol.
@@ -43,7 +45,8 @@ impl Statement {
 
         match self {
             Workbench(st) => st.span.clone(),
-            Module(st) => st.span.clone(),
+            InlineModule(st) => st.span.clone(),
+            FileModule(st) => st.span.clone(),
             Function(st) => st.span.clone(),
             Use(st) => st.span.clone(),
             Const(st) => st.span.clone(),
@@ -62,7 +65,7 @@ impl Statement {
     pub fn ends_with_semicolon(&self) -> bool {
         match self {
             Statement::Workbench(_) => false,
-            Statement::Module(_) => false,
+            Statement::InlineModule(_) => false,
             Statement::Function(_) => false,
             Statement::InnerAttribute(_) => false,
             Statement::InnerDocComment(_) => false,
@@ -72,6 +75,7 @@ impl Statement {
             Statement::Use(_) => true,
             Statement::Const(_) => true,
             Statement::Return(_) => true,
+            Statement::FileModule(_) => true,
             Statement::LocalAssignment(_) => true,
             Statement::Property(_) => true,
             Statement::Expression(e) => match &e.expression {
@@ -124,7 +128,7 @@ pub struct WorkbenchDefinition {
 /// A definition of a module
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub struct ModuleDefinition {
+pub struct InlineModule {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
@@ -132,7 +136,20 @@ pub struct ModuleDefinition {
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: ast::Identifier,
-    pub body: Option<ast::Body>,
+    pub body: ast::Body,
+}
+
+/// A definition of a module
+#[derive(Debug, PartialEq)]
+#[allow(missing_docs)]
+pub struct FileModule {
+    pub span: Span,
+    pub keyword_span: Span,
+    pub extras: ast::ItemExtras,
+    pub doc: DocBlock,
+    pub attributes: Vec<Attribute>,
+    pub visibility: Option<Visibility>,
+    pub name: ast::Identifier,
 }
 
 /// A definition of a function

@@ -823,7 +823,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .with_extras()
             .map_with(
                 |((((((doc, attributes), visibility), keyword_span), name), body), extras), e| {
-                    Statement::Module(ModuleDefinition {
+                    Statement::InlineModule(InlineModule {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -831,7 +831,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                         attributes,
                         visibility,
                         name,
-                        body: Some(body),
+                        body,
                     })
                 },
             )
@@ -852,7 +852,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .with_extras()
             .map_with(
                 |(((((doc, attributes), visibility), keyword_span), name), extras), e| {
-                    Statement::Module(ModuleDefinition {
+                    Statement::FileModule(FileModule {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -860,7 +860,6 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                         attributes,
                         visibility,
                         name,
-                        body: None,
                     })
                 },
             )

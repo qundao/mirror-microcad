@@ -17,8 +17,8 @@ Ok(
             },
             statements: [
                 (
-                    Module(
-                        ModuleDefinition {
+                    InlineModule(
+                        InlineModule {
                             span: 0..26,
                             keyword_span: 4..7,
                             extras: ItemExtras {
@@ -41,53 +41,67 @@ Ok(
                                 span: 8..11,
                                 name: "foo",
                             },
-                            body: Some(
-                                Body {
-                                    span: 12..26,
-                                    statements: StatementList {
-                                        span: 13..25,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [
-                                                    Whitespace(
-                                                        " ",
-                                                    ),
-                                                ],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        statements: [
-                                            (
-                                                Function(
-                                                    FunctionDefinition {
-                                                        span: 14..25,
-                                                        keyword_span: 14..16,
+                            body: Body {
+                                span: 12..26,
+                                statements: StatementList {
+                                    span: 13..25,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [
+                                                Whitespace(
+                                                    " ",
+                                                ),
+                                            ],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    statements: [
+                                        (
+                                            Function(
+                                                FunctionDefinition {
+                                                    span: 14..25,
+                                                    keyword_span: 14..16,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    },
+                                                    doc: DocBlock {
+                                                        span: 14..14,
+                                                        lines: [],
+                                                    },
+                                                    attributes: [],
+                                                    visibility: None,
+                                                    name: Identifier {
+                                                        span: 17..20,
+                                                        name: "bar",
+                                                    },
+                                                    parameters: ParameterList {
+                                                        span: 21..21,
                                                         extras: ItemExtras {
                                                             leading: LeadingExtras(
                                                                 [],
                                                             ),
                                                             trailing: TrailingExtras(
-                                                                [
-                                                                    Whitespace(
-                                                                        " ",
-                                                                    ),
-                                                                ],
+                                                                [],
                                                             ),
                                                         },
-                                                        doc: DocBlock {
-                                                            span: 14..14,
-                                                            lines: [],
-                                                        },
-                                                        attributes: [],
-                                                        visibility: None,
-                                                        name: Identifier {
-                                                            span: 17..20,
-                                                            name: "bar",
-                                                        },
-                                                        parameters: ParameterList {
-                                                            span: 21..21,
+                                                        parameters: [],
+                                                    },
+                                                    return_type: None,
+                                                    body: Body {
+                                                        span: 22..24,
+                                                        statements: StatementList {
+                                                            span: 23..23,
                                                             extras: ItemExtras {
                                                                 leading: LeadingExtras(
                                                                     [],
@@ -96,36 +110,20 @@ Ok(
                                                                     [],
                                                                 ),
                                                             },
-                                                            parameters: [],
-                                                        },
-                                                        return_type: None,
-                                                        body: Body {
-                                                            span: 22..24,
-                                                            statements: StatementList {
-                                                                span: 23..23,
-                                                                extras: ItemExtras {
-                                                                    leading: LeadingExtras(
-                                                                        [],
-                                                                    ),
-                                                                    trailing: TrailingExtras(
-                                                                        [],
-                                                                    ),
-                                                                },
-                                                                statements: [],
-                                                                tail: None,
-                                                            },
+                                                            statements: [],
+                                                            tail: None,
                                                         },
                                                     },
-                                                ),
-                                                TrailingExtras(
-                                                    [],
-                                                ),
+                                                },
                                             ),
-                                        ],
-                                        tail: None,
-                                    },
+                                            TrailingExtras(
+                                                [],
+                                            ),
+                                        ),
+                                    ],
+                                    tail: None,
                                 },
-                            ),
+                            },
                         },
                     ),
                     TrailingExtras(
