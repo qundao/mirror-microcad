@@ -31,7 +31,7 @@ impl Format for ast::Body {
 
         match (body.statements.is_empty(), &body.tail) {
             (true, Some(tail)) => {
-                let tail_node = tail.format(f);
+                let tail_node = node!(f, body.extras => tail.format(f));
                 if tail_node.contains_hardline() {
                     node!(
                         "{" Node::Hardline

@@ -266,9 +266,6 @@ impl Node {
             Node::SingleLineComment(s) => {
                 write_extra_pending(f, state)?;
                 write_pending_indent(f, state)?;
-                if state.column as i32 - state.indent_level as i32 > 0 {
-                    write!(f, " ")?; // Leading ws
-                }
                 state.column += s.len();
                 state.indent_pending = true;
                 state.extra_pending = true;
@@ -280,8 +277,7 @@ impl Node {
                 writeln!(f)
             }
             Node::Softline => {
-                write_pending_indent(f, state)?;
-                if state.column as i32 - state.indent_level as i32 > 0 {
+                if state.column as i32 - state.indent_level as i32 > 0 && !state.indent_pending {
                     write!(f, " ") // Leading ws
                 } else {
                     write!(f, "")

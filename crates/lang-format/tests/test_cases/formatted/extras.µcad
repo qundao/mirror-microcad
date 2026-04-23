@@ -16,3 +16,8 @@ foo
 #[G] // H
 #[I] // J
 sketch K() {}
+
+pub fn L(m: Scalar) -> Scalar {
+    // n
+    o(p, 2)
+}

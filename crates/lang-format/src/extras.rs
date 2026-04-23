@@ -24,7 +24,7 @@ impl Format for ast::LeadingExtras {
                     .filter(|&c| c == '\n')
                     .map(|_| if i > 0 { Node::Hardline } else { Node::Nil })
                     .skip(if prev_newline { 1 } else { 0 })
-                    .take(if i < self.0.len() - 1 { 2 } else { 0 })
+                    .take(2)
                     .collect::<Vec<Node>>()
                     .into(),
                 _ => todo!(),
