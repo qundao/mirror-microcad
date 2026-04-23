@@ -7,7 +7,15 @@ use microcad_syntax::ast;
 
 impl Format for ast::BinaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        self.operation.as_str().into()
+        use ast::BinaryOperatorType::*;
+        match &self.operation {
+            GreaterEqual => ">=",
+            LessEqual => "<=",
+            And => "and",
+            Or => "or",
+            op => op.as_str(),
+        }
+        .into()
     }
 }
 
