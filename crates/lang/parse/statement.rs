@@ -148,8 +148,11 @@ impl FromAst for Statement {
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(match node {
-            ast::Statement::Module(module) => Statement::Module(std::rc::Rc::new(
-                ModuleDefinition::from_ast(module, context)?,
+            ast::Statement::InlineModule(module) => Statement::Module(std::rc::Rc::new(
+                ModuleDefinition::from_ast_inline(module, context)?,
+            )),
+            ast::Statement::FileModule(module) => Statement::Module(std::rc::Rc::new(
+                ModuleDefinition::from_ast_file(module, context)?,
             )),
             ast::Statement::Use(statement) => {
                 Statement::Use(UseStatement::from_ast(statement, context)?)
@@ -215,13 +218,17 @@ impl FromAst for StatementList {
     type AstNode = ast::StatementList;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
-        Ok(StatementList(
-            node.statements
-                .iter()
-                .map(|(statement, _)| statement)
-                .chain(node.tail.iter().map(|tail| tail.as_ref()))
-                .map(|statement| Statement::from_ast(statement, context))
-                .collect::<Result<Vec<_>, _>>()?,
-        ))
+        let mut statements = Vec::new();
+        node.statements.iter().try_for_each(|(statement, _)| {
+            Ok(statements.push(Statement::from_ast(statement, context)?))
+        })?;
+
+        if let Some(tail) = &node.tail {
+            statements.push(Statement::Expression(ExpressionStatement::from_ast(
+                &tail, context,
+            )?));
+        }
+
+        Ok(StatementList(statements))
     }
 }
