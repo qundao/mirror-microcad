@@ -27,7 +27,7 @@ pub struct FormatConfig {
 impl Default for FormatConfig {
     fn default() -> Self {
         Self {
-            max_width: 80,
+            max_width: 60,
             indent_width: 4,
         }
     }

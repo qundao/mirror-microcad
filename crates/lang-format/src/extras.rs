@@ -16,7 +16,7 @@ impl Format for ast::LeadingExtras {
             .map(|(i, extra)| match &extra {
                 ast::ItemExtra::Comment(comment) => {
                     let node = comment.format(f);
-                    prev_newline = node.contains_hardline();
+                    prev_newline = node.ends_with_hardline();
                     node
                 }
                 ast::ItemExtra::Whitespace(ws) => ws
@@ -45,7 +45,7 @@ impl Format for ast::TrailingExtras {
                 .map(|extra| match &extra {
                     ast::ItemExtra::Comment(comment) => {
                         let node = comment.format(f);
-                        prev_newline = node.contains_hardline();
+                        prev_newline = node.ends_with_hardline();
                         node
                     }
                     ast::ItemExtra::Whitespace(ws) => ws
