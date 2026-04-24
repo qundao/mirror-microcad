@@ -9,23 +9,22 @@ use std::math::*;
 
 // https://de.wikipedia.org/wiki/Bauhaus-Schachspiel
 
-pub TILE_SIZE = 5.8cm;
+pub const TILE_SIZE = 5.8cm;
 const BASE_SIZE = TILE_SIZE * 70%;
-
 
 pub part Pawn() {
     Cube(BASE_SIZE * 80%)
 }
 
 pub part King() {
-    { 
+    {
         Cube(BASE_SIZE);
         Cube(BASE_SIZE / sqrt(2)).rotate(45°);
     }.align(Z);
 }
 
 pub part Queen() {
-    { 
+    {
         Cube(BASE_SIZE);
         Sphere(diameter = BASE_SIZE / sqrt(2));
     }.align(Z);
@@ -34,7 +33,7 @@ pub part Queen() {
 pub part Bishop() {
     size = BASE_SIZE / 3;
     Rect(size * 90%)
-        .translate(size * 150%, [45,-135]°)
+        .translate(size * 150%, [45, -135]°)
         .hull()
         .mirror(X)
         .union()
@@ -49,12 +48,11 @@ pub part Rook() {
 
 pub part Knight() {
     {
-        height = BASE_SIZE/2;
+        height = BASE_SIZE / 2;
         r = Rect(BASE_SIZE);
         (r - r.translate(x = height, y = height)).extrude(height);
-    }.rotate([0,90]°).align(Z);
+    }.rotate([0, 90]°).align(Z);
 }
-
 
 {
     Rook();
