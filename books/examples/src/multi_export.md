@@ -12,7 +12,7 @@ use std::ops::*;
 std::geo2d::Rect(42mm)
     .rotate(45°);
 
-#[export = "circle.svg"]  // Will be exported to `circle.svg`
+#[export = "circle.svg"] // Will be exported to `circle.svg`
 std::geo2d::Circle(r = 42mm)
     .translate(x = 42mm);
 

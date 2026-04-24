@@ -7,11 +7,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 /// A part called `Lid` with three parameters.
-part Lid(
-    thickness = 1.6mm,
-    inner_diameter = 16.0cm,
-    height = 20.0mm,
-) {
+part Lid(thickness = 1.6mm, inner_diameter = 16.0cm, height = 20.0mm) {
     // Calculate the outer diameter
     outer_diameter = 2.0 * thickness + inner_diameter;
 
@@ -23,12 +19,10 @@ part Lid(
     outer - inner;
 }
 
-
 // `l` is the instance of the lid model
 l = Lid();
 
 l; // Instantiate the lid.
-
 ```
 
 **2D Output**

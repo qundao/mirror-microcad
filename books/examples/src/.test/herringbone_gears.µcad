@@ -6,7 +6,7 @@ use std::ops::*;
 use std::geo2d::*;
 use std::math::*;
 
-part Gear(teeth: Integer)  {
+part Gear(teeth: Integer) {
     gear_profile = InvoluteGearProfile(1.5mm, teeth);
     prop outer_radius = gear_profile.outer_radius;
     prop pitch_radius = gear_profile.pitch_radius;
@@ -39,6 +39,5 @@ gear1.reflect(X);
 gear2
     .rotate(gear2.tooth_angle * 50%)
     .translate(gear1.outer_radius + gear2.pitch_radius, [1..3] * 360° / 3);
-
 
 

@@ -63,4 +63,3 @@ TextPlate("Hello µcad", 10mm)
 
 **3D Output**
     : ![None](.test/text_text_plate-out.stl)
-

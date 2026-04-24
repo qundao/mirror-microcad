@@ -40,7 +40,7 @@ height = 15.8mm;
 {
     std::geo2d::Rect(width, height);
     std::geo2d::Rect(width = width - 2 * thickness, height = height - 2 * thickness);
-}.std::ops::subtract();   // Apply the operation.
+}.std::ops::subtract(); // Apply the operation.
 ```
 
 ![Picture](.test/subtract-out.svg)
