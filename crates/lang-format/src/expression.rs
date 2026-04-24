@@ -41,7 +41,9 @@ impl Format for ast::Body {
                     node!("{ " tail_node " }")
                 }
             }
-            (true, None) => node!("{}"),
+            (true, None) => {
+                node!("{" Node::indent(f.indent_width, node!(f, body.extras => Node::Nil)) "}")
+            }
             _ => {
                 let leading = body.extras.leading.format(f);
                 let node = Node::indent(f.indent_width, body.format(f));

@@ -32,8 +32,8 @@ impl Format for ast::ParameterList {
         let nodes: Vec<Node> = self.parameters.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
-        node!(f, leading_extras_without_newline(&self.extras) =>
-            '(' Node::list(nodes, ',', break_mode) ')'
+        node!(f =>
+            '(' node!(f, leading_extras_without_newline(&self.extras) => Node::list(nodes, ',', break_mode)) ')'
         )
     }
 }

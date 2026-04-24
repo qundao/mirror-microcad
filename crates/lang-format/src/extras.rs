@@ -31,8 +31,7 @@ impl Format for ast::LeadingExtras {
         let node: Node = self
             .0
             .iter()
-            .enumerate()
-            .map(|(i, extra)| match &extra {
+            .map(|extra| match &extra {
                 ast::ItemExtra::Comment(comment) => {
                     let node = comment.format(f);
                     prev_newline = node.ends_with_hardline();
