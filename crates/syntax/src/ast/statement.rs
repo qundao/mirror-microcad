@@ -78,10 +78,10 @@ impl Statement {
             Statement::FileModule(_) => true,
             Statement::LocalAssignment(_) => true,
             Statement::Property(_) => true,
-            Statement::Expression(e) => match &e.expression {
-                ast::Expression::Body(_) | ast::Expression::If(_) => false,
-                _ => true,
-            },
+            Statement::Expression(e) => !matches!(
+                &e.expression,
+                ast::Expression::Body(_) | ast::Expression::If(_)
+            ),
         }
     }
 }

@@ -344,7 +344,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
         .boxed();
 
         single_value
-            .then(unit.clone().or_not())
+            .then(unit.or_not())
             .with_extras()
             .try_map_with(|((literal, ty), extras), e| {
                 let literal = match (literal, ty) {
@@ -1367,7 +1367,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.clone().or_not())
+            .then(unit.or_not())
             .map_with(|(((start, end), extras), unit), e| {
                 Expression::ArrayRange(ArrayRangeExpression {
                     span: e.span(),
@@ -1390,7 +1390,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.clone().or_not())
+            .then(unit.or_not())
             .map_with(|((items, extras), unit), e| {
                 Expression::ArrayList(ArrayListExpression {
                     span: e.span(),
