@@ -21,3 +21,7 @@ pub fn L(m: Scalar) -> Scalar {
     // n
     o(p, 2)
 }
+
+fn p(q: Length) { // r
+    s; // t
+}

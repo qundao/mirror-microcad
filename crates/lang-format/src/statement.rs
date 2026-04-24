@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{BreakMode, Format, FormatConfig, Node, node};
+use crate::{BreakMode, Format, FormatConfig, Node, extras::leading_extras_without_newline, node};
 
 use microcad_syntax::ast;
 
@@ -16,7 +16,7 @@ impl Format for Option<ast::Visibility> {
 
 impl Format for ast::Parameter {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras =>
+        node!(f, leading_extras_without_newline(&self.extras) =>
             match (&self.ty, &self.default) {
                 (None, None) => self.name.format(f),
                 (None, Some(def)) => node!(f => self.name " = " def),
@@ -32,7 +32,7 @@ impl Format for ast::ParameterList {
         let nodes: Vec<Node> = self.parameters.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
-        node!(f, self.extras =>
+        node!(f, leading_extras_without_newline(&self.extras) =>
             '(' Node::list(nodes, ',', break_mode) ')'
         )
     }

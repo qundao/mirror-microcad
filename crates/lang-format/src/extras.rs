@@ -5,6 +5,25 @@ use microcad_syntax::ast;
 
 use crate::{Format, FormatConfig, Node, node};
 
+pub(crate) fn leading_extras_without_newline(extras: &ast::ItemExtras) -> ast::ItemExtras {
+    let mut leading = extras.leading.clone();
+
+    if let Some(first_item) = leading.0.first_mut() {
+        if let ast::ItemExtra::Whitespace(ws) = first_item {
+            // Find the index of the first newline
+            if let Some(pos) = ws.find('\n') {
+                // Remove only that specific character
+                ws.remove(pos);
+            }
+        }
+    }
+
+    ast::ItemExtras {
+        leading,
+        trailing: extras.trailing.clone(),
+    }
+}
+
 impl Format for ast::LeadingExtras {
     fn format(&self, f: &FormatConfig) -> Node {
         let mut prev_newline = false;
@@ -22,7 +41,7 @@ impl Format for ast::LeadingExtras {
                 ast::ItemExtra::Whitespace(ws) => ws
                     .chars()
                     .filter(|&c| c == '\n')
-                    .map(|_| if i > 0 { Node::Hardline } else { Node::Nil })
+                    .map(|_| Node::Hardline)
                     .skip(if prev_newline { 1 } else { 0 })
                     .take(2)
                     .collect::<Vec<Node>>()
@@ -78,28 +97,4 @@ pub(crate) fn with_extras(
         node.into()
         extras.trailing
     )
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::{Format, FormatConfig};
-    use microcad_syntax::ast;
-
-    #[test]
-    fn leading_extras() {
-        //
-        // // A
-        //
-        let extras = ast::LeadingExtras(vec![
-            ast::ItemExtra::Whitespace("\n".into()),
-            ast::ItemExtra::Comment(ast::Comment {
-                span: 0..0,
-                inner: ast::CommentInner::SingleLine("// A".into()),
-            }),
-            ast::ItemExtra::Whitespace("\n".into()),
-        ]);
-
-        let node = extras.format(&FormatConfig::default());
-        println!("{:#?}", node)
-    }
 }

@@ -140,6 +140,16 @@ impl Node {
         }
     }
 
+    pub fn starts_with_hardline(&self) -> bool {
+        match &self {
+            Node::Nil | Node::Softline => false,
+            Node::Text(compact_string) => compact_string.starts_with("\n"),
+            Node::Hardline | Node::SingleLineComment(_) => true,
+            Node::Indent { width: _, node } => node.starts_with_hardline(),
+            Node::Group(group) => group.iter().any(|node| node.starts_with_hardline()),
+        }
+    }
+
     /// Compact nodes: Remove Nil nodes and concatenate adjacent Text ndoes
     pub fn compact(nodes: Vec<Node>) -> Self {
         // 1. Filter out Nil and

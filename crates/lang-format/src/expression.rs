@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{BreakMode, Format, FormatConfig, Node, node};
+use crate::{BreakMode, Format, FormatConfig, Node, extras::leading_extras_without_newline, node};
 
 use microcad_syntax::ast;
 
@@ -34,8 +34,7 @@ impl Format for ast::Body {
                 let tail_node = node!(f, body.extras => tail.format(f));
                 if tail_node.contains_hardline() {
                     node!(
-                        "{" Node::Hardline
-                            Node::indent(f.indent_width, tail_node)
+                        "{" Node::indent(f.indent_width, tail_node)
                         "}"
                     )
                 } else {
@@ -44,11 +43,12 @@ impl Format for ast::Body {
             }
             (true, None) => node!("{}"),
             _ => {
+                let leading = body.extras.leading.format(f);
                 let node = Node::indent(f.indent_width, body.format(f));
                 node!(
-                "{" Node::Hardline
+                "{" if leading.starts_with_hardline() { Node::Nil } else { Node::Hardline }
                     node.clone()
-                    if node.contains_hardline() { Node::Nil } else { Node::Hardline }
+                    if node.ends_with_hardline() { Node::Nil } else { Node::Hardline }
                 "}")
             }
         }
@@ -144,7 +144,7 @@ impl Format for ast::TupleExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.values.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 4, f);
-        node!(f, self.extras =>
+        node!(f, leading_extras_without_newline(&self.extras) =>
             '(' Node::list(nodes, ',', break_mode) ')'
         )
     }
@@ -220,7 +220,7 @@ impl Format for ast::ArgumentList {
         let nodes: Vec<Node> = self.arguments.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
-        node!(f, self.extras => '(' Node::list(nodes, ',', break_mode) ')')
+        node!('(' node!(f, leading_extras_without_newline(&self.extras) => Node::list(nodes, ',', break_mode)) ')')
     }
 }
 
