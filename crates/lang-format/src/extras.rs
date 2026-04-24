@@ -7,14 +7,11 @@ use crate::{Format, FormatConfig, Node, node};
 
 pub(crate) fn leading_extras_without_newline(extras: &ast::ItemExtras) -> ast::ItemExtras {
     let mut leading = extras.leading.clone();
-
-    if let Some(first_item) = leading.0.first_mut() {
-        if let ast::ItemExtra::Whitespace(ws) = first_item {
-            // Find the index of the first newline
-            if let Some(pos) = ws.find('\n') {
-                // Remove only that specific character
-                ws.remove(pos);
-            }
+    if let Some(ast::ItemExtra::Whitespace(ws)) = leading.0.first_mut() {
+        // Find the index of the first newline
+        if let Some(pos) = ws.find('\n') {
+            // Remove only that specific character
+            ws.remove(pos);
         }
     }
 
