@@ -265,7 +265,7 @@ impl Format for Vec<(ast::Statement, ast::TrailingExtras)> {
             .map(|(statement, extras)| {
                 node!(f =>
                     statement
-                    if statement.ends_with_semicolon() { node!(';') } else { Node::Nil }
+                    if statement.ends_with_semicolon() { node!(';' Node::Softline) } else { Node::Nil }
                     extras
                 )
             })

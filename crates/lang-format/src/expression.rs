@@ -131,7 +131,7 @@ impl Format for ast::FormatString {
 
 impl Format for ast::TupleItem {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras =>
+        node!(f, leading_extras_without_newline(&self.extras) =>
             match &self.name {
                 Some(name) => node!(f => name " = " self.value),
                 None => node!(f => self.value)
@@ -184,7 +184,7 @@ impl Format for ast::QualifiedName {
 
 impl Format for ast::BinaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.lhs ' ' self.operation ' ' self.rhs)
+        node!(f => self.lhs Node::Softline self.operation Node::Softline self.rhs)
     }
 }
 
@@ -248,20 +248,40 @@ impl Format for ast::Element {
     }
 }
 
-impl Format for Vec<ast::Element> {
-    fn format(&self, f: &FormatConfig) -> Node {
-        let nodes: Vec<Node> = self.iter().map(|element| node!(f => element)).collect();
-
-        match BreakMode::from_layout(&nodes, 3, f) {
-            BreakMode::NoBreak => Node::hlist(nodes, Node::Nil),
-            BreakMode::WithIndent(indent_width) => Node::indent(indent_width, nodes),
-        }
-    }
-}
-
 impl Format for ast::ElementAccess {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.value self.element_chain)
+        let indent = match &self.value.as_ref() {
+            ast::Expression::Literal(_) => false,
+            ast::Expression::Bracketed(_, _) => true,
+            ast::Expression::Tuple(_) => false,
+            ast::Expression::ArrayRange(_) => false,
+            ast::Expression::ArrayList(_) => false,
+            ast::Expression::String(_) => true,
+            ast::Expression::QualifiedName(_) => true,
+            ast::Expression::Marker(_) => true,
+            ast::Expression::BinaryOperation(_) => true,
+            ast::Expression::UnaryOperation(_) => true,
+            ast::Expression::Body(_) => false,
+            ast::Expression::Call(_) => true,
+            ast::Expression::ElementAccess(_) => false,
+            ast::Expression::If(_) => false,
+            ast::Expression::Error(_) => false,
+        };
+
+        let nodes: Vec<Node> = self
+            .element_chain
+            .iter()
+            .map(|element| node!(f => element))
+            .collect();
+
+        let element_chain_node = match BreakMode::from_layout(&nodes, 3, f) {
+            BreakMode::NoBreak => Node::hlist(nodes, Node::Nil),
+            BreakMode::WithIndent(indent_width) => {
+                Node::indent(if indent { indent_width } else { 0 }, nodes)
+            }
+        };
+
+        node!(f => self.value element_chain_node)
     }
 }
 

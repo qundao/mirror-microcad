@@ -93,7 +93,7 @@ impl Node {
     {
         let sep = separator.into();
         match break_mode {
-            BreakMode::NoBreak => Self::hlist(nodes, node!(sep ' ')),
+            BreakMode::NoBreak => Self::hlist(nodes, node!(sep Node::Softline)),
             BreakMode::WithIndent(indent_width) => Self::vlist(nodes, sep, indent_width),
         }
     }
@@ -164,6 +164,7 @@ impl Node {
                 (Some(Node::Text(last)), Node::Text(next)) => {
                     last.push_str(&next);
                 }
+                (Some(Node::Softline), Node::Softline) => continue,
                 (_, Node::Group(group)) => {
                     let flattened = Self::compact(group);
                     match flattened {
@@ -272,7 +273,9 @@ impl Node {
             if state.softline_pending {
                 state.softline_pending = false;
                 state.column += 1;
-                write!(f, " ")?;
+                if !state.indent_pending {
+                    write!(f, " ")?;
+                }
             }
 
             if state.extra_pending {
