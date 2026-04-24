@@ -220,12 +220,13 @@ impl FromAst for StatementList {
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         let mut statements = Vec::new();
         node.statements.iter().try_for_each(|(statement, _)| {
-            Ok(statements.push(Statement::from_ast(statement, context)?))
+            statements.push(Statement::from_ast(statement, context)?);
+            Ok(())
         })?;
 
         if let Some(tail) = &node.tail {
             statements.push(Statement::Expression(ExpressionStatement::from_ast(
-                &tail, context,
+                tail, context,
             )?));
         }
 
