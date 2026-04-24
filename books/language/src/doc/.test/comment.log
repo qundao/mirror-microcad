@@ -12,11 +12,10 @@
   12:   /* This is a block comment */
   13:   
   14:   /* Block comments my have...
-  15:      ...multiple lines.
-  16:   */
-  17:   
-  18:   std::print("Hello, ");   // Line comments can be appended to a line
-  19:   std::print( /* Block comments can be placed almost anywhere */ "world!");
+  15:      ...multiple lines. */
+  16:   
+  17:   std::print("Hello, "); // Line comments can be appended to a line
+  18:   std::print( /* Block comments can be placed almost anywhere */ "world!");
 
 -- Output --
 Hello, 

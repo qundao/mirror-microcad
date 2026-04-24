@@ -2,68 +2,63 @@
 -- Test --
         Test name: bricks_tutorial
   Expected result: ok
-      Source file: ../books/examples/src/bricks.md:78
+      Source file: ../books/examples/src/bricks.md:77
         Test path: ../books/examples/src/.test
 
 -- Code --
 
-  78:   // file: tutorial.µcad
-  79:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
-  80:   // SPDX-License-Identifier: AGPL-3.0-or-later
-  81:   
-  82:   use std::geo2d::*;
-  83:   use std::ops::*;
-  84:   
-  85:   pub const SPACING = 8mm;
-  86:   
-  87:   op grid(columns: Integer, rows: Integer) {
-  88:       @input
-  89:           .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
-  90:           .center()
-  91:   }
-  92:   
-  93:   sketch Base(
-  94:       columns: Integer,
-  95:       rows: Integer,
-  96:       width: Length,
-  97:       height: Length
-  98:   ) {
-  99:       thickness = 1.2mm;
- 100:       frame = Frame(width, height, thickness);
- 101:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
- 102:           .grid(columns = columns-1, rows = rows-1);
- 103:       frame | struts;
- 104:   }
- 105:   
- 106:   use Rect as Cap;
- 107:   
- 108:   sketch Knobs(columns: Integer, rows: Integer) {
- 109:       Circle(d = 4.8mm)
- 110:           .grid(columns, rows);
- 111:   }
- 112:   
- 113:   pub part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
- 114:       width = columns * SPACING - 0.2mm;
- 115:       height =rows * SPACING - 0.2mm;
- 116:       cap_thickness = 1.0mm;
- 117:   
- 118:       base = Base(rows, columns, width, height)
- 119:           .extrude(base_height - cap_thickness);
- 120:   
- 121:       cap = Cap(width, height)
- 122:           .extrude(cap_thickness)
- 123:           .translate(z = base_height - cap_thickness);
- 124:   
- 125:       knobs = Knobs(rows, columns)
- 126:           .extrude(1.7mm)
- 127:           .translate(z = base_height);
+  77:   // file: tutorial.µcad
+  78:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+  79:   // SPDX-License-Identifier: AGPL-3.0-or-later
+  80:   
+  81:   use std::geo2d::*;
+  82:   use std::ops::*;
+  83:   
+  84:   pub const SPACING = 8mm;
+  85:   
+  86:   op grid(columns: Integer, rows: Integer) {
+  87:       @input
+  88:           .translate(x = [1..columns] * SPACING, y = [1..rows] * SPACING)
+  89:           .center()
+  90:   }
+  91:   
+  92:   sketch Base(columns: Integer, rows: Integer, width: Length, height: Length) {
+  93:       thickness = 1.2mm;
+  94:       frame = Frame(width, height, thickness);
+  95:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
+  96:           .grid(columns = columns - 1, rows = rows - 1);
+  97:       frame | struts;
+  98:   }
+  99:   
+ 100:   use Rect as Cap;
+ 101:   
+ 102:   sketch Knobs(columns: Integer, rows: Integer) {
+ 103:       Circle(d = 4.8mm)
+ 104:           .grid(columns, rows);
+ 105:   }
+ 106:   
+ 107:   pub part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
+ 108:       width = columns * SPACING - 0.2mm;
+ 109:       height = rows * SPACING - 0.2mm;
+ 110:       cap_thickness = 1.0mm;
+ 111:   
+ 112:       base = Base(rows, columns, width, height)
+ 113:           .extrude(base_height - cap_thickness);
+ 114:   
+ 115:       cap = Cap(width, height)
+ 116:           .extrude(cap_thickness)
+ 117:           .translate(z = base_height - cap_thickness);
+ 118:   
+ 119:       knobs = Knobs(rows, columns)
+ 120:           .extrude(1.7mm)
+ 121:           .translate(z = base_height);
+ 122:   
+ 123:       base | cap | knobs;
+ 124:   }
+ 125:   
+ 126:   // render a brick with default values
+ 127:   LegoBrick();
  128:   
- 129:       base | cap | knobs;
- 130:   }
- 131:   
- 132:   // render a brick with default values
- 133:   LegoBrick();
- 134:   
 
 -- No Output --
 -- No Errors --

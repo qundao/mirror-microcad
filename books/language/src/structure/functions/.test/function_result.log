@@ -7,11 +7,11 @@
 
 -- Code --
 
-   9:   fn square( x: Scalar ) -> Scalar {
+   9:   fn square(x: Scalar) -> Scalar {
   10:       x * x
   11:   }
   12:   
-  13:   std::debug::assert_eq([ square(8.0), 64.0 ]);
+  13:   std::debug::assert_eq([square(8.0), 64.0]);
 
 -- No Output --
 -- No Errors --

@@ -12,35 +12,37 @@
   15:       const FACTOR = 2.0;
   16:   
   17:       // initializer
-  18:       init(diameter: Length) { radius = into_radius(diameter); }
-  19:   
-  20:       // function
-  21:       fn into_radius( diameter: Length ) {
-  22:           // use constant FACTOR from init code
-  23:           diameter / FACTOR
-  24:       }
-  25:   
-  26:       // set property diameter and use FACTOR from init code
-  27:       prop diameter = radius * FACTOR;
-  28:       
-  29:       // code body
-  30:       std::geo2d::Circle(radius);
-  31:   }
-  32:   
-  33:   std::debug::assert_eq([Wheel(radius = 5cm).radius, 5cm]);
-  34:   std::debug::assert_eq([Wheel(radius = 5cm).diameter, 10cm]);
+  18:       init(diameter: Length) {
+  19:           radius = into_radius(diameter);
+  20:       }
+  21:   
+  22:       // function
+  23:       fn into_radius(diameter: Length) {
+  24:           // use constant FACTOR from init code
+  25:           diameter / FACTOR
+  26:       }
+  27:   
+  28:       // set property diameter and use FACTOR from init code
+  29:       prop diameter = radius * FACTOR;
+  30:   
+  31:       // code body
+  32:       std::geo2d::Circle(radius);
+  33:   }
+  34:   
+  35:   std::debug::assert_eq([Wheel(radius = 5cm).radius, 5cm]);
+  36:   std::debug::assert_eq([Wheel(radius = 5cm).diameter, 10cm]);
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 21:8: Unused global symbol into_radius.
-    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:21:8]
- 20 │     // function
- 21 │     fn into_radius( diameter: Length ) {
+  ⚠ warning: 23:8: Unused global symbol into_radius.
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:23:8]
+ 22 │     // function
+ 23 │     fn into_radius(diameter: Length) {
     ·        ─────┬─────
     ·             ╰── Unused global symbol into_radius.
- 22 │         // use constant FACTOR from init code
+ 24 │         // use constant FACTOR from init code
     ╰────
-Unexpected warnings(s) which did occur in line(s): 21
+Unexpected warnings(s) which did occur in line(s): 23
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

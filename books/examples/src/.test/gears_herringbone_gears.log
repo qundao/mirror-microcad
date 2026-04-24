@@ -2,55 +2,57 @@
 -- Test --
         Test name: gears_herringbone_gears
   Expected result: ok
-      Source file: ../books/examples/src/gears.md:106
+      Source file: ../books/examples/src/gears.md:105
         Test path: ../books/examples/src/.test
 
 -- Code --
 
- 106:   // file: herringbone_gears.µcad
- 107:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
- 108:   // SPDX-License-Identifier: AGPL-3.0-or-later
- 109:   
- 110:   use std::ops::*;
- 111:   use std::geo2d::*;
- 112:   use std::math::*;
- 113:   
- 114:   part Gear(teeth: Integer)  {
- 115:       gear_profile = InvoluteGearProfile(1.5mm, teeth);
- 116:       prop outer_radius = gear_profile.outer_radius;
- 117:       prop pitch_radius = gear_profile.pitch_radius;
- 118:       prop tooth_angle = gear_profile.tooth_angle;
- 119:       prop tooth_distance = gear_profile.tooth_distance;
- 120:       prop module = gear_profile.module;
- 121:   
- 122:       disc = Circle(radius = pitch_radius - module * 400%);
- 123:       web = {
- 124:           sector = Sector(disc.radius, 360° / 5)
- 125:               .buffer(-disc.radius * 15%)
- 126:               .buffer(disc.radius * 12%);
- 127:           holes = (sector - Circle(radius = module * 1000%))
- 128:               .rotate([0..4] * 360° / 5);
- 129:           hub = InvoluteGearProfile(2.5mm, 7);
- 130:           disc - holes - hub;
- 131:       }.extrude(tooth_distance * 300%).center();
- 132:   
- 133:       rim = (gear_profile - disc)
- 134:           .extrude(tooth_distance * 200%, tooth_angle)
- 135:           .mirror(-Z);
- 136:   
- 137:       web | rim;
- 138:   }
- 139:   
- 140:   gear1 = Gear(90);
- 141:   gear2 = Gear(60);
- 142:   
- 143:   gear1.reflect(X);
- 144:   gear2
- 145:       .rotate(gear2.tooth_angle * 50%)
- 146:       .translate(gear1.outer_radius + gear2.pitch_radius, [1..3] * 360° / 3);
- 147:   
- 148:   
+ 105:   // file: herringbone_gears.µcad
+ 106:   // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+ 107:   // SPDX-License-Identifier: AGPL-3.0-or-later
+ 108:   
+ 109:   use std::ops::*;
+ 110:   use std::geo2d::*;
+ 111:   use std::math::*;
+ 112:   
+ 113:   part Gear(teeth: Integer) {
+ 114:       gear_profile = InvoluteGearProfile(1.5mm, teeth);
+ 115:       prop outer_radius = gear_profile.outer_radius;
+ 116:       prop pitch_radius = gear_profile.pitch_radius;
+ 117:       prop tooth_angle = gear_profile.tooth_angle;
+ 118:       prop tooth_distance = gear_profile.tooth_distance;
+ 119:       prop module = gear_profile.module;
+ 120:   
+ 121:       disc = Circle(radius = pitch_radius - module * 400%);
+ 122:       web = {
+ 123:           sector = Sector(disc.radius, 360° / 5)
+ 124:               .buffer(-disc.radius * 15%)
+ 125:               .buffer(disc.radius * 12%);
+ 126:           holes = (sector - Circle(radius = module * 1000%))
+ 127:               .rotate([0..4] * 360° / 5);
+ 128:           hub = InvoluteGearProfile(2.5mm, 7);
+ 129:           disc - holes - hub;
+ 130:       }.extrude(tooth_distance * 300%).center();
+ 131:   
+ 132:       rim = (gear_profile - disc)
+ 133:           .extrude(tooth_distance * 200%, tooth_angle)
+ 134:           .mirror(-Z);
+ 135:   
+ 136:       web | rim;
+ 137:   }
+ 138:   
+ 139:   gear1 = Gear(90);
+ 140:   gear2 = Gear(60);
+ 141:   
+ 142:   gear1.reflect(X);
+ 143:   gear2
+ 144:       .rotate(gear2.tooth_angle * 50%)
+ 145:       .translate(
+ 146:           gear1.outer_radius + gear2.pitch_radius,
+ 147:           [1..3] * 360° / 3,
+ 148:       );
  149:   
+ 150:   
 
 -- No Output --
 -- No Errors --

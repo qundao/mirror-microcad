@@ -10,11 +10,11 @@
   11:   // module math
   12:   mod math {
   13:       // pow cannot be called from outside math
-  14:       fn pow( x: Scalar, n: Integer ) -> Scalar {
+  14:       fn pow(x: Scalar, n: Integer) -> Scalar {
   15:           if n == 1 {
-  16:               x   // return x
+  16:               x // return x
   17:           } else {
-  18:               x * pow(x, n-1) // return recursive product
+  18:               x * pow(x, n - 1) // return recursive product
   19:           }
   20:       }
   21:   

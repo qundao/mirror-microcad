@@ -8,11 +8,14 @@
 -- Code --
 
   75:   sketch Knobs(diameter = 4.8mm) {
-  76:       std::geo2d::Circle(diameter = 4.8mm, center = (x = [0..3] * 8mm, y = [0..1] * 8mm))
-  77:           .std::ops::center();
-  78:   }
-  79:   
-  80:   Knobs();
+  76:       std::geo2d::Circle(
+  77:           diameter = 4.8mm,
+  78:           center = (x = [0..3] * 8mm, y = [0..1] * 8mm),
+  79:       )
+  80:           .std::ops::center();
+  81:   }
+  82:   
+  83:   Knobs();
 
 -- No Output --
 -- No Errors --

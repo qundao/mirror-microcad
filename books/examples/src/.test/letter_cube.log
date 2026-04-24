@@ -24,18 +24,17 @@
   20:           .orient(axis);
   21:   }
   22:   
-  23:   
-  24:   part LetterCube(size: Length) {
-  25:       s = size / sqrt(2.1);
-  26:       body = Cube(size) & Sphere(r = s);
-  27:       p = Letter("P", size, [-Z, Z]).rotate(z = -90°);
-  28:       t = Letter("T", size, [-X, X]).rotate(x = 90°);
-  29:       f = Letter("F", size, [-Y, Y]);
-  30:       body - (p | t | f);
-  31:   }
-  32:   
-  33:   LetterCube(20mm).translate(z = 10mm);
-  34:   
+  23:   part LetterCube(size: Length) {
+  24:       s = size / sqrt(2.1);
+  25:       body = Cube(size) & Sphere(r = s);
+  26:       p = Letter("P", size, [-Z, Z]).rotate(z = -90°);
+  27:       t = Letter("T", size, [-X, X]).rotate(x = 90°);
+  28:       f = Letter("F", size, [-Y, Y]);
+  29:       body - (p | t | f);
+  30:   }
+  31:   
+  32:   LetterCube(20mm).translate(z = 10mm);
+  33:   
 
 -- No Output --
 -- No Errors --

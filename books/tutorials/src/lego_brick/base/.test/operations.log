@@ -15,9 +15,9 @@
   17:   height = 15.8mm;
   18:   frame = Frame(width, height, thickness);
   19:   struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
-  20:                .translate(x = [-1..1] * 8mm);
+  20:       .translate(x = [-1..1] * 8mm);
   21:   
-  22:   frame | struts; // We could also write `{ frame; struts; }.union()` but the `|` operator is more elegant. 
+  22:   frame | struts; // We could also write `{ frame; struts; }.union()` but the `|` operator is more elegant.
 
 -- No Output --
 -- No Errors --

@@ -7,8 +7,8 @@
 
 -- Code --
 
-  10:   __builtin::debug::assert_eq(
-  11:       // use measure area() on a circle
+  10:   // use measure area() on a circle
+  11:   __builtin::debug::assert_eq(
   12:       [
   13:           std::geo2d::Circle(radius = 10mm).area(),
   14:           // circle area formula for comparison
@@ -28,7 +28,7 @@
     ╰────
   × error: 12:5: Array elements have different types: [<NO TYPE>, Area]
     ╭─[../books/language/src/types/models/measures.md:12:5]
- 11 │         // use measure area() on a circle
+ 11 │     __builtin::debug::assert_eq(
  12 │ ╭─▶     [
  13 │ │           std::geo2d::Circle(radius = 10mm).area(),
  14 │ │           // circle area formula for comparison
@@ -39,7 +39,7 @@
     ╰────
   × error: 12:5: Assertion failed: Invalid: <NO VALUE>
     ╭─[../books/language/src/types/models/measures.md:12:5]
- 11 │         // use measure area() on a circle
+ 11 │     __builtin::debug::assert_eq(
  12 │ ╭─▶     [
  13 │ │           std::geo2d::Circle(radius = 10mm).area(),
  14 │ │           // circle area formula for comparison

@@ -17,7 +17,7 @@
   13:   part CsgCube(size: Length) {
   14:       s = size / sqrt(2.1);
   15:       body = Sphere(radius = s) & Cube(size);
-  16:       holes = Cylinder(size, diameter = s).orient([X,Y,Z]);
+  16:       holes = Cylinder(size, diameter = s).orient([X, Y, Z]);
   17:       body - holes;
   18:   }
   19:   

@@ -7,10 +7,10 @@
 
 -- Code --
 
-  32:   std::geo2d::Circle(diameter = 4.8mm, center = (
-  33:           x = ([-1..2] - 0.5) * 8mm, 
-  34:           y = ([0..1] - 0.5) * 8mm)
-  35:       );
+  32:   std::geo2d::Circle(
+  33:       diameter = 4.8mm,
+  34:       center = (x = ([-1..2] - 0.5) * 8mm, y = ([0..1] - 0.5) * 8mm),
+  35:   );
 
 -- No Output --
 -- No Errors --

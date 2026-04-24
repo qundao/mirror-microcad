@@ -19,16 +19,20 @@
   15:   
   16:   part Hole(diameter: Length) {
   17:       r = diameter * 50%;
-  18:       Cylinder(radius_bottom = r, radius_top = r + THICKNESS * 50%, height = THICKNESS);
-  19:   }
-  20:   
-  21:   r = RoundedRect(60mm, radius = 10mm).extrude(THICKNESS);
-  22:   
-  23:   holes = Hole([1..9] * 0.25mm)
-  24:       .distribute_grid(size = 60mm, rows = 3, columns = 3);
-  25:   
-  26:   r - holes;
-  27:   
+  18:       Cylinder(
+  19:           radius_bottom = r,
+  20:           radius_top = r + THICKNESS * 50%,
+  21:           height = THICKNESS,
+  22:       );
+  23:   }
+  24:   
+  25:   r = RoundedRect(60mm, radius = 10mm).extrude(THICKNESS);
+  26:   
+  27:   holes = Hole([1..9] * 0.25mm)
+  28:       .distribute_grid(size = 60mm, rows = 3, columns = 3);
+  29:   
+  30:   r - holes;
+  31:   
 
 -- No Output --
 -- Errors --
