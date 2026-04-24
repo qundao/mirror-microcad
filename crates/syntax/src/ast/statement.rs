@@ -320,7 +320,7 @@ pub struct PropertyAssignment {
     pub value: Box<ast::Expression>,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 #[allow(missing_docs)]
 pub enum CommentInner {
     // A list of single line comments starting with `//`.
@@ -330,7 +330,7 @@ pub enum CommentInner {
 }
 
 /// A single- or multi-line comment
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 #[allow(missing_docs)]
 pub struct Comment {
     pub span: Span,
