@@ -232,6 +232,7 @@ impl std::fmt::Display for Node {
             column: 0,
             indent_pending: false,
             extra_pending: false,
+            softline_pending: false,
         };
         self.render_recursive(f, &mut state)
     }
@@ -241,6 +242,7 @@ struct RenderState {
     indent_level: usize,
     column: usize,
     indent_pending: bool,
+    softline_pending: bool,
     extra_pending: bool,
 }
 
@@ -267,6 +269,12 @@ impl Node {
             f: &mut std::fmt::Formatter<'_>,
             state: &mut RenderState,
         ) -> std::fmt::Result {
+            if state.softline_pending {
+                state.softline_pending = false;
+                state.column += 1;
+                write!(f, " ")?;
+            }
+
             if state.extra_pending {
                 state.extra_pending = false;
                 state.column = state.indent_level;
@@ -297,11 +305,9 @@ impl Node {
                 writeln!(f)
             }
             Node::Softline => {
-                if state.column as i32 - state.indent_level as i32 > 0 && !state.indent_pending {
-                    write!(f, " ") // Leading ws
-                } else {
-                    write!(f, "")
-                }
+                state.softline_pending =
+                    state.column as i32 - state.indent_level as i32 > 0 && !state.indent_pending;
+                Ok(())
             }
             Node::Group(group) => {
                 write_extra_pending(f, state)?;

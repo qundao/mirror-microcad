@@ -69,7 +69,7 @@ impl Format for ast::Comment {
                 node!(Node::Softline Node::SingleLineComment(line.into()))
             }
             ast::CommentInner::MultiLine(line) => {
-                node!(Node::Softline "/* " Node::from(line.clone()) " */")
+                node!(Node::Softline "/* " Node::from(line.clone()) " */" Node::Softline)
             }
         }
     }
