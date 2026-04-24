@@ -225,7 +225,7 @@ impl Parse for Markdown {
                 }
                 current_section
                     .content
-                    .push(Paragraph::Text(content.join("\n").trim().to_string()));
+                    .push(Paragraph::Text(content.join("\n").to_string()));
             }
         }
 
