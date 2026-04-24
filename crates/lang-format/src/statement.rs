@@ -136,7 +136,7 @@ impl Format for ast::InitDefinition {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            "init" self.parameters " " self.body
+            "init" self.parameters Node::Softline self.body
         )
     }
 }
@@ -146,7 +146,7 @@ impl Format for ast::Return {
         node!(f, self.extras =>
             "return"
             match &self.value {
-                Some(value) => node!(f => ' ' value),
+                Some(value) => node!(f => Node::Softline value),
                 None => Node::Nil
             }
         )
@@ -155,14 +155,18 @@ impl Format for ast::Return {
 
 impl Format for ast::LocalAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras =>
-            self.attributes
+        let assignment = node!(f =>
             self.name
             match &self.ty {
-                Some(ty) => node!(f => ": " ty),
+                Some(ty) => node!(f => ':' Node::Softline ty),
                 None => Node::Nil,
             }
-            " = " self.value
+            Node::Softline '=' Node::Softline
+        );
+
+        node!(f, self.extras =>
+            self.attributes
+            assignment Node::AdditionalIndent(assignment.estimate_width()) self.value
         )
     }
 }
@@ -172,8 +176,8 @@ impl Format for ast::PropertyAssignment {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            "prop " self.name
-            self.ty.as_ref().map(|ty| node!(f => ": " ty))
+            "prop" Node::Softline self.name
+            self.ty.as_ref().map(|ty| node!(f => ':' Node::Softline ty))
             " = " self.value
         )
     }
@@ -267,6 +271,7 @@ impl Format for Vec<(ast::Statement, ast::TrailingExtras)> {
                     statement
                     if statement.ends_with_semicolon() { node!(';' Node::Softline) } else { Node::Nil }
                     extras
+                    Node::AdditionalIndent(0)
                 )
             })
             .collect::<Vec<Node>>()

@@ -250,12 +250,13 @@ impl Format for ast::Element {
 
 impl Format for ast::ElementAccess {
     fn format(&self, f: &FormatConfig) -> Node {
-        let indent = match &self.value.as_ref() {
+        // If this is true, we place an indent on the next line
+        let mut indent = match &self.value.as_ref() {
             ast::Expression::Literal(_) => false,
             ast::Expression::Bracketed(_, _) => true,
-            ast::Expression::Tuple(_) => false,
+            ast::Expression::Tuple(_) => true,
             ast::Expression::ArrayRange(_) => false,
-            ast::Expression::ArrayList(_) => false,
+            ast::Expression::ArrayList(_) => true,
             ast::Expression::String(_) => true,
             ast::Expression::QualifiedName(_) => true,
             ast::Expression::Marker(_) => true,
@@ -274,8 +275,15 @@ impl Format for ast::ElementAccess {
             .map(|element| node!(f => element))
             .collect();
 
+        // Indent if the first node already starts with a hardline
+        indent |= nodes
+            .iter()
+            .take(1)
+            .any(|node| !node.starts_with_hardline());
+
         let element_chain_node = match BreakMode::from_layout(&nodes, 3, f) {
-            BreakMode::NoBreak => Node::hlist(nodes, Node::Nil),
+            BreakMode::NoBreak if !indent => Node::hlist(nodes, Node::Nil),
+            BreakMode::NoBreak => Node::indent(f.indent_width, nodes),
             BreakMode::WithIndent(indent_width) => {
                 Node::indent(if indent { indent_width } else { 0 }, nodes)
             }
