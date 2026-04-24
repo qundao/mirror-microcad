@@ -35,7 +35,16 @@ impl RunCommand<()> for Format {
             let formatted = microcad_lang_format::format_str(&source, &config)
                 .map_err(|err| miette!("{err}"))?;
 
-            eprintln!("{formatted}");
+            if source == formatted {
+                eprintln!(
+                    "File `{}` is already formatted. No changes have been made.",
+                    self.input.display()
+                );
+            } else {
+                std::fs::write(&self.input, formatted).map_err(|err| miette!("{err}"))?;
+                eprintln!("Successfully formatted file `{}`", self.input.display());
+            }
+
             Ok(())
         }
     }
