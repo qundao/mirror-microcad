@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{BreakMode, Format, FormatConfig, Node, node};
+use crate::{BreakMode, Format, FormatConfig, Node, extras::leading_extras_without_newline, node};
 
 use microcad_syntax::ast;
 
@@ -16,7 +16,7 @@ impl Format for Option<ast::Visibility> {
 
 impl Format for ast::Parameter {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras =>
+        node!(f, leading_extras_without_newline(&self.extras) =>
             match (&self.ty, &self.default) {
                 (None, None) => self.name.format(f),
                 (None, Some(def)) => node!(f => self.name " = " def),
@@ -32,8 +32,8 @@ impl Format for ast::ParameterList {
         let nodes: Vec<Node> = self.parameters.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
-        node!(f, self.extras =>
-            '(' Node::list(nodes, ',', break_mode) ')'
+        node!(f =>
+            '(' node!(f, leading_extras_without_newline(&self.extras) => Node::list(nodes, ',', break_mode)) ')'
         )
     }
 }
@@ -56,16 +56,23 @@ impl Format for ast::WorkbenchDefinition {
     }
 }
 
-impl Format for ast::ModuleDefinition {
+impl Format for ast::InlineModule {
+    fn format(&self, f: &FormatConfig) -> Node {
+        node!(f, self.extras =>
+            self.doc
+            self.attributes
+            self.visibility "mod " self.name ' '
+            self.body
+        )
+    }
+}
+
+impl Format for ast::FileModule {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
             self.attributes
             self.visibility "mod " self.name
-            match &self.body {
-                Some(body) => node!(f => ' ' body),
-                None => node!(';')
-            }
         )
     }
 }
@@ -129,7 +136,7 @@ impl Format for ast::InitDefinition {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            "init" self.parameters " " self.body
+            "init" self.parameters Node::Softline self.body
         )
     }
 }
@@ -139,7 +146,7 @@ impl Format for ast::Return {
         node!(f, self.extras =>
             "return"
             match &self.value {
-                Some(value) => node!(f => ' ' value),
+                Some(value) => node!(f => Node::Softline value),
                 None => Node::Nil
             }
         )
@@ -148,14 +155,18 @@ impl Format for ast::Return {
 
 impl Format for ast::LocalAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras =>
-            self.attributes
+        let assignment = node!(f =>
             self.name
             match &self.ty {
-                Some(ty) => node!(f => ": " ty),
+                Some(ty) => node!(f => ':' Node::Softline ty),
                 None => Node::Nil,
             }
-            " = " self.value
+            Node::Softline '=' Node::Softline
+        );
+
+        node!(f, self.extras =>
+            self.attributes
+            assignment Node::AdditionalIndent(assignment.estimate_width()) self.value
         )
     }
 }
@@ -165,8 +176,8 @@ impl Format for ast::PropertyAssignment {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            "prop " self.name
-            self.ty.as_ref().map(|ty| node!(f => ": " ty))
+            "prop" Node::Softline self.name
+            self.ty.as_ref().map(|ty| node!(f => ':' Node::Softline ty))
             " = " self.value
         )
     }
@@ -199,17 +210,13 @@ impl Format for ast::AttributeCommand {
 
 impl Format for ast::Attribute {
     fn format(&self, f: &FormatConfig) -> Node {
-        let (prefix, suffix) = if self.is_inner {
-            ("#![", node!(']' Node::Hardline))
-        } else {
-            ("#[", node!(']'))
-        };
+        let prefix = if self.is_inner { "#![" } else { "#[" };
 
         let nodes: Vec<Node> = self.commands.iter().map(|attr| attr.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 0, f);
 
         node!(f, self.extras =>
-            prefix Node::list(nodes, ',', break_mode) suffix
+            prefix Node::list(nodes, ',', break_mode) ']'
         )
     }
 }
@@ -219,7 +226,17 @@ impl Format for Vec<ast::Attribute> {
         if self.is_empty() {
             Node::Nil
         } else {
-            Node::vlist(self.iter().map(|attr| attr.format(f)), Node::Nil, 0)
+            self.iter()
+                .map(|attr| {
+                    let node = attr.format(f);
+                    if node.contains_hardline() {
+                        node
+                    } else {
+                        node!(node Node::Hardline)
+                    }
+                })
+                .collect::<Vec<_>>()
+                .into()
         }
     }
 }
@@ -228,7 +245,8 @@ impl Format for ast::Statement {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::Statement::Workbench(workbench_definition) => workbench_definition.format(f),
-            ast::Statement::Module(module_definition) => module_definition.format(f),
+            ast::Statement::InlineModule(inline_module) => inline_module.format(f),
+            ast::Statement::FileModule(file_module) => file_module.format(f),
             ast::Statement::Function(function_definition) => function_definition.format(f),
             ast::Statement::InnerDocComment(comment) => comment.format(f),
             ast::Statement::Use(use_statement) => use_statement.format(f),
@@ -251,8 +269,9 @@ impl Format for Vec<(ast::Statement, ast::TrailingExtras)> {
             .map(|(statement, extras)| {
                 node!(f =>
                     statement
-                    if statement.ends_with_semicolon() { node!(';') } else { Node::Nil }
+                    if statement.ends_with_semicolon() { node!(';' Node::Softline) } else { Node::Nil }
                     extras
+                    Node::AdditionalIndent(0)
                 )
             })
             .collect::<Vec<Node>>()

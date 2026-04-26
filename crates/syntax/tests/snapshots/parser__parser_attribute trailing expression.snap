@@ -17,93 +17,91 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..26,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [
-                            Attribute {
-                                span: 0..25,
-                                is_inner: false,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                commands: [
-                                    Assignment(
-                                        LocalAssignment {
-                                            span: 2..19,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            attributes: [],
-                                            name: Identifier {
-                                                span: 2..7,
-                                                name: "color",
-                                            },
-                                            ty: None,
-                                            value: Literal(
-                                                Literal {
-                                                    span: 10..19,
-                                                    extras: ItemExtras {
-                                                        leading: LeadingExtras(
-                                                            [],
-                                                        ),
-                                                        trailing: TrailingExtras(
-                                                            [],
-                                                        ),
-                                                    },
-                                                    literal: String(
-                                                        StringLiteral {
-                                                            span: 10..19,
-                                                            content: "#FF00FF",
-                                                        },
-                                                    ),
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                ],
-                            },
-                        ],
-                        expression: Literal(
-                            Literal {
-                                span: 25..26,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                literal: Integer(
-                                    IntegerLiteral {
-                                        span: 25..26,
-                                        value: 1,
-                                        raw: "1",
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..26,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [
+                        Attribute {
+                            span: 0..25,
+                            is_inner: false,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            commands: [
+                                Assignment(
+                                    LocalAssignment {
+                                        span: 2..19,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        attributes: [],
+                                        name: Identifier {
+                                            span: 2..7,
+                                            name: "color",
+                                        },
+                                        ty: None,
+                                        value: Literal(
+                                            Literal {
+                                                span: 10..19,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
+                                                },
+                                                literal: String(
+                                                    StringLiteral {
+                                                        span: 10..19,
+                                                        content: "#FF00FF",
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ),
+                            ],
+                        },
+                    ],
+                    expression: Literal(
+                        Literal {
+                            span: 25..26,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            literal: Integer(
+                                IntegerLiteral {
+                                    span: 25..26,
+                                    value: 1,
+                                    raw: "1",
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

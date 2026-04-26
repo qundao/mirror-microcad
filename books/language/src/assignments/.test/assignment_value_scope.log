@@ -27,7 +27,7 @@
   52:           // b is available in scope #2 because #2 is within #1
   53:           assert_valid("b");
   54:       }
-  55:   };
+  55:   }
   56:   
   57:   // a is still available
   58:   assert_valid("a");

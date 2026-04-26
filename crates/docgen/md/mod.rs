@@ -30,7 +30,7 @@ impl Md {
         Ok(symbol
             .to_md()
             .save(self.symbol_md_file_path(symbol))
-            .map_err(|err| Box::new(err))?)
+            .map_err(Box::new)?)
     }
 }
 

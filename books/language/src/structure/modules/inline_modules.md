@@ -8,7 +8,7 @@ followed by a name and a body `{...}` as the following example shows:
 ```µcad,inline_mod
 mod my_module {
     // e.g. define a constant
-    pub VALUE = 1;
+    pub const VALUE = 1;
 }
 ```
 

@@ -1,13 +1,21 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{BreakMode, Format, FormatConfig, Node, node};
+use crate::{BreakMode, Format, FormatConfig, Node, extras::leading_extras_without_newline, node};
 
 use microcad_syntax::ast;
 
 impl Format for ast::BinaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        self.operation.as_str().into()
+        use ast::BinaryOperatorType::*;
+        match &self.operation {
+            GreaterEqual => ">=",
+            LessEqual => "<=",
+            And => "and",
+            Or => "or",
+            op => op.as_str(),
+        }
+        .into()
     }
 }
 
@@ -22,13 +30,29 @@ impl Format for ast::Body {
         let body = &self.statements;
 
         match (body.statements.is_empty(), &body.tail) {
-            (true, Some(tail)) => node!(f => "{ " tail " }"),
-            (true, None) => node!("{}"),
-            _ => node!(
-                "{" Node::Hardline
-                    Node::indent(f.indent_width, body.format(f))
-                "}"
-            ),
+            (true, Some(tail)) => {
+                let tail_node = node!(f, body.extras => tail.format(f));
+                if tail_node.contains_hardline() {
+                    node!(
+                        "{" Node::indent(f.indent_width, tail_node)
+                        "}"
+                    )
+                } else {
+                    node!("{ " tail_node " }")
+                }
+            }
+            (true, None) => {
+                node!("{" Node::indent(f.indent_width, node!(f, body.extras => Node::Nil)) "}")
+            }
+            _ => {
+                let leading = body.extras.leading.format(f);
+                let node = Node::indent(f.indent_width, body.format(f));
+                node!(
+                "{" if leading.starts_with_hardline() { Node::Nil } else { Node::Hardline }
+                    node.clone()
+                    if node.ends_with_hardline() { Node::Nil } else { Node::Hardline }
+                "}")
+            }
         }
     }
 }
@@ -46,7 +70,7 @@ impl Format for ast::Expression {
             ast::Expression::Marker(identifier) => format!("@{}", identifier.name).into(),
             ast::Expression::BinaryOperation(binary_operation) => binary_operation.format(f),
             ast::Expression::UnaryOperation(unary_operation) => unary_operation.format(f),
-            ast::Expression::Block(body) => body.format(f),
+            ast::Expression::Body(body) => body.format(f),
             ast::Expression::Call(call) => call.format(f),
             ast::Expression::ElementAccess(element_access) => element_access.format(f),
             ast::Expression::If(i) => i.format(f),
@@ -109,7 +133,7 @@ impl Format for ast::FormatString {
 
 impl Format for ast::TupleItem {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras =>
+        node!(f, leading_extras_without_newline(&self.extras) =>
             match &self.name {
                 Some(name) => node!(f => name " = " self.value),
                 None => node!(f => self.value)
@@ -122,7 +146,7 @@ impl Format for ast::TupleExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.values.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 4, f);
-        node!(f, self.extras =>
+        node!(f, leading_extras_without_newline(&self.extras) =>
             '(' Node::list(nodes, ',', break_mode) ')'
         )
     }
@@ -162,7 +186,7 @@ impl Format for ast::QualifiedName {
 
 impl Format for ast::BinaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.lhs ' ' self.operation ' ' self.rhs)
+        node!(f => self.lhs Node::Softline self.operation Node::Softline self.rhs)
     }
 }
 
@@ -198,7 +222,7 @@ impl Format for ast::ArgumentList {
         let nodes: Vec<Node> = self.arguments.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 4, f);
 
-        node!(f, self.extras => '(' Node::list(nodes, ',', break_mode) ')')
+        node!('(' node!(f, leading_extras_without_newline(&self.extras) => Node::list(nodes, ',', break_mode)) ')')
     }
 }
 
@@ -226,20 +250,48 @@ impl Format for ast::Element {
     }
 }
 
-impl Format for Vec<ast::Element> {
-    fn format(&self, f: &FormatConfig) -> Node {
-        let nodes: Vec<Node> = self.iter().map(|element| node!(f => element)).collect();
-
-        match BreakMode::from_layout(&nodes, 3, f) {
-            BreakMode::NoBreak => Node::hlist(nodes, Node::Nil),
-            BreakMode::WithIndent(indent_width) => Node::indent(indent_width, nodes),
-        }
-    }
-}
-
 impl Format for ast::ElementAccess {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.value self.element_chain)
+        // If this is true, we place an indent on the next line
+        let mut indent = match &self.value.as_ref() {
+            ast::Expression::Literal(_) => false,
+            ast::Expression::Bracketed(_, _) => true,
+            ast::Expression::Tuple(_) => true,
+            ast::Expression::ArrayRange(_) => false,
+            ast::Expression::ArrayList(_) => true,
+            ast::Expression::String(_) => true,
+            ast::Expression::QualifiedName(_) => true,
+            ast::Expression::Marker(_) => true,
+            ast::Expression::BinaryOperation(_) => true,
+            ast::Expression::UnaryOperation(_) => true,
+            ast::Expression::Body(_) => false,
+            ast::Expression::Call(_) => true,
+            ast::Expression::ElementAccess(_) => false,
+            ast::Expression::If(_) => false,
+            ast::Expression::Error(_) => false,
+        };
+
+        let nodes: Vec<Node> = self
+            .element_chain
+            .iter()
+            .map(|element| node!(f => element))
+            .collect();
+
+        // Indent if the first node already starts with a hardline
+        indent |= nodes
+            .iter()
+            .take(1)
+            .any(|node| !node.starts_with_hardline());
+
+        let element_chain_node = match BreakMode::from_layout(&nodes, 3, f) {
+            BreakMode::NoBreak if !indent => Node::hlist(nodes, Node::Nil),
+            BreakMode::NoBreak => Node::indent(f.indent_width, nodes),
+            BreakMode::WithIndent(indent_width) => {
+                Node::indent(if indent { indent_width } else { 0 }, nodes)
+            }
+        };
+
+        node!(f => self.value element_chain_node)
     }
 }
 
@@ -247,8 +299,17 @@ impl Format for ast::If {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             "if " self.condition ' ' self.body
-            self.else_body.as_ref().map(|body| node!(f => " else " body))
-            self.next_if.as_ref().map(|next_if| node!(f => " else " next_if))
+            match &self.else_body {
+                Some(else_body) => node!(f => Node::Softline "else " else_body),
+                None => match &self.next_if {
+                    Some(_) => Node::Nil,
+                    None => Node::Hardline
+                }
+            }
+            match &self.next_if {
+                Some(next_if) => node!(f => Node::Softline "else " next_if),
+                None => Node::Nil
+            }
         )
     }
 }

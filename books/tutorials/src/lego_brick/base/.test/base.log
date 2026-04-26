@@ -13,7 +13,7 @@
   23:   sketch Base(width: Length, height: Length, thickness = 1.2mm) {
   24:       frame = Frame(width, height, thickness);
   25:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
-  26:                .translate(x = [-1..1] * 8mm);
+  26:           .translate(x = [-1..1] * 8mm);
   27:       frame | struts;
   28:   }
   29:   

@@ -24,7 +24,9 @@ sketch Wheel(radius: Length, thickness = 5mm) {
     // initializer code
     use std::geo2d::Circle;
     // initializer
-    init( diameter: Length ) { radius = diameter / 2; }
+    init(diameter: Length) {
+        radius = diameter / 2;
+    }
 
     // building code starts here
     std::geo2d::Circle(radius);
@@ -42,9 +44,9 @@ It's **not allowed** to use the `sketch`, `part`, `op`, `return` nor `mod` state
 
 ```µcad,illegal_workbench_statement_sketch#fail
 sketch Wheel(radius: Length) {
-    sketch A() {}   // error
-    part B() {}     // error
-    op C() {}       // error
+    sketch A() {} // error
+    part B() {} // error
+    op C() {} // error
 }
 ```
 
@@ -52,7 +54,7 @@ sketch Wheel(radius: Length) {
 
 ```µcad,illegal_workbench_statement_mod#fail
 sketch Wheel(radius: Length) {
-    mod m {}        // error
+    mod m {} // error
 }
 ```
 
@@ -60,6 +62,6 @@ sketch Wheel(radius: Length) {
 
 ```µcad,illegal_workbench_statement_return#fail
 sketch Wheel(radius: Length) {
-    return;         // error
+    return; // error
 }
 ```

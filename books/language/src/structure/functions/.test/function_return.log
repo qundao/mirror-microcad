@@ -7,9 +7,9 @@
 
 -- Code --
 
-  61:   fn pow( x: Scalar, n: Integer ) -> Scalar {
+  61:   fn pow(x: Scalar, n: Integer) -> Scalar {
   62:       if n > 1 {
-  63:           return x * pow(x, n-1);
+  63:           return x * pow(x, n - 1);
   64:       }
   65:       if n < 1 {
   66:           return 1.0 / x / pow(x, -n);
@@ -17,31 +17,31 @@
   68:       1.0
   69:   }
   70:   
-  71:   std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
-  72:   std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+  71:   std::debug::assert_eq([pow(8.0, 2), 64.0]);
+  72:   std::debug::assert_eq([pow(8.0, -2), 0.015625]);
 
 -- No Output --
 -- Errors --
-  ⚠ warning: 61:9: Unused local x.
-    ╭─[../books/language/src/structure/functions/result.md:61:9]
- 61 │ fn pow( x: Scalar, n: Integer ) -> Scalar {
-    ·         ┬
-    ·         ╰── Unused local x.
+  ⚠ warning: 61:8: Unused local x.
+    ╭─[../books/language/src/structure/functions/result.md:61:8]
+ 61 │ fn pow(x: Scalar, n: Integer) -> Scalar {
+    ·        ┬
+    ·        ╰── Unused local x.
  62 │     if n > 1 {
     ╰────
   × error: 71:23: Assertion failed: Values differ: [8, 64]
     ╭─[../books/language/src/structure/functions/result.md:71:23]
  70 │ 
- 71 │ std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
-    ·                       ──────────┬─────────
-    ·                                 ╰── Assertion failed: Values differ: [8, 64]
- 72 │ std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+ 71 │ std::debug::assert_eq([pow(8.0, 2), 64.0]);
+    ·                       ─────────┬─────────
+    ·                                ╰── Assertion failed: Values differ: [8, 64]
+ 72 │ std::debug::assert_eq([pow(8.0, -2), 0.015625]);
     ╰────
-  ⚠ warning: 61:9: Unused local x.
-    ╭─[../books/language/src/structure/functions/result.md:61:9]
- 61 │ fn pow( x: Scalar, n: Integer ) -> Scalar {
-    ·         ┬
-    ·         ╰── Unused local x.
+  ⚠ warning: 61:8: Unused local x.
+    ╭─[../books/language/src/structure/functions/result.md:61:8]
+ 61 │ fn pow(x: Scalar, n: Integer) -> Scalar {
+    ·        ┬
+    ·        ╰── Unused local x.
  62 │     if n > 1 {
     ╰────
 Unexpected error(s) which did occur in line(s): 71

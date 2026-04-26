@@ -50,7 +50,7 @@ As you can see in the first line we use a `mod` statement to load our external m
 To make this work, we also need to change one line in our final part:
 
 ```µcad
-pub part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
+pub part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {}
 ```
 
 Here we add the keyword `pub` to make `LegoBrick` visible from outside modules (like our `my_brick.µcad`):

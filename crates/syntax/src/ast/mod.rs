@@ -40,7 +40,7 @@ pub struct Source {
 }
 
 /// Non-syntactic extras that can be attached to many ast nodes
-#[derive(Debug, PartialEq, Default)]
+#[derive(Clone, Debug, PartialEq, Default)]
 #[allow(missing_docs)]
 pub struct ItemExtras {
     pub leading: LeadingExtras,
@@ -48,16 +48,16 @@ pub struct ItemExtras {
 }
 
 /// Extras that occur *before* a syntax element.
-#[derive(Debug, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[allow(missing_docs)]
 pub struct TrailingExtras(pub Vec<ItemExtra>);
 
 /// Extras that occur *after* a syntax element.
-#[derive(Debug, PartialEq, Default)]
+#[derive(Debug, Clone, PartialEq, Default)]
 #[allow(missing_docs)]
 pub struct LeadingExtras(pub Vec<ItemExtra>);
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 #[allow(missing_docs)]
 #[non_exhaustive]
 pub enum ItemExtra {

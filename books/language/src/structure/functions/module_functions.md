@@ -11,11 +11,11 @@ available for use outside the module.
 // module math
 mod math {
     // pow cannot be called from outside math
-    fn pow( x: Scalar, n: Integer ) -> Scalar {
+    fn pow(x: Scalar, n: Integer) -> Scalar {
         if n == 1 {
-            x   // return x
+            x // return x
         } else {
-            x * pow(x, n-1) // return recursive product
+            x * pow(x, n - 1) // return recursive product
         }
     }
 

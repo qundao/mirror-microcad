@@ -6,11 +6,11 @@ To do so, you need to define the *return type* (using `->`) as shown in the foll
 [![test](.test/function_result.svg)](.test/function_result.log)
 
 ```µcad,function_result
-fn square( x: Scalar ) -> Scalar {
+fn square(x: Scalar) -> Scalar {
     x * x
 }
 
-std::debug::assert_eq([ square(8.0), 64.0 ]);
+std::debug::assert_eq([square(8.0), 64.0]);
 ```
 
 You may also use `if` to decide between different results.
@@ -18,9 +18,9 @@ You may also use `if` to decide between different results.
 [![test](.test/function_conditional_result.svg)](.test/function_conditional_result.log)
 
 ```µcad,function_conditional_result#todo
-fn pow( x: Scalar, n: Integer ) -> Scalar {
+fn pow(x: Scalar, n: Integer) -> Scalar {
     if n > 1 {
-        x * pow(x, n-1)
+        x * pow(x, n - 1)
     } else if n < 1 {
         1.0 / x / pow(x, -n)
     } else {
@@ -28,8 +28,8 @@ fn pow( x: Scalar, n: Integer ) -> Scalar {
     }
 }
 
-std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
-std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+std::debug::assert_eq([pow(8.0, 2), 64.0]);
+std::debug::assert_eq([pow(8.0, -2), 0.015625]);
 ```
 
 Of course returning a value twice is not allowed.
@@ -37,17 +37,17 @@ Of course returning a value twice is not allowed.
 [![test](.test/return_twice.svg)](.test/return_twice.log)
 
 ```µcad,return_twice#todo_fail
-fn pow( x: Scalar, n: Integer ) -> Scalar {
+fn pow(x: Scalar, n: Integer) -> Scalar {
     if n > 1 {
-        x * pow(x, n-1)
+        x * pow(x, n - 1)
     } else if n < 1 {
         1.0 / x / pow(x, -n)
     }
     1.0 // error: without else this line would return a second value
 }
 
-std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
-std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+std::debug::assert_eq([pow(8.0, 2), 64.0]);
+std::debug::assert_eq([pow(8.0, -2), 0.015625]);
 ```
 
 ## Early Return
@@ -58,9 +58,9 @@ statement.
 [![test](.test/function_return.svg)](.test/function_return.log)
 
 ```µcad,function_return#todo
-fn pow( x: Scalar, n: Integer ) -> Scalar {
+fn pow(x: Scalar, n: Integer) -> Scalar {
     if n > 1 {
-        return x * pow(x, n-1);
+        return x * pow(x, n - 1);
     }
     if n < 1 {
         return 1.0 / x / pow(x, -n);
@@ -68,6 +68,6 @@ fn pow( x: Scalar, n: Integer ) -> Scalar {
     1.0
 }
 
-std::debug::assert_eq([ pow(8.0,2), 64.0 ]);
-std::debug::assert_eq([ pow(8.0,-2), 0.015625 ]);
+std::debug::assert_eq([pow(8.0, 2), 64.0]);
+std::debug::assert_eq([pow(8.0, -2), 0.015625]);
 ```

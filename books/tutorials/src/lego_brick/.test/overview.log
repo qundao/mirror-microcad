@@ -24,16 +24,19 @@
   22:   use Rect as Cap;
   23:   
   24:   sketch Knobs() {
-  25:       Circle(diameter = 4.8mm, center = (x = [0..3] * SPACING, y = [0..1] * SPACING))
-  26:           .center();
-  27:   }
-  28:   
-  29:   width = 31.8mm;
-  30:   height = 15.8mm;
+  25:       Circle(
+  26:           diameter = 4.8mm,
+  27:           center = (x = [0..3] * SPACING, y = [0..1] * SPACING),
+  28:       )
+  29:           .center();
+  30:   }
   31:   
-  32:   Base(width, height);
-  33:   Cap(width, height);
-  34:   Knobs();
+  32:   width = 31.8mm;
+  33:   height = 15.8mm;
+  34:   
+  35:   Base(width, height);
+  36:   Cap(width, height);
+  37:   Knobs();
 
 -- No Output --
 -- No Errors --

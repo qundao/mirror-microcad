@@ -72,7 +72,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
     let mut type_parser = Recursive::declare();
-    let mut attribute_parser = Recursive::declare();
+    let mut outer_attribute_parser = Recursive::declare();
     let mut if_inner = Recursive::declare();
 
     let semi_recovery = none_of(Token::SigilSemiColon).repeated().ignored();
@@ -112,7 +112,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
     .boxed();
 
     statement_list_parser.define({
-        let trailing_expr = attribute_parser
+        let trailing_expr = outer_attribute_parser
             .clone()
             .then(expression_parser.clone())
             .with_extras()
@@ -124,7 +124,6 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                     expression,
                 },
             )
-            .map(Statement::Expression)
             .map(Box::new)
             .or_not()
             .boxed();
@@ -149,7 +148,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
     let block_recovery =
         ignore_till_matched_curly().map_with(|_, e| StatementList::dummy(e.span()));
 
-    let block = whitespace_parser()
+    let body = whitespace_parser()
         .or_not()
         .ignore_then(statement_list_parser.clone().delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
@@ -345,7 +344,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
         .boxed();
 
         single_value
-            .then(unit.clone().or_not())
+            .then(unit.or_not())
             .with_extras()
             .try_map_with(|((literal, ty), extras), e| {
                 let literal = match (literal, ty) {
@@ -499,7 +498,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
         }
         .labelled("visibility");
 
-        let expression = attribute_parser
+        let expression = outer_attribute_parser
             .clone()
             .then(expression_parser.clone())
             .with_extras()
@@ -514,7 +513,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .map(Statement::Expression)
             .boxed();
 
-        let local_assignment_inner = attribute_parser
+        let local_assignment_inner = outer_attribute_parser
             .clone()
             .then(identifier_parser.clone())
             .then_maybe_whitespace()
@@ -554,7 +553,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
 
         let const_assignment_inner = doc_block
             .clone()
-            .then(attribute_parser.clone())
+            .then(outer_attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordConst).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
@@ -606,7 +605,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
         // A pub assignment without the `const` keyword will eventually become a const assignment
         let pub_assignment_inner = doc_block
             .clone()
-            .then(attribute_parser.clone())
+            .then(outer_attribute_parser.clone())
             .then(just(Token::KeywordPub).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
             .then(identifier_parser.clone())
@@ -652,7 +651,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
 
         let property_assignment_inner = doc_block
             .clone()
-            .then(attribute_parser.clone())
+            .then(outer_attribute_parser.clone())
             .then(just(Token::KeywordProp).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
             .then(identifier_parser.clone())
@@ -695,31 +694,31 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .map(Statement::Property)
             .labelled("property assignment");
 
-        attribute_parser.define({
-            let attribute_command = local_assignment_inner
-                .clone()
-                .map(AttributeCommand::Assignment)
-                .or(call_inner.clone().map(AttributeCommand::Call))
-                .or(identifier_parser.clone().map(AttributeCommand::Ident));
+        let attribute_command = local_assignment_inner
+            .clone()
+            .map(AttributeCommand::Assignment)
+            .or(call_inner.clone().map(AttributeCommand::Call))
+            .or(identifier_parser.clone().map(AttributeCommand::Ident));
 
+        let attribute_inner = attribute_command
+            .separated_by(just(Token::SigilComma).then_maybe_whitespace())
+            .at_least(1)
+            .collect::<Vec<_>>()
+            .then_maybe_whitespace()
+            .delimited_by(
+                just(Token::SigilOpenSquareBracket),
+                just(Token::SigilCloseSquareBracket),
+            )
+            .boxed();
+
+        outer_attribute_parser.define({
             just(Token::SigilHash)
-                .ignore_then(just(Token::OperatorNot).or_not().map(|opt| opt.is_some()))
-                .then(
-                    attribute_command
-                        .separated_by(just(Token::SigilComma).then_maybe_whitespace())
-                        .at_least(1)
-                        .collect::<Vec<_>>()
-                        .then_maybe_whitespace()
-                        .delimited_by(
-                            just(Token::SigilOpenSquareBracket),
-                            just(Token::SigilCloseSquareBracket),
-                        ),
-                )
+                .ignore_then(attribute_inner.clone())
                 .then_whitespace()
                 .with_extras()
-                .map_with(|((is_inner, commands), extras), e| Attribute {
+                .map_with(|(commands, extras), e| Attribute {
                     span: e.span(),
-                    is_inner,
+                    is_inner: false,
                     extras,
                     commands,
                 })
@@ -807,9 +806,9 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             ))
             .boxed();
 
-        let module = doc_block
+        let inline_module = doc_block
             .clone()
-            .then(attribute_parser.clone())
+            .then(outer_attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordMod).map_with(|_, e| e.span()))
             .then_whitespace()
@@ -820,16 +819,11 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 )),
             )
             .then_maybe_whitespace()
-            .then(
-                block
-                    .clone()
-                    .map(Some)
-                    .or(just(Token::SigilSemiColon).map(|_| None)),
-            )
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |((((((doc, attributes), visibility), keyword_span), name), body), extras), e| {
-                    Statement::Module(ModuleDefinition {
+                    Statement::InlineModule(InlineModule {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -838,6 +832,34 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                         visibility,
                         name,
                         body,
+                    })
+                },
+            )
+            .boxed();
+
+        let file_module = doc_block
+            .clone()
+            .then(outer_attribute_parser.clone())
+            .then(visibility.then_whitespace().or_not())
+            .then(just(Token::KeywordMod).map_with(|_, e| e.span()))
+            .then_whitespace()
+            .then(
+                identifier_parser.clone().recover_with(via_parser(
+                    recovery_expect_any_except(&[Token::SigilOpenCurlyBracket])
+                        .map_with(|_, e| Identifier::dummy(e.span())),
+                )),
+            )
+            .with_extras()
+            .map_with(
+                |(((((doc, attributes), visibility), keyword_span), name), extras), e| {
+                    Statement::FileModule(FileModule {
+                        span: e.span(),
+                        keyword_span,
+                        extras,
+                        doc,
+                        attributes,
+                        visibility,
+                        name,
                     })
                 },
             )
@@ -865,7 +887,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             })
             .boxed();
 
-        let use_statement = attribute_parser
+        let use_statement = outer_attribute_parser
             .clone()
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordUse).map_with(|_, e| e.span()))
@@ -906,11 +928,11 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
 
         let init = doc_block
             .clone()
-            .then(attribute_parser.clone())
+            .then(outer_attribute_parser.clone())
             .then(just(Token::KeywordInit).map_with(|_, e| e.span()))
             .then_maybe_whitespace()
             .then(parameter_list.clone())
-            .then(block.clone())
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |(((((doc, attributes), keyword_span), arguments), body), extras), e| {
@@ -928,7 +950,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .boxed();
         let workbench = doc_block
             .clone()
-            .then(attribute_parser.clone())
+            .then(outer_attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
             .then(workbench_kind.map_with(|kind, e| (kind, e.span())))
             .then_whitespace()
@@ -944,7 +966,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .then_maybe_whitespace()
             .then(parameter_list.clone())
             .then_maybe_whitespace()
-            .then(block.clone())
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |(
@@ -991,7 +1013,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
 
         let function = doc_block
             .clone()
-            .then(attribute_parser.clone())
+            .then(outer_attribute_parser.clone())
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordFn).map_with(|_, e| e.span()))
             .then_whitespace()
@@ -1014,7 +1036,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                     .then_maybe_whitespace()
                     .or_not(),
             )
-            .then(block.clone())
+            .then(body.clone())
             .with_extras()
             .map_with(
                 |(
@@ -1044,7 +1066,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             )
             .boxed();
 
-        let if_expression = attribute_parser
+        let if_statement = outer_attribute_parser
             .clone()
             .then(if_inner.clone().map(Expression::If))
             .with_extras()
@@ -1059,6 +1081,21 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .labelled("if statement")
             .boxed();
 
+        let body_statement = outer_attribute_parser
+            .clone()
+            .then(body.clone().map(Expression::Body))
+            .with_extras()
+            .map_with(|((attributes, expression), extras), e| {
+                Statement::Expression(ExpressionStatement {
+                    span: e.span(),
+                    extras,
+                    attributes,
+                    expression,
+                })
+            })
+            .labelled("body statement")
+            .boxed();
+
         let inner_doc_comment = select_ref! {
             Token::InnerDocComment(comment) => comment.to_string(),
         }
@@ -1070,6 +1107,20 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             })
         })
         .boxed();
+
+        let inner_attribute = just(Token::SigilHash)
+            .ignore_then(just(Token::OperatorNot))
+            .ignore_then(attribute_inner)
+            .with_extras()
+            .map_with(|(commands, extras), e| Attribute {
+                span: e.span(),
+                is_inner: true,
+                extras,
+                commands,
+            })
+            .labelled("inner attribute")
+            .map(Statement::InnerAttribute)
+            .boxed();
 
         let not_assignment = whitespace_parser()
             .or_not()
@@ -1110,22 +1161,11 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .or(use_statement)
             .or(const_assignment)
             .or(pub_assignment)
+            .or(file_module)
             .or(property_assignment)
             .or(local_assignment)
             .or(expression)
-            .boxed();
-
-        let without_semi = function
-            .or(inner_doc_comment)
-            .or(init)
-            .or(workbench)
-            .or(module)
-            .or(if_expression)
-            .boxed();
-
-        without_semi
-            .or(reserved_keyword_statement)
-            .or(with_semi.then_ignore(
+            .then_ignore(
                 just(Token::SigilSemiColon)
                     .labelled("semicolon")
                     .ignored()
@@ -1134,7 +1174,22 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                             .repeated()
                             .then_ignore(just(Token::SigilSemiColon)),
                     )),
-            ))
+            )
+            .boxed();
+
+        let without_semi = function
+            .or(inner_doc_comment)
+            .or(inner_attribute)
+            .or(init)
+            .or(workbench)
+            .or(inline_module)
+            .or(if_statement)
+            .or(body_statement)
+            .boxed();
+
+        with_semi
+            .or(reserved_keyword_statement)
+            .or(without_semi)
             .boxed()
             .labelled("statement")
     });
@@ -1312,7 +1367,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.clone().or_not())
+            .then(unit.or_not())
             .map_with(|(((start, end), extras), unit), e| {
                 Expression::ArrayRange(ArrayRangeExpression {
                     span: e.span(),
@@ -1335,7 +1390,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.clone().or_not())
+            .then(unit.or_not())
             .map_with(|((items, extras), unit), e| {
                 Expression::ArrayList(ArrayListExpression {
                     span: e.span(),
@@ -1347,10 +1402,10 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .labelled("array")
             .boxed();
 
-        let block_expression = block
+        let body_expression = body
             .clone()
-            .map(Expression::Block)
-            .labelled("block expression")
+            .map(Expression::Body)
+            .labelled("body expression")
             .boxed();
 
         if_inner.define(
@@ -1359,7 +1414,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                 .then_whitespace()
                 .then(expression_parser.clone())
                 .then_maybe_whitespace()
-                .then(block.clone())
+                .then(body.clone())
                 .then_maybe_whitespace()
                 .then(
                     just(Token::KeywordElse)
@@ -1373,7 +1428,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
                     just(Token::KeywordElse)
                         .map_with(|_, e| e.span())
                         .then_maybe_whitespace()
-                        .then(block.clone())
+                        .then(body.clone())
                         .or_not(),
                 )
                 .with_extras()
@@ -1448,7 +1503,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .or(bracket_based)
             .or(array_range)
             .or(array_list)
-            .or(block_expression)
+            .or(body_expression)
             .or(if_expression)
             .or(qualified_name_expr)
             .boxed();

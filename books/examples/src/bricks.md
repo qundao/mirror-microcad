@@ -33,8 +33,8 @@ pub part Brick(rows = 2, columns = 4, base_height = BASE_HEIGHT) {
                 .distribute_grid(
                     width = width - width / columns,
                     height = height - height / rows,
-                    rows = r, 
-                    columns = c
+                    rows = r,
+                    columns = c,
                 );
         }
     }
@@ -47,20 +47,19 @@ pub part Brick(rows = 2, columns = 4, base_height = BASE_HEIGHT) {
         .distribute_grid(width, height, rows, columns)
         .extrude(1.7mm);
 
-    { base; cap; knobs; }.align(Z).union();
+    {
+        base; cap; knobs;
+    }.align(Z).union();
 }
 
 n = 4;
 
 Brick(
-    rows = [1..n], 
-    columns = [1..n], 
-    base_height = BASE_HEIGHT * [1 / 3, 100%, 200%, 300%]
+    rows = [1..n],
+    columns = [1..n],
+    base_height = BASE_HEIGHT * [1 / 3, 100%, 200%, 300%],
 )
-.distribute_grid(cell_size = n * 10mm, 
-    rows = 2*n, 
-    columns = 2*n,
-);
+    .distribute_grid(cell_size = n * 10mm, rows = 2 * n, columns = 2 * n);
 
 ```
 
@@ -90,16 +89,11 @@ op grid(columns: Integer, rows: Integer) {
         .center()
 }
 
-sketch Base(
-    columns: Integer,
-    rows: Integer,
-    width: Length,
-    height: Length
-) {
+sketch Base(columns: Integer, rows: Integer, width: Length, height: Length) {
     thickness = 1.2mm;
     frame = Frame(width, height, thickness);
     struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
-        .grid(columns = columns-1, rows = rows-1);
+        .grid(columns = columns - 1, rows = rows - 1);
     frame | struts;
 }
 
@@ -112,7 +106,7 @@ sketch Knobs(columns: Integer, rows: Integer) {
 
 pub part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
     width = columns * SPACING - 0.2mm;
-    height =rows * SPACING - 0.2mm;
+    height = rows * SPACING - 0.2mm;
     cap_thickness = 1.0mm;
 
     base = Base(rows, columns, width, height)
@@ -175,4 +169,3 @@ third_3x2.translate(y = 40mm);
 
 **3D Output**
     : ![None](.test/bricks_use_bricks-out.stl)
-

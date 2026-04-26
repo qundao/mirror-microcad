@@ -10,58 +10,59 @@
  132:   sketch Wheel(radius: Length, thickness: Length) {
  133:       use std::geo2d::Circle;
  134:   
- 135:       init( radius: Scalar, outer: Length ) { // error: radius is already a Length in building plan
- 136:           thickness = outer - (radius * 1mm);
- 137:       }  
- 138:   
- 139:       Circle(radius = radius + thickness) - Circle(radius)
- 140:   }
- 141:   // Use initializer
- 142:   Wheel(radius = 1.0, outer = 1cm);
+ 135:       init(radius: Scalar, outer: Length) {
+ 136:           // error: radius is already a Length in building plan
+ 137:           thickness = outer - (radius * 1mm);
+ 138:       }
+ 139:   
+ 140:       Circle(radius = radius + thickness) - Circle(radius)
+ 141:   }
+ 142:   // Use initializer
+ 143:   Wheel(radius = 1.0, outer = 1cm);
 
 -- No Output --
 -- Errors --
-  × error: 139:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
+  × error: 140:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
   ╰─▶ Invalid operation: `1` + `9mm` (try `9mm` + `1`)
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:21]
- 138 │ 
- 139 │     Circle(radius = radius + thickness) - Circle(radius)
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:21]
+ 139 │ 
+ 140 │     Circle(radius = radius + thickness) - Circle(radius)
      ·                     ─────────┬────────
      ·                              ╰── Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
- 140 │ }
+ 141 │ }
      ╰────
-  × error: 139:12: Workbench Circle cannot find initialization for those arguments
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:5]
- 138 │ 
- 139 │     Circle(radius = radius + thickness) - Circle(radius)
+  × error: 140:12: Workbench Circle cannot find initialization for those arguments
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:5]
+ 139 │ 
+ 140 │     Circle(radius = radius + thickness) - Circle(radius)
      ·     ──────────────────┬─────────────────
      ·                       ╰── Got: Circle( radius = <NO VALUE> )
- 140 │ }
+ 141 │ }
      ╰────
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-  × error: 139:50: Workbench Circle cannot find initialization for those arguments
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:43]
- 138 │ 
- 139 │     Circle(radius = radius + thickness) - Circle(radius)
+  × error: 140:50: Workbench Circle cannot find initialization for those arguments
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:43]
+ 139 │ 
+ 140 │     Circle(radius = radius + thickness) - Circle(radius)
      ·                                           ───────┬───────
      ·                                                  ╰── Got: Circle( radius = 1 )
- 140 │ }
- 141 │ // Use initializer
+ 141 │ }
+ 142 │ // Use initializer
      ╰────
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-  × error: 139:5: The Sketch workbench produced a Undetermined output, but expected a 2D output.
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:139:5]
- 138 │ 
- 139 │     Circle(radius = radius + thickness) - Circle(radius)
+  × error: 140:5: The Sketch workbench produced a Undetermined output, but expected a 2D output.
+     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:5]
+ 139 │ 
+ 140 │     Circle(radius = radius + thickness) - Circle(radius)
      ·     ──────────────────────────┬──────────────────────────
      ·                               ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
- 140 │ }
- 141 │ // Use initializer
+ 141 │ }
+ 142 │ // Use initializer
      ╰────
-Expected error(s) which did not occur in line(s): 135
+Expected error(s) which did not occur in line(s): 136
 -- Test Result --
 TODO (SHALL FAIL)

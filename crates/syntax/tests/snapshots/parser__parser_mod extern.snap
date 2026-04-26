@@ -17,9 +17,9 @@ Ok(
             },
             statements: [
                 (
-                    Module(
-                        ModuleDefinition {
-                            span: 0..8,
+                    FileModule(
+                        FileModule {
+                            span: 0..7,
                             keyword_span: 0..3,
                             extras: ItemExtras {
                                 leading: LeadingExtras(
@@ -39,7 +39,6 @@ Ok(
                                 span: 4..7,
                                 name: "foo",
                             },
-                            body: None,
                         },
                     ),
                     TrailingExtras(

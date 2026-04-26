@@ -17,8 +17,7 @@ c: [Length] = [1.42mm, 2.3m, 3.1cm, 4.42cm, 5.23m];
 d: [String] = ["one", "two", "three", "four", "five"];
 e: [Model] = [
     std::geo2d::Circle(radius = 1cm),
-    std::geo3d::Sphere(radius = 1cm)
-    ,
+    std::geo3d::Sphere(radius = 1cm),
 ];
 ```
 

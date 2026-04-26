@@ -11,7 +11,7 @@ pub mod microcad {
     use std::geo2d::*;
     use std::ops::*;
 
-    sketch IconElement( radius: Length ) {
+    sketch IconElement(radius: Length) {
         c = Sector(radius, start = 180°, end = 270°).translate(y = radius);
         r = Rect(width = radius, height = radius * 2, x = -radius, y = -radius);
         c | r
@@ -26,13 +26,23 @@ pub mod microcad {
         prop gap = radius / 5;
         IconElement(radius)
             .translate(x = -radius - gap)
-            .rotate([0..3] * 90°); 
+            .rotate([0..3] * 90°);
     }
 
     pub sketch Micro(radius: Length, thickness: Length) {
         u = Sector(radius, 180°).rotate(90°) - Circle(radius = radius - thickness);
-        r_l = Rect(width = thickness, height = radius * 3, x = -radius, y = -2*radius);
-        r_r = Rect(width = thickness, height = radius * 2, x = radius - thickness, y = -radius);
+        r_l = Rect(
+            width = thickness,
+            height = radius * 3,
+            x = -radius,
+            y = -2 * radius,
+        );
+        r_r = Rect(
+            width = thickness,
+            height = radius * 2,
+            x = radius - thickness,
+            y = -radius,
+        );
         u | r_l | r_r
     }
 
@@ -42,12 +52,22 @@ pub mod microcad {
 
     pub sketch A(radius: Length, thickness: Length) {
         Arc(radius, thickness)
-         | Rect(width = thickness, height = radius * 2, x = radius * 0.5, y = -radius);
+        | Rect(
+            width = thickness,
+            height = radius * 2,
+            x = radius * 0.5,
+            y = -radius,
+        );
     }
 
     pub sketch D(radius: Length, thickness: Length) {
         Arc(radius, thickness)
-         | Rect(width = thickness, height = radius * 3, x = radius * 0.5, y = -radius);
+        | Rect(
+            width = thickness,
+            height = radius * 3,
+            x = radius * 0.5,
+            y = -radius,
+        );
     }
 
     pub sketch Logo(radius: Length, thickness: Length) {
@@ -56,7 +76,7 @@ pub mod microcad {
             radius = size * 50%;
             thickness = radius * 40%;
         }
-        
+
         {
             Icon(radius);
             {
@@ -71,7 +91,7 @@ pub mod microcad {
 
 use std::ops::*;
 
-pub SIZE = 1cm;
+pub const SIZE = 1cm;
 
 microcad::Logo(size = SIZE).extrude(4mm);
 

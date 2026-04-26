@@ -18,34 +18,29 @@
   43:           .center()
   44:   }
   45:   
-  46:   sketch Base(
-  47:       columns: Integer,
-  48:       rows: Integer,
-  49:       width: Length,
-  50:       height: Length
-  51:   ) {
-  52:       thickness = 1.2mm;
-  53:       frame = Frame(width, height, thickness);
-  54:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
-  55:           .grid(columns = columns-1, rows = rows-1);
-  56:       frame | struts;
+  46:   sketch Base(columns: Integer, rows: Integer, width: Length, height: Length) {
+  47:       thickness = 1.2mm;
+  48:       frame = Frame(width, height, thickness);
+  49:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
+  50:           .grid(columns = columns - 1, rows = rows - 1);
+  51:       frame | struts;
+  52:   }
+  53:   
+  54:   sketch Knobs(columns: Integer, rows: Integer) {
+  55:       Circle(diameter = 4.8mm)
+  56:           .grid(columns, rows);
   57:   }
   58:   
-  59:   sketch Knobs(columns: Integer, rows: Integer) {
-  60:       Circle(diameter = 4.8mm)
-  61:           .grid(columns, rows);
-  62:   }
-  63:   
-  64:   use Rect as Cap;
+  59:   use Rect as Cap;
+  60:   
+  61:   columns = 4;
+  62:   rows = 2;
+  63:   width = columns * SPACING - 0.2mm;
+  64:   height = rows * SPACING - 0.2mm;
   65:   
-  66:   columns = 4;
-  67:   rows = 2;
-  68:   width = columns * SPACING - 0.2mm;
-  69:   height = rows * SPACING - 0.2mm;
-  70:   
-  71:   Base(rows, columns, width, height);
-  72:   Cap(width, height);
-  73:   Knobs(rows, columns);
+  66:   Base(rows, columns, width, height);
+  67:   Cap(width, height);
+  68:   Knobs(rows, columns);
 
 -- No Output --
 -- No Errors --

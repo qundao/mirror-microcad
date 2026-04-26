@@ -11,7 +11,7 @@
   12:       prop diameter = radius * 2;
   13:       std::geo2d::Circle(radius);
   14:   }
-  15:   std::debug::assert_eq([ MySketch(5cm).diameter, 10cm ])
+  15:   std::debug::assert_eq([MySketch(5cm).diameter, 10cm])
 
 -- No Output --
 -- No Errors --

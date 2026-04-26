@@ -75,40 +75,38 @@ Ok(
                                     },
                                     statements: [],
                                     tail: Some(
-                                        Expression(
-                                            ExpressionStatement {
-                                                span: 20..21,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                attributes: [],
-                                                expression: Literal(
-                                                    Literal {
-                                                        span: 20..21,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 20..21,
-                                                                value: 2,
-                                                                raw: "2",
-                                                            },
-                                                        ),
-                                                    },
+                                        ExpressionStatement {
+                                            span: 20..21,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
                                                 ),
                                             },
-                                        ),
+                                            attributes: [],
+                                            expression: Literal(
+                                                Literal {
+                                                    span: 20..21,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 20..21,
+                                                            value: 2,
+                                                            raw: "2",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
                                     ),
                                 },
                             },

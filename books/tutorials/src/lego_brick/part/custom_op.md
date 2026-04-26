@@ -43,16 +43,11 @@ op grid(columns: Integer, rows: Integer) {
         .center()
 }
 
-sketch Base(
-    columns: Integer,
-    rows: Integer,
-    width: Length,
-    height: Length
-) {
+sketch Base(columns: Integer, rows: Integer, width: Length, height: Length) {
     thickness = 1.2mm;
     frame = Frame(width, height, thickness);
     struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
-        .grid(columns = columns-1, rows = rows-1);
+        .grid(columns = columns - 1, rows = rows - 1);
     frame | struts;
 }
 

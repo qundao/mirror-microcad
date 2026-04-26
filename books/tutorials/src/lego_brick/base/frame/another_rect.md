@@ -6,7 +6,10 @@ Like the outer frame, the inner frame is a `std::geo2d::Rect` too:
 
 ```µcad,inner
 thickness = 1.2mm;
-std::geo2d::Rect(width = 31.8mm - 2 * thickness, height = 15.8mm - 2 * thickness);
+std::geo2d::Rect(
+    width = 31.8mm - 2 * thickness,
+    height = 15.8mm - 2 * thickness,
+);
 ```
 
 ![Picture](.test/inner-out.svg)

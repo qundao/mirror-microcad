@@ -8,11 +8,11 @@
 -- Code --
 
   38:   // define operation which takes multiple items
-  39:   op punched_disk() { 
+  39:   op punched_disk() {
   40:       // check number of input models
   41:       if @input.count() == 2 {
   42:           // make hole by subtracting both inputs
-  43:           @input.subtract(); 
+  43:           @input.subtract();
   44:       } else {
   45:           std::error("punched_disk must get exactly two objects");
   46:       }

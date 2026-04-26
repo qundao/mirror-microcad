@@ -15,7 +15,7 @@
   11:       use std::geo2d::*;
   12:       use std::ops::*;
   13:   
-  14:       sketch IconElement( radius: Length ) {
+  14:       sketch IconElement(radius: Length) {
   15:           c = Sector(radius, start = 180°, end = 270°).translate(y = radius);
   16:           r = Rect(width = radius, height = radius * 2, x = -radius, y = -radius);
   17:           c | r
@@ -30,56 +30,76 @@
   26:           prop gap = radius / 5;
   27:           IconElement(radius)
   28:               .translate(x = -radius - gap)
-  29:               .rotate([0..3] * 90°); 
+  29:               .rotate([0..3] * 90°);
   30:       }
   31:   
   32:       pub sketch Micro(radius: Length, thickness: Length) {
   33:           u = Sector(radius, 180°).rotate(90°) - Circle(radius = radius - thickness);
-  34:           r_l = Rect(width = thickness, height = radius * 3, x = -radius, y = -2*radius);
-  35:           r_r = Rect(width = thickness, height = radius * 2, x = radius - thickness, y = -radius);
-  36:           u | r_l | r_r
-  37:       }
-  38:   
-  39:       pub sketch C(radius: Length, thickness: Length) {
-  40:           Arc(radius, thickness, 260°)
-  41:       }
-  42:   
-  43:       pub sketch A(radius: Length, thickness: Length) {
-  44:           Arc(radius, thickness)
-  45:            | Rect(width = thickness, height = radius * 2, x = radius * 0.5, y = -radius);
-  46:       }
-  47:   
-  48:       pub sketch D(radius: Length, thickness: Length) {
-  49:           Arc(radius, thickness)
-  50:            | Rect(width = thickness, height = radius * 3, x = radius * 0.5, y = -radius);
+  34:           r_l = Rect(
+  35:               width = thickness,
+  36:               height = radius * 3,
+  37:               x = -radius,
+  38:               y = -2 * radius,
+  39:           );
+  40:           r_r = Rect(
+  41:               width = thickness,
+  42:               height = radius * 2,
+  43:               x = radius - thickness,
+  44:               y = -radius,
+  45:           );
+  46:           u | r_l | r_r
+  47:       }
+  48:   
+  49:       pub sketch C(radius: Length, thickness: Length) {
+  50:           Arc(radius, thickness, 260°)
   51:       }
   52:   
-  53:       pub sketch Logo(radius: Length, thickness: Length) {
-  54:           use std::math::*;
-  55:           init(size: Length) {
-  56:               radius = size * 50%;
-  57:               thickness = radius * 40%;
-  58:           }
-  59:           
-  60:           {
-  61:               Icon(radius);
-  62:               {
-  63:                   Micro(radius, thickness);
-  64:                   C(radius, thickness);
-  65:                   A(radius, thickness);
-  66:                   D(radius, thickness);
-  67:               }.align(X);
-  68:           }.align(X, 4mm).center();
-  69:       }
-  70:   }
-  71:   
-  72:   use std::ops::*;
-  73:   
-  74:   pub SIZE = 1cm;
-  75:   
-  76:   microcad::Logo(size = SIZE).extrude(4mm);
-  77:   
-  78:   
+  53:       pub sketch A(radius: Length, thickness: Length) {
+  54:           Arc(radius, thickness)
+  55:           | Rect(
+  56:               width = thickness,
+  57:               height = radius * 2,
+  58:               x = radius * 0.5,
+  59:               y = -radius,
+  60:           );
+  61:       }
+  62:   
+  63:       pub sketch D(radius: Length, thickness: Length) {
+  64:           Arc(radius, thickness)
+  65:           | Rect(
+  66:               width = thickness,
+  67:               height = radius * 3,
+  68:               x = radius * 0.5,
+  69:               y = -radius,
+  70:           );
+  71:       }
+  72:   
+  73:       pub sketch Logo(radius: Length, thickness: Length) {
+  74:           use std::math::*;
+  75:           init(size: Length) {
+  76:               radius = size * 50%;
+  77:               thickness = radius * 40%;
+  78:           }
+  79:   
+  80:           {
+  81:               Icon(radius);
+  82:               {
+  83:                   Micro(radius, thickness);
+  84:                   C(radius, thickness);
+  85:                   A(radius, thickness);
+  86:                   D(radius, thickness);
+  87:               }.align(X);
+  88:           }.align(X, 4mm).center();
+  89:       }
+  90:   }
+  91:   
+  92:   use std::ops::*;
+  93:   
+  94:   pub const SIZE = 1cm;
+  95:   
+  96:   microcad::Logo(size = SIZE).extrude(4mm);
+  97:   
+  98:   
 
 -- No Output --
 -- No Errors --

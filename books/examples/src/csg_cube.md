@@ -13,7 +13,7 @@ use std::geo3d::*;
 part CsgCube(size: Length) {
     s = size / sqrt(2.1);
     body = Sphere(radius = s) & Cube(size);
-    holes = Cylinder(size, diameter = s).orient([X,Y,Z]);
+    holes = Cylinder(size, diameter = s).orient([X, Y, Z]);
     body - holes;
 }
 

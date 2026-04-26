@@ -35,8 +35,8 @@
   33:                   .distribute_grid(
   34:                       width = width - width / columns,
   35:                       height = height - height / rows,
-  36:                       rows = r, 
-  37:                       columns = c
+  36:                       rows = r,
+  37:                       columns = c,
   38:                   );
   39:           }
   40:       }
@@ -49,21 +49,20 @@
   47:           .distribute_grid(width, height, rows, columns)
   48:           .extrude(1.7mm);
   49:   
-  50:       { base; cap; knobs; }.align(Z).union();
-  51:   }
-  52:   
-  53:   n = 4;
+  50:       {
+  51:           base; cap; knobs;
+  52:       }.align(Z).union();
+  53:   }
   54:   
-  55:   Brick(
-  56:       rows = [1..n], 
-  57:       columns = [1..n], 
-  58:       base_height = BASE_HEIGHT * [1 / 3, 100%, 200%, 300%]
-  59:   )
-  60:   .distribute_grid(cell_size = n * 10mm, 
-  61:       rows = 2*n, 
-  62:       columns = 2*n,
-  63:   );
-  64:   
+  55:   n = 4;
+  56:   
+  57:   Brick(
+  58:       rows = [1..n],
+  59:       columns = [1..n],
+  60:       base_height = BASE_HEIGHT * [1 / 3, 100%, 200%, 300%],
+  61:   )
+  62:       .distribute_grid(cell_size = n * 10mm, rows = 2 * n, columns = 2 * n);
+  63:   
 
 -- No Output --
 -- No Errors --

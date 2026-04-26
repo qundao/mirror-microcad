@@ -17,21 +17,30 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..17,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Call(
-                            Call {
-                                span: 0..17,
+                ExpressionStatement {
+                    span: 0..17,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
+                        ),
+                    },
+                    attributes: [],
+                    expression: Call(
+                        Call {
+                            span: 0..17,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            name: QualifiedName {
+                                span: 0..3,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
                                         [],
@@ -40,114 +49,103 @@ Ok(
                                         [],
                                     ),
                                 },
-                                name: QualifiedName {
-                                    span: 0..3,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
+                                parts: [
+                                    Identifier {
+                                        span: 0..3,
+                                        name: "foo",
                                     },
-                                    parts: [
-                                        Identifier {
-                                            span: 0..3,
-                                            name: "foo",
-                                        },
-                                    ],
-                                },
-                                arguments: ArgumentList {
-                                    span: 4..16,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    arguments: [
-                                        Named(
-                                            NamedArgument {
-                                                span: 4..9,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                name: Identifier {
-                                                    span: 4..5,
-                                                    name: "a",
-                                                },
-                                                value: Literal(
-                                                    Literal {
-                                                        span: 8..9,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 8..9,
-                                                                value: 1,
-                                                                raw: "1",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                        Named(
-                                            NamedArgument {
-                                                span: 11..16,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                name: Identifier {
-                                                    span: 11..12,
-                                                    name: "b",
-                                                },
-                                                value: Literal(
-                                                    Literal {
-                                                        span: 15..16,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 15..16,
-                                                                value: 2,
-                                                                raw: "2",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    ],
-                                },
+                                ],
                             },
-                        ),
-                    },
-                ),
+                            arguments: ArgumentList {
+                                span: 4..16,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                arguments: [
+                                    Named(
+                                        NamedArgument {
+                                            span: 4..9,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            name: Identifier {
+                                                span: 4..5,
+                                                name: "a",
+                                            },
+                                            value: Literal(
+                                                Literal {
+                                                    span: 8..9,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 8..9,
+                                                            value: 1,
+                                                            raw: "1",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    Named(
+                                        NamedArgument {
+                                            span: 11..16,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            name: Identifier {
+                                                span: 11..12,
+                                                name: "b",
+                                            },
+                                            value: Literal(
+                                                Literal {
+                                                    span: 15..16,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 15..16,
+                                                            value: 2,
+                                                            raw: "2",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                ],
+                            },
+                        },
+                    ),
+                },
             ),
         },
     },

@@ -14,56 +14,49 @@
   10:   use std::ops::*;
   11:   use std::math::*;
   12:   
-  13:   sketch Base(
-  14:       width = 130.0mm,
-  15:       height = 23.5mm,
-  16:       radius = 3mm,
-  17:   ) {
-  18:       RoundedRect(width, height, radius);
-  19:   }
-  20:   
-  21:   part RackRails(
-  22:       rack_rail_distance = 100mm,
-  23:       rack_rail_diameter = 10.5mm,
-  24:   ) {
-  25:       {
-  26:           rd = (rack_rail_distance + rack_rail_diameter) / 2; 
-  27:           Circle(d = rack_rail_diameter, c = (x = [-0.5,0.5]mm, y = 0mm))
-  28:               .hull()
-  29:               .translate(x = [-rd, rd]);
-  30:       }
-  31:       .extrude(40mm)
-  32:       .orient(Y)
-  33:       .translate(y = -15mm);
-  34:   }
-  35:   
-  36:   part Mount(
-  37:       height: Length,
-  38:       screw_distance = 94mm,
-  39:       screw_hole_diameter = 6mm,
-  40:       rack_rail_distance = 100mm,
-  41:       rack_rail_diameter = 10.5mm,
-  42:   ) {
-  43:       d = screw_distance / 2;
-  44:       screws = Circle(d = screw_hole_diameter, c = (x = [-d,d], y = 0.0mm));
+  13:   sketch Base(width = 130.0mm, height = 23.5mm, radius = 3mm) {
+  14:       RoundedRect(width, height, radius);
+  15:   }
+  16:   
+  17:   part RackRails(rack_rail_distance = 100mm, rack_rail_diameter = 10.5mm) {
+  18:       {
+  19:           rd = (rack_rail_distance + rack_rail_diameter) / 2;
+  20:           Circle(d = rack_rail_diameter, c = (x = [-0.5, 0.5]mm, y = 0mm))
+  21:               .hull()
+  22:               .translate(x = [-rd, rd]);
+  23:       }
+  24:       .extrude(40mm)
+  25:       .orient(Y)
+  26:       .translate(y = -15mm);
+  27:   }
+  28:   
+  29:   part Mount(
+  30:       height: Length,
+  31:       screw_distance = 94mm,
+  32:       screw_hole_diameter = 6mm,
+  33:       rack_rail_distance = 100mm,
+  34:       rack_rail_diameter = 10.5mm,
+  35:   ) {
+  36:       d = screw_distance / 2;
+  37:       screws = Circle(d = screw_hole_diameter, c = (x = [-d, d], y = 0.0mm));
+  38:   
+  39:       Base().extrude(height) - screws.extrude(height + 10mm) - RackRails();
+  40:   }
+  41:   
+  42:   pub part Lower() {
+  43:       Mount(height = 15mm);
+  44:   }
   45:   
-  46:       Base().extrude(height) - screws.extrude(height + 10mm) - RackRails();
-  47:   }
-  48:   
-  49:   pub part Lower() {
-  50:       Mount(height = 15mm);
-  51:   }
+  46:   pub part Upper() {
+  47:       Mount(height = 55mm);
+  48:   }
+  49:   
+  50:   #[export = "lower.stl"]
+  51:   Lower().translate(y = 50mm);
   52:   
-  53:   pub part Upper() {
-  54:       Mount(height = 55mm);
-  55:   }
-  56:   
-  57:   #[export = "lower.stl"]
-  58:   Lower().translate(y = 50mm);
-  59:   
-  60:   #[export = "upper.stl"]
-  61:   Upper().translate(y = -50mm);
-  62:   
+  53:   #[export = "upper.stl"]
+  54:   Upper().translate(y = -50mm);
+  55:   
 
 -- No Output --
 -- No Errors --

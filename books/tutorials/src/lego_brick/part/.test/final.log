@@ -19,47 +19,42 @@
   17:           .center()
   18:   }
   19:   
-  20:   sketch Base(
-  21:       columns: Integer,
-  22:       rows: Integer,
-  23:       width: Length,
-  24:       height: Length
-  25:   ) {
-  26:       thickness = 1.2mm;
-  27:       frame = Frame(width, height, thickness);
-  28:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
-  29:           .grid(columns = columns-1, rows = rows-1);
-  30:       frame | struts;
-  31:   }
-  32:   
-  33:   use Rect as Cap;
+  20:   sketch Base(columns: Integer, rows: Integer, width: Length, height: Length) {
+  21:       thickness = 1.2mm;
+  22:       frame = Frame(width, height, thickness);
+  23:       struts = Ring(outer_diameter = 6.51mm, inner_diameter = 4.8mm)
+  24:           .grid(columns = columns - 1, rows = rows - 1);
+  25:       frame | struts;
+  26:   }
+  27:   
+  28:   use Rect as Cap;
+  29:   
+  30:   sketch Knobs(columns: Integer, rows: Integer) {
+  31:       Circle(diameter = 4.8mm)
+  32:           .grid(columns, rows);
+  33:   }
   34:   
-  35:   sketch Knobs(columns: Integer, rows: Integer) {
-  36:       Circle(diameter = 4.8mm)
-  37:           .grid(columns, rows);
-  38:   }
+  35:   part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
+  36:       width = columns * SPACING - 0.2mm;
+  37:       height = rows * SPACING - 0.2mm;
+  38:       cap_thickness = 1.0mm;
   39:   
-  40:   part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
-  41:       width = columns * SPACING - 0.2mm;
-  42:       height =rows * SPACING - 0.2mm;
-  43:       cap_thickness = 1.0mm;
-  44:   
-  45:       base = Base(rows, columns, width, height)
-  46:           .extrude(base_height - cap_thickness);
-  47:   
-  48:       cap = Cap(width, height)
-  49:           .extrude(cap_thickness)
-  50:           .translate(z = base_height - cap_thickness);
-  51:   
-  52:       knobs = Knobs(rows, columns)
-  53:           .extrude(1.7mm)
-  54:           .translate(z = base_height);
-  55:   
-  56:       base | cap | knobs;
-  57:   }
-  58:   
-  59:   // render a brick with default values
-  60:   LegoBrick();
+  40:       base = Base(rows, columns, width, height)
+  41:           .extrude(base_height - cap_thickness);
+  42:   
+  43:       cap = Cap(width, height)
+  44:           .extrude(cap_thickness)
+  45:           .translate(z = base_height - cap_thickness);
+  46:   
+  47:       knobs = Knobs(rows, columns)
+  48:           .extrude(1.7mm)
+  49:           .translate(z = base_height);
+  50:   
+  51:       base | cap | knobs;
+  52:   }
+  53:   
+  54:   // render a brick with default values
+  55:   LegoBrick();
 
 -- No Output --
 -- No Errors --

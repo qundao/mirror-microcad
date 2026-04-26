@@ -17,129 +17,127 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..9,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: BinaryOperation(
-                            BinaryOperation {
-                                span: 0..9,
-                                lhs: BinaryOperation(
-                                    BinaryOperation {
-                                        span: 0..4,
-                                        lhs: QualifiedName(
-                                            QualifiedName {
-                                                span: 0..1,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                parts: [
-                                                    Identifier {
-                                                        span: 0..1,
-                                                        name: "a",
-                                                    },
-                                                ],
-                                            },
-                                        ),
-                                        operation: BinaryOperator {
-                                            span: 1..2,
-                                            operation: PowerXor,
-                                        },
-                                        rhs: Literal(
-                                            Literal {
-                                                span: 2..4,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [
-                                                            Whitespace(
-                                                                " ",
-                                                            ),
-                                                        ],
-                                                    ),
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 2..3,
-                                                        value: 2,
-                                                        raw: "2",
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ),
-                                operation: BinaryOperator {
-                                    span: 4..5,
-                                    operation: Add,
-                                },
-                                rhs: BinaryOperation(
-                                    BinaryOperation {
-                                        span: 6..9,
-                                        lhs: QualifiedName(
-                                            QualifiedName {
-                                                span: 6..7,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                parts: [
-                                                    Identifier {
-                                                        span: 6..7,
-                                                        name: "b",
-                                                    },
-                                                ],
-                                            },
-                                        ),
-                                        operation: BinaryOperator {
-                                            span: 7..8,
-                                            operation: PowerXor,
-                                        },
-                                        rhs: Literal(
-                                            Literal {
-                                                span: 8..9,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 8..9,
-                                                        value: 3,
-                                                        raw: "3",
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..9,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: BinaryOperation(
+                        BinaryOperation {
+                            span: 0..9,
+                            lhs: BinaryOperation(
+                                BinaryOperation {
+                                    span: 0..4,
+                                    lhs: QualifiedName(
+                                        QualifiedName {
+                                            span: 0..1,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            parts: [
+                                                Identifier {
+                                                    span: 0..1,
+                                                    name: "a",
+                                                },
+                                            ],
+                                        },
+                                    ),
+                                    operation: BinaryOperator {
+                                        span: 1..2,
+                                        operation: PowerXor,
+                                    },
+                                    rhs: Literal(
+                                        Literal {
+                                            span: 2..4,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ],
+                                                ),
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 2..3,
+                                                    value: 2,
+                                                    raw: "2",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                            operation: BinaryOperator {
+                                span: 4..5,
+                                operation: Add,
+                            },
+                            rhs: BinaryOperation(
+                                BinaryOperation {
+                                    span: 6..9,
+                                    lhs: QualifiedName(
+                                        QualifiedName {
+                                            span: 6..7,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            parts: [
+                                                Identifier {
+                                                    span: 6..7,
+                                                    name: "b",
+                                                },
+                                            ],
+                                        },
+                                    ),
+                                    operation: BinaryOperator {
+                                        span: 7..8,
+                                        operation: PowerXor,
+                                    },
+                                    rhs: Literal(
+                                        Literal {
+                                            span: 8..9,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 8..9,
+                                                    value: 3,
+                                                    raw: "3",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

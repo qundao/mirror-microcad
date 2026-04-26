@@ -165,7 +165,7 @@ impl MdBook {
                     _ => Ok(()),
                 })
             })
-            .map_err(|err| Box::new(err))?)
+            .map_err(Box::new)?)
     }
 
     fn write_summary(&self, symbol: &Symbol) -> std::io::Result<()> {

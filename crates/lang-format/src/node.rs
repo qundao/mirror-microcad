@@ -17,7 +17,7 @@ impl BreakMode {
         let width: usize = nodes.iter().map(|node| node.estimate_width()).sum();
         let too_many_items = max_items > 0 && nodes.len() > max_items;
         let too_wide = width > f.max_width;
-        let forced_break = nodes.iter().any(|node| node.contains_hardline());
+        let forced_break = nodes.iter().any(|node| node.ends_with_hardline());
 
         if too_many_items || too_wide || forced_break {
             Self::WithIndent(f.indent_width)
@@ -32,7 +32,11 @@ pub enum Node {
     #[default]
     Nil,
     Text(CompactString),
+    // A comment starting with `//`
+    SingleLineComment(CompactString),
     Hardline,
+    AdditionalIndent(usize),
+    Softline,
     Indent {
         width: usize,
         node: Box<Node>,
@@ -64,6 +68,31 @@ impl Node {
         result.into()
     }
 
+    pub fn remove_hardline(self) -> Node {
+        match self {
+            Node::Nil | Node::Softline | Node::AdditionalIndent(_) | Node::SingleLineComment(_) => {
+                self.clone()
+            }
+            Node::Text(compact_string) => compact_string.trim_end().into(),
+            Node::Hardline => Node::Nil,
+            Node::Indent { width, node } => Node::Indent {
+                width,
+                node: Box::new(node.remove_hardline()),
+            },
+            Node::Group(mut group) => {
+                // Check if the last element exists and is a Hardline
+                if let Some(Node::Hardline) = group.last() {
+                    group.pop(); // Remove it
+                }
+
+                // If you need to recursively remove hardlines from the new last element,
+                // you could call .remove_hardline() on the group itself or the new tail,
+                // but for a simple "pop if last", this is sufficient:
+                Node::Group(group)
+            }
+        }
+    }
+
     pub fn vlist<I>(nodes: I, separator: impl Into<Node>, indent_width: usize) -> Node
     where
         I: IntoIterator<Item = Node>,
@@ -71,9 +100,10 @@ impl Node {
         let sep = separator.into();
         let nodes: Node = nodes
             .into_iter()
-            .flat_map(|node| vec![node, sep.clone(), Node::Hardline])
+            .map(|node| node!(node.remove_hardline() sep.clone() Node::Hardline))
             .collect::<Vec<_>>()
             .into();
+
         match indent_width {
             0 => nodes,
             width => node!(
@@ -90,7 +120,7 @@ impl Node {
     {
         let sep = separator.into();
         match break_mode {
-            BreakMode::NoBreak => Self::hlist(nodes, node!(sep ' ')),
+            BreakMode::NoBreak => Self::hlist(nodes, node!(sep Node::Softline)),
             BreakMode::WithIndent(indent_width) => Self::vlist(nodes, sep, indent_width),
         }
     }
@@ -99,13 +129,14 @@ impl Node {
         match &self {
             Node::Nil => 0,
             Node::Text(compact_string) => compact_string.len(),
-            Node::Hardline => 0,
+            Node::Hardline | Node::SingleLineComment(_) => 0,
+            Node::AdditionalIndent(width) => *width,
+            Node::Softline => 1,
             Node::Indent { width, node } => width + node.estimate_width(),
             Node::Group(group) => group
                 .iter()
                 .map(|node| node.estimate_width())
-                .max()
-                .unwrap_or_default(),
+                .sum::<usize>(),
         }
     }
 
@@ -118,11 +149,31 @@ impl Node {
 
     pub fn contains_hardline(&self) -> bool {
         match &self {
-            Node::Nil => false,
+            Node::Nil | Node::Softline | Node::AdditionalIndent(_) => false,
             Node::Text(compact_string) => compact_string.contains("\n"),
-            Node::Hardline => true,
+            Node::Hardline | Node::SingleLineComment(_) => true,
             Node::Indent { width: _, node } => node.contains_hardline(),
             Node::Group(group) => group.iter().any(|node| node.contains_hardline()),
+        }
+    }
+
+    pub fn ends_with_hardline(&self) -> bool {
+        match &self {
+            Node::Nil | Node::Softline | Node::AdditionalIndent(_) => false,
+            Node::Text(compact_string) => compact_string.ends_with("\n"),
+            Node::Hardline | Node::SingleLineComment(_) => true,
+            Node::Indent { width: _, node } => node.ends_with_hardline(),
+            Node::Group(group) => group.iter().any(|node| node.ends_with_hardline()),
+        }
+    }
+
+    pub fn starts_with_hardline(&self) -> bool {
+        match &self {
+            Node::Nil | Node::Softline | Node::AdditionalIndent(_) => false,
+            Node::Text(compact_string) => compact_string.starts_with("\n"),
+            Node::Hardline | Node::SingleLineComment(_) => true,
+            Node::Indent { width: _, node } => node.starts_with_hardline(),
+            Node::Group(group) => group.iter().any(|node| node.starts_with_hardline()),
         }
     }
 
@@ -140,6 +191,7 @@ impl Node {
                 (Some(Node::Text(last)), Node::Text(next)) => {
                     last.push_str(&next);
                 }
+                (Some(Node::Softline), Node::Softline) => continue,
                 (_, Node::Group(group)) => {
                     let flattened = Self::compact(group);
                     match flattened {
@@ -202,20 +254,19 @@ impl From<CompactString> for Node {
 
 impl std::fmt::Display for Node {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        // We initialize a tiny state tracker for the recursive process
-        let mut state = RenderState {
-            indent_level: 0,
-            column: 0,
-            indent_pending: false,
-        };
+        let mut state = RenderState::default();
         self.render_recursive(f, &mut state)
     }
 }
 
+#[derive(Default)]
 struct RenderState {
     indent_level: usize,
     column: usize,
+    additional_indent: usize,
     indent_pending: bool,
+    softline_pending: bool,
+    extra_pending: bool,
 }
 
 impl Node {
@@ -231,7 +282,28 @@ impl Node {
             if state.indent_pending {
                 let spaces = " ".repeat(state.indent_level);
                 state.indent_pending = false;
-                write!(f, "{}", spaces)
+                write!(f, "{spaces}")
+            } else {
+                Ok(())
+            }
+        }
+
+        fn write_extra_pending(
+            f: &mut std::fmt::Formatter<'_>,
+            state: &mut RenderState,
+        ) -> std::fmt::Result {
+            if state.softline_pending {
+                state.softline_pending = false;
+                state.column += 1;
+                if !state.indent_pending {
+                    write!(f, " ")?;
+                }
+            }
+
+            if state.extra_pending {
+                state.extra_pending = false;
+                state.column = state.indent_level;
+                writeln!(f)
             } else {
                 Ok(())
             }
@@ -239,25 +311,41 @@ impl Node {
 
         match self {
             Node::Text(s) => {
+                write_extra_pending(f, state)?;
                 write_pending_indent(f, state)?;
                 state.column += s.len();
-                write!(f, "{}", s)
+                write!(f, "{s}")
+            }
+            Node::SingleLineComment(s) => {
+                write_extra_pending(f, state)?;
+                write_pending_indent(f, state)?;
+                state.column += s.len();
+                state.indent_pending = true;
+                state.extra_pending = true;
+                write!(f, "{s}")
             }
             Node::Hardline => {
                 state.column = state.indent_level;
                 state.indent_pending = true;
                 writeln!(f)
             }
+            Node::Softline => {
+                state.softline_pending =
+                    state.column as i32 - state.indent_level as i32 > 0 && !state.indent_pending;
+                Ok(())
+            }
             Node::Group(group) => {
+                write_extra_pending(f, state)?;
                 write_pending_indent(f, state)?;
                 group
                     .iter()
                     .try_for_each(|node| node.render_recursive(f, state))
             }
             Node::Indent { width, node } => {
-                state.indent_level += width;
+                state.indent_level += width + state.additional_indent;
                 node.render_recursive(f, state)?;
-                state.indent_level -= width;
+                state.indent_level -= width + state.additional_indent;
+                state.additional_indent = 0;
                 Ok(())
             }
             _ => Ok(()),

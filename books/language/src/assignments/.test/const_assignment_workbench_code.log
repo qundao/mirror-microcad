@@ -2,15 +2,15 @@
 -- Test --
         Test name: const_assignment_workbench_code
   Expected result: ok
-      Source file: ../books/language/src/assignments/const.md:119
+      Source file: ../books/language/src/assignments/const.md:118
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
- 119:   sketch MySketch() {
- 120:       const MY_CONST = 1;   // allowed if no initializers
- 121:   }
- 122:   MySketch();
+ 118:   sketch MySketch() {
+ 119:       const MY_CONST = 1; // allowed if no initializers
+ 120:   }
+ 121:   MySketch();
 
 -- No Output --
 -- No Errors --

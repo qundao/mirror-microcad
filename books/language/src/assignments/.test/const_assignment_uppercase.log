@@ -2,19 +2,19 @@
 -- Test --
         Test name: const_assignment_uppercase
   Expected result: todo_warn
-      Source file: ../books/language/src/assignments/const.md:67
+      Source file: ../books/language/src/assignments/const.md:66
         Test path: ../books/language/src/assignments/.test
 
 -- Code --
 
-  67:   const A = 1;        // ok
-  68:   const a = 1;        // warning
-  69:   const MyValue = 1;  // warning
-  70:   const MY_VALUE = 1; // ok
+  66:   const A = 1; // ok
+  67:   const a = 1; // warning
+  68:   const MyValue = 1; // warning
+  69:   const MY_VALUE = 1; // ok
 
 -- No Output --
 -- No Errors --
-Expected warnings(s) which did not occur in line(s): 68, 69
+Expected warnings(s) which did not occur in line(s): 67, 68
 -- No Model --
 -- Test Result --
 TODO (WRONG WARNINGS)

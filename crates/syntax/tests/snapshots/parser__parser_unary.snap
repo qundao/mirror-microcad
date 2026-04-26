@@ -17,56 +17,54 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..6,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: UnaryOperation(
-                            UnaryOperation {
-                                span: 0..6,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                operation: UnaryOperator {
-                                    span: 0..1,
-                                    operation: Not,
-                                },
-                                rhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 1..6,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 1..6,
-                                                name: "input",
-                                            },
-                                        ],
-                                    },
-                                ),
-                            },
+                ExpressionStatement {
+                    span: 0..6,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: UnaryOperation(
+                        UnaryOperation {
+                            span: 0..6,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            operation: UnaryOperator {
+                                span: 0..1,
+                                operation: Not,
+                            },
+                            rhs: QualifiedName(
+                                QualifiedName {
+                                    span: 1..6,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    parts: [
+                                        Identifier {
+                                            span: 1..6,
+                                            name: "input",
+                                        },
+                                    ],
+                                },
+                            ),
+                        },
+                    ),
+                },
             ),
         },
     },

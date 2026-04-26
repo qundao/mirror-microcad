@@ -8,7 +8,10 @@
 -- Code --
 
    8:   thickness = 1.2mm;
-   9:   std::geo2d::Rect(width = 31.8mm - 2 * thickness, height = 15.8mm - 2 * thickness);
+   9:   std::geo2d::Rect(
+  10:       width = 31.8mm - 2 * thickness,
+  11:       height = 15.8mm - 2 * thickness,
+  12:   );
 
 -- No Output --
 -- No Errors --

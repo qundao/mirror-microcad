@@ -15,7 +15,11 @@ const THICKNESS = 2mm;
 
 part Hole(diameter: Length) {
     r = diameter * 50%;
-    Cylinder(radius_bottom = r, radius_top = r + THICKNESS * 50%, height = THICKNESS);
+    Cylinder(
+        radius_bottom = r,
+        radius_top = r + THICKNESS * 50%,
+        height = THICKNESS,
+    );
 }
 
 r = RoundedRect(60mm, radius = 10mm).extrude(THICKNESS);

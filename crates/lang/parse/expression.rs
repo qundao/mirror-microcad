@@ -163,7 +163,7 @@ impl FromAst for Expression {
                 ),
                 src_ref: context.src_ref(&unop.span),
             },
-            ast::Expression::Block(b) => Expression::Body(Body::from_ast(b, context)?),
+            ast::Expression::Body(b) => Expression::Body(Body::from_ast(b, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
                 Expression::from_ast(&access.value, context)?,
                 |acc, element| {
@@ -242,16 +242,17 @@ macro_rules! tuple_expression {
             .statements
             .statements
             .first()
-            .map(|(statement, _)| statement)
+            .map(|(statement, _)| match statement {
+                ast::Statement::Expression(expr) => expr,
+                _ => panic!("Invalid tuple expr"),
+            })
             .or(ast.statements.tail.as_deref())
             .expect("empty source");
-        let tuple_expression = match statement {
-            ast::Statement::Expression(ast::ExpressionStatement {
-                expression: ast::Expression::Tuple(tuple),
-                ..
-            }) => tuple,
-            _ => panic!("non tuple source"),
+
+        let tuple = match &statement.expression {
+            ast::Expression::Tuple(tuple) => tuple,
+            _ => panic!("No tuple"),
         };
-        TupleExpression::from_ast(&tuple_expression, &context).unwrap()
+        TupleExpression::from_ast(&tuple, &context).unwrap()
     }};
 }

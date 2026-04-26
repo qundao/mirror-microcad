@@ -16,8 +16,8 @@
   12:   /// A drill plate with four holes.
   13:   #[color = "red"]
   14:   sketch DrillPlate(size = 100mm, hole_size = 10mm) {
-  15:       l = size/2 - hole_size;
-  16:       Rect(size) - Circle(diameter = hole_size).translate(x = [-l,l], y = [-l,l])
+  15:       l = size / 2 - hole_size;
+  16:       Rect(size) - Circle(diameter = hole_size).translate(x = [-l, l], y = [-l, l])
   17:   }
   18:   
   19:   DrillPlate();

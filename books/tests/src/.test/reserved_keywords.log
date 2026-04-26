@@ -73,22 +73,34 @@
     ╰────
 
 -- Parse Error --
-  × error: 19:1: 'struct' is a reserved keyword
-    ╭─[../books/tests/src/reserved_keywords.md:19:1]
+  × error: 19:8: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
+  │ 'or', 'and', ':', '=' or semicolon
+    ╭─[../books/tests/src/reserved_keywords.md:19:8]
  18 │ 
  19 │ struct asd { // error
-    · ───┬──
-    ·    ╰── 'struct' is a reserved keyword
+    ·        ─┬─
+    ·         ╰── unexpected identifier
  20 │ 
     ╰────
 
 -- Parse Error --
-  × error: 25:1: 'unit' is a reserved keyword
+  × error: 25:1: 'unit' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:25:1]
  24 │ 
  25 │ unit foo; // error
     · ──┬─
-    ·   ╰── 'unit' is a reserved keyword
+    ·   ╰── 'unit' is a reserved keyword and can't be used as an identifier
+ 26 │ 
+    ╰────
+
+-- Parse Error --
+  × error: 25:6: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
+  │ 'or', 'and', ':', '=' or semicolon
+    ╭─[../books/tests/src/reserved_keywords.md:25:6]
+ 24 │ 
+ 25 │ unit foo; // error
+    ·      ─┬─
+    ·       ╰── unexpected identifier
  26 │ 
     ╰────
 
@@ -103,12 +115,22 @@
     ╰────
 
 -- Parse Error --
-  × error: 31:1: 'type' is a reserved keyword
+  × error: 31:1: 'type' is a reserved keyword and can't be used as an identifier
     ╭─[../books/tests/src/reserved_keywords.md:31:1]
  30 │ 
  31 │ type A = Integer; // error
     · ──┬─
-    ·   ╰── 'type' is a reserved keyword
+    ·   ╰── 'type' is a reserved keyword and can't be used as an identifier
+    ╰────
+
+-- Parse Error --
+  × error: 31:6: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
+  │ 'or', 'and', ':', '=' or semicolon
+    ╭─[../books/tests/src/reserved_keywords.md:31:6]
+ 30 │ 
+ 31 │ type A = Integer; // error
+    ·      ┬
+    ·      ╰── unexpected identifier
     ╰────
 
 -- Test Result --

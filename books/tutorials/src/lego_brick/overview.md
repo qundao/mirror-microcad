@@ -22,7 +22,10 @@ sketch Base(width: Length, height: Length) {
 use Rect as Cap;
 
 sketch Knobs() {
-    Circle(diameter = 4.8mm, center = (x = [0..3] * SPACING, y = [0..1] * SPACING))
+    Circle(
+        diameter = 4.8mm,
+        center = (x = [0..3] * SPACING, y = [0..1] * SPACING),
+    )
         .center();
 }
 

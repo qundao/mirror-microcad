@@ -12,7 +12,7 @@ The function definition starts with the keyword `fn`, followed by an
 
 ```µcad,example
 // define function print_error with text as parameter of type String
-fn print_error( text: String ) {
+fn print_error(text: String) {
     // code body
     std::print("ERROR: {text}");
 }
@@ -37,12 +37,12 @@ type is inferred from the unit of the provided value.
 [![test](.test/function_default.svg)](.test/function_default.log)
 
 ```µcad,function_default
-fn f(x: Scalar, y=1mm) -> Length {
+fn f(x: Scalar, y = 1mm) -> Length {
     x * y
 }
 
-std::debug::assert_eq([ f(2), 2mm ]);
-std::debug::assert_eq([ f(2, 2mm), 4mm ]);
+std::debug::assert_eq([f(2), 2mm]);
+std::debug::assert_eq([f(2, 2mm), 4mm]);
 ```
 
 Functions may be declared within [source files](../source_file.md),

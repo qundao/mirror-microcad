@@ -2,34 +2,34 @@
 -- Test --
         Test name: bricks_use_bricks
   Expected result: ok
-      Source file: ../books/examples/src/bricks.md:148
+      Source file: ../books/examples/src/bricks.md:142
         Test path: ../books/examples/src/.test
 
 -- Code --
 
- 148:   // file: use_bricks.µcad
- 149:   // Copyright © 2025 The µcad authors <info@microcad.xyz>
- 150:   // SPDX-License-Identifier: AGPL-3.0-or-later
- 151:   
- 152:   mod brick;
- 153:   
- 154:   use brick::*;
+ 142:   // file: use_bricks.µcad
+ 143:   // Copyright © 2025 The µcad authors <info@microcad.xyz>
+ 144:   // SPDX-License-Identifier: AGPL-3.0-or-later
+ 145:   
+ 146:   mod brick;
+ 147:   
+ 148:   use brick::*;
+ 149:   
+ 150:   // 2x2 double height
+ 151:   double_2x2 = Brick(rows = 2, columns = 2, base_height = 9.6mm * 2);
+ 152:   
+ 153:   // 4x2 single height
+ 154:   single_4x2 = Brick(rows = 4, columns = 2);
  155:   
- 156:   // 2x2 double height
- 157:   double_2x2 = Brick(rows = 2, columns = 2, base_height = 9.6mm * 2);
+ 156:   // 3x2 one-third height
+ 157:   third_3x2 = Brick(rows = 3, columns = 2, base_height = 3.2mm);
  158:   
- 159:   // 4x2 single height
- 160:   single_4x2 = Brick(rows = 4, columns = 2);
+ 159:   // generate geometry placing all elements side by side
+ 160:   use std::ops::translate;
  161:   
- 162:   // 3x2 one-third height
- 163:   third_3x2 = Brick(rows = 3, columns = 2, base_height = 3.2mm);
- 164:   
- 165:   // generate geometry placing all elements side by side
- 166:   use std::ops::translate;
- 167:   
- 168:   single_4x2;
- 169:   double_2x2.translate(y = -40mm);
- 170:   third_3x2.translate(y = 40mm);
+ 162:   single_4x2;
+ 163:   double_2x2.translate(y = -40mm);
+ 164:   third_3x2.translate(y = 40mm);
 
 -- No Output --
 -- No Errors --

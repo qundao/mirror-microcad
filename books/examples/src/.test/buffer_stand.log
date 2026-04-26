@@ -22,7 +22,7 @@
   18:           .extrude(4.0in);
   19:   
   20:       side = {
-  21:           Line(height = size/2);
+  21:           Line(height = size / 2);
   22:           Circle(d = 1.5in).translate(x = -3.25in);
   23:       }
   24:       .hull()
@@ -34,7 +34,7 @@
   30:           w = 4.25in;
   31:           d = w * 0.5 - 0.5in;
   32:   
-  33:           Circle(r = 0.5in, c = (x = [d,-d], y = 0in));
+  33:           Circle(r = 0.5in, c = (x = [d, -d], y = 0in));
   34:           Line(width = w, p = (x = -w * 0.5, y = -4.0in));
   35:       }
   36:       .hull()
@@ -51,7 +51,7 @@
   47:           .revolve()
   48:           .orient(X)
   49:           .translate(x = [2.0, -2.0]in, z = 3.25in);
-  50:       
+  50:   
   51:       bottom_bar = {
   52:           Circle(d = 0.15in).translate(x = -1.35in);
   53:           Line(height = 0.5in);

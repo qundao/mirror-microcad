@@ -2,35 +2,37 @@
 -- Test --
         Test name: init_code_no_building_plan
   Expected result: todo_fail
-      Source file: ../books/language/src/structure/workbenches/elements/init_code.md:47
+      Source file: ../books/language/src/structure/workbenches/elements/init_code.md:49
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
 -- Code --
 
-  47:   sketch Wheel(radius: Length, thickness = 5mm) {
-  48:       use std::geo2d::Circle;
-  49:   
-  50:       const _ = radius * 2;   // error: cannot use radius from building plan
+  49:   sketch Wheel(radius: Length, thickness = 5mm) {
+  50:       use std::geo2d::Circle;
   51:   
-  52:       init( diameter: Length ) { radius = diameter / 2; }
-  53:       Circle(radius + thickness) - Circle(radius)
-  54:   }
-  55:   
-  56:   Wheel(radius = 1cm);
+  52:       const _ = radius * 2; // error: cannot use radius from building plan
+  53:   
+  54:       init(diameter: Length) {
+  55:           radius = diameter / 2;
+  56:       }
+  57:       Circle(radius + thickness) - Circle(radius)
+  58:   }
+  59:   
+  60:   Wheel(radius = 1cm);
 
 -- No Output --
 -- Errors --
-  × error: 53:12: Workbench Circle has ambiguous initialization for those arguments
-    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:53:5]
- 52 │     init( diameter: Length ) { radius = diameter / 2; }
- 53 │     Circle(radius + thickness) - Circle(radius)
+  × error: 57:12: Workbench Circle has ambiguous initialization for those arguments
+    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:57:5]
+ 56 │     }
+ 57 │     Circle(radius + thickness) - Circle(radius)
     ·     ─────────────┬─────────────
     ·                  ╰── Got: Circle( 15mm )
- 54 │ }
+ 58 │ }
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
-Expected error(s) which did not occur in line(s): 50
+Expected error(s) which did not occur in line(s): 52
 -- Test Result --
 TODO (SHALL FAIL)

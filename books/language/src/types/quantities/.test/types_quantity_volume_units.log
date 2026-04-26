@@ -15,12 +15,15 @@
  118:   centiliter = 100.0cl;
  119:   milliliter = 1000.0ml;
  120:   
- 121:   std::debug::assert_eq([ cubic_millimeter,
- 122:                           cubic_centimeter,
- 123:                           cubic_meter,
- 124:                           centiliter,
- 125:                           milliliter
- 126:                           ]);
+ 121:   std::debug::assert_eq(
+ 122:       [
+ 123:           cubic_millimeter,
+ 124:           cubic_centimeter,
+ 125:           cubic_meter,
+ 126:           centiliter,
+ 127:           milliliter,
+ 128:       ],
+ 129:   );
 
 -- No Output --
 -- Errors --

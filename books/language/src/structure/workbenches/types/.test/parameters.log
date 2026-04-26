@@ -10,7 +10,7 @@
   64:   // define operation which takes multiple items
   65:   op punch_disk(radius: Length) {
   66:       if @input.count() == 1 {
-  67:           { 
+  67:           {
   68:               @input;
   69:               std::geo2d::Circle(radius);
   70:           }.subtract();
@@ -32,7 +32,7 @@
  66 │     if @input.count() == 1 {
     ·               ──┬──
     ·                 ╰── Symbol count not found.
- 67 │         { 
+ 67 │         {
     ╰────
   × error: 66:5: If condition is not a boolean: <NO VALUE>
     ╭─[../books/language/src/structure/workbenches/types/operations.md:66:8]
@@ -40,7 +40,7 @@
  66 │     if @input.count() == 1 {
     ·        ──────────┬─────────
     ·                  ╰── Not a boolean
- 67 │         { 
+ 67 │         {
     ╰────
 Unexpected error(s) which did occur in line(s): 66
 -- Test Result --

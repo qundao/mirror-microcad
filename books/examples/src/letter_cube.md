@@ -20,7 +20,6 @@ part Letter(letter: String, size: Length, axis: Vec3) {
         .orient(axis);
 }
 
-
 part LetterCube(size: Length) {
     s = size / sqrt(2.1);
     body = Cube(size) & Sphere(r = s);

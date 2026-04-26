@@ -7,6 +7,7 @@ use microcad_syntax::ast;
 
 mod error;
 mod expression;
+mod extras;
 mod literal;
 mod node;
 mod statement;
@@ -17,99 +18,6 @@ pub(crate) use crate::{
     node::{BreakMode, Node},
 };
 
-impl Format for ast::LeadingExtras {
-    fn format(&self, f: &FormatConfig) -> Node {
-        let node: Node = self
-            .0
-            .iter()
-            .enumerate()
-            .map(|(i, extra)| match &extra {
-                ast::ItemExtra::Comment(comment) => comment.format(f),
-                ast::ItemExtra::Whitespace(ws) => ws
-                    .chars()
-                    .filter(|&c| c == '\n')
-                    .map(|_| if i > 0 { Node::Hardline } else { Node::Nil })
-                    .take(if i < self.0.len() - 1 { 2 } else { 0 })
-                    .collect::<Vec<Node>>()
-                    .into(),
-                _ => todo!(),
-            })
-            .collect::<Vec<_>>()
-            .into();
-
-        let trailing_ws = if let Some(ast::ItemExtra::Whitespace(ws)) = self.0.last()
-            && ws.starts_with('\n')
-            && !ws.contains(' ')
-            && self.0.len() > 1
-        {
-            node!(
-                ws.chars()
-                    .filter(|&c| c == '\n')
-                    .map(|_| Node::Hardline)
-                    .take(2)
-                    .collect::<Vec<Node>>()
-            )
-        } else {
-            Node::Nil
-        };
-
-        node!(f =>
-            node
-            trailing_ws
-        )
-    }
-}
-
-impl Format for ast::TrailingExtras {
-    fn format(&self, f: &FormatConfig) -> Node {
-        let leading_ws = if let Some(ast::ItemExtra::Whitespace(ws)) = self.0.first()
-            && !ws.contains('\n')
-            && ws.contains(' ')
-            && self.0.len() > 1
-        {
-            node!(' ')
-        } else {
-            Node::Nil
-        };
-
-        node!(
-            leading_ws
-            self.0
-                .iter()
-                .map(|extra| match &extra {
-                    ast::ItemExtra::Comment(comment) => comment.format(f),
-                    ast::ItemExtra::Whitespace(ws) => ws
-                    .chars()
-                    .filter_map(|c| {
-                        if c == '\n' {
-                            Some(Node::Hardline)
-                        } else {
-                            None
-                        }
-                    })
-                    .take(2)
-                    .collect::<Vec<_>>()
-                    .into(),
-                _ => todo!(),
-            })
-            .collect::<Vec<_>>()
-
-        )
-    }
-}
-
-pub(crate) fn with_extras(
-    extras: &ast::ItemExtras,
-    f: &FormatConfig,
-    node: impl Into<Node>,
-) -> Node {
-    node!(f =>
-        extras.leading
-        node.into()
-        extras.trailing
-    )
-}
-
 #[derive(Debug, Clone)]
 pub struct FormatConfig {
     pub max_width: usize,
@@ -119,7 +27,7 @@ pub struct FormatConfig {
 impl Default for FormatConfig {
     fn default() -> Self {
         Self {
-            max_width: 80,
+            max_width: 60,
             indent_width: 4,
         }
     }
@@ -157,8 +65,12 @@ impl Format for ast::Identifier {
 impl Format for ast::Comment {
     fn format(&self, _: &FormatConfig) -> Node {
         match &self.inner {
-            ast::CommentInner::SingleLine(line) => line.clone().into(),
-            ast::CommentInner::MultiLine(line) => node!("/* " Node::from(line.clone()) " */"),
+            ast::CommentInner::SingleLine(line) => {
+                node!(Node::Softline Node::SingleLineComment(line.into()))
+            }
+            ast::CommentInner::MultiLine(line) => {
+                node!(Node::Softline "/* " Node::from(line.clone()) " */" Node::Softline)
+            }
         }
     }
 }
@@ -194,7 +106,7 @@ macro_rules! node {
     };
     // Multiple formatted elements with extras: node!(f => begin, body, end)
     ($f:ident, $extras:expr => $($node:expr)*) => {
-        $crate::with_extras(
+        $crate::extras::with_extras(
             &$extras,
             $f,
             $crate::Node::from(vec![

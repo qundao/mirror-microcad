@@ -8,7 +8,7 @@
 -- Code --
 
   38:   // function with two parameters (`one`, `another`, and `one_more`)
-  39:   fn f( one: Integer, another = 2m, one_more: Area ) { 
+  39:   fn f(one: Integer, another = 2m, one_more: Area) {
   40:       std::print("{one} {another} {one_more}");
   41:   }
   42:   

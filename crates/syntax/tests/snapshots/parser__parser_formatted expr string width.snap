@@ -17,120 +17,118 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..47,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: String(
-                            FormatString {
-                                span: 0..47,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                parts: [
-                                    Content(
-                                        StringLiteral {
-                                            span: 1..8,
-                                            content: "string ",
-                                        },
-                                    ),
-                                    Expression(
-                                        StringExpression {
-                                            span: 34..35,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            expression: BinaryOperation(
-                                                BinaryOperation {
-                                                    span: 9..31,
-                                                    lhs: QualifiedName(
-                                                        QualifiedName {
-                                                            span: 9..18,
-                                                            extras: ItemExtras {
-                                                                leading: LeadingExtras(
-                                                                    [],
-                                                                ),
-                                                                trailing: TrailingExtras(
-                                                                    [
-                                                                        Whitespace(
-                                                                            " ",
-                                                                        ),
-                                                                    ],
-                                                                ),
-                                                            },
-                                                            parts: [
-                                                                Identifier {
-                                                                    span: 9..18,
-                                                                    name: "formatted",
-                                                                },
-                                                            ],
-                                                        },
-                                                    ),
-                                                    operation: BinaryOperator {
-                                                        span: 19..20,
-                                                        operation: Subtract,
-                                                    },
-                                                    rhs: QualifiedName(
-                                                        QualifiedName {
-                                                            span: 21..31,
-                                                            extras: ItemExtras {
-                                                                leading: LeadingExtras(
-                                                                    [],
-                                                                ),
-                                                                trailing: TrailingExtras(
-                                                                    [],
-                                                                ),
-                                                            },
-                                                            parts: [
-                                                                Identifier {
-                                                                    span: 21..31,
-                                                                    name: "expression",
-                                                                },
-                                                            ],
-                                                        },
-                                                    ),
-                                                },
-                                            ),
-                                            specification: StringFormatSpecification {
-                                                span: 32..34,
-                                                precision: None,
-                                                width: Some(
-                                                    Ok(
-                                                        3,
-                                                    ),
-                                                ),
-                                            },
-                                        },
-                                    ),
-                                    Content(
-                                        StringLiteral {
-                                            span: 35..46,
-                                            content: " expression",
-                                        },
-                                    ),
-                                ],
-                            },
+                ExpressionStatement {
+                    span: 0..47,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
                         ),
                     },
-                ),
+                    attributes: [],
+                    expression: String(
+                        FormatString {
+                            span: 0..47,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            parts: [
+                                Content(
+                                    StringLiteral {
+                                        span: 1..8,
+                                        content: "string ",
+                                    },
+                                ),
+                                Expression(
+                                    StringExpression {
+                                        span: 34..35,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        expression: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 9..31,
+                                                lhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 9..18,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                        },
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 9..18,
+                                                                name: "formatted",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                                operation: BinaryOperator {
+                                                    span: 19..20,
+                                                    operation: Subtract,
+                                                },
+                                                rhs: QualifiedName(
+                                                    QualifiedName {
+                                                        span: 21..31,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 21..31,
+                                                                name: "expression",
+                                                            },
+                                                        ],
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                        specification: StringFormatSpecification {
+                                            span: 32..34,
+                                            precision: None,
+                                            width: Some(
+                                                Ok(
+                                                    3,
+                                                ),
+                                            ),
+                                        },
+                                    },
+                                ),
+                                Content(
+                                    StringLiteral {
+                                        span: 35..46,
+                                        content: " expression",
+                                    },
+                                ),
+                            ],
+                        },
+                    ),
+                },
             ),
         },
     },

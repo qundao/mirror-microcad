@@ -16,7 +16,7 @@
   12:   std::geo2d::Rect(42mm)
   13:       .rotate(45°);
   14:   
-  15:   #[export = "circle.svg"]  // Will be exported to `circle.svg`
+  15:   #[export = "circle.svg"] // Will be exported to `circle.svg`
   16:   std::geo2d::Circle(r = 42mm)
   17:       .translate(x = 42mm);
   18:   

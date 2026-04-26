@@ -17,21 +17,30 @@ Ok(
             },
             statements: [],
             tail: Some(
-                Expression(
-                    ExpressionStatement {
-                        span: 0..17,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attributes: [],
-                        expression: Call(
-                            Call {
-                                span: 0..17,
+                ExpressionStatement {
+                    span: 0..17,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
+                        ),
+                    },
+                    attributes: [],
+                    expression: Call(
+                        Call {
+                            span: 0..17,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            name: QualifiedName {
+                                span: 0..3,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
                                         [],
@@ -40,48 +49,37 @@ Ok(
                                         [],
                                     ),
                                 },
-                                name: QualifiedName {
-                                    span: 0..3,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
+                                parts: [
+                                    Identifier {
+                                        span: 0..3,
+                                        name: "foo",
                                     },
-                                    parts: [
-                                        Identifier {
-                                            span: 0..3,
-                                            name: "foo",
-                                        },
-                                    ],
-                                },
-                                arguments: ArgumentList {
-                                    span: 4..16,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [
-                                                Comment(
-                                                    Comment {
-                                                        span: 4..16,
-                                                        inner: MultiLine(
-                                                            "foobar",
-                                                        ),
-                                                    },
-                                                ),
-                                            ],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    arguments: [],
-                                },
+                                ],
                             },
-                        ),
-                    },
-                ),
+                            arguments: ArgumentList {
+                                span: 4..16,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [
+                                            Comment(
+                                                Comment {
+                                                    span: 4..16,
+                                                    inner: MultiLine(
+                                                        "foobar",
+                                                    ),
+                                                },
+                                            ),
+                                        ],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                arguments: [],
+                            },
+                        },
+                    ),
+                },
             ),
         },
     },

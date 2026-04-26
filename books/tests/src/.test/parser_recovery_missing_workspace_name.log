@@ -14,11 +14,12 @@
   40:   a =; // error after a workspace with no name
 
 -- Parse Error --
-  × error: 37:8: Expected identifier
-    ╭─[../books/tests/src/parser_recovery.md:37:8]
+  × error: 37:11: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  │ 'and' or semicolon
+    ╭─[../books/tests/src/parser_recovery.md:37:11]
  37 │ sketch () { // error, no name
-    ·        ┬
-    ·        ╰── unexpected (
+    ·           ┬
+    ·           ╰── unexpected {
  38 │   1=; // error inside an if statement with missing params
     ╰────
 
