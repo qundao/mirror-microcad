@@ -19,7 +19,7 @@ mod parser;
 /// Source tokens for µcad files
 pub mod tokens;
 
-use microcad_lang_base::Hashed;
+use microcad_lang_base::{ComputedHash, Hashed, SrcRef, SrcReferrer};
 pub use parser::ParseError;
 
 /// An index to retrieve the offsets in a line in O(log(n)).
@@ -62,6 +62,13 @@ pub struct Document<'a> {
     pub text: Hashed<&'a str>,
     /// The syntax tree
     pub ast: ast::Source,
+}
+
+impl<'a> SrcReferrer for Document<'a> {
+    fn src_ref(&self) -> SrcRef {
+        let (line, col) = self.line_index.line_col(&self.text, self.ast.span.start);
+        SrcRef::new(self.ast.span.clone(), line, col, self.text.computed_hash())
+    }
 }
 
 /// Highlevel API to parse directly from a string
