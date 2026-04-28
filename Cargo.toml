@@ -60,7 +60,7 @@ authors = [
     "Michael Winkelmann (michael@winkelmann.site)",
     "Patrick Hoffmann (p.hoffmann@berlin.de)",
 ]
-version = "0.4.0"
+version = "0.5.0"
 edition = "2024"
 homepage = "https://microcad.xyz"
 repository = "https://codeberg.org/microcad/microcad"
@@ -72,18 +72,18 @@ keywords = ["cad", "geometry", "3d", "cnc", "openscad"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace.dependencies]
-microcad-core = { path = "crates/core", version = "0.4.0" }
-microcad-syntax = { path = "crates/syntax", version = "0.4.0" }
-microcad-import = { path = "crates/import", version = "0.4.0" }
-microcad-export = { path = "crates/export", version = "0.4.0" }
-microcad-lang = { path = "crates/lang", version = "0.4.0" }
-microcad-lang-base = { path = "crates/lang-base", version = "0.4.0" }
-microcad-lang-format = { path = "crates/lang-format", version = "0.4.0" }
-microcad-lang-markdown = { path = "crates/lang-markdown", version = "0.4.0" }
-microcad-lang-proc-macros = { path = "crates/lang-proc-macros", version = "0.4.0" }
-microcad-docgen = { path = "crates/docgen", version = "0.4.0" }
-microcad-builtin = { path = "crates/builtin", version = "0.4.0" }
-microcad-builtin-proc-macros = { path = "crates/builtin-proc-macros", version = "0.4.0" }
-microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.4.0" }
-microcad-viewer = { path = "crates/viewer", version = "0.4.0" }
-microcad-std = { path = "crates/std", version = "0.4.0" }
+microcad-core = { path = "crates/core", version = "0.5.0" }
+microcad-syntax = { path = "crates/syntax", version = "0.5.0" }
+microcad-import = { path = "crates/import", version = "0.5.0" }
+microcad-export = { path = "crates/export", version = "0.5.0" }
+microcad-lang = { path = "crates/lang", version = "0.5.0" }
+microcad-lang-base = { path = "crates/lang-base", version = "0.5.0" }
+microcad-lang-format = { path = "crates/lang-format", version = "0.5.0" }
+microcad-lang-markdown = { path = "crates/lang-markdown", version = "0.5.0" }
+microcad-lang-proc-macros = { path = "crates/lang-proc-macros", version = "0.5.0" }
+microcad-docgen = { path = "crates/docgen", version = "0.5.0" }
+microcad-builtin = { path = "crates/builtin", version = "0.5.0" }
+microcad-builtin-proc-macros = { path = "crates/builtin-proc-macros", version = "0.5.0" }
+microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.5.0" }
+microcad-viewer = { path = "crates/viewer", version = "0.5.0" }
+microcad-std = { path = "crates/std", version = "0.5.0" }
