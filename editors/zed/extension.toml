@@ -1,0 +1,14 @@
+id = "microcad"
+name = "Microcad"
+version = "0.0.1"
+schema_version = 1
+authors = ["Patrick Hoffmann", "Michael Winkelmann"]
+description = "Microcad Plugin for Zed"
+repository = "https://codeberg.org/microcad/microcad"
+
+[grammars.microcad]
+repository = "https://codeberg.org/icewind/tree-sitter-microcad"
+commit = "339420b9cfbb9d6e96ed1f881c1632af4c3fcd22"
+
+[language_servers.microcad-lsp]
+language = "Microcad"

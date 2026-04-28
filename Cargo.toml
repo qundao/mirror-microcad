@@ -50,6 +50,7 @@ members = [
     # Non default members
     "crates/viewer",
     "crates/inspector",
+    "editors/zed",
 ]
 resolver = "2"
 

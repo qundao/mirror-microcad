@@ -246,7 +246,7 @@ impl Format for ast::ElementInner {
 
 impl Format for ast::Element {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.inner)
+        node!(f, leading_extras_without_newline(&self.extras) => self.inner)
     }
 }
 

@@ -1,0 +1,13 @@
+[package]
+name = "microcad-zed"
+edition = "2024"
+license = "MIT"
+publish = false
+version = "0.0.1"
+
+[lib]
+crate-type = ["cdylib"]
+path = "src/microcad.rs"
+
+[dependencies]
+zed_extension_api  = "0.7.0"
