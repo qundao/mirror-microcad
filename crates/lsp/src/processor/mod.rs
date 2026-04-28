@@ -11,10 +11,11 @@ use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
 use microcad_lang::{eval, syntax};
-use microcad_lang_base::{DiagHandler, PushDiag, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{DiagHandler, HashMap, PushDiag, Refer, SrcRef, SrcReferrer};
+use microcad_lang_format::FormatConfig;
 use miette::IntoDiagnostic;
 use tower_lsp::lsp_types::{
-    Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, SemanticTokens,
+    Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Range, SemanticTokens,
     SemanticTokensResult, Url,
 };
 
@@ -35,6 +36,7 @@ pub enum ProcessorRequest {
     UpdateDocumentStr(Url, String),
     GetDocumentDiagnostics(Url),
     GetFullSemanticTokens(Url),
+    FormatDocument(Url),
 }
 
 /// A processor response.
@@ -42,9 +44,13 @@ pub enum ProcessorResponse {
     /// Error messages and warnings for a specific document received.
     DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
     SemanticTokens(Url, SemanticTokensResult),
+    FormattedDocument {
+        url: Url,
+        code: String,
+    },
 }
 
-fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<tower_lsp::lsp_types::Range> {
+fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<Range> {
     match src_ref.0 {
         Some(src_ref_inner) => {
             use tower_lsp::lsp_types::{Position, Range};
@@ -96,6 +102,8 @@ pub struct Processor {
     pub request_handler: Receiver<ProcessorRequest>,
     /// Outputs
     pub response_sender: Sender<ProcessorResponse>,
+
+    pub buffers: HashMap<Url, String>,
 }
 
 pub type ProcessorResult = miette::Result<Vec<ProcessorResponse>>;
@@ -111,6 +119,7 @@ impl Processor {
             ProcessorRequest::UpdateDocumentStr(url, doc) => self.update_document_str(&url, &doc),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
             ProcessorRequest::GetFullSemanticTokens(url) => self.get_full_semantic_tokens(&url),
+            ProcessorRequest::FormatDocument(url) => self.format_document(&url),
         }
     }
 
@@ -126,6 +135,7 @@ impl Processor {
                 .map_err(|_| miette::miette!("Error converting {url} to file path."))?,
         ) {
             Ok(source_file) => {
+                self.buffers.insert(url.clone(), source_file.source.clone());
                 match eval::EvalContext::from_source(
                     source_file,
                     Some(microcad_builtin::builtin_module()),
@@ -163,21 +173,24 @@ impl Processor {
             .to_file_path()
             .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
         self.context = match syntax::SourceFile::load_from_str(None, path, doc) {
-            Ok(source_file) => match eval::EvalContext::from_source(
-                source_file,
-                Some(microcad_builtin::builtin_module()),
-                &self.workspace_settings.search_paths,
-                microcad_lang_base::Capture::new(),
-                microcad_builtin::builtin_exporters(),
-                microcad_builtin::builtin_importers(),
-                0,
-            ) {
-                Ok(mut context) => {
-                    context.eval()?;
-                    Context::Eval(context.into())
+            Ok(source_file) => {
+                self.buffers.insert(url.clone(), source_file.source.clone());
+                match eval::EvalContext::from_source(
+                    source_file,
+                    Some(microcad_builtin::builtin_module()),
+                    &self.workspace_settings.search_paths,
+                    microcad_lang_base::Capture::new(),
+                    microcad_builtin::builtin_exporters(),
+                    microcad_builtin::builtin_importers(),
+                    0,
+                ) {
+                    Ok(mut context) => {
+                        context.eval()?;
+                        Context::Eval(context.into())
+                    }
+                    Err(_) => todo!(),
                 }
-                Err(_) => todo!(),
-            },
+            }
 
             Err(errors) => {
                 let mut diag = DiagHandler::default();
@@ -192,6 +205,30 @@ impl Processor {
             }
         };
         Ok(vec![])
+    }
+
+    pub fn get_document_string(&self, url: &Url) -> miette::Result<String> {
+        match self.buffers.get(url) {
+            Some(buffer) => Ok(buffer.clone()),
+            None => {
+                let path = url
+                    .to_file_path()
+                    .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
+                std::fs::read_to_string(&path)
+                    .map_err(|err| miette::miette!("Error reading file: {err}"))
+            }
+        }
+    }
+
+    pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
+        let src = self.get_document_string(url)?;
+        let doc =
+            microcad_syntax::parse(&src).map_err(|err| miette::miette!("Parse error: {err:?}"))?;
+
+        Ok(vec![ProcessorResponse::FormattedDocument {
+            url: url.clone(),
+            code: microcad_lang_format::format(&doc.ast, &FormatConfig::default()),
+        }])
     }
 
     pub fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
@@ -279,6 +316,7 @@ impl ProcessorInterface {
                 request_handler: request_receiver,
                 response_sender,
                 context: Context::None,
+                buffers: HashMap::default(),
             };
 
             loop {

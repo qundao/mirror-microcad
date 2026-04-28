@@ -15,12 +15,12 @@ use tower_lsp::{
         DiagnosticOptions, DiagnosticServerCapabilities, DidChangeTextDocumentParams,
         DidCloseTextDocumentParams, DidOpenTextDocumentParams, DidSaveTextDocumentParams,
         DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportPartialResult,
-        DocumentDiagnosticReportResult, ExecuteCommandParams, InitializeParams, InitializeResult,
-        InitializedParams, MessageType, RelatedFullDocumentDiagnosticReport,
-        SemanticTokensFullOptions, SemanticTokensLegend, SemanticTokensOptions,
-        SemanticTokensParams, SemanticTokensPartialResult, SemanticTokensResult,
-        SemanticTokensServerCapabilities, ServerCapabilities, TextDocumentSyncCapability,
-        TextDocumentSyncKind, Url,
+        DocumentDiagnosticReportResult, DocumentFormattingParams, ExecuteCommandParams,
+        InitializeParams, InitializeResult, InitializedParams, MessageType, OneOf, Position, Range,
+        RelatedFullDocumentDiagnosticReport, SemanticTokensFullOptions, SemanticTokensLegend,
+        SemanticTokensOptions, SemanticTokensParams, SemanticTokensPartialResult,
+        SemanticTokensResult, SemanticTokensServerCapabilities, ServerCapabilities,
+        TextDocumentSyncCapability, TextDocumentSyncKind, TextEdit, Url,
     },
 };
 
@@ -101,6 +101,7 @@ impl LanguageServer for Backend {
                         },
                     ),
                 ),
+                document_formatting_provider: Some(OneOf::Left(true)),
                 ..Default::default()
             },
         })
@@ -141,7 +142,7 @@ impl LanguageServer for Backend {
                 match uri.to_file_path() {
                     Ok(path) => {
                         log::info!("New active document: {:?}", path);
-                        self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
+                        let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
                     }
                     Err(()) => log::error!("Cannot parse URI: {uri}"),
                 }
@@ -283,6 +284,35 @@ impl LanguageServer for Backend {
         }
 
         Ok(None)
+    }
+
+    async fn formatting(&self, params: DocumentFormattingParams) -> Result<Option<Vec<TextEdit>>> {
+        let _ = params;
+        log::error!("Got a textDocument/formatting request, but it is not implemented");
+        let url = &params.text_document.uri;
+        self.send_lsp(ProcessorRequest::FormatDocument(url.clone()));
+
+        // Wait for response
+        if let Ok(ProcessorResponse::FormattedDocument { url, code }) =
+            self.processor.recv_response()
+        {
+            log::info!("Formatted code received {url}");
+            Ok(Some(vec![TextEdit {
+                range: Range {
+                    start: Position {
+                        line: 0,
+                        character: 0,
+                    },
+                    end: Position {
+                        line: u32::MAX,
+                        character: u32::MAX,
+                    },
+                },
+                new_text: code,
+            }]))
+        } else {
+            Ok(None)
+        }
     }
 }
 
