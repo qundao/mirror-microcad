@@ -28,9 +28,7 @@ strum = { version = "0.28", features = ["derive"] }
 scan_dir = "0.3"
 delegate = "0.13"
 pathdiff = "0.2"
-ctor = "0.6"
 color-print = "0.3"
-sqids = "0.4"
 indexmap = "2"
 rustc-hash = "2.1.1"
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
@@ -43,9 +41,3 @@ microcad-core = { workspace = true }
 microcad-syntax = { workspace = true }
 microcad-lang-base = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
-
-[lints.rust]
-missing_docs = "warn"
-
-[lints.clippy]
-unwrap_used = "warn"
