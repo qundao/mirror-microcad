@@ -1,0 +1,37 @@
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-driver"
+description = "µcad high-level API"
+documentation = "https://docs.rs/microcad-lang-base"
+authors = ["Michael Winkelmann (michael@winkelmann.site)"]
+version.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+
+[dependencies]
+compact_str = "0.9.0"
+derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
+log = "0.4"
+miette = { version = "7.6.0", features = ["derive", "fancy"] }
+notify = "8"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2.0.17"
+toml = { version = "1.1.2", features = ["serde"] }
+url = "2.5.7"
+
+microcad-builtin = { workspace = true }
+microcad-core = { workspace = true }
+microcad-docgen = { workspace = true }
+microcad-export = { workspace = true }
+microcad-lang = { workspace = true }
+microcad-lang-base = { workspace = true }
+microcad-lang-format = { workspace = true }
+microcad-lang-markdown = { workspace = true }
+microcad-std = { workspace = true }
+microcad-syntax = { workspace = true }
