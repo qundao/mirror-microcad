@@ -1,8 +1,6 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_format::FormatConfig;
-
 use crate::{Cli, commands::RunCommand};
 
 /// Format a µcad file.
@@ -15,6 +13,8 @@ pub struct Format {
 
 impl RunCommand<()> for Format {
     fn run(&self, _cli: &Cli) -> miette::Result<()> {
+        use microcad_lang_format::FormatConfig;
+
         let config = FormatConfig::default();
         use miette::miette;
 

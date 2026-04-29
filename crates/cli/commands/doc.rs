@@ -3,13 +3,10 @@
 
 //! µcad CLI doc command
 
-use microcad_builtin::Symbol;
-use microcad_docgen::*;
+use crate::{Cli, commands::RunCommand};
 
-use crate::{
-    Cli,
-    commands::{Resolve, RunCommand},
-};
+use microcad_docgen::*;
+use microcad_driver::Document;
 
 /// Generate documentation from code.
 #[derive(clap::Parser)]
@@ -17,8 +14,7 @@ pub struct Doc {
     /// Input file or library name.
     ///
     /// Build documentation for an external library (only `__builtin` and `std` are possible).
-    #[clap(flatten)]
-    resolve: Resolve,
+    input: std::path::PathBuf,
 
     /// Generator (md (default), mdbook).
     #[arg(short = 'g', long = "generator")]
@@ -44,31 +40,12 @@ impl Doc {
             _ => Err(miette::miette!("No generator with name `{name}`")),
         }
     }
-
-    /// Resolve symbol from arguments
-    fn symbol(&self, cli: &Cli) -> miette::Result<Symbol> {
-        let input = &self.resolve.parse.input;
-        // Handle special case for builtin symbol.
-        if let Some(s) = input.to_str()
-            && s == "__builtin"
-        {
-            return Ok(microcad_builtin::builtin_module());
-        }
-
-        let context = self.resolve.run(cli)?;
-        let symbol = context
-            .root
-            .get_child(&microcad_lang::syntax::Identifier::no_ref("mod")) // FIXME. This symbol should have same name as its parent directory (e.g. `std`)
-            .expect("Symbol");
-
-        Ok(symbol)
-    }
 }
 
 impl RunCommand<()> for Doc {
-    fn run(&self, cli: &Cli) -> miette::Result<()> {
+    fn run(&self, _cli: &Cli) -> miette::Result<()> {
         let generator = self.generator()?;
-        let symbol = self.symbol(cli)?;
+        let symbol = Document::new(self.input.clone()).load()?.symbol()?;
         generator
             .doc_gen(&symbol)
             .map_err(|err| miette::miette!("{err}"))

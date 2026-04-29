@@ -26,7 +26,7 @@ lazy_static = "1.4"
 log = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_derive = "1.0"
-toml = "0.9"
+toml = "1.1.2"
 notify = "8"
 dirs = "6"
 num-format = "0.4"
@@ -34,15 +34,10 @@ rust-embed = "8.9"
 miette = { version = "7.6.0", features = ["fancy"] }
 
 microcad-builtin = { workspace = true }
-microcad-core = { workspace = true }
 microcad-docgen = { workspace = true }
-microcad-export = { workspace = true }
-microcad-lang = { workspace = true }
-microcad-lang-base = { workspace = true }
-microcad-lang-format = { workspace = true }
+microcad-driver = { workspace = true }
 microcad-lang-markdown = { workspace = true }
-microcad-std = { workspace = true }
-microcad-syntax = { workspace = true }
+microcad-lang-format = { workspace = true }
 
 [build-dependencies]
 walkdir = "2"

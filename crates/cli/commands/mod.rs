@@ -3,39 +3,29 @@
 
 //! µcad CLI commands
 
+mod check;
 mod completions;
 mod create;
 mod doc;
-mod eval;
 mod export;
 mod format;
-mod parse;
-mod resolve;
 mod watch;
 
 use clap::Subcommand;
 
+pub use check::Check;
 pub use create::Create;
 pub use doc::Doc;
-pub use eval::Eval;
 pub use export::Export;
 pub use format::Format;
-pub use parse::Parse;
-pub use resolve::Resolve;
 pub use watch::Watch;
 
 use crate::commands::completions::Completions;
 
 #[derive(Subcommand)]
 pub enum Commands {
-    /// Parse a µcad file.
-    Parse(Parse),
-
-    /// Parse and resolve a µcad file.
-    Resolve(Resolve),
-
-    /// Parse and evaluate a µcad file.
-    Eval(Eval),
+    /// Check a µcad file.
+    Check(Check),
 
     /// Parse and evaluate and export a µcad file.
     Export(Export),
