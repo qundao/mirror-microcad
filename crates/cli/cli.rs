@@ -6,7 +6,8 @@
 use clap::Parser;
 
 use crate::commands::*;
-use crate::config::Config;
+
+use microcad_driver::Session;
 
 /// µcad cli
 #[derive(Parser)]
@@ -30,7 +31,7 @@ pub struct Cli {
 
     /// The loaded or default CLI config.
     #[clap(skip)]
-    pub config: Config,
+    pub session: Session,
 }
 
 impl Cli {
@@ -38,18 +39,9 @@ impl Cli {
     pub fn new() -> miette::Result<Self> {
         let mut cli = Self::parse();
         if let Some(config_path) = &cli.config_path {
-            cli.config = Config::load(config_path)?
+            cli.session = Session::new(microcad_driver::Config::load(config_path)?)
         }
         Ok(cli)
-    }
-
-    /// Return a path with default µcad extension given in the config.
-    pub fn path_with_default_ext(&self, path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
-        let mut path = path.as_ref().to_path_buf();
-        if path.extension().is_none() {
-            path.set_extension(self.config.default_extension.clone());
-        }
-        path
     }
 
     /// Run the CLI.
@@ -57,14 +49,8 @@ impl Cli {
         let start = std::time::Instant::now();
 
         match &self.command {
-            Commands::Parse(parse) => {
-                parse.run(self)?;
-            }
-            Commands::Resolve(resolve) => {
-                resolve.run(self)?;
-            }
-            Commands::Eval(eval) => {
-                eval.run(self)?;
+            Commands::Check(check) => {
+                check.run(self)?;
             }
             Commands::Export(export) => {
                 export.run(self)?;
@@ -93,22 +79,6 @@ impl Cli {
             );
         }
         Ok(())
-    }
-
-    pub(super) fn is_parse(&self) -> bool {
-        matches!(self.command, Commands::Parse(..))
-    }
-
-    pub(super) fn is_resolve(&self) -> bool {
-        matches!(self.command, Commands::Resolve(..))
-    }
-
-    pub(super) fn is_eval(&self) -> bool {
-        matches!(self.command, Commands::Eval(..))
-    }
-
-    pub(super) fn is_export(&self) -> bool {
-        matches!(self.command, Commands::Export(..))
     }
 
     pub(super) fn time_to_string(duration: &std::time::Duration) -> String {

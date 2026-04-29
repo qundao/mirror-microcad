@@ -3,8 +3,8 @@
 
 //! µcad CLI create command
 
-use miette::IntoDiagnostic;
 use crate::*;
+use miette::IntoDiagnostic;
 
 #[derive(clap::Parser)]
 pub struct Create {
@@ -18,7 +18,7 @@ struct Hello;
 
 impl RunCommand for Create {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let path = cli.path_with_default_ext(&self.path);
+        let path = cli.session.path_with_default_ext(&self.path);
 
         if path.exists() {
             eprintln!("Error: File {path:?} already exists.")
@@ -28,7 +28,8 @@ impl RunCommand for Create {
                 Hello::get("hello.µcad")
                     .expect("embedded hello.µcad not found")
                     .data,
-            ).into_diagnostic()?;
+            )
+            .into_diagnostic()?;
             eprintln!("File {path:?} generated.")
         }
 

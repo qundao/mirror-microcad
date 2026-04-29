@@ -1,68 +1,53 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad CLI parse command
+//! µcad CLI watch command
 
-use microcad_lang::{model::Model, render::*, value::Value};
-use microcad_lang_base::RcMut;
+use microcad_driver::{Document, RcMut, RenderCache};
 
 use crate::*;
 
 #[derive(clap::Parser)]
 pub struct Watch {
-    /// Export arguments.
-    #[clap(flatten)]
-    pub export: Export,
+    pub input: std::path::PathBuf,
+
+    /// Output file (e.g. an SVG or STL).
+    pub output: Option<std::path::PathBuf>,
+
+    /// The resolution of this export.
+    ///
+    /// The resolution can changed relatively `200%` or to an absolute value `0.05mm`.
+    #[arg(short, long, default_value = "0.1mm")]
+    pub resolution: String,
 }
 
 /// Run this command for a CLI.
 impl RunCommand for Watch {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let mut watcher = Watcher::new()?;
+        let mut watcher = microcad_driver::Watcher::new()?;
         let render_cache = RcMut::new(RenderCache::default());
+        let input = cli.session.path_with_default_ext(&self.input);
 
-        if !self.export.dry_run {
-            // Recompile whenever something relevant happens.
-            loop {
-                // run prior parse step
-                match self.export.run(cli) {
-                    Ok(target_models) => {
-                        target_models.iter().try_for_each(
-                            |(model, export)| -> miette::Result<()> {
-                                let mut render_context = RenderContext::new(
-                                    model,
-                                    self.export.resolution(),
-                                    Some(render_cache.clone()),
-                                    None,
-                                )?;
-                                let model: Model =
-                                    model.render_with_context(&mut render_context)?;
+        // Recompile whenever something relevant happens.
+        loop {
+            let mut doc = Document::new(input.clone());
+            let export = doc
+                .load()?
+                .export(cli.session.config.export.clone(), self.output.clone())?;
 
-                                let value = export.export(&model)?;
-                                if !matches!(value, Value::None) {
-                                    log::info!("{value}");
-                                };
-                                Ok(())
-                            },
-                        )?;
-                    }
-                    Err(err) => log::error!("{err}"),
-                }
+            export.export()?;
 
-                // Watch all dependencies of the most recent compilation.
-                watcher.update(vec![self.export.eval.resolve.parse.input_with_ext(cli)])?;
+            // Watch all dependencies of the most recent compilation.
+            watcher.update(vec![input.clone()])?;
 
-                // Remove unused cache items.
-                {
-                    let mut cache = render_cache.borrow_mut();
-                    cache.garbage_collection();
-                }
-
-                // Wait until anything relevant happens.
-                watcher.wait()?;
+            // Remove unused cache items.
+            {
+                let mut cache = render_cache.borrow_mut();
+                cache.garbage_collection();
             }
-        }
 
-        Ok(())
+            // Wait until anything relevant happens.
+            watcher.wait()?;
+        }
     }
 }
