@@ -77,8 +77,7 @@ impl Triangulation {
         Self {
             positions: triangulation
                 .vertices
-                .as_slice()
-                .chunks_exact(2)
+                .iter()
                 .map(|chunk| [chunk[0] as f32, chunk[1] as f32, z])
                 .collect(),
             indices: triangulation
