@@ -13,11 +13,8 @@ repository.workspace = true
 rust-version.workspace = true
 version.workspace = true
 
-[lib]
-path = "lib.rs"
-
 [dependencies]
-toml = { version = "0.9", features = ["serde"] }
+toml = { version = "1.1.2", features = ["serde"] }
 serde = "1.0"
 thiserror = "2.0"
 log = "0.4"
