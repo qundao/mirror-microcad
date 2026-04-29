@@ -18,10 +18,9 @@ log = "0.4"
 lazy_static = "1.5"
 cgmath = "0.18"
 dirs = "6"
-geo = "0.32"
-ctor = "0.6"
+geo = "0.33"
 env_logger = "0.11"
-geo_rusttype = "0.2.0"
+geo_rusttype = "0.3.0"
 rusttype = "0.9.3"
 
 microcad-builtin-proc-macros = { workspace = true }
