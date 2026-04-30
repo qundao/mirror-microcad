@@ -5,7 +5,7 @@ fn _formatted_test_case(name: &str) {
     use microcad_lang_format::{FormatConfig, format};
     let source = std::fs::read_to_string(format!("tests/test_cases/formatted/{name}.µcad"))
         .expect("No errors");
-    let ast = microcad_syntax::parse(&source).expect("No errors").ast;
+    let ast = microcad_syntax::parse(&source).expect("No errors");
 
     pretty_assertions::assert_eq!(
         source,
@@ -18,7 +18,7 @@ fn _unformatted_test_case(name: &str) {
     use microcad_lang_format::{FormatConfig, format};
     let source = std::fs::read_to_string(format!("tests/test_cases/unformatted/{name}.µcad"))
         .expect("No errors");
-    let ast = microcad_syntax::parse(&source).expect("No errors").ast;
+    let ast = microcad_syntax::parse(&source).expect("No errors");
     insta::assert_snapshot!(name, format(&ast, &FormatConfig::default()))
 }
 
