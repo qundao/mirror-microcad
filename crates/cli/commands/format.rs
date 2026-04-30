@@ -20,8 +20,8 @@ impl RunCommand<()> for Format {
 
         // Check if the input is a mdbook configuration
         if self.input.ends_with("book.toml") {
-            let mut mdbook = microcad_lang_markdown::MdBookDirectory::new(&self.input)
-                .map_err(|err| miette!("{err}"))?;
+            let mut mdbook =
+                microcad_lang_markdown::MdBook::new(&self.input).map_err(|err| miette!("{err}"))?;
             microcad_lang_format::format_mdbook(&mut mdbook, &config)
                 .map_err(|err| miette!("{err}"))?;
 
