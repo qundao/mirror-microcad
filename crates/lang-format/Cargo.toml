@@ -15,7 +15,7 @@ license.workspace = true
 keywords.workspace = true
 
 [dependencies]
-microcad-lang-markdown = { workspace = true }
+microcad-lang-base = { workspace = true }
 microcad-syntax = { workspace = true }
 
 thiserror = "2.0"
