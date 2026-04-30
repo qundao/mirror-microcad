@@ -9,11 +9,7 @@ use std::io::IsTerminal;
 #[derive(Default)]
 pub struct DiagHandler {
     /// The list of diagnostics per source file.
-    pub diag_list: DiagList,
-    /// The number of overall errors in the evaluation process.
-    error_count: u32,
-    /// The number of overall errors in the evaluation process.
-    warning_count: u32,
+    pub diagnostics: Diagnostics,
     /// The maximum number of collected errors until abort
     /// (`0` means unlimited number of errors).
     error_limit: Option<u32>,
@@ -73,23 +69,23 @@ impl DiagHandler {
         f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceStrByHash,
     ) -> std::fmt::Result {
-        self.diag_list
+        self.diagnostics
             .pretty_print(f, source_by_hash, self.line_offset, &self.render_options)
     }
 
     /// Return overall number of occurred errors.
     pub fn warning_count(&self) -> u32 {
-        self.warning_count
+        self.diagnostics.warning_count
     }
 
     /// Return overall number of occurred errors.
     pub fn error_count(&self) -> u32 {
-        self.error_count
+        self.diagnostics.error_count
     }
 
     /// return lines with errors
     pub fn error_lines(&self) -> HashSet<usize> {
-        self.diag_list
+        self.diagnostics
             .iter()
             .filter_map(|d| {
                 if d.level() == Level::Error {
@@ -103,7 +99,7 @@ impl DiagHandler {
 
     /// return lines with warnings
     pub fn warning_lines(&self) -> HashSet<usize> {
-        self.diag_list
+        self.diagnostics
             .iter()
             .filter_map(|d| {
                 if d.level() == Level::Warning {
@@ -117,36 +113,25 @@ impl DiagHandler {
 
     /// Clear all errors and warnings
     pub fn clear(&mut self) {
-        self.diag_list.clear();
-        self.error_count = 0;
-        self.warning_count = 0;
+        self.diagnostics.clear();
     }
 }
 
 impl PushDiag for DiagHandler {
     fn push_diag(&mut self, diag: Diagnostic) -> DiagResult<()> {
         if let Some(error_limit) = self.error_limit {
-            if self.error_count >= error_limit && !self.error_limit_reached {
+            if self.error_count() >= error_limit && !self.error_limit_reached {
                 self.error(&SrcRef(None), DiagError::ErrorLimitReached(error_limit))?;
                 self.error_limit_reached = true;
             }
             return Err(DiagError::ErrorLimitReached(error_limit));
         }
 
-        match &diag {
-            Diagnostic::Error(_) => {
-                self.error_count += 1;
-            }
-            Diagnostic::Warning(_) => {
-                if self.warnings_as_errors {
-                    self.error_count += 1;
-                } else {
-                    self.warning_count += 1;
-                }
-            }
-            _ => (),
-        }
+        let diag = match diag {
+            Diagnostic::Warning(refer) if self.warnings_as_errors => Diagnostic::Error(refer),
+            diag => diag,
+        };
 
-        self.diag_list.push_diag(diag)
+        self.diagnostics.push_diag(diag)
     }
 }
