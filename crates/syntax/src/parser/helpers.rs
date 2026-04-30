@@ -1,10 +1,9 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Span;
 use crate::ast::{
     BinaryOperation, BinaryOperator, BinaryOperatorType, Comment, CommentInner, Expression,
-    ItemExtra, ItemExtras, LeadingExtras, TrailingExtras,
+    ItemExtra, ItemExtras, LeadingExtras, Span, TrailingExtras,
 };
 use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;

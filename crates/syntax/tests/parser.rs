@@ -215,5 +215,5 @@ use test_case::test_case;
 #[test_case("body expr method tail", "{}.foo()")]
 #[test_case("body expr method", "{}.foo();")]
 fn test_parser(name: &str, input: &str) {
-    assert_debug_snapshot!(format!("parser_{name}"), parse(input).map(|doc| doc.ast));
+    assert_debug_snapshot!(format!("parser_{name}"), parse(input));
 }

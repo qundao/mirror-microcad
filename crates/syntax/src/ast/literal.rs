@@ -1,10 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    Span,
-    ast::{ItemExtras, Unit},
-};
+use crate::ast::{ItemExtras, Span, Unit};
 
 use compact_str::CompactString;
 use std::num::{ParseFloatError, ParseIntError};

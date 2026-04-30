@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Span;
+use crate::ast::Span;
 use crate::tokens::from_logos::from_logos;
 use crate::tokens::logos::NormalToken;
 use ::logos::Lexer;

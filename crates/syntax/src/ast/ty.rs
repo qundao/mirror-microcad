@@ -1,7 +1,9 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Span, ast};
+use crate::ast;
+use crate::ast::Span;
+
 use compact_str::CompactString;
 
 /// The possible types

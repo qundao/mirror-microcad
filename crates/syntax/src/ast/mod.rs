@@ -6,13 +6,15 @@ mod literal;
 mod statement;
 mod ty;
 
-use crate::Span;
 use compact_str::CompactString;
 
 pub use expression::*;
 pub use literal::*;
 pub use statement::*;
 pub use ty::*;
+
+/// Span for tokens or AST nodes, a range of byte offsets from the start of the source
+pub type Span = std::ops::Range<usize>;
 
 /// A µcad identifier
 #[derive(Debug, PartialEq, Hash, Eq)]
@@ -34,7 +36,7 @@ impl Dummy for Identifier {
 /// A µcad source file
 #[derive(Debug)]
 #[allow(missing_docs)]
-pub struct Source {
+pub struct Program {
     pub span: Span,
     pub statements: StatementList,
 }
