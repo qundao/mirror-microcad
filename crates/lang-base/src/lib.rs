@@ -22,7 +22,8 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
 pub use code_display::*;
 pub use diag::{
-    Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Level, PushDiag,
+    Diag, DiagError, DiagHandler, DiagList, DiagRenderOptions, DiagResult, Diagnostic, Level,
+    PushDiag,
 };
 pub use identifier::Identifier;
 pub use ord_map::{OrdMap, OrdMapValue};
