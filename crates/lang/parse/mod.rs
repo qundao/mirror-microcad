@@ -53,8 +53,8 @@ use crate::syntax::*;
 pub(crate) fn build_ast(
     source: &str,
     parse_context: &ParseContext,
-) -> Result<microcad_syntax::ast::Source, ParseErrorsWithSource> {
-    parse(source).map(|doc| doc.ast).map_err(|errors| {
+) -> Result<microcad_syntax::ast::Program, ParseErrorsWithSource> {
+    parse(source).map_err(|errors| {
         let errors = errors
             .into_iter()
             .map(|error| {

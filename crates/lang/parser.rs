@@ -7,7 +7,7 @@
 
 use crate::parse::*;
 use microcad_lang_base::SrcRef;
-use microcad_syntax::Span;
+use microcad_syntax::ast::Span;
 
 #[derive(Clone)]
 pub struct LineIndex {

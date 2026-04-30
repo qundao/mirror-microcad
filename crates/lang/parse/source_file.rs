@@ -144,7 +144,7 @@ impl SourceFile {
 }
 
 impl FromAst for SourceFile {
-    type AstNode = ast::Source;
+    type AstNode = ast::Program;
 
     fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
         Ok(SourceFile::new(
