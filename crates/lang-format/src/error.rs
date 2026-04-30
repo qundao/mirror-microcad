@@ -7,7 +7,7 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum FormatError {
-    /// Parse errors. TODO: Use miette.
+    /// Parse errors.
     #[error("Parse errors: {0:?}")]
     ParseErrors(Vec<microcad_syntax::ParseError>),
 

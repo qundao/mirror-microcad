@@ -3,7 +3,8 @@
 
 use std::collections::HashMap;
 
-use microcad_syntax::ast;
+use microcad_lang_base::Diagnostics;
+use microcad_syntax::{ParseError, Source, ast};
 
 mod error;
 mod expression;
@@ -129,9 +130,13 @@ pub fn format(program: &ast::Program, config: &FormatConfig) -> String {
 }
 
 /// High-level API to format a &str containing µcad source code.
-pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, FormatError> {
-    let source_file = microcad_syntax::parse(source).map_err(FormatError::ParseErrors)?;
+pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, Vec<ParseError>> {
+    let source_file = microcad_syntax::parse(source)?;
     Ok(format(&source_file, config))
+}
+
+pub fn format_source(source: &Source, config: &FormatConfig) -> Result<Source, Diagnostics> {
+    Source::new(source.url.clone(), &format(&source.ast, config))
 }
 
 /// High-level API to format an entire mdbook.
