@@ -227,7 +227,7 @@ impl Processor {
 
         Ok(vec![ProcessorResponse::FormattedDocument {
             url: url.clone(),
-            code: microcad_lang_format::format(&doc.ast, &FormatConfig::default()),
+            code: microcad_lang_format::format(&doc, &FormatConfig::default()),
         }])
     }
 
@@ -240,7 +240,7 @@ impl Processor {
             FullDocumentDiagnosticReport {
                 result_id: None,
                 items: diag
-                    .diag_list
+                    .diagnostics
                     .iter()
                     .filter_map(|diag| {
                         let message = diag.message();
