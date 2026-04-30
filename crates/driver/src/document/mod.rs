@@ -3,23 +3,51 @@
 
 use microcad_builtin::{ExporterRegistry, Symbol};
 use microcad_lang::{eval::EvalContext, resolve::ResolveContext};
-use microcad_lang_base::{DiagHandler, DiagList};
+use microcad_lang_base::{DiagHandler, Diagnostics, HashMap};
 
-use crate::{Model, RcMut, RenderContext, SourceFile, Url, config::ExportConfig, export::Export};
+use crate::{
+    Config, Model, RcMut, RenderContext, SourceFile, Url, config::ExportConfig, export::Export,
+};
 
-pub struct Document {
-    input: std::path::PathBuf,
-    code: Option<String>,
+pub struct Source {
+    url: Url,
+    source: microcad_syntax::Source,
+
     /// The current source file being processed (if any).
     source_file: Option<std::rc::Rc<SourceFile>>,
 
     /// Model resulted from an evaluation.
     model: Option<Model>,
-
-    diag: DiagList,
-
     render_context: Option<RcMut<RenderContext>>,
-    search_paths: Vec<std::path::PathBuf>,
+
+    diagnostics: Diagnostics,
+    config: Rc<Config>,
+}
+
+pub struct Markdown {
+    url: Url,
+    markdown: microcad_lang_markdown::Markdown,
+    diagnostics: Diagnostics,
+    config: Rc<Config>,
+    code_blocks: HashMap<String, Rc<Source>>,
+}
+
+pub struct Mdbook {
+    url: Url,
+    mdbook: microcad_lang_markdown::MdBook,
+    files: HashMap<Url, Markdown>,
+    config: Rc<Config>,
+}
+
+pub enum Document {
+    /// A single source file
+    SourceFile(Rc<Source>),
+
+    /// A markdown file containing source code snippets
+    Markdown(Markdown),
+
+    /// An `book.toml` of a markdown book
+    Mdbook(Mdbook),
 }
 
 impl Document {
@@ -29,7 +57,7 @@ impl Document {
             code: None,
             source_file: None,
             model: None,
-            diag: DiagList::default(),
+            diag: Diagnostics::default(),
             render_context: None,
             search_paths: vec![],
         }
