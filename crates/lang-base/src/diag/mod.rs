@@ -10,21 +10,32 @@
 //! - [`PushDiag`]: Collects error in [`DiagHandler`]
 //! - [`Diag`]: Get diagnostic messages
 
-mod diag_error;
 mod diag_handler;
-mod diag_list;
 mod diagnostic;
+mod diagnostics;
 mod level;
 
-pub use diag_error::*;
 pub use diag_handler::*;
-pub use diag_list::*;
 pub use diagnostic::*;
+pub use diagnostics::*;
 pub use level::*;
-use miette::Report;
+use miette::{Diagnostic as MietteDiagnostic, Report};
+
+use thiserror::Error;
 
 use crate::src_ref::*;
 use microcad_core::hash::HashSet;
+
+/// Diagnostic error.
+#[derive(Debug, Error, MietteDiagnostic)]
+pub enum DiagError {
+    /// Cannot continue evaluation after error limit has been reached.
+    #[error("Error limit reached: Stopped evaluation after {0} errors")]
+    ErrorLimitReached(u32),
+}
+
+/// Result type of any resolve.
+pub type DiagResult<T> = std::result::Result<T, DiagError>;
 
 /// A trait to add diagnostics with different levels conveniently.
 pub trait PushDiag {
