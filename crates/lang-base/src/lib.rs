@@ -3,6 +3,8 @@
 
 //! µcad language base components for error handling etc.
 
+use std::str::FromStr;
+
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
 mod code_display;
@@ -17,12 +19,19 @@ mod tree_display;
 /// Id type (base of all identifiers)
 pub type Id = compact_str::CompactString;
 
+/// URL to locate sources.
+pub use url::Url;
+
+pub fn virtual_url() -> Url {
+    Url::from_str("virtual://file").unwrap()
+}
+
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
 pub use code_display::*;
 pub use diag::{
-    Diag, DiagError, DiagHandler, DiagList, DiagRenderOptions, DiagResult, Diagnostic, Level,
+    Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Diagnostics, Level,
     PushDiag,
 };
 pub use identifier::Identifier;
