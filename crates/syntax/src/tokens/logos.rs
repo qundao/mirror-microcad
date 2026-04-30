@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Span,
+    ast::Span,
     tokens::{LexerError, SpannedToken},
 };
 use logos::internal::LexerInternal;

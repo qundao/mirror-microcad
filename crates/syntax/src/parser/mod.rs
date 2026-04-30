@@ -4,7 +4,6 @@
 mod error;
 mod helpers;
 
-use crate::Span;
 use crate::ast::*;
 use crate::parser::error::{ParseErrorKind, Rich};
 use crate::parser::helpers::*;
@@ -49,7 +48,7 @@ fn input<'input, 'tokens>(
 /// Build an abstract syntax tree from a list of tokens
 pub fn parse<'tokens>(
     tokens: &'tokens [SpannedToken<Token<'tokens>>],
-) -> Result<Source, Vec<ParseError>> {
+) -> Result<Program, Vec<ParseError>> {
     parser()
         .parse(input(tokens))
         .into_result()
@@ -66,7 +65,7 @@ const STRUCTURAL_TOKENS: &[Token] = &[
     Token::SigilSemiColon,
 ];
 
-fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Source, Extra<'tokens>>
+fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Program, Extra<'tokens>>
 {
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
@@ -1606,7 +1605,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
 
     statement_list_parser
         .then_ignore(end())
-        .map_with(move |statements, ex| Source {
+        .map_with(move |statements, ex| Program {
             span: ex.span(),
             statements,
         })

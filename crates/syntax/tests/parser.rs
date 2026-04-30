@@ -213,5 +213,5 @@ use test_case::test_case;
     }"#
 )]
 fn test_parser(name: &str, input: &str) {
-    assert_debug_snapshot!(format!("parser_{name}"), parse(input).map(|doc| doc.ast));
+    assert_debug_snapshot!(format!("parser_{name}"), parse(input));
 }

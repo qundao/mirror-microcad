@@ -3,7 +3,7 @@
 
 mod rich;
 
-use crate::Span;
+use crate::ast::Span;
 use crate::parser::error::rich::RichPattern;
 use crate::tokens::Token;
 use miette::{Diagnostic, LabeledSpan};
