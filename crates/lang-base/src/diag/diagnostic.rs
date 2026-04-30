@@ -31,20 +31,16 @@ impl Diagnostic {
     /// Get message (errors will be serialized).
     pub fn message(&self) -> String {
         match self {
-            Diagnostic::Trace(msg) | Diagnostic::Info(msg) => msg.to_string(),
-            Diagnostic::Warning(err) | Diagnostic::Error(err) => err.to_string(),
+            Diagnostic::Trace(r)
+            | Diagnostic::Info(r)
+            | Diagnostic::Warning(r)
+            | Diagnostic::Error(r) => r.to_string(),
         }
     }
 
     /// Return line of the error
     pub fn line(&self) -> Option<usize> {
-        let src_ref = match self {
-            Diagnostic::Trace(r) => r.src_ref(),
-            Diagnostic::Info(r) => r.src_ref(),
-            Diagnostic::Warning(r) => r.src_ref(),
-            Diagnostic::Error(r) => r.src_ref(),
-        };
-        src_ref.as_ref().map(|r| r.at.line)
+        self.src_ref().as_ref().map(|r| r.at.line)
     }
 
     fn report(&self) -> &Report {
@@ -179,7 +175,7 @@ struct DiagnosticWrapper<'a> {
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self)
+        write!(f, "{self}")
     }
 }
 
