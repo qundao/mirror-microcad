@@ -1,9 +1,9 @@
 ---
 source: crates/syntax/tests/parser.rs
-expression: parse(input).map(|doc| doc.ast)
+expression: parse(input)
 ---
 Ok(
-    Source {
+    Program {
         span: 0..36,
         statements: StatementList {
             span: 0..36,
