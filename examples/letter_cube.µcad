@@ -12,7 +12,7 @@ part Letter(letter: String, size: Length, axis: Vec3) {
         .contour(thickness = 0.25mm, distance = 0.5mm)
         .extrude(1mm)
         .translate(z = size / 2 - 0.5mm)
-        .orient(axis);
+        .orient(axis)
 }
 
 part LetterCube(size: Length) {
@@ -21,7 +21,7 @@ part LetterCube(size: Length) {
     p = Letter("P", size, [-Z, Z]).rotate(z = -90°);
     t = Letter("T", size, [-X, X]).rotate(x = 90°);
     f = Letter("F", size, [-Y, Y]);
-    body - (p | t | f);
+    body - (p | t | f)
 }
 
 LetterCube(20mm).translate(z = 10mm);

@@ -48,7 +48,7 @@ sketch RingProfile(
 part PencilHole(pencil_hole_diameter = 0.5mm, offset = 0.0mm) {
     Circle(d = pencil_hole_diameter)
         .extrude(THICKNESS, scale = (x = 300%, y = 300%))
-        .translate(y = offset);
+        .translate(y = offset)
 }
 
 part PencilHoles(radius: Length, n = 4, start = 4, angle = 22.5°) {
@@ -56,7 +56,7 @@ part PencilHoles(radius: Length, n = 4, start = 4, angle = 22.5°) {
         PencilHole(offset = [start..n * 2 - 1] * radius / n / 2);
         PencilHole(offset = ([start..n * 2 - 1] + 0.5) * radius / n / 2).rotate(-angle);
         PencilHole(offset = ([start..n * 2 - 1] + 1 / 3) * radius / n / 2).rotate(angle);
-    }.rotate(90°);
+    }.rotate(90°)
 }
 
 #[export = "spirograph_frame.stl"]

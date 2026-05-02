@@ -20,14 +20,14 @@ pub part King() {
     {
         Cube(BASE_SIZE);
         Cube(BASE_SIZE / sqrt(2)).rotate(45°);
-    }.align(Z);
+    }.align(Z)
 }
 
 pub part Queen() {
     {
         Cube(BASE_SIZE);
         Sphere(diameter = BASE_SIZE / sqrt(2));
-    }.align(Z);
+    }.align(Z)
 }
 
 pub part Bishop() {
@@ -51,7 +51,7 @@ pub part Knight() {
         height = BASE_SIZE / 2;
         r = Rect(BASE_SIZE);
         (r - r.translate(x = height, y = height)).extrude(height);
-    }.rotate([0, 90]°).align(Z);
+    }.rotate([0, 90]°).align(Z)
 }
 
 {
