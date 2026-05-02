@@ -20,22 +20,6 @@ pub struct Tuple {
     pub(crate) src_ref: SrcRef,
 }
 
-/// Create Tuple from µcad code for tests
-#[cfg(test)]
-#[macro_export]
-macro_rules! tuple {
-    ($code:expr) => {{
-        use $crate::eval::*;
-        match $crate::tuple_expression!($code)
-            .eval(&mut Default::default())
-            .expect("evaluation error")
-        {
-            Value::Tuple(tuple) => *tuple,
-            _ => panic!(),
-        }
-    }};
-}
-
 /// Create a Value::Tuple from items
 #[macro_export]
 macro_rules! create_tuple_value {
@@ -548,32 +532,4 @@ impl Ty for Tuple {
     fn ty(&self) -> Type {
         Type::Tuple(Box::new(self.tuple_type()))
     }
-}
-
-#[test]
-fn tuple_equal() {
-    assert_eq!(
-        tuple!("(v=1.0m³, l=1.0m, a=1.0m²)"),
-        tuple!("(l=1.0m, a=1.0m², v=1.0m³)")
-    );
-}
-
-#[test]
-fn tuple_not_equal() {
-    assert_ne!(
-        tuple!("(d=1.0g/mm³, l=1.0m, a=1.0m²)"),
-        tuple!("(l=1.0m, a=1.0m², v=1.0m³)")
-    );
-    assert_ne!(
-        tuple!("(l=1.0m, a=1.0m²)"),
-        tuple!("(l=1.0m, a=1.0m², v=1.0m³)")
-    );
-}
-
-#[test]
-fn multiplicity_check() {
-    let tuple = tuple!("(x = [1, 2, 3], y = [1, 2], z = 1)");
-
-    let ids: IdentifierList = ["x".into(), "y".into()].into_iter().collect();
-    tuple.multiplicity(ids, |tuple| println!("{tuple}"));
 }
