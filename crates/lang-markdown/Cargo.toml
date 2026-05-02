@@ -18,7 +18,6 @@ keywords.workspace = true
 derive_more = { version = "2", features = ["deref", "deref_mut"] }
 thiserror = "2.0"
 
-microcad-builtin = { workspace = true }
 microcad-lang-base = { workspace = true }
 
 [dev-dependencies]
