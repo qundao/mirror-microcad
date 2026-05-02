@@ -4,8 +4,8 @@
 //! µcad source API
 
 use microcad_lang_base::{
-    ComputedHash, Diagnostic, Diagnostics, HashId, Hashed, PushDiag, Refer, SrcRef, SrcReferrer,
-    Url,
+    ComputedHash, Diagnostic, Diagnostics, GetSourceStrByHash, HashId, Hashed, PushDiag, Refer,
+    SrcRef, SrcReferrer, Url,
 };
 
 use crate::ast;
@@ -62,13 +62,13 @@ pub struct Source {
 
 impl Source {
     /// When you have a location
-    pub fn new(url: Url, content: &str) -> Result<Self, Diagnostics> {
-        let line_index = LineIndex::new(content);
+    pub fn new(url: Url, content: String) -> Result<Self, Diagnostics> {
+        let line_index = LineIndex::new(&content);
         let text = Hashed::new(content.to_string());
 
         Ok(Self {
             url,
-            ast: crate::parse(content).map_err(|errors| {
+            ast: crate::parse(&content).map_err(|errors| {
                 let mut diag_list = Diagnostics::default();
 
                 for err in errors {
@@ -89,7 +89,7 @@ impl Source {
     }
 
     /// When you just have a string (e.g. tests or REPL)
-    pub fn from_string(content: &str) -> Result<Self, Diagnostics> {
+    pub fn from_string(content: String) -> Result<Self, Diagnostics> {
         Self::new(microcad_lang_base::virtual_url(), content)
     }
 }
@@ -98,5 +98,23 @@ impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
         let (line, col) = self.line_index.line_col(&self.text, self.ast.span.start);
         SrcRef::new(self.ast.span.clone(), line, col, self.text.computed_hash())
+    }
+}
+
+impl GetSourceStrByHash for Source {
+    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
+        if hash == self.text.computed_hash() {
+            Some(self.text.as_str())
+        } else {
+            None
+        }
+    }
+
+    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
+        if hash == self.text.computed_hash() {
+            self.url.to_file_path().ok()
+        } else {
+            None
+        }
     }
 }
