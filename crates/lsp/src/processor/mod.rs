@@ -135,7 +135,8 @@ impl Processor {
                 .map_err(|_| miette::miette!("Error converting {url} to file path."))?,
         ) {
             Ok(source_file) => {
-                self.buffers.insert(url.clone(), source_file.source.clone());
+                self.buffers
+                    .insert(url.clone(), source_file.source.to_string());
                 match eval::EvalContext::from_source(
                     source_file,
                     Some(microcad_builtin::builtin_module()),
@@ -174,7 +175,8 @@ impl Processor {
             .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
         self.context = match syntax::SourceFile::load_from_str(None, path, doc) {
             Ok(source_file) => {
-                self.buffers.insert(url.clone(), source_file.source.clone());
+                self.buffers
+                    .insert(url.clone(), source_file.source.to_string());
                 match eval::EvalContext::from_source(
                     source_file,
                     Some(microcad_builtin::builtin_module()),
