@@ -7,8 +7,6 @@ use clap::Parser;
 
 use crate::commands::*;
 
-use microcad_driver::Session;
-
 /// µcad cli
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -31,7 +29,7 @@ pub struct Cli {
 
     /// The loaded or default CLI config.
     #[clap(skip)]
-    pub session: Session,
+    pub config: std::rc::Rc<microcad_driver::Config>,
 }
 
 impl Cli {
@@ -39,7 +37,7 @@ impl Cli {
     pub fn new() -> miette::Result<Self> {
         let mut cli = Self::parse();
         if let Some(config_path) = &cli.config_path {
-            cli.session = Session::new(microcad_driver::Config::load(config_path)?)
+            cli.config = std::rc::Rc::new(microcad_driver::Config::load(config_path)?);
         }
         Ok(cli)
     }

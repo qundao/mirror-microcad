@@ -5,7 +5,6 @@
 
 use crate::{Cli, commands::RunCommand};
 
-use microcad_docgen::*;
 use microcad_driver::Document;
 
 /// Generate documentation from code.
@@ -25,29 +24,14 @@ pub struct Doc {
     output: Option<std::path::PathBuf>,
 }
 
-impl Doc {
-    /// Generator from arguments
-    fn generator(&self) -> miette::Result<Box<dyn DocGen>> {
-        let name = self.generator.clone().unwrap_or("md".to_string());
-
-        match name.as_str() {
-            "md" => Ok(Box::new(Md {
-                output_path: self.output.clone(),
-            })),
-            "mdbook" => Ok(Box::new(MdBook {
-                path: self.output.clone().unwrap_or_default(),
-            })),
-            _ => Err(miette::miette!("No generator with name `{name}`")),
-        }
-    }
-}
-
 impl RunCommand<()> for Doc {
-    fn run(&self, _cli: &Cli) -> miette::Result<()> {
-        let generator = self.generator()?;
-        let symbol = Document::new(self.input.clone()).load()?.symbol()?;
-        generator
-            .doc_gen(&symbol)
-            .map_err(|err| miette::miette!("{err}"))
+    fn run(&self, cli: &Cli) -> miette::Result<()> {
+        let document = Document::from_file_path(&self.input, cli.config.clone())?;
+        match document {
+            Document::Source(item) => item.doc_gen(self.generator.clone(), self.output.clone()),
+            Document::Builtin(item) => item.doc_gen(self.output.as_ref().unwrap().clone()),
+            Document::Markdown(_) => miette::bail!("Cannot generate docs for markdown"),
+            Document::MdBook(_) => miette::bail!("Cannot generate docs for mdbook"),
+        }
     }
 }

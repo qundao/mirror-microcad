@@ -18,7 +18,7 @@ struct Hello;
 
 impl RunCommand for Create {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let path = cli.session.path_with_default_ext(&self.path);
+        let path = cli.config.path_with_default_ext(&self.path);
 
         if path.exists() {
             eprintln!("Error: File {path:?} already exists.")

@@ -33,11 +33,7 @@ num-format = "0.4"
 rust-embed = "8.9"
 miette = { version = "7.6.0", features = ["fancy"] }
 
-microcad-builtin = { workspace = true }
-microcad-docgen = { workspace = true }
 microcad-driver = { workspace = true }
-microcad-lang-markdown = { workspace = true }
-microcad-lang-format = { workspace = true }
 
 [build-dependencies]
 walkdir = "2"

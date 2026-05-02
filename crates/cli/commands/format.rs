@@ -12,40 +12,19 @@ pub struct Format {
 }
 
 impl RunCommand<()> for Format {
-    fn run(&self, _cli: &Cli) -> miette::Result<()> {
-        use microcad_lang_format::FormatConfig;
+    fn run(&self, cli: &Cli) -> miette::Result<()> {
+        let document = microcad_driver::Document::from_file_path(&self.input, cli.config.clone())?;
 
-        let config = FormatConfig::default();
-        use miette::miette;
-
-        // Check if the input is a mdbook configuration
-        if self.input.ends_with("book.toml") {
-            let mut mdbook =
-                microcad_lang_markdown::MdBook::new(&self.input).map_err(|err| miette!("{err}"))?;
-            microcad_lang_format::format_mdbook(&mut mdbook, &config)
-                .map_err(|err| miette!("{err}"))?;
-
-            eprintln!("Formatted mdbook in {:?}", mdbook.src_path);
-            Ok(())
-        } else {
-            // Standard single-file formatting logic
-            let source = std::fs::read_to_string(&self.input)
-                .map_err(|e| miette!("Failed to read {}: {}", self.input.display(), e))?;
-
-            let formatted = microcad_lang_format::format_str(&source, &config)
-                .map_err(|err| miette!("{err}"))?;
-
-            if source == formatted {
-                eprintln!(
-                    "File `{}` is already formatted. No changes have been made.",
-                    self.input.display()
-                );
+        if let Err(_) = document.load_from_file().and_then(|_| {
+            if document.format()? {
+                document.sync()
             } else {
-                std::fs::write(&self.input, formatted).map_err(|err| miette!("{err}"))?;
-                eprintln!("Successfully formatted file `{}`", self.input.display());
+                Ok(())
             }
-
-            Ok(())
+        }) {
+            eprintln!("{}", document.diagnostics_string());
         }
+
+        Ok(())
     }
 }

@@ -3,7 +3,7 @@
 
 //! µcad CLI export command
 
-use microcad_driver::{Document, ExportCommand, Model};
+use microcad_driver::Document;
 
 use crate::{Cli, commands::RunCommand};
 
@@ -30,17 +30,25 @@ pub struct Export {
     pub dry_run: bool,
 }
 
-impl RunCommand<Vec<(Model, ExportCommand)>> for Export {
-    fn run(&self, cli: &Cli) -> miette::Result<Vec<(Model, ExportCommand)>> {
-        let export = Document::new(self.input.clone())
-            .load()?
-            .export(cli.session.config.export.clone(), self.output.clone())?;
+impl RunCommand for Export {
+    fn run(&self, cli: &Cli) -> miette::Result<()> {
+        let document = Document::from_file_path(&self.input, cli.config.clone())?;
+        todo!();
+        /*
 
-        if self.targets {
-            export.list_targets(&export.target_models()?)?;
-        }
-
-        export.export()
+        match document {
+            Document::Source(item) => {
+                item.render(
+                    RenderResolution { linear: 0.1 }, /*self.resolution */
+                    None,
+                );
+                item.export(self.output.clone()).unwrap().export();
+                Ok(())
+            }
+            Document::Markdown(_) => miette::bail!("Export for markdown is not implemented"),
+            Document::MdBook(_) => miette::bail!("Export for mdbook is not implemented"),
+            Document::Builtin(_) => miette::bail!("Export for builtin is not implemented"),
+        }*/
     }
 }
 
