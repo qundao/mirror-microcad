@@ -1,12 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::collections::HashMap;
+use microcad_lang_base::{Diagnostics, virtual_url};
+use microcad_syntax::{Source, ast};
 
-use microcad_lang_base::Diagnostics;
-use microcad_syntax::{ParseError, Source, ast};
-
-mod error;
 mod expression;
 mod extras;
 mod literal;
@@ -14,10 +11,7 @@ mod node;
 mod statement;
 mod ty;
 
-pub(crate) use crate::{
-    error::FormatError,
-    node::{BreakMode, Node},
-};
+pub(crate) use crate::node::{BreakMode, Node};
 
 #[derive(Debug, Clone)]
 pub struct FormatConfig {
@@ -130,51 +124,12 @@ pub fn format(program: &ast::Program, config: &FormatConfig) -> String {
 }
 
 /// High-level API to format a &str containing µcad source code.
-pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, Vec<ParseError>> {
-    let source_file = microcad_syntax::parse(source)?;
-    Ok(format(&source_file, config))
+pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, Diagnostics> {
+    let source = Source::new(virtual_url(), source.to_string())?;
+    Ok(format(&source.ast, config))
 }
 
-pub fn format_source(source: &Source, config: &FormatConfig) -> Result<Source, Diagnostics> {
-    Source::new(source.url.clone(), &format(&source.ast, config))
-}
-
-/// High-level API to format an entire mdbook.
-pub fn format_mdbook(
-    mdbook: &mut microcad_lang_markdown::MdBookDirectory,
-    config: &FormatConfig,
-) -> Result<(), FormatError> {
-    let mut errors_by_file: HashMap<std::path::PathBuf, Vec<FormatError>> = HashMap::new();
-
-    // 1. Iterate over code blocks. 'path' is the PathBuf of the .md file.
-    mdbook
-        .code_blocks_mut()
-        .filter(|(_, code_block)| code_block.can_format())
-        .for_each(|(path, code_block)| {
-            if let Err(err) = format_str(&code_block.code, config) {
-                errors_by_file
-                    .entry(path.clone())
-                    .or_default()
-                    .push(FormatError::CodeBlock {
-                        name: code_block.name().as_ref().cloned().unwrap_or_default(),
-                        error: Box::new(err),
-                    });
-            } else if let Ok(formatted) = format_str(&code_block.code, config) {
-                // Only update the code if formatting succeeded
-                code_block.code = formatted;
-            }
-        });
-
-    // 2. Persist the successfully formatted parts to disk
-    mdbook.save_all()?;
-
-    // 3. If we hit issues, return the map in the specific variant
-    if !errors_by_file.is_empty() {
-        return Err(FormatError::MdBook {
-            src_path: mdbook.src_path.clone(),
-            errors: errors_by_file,
-        });
-    }
-
-    Ok(())
+/// Format a [Source]
+pub fn format_source(source: Source, config: &FormatConfig) -> Result<Source, Diagnostics> {
+    Source::new(source.url.clone(), format(&source.ast, config))
 }
