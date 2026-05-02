@@ -3,7 +3,6 @@
 
 use microcad_builtin::{Exporter, ExporterRegistry};
 use microcad_lang::{
-    eval::EvalContext,
     model::{Model, OutputType},
     value::Value,
 };
@@ -16,66 +15,10 @@ use crate::config::ExportConfig;
 pub struct Export {
     /// Root model
     pub(crate) model: Model,
-    pub(crate) input_path: std::path::PathBuf,
-    pub(crate) output_path: Option<std::path::PathBuf>,
-    pub(crate) config: ExportConfig,
-    pub(crate) context: EvalContext,
+    pub(crate) command: ExportCommand,
 }
 
 impl Export {
-    /// Get default exporter.
-    pub fn default_exporter(
-        &self,
-        output_type: &OutputType,
-    ) -> miette::Result<std::rc::Rc<dyn Exporter>> {
-        use microcad_builtin::ExporterAccess;
-        let exporters = self.context.exporters();
-
-        match output_type {
-            OutputType::NotDetermined => Err(miette::miette!("Could not determine output type.")),
-            OutputType::Geometry2D => Ok(exporters.exporter_by_id(&(&self.config.sketch).into())?),
-            OutputType::Geometry3D => Ok(exporters.exporter_by_id(&(&self.config.part).into())?),
-            OutputType::InvalidMixed => Err(miette::miette!(
-                "Invalid output type, the model cannot be exported."
-            )),
-        }
-    }
-
-    /// Get default export attribute.
-    fn default_export_attribute(&self) -> miette::Result<ExportCommand> {
-        use microcad_builtin::ExporterAccess;
-        let default_exporter = self.default_exporter(&self.model.deduce_output_type());
-        let resolution = self.config.render_resolution();
-        let exporters = self.context.exporters();
-
-        match &self.output_path {
-            Some(filename) => Ok(ExportCommand {
-                filename: filename.to_path_buf(),
-                resolution,
-                exporter: exporters
-                    .exporter_by_filename(filename)
-                    .or(default_exporter)?,
-            }),
-            None => {
-                let mut filename = self.input_path.clone();
-                let exporter = default_exporter?;
-
-                let ext = exporter
-                    .file_extensions()
-                    .first()
-                    .unwrap_or(&exporter.id())
-                    .to_string();
-                filename.set_extension(&ext);
-
-                Ok(ExportCommand {
-                    filename,
-                    exporter,
-                    resolution,
-                })
-            }
-        }
-    }
-
     /// Get all models that are supposed to be exported.
     ///
     /// All child models of `model` that are in the same source file and
@@ -103,7 +46,7 @@ impl Export {
         // No models with export attributes have been found.
         if models.is_empty() {
             // Add the root model with default exporters.
-            models.push((self.model.clone(), self.default_export_attribute()?))
+            models.push((self.model.clone(), self.command.clone()))
         }
 
         Ok(models)
@@ -113,7 +56,7 @@ impl Export {
         models
             .iter()
             .try_for_each(|(model, export)| -> miette::Result<()> {
-                let value = export.render_and_export(model)?;
+                let value = export.export(model)?;
                 if !matches!(value, Value::None) {
                     log::info!("{value}");
                 };

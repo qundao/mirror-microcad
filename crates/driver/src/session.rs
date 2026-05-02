@@ -42,13 +42,4 @@ impl Session {
     pub fn remove_document(&mut self, url: Url) -> Document {
         todo!()
     }
-
-    /// Return a path with default µcad extension given in the config.
-    pub fn path_with_default_ext(&self, path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
-        let mut path = path.as_ref().to_path_buf();
-        if path.extension().is_none() {
-            path.set_extension(self.config.default_extension.clone());
-        }
-        path
-    }
 }
