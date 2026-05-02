@@ -7,6 +7,17 @@ use microcad_syntax::ast;
 use std::fs::read_to_string;
 
 impl SourceFile {
+    pub fn from_source(source: &microcad_syntax::Source) -> Result<std::rc::Rc<Self>, ParseError> {
+        let context = ParseContext::new(source.text.as_str());
+        Ok(std::rc::Rc::new(Self {
+            doc: None,
+            statements: StatementList::from_ast(&source.ast.statements, &context)?,
+            source: source.text.clone(),
+            name: QualifiedName::default(),
+            filename: source.url.to_file_path().ok(),
+        }))
+    }
+
     /// Load µcad source file from given `path`
     pub fn load(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
