@@ -4,10 +4,12 @@
 //! µcad source file representation
 
 use crate::syntax::*;
-use microcad_lang_base::{MietteSourceFile, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{
+    ComputedHash, Hashed, MietteSourceFile, SrcRef, SrcReferrer, TreeDisplay, TreeState,
+};
 
 /// µcad source file
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct SourceFile {
     /// Documentation.
     pub doc: Option<DocBlock>,
@@ -17,32 +19,22 @@ pub struct SourceFile {
     pub statements: StatementList,
     /// Name of loaded file.
     pub filename: Option<std::path::PathBuf>,
-    /// Source file string, TODO: might be a &'a str in the future
-    pub source: String,
-
-    /// Hash of the source file
-    ///
-    /// This hash is calculated from the source code itself
-    /// This is used to map `SrcRef` -> `SourceFile`
-    pub hash: u64,
+    /// Source file string with hash
+    pub source: Hashed<String>,
 }
 
 impl SourceFile {
     /// Create new source file from existing source.
-    pub fn new(
-        doc: Option<DocBlock>,
-        statements: StatementList,
-        source: String,
-        hash: u64,
-    ) -> Self {
+    pub fn new(doc: Option<DocBlock>, statements: StatementList, source: Hashed<String>) -> Self {
         Self {
             doc,
             statements,
             source,
-            hash,
-            ..Default::default()
+            filename: None,
+            name: QualifiedName::default(),
         }
     }
+
     /// Return filename of loaded file or `<NO FILE>`
     pub fn filename(&self) -> std::path::PathBuf {
         self.filename
@@ -76,21 +68,9 @@ impl SourceFile {
     /// get a specific line
     ///
     /// - `line`: line number beginning at `0`
-    pub fn get_line(&self, line: usize) -> Option<&str> {
-        self.source.lines().nth(line)
-    }
-
-    /// get a specific line
-    ///
-    /// - `line`: line number beginning at `0`
     pub fn get_code(&self, src_ref: &SrcRef) -> &str {
         let range = &src_ref.as_ref().expect("source reference empty").range;
         &self.source[range.start..range.end]
-    }
-
-    /// return number of source code lines
-    pub fn num_lines(&self) -> usize {
-        self.source.lines().count()
     }
 
     /// Set file name.
@@ -135,7 +115,7 @@ impl TreeDisplay for SourceFile {
 
 impl SrcReferrer for SourceFile {
     fn src_ref(&self) -> SrcRef {
-        SrcRef::new(0..self.num_lines(), 0, 0, self.hash)
+        SrcRef::new(0..self.source.len(), 0, 0, self.source.computed_hash())
     }
 }
 

@@ -4,7 +4,7 @@
 //! Parser errors
 
 use crate::parse::*;
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_base::{Hashed, SrcRef, SrcReferrer};
 use microcad_syntax::ast::LiteralErrorKind;
 use miette::{Diagnostic, SourceCode};
 use thiserror::Error;
@@ -104,8 +104,7 @@ impl ParseError {
     pub fn with_source(self, source: String) -> ParseErrorsWithSource {
         ParseErrorsWithSource {
             errors: vec![self],
-            source_code: Some(source),
-            source_hash: 0,
+            source_code: Some(Hashed::new(source)),
         }
     }
 }
@@ -117,9 +116,7 @@ pub struct ParseErrorsWithSource {
     /// The errors encountered during parsing
     pub errors: Vec<ParseError>,
     /// The parsed source code
-    pub source_code: Option<String>,
-    /// The hash of the parsed source
-    pub source_hash: u64,
+    pub source_code: Option<Hashed<String>>,
 }
 
 impl From<ParseError> for ParseErrorsWithSource {
@@ -127,7 +124,6 @@ impl From<ParseError> for ParseErrorsWithSource {
         ParseErrorsWithSource {
             errors: vec![value],
             source_code: None,
-            source_hash: 0,
         }
     }
 }
@@ -137,7 +133,6 @@ impl From<Vec<ParseError>> for ParseErrorsWithSource {
         ParseErrorsWithSource {
             errors: value,
             source_code: None,
-            source_hash: 0,
         }
     }
 }
@@ -146,7 +141,7 @@ impl Diagnostic for ParseErrorsWithSource {
     fn source_code(&self) -> Option<&dyn SourceCode> {
         self.source_code
             .as_ref()
-            .map(|source| source as &dyn SourceCode)
+            .map(|source| source.value() as &dyn SourceCode)
     }
 
     fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item = &'a dyn Diagnostic> + 'a>> {

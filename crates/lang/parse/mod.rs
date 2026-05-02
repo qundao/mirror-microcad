@@ -64,8 +64,12 @@ pub(crate) fn build_ast(
             .collect::<Vec<_>>();
         ParseErrorsWithSource {
             errors,
-            source_code: Some(source.into()),
-            source_hash: parse_context.source_file_hash,
+            source_code: Some(
+                parse_context
+                    .source
+                    .clone()
+                    .map(|source| source.to_string()),
+            ),
         }
     })
 }

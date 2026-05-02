@@ -6,7 +6,7 @@
 #![allow(missing_docs)]
 
 use crate::parse::*;
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{ComputedHash, Hashed, SrcRef};
 use microcad_syntax::ast::Span;
 
 #[derive(Clone)]
@@ -47,28 +47,21 @@ impl LineIndex {
 }
 
 pub struct ParseContext<'source> {
-    pub source: &'source str,
-    pub source_file_hash: u64,
+    pub source: Hashed<&'source str>,
     line_index: LineIndex,
 }
 
 impl<'source> ParseContext<'source> {
     pub fn new(source: &'source str) -> Self {
         ParseContext {
-            source,
-            source_file_hash: {
-                use std::hash::{Hash, Hasher};
-                let mut hasher = rustc_hash::FxHasher::default();
-                source.hash(&mut hasher);
-                hasher.finish()
-            },
+            source: Hashed::new(source),
             line_index: LineIndex::new(source),
         }
     }
 
     pub fn src_ref(&self, span: &Span) -> SrcRef {
-        let (line, col) = self.line_index.line_col(self.source, span.start);
-        SrcRef::new(span.clone(), line, col, self.source_file_hash)
+        let (line, col) = self.line_index.line_col(&self.source, span.start);
+        SrcRef::new(span.clone(), line, col, self.source.computed_hash())
     }
 }
 

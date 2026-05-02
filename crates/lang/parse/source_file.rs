@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{parse::*, parser::*};
-use microcad_lang_base::{FormatTree, SrcReferrer};
+use microcad_lang_base::{FormatTree, Hashed, SrcReferrer};
 use microcad_syntax::ast;
 use std::fs::read_to_string;
 
@@ -35,7 +35,7 @@ impl SourceFile {
             Err(error) => {
                 let error = ParseError::LoadSource(name.src_ref(), path.into(), error);
                 let mut source_file =
-                    SourceFile::new(None, StatementList::default(), String::new(), 0);
+                    SourceFile::new(None, StatementList::default(), Hashed::new(String::new()));
                 source_file.name = name;
                 return (std::rc::Rc::new(source_file), Some(error.into()));
             }
@@ -92,8 +92,7 @@ impl SourceFile {
             let mut source = SourceFile::new(
                 None,
                 StatementList::default(),
-                source_str.into(),
-                parse_context.source_file_hash,
+                Hashed::new(source_str.into()),
             );
             source.filename = Some(path.as_ref().into());
             source
@@ -114,8 +113,7 @@ impl SourceFile {
                         dummy_source(),
                         Some(ParseErrorsWithSource {
                             errors,
-                            source_code: Some(source_str.into()),
-                            source_hash: parse_context.source_file_hash,
+                            source_code: Some(Hashed::new(source_str.into())),
                         }),
                     );
                 }
@@ -150,8 +148,7 @@ impl FromAst for SourceFile {
         Ok(SourceFile::new(
             None, // todo
             StatementList::from_ast(&node.statements, context)?,
-            context.source.into(),
-            context.source_file_hash,
+            Hashed::new(context.source.to_string()),
         ))
     }
 }
