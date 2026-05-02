@@ -5212,11 +5212,7 @@ dependencies = [
  "env_logger",
  "lazy_static",
  "log",
- "microcad-builtin",
- "microcad-docgen",
  "microcad-driver",
- "microcad-lang-format",
- "microcad-lang-markdown",
  "miette",
  "notify",
  "num-format",
@@ -5428,7 +5424,6 @@ version = "0.5.0"
 dependencies = [
  "derive_more 2.1.1",
  "insta",
- "microcad-builtin",
  "microcad-lang-base",
  "thiserror 2.0.18",
 ]
