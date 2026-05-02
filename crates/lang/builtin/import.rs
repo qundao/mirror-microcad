@@ -200,8 +200,7 @@ fn importer() {
 
     let by_id = registry.by_id(&"dummy".into()).expect("Dummy importer");
 
-    let mut args = crate::tuple!("(some_arg=32)");
-
+    let mut args = crate::create_tuple!(some_arg = 32 as Integer);
     let value = by_id.import(&args).expect("Value");
     assert!(matches!(value, Value::Integer(32)));
 
