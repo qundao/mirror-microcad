@@ -391,7 +391,10 @@ fn argument_matching() {
 
     let result = ArgumentMatch::find_match(&arguments, &params).expect("expect valid arguments");
 
-    assert_eq!(result, crate::tuple!("(a=1.0, b=2.0mm, c=3.0, d=4.0mm)"));
+    assert_eq!(
+        result,
+        crate::create_tuple!(a = 1.0, b = Length::mm(2.0), c = 3.0, d = Length::mm(4.0))
+    );
 }
 
 #[test]
