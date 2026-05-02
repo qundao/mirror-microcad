@@ -92,8 +92,7 @@ impl SourceFile {
             let mut source = SourceFile::new(
                 None,
                 StatementList::default(),
-                source_str.into(),
-                parse_context.source_file_hash,
+                Hashed::new(source_str.into()),
             );
             source.filename = Some(path.as_ref().into());
             source
@@ -114,8 +113,7 @@ impl SourceFile {
                         dummy_source(),
                         Some(ParseErrorsWithSource {
                             errors,
-                            source_code: Some(source_str.into()),
-                            source_hash: parse_context.source_file_hash,
+                            source_code: Some(Hashed::new(source_str.into())),
                         }),
                     );
                 }
@@ -150,8 +148,7 @@ impl FromAst for SourceFile {
         Ok(SourceFile::new(
             None, // todo
             StatementList::from_ast(&node.statements, context)?,
-            context.source.into(),
-            context.source_file_hash,
+            Hashed::new(context.source.to_string()),
         ))
     }
 }

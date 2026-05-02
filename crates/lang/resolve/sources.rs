@@ -16,7 +16,7 @@ use std::{collections::HashMap, rc::Rc};
 ///
 /// The *root model* (given at creation) will be stored but will only be accessible by hash and path
 /// but not by it's qualified name.
-#[derive(Default, Deref)]
+#[derive(Deref)]
 pub struct Sources {
     by_hash: HashMap<u64, usize>,
     by_path: HashMap<std::path::PathBuf, usize>,
@@ -46,7 +46,7 @@ impl Sources {
         let mut by_hash = HashMap::new();
         let mut by_path = HashMap::new();
 
-        by_hash.insert(root.hash, 0);
+        by_hash.insert(root.source_hash(), 0);
         by_path.insert(root.filename(), 0);
         by_name.insert(root.name.clone(), 0);
         source_files.push(root.clone());
@@ -56,7 +56,7 @@ impl Sources {
             |(name, path)| -> Result<(), ParseErrorsWithSource> {
                 let (source_file, error) = SourceFile::load_with_name(path.clone(), name.clone());
                 let index = source_files.len();
-                by_hash.insert(source_file.hash, index);
+                by_hash.insert(source_file.source_hash(), index);
                 by_path.insert(source_file.filename(), index);
                 by_name.insert(name.clone(), index);
                 source_files.push(source_file);
@@ -91,7 +91,7 @@ impl Sources {
 
     /// Insert a file to the sources.
     pub fn insert(&mut self, source_file: Rc<SourceFile>) {
-        let hash = source_file.hash;
+        let hash = source_file.source_hash();
         let path = source_file.filename();
         let name = source_file.name.clone();
 
@@ -275,7 +275,7 @@ impl std::fmt::Display for Sources {
             let name = self
                 .name_from_index(index)
                 .unwrap_or(QualifiedName::no_ref(vec![]));
-            let hash = source_file.hash;
+            let hash = source_file.source_hash();
             writeln!(f, "[{index}] {name} {hash:#x} {filename}")?;
         }
         Ok(())
@@ -289,7 +289,7 @@ impl std::fmt::Debug for Sources {
             let name = self
                 .name_from_index(index)
                 .unwrap_or(QualifiedName::no_ref(vec![]));
-            let hash = source_file.hash;
+            let hash = source_file.source_hash();
             writeln!(f, "[{index}] {name:?} {hash:#x} {filename}")?;
         }
         Ok(())

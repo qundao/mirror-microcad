@@ -70,8 +70,7 @@ fn test_recurse_children() {
         SymbolDef::SourceFile(std::rc::Rc::new(SourceFile::new(
             None,
             StatementList::default(),
-            String::new(),
-            0,
+            microcad_lang_base::Hashed::new(String::new()),
         ))),
         None,
     );
