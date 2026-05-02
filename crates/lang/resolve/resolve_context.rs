@@ -12,7 +12,6 @@ use microcad_lang_base::{
 use crate::{resolve::*, symbol::Symbol, syntax::*};
 
 /// Resolve Context
-#[derive(Default)]
 pub struct ResolveContext {
     /// Symbol table.
     pub root: Symbol,
@@ -33,7 +32,7 @@ impl ResolveContext {
         let mut context = Self {
             sources: Sources::load(root.clone(), search_paths)?,
             diag,
-            ..Default::default()
+            root: Symbol::default()
         };
         match context.load(builtin) {
             Ok(()) => Ok(context),

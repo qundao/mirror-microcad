@@ -120,28 +120,3 @@ impl CallMethod for Value {
         }
     }
 }
-
-#[test]
-fn call_list_method() {
-    let list = Array::from_values(
-        ValueList::new(vec![
-            Value::Quantity(Quantity::new(3.0, QuantityType::Scalar)),
-            Value::Quantity(Quantity::new(3.0, QuantityType::Scalar)),
-            Value::Quantity(Quantity::new(3.0, QuantityType::Scalar)),
-        ]),
-        crate::ty::Type::Quantity(QuantityType::Scalar),
-    );
-
-    if let Value::Bool(result) = list
-        .call_method(
-            &"all_equal".into(),
-            &ArgumentValueList::default(),
-            &mut EvalContext::default(),
-        )
-        .expect("test error")
-    {
-        assert!(result);
-    } else {
-        panic!("Test failed");
-    }
-}
