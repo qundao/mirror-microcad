@@ -19,8 +19,8 @@ pub enum MdBookError {
     #[error("No mdbook in directory: {0}")]
     NoMdBookDirectory(std::path::PathBuf),
 
-    #[error("Error parsing markdown file `{file}`: {err}")]
-    Parse {
+    #[error("Error saving markdown file `{file}`: {err}")]
+    Save {
         file: std::path::PathBuf,
         err: MarkdownError,
     },
@@ -99,7 +99,7 @@ impl MdBook {
     pub fn save_all(&self) -> Result<(), MdBookError> {
         self.md_files.iter().try_for_each(|(md_file, md)| {
             md.save(self.abs_md_file(md_file))
-                .map_err(|err| MdBookError::Parse {
+                .map_err(|err| MdBookError::Save {
                     file: md_file.clone(),
                     err,
                 })
