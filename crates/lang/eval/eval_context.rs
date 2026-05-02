@@ -14,7 +14,7 @@ use crate::{builtin::*, eval::*, model::*, symbol::SymbolDef, syntax::*};
 /// The context is used to store the current state of the evaluation.
 pub struct EvalContext {
     /// Symbol table
-    root: Symbol,
+    pub root: Symbol,
     /// Source cache
     sources: Sources,
     /// Stack of currently opened scopes with symbols while evaluation.
@@ -46,7 +46,7 @@ impl EvalContext {
             output,
             exporters,
             importers,
-            ..Default::default()
+            stack: Stack::default(),
         }
     }
 
@@ -307,20 +307,6 @@ impl Locals for EvalContext {
 
     fn current_name(&self) -> QualifiedName {
         self.stack.current_name()
-    }
-}
-
-impl Default for EvalContext {
-    fn default() -> Self {
-        Self {
-            root: Default::default(),
-            sources: Default::default(),
-            stack: Default::default(),
-            output: microcad_lang_base::Stdout::new(),
-            exporters: Default::default(),
-            importers: Default::default(),
-            diag: Default::default(),
-        }
     }
 }
 
