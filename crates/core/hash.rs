@@ -37,6 +37,23 @@ impl<T: std::hash::Hash> Hashed<T> {
             hash: hasher.finish(),
         }
     }
+
+    /// Transforms the inner value and recalculates the hash for the new value.
+    pub fn map<U: std::hash::Hash, F>(self, f: F) -> Hashed<U>
+    where
+        F: FnOnce(T) -> U,
+    {
+        // Transform the value
+        let new_inner = f(self.inner);
+
+        // Re-hash the new value to ensure the HashId stays in sync
+        Hashed::new(new_inner)
+    }
+
+    /// Return inner value.
+    pub fn value(&self) -> &T {
+        &self.inner
+    }
 }
 
 impl<T: std::hash::Hash> ComputedHash for Hashed<T> {
