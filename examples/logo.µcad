@@ -21,7 +21,7 @@ pub mod microcad {
         prop gap = radius / 5;
         IconElement(radius)
             .translate(x = -radius - gap)
-            .rotate([0..3] * 90°);
+            .rotate([0..3] * 90°)
     }
 
     pub sketch Micro(radius: Length, thickness: Length) {
@@ -52,7 +52,7 @@ pub mod microcad {
             height = radius * 2,
             x = radius * 0.5,
             y = -radius,
-        );
+        )
     }
 
     pub sketch D(radius: Length, thickness: Length) {
@@ -62,7 +62,7 @@ pub mod microcad {
             height = radius * 3,
             x = radius * 0.5,
             y = -radius,
-        );
+        )
     }
 
     pub sketch Logo(radius: Length, thickness: Length) {
@@ -80,7 +80,7 @@ pub mod microcad {
                 A(radius, thickness);
                 D(radius, thickness);
             }.align(X);
-        }.align(X, 4mm).center();
+        }.align(X, 4mm).center()
     }
 }
 

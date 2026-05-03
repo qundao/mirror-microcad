@@ -1,0 +1,120 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input).map(|doc| doc.ast)
+---
+Ok(
+    Source {
+        span: 0..9,
+        statements: StatementList {
+            span: 0..9,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 0..8,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            attributes: [],
+                            expression: ElementAccess(
+                                ElementAccess {
+                                    span: 0..8,
+                                    value: Body(
+                                        Body {
+                                            span: 0..2,
+                                            statements: StatementList {
+                                                span: 1..1,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
+                                                },
+                                                statements: [],
+                                                tail: None,
+                                            },
+                                        },
+                                    ),
+                                    element_chain: [
+                                        Element {
+                                            span: 2..8,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            inner: Method(
+                                                Call {
+                                                    span: 3..8,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    name: QualifiedName {
+                                                        span: 3..6,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        parts: [
+                                                            Identifier {
+                                                                span: 3..6,
+                                                                name: "foo",
+                                                            },
+                                                        ],
+                                                    },
+                                                    arguments: ArgumentList {
+                                                        span: 7..7,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        arguments: [],
+                                                    },
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [],
+                    ),
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

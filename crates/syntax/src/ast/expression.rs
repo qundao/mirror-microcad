@@ -132,6 +132,11 @@ impl Expression {
             Expression::Error(span) => span.clone(),
         }
     }
+
+    /// Can this expression also be used as a statement, without extra semicolon
+    pub fn is_also_statement(&self) -> bool {
+        matches!(self, Expression::Body(_) | Expression::If(_))
+    }
 }
 
 /// A string containing a format expression

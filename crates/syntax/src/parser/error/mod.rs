@@ -49,6 +49,11 @@ pub enum ParseErrorKind {
         kind: &'static str,
         close_token: Token<'static>,
     },
+    #[error("Expression statements need to have a trailing semicolon")]
+    ExpressionMissingSemicolon {
+        #[label("exprected a semicolon after this expression")]
+        span: Span,
+    },
 }
 
 impl Display for ParseError {

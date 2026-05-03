@@ -513,6 +513,30 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .map(Statement::Expression)
             .boxed();
 
+        let expression_without_semi = outer_attribute_parser
+            .clone()
+            .then(expression_parser.clone().try_map(|expr, span| {
+                if expr.is_also_statement() {
+                    Ok(expr)
+                } else {
+                    Err(Rich::custom(
+                        span.clone(),
+                        ParseErrorKind::ExpressionMissingSemicolon { span },
+                    ))
+                }
+            }))
+            .with_extras()
+            .map_with(
+                |((attributes, expression), extras), e| ExpressionStatement {
+                    span: e.span(), // FIXME: This should only return the span of attributes and expression
+                    extras,
+                    attributes,
+                    expression,
+                },
+            )
+            .map(Statement::Expression)
+            .boxed();
+
         let local_assignment_inner = outer_attribute_parser
             .clone()
             .then(identifier_parser.clone())
@@ -1066,36 +1090,6 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             )
             .boxed();
 
-        let if_statement = outer_attribute_parser
-            .clone()
-            .then(if_inner.clone().map(Expression::If))
-            .with_extras()
-            .map_with(|((attributes, expression), extras), e| {
-                Statement::Expression(ExpressionStatement {
-                    span: e.span(),
-                    extras,
-                    attributes,
-                    expression,
-                })
-            })
-            .labelled("if statement")
-            .boxed();
-
-        let body_statement = outer_attribute_parser
-            .clone()
-            .then(body.clone().map(Expression::Body))
-            .with_extras()
-            .map_with(|((attributes, expression), extras), e| {
-                Statement::Expression(ExpressionStatement {
-                    span: e.span(),
-                    extras,
-                    attributes,
-                    expression,
-                })
-            })
-            .labelled("body statement")
-            .boxed();
-
         let inner_doc_comment = select_ref! {
             Token::InnerDocComment(comment) => comment.to_string(),
         }
@@ -1183,8 +1177,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Sour
             .or(init)
             .or(workbench)
             .or(inline_module)
-            .or(if_statement)
-            .or(body_statement)
+            .or(expression_without_semi)
             .boxed();
 
         with_semi
