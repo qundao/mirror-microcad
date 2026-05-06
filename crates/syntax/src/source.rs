@@ -14,7 +14,7 @@ use crate::ast;
 #[derive(Clone)]
 pub struct LineIndex {
     /// Offset (bytes) the beginning of each line, zero-based
-    line_offsets: Vec<usize>,
+    line_offsets: Vec<u32>,
 }
 
 impl LineIndex {
@@ -22,7 +22,7 @@ impl LineIndex {
     pub fn new(s: &str) -> Self {
         Self {
             line_offsets: std::iter::once(0)
-                .chain(s.match_indices('\n').map(|(i, _)| i + 1))
+                .chain(s.match_indices('\n').map(|(i, _)| (i + 1) as u32))
                 .collect(),
         }
     }
@@ -30,15 +30,15 @@ impl LineIndex {
     /// Returns (line, col) of pos.
     ///
     /// The pos is a byte offset, start from 0, e.g. "ab" is 2, "你好" is 6
-    pub fn line_col(&self, input: &str, pos: usize) -> (usize, usize) {
-        let line = self.line_offsets.partition_point(|&it| it <= pos) - 1;
-        let first_offset = self.line_offsets[line];
+    pub fn line_col(&self, input: &str, pos: usize) -> (u32, u32) {
+        let line = self.line_offsets.partition_point(|&it| it <= pos as u32) - 1;
+        let first_offset = self.line_offsets[line] as usize;
 
         // Get line str from original input, then we can get column offset
         let line_str = &input[first_offset..pos];
         let col = line_str.chars().count();
 
-        (line + 1, col + 1)
+        ((line + 1) as u32, (col + 1) as u32)
     }
 
     fn span_to_src_ref(&self, text: &str, span: ast::Span, hash: HashId) -> SrcRef {
