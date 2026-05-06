@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 use crate::{Format, FormatConfig, Node, node};
 
