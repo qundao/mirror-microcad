@@ -3,9 +3,9 @@
 
 mod rich;
 
-use crate::ast::Span;
 use crate::parser::error::rich::RichPattern;
 use crate::tokens::Token;
+use microcad_lang_base::Span;
 use miette::{Diagnostic, LabeledSpan};
 pub use rich::{Rich, RichReason};
 use std::error::Error;

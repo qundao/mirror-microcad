@@ -16,7 +16,7 @@ pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
 
-use compact_str::ToCompactString;
+use microcad_lang_base::{Span, ToCompactString};
 
 type Error<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
 type Extra<'tokens> = extra::Err<Error<'tokens>>;

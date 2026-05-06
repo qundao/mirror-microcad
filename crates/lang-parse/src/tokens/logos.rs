@@ -1,12 +1,10 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    ast::Span,
-    tokens::{LexerError, SpannedToken},
-};
-use logos::internal::LexerInternal;
-use logos::{Lexer, Logos};
+use crate::tokens::{LexerError, SpannedToken};
+
+use logos::{Lexer, Logos, internal::LexerInternal};
+use microcad_lang_base::Span;
 use std::borrow::Cow;
 
 #[derive(Debug, PartialEq, Clone)]

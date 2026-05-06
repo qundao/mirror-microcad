@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::ast;
-use crate::ast::Span;
 
-use compact_str::CompactString;
+use microcad_lang_base::{Id, Span};
 
 /// The possible types
 #[derive(Debug, PartialEq)]
@@ -30,7 +29,7 @@ impl ast::Dummy for Type {
     fn dummy(span: Span) -> Self {
         Type::Single(SingleType {
             span,
-            name: CompactString::default(),
+            name: Id::default(),
         })
     }
 }
@@ -40,7 +39,7 @@ impl ast::Dummy for Type {
 #[allow(missing_docs)]
 pub struct SingleType {
     pub span: Span,
-    pub name: CompactString,
+    pub name: Id,
 }
 
 /// An array type
@@ -64,5 +63,5 @@ pub struct TupleType {
 #[allow(missing_docs)]
 pub struct Unit {
     pub span: Span,
-    pub name: CompactString,
+    pub name: Id,
 }

@@ -1,12 +1,14 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::ast::Span;
-use crate::tokens::from_logos::from_logos;
-use crate::tokens::logos::NormalToken;
+use crate::tokens::{from_logos::from_logos, logos::NormalToken};
+
 use ::logos::Lexer;
-use std::borrow::Cow;
-use std::fmt::{Display, Formatter};
+use microcad_lang_base::Span;
+use std::{
+    borrow::Cow,
+    fmt::{Display, Formatter},
+};
 use thiserror::Error;
 
 mod from_logos;

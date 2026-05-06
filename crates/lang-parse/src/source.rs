@@ -5,7 +5,7 @@
 
 use microcad_lang_base::{
     ComputedHash, Diagnostic, Diagnostics, GetSourceStrByHash, HashId, Hashed, PushDiag, Refer,
-    SrcRef, SrcReferrer, Url,
+    Span, SrcRef, SrcReferrer, Url,
 };
 
 use crate::ast;
@@ -41,7 +41,7 @@ impl LineIndex {
         ((line + 1) as u32, (col + 1) as u32)
     }
 
-    fn span_to_src_ref(&self, text: &str, span: ast::Span, hash: HashId) -> SrcRef {
+    fn span_to_src_ref(&self, text: &str, span: Span, hash: HashId) -> SrcRef {
         let (line, col) = self.line_col(text, span.start);
         SrcRef::new(span.clone(), line, col, hash)
     }

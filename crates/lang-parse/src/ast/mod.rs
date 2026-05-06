@@ -6,29 +6,26 @@ mod literal;
 mod statement;
 mod ty;
 
-use compact_str::CompactString;
+use microcad_lang_base::{Id, Span};
 
 pub use expression::*;
 pub use literal::*;
 pub use statement::*;
 pub use ty::*;
 
-/// Span for tokens or AST nodes, a range of byte offsets from the start of the source
-pub type Span = std::ops::Range<usize>;
-
 /// A µcad identifier
 #[derive(Debug, PartialEq, Hash, Eq)]
 #[allow(missing_docs)]
 pub struct Identifier {
     pub span: Span,
-    pub name: CompactString,
+    pub name: Id,
 }
 
 impl Dummy for Identifier {
     fn dummy(span: Span) -> Self {
         Self {
             span,
-            name: CompactString::default(),
+            name: Id::default(),
         }
     }
 }

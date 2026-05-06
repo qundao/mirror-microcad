@@ -3,7 +3,7 @@
 
 use crate::ast::{ItemExtras, Span, Unit};
 
-use compact_str::CompactString;
+use microcad_lang_base::CompactString;
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 

@@ -3,8 +3,10 @@
 
 use crate::ast::{
     BinaryOperation, BinaryOperator, BinaryOperatorType, Comment, CommentInner, Expression,
-    ItemExtra, ItemExtras, LeadingExtras, Span, TrailingExtras,
+    ItemExtra, ItemExtras, LeadingExtras, TrailingExtras,
 };
+use microcad_lang_base::Span;
+
 use crate::parser::{Error, Extra, ParserInput};
 use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
