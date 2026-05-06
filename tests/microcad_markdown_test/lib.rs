@@ -256,7 +256,7 @@ fn scan_for_tests(
     let end = Regex::new(r#"```"#).expect("bad regex");
 
     let mut ignore = false;
-    let mut start_no = 0;
+    let mut line_offset = 0;
     // read all lines in the file
     for (line_no, line) in md_content.lines().enumerate() {
         // ignore deeper markdown code
@@ -271,14 +271,15 @@ fn scan_for_tests(
                 if let Some(name) = start.name("name") {
                     // remember test name
                     test_name = name.as_str().to_string();
-                    start_no = line_no + 2;
+                    line_offset = line_no + 2;
                     // clear code
                     test_code.clear();
                 }
             } else if !test_name.is_empty() {
                 // match code end marker
                 if end.captures_iter(line).next().is_some() {
-                    if let Some(mut env) = TestEnv::new(file_path, &test_name, &test_code, start_no)
+                    if let Some(mut env) =
+                        TestEnv::new(file_path, &test_name, &test_code, line_offset as u32)
                     {
                         let head = "// file: ";
                         let mut test_output = env.generate(output);

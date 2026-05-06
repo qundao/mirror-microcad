@@ -42,7 +42,7 @@ pub fn run_test(env: Option<TestEnv>) {
             env.code()
                 .lines()
                 .enumerate()
-                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset_line(n)))
+                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset_line(n as u32)))
                 .collect::<Vec<_>>()
                 .join("\n")
         ));
@@ -241,7 +241,7 @@ pub fn run_test(env: Option<TestEnv>) {
 }
 
 // evaluate the code including µcad std library
-fn create_context(source: &Rc<SourceFile>, line_offset: usize) -> EvalContext {
+fn create_context(source: &Rc<SourceFile>, line_offset: u32) -> EvalContext {
     let mut context = EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
