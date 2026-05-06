@@ -6,11 +6,14 @@
 use microcad_lang::{
     builtin::{Builtin, BuiltinWorkbenchKind},
     doc::Doc,
-    symbol::{Symbol, SymbolDef},
-    syntax::{
-        FunctionDefinition, Identifiable, InitDefinition, Initialized, ModuleDefinition,
-        ParameterList, SourceFile, Visibility, WorkbenchDefinition,
+    lower::{
+        Identifiable, Initialized,
+        ir::{
+            FunctionDefinition, InitDefinition, ModuleDefinition, ParameterList, SourceFile,
+            Visibility, WorkbenchDefinition,
+        },
     },
+    symbol::{Symbol, SymbolDef},
 };
 use microcad_lang_markdown::{Markdown, Paragraph, Section};
 
@@ -135,7 +138,7 @@ impl ToMd for Symbol {
             }
         }
 
-        use microcad_lang::syntax::WorkbenchKind;
+        use microcad_lang::lower::ir::WorkbenchKind;
         fn symbol_list<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
         where
             P: FnMut(&Symbol) -> bool,
