@@ -38,7 +38,7 @@ pub use identifier::Identifier;
 pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
-pub use src_ref::{Refer, SrcRef, SrcRefInner, SrcReferrer};
+pub use src_ref::{Refer, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};

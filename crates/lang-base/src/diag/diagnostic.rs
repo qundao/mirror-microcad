@@ -40,7 +40,7 @@ impl Diagnostic {
 
     /// Return line of the error
     pub fn line(&self) -> Option<u32> {
-        self.src_ref().as_ref().map(|r| r.at.line)
+        self.src_ref().line()
     }
 
     fn report(&self) -> &Report {
@@ -92,9 +92,9 @@ impl Diagnostic {
             .to_string()
         }
 
-        match &src_ref {
-            SrcRef(None) => writeln!(f, "{}: {}", self.level(), self.message())?,
-            SrcRef(Some(_)) => {
+        match &src_ref.is_none() {
+            true => writeln!(f, "{}: {}", self.level(), self.message())?,
+            false => {
                 let miette_source = match source_by_hash.get_str_by_hash(hash) {
                     Some(source) => MietteSourceFile {
                         source,

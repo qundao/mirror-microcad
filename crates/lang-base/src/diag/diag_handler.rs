@@ -121,7 +121,7 @@ impl PushDiag for DiagHandler {
     fn push_diag(&mut self, diag: Diagnostic) -> DiagResult<()> {
         if let Some(error_limit) = self.error_limit {
             if self.error_count() >= error_limit && !self.error_limit_reached {
-                self.error(&SrcRef(None), DiagError::ErrorLimitReached(error_limit))?;
+                self.error(&SrcRef::none(), DiagError::ErrorLimitReached(error_limit))?;
                 self.error_limit_reached = true;
             }
             return Err(DiagError::ErrorLimitReached(error_limit));
