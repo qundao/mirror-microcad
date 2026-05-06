@@ -26,7 +26,6 @@ mod resolve_error;
 mod sources;
 mod symbolize;
 
-use crate::syntax::*;
 pub use externals::*;
 pub use lookup::*;
 pub use resolve_context::*;
@@ -34,9 +33,3 @@ pub use resolve_error::*;
 pub use sources::*;
 
 use grant::*;
-
-/// Trait for items which can be fully qualified.
-pub trait FullyQualify {
-    /// Get a fully (up to root of symbol map) qualified name.
-    fn full_name(&self) -> QualifiedName;
-}
