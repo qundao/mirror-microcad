@@ -126,12 +126,7 @@ impl Eval<Models> for ir::StatementList {
 
                 // We are in a workbench. Check if the workbench kind matches the current output type.
                 if let Some(kind) = kind {
-                    let expected_output_type = match kind {
-                        ir::WorkbenchKind::Part => OutputType::Geometry3D,
-                        ir::WorkbenchKind::Sketch => OutputType::Geometry2D,
-                        ir::WorkbenchKind::Operation => OutputType::NotDetermined,
-                    };
-
+                    let expected_output_type = kind.into();
                     if expected_output_type != OutputType::NotDetermined
                         && output_type != expected_output_type
                     {

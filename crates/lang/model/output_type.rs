@@ -1,7 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Export attribute.
+//! Model output type.
+
+use crate::lower::ir::WorkbenchKind;
 
 /// The output type of the [`crate::model::Model`].
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -47,5 +49,15 @@ impl std::fmt::Display for OutputType {
                 Self::InvalidMixed => "NO OUTPUT",
             }
         )
+    }
+}
+
+impl From<WorkbenchKind> for OutputType {
+    fn from(kind: WorkbenchKind) -> Self {
+        match kind {
+            WorkbenchKind::Sketch => Self::Geometry2D,
+            WorkbenchKind::Part => Self::Geometry3D,
+            WorkbenchKind::Operation => Self::NotDetermined,
+        }
     }
 }
