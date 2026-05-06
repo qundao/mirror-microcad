@@ -3,7 +3,7 @@
 
 use microcad_core::hash::HashSet;
 use microcad_lang::resolve::Sources;
-use microcad_lang::{eval::EvalContext, model::Model, syntax::SourceFile};
+use microcad_lang::{eval::EvalContext, lower::ir::SourceFile, model::Model};
 use microcad_lang_base::{
     Capture, Diag, DiagRenderOptions, Diagnostic, FormatTree, Refer, SrcReferrer,
 };
@@ -16,10 +16,9 @@ pub fn init() {
     let _ = env_logger::builder().try_init();
 }
 
-#[allow(dead_code, clippy::too_many_arguments)]
+#[allow(dead_code)]
 pub fn run_test(env: Option<TestEnv>) {
     if let Some(mut env) = env {
-        use microcad_lang::syntax::*;
         use std::fs;
 
         crate::markdown_test::init();
