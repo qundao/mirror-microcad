@@ -5,7 +5,8 @@
 
 use crate::lower::ir;
 use microcad_lang_base::{
-    ComputedHash, Hashed, Identifier, MietteSourceFile, SrcRef, SrcReferrer, TreeDisplay, TreeState,
+    ComputedHash, Hashed, Identifier, LineCol, MietteSourceFile, SrcRef, SrcReferrer, TreeDisplay,
+    TreeState,
 };
 
 /// µcad source file
@@ -119,7 +120,11 @@ impl TreeDisplay for SourceFile {
 
 impl SrcReferrer for SourceFile {
     fn src_ref(&self) -> SrcRef {
-        SrcRef::new(0..self.source.len(), 0, 0, self.source.computed_hash())
+        SrcRef::new(
+            0..self.source.len(),
+            LineCol::default(),
+            self.source.computed_hash(),
+        )
     }
 }
 
