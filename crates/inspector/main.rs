@@ -8,8 +8,8 @@
 use clap::Parser;
 
 use microcad_driver::Watcher;
-use microcad_lang::syntax::*;
-use microcad_lang_base::{ComputedHash, Hashed, Refer, SrcRef};
+use microcad_lang::lower::ir;
+use microcad_lang_base::{Hashed, Refer, SrcRef};
 
 use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
@@ -86,7 +86,7 @@ impl Inspector {
                 // Watch all dependencies of the most recent compilation.
                 self.watcher.update(vec![self.args.input.clone()])?;
 
-                let source_file = SourceFile::load(&self.args.input)?;
+                let source_file = ir::SourceFile::load(&self.args.input)?;
                 tx.send(ViewModelRequest::SetSourceCode {
                     code: source_file.source.clone(),
                 })
@@ -139,6 +139,7 @@ impl Inspector {
                 if let Ok(request) = rx.recv() {
                     weak.upgrade_in_event_loop(move |main_window| match request {
                         ViewModelRequest::SetSourceCode { code } => {
+                            use microcad_lang_base::ComputedHash;
                             let items = to_slint::split_source_code(&code);
                             main_window.set_source_code_model(to_slint::model_rc_from_items(items));
 
