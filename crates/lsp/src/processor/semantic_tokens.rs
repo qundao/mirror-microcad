@@ -4,16 +4,8 @@
 use std::rc::Rc;
 
 use microcad_lang::{
-    syntax::{
-        Argument, ArrayExpression, ArrayExpressionInner, Assignment, AssignmentStatement,
-        Attribute, AttributeCommand, AttributeList, Call, Expression, ExpressionStatement,
-        FormatExpression, FormatString, FormatStringInner, FunctionDefinition, FunctionSignature,
-        Identifiable, Identifier, IfStatement, InitDefinition, InnerDocComment, Literal, Marker,
-        MethodCall, ModuleDefinition, ParameterList, QualifiedName, Qualifier, RangeExpression,
-        ReturnStatement, SourceFile, Statement, StatementList, TupleExpression, TypeAnnotation,
-        UseDeclaration, UseStatement, WorkbenchDefinition,
-    },
-    ty::{Ty, Type},
+    lower::{Identifiable, ir},
+    ty::Ty,
 };
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 
@@ -22,7 +14,7 @@ use tower_lsp::lsp_types::{SemanticToken, SemanticTokenModifier, SemanticTokenTy
 use crate::processor::src_ref_to_lsp_range;
 
 pub(crate) struct TokenContext {
-    source_file: Rc<SourceFile>,
+    source_file: Rc<ir::SourceFile>,
     last_line: u32,
     last_col: u32,
 }
@@ -32,7 +24,7 @@ impl TokenContext {
         let src_path = url
             .to_file_path()
             .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
-        let source_file = SourceFile::load(src_path)
+        let source_file = ir::SourceFile::load(src_path)
             .map_err(|e| miette::miette!("Error loading source file: {e}"))?;
         Ok(Self {
             source_file,
@@ -46,29 +38,29 @@ impl TokenContext {
         self.parse_statement_list(&stmts)
     }
 
-    fn parse_statement(&mut self, stmt: &Statement) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_statement(&mut self, stmt: &ir::Statement) -> miette::Result<Vec<SemanticToken>> {
         match stmt {
-            Statement::Workbench(workbench_definition) => {
+            ir::Statement::Workbench(workbench_definition) => {
                 self.parse_workbench(workbench_definition)
             }
-            Statement::Assignment(assignment) => self.parse_assignment_stmt(assignment),
-            Statement::InnerDocComment(comment) => self.parse_comment(comment),
-            Statement::Expression(expression) => self.parse_expression_stmt(expression),
-            Statement::Use(use_statement) => self.parse_use(use_statement),
-            Statement::If(if_statement) => self.parse_if_stmt(if_statement),
-            Statement::Module(module_definition) => self.parse_module_stmt(module_definition),
-            Statement::Function(function_definition) => {
+            ir::Statement::Assignment(assignment) => self.parse_assignment_stmt(assignment),
+            ir::Statement::InnerDocComment(comment) => self.parse_comment(comment),
+            ir::Statement::Expression(expression) => self.parse_expression_stmt(expression),
+            ir::Statement::Use(use_statement) => self.parse_use(use_statement),
+            ir::Statement::If(if_statement) => self.parse_if_stmt(if_statement),
+            ir::Statement::Module(module_definition) => self.parse_module_stmt(module_definition),
+            ir::Statement::Function(function_definition) => {
                 self.parse_function_stmt(function_definition)
             }
-            Statement::Init(init_definition) => self.parse_init_stmt(init_definition),
-            Statement::Return(return_statement) => self.parse_return_stmt(return_statement),
-            Statement::InnerAttribute(attribute) => self.parse_inner_attribute(attribute),
+            ir::Statement::Init(init_definition) => self.parse_init_stmt(init_definition),
+            ir::Statement::Return(return_statement) => self.parse_return_stmt(return_statement),
+            ir::Statement::InnerAttribute(attribute) => self.parse_inner_attribute(attribute),
         }
     }
 
     fn parse_workbench(
         &mut self,
-        workbench: &WorkbenchDefinition,
+        workbench: &ir::WorkbenchDefinition,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.doc_token(&workbench.doc)?);
@@ -92,7 +84,7 @@ impl TokenContext {
 
     fn parse_attribute_list(
         &mut self,
-        attr_list: &AttributeList,
+        attr_list: &ir::AttributeList,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         for attribute in attr_list.iter() {
@@ -108,7 +100,10 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_parameter_list(&mut self, plan: &ParameterList) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_parameter_list(
+        &mut self,
+        plan: &ir::ParameterList,
+    ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         for param in plan.iter() {
             tokens.extend(
@@ -139,7 +134,7 @@ impl TokenContext {
 
     fn parse_statement_list(
         &mut self,
-        statements: &StatementList,
+        statements: &ir::StatementList,
     ) -> miette::Result<Vec<SemanticToken>> {
         let tokens = statements
             .iter()
@@ -150,12 +145,12 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_literal(&mut self, lit: &Literal) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_literal(&mut self, lit: &ir::Literal) -> miette::Result<Vec<SemanticToken>> {
         Ok(vec![match lit {
-            Literal::Integer(int) => {
+            ir::Literal::Integer(int) => {
                 self.output_semantic_token(int.src_ref(), SemanticTokenType::NUMBER, &[])?
             }
-            Literal::Number(number) => {
+            ir::Literal::Number(number) => {
                 self.output_semantic_token(
                     number.src_ref(),
                     // SEMANTIC_LENGTH,
@@ -163,43 +158,49 @@ impl TokenContext {
                     &[],
                 )?
             }
-            Literal::Bool(bool) => {
+            ir::Literal::Bool(bool) => {
                 self.output_semantic_token(bool.src_ref(), SemanticTokenType::KEYWORD, &[])?
             }
         }])
     }
 
-    fn parse_expression(&mut self, expr: &Expression) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_expression(&mut self, expr: &ir::Expression) -> miette::Result<Vec<SemanticToken>> {
         let ret = match expr {
-            Expression::Invalid => miette::bail!("Invalid expression"),
-            Expression::Literal(literal) => self.parse_literal(literal)?,
-            Expression::UnaryOp { op, rhs, src_ref } => self.parse_unary_op(op, rhs, src_ref)?,
-            Expression::BinaryOp {
+            ir::Expression::Invalid => miette::bail!("Invalid expression"),
+            ir::Expression::Literal(literal) => self.parse_literal(literal)?,
+            ir::Expression::UnaryOp { op, rhs, src_ref } => {
+                self.parse_unary_op(op, rhs, src_ref)?
+            }
+            ir::Expression::BinaryOp {
                 lhs,
                 op,
                 rhs,
                 src_ref,
             } => self.parse_binary_op(lhs, op, rhs, src_ref)?,
-            Expression::QualifiedName(qualified_name) => {
+            ir::Expression::QualifiedName(qualified_name) => {
                 self.parse_qualified_name(qualified_name, SemanticTokenType::VARIABLE)?
             }
-            Expression::MethodCall(expression, method_call, src_ref) => {
+            ir::Expression::MethodCall(expression, method_call, src_ref) => {
                 self.parse_method_call(expression, method_call, src_ref)?
             }
-            Expression::Call(call) => self.parse_call(call)?,
-            Expression::TupleExpression(tuple) => self.parse_tuple_expression(tuple)?,
-            Expression::ArrayExpression(array_expr) => self.parse_array_expression(array_expr)?,
-            Expression::Body(body) => self.parse_statement_list(body)?,
-            Expression::If(if_stmt) => self.parse_if_stmt(if_stmt)?,
-            Expression::Marker(marker) => self.parse_marker(marker)?,
-            Expression::FormatString(format_string) => self.parse_format_string(format_string)?,
-            Expression::AttributeAccess(expression, identifier, src_ref) => {
+            ir::Expression::Call(call) => self.parse_call(call)?,
+            ir::Expression::TupleExpression(tuple) => self.parse_tuple_expression(tuple)?,
+            ir::Expression::ArrayExpression(array_expr) => {
+                self.parse_array_expression(array_expr)?
+            }
+            ir::Expression::Body(body) => self.parse_statement_list(body)?,
+            ir::Expression::If(if_stmt) => self.parse_if_stmt(if_stmt)?,
+            ir::Expression::Marker(marker) => self.parse_marker(marker)?,
+            ir::Expression::FormatString(format_string) => {
+                self.parse_format_string(format_string)?
+            }
+            ir::Expression::AttributeAccess(expression, identifier, src_ref) => {
                 self.parse_attribute_access(expression, identifier, src_ref)?
             }
-            Expression::PropertyAccess(expression, identifier, src_ref) => {
+            ir::Expression::PropertyAccess(expression, identifier, src_ref) => {
                 self.parse_property_access(expression, identifier, src_ref)?
             }
-            Expression::ArrayElementAccess(expression, expression1, src_ref) => {
+            ir::Expression::ArrayElementAccess(expression, expression1, src_ref) => {
                 self.parse_array_element_access(expression, expression1, src_ref)?
             }
         };
@@ -241,10 +242,7 @@ impl TokenContext {
         })
     }
 
-    fn doc_token(
-        &mut self,
-        doc_block: &microcad_lang::syntax::DocBlock,
-    ) -> miette::Result<Option<SemanticToken>> {
+    fn doc_token(&mut self, doc_block: &ir::DocBlock) -> miette::Result<Option<SemanticToken>> {
         if doc_block.is_empty() {
             Ok(None)
         } else {
@@ -256,13 +254,16 @@ impl TokenContext {
         }
     }
 
-    fn parse_assignment(&mut self, assignment: &Assignment) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_assignment(
+        &mut self,
+        assignment: &ir::Assignment,
+    ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.doc_token(&assignment.doc)?);
         let id_type = match assignment.qualifier() {
-            Qualifier::Const => SemanticTokenType::MACRO,
-            Qualifier::Value => SemanticTokenType::VARIABLE,
-            Qualifier::Prop => SemanticTokenType::PROPERTY,
+            ir::Qualifier::Const => SemanticTokenType::MACRO,
+            ir::Qualifier::Value => SemanticTokenType::VARIABLE,
+            ir::Qualifier::Prop => SemanticTokenType::PROPERTY,
         };
 
         tokens.push(self.output_semantic_token(assignment.id_ref().src_ref(), id_type, &[])?);
@@ -281,7 +282,7 @@ impl TokenContext {
     fn parse_unary_op(
         &mut self,
         op: &Refer<String>,
-        rhs: &Expression,
+        rhs: &ir::Expression,
         _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
@@ -292,9 +293,9 @@ impl TokenContext {
 
     fn parse_binary_op(
         &mut self,
-        lhs: &Expression,
+        lhs: &ir::Expression,
         op: &Refer<String>,
-        rhs: &Expression,
+        rhs: &ir::Expression,
         _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
@@ -306,7 +307,7 @@ impl TokenContext {
 
     fn parse_qualified_name(
         &mut self,
-        qualified_name: &QualifiedName,
+        qualified_name: &ir::QualifiedName,
         token_type: SemanticTokenType,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
@@ -323,8 +324,8 @@ impl TokenContext {
 
     fn parse_method_call(
         &mut self,
-        expression: &Expression,
-        method_call: &MethodCall,
+        expression: &ir::Expression,
+        method_call: &ir::MethodCall,
         _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
@@ -340,7 +341,7 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_argument(&mut self, arg: &Argument) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_argument(&mut self, arg: &ir::Argument) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         if let Some(id) = &arg.id {
             tokens.push(self.output_semantic_token(
@@ -353,7 +354,7 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_call(&mut self, call: &Call) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_call(&mut self, call: &ir::Call) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_qualified_name(&call.name, SemanticTokenType::FUNCTION)?);
         for arg in call.argument_list.iter() {
@@ -362,7 +363,10 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_comment(&mut self, comment: &InnerDocComment) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_comment(
+        &mut self,
+        comment: &ir::InnerDocComment,
+    ) -> miette::Result<Vec<SemanticToken>> {
         Ok(vec![self.output_semantic_token(
             comment.src_ref(),
             SemanticTokenType::COMMENT,
@@ -370,7 +374,10 @@ impl TokenContext {
         )?])
     }
 
-    fn parse_use(&mut self, use_statement: &UseStatement) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_use(
+        &mut self,
+        use_statement: &ir::UseStatement,
+    ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(
             use_statement.keyword_ref.clone(),
@@ -381,13 +388,13 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_use_decl(&mut self, decl: &UseDeclaration) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_use_decl(&mut self, decl: &ir::UseDeclaration) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         match decl {
-            UseDeclaration::UseAll(name) | UseDeclaration::Use(name) => {
+            ir::UseDeclaration::UseAll(name) | ir::UseDeclaration::Use(name) => {
                 tokens.extend(self.parse_qualified_name(name, SemanticTokenType::NAMESPACE)?);
             }
-            UseDeclaration::UseAs(name, id) => {
+            ir::UseDeclaration::UseAs(name, id) => {
                 tokens.extend(self.parse_qualified_name(name, SemanticTokenType::NAMESPACE)?);
                 tokens.push(self.output_semantic_token(
                     id.src_ref(),
@@ -401,7 +408,7 @@ impl TokenContext {
 
     fn parse_tuple_expression(
         &mut self,
-        tuple: &TupleExpression,
+        tuple: &ir::TupleExpression,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         for arg in tuple.args.iter() {
@@ -412,18 +419,18 @@ impl TokenContext {
 
     fn parse_array_expression(
         &mut self,
-        array_expr: &ArrayExpression,
+        array_expr: &ir::ArrayExpression,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         match &array_expr.inner {
-            ArrayExpressionInner::List(expressions) => tokens.extend(
+            ir::ArrayExpressionInner::List(expressions) => tokens.extend(
                 expressions
                     .iter()
                     .map(|e| self.parse_expression(e))
                     .flat_map(Result::ok)
                     .flatten(),
             ),
-            ArrayExpressionInner::Range(range_expression) => {
+            ir::ArrayExpressionInner::Range(range_expression) => {
                 tokens.extend(self.parse_range_expression(range_expression)?);
             }
         }
@@ -432,7 +439,7 @@ impl TokenContext {
 
     fn parse_range_expression(
         &mut self,
-        range_expression: &RangeExpression,
+        range_expression: &ir::RangeExpression,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_expression(&range_expression.first)?);
@@ -440,7 +447,7 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_marker(&mut self, marker: &Marker) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_marker(&mut self, marker: &ir::Marker) -> miette::Result<Vec<SemanticToken>> {
         Ok(vec![self.output_semantic_token(
             marker.src_ref(),
             SemanticTokenType::EVENT,
@@ -450,21 +457,21 @@ impl TokenContext {
 
     fn parse_attribute_command(
         &mut self,
-        command: &AttributeCommand,
+        command: &ir::AttributeCommand,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         match command {
-            AttributeCommand::Ident(name) => {
+            ir::AttributeCommand::Ident(name) => {
                 tokens.push(self.output_semantic_token(
                     name.src_ref(),
                     SemanticTokenType::PROPERTY,
                     &[],
                 )?);
             }
-            AttributeCommand::Call(call) => {
+            ir::AttributeCommand::Call(call) => {
                 tokens.extend(self.parse_call(call)?);
             }
-            AttributeCommand::Assignment { name, value, .. } => {
+            ir::AttributeCommand::Assignment { name, value, .. } => {
                 tokens.push(self.output_semantic_token(
                     name.src_ref(),
                     SemanticTokenType::PROPERTY,
@@ -478,7 +485,7 @@ impl TokenContext {
 
     fn parse_format_string(
         &mut self,
-        format_string: &FormatString,
+        format_string: &ir::FormatString,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(
@@ -488,12 +495,12 @@ impl TokenContext {
         )?);
         for elem in &*format_string.0 {
             match elem {
-                FormatStringInner::String(_) => tokens.push(self.output_semantic_token(
+                ir::FormatStringInner::String(_) => tokens.push(self.output_semantic_token(
                     elem.src_ref(),
                     SemanticTokenType::STRING,
                     &[],
                 )?),
-                FormatStringInner::FormatExpression(expr) => {
+                ir::FormatStringInner::FormatExpression(expr) => {
                     tokens.extend(self.parse_format_expression(expr)?)
                 }
             }
@@ -503,7 +510,7 @@ impl TokenContext {
 
     fn parse_format_expression(
         &mut self,
-        expr: &FormatExpression,
+        expr: &ir::FormatExpression,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_expression(&expr.expression)?);
@@ -519,8 +526,8 @@ impl TokenContext {
 
     fn parse_attribute_access(
         &mut self,
-        expression: &Expression,
-        identifier: &Identifier,
+        expression: &ir::Expression,
+        identifier: &ir::Identifier,
         src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
@@ -540,8 +547,8 @@ impl TokenContext {
 
     fn parse_property_access(
         &mut self,
-        expression: &Expression,
-        identifier: &Identifier,
+        expression: &ir::Expression,
+        identifier: &ir::Identifier,
         _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
@@ -557,8 +564,8 @@ impl TokenContext {
 
     fn parse_array_element_access(
         &mut self,
-        expression: &Expression,
-        expression1: &Expression,
+        expression: &ir::Expression,
+        expression1: &ir::Expression,
         _src_ref: &SrcRef,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
@@ -569,7 +576,7 @@ impl TokenContext {
 
     fn parse_function_signature(
         &mut self,
-        signature: &FunctionSignature,
+        signature: &ir::FunctionSignature,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
 
@@ -583,11 +590,11 @@ impl TokenContext {
 
     fn parse_type_annotation(
         &mut self,
-        return_type: &TypeAnnotation,
+        return_type: &ir::TypeAnnotation,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         match return_type.ty() {
-            Type::Array(_) => tokens.push(self.output_semantic_token(
+            ir::Type::Array(_) => tokens.push(self.output_semantic_token(
                 return_type.0.src_ref(),
                 SemanticTokenType::TYPE,
                 &[],
@@ -603,7 +610,7 @@ impl TokenContext {
 
     fn parse_inner_attribute(
         &mut self,
-        attribute: &Attribute,
+        attribute: &ir::Attribute,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         for command in &attribute.commands {
@@ -617,7 +624,7 @@ impl TokenContext {
 impl TokenContext {
     fn parse_expression_stmt(
         &mut self,
-        expression: &ExpressionStatement,
+        expression: &ir::ExpressionStatement,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_attribute_list(&expression.attribute_list)?);
@@ -625,7 +632,7 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_if_stmt(&mut self, if_stmt: &IfStatement) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_if_stmt(&mut self, if_stmt: &ir::IfStatement) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(
             if_stmt.if_ref.clone(),
@@ -659,7 +666,7 @@ impl TokenContext {
 
     fn parse_module_stmt(
         &mut self,
-        module_definition: &ModuleDefinition,
+        module_definition: &ir::ModuleDefinition,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(
@@ -680,7 +687,7 @@ impl TokenContext {
 
     fn parse_function_stmt(
         &mut self,
-        function_definition: &FunctionDefinition,
+        function_definition: &ir::FunctionDefinition,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         self.doc_token(&function_definition.doc)?;
@@ -702,7 +709,7 @@ impl TokenContext {
 
     fn parse_init_stmt(
         &mut self,
-        init_definition: &InitDefinition,
+        init_definition: &ir::InitDefinition,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         self.doc_token(&init_definition.doc)?;
@@ -719,7 +726,7 @@ impl TokenContext {
 
     fn parse_assignment_stmt(
         &mut self,
-        assignment: &AssignmentStatement,
+        assignment: &ir::AssignmentStatement,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.extend(self.parse_attribute_list(&assignment.attribute_list)?);
@@ -730,7 +737,7 @@ impl TokenContext {
 
     fn parse_return_stmt(
         &mut self,
-        return_statement: &ReturnStatement,
+        return_statement: &ir::ReturnStatement,
     ) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(
