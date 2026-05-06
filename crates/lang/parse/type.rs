@@ -14,10 +14,10 @@ impl Type {
                 .split_once('x')
                 .unwrap_or((dimensions, dimensions));
             let x = usize::from_str(x).map_err(|_| {
-                ParseError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref.clone()))
+                LowerError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref.clone()))
             })?;
             let y = usize::from_str(y).map_err(|_| {
-                ParseError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref.clone()))
+                LowerError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref.clone()))
             })?;
             return Ok(Type::Matrix(MatrixType::new(x, y)));
         }
@@ -38,7 +38,7 @@ impl Type {
             "Weight" => Ok(Type::Quantity(QuantityType::Weight)),
             "Density" => Ok(Type::Quantity(QuantityType::Density)),
             "Model" => Ok(Type::Model),
-            _ => Err(ParseError::UnknownType(Refer::new(ty.to_string(), src_ref))),
+            _ => Err(LowerError::UnknownType(Refer::new(ty.to_string(), src_ref))),
         }
     }
 }
@@ -46,7 +46,7 @@ impl Type {
 impl FromAst for Type {
     type AstNode = ast::Type;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Type::Single(ty) => {
                 Type::parse_str(ty.name.as_str(), context.src_ref(&node.span()))?
@@ -60,7 +60,7 @@ impl FromAst for Type {
 impl FromAst for TypeAnnotation {
     type AstNode = ast::Type;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(TypeAnnotation(Refer::new(
             Type::from_ast(node, context)?,
             context.src_ref(&node.span()),

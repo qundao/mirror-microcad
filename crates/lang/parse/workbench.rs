@@ -16,7 +16,7 @@ impl From<ast::WorkbenchKind> for WorkbenchKind {
 impl FromAst for std::rc::Rc<WorkbenchDefinition> {
     type AstNode = ast::WorkbenchDefinition;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(std::rc::Rc::new(WorkbenchDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: DocBlock::from_ast(&node.doc, context)?,

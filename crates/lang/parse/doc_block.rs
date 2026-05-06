@@ -8,7 +8,7 @@ use microcad_syntax::ast;
 impl FromAst for DocBlock {
     type AstNode = ast::DocBlock;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(DocBlock(Refer::new(
             node.lines.clone(),
             context.src_ref(&node.span),
@@ -19,7 +19,7 @@ impl FromAst for DocBlock {
 impl FromAst for InnerDocComment {
     type AstNode = ast::InnerDocComment;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(Self(Refer::new(
             node.line.clone(),
             context.src_ref(&node.span),

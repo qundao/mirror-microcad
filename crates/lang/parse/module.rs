@@ -8,8 +8,8 @@ impl ModuleDefinition {
     /// Get inline module
     pub fn from_ast_inline(
         node: &ast::InlineModule,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(ModuleDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: DocBlock::from_ast(&node.doc, context)?,
@@ -27,8 +27,8 @@ impl ModuleDefinition {
     /// Get file module
     pub fn from_ast_file(
         node: &ast::FileModule,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(ModuleDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: DocBlock::from_ast(&node.doc, context)?,

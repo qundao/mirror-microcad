@@ -10,7 +10,7 @@ use std::str::FromStr;
 impl FromAst for Literal {
     type AstNode = ast::Literal;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match &node.literal {
             ast::LiteralKind::Bool(lit) => {
                 Literal::Bool(Refer::new(lit.value, context.src_ref(&lit.span)))
@@ -30,7 +30,7 @@ impl FromAst for Literal {
                 unreachable!("string literal are handled else were");
             }
             ast::LiteralKind::Error(e) => {
-                return Err(ParseError::InvalidLiteral {
+                return Err(LowerError::InvalidLiteral {
                     error: e.kind.clone(),
                     src_ref: context.src_ref(&e.span),
                 });
@@ -42,7 +42,7 @@ impl FromAst for Literal {
 impl FromAst for NumberLiteral {
     type AstNode = ast::QuantityLiteral;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(NumberLiteral(
             node.value,
             Unit::from_ast(&node.unit, context)?,
@@ -52,7 +52,7 @@ impl FromAst for NumberLiteral {
 }
 
 impl std::str::FromStr for NumberLiteral {
-    type Err = ParseError;
+    type Err = LowerError;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         let num_bytes = s
@@ -61,7 +61,7 @@ impl std::str::FromStr for NumberLiteral {
             .count();
         let value = s[0..num_bytes]
             .parse()
-            .map_err(|e| ParseError::InvalidLiteral {
+            .map_err(|e| LowerError::InvalidLiteral {
                 error: LiteralErrorKind::Float(e),
                 src_ref: SrcRef::default(),
             })?;
@@ -77,9 +77,9 @@ impl std::str::FromStr for NumberLiteral {
 impl FromAst for Unit {
     type AstNode = ast::Unit;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Unit::from_str(node.name.as_str()).map_err(|_| {
-            ParseError::UnknownUnit(Refer::new(
+            LowerError::UnknownUnit(Refer::new(
                 node.name.to_string(),
                 context.src_ref(&node.span),
             ))
@@ -88,7 +88,7 @@ impl FromAst for Unit {
 }
 
 impl std::str::FromStr for Unit {
-    type Err = ParseError;
+    type Err = LowerError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
@@ -146,7 +146,7 @@ impl std::str::FromStr for Unit {
             "g/m³" => Ok(Self::GramPerMeter3),
 
             // Unknown
-            _ => Err(ParseError::UnknownUnit(Refer::new(
+            _ => Err(LowerError::UnknownUnit(Refer::new(
                 s.into(),
                 SrcRef::default(),
             ))),

@@ -12,7 +12,7 @@ use thiserror::Error;
 /// Parsing errors
 #[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
-pub enum ParseError {
+pub enum LowerError {
     #[error("Error parsing integer literal: {0}")]
     ParseIntError(#[label("{0}")] Refer<std::num::ParseIntError>),
 
@@ -76,30 +76,30 @@ pub enum ParseError {
 }
 
 /// Result with parse error
-pub type ParseResult<T> = Result<T, ParseError>;
+pub type ParseResult<T> = Result<T, LowerError>;
 
-impl SrcReferrer for ParseError {
+impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
         match self {
-            ParseError::DuplicateArgument { id, .. } => id.src_ref(),
-            ParseError::LoadSource(src_ref, ..)
-            | ParseError::InvalidGlobPattern(src_ref)
-            | ParseError::UseGlobAlias(src_ref)
-            | ParseError::InvalidLiteral { src_ref, .. }
-            | ParseError::InvalidExpression { src_ref }
-            | ParseError::InvalidStatement { src_ref }
-            | ParseError::InvalidRangeType { src_ref } => src_ref.clone(),
-            ParseError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
-            ParseError::InvalidIdentifier(id) => id.src_ref(),
-            ParseError::UnknownUnit(unit) => unit.src_ref(),
-            ParseError::UnknownType(ty) => ty.src_ref(),
-            ParseError::InvalidMatrixType(ty) => ty.src_ref(),
-            ParseError::AstParser(err) => err.src_ref(),
+            LowerError::DuplicateArgument { id, .. } => id.src_ref(),
+            LowerError::LoadSource(src_ref, ..)
+            | LowerError::InvalidGlobPattern(src_ref)
+            | LowerError::UseGlobAlias(src_ref)
+            | LowerError::InvalidLiteral { src_ref, .. }
+            | LowerError::InvalidExpression { src_ref }
+            | LowerError::InvalidStatement { src_ref }
+            | LowerError::InvalidRangeType { src_ref } => src_ref.clone(),
+            LowerError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
+            LowerError::InvalidIdentifier(id) => id.src_ref(),
+            LowerError::UnknownUnit(unit) => unit.src_ref(),
+            LowerError::UnknownType(ty) => ty.src_ref(),
+            LowerError::InvalidMatrixType(ty) => ty.src_ref(),
+            LowerError::AstParser(err) => err.src_ref(),
         }
     }
 }
 
-impl ParseError {
+impl LowerError {
     /// Add source code to the error
     pub fn with_source(self, source: String) -> ParseErrorsWithSource {
         ParseErrorsWithSource {
@@ -114,13 +114,13 @@ impl ParseError {
 #[error("Failed to parse")] // todo
 pub struct ParseErrorsWithSource {
     /// The errors encountered during parsing
-    pub errors: Vec<ParseError>,
+    pub errors: Vec<LowerError>,
     /// The parsed source code
     pub source_code: Option<Hashed<String>>,
 }
 
-impl From<ParseError> for ParseErrorsWithSource {
-    fn from(value: ParseError) -> Self {
+impl From<LowerError> for ParseErrorsWithSource {
+    fn from(value: LowerError) -> Self {
         ParseErrorsWithSource {
             errors: vec![value],
             source_code: None,
@@ -128,8 +128,8 @@ impl From<ParseError> for ParseErrorsWithSource {
     }
 }
 
-impl From<Vec<ParseError>> for ParseErrorsWithSource {
-    fn from(value: Vec<ParseError>) -> Self {
+impl From<Vec<LowerError>> for ParseErrorsWithSource {
+    fn from(value: Vec<LowerError>) -> Self {
         ParseErrorsWithSource {
             errors: value,
             source_code: None,

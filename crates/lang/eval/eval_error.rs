@@ -112,7 +112,7 @@ pub enum EvalError {
 
     /// Parser Error
     #[error("Parsing error {0}")]
-    ParseError(#[from] ParseError),
+    LowerError(#[from] LowerError),
 
     /// Unexpected element within expression.
     #[error("Unexpected {0} {1} within expression")]

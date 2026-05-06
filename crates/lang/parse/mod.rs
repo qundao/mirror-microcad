@@ -47,25 +47,25 @@ use microcad_lang_base::Refer;
 use microcad_syntax::parse;
 pub use parse_error::*;
 
-use crate::parser::ParseContext;
+use crate::parser::LowerContext;
 use crate::syntax::*;
 
 pub(crate) fn build_ast(
     source: &str,
-    parse_context: &ParseContext,
+    lower_context: &LowerContext,
 ) -> Result<microcad_syntax::ast::Program, ParseErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors
             .into_iter()
             .map(|error| {
-                let src_ref = parse_context.src_ref(&error.span);
-                ParseError::AstParser(Refer::new(error, src_ref))
+                let src_ref = lower_context.src_ref(&error.span);
+                LowerError::AstParser(Refer::new(error, src_ref))
             })
             .collect::<Vec<_>>();
         ParseErrorsWithSource {
             errors,
             source_code: Some(
-                parse_context
+                lower_context
                     .source
                     .clone()
                     .map(|source| source.to_string()),

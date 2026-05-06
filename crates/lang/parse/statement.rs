@@ -8,8 +8,8 @@ use microcad_syntax::ast;
 impl Assignment {
     fn from_ast_local(
         node: &ast::LocalAssignment,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(Assignment {
             doc: DocBlock::default(),
             visibility: Visibility::Private,
@@ -27,8 +27,8 @@ impl Assignment {
 
     fn from_ast_prop(
         node: &ast::PropertyAssignment,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(Assignment {
             doc: DocBlock::from_ast(&node.doc, context)?,
             visibility: Visibility::Private,
@@ -46,8 +46,8 @@ impl Assignment {
 
     fn from_ast_const(
         node: &ast::ConstAssignment,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(Assignment {
             doc: DocBlock::from_ast(&node.doc, context)?,
             visibility: node
@@ -73,8 +73,8 @@ impl Assignment {
 impl AssignmentStatement {
     fn from_ast_local(
         node: &ast::LocalAssignment,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
             assignment: std::rc::Rc::new(Assignment::from_ast_local(node, context)?),
@@ -84,8 +84,8 @@ impl AssignmentStatement {
 
     fn from_ast_prop(
         node: &ast::PropertyAssignment,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
             assignment: std::rc::Rc::new(Assignment::from_ast_prop(node, context)?),
@@ -95,8 +95,8 @@ impl AssignmentStatement {
 
     fn from_ast_const(
         node: &ast::ConstAssignment,
-        context: &ParseContext,
-    ) -> Result<Self, ParseError> {
+        context: &LowerContext,
+    ) -> Result<Self, LowerError> {
         Ok(AssignmentStatement {
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
             assignment: std::rc::Rc::new(Assignment::from_ast_const(node, context)?),
@@ -108,7 +108,7 @@ impl AssignmentStatement {
 impl FromAst for IfStatement {
     type AstNode = ast::If;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(IfStatement {
             if_ref: context.src_ref(&node.if_span),
             cond: Expression::from_ast(&node.condition, context)?,
@@ -134,7 +134,7 @@ impl FromAst for IfStatement {
 impl FromAst for ExpressionStatement {
     type AstNode = ast::ExpressionStatement;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(ExpressionStatement {
             src_ref: context.src_ref(&node.span),
             attribute_list: AttributeList::from_ast(&node.attributes, context)?,
@@ -146,7 +146,7 @@ impl FromAst for ExpressionStatement {
 impl FromAst for Statement {
     type AstNode = ast::Statement;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Statement::InlineModule(module) => Statement::Module(std::rc::Rc::new(
                 ModuleDefinition::from_ast_inline(module, context)?,
@@ -190,7 +190,7 @@ impl FromAst for Statement {
                 Statement::Assignment(AssignmentStatement::from_ast_const(a, context)?)
             }
             ast::Statement::Error(span) => {
-                return Err(ParseError::InvalidStatement {
+                return Err(LowerError::InvalidStatement {
                     src_ref: context.src_ref(span),
                 });
             }
@@ -201,7 +201,7 @@ impl FromAst for Statement {
 impl FromAst for ReturnStatement {
     type AstNode = ast::Return;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(ReturnStatement {
             keyword_ref: context.src_ref(&node.keyword_span),
             result: node
@@ -217,7 +217,7 @@ impl FromAst for ReturnStatement {
 impl FromAst for StatementList {
     type AstNode = ast::StatementList;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         let mut statements = Vec::new();
         node.statements.iter().try_for_each(|(statement, _)| {
             statements.push(Statement::from_ast(statement, context)?);

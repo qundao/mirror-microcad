@@ -8,7 +8,7 @@ use microcad_syntax::ast;
 impl FromAst for Identifier {
     type AstNode = ast::Identifier;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(Self(Refer::new(
             node.name.clone(),
             context.src_ref(&node.span),
@@ -19,7 +19,7 @@ impl FromAst for Identifier {
 impl FromAst for QualifiedName {
     type AstNode = ast::QualifiedName;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         let parts = node
             .parts
             .iter()

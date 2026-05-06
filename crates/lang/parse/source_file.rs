@@ -7,8 +7,8 @@ use microcad_syntax::ast;
 use std::fs::read_to_string;
 
 impl SourceFile {
-    pub fn from_source(source: &microcad_syntax::Source) -> Result<std::rc::Rc<Self>, ParseError> {
-        let context = ParseContext::new(source.text.as_str());
+    pub fn from_source(source: &microcad_syntax::Source) -> Result<std::rc::Rc<Self>, LowerError> {
+        let context = LowerContext::new(source.text.as_str());
         Ok(std::rc::Rc::new(Self {
             doc: None,
             statements: StatementList::from_ast(&source.ast.statements, &context)?,
@@ -44,7 +44,7 @@ impl SourceFile {
         let buf = match read_to_string(path) {
             Ok(buf) => buf,
             Err(error) => {
-                let error = ParseError::LoadSource(name.src_ref(), path.into(), error);
+                let error = LowerError::LoadSource(name.src_ref(), path.into(), error);
                 let mut source_file =
                     SourceFile::new(None, StatementList::default(), Hashed::new(String::new()));
                 source_file.name = name;
@@ -69,7 +69,7 @@ impl SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
-    ) -> Result<std::rc::Rc<Self>, Vec<ParseError>> {
+    ) -> Result<std::rc::Rc<Self>, Vec<LowerError>> {
         let (source, error) = Self::load_inner(name, path, source_str);
         match error {
             Some(error) => Err(error.errors),
@@ -83,7 +83,7 @@ impl SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
-    ) -> (std::rc::Rc<Self>, Option<Vec<ParseError>>) {
+    ) -> (std::rc::Rc<Self>, Option<Vec<LowerError>>) {
         let (source, error) = Self::load_inner(name, path, source_str);
         (std::rc::Rc::new(source), error.map(|err| err.errors))
     }
@@ -97,7 +97,7 @@ impl SourceFile {
             "{load} source from string",
             load = microcad_lang_base::mark!(LOAD)
         );
-        let parse_context = ParseContext::new(source_str);
+        let parse_context = LowerContext::new(source_str);
 
         let dummy_source = || {
             let mut source = SourceFile::new(
@@ -155,7 +155,7 @@ impl SourceFile {
 impl FromAst for SourceFile {
     type AstNode = ast::Program;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(SourceFile::new(
             None, // todo
             StatementList::from_ast(&node.statements, context)?,

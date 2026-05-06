@@ -7,7 +7,7 @@ use microcad_syntax::ast;
 impl FromAst for TupleType {
     type AstNode = ast::TupleType;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(TupleType {
             named: node
                 .inner

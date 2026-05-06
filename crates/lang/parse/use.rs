@@ -8,7 +8,7 @@ use microcad_syntax::ast::UseStatementPart;
 impl FromAst for UseStatement {
     type AstNode = ast::UseStatement;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         let glob_index = node
             .name
             .parts
@@ -18,7 +18,7 @@ impl FromAst for UseStatement {
             .map(|(i, _)| i);
         if let Some(i) = glob_index {
             if i < node.name.parts.len() - 1 {
-                return Err(ParseError::InvalidGlobPattern(
+                return Err(LowerError::InvalidGlobPattern(
                     context.src_ref(&node.name.span),
                 ));
             }
@@ -39,7 +39,7 @@ impl FromAst for UseStatement {
             (false, None) => UseDeclaration::Use(name),
             (true, None) => UseDeclaration::UseAll(name),
             (true, Some(_)) => {
-                return Err(ParseError::UseGlobAlias(context.src_ref(&node.span)));
+                return Err(LowerError::UseGlobAlias(context.src_ref(&node.span)));
             }
             (false, Some(alias)) => {
                 UseDeclaration::UseAs(name, Identifier::from_ast(alias, context)?)
@@ -62,7 +62,7 @@ impl FromAst for UseStatement {
 impl FromAst for Visibility {
     type AstNode = ast::Visibility;
 
-    fn from_ast(node: &Self::AstNode, _context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, _context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Visibility::Public => Self::Public,
         })

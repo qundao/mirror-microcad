@@ -8,7 +8,7 @@ use microcad_syntax::ast;
 impl FromAst for Parameter {
     type AstNode = ast::Parameter;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(Parameter {
             src_ref: context.src_ref(&node.span),
             id: Identifier::from_ast(&node.name, context)?,
@@ -29,14 +29,14 @@ impl FromAst for Parameter {
 impl FromAst for ParameterList {
     type AstNode = ast::ParameterList;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         let mut parameters: OrdMap<_, _> = Default::default();
 
         for param in &node.parameters {
             let param = Parameter::from_ast(param, context)?;
             parameters
                 .try_push(param)
-                .map_err(|(previous, id)| ParseError::DuplicateArgument { previous, id })?;
+                .map_err(|(previous, id)| LowerError::DuplicateArgument { previous, id })?;
         }
         Ok(ParameterList(Refer::new(
             parameters,

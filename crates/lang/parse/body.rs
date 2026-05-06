@@ -7,7 +7,7 @@ use microcad_syntax::ast;
 impl FromAst for Body {
     type AstNode = ast::Body;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(Body {
             statements: StatementList::from_ast(&node.statements, context)?,
             src_ref: context.src_ref(&node.span),

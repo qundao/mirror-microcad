@@ -7,7 +7,7 @@ use microcad_syntax::ast;
 impl FromAst for AttributeCommand {
     type AstNode = ast::AttributeCommand;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::AttributeCommand::Ident(i) => {
                 AttributeCommand::Ident(Identifier::from_ast(i, context)?)
@@ -25,7 +25,7 @@ impl FromAst for AttributeCommand {
 impl FromAst for Attribute {
     type AstNode = ast::Attribute;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(Attribute {
             src_ref: context.src_ref(&node.span),
             is_inner: node.is_inner,
@@ -33,7 +33,7 @@ impl FromAst for Attribute {
                 .commands
                 .iter()
                 .map(|c| AttributeCommand::from_ast(c, context))
-                .collect::<Result<Vec<_>, ParseError>>()?,
+                .collect::<Result<Vec<_>, LowerError>>()?,
         })
     }
 }
@@ -41,7 +41,7 @@ impl FromAst for Attribute {
 impl FromAst for AttributeList {
     type AstNode = Vec<ast::Attribute>;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         node.iter()
             .map(|a| Attribute::from_ast(a, context))
             .collect::<Result<Vec<_>, _>>()

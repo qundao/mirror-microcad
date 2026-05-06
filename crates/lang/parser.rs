@@ -46,14 +46,14 @@ impl LineIndex {
     }
 }
 
-pub struct ParseContext<'source> {
+pub struct LowerContext<'source> {
     pub source: Hashed<&'source str>,
     line_index: LineIndex,
 }
 
-impl<'source> ParseContext<'source> {
+impl<'source> LowerContext<'source> {
     pub fn new(source: &'source str) -> Self {
-        ParseContext {
+        LowerContext {
             source: Hashed::new(source),
             line_index: LineIndex::new(source),
         }
@@ -68,5 +68,5 @@ impl<'source> ParseContext<'source> {
 pub trait FromAst: Sized {
     type AstNode;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError>;
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError>;
 }

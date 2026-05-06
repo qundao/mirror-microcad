@@ -7,7 +7,7 @@ use microcad_syntax::ast;
 impl FromAst for FunctionDefinition {
     type AstNode = ast::FunctionDefinition;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(FunctionDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: DocBlock::from_ast(&node.doc, context)?,

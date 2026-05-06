@@ -8,7 +8,7 @@ use microcad_syntax::ast;
 impl FromAst for Call {
     type AstNode = ast::Call;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(Call {
             src_ref: context.src_ref(&node.span),
             name: QualifiedName::from_ast(&node.name, context)?,
@@ -20,13 +20,13 @@ impl FromAst for Call {
 impl FromAst for ArgumentList {
     type AstNode = ast::ArgumentList;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         let mut argument_list =
             ArgumentList(Refer::new(OrdMap::default(), context.src_ref(&node.span)));
         for arg in &node.arguments {
             argument_list
                 .try_push(Argument::from_ast(arg, context)?)
-                .map_err(|(previous, id)| ParseError::DuplicateArgument { previous, id })?;
+                .map_err(|(previous, id)| LowerError::DuplicateArgument { previous, id })?;
         }
         Ok(argument_list)
     }
@@ -35,7 +35,7 @@ impl FromAst for ArgumentList {
 impl FromAst for Argument {
     type AstNode = ast::Argument;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(Argument {
             id: node
                 .name()
@@ -50,7 +50,7 @@ impl FromAst for Argument {
 impl FromAst for MethodCall {
     type AstNode = ast::Call;
 
-    fn from_ast(node: &Self::AstNode, context: &ParseContext) -> Result<Self, ParseError> {
+    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(MethodCall {
             name: QualifiedName::from_ast(&node.name, context)?,
             argument_list: ArgumentList::from_ast(&node.arguments, context)?,
