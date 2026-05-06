@@ -26,13 +26,13 @@
   Group (root) ->
     Operation subtract() ->
       Group ->
-        outer: Workpiece(sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
+        outer: Workpiece(Sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
           - height = 15.8mm
           - width = 31.8mm
           - x = -15.9mm
           - y = -7.9mm
           Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) ->
-        inner: Workpiece(sketch) std::geo2d::Rect(height=13.4mm, width=29.4mm) ->
+        inner: Workpiece(Sketch) std::geo2d::Rect(height=13.4mm, width=29.4mm) ->
           - height = 13.4mm
           - width = 29.4mm
           - x = -14.7mm

@@ -15,7 +15,7 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) pre_init_init::K() ->
+    Workpiece(Sketch) pre_init_init::K() ->
       - x = 1
 
 Export error: Render error: Nothing to render

@@ -24,8 +24,8 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(part) builtin_modules::a::b::c::M1() ->
-    Workpiece(part) builtin_modules::a::M2() ->
+    Workpiece(Part) builtin_modules::a::b::c::M1() ->
+    Workpiece(Part) builtin_modules::a::M2() ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

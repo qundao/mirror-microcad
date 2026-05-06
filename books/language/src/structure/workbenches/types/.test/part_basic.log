@@ -18,28 +18,28 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(part) part_basic::MyPart(radius=10mm) ->
+    Workpiece(Part) part_basic::MyPart(radius=10mm) ->
       - radius = 10mm
       Operation subtract() ->
         Group ->
-          Workpiece(part) std::geo3d::Sphere(radius=10mm) ->
+          Workpiece(Part) std::geo3d::Sphere(radius=10mm) ->
             - radius = 10mm
             Primitive3D __builtin::geo3d::Sphere(radius=10mm) ->
-          Workpiece(part) std::geo3d::Cube(size=10mm) ->
+          Workpiece(Part) std::geo3d::Cube(size=10mm) ->
             - size_x = 10mm
             - size_y = 10mm
             - size_z = 10mm
-            Workpiece(op) std::ops::translate(x=0mm, y=0mm, z=-5mm) ->
+            Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-5mm) ->
               - x = 0mm
               - y = 0mm
               - z = -5mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=-5mm) ->
-                Workpiece(op) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
+                Workpiece(Operation) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
                   - height = 10mm
                   - scale = (x=1, y=1)
                   - twist = 0rad
                   Operation __builtin::ops::extrude(height=10mm, scale_x=1, scale_y=1, twist=0rad) ->
-                    Workpiece(sketch) std::geo2d::Rect(height=10mm, width=10mm) ->
+                    Workpiece(Sketch) std::geo2d::Rect(height=10mm, width=10mm) ->
                       - height = 10mm
                       - width = 10mm
                       - x = -5mm

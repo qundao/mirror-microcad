@@ -15,7 +15,7 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(part) std::geo3d::Sphere(radius=4mm) ->
+    Workpiece(Part) std::geo3d::Sphere(radius=4mm) ->
       - radius = 4mm
       Primitive3D __builtin::geo3d::Sphere(radius=4mm) ->
 

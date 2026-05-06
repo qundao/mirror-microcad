@@ -30,7 +30,7 @@
 Unexpected warnings(s) which did occur in line(s): 12
 -- Model --
   Group (root) ->
-    Workpiece(sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=100) ->
+    Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=100) ->
       - module = 1mm
       - outer_radius = 51mm
       - pitch_radius = 50mm

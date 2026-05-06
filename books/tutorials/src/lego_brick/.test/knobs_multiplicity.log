@@ -16,7 +16,7 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) std::geo2d::Circle(center=(x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm]), diameter=4.8mm) ->
+    Workpiece(Sketch) std::geo2d::Circle(center=(x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm]), diameter=4.8mm) ->
       - center = (x=[-12mm, -4mm, 4mm, 12mm], y=[-4mm, 4mm])
       - radius = 2.4mm
       Multiplicity ->

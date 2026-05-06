@@ -20,7 +20,7 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) create::YourSketch() ->
+    Workpiece(Sketch) create::YourSketch() ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

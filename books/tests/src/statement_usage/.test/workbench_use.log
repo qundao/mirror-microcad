@@ -24,7 +24,7 @@
 Unexpected warnings(s) which did occur in line(s): 39
 -- Model --
   Group (root) ->
-    Workpiece(sketch) workbench_use::K() ->
+    Workpiece(Sketch) workbench_use::K() ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

@@ -19,7 +19,7 @@
     ╰────
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::translate(x=5mm, y=0mm, z=0mm) ->
+    Workpiece(Operation) std::ops::translate(x=5mm, y=0mm, z=0mm) ->
       - x = 5mm
       - y = 0mm
       - z = 0mm

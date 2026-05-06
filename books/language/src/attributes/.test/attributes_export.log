@@ -17,14 +17,14 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(size=42mm) ->
+    Workpiece(Sketch) std::geo2d::Rect(size=42mm) ->
       - height = 42mm
       - width = 42mm
       - x = -21mm
       - y = -21mm
       #[export = "rect.svg" with exporter `svg`]
       Primitive2D __builtin::geo2d::Rect(height=42mm, width=42mm, x=-21mm, y=-21mm) ->
-    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=42mm) ->
+    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=42mm) ->
       - center = (x=0mm, y=0mm)
       - radius = 42mm
       #[export = "circle.svg" with exporter `svg`]

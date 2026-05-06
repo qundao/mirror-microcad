@@ -13,7 +13,7 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) source_workbench::F() ->
+    Workpiece(Sketch) source_workbench::F() ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

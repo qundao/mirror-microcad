@@ -16,45 +16,45 @@
 -- Model --
   Group (root) ->
     Multiplicity ->
-      Workpiece(op) std::ops::translate(x=-4mm, y=-4mm, z=0mm) ->
+      Workpiece(Operation) std::ops::translate(x=-4mm, y=-4mm, z=0mm) ->
         - x = -4mm
         - y = -4mm
         - z = 0mm
         Transform __builtin::ops::translate(x=-4mm, y=-4mm, z=0mm) ->
-          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
+          r: Workpiece(Sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
             - height = 2mm
             - width = 2mm
             - x = -1mm
             - y = -1mm
             Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
-      Workpiece(op) std::ops::translate(x=4mm, y=-4mm, z=0mm) ->
+      Workpiece(Operation) std::ops::translate(x=4mm, y=-4mm, z=0mm) ->
         - x = 4mm
         - y = -4mm
         - z = 0mm
         Transform __builtin::ops::translate(x=4mm, y=-4mm, z=0mm) ->
-          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
+          r: Workpiece(Sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
             - height = 2mm
             - width = 2mm
             - x = -1mm
             - y = -1mm
             Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
-      Workpiece(op) std::ops::translate(x=-4mm, y=4mm, z=0mm) ->
+      Workpiece(Operation) std::ops::translate(x=-4mm, y=4mm, z=0mm) ->
         - x = -4mm
         - y = 4mm
         - z = 0mm
         Transform __builtin::ops::translate(x=-4mm, y=4mm, z=0mm) ->
-          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
+          r: Workpiece(Sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
             - height = 2mm
             - width = 2mm
             - x = -1mm
             - y = -1mm
             Primitive2D __builtin::geo2d::Rect(height=2mm, width=2mm, x=-1mm, y=-1mm) ->
-      Workpiece(op) std::ops::translate(x=4mm, y=4mm, z=0mm) ->
+      Workpiece(Operation) std::ops::translate(x=4mm, y=4mm, z=0mm) ->
         - x = 4mm
         - y = 4mm
         - z = 0mm
         Transform __builtin::ops::translate(x=4mm, y=4mm, z=0mm) ->
-          r: Workpiece(sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
+          r: Workpiece(Sketch) std::geo2d::Rect(height=2mm, width=2mm) ->
             - height = 2mm
             - width = 2mm
             - x = -1mm

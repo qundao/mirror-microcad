@@ -28,17 +28,17 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    w: Workpiece(sketch) building_plan::Wheel(radius=10mm, thickness=5mm) ->
+    w: Workpiece(Sketch) building_plan::Wheel(radius=10mm, thickness=5mm) ->
       - radius = 10mm
       - thickness = 5mm
       Operation subtract() ->
         Group ->
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 15mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
               Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-          Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 10mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
