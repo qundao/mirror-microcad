@@ -4,7 +4,7 @@
 use crate::lower::{Lower, LowerContext, LowerError, ir};
 
 use microcad_lang_base::{Identifier, Refer};
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl Lower for ir::RangeFirst {
     type AstNode = ast::ArrayItem;

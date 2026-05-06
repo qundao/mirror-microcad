@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::lower::{Lower, LowerContext, LowerError, ir};
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 /// Note: These constructors are a workaround until the assignment in microcad-lang is split up
 impl ir::Assignment {
@@ -165,9 +165,7 @@ impl Lower for ir::Statement {
                 ir::Statement::Expression(ir::ExpressionStatement::lower(statement, context)?)
             }
             ast::Statement::Workbench(w) => {
-                ir::Statement::Workbench(<std::rc::Rc<ir::WorkbenchDefinition>>::lower(
-                    w, context,
-                )?)
+                ir::Statement::Workbench(<std::rc::Rc<ir::WorkbenchDefinition>>::lower(w, context)?)
             }
             ast::Statement::Function(f) => ir::Statement::Function(std::rc::Rc::new(
                 ir::FunctionDefinition::lower(f, context)?,
@@ -229,9 +227,9 @@ impl Lower for ir::StatementList {
         })?;
 
         if let Some(tail) = &node.tail {
-            statements.push(ir::Statement::Expression(
-                ir::ExpressionStatement::lower(tail, context)?,
-            ));
+            statements.push(ir::Statement::Expression(ir::ExpressionStatement::lower(
+                tail, context,
+            )?));
         }
 
         Ok(ir::StatementList(statements))

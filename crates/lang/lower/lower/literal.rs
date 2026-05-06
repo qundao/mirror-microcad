@@ -4,7 +4,7 @@
 use crate::lower::{Lower, LowerContext, LowerError, ir};
 
 use microcad_lang_base::{Refer, SrcRef};
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl Lower for ir::Literal {
     type AstNode = ast::Literal;

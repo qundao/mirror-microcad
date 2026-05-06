@@ -4,10 +4,12 @@
 use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
 use microcad_lang_base::{FormatTree, Hashed, SrcReferrer};
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl ir::SourceFile {
-    pub fn from_source(source: &microcad_syntax::Source) -> Result<std::rc::Rc<Self>, LowerError> {
+    pub fn from_source(
+        source: &microcad_lang_parse::Source,
+    ) -> Result<std::rc::Rc<Self>, LowerError> {
         let context = LowerContext::new(source.text.as_str());
         Ok(std::rc::Rc::new(Self {
             doc: None,
@@ -119,19 +121,18 @@ impl ir::SourceFile {
             }
         };
 
-        let mut source_file =
-            match Self::lower(&ast, &parse_context).map_err(|error| vec![error]) {
-                Ok(source_file) => source_file,
-                Err(errors) => {
-                    return (
-                        dummy_source(),
-                        Some(LowerErrorsWithSource {
-                            errors,
-                            source_code: Some(Hashed::new(source_str.into())),
-                        }),
-                    );
-                }
-            };
+        let mut source_file = match Self::lower(&ast, &parse_context).map_err(|error| vec![error]) {
+            Ok(source_file) => source_file,
+            Err(errors) => {
+                return (
+                    dummy_source(),
+                    Some(LowerErrorsWithSource {
+                        errors,
+                        source_code: Some(Hashed::new(source_str.into())),
+                    }),
+                );
+            }
+        };
         if let Some(name) = name {
             source_file.set_name(ir::Identifier::no_ref(name).into());
         } else {

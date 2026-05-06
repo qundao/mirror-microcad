@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::lower::{Lower, LowerContext, LowerError, ir};
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl Lower for ir::InitDefinition {
     type AstNode = ast::InitDefinition;

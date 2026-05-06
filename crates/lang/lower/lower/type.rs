@@ -7,7 +7,7 @@ use crate::{
 };
 
 use microcad_lang_base::{Refer, SrcRef};
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 use std::str::FromStr;
 
 impl Type {

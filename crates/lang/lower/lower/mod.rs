@@ -42,8 +42,8 @@ mod r#use;
 mod workbench;
 
 use microcad_lang_base::{Hashed, Identifier, Refer, SrcRef, SrcReferrer};
-use microcad_syntax::ast::LiteralErrorKind;
-use microcad_syntax::parse;
+use microcad_lang_parse::ast::LiteralErrorKind;
+use microcad_lang_parse::parse;
 use miette::{Diagnostic, SourceCode};
 use thiserror::Error;
 
@@ -90,7 +90,7 @@ pub enum LowerError {
     /// A parser from the AST builder
     #[error(transparent)]
     #[diagnostic(transparent)]
-    AstParser(Refer<microcad_syntax::ParseError>),
+    AstParser(Refer<microcad_lang_parse::ParseError>),
 
     /// An invalid literal was encountered
     #[error("Invalid literal: {error}")]
@@ -188,7 +188,7 @@ impl SrcReferrer for LowerErrorsWithSource {
 pub(crate) fn build_ast(
     source: &str,
     lower_context: &super::LowerContext,
-) -> Result<microcad_syntax::ast::Program, LowerErrorsWithSource> {
+) -> Result<microcad_lang_parse::ast::Program, LowerErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors
             .into_iter()

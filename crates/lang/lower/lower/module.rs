@@ -3,7 +3,7 @@
 
 use crate::lower::{LowerContext, LowerError, ir};
 
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl ir::ModuleDefinition {
     /// Get inline module

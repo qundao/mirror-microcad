@@ -38,6 +38,6 @@ derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
 round = "0.1.2"
 
 microcad-core = { workspace = true }
-microcad-syntax = { workspace = true }
 microcad-lang-base = { workspace = true }
+microcad-lang-parse = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
