@@ -14,12 +14,16 @@
 //!   (e.g. implemented by [`Refer`]).
 
 mod line_col;
+mod line_index;
 mod refer;
 mod src_referrer;
 
 pub use line_col::*;
+pub use line_index::*;
 pub use refer::*;
 pub use src_referrer::*;
+
+use crate::HashId;
 
 use miette::SourceSpan;
 
@@ -32,11 +36,11 @@ pub type Span = std::ops::Range<usize>;
 #[derive(Clone, Default)]
 pub struct SrcRef {
     /// Range in bytes
-    pub range: std::ops::Range<usize>,
+    pub range: Span,
     /// Line and column
     pub at: LineCol,
     /// Hash of the source code file to map `SrcRef` -> `SourceFile`
-    pub source_hash: u64,
+    pub source_hash: HashId,
 }
 
 impl SrcRef {
@@ -44,10 +48,10 @@ impl SrcRef {
     /// - `range`: Position in file
     /// - `line`: Line number within file
     /// - `col`: Column number within file
-    pub fn new(range: std::ops::Range<usize>, line: u32, col: u32, source_hash: u64) -> Self {
+    pub fn new(range: std::ops::Range<usize>, at: LineCol, source_hash: HashId) -> Self {
         Self {
             range,
-            at: LineCol { line, col },
+            at,
             source_hash,
         }
     }
@@ -273,14 +277,30 @@ fn merge_all() {
     assert_eq!(
         SrcRef::merge_all(
             [
-                SrcRef::new(Range { start: 5, end: 8 }, 1, 6, 123),
-                SrcRef::new(Range { start: 8, end: 10 }, 2, 1, 123),
-                SrcRef::new(Range { start: 12, end: 16 }, 3, 1, 123),
-                SrcRef::new(Range { start: 0, end: 10 }, 1, 1, 123),
+                SrcRef::new(Range { start: 5, end: 8 }, LineCol { line: 1, col: 6 }, 123),
+                SrcRef::new(
+                    Range { start: 8, end: 10 },
+                    LineCol { line: 2, col: 1 },
+                    123
+                ),
+                SrcRef::new(
+                    Range { start: 12, end: 16 },
+                    LineCol { line: 3, col: 1 },
+                    123
+                ),
+                SrcRef::new(
+                    Range { start: 0, end: 10 },
+                    LineCol { line: 1, col: 1 },
+                    123
+                ),
             ]
             .iter(),
         ),
-        SrcRef::new(Range { start: 0, end: 16 }, 1, 1, 123),
+        SrcRef::new(
+            Range { start: 0, end: 16 },
+            LineCol { line: 1, col: 1 },
+            123
+        ),
     );
 }
 
@@ -291,9 +311,8 @@ fn test_src_ref() {
 
     let cube = 7..11;
     let size_y = 26..32;
-
-    let cube = SrcRef::new(cube, 1, 0, input.computed_hash());
-    let size_y = SrcRef::new(size_y, 1, 0, input.computed_hash());
+    let cube = SrcRef::new(cube, LineCol { line: 1, col: 0 }, input.computed_hash());
+    let size_y = SrcRef::new(size_y, LineCol { line: 1, col: 0 }, input.computed_hash());
 
     assert_eq!(cube.source_slice(input.value()), "Cube");
     assert_eq!(size_y.source_slice(input.value()), "size_y");

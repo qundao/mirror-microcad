@@ -221,11 +221,14 @@ static UNIQUE_ID_NEXT: std::sync::Mutex<usize> = std::sync::Mutex::new(0);
 
 #[test]
 fn identifier_comparison() {
-    use crate::SrcRef;
+    use crate::{LineCol, SrcRef};
 
     // same id but different src refs
     let id1 = Identifier::no_ref("x");
-    let id2 = Identifier(Refer::new("x".into(), SrcRef::new(0..5, 0, 1, 1)));
+    let id2 = Identifier(Refer::new(
+        "x".into(),
+        SrcRef::new(0..5, LineCol { line: 0, col: 1 }, 1),
+    ));
 
     // shall be equal
     assert!(id1 == id2);
@@ -233,11 +236,15 @@ fn identifier_comparison() {
 
 #[test]
 fn identifier_hash() {
+    use crate::{LineCol, SrcRef};
     use std::hash::{Hash, Hasher};
 
     // same id but different src refs
     let id1 = Identifier(Refer::none("x".into()));
-    let id2 = Identifier(Refer::new("x".into(), SrcRef::new(0..5, 0, 1, 1)));
+    let id2 = Identifier(Refer::new(
+        "x".into(),
+        SrcRef::new(0..5, LineCol { line: 0, col: 1 }, 1),
+    ));
 
     let mut hasher = std::hash::DefaultHasher::new();
     id1.hash(&mut hasher);
