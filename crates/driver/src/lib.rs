@@ -9,9 +9,9 @@ mod export;
 mod session;
 mod watcher;
 
+pub use microcad_lang::lower::ir::SourceFile;
 pub use microcad_lang::model::Model;
 pub use microcad_lang::render::{RenderCache, RenderContext};
-pub use microcad_lang::syntax::SourceFile;
 pub use microcad_lang_base::RcMut;
 
 pub(crate) use url::Url;

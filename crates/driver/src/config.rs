@@ -90,18 +90,18 @@ impl Default for ExportConfig {
 
 impl ExportConfig {
     pub fn render_resolution(&self) -> RenderResolution {
-        use microcad_lang::*;
+        use microcad_lang::{lower::ir, value};
 
         use std::str::FromStr;
         let resolution_str = self.resolution.clone().unwrap_or("0.1mm".into());
-        let value = syntax::NumberLiteral::from_str(&resolution_str)
+        let value = ir::NumberLiteral::from_str(&resolution_str)
             .map(|literal| literal.value())
             .unwrap_or(value::Value::None);
 
         match value {
             value::Value::Quantity(value::Quantity {
                 value,
-                quantity_type: ty::QuantityType::Length,
+                quantity_type: ir::QuantityType::Length,
             }) => RenderResolution::new(value),
             _ => {
                 let default = RenderResolution::default();

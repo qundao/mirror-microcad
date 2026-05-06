@@ -4,10 +4,10 @@
 use microcad_core::RenderResolution;
 use microcad_lang::{
     eval::EvalContext,
+    lower::ir::SourceFile,
     model::{ExportCommand, Model, OutputType},
     render::{RenderCache, RenderContext, RenderWithContext},
     resolve::ResolveContext,
-    syntax::SourceFile,
 };
 use microcad_lang_base::{
     ComputedHash, DiagHandler, DiagRenderOptions, Diagnostics, GetSourceStrByHash, RcMut,
