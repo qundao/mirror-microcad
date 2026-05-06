@@ -4,48 +4,11 @@
 //! µcad source API
 
 use microcad_lang_base::{
-    ComputedHash, Diagnostic, Diagnostics, GetSourceStrByHash, HashId, Hashed, PushDiag, Refer,
-    Span, SrcRef, SrcReferrer, Url,
+    ComputedHash, Diagnostic, Diagnostics, GetSourceStrByHash, Hashed, LineIndex, PushDiag, Refer,
+    SrcRef, SrcReferrer, Url,
 };
 
 use crate::ast;
-
-/// An index to retrieve the offsets in a line in O(log(n)).
-#[derive(Clone)]
-pub struct LineIndex {
-    /// Offset (bytes) the beginning of each line, zero-based
-    line_offsets: Vec<u32>,
-}
-
-impl LineIndex {
-    /// Create a new line index from a &str.
-    pub fn new(s: &str) -> Self {
-        Self {
-            line_offsets: std::iter::once(0)
-                .chain(s.match_indices('\n').map(|(i, _)| (i + 1) as u32))
-                .collect(),
-        }
-    }
-
-    /// Returns (line, col) of pos.
-    ///
-    /// The pos is a byte offset, start from 0, e.g. "ab" is 2, "你好" is 6
-    pub fn line_col(&self, input: &str, pos: usize) -> (u32, u32) {
-        let line = self.line_offsets.partition_point(|&it| it <= pos as u32) - 1;
-        let first_offset = self.line_offsets[line] as usize;
-
-        // Get line str from original input, then we can get column offset
-        let line_str = &input[first_offset..pos];
-        let col = line_str.chars().count();
-
-        ((line + 1) as u32, (col + 1) as u32)
-    }
-
-    fn span_to_src_ref(&self, text: &str, span: Span, hash: HashId) -> SrcRef {
-        let (line, col) = self.line_col(text, span.start);
-        SrcRef::new(span.clone(), line, col, hash)
-    }
-}
 
 /// A µcad source with a parse syntax tree with a line index and the hashed original source code.
 pub struct Source {
@@ -96,8 +59,11 @@ impl Source {
 
 impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
-        let (line, col) = self.line_index.line_col(&self.text, self.ast.span.start);
-        SrcRef::new(self.ast.span.clone(), line, col, self.text.computed_hash())
+        self.line_index.span_to_src_ref(
+            &self.text,
+            self.ast.span.clone(),
+            self.text.computed_hash(),
+        )
     }
 }
 
