@@ -11,8 +11,8 @@ pub mod debug {
     use microcad_lang::{
         builtin::ValueAccess,
         eval::{ArgumentMatch, EvalContext, EvalError, EvalResult},
+        lower::ir::{Identifier, QualifiedName},
         parameter,
-        syntax::{Identifier, QualifiedName},
         value::Value,
     };
     use microcad_lang_base::{PushDiag, SrcReferrer};
