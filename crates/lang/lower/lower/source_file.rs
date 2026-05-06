@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{FromAst, LowerContext, LowerError, LowerErrorsWithSource, ir};
+use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
 use microcad_lang_base::{FormatTree, Hashed, SrcReferrer};
 use microcad_syntax::ast;
@@ -11,7 +11,7 @@ impl ir::SourceFile {
         let context = LowerContext::new(source.text.as_str());
         Ok(std::rc::Rc::new(Self {
             doc: None,
-            statements: ir::StatementList::from_ast(&source.ast.statements, &context)?,
+            statements: ir::StatementList::lower(&source.ast.statements, &context)?,
             source: source.text.clone(),
             name: ir::QualifiedName::default(),
             filename: source.url.to_file_path().ok(),
@@ -120,7 +120,7 @@ impl ir::SourceFile {
         };
 
         let mut source_file =
-            match Self::from_ast(&ast, &parse_context).map_err(|error| vec![error]) {
+            match Self::lower(&ast, &parse_context).map_err(|error| vec![error]) {
                 Ok(source_file) => source_file,
                 Err(errors) => {
                     return (
@@ -156,13 +156,13 @@ impl ir::SourceFile {
     }
 }
 
-impl FromAst for ir::SourceFile {
+impl Lower for ir::SourceFile {
     type AstNode = ast::Program;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(ir::SourceFile::new(
             None, // todo
-            ir::StatementList::from_ast(&node.statements, context)?,
+            ir::StatementList::lower(&node.statements, context)?,
             Hashed::new(context.source.to_string()),
         ))
     }

@@ -1,18 +1,18 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{FromAst, LowerContext, LowerError, ir};
+use crate::lower::{Lower, LowerContext, LowerError, ir};
 use microcad_syntax::ast;
 
-impl FromAst for ir::InitDefinition {
+impl Lower for ir::InitDefinition {
     type AstNode = ast::InitDefinition;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(ir::InitDefinition {
-            doc: ir::DocBlock::from_ast(&node.doc, context)?,
+            doc: ir::DocBlock::lower(&node.doc, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
-            parameters: ir::ParameterList::from_ast(&node.parameters, context)?,
-            body: ir::Body::from_ast(&node.body, context)?,
+            parameters: ir::ParameterList::lower(&node.parameters, context)?,
+            body: ir::Body::lower(&node.body, context)?,
             src_ref: context.src_ref(&node.span),
         })
     }

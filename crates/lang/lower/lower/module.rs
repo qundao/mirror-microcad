@@ -11,18 +11,18 @@ impl ir::ModuleDefinition {
         node: &ast::InlineModule,
         context: &LowerContext,
     ) -> Result<Self, LowerError> {
-        use crate::lower::FromAst;
+        use crate::lower::Lower;
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
-            doc: ir::DocBlock::from_ast(&node.doc, context)?,
+            doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
                 .visibility
                 .as_ref()
-                .map(|visibility| ir::Visibility::from_ast(visibility, context))
+                .map(|visibility| ir::Visibility::lower(visibility, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: ir::Identifier::from_ast(&node.name, context)?,
-            body: Some(ir::Body::from_ast(&node.body, context)?),
+            id: ir::Identifier::lower(&node.name, context)?,
+            body: Some(ir::Body::lower(&node.body, context)?),
         })
     }
 
@@ -31,17 +31,17 @@ impl ir::ModuleDefinition {
         node: &ast::FileModule,
         context: &LowerContext,
     ) -> Result<Self, LowerError> {
-        use crate::lower::FromAst;
+        use crate::lower::Lower;
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
-            doc: ir::DocBlock::from_ast(&node.doc, context)?,
+            doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
                 .visibility
                 .as_ref()
-                .map(|visibility| ir::Visibility::from_ast(visibility, context))
+                .map(|visibility| ir::Visibility::lower(visibility, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: ir::Identifier::from_ast(&node.name, context)?,
+            id: ir::Identifier::lower(&node.name, context)?,
             body: None,
         })
     }

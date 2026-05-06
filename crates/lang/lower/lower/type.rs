@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    lower::{FromAst, LowerContext, LowerError, LowerResult, ir},
+    lower::{Lower, LowerContext, LowerError, LowerResult, ir},
     ty::*,
 };
 
@@ -47,26 +47,26 @@ impl Type {
     }
 }
 
-impl FromAst for ir::Type {
+impl Lower for ir::Type {
     type AstNode = ast::Type;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Type::Single(ty) => {
                 Type::parse_str(ty.name.as_str(), context.src_ref(&node.span()))?
             }
-            ast::Type::Array(ty) => Type::Array(Box::new(Type::from_ast(&ty.inner, context)?)),
-            ast::Type::Tuple(ty) => Type::Tuple(Box::new(TupleType::from_ast(ty, context)?)),
+            ast::Type::Array(ty) => Type::Array(Box::new(Type::lower(&ty.inner, context)?)),
+            ast::Type::Tuple(ty) => Type::Tuple(Box::new(TupleType::lower(ty, context)?)),
         })
     }
 }
 
-impl FromAst for ir::TypeAnnotation {
+impl Lower for ir::TypeAnnotation {
     type AstNode = ast::Type;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(ir::TypeAnnotation(Refer::new(
-            Type::from_ast(node, context)?,
+            Type::lower(node, context)?,
             context.src_ref(&node.span()),
         )))
     }

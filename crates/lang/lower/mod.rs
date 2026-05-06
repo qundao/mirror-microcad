@@ -108,8 +108,8 @@ impl<'source> LowerContext<'source> {
     }
 }
 
-pub trait FromAst: Sized {
+pub trait Lower: Sized {
     type AstNode;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError>;
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError>;
 }

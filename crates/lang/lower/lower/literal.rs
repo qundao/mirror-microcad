@@ -1,15 +1,15 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{FromAst, LowerContext, LowerError, ir};
+use crate::lower::{Lower, LowerContext, LowerError, ir};
 
 use microcad_lang_base::{Refer, SrcRef};
 use microcad_syntax::ast;
 
-impl FromAst for ir::Literal {
+impl Lower for ir::Literal {
     type AstNode = ast::Literal;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match &node.literal {
             ast::LiteralKind::Bool(lit) => {
                 ir::Literal::Bool(Refer::new(lit.value, context.src_ref(&lit.span)))
@@ -18,7 +18,7 @@ impl FromAst for ir::Literal {
                 ir::Literal::Integer(Refer::new(lit.value, context.src_ref(&lit.span)))
             }
             ast::LiteralKind::Quantity(lit) => {
-                ir::Literal::Number(ir::NumberLiteral::from_ast(lit, context)?)
+                ir::Literal::Number(ir::NumberLiteral::lower(lit, context)?)
             }
             ast::LiteralKind::Float(lit) => ir::Literal::Number(ir::NumberLiteral(
                 lit.value,
@@ -38,13 +38,13 @@ impl FromAst for ir::Literal {
     }
 }
 
-impl FromAst for ir::NumberLiteral {
+impl Lower for ir::NumberLiteral {
     type AstNode = ast::QuantityLiteral;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(ir::NumberLiteral(
             node.value,
-            ir::Unit::from_ast(&node.unit, context)?,
+            ir::Unit::lower(&node.unit, context)?,
             context.src_ref(&node.span),
         ))
     }
@@ -73,10 +73,10 @@ impl std::str::FromStr for ir::NumberLiteral {
     }
 }
 
-impl FromAst for ir::Unit {
+impl Lower for ir::Unit {
     type AstNode = ast::Unit;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         use std::str::FromStr;
         ir::Unit::from_str(node.name.as_str()).map_err(|_| {
             LowerError::UnknownUnit(Refer::new(

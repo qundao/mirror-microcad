@@ -1,14 +1,14 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{FromAst, LowerContext, LowerError, ir};
+use crate::lower::{Lower, LowerContext, LowerError, ir};
 
 use microcad_syntax::ast;
 
-impl FromAst for ir::UseStatement {
+impl Lower for ir::UseStatement {
     type AstNode = ast::UseStatement;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         let glob_index = node
             .name
             .parts
@@ -29,7 +29,7 @@ impl FromAst for ir::UseStatement {
             .iter()
             .filter_map(|part| match part {
                 ast::UseStatementPart::Identifier(ident) => {
-                    Some(ir::Identifier::from_ast(ident, context))
+                    Some(ir::Identifier::lower(ident, context))
                 }
                 ast::UseStatementPart::Glob(_) => None,
                 ast::UseStatementPart::Error(_) => None,
@@ -44,13 +44,13 @@ impl FromAst for ir::UseStatement {
                 return Err(LowerError::UseGlobAlias(context.src_ref(&node.span)));
             }
             (false, Some(alias)) => {
-                ir::UseDeclaration::UseAs(name, ir::Identifier::from_ast(alias, context)?)
+                ir::UseDeclaration::UseAs(name, ir::Identifier::lower(alias, context)?)
             }
         };
         let visibility = node
             .visibility
             .as_ref()
-            .map(|visibility| ir::Visibility::from_ast(visibility, context))
+            .map(|visibility| ir::Visibility::lower(visibility, context))
             .transpose()?;
         Ok(ir::UseStatement {
             keyword_ref: context.src_ref(&node.keyword_span),
@@ -61,10 +61,10 @@ impl FromAst for ir::UseStatement {
     }
 }
 
-impl FromAst for ir::Visibility {
+impl Lower for ir::Visibility {
     type AstNode = ast::Visibility;
 
-    fn from_ast(node: &Self::AstNode, _context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, _context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Visibility::Public => Self::Public,
         })

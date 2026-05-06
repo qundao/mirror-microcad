@@ -1,33 +1,33 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{FromAst, LowerContext, LowerError, ir};
+use crate::lower::{Lower, LowerContext, LowerError, ir};
 
 use microcad_lang_base::Identifier;
 use microcad_syntax::ast;
 
-impl FromAst for ir::FunctionDefinition {
+impl Lower for ir::FunctionDefinition {
     type AstNode = ast::FunctionDefinition;
 
-    fn from_ast(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(ir::FunctionDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
-            doc: ir::DocBlock::from_ast(&node.doc, context)?,
+            doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
                 .visibility
                 .as_ref()
-                .map(|vis| ir::Visibility::from_ast(vis, context))
+                .map(|vis| ir::Visibility::lower(vis, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: Identifier::from_ast(&node.name, context)?,
-            body: ir::Body::from_ast(&node.body, context)?,
+            id: Identifier::lower(&node.name, context)?,
+            body: ir::Body::lower(&node.body, context)?,
             signature: ir::FunctionSignature {
                 src_ref: context.src_ref(&node.span),
-                parameters: ir::ParameterList::from_ast(&node.parameters, context)?,
+                parameters: ir::ParameterList::lower(&node.parameters, context)?,
                 return_type: node
                     .return_type
                     .as_ref()
-                    .map(|ty| ir::TypeAnnotation::from_ast(ty, context))
+                    .map(|ty| ir::TypeAnnotation::lower(ty, context))
                     .transpose()?,
             },
         })
