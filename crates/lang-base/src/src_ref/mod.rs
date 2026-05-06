@@ -35,12 +35,7 @@ impl SrcRef {
     /// - `range`: Position in file
     /// - `line`: Line number within file
     /// - `col`: Column number within file
-    pub fn new(
-        range: std::ops::Range<usize>,
-        line: usize,
-        col: usize,
-        source_file_hash: u64,
-    ) -> Self {
+    pub fn new(range: std::ops::Range<usize>, line: u32, col: u32, source_file_hash: u64) -> Self {
         Self(Some(Box::new(SrcRefInner {
             range,
             at: LineCol { line, col },
@@ -56,7 +51,7 @@ impl SrcRef {
     }
 
     /// Return a reference with a given line offset.
-    pub fn with_line_offset(self, offset: usize) -> Self {
+    pub fn with_line_offset(self, offset: u32) -> Self {
         Self(self.0.map(|inner| Box::new(inner.with_line_offset(offset))))
     }
 }
@@ -90,7 +85,7 @@ impl SrcRefInner {
     }
 
     /// Return a reference with a given line offset.
-    pub fn with_line_offset(&self, line_offset: usize) -> Self {
+    pub fn with_line_offset(&self, line_offset: u32) -> Self {
         let mut s = self.clone();
         s.at.line += line_offset;
         s
@@ -254,12 +249,12 @@ impl SrcRef {
     }
 
     /// Get the line of the start of the referenced source, if any
-    pub fn line(&self) -> Option<usize> {
+    pub fn line(&self) -> Option<u32> {
         self.0.as_ref().map(|inner| inner.at.line)
     }
 
     /// Get the column of the start of the referenced source, if any
-    pub fn col(&self) -> Option<usize> {
+    pub fn col(&self) -> Option<u32> {
         self.0.as_ref().map(|inner| inner.at.line)
     }
 }

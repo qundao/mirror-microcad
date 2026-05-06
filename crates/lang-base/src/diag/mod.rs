@@ -114,8 +114,8 @@ pub trait Diag {
     fn error_count(&self) -> u32;
 
     /// Return all lines with errors
-    fn error_lines(&self) -> HashSet<usize>;
+    fn error_lines(&self) -> HashSet<u32>;
 
     /// Return all lines with warnings
-    fn warning_lines(&self) -> HashSet<usize>;
+    fn warning_lines(&self) -> HashSet<u32>;
 }

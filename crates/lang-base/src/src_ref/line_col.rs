@@ -5,9 +5,9 @@
 #[derive(Clone, Debug, Default)]
 pub struct LineCol {
     /// Line number (1..)
-    pub line: usize,
+    pub line: u32,
     /// Column number (1..)
-    pub col: usize,
+    pub col: u32,
 }
 
 impl std::fmt::Display for LineCol {

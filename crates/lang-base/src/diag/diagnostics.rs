@@ -45,7 +45,7 @@ impl Diagnostics {
         &self,
         f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceStrByHash,
-        line_offset: usize,
+        line_offset: u32,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         self.diagnostics

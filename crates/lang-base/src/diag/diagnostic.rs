@@ -39,7 +39,7 @@ impl Diagnostic {
     }
 
     /// Return line of the error
-    pub fn line(&self) -> Option<usize> {
+    pub fn line(&self) -> Option<u32> {
         self.src_ref().as_ref().map(|r| r.at.line)
     }
 
@@ -74,7 +74,7 @@ impl Diagnostic {
         &self,
         mut f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceStrByHash,
-        line_offset: usize,
+        line_offset: u32,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
@@ -124,7 +124,7 @@ impl Diagnostic {
     pub fn to_pretty_string(
         &self,
         source_by_hash: &impl GetSourceStrByHash,
-        line_offset: usize,
+        line_offset: u32,
         options: &DiagRenderOptions,
     ) -> String {
         let mut buff = String::new();
@@ -170,7 +170,7 @@ impl std::fmt::Debug for Diagnostic {
 struct DiagnosticWrapper<'a> {
     diagnostic: &'a Diagnostic,
     source: MietteSourceFile<'a>,
-    line_offset: usize,
+    line_offset: u32,
 }
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {

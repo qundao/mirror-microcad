@@ -50,7 +50,7 @@ pub struct MietteSourceFile<'a> {
     /// Name of of file
     pub name: String,
     /// Line offset (e.g. used when source comes from a markdown file).
-    pub line_offset: usize,
+    pub line_offset: u32,
 }
 
 impl MietteSourceFile<'static> {
@@ -78,7 +78,7 @@ impl SourceCode for MietteSourceFile<'_> {
             self.name.clone(),
             inner_contents.data(),
             *inner_contents.span(),
-            inner_contents.line() + self.line_offset,
+            inner_contents.line() + self.line_offset as usize,
             inner_contents.column(),
             inner_contents.line_count(),
         )

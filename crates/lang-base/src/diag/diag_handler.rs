@@ -18,7 +18,7 @@ pub struct DiagHandler {
     /// Treat warnings as errors if `true`.
     warnings_as_errors: bool,
     /// Line offset for error and warning messages.
-    line_offset: usize,
+    line_offset: u32,
     /// Diagnostic rendering options
     pub render_options: DiagRenderOptions,
 }
@@ -56,7 +56,7 @@ impl DiagRenderOptions {
 /// Handler for diagnostics.
 impl DiagHandler {
     /// Create new diag handler.
-    pub fn new(line_offset: usize) -> Self {
+    pub fn new(line_offset: u32) -> Self {
         Self {
             line_offset,
             ..Default::default()
@@ -84,7 +84,7 @@ impl DiagHandler {
     }
 
     /// return lines with errors
-    pub fn error_lines(&self) -> HashSet<usize> {
+    pub fn error_lines(&self) -> HashSet<u32> {
         self.diagnostics
             .iter()
             .filter_map(|d| {
@@ -98,7 +98,7 @@ impl DiagHandler {
     }
 
     /// return lines with warnings
-    pub fn warning_lines(&self) -> HashSet<usize> {
+    pub fn warning_lines(&self) -> HashSet<u32> {
         self.diagnostics
             .iter()
             .filter_map(|d| {
