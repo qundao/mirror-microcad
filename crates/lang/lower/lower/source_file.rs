@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{FromAst, LowerContext, LowerError, ParseErrorsWithSource, ir};
+use crate::lower::{FromAst, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
 use microcad_lang_base::{FormatTree, Hashed, SrcReferrer};
 use microcad_syntax::ast;
@@ -21,7 +21,7 @@ impl ir::SourceFile {
     /// Load µcad source file from given `path`
     pub fn load(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
-    ) -> Result<std::rc::Rc<Self>, ParseErrorsWithSource> {
+    ) -> Result<std::rc::Rc<Self>, LowerErrorsWithSource> {
         let (source, error) = Self::load_with_name(&path, Self::name_from_path(&path));
         match error {
             Some(error) => Err(error),
@@ -33,7 +33,7 @@ impl ir::SourceFile {
     pub fn load_with_name(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
         name: ir::QualifiedName,
-    ) -> (std::rc::Rc<Self>, Option<ParseErrorsWithSource>) {
+    ) -> (std::rc::Rc<Self>, Option<LowerErrorsWithSource>) {
         let path = path.as_ref();
         log::trace!(
             "{load} file {path} [{name}]",
@@ -95,7 +95,7 @@ impl ir::SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
-    ) -> (Self, Option<ParseErrorsWithSource>) {
+    ) -> (Self, Option<LowerErrorsWithSource>) {
         log::trace!(
             "{load} source from string",
             load = microcad_lang_base::mark!(LOAD)
@@ -125,7 +125,7 @@ impl ir::SourceFile {
                 Err(errors) => {
                     return (
                         dummy_source(),
-                        Some(ParseErrorsWithSource {
+                        Some(LowerErrorsWithSource {
                             errors,
                             source_code: Some(Hashed::new(source_str.into())),
                         }),

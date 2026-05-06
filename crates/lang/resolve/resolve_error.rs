@@ -7,7 +7,7 @@
 use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
-use crate::lower::{ParseErrorsWithSource, ir};
+use crate::lower::{LowerErrorsWithSource, ir};
 use crate::resolve::grant::Scope;
 use microcad_lang_base::{DiagError, SrcRef, SrcReferrer};
 
@@ -25,7 +25,7 @@ pub enum ResolveError {
     /// Lower Error.
     #[error("Lower Error: {0}")]
     #[diagnostic(transparent)]
-    LowerError(#[from] ParseErrorsWithSource),
+    LowerError(#[from] LowerErrorsWithSource),
 
     /// Can't find a project file by hash.
     #[error("Could not find a file with hash {0}")]

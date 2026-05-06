@@ -137,45 +137,35 @@ impl SrcReferrer for LowerError {
     }
 }
 
-impl LowerError {
-    /// Add source code to the error
-    pub fn with_source(self, source: String) -> ParseErrorsWithSource {
-        ParseErrorsWithSource {
-            errors: vec![self],
-            source_code: Some(Hashed::new(source)),
-        }
-    }
-}
-
 /// Parse error, possibly with source code
 #[derive(Debug, Error)]
 #[error("Failed to parse")] // todo
-pub struct ParseErrorsWithSource {
+pub struct LowerErrorsWithSource {
     /// The errors encountered during parsing
     pub errors: Vec<LowerError>,
     /// The parsed source code
     pub source_code: Option<Hashed<String>>,
 }
 
-impl From<LowerError> for ParseErrorsWithSource {
+impl From<LowerError> for LowerErrorsWithSource {
     fn from(value: LowerError) -> Self {
-        ParseErrorsWithSource {
+        LowerErrorsWithSource {
             errors: vec![value],
             source_code: None,
         }
     }
 }
 
-impl From<Vec<LowerError>> for ParseErrorsWithSource {
+impl From<Vec<LowerError>> for LowerErrorsWithSource {
     fn from(value: Vec<LowerError>) -> Self {
-        ParseErrorsWithSource {
+        LowerErrorsWithSource {
             errors: value,
             source_code: None,
         }
     }
 }
 
-impl Diagnostic for ParseErrorsWithSource {
+impl Diagnostic for LowerErrorsWithSource {
     fn source_code(&self) -> Option<&dyn SourceCode> {
         self.source_code
             .as_ref()
@@ -189,7 +179,7 @@ impl Diagnostic for ParseErrorsWithSource {
     }
 }
 
-impl SrcReferrer for ParseErrorsWithSource {
+impl SrcReferrer for LowerErrorsWithSource {
     fn src_ref(&self) -> SrcRef {
         self.errors[0].src_ref()
     }
@@ -198,7 +188,7 @@ impl SrcReferrer for ParseErrorsWithSource {
 pub(crate) fn build_ast(
     source: &str,
     lower_context: &super::LowerContext,
-) -> Result<microcad_syntax::ast::Program, ParseErrorsWithSource> {
+) -> Result<microcad_syntax::ast::Program, LowerErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors
             .into_iter()
@@ -207,7 +197,7 @@ pub(crate) fn build_ast(
                 LowerError::AstParser(Refer::new(error, src_ref))
             })
             .collect::<Vec<_>>();
-        ParseErrorsWithSource {
+        LowerErrorsWithSource {
             errors,
             source_code: Some(
                 lower_context

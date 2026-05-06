@@ -9,7 +9,7 @@ mod lower;
 use microcad_lang_base::{ComputedHash, Hashed, Identifier, SrcRef};
 use microcad_syntax::ast::Span;
 
-pub use lower::{LowerError, LowerResult, ParseErrorsWithSource};
+pub use lower::{LowerError, LowerErrorsWithSource, LowerResult};
 
 /// Check if the element only includes one identifier
 pub trait SingleIdentifier {

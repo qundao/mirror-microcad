@@ -7,7 +7,7 @@ use derive_more::Deref;
 use microcad_lang_base::{GetSourceStrByHash, SrcReferrer};
 
 use crate::{
-    lower::{ParseErrorsWithSource, ir},
+    lower::{LowerErrorsWithSource, ir},
     resolve::*,
 };
 use std::{collections::HashMap, rc::Rc};
@@ -56,7 +56,7 @@ impl Sources {
 
         // load all external source files into cache
         Externals::new(search_paths)?.iter().try_for_each(
-            |(name, path)| -> Result<(), ParseErrorsWithSource> {
+            |(name, path)| -> Result<(), LowerErrorsWithSource> {
                 let (source_file, error) =
                     ir::SourceFile::load_with_name(path.clone(), name.clone());
                 let index = source_files.len();
