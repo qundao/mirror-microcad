@@ -6,8 +6,7 @@
 pub mod ir;
 mod lower;
 
-use microcad_lang_base::{ComputedHash, Hashed, Identifier, SrcRef};
-use microcad_lang_parse::ast::Span;
+use microcad_lang_base::{ComputedHash, Hashed, Identifier, Span, SrcRef};
 
 pub use lower::{LowerError, LowerErrorsWithSource, LowerResult};
 

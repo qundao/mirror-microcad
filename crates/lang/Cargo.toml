@@ -17,7 +17,6 @@ version.workspace = true
 path = "lib.rs"
 
 [dependencies]
-compact_str = { version = "0.9", features = ["serde"] }
 bytemuck = "1.24"
 log = "0.4"
 lazy_static = "1.5"
