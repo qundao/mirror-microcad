@@ -23,6 +23,9 @@ pub use src_referrer::*;
 
 use miette::SourceSpan;
 
+/// Span for tokens or AST nodes, a range of byte offsets from the start of the source
+pub type Span = std::ops::Range<usize>;
+
 /// Reference into a source file.
 ///
 /// *Hint*: Source file is not part of `SrcRef` and must be provided from outside

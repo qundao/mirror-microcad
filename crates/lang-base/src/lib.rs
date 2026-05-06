@@ -16,8 +16,10 @@ mod rc;
 mod src_ref;
 mod tree_display;
 
+pub use compact_str::{CompactString, ToCompactString};
+
 /// Id type (base of all identifiers)
-pub type Id = compact_str::CompactString;
+pub type Id = CompactString;
 
 /// URL to locate sources.
 pub use url::Url;
@@ -38,7 +40,7 @@ pub use identifier::Identifier;
 pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
-pub use src_ref::{Refer, SrcRef, SrcReferrer};
+pub use src_ref::{Refer, Span, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
