@@ -221,8 +221,8 @@ impl Processor {
 
     pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
         let src = self.get_document_string(url)?;
-        let doc =
-            microcad_syntax::parse(&src).map_err(|err| miette::miette!("Parse error: {err:?}"))?;
+        let doc = microcad_lang_parse::parse(&src)
+            .map_err(|err| miette::miette!("Parse error: {err:?}"))?;
 
         Ok(vec![ProcessorResponse::FormattedDocument {
             url: url.clone(),
