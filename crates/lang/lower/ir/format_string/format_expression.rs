@@ -1,0 +1,54 @@
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Format expression syntax element
+
+use crate::lower::ir;
+
+use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::SrcReferrer;
+
+/// Format expression including format specification.
+#[derive(Clone, Debug, PartialEq, SrcReferrer)]
+pub struct FormatExpression {
+    /// Format specifier
+    pub spec: Option<ir::FormatSpec>,
+    /// Expression to format
+    pub expression: ir::Expression,
+    /// Source code reference
+    src_ref: SrcRef,
+}
+
+impl FormatExpression {
+    /// Create new format expression.
+    pub fn new(spec: Option<ir::FormatSpec>, expression: ir::Expression, src_ref: SrcRef) -> Self {
+        Self {
+            src_ref,
+            spec,
+            expression,
+        }
+    }
+}
+
+impl std::fmt::Display for FormatExpression {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        if let Some(spec) = &self.spec {
+            write!(f, "{{{}:{}}}", spec, self.expression)
+        } else {
+            write!(f, "{{{}}}", self.expression)
+        }
+    }
+}
+
+impl TreeDisplay for FormatExpression {
+    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
+        writeln!(f, "{:depth$}FormatExpression:", "")?;
+        depth.indent();
+        if let Some(spec) = &self.spec {
+            spec.tree_print(f, depth)?;
+            self.expression.tree_print(f, depth)
+        } else {
+            self.expression.tree_print(f, depth)
+        }
+    }
+}

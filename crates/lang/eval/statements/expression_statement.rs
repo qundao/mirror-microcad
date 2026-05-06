@@ -3,9 +3,9 @@
 
 use microcad_lang_base::PushDiag;
 
-use crate::{eval::*, model::*};
+use crate::{eval::*, lower::ir, model::*};
 
-impl Eval for ExpressionStatement {
+impl Eval for ir::ExpressionStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         log::debug!("Evaluating expression statement to value:\n{self}");
 
@@ -33,7 +33,7 @@ impl Eval for ExpressionStatement {
     }
 }
 
-impl Eval<Option<Model>> for ExpressionStatement {
+impl Eval<Option<Model>> for ir::ExpressionStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         log::debug!("Evaluating expression statement to models:\n{self}");
         Ok(match self.eval(context)? {

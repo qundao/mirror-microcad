@@ -7,7 +7,7 @@ use custom_debug::Debug;
 use microcad_core::hash::{ComputedHash, HashId, Hashed};
 use microcad_lang_base::SrcRef;
 
-use crate::{builtin::*, eval::*, model::*, render::*, syntax::*, value::*};
+use crate::{builtin::*, eval::*, lower::ir, model::*, render::*, value::*};
 
 /// The return value when calling a built-in workpiece.
 pub enum BuiltinWorkpieceOutput {
@@ -133,8 +133,8 @@ pub trait BuiltinWorkbenchDefinition {
     }
 
     /// Workbench function
-    fn doc() -> Option<DocBlock> {
-        Self::help().map(DocBlock::new_builtin)
+    fn doc() -> Option<ir::DocBlock> {
+        Self::help().map(ir::DocBlock::new_builtin)
     }
 
     /// Part initialization parameters

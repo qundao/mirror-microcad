@@ -7,7 +7,8 @@ mod stack_frame;
 pub use stack::*;
 pub use stack_frame::*;
 
-use crate::{eval::*, model::*, symbol::Symbol, syntax::*};
+use crate::{eval::*, lower::ir, model::*, symbol::Symbol};
+use microcad_lang_base::Identifier;
 
 /// Trait to manage the *locals*.
 ///
@@ -40,5 +41,5 @@ pub trait Locals {
     fn get_model(&self) -> EvalResult<Model>;
 
     /// Return qualified name of current module or workbench.
-    fn current_name(&self) -> QualifiedName;
+    fn current_name(&self) -> ir::QualifiedName;
 }

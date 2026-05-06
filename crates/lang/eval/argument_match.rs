@@ -3,9 +3,9 @@
 
 //! Argument match trait
 
-use crate::eval::*;
+use crate::{eval::*, lower::ir};
 
-use microcad_lang_base::SrcReferrer;
+use microcad_lang_base::{Identifier, SrcReferrer};
 
 /// Match priorities
 ///
@@ -284,12 +284,12 @@ impl<'a> ArgumentMatch<'a> {
     /// Return error if params are missing or arguments are to many
     fn check_missing(&self) -> EvalResult<()> {
         if !self.params.is_empty() {
-            let mut missing: IdentifierList =
+            let mut missing: ir::IdentifierList =
                 self.params.iter().map(|(id, _)| (*id).clone()).collect();
             missing.sort();
             Err(EvalError::MissingArguments(missing))
         } else if !self.arguments.is_empty() {
-            let mut too_many: IdentifierList =
+            let mut too_many: ir::IdentifierList =
                 self.arguments.iter().map(|(id, _)| (*id).clone()).collect();
             too_many.sort();
             Err(EvalError::TooManyArguments(too_many))
@@ -310,7 +310,7 @@ impl<'a> ArgumentMatch<'a> {
     ///
     /// Return one or many tuples.
     fn multiply(&self, params: &ParameterValueList) -> Vec<Tuple> {
-        let ids: IdentifierList = Self::multipliers(&self.result, params);
+        let ids: ir::IdentifierList = Self::multipliers(&self.result, params);
         if !ids.is_empty() {
             let mut result = Vec::new();
             self.result.multiplicity(ids, |t| result.push(t));
@@ -321,8 +321,8 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Return the multipliers' ids in the arguments.
-    fn multipliers(args: &impl ValueAccess, params: &ParameterValueList) -> IdentifierList {
-        let mut result: IdentifierList = params
+    fn multipliers(args: &impl ValueAccess, params: &ParameterValueList) -> ir::IdentifierList {
+        let mut result: ir::IdentifierList = params
             .iter()
             .filter_map(|(id, param)| {
                 if let Some(a) = args.by_id(id) {

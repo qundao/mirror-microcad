@@ -3,9 +3,9 @@
 
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, model::*};
+use crate::{eval::*, lower::ir, model::*};
 
-impl Eval<Option<Model>> for Marker {
+impl Eval<Option<Model>> for ir::Marker {
     fn eval(&self, _: &mut EvalContext) -> EvalResult<Option<Model>> {
         if self.is_input_placeholder() {
             Ok(Some(

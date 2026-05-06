@@ -3,10 +3,10 @@
 
 //! Model
 
-use microcad_lang_base::Refer;
+use microcad_lang_base::{Identifier, Refer};
 use rustc_hash::FxHashMap;
 
-use crate::{model::*, render::*, syntax::*};
+use crate::{model::*, render::*};
 
 /// The actual model contents
 #[derive(custom_debug::Debug, Default)]

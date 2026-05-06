@@ -23,7 +23,7 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{model::*, syntax::*, ty::*};
+use crate::{lower::ir, model::*, ty::*};
 use microcad_core::*;
 use microcad_lang_base::SrcRef;
 
@@ -294,10 +294,10 @@ impl std::ops::Mul for Value {
 /// Multiply a Unit with a value. Used for unit bundling: `[1,2,3]mm`.
 ///
 /// `[1,2,3]mm` is a shortcut for `[1,2,3] * 1mm`.
-impl std::ops::Mul<Unit> for Value {
+impl std::ops::Mul<ir::Unit> for Value {
     type Output = ValueResult;
 
-    fn mul(self, unit: Unit) -> Self::Output {
+    fn mul(self, unit: ir::Unit) -> Self::Output {
         match (self, unit.ty()) {
             (value, Type::Quantity(QuantityType::Scalar)) | (value, Type::Integer) => Ok(value),
             (Value::Integer(i), Type::Quantity(quantity_type)) => Ok(Value::Quantity(
@@ -572,7 +572,7 @@ impl FromIterator<Value> for Value {
 }
 
 impl AttributesAccess for Value {
-    fn get_attributes_by_id(&self, id: &Identifier) -> Vec<crate::model::Attribute> {
+    fn get_attributes_by_id(&self, id: &ir::Identifier) -> Vec<crate::model::Attribute> {
         match self {
             Value::Model(model) => model.get_attributes_by_id(id),
             _ => Vec::default(),

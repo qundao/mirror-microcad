@@ -7,6 +7,8 @@ use crate::value::{error::QuantityError, *};
 use miette::Diagnostic;
 use thiserror::Error;
 
+use microcad_lang_base::Identifier;
+
 /// Value error
 #[derive(Debug, Error, Diagnostic)]
 pub enum ValueError {

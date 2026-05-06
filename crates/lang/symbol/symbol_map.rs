@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
+    lower::ir,
     resolve::{ResolveContext, ResolveResult},
     symbol::{Symbol, SymbolDef},
-    syntax::*,
     value::*,
 };
 use derive_more::{Deref, DerefMut};
@@ -13,7 +13,7 @@ use microcad_lang_base::{FormatTree, WriteToFile};
 
 /// Map Id to SymbolNode reference
 #[derive(Default, Clone, Deref, DerefMut)]
-pub struct SymbolMap(pub IndexMap<Identifier, Symbol>);
+pub struct SymbolMap(pub IndexMap<ir::Identifier, Symbol>);
 
 impl From<Tuple> for SymbolMap {
     fn from(tuple: Tuple) -> Self {
@@ -26,8 +26,8 @@ impl From<Tuple> for SymbolMap {
     }
 }
 
-impl FromIterator<(Identifier, Value)> for SymbolMap {
-    fn from_iter<T: IntoIterator<Item = (Identifier, Value)>>(iter: T) -> Self {
+impl FromIterator<(ir::Identifier, Value)> for SymbolMap {
+    fn from_iter<T: IntoIterator<Item = (ir::Identifier, Value)>>(iter: T) -> Self {
         iter.into_iter()
             .map(|(id, value)| {
                 (
@@ -39,8 +39,8 @@ impl FromIterator<(Identifier, Value)> for SymbolMap {
     }
 }
 
-impl FromIterator<(Identifier, Symbol)> for SymbolMap {
-    fn from_iter<T: IntoIterator<Item = (Identifier, Symbol)>>(iter: T) -> Self {
+impl FromIterator<(ir::Identifier, Symbol)> for SymbolMap {
+    fn from_iter<T: IntoIterator<Item = (ir::Identifier, Symbol)>>(iter: T) -> Self {
         SymbolMap(iter.into_iter().collect())
     }
 }
@@ -48,7 +48,7 @@ impl FromIterator<(Identifier, Symbol)> for SymbolMap {
 impl WriteToFile for SymbolMap {}
 
 impl SymbolMap {
-    pub fn get<'a>(&'a self, id: &Identifier) -> Option<&'a Symbol> {
+    pub fn get<'a>(&'a self, id: &ir::Identifier) -> Option<&'a Symbol> {
         self.iter()
             .filter(|(_, symbol)| !symbol.is_deleted())
             .find(|(i, _)| *i == id)

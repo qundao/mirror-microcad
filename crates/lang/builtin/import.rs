@@ -3,7 +3,7 @@
 
 //! Value importer
 
-use crate::{Id, builtin::file_io::*, eval::ParameterValueList, syntax::*, value::*};
+use crate::{Id, Identifier, builtin::file_io::*, eval::ParameterValueList, value::*};
 use microcad_core::hash::HashMap;
 use miette::{Diagnostic, Report};
 use std::rc::Rc;

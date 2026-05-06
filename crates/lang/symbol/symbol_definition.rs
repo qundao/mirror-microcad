@@ -7,11 +7,14 @@ use std::rc::Rc;
 
 use crate::{
     builtin::*,
-    symbol::{Info, SymbolInfo},
-    syntax::{
-        Assignment, FunctionDefinition, Identifiable, ModuleDefinition, QualifiedName, SourceFile,
-        Visibility, WorkbenchDefinition,
+    lower::{
+        Identifiable,
+        ir::{
+            Assignment, FunctionDefinition, ModuleDefinition, QualifiedName, SourceFile,
+            Visibility, WorkbenchDefinition,
+        },
     },
+    symbol::{Info, SymbolInfo},
     value::*,
 };
 

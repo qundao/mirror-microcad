@@ -3,11 +3,15 @@
 
 //! Builtin evaluation entity
 
-use microcad_lang_base::PushDiag;
+use microcad_lang_base::{Identifier, PushDiag};
 use microcad_lang_proc_macros::Identifiable;
 use strum::Display;
 
-use crate::{eval::*, syntax::*, value::*};
+use crate::{
+    eval::*,
+    lower::{Identifiable, ir},
+    value::*,
+};
 
 /// Builtin function type
 pub type BuiltinFn =
@@ -26,7 +30,7 @@ pub struct BuiltinFunction {
     pub f: &'static BuiltinFn,
 
     /// Functor which returns documentation of this function
-    pub doc: Option<DocBlock>,
+    pub doc: Option<ir::DocBlock>,
 }
 
 /// Builtin workbench
@@ -45,7 +49,7 @@ pub struct BuiltinWorkbench {
     pub kind: BuiltinWorkbenchKind,
 
     /// Functor which returns documentation of this function
-    pub doc: Option<DocBlock>,
+    pub doc: Option<ir::DocBlock>,
 }
 
 /// The kind of the built-in workbench determines its output.
@@ -81,7 +85,7 @@ pub struct BuiltinConstant {
     /// The actual value.
     pub value: Value,
     /// Documentation.
-    pub doc: Option<DocBlock>,
+    pub doc: Option<ir::DocBlock>,
 }
 
 /// Builtin enum

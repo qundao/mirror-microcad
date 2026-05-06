@@ -7,6 +7,7 @@ use crate::eval::*;
 use compact_str::CompactStringExt;
 use derive_more::Deref;
 use microcad_core::hash::HashMap;
+use microcad_lang_base::Identifier;
 
 /// List of parameter values
 #[derive(Clone, Debug, Default, Deref)]

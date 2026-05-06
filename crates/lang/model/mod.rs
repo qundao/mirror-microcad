@@ -32,9 +32,11 @@ use microcad_core::{
     BooleanOp, Integer,
     hash::{ComputedHash, HashId},
 };
-use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState, WriteToFile};
+use microcad_lang_base::{
+    Identifier, RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState, WriteToFile,
+};
 
-use crate::{syntax::Identifier, value::Value};
+use crate::{lower::ir::WorkbenchKind, value::Value};
 
 /// A reference counted, mutable [`Model`].
 #[derive(Clone, Deref, DerefMut)]

@@ -11,11 +11,13 @@ pub use parameter_value_list::ParameterValueList;
 
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, syntax::*, ty::*, value::*};
+use crate::{eval::*, lower::ir, ty::*, value::*};
 
-impl Eval<ParameterValue> for Parameter {
+impl Eval<ParameterValue> for ir::Parameter {
     /// Evaluate [Parameter] into [ParameterValue].
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ParameterValue> {
+        use crate::lower::Identifiable;
+
         match (&self.specified_type, &self.default_value) {
             // Type and value are specified
             (Some(specified_type), Some(default_value)) => {
@@ -61,9 +63,11 @@ impl Eval<ParameterValue> for Parameter {
     }
 }
 
-impl Eval<ParameterValueList> for ParameterList {
+impl Eval<ParameterValueList> for ir::ParameterList {
     /// Evaluate [ParameterList] into [ParameterValueList].
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ParameterValueList> {
+        use crate::lower::Identifiable;
+
         let mut values = ParameterValueList::default();
         for parameter in self.iter() {
             values.insert(parameter.id(), parameter.eval(context)?)?;

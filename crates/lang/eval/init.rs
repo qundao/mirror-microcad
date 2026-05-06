@@ -3,9 +3,9 @@
 
 use microcad_lang_base::PushDiag;
 
-use crate::{eval::*, model::*, syntax::*};
+use crate::{eval::*, lower::ir, model::*};
 
-impl InitDefinition {
+impl ir::InitDefinition {
     /// Evaluate a call to the init definition
     pub fn eval(&self, non_property_args: Tuple, context: &mut EvalContext) -> EvalResult<()> {
         let model = context.get_model()?;
@@ -13,7 +13,7 @@ impl InitDefinition {
             let _: Value = self.body.statements.eval(context)?;
 
             if let Some(properties) = model.borrow().get_properties() {
-                let missing: IdentifierList = properties
+                let missing: ir::IdentifierList = properties
                     .iter()
                     .filter(|(_, value)| value.is_invalid())
                     .map(|(id, _)| id.clone())

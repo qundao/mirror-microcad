@@ -9,7 +9,7 @@ use microcad_lang_base::{
     TreeDisplay, TreeState, WriteToFile,
 };
 
-use crate::{resolve::*, symbol::Symbol, syntax::*};
+use crate::{lower::ir, resolve::*, symbol::Symbol};
 
 /// Resolve Context
 pub struct ResolveContext {
@@ -24,7 +24,7 @@ pub struct ResolveContext {
 impl ResolveContext {
     /// Load resolve and check a source file and referenced files.
     pub fn create(
-        root: std::rc::Rc<SourceFile>,
+        root: std::rc::Rc<ir::SourceFile>,
         search_paths: &[impl AsRef<std::path::Path>],
         builtin: Option<Symbol>,
         diag: DiagHandler,
@@ -56,6 +56,8 @@ impl ResolveContext {
     }
 
     pub(crate) fn symbolize(&mut self) -> ResolveResult<()> {
+        use crate::lower::SingleIdentifier;
+
         let named_symbols = self
             .sources
             .clone()
@@ -63,7 +65,7 @@ impl ResolveContext {
             .map(|source| {
                 match (
                     self.sources.generate_name_from_path(&source.filename()),
-                    source.symbolize(Visibility::Public, self),
+                    source.symbolize(ir::Visibility::Public, self),
                 ) {
                     (Ok(name), Ok(symbol)) => Ok((name, symbol)),
                     (_, Err(err)) | (Err(err), _) => Err(err),
@@ -83,7 +85,7 @@ impl ResolveContext {
 
     pub(super) fn resolve(&mut self) -> ResolveResult<()> {
         // resolve std as first
-        if let Some(std) = self.root.get_child(&Identifier::no_ref("std")) {
+        if let Some(std) = self.root.get_child(&ir::Identifier::no_ref("std")) {
             std.resolve(self)?;
         }
 
@@ -125,9 +127,9 @@ impl ResolveContext {
     /// Load file into source cache and symbolize it into a symbol.
     pub fn symbolize_file(
         &mut self,
-        visibility: Visibility,
+        visibility: ir::Visibility,
         parent_path: impl AsRef<std::path::Path>,
-        id: &Identifier,
+        id: &ir::Identifier,
     ) -> ResolveResult<Symbol> {
         let mut symbol = self
             .sources
@@ -179,7 +181,7 @@ impl Diag for ResolveContext {
 }
 
 impl GetSourceByHash for ResolveContext {
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::SourceFile>> {
         self.sources.get_by_hash(hash)
     }
 }

@@ -7,7 +7,7 @@
 
 use microcad_lang_base::PushDiag;
 
-use crate::{eval::*, model::*, symbol::SymbolDef};
+use crate::{eval::*, lower::ir, model::*, symbol::SymbolDef};
 
 mod assignment_statement;
 mod expression_statement;
@@ -15,7 +15,7 @@ mod if_statement;
 mod marker;
 mod return_statement;
 
-impl Eval for Statement {
+impl Eval for ir::Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match self {
             Self::Assignment(a) => {
@@ -37,7 +37,7 @@ impl Eval for Statement {
     }
 }
 
-impl Eval<Option<Model>> for Statement {
+impl Eval<Option<Model>> for ir::Statement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         let model: Option<Model> = match self {
             Self::Assignment(a) => {
@@ -67,7 +67,7 @@ impl Eval<Option<Model>> for Statement {
     }
 }
 
-impl Eval<Value> for StatementList {
+impl Eval<Value> for ir::StatementList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         let mut result = Value::None;
         for statement in self.iter() {
@@ -84,11 +84,11 @@ impl Eval<Value> for StatementList {
 }
 
 /// Parse inner attributes of a statement list.
-impl Eval<Attributes> for StatementList {
+impl Eval<Attributes> for ir::StatementList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Attributes> {
         let mut attributes = Vec::new();
         for statement in self.iter() {
-            if let Statement::InnerAttribute(attribute) = statement {
+            if let ir::Statement::InnerAttribute(attribute) = statement {
                 attributes.append(&mut attribute.eval(context)?);
             }
         }
@@ -97,7 +97,7 @@ impl Eval<Attributes> for StatementList {
     }
 }
 
-impl Eval<Models> for StatementList {
+impl Eval<Models> for ir::StatementList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Models> {
         let mut models = Models::default();
         let mut output_type = OutputType::NotDetermined;
@@ -127,9 +127,9 @@ impl Eval<Models> for StatementList {
                 // We are in a workbench. Check if the workbench kind matches the current output type.
                 if let Some(kind) = kind {
                     let expected_output_type = match kind {
-                        WorkbenchKind::Part => OutputType::Geometry3D,
-                        WorkbenchKind::Sketch => OutputType::Geometry2D,
-                        WorkbenchKind::Operation => OutputType::NotDetermined,
+                        ir::WorkbenchKind::Part => OutputType::Geometry3D,
+                        ir::WorkbenchKind::Sketch => OutputType::Geometry2D,
+                        ir::WorkbenchKind::Operation => OutputType::NotDetermined,
                     };
 
                     if expected_output_type != OutputType::NotDetermined

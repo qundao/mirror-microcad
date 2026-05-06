@@ -3,7 +3,9 @@
 
 //! Tuple type syntax element
 
-use crate::{syntax::*, ty::*};
+use crate::ty::*;
+
+use microcad_lang_base::Identifier;
 
 /// (Partially named) tuple (e.g. `(n: Scalar, m: String, Integer)`)
 #[derive(Debug, Clone, Default, PartialEq, Eq)]

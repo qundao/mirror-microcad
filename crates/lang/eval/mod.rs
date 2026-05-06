@@ -56,7 +56,7 @@ pub use parameter::*;
 use locals::*;
 use microcad_lang_base::PushDiag;
 
-use crate::{resolve::*, syntax::*, ty::*, value::*};
+use crate::{lower::ir, resolve::*, ty::*, value::*};
 
 /// Evaluation trait.
 ///
@@ -78,14 +78,14 @@ pub trait Eval<T = Value> {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<T>;
 }
 
-impl MethodCall {
+impl ir::MethodCall {
     /// Evaluate method call.
     ///
     /// Examples:
     /// ```microcad
     /// assert([2.0, 2.0].all_equal(), "All elements in this list must be equal.");
     /// ```
-    fn eval(&self, context: &mut EvalContext, lhs: &Expression) -> EvalResult<Value> {
+    fn eval(&self, context: &mut EvalContext, lhs: &ir::Expression) -> EvalResult<Value> {
         let value: Value = lhs.eval(context)?;
         if let Value::Model(model) = &value {
             if model.has_no_output() {

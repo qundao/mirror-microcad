@@ -6,9 +6,14 @@
 use microcad_core::hash::Hashed;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 
-use crate::{eval::*, model::*, symbol::Symbol, syntax::*};
+use crate::{
+    eval::*,
+    lower::{Identifiable, ir},
+    model::*,
+    symbol::Symbol,
+};
 
-impl WorkbenchDefinition {
+impl ir::WorkbenchDefinition {
     /// Try to evaluate a single call into a [`Model`].
     ///
     /// - `arguments`: Single argument tuple (will not be multiplied).
@@ -18,7 +23,7 @@ impl WorkbenchDefinition {
         &'a self,
         call_src_ref: SrcRef,
         creator: Creator,
-        init: Option<&'a InitDefinition>,
+        init: Option<&'a ir::InitDefinition>,
         context: &mut EvalContext,
     ) -> EvalResult<Model> {
         log::debug!(
@@ -93,7 +98,7 @@ impl WorkbenchDefinition {
     }
 }
 
-impl WorkbenchDefinition {
+impl ir::WorkbenchDefinition {
     /// Evaluate the call of a workbench with given arguments.
     ///
     /// - `args`: Arguments which will be matched with the building plan and the initializers using parameter multiplicity.
@@ -107,6 +112,7 @@ impl WorkbenchDefinition {
         arguments: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Model> {
+        use crate::lower::Initialized;
         log::debug!(
             "{call} workbench {kind} {id:?}({arguments:?})",
             call = microcad_lang_base::mark!(CALL),

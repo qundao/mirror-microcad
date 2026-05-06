@@ -134,8 +134,8 @@ pub use crate::eval::ParameterValueList;
 pub use crate::model::Operation;
 pub use crate::parameter;
 pub use crate::symbol::Symbol;
-pub use crate::syntax::Identifier;
 pub use crate::value::ValueAccess;
+pub use microcad_lang_base::Identifier;
 
 /// Shortcut to create a `ParameterValue`
 #[macro_export]
@@ -151,7 +151,7 @@ macro_rules! parameter {
     };
     ($id:ident: $ty:ident) => {
         (
-            $crate::syntax::Identifier::no_ref(stringify!($id)),
+            $crate::builtin::Identifier::no_ref(stringify!($id)),
             $crate::eval::ParameterValue {
                 specified_type: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
                 src_ref: microcad_lang_base::SrcRef::none(),
@@ -161,7 +161,7 @@ macro_rules! parameter {
     };
     ($id:ident: $ty:ident = $value:expr) => {
         (
-            $crate::syntax::Identifier::no_ref(stringify!($id)),
+            $crate::builtin::Identifier::no_ref(stringify!($id)),
             $crate::eval::ParameterValue {
                 specified_type: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
                 default_value: Some($crate::builtin::BuiltinValueHelper::$ty($value).into()),
@@ -171,7 +171,7 @@ macro_rules! parameter {
     };
     ($id:ident = $value:expr) => {
         (
-            $crate::syntax::Identifier::no_ref(stringify!($id)),
+            $crate::builtin::Identifier::no_ref(stringify!($id)),
             $crate::eval::ParameterValue {
                 default_value: Some($value),
                 ..Default::default()
@@ -186,7 +186,7 @@ macro_rules! parameter {
 macro_rules! argument {
     ($id:ident: $ty:ident = $value:expr) => {
         (
-            $crate::syntax::Identifier::no_ref(stringify!($id)),
+            $crate::builtin::Identifier::no_ref(stringify!($id)),
             ArgumentValue::new(
                 $crate::builtin::BuiltinValueHelper::$ty($value).into(),
                 None,

@@ -4,9 +4,10 @@
 //! Builder pattern to build built-in modules.
 
 use crate::{
+    Identifier,
     builtin::{BuiltinConstant, BuiltinWorkbenchDefinition},
+    lower::ir,
     symbol::{Symbol, SymbolDef},
-    syntax::*,
     value::Value,
 };
 
@@ -21,7 +22,7 @@ impl ModuleBuilder {
     pub fn new(id: impl Into<Identifier>) -> Self {
         Self {
             module: Symbol::new(
-                SymbolDef::Module(ModuleDefinition::new(Visibility::Public, id.into())),
+                SymbolDef::Module(ir::ModuleDefinition::new(ir::Visibility::Public, id.into())),
                 None,
             ),
         }

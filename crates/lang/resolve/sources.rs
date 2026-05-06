@@ -6,7 +6,10 @@
 use derive_more::Deref;
 use microcad_lang_base::{GetSourceStrByHash, SrcReferrer};
 
-use crate::{parse::*, resolve::*, syntax::*};
+use crate::{
+    lower::{ParseErrorsWithSource, ir},
+    resolve::*,
+};
 use std::{collections::HashMap, rc::Rc};
 
 /// Register of loaded source files and their syntax trees.
@@ -20,14 +23,14 @@ use std::{collections::HashMap, rc::Rc};
 pub struct Sources {
     by_hash: HashMap<u64, usize>,
     by_path: HashMap<std::path::PathBuf, usize>,
-    by_name: HashMap<QualifiedName, usize>,
+    by_name: HashMap<ir::QualifiedName, usize>,
 
     //root source file.
-    root: Rc<SourceFile>,
+    root: Rc<ir::SourceFile>,
 
     /// External source files.
     #[deref]
-    pub source_files: Vec<Rc<SourceFile>>,
+    pub source_files: Vec<Rc<ir::SourceFile>>,
 
     /// Search paths.
     search_paths: Vec<std::path::PathBuf>,
@@ -38,7 +41,7 @@ impl Sources {
     ///
     /// Inserts the `root` file and loads all files from `search_paths`.
     pub fn load(
-        root: Rc<SourceFile>,
+        root: Rc<ir::SourceFile>,
         search_paths: &[impl AsRef<std::path::Path>],
     ) -> ResolveResult<Self> {
         let mut source_files = Vec::new();
@@ -54,7 +57,8 @@ impl Sources {
         // load all external source files into cache
         Externals::new(search_paths)?.iter().try_for_each(
             |(name, path)| -> Result<(), ParseErrorsWithSource> {
-                let (source_file, error) = SourceFile::load_with_name(path.clone(), name.clone());
+                let (source_file, error) =
+                    ir::SourceFile::load_with_name(path.clone(), name.clone());
                 let index = source_files.len();
                 by_hash.insert(source_file.source_hash(), index);
                 by_path.insert(source_file.filename(), index);
@@ -85,12 +89,12 @@ impl Sources {
     }
 
     /// Return root file.
-    pub fn root(&self) -> Rc<SourceFile> {
+    pub fn root(&self) -> Rc<ir::SourceFile> {
         self.root.clone()
     }
 
     /// Insert a file to the sources.
-    pub fn insert(&mut self, source_file: Rc<SourceFile>) {
+    pub fn insert(&mut self, source_file: Rc<ir::SourceFile>) {
         let hash = source_file.source_hash();
         let path = source_file.filename();
         let name = source_file.name.clone();
@@ -120,10 +124,10 @@ impl Sources {
     pub fn generate_name_from_path(
         &self,
         file_path: &std::path::Path,
-    ) -> ResolveResult<QualifiedName> {
+    ) -> ResolveResult<ir::QualifiedName> {
         // check root file name
         if self.root.filename() == file_path {
-            return Ok(QualifiedName::from_id(self.root.id()));
+            return Ok(self.root.id().into());
         }
 
         // check file names relative to search paths
@@ -168,7 +172,7 @@ impl Sources {
         if let Some(path) = path {
             Ok(path
                 .iter()
-                .map(|name| Identifier::no_ref(name.to_string_lossy().as_ref()))
+                .map(|name| ir::Identifier::no_ref(name.to_string_lossy().as_ref()))
                 .collect())
         } else {
             Err(ResolveError::InvalidPath(file_path.to_path_buf()))
@@ -176,12 +180,12 @@ impl Sources {
     }
 
     /// Convenience function to get a source file by from a `SrcReferrer`.
-    pub fn get_by_src_ref(&self, referrer: &impl SrcReferrer) -> ResolveResult<Rc<SourceFile>> {
+    pub fn get_by_src_ref(&self, referrer: &impl SrcReferrer) -> ResolveResult<Rc<ir::SourceFile>> {
         self.get_by_hash(referrer.src_ref().source_hash())
     }
 
     /// Find a project file by it's file path.
-    pub fn get_by_path(&self, path: &std::path::Path) -> ResolveResult<Rc<SourceFile>> {
+    pub fn get_by_path(&self, path: &std::path::Path) -> ResolveResult<Rc<ir::SourceFile>> {
         let path = path.to_path_buf();
         if let Some(index) = self.by_path.get(&path) {
             Ok(self.source_files[*index].clone())
@@ -198,7 +202,7 @@ impl Sources {
             .to_string())
     }
 
-    fn name_from_index(&self, index: usize) -> Option<QualifiedName> {
+    fn name_from_index(&self, index: usize) -> Option<ir::QualifiedName> {
         self.by_name
             .iter()
             .find(|(_, i)| **i == index)
@@ -218,15 +222,15 @@ impl Sources {
     pub fn load_mod_file(
         &mut self,
         parent_path: impl AsRef<std::path::Path>,
-        id: &Identifier,
-    ) -> ResolveResult<Rc<SourceFile>> {
+        id: &ir::Identifier,
+    ) -> ResolveResult<Rc<ir::SourceFile>> {
         log::trace!(
             "loading file: {:?} [{id}]",
             parent_path.as_ref().canonicalize().expect("invalid path")
         );
         let file_path = find_mod_file_by_id(parent_path, id)?;
         let name = self.generate_name_from_path(&file_path)?;
-        let (source_file, error) = SourceFile::load_with_name(&file_path, name);
+        let (source_file, error) = ir::SourceFile::load_with_name(&file_path, name);
         self.insert(source_file.clone());
         match error {
             Some(error) => Err(error.into()),
@@ -238,7 +242,7 @@ impl Sources {
 /// Trait that can fetch for a file by it's hash value.
 pub trait GetSourceByHash {
     /// Find a project file by it's hash value.
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<SourceFile>>;
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<ir::SourceFile>>;
 }
 
 impl GetSourceStrByHash for Sources {
@@ -257,7 +261,7 @@ impl GetSourceStrByHash for Sources {
 
 impl GetSourceByHash for Sources {
     /// Find a project file by it's hash value.
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<ir::SourceFile>> {
         if let Some(index) = self.by_hash.get(&hash) {
             Ok(self.source_files[*index].clone())
         } else if hash == 0 {
@@ -274,7 +278,7 @@ impl std::fmt::Display for Sources {
             let filename = source_file.filename_as_str();
             let name = self
                 .name_from_index(index)
-                .unwrap_or(QualifiedName::no_ref(vec![]));
+                .unwrap_or(ir::QualifiedName::no_ref(vec![]));
             let hash = source_file.source_hash();
             writeln!(f, "[{index}] {name} {hash:#x} {filename}")?;
         }
@@ -288,7 +292,7 @@ impl std::fmt::Debug for Sources {
             let filename = source_file.filename_as_str();
             let name = self
                 .name_from_index(index)
-                .unwrap_or(QualifiedName::no_ref(vec![]));
+                .unwrap_or(ir::QualifiedName::no_ref(vec![]));
             let hash = source_file.source_hash();
             writeln!(f, "[{index}] {name:?} {hash:#x} {filename}")?;
         }

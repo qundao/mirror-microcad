@@ -4,11 +4,13 @@
 use microcad_lang_base::PushDiag;
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, symbol::SymbolDef, value::*};
+use crate::{eval::*, lower::ir, symbol::SymbolDef, value::*};
 
-impl Assignment {
+impl ir::Assignment {
     /// Check if the specified type matches the found type.
     pub fn type_check(&self, found: Type) -> EvalResult<()> {
+        use crate::lower::Identifiable;
+
         if let Some(ty) = &self.specified_type {
             if ty.ty() != found {
                 return Err(EvalError::TypeMismatch {
@@ -23,8 +25,9 @@ impl Assignment {
     }
 }
 
-impl Eval<()> for AssignmentStatement {
+impl Eval<()> for ir::AssignmentStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<()> {
+        use crate::lower::Identifiable;
         log::debug!("Evaluating assignment statement:\n{self}");
 
         let assignment = &self.assignment;
@@ -61,10 +64,7 @@ impl Eval<()> for AssignmentStatement {
         let mut abort = false;
 
         // lookup if we find any existing symbol
-        if let Ok(symbol) = context.lookup(
-            &QualifiedName::from_id(assignment.id()),
-            LookupTarget::Value,
-        ) {
+        if let Ok(symbol) = context.lookup(&assignment.id().into(), LookupTarget::Value) {
             let err = symbol.with_def_mut(|def| match def {
                 SymbolDef::Value(id, value) => {
                     if value.is_invalid() {
@@ -97,7 +97,7 @@ impl Eval<()> for AssignmentStatement {
         if !abort {
             // now check what to do with the value
             match assignment.qualifier() {
-                Qualifier::Const => {
+                ir::Qualifier::Const => {
                     if context.get_property(assignment.id_ref()).is_ok() {
                         todo!("property with that name exists")
                     }
@@ -112,7 +112,7 @@ impl Eval<()> for AssignmentStatement {
                         Err(err) => context.error(self, err)?,
                     }
                 }
-                Qualifier::Value => {
+                ir::Qualifier::Value => {
                     let result = if context.get_property(assignment.id_ref()).is_ok() {
                         if context.is_init() {
                             context.init_property(assignment.id(), new_value)
@@ -126,7 +126,7 @@ impl Eval<()> for AssignmentStatement {
                         context.error(self, err)?;
                     }
                 }
-                Qualifier::Prop => {
+                ir::Qualifier::Prop => {
                     if context.get_local_value(assignment.id_ref()).is_ok() {
                         todo!("local value with that name exists")
                     }
@@ -141,7 +141,7 @@ impl Eval<()> for AssignmentStatement {
     }
 }
 
-impl Eval<Value> for Assignment {
+impl Eval<Value> for ir::Assignment {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         self.expression.eval(context)
     }

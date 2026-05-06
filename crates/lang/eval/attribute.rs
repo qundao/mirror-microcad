@@ -5,11 +5,12 @@ use crate::{
     Id,
     builtin::ExporterAccess,
     eval::{self, *},
+    lower::{Identifiable, ir},
     model::{Attributes, CustomCommand, ExportCommand, MeasureCommand, ResolutionAttribute},
     parameter,
-    syntax::{self, *},
 };
-use microcad_lang_base::{PushDiag, SrcRef};
+
+use microcad_lang_base::{Identifier, PushDiag, SrcRef};
 use miette::Diagnostic;
 use std::str::FromStr;
 
@@ -32,10 +33,10 @@ pub enum AttributeError {
     InvalidCommand(Identifier),
 }
 
-impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
+impl Eval<Option<ExportCommand>> for ir::AttributeCommand {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<ExportCommand>> {
         match self {
-            AttributeCommand::Call(call) => {
+            ir::AttributeCommand::Call(call) => {
                 match ArgumentMatch::find_match(
                     &call.argument_list.eval(context)?,
                     &[
@@ -83,7 +84,7 @@ impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
                     }
                 }
             }
-            AttributeCommand::Assignment { value, .. } => {
+            ir::AttributeCommand::Assignment { value, .. } => {
                 let value: Value = value.eval(context)?;
                 match value {
                     Value::String(filename) => {
@@ -108,7 +109,7 @@ impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
     }
 }
 
-impl Eval<Vec<ExportCommand>> for syntax::Attribute {
+impl Eval<Vec<ExportCommand>> for ir::Attribute {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Vec<ExportCommand>> {
         self.commands
             .iter()
@@ -122,13 +123,13 @@ impl Eval<Vec<ExportCommand>> for syntax::Attribute {
     }
 }
 
-impl Eval<Vec<MeasureCommand>> for syntax::Attribute {
+impl Eval<Vec<MeasureCommand>> for ir::Attribute {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Vec<MeasureCommand>> {
         let mut commands = Vec::new();
 
         for command in &self.commands {
             match command {
-                AttributeCommand::Call(_) => match command.id_as_str() {
+                ir::AttributeCommand::Call(_) => match command.id_as_str() {
                     "width" => commands.push(MeasureCommand::Width),
                     "height" => commands.push(MeasureCommand::Height),
                     "size" => commands.push(MeasureCommand::Size),
@@ -143,12 +144,12 @@ impl Eval<Vec<MeasureCommand>> for syntax::Attribute {
     }
 }
 
-impl Eval<Vec<CustomCommand>> for syntax::Attribute {
+impl Eval<Vec<CustomCommand>> for ir::Attribute {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Vec<CustomCommand>> {
         let mut commands = Vec::new();
         for command in &self.commands {
             match command {
-                AttributeCommand::Call(call) => {
+                ir::AttributeCommand::Call(call) => {
                     match context.exporters().exporter_by_id(command.id().id()) {
                         Ok(exporter) => {
                             match ArgumentMatch::find_match(
@@ -166,7 +167,7 @@ impl Eval<Vec<CustomCommand>> for syntax::Attribute {
                         }
                     }
                 }
-                AttributeCommand::Assignment { name, .. } => {
+                ir::AttributeCommand::Assignment { name, .. } => {
                     match context.exporters().exporter_by_id(name.id()) {
                         Ok(_) => {
                             commands.push(CustomCommand::new(command.id(), Default::default()))
@@ -184,11 +185,11 @@ impl Eval<Vec<CustomCommand>> for syntax::Attribute {
     }
 }
 
-impl Eval<Option<Color>> for syntax::AttributeCommand {
+impl Eval<Option<Color>> for ir::AttributeCommand {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Color>> {
         match self {
             // Get color from a tuple or string.
-            AttributeCommand::Assignment { value, .. } => {
+            ir::AttributeCommand::Assignment { value, .. } => {
                 let value: Value = value.eval(context)?;
                 match value {
                     // Color from string: color = "red"
@@ -221,10 +222,10 @@ impl Eval<Option<Color>> for syntax::AttributeCommand {
     }
 }
 
-impl Eval<Option<ResolutionAttribute>> for syntax::AttributeCommand {
+impl Eval<Option<ResolutionAttribute>> for ir::AttributeCommand {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<ResolutionAttribute>> {
         match self {
-            AttributeCommand::Assignment { value, .. } => {
+            ir::AttributeCommand::Assignment { value, .. } => {
                 let value: Value = value.eval(context)?;
                 match value {
                     Value::Quantity(qty) => match qty.quantity_type {
@@ -246,7 +247,7 @@ impl Eval<Option<ResolutionAttribute>> for syntax::AttributeCommand {
     }
 }
 
-impl Eval<Option<Size2>> for syntax::AttributeCommand {
+impl Eval<Option<Size2>> for ir::AttributeCommand {
     fn eval(&self, _: &mut EvalContext) -> EvalResult<Option<Size2>> {
         todo!("Get Size2, e.g. `size = (width = 10mm, height = 10mm) from AttributeCommand")
     }
@@ -254,7 +255,7 @@ impl Eval<Option<Size2>> for syntax::AttributeCommand {
 
 macro_rules! eval_to_attribute {
     ($id:ident: $ty:ty) => {
-        impl Eval<Option<$ty>> for syntax::Attribute {
+        impl Eval<Option<$ty>> for ir::Attribute {
             fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<$ty>> {
                 let command = self.commands.first().expect("empty attribute");
                 assert_eq!(command.id_ref().to_string(), stringify!($id));
@@ -274,7 +275,7 @@ eval_to_attribute!(color: Color);
 eval_to_attribute!(resolution: ResolutionAttribute);
 eval_to_attribute!(size: Size2);
 
-impl Eval<Vec<crate::model::Attribute>> for syntax::Attribute {
+impl Eval<Vec<crate::model::Attribute>> for ir::Attribute {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Vec<crate::model::Attribute>> {
         use crate::model::Attribute as Attr;
         self.commands
@@ -315,7 +316,7 @@ impl Eval<Vec<crate::model::Attribute>> for syntax::Attribute {
     }
 }
 
-impl Eval<crate::model::Attributes> for AttributeList {
+impl Eval<crate::model::Attributes> for ir::AttributeList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<crate::model::Attributes> {
         Ok(Attributes(self.iter().try_fold(
             Vec::new(),

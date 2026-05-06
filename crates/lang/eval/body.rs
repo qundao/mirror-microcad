@@ -3,10 +3,10 @@
 
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, model::*, symbol::SymbolMap};
+use crate::{eval::*, lower::ir, model::*, symbol::SymbolMap};
 
 /// Evaluate the body into a value.
-impl Eval<Value> for Body {
+impl Eval<Value> for ir::Body {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         context.scope(StackFrame::Body(SymbolMap::default()), |context| {
             self.statements.eval(context)
@@ -14,13 +14,13 @@ impl Eval<Value> for Body {
     }
 }
 
-impl Eval<Option<Model>> for Body {
+impl Eval<Option<Model>> for ir::Body {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         self.eval(context).map(Some)
     }
 }
 
-impl Eval<Model> for Body {
+impl Eval<Model> for ir::Body {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Model> {
         context.scope(StackFrame::Body(SymbolMap::default()), |context| {
             Ok(ModelBuilder::new(Element::Group, self.src_ref())
@@ -31,7 +31,7 @@ impl Eval<Model> for Body {
     }
 }
 
-impl Eval<Attributes> for Body {
+impl Eval<Attributes> for ir::Body {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Attributes> {
         self.statements.eval(context)
     }

@@ -5,7 +5,7 @@
 
 use microcad_lang_base::{PushDiag, SrcRef};
 
-use crate::{eval::*, model::Model, symbol::SymbolDef, syntax::*};
+use crate::{eval::*, lower::ir, model::Model, symbol::SymbolDef};
 
 /// Trait for calling methods of values
 pub trait CallMethod<T = Value> {
@@ -16,7 +16,7 @@ pub trait CallMethod<T = Value> {
     /// - `context`: Evaluation context
     fn call_method(
         &self,
-        id: &QualifiedName,
+        id: &ir::QualifiedName,
         args: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<T>;
@@ -25,10 +25,12 @@ pub trait CallMethod<T = Value> {
 impl CallMethod for Array {
     fn call_method(
         &self,
-        id: &QualifiedName,
+        id: &ir::QualifiedName,
         _: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Value> {
+        use crate::lower::SingleIdentifier;
+
         Ok(
             match id.single_identifier().expect("Single id").id().as_str() {
                 "count" => self.len().into(),
@@ -52,7 +54,7 @@ impl CallMethod for Array {
 impl CallMethod<Option<Model>> for Model {
     fn call_method(
         &self,
-        name: &QualifiedName,
+        name: &ir::QualifiedName,
         args: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Option<Model>> {
@@ -97,7 +99,7 @@ impl CallMethod<Option<Model>> for Model {
 impl CallMethod for Value {
     fn call_method(
         &self,
-        id: &QualifiedName,
+        id: &ir::QualifiedName,
         args: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Value> {

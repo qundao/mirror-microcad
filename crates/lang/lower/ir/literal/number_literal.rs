@@ -1,0 +1,58 @@
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Number literal syntax element
+
+use microcad_lang_base::{SrcRef, SrcReferrer};
+
+use crate::{lower::ir, ty::*, value::*};
+
+/// Number literal.
+#[derive(Clone, Debug, PartialEq)]
+pub struct NumberLiteral(pub f64, pub ir::Unit, pub SrcRef);
+
+impl NumberLiteral {
+    /// Returns the actual value of the literal
+    pub fn normalized_value(&self) -> f64 {
+        self.1.normalize(self.0)
+    }
+
+    /// return unit
+    pub fn unit(&self) -> ir::Unit {
+        self.1
+    }
+
+    /// Return value for number literal
+    pub fn value(&self) -> Value {
+        match self.1.ty() {
+            Type::Quantity(quantity_type) => {
+                Value::Quantity(Quantity::new(self.normalized_value(), quantity_type))
+            }
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl crate::ty::Ty for NumberLiteral {
+    fn ty(&self) -> Type {
+        self.1.ty()
+    }
+}
+
+impl SrcReferrer for NumberLiteral {
+    fn src_ref(&self) -> SrcRef {
+        self.2.clone()
+    }
+}
+
+impl std::fmt::Display for NumberLiteral {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}{}", self.0, self.1)
+    }
+}
+
+impl From<NumberLiteral> for Value {
+    fn from(literal: NumberLiteral) -> Self {
+        literal.value()
+    }
+}

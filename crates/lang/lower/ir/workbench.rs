@@ -1,0 +1,107 @@
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Workbench definition syntax element
+
+use crate::lower::ir;
+
+use custom_debug::Debug;
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_proc_macros::Identifiable;
+use strum::Display;
+
+/// Kind of a [`WorkbenchDefinition`].
+#[derive(Clone, Display, Debug, Copy, PartialEq)]
+pub enum WorkbenchKind {
+    /// 3D part
+    Part,
+    /// 2D sketch
+    Sketch,
+    /// Operation
+    Operation,
+}
+
+impl WorkbenchKind {
+    /// return kind name
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            WorkbenchKind::Part => "part",
+            WorkbenchKind::Sketch => "sketch",
+            WorkbenchKind::Operation => "op",
+        }
+    }
+}
+
+/// Workbench definition, e.g `sketch`, `part` or `op`.
+#[derive(Clone, Debug, Identifiable)]
+pub struct WorkbenchDefinition {
+    /// SrcRef of the `sketch`/`part`/`op` keyword
+    pub keyword_ref: SrcRef,
+    /// Documentation.
+    pub doc: ir::DocBlock,
+    /// Workbench attributes.
+    pub attribute_list: ir::AttributeList,
+    /// Visibility from outside modules.
+    pub visibility: ir::Visibility,
+    /// Workbench kind.
+    pub kind: Refer<WorkbenchKind>,
+    /// Workbench name.
+    pub(crate) id: ir::Identifier,
+    /// Workbench's building plan.
+    pub plan: ir::ParameterList,
+    /// Workbench body
+    pub body: ir::Body,
+}
+
+impl WorkbenchDefinition {
+    pub(crate) fn possible_params(&self) -> Vec<String> {
+        use crate::lower::Initialized;
+        std::iter::once(&self.plan)
+            .chain(self.inits().map(|init| &init.parameters))
+            .map(|params| format!("{}( {})", self.id, params))
+            .collect()
+    }
+}
+
+impl<'a> crate::lower::Initialized<'a> for WorkbenchDefinition {
+    fn statements(&'a self) -> std::slice::Iter<'a, ir::Statement> {
+        self.body.statements.iter()
+    }
+}
+
+impl SrcReferrer for WorkbenchDefinition {
+    fn src_ref(&self) -> SrcRef {
+        self.id.src_ref()
+    }
+}
+
+impl std::fmt::Display for WorkbenchDefinition {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{visibility}{kind} {id}({plan}) {body}",
+            visibility = self.visibility,
+            kind = self.kind,
+            id = self.id,
+            plan = self.plan,
+            body = self.body
+        )
+    }
+}
+
+impl TreeDisplay for WorkbenchDefinition {
+    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
+        writeln!(
+            f,
+            "{:depth$}{visibility}Workbench ({kind}) '{id}':",
+            "",
+            visibility = self.visibility,
+            kind = self.kind,
+            id = self.id
+        )?;
+        depth.indent();
+        self.doc.tree_print(f, depth)?;
+        self.plan.tree_print(f, depth)?;
+        self.body.tree_print(f, depth)
+    }
+}

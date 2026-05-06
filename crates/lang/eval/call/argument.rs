@@ -5,11 +5,13 @@
 
 use microcad_lang_base::PushDiag;
 
-use crate::{eval::*, syntax::*};
+use crate::{eval::*, lower::ir};
 
-impl Eval<ArgumentValue> for Argument {
+impl Eval<ArgumentValue> for ir::Argument {
     /// Evaluate `Argument` and return `ArgumentValue`
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValue> {
+        use crate::lower::SingleIdentifier;
+
         Ok(ArgumentValue::new(
             match self.expression.eval(context) {
                 Ok(value) => value,

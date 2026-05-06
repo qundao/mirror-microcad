@@ -3,7 +3,9 @@
 
 //! Value access trait
 
-use crate::{syntax::*, value::*};
+use crate::value::*;
+
+use microcad_lang_base::Identifier;
 
 /// Trait for Value Lists
 pub trait ValueAccess {
