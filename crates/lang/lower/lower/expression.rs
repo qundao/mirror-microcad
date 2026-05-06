@@ -235,31 +235,3 @@ impl FromAst for ir::TupleExpression {
         })
     }
 }
-
-/// Create TupleExpression from µcad code
-#[cfg(test)]
-#[macro_export]
-macro_rules! tuple_expression {
-    ($code:literal) => {{
-        use microcad_syntax::ast;
-        use $crate::parser::FromAst;
-        let context = $crate::parser::ParseContext::new($code);
-        let ast = $crate::parse::build_ast($code, &context).unwrap();
-        let statement = ast
-            .statements
-            .statements
-            .first()
-            .map(|(statement, _)| match statement {
-                ast::Statement::Expression(expr) => expr,
-                _ => panic!("Invalid tuple expr"),
-            })
-            .or(ast.statements.tail.as_deref())
-            .expect("empty source");
-
-        let tuple = match &statement.expression {
-            ast::Expression::Tuple(tuple) => tuple,
-            _ => panic!("No tuple"),
-        };
-        TupleExpression::from_ast(&tuple, &context).unwrap()
-    }};
-}
