@@ -51,22 +51,19 @@ pub enum ProcessorResponse {
 }
 
 fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<Range> {
-    match src_ref.0 {
-        Some(src_ref_inner) => {
+    match src_ref.is_some() {
+        true => {
             use tower_lsp::lsp_types::{Position, Range};
 
-            let start = Position::new(
-                src_ref_inner.at.line as u32 - 1,
-                src_ref_inner.at.col as u32 - 1,
-            );
+            let start = Position::new(src_ref.at.line - 1, src_ref.at.col - 1);
             let end = Position::new(
-                src_ref_inner.at.line as u32 - 1,
-                (src_ref_inner.at.col + src_ref_inner.range.len() as u32) - 1,
+                src_ref.at.line - 1,
+                (src_ref.at.col + src_ref.range.len() as u32) - 1,
             );
 
             Some(Range::new(start, end))
         }
-        None => None,
+        false => None,
     }
 }
 
