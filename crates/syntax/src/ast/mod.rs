@@ -33,7 +33,7 @@ impl Dummy for Identifier {
     }
 }
 
-/// A µcad source file
+/// A µcad program
 #[derive(Debug)]
 #[allow(missing_docs)]
 pub struct Program {

@@ -93,22 +93,36 @@ impl UnaryOperatorType {
 
 /// Any expression.
 #[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
 pub enum Expression {
+    /// A literal: `42mm`
     Literal(ast::Literal),
+    /// Something in `()` brackets: `(42mm)`
     Bracketed(Box<Expression>, Span),
+    /// A tuple: `(a = 1, b = 23)`
     Tuple(TupleExpression),
+    /// A range expression: `[1..4]`
     ArrayRange(ArrayRangeExpression),
+    /// A list expression: `[1, 2, 3]`
     ArrayList(ArrayListExpression),
+    /// A format string: `"We have {n} items"`
     String(FormatString),
+    /// A qualified name: `foo::bar::baz`
     QualifiedName(QualifiedName),
+    /// A marker expression: `@input`
     Marker(ast::Identifier),
+    /// A binary operation: `1 + 3`
     BinaryOperation(BinaryOperation),
+    /// A unary operation: `-2`
     UnaryOperation(UnaryOperation),
+    /// A body expression containing statements: `{ ... }`
     Body(ast::Body),
+    /// A call: `call::me(1, 2, 3)`
     Call(Call),
+    /// Accessing an element: `.foo`, `.rotate()`, `#attr`, `[1]`
     ElementAccess(ElementAccess),
+    /// An if expression: `if a == b { ... } else { ... }`
     If(If),
+    /// Any occurred during parsing
     Error(Span),
 }
 
@@ -116,7 +130,7 @@ impl Expression {
     /// Get the source span for the identifier
     pub fn span(&self) -> Span {
         match self {
-            Expression::Literal(ex) => ex.span(),
+            Expression::Literal(ex) => ex.span.clone(),
             Expression::Bracketed(_, span) => span.clone(),
             Expression::Tuple(ex) => ex.span.clone(),
             Expression::ArrayRange(ex) => ex.span.clone(),
@@ -176,7 +190,7 @@ pub struct StringExpression {
     pub specification: Box<StringFormatSpecification>,
 }
 
-/// The format specification for a [`StringExpression`], specifying the with and precision for number formatting
+/// The format specification for a [`StringExpression`], specifying the width and precision for number formatting
 ///
 /// All parts of the specification are optional
 #[derive(Debug, PartialEq)]
@@ -254,7 +268,7 @@ pub struct ArrayItem {
     pub expression: Expression,
 }
 
-/// A qualified name, containing one or more [`Literal`]s seperated by `::`
+/// A qualified name, containing one or more [`Identifier`]s separated by `::`
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct QualifiedName {

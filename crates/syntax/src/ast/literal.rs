@@ -16,13 +16,6 @@ pub struct Literal {
     pub literal: LiteralKind,
 }
 
-impl Literal {
-    /// Get the span for the literal
-    pub fn span(&self) -> Span {
-        self.literal.span()
-    }
-}
-
 /// The various types of literal values a [`Literal`] can contain
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
@@ -83,7 +76,7 @@ pub struct FloatLiteral {
     pub raw: CompactString,
 }
 
-// A float literal with type
+/// A float literal with type
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct QuantityLiteral {

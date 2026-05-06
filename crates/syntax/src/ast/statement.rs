@@ -12,30 +12,36 @@ pub struct InnerDocComment {
     pub line: String,
 }
 
-/// A µcad statements
+/// A µcad statement.
 #[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
 pub enum Statement {
-    /// Workbench statement producing a symbol.
+    /// Workbench statement: `part Foo() { ... }`
     Workbench(WorkbenchDefinition),
-    /// Inline Module: `mod foo {}`
+    /// Inline Module: `mod foo { ... }`
     InlineModule(InlineModule),
-    /// File Module: `mod foo;`.
+    /// File Module: `mod foo;`
     FileModule(FileModule),
-    /// Function statement producing a symbol.
+    /// Function statement: `fn bar() { ... }`
     Function(FunctionDefinition),
-    /// Use statement producing a symbol.
+    /// Use statement: `use foo::bar;`
     Use(UseStatement),
-    /// Const statement producing a symbol.
+    /// Const definition: `const FOO = 42mm`
     Const(ConstAssignment),
-
+    /// Init definition: `init() { ... }`
     Init(InitDefinition),
+    /// Return statement: `return 23mm;`
     Return(Return),
+    /// Inner attribute: `#![...]`
     InnerAttribute(Attribute),
+    /// Inner documentation: `//! Doc comment`
     InnerDocComment(InnerDocComment),
+    /// Local assignment: `foo = bar;`
     LocalAssignment(LocalAssignment),
+    /// Property: `prop bar = 42mm;`
     Property(PropertyAssignment),
+    /// Expression statement: `foo | bar;`
     Expression(ExpressionStatement),
+    /// Any error occured during parsing.
     Error(Span),
 }
 
@@ -89,10 +95,12 @@ impl Statement {
 
 /// The possible type of workbenches
 #[derive(Debug, PartialEq, Copy, Clone)]
-#[allow(missing_docs)]
 pub enum WorkbenchKind {
+    /// `sketch`
     Sketch,
+    /// `part`
     Part,
+    /// `op`
     Op,
 }
 
@@ -265,22 +273,16 @@ pub struct Attribute {
 
 /// The contents an an [`Attribute`]
 #[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
 pub enum AttributeCommand {
+    /// A single identifier: `#[deprecated]`
     Ident(ast::Identifier),
+    /// A meta data assignent: `#[color = RED]`
     Assignment(LocalAssignment),
+    /// A call: `#[export("file.svg")`
     Call(ast::Call),
 }
 
-/// An optional qualifier that can be part of an [`Assignment`]
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub enum AssignmentQualifier {
-    Const,
-    Prop,
-}
-
-/// A local assignment statement: `a = 42;`
+/// A local assignment: `a = 42`
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct LocalAssignment {
@@ -307,7 +309,7 @@ pub struct ConstAssignment {
     pub value: Box<ast::Expression>,
 }
 
-/// A property assignment: `prop A = 42`
+/// A property assignment: `prop a = 42`
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct PropertyAssignment {
@@ -346,10 +348,12 @@ pub struct DocBlock {
     pub lines: Vec<String>,
 }
 
-/// An optional visibility modifier that can be art of assignment and module, function and workbench definitions
+/// An optional visibility modifier
+///
+/// it can be part of constant, module, function or workbench definitions.
 #[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
 pub enum Visibility {
+    /// `pub`
     Public,
 }
 
