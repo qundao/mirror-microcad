@@ -61,7 +61,7 @@ fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<Range> {
             );
             let end = Position::new(
                 src_ref_inner.at.line as u32 - 1,
-                (src_ref_inner.at.col + src_ref_inner.range.len()) as u32 - 1,
+                (src_ref_inner.at.col + src_ref_inner.range.len() as u32) - 1,
             );
 
             Some(Range::new(start, end))
