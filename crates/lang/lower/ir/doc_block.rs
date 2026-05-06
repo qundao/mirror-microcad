@@ -70,7 +70,7 @@ impl TreeDisplay for DocBlock {
                 f,
                 "{:depth$}DocBlock: '{}'",
                 "",
-                microcad_lang_base::shorten!(self.0.first().cloned().unwrap_or_default())
+                microcad_lang_base::shorten(&self.0.first().cloned().unwrap_or_default(), 80)
             )
         }
     }

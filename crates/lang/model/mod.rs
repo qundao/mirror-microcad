@@ -253,19 +253,22 @@ impl std::fmt::Debug for Model {
         write!(
             f,
             "{}",
-            microcad_lang_base::shorten!(format!(
-                "{id}{element}{is_root} ->",
-                id = match &self.borrow().id {
-                    Some(id) => format!("{id:?}: "),
-                    None => String::new(),
-                },
-                element = *self.borrow().element,
-                is_root = if self.parents().next().is_some() {
-                    ""
-                } else {
-                    " (root)"
-                }
-            ))
+            microcad_lang_base::shorten(
+                &format!(
+                    "{id}{element}{is_root} ->",
+                    id = match &self.borrow().id {
+                        Some(id) => format!("{id:?}: "),
+                        None => String::new(),
+                    },
+                    element = *self.borrow().element,
+                    is_root = if self.parents().next().is_some() {
+                        ""
+                    } else {
+                        " (root)"
+                    }
+                ),
+                140
+            )
         )
     }
 }
