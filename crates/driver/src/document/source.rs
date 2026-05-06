@@ -37,23 +37,23 @@ pub enum State {
         source: String,
     },
     Parsed {
-        source: microcad_syntax::Source,
+        source: microcad_lang_parse::Source,
     },
     Lowered {
-        source: microcad_syntax::Source,
+        source: microcad_lang_parse::Source,
         resolve_context: ResolveContext,
     },
     Resolved {
-        source: microcad_syntax::Source,
+        source: microcad_lang_parse::Source,
         eval_context: EvalContext,
     },
     Evaluated {
-        source: microcad_syntax::Source,
+        source: microcad_lang_parse::Source,
         eval_context: EvalContext,
         model: Model,
     },
     Rendered {
-        source: microcad_syntax::Source,
+        source: microcad_lang_parse::Source,
         eval_context: EvalContext,
         model: Model,
     },
@@ -110,7 +110,7 @@ impl document::SourceItem {
 
         self.transition(|current| match current {
             State::Loaded { source } => {
-                let source = microcad_syntax::Source::new(self.url.clone(), source)?;
+                let source = microcad_lang_parse::Source::new(self.url.clone(), source)?;
                 Ok(State::Parsed { source })
             }
             _ => Ok(current),
