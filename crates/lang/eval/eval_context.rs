@@ -63,7 +63,7 @@ impl EvalContext {
         output: Box<dyn Output>,
         exporters: ExporterRegistry,
         importers: ImporterRegistry,
-        line_offset: usize,
+        line_offset: u32,
     ) -> EvalResult<Self> {
         Ok(Self::new(
             ResolveContext::create(root, search_paths, builtin, DiagHandler::new(line_offset))?,
@@ -442,11 +442,11 @@ impl microcad_lang_base::Diag for EvalContext {
         self.diag.error_count()
     }
 
-    fn error_lines(&self) -> HashSet<usize> {
+    fn error_lines(&self) -> HashSet<u32> {
         self.diag.error_lines()
     }
 
-    fn warning_lines(&self) -> HashSet<usize> {
+    fn warning_lines(&self) -> HashSet<u32> {
         self.diag.warning_lines()
     }
 }

@@ -32,7 +32,7 @@ impl ResolveContext {
         let mut context = Self {
             sources: Sources::load(root.clone(), search_paths)?,
             diag,
-            root: Symbol::default()
+            root: Symbol::default(),
         };
         match context.load(builtin) {
             Ok(()) => Ok(context),
@@ -169,11 +169,11 @@ impl Diag for ResolveContext {
         self.diag.error_count()
     }
 
-    fn error_lines(&self) -> HashSet<usize> {
+    fn error_lines(&self) -> HashSet<u32> {
         self.diag.error_lines()
     }
 
-    fn warning_lines(&self) -> HashSet<usize> {
+    fn warning_lines(&self) -> HashSet<u32> {
         self.diag.warning_lines()
     }
 }

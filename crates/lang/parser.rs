@@ -34,7 +34,7 @@ impl LineIndex {
     /// Returns (line, col) of pos.
     ///
     /// The pos is a byte offset, start from 0, e.g. "ab" is 2, "你好" is 6
-    pub fn line_col(&self, input: &str, pos: usize) -> (usize, usize) {
+    pub fn line_col(&self, input: &str, pos: usize) -> (u32, u32) {
         let line = self.line_offsets.partition_point(|&it| it <= pos) - 1;
         let first_offset = self.line_offsets[line];
 
@@ -42,7 +42,7 @@ impl LineIndex {
         let line_str = &input[first_offset..pos];
         let col = line_str.chars().count();
 
-        (line + 1, col + 1)
+        ((line + 1) as u32, (col + 1) as u32)
     }
 }
 

@@ -79,7 +79,7 @@ impl SourceFile {
     }
 
     /// Get a miette source adapter for the SourceFile
-    pub fn miette_source<'a>(&'a self, path: String, line_offset: usize) -> MietteSourceFile<'a> {
+    pub fn miette_source<'a>(&'a self, path: String, line_offset: u32) -> MietteSourceFile<'a> {
         MietteSourceFile {
             source: &self.source,
             name: path,
