@@ -1,7 +1,7 @@
 # µcad Syntax
 
-[![Crates.io](https://img.shields.io/crates/v/microcad-syntax.svg)](https://crates.io/crates/microcad-syntax)
-[![Documentation](https://docs.rs/microcad-syntax/badge.svg)](https://docs.rs/microcad-syntax/)
+[![Crates.io](https://img.shields.io/crates/v/microcad-lang-parse.svg)](https://crates.io/crates/microcad-lang-parse)
+[![Documentation](https://docs.rs/microcad-lang-parse/badge.svg)](https://docs.rs/microcad-lang-parse/)
 
 This crate provides a lexer and a parser for the µcad language.
 The parsing process will only operate on a single file and will result in an AST.
