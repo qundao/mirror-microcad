@@ -96,14 +96,14 @@ pub trait BuiltinWorkbenchDefinition {
     /// Create model from workpiece and creator.
     fn model(creator: Creator) -> Model {
         let workpiece = Self::workpiece(creator);
-        let model = ModelBuilder::new(Element::BuiltinWorkpiece(workpiece), SrcRef(None)).build();
+        let model = ModelBuilder::new(Element::BuiltinWorkpiece(workpiece), SrcRef::none()).build();
 
         // Add a @input placeholder if we have a built-in operation or transform.
         // This assures that multiplicity for built-ins is working correctly.
         if Self::kind() == BuiltinWorkbenchKind::Operation
             || Self::kind() == BuiltinWorkbenchKind::Transform
         {
-            model.append(ModelBuilder::new(Element::InputPlaceholder, SrcRef(None)).build());
+            model.append(ModelBuilder::new(Element::InputPlaceholder, SrcRef::none()).build());
         }
         model
     }
@@ -127,7 +127,7 @@ pub trait BuiltinWorkbenchDefinition {
                         ))
                     })
                     .collect::<Models>()
-                    .to_multiplicity(SrcRef(None)),
+                    .to_multiplicity(SrcRef::none()),
             ))
         }
     }

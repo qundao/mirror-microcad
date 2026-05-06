@@ -236,7 +236,7 @@ impl SrcReferrer for ResolveError {
             ResolveError::SourceFileNotFound(identifier, _) => identifier.src_ref(),
             ResolveError::ParseError(parse_error) => parse_error.src_ref(),
             ResolveError::ResolveCheckFailed(src_ref) => src_ref.clone(),
-            _ => SrcRef(None),
+            _ => SrcRef::none(),
         }
     }
 }

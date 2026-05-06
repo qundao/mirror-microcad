@@ -46,7 +46,7 @@ impl Eval<Option<ExportCommand>> for syntax::AttributeCommand {
                             eval::ParameterValue {
                                 specified_type: Some(Type::Tuple(Box::new(TupleType::new_size2()))),
                                 default_value: Some(Value::Tuple(Box::new(Size2::A4.into()))),
-                                src_ref: SrcRef(None),
+                                src_ref: SrcRef::none(),
                             },
                         ),
                     ]

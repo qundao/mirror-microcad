@@ -153,7 +153,7 @@ impl From<&Builtin> for SymbolInfo {
             kind: "Builtin".into(),
             doc: Some(def.doc()),
             signatures: vec![],
-            src_ref: SrcRef(None),
+            src_ref: SrcRef::none(),
         }
     }
 }

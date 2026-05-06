@@ -606,7 +606,7 @@ impl SrcReferrer for Symbol {
 impl Default for Symbol {
     fn default() -> Self {
         Self {
-            src_ref: SrcRef(None),
+            src_ref: SrcRef::none(),
             visibility: std::cell::RefCell::new(Visibility::default()),
             inner: RcMut::new(Default::default()),
         }

@@ -140,7 +140,7 @@ impl CallTrait for Builtin {
             Builtin::Workbench(w) => w.call(args, context),
             Builtin::Constant(c) => {
                 context.error(
-                    &microcad_lang_base::SrcRef(None),
+                    &microcad_lang_base::SrcRef::none(),
                     EvalError::BuiltinError(format!(
                         "Built-in constant `{}` cannot be called.",
                         c.id()

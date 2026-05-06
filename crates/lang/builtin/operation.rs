@@ -129,10 +129,10 @@ impl BuiltinWorkbenchDefinition for Multiply {
 
     fn model(creator: Creator) -> Model {
         let n: Integer = creator.arguments.get("n");
-        let model = ModelBuilder::new(Element::Multiplicity, SrcRef(None)).build();
+        let model = ModelBuilder::new(Element::Multiplicity, SrcRef::none()).build();
 
         model.append_children(
-            ModelBuilder::new(Element::InputPlaceholder, SrcRef(None))
+            ModelBuilder::new(Element::InputPlaceholder, SrcRef::none())
                 .build()
                 .multiply(n)
                 .into(),

@@ -283,7 +283,7 @@ where
             .map(|(k, v)| (Identifier::no_ref(k), (*v).clone().into()))
             .partition(|(k, _)| k.is_empty());
         Self {
-            src_ref: SrcRef(None),
+            src_ref: SrcRef::none(),
             named: named.into_iter().collect(),
             unnamed: unnamed.into_iter().map(|(_, v)| (v.ty(), v)).collect(),
         }

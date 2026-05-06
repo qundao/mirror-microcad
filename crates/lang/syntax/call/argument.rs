@@ -50,19 +50,19 @@ fn test_argument_debug() {
     let arg1 = Argument {
         id: Some("id1".into()),
         expression: Expression::QualifiedName("my::name1".into()),
-        src_ref: SrcRef(None),
+        src_ref: SrcRef::none(),
     };
 
     let arg2 = Argument {
         id: None,
         expression: Expression::QualifiedName("my::name2".into()),
-        src_ref: SrcRef(None),
+        src_ref: SrcRef::none(),
     };
 
     let arg3 = Argument {
         id: Some(Identifier::none()),
         expression: Expression::QualifiedName("my::name2".into()),
-        src_ref: SrcRef(None),
+        src_ref: SrcRef::none(),
     };
 
     let mut args = ArgumentList::default();

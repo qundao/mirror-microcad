@@ -69,7 +69,7 @@ impl SourceFile {
     ///
     /// - `line`: line number beginning at `0`
     pub fn get_code(&self, src_ref: &SrcRef) -> &str {
-        let range = &src_ref.as_ref().expect("source reference empty").range;
+        let range = &src_ref.range;
         &self.source[range.start..range.end]
     }
 

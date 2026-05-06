@@ -219,7 +219,7 @@ impl From<&std::path::Path> for QualifiedName {
                 .map(|id| {
                     Identifier(Refer {
                         value: id.to_string_lossy().into_owned().into(),
-                        src_ref: SrcRef(None),
+                        src_ref: SrcRef::none(),
                     })
                 })
                 .collect(),

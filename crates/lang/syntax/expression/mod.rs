@@ -123,7 +123,7 @@ impl SingleIdentifier for Expression {
 impl SrcReferrer for Expression {
     fn src_ref(&self) -> SrcRef {
         match self {
-            Self::Invalid => SrcRef(None),
+            Self::Invalid => SrcRef::none(),
             Self::Literal(l) => l.src_ref(),
             Self::FormatString(fs) => fs.src_ref(),
             Self::ArrayExpression(le) => le.src_ref(),

@@ -39,9 +39,9 @@ impl Models {
     pub fn boolean_op(&self, op: BooleanOp) -> Model {
         match self.single_model() {
             Some(model) => model,
-            None => ModelBuilder::new(Element::BuiltinWorkpiece(op.into()), SrcRef(None))
+            None => ModelBuilder::new(Element::BuiltinWorkpiece(op.into()), SrcRef::none())
                 .add_children(
-                    [ModelBuilder::new(Element::Group, SrcRef(None))
+                    [ModelBuilder::new(Element::Group, SrcRef::none())
                         .add_children(self.clone())
                         .build()]
                     .into_iter()

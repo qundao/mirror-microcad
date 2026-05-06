@@ -125,7 +125,7 @@ impl std::fmt::Display for AttributeList {
 impl SrcReferrer for AttributeList {
     fn src_ref(&self) -> SrcRef {
         if self.0.is_empty() {
-            SrcRef(None)
+            SrcRef::none()
         } else {
             SrcRef::merge(
                 &self.0.first().expect("One element").src_ref(),

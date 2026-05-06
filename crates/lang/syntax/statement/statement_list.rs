@@ -25,7 +25,7 @@ impl SrcReferrer for StatementList {
         if let (Some(first), Some(last)) = (self.first(), self.last()) {
             SrcRef::merge(first, last)
         } else {
-            SrcRef(None)
+            SrcRef::none()
         }
     }
 }
