@@ -7,8 +7,11 @@
 
 use clap::Parser;
 
-use microcad_lang::syntax::*;
-use microcad_lang_base::{Refer, SrcRef};
+mod watcher;
+use crate::watcher::Watcher;
+
+use microcad_lang::lower::ir;
+use microcad_lang_base::{Hashed, Refer, SrcRef};
 
 use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
@@ -16,12 +19,9 @@ use miette::IntoDiagnostic;
 use std::sync::{Arc, RwLock};
 use std::thread;
 
-mod watcher;
-
 use slint::VecModel;
 
 use crate::to_slint::hash_to_shared_string;
-use crate::watcher::Watcher;
 
 slint::include_modules!();
 
@@ -43,9 +43,7 @@ pub enum ViewModelRequest {
     /// Set source code string.
     SetSourceCode {
         /// Source code to be displayed.
-        code: String,
-        /// Source file hash.
-        hash: u64,
+        code: Hashed<String>,
     },
     /// Set the symbol tree items.
     SetSymbolTree(Vec<SymbolTreeModelItem>),
@@ -87,17 +85,11 @@ impl Inspector {
                 // Watch all dependencies of the most recent compilation.
                 self.watcher.update(vec![self.args.input.clone()])?;
 
-                let source_file = SourceFile::load(&self.args.input)?;
-
-                match std::fs::read_to_string(&self.args.input) {
-                    Ok(code) => tx
-                        .send(ViewModelRequest::SetSourceCode {
-                            code,
-                            hash: source_file.hash,
-                        })
-                        .expect("No error"),
-                    Err(err) => log::error!("{err}"),
-                };
+                let source_file = ir::SourceFile::load(&self.args.input)?;
+                tx.send(ViewModelRequest::SetSourceCode {
+                    code: source_file.source.clone(),
+                })
+                .expect("No error");
 
                 // resolve the file
                 let resolve_context = microcad_lang::resolve::ResolveContext::create(
@@ -145,15 +137,16 @@ impl Inspector {
             loop {
                 if let Ok(request) = rx.recv() {
                     weak.upgrade_in_event_loop(move |main_window| match request {
-                        ViewModelRequest::SetSourceCode { code, hash } => {
+                        ViewModelRequest::SetSourceCode { code } => {
+                            use microcad_lang_base::ComputedHash;
                             let items = to_slint::split_source_code(&code);
                             main_window.set_source_code_model(to_slint::model_rc_from_items(items));
 
                             main_window.set_state(VM_State {
-                                current_source_hash: hash_to_shared_string(hash),
+                                current_source_hash: hash_to_shared_string(code.computed_hash()),
                                 current_line: 1,
                             });
-                            main_window.set_source_code(code.into());
+                            main_window.set_source_code(code.value().into());
                         }
                         ViewModelRequest::SetSymbolTree(items) => {
                             main_window.set_symbol_tree(to_slint::model_rc_from_items(items))

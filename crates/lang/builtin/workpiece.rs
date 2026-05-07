@@ -7,7 +7,7 @@ use custom_debug::Debug;
 use microcad_core::hash::{ComputedHash, HashId, Hashed};
 use microcad_lang_base::SrcRef;
 
-use crate::{builtin::*, eval::*, model::*, render::*, syntax::*, value::*};
+use crate::{builtin::*, eval::*, lower::ir, model::*, render::*, value::*};
 
 /// The return value when calling a built-in workpiece.
 pub enum BuiltinWorkpieceOutput {
@@ -96,14 +96,14 @@ pub trait BuiltinWorkbenchDefinition {
     /// Create model from workpiece and creator.
     fn model(creator: Creator) -> Model {
         let workpiece = Self::workpiece(creator);
-        let model = ModelBuilder::new(Element::BuiltinWorkpiece(workpiece), SrcRef(None)).build();
+        let model = ModelBuilder::new(Element::BuiltinWorkpiece(workpiece), SrcRef::none()).build();
 
         // Add a @input placeholder if we have a built-in operation or transform.
         // This assures that multiplicity for built-ins is working correctly.
         if Self::kind() == BuiltinWorkbenchKind::Operation
             || Self::kind() == BuiltinWorkbenchKind::Transform
         {
-            model.append(ModelBuilder::new(Element::InputPlaceholder, SrcRef(None)).build());
+            model.append(ModelBuilder::new(Element::InputPlaceholder, SrcRef::none()).build());
         }
         model
     }
@@ -127,14 +127,14 @@ pub trait BuiltinWorkbenchDefinition {
                         ))
                     })
                     .collect::<Models>()
-                    .to_multiplicity(SrcRef(None)),
+                    .to_multiplicity(SrcRef::none()),
             ))
         }
     }
 
     /// Workbench function
-    fn doc() -> Option<DocBlock> {
-        Self::help().map(DocBlock::new_builtin)
+    fn doc() -> Option<ir::DocBlock> {
+        Self::help().map(ir::DocBlock::new_builtin)
     }
 
     /// Part initialization parameters

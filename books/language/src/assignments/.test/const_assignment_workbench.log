@@ -26,7 +26,7 @@ Hello
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) const_assignment_workbench::MySketch() ->
+    Workpiece(Sketch) const_assignment_workbench::MySketch() ->
       - text = Hello
 
 Export error: Render error: Nothing to render

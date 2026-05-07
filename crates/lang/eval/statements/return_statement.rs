@@ -1,9 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::eval::*;
+use crate::{eval::*, lower::ir};
 
-impl Eval<Value> for ReturnStatement {
+impl Eval<Value> for ir::ReturnStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         log::debug!("Evaluating return statement to value: {self}");
         if let Some(result) = &self.result {

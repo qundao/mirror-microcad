@@ -12,7 +12,7 @@ mod section;
 
 pub use code_block::CodeBlock;
 pub use markdown::{Markdown, MarkdownError};
-pub use mdbook::{MdBookDirectory, MdBookDirectoryError};
+pub use mdbook::{MdBook, MdBookError};
 pub use paragraph::Paragraph;
 pub use section::Section;
 

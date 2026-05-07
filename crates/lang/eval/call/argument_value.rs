@@ -3,10 +3,10 @@
 
 //! Argument value evaluation entity
 
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::{syntax::*, ty::*, value::*};
+use crate::{ty::*, value::*};
 
 /// Argument value.
 #[derive(Clone, Debug, SrcReferrer)]

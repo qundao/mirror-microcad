@@ -10,7 +10,7 @@
 use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, Sender};
-use microcad_lang::{eval, syntax};
+use microcad_lang::{eval, lower::ir};
 use microcad_lang_base::{DiagHandler, HashMap, PushDiag, Refer, SrcRef, SrcReferrer};
 use microcad_lang_format::FormatConfig;
 use miette::IntoDiagnostic;
@@ -51,22 +51,19 @@ pub enum ProcessorResponse {
 }
 
 fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<Range> {
-    match src_ref.0 {
-        Some(src_ref_inner) => {
+    match src_ref.is_some() {
+        true => {
             use tower_lsp::lsp_types::{Position, Range};
 
-            let start = Position::new(
-                src_ref_inner.at.line as u32 - 1,
-                src_ref_inner.at.col as u32 - 1,
-            );
+            let start = Position::new(src_ref.at.line - 1, src_ref.at.col - 1);
             let end = Position::new(
-                src_ref_inner.at.line as u32 - 1,
-                (src_ref_inner.at.col + src_ref_inner.range.len()) as u32 - 1,
+                src_ref.at.line - 1,
+                (src_ref.at.col + src_ref.range.len() as u32) - 1,
             );
 
             Some(Range::new(start, end))
         }
-        None => None,
+        false => None,
     }
 }
 
@@ -130,12 +127,13 @@ impl Processor {
 
     /// Update (re-evaluate) a document.
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
-        self.context = match syntax::SourceFile::load(
+        self.context = match ir::SourceFile::load(
             url.to_file_path()
                 .map_err(|_| miette::miette!("Error converting {url} to file path."))?,
         ) {
             Ok(source_file) => {
-                self.buffers.insert(url.clone(), source_file.source.clone());
+                self.buffers
+                    .insert(url.clone(), source_file.source.to_string());
                 match eval::EvalContext::from_source(
                     source_file,
                     Some(microcad_builtin::builtin_module()),
@@ -172,9 +170,10 @@ impl Processor {
         let path = url
             .to_file_path()
             .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
-        self.context = match syntax::SourceFile::load_from_str(None, path, doc) {
+        self.context = match ir::SourceFile::load_from_str(None, path, doc) {
             Ok(source_file) => {
-                self.buffers.insert(url.clone(), source_file.source.clone());
+                self.buffers
+                    .insert(url.clone(), source_file.source.to_string());
                 match eval::EvalContext::from_source(
                     source_file,
                     Some(microcad_builtin::builtin_module()),
@@ -222,12 +221,12 @@ impl Processor {
 
     pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
         let src = self.get_document_string(url)?;
-        let doc =
-            microcad_syntax::parse(&src).map_err(|err| miette::miette!("Parse error: {err:?}"))?;
+        let doc = microcad_lang_parse::parse(&src)
+            .map_err(|err| miette::miette!("Parse error: {err:?}"))?;
 
         Ok(vec![ProcessorResponse::FormattedDocument {
             url: url.clone(),
-            code: microcad_lang_format::format(&doc.ast, &FormatConfig::default()),
+            code: microcad_lang_format::format(&doc, &FormatConfig::default()),
         }])
     }
 
@@ -240,7 +239,7 @@ impl Processor {
             FullDocumentDiagnosticReport {
                 result_id: None,
                 items: diag
-                    .diag_list
+                    .diagnostics
                     .iter()
                     .filter_map(|diag| {
                         let message = diag.message();

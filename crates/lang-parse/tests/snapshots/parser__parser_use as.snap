@@ -1,0 +1,81 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..27,
+        statements: StatementList {
+            span: 0..27,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    Use(
+                        UseStatement {
+                            span: 0..26,
+                            attributes: [],
+                            keyword_span: 4..7,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            visibility: Some(
+                                Public,
+                            ),
+                            name: UseName {
+                                span: 8..17,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [
+                                            Whitespace(
+                                                " ",
+                                            ),
+                                        ],
+                                    ),
+                                },
+                                parts: [
+                                    Identifier(
+                                        Identifier {
+                                            span: 8..11,
+                                            name: "foo",
+                                        },
+                                    ),
+                                    Identifier(
+                                        Identifier {
+                                            span: 13..16,
+                                            name: "bar",
+                                        },
+                                    ),
+                                ],
+                            },
+                            use_as: Some(
+                                Identifier {
+                                    span: 20..26,
+                                    name: "foobar",
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [],
+                    ),
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

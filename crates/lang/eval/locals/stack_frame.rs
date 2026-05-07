@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{Identifier, SrcRef};
 
 use crate::{
     eval::*,
@@ -90,6 +90,8 @@ impl StackFrame {
         idx: usize,
         mut depth: usize,
     ) -> std::fmt::Result {
+        use crate::lower::Identifiable;
+
         let locals = match self {
             StackFrame::Source(id, locals) => {
                 writeln!(f, "{:depth$}[{idx}] Source: {id:?}", "")?;

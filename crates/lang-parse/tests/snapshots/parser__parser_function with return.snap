@@ -1,0 +1,187 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..43,
+        statements: StatementList {
+            span: 0..43,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    Function(
+                        FunctionDefinition {
+                            span: 0..43,
+                            keyword_span: 0..2,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            doc: DocBlock {
+                                span: 0..43,
+                                lines: [],
+                            },
+                            attributes: [],
+                            visibility: None,
+                            name: Identifier {
+                                span: 3..6,
+                                name: "foo",
+                            },
+                            parameters: ParameterList {
+                                span: 7..16,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                parameters: [
+                                    Parameter {
+                                        span: 7..16,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        name: Identifier {
+                                            span: 7..8,
+                                            name: "a",
+                                        },
+                                        ty: Some(
+                                            Single(
+                                                SingleType {
+                                                    span: 10..16,
+                                                    name: "Length",
+                                                },
+                                            ),
+                                        ),
+                                        default: None,
+                                    },
+                                ],
+                            },
+                            return_type: Some(
+                                Single(
+                                    SingleType {
+                                        span: 21..27,
+                                        name: "Length",
+                                    },
+                                ),
+                            ),
+                            body: Body {
+                                span: 28..43,
+                                statements: StatementList {
+                                    span: 29..42,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    statements: [
+                                        (
+                                            Return(
+                                                Return {
+                                                    span: 29..41,
+                                                    keyword_span: 29..35,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    value: Some(
+                                                        BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 36..41,
+                                                                lhs: QualifiedName(
+                                                                    QualifiedName {
+                                                                        span: 36..37,
+                                                                        extras: ItemExtras {
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        },
+                                                                        parts: [
+                                                                            Identifier {
+                                                                                span: 36..37,
+                                                                                name: "a",
+                                                                            },
+                                                                        ],
+                                                                    },
+                                                                ),
+                                                                operation: BinaryOperator {
+                                                                    span: 38..39,
+                                                                    operation: Multiply,
+                                                                },
+                                                                rhs: Literal(
+                                                                    Literal {
+                                                                        span: 40..41,
+                                                                        extras: ItemExtras {
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [],
+                                                                            ),
+                                                                        },
+                                                                        literal: Integer(
+                                                                            IntegerLiteral {
+                                                                                span: 40..41,
+                                                                                value: 2,
+                                                                                raw: "2",
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ),
+                                                },
+                                            ),
+                                            TrailingExtras(
+                                                [],
+                                            ),
+                                        ),
+                                    ],
+                                    tail: None,
+                                },
+                            },
+                        },
+                    ),
+                    TrailingExtras(
+                        [],
+                    ),
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

@@ -20,7 +20,7 @@ impl<T> Refer<T> {
     pub fn none(value: T) -> Self {
         Self {
             value,
-            src_ref: SrcRef(None),
+            src_ref: SrcRef::none(),
         }
     }
     /// Create a `Refer` instance with source code reference
@@ -80,6 +80,9 @@ impl<T: std::iter::IntoIterator> std::iter::IntoIterator for Refer<T> {
 
 impl<T> From<Refer<T>> for SourceSpan {
     fn from(value: Refer<T>) -> Self {
-        value.src_ref.as_miette_span().unwrap_or_else(|| SourceSpan::new(0.into(), 0))
+        value
+            .src_ref
+            .as_miette_span()
+            .unwrap_or_else(|| SourceSpan::new(0.into(), 0))
     }
 }

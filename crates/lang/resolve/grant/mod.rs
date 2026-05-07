@@ -6,8 +6,10 @@
 mod context;
 mod scope;
 
-use crate::{resolve::*, syntax::*};
+use crate::resolve::*;
 use microcad_lang_base::{DiagResult, PushDiag, SrcRef, SrcReferrer};
+
+use crate::lower::ir;
 
 pub(crate) use context::*;
 pub(crate) use scope::*;
@@ -17,16 +19,16 @@ pub(super) trait Grant {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()>;
 }
 
-impl Grant for SourceFile {
+impl Grant for ir::SourceFile {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
-        context.scope(Scope(Source, SrcRef(None)), |context| {
+        context.scope(Scope(Source, SrcRef::none()), |context| {
             self.statements.grant(context)
         })
     }
 }
 
-impl Grant for ModuleDefinition {
+impl Grant for ir::ModuleDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(Module, self.keyword_ref.clone());
@@ -42,7 +44,7 @@ impl Grant for ModuleDefinition {
     }
 }
 
-impl Grant for StatementList {
+impl Grant for ir::StatementList {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(StatementList, self.src_ref());
@@ -56,9 +58,9 @@ impl Grant for StatementList {
     }
 }
 
-impl Grant for Statement {
+impl Grant for ir::Statement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use Statement::*;
+        use ir::Statement::*;
         match self {
             If(statement) => statement.grant(context),
             Init(statement) => statement.grant(context),
@@ -77,7 +79,7 @@ impl Grant for Statement {
     }
 }
 
-impl Grant for WorkbenchDefinition {
+impl Grant for ir::WorkbenchDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(Workbench, self.keyword_ref.clone());
@@ -90,7 +92,7 @@ impl Grant for WorkbenchDefinition {
     }
 }
 
-impl Grant for FunctionDefinition {
+impl Grant for ir::FunctionDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(Function, self.keyword_ref.clone());
@@ -98,7 +100,7 @@ impl Grant for FunctionDefinition {
         match parent.ty() {
             Source | Module => Ok(()),
             Workbench => {
-                use Visibility::*;
+                use ir::Visibility::*;
                 match self.visibility {
                     Private | PrivateUse(..) => Ok(()),
                     Public | Deleted => {
@@ -112,7 +114,7 @@ impl Grant for FunctionDefinition {
     }
 }
 
-impl Grant for InitDefinition {
+impl Grant for ir::InitDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(Init, self.keyword_ref.clone());
@@ -125,7 +127,7 @@ impl Grant for InitDefinition {
     }
 }
 
-impl Grant for ReturnStatement {
+impl Grant for ir::ReturnStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(Return, self.src_ref());
@@ -144,7 +146,7 @@ impl Grant for ReturnStatement {
     }
 }
 
-impl Grant for IfStatement {
+impl Grant for ir::IfStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(If, self.src_ref());
@@ -170,9 +172,9 @@ impl Grant for IfStatement {
     }
 }
 
-impl Grant for AssignmentStatement {
+impl Grant for ir::AssignmentStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use {Qualifier::*, ScopeType::*, Visibility::*};
+        use {ScopeType::*, ir::Qualifier::*, ir::Visibility::*};
         let scope = Scope(
             match (&self.assignment.visibility, &self.assignment.qualifier()) {
                 (Private | PrivateUse(_), Value) => ValueAssignment,
@@ -204,7 +206,7 @@ impl Grant for AssignmentStatement {
     }
 }
 
-impl Grant for Body {
+impl Grant for ir::Body {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(Body, self.src_ref());
@@ -224,15 +226,15 @@ impl Grant for Body {
     }
 }
 
-impl Body {
+impl ir::Body {
     fn check_workbench_body(
         &self,
         parent: &Scope,
         context: &mut GrantContext,
     ) -> ResolveResult<()> {
-        fn find_init((pos, stmt): (usize, &Statement)) -> Option<(usize, &InitDefinition)> {
+        fn find_init((pos, stmt): (usize, &ir::Statement)) -> Option<(usize, &ir::InitDefinition)> {
             match stmt {
-                Statement::Init(init) => Some((pos, init.as_ref())),
+                ir::Statement::Init(init) => Some((pos, init.as_ref())),
                 _ => None,
             }
         }
@@ -241,13 +243,13 @@ impl Body {
             self.iter().enumerate().rev().find_map(find_init),
         ) {
             use ResolveError::*;
-            let code_before_err = |stmt: &Statement| StatementNotAllowedPriorInitializers {
+            let code_before_err = |stmt: &ir::Statement| StatementNotAllowedPriorInitializers {
                 initializer: first_init.keyword_ref.clone(),
                 statement: stmt.src_ref(),
                 workbench: parent.src_ref(),
                 scope: parent.to_str(),
             };
-            let code_between_err = |stmt: &Statement| CodeBetweenInitializers {
+            let code_between_err = |stmt: &ir::Statement| CodeBetweenInitializers {
                 initializers: SrcRef::merge(&first_init.keyword_ref, &last_init.keyword_ref),
                 statement: stmt.src_ref(),
                 workbench: parent.src_ref(),
@@ -255,7 +257,7 @@ impl Body {
             };
 
             for (n, stmt) in self.iter().enumerate() {
-                use {Qualifier::*, Statement::*, Visibility::*};
+                use {ir::Qualifier::*, ir::Statement::*, ir::Visibility::*};
                 match stmt {
                     // ignore inits
                     Init(_) => (),
@@ -321,9 +323,9 @@ impl Body {
     }
 }
 
-impl Grant for UseStatement {
+impl Grant for ir::UseStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use {ScopeType::*, Visibility::*};
+        use {ScopeType::*, ir::Visibility::*};
         let scope = Scope(
             match self.visibility {
                 Private | PrivateUse(..) => Use,
@@ -350,7 +352,7 @@ impl Grant for UseStatement {
     }
 }
 
-impl Grant for ExpressionStatement {
+impl Grant for ir::ExpressionStatement {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(ExpressionStatement, self.src_ref());
@@ -365,9 +367,9 @@ impl Grant for ExpressionStatement {
     }
 }
 
-impl Grant for Expression {
+impl Grant for ir::Expression {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
-        use FormatStringInner::*;
+        use ir::FormatStringInner::*;
 
         {
             use ScopeType::*;
@@ -379,9 +381,9 @@ impl Grant for Expression {
             }
         }
 
-        use Expression::*;
+        use ir::Expression::*;
         match self {
-            Invalid | Expression::Literal(..) | QualifiedName(..) | Marker(..) => Ok(()),
+            Invalid | Literal(..) | QualifiedName(..) | Marker(..) => Ok(()),
             FormatString(fs) => {
                 fs.0.iter()
                     .filter_map(|fs| {
@@ -394,7 +396,7 @@ impl Grant for Expression {
                     .try_for_each(|exp| exp.grant(context))
             }
             ArrayExpression(ae) => {
-                if let ArrayExpressionInner::List(expressions) = &ae.inner {
+                if let ir::ArrayExpressionInner::List(expressions) = &ae.inner {
                     expressions.iter().try_for_each(|exp| exp.grant(context))
                 } else {
                     Ok(())

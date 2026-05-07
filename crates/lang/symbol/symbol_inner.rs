@@ -34,12 +34,12 @@ impl SymbolInner {
 impl SrcReferrer for SymbolInner {
     fn src_ref(&self) -> SrcRef {
         match &self.def {
-            SymbolDef::Root => SrcRef(None),
+            SymbolDef::Root => SrcRef::none(),
             SymbolDef::SourceFile(sf) => sf.src_ref(),
             SymbolDef::Module(m) => m.src_ref(),
             SymbolDef::Workbench(wb) => wb.src_ref(),
             SymbolDef::Function(f) => f.src_ref(),
-            SymbolDef::Builtin(_) => SrcRef(None),
+            SymbolDef::Builtin(_) => SrcRef::none(),
             SymbolDef::Assignment(a) => a.src_ref(),
             SymbolDef::Value(id, ..) => id.src_ref(),
             SymbolDef::Alias(_, id, _) => id.src_ref(),

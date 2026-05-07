@@ -16,7 +16,7 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) std::geo2d::Rect(height=1mm, width=1mm) ->
+    Workpiece(Sketch) std::geo2d::Rect(height=1mm, width=1mm) ->
       - height = 1mm
       - width = 1mm
       - x = -0.5mm

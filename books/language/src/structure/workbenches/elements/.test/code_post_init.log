@@ -24,10 +24,10 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) code_post_init::Wheel(radius=10mm, thickness=5mm) ->
+    Workpiece(Sketch) code_post_init::Wheel(radius=10mm, thickness=5mm) ->
       - radius = 10mm
       - thickness = 5mm
-      Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
         - center = (x=0mm, y=0mm)
         - radius = 10mm
         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->

@@ -6,8 +6,8 @@
 //! After parsing a source file (see [`mod@crate::parse`]) it must be resolved to get a symbol out of it:
 //!
 //! ```no_run
-//! use microcad_lang::{syntax::*, parse::*, resolve::*};
-//! let source_file = SourceFile::load("my.µcad").expect("parsing success");
+//! use microcad_lang::{lower::ir, resolve::*};
+//! let source_file = ir::SourceFile::load("my.µcad").expect("parsing success");
 //! let mut context = ResolveContext::create(
 //!     source_file,
 //!     &["./std/lib"],
@@ -26,7 +26,6 @@ mod resolve_error;
 mod sources;
 mod symbolize;
 
-use crate::syntax::*;
 pub use externals::*;
 pub use lookup::*;
 pub use resolve_context::*;
@@ -34,9 +33,3 @@ pub use resolve_error::*;
 pub use sources::*;
 
 use grant::*;
-
-/// Trait for items which can be fully qualified.
-pub trait FullyQualify {
-    /// Get a fully (up to root of symbol map) qualified name.
-    fn full_name(&self) -> QualifiedName;
-}

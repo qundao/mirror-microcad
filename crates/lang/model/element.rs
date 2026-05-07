@@ -3,7 +3,7 @@
 
 //! Element of a [`Model`].
 
-use crate::{builtin::*, model::*, syntax::*, value::*};
+use crate::{builtin::*, model::*, value::*};
 use strum::IntoStaticStr;
 
 /// An element defines the entity of a [`Model`].
@@ -43,11 +43,7 @@ impl Element {
     /// Get output type of element.
     pub fn output_type(&self) -> OutputType {
         match self {
-            Element::Workpiece(workpiece) => match workpiece.kind {
-                WorkbenchKind::Sketch => OutputType::Geometry2D,
-                WorkbenchKind::Part => OutputType::Geometry3D,
-                WorkbenchKind::Operation => OutputType::NotDetermined,
-            },
+            Element::Workpiece(workpiece) => workpiece.kind.into(),
             Element::BuiltinWorkpiece(builtin_workpiece) => match builtin_workpiece.kind {
                 BuiltinWorkbenchKind::Primitive2D => OutputType::Geometry2D,
                 BuiltinWorkbenchKind::Primitive3D => OutputType::Geometry3D,
@@ -58,21 +54,6 @@ impl Element {
             Element::Group | Element::Multiplicity | Element::InputPlaceholder => {
                 OutputType::NotDetermined
             }
-        }
-    }
-
-    /// Check if an element is an operation.
-    pub fn is_operation(&self) -> bool {
-        match self {
-            Element::BuiltinWorkpiece(builtin_workpiece) => match builtin_workpiece.kind {
-                BuiltinWorkbenchKind::Primitive2D | BuiltinWorkbenchKind::Primitive3D => false,
-                BuiltinWorkbenchKind::Operation | BuiltinWorkbenchKind::Transform => true,
-            },
-            Element::Multiplicity | Element::Group | Element::InputPlaceholder => false,
-            Element::Workpiece(workpiece) => match workpiece.kind {
-                WorkbenchKind::Part | WorkbenchKind::Sketch => false,
-                WorkbenchKind::Operation => true,
-            },
         }
     }
 }

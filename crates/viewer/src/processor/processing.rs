@@ -4,9 +4,9 @@
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
 use microcad_lang::{
+    lower::ir::SourceFile,
     model::Model,
     render::{GeometryOutput, RenderContext, RenderWithContext},
-    syntax::SourceFile,
 };
 use microcad_lang_base::Diag;
 

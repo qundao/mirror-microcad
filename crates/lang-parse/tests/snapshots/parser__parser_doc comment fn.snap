@@ -1,0 +1,124 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..46,
+        statements: StatementList {
+            span: 0..46,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    Function(
+                        FunctionDefinition {
+                            span: 0..46,
+                            keyword_span: 20..22,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            doc: DocBlock {
+                                span: 0..20,
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            },
+                            attributes: [],
+                            visibility: None,
+                            name: Identifier {
+                                span: 23..26,
+                                name: "Foo",
+                            },
+                            parameters: ParameterList {
+                                span: 27..27,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                parameters: [],
+                            },
+                            return_type: None,
+                            body: Body {
+                                span: 29..46,
+                                statements: StatementList {
+                                    span: 30..45,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [
+                                                Whitespace(
+                                                    "\n        ",
+                                                ),
+                                            ],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    statements: [],
+                                    tail: Some(
+                                        ExpressionStatement {
+                                            span: 39..45,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            attributes: [],
+                                            expression: Literal(
+                                                Literal {
+                                                    span: 39..45,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [
+                                                                Whitespace(
+                                                                    "\n    ",
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 39..40,
+                                                            value: 1,
+                                                            raw: "1",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            },
+                        },
+                    ),
+                    TrailingExtras(
+                        [],
+                    ),
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

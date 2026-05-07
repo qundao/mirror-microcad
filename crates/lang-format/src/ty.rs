@@ -3,7 +3,7 @@
 
 use crate::{BreakMode, Format, FormatConfig, Node, node};
 
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl Format for ast::Unit {
     fn format(&self, _: &FormatConfig) -> Node {

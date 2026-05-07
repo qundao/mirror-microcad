@@ -7,9 +7,9 @@ use derive_more::Deref;
 use microcad_core::{Color, Mat3, Scalar};
 use microcad_lang::{
     model::{AttributesAccess, Model},
-    syntax::Identifier,
     value::{Value, ValueAccess},
 };
+use microcad_lang_base::Identifier;
 
 #[derive(Debug, Clone)]
 pub enum SvgTagAttribute {

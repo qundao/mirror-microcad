@@ -63,31 +63,30 @@ impl Iterator for RecurseChildren {
 
 #[test]
 fn test_recurse_children() {
+    use crate::lower::ir;
     use crate::symbol::SymbolDef;
-    use crate::syntax::*;
 
     let mut root = Symbol::new(
-        SymbolDef::SourceFile(std::rc::Rc::new(SourceFile::new(
+        SymbolDef::SourceFile(std::rc::Rc::new(ir::SourceFile::new(
             None,
-            StatementList::default(),
-            String::new(),
-            0,
+            ir::StatementList::default(),
+            microcad_lang_base::Hashed::new(String::new()),
         ))),
         None,
     );
 
     let mut foo = Symbol::new(
-        SymbolDef::Tester(Identifier::no_ref("foo")),
+        SymbolDef::Tester(ir::Identifier::no_ref("foo")),
         Some(root.clone()),
     );
     {
         let mut baz = Symbol::new(
-            SymbolDef::Tester(Identifier::no_ref("baz")),
+            SymbolDef::Tester(ir::Identifier::no_ref("baz")),
             Some(foo.clone()),
         );
         {
             let bam = Symbol::new(
-                SymbolDef::Tester(Identifier::no_ref("bam")),
+                SymbolDef::Tester(ir::Identifier::no_ref("bam")),
                 Some(baz.clone()),
             );
             baz.add_symbol(bam).expect("test error");
@@ -98,7 +97,7 @@ fn test_recurse_children() {
     root.add_symbol(foo).expect("test error");
 
     let bar = Symbol::new(
-        SymbolDef::Tester(Identifier::no_ref("bar")),
+        SymbolDef::Tester(ir::Identifier::no_ref("bar")),
         Some(root.clone()),
     );
     root.add_symbol(bar).expect("test error");

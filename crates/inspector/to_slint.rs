@@ -7,6 +7,7 @@ use crate::*;
 
 use microcad_builtin::Symbol;
 use microcad_lang::{
+    lower::ir,
     model::{Creator, Element, Model},
     symbol::SymbolInfo,
 };
@@ -34,13 +35,10 @@ pub fn model_rc_from_items<T: Sized + Clone + 'static>(items: Vec<T>) -> slint::
 
 impl From<&SrcRef> for VM_SrcRef {
     fn from(src_ref: &SrcRef) -> Self {
-        let src_ref = src_ref.as_ref();
         Self {
-            line: src_ref.map(|src_ref| src_ref.at.line).unwrap_or_default() as i32,
-            col: src_ref.map(|src_ref| src_ref.at.col).unwrap_or_default() as i32,
-            source_hash: src_ref
-                .map(|src_ref| hash_to_shared_string(src_ref.source_file_hash))
-                .unwrap_or_default(),
+            line: src_ref.at.line as i32,
+            col: src_ref.at.col as i32,
+            source_hash: hash_to_shared_string(src_ref.source_hash),
         }
     }
 }
@@ -54,8 +52,8 @@ impl From<&Refer<Element>> for VM_Element {
     }
 }
 
-impl From<&DocBlock> for VM_DocBlock {
-    fn from(doc: &DocBlock) -> Self {
+impl From<&ir::DocBlock> for VM_DocBlock {
+    fn from(doc: &ir::DocBlock) -> Self {
         Self {
             lines: doc.0.join("\n").to_shared_string(),
             src_ref: (&doc.src_ref()).into(),

@@ -1,0 +1,75 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..18,
+        statements: StatementList {
+            span: 0..18,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    Const(
+                        ConstAssignment {
+                            span: 0..17,
+                            keyword_span: 4..9,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            doc: DocBlock {
+                                span: 0..18,
+                                lines: [],
+                            },
+                            attributes: [],
+                            visibility: Some(
+                                Public,
+                            ),
+                            name: Identifier {
+                                span: 10..13,
+                                name: "FOO",
+                            },
+                            ty: None,
+                            value: Literal(
+                                Literal {
+                                    span: 16..17,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Integer(
+                                        IntegerLiteral {
+                                            span: 16..17,
+                                            value: 1,
+                                            raw: "1",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [],
+                    ),
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

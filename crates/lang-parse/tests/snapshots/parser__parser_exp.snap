@@ -1,0 +1,271 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..36,
+        statements: StatementList {
+            span: 0..36,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 0..5,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            attributes: [],
+                            expression: Literal(
+                                Literal {
+                                    span: 0..5,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Float(
+                                        FloatLiteral {
+                                            span: 0..5,
+                                            value: 0.0001,
+                                            raw: ".1e-3",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
+                ),
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 7..12,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            attributes: [],
+                            expression: Literal(
+                                Literal {
+                                    span: 7..12,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Float(
+                                        FloatLiteral {
+                                            span: 7..12,
+                                            value: 100.0,
+                                            raw: ".1e+3",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
+                ),
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 14..18,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            attributes: [],
+                            expression: Literal(
+                                Literal {
+                                    span: 14..18,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Float(
+                                        FloatLiteral {
+                                            span: 14..18,
+                                            value: 100.0,
+                                            raw: ".1e3",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
+                ),
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 20..24,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            attributes: [],
+                            expression: Literal(
+                                Literal {
+                                    span: 20..24,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Float(
+                                        FloatLiteral {
+                                            span: 20..24,
+                                            value: 1000.0,
+                                            raw: "1.e3",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
+                ),
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 26..31,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            attributes: [],
+                            expression: Literal(
+                                Literal {
+                                    span: 26..31,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    literal: Float(
+                                        FloatLiteral {
+                                            span: 26..31,
+                                            value: 1200.0,
+                                            raw: "1.2e3",
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [
+                            Whitespace(
+                                " ",
+                            ),
+                        ],
+                    ),
+                ),
+            ],
+            tail: Some(
+                ExpressionStatement {
+                    span: 33..36,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
+                        ),
+                    },
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 33..36,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            literal: Float(
+                                FloatLiteral {
+                                    span: 33..36,
+                                    value: 1000.0,
+                                    raw: "1e3",
+                                },
+                            ),
+                        },
+                    ),
+                },
+            ),
+        },
+    },
+)

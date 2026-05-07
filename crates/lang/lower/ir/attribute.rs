@@ -1,0 +1,131 @@
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Attribute syntax entities.
+
+use crate::lower::{Identifiable, SingleIdentifier, ir};
+
+use derive_more::{Deref, DerefMut};
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
+use microcad_lang_proc_macros::SrcReferrer;
+
+/// *Command syntax* within an attribute.
+#[derive(Clone, Debug)]
+pub enum AttributeCommand {
+    /// A bare name
+    Ident(Identifier),
+    /// A command with optional arguments: `width(offset = 30mm)`.
+    Call(ir::Call),
+    /// An assignment: `color = "red"`.
+    Assignment {
+        /// Source code reference.
+        src_ref: SrcRef,
+        /// Name of the assignment.
+        name: Identifier,
+        /// Value name of the assignment.
+        value: ir::Expression,
+    },
+}
+
+impl Identifiable for AttributeCommand {
+    /// Id of the attribute command
+    fn id_ref(&self) -> &Identifier {
+        match self {
+            AttributeCommand::Ident(name) => name,
+            AttributeCommand::Call(call) => call
+                .name
+                .single_identifier()
+                .expect("non-identifier attribute call"),
+            AttributeCommand::Assignment { name, .. } => name,
+        }
+    }
+}
+
+impl std::fmt::Display for AttributeCommand {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            AttributeCommand::Ident(name) => write!(f, "{name}"),
+            AttributeCommand::Call(call) => write!(f, "{call}"),
+            AttributeCommand::Assignment { name, value, .. } => write!(f, "{name} = {value}"),
+        }
+    }
+}
+
+impl SrcReferrer for AttributeCommand {
+    fn src_ref(&self) -> SrcRef {
+        match &self {
+            AttributeCommand::Ident(name) => name.src_ref(),
+            AttributeCommand::Call(call) => call.src_ref(),
+            AttributeCommand::Assignment { src_ref, .. } => src_ref.clone(),
+        }
+    }
+}
+
+/// An attribute item.
+#[derive(Clone, Debug, SrcReferrer)]
+pub struct Attribute {
+    /// Attribute commands: `export = "test.stl", height(30mm)`.
+    pub commands: Vec<AttributeCommand>,
+    /// Tells if the attribute is an inner attribute: `#[...]` (outer) vs `#![...]` (inner).
+    pub is_inner: bool,
+    /// Source reference
+    pub src_ref: SrcRef,
+}
+
+impl Attribute {
+    /// Return some command it is the only one in the list.
+    pub fn single_command(&self) -> Option<&AttributeCommand> {
+        match self.commands.len() {
+            1 => self.commands.first(),
+            _ => None,
+        }
+    }
+}
+
+impl std::fmt::Display for Attribute {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self.is_inner {
+            true => write!(f, "#![")?,
+            false => write!(f, "#[")?,
+        }
+        write!(
+            f,
+            "{}",
+            self.commands
+                .iter()
+                .map(|command| command.to_string())
+                .collect::<Vec<_>>()
+                .join(", ")
+        )?;
+        writeln!(f, "]")
+    }
+}
+
+/// A list of attributes, e.g. `#foo #[bar, baz = 42]`
+#[derive(Clone, Debug, Default, Deref, DerefMut)]
+pub struct AttributeList(Vec<Attribute>);
+
+impl From<Vec<Attribute>> for AttributeList {
+    fn from(value: Vec<Attribute>) -> Self {
+        AttributeList(value)
+    }
+}
+
+impl std::fmt::Display for AttributeList {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.iter().try_for_each(|attr| writeln!(f, "{attr}"))
+    }
+}
+
+impl SrcReferrer for AttributeList {
+    fn src_ref(&self) -> SrcRef {
+        if self.0.is_empty() {
+            SrcRef::none()
+        } else {
+            SrcRef::merge(
+                &self.0.first().expect("One element").src_ref(),
+                &self.0.last().expect("Second element").src_ref(),
+            )
+        }
+    }
+}

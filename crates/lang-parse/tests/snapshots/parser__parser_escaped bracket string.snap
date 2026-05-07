@@ -1,0 +1,54 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..35,
+        statements: StatementList {
+            span: 0..35,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [],
+            tail: Some(
+                ExpressionStatement {
+                    span: 0..35,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
+                        ),
+                    },
+                    attributes: [],
+                    expression: Literal(
+                        Literal {
+                            span: 0..35,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            literal: String(
+                                StringLiteral {
+                                    span: 0..35,
+                                    content: "string { with } escaped bracket",
+                                },
+                            ),
+                        },
+                    ),
+                },
+            ),
+        },
+    },
+)

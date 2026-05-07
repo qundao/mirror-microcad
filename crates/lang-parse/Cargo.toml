@@ -1,0 +1,35 @@
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-lang-parse"
+description = "µcad language syntax lexer and parser"
+documentation = "https://docs.rs/microcad-lang-parse"
+authors.workspace = true
+version.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+
+[dependencies]
+logos = "0.16.0"
+chumsky = "0.13.0"
+thiserror = "2.0.17"
+miette = "7.6.0"
+either = "1.15.0"
+
+microcad-lang-base = { workspace = true }
+
+[dev-dependencies]
+insta = { version = "1.45.0" }
+test-case = "3.3.1"
+miette = { version = "7.6.0", features = ["fancy"] }
+
+[lints.rust]
+missing_docs = "warn"
+
+[lints.clippy]
+unwrap_used = "warn"

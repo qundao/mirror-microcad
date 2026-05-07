@@ -1,0 +1,137 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..25,
+        statements: StatementList {
+            span: 0..25,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [],
+            tail: Some(
+                ExpressionStatement {
+                    span: 0..25,
+                    extras: ItemExtras {
+                        leading: LeadingExtras(
+                            [],
+                        ),
+                        trailing: TrailingExtras(
+                            [],
+                        ),
+                    },
+                    attributes: [],
+                    expression: ArrayList(
+                        ArrayListExpression {
+                            span: 0..25,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            items: [
+                                ArrayItem {
+                                    span: 1..12,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    expression: Literal(
+                                        Literal {
+                                            span: 1..12,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                        Comment(
+                                                            Comment {
+                                                                span: 3..12,
+                                                                inner: MultiLine(
+                                                                    "foo",
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                ),
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 1..2,
+                                                    value: 1,
+                                                    raw: "1",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                                ArrayItem {
+                                    span: 13..24,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    expression: Literal(
+                                        Literal {
+                                            span: 13..24,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                        Comment(
+                                                            Comment {
+                                                                span: 15..24,
+                                                                inner: MultiLine(
+                                                                    "bar",
+                                                                ),
+                                                            },
+                                                        ),
+                                                    ],
+                                                ),
+                                            },
+                                            literal: Integer(
+                                                IntegerLiteral {
+                                                    span: 13..14,
+                                                    value: 2,
+                                                    raw: "2",
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                },
+                            ],
+                            unit: None,
+                        },
+                    ),
+                },
+            ),
+        },
+    },
+)

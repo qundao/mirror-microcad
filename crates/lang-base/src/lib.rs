@@ -3,6 +3,8 @@
 
 //! µcad language base components for error handling etc.
 
+use std::str::FromStr;
+
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
 mod code_display;
@@ -14,21 +16,31 @@ mod rc;
 mod src_ref;
 mod tree_display;
 
+pub use compact_str::{CompactString, ToCompactString};
+
 /// Id type (base of all identifiers)
-pub type Id = compact_str::CompactString;
+pub type Id = CompactString;
+
+/// URL to locate sources.
+pub use url::Url;
+
+pub fn virtual_url() -> Url {
+    Url::from_str("virtual://file").unwrap()
+}
 
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
 
 pub use code_display::*;
 pub use diag::{
-    Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Level, PushDiag,
+    Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Diagnostics, Level,
+    PushDiag,
 };
 pub use identifier::Identifier;
 pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
-pub use src_ref::{Refer, SrcRef, SrcRefInner, SrcReferrer};
+pub use src_ref::{LineCol, LineIndex, Refer, Span, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
@@ -40,7 +52,7 @@ pub struct MietteSourceFile<'a> {
     /// Name of of file
     pub name: String,
     /// Line offset (e.g. used when source comes from a markdown file).
-    pub line_offset: usize,
+    pub line_offset: u32,
 }
 
 impl MietteSourceFile<'static> {
@@ -68,7 +80,7 @@ impl SourceCode for MietteSourceFile<'_> {
             self.name.clone(),
             inner_contents.data(),
             *inner_contents.span(),
-            inner_contents.line() + self.line_offset,
+            inner_contents.line() + self.line_offset as usize,
             inner_contents.column(),
             inner_contents.line_count(),
         )
@@ -107,24 +119,6 @@ pub fn shorten(what: &str, max_chars: usize) -> String {
     } else {
         short
     }
-}
-
-/// Shortens given string to it's first line and to maximum characters.
-#[macro_export]
-macro_rules! shorten {
-    ($what:expr) => {
-        $crate::shorten(&format!("{}", $what), 140)
-    };
-    ($what:expr,$shorten:expr) => {
-        if $shorten {
-            $crate::shorten!($what)
-        } else {
-            $what
-        }
-    };
-    ($what:expr, $max_chars:literal) => {
-        shorten(format!("{}", $what).lines(), max_chars)
-    };
 }
 
 /// Create a marker string which is colored with ANSI.

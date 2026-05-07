@@ -5,9 +5,13 @@
 
 use microcad_lang_base::PushDiag;
 
-use crate::{eval::*, syntax::*, value::*};
+use crate::{
+    eval::*,
+    lower::{Identifiable, ir},
+    value::*,
+};
 
-impl CallTrait for FunctionDefinition {
+impl CallTrait for ir::FunctionDefinition {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
         match ArgumentMatch::find_multi_match(args, &self.signature.parameters.eval(context)?) {
             Ok(matches) => {

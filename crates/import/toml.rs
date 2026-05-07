@@ -31,7 +31,7 @@ impl TomlImporter {
                 map.iter()
                     .map(|(k, v)| (Identifier::no_ref(k), Self::toml_to_value(v)))
                     .collect(),
-                SrcRef(None),
+                SrcRef::none(),
             ))),
         }
     }

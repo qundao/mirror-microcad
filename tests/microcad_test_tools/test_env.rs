@@ -16,7 +16,7 @@ pub struct TestEnv {
     mode: String,
     params: Option<String>,
     code: String,
-    start_no: usize,
+    start_no: u32,
     log_file: Option<std::fs::File>,
 }
 
@@ -89,7 +89,7 @@ impl TestEnv {
         path: impl AsRef<std::path::Path>,
         name: &str,
         code: &str,
-        start_no: usize,
+        line_offset: u32,
     ) -> Option<Self> {
         let orig_name = name.to_string();
         // split name into `name` and optional `mode`
@@ -119,7 +119,7 @@ impl TestEnv {
                 mode: mode.unwrap_or("ok").to_string(),
                 params: params.map(|p| p.to_string()),
                 code: code.into(),
-                start_no,
+                start_no: line_offset,
                 log_file: None,
             })
         }
@@ -237,12 +237,12 @@ impl TestEnv {
     }
 
     /// Map line number into MD-line number.
-    pub fn offset_line(&self, line_no: usize) -> usize {
+    pub fn offset_line(&self, line_no: u32) -> u32 {
         line_no + self.start_no
     }
 
     /// Map line number into MD-line number.
-    pub fn offset(&self) -> usize {
+    pub fn offset(&self) -> u32 {
         self.start_no
     }
 
@@ -283,7 +283,7 @@ impl TestEnv {
         }
     }
 
-    fn diff(&mut self, left: &HashSet<usize>, right: &HashSet<usize>, message: &str) -> bool {
+    fn diff(&mut self, left: &HashSet<u32>, right: &HashSet<u32>, message: &str) -> bool {
         let mut diff = left.difference(right).collect::<Vec<_>>();
         if diff.is_empty() {
             true
@@ -306,15 +306,15 @@ impl TestEnv {
     /// Report wrong errors into log file.
     pub fn report_wrong_errors(
         &mut self,
-        error_lines: &HashSet<usize>,
-        warning_lines: &HashSet<usize>,
+        error_lines: &HashSet<u32>,
+        warning_lines: &HashSet<u32>,
     ) -> bool {
-        fn lines_with(code: &str, marker: &str, offset: usize) -> HashSet<usize> {
+        fn lines_with(code: &str, marker: &str, offset: u32) -> HashSet<u32> {
             code.lines()
                 .enumerate()
                 .filter_map(|line| {
                     if line.1.contains(marker) {
-                        Some(line.0 + offset)
+                        Some(line.0 as u32 + offset)
                     } else {
                         None
                     }

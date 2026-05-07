@@ -11,8 +11,8 @@ pub mod debug {
     use microcad_lang::{
         builtin::ValueAccess,
         eval::{ArgumentMatch, EvalContext, EvalError, EvalResult},
+        lower::ir::{Identifier, QualifiedName},
         parameter,
-        syntax::{Identifier, QualifiedName},
         value::Value,
     };
     use microcad_lang_base::{PushDiag, SrcReferrer};
@@ -108,7 +108,7 @@ pub mod debug {
         // Hack split input string and construct a qualified name.
         let name = QualifiedName::new(
             name.split("::").map(Identifier::no_ref).collect(),
-            microcad_lang_base::SrcRef(None),
+            microcad_lang_base::SrcRef::none(),
         );
         use microcad_lang::resolve::Lookup;
         Ok(

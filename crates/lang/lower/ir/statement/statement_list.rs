@@ -1,0 +1,32 @@
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Statement list syntax element.
+
+use crate::lower::ir;
+
+use derive_more::Deref;
+use microcad_lang_base::{SrcRef, SrcReferrer};
+
+/// A list of statements.
+#[derive(Clone, Debug, Default, Deref)]
+pub struct StatementList(pub Vec<ir::Statement>);
+
+impl std::fmt::Display for StatementList {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for statement in self.iter() {
+            writeln!(f, "{statement}")?;
+        }
+        Ok(())
+    }
+}
+
+impl SrcReferrer for StatementList {
+    fn src_ref(&self) -> SrcRef {
+        if let (Some(first), Some(last)) = (self.first(), self.last()) {
+            SrcRef::merge(first, last)
+        } else {
+            SrcRef::none()
+        }
+    }
+}

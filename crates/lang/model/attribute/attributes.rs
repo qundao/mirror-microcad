@@ -5,7 +5,8 @@
 
 use derive_more::{Deref, DerefMut};
 
-use crate::{model::*, syntax::Identifier};
+use crate::model::*;
+use microcad_lang_base::Identifier;
 
 /// Model attributes, from an evaluated attribute list.
 ///

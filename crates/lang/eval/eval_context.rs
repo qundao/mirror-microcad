@@ -7,14 +7,20 @@ use microcad_lang_base::{
     SrcReferrer, TreeDisplay, TreeState,
 };
 
-use crate::{builtin::*, eval::*, model::*, symbol::SymbolDef, syntax::*};
+use crate::{
+    builtin::*,
+    eval::*,
+    lower::{SingleIdentifier, ir},
+    model::*,
+    symbol::SymbolDef,
+};
 
 /// *Context* for *evaluation* of a resolved µcad file.
 ///
 /// The context is used to store the current state of the evaluation.
 pub struct EvalContext {
     /// Symbol table
-    root: Symbol,
+    pub root: Symbol,
     /// Source cache
     sources: Sources,
     /// Stack of currently opened scopes with symbols while evaluation.
@@ -46,7 +52,7 @@ impl EvalContext {
             output,
             exporters,
             importers,
-            ..Default::default()
+            stack: Stack::default(),
         }
     }
 
@@ -57,13 +63,13 @@ impl EvalContext {
 
     /// Create a new context from a source file.
     pub fn from_source(
-        root: std::rc::Rc<SourceFile>,
+        root: std::rc::Rc<ir::SourceFile>,
         builtin: Option<Symbol>,
         search_paths: &[impl AsRef<std::path::Path>],
         output: Box<dyn Output>,
         exporters: ExporterRegistry,
         importers: ImporterRegistry,
-        line_offset: usize,
+        line_offset: u32,
     ) -> EvalResult<Self> {
         Ok(Self::new(
             ResolveContext::create(root, search_paths, builtin, DiagHandler::new(line_offset))?,
@@ -207,7 +213,7 @@ impl EvalContext {
     }
 
     /// Lookup a property by qualified name.
-    fn lookup_property(&self, name: &QualifiedName) -> EvalResult<Symbol> {
+    fn lookup_property(&self, name: &ir::QualifiedName) -> EvalResult<Symbol> {
         log::trace!(
             "{lookup} for property {name:?}",
             lookup = microcad_lang_base::mark!(LOOKUP)
@@ -237,7 +243,7 @@ impl EvalContext {
 
     fn lookup_workbench(
         &self,
-        name: &QualifiedName,
+        name: &ir::QualifiedName,
         target: LookupTarget,
     ) -> ResolveResult<Symbol> {
         if let Some(workbench) = &self.stack.current_call_name() {
@@ -271,7 +277,11 @@ impl EvalContext {
         }
     }
 
-    fn lookup_within(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
+    fn lookup_within(
+        &self,
+        name: &ir::QualifiedName,
+        target: LookupTarget,
+    ) -> ResolveResult<Symbol> {
         self.root.lookup_within(
             name,
             &self.root.search(&self.stack.current_module_name(), false)?,
@@ -305,27 +315,13 @@ impl Locals for EvalContext {
         self.stack.get_model()
     }
 
-    fn current_name(&self) -> QualifiedName {
+    fn current_name(&self) -> ir::QualifiedName {
         self.stack.current_name()
     }
 }
 
-impl Default for EvalContext {
-    fn default() -> Self {
-        Self {
-            root: Default::default(),
-            sources: Default::default(),
-            stack: Default::default(),
-            output: microcad_lang_base::Stdout::new(),
-            exporters: Default::default(),
-            importers: Default::default(),
-            diag: Default::default(),
-        }
-    }
-}
-
 impl Lookup<EvalError> for EvalContext {
-    fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> EvalResult<Symbol> {
+    fn lookup(&self, name: &ir::QualifiedName, target: LookupTarget) -> EvalResult<Symbol> {
         log::debug!("Lookup {target} '{name:?}' (at line {:?}):", name.src_ref());
 
         log::trace!("- lookups -------------------------------------------------------");
@@ -419,7 +415,7 @@ impl Lookup<EvalError> for EvalContext {
                     symbol.set_used();
                     Ok(symbol.clone())
                 } else {
-                    let others: QualifiedNames =
+                    let others: ir::QualifiedNames =
                         found.iter().map(|(_, symbol)| symbol.full_name()).collect();
                     log::debug!(
                         "{ambiguous} symbol '{name:?}' in {others:?}:\n{self:?}",
@@ -438,7 +434,7 @@ impl Lookup<EvalError> for EvalContext {
         }
     }
 
-    fn ambiguity_error(ambiguous: QualifiedName, others: QualifiedNames) -> EvalError {
+    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> EvalError {
         EvalError::AmbiguousSymbol(ambiguous, others)
     }
 }
@@ -456,11 +452,11 @@ impl microcad_lang_base::Diag for EvalContext {
         self.diag.error_count()
     }
 
-    fn error_lines(&self) -> HashSet<usize> {
+    fn error_lines(&self) -> HashSet<u32> {
         self.diag.error_lines()
     }
 
-    fn warning_lines(&self) -> HashSet<usize> {
+    fn warning_lines(&self) -> HashSet<u32> {
         self.diag.warning_lines()
     }
 }
@@ -479,7 +475,7 @@ impl PushDiag for EvalContext {
 }
 
 impl GetSourceByHash for EvalContext {
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::SourceFile>> {
         self.sources.get_by_hash(hash)
     }
 }

@@ -58,7 +58,7 @@ impl Doc {
         let context = self.resolve.run(cli)?;
         let symbol = context
             .root
-            .get_child(&microcad_lang::syntax::Identifier::no_ref("mod")) // FIXME. This symbol should have same name as its parent directory (e.g. `std`)
+            .get_child(&microcad_lang_base::Identifier::no_ref("mod")) // FIXME. This symbol should have same name as its parent directory (e.g. `std`)
             .expect("Symbol");
 
         Ok(symbol)

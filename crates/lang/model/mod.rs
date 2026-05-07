@@ -32,9 +32,11 @@ use microcad_core::{
     BooleanOp, Integer,
     hash::{ComputedHash, HashId},
 };
-use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState, WriteToFile};
+use microcad_lang_base::{
+    Identifier, RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState, WriteToFile,
+};
 
-use crate::{syntax::Identifier, value::Value};
+use crate::{lower::ir::WorkbenchKind, value::Value};
 
 /// A reference counted, mutable [`Model`].
 #[derive(Clone, Deref, DerefMut)]
@@ -251,19 +253,22 @@ impl std::fmt::Debug for Model {
         write!(
             f,
             "{}",
-            microcad_lang_base::shorten!(format!(
-                "{id}{element}{is_root} ->",
-                id = match &self.borrow().id {
-                    Some(id) => format!("{id:?}: "),
-                    None => String::new(),
-                },
-                element = *self.borrow().element,
-                is_root = if self.parents().next().is_some() {
-                    ""
-                } else {
-                    " (root)"
-                }
-            ))
+            microcad_lang_base::shorten(
+                &format!(
+                    "{id}{element}{is_root} ->",
+                    id = match &self.borrow().id {
+                        Some(id) => format!("{id:?}: "),
+                        None => String::new(),
+                    },
+                    element = *self.borrow().element,
+                    is_root = if self.parents().next().is_some() {
+                        ""
+                    } else {
+                        " (root)"
+                    }
+                ),
+                140
+            )
         )
     }
 }

@@ -7,11 +7,14 @@ use std::rc::Rc;
 
 use crate::{
     builtin::*,
-    symbol::{Info, SymbolInfo},
-    syntax::{
-        Assignment, FunctionDefinition, Identifiable, ModuleDefinition, QualifiedName, SourceFile,
-        Visibility, WorkbenchDefinition,
+    lower::{
+        Identifiable,
+        ir::{
+            Assignment, FunctionDefinition, ModuleDefinition, QualifiedName, SourceFile,
+            Visibility, WorkbenchDefinition,
+        },
     },
+    symbol::{Info, SymbolInfo},
     value::*,
 };
 
@@ -103,7 +106,7 @@ impl SymbolDef {
     pub(crate) fn source_hash(&self) -> u64 {
         match self {
             Self::Root => 0,
-            Self::SourceFile(sf) => sf.hash,
+            Self::SourceFile(sf) => sf.source_hash(),
             Self::Module(md) => md.src_ref().source_hash(),
             Self::Workbench(wd) => wd.src_ref().source_hash(),
             Self::Function(fd) => fd.src_ref().source_hash(),

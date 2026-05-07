@@ -5,8 +5,15 @@
 
 #![allow(unused, unused_assignments)]
 
-use crate::{eval::*, model::OutputType, parse::*, resolve::*, syntax::*, ty::*, value::*};
-use microcad_lang_base::{DiagError, SrcRef};
+use crate::{
+    eval::*,
+    lower::{LowerError, ir},
+    model::OutputType,
+    resolve::*,
+    ty::*,
+    value::*,
+};
+use microcad_lang_base::{DiagError, Identifier, SrcRef};
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -44,15 +51,15 @@ pub enum EvalError {
 
     /// Symbol not found.
     #[error("Symbol {0} not found.")]
-    SymbolNotFound(QualifiedName),
+    SymbolNotFound(ir::QualifiedName),
 
     /// The symbol cannot be called, e.g. when it is a source file or a module.
     #[error("Symbol `{0}` cannot be called.")]
-    SymbolCannotBeCalled(QualifiedName),
+    SymbolCannotBeCalled(ir::QualifiedName),
 
     /// Found ambiguous symbols.
     #[error("Ambiguous symbol {0} might be one of the following: {1}")]
-    AmbiguousSymbol(QualifiedName, QualifiedNames),
+    AmbiguousSymbol(ir::QualifiedName, ir::QualifiedNames),
 
     /// Local Symbol not found.
     #[error("Local symbol not found: {0}")]
@@ -64,7 +71,7 @@ pub enum EvalError {
 
     /// A property of a value was not found.
     #[error("Not a property id: {0}")]
-    NoPropertyId(QualifiedName),
+    NoPropertyId(ir::QualifiedName),
 
     /// Argument count mismatch.
     #[error("Argument count mismatch: expected {expected}, got {found} in {args}")]
@@ -108,11 +115,11 @@ pub enum EvalError {
 
     /// Unknown method.
     #[error("Unknown method `{0}`")]
-    UnknownMethod(QualifiedName),
+    UnknownMethod(ir::QualifiedName),
 
     /// Parser Error
     #[error("Parsing error {0}")]
-    ParseError(#[from] ParseError),
+    LowerError(#[from] LowerError),
 
     /// Unexpected element within expression.
     #[error("Unexpected {0} {1} within expression")]
@@ -120,11 +127,11 @@ pub enum EvalError {
 
     /// Missing arguments
     #[error("Missing arguments: {0}")]
-    MissingArguments(IdentifierList),
+    MissingArguments(ir::IdentifierList),
 
     /// Missing arguments
     #[error("Too many arguments: {0}")]
-    TooManyArguments(IdentifierList),
+    TooManyArguments(ir::IdentifierList),
 
     /// Arguments match by identifier but have incompatible types
     #[error("Arguments match by identifier but have incompatible types: {0}")]
@@ -136,7 +143,7 @@ pub enum EvalError {
 
     /// Trying to use multiplicity where it is not allowed
     #[error("Multiplicity not allowed '{0}'")]
-    MultiplicityNotAllowed(IdentifierList),
+    MultiplicityNotAllowed(ir::IdentifierList),
 
     /// An error if you try to mix 2d and 3d geometries.
     #[error("Cannot mix 2d and 3d geometries")]
@@ -173,7 +180,7 @@ pub enum EvalError {
 
     /// Initializer missed to set a property from plan
     #[error("Building plan incomplete. Missing properties: {0}")]
-    BuildingPlanIncomplete(IdentifierList),
+    BuildingPlanIncomplete(ir::IdentifierList),
 
     /// This errors happens if the expression is supposed to produce models but did not.
     #[error("This expression statement did not produce any model")]
@@ -182,7 +189,7 @@ pub enum EvalError {
     /// This error happens if the workbench produced a different output type.
     #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]
     WorkbenchInvalidOutput {
-        kind: WorkbenchKind,
+        kind: ir::WorkbenchKind,
         produced: OutputType,
         expected: OutputType,
     },
@@ -224,9 +231,9 @@ pub enum EvalError {
     #[error("Symbol {what} is private from within {within}")]
     SymbolIsPrivate {
         /// what was searched
-        what: QualifiedName,
+        what: ir::QualifiedName,
         /// where it was searched
-        within: QualifiedName,
+        within: ir::QualifiedName,
     },
 
     /// Found unused global symbols.

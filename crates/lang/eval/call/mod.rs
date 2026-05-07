@@ -14,11 +14,11 @@ pub use argument_value::ArgumentValue;
 pub use argument_value_list::ArgumentValueList;
 pub use call_method::*;
 pub use call_trait::*;
-use microcad_lang_base::SrcReferrer;
+use microcad_lang_base::{Identifier, SrcReferrer};
 
-use crate::{eval::*, symbol::SymbolDef, syntax::*, value::*};
+use crate::{eval::*, lower::ir, symbol::SymbolDef, value::*};
 
-impl Eval<ArgumentValueList> for ArgumentList {
+impl Eval<ArgumentValueList> for ir::ArgumentList {
     /// Evaluate into a [`ArgumentValueList`].
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValueList> {
         self.iter()
@@ -36,7 +36,7 @@ impl Eval<ArgumentValueList> for ArgumentList {
     }
 }
 
-impl Eval for Call {
+impl Eval for ir::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         // find self in symbol table by own name
         let symbol = match context.lookup(&self.name, LookupTarget::Function) {
@@ -66,7 +66,7 @@ impl Eval for Call {
                 symbol.with_def(|def| match def {
                     SymbolDef::Builtin(f) => f.call(&args, context),
                     SymbolDef::Workbench(w) => {
-                        if matches!(*w.kind, WorkbenchKind::Operation) {
+                        if matches!(*w.kind, ir::WorkbenchKind::Operation) {
                             context.error(self, EvalError::CannotCallOperationWithoutWorkpiece)?;
                             Ok(Value::None)
                         } else {

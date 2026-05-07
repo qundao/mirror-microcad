@@ -31,20 +31,16 @@ impl Diagnostic {
     /// Get message (errors will be serialized).
     pub fn message(&self) -> String {
         match self {
-            Diagnostic::Trace(msg) | Diagnostic::Info(msg) => msg.to_string(),
-            Diagnostic::Warning(err) | Diagnostic::Error(err) => err.to_string(),
+            Diagnostic::Trace(r)
+            | Diagnostic::Info(r)
+            | Diagnostic::Warning(r)
+            | Diagnostic::Error(r) => r.to_string(),
         }
     }
 
     /// Return line of the error
-    pub fn line(&self) -> Option<usize> {
-        let src_ref = match self {
-            Diagnostic::Trace(r) => r.src_ref(),
-            Diagnostic::Info(r) => r.src_ref(),
-            Diagnostic::Warning(r) => r.src_ref(),
-            Diagnostic::Error(r) => r.src_ref(),
-        };
-        src_ref.as_ref().map(|r| r.at.line)
+    pub fn line(&self) -> Option<u32> {
+        self.src_ref().line()
     }
 
     fn report(&self) -> &Report {
@@ -78,7 +74,7 @@ impl Diagnostic {
         &self,
         mut f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceStrByHash,
-        line_offset: usize,
+        line_offset: u32,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
@@ -96,9 +92,9 @@ impl Diagnostic {
             .to_string()
         }
 
-        match &src_ref {
-            SrcRef(None) => writeln!(f, "{}: {}", self.level(), self.message())?,
-            SrcRef(Some(_)) => {
+        match &src_ref.is_none() {
+            true => writeln!(f, "{}: {}", self.level(), self.message())?,
+            false => {
                 let miette_source = match source_by_hash.get_str_by_hash(hash) {
                     Some(source) => MietteSourceFile {
                         source,
@@ -128,7 +124,7 @@ impl Diagnostic {
     pub fn to_pretty_string(
         &self,
         source_by_hash: &impl GetSourceStrByHash,
-        line_offset: usize,
+        line_offset: u32,
         options: &DiagRenderOptions,
     ) -> String {
         let mut buff = String::new();
@@ -174,12 +170,12 @@ impl std::fmt::Debug for Diagnostic {
 struct DiagnosticWrapper<'a> {
     diagnostic: &'a Diagnostic,
     source: MietteSourceFile<'a>,
-    line_offset: usize,
+    line_offset: u32,
 }
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self)
+        write!(f, "{self}")
     }
 }
 

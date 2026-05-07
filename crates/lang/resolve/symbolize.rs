@@ -8,9 +8,9 @@ use std::rc::Rc;
 use microcad_lang_base::PushDiag;
 
 use crate::{
+    lower::ir,
     resolve::*,
     symbol::{Symbol, SymbolDef, SymbolMap},
-    syntax::*,
 };
 
 pub(super) trait Symbolize<T = Option<Symbol>> {
@@ -20,11 +20,11 @@ pub(super) trait Symbolize<T = Option<Symbol>> {
     }
 }
 
-impl SourceFile {
+impl ir::SourceFile {
     /// Create symbol from definition.
     pub fn symbolize(
         &self,
-        visibility: Visibility,
+        visibility: ir::Visibility,
         context: &mut ResolveContext,
     ) -> ResolveResult<Symbol> {
         let symbol = Symbol::new_with_visibility(
@@ -39,8 +39,10 @@ impl SourceFile {
     }
 }
 
-impl Symbolize<Symbol> for ModuleDefinition {
+impl Symbolize<Symbol> for ir::ModuleDefinition {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
+        use crate::Identifiable;
+
         let symbol = if let Some(body) = &self.body {
             let symbol = Symbol::new(SymbolDef::Module(self.clone().into()), Some(parent.clone()));
             symbol.set_children(body.symbolize(&symbol, context)?);
@@ -57,7 +59,7 @@ impl Symbolize<Symbol> for ModuleDefinition {
     }
 }
 
-impl Symbolize<SymbolMap> for StatementList {
+impl Symbolize<SymbolMap> for ir::StatementList {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<SymbolMap> {
         let mut symbols = SymbolMap::default();
         // Iterate over all statement fetch definitions
@@ -78,32 +80,30 @@ impl Symbolize<SymbolMap> for StatementList {
     }
 }
 
-impl Symbolize<Option<(Identifier, Symbol)>> for Statement {
+impl Symbolize<Option<(ir::Identifier, Symbol)>> for ir::Statement {
     fn symbolize(
         &self,
         parent: &Symbol,
         context: &mut ResolveContext,
-    ) -> ResolveResult<Option<(Identifier, Symbol)>> {
+    ) -> ResolveResult<Option<(ir::Identifier, Symbol)>> {
+        use crate::Identifiable;
+        use ir::Statement::*;
         match self {
-            Statement::Workbench(wd) => Ok(Some((wd.id(), wd.symbolize(parent, context)?))),
-            Statement::Module(md) => Ok(Some((md.id(), md.symbolize(parent, context)?))),
-            Statement::Function(fd) => Ok(Some((fd.id(), fd.symbolize(parent, context)?))),
-            Statement::Use(us) => us.symbolize(parent, context),
-            Statement::Assignment(a) => Ok(a
+            Workbench(wd) => Ok(Some((wd.id(), wd.symbolize(parent, context)?))),
+            Module(md) => Ok(Some((md.id(), md.symbolize(parent, context)?))),
+            Function(fd) => Ok(Some((fd.id(), fd.symbolize(parent, context)?))),
+            Use(us) => us.symbolize(parent, context),
+            Assignment(a) => Ok(a
                 .symbolize(parent, context)?
                 .map(|symbol| (a.assignment.id(), symbol))),
             // Not producing any symbols
-            Statement::Init(_)
-            | Statement::Return(_)
-            | Statement::If(_)
-            | Statement::InnerAttribute(_)
-            | Statement::InnerDocComment(_)
-            | Statement::Expression(_) => Ok(None),
+            Init(_) | Return(_) | If(_) | InnerAttribute(_) | InnerDocComment(_)
+            | Expression(_) => Ok(None),
         }
     }
 }
 
-impl Symbolize<Symbol> for Rc<WorkbenchDefinition> {
+impl Symbolize<Symbol> for Rc<ir::WorkbenchDefinition> {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
         let symbol = Symbol::new(SymbolDef::Workbench(self.clone()), Some(parent.clone()));
         symbol.set_children(self.body.symbolize(&symbol, context)?);
@@ -111,7 +111,7 @@ impl Symbolize<Symbol> for Rc<WorkbenchDefinition> {
     }
 }
 
-impl Symbolize<Symbol> for Rc<FunctionDefinition> {
+impl Symbolize<Symbol> for Rc<ir::FunctionDefinition> {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<Symbol> {
         let symbol = Symbol::new(SymbolDef::Function(self.clone()), Some(parent.clone()));
         symbol.set_children(self.body.symbolize(&symbol, context)?);
@@ -119,15 +119,17 @@ impl Symbolize<Symbol> for Rc<FunctionDefinition> {
     }
 }
 
-impl Symbolize for AssignmentStatement {
+impl Symbolize for ir::AssignmentStatement {
     fn symbolize(
         &self,
         parent: &Symbol,
         _context: &mut ResolveContext,
     ) -> ResolveResult<Option<Symbol>> {
+        use crate::Identifiable;
+
         let symbol = match (&self.assignment.visibility, self.assignment.qualifier()) {
             // properties do not have a visibility
-            (_, Qualifier::Prop) => {
+            (_, ir::Qualifier::Prop) => {
                 if !parent.can_prop() {
                     None
                 } else {
@@ -135,7 +137,7 @@ impl Symbolize for AssignmentStatement {
                 }
             }
             // constants will be symbols (`pub` shall equal `pub const`)
-            (_, Qualifier::Const) | (Visibility::Public, Qualifier::Value) => {
+            (_, ir::Qualifier::Const) | (ir::Visibility::Public, ir::Qualifier::Value) => {
                 if !parent.can_const() {
                     None
                 } else {
@@ -150,14 +152,14 @@ impl Symbolize for AssignmentStatement {
                 }
             }
             // value go on stack
-            (Visibility::Private | Visibility::PrivateUse(_), Qualifier::Value) => {
-                if self.assignment.visibility == Visibility::Private && !parent.can_value() {
+            (ir::Visibility::Private | ir::Visibility::PrivateUse(_), ir::Qualifier::Value) => {
+                if self.assignment.visibility == ir::Visibility::Private && !parent.can_value() {
                     None
                 } else {
                     Some(None)
                 }
             }
-            (Visibility::Deleted, _) => unreachable!(),
+            (ir::Visibility::Deleted, _) => unreachable!(),
         };
 
         match symbol {
@@ -167,38 +169,38 @@ impl Symbolize for AssignmentStatement {
     }
 }
 
-impl Symbolize<SymbolMap> for Body {
+impl Symbolize<SymbolMap> for ir::Body {
     fn symbolize(&self, parent: &Symbol, context: &mut ResolveContext) -> ResolveResult<SymbolMap> {
         self.statements.symbolize(parent, context)
     }
 }
 
-impl Symbolize<Option<(Identifier, Symbol)>> for UseStatement {
+impl Symbolize<Option<(ir::Identifier, Symbol)>> for ir::UseStatement {
     fn symbolize(
         &self,
         parent: &Symbol,
         _: &mut ResolveContext,
-    ) -> ResolveResult<Option<(Identifier, Symbol)>> {
+    ) -> ResolveResult<Option<(ir::Identifier, Symbol)>> {
         match &self.decl {
-            UseDeclaration::Use(name) => {
+            ir::UseDeclaration::Use(name) => {
                 let identifier = name.last().expect("Identifier");
                 Ok(Some((
-                    Identifier::unique(),
+                    ir::Identifier::unique(),
                     Symbol::new(
                         SymbolDef::Alias(self.visibility.clone(), identifier.clone(), name.clone()),
                         Some(parent.clone()),
                     ),
                 )))
             }
-            UseDeclaration::UseAll(name) => Ok(Some((
-                Identifier::unique(),
+            ir::UseDeclaration::UseAll(name) => Ok(Some((
+                ir::Identifier::unique(),
                 Symbol::new(
                     SymbolDef::UseAll(self.visibility.clone(), name.clone()),
                     Some(parent.clone()),
                 ),
             ))),
-            UseDeclaration::UseAs(name, alias) => Ok(Some((
-                Identifier::unique(),
+            ir::UseDeclaration::UseAs(name, alias) => Ok(Some((
+                ir::Identifier::unique(),
                 Symbol::new(
                     SymbolDef::Alias(self.visibility.clone(), alias.clone(), name.clone()),
                     Some(parent.clone()),

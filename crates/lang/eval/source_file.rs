@@ -3,9 +3,9 @@
 
 use microcad_lang_base::SrcReferrer;
 
-use crate::{eval::*, model::*, symbol::SymbolMap, syntax::*};
+use crate::{eval::*, lower::ir, model::*, symbol::SymbolMap};
 
-impl Eval for std::rc::Rc<SourceFile> {
+impl Eval for std::rc::Rc<ir::SourceFile> {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         context.scope(
             StackFrame::Source(self.id(), SymbolMap::default()),
@@ -14,7 +14,7 @@ impl Eval for std::rc::Rc<SourceFile> {
     }
 }
 
-impl Eval<Model> for std::rc::Rc<SourceFile> {
+impl Eval<Model> for std::rc::Rc<ir::SourceFile> {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Model> {
         context.scope(
             StackFrame::Source(self.id(), SymbolMap::default()),

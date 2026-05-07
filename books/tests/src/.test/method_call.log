@@ -23,9 +23,9 @@
 Unexpected warnings(s) which did occur in line(s): 6
 -- Model --
   Group (root) ->
-    Workpiece(sketch) method_call::Sketch(scale=4) ->
+    Workpiece(Sketch) method_call::Sketch(scale=4) ->
       - scale = 4
-      Workpiece(sketch) std::geo2d::Rect(size=160mm) ->
+      Workpiece(Sketch) std::geo2d::Rect(size=160mm) ->
         - height = 160mm
         - width = 160mm
         - x = -80mm

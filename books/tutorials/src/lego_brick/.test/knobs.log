@@ -21,10 +21,10 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) knobs::Knobs(diameter=4.8mm) ->
+    Workpiece(Sketch) knobs::Knobs(diameter=4.8mm) ->
       - diameter = 4.8mm
       Operation __builtin::ops::center() ->
-        Workpiece(sketch) std::geo2d::Circle(center=(x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm]), diameter=4.8mm) ->
+        Workpiece(Sketch) std::geo2d::Circle(center=(x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm]), diameter=4.8mm) ->
           - center = (x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm])
           - radius = 2.4mm
           Multiplicity ->

@@ -7,8 +7,8 @@
 use miette::{Diagnostic, SourceSpan};
 use thiserror::Error;
 
+use crate::lower::{LowerErrorsWithSource, ir};
 use crate::resolve::grant::Scope;
-use crate::{parse::*, syntax::*};
 use microcad_lang_base::{DiagError, SrcRef, SrcReferrer};
 
 fn capitalize_first(s: &str) -> String {
@@ -22,10 +22,10 @@ fn capitalize_first(s: &str) -> String {
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
 pub enum ResolveError {
-    /// Parse Error.
-    #[error("Parse Error: {0}")]
+    /// Lower Error.
+    #[error("Lower Error: {0}")]
     #[diagnostic(transparent)]
-    ParseError(#[from] ParseErrorsWithSource),
+    LowerError(#[from] LowerErrorsWithSource),
 
     /// Can't find a project file by hash.
     #[error("Could not find a file with hash {0}")]
@@ -37,7 +37,7 @@ pub enum ResolveError {
 
     /// Name of external symbol is unknown.
     #[error("External symbol `{0}` not found")]
-    ExternalSymbolNotFound(QualifiedName),
+    ExternalSymbolNotFound(ir::QualifiedName),
 
     /// Path of external file is unknown.
     #[error("External path `{0}` not found")]
@@ -49,15 +49,15 @@ pub enum ResolveError {
 
     /// Symbol not found.
     #[error("Symbol {0} not found while resolving.")]
-    SymbolNotFound(QualifiedName),
+    SymbolNotFound(ir::QualifiedName),
 
     /// Symbol not found (retry to load from external).
     #[error("Symbol {0} must be loaded from {1}")]
-    SymbolMustBeLoaded(QualifiedName, std::path::PathBuf),
+    SymbolMustBeLoaded(ir::QualifiedName, std::path::PathBuf),
 
     /// Symbol is not a value
     #[error("Symbol {0} is not a value")]
-    NotAValue(QualifiedName),
+    NotAValue(ir::QualifiedName),
 
     /// Sternal module file not found
     #[error("Ambiguous external module files found {0:?}")]
@@ -65,20 +65,20 @@ pub enum ResolveError {
 
     /// Ambiguous symbol was found
     #[error("Symbol {0} already defined")]
-    SymbolAlreadyDefined(QualifiedName),
+    SymbolAlreadyDefined(ir::QualifiedName),
 
     /// Ambiguous symbol was found
     #[error("Ambiguous symbol found: {0}")]
-    AmbiguousSymbol(QualifiedName, QualifiedNames),
+    AmbiguousSymbol(ir::QualifiedName, ir::QualifiedNames),
 
     /// Ambiguous symbol was found
     #[error("Ambiguous identifier '{ambiguous}'")]
     #[allow(missing_docs)]
     AmbiguousId {
         #[label(primary, "First usage of '{first}'")]
-        first: Identifier,
+        first: ir::Identifier,
         #[label("Ambiguous usage of '{ambiguous}'")]
-        ambiguous: Identifier,
+        ambiguous: ir::Identifier,
     },
 
     /// ScanDir Error
@@ -104,7 +104,7 @@ pub enum ResolveError {
 
     /// Symbol is private
     #[error("Symbol {0} is private")]
-    SymbolIsPrivate(QualifiedName),
+    SymbolIsPrivate(ir::QualifiedName),
 
     /// ScanDir Error
     #[error("{0}")]
@@ -114,7 +114,10 @@ pub enum ResolveError {
     #[error(
         "Source of module '{0}' could not be found in {1:?} (expecting a file '{0}.µcad' or '{0}/mod.µcad')"
     )]
-    SourceFileNotFound(#[label("module not found")] Identifier, std::path::PathBuf),
+    SourceFileNotFound(
+        #[label("module not found")] ir::Identifier,
+        std::path::PathBuf,
+    ),
 
     /// Wrong lookup target
     #[error("Wrong lookup target")]
@@ -234,9 +237,9 @@ impl SrcReferrer for ResolveError {
     fn src_ref(&self) -> SrcRef {
         match self {
             ResolveError::SourceFileNotFound(identifier, _) => identifier.src_ref(),
-            ResolveError::ParseError(parse_error) => parse_error.src_ref(),
+            ResolveError::LowerError(parse_error) => parse_error.src_ref(),
             ResolveError::ResolveCheckFailed(src_ref) => src_ref.clone(),
-            _ => SrcRef(None),
+            _ => SrcRef::none(),
         }
     }
 }

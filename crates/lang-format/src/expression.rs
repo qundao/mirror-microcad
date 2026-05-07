@@ -3,7 +3,7 @@
 
 use crate::{BreakMode, Format, FormatConfig, Node, extras::leading_extras_without_newline, node};
 
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl Format for ast::BinaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {

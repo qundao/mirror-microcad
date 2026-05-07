@@ -1,10 +1,11 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::SrcReferrer;
+use microcad_lang_base::{Identifier, SrcReferrer};
 
 use crate::{
     eval::*,
+    lower::ir,
     model::*,
     symbol::{Symbol, SymbolDef},
 };
@@ -73,11 +74,11 @@ impl Stack {
     }
 
     /// Get name of current module.
-    pub fn current_module_name(&self) -> QualifiedName {
+    pub fn current_module_name(&self) -> ir::QualifiedName {
         if self.0.is_empty() {
-            QualifiedName::default()
+            ir::QualifiedName::default()
         } else {
-            let mut module_name = QualifiedName::default();
+            let mut module_name = ir::QualifiedName::default();
             for (n, frame) in self.0.iter().rev().enumerate() {
                 match frame {
                     StackFrame::Source(id, ..) => {
@@ -101,7 +102,7 @@ impl Stack {
     }
 
     /// Get name of current workbench or function.
-    pub fn current_call_name(&self) -> Option<QualifiedName> {
+    pub fn current_call_name(&self) -> Option<ir::QualifiedName> {
         self.0
             .iter()
             .rev()
@@ -119,7 +120,7 @@ impl Stack {
             })
             .find_map(|(n, frame)| match frame {
                 StackFrame::Workbench(_, id, _) | StackFrame::Function(id, _) => Some(
-                    QualifiedName::new(vec![id.clone()], id.src_ref())
+                    ir::QualifiedName::new(vec![id.clone()], id.src_ref())
                         .with_prefix(&self.current_module_name()),
                 ),
                 StackFrame::Call { symbol, .. } => {
@@ -180,7 +181,8 @@ impl Stack {
 }
 
 impl Lookup<EvalError> for Stack {
-    fn lookup(&self, name: &QualifiedName, _: LookupTarget) -> EvalResult<Symbol> {
+    fn lookup(&self, name: &ir::QualifiedName, _: LookupTarget) -> EvalResult<Symbol> {
+        use crate::lower::SingleIdentifier;
         log::trace!(
             "{lookup} for local symbol '{name:?}'",
             lookup = microcad_lang_base::mark!(LOOKUP)
@@ -222,7 +224,7 @@ impl Lookup<EvalError> for Stack {
         }
     }
 
-    fn ambiguity_error(ambiguous: QualifiedName, others: QualifiedNames) -> EvalError {
+    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> EvalError {
         EvalError::AmbiguousSymbol(ambiguous, others)
     }
 }
@@ -305,9 +307,9 @@ impl Locals for Stack {
     }
 
     /// Get name of current workbench or module (might be empty).
-    fn current_name(&self) -> QualifiedName {
+    fn current_name(&self) -> ir::QualifiedName {
         if let Some(id) = self.current_workbench_id() {
-            let name = QualifiedName::new(vec![id.clone()], id.src_ref());
+            let name = ir::QualifiedName::new(vec![id.clone()], id.src_ref());
             name.with_prefix(&self.current_module_name())
         } else {
             self.current_module_name()
@@ -346,8 +348,8 @@ fn local_stack() {
         }
     };
 
-    let root_name = "test".into();
-    let root_id = QualifiedName::from_id(root_name);
+    let root_name: Identifier = "test".into();
+    let root_id = ir::QualifiedName::from(root_name);
     stack.open(StackFrame::Source("test".into(), SymbolMap::default()));
     assert!(stack.current_module_name() == root_id);
 

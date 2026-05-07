@@ -5,7 +5,7 @@
 
 use microcad_core::hash::HashMap;
 
-use microcad_lang_base::SrcReferrer;
+use microcad_lang_base::{Identifier, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::{ty::*, value::*};
@@ -15,25 +15,9 @@ use crate::{ty::*, value::*};
 /// Names are optional, which means Identifiers can be empty.
 #[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
 pub struct Tuple {
-    pub(crate) named: HashMap<Identifier, Value>,
+    pub(crate) named: HashMap<ir::Identifier, Value>,
     pub(crate) unnamed: HashMap<Type, Value>,
     pub(crate) src_ref: SrcRef,
-}
-
-/// Create Tuple from µcad code for tests
-#[cfg(test)]
-#[macro_export]
-macro_rules! tuple {
-    ($code:expr) => {{
-        use $crate::eval::*;
-        match $crate::tuple_expression!($code)
-            .eval(&mut Default::default())
-            .expect("evaluation error")
-        {
-            Value::Tuple(tuple) => *tuple,
-            _ => panic!(),
-        }
-    }};
 }
 
 /// Create a Value::Tuple from items
@@ -57,7 +41,7 @@ macro_rules! create_tuple {
 impl Tuple {
     /// Create new named tuple.
     pub fn new_named(
-        named: microcad_core::hash::HashMap<Identifier, Value>,
+        named: microcad_core::hash::HashMap<ir::Identifier, Value>,
         src_ref: SrcRef,
     ) -> Self {
         Self {
@@ -68,7 +52,7 @@ impl Tuple {
     }
 
     /// Insert new (or overwrite existing) value into tuple
-    pub fn insert(&mut self, id: Identifier, value: Value) {
+    pub fn insert(&mut self, id: ir::Identifier, value: Value) {
         if id.is_empty() {
             self.unnamed.insert(value.ty(), value);
         } else {
@@ -77,7 +61,7 @@ impl Tuple {
     }
 
     /// Return an iterator over all named values
-    pub fn named_iter(&self) -> std::collections::hash_map::Iter<'_, Identifier, Value> {
+    pub fn named_iter(&self) -> std::collections::hash_map::Iter<'_, ir::Identifier, Value> {
         if !self.unnamed.is_empty() {
             log::warn!("using named_iter() on a tuple which has unnamed items too")
         }
@@ -217,7 +201,7 @@ impl Tuple {
     /// |-----------------|------------------------|
     /// | `([x₀, x₁], y)` | `(x₀, y)`, `(x₁, y)`   |
     ///
-    pub fn multiplicity<P: FnMut(Tuple)>(&self, mut ids: IdentifierList, mut p: P) {
+    pub fn multiplicity<P: FnMut(Tuple)>(&self, mut ids: ir::IdentifierList, mut p: P) {
         log::trace!("combining: {ids:?}:");
 
         // sort ids for persistent order
@@ -299,7 +283,7 @@ where
             .map(|(k, v)| (Identifier::no_ref(k), (*v).clone().into()))
             .partition(|(k, _)| k.is_empty());
         Self {
-            src_ref: SrcRef(None),
+            src_ref: SrcRef::none(),
             named: named.into_iter().collect(),
             unnamed: unnamed.into_iter().map(|(_, v)| (v.ty(), v)).collect(),
         }
@@ -548,32 +532,4 @@ impl Ty for Tuple {
     fn ty(&self) -> Type {
         Type::Tuple(Box::new(self.tuple_type()))
     }
-}
-
-#[test]
-fn tuple_equal() {
-    assert_eq!(
-        tuple!("(v=1.0m³, l=1.0m, a=1.0m²)"),
-        tuple!("(l=1.0m, a=1.0m², v=1.0m³)")
-    );
-}
-
-#[test]
-fn tuple_not_equal() {
-    assert_ne!(
-        tuple!("(d=1.0g/mm³, l=1.0m, a=1.0m²)"),
-        tuple!("(l=1.0m, a=1.0m², v=1.0m³)")
-    );
-    assert_ne!(
-        tuple!("(l=1.0m, a=1.0m²)"),
-        tuple!("(l=1.0m, a=1.0m², v=1.0m³)")
-    );
-}
-
-#[test]
-fn multiplicity_check() {
-    let tuple = tuple!("(x = [1, 2, 3], y = [1, 2], z = 1)");
-
-    let ids: IdentifierList = ["x".into(), "y".into()].into_iter().collect();
-    tuple.multiplicity(ids, |tuple| println!("{tuple}"));
 }

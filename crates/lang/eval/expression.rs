@@ -5,11 +5,12 @@ use microcad_lang_base::{PushDiag, SrcReferrer};
 
 use crate::{
     eval::*,
+    lower::ir,
     model::*,
     symbol::{Symbol, SymbolDef},
 };
 
-impl Eval for RangeFirst {
+impl Eval for ir::RangeFirst {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         let value: Value = self.0.eval(context)?;
         Ok(match value {
@@ -29,7 +30,7 @@ impl Eval for RangeFirst {
     }
 }
 
-impl Eval for RangeLast {
+impl Eval for ir::RangeLast {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         let value: Value = self.0.eval(context)?;
         Ok(match value {
@@ -49,7 +50,7 @@ impl Eval for RangeLast {
     }
 }
 
-impl Eval for RangeExpression {
+impl Eval for ir::RangeExpression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         Ok(
             match (self.first.eval(context)?, self.last.eval(context)?) {
@@ -69,11 +70,11 @@ impl Eval for RangeExpression {
     }
 }
 
-impl Eval for ArrayExpression {
+impl Eval for ir::ArrayExpression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match &self.inner {
-            ArrayExpressionInner::Range(range_expression) => range_expression.eval(context),
-            ArrayExpressionInner::List(expressions) => {
+            ir::ArrayExpressionInner::Range(range_expression) => range_expression.eval(context),
+            ir::ArrayExpressionInner::List(expressions) => {
                 let value_list = ValueList::new(
                     expressions
                         .iter()
@@ -105,7 +106,7 @@ impl Eval for ArrayExpression {
     }
 }
 
-impl Eval<Option<Symbol>> for QualifiedName {
+impl Eval<Option<Symbol>> for ir::QualifiedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Symbol>> {
         match context.lookup(self, LookupTarget::AnyButMethod) {
             Ok(symbol) => Ok(Some(symbol.clone())),
@@ -117,8 +118,10 @@ impl Eval<Option<Symbol>> for QualifiedName {
     }
 }
 
-impl Eval for QualifiedName {
+impl Eval for ir::QualifiedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        use crate::lower::Identifiable;
+
         context
             .lookup(self, LookupTarget::AnyButMethod)?
             .with_def(|def| match def {
@@ -161,14 +164,14 @@ impl Eval for QualifiedName {
     }
 }
 
-impl Expression {
+impl ir::Expression {
     /// Evaluate an expression together with an attribute list.
     ///
     /// The attribute list will be also evaluated and the resulting attributes
     /// will be assigned to the resulting value.
     pub fn eval_with_attribute_list(
         &self,
-        attribute_list: &AttributeList,
+        attribute_list: &ir::AttributeList,
         context: &mut EvalContext,
     ) -> EvalResult<Value> {
         let value = self.eval(context)?;
@@ -192,7 +195,7 @@ impl Expression {
     }
 }
 
-impl Eval for Expression {
+impl Eval for ir::Expression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         log::trace!("Evaluating expression:\n{self}");
         let result = match self {
@@ -318,7 +321,7 @@ impl Eval for Expression {
     }
 }
 
-impl Eval<Option<Model>> for Expression {
+impl Eval<Option<Model>> for ir::Expression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Option<Model>> {
         Ok(match self.eval(context)? {
             Value::Model(model) => Some(model),

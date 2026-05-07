@@ -33,76 +33,76 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
       - height = 4mm
       - scale = (x=1, y=1)
       - twist = 0rad
       #[color = rgba(0, 1, 0, 1)]
       Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(op) std::ops::translate(x=-110mm, y=0mm, z=0mm) ->
+        Workpiece(Operation) std::ops::translate(x=-110mm, y=0mm, z=0mm) ->
           - x = -110mm
           - y = 0mm
           - z = 0mm
           Transform __builtin::ops::translate(x=-110mm, y=0mm, z=0mm) ->
             Operation __builtin::ops::center() ->
-              Workpiece(sketch) std::geo2d::Text(font_file=, height=80mm, text=µcad) ->
+              Workpiece(Sketch) std::geo2d::Text(font_file=, height=80mm, text=µcad) ->
                 - font_file = 
                 - height = 80mm
                 - text = µcad
                 Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=µcad) ->
-    Workpiece(op) std::ops::extrude(height=12mm, scale=(x=1, y=1), twist=0rad) ->
+    Workpiece(Operation) std::ops::extrude(height=12mm, scale=(x=1, y=1), twist=0rad) ->
       - height = 12mm
       - scale = (x=1, y=1)
       - twist = 0rad
       #[color = rgba(1, 0, 0, 1)]
       Operation __builtin::ops::extrude(height=12mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(sketch) text_love::Heart(size=40mm) ->
+        Workpiece(Sketch) text_love::Heart(size=40mm) ->
           - size = 40mm
           Operation union() ->
             Group ->
               Multiplicity ->
-                Workpiece(op) std::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
+                Workpiece(Operation) std::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
                   - x = 13.33333333333334mm
                   - y = 13.33333333333334mm
                   - z = 0mm
                   Transform __builtin::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
+                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
                       - center = (x=0mm, y=0mm)
                       - radius = 20mm
                       Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                         Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-                Workpiece(op) std::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
+                Workpiece(Operation) std::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
                   - x = -13.33333333333334mm
                   - y = 13.33333333333334mm
                   - z = 0mm
                   Transform __builtin::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                    Workpiece(sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
+                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
                       - center = (x=0mm, y=0mm)
                       - radius = 20mm
                       Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                         Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-              Workpiece(op) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->
+              Workpiece(Operation) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->
                 - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
                 Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
-                  Workpiece(sketch) std::geo2d::Rect(size=40mm) ->
+                  Workpiece(Sketch) std::geo2d::Rect(size=40mm) ->
                     - height = 40mm
                     - width = 40mm
                     - x = -20mm
                     - y = -20mm
                     Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) ->
-    Workpiece(op) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
       - height = 4mm
       - scale = (x=1, y=1)
       - twist = 0rad
       #[color = rgba(0, 0, 1, 1)]
       Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(op) std::ops::translate(x=90mm, y=0mm, z=0mm) ->
+        Workpiece(Operation) std::ops::translate(x=90mm, y=0mm, z=0mm) ->
           - x = 90mm
           - y = 0mm
           - z = 0mm
           Transform __builtin::ops::translate(x=90mm, y=0mm, z=0mm) ->
             Operation __builtin::ops::center() ->
-              Workpiece(sketch) std::geo2d::Text(font_file=, height=80mm, text=PTF) ->
+              Workpiece(Sketch) std::geo2d::Text(font_file=, height=80mm, text=PTF) ->
                 - font_file = 
                 - height = 80mm
                 - text = PTF

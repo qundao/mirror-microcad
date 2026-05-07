@@ -3,7 +3,7 @@
 
 use crate::{Format, FormatConfig, Node, node};
 
-use microcad_syntax::ast;
+use microcad_lang_parse::ast;
 
 impl Format for ast::Literal {
     fn format(&self, f: &FormatConfig) -> Node {

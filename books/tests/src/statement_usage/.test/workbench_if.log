@@ -15,7 +15,7 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(sketch) workbench_if::K() ->
+    Workpiece(Sketch) workbench_if::K() ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

@@ -17,7 +17,6 @@ version.workspace = true
 path = "lib.rs"
 
 [dependencies]
-compact_str = { version = "0.9", features = ["serde"] }
 bytemuck = "1.24"
 log = "0.4"
 lazy_static = "1.5"
@@ -38,6 +37,6 @@ derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
 round = "0.1.2"
 
 microcad-core = { workspace = true }
-microcad-syntax = { workspace = true }
 microcad-lang-base = { workspace = true }
+microcad-lang-parse = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }

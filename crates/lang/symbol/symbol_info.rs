@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use microcad_lang_base::{SrcRef, SrcReferrer};
 
-use crate::{builtin::*, doc::Doc, syntax::*};
+use crate::{builtin::*, doc::Doc, lower::ir};
 
 /// Retrieve symbol information.
 pub trait Info {
@@ -23,10 +23,10 @@ pub struct ParameterInfo {
     pub def: Option<String>,
 }
 
-impl From<&Parameter> for ParameterInfo {
-    fn from(param: &Parameter) -> Self {
+impl From<&ir::Parameter> for ParameterInfo {
+    fn from(param: &ir::Parameter) -> Self {
         Self {
-            id: param.id().to_string(),
+            id: param.id.to_string(),
             ty: param.specified_type.clone().map(|ty| ty.to_string()),
             def: param.default_value.clone().map(|def| def.to_string()),
         }
@@ -48,7 +48,7 @@ pub struct SignatureInfo {
     /// Parameters of the call.
     pub params: Vec<ParameterInfo>,
     /// Documentation.
-    pub doc: Option<DocBlock>,
+    pub doc: Option<ir::DocBlock>,
 }
 
 /// Symbol information in human readable form.
@@ -59,7 +59,7 @@ pub struct SymbolInfo {
     /// Human readable symbol kind.
     pub kind: String,
     /// Optional documentation block.
-    pub doc: Option<DocBlock>,
+    pub doc: Option<ir::DocBlock>,
     /// Parameters and alternative parameters if any.
     pub signatures: Vec<SignatureInfo>,
     /// Source code reference.
@@ -76,10 +76,10 @@ impl SymbolInfo {
     }
 }
 
-impl From<&Rc<Assignment>> for SymbolInfo {
-    fn from(def: &Rc<Assignment>) -> Self {
+impl From<&Rc<ir::Assignment>> for SymbolInfo {
+    fn from(def: &Rc<ir::Assignment>) -> Self {
         SymbolInfo {
-            id: def.id().to_string(),
+            id: def.id.to_string(),
             kind: "Assignment".into(),
             doc: Some(def.doc()),
             signatures: vec![],
@@ -88,8 +88,8 @@ impl From<&Rc<Assignment>> for SymbolInfo {
     }
 }
 
-impl From<&Rc<SourceFile>> for SymbolInfo {
-    fn from(def: &Rc<SourceFile>) -> Self {
+impl From<&Rc<ir::SourceFile>> for SymbolInfo {
+    fn from(def: &Rc<ir::SourceFile>) -> Self {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "SourceFile".into(),
@@ -100,10 +100,10 @@ impl From<&Rc<SourceFile>> for SymbolInfo {
     }
 }
 
-impl From<&Rc<ModuleDefinition>> for SymbolInfo {
-    fn from(def: &Rc<ModuleDefinition>) -> Self {
+impl From<&Rc<ir::ModuleDefinition>> for SymbolInfo {
+    fn from(def: &Rc<ir::ModuleDefinition>) -> Self {
         SymbolInfo {
-            id: def.id().to_string(),
+            id: def.id.to_string(),
             kind: "ModuleDefinition".into(),
             doc: Some(def.doc()),
             signatures: vec![],
@@ -112,10 +112,12 @@ impl From<&Rc<ModuleDefinition>> for SymbolInfo {
     }
 }
 
-impl From<&Rc<WorkbenchDefinition>> for SymbolInfo {
-    fn from(def: &Rc<WorkbenchDefinition>) -> Self {
+impl From<&Rc<ir::WorkbenchDefinition>> for SymbolInfo {
+    fn from(def: &Rc<ir::WorkbenchDefinition>) -> Self {
+        use crate::lower::Initialized;
+
         SymbolInfo {
-            id: def.id().to_string(),
+            id: def.id.to_string(),
             kind: def.kind.to_string(),
             doc: Some(def.doc()),
             signatures: def
@@ -130,10 +132,10 @@ impl From<&Rc<WorkbenchDefinition>> for SymbolInfo {
     }
 }
 
-impl From<&Rc<FunctionDefinition>> for SymbolInfo {
-    fn from(def: &Rc<FunctionDefinition>) -> Self {
+impl From<&Rc<ir::FunctionDefinition>> for SymbolInfo {
+    fn from(def: &Rc<ir::FunctionDefinition>) -> Self {
         SymbolInfo {
-            id: def.id().to_string(),
+            id: def.id.to_string(),
             kind: "Function".into(),
             doc: Some(def.doc()),
             signatures: vec![SignatureInfo {
@@ -147,13 +149,13 @@ impl From<&Rc<FunctionDefinition>> for SymbolInfo {
 
 impl From<&Builtin> for SymbolInfo {
     fn from(def: &Builtin) -> Self {
-        use crate::doc::Doc;
+        use crate::{Identifiable, doc::Doc};
         SymbolInfo {
             id: def.id().to_string(),
             kind: "Builtin".into(),
             doc: Some(def.doc()),
             signatures: vec![],
-            src_ref: SrcRef(None),
+            src_ref: SrcRef::none(),
         }
     }
 }

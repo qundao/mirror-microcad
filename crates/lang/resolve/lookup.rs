@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
+    lower::ir,
     resolve::*,
     symbol::{Symbol, SymbolDef},
-    syntax::*,
 };
 
 /// Target of symbol to look up.
@@ -37,10 +37,10 @@ impl LookupTarget {
                     matches!(self, Self::Any | Self::AnyButMethod | Self::Module)
                 }
                 SymbolDef::Workbench(wd) => match *wd.kind {
-                    WorkbenchKind::Part | WorkbenchKind::Sketch => {
+                    ir::WorkbenchKind::Part | ir::WorkbenchKind::Sketch => {
                         matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
                     }
-                    WorkbenchKind::Operation => matches!(self, Self::Any | Self::Method),
+                    ir::WorkbenchKind::Operation => matches!(self, Self::Any | Self::Method),
                 },
                 SymbolDef::Function(..) => {
                     matches!(self, Self::Any | Self::AnyButMethod | Self::Function)
@@ -96,10 +96,10 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     /// # Arguments
     /// - `name`: *Qualified name* to search for.
     /// - `target`: What to search for
-    fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> Result<Symbol, E>;
+    fn lookup(&self, name: &ir::QualifiedName, target: LookupTarget) -> Result<Symbol, E>;
 
     /// Return an ambiguity error.
-    fn ambiguity_error(ambiguous: QualifiedName, others: QualifiedNames) -> E;
+    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> E;
 
     /// Search a *symbol* by it's *qualified name* **and** within the given *symbol*.
     ///
@@ -111,7 +111,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     /// If both are found and one is an *alias* returns the other one.
     fn lookup_within(
         &self,
-        name: &QualifiedName,
+        name: &ir::QualifiedName,
         within: &Symbol,
         target: LookupTarget,
     ) -> Result<Symbol, E> {
@@ -171,7 +171,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     /// If both are found and one is an *alias* returns the other one.
     fn lookup_within_opt(
         &self,
-        name: &QualifiedName,
+        name: &ir::QualifiedName,
         within: &Option<Symbol>,
         target: LookupTarget,
     ) -> Result<Symbol, E> {
@@ -183,7 +183,7 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
     }
 
     /// Returns an error if name starts with `super::`.
-    fn deny_super(&self, name: &QualifiedName) -> ResolveResult<()> {
+    fn deny_super(&self, name: &ir::QualifiedName) -> ResolveResult<()> {
         if name.count_super() > 0 {
             log::trace!(
                 "{not_found} '{name:?}' is not canonical",

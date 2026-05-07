@@ -13,11 +13,11 @@ default-members = [
     "crates/lang-base",
     "crates/lang-format",
     "crates/lang-markdown",
+    "crates/lang-parse",
     "crates/lang-proc-macros",
     "crates/lsp",
     "crates/docgen",
     "crates/std",
-    "crates/syntax",
     "crates/viewer-ipc",
 
     "tests",
@@ -36,11 +36,11 @@ members = [
     "crates/lang-base",
     "crates/lang-format",
     "crates/lang-markdown",
+    "crates/lang-parse",
     "crates/lang-proc-macros",
     "crates/lsp",
     "crates/docgen",
     "crates/std",
-    "crates/syntax",
     "crates/viewer-ipc",
 
     "tests",
@@ -73,13 +73,13 @@ keywords = ["cad", "geometry", "3d", "cnc", "openscad"]
 
 [workspace.dependencies]
 microcad-core = { path = "crates/core", version = "0.4.0" }
-microcad-syntax = { path = "crates/syntax", version = "0.4.0" }
 microcad-import = { path = "crates/import", version = "0.4.0" }
 microcad-export = { path = "crates/export", version = "0.4.0" }
 microcad-lang = { path = "crates/lang", version = "0.4.0" }
 microcad-lang-base = { path = "crates/lang-base", version = "0.4.0" }
 microcad-lang-format = { path = "crates/lang-format", version = "0.4.0" }
 microcad-lang-markdown = { path = "crates/lang-markdown", version = "0.4.0" }
+microcad-lang-parse = { path = "crates/lang-parse", version = "0.4.0" }
 microcad-lang-proc-macros = { path = "crates/lang-proc-macros", version = "0.4.0" }
 microcad-docgen = { path = "crates/docgen", version = "0.4.0" }
 microcad-builtin = { path = "crates/builtin", version = "0.4.0" }

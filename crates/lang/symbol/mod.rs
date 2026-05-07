@@ -21,12 +21,12 @@ pub(crate) use symbols::*;
 
 use symbol_inner::*;
 
-use crate::{builtin::*, resolve::*, syntax::*, value::*};
+use crate::{builtin::*, lower::ir, resolve::*, value::*};
 
 /// Symbol
 #[derive(Clone)]
 pub struct Symbol {
-    visibility: std::cell::RefCell<Visibility>,
+    visibility: std::cell::RefCell<ir::Visibility>,
     src_ref: SrcRef,
     inner: RcMut<SymbolInner>,
 }
@@ -55,7 +55,7 @@ impl Symbol {
     /// - `def`: Symbol definition
     /// - `parent`: Symbol's parent symbol or none for root
     pub(crate) fn new_with_visibility(
-        visibility: Visibility,
+        visibility: ir::Visibility,
         def: SymbolDef,
         parent: Option<Symbol>,
     ) -> Self {
@@ -90,12 +90,12 @@ impl Symbol {
             id: Identifier::no_ref(name),
             parameters: parameters.collect(),
             f,
-            doc: doc.map(DocBlock::new_builtin),
+            doc: doc.map(ir::DocBlock::new_builtin),
         })
     }
 
     /// Get fully qualified name.
-    pub fn full_name(&self) -> QualifiedName {
+    pub fn full_name(&self) -> ir::QualifiedName {
         let id = self.id();
         match &self.get_parent() {
             Some(parent) => {
@@ -106,7 +106,7 @@ impl Symbol {
 
             None => {
                 let src_ref = id.src_ref();
-                QualifiedName::new(vec![id], src_ref)
+                ir::QualifiedName::new(vec![id], src_ref)
             }
         }
     }
@@ -151,8 +151,8 @@ impl Symbol {
     /// - `target`: What to search for
     pub(crate) fn lookup_within_name(
         &self,
-        name: &QualifiedName,
-        within: &QualifiedName,
+        name: &ir::QualifiedName,
+        within: &ir::QualifiedName,
         target: LookupTarget,
     ) -> ResolveResult<Symbol> {
         self.lookup_within(name, &self.search(within, false)?, target)
@@ -225,7 +225,7 @@ impl Symbol {
     }
 
     /// Create a vector of cloned children.
-    fn public_children(&self, visibility: Visibility, src_ref: SrcRef) -> SymbolMap {
+    fn public_children(&self, visibility: ir::Visibility, src_ref: SrcRef) -> SymbolMap {
         let inner = self.inner.borrow();
 
         inner
@@ -273,25 +273,25 @@ impl Symbol {
 // visibility
 impl Symbol {
     /// Return `true` if symbol's visibility is private
-    pub fn visibility(&self) -> Visibility {
+    pub fn visibility(&self) -> ir::Visibility {
         self.visibility.borrow().clone()
     }
 
     /// Return `true` if symbol's visibility set to is public.
     pub fn is_public(&self) -> bool {
-        matches!(self.visibility(), Visibility::Public)
+        matches!(self.visibility(), ir::Visibility::Public)
     }
 
     pub(super) fn is_deleted(&self) -> bool {
-        matches!(self.visibility(), Visibility::Deleted)
+        matches!(self.visibility(), ir::Visibility::Deleted)
     }
 
     pub(super) fn delete(&self) {
-        self.visibility.replace(Visibility::Deleted);
+        self.visibility.replace(ir::Visibility::Deleted);
     }
 
     /// Clone this symbol but give the clone another visibility.
-    pub(crate) fn clone_with(&self, visibility: Visibility, src_ref: SrcRef) -> Self {
+    pub(crate) fn clone_with(&self, visibility: ir::Visibility, src_ref: SrcRef) -> Self {
         Self {
             visibility: std::cell::RefCell::new(visibility),
             src_ref,
@@ -435,8 +435,8 @@ impl Symbol {
         !self.is_used() && !self.is_public() && !self.is_deleted()
     }
 
-    pub(crate) fn in_module(&self) -> Option<QualifiedName> {
-        if let Visibility::PrivateUse(module) = self.visibility() {
+    pub(crate) fn in_module(&self) -> Option<ir::QualifiedName> {
+        if let ir::Visibility::PrivateUse(module) = self.visibility() {
             Some(module.clone())
         } else {
             None
@@ -461,8 +461,8 @@ impl Symbol {
                     [(id.clone(), symbol)].into_iter().collect()
                 }
                 SymbolDef::UseAll(visibility, name) => {
-                    let visibility = &if matches!(visibility, &Visibility::Private) {
-                        Visibility::PrivateUse(name.clone())
+                    let visibility = &if matches!(visibility, &ir::Visibility::Private) {
+                        ir::Visibility::PrivateUse(name.clone())
                     } else {
                         visibility.clone()
                     };
@@ -496,7 +496,7 @@ impl Symbol {
     /// Search down the symbol tree for a qualified name.
     /// # Arguments
     /// - `name`: Name to search for.
-    pub(crate) fn search(&self, name: &QualifiedName, respect: bool) -> ResolveResult<Symbol> {
+    pub(crate) fn search(&self, name: &ir::QualifiedName, respect: bool) -> ResolveResult<Symbol> {
         log::trace!("Searching {name} in {:?}", self.full_name());
         if let Some(id) = name.first() {
             if id.is_super() {
@@ -510,10 +510,12 @@ impl Symbol {
 
     fn search_inner(
         &self,
-        name: &QualifiedName,
+        name: &ir::QualifiedName,
         top_level: bool,
         respect: bool,
     ) -> ResolveResult<Symbol> {
+        use crate::lower::SingleIdentifier;
+
         if let Some(first) = name.first() {
             if let Some(child) = self.get_child(first) {
                 if respect && !top_level && !child.is_public() {
@@ -545,7 +547,7 @@ impl Symbol {
     pub(super) fn print_symbol(
         &self,
         f: &mut impl std::fmt::Write,
-        id: Option<&Identifier>,
+        id: Option<&ir::Identifier>,
         state: TreeState,
         children: bool,
     ) -> std::fmt::Result {
@@ -606,8 +608,8 @@ impl SrcReferrer for Symbol {
 impl Default for Symbol {
     fn default() -> Self {
         Self {
-            src_ref: SrcRef(None),
-            visibility: std::cell::RefCell::new(Visibility::default()),
+            src_ref: SrcRef::none(),
+            visibility: std::cell::RefCell::new(ir::Visibility::default()),
             inner: RcMut::new(Default::default()),
         }
     }
@@ -654,7 +656,7 @@ impl TreeDisplay for Symbol {
 
 impl Lookup for Symbol {
     /// Lookup a symbol from global symbols.
-    fn lookup(&self, name: &QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
+    fn lookup(&self, name: &ir::QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
         log::trace!(
             "{lookup} for global symbol '{name:?}'",
             lookup = microcad_lang_base::mark!(LOOKUP)
@@ -688,7 +690,7 @@ impl Lookup for Symbol {
         Ok(symbol)
     }
 
-    fn ambiguity_error(ambiguous: QualifiedName, others: QualifiedNames) -> ResolveError {
+    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> ResolveError {
         ResolveError::AmbiguousSymbol(ambiguous, others)
     }
 }

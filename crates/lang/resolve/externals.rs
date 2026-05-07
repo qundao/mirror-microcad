@@ -3,7 +3,7 @@
 
 //! External files register
 
-use crate::{resolve::*, syntax::*};
+use crate::{lower::*, resolve::*};
 use derive_more::Deref;
 
 use microcad_core::hash::HashMap;
@@ -14,7 +14,7 @@ use microcad_lang_base::MICROCAD_EXTENSIONS;
 /// A map of *qualified name* -> *source file path* which is generated at creation
 /// by scanning in the given `search_paths`.
 #[derive(Default, Deref)]
-pub struct Externals(HashMap<QualifiedName, std::path::PathBuf>);
+pub struct Externals(HashMap<ir::QualifiedName, std::path::PathBuf>);
 
 impl Externals {
     /// Creates externals list.
@@ -44,8 +44,8 @@ impl Externals {
     /// - `name`: Qualified name expected to find.
     pub fn fetch_external(
         &self,
-        name: &QualifiedName,
-    ) -> ResolveResult<(QualifiedName, std::path::PathBuf)> {
+        name: &ir::QualifiedName,
+    ) -> ResolveResult<(ir::QualifiedName, std::path::PathBuf)> {
         log::trace!("fetching {name} from externals");
 
         if let Some(found) = self
@@ -65,7 +65,7 @@ impl Externals {
     }
 
     /// Get qualified name by path
-    pub fn get_name(&self, path: &std::path::Path) -> ResolveResult<&QualifiedName> {
+    pub fn get_name(&self, path: &std::path::Path) -> ResolveResult<&ir::QualifiedName> {
         match self.0.iter().find(|(_, p)| p.as_path() == path) {
             Some((name, _)) => {
                 log::trace!("got name of {path:?} => {name}");
@@ -78,7 +78,7 @@ impl Externals {
     /// Searches for external source code files (*external modules*) in given *search paths*.
     fn search_externals(
         search_paths: &[impl AsRef<std::path::Path>],
-    ) -> ResolveResult<HashMap<QualifiedName, std::path::PathBuf>> {
+    ) -> ResolveResult<HashMap<ir::QualifiedName, std::path::PathBuf>> {
         search_paths
             .iter()
             .inspect(|p| log::trace!("Searching externals in: {:?}", p.as_ref()))
@@ -137,7 +137,7 @@ impl std::fmt::Debug for Externals {
     }
 }
 
-fn make_symbol_name(relative_path: impl AsRef<std::path::Path>) -> QualifiedName {
+fn make_symbol_name(relative_path: impl AsRef<std::path::Path>) -> ir::QualifiedName {
     let path = relative_path.as_ref();
     let stem = path.file_stem().map(|s| s.to_string_lossy().to_string());
     let name = if stem == Some("mod".into()) {
@@ -146,7 +146,7 @@ fn make_symbol_name(relative_path: impl AsRef<std::path::Path>) -> QualifiedName
         path
     };
     name.iter()
-        .map(|id| Identifier::no_ref(id.to_string_lossy().as_ref()))
+        .map(|id| ir::Identifier::no_ref(id.to_string_lossy().as_ref()))
         .collect()
 }
 
@@ -244,7 +244,7 @@ pub fn microcad_file_path(
 /// *ext* = any valid microcad file extension.
 pub fn find_mod_file_by_id(
     path: impl AsRef<std::path::Path>,
-    id: &Identifier,
+    id: &ir::Identifier,
 ) -> ResolveResult<std::path::PathBuf> {
     let path = path.as_ref();
     log::trace!("find_mod_file_by_id: {path:?} {id:?}");
@@ -275,7 +275,7 @@ fn find_external_mod(
 
 fn search_mod_file_by_id(
     path: impl AsRef<std::path::Path>,
-    id: &Identifier,
+    id: &ir::Identifier,
 ) -> ResolveResult<std::path::PathBuf> {
     let path = path.as_ref();
 

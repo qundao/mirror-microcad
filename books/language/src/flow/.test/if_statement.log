@@ -24,9 +24,9 @@
 -- Model --
   Group (root) ->
     Group ->
-      Workpiece(sketch) std::geo2d::Hexagon(radius=5mm) ->
+      Workpiece(Sketch) std::geo2d::Hexagon(radius=5mm) ->
         - radius = 5mm
-        Workpiece(sketch) std::geo2d::Ngon(n=6, radius=5mm) ->
+        Workpiece(Sketch) std::geo2d::Ngon(n=6, radius=5mm) ->
           - n = 6
           - radius = 5mm
           Primitive2D __builtin::geo2d::Ngon(n=6, radius=5mm) ->

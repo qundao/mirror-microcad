@@ -1,0 +1,42 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..27,
+        statements: StatementList {
+            span: 0..27,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [
+                        Comment(
+                            Comment {
+                                span: 0..11,
+                                inner: SingleLine(
+                                    "// comment1",
+                                ),
+                            },
+                        ),
+                        Whitespace(
+                            "\n    ",
+                        ),
+                        Comment(
+                            Comment {
+                                span: 16..27,
+                                inner: SingleLine(
+                                    "// comment2",
+                                ),
+                            },
+                        ),
+                    ],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [],
+            tail: None,
+        },
+    },
+)

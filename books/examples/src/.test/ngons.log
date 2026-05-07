@@ -20,20 +20,20 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(op) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+    Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
       - height = 20mm
       - scale = (x=1, y=1)
       - twist = 0rad
       Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
         Operation subtract() ->
           Group ->
-            Workpiece(sketch) std::geo2d::Hexagon(radius=20mm) ->
+            Workpiece(Sketch) std::geo2d::Hexagon(radius=20mm) ->
               - radius = 20mm
-              Workpiece(sketch) std::geo2d::Ngon(n=6, radius=20mm) ->
+              Workpiece(Sketch) std::geo2d::Ngon(n=6, radius=20mm) ->
                 - n = 6
                 - radius = 20mm
                 Primitive2D __builtin::geo2d::Ngon(n=6, radius=20mm) ->
-            Workpiece(sketch) std::geo2d::Ngon(n=5, radius=10mm) ->
+            Workpiece(Sketch) std::geo2d::Ngon(n=5, radius=10mm) ->
               - n = 5
               - radius = 10mm
               Primitive2D __builtin::geo2d::Ngon(n=5, radius=10mm) ->

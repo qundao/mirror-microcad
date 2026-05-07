@@ -3,9 +3,9 @@
 
 //! Work piece element
 
-use microcad_core::hash::Hashed;
+use microcad_lang_base::{Hashed, Identifier};
 
-use crate::{model::*, syntax::*, value::*};
+use crate::{model::*, value::*};
 
 /// A workpiece is an element produced by a workbench.
 #[derive(Debug, Clone)]
@@ -20,11 +20,7 @@ pub struct Workpiece {
 
 impl std::fmt::Display for Workpiece {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self.kind {
-            WorkbenchKind::Part => write!(f, "Workpiece(part) {}", *self.creator),
-            WorkbenchKind::Sketch => write!(f, "Workpiece(sketch) {}", *self.creator),
-            WorkbenchKind::Operation => write!(f, "Workpiece(op) {}", *self.creator),
-        }
+        write!(f, "Workpiece({}) {}", self.kind, *self.creator)
     }
 }
 

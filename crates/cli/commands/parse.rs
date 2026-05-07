@@ -5,8 +5,7 @@
 
 use crate::*;
 
-use microcad_lang::syntax::*;
-use microcad_lang_base::FormatTree;
+use microcad_lang::lower::ir;
 use std::rc::Rc;
 
 #[derive(clap::Parser)]
@@ -25,10 +24,10 @@ impl Parse {
     }
 }
 
-impl RunCommand<Rc<SourceFile>> for Parse {
-    fn run(&self, cli: &Cli) -> miette::Result<Rc<SourceFile>> {
+impl RunCommand<Rc<ir::SourceFile>> for Parse {
+    fn run(&self, cli: &Cli) -> miette::Result<Rc<ir::SourceFile>> {
         let start = std::time::Instant::now();
-        let source_file = SourceFile::load(self.input_with_ext(cli))?;
+        let source_file = ir::SourceFile::load(self.input_with_ext(cli))?;
 
         if cli.time {
             eprintln!("Parsing Time   : {}", Cli::time_to_string(&start.elapsed()));
@@ -39,7 +38,7 @@ impl RunCommand<Rc<SourceFile>> for Parse {
         }
 
         if self.syntax {
-            println!("{}", FormatTree(source_file.as_ref()));
+            println!("{source_file:?}");
         }
         Ok(source_file)
     }

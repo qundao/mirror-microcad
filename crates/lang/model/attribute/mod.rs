@@ -15,9 +15,10 @@ pub use layer::Layer;
 pub use measure_command::MeasureCommand;
 pub use resolution_attribute::ResolutionAttribute;
 
-use crate::{syntax::*, value::*};
+use crate::value::*;
 
 use microcad_core::{Color, Size2};
+use microcad_lang_base::Identifier;
 use microcad_lang_proc_macros::Identifiable;
 
 /// A custom command attribute from an exporter, e.g.: `svg = (style = "fill:none")`
@@ -70,7 +71,7 @@ impl Attribute {
             Attribute::Size(_) => Identifier::no_ref("size"),
             Attribute::Export(_) => Identifier::no_ref("export"),
             Attribute::Measure(_) => Identifier::no_ref("measure"),
-            Attribute::Custom(attr) => attr.id(),
+            Attribute::Custom(attr) => attr.id.clone(),
         }
     }
 

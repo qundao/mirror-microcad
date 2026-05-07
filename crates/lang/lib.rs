@@ -17,16 +17,15 @@
 pub mod builtin;
 pub mod doc;
 pub mod eval;
+pub mod lower;
 pub mod model;
-pub mod parse;
 pub mod parser;
 pub mod render;
 pub mod resolve;
 pub mod symbol;
-pub mod syntax;
 pub mod ty;
 pub mod value;
 
-pub(crate) use microcad_lang_base::Id;
+pub(crate) use microcad_lang_base::{Id, Identifier};
 
-pub(crate) use crate::syntax::{Identifiable, Identifier};
+pub(crate) use crate::lower::Identifiable;

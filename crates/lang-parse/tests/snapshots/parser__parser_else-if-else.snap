@@ -1,0 +1,382 @@
+---
+source: crates/syntax/tests/parser.rs
+expression: parse(input)
+---
+Ok(
+    Program {
+        span: 0..46,
+        statements: StatementList {
+            span: 0..46,
+            extras: ItemExtras {
+                leading: LeadingExtras(
+                    [],
+                ),
+                trailing: TrailingExtras(
+                    [],
+                ),
+            },
+            statements: [
+                (
+                    Expression(
+                        ExpressionStatement {
+                            span: 0..46,
+                            extras: ItemExtras {
+                                leading: LeadingExtras(
+                                    [],
+                                ),
+                                trailing: TrailingExtras(
+                                    [],
+                                ),
+                            },
+                            attributes: [],
+                            expression: If(
+                                If {
+                                    span: 0..46,
+                                    if_span: 0..2,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    condition: BinaryOperation(
+                                        BinaryOperation {
+                                            span: 3..9,
+                                            lhs: QualifiedName(
+                                                QualifiedName {
+                                                    span: 3..4,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    },
+                                                    parts: [
+                                                        Identifier {
+                                                            span: 3..4,
+                                                            name: "a",
+                                                        },
+                                                    ],
+                                                },
+                                            ),
+                                            operation: BinaryOperator {
+                                                span: 5..6,
+                                                operation: GreaterThan,
+                                            },
+                                            rhs: Literal(
+                                                Literal {
+                                                    span: 7..9,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ],
+                                                        ),
+                                                    },
+                                                    literal: Integer(
+                                                        IntegerLiteral {
+                                                            span: 7..8,
+                                                            value: 1,
+                                                            raw: "1",
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    body: Body {
+                                        span: 9..14,
+                                        statements: StatementList {
+                                            span: 10..13,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            statements: [],
+                                            tail: Some(
+                                                ExpressionStatement {
+                                                    span: 11..13,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    attributes: [],
+                                                    expression: Literal(
+                                                        Literal {
+                                                            span: 11..13,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            },
+                                                            literal: Integer(
+                                                                IntegerLiteral {
+                                                                    span: 11..12,
+                                                                    value: 3,
+                                                                    raw: "3",
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                        },
+                                    },
+                                    next_if_span: Some(
+                                        15..19,
+                                    ),
+                                    next_if: Some(
+                                        If {
+                                            span: 20..46,
+                                            if_span: 20..22,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            condition: BinaryOperation(
+                                                BinaryOperation {
+                                                    span: 23..30,
+                                                    lhs: QualifiedName(
+                                                        QualifiedName {
+                                                            span: 23..24,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
+                                                                    ],
+                                                                ),
+                                                            },
+                                                            parts: [
+                                                                Identifier {
+                                                                    span: 23..24,
+                                                                    name: "a",
+                                                                },
+                                                            ],
+                                                        },
+                                                    ),
+                                                    operation: BinaryOperator {
+                                                        span: 25..26,
+                                                        operation: LessThan,
+                                                    },
+                                                    rhs: UnaryOperation(
+                                                        UnaryOperation {
+                                                            span: 27..30,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [],
+                                                                ),
+                                                            },
+                                                            operation: UnaryOperator {
+                                                                span: 27..28,
+                                                                operation: Minus,
+                                                            },
+                                                            rhs: Literal(
+                                                                Literal {
+                                                                    span: 28..30,
+                                                                    extras: ItemExtras {
+                                                                        leading: LeadingExtras(
+                                                                            [],
+                                                                        ),
+                                                                        trailing: TrailingExtras(
+                                                                            [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    },
+                                                                    literal: Integer(
+                                                                        IntegerLiteral {
+                                                                            span: 28..29,
+                                                                            value: 1,
+                                                                            raw: "1",
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
+                                            ),
+                                            body: Body {
+                                                span: 30..35,
+                                                statements: StatementList {
+                                                    span: 31..34,
+                                                    extras: ItemExtras {
+                                                        leading: LeadingExtras(
+                                                            [
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ],
+                                                        ),
+                                                        trailing: TrailingExtras(
+                                                            [],
+                                                        ),
+                                                    },
+                                                    statements: [],
+                                                    tail: Some(
+                                                        ExpressionStatement {
+                                                            span: 32..34,
+                                                            extras: ItemExtras {
+                                                                leading: LeadingExtras(
+                                                                    [],
+                                                                ),
+                                                                trailing: TrailingExtras(
+                                                                    [],
+                                                                ),
+                                                            },
+                                                            attributes: [],
+                                                            expression: Literal(
+                                                                Literal {
+                                                                    span: 32..34,
+                                                                    extras: ItemExtras {
+                                                                        leading: LeadingExtras(
+                                                                            [],
+                                                                        ),
+                                                                        trailing: TrailingExtras(
+                                                                            [
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ],
+                                                                        ),
+                                                                    },
+                                                                    literal: Integer(
+                                                                        IntegerLiteral {
+                                                                            span: 32..33,
+                                                                            value: 1,
+                                                                            raw: "1",
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        },
+                                                    ),
+                                                },
+                                            },
+                                            next_if_span: None,
+                                            next_if: None,
+                                            else_span: Some(
+                                                36..40,
+                                            ),
+                                            else_body: Some(
+                                                Body {
+                                                    span: 41..46,
+                                                    statements: StatementList {
+                                                        span: 42..45,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        statements: [],
+                                                        tail: Some(
+                                                            ExpressionStatement {
+                                                                span: 43..45,
+                                                                extras: ItemExtras {
+                                                                    leading: LeadingExtras(
+                                                                        [],
+                                                                    ),
+                                                                    trailing: TrailingExtras(
+                                                                        [],
+                                                                    ),
+                                                                },
+                                                                attributes: [],
+                                                                expression: Literal(
+                                                                    Literal {
+                                                                        span: 43..45,
+                                                                        extras: ItemExtras {
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        },
+                                                                        literal: Integer(
+                                                                            IntegerLiteral {
+                                                                                span: 43..44,
+                                                                                value: 0,
+                                                                                raw: "0",
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                },
+                                            ),
+                                        },
+                                    ),
+                                    else_span: None,
+                                    else_body: None,
+                                },
+                            ),
+                        },
+                    ),
+                    TrailingExtras(
+                        [],
+                    ),
+                ),
+            ],
+            tail: None,
+        },
+    },
+)

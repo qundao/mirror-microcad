@@ -4,9 +4,10 @@
 //! Parameter value list evaluation entity
 
 use crate::eval::*;
-use compact_str::CompactStringExt;
+
 use derive_more::Deref;
 use microcad_core::hash::HashMap;
+use microcad_lang_base::Identifier;
 
 /// List of parameter values
 #[derive(Clone, Debug, Default, Deref)]
@@ -37,7 +38,7 @@ impl std::fmt::Display for ParameterValueList {
                 .map(|(id, p)| format!("{id}: {p}"))
                 .collect::<Vec<_>>();
             v.sort();
-            v.join_compact(", ")
+            v.join(", ")
         })
     }
 }
