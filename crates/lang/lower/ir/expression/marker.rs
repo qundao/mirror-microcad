@@ -3,7 +3,7 @@
 
 //! Node marker syntax element
 
-use microcad_lang_base::{Identifier, SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 /// Node marker, e.g. `@input`.
@@ -25,11 +25,5 @@ impl Marker {
 impl std::fmt::Display for Marker {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "@{}", self.id)
-    }
-}
-
-impl TreeDisplay for Marker {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Marker '{}'", "", self.id)
     }
 }

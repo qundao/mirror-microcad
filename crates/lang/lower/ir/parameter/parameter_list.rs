@@ -6,7 +6,7 @@
 use crate::lower::ir;
 
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Identifier, OrdMap, Refer, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, OrdMap, Refer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Parameter list
@@ -36,13 +36,5 @@ impl std::fmt::Display for ParameterList {
                 .collect::<Vec<_>>()
                 .join(", ")
         )
-    }
-}
-
-impl TreeDisplay for ParameterList {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}ParameterList:", "")?;
-        depth.indent();
-        self.0.iter().try_for_each(|p| p.tree_print(f, depth))
     }
 }

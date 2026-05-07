@@ -3,7 +3,7 @@
 
 //! Return statement syntax elements.
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::lower::ir;
@@ -26,16 +26,5 @@ impl std::fmt::Display for ReturnStatement {
         } else {
             write!(f, "NO RESULT")
         }
-    }
-}
-
-impl TreeDisplay for ReturnStatement {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}ReturnStatement:", "")?;
-        depth.indent();
-        if let Some(result) = &self.result {
-            result.tree_print(f, depth)?;
-        }
-        Ok(())
     }
 }

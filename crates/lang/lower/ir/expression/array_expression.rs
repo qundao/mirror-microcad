@@ -5,7 +5,7 @@
 
 use crate::lower::ir;
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Inner of an [`ArrayExpression`].
@@ -58,21 +58,6 @@ impl SrcReferrer for ArrayExpressionInner {
     }
 }
 
-impl TreeDisplay for ArrayExpressionInner {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        match &self {
-            ArrayExpressionInner::List(expressions) => {
-                writeln!(f, "{:depth$}List:", "")?;
-                depth.indent();
-                expressions
-                    .iter()
-                    .try_for_each(|expression| expression.tree_print(f, depth))
-            }
-            ArrayExpressionInner::Range(range_expression) => range_expression.tree_print(f, depth),
-        }
-    }
-}
-
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]`.
 #[derive(Default, Clone, Debug, Deref, DerefMut, PartialEq, SrcReferrer)]
 pub struct ArrayExpression {
@@ -89,14 +74,5 @@ pub struct ArrayExpression {
 impl std::fmt::Display for ArrayExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "[{}]{}", self.inner, self.unit)
-    }
-}
-
-impl TreeDisplay for ArrayExpression {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}ArrayExpression:", "")?;
-        depth.indent();
-        self.inner.tree_print(f, depth)?;
-        self.unit.tree_print(f, depth)
     }
 }

@@ -4,9 +4,9 @@
 //! µcad source file representation
 
 use crate::lower::ir;
+
 use microcad_lang_base::{
-    ComputedHash, Hashed, Identifier, LineCol, MietteSourceFile, SrcRef, SrcReferrer, TreeDisplay,
-    TreeState,
+    ComputedHash, Hashed, Identifier, LineCol, MietteSourceFile, SrcRef, SrcReferrer,
 };
 
 /// µcad source file
@@ -96,25 +96,6 @@ impl SourceFile {
 impl std::fmt::Display for SourceFile {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.statements.iter().try_for_each(|s| writeln!(f, "{s}"))
-    }
-}
-
-impl TreeDisplay for SourceFile {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(
-            f,
-            "{:depth$}SourceFile '{:?}' ({}):",
-            "",
-            self.id(),
-            self.filename_as_str()
-        )?;
-        depth.indent();
-        if let Some(doc) = &self.doc {
-            doc.tree_print(f, depth)?;
-        }
-        self.statements
-            .iter()
-            .try_for_each(|s| s.tree_print(f, depth))
     }
 }
 

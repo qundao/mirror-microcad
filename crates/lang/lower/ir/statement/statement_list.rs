@@ -4,6 +4,7 @@
 //! Statement list syntax element.
 
 use crate::lower::ir;
+
 use derive_more::Deref;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 

@@ -3,11 +3,10 @@
 
 //! If statement syntax elements.
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
-use microcad_lang_proc_macros::SrcReferrer;
-
 use crate::lower::ir;
 
+use microcad_lang_base::SrcRef;
+use microcad_lang_proc_macros::SrcReferrer;
 /// If statement.
 #[derive(Clone, Debug, SrcReferrer)]
 pub struct IfStatement {
@@ -37,22 +36,6 @@ impl std::fmt::Display for IfStatement {
         }
         if let Some(body) = &self.body_else {
             writeln!(f, "else {body}")?;
-        }
-        Ok(())
-    }
-}
-
-impl TreeDisplay for IfStatement {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}IfStatement:", "")?;
-        depth.indent();
-        writeln!(f, "{:depth$}Condition:", "")?;
-        self.cond.tree_print(f, depth.indented())?;
-        writeln!(f, "{:depth$}If:", "")?;
-        self.body.tree_print(f, depth.indented())?;
-        if let Some(body_else) = &self.body_else {
-            writeln!(f, "{:depth$}Else:", "")?;
-            body_else.tree_print(f, depth.indented())?;
         }
         Ok(())
     }

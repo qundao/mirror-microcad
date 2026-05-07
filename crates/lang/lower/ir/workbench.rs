@@ -6,7 +6,7 @@
 use crate::lower::ir;
 
 use custom_debug::Debug;
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 use strum::Display;
 
@@ -86,22 +86,5 @@ impl std::fmt::Display for WorkbenchDefinition {
             plan = self.plan,
             body = self.body
         )
-    }
-}
-
-impl TreeDisplay for WorkbenchDefinition {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(
-            f,
-            "{:depth$}{visibility}Workbench ({kind}) '{id}':",
-            "",
-            visibility = self.visibility,
-            kind = self.kind,
-            id = self.id
-        )?;
-        depth.indent();
-        self.doc.tree_print(f, depth)?;
-        self.plan.tree_print(f, depth)?;
-        self.body.tree_print(f, depth)
     }
 }

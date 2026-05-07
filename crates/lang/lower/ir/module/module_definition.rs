@@ -5,7 +5,7 @@
 
 use std::rc::Rc;
 
-use microcad_lang_base::{Identifier, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 use crate::lower::ir;
@@ -39,33 +39,6 @@ impl ModuleDefinition {
 impl SrcReferrer for ModuleDefinition {
     fn src_ref(&self) -> SrcRef {
         self.id.src_ref()
-    }
-}
-
-impl TreeDisplay for ModuleDefinition {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        if let Some(body) = &self.body {
-            writeln!(
-                f,
-                "{:depth$}ModuleDefinition {visibility}'{id}':",
-                "",
-                id = self.id,
-                visibility = self.visibility,
-            )?;
-            depth.indent();
-            self.doc.tree_print(f, depth)?;
-            body.tree_print(f, depth)
-        } else {
-            writeln!(
-                f,
-                "{:depth$}ModuleDefinition {visibility}'{id}' (external)",
-                "",
-                id = self.id,
-                visibility = self.visibility,
-            )?;
-            self.doc.tree_print(f, depth)?;
-            Ok(())
-        }
     }
 }
 

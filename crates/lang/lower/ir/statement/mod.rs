@@ -3,8 +3,6 @@
 
 //! statement syntax elements
 
-use std::rc::Rc;
-
 use crate::lower::ir;
 
 mod assignment_statement;
@@ -18,9 +16,11 @@ pub use assignment_statement::*;
 pub use expression_statement::*;
 pub use if_statement::*;
 pub use inner_doc_comment::*;
-use microcad_lang_base::{SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{SrcRef, SrcReferrer};
 pub use return_statement::*;
 pub use statement_list::*;
+
+use std::rc::Rc;
 
 /// Any statement.
 #[derive(Clone, Debug, strum::IntoStaticStr)]
@@ -96,27 +96,6 @@ impl std::fmt::Display for Statement {
 
             Self::Assignment(a) => write!(f, "{a}"),
             Self::Expression(e) => write!(f, "{e}"),
-        }
-    }
-}
-
-impl TreeDisplay for Statement {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        // statement is transparent
-        match self {
-            Self::Workbench(w) => w.tree_print(f, depth),
-            Self::Module(m) => m.tree_print(f, depth),
-            Self::Function(func) => func.tree_print(f, depth),
-            Self::Init(i) => i.tree_print(f, depth),
-
-            Self::Use(u) => u.tree_print(f, depth),
-            Self::Return(r) => r.tree_print(f, depth),
-            Self::If(i) => i.tree_print(f, depth),
-            Self::InnerAttribute(i) => i.tree_print(f, depth),
-            Self::InnerDocComment(i) => i.tree_print(f, depth),
-
-            Self::Assignment(a) => a.tree_print(f, depth),
-            Self::Expression(e) => e.tree_print(f, depth),
         }
     }
 }

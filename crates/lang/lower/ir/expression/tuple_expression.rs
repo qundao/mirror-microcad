@@ -5,7 +5,7 @@
 
 use crate::lower::ir;
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
@@ -33,13 +33,5 @@ impl std::fmt::Display for TupleExpression {
                 .join(", ")
         )?;
         Ok(())
-    }
-}
-
-impl TreeDisplay for TupleExpression {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}TupleExpression:", "")?;
-        depth.indent();
-        self.args.tree_print(f, depth)
     }
 }

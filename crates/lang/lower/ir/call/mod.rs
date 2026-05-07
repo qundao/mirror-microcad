@@ -10,7 +10,7 @@ mod method_call;
 pub use argument::*;
 pub use argument_list::*;
 pub use method_call::*;
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::lower::ir;
@@ -29,15 +29,5 @@ pub struct Call {
 impl std::fmt::Display for Call {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}({})", self.name, self.argument_list)
-    }
-}
-
-impl TreeDisplay for Call {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Call '{}':", "", self.name)?;
-        depth.indent();
-        self.argument_list
-            .iter()
-            .try_for_each(|a| a.tree_print(f, depth))
     }
 }

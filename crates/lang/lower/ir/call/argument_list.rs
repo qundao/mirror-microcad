@@ -6,7 +6,7 @@
 use crate::lower::ir;
 
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Identifier, OrdMap, Refer, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, OrdMap, Refer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// *Ordered map* of arguments in a [`Call`].
@@ -25,14 +25,6 @@ impl std::fmt::Display for ArgumentList {
             v.sort();
             v.join(", ")
         })
-    }
-}
-
-impl TreeDisplay for ArgumentList {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}ArgumentList:", "")?;
-        depth.indent();
-        self.0.value.iter().try_for_each(|p| p.tree_print(f, depth))
     }
 }
 

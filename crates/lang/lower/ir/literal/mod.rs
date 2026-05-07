@@ -6,7 +6,7 @@
 mod number_literal;
 mod units;
 
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 pub use number_literal::*;
 pub use units::*;
 
@@ -60,17 +60,6 @@ impl std::fmt::Display for Literal {
             Literal::Integer(i) => write!(f, "{i}"),
             Literal::Number(n) => write!(f, "{n}"),
             Literal::Bool(b) => write!(f, "{b}"),
-        }
-    }
-}
-
-impl TreeDisplay for Literal {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        write!(f, "{:depth$}Literal: ", "")?;
-        match self {
-            Literal::Integer(i) => writeln!(f, "{i}"),
-            Literal::Number(n) => writeln!(f, "{n}"),
-            Literal::Bool(b) => writeln!(f, "{b}"),
         }
     }
 }

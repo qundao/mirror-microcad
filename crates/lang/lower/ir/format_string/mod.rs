@@ -8,7 +8,8 @@ mod format_spec;
 
 pub use format_expression::*;
 pub use format_spec::*;
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format string item.
@@ -71,16 +72,5 @@ impl std::fmt::Display for FormatString {
         }
         write!(f, r#"""#)?;
         Ok(())
-    }
-}
-
-impl TreeDisplay for FormatString {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}FormatString:", "")?;
-        depth.indent();
-        self.0.iter().try_for_each(|fs| match fs {
-            FormatStringInner::String(s) => writeln!(f, "{:depth$}String: \"{}\"", "", s.value),
-            FormatStringInner::FormatExpression(e) => e.tree_print(f, depth),
-        })
     }
 }

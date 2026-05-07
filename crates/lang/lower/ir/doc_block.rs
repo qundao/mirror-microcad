@@ -3,7 +3,7 @@
 
 //! Documentation block syntax element
 
-use microcad_lang_base::{Refer, SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::{Refer, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Block of documentation comments, starting with `/// `.
@@ -61,20 +61,6 @@ impl std::fmt::Display for DocBlock {
     }
 }
 
-impl TreeDisplay for DocBlock {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        if self.is_empty() {
-            Ok(())
-        } else {
-            writeln!(
-                f,
-                "{:depth$}DocBlock: '{}'",
-                "",
-                microcad_lang_base::shorten(&self.0.first().cloned().unwrap_or_default(), 80)
-            )
-        }
-    }
-}
 #[test]
 fn doc_block_merge() {
     let doc_a = DocBlock(Refer::none(vec!["/// line 1".to_string()]));

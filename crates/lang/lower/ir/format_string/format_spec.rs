@@ -3,7 +3,7 @@
 
 //! Format Specification syntax element
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format specification.
@@ -23,19 +23,6 @@ impl std::fmt::Display for FormatSpec {
             (Some(width), Some(precision)) => write!(f, "0{width}.{precision}"),
             (None, Some(precision)) => write!(f, ".{precision}"),
             (Some(width), None) => write!(f, "0{width}"),
-            _ => Ok(()),
-        }
-    }
-}
-
-impl TreeDisplay for FormatSpec {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        match (self.width, self.precision) {
-            (Some(width), Some(precision)) => {
-                writeln!(f, "{:depth$}FormatSpec: 0{width}.{precision}", "")
-            }
-            (None, Some(precision)) => writeln!(f, "{:depth$}FormatSpec: .{precision}", ""),
-            (Some(width), None) => writeln!(f, "{:depth$}FormatSpec:  0{width}", ""),
             _ => Ok(()),
         }
     }

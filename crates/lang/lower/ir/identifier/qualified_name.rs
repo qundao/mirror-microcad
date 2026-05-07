@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+
+use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 use miette::SourceSpan;
 
@@ -90,19 +91,6 @@ impl QualifiedName {
         }
     }
 
-    /// Return the base of the given relative name.
-    pub fn base(&self, relative: &Self) -> Self {
-        if self == relative {
-            QualifiedName::default()
-        } else {
-            assert!(!relative.is_empty());
-            assert!(self.len() > relative.len());
-            assert!(self.ends_with(relative));
-            let (base, _) = self.split_at(self.len() - relative.len());
-            base.iter().cloned().collect()
-        }
-    }
-
     /// Add given prefix to name
     pub fn with_prefix(&self, prefix: &QualifiedName) -> Self {
         let mut full_name = prefix.clone();
@@ -140,21 +128,6 @@ impl From<Identifier> for QualifiedName {
         let src_ref = id.src_ref();
         Self(Refer::new(vec![id], src_ref))
     }
-}
-
-#[test]
-fn test_base() {
-    let d: QualifiedName = "a::b::c::d".into();
-    assert_eq!(d.base(&"b::c::d".into()), "a".into());
-    assert_eq!(d.base(&"c::d".into()), "a::b".into());
-    assert_eq!(d.base(&"d".into()), "a::b::c".into());
-}
-
-#[test]
-#[should_panic]
-fn test_base_panic() {
-    let d: QualifiedName = "a::b::c::d".into();
-    assert_eq!(d.base(&"a::b::c::d".into()), "".into());
 }
 
 #[test]
@@ -235,19 +208,5 @@ impl From<QualifiedName> for String {
             .map(|id| format!("{id}"))
             .collect::<Vec<_>>()
             .join("::")
-    }
-}
-
-impl TreeDisplay for QualifiedName {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        writeln!(
-            f,
-            "{:depth$}QualifiedName: '{}'",
-            "",
-            self.iter()
-                .map(|id| format!("{id:?}"))
-                .collect::<Vec<_>>()
-                .join("::")
-        )
     }
 }

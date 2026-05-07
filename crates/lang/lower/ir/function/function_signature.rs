@@ -5,7 +5,7 @@
 
 use crate::lower::ir;
 
-use microcad_lang_base::{Identifier, SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Parameters and return type of a function
@@ -24,19 +24,6 @@ impl FunctionSignature {
     pub fn parameter_by_name(&self, name: &Identifier) -> Option<&ir::Parameter> {
         use crate::lower::Identifiable;
         self.parameters.iter().find(|arg| arg.id_ref() == name)
-    }
-}
-
-impl TreeDisplay for FunctionSignature {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Parameters:", "")?;
-        depth.indent();
-        self.parameters.tree_print(f, depth)?;
-        if let Some(return_type) = &self.return_type {
-            writeln!(f, "{:depth$}Return:", "")?;
-            return_type.tree_print(f, depth)?;
-        };
-        Ok(())
     }
 }
 

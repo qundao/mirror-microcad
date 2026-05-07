@@ -3,7 +3,7 @@
 
 //! Expression statement syntax elements
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::lower::ir;
@@ -17,12 +17,6 @@ pub struct ExpressionStatement {
     pub expression: ir::Expression,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl TreeDisplay for ExpressionStatement {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        self.expression.tree_print(f, depth)
-    }
 }
 
 impl std::fmt::Display for ExpressionStatement {

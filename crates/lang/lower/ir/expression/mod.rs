@@ -4,7 +4,6 @@
 //! µcad syntax elements related to expressions
 
 use crate::lower::ir;
-use crate::value::*;
 
 mod array_expression;
 mod marker;
@@ -16,7 +15,7 @@ pub use marker::*;
 pub use range_expression::*;
 pub use tuple_expression::*;
 
-use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 
 /// List of expressions.
 pub type ListExpression = Vec<Expression>;
@@ -182,73 +181,6 @@ impl std::fmt::Display for Expression {
             Self::QualifiedName(qualified_name) => write!(f, "{qualified_name}"),
             Self::Marker(marker) => write!(f, "{marker}"),
             _ => unimplemented!(),
-        }
-    }
-}
-
-impl TreeDisplay for Value {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        write!(f, "{:depth$}Value: {value}", "", value = self)
-    }
-}
-
-impl TreeDisplay for Expression {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        match self {
-            Expression::Literal(literal) => literal.tree_print(f, depth),
-            Expression::FormatString(format_string) => format_string.tree_print(f, depth),
-            Expression::ArrayExpression(array_expression) => array_expression.tree_print(f, depth),
-            Expression::TupleExpression(tuple_expression) => tuple_expression.tree_print(f, depth),
-            Expression::BinaryOp {
-                lhs,
-                op,
-                rhs,
-                src_ref: _,
-            } => {
-                writeln!(f, "{:depth$}BinaryOp '{op}':", "")?;
-                depth.indent();
-                lhs.tree_print(f, depth)?;
-                rhs.tree_print(f, depth)
-            }
-            Expression::UnaryOp {
-                op,
-                rhs,
-                src_ref: _,
-            } => {
-                writeln!(f, "{:depth$}UnaryOp '{op}':", "")?;
-                depth.indent();
-                rhs.tree_print(f, depth)
-            }
-            Expression::ArrayElementAccess(lhs, rhs, _) => {
-                writeln!(f, "{:depth$}ArrayElementAccess:", "")?;
-                depth.indent();
-                lhs.tree_print(f, depth)?;
-                rhs.tree_print(f, depth)
-            }
-            Expression::PropertyAccess(lhs, rhs, _) => {
-                writeln!(f, "{:depth$}FieldAccess:", "")?;
-                depth.indent();
-                lhs.tree_print(f, depth)?;
-                rhs.tree_print(f, depth)
-            }
-            Expression::AttributeAccess(lhs, rhs, _) => {
-                writeln!(f, "{:depth$}AttributeAccess:", "")?;
-                depth.indent();
-                lhs.tree_print(f, depth)?;
-                rhs.tree_print(f, depth)
-            }
-            Expression::MethodCall(lhs, method_call, _) => {
-                writeln!(f, "{:depth$}MethodCall:", "")?;
-                depth.indent();
-                lhs.tree_print(f, depth)?;
-                method_call.tree_print(f, depth)
-            }
-            Expression::Call(call) => call.tree_print(f, depth),
-            Expression::Body(body) => body.tree_print(f, depth),
-            Expression::If(if_) => if_.tree_print(f, depth),
-            Expression::QualifiedName(qualified_name) => qualified_name.tree_print(f, depth),
-            Expression::Marker(marker) => marker.tree_print(f, depth),
-            Expression::Invalid => write!(f, "INVALID EXPRESSION"),
         }
     }
 }

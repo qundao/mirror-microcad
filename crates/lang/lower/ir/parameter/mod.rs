@@ -7,7 +7,7 @@ mod parameter_list;
 
 use crate::lower::ir;
 
-use microcad_lang_base::{Identifier, OrdMapValue, SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, OrdMapValue, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 pub use parameter_list::*;
 
@@ -37,25 +37,6 @@ impl std::fmt::Display for Parameter {
             (Some(t), None) => write!(f, "{}: {t}", self.id),
             (None, Some(v)) => write!(f, "{} = {v}", self.id),
             _ => Ok(()),
-        }
-    }
-}
-
-impl TreeDisplay for Parameter {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        match (&self.specified_type, &self.default_value) {
-            (Some(specified_type), Some(default_value)) => writeln!(
-                f,
-                "{:depth$}Parameter: {}: {} = {}",
-                "", self.id, specified_type, default_value
-            ),
-            (Some(specified_type), None) => {
-                writeln!(f, "{:depth$}Parameter: {}: {}", "", self.id, specified_type)
-            }
-            (None, Some(default_value)) => {
-                writeln!(f, "{:depth$}Parameter: {} = {}", "", self.id, default_value)
-            }
-            _ => unreachable!("impossible parameter declaration"),
         }
     }
 }

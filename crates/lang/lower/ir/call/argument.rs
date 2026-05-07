@@ -5,7 +5,7 @@
 
 use crate::lower::ir;
 
-use microcad_lang_base::{Identifier, OrdMapValue, SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, OrdMapValue, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Argument in a [`Call`].
@@ -31,17 +31,6 @@ impl std::fmt::Display for Argument {
             Some(ref id) => write!(f, "{id} = {}", self.expression),
             None => write!(f, "{}", self.expression),
         }
-    }
-}
-
-impl TreeDisplay for Argument {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        match self.id {
-            Some(ref id) => writeln!(f, "{:depth$}Argument '{id:?}':", "")?,
-            None => writeln!(f, "{:depth$}Argument:", "")?,
-        };
-        depth.indent();
-        self.expression.tree_print(f, depth)
     }
 }
 

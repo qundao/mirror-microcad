@@ -3,8 +3,6 @@
 
 //! µcad unit syntax element.
 
-use microcad_lang_base::{TreeDisplay, TreeState};
-
 use crate::ty::*;
 
 /// Definition of type & scale of numbers.
@@ -253,16 +251,6 @@ impl Unit {
             // Densities
             Self::GramPerMeter3 => 1_000_000_000_f64,
             Self::GramPerMillimeter3 => 1_f64,
-        }
-    }
-}
-
-impl TreeDisplay for Unit {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        if !matches!(self, Unit::None) {
-            writeln!(f, "{:depth$}Unit: {}", "", self)
-        } else {
-            Ok(())
         }
     }
 }

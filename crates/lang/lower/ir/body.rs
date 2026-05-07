@@ -6,7 +6,7 @@
 use crate::lower::ir;
 
 use derive_more::Deref;
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// [StatementList] from inside `{}` brackets.
@@ -25,15 +25,5 @@ impl std::fmt::Display for Body {
         writeln!(f, "{}", self.statements)?;
         writeln!(f, "}}")?;
         Ok(())
-    }
-}
-
-impl TreeDisplay for Body {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Body:", "")?;
-        depth.indent();
-        self.statements
-            .iter()
-            .try_for_each(|s| s.tree_print(f, depth))
     }
 }

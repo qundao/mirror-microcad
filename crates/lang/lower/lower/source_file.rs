@@ -3,7 +3,7 @@
 
 use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
-use microcad_lang_base::{FormatTree, Hashed, SrcReferrer};
+use microcad_lang_base::{Hashed, SrcReferrer};
 use microcad_lang_parse::ast;
 
 impl ir::SourceFile {
@@ -140,7 +140,6 @@ impl ir::SourceFile {
         };
         source_file.set_filename(path);
         log::debug!("Successfully loaded source from string");
-        log::trace!("Syntax tree:\n{}", FormatTree(&source_file));
         (source_file, None)
     }
 

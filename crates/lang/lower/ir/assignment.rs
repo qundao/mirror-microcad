@@ -3,10 +3,10 @@
 
 //! µcad assignment syntax element
 
-use microcad_lang_base::{Identifier, SrcRef, TreeDisplay, TreeState};
-use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
-
 use crate::{lower::ir, ty::*};
+
+use microcad_lang_base::{Identifier, SrcRef};
+use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 /// Assignment specifying an identifier, type and value
 #[derive(Clone, Debug, SrcReferrer, Identifiable)]
@@ -59,23 +59,5 @@ impl std::fmt::Display for Assignment {
                 expr = self.expression
             ),
         }
-    }
-}
-
-impl TreeDisplay for Assignment {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(
-            f,
-            "{:depth$}Assignment {vis}{qual}'{id}':",
-            "",
-            vis = self.visibility,
-            qual = self.qualifier,
-            id = self.id
-        )?;
-        depth.indent();
-        if let Some(specified_type) = &self.specified_type {
-            specified_type.tree_print(f, depth)?;
-        }
-        self.expression.tree_print(f, depth)
     }
 }

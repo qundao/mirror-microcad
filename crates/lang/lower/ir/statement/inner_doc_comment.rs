@@ -3,7 +3,7 @@
 
 //! Inner doc syntax element impl.
 
-use microcad_lang_base::{Refer, TreeDisplay, TreeState};
+use microcad_lang_base::Refer;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Inner doc syntax element: `//!`.
@@ -15,11 +15,5 @@ pub struct InnerDocComment(pub Refer<String>);
 impl std::fmt::Display for InnerDocComment {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "/// {}", self.0.value)
-    }
-}
-
-impl TreeDisplay for InnerDocComment {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Doc: {}", "", self.0)
     }
 }

@@ -5,7 +5,7 @@
 
 use crate::lower::ir;
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format expression including format specification.
@@ -36,19 +36,6 @@ impl std::fmt::Display for FormatExpression {
             write!(f, "{{{}:{}}}", spec, self.expression)
         } else {
             write!(f, "{{{}}}", self.expression)
-        }
-    }
-}
-
-impl TreeDisplay for FormatExpression {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}FormatExpression:", "")?;
-        depth.indent();
-        if let Some(spec) = &self.spec {
-            spec.tree_print(f, depth)?;
-            self.expression.tree_print(f, depth)
-        } else {
-            self.expression.tree_print(f, depth)
         }
     }
 }

@@ -5,7 +5,7 @@
 
 use std::rc::Rc;
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::lower::ir;
@@ -19,12 +19,6 @@ pub struct AssignmentStatement {
     pub assignment: Rc<ir::Assignment>,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl TreeDisplay for AssignmentStatement {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Assignment {}", "", self.assignment)
-    }
 }
 
 impl std::fmt::Display for AssignmentStatement {

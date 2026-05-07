@@ -3,10 +3,10 @@
 
 //! Initialization definition syntax element
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
-use microcad_lang_proc_macros::SrcReferrer;
-
 use crate::lower::ir;
+
+use microcad_lang_base::SrcRef;
+use microcad_lang_proc_macros::SrcReferrer;
 
 /// Workbench *initializer* definition
 ///
@@ -42,16 +42,6 @@ impl std::fmt::Display for InitDefinition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.signature())?;
         write!(f, "{body}", body = self.body)
-    }
-}
-
-impl TreeDisplay for InitDefinition {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}InitDefinition:", "")?;
-        depth.indent();
-        self.doc.tree_print(f, depth)?;
-        self.parameters.tree_print(f, depth)?;
-        self.body.tree_print(f, depth)
     }
 }
 

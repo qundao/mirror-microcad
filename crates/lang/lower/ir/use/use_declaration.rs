@@ -5,8 +5,7 @@
 
 use crate::lower::ir;
 
-use microcad_lang_base::{Identifier, SrcRef, SrcReferrer, TreeDisplay, TreeState};
-use strum::IntoStaticStr;
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 
 /// Use declaration.
 ///
@@ -19,7 +18,7 @@ use strum::IntoStaticStr;
 /// use std::print as p;
 /// ```
 ///
-#[derive(Clone, Debug, IntoStaticStr)]
+#[derive(Clone, Debug)]
 pub enum UseDeclaration {
     /// Import symbols given as qualified names: `use a, b`
     Use(ir::QualifiedName),
@@ -46,23 +45,6 @@ impl std::fmt::Display for UseDeclaration {
             UseDeclaration::UseAll(name) => write!(f, "{name}::*"),
             UseDeclaration::UseAs(name, alias) => {
                 write!(f, "{name} as {alias}")
-            }
-        }
-    }
-}
-
-impl TreeDisplay for UseDeclaration {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        // use declaration is transparent
-        match self {
-            UseDeclaration::Use(name) => {
-                writeln!(f, "{:depth$}use {name}", "")
-            }
-            UseDeclaration::UseAll(name) => {
-                writeln!(f, "{:depth$}use {name}::*", "")
-            }
-            UseDeclaration::UseAs(name, alias) => {
-                writeln!(f, "{:depth$}use {name} as {alias}", "")
             }
         }
     }

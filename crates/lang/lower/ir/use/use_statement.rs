@@ -3,7 +3,7 @@
 
 //! Use statement syntax element.
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 use crate::lower::ir;
@@ -35,13 +35,5 @@ impl std::fmt::Display for UseStatement {
         }
         write!(f, "{}", self.decl)?;
         Ok(())
-    }
-}
-
-impl TreeDisplay for UseStatement {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}UseStatement", "")?;
-        depth.indent();
-        self.decl.tree_print(f, depth)
     }
 }

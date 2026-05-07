@@ -5,7 +5,7 @@
 
 use crate::lower::ir;
 
-use microcad_lang_base::{SrcRef, TreeDisplay, TreeState};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Method call syntax entity.
@@ -22,13 +22,5 @@ pub struct MethodCall {
 impl std::fmt::Display for MethodCall {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}({})", self.name, self.argument_list)
-    }
-}
-
-impl TreeDisplay for MethodCall {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, mut depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}MethodCall '{}':", "", self.name)?;
-        depth.indent();
-        self.argument_list.tree_print(f, depth)
     }
 }

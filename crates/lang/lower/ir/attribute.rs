@@ -6,7 +6,7 @@
 use crate::lower::{Identifiable, SingleIdentifier, ir};
 
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Identifier, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// *Command syntax* within an attribute.
@@ -79,12 +79,6 @@ impl Attribute {
             1 => self.commands.first(),
             _ => None,
         }
-    }
-}
-
-impl TreeDisplay for Attribute {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Attribute: {self}", "")
     }
 }
 
