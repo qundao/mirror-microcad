@@ -5,7 +5,7 @@
 
 use microcad_builtin::*;
 use microcad_core::RenderResolution;
-use microcad_lang::{model::*, ty::*, value::*};
+use microcad_lang::{lower::ir, model::*, ty::*, value::*};
 
 use crate::{config::Config, *};
 
@@ -96,7 +96,7 @@ impl Export {
         use microcad_lang::*;
 
         use std::str::FromStr;
-        let value = syntax::NumberLiteral::from_str(&self.resolution)
+        let value = ir::NumberLiteral::from_str(&self.resolution)
             .map(|literal| literal.value())
             .unwrap_or(value::Value::None);
 
