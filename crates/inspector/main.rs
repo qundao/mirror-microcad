@@ -7,7 +7,9 @@
 
 use clap::Parser;
 
-use microcad_driver::Watcher;
+mod watcher;
+use crate::watcher::Watcher;
+
 use microcad_lang::lower::ir;
 use microcad_lang_base::{Hashed, Refer, SrcRef};
 
@@ -17,12 +19,9 @@ use miette::IntoDiagnostic;
 use std::sync::{Arc, RwLock};
 use std::thread;
 
-mod watcher;
-
 use slint::VecModel;
 
 use crate::to_slint::hash_to_shared_string;
-use crate::watcher::Watcher;
 
 slint::include_modules!();
 
