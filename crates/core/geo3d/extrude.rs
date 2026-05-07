@@ -263,8 +263,7 @@ impl Extrude for Polygon {
         TriangleMesh {
             positions: raw_triangulation
                 .vertices
-                .as_slice()
-                .chunks_exact(2)
+                .iter()
                 .map(|chunk| {
                     let p = Point3::new(chunk[0] as f32, chunk[1] as f32, 0.0_f32);
                     let p = m.transform_point(p);
