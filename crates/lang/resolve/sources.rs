@@ -186,16 +186,6 @@ impl Sources {
         self.get_by_hash(referrer.src_ref().source_hash())
     }
 
-    /// Find a project file by it's file path.
-    pub fn get_by_path(&self, path: &std::path::Path) -> ResolveResult<Rc<ir::SourceFile>> {
-        let path = path.to_path_buf();
-        if let Some(index) = self.by_path.get(&path) {
-            Ok(self.source_files[*index].clone())
-        } else {
-            Err(ResolveError::FileNotFound(path))
-        }
-    }
-
     /// Return code at referrer.
     pub fn get_code(&self, referrer: &impl SrcReferrer) -> ResolveResult<String> {
         Ok(self
