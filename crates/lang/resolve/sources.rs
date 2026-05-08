@@ -267,7 +267,7 @@ impl std::fmt::Display for Sources {
                 .unwrap_or("NO FILE".to_string());
             let name = self
                 .name_from_index(index)
-                .unwrap_or(ir::QualifiedName::no_ref(vec![]));
+                .unwrap_or(ir::QualifiedName::default());
             let hash = source_file.source_hash();
             writeln!(f, "[{index}] {name} {hash:#x} {filename}")?;
         }
@@ -284,7 +284,7 @@ impl std::fmt::Debug for Sources {
                 .unwrap_or("NO FILE".to_string());
             let name = self
                 .name_from_index(index)
-                .unwrap_or(ir::QualifiedName::no_ref(vec![]));
+                .unwrap_or(ir::QualifiedName::default());
             let hash = source_file.source_hash();
             writeln!(f, "[{index}] {name:?} {hash:#x} {filename}")?;
         }

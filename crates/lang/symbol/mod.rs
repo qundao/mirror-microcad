@@ -661,7 +661,6 @@ impl Lookup for Symbol {
             "{lookup} for global symbol '{name:?}'",
             lookup = microcad_lang_base::mark!(LOOKUP)
         );
-        self.deny_super(name)?;
 
         let symbol = match self.search(name, true) {
             Ok(symbol) => {

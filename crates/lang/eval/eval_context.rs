@@ -217,7 +217,6 @@ impl EvalContext {
             "{lookup} for property {name:?}",
             lookup = microcad_lang_base::mark!(LOOKUP)
         );
-        self.root.deny_super(name)?;
 
         if self.stack.current_call_name().is_some() {
             if let Some(id) = name.single_identifier() {
@@ -250,7 +249,6 @@ impl EvalContext {
                 "{lookup} for symbol '{name:?}' in current workbench '{workbench:?}'",
                 lookup = microcad_lang_base::mark!(LOOKUP)
             );
-            self.deny_super(name)?;
             match self.root.lookup_within_name(name, workbench, target) {
                 Ok(symbol) => {
                     log::trace!(

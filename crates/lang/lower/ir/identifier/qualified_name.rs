@@ -47,13 +47,6 @@ impl QualifiedName {
         Self(Refer::new(ids, src_ref))
     }
 
-    /// Create *qualified name* from [`identifier`]s without source code reference.
-    ///
-    /// - `ids`: *Identifiers* that concatenate to the *qualified name*.
-    pub fn no_ref(ids: Vec<Identifier>) -> Self {
-        Self(Refer::none(ids))
-    }
-
     /// Returns true if self is a qualified name with multiple ids in it
     pub fn is_qualified(&self) -> bool {
         self.0.len() > 1
@@ -97,10 +90,6 @@ impl QualifiedName {
         full_name.append(&mut self.clone());
         full_name
     }
-
-    pub(crate) fn count_super(&self) -> usize {
-        self.iter().take_while(|id| id.is_super()).count()
-    }
 }
 
 impl crate::lower::SingleIdentifier for QualifiedName {
@@ -128,12 +117,6 @@ impl From<Identifier> for QualifiedName {
         let src_ref = id.src_ref();
         Self(Refer::new(vec![id], src_ref))
     }
-}
-
-#[test]
-fn dissolve_super() {
-    let what: QualifiedName = "super::super::c::x".into();
-    assert_eq!(what.count_super(), 2);
 }
 
 impl std::fmt::Display for QualifiedName {
