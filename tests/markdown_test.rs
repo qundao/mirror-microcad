@@ -41,7 +41,7 @@ pub fn run_test(env: Option<TestEnv>) {
             env.code()
                 .lines()
                 .enumerate()
-                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset_line(n as u32)))
+                .map(|(n, line)| format!("{n:4}:   {line}", n = n as u32 + env.line_offset))
                 .collect::<Vec<_>>()
                 .join("\n")
         ));
@@ -51,6 +51,7 @@ pub fn run_test(env: Option<TestEnv>) {
             Some(env.name()),
             env.source_path(),
             env.code(),
+            env.line_offset,
         );
         let sources =
             Sources::load(source.clone(), &<Vec<&str>>::new()).expect("no externals to fail");
@@ -67,12 +68,12 @@ pub fn run_test(env: Option<TestEnv>) {
                     let mut error_lines = HashSet::default();
                     for err in errors {
                         if let Some(line) = err.src_ref().line() {
-                            error_lines.insert(line + env.offset() - 1);
+                            error_lines.insert(line);
                         }
                         env.log_ln("-- Parse Error --");
                         let src_ref = err.src_ref();
                         let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
-                        env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
+                        env.log_ln(&diag.to_pretty_string(&sources, &render_options));
                     }
                     if env.has_error_markers() {
                         if env.report_wrong_errors(&error_lines, &HashSet::default()) {
@@ -89,7 +90,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 // test expected to fail succeeded at parsing?
                 None => {
                     // evaluate the code including µcad std library
-                    let mut context = create_context(&source, env.offset());
+                    let mut context = create_context(&source);
                     let eval = context.eval();
 
                     env.report_output(context.output());
@@ -158,7 +159,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         env.log_ln("-- Parse Error --");
                         let src_ref = err.src_ref();
                         let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
-                        env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
+                        env.log_ln(&diag.to_pretty_string(&sources, &render_options));
                     }
 
                     if env.todo() {
@@ -174,7 +175,7 @@ pub fn run_test(env: Option<TestEnv>) {
                 // test awaited to succeed and parsing succeeds?
                 None => {
                     // evaluate the code including µcad std library
-                    let mut context = create_context(&source, env.offset());
+                    let mut context = create_context(&source);
                     let eval = context.eval();
 
                     env.report_output(context.output());
@@ -240,7 +241,7 @@ pub fn run_test(env: Option<TestEnv>) {
 }
 
 // evaluate the code including µcad std library
-fn create_context(source: &Rc<SourceFile>, line_offset: u32) -> EvalContext {
+fn create_context(source: &Rc<SourceFile>) -> EvalContext {
     let mut context = EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
@@ -248,7 +249,6 @@ fn create_context(source: &Rc<SourceFile>, line_offset: u32) -> EvalContext {
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),
-        line_offset - 1,
     )
     .expect("resolve error");
     context.diag.render_options.color = false;

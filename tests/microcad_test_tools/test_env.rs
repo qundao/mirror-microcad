@@ -16,7 +16,8 @@ pub struct TestEnv {
     mode: String,
     params: Option<String>,
     code: String,
-    start_no: u32,
+    /// Line offset
+    pub line_offset: u32,
     log_file: Option<std::fs::File>,
 }
 
@@ -52,11 +53,11 @@ impl std::fmt::Display for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {start_no:?})"#,
+            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {line_offset:?})"#,
             path = self.path,
             orig_name = self.orig_name,
             code = self.code,
-            start_no = self.start_no
+            line_offset = self.line_offset
         )
     }
 }
@@ -68,10 +69,10 @@ impl std::fmt::Debug for TestEnv {
         if !self.params().is_empty() {
             writeln!(f, "           Params: {}", self.params())?;
         }
-        let start = self.start_no;
+        let line_offset = self.line_offset;
         writeln!(
             f,
-            "      Source file: {}:{start}",
+            "      Source file: {}:{line_offset}",
             self.source_path().display()
         )?;
         writeln!(f, "        Test path: {}", self.test_path().display())
@@ -119,7 +120,7 @@ impl TestEnv {
                 mode: mode.unwrap_or("ok").to_string(),
                 params: params.map(|p| p.to_string()),
                 code: code.into(),
-                start_no: line_offset,
+                line_offset,
                 log_file: None,
             })
         }
@@ -189,14 +190,6 @@ impl TestEnv {
         self.path.parent().unwrap().join(".test")
     }
 
-    /// Return test banner filename as string.
-    pub fn banner(&self) -> String {
-        self.banner_file()
-            .to_string_lossy()
-            .escape_default()
-            .to_string()
-    }
-
     /// Return test banner filename as path.
     pub fn banner_file(&self) -> PathBuf {
         self.test_path().join(format!("{}.svg", self.name()))
@@ -225,25 +218,6 @@ impl TestEnv {
     /// Return if parameter `hires` is set.
     pub fn hires(&self) -> bool {
         self.params() == "hires"
-    }
-
-    /// Return markdown file reference of the test.
-    pub fn reference(&self) -> String {
-        format!(
-            "{}:{}",
-            self.source_path().to_str().expect("valid path"),
-            self.start_no
-        )
-    }
-
-    /// Map line number into MD-line number.
-    pub fn offset_line(&self, line_no: u32) -> u32 {
-        line_no + self.start_no
-    }
-
-    /// Map line number into MD-line number.
-    pub fn offset(&self) -> u32 {
-        self.start_no
     }
 
     /// Write into test log (end line with LF).
@@ -322,8 +296,8 @@ impl TestEnv {
                 .collect()
         }
 
-        let lines_with_error = lines_with(self.code(), "// error", self.offset());
-        let lines_with_warning = lines_with(self.code(), "// warning", self.offset());
+        let lines_with_error = lines_with(self.code(), "// error", self.line_offset);
+        let lines_with_warning = lines_with(self.code(), "// warning", self.line_offset);
 
         let errors_ok = self.diff(
             &lines_with_error,
