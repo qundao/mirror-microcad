@@ -4,80 +4,69 @@
 //! µcad source API
 
 use microcad_lang_base::{
-    ComputedHash, Diagnostic, Diagnostics, GetSourceStrByHash, Hashed, LineIndex, PushDiag, Refer,
-    SrcRef, SrcReferrer, Url,
+    ComputedHash, Diagnostic, Diagnostics, GetSourceStrByHash, Hashed, PushDiag, Refer, SrcRef,
+    SrcReferrer, Url,
 };
 
-use crate::ast;
+use crate::{Parse, ParseContext, ast};
 
-/// A µcad source with a parse syntax tree with a line index and the hashed original source code.
+/// A µcad source with a parse syntax tree with a line offset and the hashed original source code.
 pub struct Source {
     /// The source url
     pub url: Url,
-    /// The original text
-    pub text: Hashed<String>,
+    /// Line offset
+    pub line_offset: u32,
+    /// The original source
+    pub source: Hashed<String>,
     /// The µcad program
-    pub ast: ast::Program,
-
-    /// Computed line index.
-    line_index: LineIndex,
+    pub ast: Refer<ast::Program>,
 }
 
-impl Source {
-    /// When you have a location
-    pub fn new(url: Url, content: String) -> Result<Self, Diagnostics> {
-        let line_index = LineIndex::new(&content);
-        let text = Hashed::new(content.to_string());
+impl Parse for Source {
+    fn parse(context: &ParseContext) -> Result<Self, Diagnostics> {
+        let ast = crate::parse(context.source.value()).map_err(|errors| {
+            let mut diag_list = Diagnostics::default();
+
+            for err in errors {
+                let span = err.span.clone();
+                diag_list
+                    .push_diag(Diagnostic::Error(Refer::new(
+                        err.into(),
+                        context.src_ref(&span),
+                    )))
+                    .expect("Diag list should return no error");
+            }
+
+            diag_list
+        })?;
+        let src_ref = context.src_ref(&ast.span);
 
         Ok(Self {
-            url,
-            ast: crate::parse(&content).map_err(|errors| {
-                let mut diag_list = Diagnostics::default();
-
-                for err in errors {
-                    let span = err.span.clone();
-                    diag_list
-                        .push_diag(Diagnostic::Error(Refer::new(
-                            err.into(),
-                            line_index.span_to_src_ref(text.as_str(), span, text.computed_hash()),
-                        )))
-                        .expect("Diag list should return no error");
-                }
-
-                diag_list
-            })?,
-            line_index,
-            text,
+            url: context.url.clone(),
+            ast: Refer::new(ast, src_ref),
+            line_offset: context.line_offset,
+            source: context.source.clone().map(|s| s.to_string()),
         })
-    }
-
-    /// When you just have a string (e.g. tests or REPL)
-    pub fn from_string(content: String) -> Result<Self, Diagnostics> {
-        Self::new(microcad_lang_base::virtual_url(), content)
     }
 }
 
 impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
-        self.line_index.span_to_src_ref(
-            &self.text,
-            self.ast.span.clone(),
-            self.text.computed_hash(),
-        )
+        self.ast.src_ref()
     }
 }
 
 impl GetSourceStrByHash for Source {
     fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
-        if hash == self.text.computed_hash() {
-            Some(self.text.as_str())
+        if hash == self.source.computed_hash() {
+            Some(self.source.as_str())
         } else {
             None
         }
     }
 
     fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
-        if hash == self.text.computed_hash() {
+        if hash == self.source.computed_hash() {
             self.url.to_file_path().ok()
         } else {
             None
