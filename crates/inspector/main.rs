@@ -7,9 +7,7 @@
 
 use clap::Parser;
 
-mod watcher;
-use crate::watcher::Watcher;
-
+use microcad_driver::Watcher;
 use microcad_lang::lower::ir;
 use microcad_lang_base::{Hashed, Refer, SrcRef};
 
