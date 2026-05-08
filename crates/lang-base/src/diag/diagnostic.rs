@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceStrByHash, MietteSourceFile};
+use crate::{GetSourceLocInfoByHash, SourceLocInfo};
 use crate::{diag::*, src_ref::*};
 use miette::SourceCode;
 
@@ -38,11 +38,6 @@ impl Diagnostic {
         }
     }
 
-    /// Return line of the error
-    pub fn line(&self) -> Option<u32> {
-        self.src_ref().line()
-    }
-
     fn report(&self) -> &Report {
         match self {
             Diagnostic::Trace(r)
@@ -73,44 +68,26 @@ impl Diagnostic {
     pub fn pretty_print(
         &self,
         mut f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceStrByHash,
-        line_offset: u32,
+        source_by_hash: &impl GetSourceLocInfoByHash,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
         let hash = src_ref.source_hash();
 
-        fn make_relative(path: &std::path::Path) -> String {
-            let current_dir = std::env::current_dir().expect("current dir");
-            if let Ok(path) = path.canonicalize() {
-                pathdiff::diff_paths(path, current_dir)
-                    .expect("related paths:\n  {path:?}\n  {current_dir:?}")
-            } else {
-                path.to_path_buf()
-            }
-            .to_string_lossy()
-            .to_string()
-        }
-
         match &src_ref.is_none() {
             true => writeln!(f, "{}: {}", self.level(), self.message())?,
             false => {
-                let miette_source = match source_by_hash.get_str_by_hash(hash) {
-                    Some(source) => MietteSourceFile {
-                        source,
-                        name: make_relative(
-                            &source_by_hash
-                                .get_filename_by_hash(hash)
-                                .unwrap_or_default(),
-                        ),
-                        line_offset,
+                let source = match source_by_hash.get_source_loc_info_by_hash(hash) {
+                    Some(source) => SourceLocInfo {
+                        source: source.source,
+                        url: source.url,
+                        line_offset: source.line_offset - 1,
                     },
-                    None => MietteSourceFile::invalid(),
+                    None => SourceLocInfo::invalid(),
                 };
                 let wrapper = DiagnosticWrapper {
                     diagnostic: self,
-                    source: miette_source,
-                    line_offset,
+                    source,
                 };
                 let handler = miette::GraphicalReportHandler::new_themed(options.theme());
                 handler.render_report(&mut f, &wrapper)?
@@ -123,12 +100,11 @@ impl Diagnostic {
     /// Pretty print the diagnostics to a string, see `pretty_print` for more information
     pub fn to_pretty_string(
         &self,
-        source_by_hash: &impl GetSourceStrByHash,
-        line_offset: u32,
+        source_by_hash: &impl GetSourceLocInfoByHash,
         options: &DiagRenderOptions,
     ) -> String {
         let mut buff = String::new();
-        self.pretty_print(&mut buff, source_by_hash, line_offset, options)
+        self.pretty_print(&mut buff, source_by_hash, options)
             .expect("format to string can't fail");
         buff
     }
@@ -169,8 +145,7 @@ impl std::fmt::Debug for Diagnostic {
 
 struct DiagnosticWrapper<'a> {
     diagnostic: &'a Diagnostic,
-    source: MietteSourceFile<'a>,
-    line_offset: u32,
+    source: SourceLocInfo<'a>,
 }
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {
@@ -181,12 +156,12 @@ impl std::fmt::Debug for DiagnosticWrapper<'_> {
 
 impl std::fmt::Display for DiagnosticWrapper<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let src_ref = self.diagnostic.src_ref().with_line_offset(self.line_offset);
+        let src_ref = self.diagnostic.src_ref();
         match self.diagnostic {
-            Diagnostic::Trace(message) => write!(f, "trace: {}: {message}", src_ref),
-            Diagnostic::Info(message) => write!(f, "info: {}: {message}", src_ref),
-            Diagnostic::Warning(error) => write!(f, "warning: {}: {error}", src_ref),
-            Diagnostic::Error(error) => write!(f, "error: {}: {error}", src_ref),
+            Diagnostic::Trace(message) => write!(f, "trace: {src_ref}: {message}"),
+            Diagnostic::Info(message) => write!(f, "info: {src_ref}: {message}"),
+            Diagnostic::Warning(error) => write!(f, "warning: {src_ref}: {error}"),
+            Diagnostic::Error(error) => write!(f, "error: {src_ref}: {error}"),
         }
     }
 }

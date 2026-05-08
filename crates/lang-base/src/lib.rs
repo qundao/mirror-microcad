@@ -66,27 +66,52 @@ pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
 
 /// A compatibility layer for using SourceFile with miette
-pub struct MietteSourceFile<'a> {
+pub struct SourceLocInfo<'a> {
     /// The source text.
     pub source: &'a str,
     /// Name of of file
-    pub name: String,
+    pub url: Url,
     /// Line offset (e.g. used when source comes from a markdown file).
     pub line_offset: u32,
 }
 
-impl MietteSourceFile<'static> {
+impl SourceLocInfo<'static> {
     /// Create an invalid source file for when we can't load the source
     pub fn invalid() -> Self {
-        MietteSourceFile {
+        SourceLocInfo {
             source: "NO FILE",
-            name: "NO FILE".into(),
+            url: virtual_url("invalid"),
             line_offset: 0,
         }
     }
 }
 
-impl SourceCode for MietteSourceFile<'_> {
+impl<'a> SourceLocInfo<'a> {
+    pub fn name(&self) -> String {
+        fn make_relative(path: impl AsRef<std::path::Path>) -> String {
+            let path = path.as_ref();
+            let current_dir = std::env::current_dir().expect("current dir");
+            if let Ok(path) = path.canonicalize() {
+                pathdiff::diff_paths(path, current_dir)
+                    .expect("related paths:\n  {path:?}\n  {current_dir:?}")
+            } else {
+                path.to_path_buf()
+            }
+            .to_string_lossy()
+            .to_string()
+        }
+
+        make_relative(self.url.path())
+    }
+}
+
+impl<'a> ResourceLocation for SourceLocInfo<'a> {
+    fn url(&self) -> &Url {
+        &self.url
+    }
+}
+
+impl SourceCode for SourceLocInfo<'_> {
     fn read_span<'a>(
         &'a self,
         span: &SourceSpan,
@@ -97,7 +122,7 @@ impl SourceCode for MietteSourceFile<'_> {
             self.source
                 .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
-            self.name.clone(),
+            self.name(),
             inner_contents.data(),
             *inner_contents.span(),
             inner_contents.line() + self.line_offset as usize,
@@ -110,12 +135,9 @@ impl SourceCode for MietteSourceFile<'_> {
 }
 
 /// Trait that can fetch for a file by it's hash value.
-pub trait GetSourceStrByHash {
+pub trait GetSourceLocInfoByHash {
     /// Get a source string by it's hash value.
-    fn get_str_by_hash(&self, hash: u64) -> Option<&str>;
-
-    /// Get filename by hash
-    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf>;
+    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>>;
 }
 
 /// Shortens given string to it's first line and to `max_chars` characters.

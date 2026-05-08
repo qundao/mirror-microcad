@@ -3,7 +3,7 @@
 
 use std::slice::Iter;
 
-use crate::{GetSourceStrByHash, diag::*};
+use crate::{GetSourceLocInfoByHash, diag::*};
 
 /// µcad source diagnostics.
 #[derive(Debug, Default)]
@@ -36,13 +36,12 @@ impl Diagnostics {
     pub fn pretty_print(
         &self,
         f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceStrByHash,
-        line_offset: u32,
+        source_by_hash: &impl GetSourceLocInfoByHash,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         self.diagnostics
             .iter()
-            .try_for_each(|diag| diag.pretty_print(f, source_by_hash, line_offset, options))
+            .try_for_each(|diag| diag.pretty_print(f, source_by_hash, options))
     }
 
     /// Merges another Diagnostics collection into this one.

@@ -32,7 +32,7 @@ impl LineIndex {
         let col = line_str.chars().count();
 
         LineCol {
-            line: (line + 1) as u32,
+            line: line as u32,
             col: (col + 1) as u32,
         }
     }
