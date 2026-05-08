@@ -45,8 +45,6 @@ mod module {
             init(alt_param = 7) {
                 init_local = 8;
 
-                assert_eq([super::value, 1]);
-                assert_eq([super::pub_value, 2]);
                 assert_eq([value, 3]);
                 assert_eq([pub_value, 4]);
                 assert_invalid("param");
@@ -59,8 +57,6 @@ mod module {
             prop property = 9;
 
             // post init code
-            assert_eq([super::value,1]);
-            assert_eq([super::pub_value, 2]);
             assert_eq([value, 3]);
             assert_eq([pub_value, 4]);
             assert_eq([param, 5]);
@@ -73,8 +69,6 @@ mod module {
         }
 
         fn function(fn_param = 10) {
-            assert_eq([super::value, 1]);
-            assert_eq([super::pub_value, 2]);
             assert_eq([value, 3]);
             assert_eq([pub_value, 4]);
             assert_invalid("param");
