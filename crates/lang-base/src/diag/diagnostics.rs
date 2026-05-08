@@ -17,14 +17,6 @@ pub struct Diagnostics {
 }
 
 impl Diagnostics {
-    pub fn single_error(report: impl Into<Report>) -> Self {
-        Self {
-            error_count: 1,
-            warning_count: 0,
-            diagnostics: vec![Diagnostic::Error(Refer::none(report.into()))],
-        }
-    }
-
     pub fn has_errors(&self) -> bool {
         self.error_count > 0
     }
@@ -58,6 +50,19 @@ impl Diagnostics {
         self.error_count += other.error_count;
         self.warning_count += other.warning_count;
         self.diagnostics.append(&mut other.diagnostics);
+    }
+}
+
+impl<R> From<R> for Diagnostics
+where
+    R: Into<Report>,
+{
+    fn from(report: R) -> Self {
+        Self {
+            error_count: 1,
+            warning_count: 0,
+            diagnostics: vec![Diagnostic::Error(Refer::none(report.into()))],
+        }
     }
 }
 
