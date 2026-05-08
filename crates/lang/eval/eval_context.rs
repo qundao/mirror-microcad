@@ -362,7 +362,6 @@ impl Lookup<EvalError> for EvalContext {
                         | EvalError::NoPropertyId(_)
                         // for symbol table
                         | EvalError::ResolveError(ResolveError::SymbolNotFound(_))
-                        | EvalError::ResolveError(ResolveError::ExternalPathNotFound(_))
                         | EvalError::ResolveError(ResolveError::SymbolIsPrivate(_))
                         | EvalError::ResolveError(ResolveError::NulHash)
                         | EvalError::ResolveError(ResolveError::WrongTarget),
