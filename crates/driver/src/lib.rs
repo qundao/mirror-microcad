@@ -3,6 +3,7 @@
 
 //! µcad driver is a high-level API to be integrated in LSP, CLI or Viewer.
 
+mod commands;
 mod config;
 mod document;
 mod export;

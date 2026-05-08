@@ -9,9 +9,8 @@ use microcad_lang::{
     render::{RenderCache, RenderContext, RenderWithContext},
     resolve::ResolveContext,
 };
-use microcad_lang_base::{
-    ComputedHash, DiagHandler, DiagRenderOptions, Diagnostics, GetSourceStrByHash, RcMut,
-};
+use microcad_lang_base::{ComputedHash, DiagHandler, Diagnostics, RcMut};
+use microcad_lang_parse::{Parse, ParseContext, Source};
 use miette::Diagnostic;
 use thiserror::Error;
 use url::Url;
@@ -37,23 +36,23 @@ pub enum State {
         source: String,
     },
     Parsed {
-        source: microcad_lang_parse::Source,
+        source: Source,
     },
     Lowered {
-        source: microcad_lang_parse::Source,
+        source: Source,
         resolve_context: ResolveContext,
     },
     Resolved {
-        source: microcad_lang_parse::Source,
+        source: Source,
         eval_context: EvalContext,
     },
     Evaluated {
-        source: microcad_lang_parse::Source,
+        source: Source,
         eval_context: EvalContext,
         model: Model,
     },
     Rendered {
-        source: microcad_lang_parse::Source,
+        source: Source,
         eval_context: EvalContext,
         model: Model,
     },
@@ -77,10 +76,10 @@ impl document::SourceItem {
 
         self.transition(|current| match current {
             State::Parsed { source } => {
-                let hash = source.text.computed_hash();
+                let hash = source.source.computed_hash();
                 let config = microcad_lang_format::FormatConfig::from(&self.config.format);
                 let source = microcad_lang_format::format_source(source, &config)?;
-                formatted = source.text.computed_hash() != hash;
+                formatted = source.source.computed_hash() != hash;
 
                 Ok(State::Parsed { source })
             }
@@ -99,7 +98,7 @@ impl document::SourceItem {
             | State::Lowered { source, .. }
             | State::Resolved { source, .. }
             | State::Evaluated { source, .. }
-            | State::Rendered { source, .. } => &source.text,
+            | State::Rendered { source, .. } => &source.source,
         };
         std::fs::write(self.file_path().expect("path"), source.value()).expect("No error");
         Ok(())
@@ -110,7 +109,8 @@ impl document::SourceItem {
 
         self.transition(|current| match current {
             State::Loaded { source } => {
-                let source = microcad_lang_parse::Source::new(self.url.clone(), source)?;
+                let parse_context = ParseContext::new(&source).with_url(self.url.clone());
+                let source = microcad_lang_parse::Source::parse(&parse_context)?;
                 Ok(State::Parsed { source })
             }
             _ => Ok(current),

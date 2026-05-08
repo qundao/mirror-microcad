@@ -12,7 +12,7 @@ use std::{
 };
 
 use derive_more::From;
-use microcad_lang_base::{DiagRenderOptions, Diagnostics, MICROCAD_EXTENSIONS};
+use microcad_lang_base::{Diagnostics, MICROCAD_EXTENSIONS, RcMut};
 use url::Url;
 
 use crate::{Config, document};
@@ -24,7 +24,7 @@ pub struct Item<S: Default> {
     /// Each document can have its own config
     config: Rc<Config>,
     /// Each document item keeps its [Diagnostics]
-    diagnostics: RefCell<Diagnostics>,
+    diagnostics: RcMut<Diagnostics>,
     /// Each document has a state.
     state: RefCell<S>,
 }
@@ -37,7 +37,7 @@ impl<S: Default> Item<S> {
         Rc::new(Self {
             url,
             config,
-            diagnostics: Default::default(),
+            diagnostics: RcMut::new(Default::default()),
             state: Default::default(),
         })
     }
@@ -74,6 +74,7 @@ pub type MarkdownItem = Item<document::markdown::State>;
 pub type MdBookItem = Item<document::mdbook::State>;
 pub type BuiltinItem = Item<document::builtin::State>;
 
+/// A document containing µcad code.
 #[derive(From)]
 pub enum Document {
     /// A single source file
