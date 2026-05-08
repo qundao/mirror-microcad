@@ -256,7 +256,6 @@ impl document::SourceAsset {
         self.diagnostics.borrow().pretty_print(
             f,
             source,
-            0,
             &microcad_lang_base::DiagRenderOptions::from(&self.config.diagnostics),
         )
     }
