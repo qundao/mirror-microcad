@@ -141,7 +141,6 @@ impl Processor {
                     microcad_lang_base::Capture::new(),
                     microcad_builtin::builtin_exporters(),
                     microcad_builtin::builtin_importers(),
-                    0,
                 ) {
                     Ok(eval) => Context::Eval(eval.into()),
                     Err(_) => todo!(),
@@ -181,7 +180,6 @@ impl Processor {
                     microcad_lang_base::Capture::new(),
                     microcad_builtin::builtin_exporters(),
                     microcad_builtin::builtin_importers(),
-                    0,
                 ) {
                     Ok(mut context) => {
                         context.eval()?;
