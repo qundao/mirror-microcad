@@ -6,7 +6,8 @@
 use crate::lower::ir;
 
 use microcad_lang_base::{
-    ComputedHash, Hashed, Identifier, LineCol, MietteSourceFile, SrcRef, SrcReferrer,
+    ComputedHash, Hashed, Identifier, LineCol, ResourceLocation, SourceLocInfo, SrcRef,
+    SrcReferrer, Url,
 };
 
 /// µcad source file
@@ -19,9 +20,11 @@ pub struct SourceFile {
     /// Root code body.
     pub statements: ir::StatementList,
     /// Name of loaded file.
-    pub filename: Option<std::path::PathBuf>,
+    pub url: Url,
     /// Source file string with hash
     pub source: Hashed<String>,
+    /// Line offset
+    pub line_offset: u32,
 }
 
 impl SourceFile {
@@ -30,44 +33,44 @@ impl SourceFile {
         doc: Option<ir::DocBlock>,
         statements: ir::StatementList,
         source: Hashed<String>,
+        url: Url,
     ) -> Self {
         Self {
             doc,
             statements,
             source,
-            filename: None,
+            url,
             name: ir::QualifiedName::default(),
+            line_offset: 0,
         }
     }
 
-    /// Return filename of loaded file or `<NO FILE>`
-    pub fn filename(&self) -> std::path::PathBuf {
-        self.filename
-            .clone()
-            .unwrap_or(std::path::PathBuf::from("<NO FILE>"))
-    }
-
-    /// Return filename of loaded file or `<NO FILE>`
-    pub fn set_filename(&mut self, path: impl AsRef<std::path::Path>) {
-        assert!(self.filename.is_none());
-        self.filename = Some(
-            path.as_ref()
-                .canonicalize()
-                .unwrap_or(path.as_ref().to_path_buf()),
-        )
-    }
-
-    /// Return filename of loaded file or `<no file>`
-    pub fn filename_as_str(&self) -> &str {
-        self.filename
-            .as_ref()
-            .map(|f| f.to_str().expect("File name error {filename:?}"))
-            .unwrap_or("NO FILE")
+    pub fn with_line_offset(self, line_offset: u32) -> Self {
+        let mut src = self;
+        src.line_offset = line_offset;
+        src
     }
 
     /// Return the module name from the file name
     pub fn id(&self) -> Identifier {
         self.name.last().unwrap_or(&Identifier::none()).clone()
+    }
+
+    /// Return filename of loaded file or `<NO FILE>`
+    pub fn filename(&self) -> std::path::PathBuf {
+        self.to_file_path()
+            .unwrap_or(std::path::PathBuf::from("<NO FILE>"))
+    }
+
+    /// Return filename of loaded file or `<NO FILE>`
+    pub fn set_filename(&mut self, path: impl AsRef<std::path::Path>) {
+        assert!(self.to_file_path().is_none());
+        self.url = Url::from_file_path(
+            path.as_ref()
+                .canonicalize()
+                .unwrap_or(path.as_ref().to_path_buf()),
+        )
+        .unwrap_or(self.url.clone());
     }
 
     /// get a specific line
@@ -84,12 +87,18 @@ impl SourceFile {
     }
 
     /// Get a miette source adapter for the SourceFile
-    pub fn miette_source<'a>(&'a self, path: String, line_offset: u32) -> MietteSourceFile<'a> {
-        MietteSourceFile {
+    pub fn source_loc_info<'a>(&'a self) -> SourceLocInfo<'a> {
+        SourceLocInfo {
             source: &self.source,
-            name: path,
-            line_offset,
+            url: self.url.clone(),
+            line_offset: self.line_offset,
         }
+    }
+}
+
+impl ResourceLocation for SourceFile {
+    fn url(&self) -> &microcad_lang_base::Url {
+        &self.url
     }
 }
 

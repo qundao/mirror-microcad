@@ -4,7 +4,9 @@
 //! Source file cache
 
 use derive_more::Deref;
-use microcad_lang_base::{GetSourceStrByHash, SrcReferrer};
+use microcad_lang_base::{
+    GetSourceLocInfoByHash, HashId, ResourceLocation, SourceLocInfo, SrcReferrer,
+};
 
 use crate::{
     lower::{LowerErrorsWithSource, ir},
@@ -245,17 +247,11 @@ pub trait GetSourceByHash {
     fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<ir::SourceFile>>;
 }
 
-impl GetSourceStrByHash for Sources {
-    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
+impl GetSourceLocInfoByHash for Sources {
+    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>> {
         self.by_hash
             .get(&hash)
-            .map(|index| self.source_files[*index].source.as_str())
-    }
-
-    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
-        self.by_hash
-            .get(&hash)
-            .map(|index| self.source_files[*index].filename())
+            .map(|index| self.source_files[*index].source_loc_info())
     }
 }
 
@@ -275,7 +271,10 @@ impl GetSourceByHash for Sources {
 impl std::fmt::Display for Sources {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for (index, source_file) in self.source_files.iter().enumerate() {
-            let filename = source_file.filename_as_str();
+            let filename = source_file
+                .to_file_path()
+                .map(|p| p.to_string_lossy().to_string())
+                .unwrap_or("NO FILE".to_string());
             let name = self
                 .name_from_index(index)
                 .unwrap_or(ir::QualifiedName::no_ref(vec![]));
@@ -289,7 +288,10 @@ impl std::fmt::Display for Sources {
 impl std::fmt::Debug for Sources {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         for (index, source_file) in self.source_files.iter().enumerate() {
-            let filename = source_file.filename_as_str();
+            let filename = source_file
+                .to_file_path()
+                .map(|p| p.to_string_lossy().to_string())
+                .unwrap_or("NO FILE".to_string());
             let name = self
                 .name_from_index(index)
                 .unwrap_or(ir::QualifiedName::no_ref(vec![]));

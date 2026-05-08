@@ -3,8 +3,8 @@
 
 use microcad_core::hash::HashSet;
 use microcad_lang_base::{
-    Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceStrByHash, Output, PushDiag,
-    SrcReferrer, TreeDisplay, TreeState,
+    Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceLocInfoByHash, HashId, Output,
+    PushDiag, SourceLocInfo, SrcReferrer, TreeDisplay, TreeState,
 };
 
 use crate::{
@@ -69,10 +69,9 @@ impl EvalContext {
         output: Box<dyn Output>,
         exporters: ExporterRegistry,
         importers: ImporterRegistry,
-        line_offset: u32,
     ) -> EvalResult<Self> {
         Ok(Self::new(
-            ResolveContext::create(root, search_paths, builtin, DiagHandler::new(line_offset))?,
+            ResolveContext::create(root, search_paths, builtin, DiagHandler::default())?,
             output,
             exporters,
             importers,
@@ -479,13 +478,9 @@ impl GetSourceByHash for EvalContext {
     }
 }
 
-impl GetSourceStrByHash for EvalContext {
-    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
-        self.sources.get_str_by_hash(hash)
-    }
-
-    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
-        self.sources.get_filename_by_hash(hash)
+impl GetSourceLocInfoByHash for EvalContext {
+    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>> {
+        self.sources.get_source_loc_info_by_hash(hash)
     }
 }
 

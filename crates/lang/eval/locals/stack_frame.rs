@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Identifier, SrcRef};
+use microcad_lang_base::{Identifier, ResourceLocation, SrcRef};
 
 use crate::{
     eval::*,
@@ -204,8 +204,12 @@ impl StackFrame {
                         "            at {filename}:{line_col}",
                         filename = source_file
                             .as_ref()
-                            .map(|sf| sf.filename_as_str())
-                            .unwrap_or("NO FILE"),
+                            .map(|sf| sf
+                                .to_file_path()
+                                .unwrap_or(std::path::PathBuf::from("<NO FILE>")))
+                            .unwrap_or(std::path::PathBuf::from("<NO FILE>"))
+                            .to_string_lossy()
+                            .to_string()
                     )?;
                 }
             }

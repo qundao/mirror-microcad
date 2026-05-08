@@ -71,6 +71,7 @@ fn test_recurse_children() {
             None,
             ir::StatementList::default(),
             microcad_lang_base::Hashed::new(String::new()),
+            microcad_lang_base::virtual_url("test"),
         ))),
         None,
     );

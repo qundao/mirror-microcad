@@ -3,20 +3,22 @@
 
 use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
-use microcad_lang_base::{Hashed, SrcReferrer};
+use microcad_lang_base::{Hashed, SrcReferrer, Url, virtual_url};
 use microcad_lang_parse::ast;
 
 impl ir::SourceFile {
     pub fn from_source(
         source: &microcad_lang_parse::Source,
     ) -> Result<std::rc::Rc<Self>, LowerError> {
-        let context = LowerContext::new(source.source.as_str());
+        let context =
+            LowerContext::new(source.source.as_str()).with_line_offset(source.line_offset);
         Ok(std::rc::Rc::new(Self {
             doc: None,
             statements: ir::StatementList::lower(&source.ast.statements, &context)?,
             source: source.source.clone(),
             name: ir::QualifiedName::default(),
-            filename: source.url.to_file_path().ok(),
+            url: source.url.clone(),
+            line_offset: source.line_offset,
         }))
     }
 
@@ -51,13 +53,14 @@ impl ir::SourceFile {
                     None,
                     ir::StatementList::default(),
                     Hashed::new(String::new()),
+                    Url::from_file_path(path).unwrap_or(virtual_url("invalid")),
                 );
                 source_file.name = name;
                 return (std::rc::Rc::new(source_file), Some(error.into()));
             }
         };
 
-        let (mut source_file, errors) = Self::load_inner(None, path, &buf);
+        let (mut source_file, errors) = Self::load_inner(None, path, &buf, 0);
         source_file.name = name;
         log::debug!(
             "Successfully loaded external file {} to {}",
@@ -75,7 +78,7 @@ impl ir::SourceFile {
         path: impl AsRef<std::path::Path>,
         source_str: &str,
     ) -> Result<std::rc::Rc<Self>, Vec<LowerError>> {
-        let (source, error) = Self::load_inner(name, path, source_str);
+        let (source, error) = Self::load_inner(name, path, source_str, 0);
         match error {
             Some(error) => Err(error.errors),
             None => Ok(std::rc::Rc::new(source)),
@@ -88,8 +91,9 @@ impl ir::SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
+        line_offset: u32,
     ) -> (std::rc::Rc<Self>, Option<Vec<LowerError>>) {
-        let (source, error) = Self::load_inner(name, path, source_str);
+        let (source, error) = Self::load_inner(name, path, source_str, line_offset);
         (std::rc::Rc::new(source), error.map(|err| err.errors))
     }
 
@@ -97,31 +101,32 @@ impl ir::SourceFile {
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,
         source_str: &str,
+        line_offset: u32,
     ) -> (Self, Option<LowerErrorsWithSource>) {
         log::trace!(
             "{load} source from string",
             load = microcad_lang_base::mark!(LOAD)
         );
-        let parse_context = LowerContext::new(source_str);
+        let lower_context = LowerContext::new(source_str).with_line_offset(line_offset);
 
         let dummy_source = || {
-            let mut source = ir::SourceFile::new(
+            ir::SourceFile::new(
                 None,
                 ir::StatementList::default(),
                 Hashed::new(source_str.into()),
-            );
-            source.filename = Some(path.as_ref().into());
-            source
+                Url::from_file_path(&path).unwrap_or(virtual_url("dummy")),
+            )
+            .with_line_offset(line_offset)
         };
 
-        let ast = match crate::lower::lower::build_ast(source_str, &parse_context) {
+        let ast = match crate::lower::lower::build_ast(source_str, &lower_context) {
             Ok(ast) => ast,
             Err(error) => {
                 return (dummy_source(), Some(error));
             }
         };
 
-        let mut source_file = match Self::lower(&ast, &parse_context).map_err(|error| vec![error]) {
+        let mut source_file = match Self::lower(&ast, &lower_context).map_err(|error| vec![error]) {
             Ok(source_file) => source_file,
             Err(errors) => {
                 return (
@@ -140,7 +145,7 @@ impl ir::SourceFile {
         };
         source_file.set_filename(path);
         log::debug!("Successfully loaded source from string");
-        (source_file, None)
+        (source_file.with_line_offset(line_offset), None)
     }
 
     /// Get the source file name from path.
@@ -164,23 +169,7 @@ impl Lower for ir::SourceFile {
             None, // todo
             ir::StatementList::lower(&node.statements, context)?,
             Hashed::new(context.source.to_string()),
+            microcad_lang_base::virtual_url("name"),
         ))
     }
-}
-
-#[test]
-fn parse_source_file() {
-    let source_file = ir::SourceFile::load_from_str(
-        None,
-        "test.µcad",
-        r#"use std::log::info;
-            part Foo(r: Scalar) {
-                info("Hello, world, {r}!");
-            }
-            Foo(20.0);
-            "#,
-    )
-    .expect("test error");
-
-    assert_eq!(source_file.statements.len(), 3);
 }
