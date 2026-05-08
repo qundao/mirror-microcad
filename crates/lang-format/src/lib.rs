@@ -1,8 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, virtual_url};
-use microcad_lang_parse::{Source, ast};
+use microcad_lang_base::Diagnostics;
+use microcad_lang_parse::{Parse, ParseContext, Source, ast};
 
 mod expression;
 mod extras;
@@ -125,11 +125,14 @@ pub fn format(program: &ast::Program, config: &FormatConfig) -> String {
 
 /// High-level API to format a &str containing µcad source code.
 pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, Diagnostics> {
-    let source = Source::new(virtual_url(), source.to_string())?;
+    let parse_context = ParseContext::new(source);
+    let source = Source::parse(&parse_context)?;
     Ok(format(&source.ast, config))
 }
 
 /// Format a [Source]
 pub fn format_source(source: Source, config: &FormatConfig) -> Result<Source, Diagnostics> {
-    Source::new(source.url.clone(), format(&source.ast, config))
+    let formatted = format(&source.ast, config);
+    let parse_context = ParseContext::new(&formatted);
+    Source::parse(&parse_context)
 }
