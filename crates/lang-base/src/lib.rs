@@ -24,8 +24,28 @@ pub type Id = CompactString;
 /// URL to locate sources.
 pub use url::Url;
 
-pub fn virtual_url() -> Url {
-    Url::from_str("virtual://file").unwrap()
+pub fn virtual_url(name: &str) -> Url {
+    Url::from_str(&format!("virtual://{name}")).unwrap()
+}
+
+pub trait ResourceLocation {
+    /// The canonical identity of the resource.
+    fn url(&self) -> &Url;
+
+    /// Attempts to convert the location to a physical filesystem path.
+    /// Returns None if the resource is virtual (e.g., ucad-std:// or snippet://).
+    fn to_file_path(&self) -> Option<std::path::PathBuf> {
+        if self.url().scheme() == "file" {
+            self.url().to_file_path().ok()
+        } else {
+            None
+        }
+    }
+
+    /// Helper to identify if the resource exists on disk.
+    fn is_local(&self) -> bool {
+        self.url().scheme() == "file"
+    }
 }
 
 /// List of valid µcad extensions.
