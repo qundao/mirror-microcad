@@ -10,11 +10,11 @@ impl ir::SourceFile {
     pub fn from_source(
         source: &microcad_lang_parse::Source,
     ) -> Result<std::rc::Rc<Self>, LowerError> {
-        let context = LowerContext::new(source.text.as_str());
+        let context = LowerContext::new(source.source.as_str());
         Ok(std::rc::Rc::new(Self {
             doc: None,
             statements: ir::StatementList::lower(&source.ast.statements, &context)?,
-            source: source.text.clone(),
+            source: source.source.clone(),
             name: ir::QualifiedName::default(),
             filename: source.url.to_file_path().ok(),
         }))
