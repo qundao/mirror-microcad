@@ -43,14 +43,11 @@ impl document::MarkdownAsset {
     pub fn load_from_file(&self) -> CommandResult {
         self.transition(|_| match self.file_path() {
             Some(path) => {
-                let markdown = Markdown::load(path).map_err(|err| {
-                    Diagnostics::single_error(MarkdownItemError::MarkdownError(err))
-                })?;
+                let markdown =
+                    Markdown::load(path).map_err(|err| MarkdownItemError::MarkdownError(err))?;
                 Ok(State::Loaded { markdown })
             }
-            None => Err(Diagnostics::single_error(
-                MarkdownItemError::NoLocalMarkdown(self.url.clone()),
-            )),
+            None => Err(MarkdownItemError::NoLocalMarkdown(self.url.clone()).into()),
         })
     }
 
@@ -84,7 +81,7 @@ impl document::MarkdownAsset {
                     Ok(State::Loaded { markdown })
                 }
             } else {
-                Err(Diagnostics::single_error(MarkdownItemError::NotLoaded))
+                Err(MarkdownItemError::NotLoaded.into())
             }
         })?;
 

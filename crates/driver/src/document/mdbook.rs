@@ -38,13 +38,10 @@ impl document::MdBookAsset {
     pub fn load_from_file(&self) -> CommandResult {
         self.transition(|_| match self.file_path() {
             Some(path) => {
-                let mdbook = MdBook::new(path)
-                    .map_err(|err| Diagnostics::single_error(MdBookUnitError::MdBook(err)))?;
+                let mdbook = MdBook::new(path).map_err(|err| MdBookUnitError::MdBook(err))?;
                 Ok(State::Loaded { mdbook })
             }
-            None => Err(Diagnostics::single_error(MdBookUnitError::NoLocalMdBook(
-                self.url.clone(),
-            ))),
+            None => Err(MdBookUnitError::NoLocalMdBook(self.url.clone()).into()),
         })
     }
 
@@ -78,7 +75,7 @@ impl document::MdBookAsset {
                     Ok(State::Loaded { mdbook })
                 }
             } else {
-                Err(Diagnostics::single_error(MdBookUnitError::NotLoaded))
+                Err(MdBookUnitError::NotLoaded.into())
             }
         })?;
 

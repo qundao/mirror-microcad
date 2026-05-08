@@ -9,7 +9,7 @@ use microcad_lang::{
     render::{RenderCache, RenderContext, RenderWithContext},
     resolve::ResolveContext,
 };
-use microcad_lang_base::{ComputedHash, DiagHandler, Diagnostics, RcMut};
+use microcad_lang_base::{ComputedHash, DiagHandler, RcMut};
 use microcad_lang_parse::{Parse, ParseContext, Source};
 use miette::Diagnostic;
 use thiserror::Error;
@@ -64,9 +64,8 @@ impl document::SourceAsset {
             let path = self
                 .url
                 .to_file_path()
-                .map_err(|_| Diagnostics::single_error(SourceError::NoFileUrl(self.url.clone())))?;
-            let source = std::fs::read_to_string(path)
-                .map_err(|err| Diagnostics::single_error(SourceError::IoError(err)))?;
+                .map_err(|_| SourceError::NoFileUrl(self.url.clone()))?;
+            let source = std::fs::read_to_string(path).map_err(|err| SourceError::IoError(err))?;
             Ok(State::Loaded { source })
         })
     }

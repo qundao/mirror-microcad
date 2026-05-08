@@ -1,6 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_builtin::Symbol;
 use microcad_lang_base::{Diagnostics, RcMut};
 
 pub type CommandResult<T = ()> = Result<T, RcMut<Diagnostics>>;
@@ -23,4 +24,9 @@ pub trait Format {
 /// Write document contents to file
 pub trait Sync {
     fn sync(&self) -> CommandResult<()>;
+}
+
+/// Return a symbol
+pub trait GetSymbol {
+    fn get_symbol(&self) -> CommandResult<Symbol>;
 }

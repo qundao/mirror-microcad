@@ -2,17 +2,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_docgen::{Md, MdBook};
+use microcad_lang_base::{Diagnostics, RcMut};
 
-use crate::commands::CommandResult;
+use crate::commands::{CommandResult, GetSymbol};
 
 pub struct DocGenSettings {
-    generator: Option<String>,
+    generator_id: Option<String>,
     output_path: Option<std::path::PathBuf>,
 }
 
 impl DocGenSettings {
     fn generator(&self) -> miette::Result<Box<dyn microcad_docgen::DocGen>> {
-        let name = self.generator.clone().unwrap_or("md".to_string());
+        let name = self.generator_id.clone().unwrap_or("md".to_string());
         use microcad_docgen::*;
         match name.as_str() {
             "md" => Ok(Box::new(Md {
@@ -26,6 +27,15 @@ impl DocGenSettings {
     }
 }
 
-pub trait DocGen {
-    fn doc_gen(&self, settings: &DocGenSettings) -> CommandResult<()>;
+pub trait DocGen: GetSymbol {
+    fn doc_gen(&self, settings: &DocGenSettings) -> CommandResult<()> {
+        let generator = settings
+            .generator()
+            .map_err(|err| RcMut::new(miette::miette!("{err}").into()))?;
+
+        let symbol = self.get_symbol()?;
+        generator
+            .doc_gen(&symbol)
+            .map_err(|err| RcMut::new(miette::miette!("{err}").into()))
+    }
 }
