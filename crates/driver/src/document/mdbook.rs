@@ -7,7 +7,7 @@ use miette::Diagnostic;
 use thiserror::Error;
 use url::Url;
 
-use crate::document;
+use crate::{commands::CommandResult, document};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum MdBookUnitError {
@@ -34,8 +34,8 @@ pub enum State {
     },
 }
 
-impl document::MdBookItem {
-    pub fn load_from_file(&'_ self) -> document::DiagResult<'_> {
+impl document::MdBookAsset {
+    pub fn load_from_file(&self) -> CommandResult {
         self.transition(|_| match self.file_path() {
             Some(path) => {
                 let mdbook = MdBook::new(path)
@@ -48,7 +48,7 @@ impl document::MdBookItem {
         })
     }
 
-    pub fn format(&'_ self) -> document::DiagResult<'_, bool> {
+    pub fn format(&'_ self) -> CommandResult<bool> {
         self.load_from_file()?;
         let mut formatted = false;
 
@@ -85,7 +85,7 @@ impl document::MdBookItem {
         Ok(formatted)
     }
 
-    pub fn sync(&'_ self) -> document::DiagResult<'_> {
+    pub fn sync(&self) -> CommandResult {
         Ok(match &*self.state.borrow() {
             State::Raw => (),
             State::Loaded { mdbook } => mdbook.save_all().expect("No error"),

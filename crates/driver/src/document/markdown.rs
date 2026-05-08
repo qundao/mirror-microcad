@@ -8,7 +8,7 @@ use miette::Diagnostic;
 use thiserror::Error;
 use url::Url;
 
-use crate::document;
+use crate::{commands::CommandResult, document};
 use microcad_lang_markdown::{Markdown, MarkdownError};
 
 #[derive(Error, Debug, Diagnostic)]
@@ -35,12 +35,12 @@ pub enum State {
     },
     Processed {
         markdown: Markdown,
-        code_blocks: HashMap<String, Rc<document::SourceItem>>,
+        code_blocks: HashMap<String, Rc<document::SourceAsset>>,
     },
 }
 
-impl document::MarkdownItem {
-    pub fn load_from_file(&self) -> document::DiagResult {
+impl document::MarkdownAsset {
+    pub fn load_from_file(&self) -> CommandResult {
         self.transition(|_| match self.file_path() {
             Some(path) => {
                 let markdown = Markdown::load(path).map_err(|err| {
@@ -54,7 +54,7 @@ impl document::MarkdownItem {
         })
     }
 
-    pub fn format(&'_ self) -> document::DiagResult<'_, bool> {
+    pub fn format(&self) -> CommandResult<bool> {
         self.load_from_file()?;
         let mut formatted = false;
 
@@ -91,7 +91,7 @@ impl document::MarkdownItem {
         Ok(formatted)
     }
 
-    pub fn sync(&'_ self) -> document::DiagResult<'_> {
+    pub fn sync(&self) -> CommandResult {
         Ok(match &*self.state.borrow() {
             State::Raw => (),
             State::Loaded { markdown } | State::Processed { markdown, .. } => markdown

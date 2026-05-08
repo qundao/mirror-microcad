@@ -3,7 +3,7 @@
 
 use microcad_lang_base::{Diagnostics, RcMut};
 
-pub type CommandResult<T> = Result<T, RcMut<Diagnostics>>;
+pub type CommandResult<T = ()> = Result<T, RcMut<Diagnostics>>;
 
 mod doc_gen;
 mod export;

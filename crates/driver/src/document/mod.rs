@@ -6,19 +6,16 @@ mod markdown;
 mod mdbook;
 mod source;
 
-use std::{
-    cell::{Ref, RefCell},
-    rc::Rc,
-};
+use std::{cell::RefCell, rc::Rc};
 
 use derive_more::From;
 use microcad_lang_base::{Diagnostics, MICROCAD_EXTENSIONS, RcMut};
 use url::Url;
 
-use crate::{Config, document};
+use crate::{Config, commands::CommandResult, document};
 
 /// A container for a document with a state and diagnostics
-pub struct Item<S: Default> {
+pub struct Asset<S: Default> {
     /// Each container must a URL.
     url: Url,
     /// Each document can have its own config
@@ -29,9 +26,7 @@ pub struct Item<S: Default> {
     state: RefCell<S>,
 }
 
-pub type DiagResult<'a, T = ()> = Result<T, Ref<'a, Diagnostics>>;
-
-impl<S: Default> Item<S> {
+impl<S: Default> Asset<S> {
     /// Create a new container
     fn new(url: Url, config: Rc<Config>) -> Rc<Self> {
         Rc::new(Self {
@@ -43,7 +38,7 @@ impl<S: Default> Item<S> {
     }
 
     /// Generic transitioner to move the pipeline forward
-    fn transition<F>(&self, f: F) -> DiagResult
+    fn transition<F>(&self, f: F) -> CommandResult
     where
         F: FnOnce(S) -> Result<S, Diagnostics>,
     {
@@ -56,7 +51,7 @@ impl<S: Default> Item<S> {
             }
             Err(diag) => {
                 self.diagnostics.replace(diag);
-                Err(self.diagnostics.borrow())
+                Err(self.diagnostics.clone())
             }
         }
     }
@@ -69,25 +64,25 @@ impl<S: Default> Item<S> {
     }
 }
 
-pub type SourceItem = Item<document::source::State>;
-pub type MarkdownItem = Item<document::markdown::State>;
-pub type MdBookItem = Item<document::mdbook::State>;
-pub type BuiltinItem = Item<document::builtin::State>;
+pub type SourceAsset = Asset<document::source::State>;
+pub type MarkdownAsset = Asset<document::markdown::State>;
+pub type MdBookAsset = Asset<document::mdbook::State>;
+pub type BuiltinAsset = Asset<document::builtin::State>;
 
 /// A document containing µcad code.
 #[derive(From)]
 pub enum Document {
     /// A single source file
-    Source(Rc<SourceItem>),
+    Source(Rc<SourceAsset>),
 
     /// A markdown file containing source code snippets
-    Markdown(Rc<MarkdownItem>),
+    Markdown(Rc<MarkdownAsset>),
 
     /// An `book.toml` of a markdown book
-    MdBook(Rc<MdBookItem>),
+    MdBook(Rc<MdBookAsset>),
 
     /// A builtin symbol
-    Builtin(Rc<BuiltinItem>),
+    Builtin(Rc<BuiltinAsset>),
 }
 
 impl Document {
@@ -103,12 +98,12 @@ impl Document {
         let extension = path.extension().and_then(|os| os.to_str()).unwrap_or("");
 
         match file_name {
-            "book.toml" => Ok(MdBookItem::new(url, config).into()),
+            "book.toml" => Ok(MdBookAsset::new(url, config).into()),
             _ => match extension {
-                "md" => Ok(MarkdownItem::new(url, config).into()),
+                "md" => Ok(MarkdownAsset::new(url, config).into()),
                 extension => {
                     if MICROCAD_EXTENSIONS.contains(&extension) {
-                        Ok(SourceItem::new(url, config).into())
+                        Ok(SourceAsset::new(url, config).into())
                     } else {
                         Err(miette::miette!("Invalid document type: {extension}"))
                     }
@@ -125,7 +120,7 @@ impl Document {
         Self::new(url, config)
     }
 
-    pub fn load_from_file(&'_ self) -> DiagResult<'_> {
+    pub fn load_from_file(&self) -> CommandResult {
         match &self {
             Document::Source(item) => item.load_from_file(),
             Document::Markdown(item) => item.load_from_file(),
@@ -134,7 +129,7 @@ impl Document {
         }
     }
 
-    pub fn format(&'_ self) -> DiagResult<'_, bool> {
+    pub fn format(&self) -> CommandResult<bool> {
         match &self {
             Document::Source(item) => item.format(),
             Document::Markdown(item) => item.format(),
@@ -144,7 +139,7 @@ impl Document {
     }
 
     /// Write to disk
-    pub fn sync(&'_ self) -> DiagResult<'_> {
+    pub fn sync(&self) -> CommandResult {
         match &self {
             Document::Source(source) => source.sync(),
             Document::Markdown(markdown) => markdown.sync(),
@@ -166,21 +161,21 @@ impl Document {
         self.url().to_file_path().ok()
     }
 
-    pub fn diagnostics(&'_ self) -> std::cell::Ref<'_, Diagnostics> {
+    pub fn diagnostics(&self) -> RcMut<Diagnostics> {
         match self {
-            Document::Source(i) => i.diagnostics.borrow(),
-            Document::Markdown(i) => i.diagnostics.borrow(),
-            Document::MdBook(i) => i.diagnostics.borrow(),
-            Document::Builtin(i) => i.diagnostics.borrow(),
+            Document::Source(i) => i.diagnostics.clone(),
+            Document::Markdown(i) => i.diagnostics.clone(),
+            Document::MdBook(i) => i.diagnostics.clone(),
+            Document::Builtin(i) => i.diagnostics.clone(),
         }
     }
 
     pub fn pretty_print(&self, f: &mut dyn std::fmt::Write) -> std::fmt::Result {
         match self {
             Document::Source(i) => i.pretty_print(f),
-            Document::Markdown(u) => todo!(),
-            Document::MdBook(u) => todo!(),
-            Document::Builtin(u) => todo!(),
+            Document::Markdown(_) => todo!(),
+            Document::MdBook(_) => todo!(),
+            Document::Builtin(_) => todo!(),
         }
     }
 

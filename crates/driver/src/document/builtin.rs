@@ -4,7 +4,7 @@
 use microcad_builtin::Symbol;
 use microcad_docgen::DocGen;
 
-use crate::document;
+use crate::{commands::CommandResult, document};
 
 #[derive(Default)]
 pub enum State {
@@ -13,8 +13,8 @@ pub enum State {
     Symbol(Symbol),
 }
 
-impl document::BuiltinItem {
-    pub fn symbol(&'_ self) -> document::DiagResult<'_> {
+impl document::BuiltinAsset {
+    pub fn symbol(&'_ self) -> CommandResult {
         self.transition(|_| Ok(State::Symbol(microcad_builtin::__builtin())))
     }
 

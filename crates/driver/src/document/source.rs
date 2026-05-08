@@ -15,7 +15,7 @@ use miette::Diagnostic;
 use thiserror::Error;
 use url::Url;
 
-use crate::{Export, document};
+use crate::{Export, commands::CommandResult, document};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum SourceError {
@@ -58,8 +58,8 @@ pub enum State {
     },
 }
 
-impl document::SourceItem {
-    pub fn load_from_file(&'_ self) -> document::DiagResult<'_> {
+impl document::SourceAsset {
+    pub fn load_from_file(&self) -> CommandResult {
         self.transition(|_| {
             let path = self
                 .url
@@ -71,7 +71,7 @@ impl document::SourceItem {
         })
     }
 
-    pub fn format(&'_ self) -> document::DiagResult<'_, bool> {
+    pub fn format(&self) -> CommandResult<bool> {
         let mut formatted = false;
 
         self.transition(|current| match current {
@@ -89,7 +89,7 @@ impl document::SourceItem {
         Ok(formatted)
     }
 
-    pub fn sync(&'_ self) -> document::DiagResult<'_> {
+    pub fn sync(&self) -> CommandResult {
         let state = &*self.state.borrow();
         let source = match state {
             State::Raw => todo!(),
@@ -104,7 +104,7 @@ impl document::SourceItem {
         Ok(())
     }
 
-    pub fn parse(&'_ self) -> document::DiagResult<'_> {
+    pub fn parse(&self) -> CommandResult {
         self.load_from_file()?;
 
         self.transition(|current| match current {
@@ -117,7 +117,7 @@ impl document::SourceItem {
         })
     }
 
-    pub fn lower(&'_ self) -> document::DiagResult<'_> {
+    pub fn lower(&'_ self) -> CommandResult {
         self.parse()?;
 
         self.transition(|current| match current {
@@ -135,7 +135,7 @@ impl document::SourceItem {
         })
     }
 
-    pub fn resolve(&'_ self) -> document::DiagResult<'_> {
+    pub fn resolve(&self) -> CommandResult {
         self.lower()?;
 
         self.transition(|current| match current {
@@ -155,7 +155,7 @@ impl document::SourceItem {
         })
     }
 
-    pub fn eval(&'_ self) -> document::DiagResult<'_> {
+    pub fn eval(&self) -> CommandResult {
         self.resolve()?;
 
         self.transition(|current| match current {
@@ -176,7 +176,7 @@ impl document::SourceItem {
         &'_ self,
         resolution: RenderResolution,
         cache: Option<RcMut<RenderCache>>,
-    ) -> document::DiagResult<'_> {
+    ) -> CommandResult {
         self.eval()?;
 
         self.transition(|current| match current {
