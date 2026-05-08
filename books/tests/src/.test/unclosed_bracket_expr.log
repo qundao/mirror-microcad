@@ -10,9 +10,9 @@
   12:   a = (1 + 2;
 
 -- Parse Error --
-  × error: 13:11: Unclosed bracketed expression
-    ╭─[../books/tests/src/unclosed_brackets.md:13:5]
- 13 │ a = (1 + 2;
+  × error: 12:11: Unclosed bracketed expression
+    ╭─[:12:5]
+ 12 │ a = (1 + 2;
     ·     ┬     ▲
     ·     │     ╰── expected bracketed expression to be closed by here with a ')'
     ·     ╰── bracketed expression opened here

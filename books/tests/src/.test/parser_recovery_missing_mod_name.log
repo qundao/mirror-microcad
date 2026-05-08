@@ -14,30 +14,30 @@
   50:   a =; // error after a mod with no name
 
 -- Parse Error --
-  × error: 47:5: Expected something else, ';', comment, semicolon or identifier
-    ╭─[../books/tests/src/parser_recovery.md:47:5]
- 47 │ mod { // error, no name
+  × error: 46:5: Expected something else, ';', comment, semicolon or identifier
+    ╭─[:46:5]
+ 46 │ mod { // error, no name
     ·     ┬
     ·     ╰── unexpected {
- 48 │   1=; // error inside a mod statements with no name
+ 47 │   1=; // error inside a mod statements with no name
     ╰────
 
 -- Parse Error --
-  × error: 48:4: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  × error: 47:4: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[../books/tests/src/parser_recovery.md:48:4]
- 47 │ mod { // error, no name
- 48 │   1=; // error inside a mod statements with no name
+    ╭─[:47:4]
+ 46 │ mod { // error, no name
+ 47 │   1=; // error inside a mod statements with no name
     ·    ┬
     ·    ╰── unexpected =
- 49 │ }
+ 48 │ }
     ╰────
 
 -- Parse Error --
-  × error: 51:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:51:4]
- 50 │ 
- 51 │ a =; // error after a mod with no name
+  × error: 50:4: Expected expression
+    ╭─[:50:4]
+ 49 │ 
+ 50 │ a =; // error after a mod with no name
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

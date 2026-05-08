@@ -14,31 +14,31 @@
   40:   a =; // error after a workspace with no name
 
 -- Parse Error --
-  × error: 37:11: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  × error: 36:11: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[../books/tests/src/parser_recovery.md:37:11]
- 37 │ sketch () { // error, no name
+    ╭─[:36:11]
+ 36 │ sketch () { // error, no name
     ·           ┬
     ·           ╰── unexpected {
- 38 │   1=; // error inside an if statement with missing params
+ 37 │   1=; // error inside an if statement with missing params
     ╰────
 
 -- Parse Error --
-  × error: 38:4: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+  × error: 37:4: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[../books/tests/src/parser_recovery.md:38:4]
- 37 │ sketch () { // error, no name
- 38 │   1=; // error inside an if statement with missing params
+    ╭─[:37:4]
+ 36 │ sketch () { // error, no name
+ 37 │   1=; // error inside an if statement with missing params
     ·    ┬
     ·    ╰── unexpected =
- 39 │ }
+ 38 │ }
     ╰────
 
 -- Parse Error --
-  × error: 41:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:41:4]
- 40 │ 
- 41 │ a =; // error after a workspace with no name
+  × error: 40:4: Expected expression
+    ╭─[:40:4]
+ 39 │ 
+ 40 │ a =; // error after a workspace with no name
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

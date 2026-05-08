@@ -13,14 +13,14 @@
    9:   Rect(w = 10mm, w = 10mm); // error: same parameter name
 
 -- Parse Error --
-  × error: 10:16: Duplicate argument: w
-    ╭─[../books/tests/src/calls.md:10:16]
-  9 │ 
- 10 │ Rect(w = 10mm, w = 10mm); // error: same parameter name
-    ·      ┬         ┬
-    ·      │         ╰── Duplicate argument
-    ·      ╰── Previous declaration
-    ╰────
+  × error: 9:16: Duplicate argument: w
+   ╭─[:9:16]
+ 8 │ 
+ 9 │ Rect(w = 10mm, w = 10mm); // error: same parameter name
+   ·      ┬         ┬
+   ·      │         ╰── Duplicate argument
+   ·      ╰── Previous declaration
+   ╰────
 
 -- Test Result --
 FAILS AS EXPECTED
