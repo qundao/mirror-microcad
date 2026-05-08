@@ -4,8 +4,8 @@
 //! µcad source API
 
 use microcad_lang_base::{
-    ComputedHash, Diagnostic, Diagnostics, GetSourceStrByHash, Hashed, PushDiag, Refer, SrcRef,
-    SrcReferrer, Url,
+    ComputedHash, Diagnostic, Diagnostics, GetSourceLocInfoByHash, Hashed, PushDiag, Refer,
+    SourceLocInfo, SrcRef, SrcReferrer, Url,
 };
 
 use crate::{Parse, ParseContext, ast};
@@ -56,18 +56,17 @@ impl SrcReferrer for Source {
     }
 }
 
-impl GetSourceStrByHash for Source {
-    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
+impl GetSourceLocInfoByHash for Source {
+    fn get_source_loc_info_by_hash(
+        &'_ self,
+        hash: microcad_lang_base::HashId,
+    ) -> Option<microcad_lang_base::SourceLocInfo<'_>> {
         if hash == self.source.computed_hash() {
-            Some(self.source.as_str())
-        } else {
-            None
-        }
-    }
-
-    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
-        if hash == self.source.computed_hash() {
-            self.url.to_file_path().ok()
+            Some(SourceLocInfo {
+                source: &self.source,
+                url: self.url.clone(),
+                line_offset: self.line_offset,
+            })
         } else {
             None
         }
