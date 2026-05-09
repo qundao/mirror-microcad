@@ -3,16 +3,12 @@
 
 //! µcad source API
 
-use chumsky::Parser;
 use microcad_lang_base::{
     ComputedHash, Diagnostics, GetSourceLocInfoByHash, Hashed, Refer, SourceLocInfo, SrcRef,
     SrcReferrer, Url,
 };
 
-use crate::{
-    Parse, ParseContext, ParseErrors, ast,
-    parser::{Extra, ParserInput},
-};
+use crate::{Parse, ParseContext, ast};
 
 /// A µcad source with a parse syntax tree with a line offset and the hashed original source code.
 pub struct Source {
@@ -47,28 +43,6 @@ impl Parse for Source {
                     source: source.clone().map(|s| s.to_string()),
                 })
             }
-        }
-    }
-}
-
-impl Parse for ast::Literal {
-    fn parse(context: &ParseContext) -> Result<Self, Diagnostics> {
-        fn literal<'tokens>()
-        -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Extra<'tokens>>
-        {
-            crate::parsers::literal()
-        }
-
-        match context {
-            ParseContext::Element(source) => {
-                use chumsky::Parser;
-                let tokens = crate::tokens::lex(source.value()).collect::<Vec<_>>();
-                literal()
-                    .parse(crate::parser::input(&tokens))
-                    .into_result()
-                    .map_err(|errors| ParseErrors::from(errors).to_diagnostics(context))
-            }
-            _ => panic!("Not possible"),
         }
     }
 }

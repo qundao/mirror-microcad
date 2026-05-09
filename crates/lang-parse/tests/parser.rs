@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-#![allow(missing_docs)]
+//! Parser tests
 
 use insta::assert_debug_snapshot;
 use microcad_lang_parse::parse;

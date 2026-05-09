@@ -35,8 +35,8 @@ impl ParseError {
 }
 
 /// Parse error collection.
-#[derive(Debug)]
-pub struct ParseErrors(Vec<ParseError>);
+#[derive(Debug, derive_more::Deref)]
+pub struct ParseErrors(pub Vec<ParseError>);
 
 impl ParseErrors {
     /// Convert parse errors to diagnostics

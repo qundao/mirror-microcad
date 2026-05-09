@@ -15,11 +15,12 @@ license.workspace = true
 keywords.workspace = true
 
 [dependencies]
-logos = "0.16.0"
 chumsky = "0.13.0"
-thiserror = "2.0.17"
-miette = "7.6.0"
+derive_more = { version = "2", features = ["deref"] }
 either = "1.15.0"
+logos = "0.16.0"
+miette = "7.6.0"
+thiserror = "2.0.17"
 
 microcad-lang-base = { workspace = true }
 
