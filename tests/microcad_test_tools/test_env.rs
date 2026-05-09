@@ -222,20 +222,10 @@ impl TestEnv {
 
     /// Write into test log (end line with LF).
     pub fn log_ln(&mut self, text: &str) {
-        if let Some(mut log_file) = self.log_file.as_mut() {
-            let log_out = &mut std::io::BufWriter::new(&mut log_file);
-            use std::io::Write;
-            writeln!(log_out, "{}", text).expect("output error")
-        }
-    }
-
-    /// Write into test log (no LF at end).
-    pub fn log(&mut self, text: &str) {
-        if let Some(mut log_file) = self.log_file.as_mut() {
-            let log_out = &mut std::io::BufWriter::new(&mut log_file);
-            use std::io::Write;
-            write!(log_out, "{}", text).expect("output error")
-        }
+        let mut log_file = self.log_file.as_mut().unwrap();
+        let log_out = &mut std::io::BufWriter::new(&mut log_file);
+        use std::io::Write;
+        writeln!(log_out, "{}", text).expect("output error")
     }
 
     /// Report output into log file.
@@ -244,16 +234,16 @@ impl TestEnv {
         if output.is_empty() {
             self.log_ln("-- No Output --");
         } else {
-            self.log_ln(&format!("-- Output --\n{}", output));
+            self.log_ln(&format!("-- Output --\n{output}"));
         }
     }
 
     /// Report errors into log file.
     pub fn report_errors(&mut self, diagnosis: String) {
         if diagnosis.is_empty() {
-            self.log("-- No Errors --\n");
+            self.log_ln("-- No Errors --");
         } else {
-            self.log(&format!("-- Errors --\n{diagnosis}"));
+            self.log_ln(&format!("-- Errors --\n{diagnosis}"));
         }
     }
 
