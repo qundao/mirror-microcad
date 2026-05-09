@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::ast::{
-    BinaryOperation, BinaryOperator, BinaryOperatorType, Comment, CommentInner, Expression,
+    self, BinaryOperation, BinaryOperator, BinaryOperatorType, Comment, CommentInner, Expression,
     ItemExtra, ItemExtras, LeadingExtras, TrailingExtras,
 };
 use microcad_lang_base::Span;
@@ -14,6 +14,119 @@ use chumsky::input::Input;
 use chumsky::inspector::Inspector;
 use chumsky::prelude::*;
 use chumsky::{IterParser, Parser, extra, select_ref};
+
+pub fn unit_parser<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Unit, Full<Error<'tokens>, S, Ctx>> + 'tokens
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
+    select_ref! {
+        Token::Identifier(ident) = e => ast::Unit {
+            span: e.span(),
+            name: ident.as_ref().into()
+        },
+        Token::Unit(unit) = e => ast::Unit {
+            span: e.span(),
+            name: unit.as_ref().into()
+        },
+        Token::SigilQuote = e => ast::Unit {
+            span: e.span(),
+            name: r#"""#.into()
+        },
+    }
+}
+
+pub fn literal_parser<'tokens, S, Ctx>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Full<Error<'tokens>, S, Ctx>>
++ 'tokens
+where
+    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
+    Ctx: 'tokens,
+{
+    use microcad_lang_base::ToCompactString;
+    use std::str::FromStr;
+
+    {
+        let single_value = select_ref! {
+            Token::LiteralFloat(x) = e => {
+                match f64::from_str(x) {
+                    Ok(value) => ast::LiteralKind::Float(ast::FloatLiteral {
+                        value,
+                        raw: x.to_compact_string(),
+                        span: e.span(),
+                    }),
+                    Err(err) => ast::LiteralKind::Error(ast::LiteralError {
+                        span: e.span(),
+                        kind: err.into(),
+                    })
+                }
+            },
+            Token::LiteralInt(x) = e => {
+                match i64::from_str(x) {
+                    Ok(value) => ast::LiteralKind::Integer(ast::IntegerLiteral {
+                    value,
+                    raw: x.to_compact_string(),
+                    span: e.span(),
+                }),
+                    Err(err) => ast::LiteralKind::Error(ast::LiteralError {
+                        span: e.span(),
+                        kind: err.into(),
+                    })
+                }
+            },
+            Token::LiteralString(content) = e => {
+                ast::LiteralKind::String(ast::StringLiteral {
+                    span: e.span(),
+                    content: content.as_ref().into(),
+                })
+            },
+            Token::LiteralBool(value) = e => {
+                ast::LiteralKind::Bool(ast::BoolLiteral {
+                    span: e.span(),
+                    value: *value,
+                })
+            },
+        }
+        .boxed();
+
+        single_value
+            .then(unit_parser().or_not())
+            .with_extras()
+            .try_map_with(|((literal, ty), extras), e| {
+                let literal = match (literal, ty) {
+                    (ast::LiteralKind::Float(float), Some(unit)) => {
+                        ast::LiteralKind::Quantity(ast::QuantityLiteral {
+                            span: e.span(),
+                            value: float.value,
+                            raw: float.raw,
+                            unit,
+                        })
+                    }
+                    (ast::LiteralKind::Integer(int), Some(unit)) => {
+                        ast::LiteralKind::Quantity(ast::QuantityLiteral {
+                            span: e.span(),
+                            value: int.value as f64,
+                            raw: int.raw,
+                            unit,
+                        })
+                    }
+                    (_, Some(_)) => ast::LiteralKind::Error(ast::LiteralError {
+                        span: e.span(),
+                        kind: ast::LiteralErrorKind::Untypable,
+                    }),
+                    (literal, None) => literal,
+                };
+                Ok(ast::Literal {
+                    span: e.span(),
+                    literal,
+                    extras,
+                })
+            })
+            .labelled("literal")
+            .boxed()
+    }
+}
 
 pub fn comment_parser<'tokens, S, Ctx>()
 -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Comment, Full<Error<'tokens>, S, Ctx>> + 'tokens

@@ -16,7 +16,7 @@ pub use error::ParseError;
 use helpers::ParserExt;
 use std::str::FromStr;
 
-use microcad_lang_base::{Span, ToCompactString};
+use microcad_lang_base::Span;
 
 type Error<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
 type Extra<'tokens> = extra::Err<Error<'tokens>>;
@@ -226,20 +226,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
     .labelled("quantity type")
     .boxed();
 
-    let unit = select_ref! {
-        Token::Identifier(ident) = e => Unit {
-            span: e.span(),
-            name: ident.as_ref().into()
-        },
-        Token::Unit(unit) = e => Unit {
-            span: e.span(),
-            name: unit.as_ref().into()
-        },
-        Token::SigilQuote = e => Unit {
-            span: e.span(),
-            name: r#"""#.into()
-        },
-    };
+    let unit = helpers::unit_parser().boxed();
 
     type_parser.define({
         let single = single_type.clone().map(Type::Single);
@@ -299,85 +286,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         single.or(array).or(tuple).labelled("type").boxed()
     });
 
-    let literal_parser = {
-        let single_value = select_ref! {
-            Token::LiteralFloat(x) = e => {
-                match f64::from_str(x) {
-                    Ok(value) => LiteralKind::Float(FloatLiteral {
-                        value,
-                        raw: x.to_compact_string(),
-                        span: e.span(),
-                    }),
-                    Err(err) => LiteralKind::Error(LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    })
-                }
-            },
-            Token::LiteralInt(x) = e => {
-                match i64::from_str(x) {
-                    Ok(value) => LiteralKind::Integer(IntegerLiteral {
-                    value,
-                    raw: x.to_compact_string(),
-                    span: e.span(),
-                }),
-                    Err(err) => LiteralKind::Error(LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    })
-                }
-            },
-            Token::LiteralString(content) = e => {
-                LiteralKind::String(StringLiteral {
-                    span: e.span(),
-                    content: content.as_ref().into(),
-                })
-            },
-            Token::LiteralBool(value) = e => {
-                LiteralKind::Bool(BoolLiteral {
-                    span: e.span(),
-                    value: *value,
-                })
-            },
-        }
-        .boxed();
-
-        single_value
-            .then(unit.or_not())
-            .with_extras()
-            .try_map_with(|((literal, ty), extras), e| {
-                let literal = match (literal, ty) {
-                    (LiteralKind::Float(float), Some(unit)) => {
-                        LiteralKind::Quantity(QuantityLiteral {
-                            span: e.span(),
-                            value: float.value,
-                            raw: float.raw,
-                            unit,
-                        })
-                    }
-                    (LiteralKind::Integer(int), Some(unit)) => {
-                        LiteralKind::Quantity(QuantityLiteral {
-                            span: e.span(),
-                            value: int.value as f64,
-                            raw: int.raw,
-                            unit,
-                        })
-                    }
-                    (_, Some(_)) => LiteralKind::Error(LiteralError {
-                        span: e.span(),
-                        kind: LiteralErrorKind::Untypable,
-                    }),
-                    (literal, None) => literal,
-                };
-                Ok(Literal {
-                    span: e.span(),
-                    literal,
-                    extras,
-                })
-            })
-            .labelled("literal")
-            .boxed()
-    };
+    let literal_parser = helpers::literal_parser();
 
     let unary_operator_parser = select_ref! {
         Token::OperatorSubtract = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Minus },
@@ -1359,7 +1268,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.or_not())
+            .then(unit.clone().or_not())
             .map_with(|(((start, end), extras), unit), e| {
                 Expression::ArrayRange(ArrayRangeExpression {
                     span: e.span(),
@@ -1382,7 +1291,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.or_not())
+            .then(unit.clone().or_not())
             .map_with(|((items, extras), unit), e| {
                 Expression::ArrayList(ArrayListExpression {
                     span: e.span(),
