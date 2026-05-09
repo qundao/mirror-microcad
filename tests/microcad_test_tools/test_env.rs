@@ -18,7 +18,6 @@ pub struct TestEnv {
     code: String,
     /// Line offset
     pub line_offset: u32,
-    log_file: Option<std::fs::File>,
 }
 
 /// Markdown test result
@@ -91,7 +90,7 @@ impl TestEnv {
         name: &str,
         code: &str,
         line_offset: u32,
-    ) -> Option<Self> {
+    ) -> Self {
         let orig_name = name.to_string();
         // split name into `name` and optional `mode`
         let (name, mode) = if let Some((name, mode)) = name.split_once('#') {
@@ -100,41 +99,36 @@ impl TestEnv {
             (name, None)
         };
 
-        if mode == Some("no_test") {
-            None
-        } else {
-            let (name, params) = if let Some((name, params)) = name.split_once('(') {
-                if params.ends_with(")") {
-                    (name, Some(&params[0..params.len() - 1]))
-                } else {
-                    (name, None)
-                }
+        let (name, params) = if let Some((name, params)) = name.split_once('(') {
+            if params.ends_with(")") {
+                (name, Some(&params[0..params.len() - 1]))
             } else {
                 (name, None)
-            };
+            }
+        } else {
+            (name, None)
+        };
 
-            Some(Self {
-                orig_name,
-                name: name.to_string(),
-                path: path.as_ref().to_path_buf(),
-                mode: mode.unwrap_or("ok").to_string(),
-                params: params.map(|p| p.to_string()),
-                code: code.into(),
-                line_offset,
-                log_file: None,
-            })
+        Self {
+            orig_name,
+            name: name.to_string(),
+            path: path.as_ref().to_path_buf(),
+            mode: mode.unwrap_or("ok").to_string(),
+            params: params.map(|p| p.to_string()),
+            code: code.into(),
+            line_offset,
         }
     }
 
     /// Generate the test call.
     /// - `output`: A string to append the test output to.
-    pub fn generate(&mut self, output: &mut String) -> Output {
+    pub fn generate(&self, output: &mut String) -> Output {
         output.push_str(&format!(
             r##"
         #[test]
         #[allow(non_snake_case)]
         fn r#{name}() {{
-            crate::markdown_test::run_test({self});
+            crate::markdown_test::run_test({self}).expect("No error");
         }}"##,
             name = self.name
         ));
@@ -149,15 +143,6 @@ impl TestEnv {
             self.log_file(),
             &["svg", "stl"],
         )
-    }
-
-    /// Create log file for he test.
-    pub fn start_log(&mut self) {
-        // create log file
-        self.log_file = Some(
-            std::fs::File::create(self.log_file())
-                .unwrap_or_else(|_| panic!("{:?}", self.log_file())),
-        );
     }
 
     /// Return test name.
@@ -218,14 +203,6 @@ impl TestEnv {
     /// Return if parameter `hires` is set.
     pub fn hires(&self) -> bool {
         self.params() == "hires"
-    }
-
-    /// Write into test log (end line with LF).
-    pub fn log_ln(&mut self, text: &str) {
-        let mut log_file = self.log_file.as_mut().unwrap();
-        let log_out = &mut std::io::BufWriter::new(&mut log_file);
-        use std::io::Write;
-        writeln!(log_out, "{}", text).expect("output error")
     }
 
     /// Report output into log file.
