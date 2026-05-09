@@ -3,22 +3,18 @@
 
 //! µcad driver is a high-level API to be integrated in LSP, CLI or Viewer.
 
-mod commands;
+pub mod commands;
 mod config;
 mod document;
-mod export;
 mod session;
 mod watcher;
 
 pub use microcad_lang::lower::ir::SourceFile;
 pub use microcad_lang::model::Model;
 pub use microcad_lang::render::{RenderCache, RenderContext};
-pub use microcad_lang_base::RcMut;
-
-pub(crate) use url::Url;
+pub use microcad_lang_base::{RcMut, Url};
 
 pub use config::Config;
 pub use document::Document;
-pub use export::{Export, ExportCommand};
 pub use session::Session;
 pub use watcher::Watcher;

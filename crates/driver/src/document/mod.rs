@@ -9,38 +9,44 @@ mod source;
 use std::{cell::RefCell, rc::Rc};
 
 use derive_more::From;
-use microcad_lang_base::{Diagnostics, MICROCAD_EXTENSIONS, RcMut};
+use microcad_builtin::Symbol;
+use microcad_lang_base::{
+    DiagRenderOptions, Diagnostics, MICROCAD_EXTENSIONS, RcMut, ResourceLocation,
+};
 use url::Url;
 
-use crate::{Config, commands::CommandResult, document};
+use crate::{Config, commands};
 
-/// A container for a document with a state and diagnostics
+pub type Result<T = ()> = std::result::Result<T, RcMut<Diagnostics>>;
+
+/// A document asset with a state and diagnostics
 pub struct Asset<S: Default> {
-    /// Each container must a URL.
+    /// Each asset must have a unique URL.
     url: Url,
-    /// Each document can have its own config
-    config: Rc<Config>,
     /// Each document item keeps its [Diagnostics]
     diagnostics: RcMut<Diagnostics>,
     /// Each document has a state.
     state: RefCell<S>,
 }
+/// Return a symbol
+pub trait GetAssetSymbol {
+    fn get_symbol(&self) -> Result<Symbol>;
+}
 
 impl<S: Default> Asset<S> {
     /// Create a new container
-    fn new(url: Url, config: Rc<Config>) -> Rc<Self> {
+    fn new(url: Url) -> Rc<Self> {
         Rc::new(Self {
             url,
-            config,
             diagnostics: RcMut::new(Default::default()),
             state: Default::default(),
         })
     }
 
     /// Generic transitioner to move the pipeline forward
-    fn transition<F>(&self, f: F) -> CommandResult
+    fn transition<F>(&self, f: F) -> Result
     where
-        F: FnOnce(S) -> Result<S, Diagnostics>,
+        F: FnOnce(S) -> std::result::Result<S, Diagnostics>,
     {
         let mut state = self.state.borrow_mut();
         let current = std::mem::take(&mut *state);
@@ -55,19 +61,18 @@ impl<S: Default> Asset<S> {
             }
         }
     }
+}
 
-    /// Returns the local file path if the URL is a "file://" scheme.
-    pub fn file_path(&self) -> Option<std::path::PathBuf> {
-        // url::to_file_path() returns Result<PathBuf, ()>
-        // We convert it to Option for a cleaner API
-        self.url.to_file_path().ok()
+impl<S: Default> ResourceLocation for Asset<S> {
+    fn url(&self) -> &Url {
+        &self.url
     }
 }
 
-pub type SourceAsset = Asset<document::source::State>;
-pub type MarkdownAsset = Asset<document::markdown::State>;
-pub type MdBookAsset = Asset<document::mdbook::State>;
-pub type BuiltinAsset = Asset<document::builtin::State>;
+pub type SourceAsset = Asset<source::State>;
+pub type MarkdownAsset = Asset<markdown::State>;
+pub type MdBookAsset = Asset<mdbook::State>;
+pub type BuiltinAsset = Asset<builtin::State>;
 
 /// A document containing µcad code.
 #[derive(From)]
@@ -92,18 +97,18 @@ impl Document {
     /// * `.µcad`/`.mcad`/`.ucad`: Create a source file
     /// * `.md`: Create a markdown
     /// * `book.toml`: Create an MdBook
-    pub fn new(url: Url, config: Rc<Config>) -> miette::Result<Self> {
+    pub fn new(url: Url) -> miette::Result<Self> {
         let path = std::path::Path::new(url.path());
         let file_name = path.file_name().and_then(|os| os.to_str()).unwrap_or("");
         let extension = path.extension().and_then(|os| os.to_str()).unwrap_or("");
 
         match file_name {
-            "book.toml" => Ok(MdBookAsset::new(url, config).into()),
+            "book.toml" => Ok(MdBookAsset::new(url).into()),
             _ => match extension {
-                "md" => Ok(MarkdownAsset::new(url, config).into()),
+                "md" => Ok(MarkdownAsset::new(url).into()),
                 extension => {
                     if MICROCAD_EXTENSIONS.contains(&extension) {
-                        Ok(SourceAsset::new(url, config).into())
+                        Ok(SourceAsset::new(url).into())
                     } else {
                         Err(miette::miette!("Invalid document type: {extension}"))
                     }
@@ -112,53 +117,10 @@ impl Document {
         }
     }
 
-    pub fn from_file_path(
-        path: impl AsRef<std::path::Path>,
-        config: Rc<Config>,
-    ) -> miette::Result<Self> {
-        let url = Url::from_file_path(path.as_ref()).expect("No error");
-        Self::new(url, config)
-    }
-
-    pub fn load_from_file(&self) -> CommandResult {
-        match &self {
-            Document::Source(item) => item.load_from_file(),
-            Document::Markdown(item) => item.load_from_file(),
-            Document::MdBook(item) => item.load_from_file(),
-            _ => unimplemented!(),
-        }
-    }
-
-    pub fn format(&self) -> CommandResult<bool> {
-        match &self {
-            Document::Source(item) => item.format(),
-            Document::Markdown(item) => item.format(),
-            Document::MdBook(item) => item.format(),
-            _ => unimplemented!(),
-        }
-    }
-
-    /// Write to disk
-    pub fn sync(&self) -> CommandResult {
-        match &self {
-            Document::Source(source) => source.sync(),
-            Document::Markdown(markdown) => markdown.sync(),
-            Document::MdBook(mdbook) => mdbook.sync(),
-            _ => unimplemented!(),
-        }
-    }
-
-    pub fn url(&self) -> &Url {
-        match self {
-            Document::Source(u) => &u.url,
-            Document::Markdown(u) => &u.url,
-            Document::MdBook(u) => &u.url,
-            Document::Builtin(u) => &u.url,
-        }
-    }
-
-    pub fn file_path(&self) -> Option<std::path::PathBuf> {
-        self.url().to_file_path().ok()
+    pub fn from_file_path(path: impl AsRef<std::path::Path>) -> miette::Result<Self> {
+        let url = Url::from_file_path(path.as_ref())
+            .map_err(|_| miette::miette!("URL does not contain a file path!"))?;
+        Self::new(url)
     }
 
     pub fn diagnostics(&self) -> RcMut<Diagnostics> {
@@ -169,20 +131,96 @@ impl Document {
             Document::Builtin(i) => i.diagnostics.clone(),
         }
     }
+}
 
-    pub fn pretty_print(&self, f: &mut dyn std::fmt::Write) -> std::fmt::Result {
+impl ResourceLocation for Document {
+    fn url(&self) -> &Url {
         match self {
-            Document::Source(i) => i.pretty_print(f),
+            Document::Source(u) => &u.url,
+            Document::Markdown(u) => &u.url,
+            Document::MdBook(u) => &u.url,
+            Document::Builtin(u) => &u.url,
+        }
+    }
+}
+
+impl commands::LoadFromFile for Document {
+    fn load_from_file(&self) -> Result {
+        match &self {
+            Document::Source(item) => item.load_from_file(),
+            Document::Markdown(item) => item.load_from_file(),
+            Document::MdBook(item) => item.load_from_file(),
+            _ => unimplemented!(),
+        }
+    }
+}
+
+impl commands::Format for Document {
+    fn format(&self, params: &commands::FormatParameters) -> Result<bool> {
+        match &self {
+            Document::Source(item) => item.format(params),
+            Document::Markdown(item) => item.format(params),
+            Document::MdBook(item) => item.format(params),
+            _ => unimplemented!(),
+        }
+    }
+}
+
+impl commands::Sync for Document {
+    fn sync(&self) -> Result {
+        match &self {
+            Document::Source(source) => source.sync(),
+            Document::Markdown(markdown) => markdown.sync(),
+            Document::MdBook(mdbook) => mdbook.sync(),
+            _ => unimplemented!(),
+        }
+    }
+}
+
+impl commands::Check for Document {
+    fn check(&self, config: &Config) -> Result<bool> {
+        match &self {
+            Document::Source(asset) => asset.check(config),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
             Document::Builtin(_) => todo!(),
         }
     }
+}
 
-    pub fn diagnostics_string(&self) -> String {
-        let mut buffer = String::new();
-        match self.pretty_print(&mut buffer) {
-            Ok(_) | Err(_) => buffer,
+impl GetAssetSymbol for Document {
+    fn get_symbol(&self) -> Result<Symbol> {
+        match &self {
+            Document::Source(asset) => asset.get_symbol(),
+            Document::Markdown(_) => todo!(),
+            Document::MdBook(_) => todo!(),
+            Document::Builtin(asset) => asset.get_symbol(),
+        }
+    }
+}
+
+impl commands::DocGen for Document {
+    fn doc_gen(&self, params: &commands::DocGenParameters) -> self::Result {
+        match &self {
+            Document::Source(asset) => asset.doc_gen(params),
+            Document::Markdown(_) => todo!(),
+            Document::MdBook(_) => todo!(),
+            Document::Builtin(asset) => asset.doc_gen(params),
+        }
+    }
+}
+
+impl commands::PrintDiagnostics for Document {
+    fn print_diagnostics(
+        &self,
+        f: &mut dyn std::fmt::Write,
+        options: &DiagRenderOptions,
+    ) -> std::fmt::Result {
+        match self {
+            Document::Source(i) => i.print_diagnostics(f, options),
+            Document::Markdown(_) => todo!(),
+            Document::MdBook(_) => todo!(),
+            Document::Builtin(_) => todo!(),
         }
     }
 }

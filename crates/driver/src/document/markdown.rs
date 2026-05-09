@@ -3,12 +3,12 @@
 
 use std::rc::Rc;
 
-use microcad_lang_base::{Diagnostics, HashMap};
+use microcad_lang_base::{Diagnostics, HashMap, ResourceLocation};
 use miette::Diagnostic;
 use thiserror::Error;
 use url::Url;
 
-use crate::{commands::CommandResult, document};
+use crate::{commands, document};
 use microcad_lang_markdown::{Markdown, MarkdownError};
 
 #[derive(Error, Debug, Diagnostic)]
@@ -39,9 +39,9 @@ pub enum State {
     },
 }
 
-impl document::MarkdownAsset {
-    pub fn load_from_file(&self) -> CommandResult {
-        self.transition(|_| match self.file_path() {
+impl commands::LoadFromFile for document::MarkdownAsset {
+    fn load_from_file(&self) -> document::Result {
+        self.transition(|_| match self.to_file_path() {
             Some(path) => {
                 let markdown =
                     Markdown::load(path).map_err(|err| MarkdownItemError::MarkdownError(err))?;
@@ -50,10 +50,14 @@ impl document::MarkdownAsset {
             None => Err(MarkdownItemError::NoLocalMarkdown(self.url.clone()).into()),
         })
     }
+}
 
-    pub fn format(&self) -> CommandResult<bool> {
+impl commands::Format for document::MarkdownAsset {
+    fn format(&self, params: &commands::FormatParameters) -> document::Result<bool> {
+        use crate::commands::LoadFromFile;
         self.load_from_file()?;
         let mut formatted = false;
+        let config = params;
 
         self.transition(|state| {
             let mut diags = Diagnostics::default();
@@ -63,8 +67,7 @@ impl document::MarkdownAsset {
                     .code_blocks_mut()
                     .filter(|code_block| code_block.can_format())
                     .for_each(|code_block| {
-                        let config = microcad_lang_format::FormatConfig::from(&self.config.format);
-                        match microcad_lang_format::format_str(&code_block.code, &config) {
+                        match microcad_lang_format::format_str(&code_block.code, config) {
                             Ok(code) => {
                                 formatted |= code_block.code != code;
                                 code_block.code = code;
@@ -87,12 +90,14 @@ impl document::MarkdownAsset {
 
         Ok(formatted)
     }
+}
 
-    pub fn sync(&self) -> CommandResult {
+impl commands::Sync for document::MarkdownAsset {
+    fn sync(&self) -> document::Result {
         Ok(match &*self.state.borrow() {
             State::Raw => (),
             State::Loaded { markdown } | State::Processed { markdown, .. } => markdown
-                .save(self.file_path().expect("File path"))
+                .save(self.to_file_path().expect("File path"))
                 .expect("Error handling"),
         })
     }

@@ -1,13 +1,13 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::Diagnostics;
+use microcad_lang_base::{Diagnostics, ResourceLocation};
 use microcad_lang_markdown::{MdBook, MdBookError};
 use miette::Diagnostic;
 use thiserror::Error;
 use url::Url;
 
-use crate::{commands::CommandResult, document};
+use crate::{commands, document};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum MdBookUnitError {
@@ -34,9 +34,9 @@ pub enum State {
     },
 }
 
-impl document::MdBookAsset {
-    pub fn load_from_file(&self) -> CommandResult {
-        self.transition(|_| match self.file_path() {
+impl commands::LoadFromFile for document::MdBookAsset {
+    fn load_from_file(&self) -> document::Result {
+        self.transition(|_| match self.to_file_path() {
             Some(path) => {
                 let mdbook = MdBook::new(path).map_err(|err| MdBookUnitError::MdBook(err))?;
                 Ok(State::Loaded { mdbook })
@@ -44,10 +44,13 @@ impl document::MdBookAsset {
             None => Err(MdBookUnitError::NoLocalMdBook(self.url.clone()).into()),
         })
     }
+}
 
-    pub fn format(&'_ self) -> CommandResult<bool> {
-        self.load_from_file()?;
+impl commands::Format for document::MdBookAsset {
+    fn format(&self, params: &commands::FormatParameters) -> document::Result<bool> {
+        commands::LoadFromFile::load_from_file(self)?;
         let mut formatted = false;
+        let config = params;
 
         self.transition(|state| {
             let mut diags = Diagnostics::default();
@@ -57,8 +60,7 @@ impl document::MdBookAsset {
                     .code_blocks_mut()
                     .filter(|(_, code_block)| code_block.can_format())
                     .for_each(|(_, code_block)| {
-                        let config = microcad_lang_format::FormatConfig::from(&self.config.format);
-                        match microcad_lang_format::format_str(&code_block.code, &config) {
+                        match microcad_lang_format::format_str(&code_block.code, config) {
                             Ok(code) => {
                                 formatted |= code_block.code != code;
                                 code_block.code = code;
@@ -81,8 +83,10 @@ impl document::MdBookAsset {
 
         Ok(formatted)
     }
+}
 
-    pub fn sync(&self) -> CommandResult {
+impl commands::Sync for document::MdBookAsset {
+    fn sync(&self) -> document::Result {
         Ok(match &*self.state.borrow() {
             State::Raw => (),
             State::Loaded { mdbook } => mdbook.save_all().expect("No error"),

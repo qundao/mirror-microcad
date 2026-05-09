@@ -24,7 +24,7 @@ impl Session {
         }
     }
 
-    pub fn init_render_cache(mut self) -> Self {
+    pub fn with_render_cache(mut self) -> Self {
         self.render_cache = Some(RcMut::new(RenderCache::new()));
         self
     }
@@ -35,11 +35,11 @@ impl Session {
             .map_err(|err| miette::miette!("Could not load standard library: {err}"))?;
     }
 
-    pub fn add_document(&mut self, url: Url) -> &mut Document {
+    pub fn add_document(&mut self, _url: Url) -> &mut Document {
         todo!()
     }
 
-    pub fn remove_document(&mut self, url: Url) -> Document {
+    pub fn remove_document(&mut self, _url: Url) -> Document {
         todo!()
     }
 }

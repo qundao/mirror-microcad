@@ -1,17 +1,14 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_docgen::{Md, MdBook};
-use microcad_lang_base::{Diagnostics, RcMut};
+use crate::document;
 
-use crate::commands::{CommandResult, GetSymbol};
-
-pub struct DocGenSettings {
-    generator_id: Option<String>,
-    output_path: Option<std::path::PathBuf>,
+pub struct DocGenParameters {
+    pub generator_id: Option<String>,
+    pub output_path: Option<std::path::PathBuf>,
 }
 
-impl DocGenSettings {
+impl DocGenParameters {
     fn generator(&self) -> miette::Result<Box<dyn microcad_docgen::DocGen>> {
         let name = self.generator_id.clone().unwrap_or("md".to_string());
         use microcad_docgen::*;
@@ -27,9 +24,11 @@ impl DocGenSettings {
     }
 }
 
-pub trait DocGen: GetSymbol {
-    fn doc_gen(&self, settings: &DocGenSettings) -> CommandResult<()> {
-        let generator = settings
+pub trait DocGen: document::GetAssetSymbol {
+    fn doc_gen(&self, params: &DocGenParameters) -> document::Result {
+        use microcad_lang_base::RcMut;
+
+        let generator = params
             .generator()
             .map_err(|err| RcMut::new(miette::miette!("{err}").into()))?;
 

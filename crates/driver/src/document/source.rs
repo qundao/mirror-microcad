@@ -1,21 +1,25 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_core::RenderResolution;
+use microcad_builtin::Symbol;
 use microcad_lang::{
     eval::EvalContext,
     lower::ir::SourceFile,
-    model::{ExportCommand, Model, OutputType},
-    render::{RenderCache, RenderContext, RenderWithContext},
+    model::Model,
+    render::{RenderContext, RenderWithContext},
     resolve::ResolveContext,
 };
-use microcad_lang_base::{ComputedHash, DiagHandler, RcMut};
+use microcad_lang_base::{ComputedHash, DiagHandler, DiagRenderOptions, RcMut, ResourceLocation};
 use microcad_lang_parse::{Parse, ParseContext, Source};
 use miette::Diagnostic;
 use thiserror::Error;
 use url::Url;
 
-use crate::{Export, commands::CommandResult, document};
+use crate::{
+    Config,
+    commands::{self, LoadFromFile},
+    document,
+};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum SourceError {
@@ -58,25 +62,14 @@ pub enum State {
     },
 }
 
-impl document::SourceAsset {
-    pub fn load_from_file(&self) -> CommandResult {
-        self.transition(|_| {
-            let path = self
-                .url
-                .to_file_path()
-                .map_err(|_| SourceError::NoFileUrl(self.url.clone()))?;
-            let source = std::fs::read_to_string(path).map_err(|err| SourceError::IoError(err))?;
-            Ok(State::Loaded { source })
-        })
-    }
-
-    pub fn format(&self) -> CommandResult<bool> {
+impl commands::Format for document::SourceAsset {
+    fn format(&self, params: &commands::FormatParameters) -> document::Result<bool> {
         let mut formatted = false;
+        let config = params;
 
         self.transition(|current| match current {
             State::Parsed { source } => {
                 let hash = source.source.computed_hash();
-                let config = microcad_lang_format::FormatConfig::from(&self.config.format);
                 let source = microcad_lang_format::format_source(source, &config)?;
                 formatted = source.source.computed_hash() != hash;
 
@@ -87,8 +80,23 @@ impl document::SourceAsset {
 
         Ok(formatted)
     }
+}
 
-    pub fn sync(&self) -> CommandResult {
+impl commands::LoadFromFile for document::SourceAsset {
+    fn load_from_file(&self) -> document::Result {
+        self.transition(|_| {
+            let path = self
+                .url
+                .to_file_path()
+                .map_err(|_| SourceError::NoFileUrl(self.url.clone()))?;
+            let source = std::fs::read_to_string(path).map_err(|err| SourceError::IoError(err))?;
+            Ok(State::Loaded { source })
+        })
+    }
+}
+
+impl commands::Sync for document::SourceAsset {
+    fn sync(&self) -> document::Result {
         let state = &*self.state.borrow();
         let source = match state {
             State::Raw => todo!(),
@@ -99,13 +107,13 @@ impl document::SourceAsset {
             | State::Evaluated { source, .. }
             | State::Rendered { source, .. } => &source.source,
         };
-        std::fs::write(self.file_path().expect("path"), source.value()).expect("No error");
+        std::fs::write(self.to_file_path().expect("path"), source.value()).expect("No error");
         Ok(())
     }
+}
 
-    pub fn parse(&self) -> CommandResult {
-        self.load_from_file()?;
-
+impl commands::Pipeline for document::SourceAsset {
+    fn parse(&self) -> document::Result {
         self.transition(|current| match current {
             State::Loaded { source } => {
                 let parse_context = ParseContext::new(&source).with_url(self.url.clone());
@@ -116,14 +124,12 @@ impl document::SourceAsset {
         })
     }
 
-    pub fn lower(&'_ self) -> CommandResult {
-        self.parse()?;
-
+    fn lower(&self, config: &Config) -> document::Result {
         self.transition(|current| match current {
             State::Parsed { source } => Ok(State::Lowered {
                 resolve_context: ResolveContext::create(
                     SourceFile::from_source(&source).expect("Missing error handling"),
-                    &self.config.search_paths,
+                    &config.search_paths,
                     Some(microcad_builtin::builtin_module()),
                     DiagHandler::default(),
                 )
@@ -134,9 +140,7 @@ impl document::SourceAsset {
         })
     }
 
-    pub fn resolve(&self) -> CommandResult {
-        self.lower()?;
-
+    fn resolve(&self) -> document::Result {
         self.transition(|current| match current {
             State::Lowered {
                 source,
@@ -154,9 +158,7 @@ impl document::SourceAsset {
         })
     }
 
-    pub fn eval(&self) -> CommandResult {
-        self.resolve()?;
-
+    fn eval(&self) -> document::Result {
         self.transition(|current| match current {
             State::Resolved {
                 source,
@@ -170,13 +172,11 @@ impl document::SourceAsset {
             _ => Ok(current),
         })
     }
+}
 
-    pub fn render(
-        &'_ self,
-        resolution: RenderResolution,
-        cache: Option<RcMut<RenderCache>>,
-    ) -> CommandResult {
-        self.eval()?;
+impl commands::Render for document::SourceAsset {
+    fn render(&self, params: &commands::RenderParameters) -> document::Result {
+        commands::Pipeline::eval(self)?;
 
         self.transition(|current| match current {
             State::Evaluated {
@@ -184,8 +184,13 @@ impl document::SourceAsset {
                 eval_context,
                 model,
             } => {
-                let mut render_context =
-                    RenderContext::new(&model, resolution, cache, None).expect("Error handling");
+                let mut render_context = RenderContext::new(
+                    &model,
+                    params.resolution.clone(),
+                    params.cache.clone(),
+                    None,
+                )
+                .expect("Error handling");
                 let model: Model = model
                     .render_with_context(&mut render_context)
                     .expect("Error handling");
@@ -199,49 +204,32 @@ impl document::SourceAsset {
             _ => Ok(current),
         })
     }
+}
 
-    /// Generate documentation
-    pub fn doc_gen(
-        &'_ self,
-        generator: Option<String>,
-        output_path: Option<std::path::PathBuf>,
-    ) -> miette::Result<()> {
-        fn doc_generator(
-            generator: Option<String>,
-            output_path: Option<std::path::PathBuf>,
-        ) -> miette::Result<Box<dyn microcad_docgen::DocGen>> {
-            let name = generator.clone().unwrap_or("md".to_string());
-            use microcad_docgen::*;
-            match name.as_str() {
-                "md" => Ok(Box::new(Md { output_path })),
-                "mdbook" => Ok(Box::new(MdBook {
-                    path: output_path.clone().unwrap_or_default(),
-                })),
-                _ => Err(miette::miette!("No generator with name `{name}`")),
-            }
-        }
-
-        let generator = doc_generator(generator, output_path).expect("Impl Error handling");
-        let state = &*self.state.borrow();
-
-        let symbol = match state {
+impl document::GetAssetSymbol for document::SourceAsset {
+    fn get_symbol(&self) -> document::Result<Symbol> {
+        Ok(match &*self.state.borrow() {
             State::Raw => todo!(),
             State::Loaded { .. } => todo!(),
             State::Parsed { .. } => todo!(),
             State::Lowered {
                 resolve_context, ..
-            } => &resolve_context.root,
+            } => resolve_context.root.clone(),
             State::Resolved { eval_context, .. }
             | State::Evaluated { eval_context, .. }
-            | State::Rendered { eval_context, .. } => &eval_context.root,
-        };
-
-        generator
-            .doc_gen(symbol)
-            .map_err(|err| miette::miette!("{err}"))
+            | State::Rendered { eval_context, .. } => eval_context.root.clone(),
+        })
     }
+}
 
-    pub fn pretty_print(&self, f: &mut dyn std::fmt::Write) -> std::fmt::Result {
+impl commands::DocGen for document::SourceAsset {}
+
+impl commands::PrintDiagnostics for document::SourceAsset {
+    fn print_diagnostics(
+        &self,
+        f: &mut dyn std::fmt::Write,
+        options: &DiagRenderOptions,
+    ) -> std::fmt::Result {
         let state = &*self.state.borrow();
         let source = match state {
             State::Raw => todo!(),
@@ -253,70 +241,44 @@ impl document::SourceAsset {
             | State::Rendered { source, .. } => source,
         };
 
-        self.diagnostics.borrow().pretty_print(
-            f,
-            source,
-            &microcad_lang_base::DiagRenderOptions::from(&self.config.diagnostics),
-        )
+        self.diagnostics.borrow().pretty_print(f, source, &options)
     }
+}
 
-    pub fn export(&self, output_path: Option<std::path::PathBuf>) -> miette::Result<Export> {
+impl commands::GetExportTargets for document::SourceAsset {
+    fn get_export_targets(
+        &self,
+        params: &commands::GetExportTargetParameters,
+    ) -> document::Result<commands::ExportTargets> {
         match &*self.state.borrow() {
             State::Rendered {
                 eval_context,
                 model,
                 ..
             } => {
-                use microcad_builtin::ExporterAccess;
-                let output_type = model.deduce_output_type();
                 let exporters = eval_context.exporters();
-                let default_exporter = match output_type {
-                    OutputType::NotDetermined => {
-                        Err(miette::miette!("Could not determine output type."))
-                    }
-                    OutputType::Geometry2D => {
-                        Ok(exporters.exporter_by_id(&(&self.config.export.sketch).into())?)
-                    }
-                    OutputType::Geometry3D => {
-                        Ok(exporters.exporter_by_id(&(&self.config.export.part).into())?)
-                    }
-                    OutputType::InvalidMixed => Err(miette::miette!(
-                        "Invalid output type, the model cannot be exported."
-                    )),
-                };
-                let command = match &output_path {
-                    Some(filename) => ExportCommand {
-                        filename: filename.to_path_buf(),
-                        resolution: self.config.export.render_resolution(),
-                        exporter: exporters
-                            .exporter_by_filename(filename)
-                            .or(default_exporter)?,
-                    },
-                    None => {
-                        let mut filename = self.file_path().expect("No error");
-                        let exporter = default_exporter?;
+                let default_exporter = params
+                    .default_exporter(&model.deduce_output_type(), eval_context.exporters())
+                    .map_err(|err| RcMut::new(err.into()))?;
+                let default_command = params
+                    .default_export_attribute_command(exporters, default_exporter)
+                    .map_err(|err| RcMut::new(err.into()))?;
 
-                        let ext = exporter
-                            .file_extensions()
-                            .first()
-                            .unwrap_or(&exporter.id())
-                            .to_string();
-                        filename.set_extension(&ext);
-
-                        ExportCommand {
-                            filename,
-                            exporter,
-                            resolution: self.config.export.render_resolution(),
-                        }
-                    }
-                };
-
-                Ok(Export {
-                    model: model.clone(),
-                    command,
-                })
+                params
+                    .targets(model, default_command)
+                    .map_err(|err| RcMut::new(err.into()))
             }
             _ => todo!(),
+        }
+    }
+}
+
+impl commands::Check for document::SourceAsset {
+    fn check(&self, config: &Config) -> document::Result<bool> {
+        use crate::commands::Pipeline;
+        match self.load_from_file().and(self.run_pipeline(config)) {
+            Ok(()) => Ok(true),
+            Err(diag) => Err(diag),
         }
     }
 }

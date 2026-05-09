@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_builtin::Symbol;
-use microcad_docgen::DocGen;
 
-use crate::{commands::CommandResult, document};
+use crate::{commands, document};
 
 #[derive(Default)]
 pub enum State {
@@ -13,25 +12,12 @@ pub enum State {
     Symbol(Symbol),
 }
 
-impl document::BuiltinAsset {
-    pub fn symbol(&'_ self) -> CommandResult {
-        self.transition(|_| Ok(State::Symbol(microcad_builtin::__builtin())))
-    }
-
-    /// Generate documentation
-    pub fn doc_gen(&'_ self, path: std::path::PathBuf) -> miette::Result<()> {
-        self.symbol().expect("No error");
-
-        let state = &*self.state.borrow();
-
-        let symbol = match state {
-            State::Raw => todo!(),
-            State::Symbol(symbol) => symbol,
-        };
-        let generator = microcad_docgen::MdBook::new(path);
-
-        generator
-            .doc_gen(symbol)
-            .map_err(|err| miette::miette!("{err}"))
+impl document::GetAssetSymbol for document::BuiltinAsset {
+    fn get_symbol(&self) -> document::Result<Symbol> {
+        let symbol = microcad_builtin::__builtin();
+        self.transition(|_| Ok(State::Symbol(symbol.clone())))?;
+        Ok(symbol)
     }
 }
+
+impl commands::DocGen for document::BuiltinAsset {}
