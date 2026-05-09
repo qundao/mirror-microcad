@@ -27,7 +27,8 @@ Hello
  9 │     pub mod sub_module {
    ╰────
 
-Unexpected warnings(s) which did occur in line(s): 8
+Unexpected warning(s) which did occur in line(s): 8
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

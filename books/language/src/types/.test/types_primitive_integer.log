@@ -18,7 +18,8 @@
     · ╰── Unused local i.
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 34
+Unexpected warning(s) which did occur in line(s): 34
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

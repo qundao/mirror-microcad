@@ -91,6 +91,7 @@
     ╰────
 
 Unexpected error(s) which did occur in line(s): 34, 38, 41, 42, 46
-Unexpected warnings(s) which did occur in line(s): 28
+Unexpected warning(s) which did occur in line(s): 28
+
 -- Test Result --
 TODO

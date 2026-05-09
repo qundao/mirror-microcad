@@ -21,7 +21,8 @@
  47 │   pub use std::geo2d;
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 46
+Unexpected warning(s) which did occur in line(s): 46
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

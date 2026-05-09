@@ -22,7 +22,8 @@
  96 │ }
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 95
+Unexpected warning(s) which did occur in line(s): 95
+
 -- Model --
   Group (root) ->
     Group ->

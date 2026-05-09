@@ -52,6 +52,8 @@
     ╰────
 
 Expected error(s) which did not occur in line(s): 46
-Unexpected warnings(s) which did occur in line(s): 40
+Unexpected error(s) which did occur in line(s): 49, 50
+Unexpected warning(s) which did occur in line(s): 40
+
 -- Test Result --
 TODO (SHALL FAIL)

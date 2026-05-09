@@ -58,7 +58,8 @@
  19 │     std::geo2d::Circle(radius = 1cm),
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 14, 15, 16, 17, 18
+Unexpected warning(s) which did occur in line(s): 14, 15, 16, 17, 18
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

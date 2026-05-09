@@ -27,7 +27,8 @@
     ·    ╰── Unused global symbol g.
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 49, 50
+Unexpected warning(s) which did occur in line(s): 49, 50
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

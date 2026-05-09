@@ -63,7 +63,8 @@
  66 │ // public use operation from `std/module.µcad`
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 65, 76, 77, 78
+Unexpected warning(s) which did occur in line(s): 65, 76, 77, 78
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

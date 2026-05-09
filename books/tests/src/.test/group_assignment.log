@@ -35,7 +35,8 @@
  75 │ 
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 74, 77
+Unexpected warning(s) which did occur in line(s): 74, 77
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

@@ -22,7 +22,8 @@
  88 │ } } K(1cm);
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 87
+Unexpected warning(s) which did occur in line(s): 87
+
 -- Model --
   Group (root) ->
     Workpiece(Sketch) init_assignment_var::K(l=10mm) ->

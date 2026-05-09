@@ -22,7 +22,8 @@
  88 │ } f();
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 87
+Unexpected warning(s) which did occur in line(s): 87
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

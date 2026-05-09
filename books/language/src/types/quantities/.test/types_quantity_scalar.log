@@ -36,7 +36,8 @@
  30 │ pi = 3.1415;
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 29, 30, 31
+Unexpected warning(s) which did occur in line(s): 29, 30, 31
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

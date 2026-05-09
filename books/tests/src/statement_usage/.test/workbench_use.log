@@ -22,7 +22,8 @@
  40 │ } K();
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 39
+Unexpected warning(s) which did occur in line(s): 39
+
 -- Model --
   Group (root) ->
     Workpiece(Sketch) workbench_use::K() ->

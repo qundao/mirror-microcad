@@ -21,7 +21,8 @@
  79 │   pub p = 1;
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 78
+Unexpected warning(s) which did occur in line(s): 78
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

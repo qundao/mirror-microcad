@@ -21,7 +21,8 @@
  39 │   use std;
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 38
+Unexpected warning(s) which did occur in line(s): 38
+
 -- Model --
   Group (root) ->
     Workpiece(Sketch) init_use::K(l=10mm) ->

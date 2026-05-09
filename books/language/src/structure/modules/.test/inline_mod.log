@@ -22,7 +22,8 @@
  10 │     // e.g. define a constant
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 9
+Unexpected warning(s) which did occur in line(s): 9
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

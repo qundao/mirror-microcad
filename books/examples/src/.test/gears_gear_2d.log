@@ -28,7 +28,8 @@
  13 │ use std::geo2d::*;
     ╰────
 
-Unexpected warnings(s) which did occur in line(s): 12
+Unexpected warning(s) which did occur in line(s): 12
+
 -- Model --
   Group (root) ->
     Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=100) ->

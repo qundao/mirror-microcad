@@ -18,7 +18,8 @@
      ·               ╰── Unused local gramm_per_square_centimeters.
      ╰────
 
-Unexpected warnings(s) which did occur in line(s): 139
+Unexpected warning(s) which did occur in line(s): 139
+
 -- No Model --
 -- Test Result --
 OK (BUT WARNINGS)

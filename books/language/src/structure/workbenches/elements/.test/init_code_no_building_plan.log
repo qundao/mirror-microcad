@@ -35,5 +35,7 @@
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
 
 Expected error(s) which did not occur in line(s): 52
+Unexpected error(s) which did occur in line(s): 57
+
 -- Test Result --
 TODO (SHALL FAIL)

@@ -65,5 +65,7 @@
      ╰────
 
 Expected error(s) which did not occur in line(s): 136
+Unexpected error(s) which did occur in line(s): 140
+
 -- Test Result --
 TODO (SHALL FAIL)
