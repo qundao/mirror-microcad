@@ -24,8 +24,8 @@
     ╰────
 
 -- Parse Error --
-  × error: 37:4: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
-  │ 'and' or semicolon
+  × error: 37:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
+  │ 'or', 'and' or semicolon
     ╭─[:37:4]
  36 │ sketch () { // error, no name
  37 │   1=; // error inside an if statement with missing params
