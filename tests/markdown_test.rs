@@ -70,7 +70,10 @@ pub fn run_test(env: Option<TestEnv>) {
                         env.log_ln(&diag.to_pretty_string(&sources, &render_options));
                     }
                     if env.has_error_markers() {
-                        if env.report_wrong_errors(&error_lines, &HashSet::default()) {
+                        if let Some(msg) =
+                            env.report_wrong_errors(&error_lines, &HashSet::default())
+                        {
+                            env.log_ln(&msg);
                             env.log_ln(&env.result(TestResult::FailWrong));
                             panic!("ERROR: test is marked to fail but with wrong errors/warnings");
                         }
@@ -92,6 +95,9 @@ pub fn run_test(env: Option<TestEnv>) {
 
                     let err_warn =
                         env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
+                    if let Some(msg) = &err_warn {
+                        env.log_ln(&msg);
+                    }
                     let _ = fs::remove_file(env.banner_file());
 
                     // check if test expected to fail failed at evaluation
@@ -103,7 +109,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         // evaluation had been aborted?
                         (Err(err), _, false) => {
                             env.log_ln(&err.to_string());
-                            if err_warn {
+                            if err_warn.is_some() {
                                 env.log_ln(&env.result(TestResult::FailWrong));
                                 panic!(
                                     "ERROR: test is marked to fail but with wrong errors/warnings"
@@ -113,7 +119,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         }
                         // evaluation produced errors?
                         (_, true, false) => {
-                            if err_warn {
+                            if err_warn.is_some() {
                                 env.log_ln(&env.result(TestResult::FailWrong));
                                 panic!(
                                     "ERROR: test is marked to fail but with wrong errors/warnings"
@@ -128,7 +134,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         }
                         // test fails as expected but is todo
                         (Err(_), _, true) | (_, true, true) => {
-                            if err_warn {
+                            if err_warn.is_some() {
                                 env.log_ln(&env.result(TestResult::TodoFail))
                             } else {
                                 env.log_ln(&env.result(TestResult::NotTodoFail))
@@ -176,6 +182,9 @@ pub fn run_test(env: Option<TestEnv>) {
                     env.log_ln(&env.report_errors(context.diagnosis()));
                     let err_warn =
                         env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
+                    if let Some(msg) = &err_warn {
+                        env.log_ln(&msg);
+                    }
 
                     let _ = fs::remove_file(env.banner_file());
 
@@ -184,7 +193,7 @@ pub fn run_test(env: Option<TestEnv>) {
                         // test expected to succeed and succeeds with no errors
                         (Ok(model), false, false) => {
                             report_model(&mut env, model);
-                            if err_warn {
+                            if err_warn.is_some() {
                                 match env.mode() {
                                     "warn" => {
                                         env.log_ln(&env.result(TestResult::OkWrong));
