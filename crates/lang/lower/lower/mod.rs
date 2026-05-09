@@ -191,6 +191,7 @@ pub(crate) fn build_ast(
 ) -> Result<microcad_lang_parse::ast::Program, LowerErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors
+            .0
             .into_iter()
             .map(|error| {
                 let src_ref = lower_context.src_ref(&error.span);
