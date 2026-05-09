@@ -5,7 +5,7 @@
 
 use crate::ast;
 
-use crate::parser::{Error, ParserInput, helpers::ParserExt};
+use crate::parser::{ParserInput, RichError, helpers::ParserExt};
 use crate::tokens::Token;
 use chumsky::extra::Full;
 use chumsky::inspector::Inspector;
@@ -14,8 +14,8 @@ use chumsky::{IterParser, Parser, select_ref};
 /// Alias for parser input type
 pub type PInput<'a> = ParserInput<'a, 'a>;
 
-/// Alais for parser error type
-pub type PError<'a, S, Ctx> = Full<Error<'a>, S, Ctx>;
+/// Alias for parser error type
+pub type PError<'a, S, Ctx> = Full<RichError<'a>, S, Ctx>;
 
 /// Alias for Inspector type (as a trait bound shorthand)
 pub trait PInspector<'a>: Inspector<'a, PInput<'a>> + Default + Clone + 'static {}

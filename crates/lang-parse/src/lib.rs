@@ -17,60 +17,95 @@ mod source;
 /// Source tokens for µcad files
 pub mod tokens;
 
-use microcad_lang_base::{ComputedHash, Diagnostics, Hashed, LineIndex, Span, SrcRef, Url};
-pub use parser::ParseError;
-
-pub use parser::parsers;
+use microcad_lang_base::{
+    ComputedHash, Diagnostics, Hashed, LineCol, LineIndex, Span, SrcRef, Url,
+};
+pub use parser::{ParseErrors, parsers};
 
 /// Context for parsing.
-pub struct ParseContext<'source> {
-    /// The source url
-    pub url: Url,
-    /// Line index
-    line_index: LineIndex,
-    /// A line offset (e.g. used when source is parsed from markdown code snippets).
-    line_offset: u32,
-    /// The source code to be parsed.
-    source: Hashed<&'source str>,
+pub enum ParseContext<'source> {
+    /// Parse a single element from a string
+    Element(Hashed<&'source str>),
+    /// Parse a source code snippet from a url and a string.
+    Source {
+        /// The source url
+        url: Url,
+        /// Line index
+        line_index: LineIndex,
+        /// A line offset (e.g. used when source is parsed from markdown code snippets).
+        line_offset: u32,
+        /// The source code to be parsed.
+        source: Hashed<&'source str>,
+    },
 }
 
 impl<'source> ParseContext<'source> {
-    /// Create a new parse context.
+    /// Create a new parse context for a source code.
     pub fn new(source: &'source str) -> Self {
-        let source = Hashed::new(source);
-        Self {
-            url: microcad_lang_base::virtual_url(&format!("source_{}", source.computed_hash())),
-            line_index: LineIndex::new(&source),
-            line_offset: 0,
-            source,
-        }
+        Self::Element(Hashed::new(source))
     }
 
     /// Add a URL to the parse context.
     pub fn with_url(self, url: Url) -> Self {
-        Self {
-            url,
-            source: self.source,
-            line_index: self.line_index,
-            line_offset: self.line_offset,
+        match self {
+            Self::Source {
+                line_index,
+                line_offset,
+                source,
+                ..
+            } => Self::Source {
+                url,
+                source: source,
+                line_index,
+                line_offset,
+            },
+            Self::Element(source) => Self::Source {
+                line_index: LineIndex::new(&source),
+                url,
+                source,
+                line_offset: 0,
+            },
         }
     }
 
     /// Add a line offset the parse context.
     pub fn with_line_offset(self, line_offset: u32) -> Self {
-        Self {
-            url: self.url,
-            source: self.source,
-            line_index: self.line_index,
-            line_offset,
+        match self {
+            Self::Source {
+                url,
+                line_index,
+                source,
+                ..
+            } => Self::Source {
+                url,
+                source,
+                line_index,
+                line_offset,
+            },
+            Self::Element(source) => Self::Source {
+                line_index: LineIndex::new(&source),
+                url: microcad_lang_base::virtual_url(&format!("source_{}", source.computed_hash())),
+                source,
+                line_offset,
+            },
         }
     }
 
     /// Create a source code reference from a span.
     pub fn src_ref(&self, span: &Span) -> SrcRef {
-        self.line_index
-            .src_ref(self.source.value(), span, self.source.computed_hash())
-            .with_line_offset(self.line_offset)
+        match self {
+            Self::Source {
+                line_index,
+                line_offset,
+                source,
+                ..
+            } => line_index
+                .src_ref(source.value(), span, source.computed_hash())
+                .with_line_offset(*line_offset),
+            Self::Element(source) => {
+                SrcRef::new(span.clone(), LineCol::default(), source.computed_hash())
+            }
+        }
     }
 }
 
@@ -83,7 +118,7 @@ pub trait Parse: Sized {
 }
 
 /// API to parse directly from a string
-pub fn parse(source: &str) -> Result<ast::Program, Vec<ParseError>> {
+pub fn parse(source: &str) -> Result<ast::Program, ParseErrors> {
     parser::parse(&tokens::lex(source).collect::<Vec<_>>())
 }
 

@@ -6,10 +6,7 @@ mod helpers;
 pub mod parsers;
 
 use crate::ast::*;
-use crate::parser::{
-    error::{ParseErrorKind, Rich},
-    helpers::*,
-};
+use crate::parser::{error::Rich, helpers::*};
 use crate::tokens::*;
 
 use chumsky::{
@@ -19,13 +16,13 @@ use chumsky::{
     select_ref,
 };
 
-pub use error::ParseError;
+pub use error::{ParseErrorKind, ParseErrors, RichError};
 use std::str::FromStr;
 
 use microcad_lang_base::Span;
 
-type Error<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
-type Extra<'tokens> = extra::Err<Error<'tokens>>;
+/// Extra error.
+pub type Extra<'tokens> = extra::Err<RichError<'tokens>>;
 
 pub fn map_token_input<'a, 'token>(
     spanned: &'a SpannedToken<Token<'token>>,
@@ -36,7 +33,7 @@ pub fn map_token_input<'a, 'token>(
 type InputMap<'input, 'token> =
     fn(&'input SpannedToken<Token<'token>>) -> (&'input Token<'token>, &'input Span);
 
-type ParserInput<'input, 'token> = MappedInput<
+pub type ParserInput<'input, 'token> = MappedInput<
     'input,
     Token<'token>,
     Span,
@@ -44,7 +41,8 @@ type ParserInput<'input, 'token> = MappedInput<
     InputMap<'input, 'token>,
 >;
 
-fn input<'input, 'tokens>(
+/// Get parser input from tokens
+pub fn input<'input, 'tokens>(
     input: &'input [SpannedToken<Token<'tokens>>],
 ) -> ParserInput<'input, 'tokens> {
     let end = input.last().map(|t| t.span.end).unwrap_or_default();
@@ -54,11 +52,11 @@ fn input<'input, 'tokens>(
 /// Build an abstract syntax tree from a list of tokens
 pub fn parse<'tokens>(
     tokens: &'tokens [SpannedToken<Token<'tokens>>],
-) -> Result<Program, Vec<ParseError>> {
+) -> Result<Program, ParseErrors> {
     parser()
         .parse(input(tokens))
         .into_result()
-        .map_err(|errors| errors.into_iter().map(ParseError::new).collect())
+        .map_err(|errors| errors.into())
 }
 
 const STRUCTURAL_TOKENS: &[Token] = &[
@@ -158,7 +156,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .ignore_then(statement_list_parser.clone().delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
             just(Token::SigilCloseCurlyBracket),
-            |err: Error, open, end| {
+            |err: RichError, open, end| {
                 Rich::custom(
                     err.span().clone(),
                     ParseErrorKind::UnclosedBracket {
@@ -268,7 +266,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {
@@ -377,7 +375,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .delimited_with_spanned_error(
                     just(Token::SigilOpenBracket),
                     just(Token::SigilCloseBracket),
-                    |err: Error, open, end| {
+                    |err: RichError, open, end| {
                         Rich::custom(
                             err.span().clone(),
                             ParseErrorKind::UnclosedBracket {
@@ -723,7 +721,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {
@@ -1211,7 +1209,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {
@@ -1238,7 +1236,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {

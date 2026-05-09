@@ -3,12 +3,16 @@
 
 //! µcad source API
 
+use chumsky::Parser;
 use microcad_lang_base::{
-    ComputedHash, Diagnostic, Diagnostics, GetSourceLocInfoByHash, Hashed, PushDiag, Refer,
-    SourceLocInfo, SrcRef, SrcReferrer, Url,
+    ComputedHash, Diagnostics, GetSourceLocInfoByHash, Hashed, Refer, SourceLocInfo, SrcRef,
+    SrcReferrer, Url,
 };
 
-use crate::{Parse, ParseContext, ast};
+use crate::{
+    Parse, ParseContext, ParseErrors, ast,
+    parser::{Extra, ParserInput},
+};
 
 /// A µcad source with a parse syntax tree with a line offset and the hashed original source code.
 pub struct Source {
@@ -24,29 +28,48 @@ pub struct Source {
 
 impl Parse for Source {
     fn parse(context: &ParseContext) -> Result<Self, Diagnostics> {
-        let ast = crate::parse(context.source.value()).map_err(|errors| {
-            let mut diag_list = Diagnostics::default();
+        match context {
+            ParseContext::Element(_) => panic!("Expected parse source context"),
+            ParseContext::Source {
+                url,
+                line_offset,
+                source,
+                ..
+            } => {
+                let ast = crate::parse(source.value())
+                    .map_err(|errors| errors.to_diagnostics(context))?;
+                let src_ref = context.src_ref(&ast.span);
 
-            for err in errors {
-                let span = err.span.clone();
-                diag_list
-                    .push_diag(Diagnostic::Error(Refer::new(
-                        err.into(),
-                        context.src_ref(&span),
-                    )))
-                    .expect("Diag list should return no error");
+                Ok(Self {
+                    url: url.clone(),
+                    ast: Refer::new(ast, src_ref),
+                    line_offset: *line_offset,
+                    source: source.clone().map(|s| s.to_string()),
+                })
             }
+        }
+    }
+}
 
-            diag_list
-        })?;
-        let src_ref = context.src_ref(&ast.span);
+impl Parse for ast::Literal {
+    fn parse(context: &ParseContext) -> Result<Self, Diagnostics> {
+        fn literal<'tokens>()
+        -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Extra<'tokens>>
+        {
+            crate::parsers::literal()
+        }
 
-        Ok(Self {
-            url: context.url.clone(),
-            ast: Refer::new(ast, src_ref),
-            line_offset: context.line_offset,
-            source: context.source.clone().map(|s| s.to_string()),
-        })
+        match context {
+            ParseContext::Element(source) => {
+                use chumsky::Parser;
+                let tokens = crate::tokens::lex(source.value()).collect::<Vec<_>>();
+                literal()
+                    .parse(crate::parser::input(&tokens))
+                    .into_result()
+                    .map_err(|errors| ParseErrors::from(errors).to_diagnostics(context))
+            }
+            _ => panic!("Not possible"),
+        }
     }
 }
 
