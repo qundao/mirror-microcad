@@ -1,0 +1,23 @@
+---
+source: crates/lang-parse/tests/literal.rs
+expression: "ast::Literal::parse(&context)"
+---
+Ok(
+    Literal {
+        span: 0..4,
+        extras: ItemExtras {
+            leading: LeadingExtras(
+                [],
+            ),
+            trailing: TrailingExtras(
+                [],
+            ),
+        },
+        literal: Bool(
+            BoolLiteral {
+                span: 0..4,
+                value: true,
+            },
+        ),
+    },
+)
