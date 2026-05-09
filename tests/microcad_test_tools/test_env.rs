@@ -229,21 +229,21 @@ impl TestEnv {
     }
 
     /// Report output into log file.
-    pub fn report_output(&mut self, output: Option<String>) {
+    pub fn report_output(&self, output: Option<String>) -> String {
         let output = output.unwrap_or("output error".into());
         if output.is_empty() {
-            self.log_ln("-- No Output --");
+            "-- No Output --".to_string()
         } else {
-            self.log_ln(&format!("-- Output --\n{output}"));
+            format!("-- Output --\n{output}")
         }
     }
 
     /// Report errors into log file.
-    pub fn report_errors(&mut self, diagnosis: String) {
+    pub fn report_errors(&self, diagnosis: String) -> String {
         if diagnosis.is_empty() {
-            self.log_ln("-- No Errors --");
+            "-- No Errors --".to_string()
         } else {
-            self.log_ln(&format!("-- Errors --\n{diagnosis}"));
+            format!("-- Errors --\n{diagnosis}")
         }
     }
 
@@ -313,7 +313,7 @@ impl TestEnv {
     }
 
     /// Report result into log file.
-    pub fn result(&mut self, result: TestResult) {
+    pub fn result(&self, result: TestResult) -> String {
         let (res, res_long) = match result {
             TestResult::Ok => ("ok", "OK"),
             TestResult::OkWarn => ("ok_warn", "OK (BUT WARNINGS)"),
@@ -330,6 +330,6 @@ impl TestEnv {
         };
         let _ = std::fs::remove_file(self.banner_file());
         let _ = std::fs::hard_link(format!("images/{res}.svg"), self.banner_file());
-        self.log_ln(&format!("-- Test Result --\n{res_long}"));
+        format!("-- Test Result --\n{res_long}")
     }
 }
