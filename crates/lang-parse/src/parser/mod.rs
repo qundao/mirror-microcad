@@ -3,17 +3,23 @@
 
 mod error;
 mod helpers;
+pub mod parsers;
 
 use crate::ast::*;
-use crate::parser::error::{ParseErrorKind, Rich};
-use crate::parser::helpers::*;
+use crate::parser::{
+    error::{ParseErrorKind, Rich},
+    helpers::*,
+};
 use crate::tokens::*;
 
-use chumsky::input::{Input, MappedInput};
-use chumsky::prelude::*;
-use chumsky::{Parser, extra, select_ref};
+use chumsky::{
+    Parser, extra,
+    input::{Input, MappedInput},
+    prelude::*,
+    select_ref,
+};
+
 pub use error::ParseError;
-use helpers::ParserExt;
 use std::str::FromStr;
 
 use microcad_lang_base::Span;
@@ -127,10 +133,10 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .or_not()
             .boxed();
 
-        whitespace_parser()
+        parsers::whitespace()
             .or_not()
             .ignore_then(statement_parser.clone())
-            .then(trailing_extras_parser())
+            .then(parsers::trailing_extras())
             .repeated()
             .collect::<Vec<(Statement, TrailingExtras)>>()
             .then(trailing_expr)
@@ -147,7 +153,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
     let block_recovery =
         ignore_till_matched_curly().map_with(|_, e| StatementList::dummy(e.span()));
 
-    let body = whitespace_parser()
+    let body = parsers::whitespace()
         .or_not()
         .ignore_then(statement_list_parser.clone().delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
@@ -217,7 +223,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .labelled("qualified name")
         .boxed();
 
-    let unit = helpers::unit_parser().boxed();
+    let unit = parsers::unit().boxed();
 
     type_parser.define({
         let single = select_ref! {
@@ -230,7 +236,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .labelled("single type")
         .boxed();
 
-        let array = whitespace_parser()
+        let array = parsers::whitespace()
             .or_not()
             .ignore_then(type_parser.clone())
             .then_maybe_whitespace()
@@ -247,7 +253,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .labelled("array type")
             .boxed();
 
-        let tuple = whitespace_parser()
+        let tuple = parsers::whitespace()
             .or_not()
             .ignore_then(identifier_parser.clone())
             .then_ignore(just(Token::SigilColon))
@@ -285,8 +291,6 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         single.or(array).or(tuple).labelled("type").boxed()
     });
-
-    let literal_parser = helpers::literal_parser();
 
     let unary_operator_parser = select_ref! {
         Token::OperatorSubtract = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Minus },
@@ -660,7 +664,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .boxed()
         });
 
-        let parameter_list_inner = whitespace_parser()
+        let parameter_list_inner = parsers::whitespace()
             .or_not()
             .ignore_then(identifier_parser.clone())
             .then_maybe_whitespace()
@@ -1024,7 +1028,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .map(Statement::InnerAttribute)
             .boxed();
 
-        let not_assignment = whitespace_parser()
+        let not_assignment = parsers::whitespace()
             .or_not()
             .then(none_of([
                 Token::OperatorAssignment,
@@ -1118,7 +1122,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .labelled("unclosed string")
         .boxed();
 
-        let literal = literal_parser
+        let literal = parsers::literal()
             .map(Expression::Literal)
             .labelled("literal")
             .boxed()
@@ -1200,7 +1204,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .map(Expression::String)
             .boxed();
 
-        let tuple = whitespace_parser()
+        let tuple = parsers::whitespace()
             .or_not()
             .ignore_then(tuple_body.clone())
             .with_extras()

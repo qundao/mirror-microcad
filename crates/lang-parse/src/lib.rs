@@ -20,6 +20,8 @@ pub mod tokens;
 use microcad_lang_base::{ComputedHash, Diagnostics, Hashed, LineIndex, Span, SrcRef, Url};
 pub use parser::ParseError;
 
+pub use parser::parsers;
+
 /// Context for parsing.
 pub struct ParseContext<'source> {
     /// The source url

@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::ast;
+use crate::{ast, parsers};
 use microcad_lang_base::Span;
 
 use crate::parser::{Error, Extra, ParserInput};
@@ -10,202 +10,7 @@ use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
 use chumsky::inspector::Inspector;
 use chumsky::prelude::*;
-use chumsky::{IterParser, Parser, extra, select_ref};
-
-pub fn unit_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Unit, Full<Error<'tokens>, S, Ctx>> + 'tokens
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    select_ref! {
-        Token::Identifier(ident) = e => ast::Unit {
-            span: e.span(),
-            name: ident.as_ref().into()
-        },
-        Token::Unit(unit) = e => ast::Unit {
-            span: e.span(),
-            name: unit.as_ref().into()
-        },
-        Token::SigilQuote = e => ast::Unit {
-            span: e.span(),
-            name: r#"""#.into()
-        },
-    }
-    .labelled("unit")
-}
-
-pub fn literal_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Full<Error<'tokens>, S, Ctx>>
-+ 'tokens
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    use microcad_lang_base::ToCompactString;
-    use std::str::FromStr;
-
-    {
-        let single_value = select_ref! {
-            Token::LiteralFloat(x) = e => {
-                match f64::from_str(x) {
-                    Ok(value) => ast::LiteralKind::Float(ast::FloatLiteral {
-                        value,
-                        raw: x.to_compact_string(),
-                        span: e.span(),
-                    }),
-                    Err(err) => ast::LiteralKind::Error(ast::LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    })
-                }
-            },
-            Token::LiteralInt(x) = e => {
-                match i64::from_str(x) {
-                    Ok(value) => ast::LiteralKind::Integer(ast::IntegerLiteral {
-                    value,
-                    raw: x.to_compact_string(),
-                    span: e.span(),
-                }),
-                    Err(err) => ast::LiteralKind::Error(ast::LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    })
-                }
-            },
-            Token::LiteralString(content) = e => {
-                ast::LiteralKind::String(ast::StringLiteral {
-                    span: e.span(),
-                    content: content.as_ref().into(),
-                })
-            },
-            Token::LiteralBool(value) = e => {
-                ast::LiteralKind::Bool(ast::BoolLiteral {
-                    span: e.span(),
-                    value: *value,
-                })
-            },
-        }
-        .boxed();
-
-        single_value
-            .then(unit_parser().or_not())
-            .with_extras()
-            .try_map_with(|((literal, ty), extras), e| {
-                let literal = match (literal, ty) {
-                    (ast::LiteralKind::Float(float), Some(unit)) => {
-                        ast::LiteralKind::Quantity(ast::QuantityLiteral {
-                            span: e.span(),
-                            value: float.value,
-                            raw: float.raw,
-                            unit,
-                        })
-                    }
-                    (ast::LiteralKind::Integer(int), Some(unit)) => {
-                        ast::LiteralKind::Quantity(ast::QuantityLiteral {
-                            span: e.span(),
-                            value: int.value as f64,
-                            raw: int.raw,
-                            unit,
-                        })
-                    }
-                    (_, Some(_)) => ast::LiteralKind::Error(ast::LiteralError {
-                        span: e.span(),
-                        kind: ast::LiteralErrorKind::Untypable,
-                    }),
-                    (literal, None) => literal,
-                };
-                Ok(ast::Literal {
-                    span: e.span(),
-                    literal,
-                    extras,
-                })
-            })
-            .labelled("literal")
-            .boxed()
-    }
-}
-
-pub fn comment_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Comment, Full<Error<'tokens>, S, Ctx>>
-+ 'tokens
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    let single_line_comments = select_ref! {
-        Token::SingleLineComment(comment) => comment
-    }
-    .map_with(|line, e| ast::Comment {
-        span: e.span(),
-        inner: ast::CommentInner::SingleLine(line.to_string()),
-    })
-    .boxed();
-    let multi_line = select_ref! {
-        Token::MultiLineComment(comment) = e => ast::Comment {
-            span: e.span(),
-            inner: ast::CommentInner::MultiLine(comment.to_string())
-        }
-    };
-
-    single_line_comments
-        .or(multi_line)
-        .labelled("comment")
-        .boxed()
-}
-
-pub fn whitespace_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, String, Full<Error<'tokens>, S, Ctx>>
-+ 'tokens
-+ Clone
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    select_ref! {
-        Token::Whitespace(s) => s.to_string(),
-    }
-    .labelled("whitespace")
-    .boxed()
-}
-
-pub fn leading_extras_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::LeadingExtras, Full<Error<'tokens>, S, Ctx>>
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    // Inline the whitespace logic and the comment logic
-    let whitespace =
-        select_ref! { Token::Whitespace(s) => ast::ItemExtra::Whitespace(s.to_string()) };
-    let comment = comment_parser().map(ast::ItemExtra::Comment);
-
-    comment
-        .or(whitespace)
-        .repeated()
-        .collect::<Vec<_>>()
-        .map(ast::LeadingExtras)
-        .boxed()
-}
-
-pub fn trailing_extras_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::TrailingExtras, Full<Error<'tokens>, S, Ctx>>
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    // Inline the whitespace logic and the comment logic
-    let whitespace =
-        select_ref! { Token::Whitespace(s) => ast::ItemExtra::Whitespace(s.to_string()) };
-    let comment = comment_parser().map(ast::ItemExtra::Comment);
-
-    whitespace
-        .or(comment)
-        .repeated()
-        .collect::<Vec<_>>()
-        .map(ast::TrailingExtras)
-        .boxed()
-}
+use chumsky::{Parser, extra};
 
 /// Ignore tokens, until we hit the end of a pair or nested curly brackets
 ///
@@ -276,7 +81,7 @@ where
     params
         .clone()
         .foldl_with(
-            whitespace_parser()
+            parsers::whitespace()
                 .or_not()
                 .ignore_then(one_of(tokens).map_with(|op, e| ast::BinaryOperator {
                     span: e.span(),
@@ -347,7 +152,7 @@ where
         .or(one_of(Token::SigilSemiColon)
             .ignored()
             .or(one_of(except).ignored())
-            .or(whitespace_parser().ignored())
+            .or(parsers::whitespace().ignored())
             .rewind())
 }
 
@@ -393,9 +198,9 @@ where
         (O, ast::ItemExtras),
         Full<Error<'tokens>, S, Ctx>,
     > {
-        leading_extras_parser()
+        parsers::leading_extras()
             .then(self)
-            .then(trailing_extras_parser())
+            .then(parsers::trailing_extras())
             .map(|((leading, res), trailing)| (res, ast::ItemExtras { leading, trailing }))
             .boxed()
     }
@@ -403,13 +208,13 @@ where
     fn then_whitespace(
         self,
     ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> {
-        self.then_ignore(whitespace_parser())
+        self.then_ignore(parsers::whitespace())
     }
 
     fn then_maybe_whitespace(
         self,
     ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> {
-        self.then_ignore(whitespace_parser().or_not())
+        self.then_ignore(parsers::whitespace().or_not())
     }
 
     fn delimited_with_spanned_error<B, C, U, V, F>(
