@@ -1,10 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::ast::{
-    self, BinaryOperation, BinaryOperator, BinaryOperatorType, Comment, CommentInner, Expression,
-    ItemExtra, ItemExtras, LeadingExtras, TrailingExtras,
-};
+use crate::ast;
 use microcad_lang_base::Span;
 
 use crate::parser::{Error, Extra, ParserInput};
@@ -129,7 +126,8 @@ where
 }
 
 pub fn comment_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Comment, Full<Error<'tokens>, S, Ctx>> + 'tokens
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Comment, Full<Error<'tokens>, S, Ctx>>
++ 'tokens
 where
     S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
     Ctx: 'tokens,
@@ -137,15 +135,15 @@ where
     let single_line_comments = select_ref! {
         Token::SingleLineComment(comment) => comment
     }
-    .map_with(|line, e| Comment {
+    .map_with(|line, e| ast::Comment {
         span: e.span(),
-        inner: CommentInner::SingleLine(line.to_string()),
+        inner: ast::CommentInner::SingleLine(line.to_string()),
     })
     .boxed();
     let multi_line = select_ref! {
-        Token::MultiLineComment(comment) = e => Comment {
+        Token::MultiLineComment(comment) = e => ast::Comment {
             span: e.span(),
-            inner: CommentInner::MultiLine(comment.to_string())
+            inner: ast::CommentInner::MultiLine(comment.to_string())
         }
     };
 
@@ -171,38 +169,40 @@ where
 }
 
 pub fn leading_extras_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, LeadingExtras, Full<Error<'tokens>, S, Ctx>>
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::LeadingExtras, Full<Error<'tokens>, S, Ctx>>
 where
     S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
     Ctx: 'tokens,
 {
     // Inline the whitespace logic and the comment logic
-    let whitespace = select_ref! { Token::Whitespace(s) => ItemExtra::Whitespace(s.to_string()) };
-    let comment = comment_parser().map(ItemExtra::Comment);
+    let whitespace =
+        select_ref! { Token::Whitespace(s) => ast::ItemExtra::Whitespace(s.to_string()) };
+    let comment = comment_parser().map(ast::ItemExtra::Comment);
 
     comment
         .or(whitespace)
         .repeated()
         .collect::<Vec<_>>()
-        .map(LeadingExtras)
+        .map(ast::LeadingExtras)
         .boxed()
 }
 
 pub fn trailing_extras_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, TrailingExtras, Full<Error<'tokens>, S, Ctx>>
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::TrailingExtras, Full<Error<'tokens>, S, Ctx>>
 where
     S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
     Ctx: 'tokens,
 {
     // Inline the whitespace logic and the comment logic
-    let whitespace = select_ref! { Token::Whitespace(s) => ItemExtra::Whitespace(s.to_string()) };
-    let comment = comment_parser().map(ItemExtra::Comment);
+    let whitespace =
+        select_ref! { Token::Whitespace(s) => ast::ItemExtra::Whitespace(s.to_string()) };
+    let comment = comment_parser().map(ast::ItemExtra::Comment);
 
     whitespace
         .or(comment)
         .repeated()
         .collect::<Vec<_>>()
-        .map(TrailingExtras)
+        .map(ast::TrailingExtras)
         .boxed()
 }
 
@@ -264,35 +264,39 @@ pub fn ignore_till_semi<'tokens>()
 pub fn binop<'tokens, I>(
     params: I,
     tokens: &'static [Token<'static>],
-) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Expression, Extra<'tokens>> + Clone
+) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Expression, Extra<'tokens>> + Clone
 where
-    I: Parser<'tokens, ParserInput<'tokens, 'tokens>, Expression, Extra<'tokens>> + Clone + 'tokens,
+    I: Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Expression, Extra<'tokens>>
+        + Clone
+        + 'tokens,
 {
+    use ast::BinaryOperatorType::*;
+
     params
         .clone()
         .foldl_with(
             whitespace_parser()
                 .or_not()
-                .ignore_then(one_of(tokens).map_with(|op, e| BinaryOperator {
+                .ignore_then(one_of(tokens).map_with(|op, e| ast::BinaryOperator {
                     span: e.span(),
                     operation: match op {
-                        Token::OperatorAdd => BinaryOperatorType::Add,
-                        Token::OperatorSubtract => BinaryOperatorType::Subtract,
-                        Token::OperatorMultiply => BinaryOperatorType::Multiply,
-                        Token::OperatorDivide => BinaryOperatorType::Divide,
-                        Token::OperatorUnion => BinaryOperatorType::Union,
-                        Token::OperatorIntersect => BinaryOperatorType::Intersect,
-                        Token::OperatorPowerXor => BinaryOperatorType::PowerXor,
-                        Token::OperatorGreaterThan => BinaryOperatorType::GreaterThan,
-                        Token::OperatorLessThan => BinaryOperatorType::LessThan,
-                        Token::OperatorGreaterEqual => BinaryOperatorType::GreaterEqual,
-                        Token::OperatorLessEqual => BinaryOperatorType::LessEqual,
-                        Token::OperatorNear => BinaryOperatorType::Near,
-                        Token::OperatorEqual => BinaryOperatorType::Equal,
-                        Token::OperatorNotEqual => BinaryOperatorType::NotEqual,
-                        Token::OperatorAnd => BinaryOperatorType::And,
-                        Token::OperatorOr => BinaryOperatorType::Or,
-                        Token::OperatorXor => BinaryOperatorType::Xor,
+                        Token::OperatorAdd => Add,
+                        Token::OperatorSubtract => Subtract,
+                        Token::OperatorMultiply => Multiply,
+                        Token::OperatorDivide => Divide,
+                        Token::OperatorUnion => Union,
+                        Token::OperatorIntersect => Intersect,
+                        Token::OperatorPowerXor => PowerXor,
+                        Token::OperatorGreaterThan => GreaterThan,
+                        Token::OperatorLessThan => LessThan,
+                        Token::OperatorGreaterEqual => GreaterEqual,
+                        Token::OperatorLessEqual => LessEqual,
+                        Token::OperatorNear => Near,
+                        Token::OperatorEqual => Equal,
+                        Token::OperatorNotEqual => NotEqual,
+                        Token::OperatorAnd => And,
+                        Token::OperatorOr => Or,
+                        Token::OperatorXor => Xor,
                         _ => unreachable!(),
                     },
                 }))
@@ -300,7 +304,7 @@ where
                 .then(params)
                 .repeated(),
             |lhs, (operation, rhs), e| {
-                Expression::BinaryOperation(BinaryOperation {
+                ast::Expression::BinaryOperation(ast::BinaryOperation {
                     span: e.span(),
                     lhs: lhs.into(),
                     operation,
@@ -352,7 +356,7 @@ where
     E: ParserExtra<'src, I>,
     O: 'src,
 {
-    fn with_extras(self) -> impl Parser<'src, I, (O, ItemExtras), E> + 'src;
+    fn with_extras(self) -> impl Parser<'src, I, (O, ast::ItemExtras), E> + 'src;
 
     /// Required a whitespace
     fn then_whitespace(self) -> impl Parser<'src, I, O, E> + 'src;
@@ -382,12 +386,16 @@ where
 {
     fn with_extras(
         self,
-    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (O, ItemExtras), Full<Error<'tokens>, S, Ctx>>
-    {
+    ) -> impl Parser<
+        'tokens,
+        ParserInput<'tokens, 'tokens>,
+        (O, ast::ItemExtras),
+        Full<Error<'tokens>, S, Ctx>,
+    > {
         leading_extras_parser()
             .then(self)
             .then(trailing_extras_parser())
-            .map(|((leading, res), trailing)| (res, ItemExtras { leading, trailing }))
+            .map(|((leading, res), trailing)| (res, ast::ItemExtras { leading, trailing }))
             .boxed()
     }
 
