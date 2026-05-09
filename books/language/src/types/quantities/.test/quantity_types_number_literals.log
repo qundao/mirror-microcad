@@ -34,6 +34,7 @@
     ·    ╰── Unused global symbol f.
  16 │ 
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 15, 19
 -- No Model --
 -- Test Result --

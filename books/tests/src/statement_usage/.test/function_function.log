@@ -24,6 +24,7 @@
  24 │ } f();
     ╰────
   help: function is only allowed within source file, module or workbench
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

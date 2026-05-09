@@ -26,6 +26,7 @@
     ·              ╰── Unused global symbol std::ops::translate.
  62 │ 
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 61
 -- Model --
   Group (root) ->

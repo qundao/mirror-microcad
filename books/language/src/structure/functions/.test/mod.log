@@ -38,5 +38,6 @@
     · ────────┬────────
     ·         ╰── Symbol math::pow not found.
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

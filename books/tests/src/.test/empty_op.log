@@ -26,5 +26,6 @@
     · ─┬
     ·  ╰── This expression statement did not produce any model
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

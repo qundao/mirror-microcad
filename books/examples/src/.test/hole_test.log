@@ -44,6 +44,7 @@
     ·           ╰── Unused global symbol std::math::*.
  13 │ 
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 12
 -- Model --
   Group (root) ->

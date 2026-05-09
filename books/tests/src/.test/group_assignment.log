@@ -34,6 +34,7 @@
     ·              ╰── Unused global symbol std::ops::translate.
  75 │ 
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 74, 77
 -- No Model --
 -- Test Result --

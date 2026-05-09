@@ -32,5 +32,6 @@
     ·                    ╰── Unused local length.
  32 │     std::print("{size}"); // error: size is not known
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

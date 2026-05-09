@@ -22,5 +22,6 @@
      ·     ╰── Quantity error: Invalid operation: `10mm` + `2` (try `2` + `10mm`)
  104 │ } } K(1cm);
      ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

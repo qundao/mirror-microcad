@@ -36,5 +36,6 @@ inner: <NO VALUE>
     ·                     ───┬───
     ·                        ╰── Property not found: inner
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -27,6 +27,7 @@
  91 │     std::debug::assert_eq([a, 10]);
     ╰────
   help: Values in microcad are immutable
+
 Unexpected error(s) which did occur in line(s): 90
 -- Test Result --
 TODO

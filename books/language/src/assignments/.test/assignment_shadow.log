@@ -29,5 +29,6 @@
     · ╰── Unused local a.
  80 │ a = a * 2; // error: a already defined in this scope
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

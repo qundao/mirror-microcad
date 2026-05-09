@@ -20,6 +20,7 @@
     ·                   ╰── Unused local l.
  39 │   use std;
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 38
 -- Model --
   Group (root) ->

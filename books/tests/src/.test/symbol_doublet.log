@@ -33,6 +33,7 @@
     ·     ╰── Ambiguous usage of 'foo'
  11 │     foo::A
     ╰────
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

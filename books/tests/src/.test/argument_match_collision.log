@@ -25,5 +25,6 @@
   help: Ambiguous initializations:
         	argument_match_collision::S(width: Length)
         	argument_match_collision::S::init(width: Length)
+
 -- Test Result --
 FAILS AS EXPECTED

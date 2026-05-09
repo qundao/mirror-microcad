@@ -59,5 +59,6 @@
  55 │ }
  56 │ Wheel(thickness = 1cm);
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

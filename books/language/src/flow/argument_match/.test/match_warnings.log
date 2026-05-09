@@ -19,5 +19,6 @@
     ·   ─────────────────┬────────────────
     ·                    ╰── Too many arguments: v
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -21,5 +21,6 @@
     ·                            ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
  72 │ } K();
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

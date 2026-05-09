@@ -33,6 +33,7 @@
     ·       ╰── Before this initializer
  49 │         radius = 1;
     ╰────
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -27,6 +27,7 @@
     ·          ╰── Unused global symbol std::ops::*.
  13 │ use std::geo2d::*;
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 12
 -- Model --
   Group (root) ->

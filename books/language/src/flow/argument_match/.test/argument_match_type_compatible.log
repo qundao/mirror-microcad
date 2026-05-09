@@ -34,6 +34,7 @@
     ·                            ╰── Unused local c.
  95 │ // giving an integer `1` to a `Scalar` parameter `a`
     ╰────
+
 -- No Model --
 -- Test Result --
 OK

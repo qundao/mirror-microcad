@@ -44,6 +44,7 @@
     ·    ──────┬─────
     ·          ╰── Missing arguments: x,y
     ╰────
+
 Unexpected error(s) which did occur in line(s): 18, 19, 20
 -- Test Result --
 TODO

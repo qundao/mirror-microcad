@@ -21,6 +21,7 @@
     ·         ╰── Unused global symbol my_module.
  10 │     // e.g. define a constant
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 9
 -- No Model --
 -- Test Result --

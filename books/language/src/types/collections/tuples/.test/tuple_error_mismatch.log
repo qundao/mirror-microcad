@@ -35,5 +35,6 @@
     · ───────────────────┬──────────────────
     ·                    ╰── Tuple type mismatch: lhs=(x: Integer, y: Integer), rhs=(x: Integer, y: Integer, z: Integer)
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -23,5 +23,6 @@
     ·                  ╰── The Part workbench produced a 2D output, but expected a 3D output.
  30 │ }
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

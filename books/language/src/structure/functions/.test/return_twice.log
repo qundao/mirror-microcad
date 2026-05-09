@@ -50,6 +50,7 @@
     ·                       ────────────┬───────────
     ·                                   ╰── Assertion failed: Values differ: [1, 0.015625]
     ╰────
+
 Expected error(s) which did not occur in line(s): 46
 Unexpected warnings(s) which did occur in line(s): 40
 -- Test Result --

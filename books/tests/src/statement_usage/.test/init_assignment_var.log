@@ -21,6 +21,7 @@
     ·   ╰── Unused local a.
  88 │ } } K(1cm);
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 87
 -- Model --
   Group (root) ->

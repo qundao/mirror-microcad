@@ -23,6 +23,7 @@
     · ╰──── Within this expression statement
     ╰────
   help: return statement is only allowed within function
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

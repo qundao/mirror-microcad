@@ -17,5 +17,6 @@
     ·                 ───────────────┬───────────────
     ·                                ╰── Builtin error: this should not have happened
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

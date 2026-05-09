@@ -20,6 +20,7 @@
     ·     ╰── Unused global symbol k.
  47 │   pub use std::geo2d;
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 46
 -- No Model --
 -- Test Result --

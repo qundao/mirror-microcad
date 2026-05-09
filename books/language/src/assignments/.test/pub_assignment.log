@@ -26,6 +26,7 @@ Hello
    ·         ╰── Unused global symbol my_module.
  9 │     pub mod sub_module {
    ╰────
+
 Unexpected warnings(s) which did occur in line(s): 8
 -- No Model --
 -- Test Result --

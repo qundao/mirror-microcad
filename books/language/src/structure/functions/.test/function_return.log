@@ -44,6 +44,7 @@
     ·        ╰── Unused local x.
  62 │     if n > 1 {
     ╰────
+
 Unexpected error(s) which did occur in line(s): 71
 Unexpected warnings(s) which did occur in line(s): 61
 -- Test Result --

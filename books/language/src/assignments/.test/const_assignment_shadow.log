@@ -50,6 +50,7 @@
     ·               ╰── Ambiguous usage of 'A'
  92 │     }
     ╰────
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

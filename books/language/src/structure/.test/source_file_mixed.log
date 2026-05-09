@@ -19,5 +19,6 @@
     · ────────────────┬───────────────
     ·                 ╰── Cannot mix 2d and 3d geometries
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

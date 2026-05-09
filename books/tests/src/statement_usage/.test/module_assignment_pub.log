@@ -20,6 +20,7 @@
     ·     ╰── Unused global symbol k.
  79 │   pub p = 1;
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 78
 -- No Model --
 -- Test Result --

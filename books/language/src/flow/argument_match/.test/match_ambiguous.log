@@ -19,5 +19,6 @@
     ·   ────────┬────────
     ·           ╰── Missing arguments: y,z
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

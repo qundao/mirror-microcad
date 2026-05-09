@@ -26,5 +26,6 @@
     · ───┬───
     ·    ╰── Bad range, first number (2) must be smaller than last (-2)
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

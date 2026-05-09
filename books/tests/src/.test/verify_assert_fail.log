@@ -17,5 +17,6 @@
     ·                    ──────────────┬──────────────
     ·                                  ╰── Assertion failed: this assertion fails
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

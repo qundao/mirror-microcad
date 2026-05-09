@@ -63,6 +63,7 @@
  141 │ }
  142 │ // Use initializer
      ╰────
+
 Expected error(s) which did not occur in line(s): 136
 -- Test Result --
 TODO (SHALL FAIL)

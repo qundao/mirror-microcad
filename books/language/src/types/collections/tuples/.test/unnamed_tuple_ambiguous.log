@@ -18,5 +18,6 @@
     ·         ╰─┤ Some unnamed values in this tuple share the same type 'Length'.
     ·           │ Maybe check the units or use identifiers in this tuple.
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

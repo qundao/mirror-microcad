@@ -25,6 +25,7 @@
      · ──┬─
      ·   ╰── Before this initializer
      ╰────
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

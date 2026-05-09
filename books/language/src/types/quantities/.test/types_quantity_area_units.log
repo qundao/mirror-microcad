@@ -32,6 +32,7 @@
     ·       ╰── Unused local square_meter.
  87 │ square_inch = 155in²;
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 86, 87
 -- No Model --
 -- Test Result --

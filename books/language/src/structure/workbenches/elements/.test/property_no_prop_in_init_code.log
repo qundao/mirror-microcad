@@ -32,6 +32,7 @@
     ·       ╰── Before this initializer
  99 │         outer = inner * 2;
     ╰────
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

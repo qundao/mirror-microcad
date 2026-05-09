@@ -51,6 +51,7 @@
     ·                    ╰── Unused global symbol const const_private = 1.
  14 │     }
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 6, 7, 13
 -- No Model --
 -- Test Result --

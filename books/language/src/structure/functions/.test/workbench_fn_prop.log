@@ -36,6 +36,7 @@
  59 │         hole
     ╰────
   help: property assignment is only allowed within workbench
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -33,6 +33,7 @@
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))
         	std::geo2d::Circle::init(diameter: Length, center = (x = 0mm, y = 0mm))
+
 Expected error(s) which did not occur in line(s): 52
 -- Test Result --
 TODO (SHALL FAIL)

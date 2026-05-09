@@ -20,6 +20,7 @@
      ·      ╰── Unused local a.
  108 │ // a has default
      ╰────
+
 -- No Model --
 -- Test Result --
 OK

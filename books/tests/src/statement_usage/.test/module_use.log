@@ -28,6 +28,7 @@
     ·            ╰── Unused global symbol std::geo2d.
  40 │ }
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 38, 39
 -- No Model --
 -- Test Result --

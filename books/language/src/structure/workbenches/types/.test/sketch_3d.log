@@ -24,5 +24,6 @@
     ·                       ╰── The Sketch workbench produced a 3D output, but expected a 2D output.
  35 │ }
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

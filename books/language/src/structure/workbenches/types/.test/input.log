@@ -42,6 +42,7 @@
     ·                  ╰── Not a boolean
  42 │         // make hole by subtracting both inputs
     ╰────
+
 Unexpected error(s) which did occur in line(s): 41
 -- Test Result --
 TODO

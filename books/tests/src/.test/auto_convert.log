@@ -116,5 +116,6 @@
     ·   ──┬──
     ·     ╰── Missing arguments: x
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -21,6 +21,7 @@
     ·   ╰── Unused local a.
  88 │ } f();
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 87
 -- No Model --
 -- Test Result --

@@ -62,6 +62,7 @@
     ·          ╰── Unused global symbol std::print.
  66 │ // public use operation from `std/module.µcad`
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 65, 76, 77, 78
 -- No Model --
 -- Test Result --

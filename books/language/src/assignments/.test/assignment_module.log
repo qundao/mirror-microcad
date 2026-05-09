@@ -24,6 +24,7 @@
  107 │ }
      ╰────
   help: value assignment is only allowed within source file, module, workbench or function
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

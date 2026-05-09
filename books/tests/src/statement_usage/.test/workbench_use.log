@@ -21,6 +21,7 @@
     ·        ╰── Unused global symbol std.
  40 │ } K();
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 39
 -- Model --
   Group (root) ->

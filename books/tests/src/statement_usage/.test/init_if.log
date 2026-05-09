@@ -24,6 +24,7 @@
  64 │ } } K(1cm);
     ╰────
   help: if statement is only allowed within source file, workbench, function, if statement or expression
+
 Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

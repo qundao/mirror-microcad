@@ -17,6 +17,7 @@
     ·     ─┬─
     ·      ╰── Unused global symbol std.
     ╰────
+
 Unexpected warnings(s) which did occur in line(s): 30
 -- No Model --
 -- Test Result --
