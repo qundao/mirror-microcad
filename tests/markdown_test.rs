@@ -12,16 +12,10 @@ use miette::Report;
 use std::rc::Rc;
 
 #[allow(dead_code)]
-pub fn init() {
-    let _ = env_logger::builder().try_init();
-}
-
-#[allow(dead_code)]
 pub fn run_test(env: Option<TestEnv>) {
     if let Some(mut env) = env {
         use std::fs;
-
-        crate::markdown_test::init();
+        env_logger::try_init().ok();
 
         log::info!("Running test:\n{env:?}");
 
