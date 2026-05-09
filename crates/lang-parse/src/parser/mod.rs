@@ -217,19 +217,19 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .labelled("qualified name")
         .boxed();
 
-    let single_type = select_ref! {
-        Token::Identifier(ident) = e => SingleType {
-            span: e.span(),
-            name: ident.as_ref().into()
-        },
-    }
-    .labelled("quantity type")
-    .boxed();
-
     let unit = helpers::unit_parser().boxed();
 
     type_parser.define({
-        let single = single_type.clone().map(Type::Single);
+        let single = select_ref! {
+            Token::Identifier(ident) = e => SingleType {
+                span: e.span(),
+                name: ident.as_ref().into()
+            },
+        }
+        .map(Type::Single)
+        .labelled("single type")
+        .boxed();
+
         let array = whitespace_parser()
             .or_not()
             .ignore_then(type_parser.clone())
