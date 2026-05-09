@@ -62,7 +62,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         ..Default::default()
     };
 
-    match env.mode() {
+    let result = match env.mode() {
         // test is expected to fail?
         "fail" | "todo_fail" => match errors {
             // test expected to fail failed at parsing?
@@ -80,14 +80,14 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 if env.has_error_markers() {
                     if let Some(msg) = env.report_wrong_errors(&error_lines, &HashSet::default()) {
                         writeln!(log, "{msg}")?;
-                        writeln!(log, "{}", env.result(TestResult::FailWrong))?;
-                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                        TestResult::FailWrong
+                    } else {
+                        TestResult::FailOk
                     }
-                    writeln!(log, "{}", env.result(TestResult::FailOk))
                 } else if env.todo() {
-                    writeln!(log, "{}", env.result(TestResult::NotTodoFail))
+                    TestResult::NotTodoFail
                 } else {
-                    writeln!(log, "{}", env.result(TestResult::FailOk))
+                    TestResult::FailOk
                 }
             }
             // test expected to fail succeeded at parsing?
@@ -116,41 +116,36 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     (Err(err), _, false) => {
                         writeln!(log, "{err}")?;
                         if err_warn.is_some() {
-                            writeln!(log, "{}", env.result(TestResult::FailWrong))?;
-                            panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                            TestResult::FailWrong
+                        } else {
+                            TestResult::FailOk
                         }
-                        writeln!(log, "{}", env.result(TestResult::FailOk))
                     }
                     // evaluation produced errors?
                     (_, true, false) => {
                         if err_warn.is_some() {
-                            writeln!(log, "{}", env.result(TestResult::FailWrong))?;
-                            panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                            TestResult::FailWrong
+                        } else {
+                            log::debug!(
+                                "there were {error_count} errors (see {log:?})",
+                                log = env.log_file(),
+                                error_count = context.error_count()
+                            );
+                            TestResult::FailOk
                         }
-                        log::debug!(
-                            "there were {error_count} errors (see {log:?})",
-                            log = env.log_file(),
-                            error_count = context.error_count()
-                        );
-                        writeln!(log, "{}", env.result(TestResult::FailOk))
                     }
                     // test fails as expected but is todo
                     (Err(_), _, true) | (_, true, true) => {
                         if err_warn.is_some() {
-                            writeln!(log, "{}", env.result(TestResult::TodoFail))
+                            TestResult::TodoFail
                         } else {
-                            writeln!(log, "{}", env.result(TestResult::NotTodoFail))
+                            TestResult::NotTodoFail
                         }
                     }
                     // test expected to fail but succeeds and is todo to fail?
-                    (_, _, true) => {
-                        writeln!(log, "{}", env.result(TestResult::TodoFail))
-                    }
+                    (_, _, true) => TestResult::TodoFail,
                     // test expected to fail but succeeds?
-                    (_, _, false) => {
-                        writeln!(log, "{}", env.result(TestResult::OkFail))?;
-                        panic!("ERROR: test is marked to fail but succeeded");
-                    }
+                    (_, _, false) => TestResult::OkFail,
                 }
             }
         },
@@ -158,7 +153,6 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         "ok" | "todo" | "warn" | "todo_warn" => match errors {
             // test awaited to succeed and parsing failed?
             Some(errors) => {
-                let first_err = errors[0].to_string();
                 for err in errors {
                     writeln!(log, "-- Parse Error --")?;
                     let src_ref = err.src_ref();
@@ -167,13 +161,11 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 }
 
                 if env.todo() {
-                    writeln!(log, "{}", env.result(TestResult::Todo))
+                    TestResult::Todo
                 } else if env.has_error_markers() {
-                    writeln!(log, "{}", env.result(TestResult::FailWrong))?;
-                    panic!("ERROR: test is marked to fail but with wrong errors/warnings");
+                    TestResult::FailWrong
                 } else {
-                    writeln!(log, "{}", env.result(TestResult::Fail))?;
-                    panic!("ERROR: {first_err}")
+                    TestResult::Fail
                 }
             }
             // test awaited to succeed and parsing succeeds?
@@ -199,52 +191,43 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                         report_model(&env, log, model)?;
                         if err_warn.is_some() {
                             match env.mode() {
-                                "warn" => {
-                                    writeln!(log, "{}", env.result(TestResult::OkWrong))?;
-                                    panic!(
-                                        "ERROR: test is marked to fail but with wrong errors/warnings"
-                                    );
-                                }
-                                "todo_warn" => {
-                                    writeln!(log, "{}", env.result(TestResult::TodoWarn))
-                                }
-                                _ => {
-                                    writeln!(log, "{}", env.result(TestResult::OkWarn))
-                                }
+                                "warn" => TestResult::OkWrong,
+                                "todo_warn" => TestResult::TodoWarn,
+                                _ => TestResult::OkWarn,
                             }
                         } else {
-                            writeln!(log, "{}", env.result(TestResult::Ok))
+                            TestResult::Ok
                         }
                     }
                     // test is todo but succeeds with no errors
-                    (Ok(_), false, true) => {
-                        writeln!(log, "{}", env.result(TestResult::NotTodo))
-                    }
+                    (Ok(_), false, true) => TestResult::NotTodo,
                     // Any error but todo
-                    (_, _, true) => {
-                        writeln!(log, "{}", env.result(TestResult::Todo))
-                    }
+                    (_, _, true) => TestResult::Todo,
                     // evaluation had been aborted?
                     (Err(err), _, _) => {
                         writeln!(log, "{err}")?;
-                        writeln!(log, "{}", env.result(TestResult::Fail))?;
-                        panic!("ERROR: {err}")
+                        TestResult::Fail
                     }
                     // evaluation produced errors?
-                    (_, true, _) => {
-                        writeln!(log, "{}", env.result(TestResult::Fail))?;
-                        panic!(
-                            "ERROR: There were {error_count} errors (see {log:?}).",
-                            log = env.log_file(),
-                            error_count = context.error_count()
-                        );
-                    }
+                    (_, true, _) => TestResult::Fail,
                 }
             }
         },
-        "no-test" => Ok(()),
-        "fail(no_format)" => Ok(()), // HOTFIX
+        "fail(no_format)" => {
+            return Ok(()); // HOTFIX
+        }
         _ => unreachable!(),
+    };
+
+    writeln!(log, "{}", env.result(&result))?;
+
+    match result {
+        TestResult::Fail => panic!("ERROR"),
+        TestResult::OkWrong | TestResult::FailWrong => {
+            panic!("ERROR: test is marked to fail but with wrong errors/warnings")
+        }
+        TestResult::OkFail => panic!("ERROR: test is marked to fail but succeeded"),
+        _ => Ok(()),
     }
 }
 

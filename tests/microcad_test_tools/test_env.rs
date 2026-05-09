@@ -305,7 +305,7 @@ impl TestEnv {
     }
 
     /// Report result into log file.
-    pub fn result(&self, result: TestResult) -> String {
+    pub fn result(&self, result: &TestResult) -> String {
         let (res, res_long) = match result {
             TestResult::Ok => ("ok", "OK"),
             TestResult::OkWarn => ("ok_warn", "OK (BUT WARNINGS)"),
