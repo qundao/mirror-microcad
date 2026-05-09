@@ -3,7 +3,13 @@
 
 //! µcad CLI export command
 
-use microcad_driver::Document;
+use microcad_driver::{
+    Document,
+    commands::{
+        GetExportTargetParameters, GetExportTargets, LoadFromFile, Pipeline, Render,
+        RenderParameters,
+    },
+};
 
 use crate::{Cli, commands::RunCommand};
 
@@ -32,22 +38,35 @@ pub struct Export {
 
 impl RunCommand for Export {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let document = Document::from_file_path(&self.input, cli.config.clone())?;
-        todo!();
-        /*
+        let document = Document::from_file_path(&self.input)?;
 
-        match document {
-            Document::Source(item) => {
-                item.render(
-                    RenderResolution { linear: 0.1 }, /*self.resolution */
-                    None,
-                );
-                item.export(self.output.clone()).unwrap().export();
+        match &document {
+            Document::Source(asset) => {
+                let params = GetExportTargetParameters {
+                    input_path: self.input.clone(),
+                    output_path: self.output.clone(),
+                    config: cli.config.export.clone(),
+                };
+
+                match asset
+                    .load_from_file()
+                    .and(asset.run_pipeline(&cli.config))
+                    .and(asset.render(&RenderParameters::new(self.resolution.clone())))
+                    .and(asset.get_export_targets(&params))
+                {
+                    Ok(targets) => {
+                        targets.export()?;
+                    }
+                    Err(_) => {
+                        eprintln!("Error export documentation:");
+                        cli.print_diagnostics(&document);
+                    }
+                }
                 Ok(())
             }
             Document::Markdown(_) => miette::bail!("Export for markdown is not implemented"),
             Document::MdBook(_) => miette::bail!("Export for mdbook is not implemented"),
             Document::Builtin(_) => miette::bail!("Export for builtin is not implemented"),
-        }*/
+        }
     }
 }

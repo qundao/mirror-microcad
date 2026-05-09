@@ -42,6 +42,17 @@ impl Cli {
         Ok(cli)
     }
 
+    /// Print diagnostics with colors and unicode.
+    pub fn print_diagnostics(&self, diag: &impl microcad_driver::commands::PrintDiagnostics) {
+        eprintln!(
+            "{}",
+            diag.diagnostics_string(&microcad_driver::commands::PrintDiagnosticsParameters {
+                color: true,
+                unicode: true
+            })
+        );
+    }
+
     /// Run the CLI.
     pub fn run(&self) -> miette::Result<()> {
         let start = std::time::Instant::now();

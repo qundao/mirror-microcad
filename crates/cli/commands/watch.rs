@@ -24,27 +24,47 @@ pub struct Watch {
 /// Run this command for a CLI.
 impl RunCommand for Watch {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
+        use microcad_driver::commands::{
+            GetExportTargetParameters, GetExportTargets, LoadFromFile, Pipeline, Render,
+            RenderParameters,
+        };
+
         let mut watcher = microcad_driver::Watcher::new()?;
-        let render_cache = RcMut::new(RenderCache::default());
         let input = cli.config.path_with_default_ext(&self.input);
-        let document = Document::from_file_path(input, cli.config.clone())?;
+        let document = Document::from_file_path(&input)?;
+        let render_cache = RcMut::new(RenderCache::new());
 
         let document = match document {
             Document::Source(item) => item,
-            Document::Markdown(item) => todo!(),
-            Document::MdBook(item) => todo!(),
-            Document::Builtin(item) => todo!(),
+            Document::Markdown(_) => todo!(),
+            Document::MdBook(_) => todo!(),
+            Document::Builtin(_) => todo!(),
+        };
+
+        let render_params =
+            RenderParameters::new(self.resolution.clone()).with_cache(render_cache.clone());
+        let export_params = GetExportTargetParameters {
+            input_path: self.input.clone(),
+            output_path: self.output.clone(),
+            config: cli.config.export.clone(),
         };
 
         // Recompile whenever something relevant happens.
         loop {
-            /*
-            document.load_from_file();
-            document.eval();
-            document.render(RenderResolution { linear: 0.1 }, Some(cache));
-            document.export();
-            */
-            todo!();
+            match document
+                .load_from_file()
+                .and(document.run_pipeline(&cli.config))
+                .and(document.render(&render_params))
+                .and(document.get_export_targets(&export_params))
+            {
+                Ok(targets) => {
+                    targets.export()?;
+                }
+                Err(_) => {
+                    cli.print_diagnostics(document.as_ref());
+                }
+            }
+
             // Watch all dependencies of the most recent compilation.
             watcher.update(vec![input.clone()])?;
 

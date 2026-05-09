@@ -1,6 +1,8 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_driver::Document;
+
 use crate::{Cli, commands::RunCommand};
 
 /// Format a µcad file.
@@ -13,16 +15,18 @@ pub struct Format {
 
 impl RunCommand<()> for Format {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let document = microcad_driver::Document::from_file_path(&self.input, cli.config.clone())?;
+        let document = Document::from_file_path(&self.input)?;
+        use microcad_driver::commands::{Format, FormatParameters, LoadFromFile, Sync};
 
         if let Err(_) = document.load_from_file().and_then(|_| {
-            if document.format()? {
+            let params = FormatParameters::default();
+            if document.format(&params)? {
                 document.sync()
             } else {
                 Ok(())
             }
         }) {
-            eprintln!("{}", document.diagnostics_string());
+            cli.print_diagnostics(&document);
         }
 
         Ok(())

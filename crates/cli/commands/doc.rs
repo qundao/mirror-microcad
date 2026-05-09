@@ -26,12 +26,21 @@ pub struct Doc {
 
 impl RunCommand<()> for Doc {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let document = Document::from_file_path(&self.input, cli.config.clone())?;
-        match document {
-            Document::Source(item) => item.doc_gen(self.generator.clone(), self.output.clone()),
-            Document::Builtin(item) => item.doc_gen(self.output.as_ref().unwrap().clone()),
-            Document::Markdown(_) => miette::bail!("Cannot generate docs for markdown"),
-            Document::MdBook(_) => miette::bail!("Cannot generate docs for mdbook"),
+        let document = Document::from_file_path(&self.input)?;
+        use microcad_driver::commands::{DocGen, DocGenParameters};
+        let params = DocGenParameters {
+            generator_id: self.generator.clone(),
+            output_path: self.output.clone(),
+        };
+
+        match document.doc_gen(&params) {
+            Ok(_) => {}
+            Err(_) => {
+                eprintln!("Error generating documentation:");
+                cli.print_diagnostics(&document);
+            }
         }
+
+        Ok(())
     }
 }
