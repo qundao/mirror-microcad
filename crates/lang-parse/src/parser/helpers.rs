@@ -32,6 +32,7 @@ where
             name: r#"""#.into()
         },
     }
+    .labelled("unit")
 }
 
 pub fn literal_parser<'tokens, S, Ctx>()
