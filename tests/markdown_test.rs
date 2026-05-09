@@ -77,17 +77,16 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
                     writeln!(log, "{}", &diag.to_pretty_string(&sources, &render_options))?;
                 }
-                if env.has_error_markers() {
-                    if let Some(msg) = env.report_wrong_errors(&error_lines, &HashSet::default()) {
-                        writeln!(log, "{msg}")?;
-                        TestResult::FailWrong
-                    } else {
-                        TestResult::FailOk
-                    }
-                } else if env.todo() {
-                    TestResult::NotTodoFail
-                } else {
-                    TestResult::FailOk
+                match (env.has_error_markers(), env.todo()) {
+                    (true, _) => match env.report_wrong_errors(&error_lines, &HashSet::default()) {
+                        Some(msg) => {
+                            writeln!(log, "{msg}")?;
+                            TestResult::FailWrong
+                        }
+                        None => TestResult::FailOk,
+                    },
+                    (false, true) => TestResult::NotTodoFail,
+                    (false, false) => TestResult::FailOk,
                 }
             }
             // test expected to fail succeeded at parsing?
@@ -106,46 +105,30 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 }
                 let _ = fs::remove_file(env.banner_file());
 
-                // check if test expected to fail failed at evaluation
-                match (
-                    eval,
-                    context.has_errors() || context.has_warnings(),
-                    env.todo(),
-                ) {
-                    // evaluation had been aborted?
-                    (Err(err), _, false) => {
-                        writeln!(log, "{err}")?;
-                        if err_warn.is_some() {
-                            TestResult::FailWrong
-                        } else {
-                            TestResult::FailOk
-                        }
-                    }
-                    // evaluation produced errors?
-                    (_, true, false) => {
-                        if err_warn.is_some() {
-                            TestResult::FailWrong
-                        } else {
-                            log::debug!(
-                                "there were {error_count} errors (see {log:?})",
-                                log = env.log_file(),
-                                error_count = context.error_count()
-                            );
-                            TestResult::FailOk
-                        }
-                    }
-                    // test fails as expected but is todo
-                    (Err(_), _, true) | (_, true, true) => {
-                        if err_warn.is_some() {
+                let test_failed = eval.is_err() || context.has_errors() || context.has_warnings();
+                let has_err_warn = err_warn.is_some();
+
+                if let (Err(err), false) = (&eval, env.todo()) {
+                    writeln!(log, "{err}")?;
+                }
+
+                match (test_failed, env.todo()) {
+                    (true, true) => {
+                        if has_err_warn {
                             TestResult::TodoFail
                         } else {
                             TestResult::NotTodoFail
                         }
                     }
-                    // test expected to fail but succeeds and is todo to fail?
-                    (_, _, true) => TestResult::TodoFail,
-                    // test expected to fail but succeeds?
-                    (_, _, false) => TestResult::OkFail,
+                    (true, false) => {
+                        if has_err_warn {
+                            TestResult::FailWrong
+                        } else {
+                            TestResult::FailOk
+                        }
+                    }
+                    (false, true) => TestResult::TodoFail,
+                    (false, false) => TestResult::OkFail,
                 }
             }
         },
@@ -184,32 +167,32 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 
                 let _ = fs::remove_file(env.banner_file());
 
-                // check if test awaited to succeed but failed at evaluation
-                match (eval, context.has_errors(), env.todo()) {
-                    // test expected to succeed and succeeds with no errors
-                    (Ok(model), false, false) => {
-                        report_model(&env, log, model)?;
-                        if err_warn.is_some() {
-                            match env.mode() {
-                                "warn" => TestResult::OkWrong,
-                                "todo_warn" => TestResult::TodoWarn,
-                                _ => TestResult::OkWarn,
-                            }
-                        } else {
-                            TestResult::Ok
+                let test_failed = eval.is_err() || context.has_errors();
+
+                match (test_failed, env.todo()) {
+                    // 1. Success cases
+                    (false, false) => {
+                        if let Ok(model) = eval {
+                            report_model(&env, log, model)?;
+                        }
+
+                        match (err_warn.is_some(), env.mode()) {
+                            (true, "warn") => TestResult::OkWrong,
+                            (true, "todo_warn") => TestResult::TodoWarn,
+                            (true, _) => TestResult::OkWarn,
+                            (false, _) => TestResult::Ok,
                         }
                     }
-                    // test is todo but succeeds with no errors
-                    (Ok(_), false, true) => TestResult::NotTodo,
-                    // Any error but todo
-                    (_, _, true) => TestResult::Todo,
-                    // evaluation had been aborted?
-                    (Err(err), _, _) => {
-                        writeln!(log, "{err}")?;
+                    (false, true) => TestResult::NotTodo,
+
+                    // 2. Failure cases
+                    (true, true) => TestResult::Todo,
+                    (true, false) => {
+                        if let Err(err) = eval {
+                            writeln!(log, "{err}")?;
+                        }
                         TestResult::Fail
                     }
-                    // evaluation produced errors?
-                    (_, true, _) => TestResult::Fail,
                 }
             }
         },
