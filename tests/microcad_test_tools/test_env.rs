@@ -5,7 +5,7 @@
 
 use std::path::PathBuf;
 
-use crate::output::Output;
+use crate::output::TestOutput;
 use rustc_hash::FxHashSet as HashSet;
 
 /// Markdown test environment
@@ -126,8 +126,8 @@ impl TestEnv {
     }
 
     /// Return test output.
-    pub fn output(&self) -> Output {
-        let mut output = Output::new(
+    pub fn output(&self) -> TestOutput {
+        let mut output = TestOutput::new(
             self.name().into(),
             self.path.clone(),
             self.banner_file(),

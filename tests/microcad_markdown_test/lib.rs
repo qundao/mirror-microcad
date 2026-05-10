@@ -62,11 +62,11 @@ pub fn generate(
         .context(format!("cannot create file '{dest_path:?}'"))
 }
 
-fn generate_test_outputs(code: &mut String, path: impl AsRef<Path>) -> Vec<Output> {
+fn generate_test_outputs(code: &mut String, path: impl AsRef<Path>) -> Vec<TestOutput> {
     let mdbook = MdBook::new(path).expect("No error");
     let mut outputs = Vec::new();
 
-    let mut root = Module::default();
+    let mut root = TestModule::default();
 
     let mut paths = std::collections::HashSet::new();
 
@@ -121,7 +121,7 @@ fn generate_test_outputs(code: &mut String, path: impl AsRef<Path>) -> Vec<Outpu
     outputs
 }
 
-fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
+fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[TestOutput]) {
     let mut seen = std::collections::HashSet::new();
     for item in outputs.iter().map(|o| &o.name) {
         if !seen.insert(item) {
@@ -137,7 +137,7 @@ fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
     println!("cargo:rerun-if-changed={}", path.as_ref().display());
 }
 
-fn make_test_list(path: impl AsRef<std::path::Path>, tests: &[Output]) -> String {
+fn make_test_list(path: impl AsRef<std::path::Path>, tests: &[TestOutput]) -> String {
     let count = tests.len();
     let mut result = format!(
         "# Test List
@@ -167,7 +167,7 @@ Click on the test names to jump to file with the test or click the buttons to ge
 
 /// Remove all banners in `path` and exclude folders whose names are contained
 /// in `exclude_dirs` from search.
-fn remove_banners(path: impl AsRef<Path>, exclude_outputs: &[Output]) -> Result<()> {
+fn remove_banners(path: impl AsRef<Path>, exclude_outputs: &[TestOutput]) -> Result<()> {
     //warning!("remove_banners: {:?} {exclude_files:?}", path.as_ref());
     for entry in std::fs::read_dir(&path).into_diagnostic()?.flatten() {
         // get file type
@@ -187,7 +187,7 @@ fn remove_banners(path: impl AsRef<Path>, exclude_outputs: &[Output]) -> Result<
 }
 
 /// Remove all files within `.test` directory
-fn clean_dir(path: impl AsRef<Path>, exclude_files: &[Output]) -> Result<()> {
+fn clean_dir(path: impl AsRef<Path>, exclude_files: &[TestOutput]) -> Result<()> {
     warning!("remove banners in: {:?}", path.as_ref());
 
     // list all files within `.test` directory and remove them

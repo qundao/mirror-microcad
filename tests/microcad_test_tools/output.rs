@@ -5,13 +5,19 @@
 
 use std::path::PathBuf;
 
+pub struct TestList(Vec<TestOutput>);
+
 #[derive(Default)]
-pub struct Module {
-    pub submodules: std::collections::HashMap<String, Module>,
-    pub outputs: Vec<(String, Output)>,
+pub struct TestModule {
+    pub submodules: std::collections::HashMap<String, TestModule>,
+    pub outputs: Vec<(String, TestOutput)>,
 }
 
-impl Module {
+impl TestModule {
+    pub fn new(path: impl AsRef<std::path::Path>) -> Self {
+        todo!()
+    }
+
     pub fn test_code(&self, name: &str) -> String {
         let mut output = String::new();
 
@@ -36,11 +42,15 @@ impl Module {
 
         output
     }
+
+    pub fn test_list() -> TestList {
+        todo!()
+    }
 }
 
 /// Output of a markdown test.
 #[derive(Clone)]
-pub struct Output {
+pub struct TestOutput {
     /// Name of the test
     pub name: String,
     input: PathBuf,
@@ -51,7 +61,7 @@ pub struct Output {
     externals: Vec<PathBuf>,
 }
 
-impl Output {
+impl TestOutput {
     /// Create new output.
     pub fn new(
         name: String,
@@ -128,16 +138,16 @@ impl Output {
     }
 }
 
-impl Eq for Output {}
+impl Eq for TestOutput {}
 
-impl PartialEq for Output {
+impl PartialEq for TestOutput {
     fn eq(&self, other: &Self) -> bool {
         self.name.to_lowercase().eq(&other.name.to_lowercase())
     }
 }
 
 #[allow(clippy::non_canonical_partial_ord_impl)]
-impl PartialOrd for Output {
+impl PartialOrd for TestOutput {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         self.name
             .to_lowercase()
@@ -145,7 +155,7 @@ impl PartialOrd for Output {
     }
 }
 
-impl Ord for Output {
+impl Ord for TestOutput {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.name.to_lowercase().cmp(&other.name.to_lowercase())
     }
