@@ -90,4 +90,3 @@ pub const SIZE = 1cm;
 
 microcad::Logo(size = SIZE).extrude(4mm);
 
-

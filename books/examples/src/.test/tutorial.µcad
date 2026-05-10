@@ -49,4 +49,3 @@ pub part LegoBrick(rows = 2, columns = 4, base_height = 9.6mm) {
 
 // render a brick with default values
 LegoBrick();
-
