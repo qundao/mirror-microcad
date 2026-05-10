@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: init_expression_model
-  Expected result: todo_fail
+  Expected result: todo
       Source file: ../books/tests/src/statement_usage/init.md:110
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -14,4 +14,4 @@
 -- No Output --
 -- No Errors --
 -- Test Result --
-TODO (SHALL FAIL)
+OK (BUT IS TODO)

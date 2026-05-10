@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: no_building_plan_in_initializers
-  Expected result: todo_fail
+  Expected result: todo
       Source file: ../books/language/src/structure/workbenches/elements/initializers.md:91
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
@@ -24,4 +24,4 @@
 Expected error(s) which did not occur in line(s): 95
 
 -- Test Result --
-TODO (SHALL FAIL)
+OK (BUT IS TODO)

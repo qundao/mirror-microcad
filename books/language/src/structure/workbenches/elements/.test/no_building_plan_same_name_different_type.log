@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: no_building_plan_same_name_different_type
-  Expected result: todo_fail
+  Expected result: todo
       Source file: ../books/language/src/structure/workbenches/elements/initializers.md:132
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
@@ -68,4 +68,4 @@ Expected error(s) which did not occur in line(s): 136
 Unexpected error(s) which did occur in line(s): 140
 
 -- Test Result --
-TODO (SHALL FAIL)
+TODO

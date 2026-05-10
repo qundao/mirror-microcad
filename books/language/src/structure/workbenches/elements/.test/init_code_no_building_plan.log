@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: init_code_no_building_plan
-  Expected result: todo_fail
+  Expected result: todo
       Source file: ../books/language/src/structure/workbenches/elements/init_code.md:49
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
@@ -38,4 +38,4 @@ Expected error(s) which did not occur in line(s): 52
 Unexpected error(s) which did occur in line(s): 57
 
 -- Test Result --
-TODO (SHALL FAIL)
+TODO

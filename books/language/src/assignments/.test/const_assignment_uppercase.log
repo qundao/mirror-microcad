@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: const_assignment_uppercase
-  Expected result: todo_warn
+  Expected result: todo
       Source file: ../books/language/src/assignments/const.md:66
         Test path: ../books/language/src/assignments/.test
 
@@ -16,6 +16,5 @@
 -- No Errors --
 Expected warning(s) which did not occur in line(s): 67, 68
 
--- No Model --
 -- Test Result --
-TODO (WRONG WARNINGS)
+OK (BUT IS TODO)
