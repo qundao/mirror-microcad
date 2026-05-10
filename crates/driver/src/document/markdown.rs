@@ -43,8 +43,7 @@ impl commands::LoadFromFile for document::MarkdownAsset {
     fn load_from_file(&self) -> document::Result {
         self.transition(|_| match self.to_file_path() {
             Some(path) => {
-                let markdown =
-                    Markdown::load(path).map_err(|err| MarkdownItemError::MarkdownError(err))?;
+                let markdown = Markdown::load(path).map_err(MarkdownItemError::MarkdownError)?;
                 Ok(State::Loaded { markdown })
             }
             None => Err(MarkdownItemError::NoLocalMarkdown(self.url.clone()).into()),
@@ -94,11 +93,12 @@ impl commands::Format for document::MarkdownAsset {
 
 impl commands::Sync for document::MarkdownAsset {
     fn sync(&self) -> document::Result {
-        Ok(match &*self.state.borrow() {
+        match &*self.state.borrow() {
             State::Raw => (),
             State::Loaded { markdown } | State::Processed { markdown, .. } => markdown
                 .save(self.to_file_path().expect("File path"))
                 .expect("Error handling"),
-        })
+        }
+        Ok(())
     }
 }

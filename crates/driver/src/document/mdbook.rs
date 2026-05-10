@@ -38,7 +38,7 @@ impl commands::LoadFromFile for document::MdBookAsset {
     fn load_from_file(&self) -> document::Result {
         self.transition(|_| match self.to_file_path() {
             Some(path) => {
-                let mdbook = MdBook::new(path).map_err(|err| MdBookUnitError::MdBook(err))?;
+                let mdbook = MdBook::new(path).map_err(MdBookUnitError::MdBook)?;
                 Ok(State::Loaded { mdbook })
             }
             None => Err(MdBookUnitError::NoLocalMdBook(self.url.clone()).into()),
@@ -87,9 +87,10 @@ impl commands::Format for document::MdBookAsset {
 
 impl commands::Sync for document::MdBookAsset {
     fn sync(&self) -> document::Result {
-        Ok(match &*self.state.borrow() {
+        match &*self.state.borrow() {
             State::Raw => (),
             State::Loaded { mdbook } => mdbook.save_all().expect("No error"),
-        })
+        }
+        Ok(())
     }
 }

@@ -52,7 +52,7 @@ impl<S: Default> Asset<S> {
         let current = std::mem::take(&mut *state);
         match f(current) {
             Ok(new_state) => {
-                *state = new_state.into();
+                *state = new_state;
                 Ok(())
             }
             Err(diag) => {

@@ -70,7 +70,7 @@ impl commands::Format for document::SourceAsset {
         self.transition(|current| match current {
             State::Parsed { source } => {
                 let hash = source.source.computed_hash();
-                let source = microcad_lang_format::format_source(source, &config)?;
+                let source = microcad_lang_format::format_source(source, config)?;
                 formatted = source.source.computed_hash() != hash;
 
                 Ok(State::Parsed { source })
@@ -89,7 +89,7 @@ impl commands::LoadFromFile for document::SourceAsset {
                 .url
                 .to_file_path()
                 .map_err(|_| SourceError::NoFileUrl(self.url.clone()))?;
-            let source = std::fs::read_to_string(path).map_err(|err| SourceError::IoError(err))?;
+            let source = std::fs::read_to_string(path).map_err(SourceError::IoError)?;
             Ok(State::Loaded { source })
         })
     }
@@ -167,8 +167,7 @@ impl commands::Pipeline for document::SourceAsset {
                 model: eval_context.eval().expect("No error").expect("A model"),
                 eval_context,
                 source,
-            }
-            .into()),
+            }),
             _ => Ok(current),
         })
     }
@@ -241,7 +240,7 @@ impl commands::PrintDiagnostics for document::SourceAsset {
             | State::Rendered { source, .. } => source,
         };
 
-        self.diagnostics.borrow().pretty_print(f, source, &options)
+        self.diagnostics.borrow().pretty_print(f, source, options)
     }
 }
 
