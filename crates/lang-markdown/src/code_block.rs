@@ -3,65 +3,13 @@
 
 //! A markdown code block.
 
-use crate::parser::ParseError;
-
-/// Markdown test result: `ok, fail, warn, todo` etc.
-#[derive(Debug, Clone, PartialEq)]
-pub enum TestResult {
-    /// Ok
-    Ok,
-    /// Expected to fail
-    Fail,
-    /// Warnings expected
-    Warn,
-    /// Work in progress
-    Todo,
-    /// Work in progress (should fail)
-    TodoFail,
-    /// Work in progress (should have warnings)
-    TodoWarn,
-}
-
-impl std::str::FromStr for TestResult {
-    type Err = ParseError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "ok" => Ok(Self::Ok),
-            "fail" => Ok(Self::Fail),
-            "warn" => Ok(Self::Warn),
-            "todo" => Ok(Self::Todo),
-            "todo_fail" => Ok(Self::TodoFail),
-            "todo_warn" => Ok(Self::TodoWarn),
-            s => Err(ParseError::InvalidTestResult(s.to_string())),
-        }
-    }
-}
-
-impl std::fmt::Display for TestResult {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match &self {
-                TestResult::Ok => "ok",
-                TestResult::Fail => "fail",
-                TestResult::Warn => "warn",
-                TestResult::Todo => "todo",
-                TestResult::TodoFail => "todo_fail",
-                TestResult::TodoWarn => "todo_warn",
-            }
-        )
-    }
-}
-
 /// A code block header.
 #[derive(Debug, Clone, PartialEq)]
 pub struct CodeBlockHeader {
     /// Name of the code block.
     pub name: Option<String>,
-    /// An optional test result
-    pub test_result: Option<TestResult>,
+    /// An optional fragment, e.g. to be used for test results: `#fragment`
+    pub fragment: Option<String>,
     /// Parameters of the code block inside `()`
     pub parameters: Vec<String>,
 }
@@ -96,10 +44,10 @@ impl std::fmt::Display for CodeBlockHeader {
             write!(f, ",{name}")?
         }
 
-        match &self.test_result {
-            None | Some(TestResult::Ok) => {}
-            Some(test_result) => {
-                write!(f, "#{test_result}")?;
+        match &self.fragment {
+            None => {}
+            Some(fragment) => {
+                write!(f, "#{fragment}")?;
             }
         };
         if !self.parameters.is_empty() {
@@ -129,8 +77,8 @@ impl CodeBlock {
     }
 
     /// Return test result.
-    pub fn test_result(&self) -> &Option<TestResult> {
-        &self.header.test_result
+    pub fn fragment(&self) -> &Option<String> {
+        &self.header.fragment
     }
 
     pub fn code(&self) -> &str {
