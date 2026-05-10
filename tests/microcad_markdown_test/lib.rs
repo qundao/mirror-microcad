@@ -12,8 +12,7 @@
 //! If test IDs include `.` name will be split into several names which will be
 //! used to crates sub modules.
 
-use microcad_lang_markdown::MdBook;
-use microcad_test_tools::{output::*, test_env::*};
+use microcad_test_tools::output::*;
 use miette::{Context, IntoDiagnostic, Result};
 use std::path::Path;
 
@@ -50,15 +49,12 @@ pub fn generate(
     );
 
     let test_module = TestModule::new(&path);
-    code.push_str(&test_module.test_code("tests"));
+    code.push_str(&test_module.test_code());
 
     // read all *Markdown files and write result into `code`
     let test_list = test_module.test_list(&test_list_file);
 
-    test_list
-        .write(test_list_file)
-        .map_err(|err| miette::miette!("{err}"))?;
-    test_list.cargo();
+    test_list.write().into_diagnostic()?;
 
     // remove any previous banners
     remove_banners(path, &test_list)?;

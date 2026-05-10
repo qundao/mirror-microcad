@@ -3,7 +3,7 @@
 
 //! Output of a markdown test.
 
-use std::{ops::Deref, path::PathBuf};
+use std::path::PathBuf;
 
 /// A list of test outputs
 pub struct TestList {
@@ -22,6 +22,7 @@ impl std::ops::Deref for TestList {
 }
 
 impl TestList {
+    /// Create a new test list with a path and outputs.
     pub fn new(path: std::path::PathBuf, mut outputs: Vec<TestOutput>) -> Self {
         outputs.sort();
 
@@ -30,9 +31,14 @@ impl TestList {
             panic!("doublet test name '{}'", duplicate[0].name);
         }
 
+        outputs.iter().for_each(|output| {
+            println!("cargo:rerun-if-changed={}", output.input.display());
+        });
+
         Self { path, outputs }
     }
 
+    /// Generate the markdown for this test list.
     pub fn markdown_string(&self) -> String {
         let count = self.outputs.len();
         let mut result = format!(
@@ -57,27 +63,26 @@ Click on the test names to jump to file with the test or click the buttons to ge
         result
     }
 
-    pub fn write(&self, output_path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+    /// Write the test list to file.
+    pub fn write(&self) -> std::io::Result<()> {
         use std::io::Write;
-        std::fs::File::create(&output_path)?.write_all(self.markdown_string().as_bytes())?;
-        println!("cargo:rerun-if-changed={}", output_path.as_ref().display());
+        std::fs::File::create(&self.path)?.write_all(self.markdown_string().as_bytes())?;
+        println!("cargo:rerun-if-changed={}", self.path.display());
         Ok(())
-    }
-
-    pub fn cargo(&self) {
-        self.outputs.iter().for_each(|output| {
-            println!("cargo:rerun-if-changed={}", output.input.display());
-        });
     }
 }
 
+/// A rust module containing tests from markdown
 #[derive(Default)]
 pub struct TestModule {
+    /// A submodules
     pub submodules: std::collections::HashMap<String, TestModule>,
+    /// Test outputs for this module
     pub outputs: Vec<(String, TestOutput)>,
 }
 
 impl TestModule {
+    /// Create a new test module from a directory.
     pub fn new(path: impl AsRef<std::path::Path>) -> Self {
         let mdbook = microcad_lang_markdown::MdBook::new(&path).expect("No error");
 
@@ -123,26 +128,23 @@ impl TestModule {
         root
     }
 
-    pub fn test_code(&self, name: &str) -> String {
+    /// Generate the test code.
+    pub fn test_code(&self) -> String {
         let mut output = String::new();
 
         // 1. Generate child submodules recursively
         for (sub_name, sub_module) in &self.submodules {
             // Sanitize name to handle spaces or hyphens if necessary
             let sanitized_name = sub_name.replace(['.', '-', ' '], "_");
-
-            let sub_code = sub_module.test_code(&sanitized_name);
-
             output.push_str(&format!(
-                "#[allow(non_snake_case)]\nmod r#{sanitized_name} {{\n{sub_code}}}\n\n"
+                "#[allow(non_snake_case)]\nmod r#{sanitized_name} {{\n{sub_code}}}\n\n",
+                sub_code = sub_module.test_code(),
             ));
         }
 
         // 2. Append the actual test content/outputs for this specific module
         for (test, _) in &self.outputs {
-            // Assuming Output has a method or field providing the code string
-            output.push_str(&test);
-            output.push_str("\n");
+            output.push_str(&format!("{test}\n"));
         }
 
         output
@@ -167,6 +169,7 @@ impl TestModule {
         }
     }
 
+    /// Generate a test list from this module
     pub fn test_list(&self, test_list_file: impl AsRef<std::path::Path>) -> TestList {
         TestList::new(
             test_list_file.as_ref().to_path_buf(),
