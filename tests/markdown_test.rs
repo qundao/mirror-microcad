@@ -62,7 +62,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 
     let result = match env.mode() {
         // test is expected to fail?
-        "fail" | "todo_fail" => match errors {
+        "fail" => match errors {
             // test expected to fail failed at parsing?
             Some(errors) => {
                 let mut error_lines = HashSet::default();
@@ -83,8 +83,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                         }
                         None => TestResult::FailOk,
                     },
-                    (false, true) => TestResult::NotTodoFail,
-                    (false, false) => TestResult::FailOk,
+                    _ => TestResult::FailOk,
                 }
             }
             // test expected to fail succeeded at parsing?
@@ -110,28 +109,20 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     writeln!(log, "{err}")?;
                 }
 
-                match (test_failed, env.todo()) {
-                    (true, true) => {
-                        if has_err_warn {
-                            TestResult::TodoFail
-                        } else {
-                            TestResult::NotTodoFail
-                        }
-                    }
-                    (true, false) => {
+                match test_failed {
+                    true => {
                         if has_err_warn {
                             TestResult::FailWrong
                         } else {
                             TestResult::FailOk
                         }
                     }
-                    (false, true) => TestResult::TodoFail,
-                    (false, false) => TestResult::OkFail,
+                    false => TestResult::OkFail,
                 }
             }
         },
         // test is expected to succeed?
-        "ok" | "todo" | "warn" | "todo_warn" => match errors {
+        "ok" | "todo" | "warn" => match errors {
             // test awaited to succeed and parsing failed?
             Some(errors) => {
                 for err in errors {
@@ -176,16 +167,14 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 
                         match (err_warn.is_some(), env.mode()) {
                             (true, "warn") => TestResult::OkWrong,
-                            (true, "todo_warn") => TestResult::TodoWarn,
                             (true, _) => TestResult::OkWarn,
                             (false, _) => TestResult::Ok,
                         }
                     }
-                    (false, true) => TestResult::NotTodo,
 
                     // 2. Failure cases
-                    (true, true) => TestResult::Todo,
-                    (true, false) => {
+                    (_, true) => TestResult::Todo,
+                    _ => {
                         if let Err(err) = eval {
                             writeln!(log, "{err}")?;
                         }

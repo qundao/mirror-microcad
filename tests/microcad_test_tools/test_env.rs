@@ -30,10 +30,6 @@ pub enum TestResult {
     OkWrong,
     /// Ok to fail
     FailOk,
-    /// Marked as todo but is ok
-    NotTodo,
-    /// Todo but fail intentionally
-    NotTodoFail,
     /// Fails
     Fail,
     /// Fails with wrong errors
@@ -42,10 +38,6 @@ pub enum TestResult {
     OkFail,
     /// Work in progress
     Todo,
-    /// Work in progress (should fail)
-    TodoFail,
-    /// Work in progress (incorrect warnings)
-    TodoWarn,
 }
 
 impl std::fmt::Display for TestEnv {
@@ -311,14 +303,10 @@ impl TestEnv {
             TestResult::OkWarn => ("ok_warn", "OK (BUT WARNINGS)"),
             TestResult::OkWrong => ("ok_warn", "OK (BUT WRONG WARNINGS)"),
             TestResult::Todo => ("todo", "TODO"),
-            TestResult::NotTodo => ("not_todo", "OK (BUT IS TODO)"),
             TestResult::Fail => ("fail", "FAILS"),
             TestResult::FailWrong => ("fail_wrong", "FAILS WITH WRONG ERRORS"),
             TestResult::FailOk => ("fail_ok", "FAILS AS EXPECTED"),
-            TestResult::NotTodoFail => ("not_todo_fail", "FAILS AS EXPECTED (BUT IS TODO)"),
-            TestResult::TodoFail => ("todo_fail", "TODO (SHALL FAIL)"),
             TestResult::OkFail => ("ok_fail", "OK BUT SHOULD FAIL"),
-            TestResult::TodoWarn => ("todo_warn", "TODO (WRONG WARNINGS)"),
         };
         let _ = std::fs::remove_file(self.banner_file());
         let _ = std::fs::hard_link(format!("images/{res}.svg"), self.banner_file());
