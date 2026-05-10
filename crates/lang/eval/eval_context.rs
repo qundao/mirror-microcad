@@ -92,7 +92,7 @@ impl EvalContext {
     pub fn eval(&mut self) -> EvalResult<Option<Model>> {
         if self.diag.error_count() > 0 {
             log::error!("Aborting evaluation because of prior resolve errors!");
-            return Err(EvalError::ResolveFailed);
+            return Err(EvalError::ResolveFailed.into());
         }
         let model: Model = self.sources.root().eval(self)?;
         log::trace!("Post-evaluation context:\n{self:?}");
@@ -177,7 +177,7 @@ impl EvalContext {
                 if let Some(value) = model.get_property(id) {
                     Ok(value.clone())
                 } else {
-                    Err(EvalError::PropertyNotFound(id.clone()))
+                    Err(EvalError::PropertyNotFound(id.clone()).into())
                 }
             }
             Err(err) => Err(err),
@@ -197,7 +197,8 @@ impl EvalContext {
                             name: id.clone(),
                             value: previous_value.to_string(),
                             previous_location: id.src_ref(),
-                        });
+                        }
+                        .into());
                     }
                 }
                 Ok(())
@@ -236,7 +237,7 @@ impl EvalContext {
             "{not_found} Property '{name:?}'",
             not_found = microcad_lang_base::mark!(NOT_FOUND)
         );
-        Err(EvalError::NoPropertyId(name.clone()))
+        Err(EvalError::NoPropertyId(name.clone()).into())
     }
 
     fn lookup_workbench(
@@ -317,7 +318,7 @@ impl Locals for EvalContext {
     }
 }
 
-impl Lookup<EvalError> for EvalContext {
+impl Lookup<Box<EvalError>> for EvalContext {
     fn lookup(&self, name: &ir::QualifiedName, target: LookupTarget) -> EvalResult<Symbol> {
         log::debug!("Lookup {target} '{name:?}' (at line {:?}):", name.src_ref());
 
@@ -345,10 +346,10 @@ impl Lookup<EvalError> for EvalContext {
             |(mut oks, mut ambiguities, mut errors), (origin, result)| {
                 match result {
                     Ok(symbol) => oks.push((origin, symbol)),
-                    Err(EvalError::AmbiguousSymbol( ambiguous, others)) => {
-                        ambiguities.push((origin, EvalError::AmbiguousSymbol ( ambiguous, others )))
-                    }
-                    Err(
+                    Err(err) => match *err {
+                        EvalError::AmbiguousSymbol(ambiguous, others) => {
+                            ambiguities.push((origin, EvalError::AmbiguousSymbol ( ambiguous, others )));
+                        }                
                         // ignore all kinds of "not found" errors
                         EvalError::SymbolNotFound(_)
                         // for locals
@@ -361,9 +362,9 @@ impl Lookup<EvalError> for EvalContext {
                         | EvalError::ResolveError(ResolveError::SymbolNotFound(_))
                         | EvalError::ResolveError(ResolveError::SymbolIsPrivate(_))
                         | EvalError::ResolveError(ResolveError::NulHash)
-                        | EvalError::ResolveError(ResolveError::WrongTarget),
-                    ) => (),
-                    Err(err) => errors.push((origin, err)),
+                        | EvalError::ResolveError(ResolveError::WrongTarget) => {},
+                        err => errors.push((origin, err)),
+                    }
                 }
                 (oks, ambiguities, errors)
             },
@@ -376,7 +377,7 @@ impl Lookup<EvalError> for EvalContext {
                 .iter()
                 .for_each(|(origin, err)| log::error!("Lookup ({origin}) error: {err}"));
 
-            return Err(errors.remove(0).1);
+            return Err(errors.remove(0).1.into());
         }
 
         // early emit any ambiguity error
@@ -390,7 +391,7 @@ impl Lookup<EvalError> for EvalContext {
                     .join("\n"),
                 ambiguous = microcad_lang_base::mark!(AMBIGUOUS)
             );
-            return Err(ambiguities.remove(0).1);
+            return Err(ambiguities.remove(0).1.into());
         }
 
         // filter by lookup target
@@ -417,7 +418,7 @@ impl Lookup<EvalError> for EvalContext {
                         "{ambiguous} symbol '{name:?}' in {others:?}:\n{self:?}",
                         ambiguous = microcad_lang_base::mark!(AMBIGUOUS),
                     );
-                    Err(EvalError::AmbiguousSymbol(name.clone(), others))
+                    Err(EvalError::AmbiguousSymbol(name.clone(), others).into())
                 }
             }
             None => {
@@ -425,13 +426,13 @@ impl Lookup<EvalError> for EvalContext {
                     "{not_found} Symbol '{name:?}'",
                     not_found = microcad_lang_base::mark!(NOT_FOUND!)
                 );
-                Err(EvalError::SymbolNotFound(name.clone()))
+                Err(EvalError::SymbolNotFound(name.clone()).into())
             }
         }
     }
 
-    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> EvalError {
-        EvalError::AmbiguousSymbol(ambiguous, others)
+    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> Box<EvalError> {
+        EvalError::AmbiguousSymbol(ambiguous, others).into()
     }
 }
 
@@ -520,7 +521,7 @@ impl std::fmt::Debug for EvalContext {
 }
 
 impl ImporterRegistryAccess for EvalContext {
-    type Error = EvalError;
+    type Error = Box<EvalError>;
 
     fn import(
         &mut self,

@@ -55,12 +55,12 @@ impl Stack {
                 } => {
                     // RULE: top call frame is transparent on stack
                     if pos > 0 {
-                        return Err(EvalError::WrongStackFrame(id, "call"));
+                        return Err(EvalError::WrongStackFrame(id, "call").into());
                     }
                 }
             }
         }
-        Err(EvalError::LocalStackEmpty(id))
+        Err(EvalError::LocalStackEmpty(id).into())
     }
 
     fn current_workbench_id(&self) -> Option<&Identifier> {
@@ -180,7 +180,7 @@ impl Stack {
     }
 }
 
-impl Lookup<EvalError> for Stack {
+impl Lookup<Box<EvalError>> for Stack {
     fn lookup(&self, name: &ir::QualifiedName, _: LookupTarget) -> EvalResult<Symbol> {
         use crate::lower::SingleIdentifier;
         log::trace!(
@@ -223,8 +223,8 @@ impl Lookup<EvalError> for Stack {
         }
     }
 
-    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> EvalError {
-        EvalError::AmbiguousSymbol(ambiguous, others)
+    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> Box<EvalError> {
+        EvalError::AmbiguousSymbol(ambiguous, others).into()
     }
 }
 
@@ -256,9 +256,9 @@ impl Locals for Stack {
         match self.fetch_symbol(id) {
             Ok(symbol) => symbol.with_def(|def| match def {
                 SymbolDef::Value(.., value) => Ok(value.clone()),
-                _ => Err(EvalError::LocalNotFound(id.clone())),
+                _ => Err(EvalError::LocalNotFound(id.clone()).into()),
             }),
-            Err(_) => Err(EvalError::LocalNotFound(id.clone())),
+            Err(_) => Err(EvalError::LocalNotFound(id.clone()).into()),
         }
     }
 
@@ -271,7 +271,7 @@ impl Locals for Stack {
             .find(|frame| matches!(frame, StackFrame::Workbench(_, _, _)))
         {
             Some(StackFrame::Workbench(model, _, _)) => Ok(model.clone()),
-            _ => Err(EvalError::NoModelInWorkbench),
+            _ => Err(EvalError::NoModelInWorkbench.into()),
         }
     }
 
@@ -302,7 +302,7 @@ impl Locals for Stack {
                 }
             }
         }
-        Err(EvalError::LocalNotFound(id.clone()))
+        Err(EvalError::LocalNotFound(id.clone()).into())
     }
 
     /// Get name of current workbench or module (might be empty).

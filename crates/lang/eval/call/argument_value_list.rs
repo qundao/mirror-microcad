@@ -35,7 +35,8 @@ impl ArgumentValueList {
             args: self.to_string(),
             expected: 1,
             found: self.map.len(),
-        })
+        }
+        .into())
     }
 
     /// Get value by type

@@ -209,7 +209,6 @@ impl StackFrame {
                                 .unwrap_or(std::path::PathBuf::from("<NO FILE>")))
                             .unwrap_or(std::path::PathBuf::from("<NO FILE>"))
                             .to_string_lossy()
-                            .to_string()
                     )?;
                 }
             }
