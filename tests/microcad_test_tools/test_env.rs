@@ -125,16 +125,31 @@ impl TestEnv {
             name = self.name
         ));
 
-        std::fs::create_dir_all(self.test_path()).expect("cant create dir");
-
-        Output::new(
+        let mut output = Output::new(
             self.name().into(),
             self.path.clone(),
             self.banner_file(),
             self.out_file_path_stem(),
             self.log_file(),
             &["svg", "stl"],
-        )
+        );
+
+        let head = "// file: ";
+        if let Some(first_line) = self.code.lines().find(|line| line.starts_with(head)) {
+            if first_line.starts_with(head) {
+                use std::io::Write;
+                let (_, filename) = first_line.split_at(head.len());
+                let filename = self.test_path().join(filename);
+                let mut file = std::fs::File::create(filename.clone()).expect("cannot create file");
+                file.write_all(self.code.as_bytes())
+                    .expect("cannot write file");
+                output.add_output(filename);
+            }
+        }
+
+        std::fs::create_dir_all(self.test_path()).expect("cant create dir");
+
+        output
     }
 
     /// Return test name.

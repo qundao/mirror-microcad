@@ -247,21 +247,8 @@ fn scan_for_tests(
                 // match code end marker
                 if end.captures_iter(line).next().is_some() {
                     let env = TestEnv::new(file_path, &test_name, &test_code, line_offset as u32);
-                    let head = "// file: ";
-                    let mut test_output = env.generate(output);
-                    if let Some(first_line) = test_code.lines().find(|line| line.starts_with(head))
-                    {
-                        if first_line.starts_with(head) {
-                            let (_, filename) = first_line.split_at(head.len());
-                            let filename = env.test_path().join(filename);
-                            let mut file = std::fs::File::create(filename.clone())
-                                .expect("cannot create file");
-                            file.write_all(test_code.as_bytes())
-                                .expect("cannot write file");
-                            test_output.add_output(filename);
-                        }
-                    }
-                    test_outputs.push(test_output);
+
+                    test_outputs.push(env.generate(output));
 
                     // clear name to signal new test awaited
                     test_name.clear();
