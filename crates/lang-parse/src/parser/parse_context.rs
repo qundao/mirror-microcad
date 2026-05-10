@@ -38,7 +38,7 @@ impl<'source> ParseContext<'source> {
                 ..
             } => Self::Source {
                 url,
-                source: source,
+                source,
                 line_index,
                 line_offset,
             },
