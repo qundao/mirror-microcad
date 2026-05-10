@@ -22,8 +22,6 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
     let _ = fs::remove_file(env.banner_file());
     let _ = fs::remove_file(env.log_file());
 
-    let _ = fs::hard_link("images/parse_fail.svg", env.banner_file());
-
     let mut log_file =
         std::fs::File::create(env.log_file()).unwrap_or_else(|_| panic!("{:?}", env.log_file()));
     let log = &mut std::io::BufWriter::new(&mut log_file);
