@@ -23,13 +23,12 @@ impl std::ops::Deref for TestList {
 
 impl TestList {
     pub fn new(path: std::path::PathBuf, mut outputs: Vec<TestOutput>) -> Self {
-        let mut seen = std::collections::HashSet::new();
-        for item in outputs.iter().map(|o| &o.name) {
-            if !seen.insert(item) {
-                panic!("doublet test name '{item}'")
-            }
-        }
         outputs.sort();
+
+        // Check adjacent elements for duplicates
+        if let Some(duplicate) = outputs.windows(2).find(|w| w[0].name == w[1].name) {
+            panic!("doublet test name '{}'", duplicate[0].name);
+        }
 
         Self { path, outputs }
     }
@@ -70,10 +69,6 @@ Click on the test names to jump to file with the test or click the buttons to ge
             println!("cargo:rerun-if-changed={}", output.input.display());
         });
     }
-
-    pub fn remove_banners(&self) -> std::io::Result<()> {
-        todo!()
-    }
 }
 
 #[derive(Default)]
@@ -84,7 +79,48 @@ pub struct TestModule {
 
 impl TestModule {
     pub fn new(path: impl AsRef<std::path::Path>) -> Self {
-        todo!()
+        let mdbook = microcad_lang_markdown::MdBook::new(&path).expect("No error");
+
+        let mut root = TestModule::default();
+
+        mdbook.code_blocks().for_each(|(path, code_block)| {
+            let header = &code_block.header;
+
+            let mut name = match (&header.name, &header.fragment) {
+                (None, _) => {
+                    // We need a name
+                    return;
+                }
+                (Some(name), None) => name.clone(),
+                (Some(name), Some(fragment)) => format!("{name}#{fragment}"),
+            };
+            if !header.parameters.is_empty() {
+                name += &format!("({})", header.parameters.join(","));
+            }
+
+            let env = crate::test_env::TestEnv::new(
+                &mdbook.abs_md_file(&path),
+                &name,
+                &code_block.code,
+                (code_block.line_offset + 1) as u32,
+            );
+
+            let mut current = &mut root;
+
+            // Iterate through path components
+            for component in path.components() {
+                let name = component.as_os_str().to_string_lossy().into_owned();
+
+                // Traverse deeper into the tree, creating modules if they don't exist
+                current = current.submodules.entry(name).or_default();
+            }
+
+            let output = env.output();
+            // Now 'current' is the specific leaf module for this path
+            current.outputs.push((env.test_code(), output.clone()));
+        });
+
+        root
     }
 
     pub fn test_code(&self, name: &str) -> String {
@@ -112,8 +148,33 @@ impl TestModule {
         output
     }
 
-    pub fn test_list() -> TestList {
-        todo!()
+    /// Collects all TestOutputs from this module and all submodules.
+    pub fn all_outputs(&self) -> Vec<&TestOutput> {
+        let mut all = Vec::new();
+        self.collect_recursive(&mut all);
+        all
+    }
+
+    fn collect_recursive<'a>(&'a self, collector: &mut Vec<&'a TestOutput>) {
+        // 1. Add outputs from the current module
+        for (_, output) in &self.outputs {
+            collector.push(output);
+        }
+
+        // 2. Recurse into submodules
+        for submodule in self.submodules.values() {
+            submodule.collect_recursive(collector);
+        }
+    }
+
+    pub fn test_list(&self, test_list_file: impl AsRef<std::path::Path>) -> TestList {
+        TestList::new(
+            test_list_file.as_ref().to_path_buf(),
+            self.all_outputs()
+                .into_iter()
+                .map(|output| output.clone())
+                .collect(),
+        )
     }
 }
 

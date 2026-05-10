@@ -49,8 +49,11 @@ pub fn generate(
 "#,
     );
 
+    let test_module = TestModule::new(&path);
+    code.push_str(&test_module.test_code("tests"));
+
     // read all *Markdown files and write result into `code`
-    let test_list = generate_test_outputs(&mut code, &path, &test_list_file);
+    let test_list = test_module.test_list(&test_list_file);
 
     test_list
         .write(test_list_file)
@@ -63,60 +66,6 @@ pub fn generate(
     fs::write(&dest_path, code)
         .into_diagnostic()
         .context(format!("cannot create file '{dest_path:?}'"))
-}
-
-fn generate_test_outputs(
-    code: &mut String,
-    path: impl AsRef<Path>,
-    test_list_file: impl AsRef<Path>,
-) -> TestList {
-    let mdbook = MdBook::new(&path).expect("No error");
-    let mut outputs = Vec::new();
-
-    let mut root = TestModule::default();
-
-    mdbook.code_blocks().for_each(|(path, code_block)| {
-        let header = &code_block.header;
-        warning!("{header}");
-
-        let mut name = match (&header.name, &header.fragment) {
-            (None, _) => {
-                // We need a name
-                return;
-            }
-            (Some(name), None) => name.clone(),
-            (Some(name), Some(fragment)) => format!("{name}#{fragment}"),
-        };
-        if !header.parameters.is_empty() {
-            name += &format!("({})", header.parameters.join(","));
-        }
-
-        let env = TestEnv::new(
-            &mdbook.abs_md_file(&path),
-            &name,
-            &code_block.code,
-            (code_block.line_offset + 1) as u32,
-        );
-
-        let mut current = &mut root;
-
-        // Iterate through path components
-        for component in path.components() {
-            let name = component.as_os_str().to_string_lossy().into_owned();
-
-            // Traverse deeper into the tree, creating modules if they don't exist
-            current = current.submodules.entry(name).or_default();
-        }
-
-        let output = env.output();
-        // Now 'current' is the specific leaf module for this path
-        current.outputs.push((env.test_code(), output.clone()));
-        outputs.push(output);
-    });
-
-    code.push_str(&root.test_code("tests"));
-
-    TestList::new(test_list_file.as_ref().to_path_buf(), outputs)
 }
 
 /// Remove all banners in `path` and exclude folders whose names are contained
