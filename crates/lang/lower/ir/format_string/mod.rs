@@ -18,7 +18,7 @@ pub enum FormatStringInner {
     /// String literal.
     String(Refer<String>),
     /// Format expression.
-    FormatExpression(FormatExpression),
+    FormatExpression(Box<FormatExpression>),
 }
 
 impl SrcReferrer for FormatStringInner {
@@ -43,7 +43,8 @@ impl FormatString {
 
     /// Insert a format expression
     pub fn push_format_expr(&mut self, expr: FormatExpression) {
-        self.0.push(FormatStringInner::FormatExpression(expr));
+        self.0
+            .push(FormatStringInner::FormatExpression(Box::new(expr)));
     }
 
     /// Return the number of sections (inserted elements)
