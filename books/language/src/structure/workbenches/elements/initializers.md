@@ -87,7 +87,7 @@ You cannot read building plan items from within initializers.
 
 [![test](.test/no_building_plan_in_initializers.svg)](.test/no_building_plan_in_initializers.log)
 
-```µcad,no_building_plan_in_initializers#todo_fail
+```µcad,no_building_plan_in_initializers#todo
 sketch Wheel(radius: Length, thickness = 5mm) {
     use std::geo2d::Circle;
 
@@ -128,7 +128,7 @@ Types must match when using a name from building plan in initializer parameters.
 
 [![test](.test/no_building_plan_same_name_different_type.svg)](.test/no_building_plan_same_name_different_type.log)
 
-```µcad,no_building_plan_same_name_different_type#todo_fail
+```µcad,no_building_plan_same_name_different_type#todo
 sketch Wheel(radius: Length, thickness: Length) {
     use std::geo2d::Circle;
 

@@ -36,7 +36,7 @@ Of course returning a value twice is not allowed.
 
 [![test](.test/return_twice.svg)](.test/return_twice.log)
 
-```µcad,return_twice#todo_fail
+```µcad,return_twice#todo
 fn pow(x: Scalar, n: Integer) -> Scalar {
     if n > 1 {
         x * pow(x, n - 1)

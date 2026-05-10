@@ -64,12 +64,13 @@ assert_eq([ f(4), 3 ]);
 
 [![test](.test/function_missing.svg)](.test/function_missing.log)
 
-```µcad,function_missing#todo_fail
+```µcad,function_missing#todo
 fn f(n: Scalar) { // error: not all paths return a value
     if n > 3 {
-         n-1
+        n - 1
     }
 }
+
 use std::debug::*;
 assert_eq([ f(1), 2 ]);
 assert_eq([ f(4), 3 ]);
