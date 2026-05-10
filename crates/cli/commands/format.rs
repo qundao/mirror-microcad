@@ -18,14 +18,18 @@ impl RunCommand<()> for Format {
         let document = Document::from_file_path(&self.input)?;
         use microcad_driver::commands::{Format, FormatParameters, LoadFromFile, Sync};
 
-        if let Err(_) = document.load_from_file().and_then(|_| {
-            let params = FormatParameters::default();
-            if document.format(&params)? {
-                document.sync()
-            } else {
-                Ok(())
-            }
-        }) {
+        if document
+            .load_from_file()
+            .and_then(|_| {
+                let params = FormatParameters::default();
+                if document.format(&params)? {
+                    document.sync()
+                } else {
+                    Ok(())
+                }
+            })
+            .is_err()
+        {
             cli.print_diagnostics(&document);
         }
 
