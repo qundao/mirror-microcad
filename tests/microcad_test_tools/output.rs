@@ -104,7 +104,7 @@ impl TestModule {
             }
 
             let env = crate::test_env::TestEnv::new(
-                &mdbook.abs_md_file(&path),
+                mdbook.abs_md_file(&path),
                 &name,
                 &code_block.code,
                 (code_block.line_offset + 1) as u32,
@@ -173,10 +173,7 @@ impl TestModule {
     pub fn test_list(&self, test_list_file: impl AsRef<std::path::Path>) -> TestList {
         TestList::new(
             test_list_file.as_ref().to_path_buf(),
-            self.all_outputs()
-                .into_iter()
-                .map(|output| output.clone())
-                .collect(),
+            self.all_outputs().into_iter().cloned().collect(),
         )
     }
 }
