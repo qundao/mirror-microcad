@@ -80,7 +80,6 @@
   76:   
   77:   board_height = 1mm;
   78:   Rect(TILE_SIZE * 8).extrude(board_height).translate(z = -board_height);
-  79:   
 
 -- No Output --
 -- No Errors --

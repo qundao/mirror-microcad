@@ -34,7 +34,6 @@
   30:   }
   31:   
   32:   LetterCube(20mm).translate(z = 10mm);
-  33:   
 
 -- No Output --
 -- No Errors --

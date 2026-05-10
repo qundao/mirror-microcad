@@ -99,7 +99,6 @@
   95:   
   96:   microcad::Logo(size = SIZE).extrude(4mm);
   97:   
-  98:   
 
 -- No Output --
 -- No Errors --

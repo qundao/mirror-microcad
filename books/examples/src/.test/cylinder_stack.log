@@ -38,7 +38,6 @@
   34:   
   35:   CylinderStack(heights = [5, 15, 5]mm, radii = [6, 4, 4, 6]mm);
   36:   
-  37:   
 
 -- No Output --
 -- No Errors --

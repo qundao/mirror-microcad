@@ -14,7 +14,6 @@
   10:   use std::ops::*;
   11:   
   12:   (Hexagon(20mm) - Ngon(5, 10mm)).extrude(20mm);
-  13:   
 
 -- No Output --
 -- No Errors --

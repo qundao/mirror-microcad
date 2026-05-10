@@ -32,7 +32,6 @@
   28:       .distribute_grid(size = 60mm, rows = 3, columns = 3);
   29:   
   30:   r - holes;
-  31:   
 
 -- No Output --
 -- Errors --

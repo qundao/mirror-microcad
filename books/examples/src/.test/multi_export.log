@@ -19,7 +19,6 @@
   15:   #[export = "circle.svg"] // Will be exported to `circle.svg`
   16:   std::geo2d::Circle(r = 42mm)
   17:       .translate(x = 42mm);
-  18:   
 
 -- No Output --
 -- No Errors --

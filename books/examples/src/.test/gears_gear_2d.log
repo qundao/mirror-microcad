@@ -15,7 +15,6 @@
   13:   use std::geo2d::*;
   14:   
   15:   InvoluteGearProfile(1.0mm, 100);
-  16:   
 
 -- No Output --
 -- Errors --

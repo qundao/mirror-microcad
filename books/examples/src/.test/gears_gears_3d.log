@@ -68,7 +68,6 @@
   88:       .rotate(-angle / gear3.teeth)
   89:       .translate(gear1.outer_radius + gear3.pitch_radius, 45°);
   90:   
-  91:   
 
 -- No Output --
 -- No Errors --

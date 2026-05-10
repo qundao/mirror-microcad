@@ -23,7 +23,6 @@
   55:   
   56:   TextPlate("Hello µcad", 10mm)
   57:       .extrude(2mm, 0°);
-  58:   
 
 -- No Output --
 -- Errors --

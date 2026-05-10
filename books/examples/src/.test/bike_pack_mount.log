@@ -56,7 +56,6 @@
   52:   
   53:   #[export = "upper.stl"]
   54:   Upper().translate(y = -50mm);
-  55:   
 
 -- No Output --
 -- No Errors --

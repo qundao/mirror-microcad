@@ -27,7 +27,6 @@
   25:   
   26:   #[color = std::color::BLUE]
   27:   Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
-  28:   
 
 -- No Output --
 -- No Errors --

@@ -129,7 +129,6 @@
  125:   #[export = "spirograph_gear.stl"]
  126:   #[color = std::color::TEAL]
  127:   gear.translate(x = ring_1.shift + ring_2.shift + ring_3.shift);
- 128:   
 
 -- No Output --
 -- No Errors --

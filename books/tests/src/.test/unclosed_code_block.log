@@ -11,7 +11,7 @@
   19:       1 + 2;
 
 -- Parse Error --
-  × error: 20:1: Unclosed code block
+  × error: 19:11: Unclosed code block
     ╭─[:18:5]
  18 │ a = {
     ·     ┬
