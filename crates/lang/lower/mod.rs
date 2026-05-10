@@ -4,6 +4,8 @@
 //! Lowering compile step
 
 pub mod ir;
+
+#[allow(clippy::module_inception)]
 mod lower;
 
 use microcad_lang_base::{ComputedHash, Hashed, Identifier, LineIndex, Span, SrcRef};
