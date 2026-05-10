@@ -3,9 +3,78 @@
 
 //! Output of a markdown test.
 
-use std::path::PathBuf;
+use std::{ops::Deref, path::PathBuf};
 
-pub struct TestList(Vec<TestOutput>);
+/// A list of test outputs
+pub struct TestList {
+    /// Input path for tests
+    path: std::path::PathBuf,
+    /// Path containing the tests
+    outputs: Vec<TestOutput>,
+}
+
+impl std::ops::Deref for TestList {
+    type Target = Vec<TestOutput>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.outputs
+    }
+}
+
+impl TestList {
+    pub fn new(path: std::path::PathBuf, mut outputs: Vec<TestOutput>) -> Self {
+        let mut seen = std::collections::HashSet::new();
+        for item in outputs.iter().map(|o| &o.name) {
+            if !seen.insert(item) {
+                panic!("doublet test name '{item}'")
+            }
+        }
+        outputs.sort();
+
+        Self { path, outputs }
+    }
+
+    pub fn markdown_string(&self) -> String {
+        let count = self.outputs.len();
+        let mut result = format!(
+            "# Test List
+
+The following table lists all tests included in this documentation.
+
+**{count}** tests have been evaluated with version **{version}** of microcad.
+
+Click on the test names to jump to file with the test or click the buttons to get the logs.
+
+| Result | Source | Name |
+|-------:|--------|------|
+",
+            version = env!("CARGO_PKG_VERSION")
+        );
+
+        self.outputs.iter().for_each(|test| {
+            result.push_str(&test.table_row(self.path.parent().expect("invalid path")));
+        });
+
+        result
+    }
+
+    pub fn write(&self, output_path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+        use std::io::Write;
+        std::fs::File::create(&output_path)?.write_all(self.markdown_string().as_bytes())?;
+        println!("cargo:rerun-if-changed={}", output_path.as_ref().display());
+        Ok(())
+    }
+
+    pub fn cargo(&self) {
+        self.outputs.iter().for_each(|output| {
+            println!("cargo:rerun-if-changed={}", output.input.display());
+        });
+    }
+
+    pub fn remove_banners(&self) -> std::io::Result<()> {
+        todo!()
+    }
+}
 
 #[derive(Default)]
 pub struct TestModule {

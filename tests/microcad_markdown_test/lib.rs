@@ -15,7 +15,7 @@
 use microcad_lang_markdown::MdBook;
 use microcad_test_tools::{output::*, test_env::*};
 use miette::{Context, IntoDiagnostic, Result};
-use std::{io::Write, path::Path};
+use std::path::Path;
 
 /// for debugging purpose
 #[allow(unused)]
@@ -50,25 +50,30 @@ pub fn generate(
     );
 
     // read all *Markdown files and write result into `code`
-    let test_outputs = generate_test_outputs(&mut code, &path);
+    let test_list = generate_test_outputs(&mut code, &path, &test_list_file);
 
-    create_test_list(test_list_file, &test_outputs);
+    test_list
+        .write(test_list_file)
+        .map_err(|err| miette::miette!("{err}"))?;
+    test_list.cargo();
 
     // remove any previous banners
-    remove_banners(path, &test_outputs)?;
+    remove_banners(path, &test_list)?;
 
     fs::write(&dest_path, code)
         .into_diagnostic()
         .context(format!("cannot create file '{dest_path:?}'"))
 }
 
-fn generate_test_outputs(code: &mut String, path: impl AsRef<Path>) -> Vec<TestOutput> {
-    let mdbook = MdBook::new(path).expect("No error");
+fn generate_test_outputs(
+    code: &mut String,
+    path: impl AsRef<Path>,
+    test_list_file: impl AsRef<Path>,
+) -> TestList {
+    let mdbook = MdBook::new(&path).expect("No error");
     let mut outputs = Vec::new();
 
     let mut root = TestModule::default();
-
-    let mut paths = std::collections::HashSet::new();
 
     mdbook.code_blocks().for_each(|(path, code_block)| {
         let header = &code_block.header;
@@ -103,8 +108,6 @@ fn generate_test_outputs(code: &mut String, path: impl AsRef<Path>) -> Vec<TestO
             current = current.submodules.entry(name).or_default();
         }
 
-        paths.insert(path.clone());
-
         let output = env.output();
         // Now 'current' is the specific leaf module for this path
         current.outputs.push((env.test_code(), output.clone()));
@@ -113,61 +116,12 @@ fn generate_test_outputs(code: &mut String, path: impl AsRef<Path>) -> Vec<TestO
 
     code.push_str(&root.test_code("tests"));
 
-    // Watch md files for changes
-    for path in paths {
-        println!("cargo:rerun-if-changed={}", path.display());
-    }
-
-    outputs
-}
-
-fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[TestOutput]) {
-    let mut seen = std::collections::HashSet::new();
-    for item in outputs.iter().map(|o| &o.name) {
-        if !seen.insert(item) {
-            panic!("doublet test name '{item}' in {:?}", path.as_ref())
-        }
-    }
-
-    std::fs::File::create(path.as_ref())
-        .expect("file access error")
-        .write_all(make_test_list(&path, outputs).as_bytes())
-        .expect("write error");
-    // tell cargo to watch this file
-    println!("cargo:rerun-if-changed={}", path.as_ref().display());
-}
-
-fn make_test_list(path: impl AsRef<std::path::Path>, tests: &[TestOutput]) -> String {
-    let count = tests.len();
-    let mut result = format!(
-        "# Test List
-
-The following table lists all tests included in this documentation.
-
-**{count}** tests have been evaluated with version **{version}** of microcad.
-
-Click on the test names to jump to file with the test or click the buttons to get the logs.
-
-| Result | Source | Name |
-|-------:|--------|------|
-",
-        version = env!("CARGO_PKG_VERSION")
-    );
-
-    {
-        let mut tests = tests.iter().collect::<Vec<_>>().clone();
-        tests.sort();
-        tests.iter().for_each(|test| {
-            result.push_str(&test.table_row(path.as_ref().parent().expect("invalid path")));
-        });
-    }
-
-    result
+    TestList::new(test_list_file.as_ref().to_path_buf(), outputs)
 }
 
 /// Remove all banners in `path` and exclude folders whose names are contained
 /// in `exclude_dirs` from search.
-fn remove_banners(path: impl AsRef<Path>, exclude_outputs: &[TestOutput]) -> Result<()> {
+fn remove_banners(path: impl AsRef<Path>, test_list: &TestList) -> Result<()> {
     //warning!("remove_banners: {:?} {exclude_files:?}", path.as_ref());
     for entry in std::fs::read_dir(&path).into_diagnostic()?.flatten() {
         // get file type
@@ -175,9 +129,9 @@ fn remove_banners(path: impl AsRef<Path>, exclude_outputs: &[TestOutput]) -> Res
             // check if directory or file
             if file_type.is_dir() {
                 if entry.file_name() == ".test" {
-                    clean_dir(entry.path(), exclude_outputs)?;
+                    clean_dir(entry.path(), test_list)?;
                 } else {
-                    remove_banners(entry.path(), exclude_outputs)?;
+                    remove_banners(entry.path(), test_list)?;
                 }
             }
         }
@@ -187,7 +141,7 @@ fn remove_banners(path: impl AsRef<Path>, exclude_outputs: &[TestOutput]) -> Res
 }
 
 /// Remove all files within `.test` directory
-fn clean_dir(path: impl AsRef<Path>, exclude_files: &[TestOutput]) -> Result<()> {
+fn clean_dir(path: impl AsRef<Path>, test_list: &TestList) -> Result<()> {
     warning!("remove banners in: {:?}", path.as_ref());
 
     // list all files within `.test` directory and remove them
@@ -196,7 +150,7 @@ fn clean_dir(path: impl AsRef<Path>, exclude_files: &[TestOutput]) -> Result<()>
         .flatten()
         .filter(|entry| entry.file_type().unwrap().is_file())
     {
-        if 0 == exclude_files
+        if 0 == test_list
             .iter()
             .filter(|f| f.has_path(&entry.path()))
             .count()
