@@ -5567,6 +5567,7 @@ version = "0.4.0"
 dependencies = [
  "env_logger",
  "log",
+ "microcad-lang-markdown",
  "microcad_test_tools",
  "miette",
  "regex",
@@ -5578,6 +5579,7 @@ version = "0.4.0"
 dependencies = [
  "env_logger",
  "log",
+ "microcad-lang-markdown",
  "pathdiff",
  "regex",
  "rustc-hash 2.1.1",
