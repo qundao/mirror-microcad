@@ -12,6 +12,7 @@
 //! If test IDs include `.` name will be split into several names which will be
 //! used to crates sub modules.
 
+use microcad_lang_markdown::MdBook;
 use microcad_test_tools::{output::*, test_env::*};
 use miette::{Context, IntoDiagnostic, Result};
 use std::{io::Write, path::Path};
@@ -48,12 +49,10 @@ pub fn generate(
 "#,
     );
 
-    let mut test_outputs = Vec::new();
-
     // read all *Markdown files and write result into `code`
-    scan(&mut code, path.as_ref(), "md", &mut test_outputs)?;
+    let test_outputs = generate_test_outputs(&mut code, &path);
 
-    create_test_list(test_list_file, &test_outputs);
+    // create_test_list(test_list_file, &test_outputs);
 
     // remove any previous banners
     remove_banners(path, &test_outputs)?;
@@ -61,6 +60,65 @@ pub fn generate(
     fs::write(&dest_path, code)
         .into_diagnostic()
         .context(format!("cannot create file '{dest_path:?}'"))
+}
+
+fn generate_test_outputs(code: &mut String, path: impl AsRef<Path>) -> Vec<Output> {
+    let mdbook = MdBook::new(path).expect("No error");
+    let mut outputs = Vec::new();
+
+    let mut root = Module::default();
+
+    let mut paths = std::collections::HashSet::new();
+
+    mdbook.code_blocks().for_each(|(path, code_block)| {
+        let header = &code_block.header;
+        warning!("{header}");
+
+        let mut name = match (&header.name, &header.fragment) {
+            (None, _) => {
+                // We need a name
+                return;
+            }
+            (Some(name), None) => name.clone(),
+            (Some(name), Some(fragment)) => format!("{name}#{fragment}"),
+        };
+        if !header.parameters.is_empty() {
+            name += &format!("({})", header.parameters.join(","));
+        }
+
+        let env = TestEnv::new(
+            &mdbook.abs_md_file(&path),
+            &name,
+            &code_block.code,
+            (code_block.line_offset + 1) as u32,
+        );
+
+        let mut current = &mut root;
+
+        // Iterate through path components
+        for component in path.components() {
+            let name = component.as_os_str().to_string_lossy().into_owned();
+
+            // Traverse deeper into the tree, creating modules if they don't exist
+            current = current.submodules.entry(name).or_default();
+        }
+
+        paths.insert(path.clone());
+
+        let output = env.output();
+        // Now 'current' is the specific leaf module for this path
+        current.outputs.push((env.test_code(), output.clone()));
+        outputs.push(output);
+    });
+
+    code.push_str(&root.test_code("tests"));
+
+    // Watch md files for changes
+    for path in paths {
+        println!("cargo:rerun-if-changed={}", path.display());
+    }
+
+    outputs
 }
 
 fn create_test_list(path: impl AsRef<std::path::Path>, outputs: &[Output]) {
@@ -248,7 +306,8 @@ fn scan_for_tests(
                 if end.captures_iter(line).next().is_some() {
                     let env = TestEnv::new(file_path, &test_name, &test_code, line_offset as u32);
 
-                    test_outputs.push(env.generate(output));
+                    output.push_str(&env.test_code());
+                    test_outputs.push(env.output());
 
                     // clear name to signal new test awaited
                     test_name.clear();

@@ -91,7 +91,6 @@ fn check_copyright(check_only: bool) -> anyhow::Result<bool> {
             "../target/*",
             "../tests/*.µcad",
             "../crates/cli/examples/*.µcad",
-            "../thirdparty/*",
         ],
         check_only,
     )?)
@@ -99,7 +98,7 @@ fn check_copyright(check_only: bool) -> anyhow::Result<bool> {
 
 fn update_book(name: &str) -> anyhow::Result<()> {
     match microcad_markdown_test::generate(
-        format!("../books/{name}/src"),
+        format!("../books/{name}"),
         format!("md_test_book_{name}.rs"),
         format!("../books/{name}/src/test_list.md"),
     ) {

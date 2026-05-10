@@ -113,9 +113,8 @@ impl TestEnv {
     }
 
     /// Generate the test call.
-    /// - `output`: A string to append the test output to.
-    pub fn generate(&self, output: &mut String) -> Output {
-        output.push_str(&format!(
+    pub fn test_code(&self) -> String {
+        format!(
             r##"
         #[test]
         #[allow(non_snake_case)]
@@ -123,8 +122,11 @@ impl TestEnv {
             crate::markdown_test::run_test({self}).expect("No error");
         }}"##,
             name = self.name
-        ));
+        )
+    }
 
+    /// Return test output.
+    pub fn output(&self) -> Output {
         let mut output = Output::new(
             self.name().into(),
             self.path.clone(),

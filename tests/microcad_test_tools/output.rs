@@ -5,7 +5,41 @@
 
 use std::path::PathBuf;
 
+#[derive(Default)]
+pub struct Module {
+    pub submodules: std::collections::HashMap<String, Module>,
+    pub outputs: Vec<(String, Output)>,
+}
+
+impl Module {
+    pub fn test_code(&self, name: &str) -> String {
+        let mut output = String::new();
+
+        // 1. Generate child submodules recursively
+        for (sub_name, sub_module) in &self.submodules {
+            // Sanitize name to handle spaces or hyphens if necessary
+            let sanitized_name = sub_name.replace(['.', '-', ' '], "_");
+
+            let sub_code = sub_module.test_code(&sanitized_name);
+
+            output.push_str(&format!(
+                "#[allow(non_snake_case)]\nmod r#{sanitized_name} {{\n{sub_code}}}\n\n"
+            ));
+        }
+
+        // 2. Append the actual test content/outputs for this specific module
+        for (test, _) in &self.outputs {
+            // Assuming Output has a method or field providing the code string
+            output.push_str(&test);
+            output.push_str("\n");
+        }
+
+        output
+    }
+}
+
 /// Output of a markdown test.
+#[derive(Clone)]
 pub struct Output {
     /// Name of the test
     pub name: String,

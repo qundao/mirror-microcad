@@ -17,6 +17,7 @@ miette = "7.6.0"
 log = "0.4"
 env_logger = "0.11"
 microcad_test_tools = { path = "../microcad_test_tools", version = "0" }
+microcad-lang-markdown = { workspace = true }
 
 [lints.rust]
 missing_docs = "warn"
