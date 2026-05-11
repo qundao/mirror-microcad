@@ -43,22 +43,12 @@ impl<S: Default> Asset<S> {
         })
     }
 
-    /// Generic transitioner to move the pipeline forward
-    fn transition<F>(&self, f: F) -> Result
-    where
-        F: FnOnce(S) -> std::result::Result<S, Diagnostics>,
-    {
-        let mut state = self.state.borrow_mut();
-        let current = std::mem::take(&mut *state);
-        match f(current) {
-            Ok(new_state) => {
-                *state = new_state;
-                Ok(())
-            }
-            Err(diag) => {
-                self.diagnostics.replace(diag);
-                Err(self.diagnostics.clone())
-            }
+    fn try_file_path(&self) -> Result<std::path::PathBuf> {
+        match self.to_file_path() {
+            Some(path) => Ok(path),
+            None => Err(RcMut::new(
+                miette::miette!("No local path: {}", self.url()).into(),
+            )),
         }
     }
 }
@@ -69,25 +59,25 @@ impl<S: Default> ResourceLocation for Asset<S> {
     }
 }
 
-pub type SourceAsset = Asset<source::State>;
-pub type MarkdownAsset = Asset<markdown::State>;
-pub type MdBookAsset = Asset<mdbook::State>;
-pub type BuiltinAsset = Asset<builtin::State>;
+pub type Source = Asset<source::State>;
+pub type Markdown = Asset<markdown::State>;
+pub type MdBook = Asset<mdbook::State>;
+pub type Builtin = Asset<builtin::State>;
 
 /// A document containing µcad code.
 #[derive(From)]
 pub enum Document {
     /// A single source file
-    Source(Rc<SourceAsset>),
+    Source(Rc<Source>),
 
     /// A markdown file containing source code snippets
-    Markdown(Rc<MarkdownAsset>),
+    Markdown(Rc<Markdown>),
 
     /// An `book.toml` of a markdown book
-    MdBook(Rc<MdBookAsset>),
+    MdBook(Rc<MdBook>),
 
     /// A builtin symbol
-    Builtin(Rc<BuiltinAsset>),
+    Builtin(Rc<Builtin>),
 }
 
 impl Document {
@@ -98,17 +88,17 @@ impl Document {
     /// * `.md`: Create a markdown
     /// * `book.toml`: Create an MdBook
     pub fn new(url: Url) -> miette::Result<Self> {
-        let path = std::path::Path::new(url.path());
+        let path = url.to_file_path().unwrap();
         let file_name = path.file_name().and_then(|os| os.to_str()).unwrap_or("");
         let extension = path.extension().and_then(|os| os.to_str()).unwrap_or("");
 
         match file_name {
-            "book.toml" => Ok(MdBookAsset::new(url).into()),
+            "book.toml" => Ok(MdBook::new(url).into()),
             _ => match extension {
-                "md" => Ok(MarkdownAsset::new(url).into()),
+                "md" => Ok(Markdown::new(url).into()),
                 extension => {
                     if MICROCAD_EXTENSIONS.contains(&extension) {
-                        Ok(SourceAsset::new(url).into())
+                        Ok(Source::new(url).into())
                     } else {
                         Err(miette::miette!("Invalid document type: {extension}"))
                     }
@@ -118,8 +108,14 @@ impl Document {
     }
 
     pub fn from_file_path(path: impl AsRef<std::path::Path>) -> miette::Result<Self> {
-        let url = Url::from_file_path(path.as_ref())
-            .map_err(|_| miette::miette!("URL does not contain a file path!"))?;
+        use miette::IntoDiagnostic;
+        let absolute_path = std::fs::canonicalize(&path).into_diagnostic()?;
+        let url = Url::from_file_path(&absolute_path).map_err(|_| {
+            miette::miette!(
+                "URL {path} does not contain a file path!",
+                path = path.as_ref().display()
+            )
+        })?;
         Self::new(url)
     }
 

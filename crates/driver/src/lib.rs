@@ -9,7 +9,7 @@ mod document;
 mod session;
 mod watcher;
 
-pub use microcad_lang::lower::ir::SourceFile;
+pub use microcad_lang::lower::ir::Source;
 pub use microcad_lang::model::Model;
 pub use microcad_lang::render::{RenderCache, RenderContext};
 pub use microcad_lang_base::{RcMut, Url};

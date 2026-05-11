@@ -1,22 +1,15 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::rc::Rc;
-
-use microcad_lang_base::{Diagnostics, HashMap, ResourceLocation};
+use microcad_lang_base::{Diagnostics, RcMut};
 use miette::Diagnostic;
 use thiserror::Error;
-use url::Url;
 
 use crate::{commands, document};
 use microcad_lang_markdown::{Markdown, MarkdownError};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum MarkdownItemError {
-    /// Error loading mdbook toml from file.
-    #[error("Mdbook is not local: {0}")]
-    NoLocalMarkdown(Url),
-
     /// Mdbook is not loaded
     #[error("Mdbook is not loaded")]
     NotLoaded,
@@ -27,41 +20,30 @@ pub enum MarkdownItemError {
 }
 
 #[derive(Default)]
-pub enum State {
-    #[default]
-    Raw,
-    Loaded {
-        markdown: Markdown,
-    },
-    Processed {
-        markdown: Markdown,
-        code_blocks: HashMap<String, Rc<document::SourceAsset>>,
-    },
+pub struct State {
+    markdown: Option<Markdown>,
 }
 
-impl commands::LoadFromFile for document::MarkdownAsset {
+impl commands::LoadFromFile for document::Markdown {
     fn load_from_file(&self) -> document::Result {
-        self.transition(|_| match self.to_file_path() {
-            Some(path) => {
-                let markdown = Markdown::load(path).map_err(MarkdownItemError::MarkdownError)?;
-                Ok(State::Loaded { markdown })
-            }
-            None => Err(MarkdownItemError::NoLocalMarkdown(self.url.clone()).into()),
-        })
+        let state = &mut *self.state.borrow_mut();
+        state.markdown = Some(
+            Markdown::load(self.try_file_path()?)
+                .map_err(|err| RcMut::new(MarkdownItemError::MarkdownError(err).into()))?,
+        );
+        Ok(())
     }
 }
 
-impl commands::Format for document::MarkdownAsset {
+impl commands::Format for document::Markdown {
     fn format(&self, params: &commands::FormatParameters) -> document::Result<bool> {
-        use crate::commands::LoadFromFile;
-        self.load_from_file()?;
         let mut formatted = false;
         let config = params;
+        let state = &mut *self.state.borrow_mut();
+        let mut diags = Diagnostics::default();
 
-        self.transition(|state| {
-            let mut diags = Diagnostics::default();
-
-            if let State::Loaded { mut markdown } = state {
+        match &mut state.markdown {
+            Some(markdown) => {
                 markdown
                     .code_blocks_mut()
                     .filter(|code_block| code_block.can_format())
@@ -78,27 +60,27 @@ impl commands::Format for document::MarkdownAsset {
                     });
 
                 if diags.has_errors() {
-                    Err(diags)
+                    Err(RcMut::new(diags))
                 } else {
-                    Ok(State::Loaded { markdown })
+                    Ok(formatted)
                 }
-            } else {
-                Err(MarkdownItemError::NotLoaded.into())
             }
-        })?;
-
-        Ok(formatted)
+            None => Err(RcMut::new(MarkdownItemError::NotLoaded.into())),
+        }
     }
 }
 
-impl commands::Sync for document::MarkdownAsset {
+impl commands::Sync for document::Markdown {
     fn sync(&self) -> document::Result {
-        match &*self.state.borrow() {
-            State::Raw => (),
-            State::Loaded { markdown } | State::Processed { markdown, .. } => markdown
-                .save(self.to_file_path().expect("File path"))
-                .expect("Error handling"),
+        let state = &*self.state.borrow();
+        match &state.markdown {
+            Some(markdown) => {
+                markdown
+                    .save(self.try_file_path()?)
+                    .expect("Error handling");
+                Ok(())
+            }
+            None => panic!("Impl error handling"),
         }
-        Ok(())
     }
 }

@@ -5,19 +5,23 @@ use microcad_builtin::Symbol;
 
 use crate::{commands, document};
 
-#[derive(Default)]
-pub enum State {
-    #[default]
-    Raw,
-    Symbol(Symbol),
+#[derive(Default, Debug)]
+pub struct State {
+    symbol: Option<Symbol>,
 }
 
-impl document::GetAssetSymbol for document::BuiltinAsset {
+impl document::GetAssetSymbol for document::Builtin {
     fn get_symbol(&self) -> document::Result<Symbol> {
+        let state = &mut *self.state.borrow_mut();
+        if let Some(symbol) = &state.symbol {
+            return Ok(symbol.clone());
+        }
+
         let symbol = microcad_builtin::__builtin();
-        self.transition(|_| Ok(State::Symbol(symbol.clone())))?;
+        state.symbol = Some(symbol.clone());
+
         Ok(symbol)
     }
 }
 
-impl commands::DocGen for document::BuiltinAsset {}
+impl commands::DocGen for document::Builtin {}

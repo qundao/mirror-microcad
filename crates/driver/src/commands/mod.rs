@@ -21,14 +21,14 @@ pub trait LoadFromFile {
 
 pub trait Pipeline {
     fn parse(&self) -> document::Result;
-    fn lower(&self, config: &Config) -> document::Result;
-    fn resolve(&self) -> document::Result;
+    fn lower(&self) -> document::Result;
+    fn resolve(&self, config: &Config) -> document::Result;
     fn eval(&self) -> document::Result;
 
     fn run_pipeline(&self, config: &Config) -> document::Result {
         self.parse()?;
-        self.lower(config)?;
-        self.resolve()?;
+        self.lower()?;
+        self.resolve(config)?;
         self.eval()
     }
 }
