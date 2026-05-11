@@ -12,7 +12,7 @@ use microcad_lang_base::{
 
 /// µcad source file
 #[derive(Clone, Debug)]
-pub struct SourceFile {
+pub struct Source {
     /// Documentation.
     pub doc: Option<ir::DocBlock>,
     /// Qualified name of the file if loaded from externals
@@ -27,7 +27,7 @@ pub struct SourceFile {
     pub line_offset: u32,
 }
 
-impl SourceFile {
+impl Source {
     /// Create new source file from existing source.
     pub fn new(
         doc: Option<ir::DocBlock>,
@@ -96,19 +96,19 @@ impl SourceFile {
     }
 }
 
-impl ResourceLocation for SourceFile {
+impl ResourceLocation for Source {
     fn url(&self) -> &microcad_lang_base::Url {
         &self.url
     }
 }
 
-impl std::fmt::Display for SourceFile {
+impl std::fmt::Display for Source {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.statements.iter().try_for_each(|s| writeln!(f, "{s}"))
     }
 }
 
-impl SrcReferrer for SourceFile {
+impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
         SrcRef::new(
             0..self.source.len(),
@@ -120,7 +120,7 @@ impl SrcReferrer for SourceFile {
 
 #[test]
 fn load_source_file_wrong_location() {
-    let source_file = SourceFile::load("I do not exist.µcad");
+    let source_file = Source::load("I do not exist.µcad");
     if let Err(err) = source_file {
         log::info!("{err}");
         //assert_eq!(format!("{err}"), "Cannot load source file");

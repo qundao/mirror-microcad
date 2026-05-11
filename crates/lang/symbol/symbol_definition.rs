@@ -10,7 +10,7 @@ use crate::{
     lower::{
         Identifiable,
         ir::{
-            Assignment, FunctionDefinition, ModuleDefinition, QualifiedName, SourceFile,
+            Assignment, FunctionDefinition, ModuleDefinition, QualifiedName, Source,
             Visibility, WorkbenchDefinition,
         },
     },
@@ -25,7 +25,7 @@ pub enum SymbolDef {
     #[default]
     Root,
     /// Source file symbol.
-    SourceFile(Rc<SourceFile>),
+    SourceFile(Rc<Source>),
     /// Module symbol.
     Module(Rc<ModuleDefinition>),
     /// Part symbol.

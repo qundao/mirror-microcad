@@ -24,7 +24,7 @@ pub struct ResolveContext {
 impl ResolveContext {
     /// Load resolve and check a source file and referenced files.
     pub fn create(
-        root: std::rc::Rc<ir::SourceFile>,
+        root: std::rc::Rc<ir::Source>,
         search_paths: &[impl AsRef<std::path::Path>],
         builtin: Option<Symbol>,
         diag: DiagHandler,
@@ -178,7 +178,7 @@ impl Diag for ResolveContext {
 }
 
 impl GetSourceByHash for ResolveContext {
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::Source>> {
         self.sources.get_by_hash(hash)
     }
 }

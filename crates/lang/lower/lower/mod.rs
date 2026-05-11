@@ -35,7 +35,7 @@ mod lang_type;
 mod literal;
 mod module;
 mod parameter;
-mod source_file;
+mod source;
 mod statement;
 mod r#type;
 mod r#use;

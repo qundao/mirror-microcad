@@ -88,8 +88,8 @@ impl From<&Rc<ir::Assignment>> for SymbolInfo {
     }
 }
 
-impl From<&Rc<ir::SourceFile>> for SymbolInfo {
-    fn from(def: &Rc<ir::SourceFile>) -> Self {
+impl From<&Rc<ir::Source>> for SymbolInfo {
+    fn from(def: &Rc<ir::Source>) -> Self {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "SourceFile".into(),

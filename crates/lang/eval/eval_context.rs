@@ -63,7 +63,7 @@ impl EvalContext {
 
     /// Create a new context from a source file.
     pub fn from_source(
-        root: std::rc::Rc<ir::SourceFile>,
+        root: std::rc::Rc<ir::Source>,
         builtin: Option<Symbol>,
         search_paths: &[impl AsRef<std::path::Path>],
         output: Box<dyn Output>,
@@ -472,7 +472,7 @@ impl PushDiag for EvalContext {
 }
 
 impl GetSourceByHash for EvalContext {
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::Source>> {
         self.sources.get_by_hash(hash)
     }
 }

@@ -67,7 +67,7 @@ fn test_recurse_children() {
     use crate::symbol::SymbolDef;
 
     let mut root = Symbol::new(
-        SymbolDef::SourceFile(std::rc::Rc::new(ir::SourceFile::new(
+        SymbolDef::SourceFile(std::rc::Rc::new(ir::Source::new(
             None,
             ir::StatementList::default(),
             microcad_lang_base::Hashed::new(String::new()),

@@ -6,10 +6,8 @@ use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 use microcad_lang_base::{Hashed, SrcReferrer, Url, virtual_url};
 use microcad_lang_parse::ast;
 
-impl ir::SourceFile {
-    pub fn from_source(
-        source: &microcad_lang_parse::Source,
-    ) -> Result<std::rc::Rc<Self>, LowerError> {
+impl ir::Source {
+    pub fn from_source(source: &ast::Source) -> Result<std::rc::Rc<Self>, LowerError> {
         let context =
             LowerContext::new(source.source.as_str()).with_line_offset(source.line_offset);
         Ok(std::rc::Rc::new(Self {
@@ -49,7 +47,7 @@ impl ir::SourceFile {
             Ok(buf) => buf,
             Err(error) => {
                 let error = LowerError::LoadSource(name.src_ref(), path.into(), error);
-                let mut source_file = ir::SourceFile::new(
+                let mut source_file = ir::Source::new(
                     None,
                     ir::StatementList::default(),
                     Hashed::new(String::new()),
@@ -110,7 +108,7 @@ impl ir::SourceFile {
         let lower_context = LowerContext::new(source_str).with_line_offset(line_offset);
 
         let dummy_source = || {
-            ir::SourceFile::new(
+            ir::Source::new(
                 None,
                 ir::StatementList::default(),
                 Hashed::new(source_str.into()),
@@ -161,11 +159,11 @@ impl ir::SourceFile {
     }
 }
 
-impl Lower for ir::SourceFile {
+impl Lower for ir::Source {
     type AstNode = ast::Program;
 
     fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
-        Ok(ir::SourceFile::new(
+        Ok(ir::Source::new(
             None, // todo
             ir::StatementList::lower(&node.statements, context)?,
             Hashed::new(context.source.to_string()),

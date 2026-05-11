@@ -28,11 +28,11 @@ pub struct Sources {
     by_name: HashMap<ir::QualifiedName, usize>,
 
     //root source file.
-    root: Rc<ir::SourceFile>,
+    root: Rc<ir::Source>,
 
     /// External source files.
     #[deref]
-    pub source_files: Vec<Rc<ir::SourceFile>>,
+    pub source_files: Vec<Rc<ir::Source>>,
 
     /// Search paths.
     search_paths: Vec<std::path::PathBuf>,
@@ -43,7 +43,7 @@ impl Sources {
     ///
     /// Inserts the `root` file and loads all files from `search_paths`.
     pub fn load(
-        root: Rc<ir::SourceFile>,
+        root: Rc<ir::Source>,
         search_paths: &[impl AsRef<std::path::Path>],
     ) -> ResolveResult<Self> {
         let mut source_files = Vec::new();
@@ -59,8 +59,7 @@ impl Sources {
         // load all external source files into cache
         Externals::new(search_paths)?.iter().try_for_each(
             |(name, path)| -> Result<(), LowerErrorsWithSource> {
-                let (source_file, error) =
-                    ir::SourceFile::load_with_name(path.clone(), name.clone());
+                let (source_file, error) = ir::Source::load_with_name(path.clone(), name.clone());
                 let index = source_files.len();
                 by_hash.insert(source_file.source_hash(), index);
                 by_path.insert(source_file.filename(), index);
@@ -91,12 +90,12 @@ impl Sources {
     }
 
     /// Return root file.
-    pub fn root(&self) -> Rc<ir::SourceFile> {
+    pub fn root(&self) -> Rc<ir::Source> {
         self.root.clone()
     }
 
     /// Insert a file to the sources.
-    pub fn insert(&mut self, source_file: Rc<ir::SourceFile>) {
+    pub fn insert(&mut self, source_file: Rc<ir::Source>) {
         let hash = source_file.source_hash();
         let path = source_file.filename();
         let name = source_file.name.clone();
@@ -182,7 +181,7 @@ impl Sources {
     }
 
     /// Convenience function to get a source file by from a `SrcReferrer`.
-    pub fn get_by_src_ref(&self, referrer: &impl SrcReferrer) -> ResolveResult<Rc<ir::SourceFile>> {
+    pub fn get_by_src_ref(&self, referrer: &impl SrcReferrer) -> ResolveResult<Rc<ir::Source>> {
         self.get_by_hash(referrer.src_ref().source_hash())
     }
 
@@ -215,14 +214,14 @@ impl Sources {
         &mut self,
         parent_path: impl AsRef<std::path::Path>,
         id: &ir::Identifier,
-    ) -> ResolveResult<Rc<ir::SourceFile>> {
+    ) -> ResolveResult<Rc<ir::Source>> {
         log::trace!(
             "loading file: {:?} [{id}]",
             parent_path.as_ref().canonicalize().expect("invalid path")
         );
         let file_path = find_mod_file_by_id(parent_path, id)?;
         let name = self.generate_name_from_path(&file_path)?;
-        let (source_file, error) = ir::SourceFile::load_with_name(&file_path, name);
+        let (source_file, error) = ir::Source::load_with_name(&file_path, name);
         self.insert(source_file.clone());
         match error {
             Some(error) => Err(error.into()),
@@ -234,7 +233,7 @@ impl Sources {
 /// Trait that can fetch for a file by it's hash value.
 pub trait GetSourceByHash {
     /// Find a project file by it's hash value.
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<ir::SourceFile>>;
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<ir::Source>>;
 }
 
 impl GetSourceLocInfoByHash for Sources {
@@ -247,7 +246,7 @@ impl GetSourceLocInfoByHash for Sources {
 
 impl GetSourceByHash for Sources {
     /// Find a project file by it's hash value.
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<ir::SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<Rc<ir::Source>> {
         if let Some(index) = self.by_hash.get(&hash) {
             Ok(self.source_files[*index].clone())
         } else if hash == 0 {
