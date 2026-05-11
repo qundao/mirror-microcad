@@ -83,7 +83,7 @@ impl Inspector {
                 // Watch all dependencies of the most recent compilation.
                 self.watcher.update(vec![self.args.input.clone()])?;
 
-                let source_file = ir::SourceFile::load(&self.args.input)?;
+                let source_file = ir::Source::load(&self.args.input)?;
                 tx.send(ViewModelRequest::SetSourceCode {
                     code: source_file.source.clone(),
                 })
