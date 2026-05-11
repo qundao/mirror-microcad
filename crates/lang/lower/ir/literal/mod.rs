@@ -14,52 +14,29 @@ use crate::{ty::*, value::Value};
 
 /// Literal of any kind.
 #[derive(Clone, Debug, PartialEq)]
-pub enum Literal {
-    /// Integer literal
-    Integer(Refer<i64>),
-    /// Number literal
-    Number(NumberLiteral),
-    /// Boolean literal
-    Bool(Refer<bool>),
-}
+pub struct Literal(pub Refer<Value>);
 
 impl Literal {
     /// Return value of literal.
-    pub fn value(&self) -> Value {
-        match self {
-            Self::Integer(value) => Value::Integer(*value.clone()),
-            Self::Number(value) => value.value(),
-            Self::Bool(value) => Value::Bool(*value.clone()),
-        }
+    pub fn value(&self) -> &Value {
+        &self.0.value
     }
 }
 
 impl SrcReferrer for Literal {
     fn src_ref(&self) -> SrcRef {
-        match self {
-            Literal::Number(n) => n.src_ref(),
-            Literal::Integer(i) => i.src_ref(),
-            Literal::Bool(b) => b.src_ref(),
-        }
+        self.0.src_ref.clone()
     }
 }
 
 impl crate::ty::Ty for Literal {
     fn ty(&self) -> Type {
-        match self {
-            Literal::Integer(_) => Type::Integer,
-            Literal::Number(n) => n.ty(),
-            Literal::Bool(_) => Type::Bool,
-        }
+        self.value().ty()
     }
 }
 
 impl std::fmt::Display for Literal {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Literal::Integer(i) => write!(f, "{i}"),
-            Literal::Number(n) => write!(f, "{n}"),
-            Literal::Bool(b) => write!(f, "{b}"),
-        }
+        write!(f, "{}", self.value())
     }
 }

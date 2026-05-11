@@ -158,31 +158,33 @@ impl std::fmt::Display for Unit {
     }
 }
 
-impl Unit {
+impl Ty for Unit {
     /// Return type to use with this unit.
-    pub fn ty(self) -> Type {
+    fn ty(&self) -> Type {
+        Type::Quantity(self.quantity_type())
+    }
+}
+
+impl Unit {
+    pub fn quantity_type(&self) -> QuantityType {
         match self {
-            Self::None | Self::Percent => Type::Quantity(QuantityType::Scalar),
+            Self::None | Self::Percent => QuantityType::Scalar,
             Self::Meter
             | Self::Centimeter
             | Self::Millimeter
             | Self::Micrometer
             | Self::Inch
             | Self::Foot
-            | Self::Yard => Type::Quantity(QuantityType::Length),
-            Self::Deg | Self::DegS | Self::Grad | Self::Turns | Self::Rad => {
-                Type::Quantity(QuantityType::Angle)
-            }
-            Self::Gram | Self::Kilogram | Self::Pound | Self::Ounce => {
-                Type::Quantity(QuantityType::Weight)
-            }
+            | Self::Yard => QuantityType::Length,
+            Self::Deg | Self::DegS | Self::Grad | Self::Turns | Self::Rad => QuantityType::Angle,
+            Self::Gram | Self::Kilogram | Self::Pound | Self::Ounce => QuantityType::Weight,
             Self::Meter2
             | Self::Centimeter2
             | Self::Millimeter2
             | Self::Micrometer2
             | Self::Inch2
             | Self::Foot2
-            | Self::Yard2 => Type::Quantity(QuantityType::Area),
+            | Self::Yard2 => QuantityType::Area,
             Self::Meter3
             | Self::Centimeter3
             | Self::Millimeter3
@@ -193,8 +195,8 @@ impl Unit {
             | Self::Liter
             | Self::Centiliter
             | Self::Milliliter
-            | Self::Microliter => Type::Quantity(QuantityType::Volume),
-            Self::GramPerMeter3 | Self::GramPerMillimeter3 => Type::Quantity(QuantityType::Density),
+            | Self::Microliter => QuantityType::Volume,
+            Self::GramPerMeter3 | Self::GramPerMillimeter3 => QuantityType::Density,
         }
     }
 

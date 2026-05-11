@@ -1,7 +1,10 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{Lower, LowerContext, LowerError, ir};
+use crate::{
+    lower::{Lower, LowerContext, LowerError, ir},
+    value::Quantity,
+};
 
 use microcad_lang_base::{Refer, SrcRef};
 use microcad_lang_parse::ast;
@@ -12,19 +15,21 @@ impl Lower for ir::Literal {
     fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match &node.literal {
             ast::LiteralKind::Bool(lit) => {
-                ir::Literal::Bool(Refer::new(lit.value, context.src_ref(&lit.span)))
+                ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
             }
             ast::LiteralKind::Integer(lit) => {
-                ir::Literal::Integer(Refer::new(lit.value, context.src_ref(&lit.span)))
+                ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
+            }
+            ast::LiteralKind::Float(lit) => {
+                ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
             }
             ast::LiteralKind::Quantity(lit) => {
-                ir::Literal::Number(ir::NumberLiteral::lower(lit, context)?)
+                let unit = ir::Unit::lower(&lit.unit, context)?;
+                ir::Literal(Refer::new(
+                    Quantity::new(unit.normalize(lit.value), unit.quantity_type()).into(),
+                    context.src_ref(&lit.span),
+                ))
             }
-            ast::LiteralKind::Float(lit) => ir::Literal::Number(ir::NumberLiteral(
-                lit.value,
-                ir::Unit::None,
-                context.src_ref(&lit.span),
-            )),
             ast::LiteralKind::String(_) => {
                 unreachable!("string literal are handled else were");
             }
