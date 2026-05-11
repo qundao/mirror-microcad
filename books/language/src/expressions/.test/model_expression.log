@@ -15,12 +15,12 @@
   Group (root) ->
     Operation subtract() ->
       Group ->
-        Workpiece(Sketch) std::geo2d::Rect(size=10mm) ->
-          - height = 10mm
-          - width = 10mm
+        Workpiece(Sketch) std::geo2d::Rect(size=1cm) ->
+          - height = 1cm
+          - width = 1cm
           - x = -5mm
           - y = -5mm
-          Primitive2D __builtin::geo2d::Rect(height=10mm, width=10mm, x=-5mm, y=-5mm) ->
+          Primitive2D __builtin::geo2d::Rect(height=1cm, width=1cm, x=-5mm, y=-5mm) ->
         Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3mm) ->
           - center = (x=0mm, y=0mm)
           - radius = 3mm

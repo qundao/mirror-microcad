@@ -73,11 +73,11 @@
           Operation union() ->
             Group ->
               web: Operation __builtin::ops::center() ->
-                Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
+                Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
                   - height = 14.13716694115407mm
-                  - scale = (x=1, y=1)
-                  - twist = 0rad
-                  Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
+                  - scale = (x=100%, y=100%)
+                  - twist = 0°
+                  Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
                     Group ->
                       Operation subtract() ->
                         Group ->
@@ -100,7 +100,7 @@
                                             Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
                                               - distance = -9.225mm
                                               Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
@@ -121,7 +121,7 @@
                                             Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
                                               - distance = -9.225mm
                                               Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
@@ -142,7 +142,7 @@
                                             Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
                                               - distance = -9.225mm
                                               Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
@@ -163,7 +163,7 @@
                                             Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
                                               - distance = -9.225mm
                                               Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
@@ -184,7 +184,7 @@
                                             Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
                                               - distance = -9.225mm
                                               Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=61.5mm) ->
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
@@ -194,37 +194,37 @@
                                           - radius = 15mm
                                           Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                             Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                          hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                          hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
                             - module = 2.5mm
                             - outer_radius = 11.25mm
                             - pitch_radius = 8.75mm
-                            - pressure_angle = 0rad
+                            - pressure_angle = 0°
                             - teeth = 7
                             - tooth_angle = 0.89759790102566rad
                             - tooth_distance = 7.85398163397448mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
               rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
                 - n = (x=-0, y=-0, z=-1)
                 - x = 0mm
                 - y = 0mm
                 - z = 0mm
                 Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.06981317007977rad) ->
+                  Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.06981317007977rad) ->
                     - height = 9.42477796076938mm
-                    - scale = (x=1, y=1)
+                    - scale = (x=100%, y=100%)
                     - twist = 0.06981317007977rad
-                    Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.06981317007977rad) ->
+                    Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.06981317007977rad) ->
                       Operation subtract() ->
                         Group ->
-                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=90) ->
+                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=90) ->
                             - module = 1.5mm
                             - outer_radius = 69mm
                             - pitch_radius = 67.5mm
-                            - pressure_angle = 0rad
+                            - pressure_angle = 0°
                             - teeth = 90
                             - tooth_angle = 0.06981317007977rad
                             - tooth_distance = 4.71238898038469mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=90) ->
+                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=90) ->
                           disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 61.5mm
@@ -249,11 +249,11 @@
                 Operation union() ->
                   Group ->
                     web: Operation __builtin::ops::center() ->
-                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
                         - height = 14.13716694115407mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        - scale = (x=100%, y=100%)
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
                           Group ->
                             Operation subtract() ->
                               Group ->
@@ -276,7 +276,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -297,7 +297,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -318,7 +318,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -339,7 +339,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -360,7 +360,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -370,37 +370,37 @@
                                                 - radius = 15mm
                                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                                   Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
                                   - module = 2.5mm
                                   - outer_radius = 11.25mm
                                   - pitch_radius = 8.75mm
-                                  - pressure_angle = 0rad
+                                  - pressure_angle = 0°
                                   - teeth = 7
                                   - tooth_angle = 0.89759790102566rad
                                   - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
                     rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
                       - n = (x=-0, y=-0, z=-1)
                       - x = 0mm
                       - y = 0mm
                       - z = 0mm
                       Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) ->
+                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) ->
                           - height = 9.42477796076938mm
-                          - scale = (x=1, y=1)
+                          - scale = (x=100%, y=100%)
                           - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) ->
+                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) ->
                             Operation subtract() ->
                               Group ->
-                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
+                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
                                   - module = 1.5mm
                                   - outer_radius = 46.5mm
                                   - pitch_radius = 45mm
-                                  - pressure_angle = 0rad
+                                  - pressure_angle = 0°
                                   - teeth = 60
                                   - tooth_angle = 0.10471975511966rad
                                   - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
                                 disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
                                   - center = (x=0mm, y=0mm)
                                   - radius = 39mm
@@ -424,11 +424,11 @@
                 Operation union() ->
                   Group ->
                     web: Operation __builtin::ops::center() ->
-                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
                         - height = 14.13716694115407mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        - scale = (x=100%, y=100%)
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
                           Group ->
                             Operation subtract() ->
                               Group ->
@@ -451,7 +451,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -472,7 +472,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -493,7 +493,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -514,7 +514,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -535,7 +535,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -545,37 +545,37 @@
                                                 - radius = 15mm
                                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                                   Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
                                   - module = 2.5mm
                                   - outer_radius = 11.25mm
                                   - pitch_radius = 8.75mm
-                                  - pressure_angle = 0rad
+                                  - pressure_angle = 0°
                                   - teeth = 7
                                   - tooth_angle = 0.89759790102566rad
                                   - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
                     rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
                       - n = (x=-0, y=-0, z=-1)
                       - x = 0mm
                       - y = 0mm
                       - z = 0mm
                       Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) ->
+                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) ->
                           - height = 9.42477796076938mm
-                          - scale = (x=1, y=1)
+                          - scale = (x=100%, y=100%)
                           - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) ->
+                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) ->
                             Operation subtract() ->
                               Group ->
-                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
+                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
                                   - module = 1.5mm
                                   - outer_radius = 46.5mm
                                   - pitch_radius = 45mm
-                                  - pressure_angle = 0rad
+                                  - pressure_angle = 0°
                                   - teeth = 60
                                   - tooth_angle = 0.10471975511966rad
                                   - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
                                 disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
                                   - center = (x=0mm, y=0mm)
                                   - radius = 39mm
@@ -599,11 +599,11 @@
                 Operation union() ->
                   Group ->
                     web: Operation __builtin::ops::center() ->
-                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=1, y=1), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
                         - height = 14.13716694115407mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        - scale = (x=100%, y=100%)
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
                           Group ->
                             Operation subtract() ->
                               Group ->
@@ -626,7 +626,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -647,7 +647,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -668,7 +668,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -689,7 +689,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -710,7 +710,7 @@
                                                   Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
                                                     - distance = -5.85mm
                                                     Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0rad, radius=39mm) ->
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
@@ -720,37 +720,37 @@
                                                 - radius = 15mm
                                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                                   Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
                                   - module = 2.5mm
                                   - outer_radius = 11.25mm
                                   - pitch_radius = 8.75mm
-                                  - pressure_angle = 0rad
+                                  - pressure_angle = 0°
                                   - teeth = 7
                                   - tooth_angle = 0.89759790102566rad
                                   - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0rad, teeth=7) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
                     rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
                       - n = (x=-0, y=-0, z=-1)
                       - x = 0mm
                       - y = 0mm
                       - z = 0mm
                       Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=1, y=1), twist=0.10471975511966rad) ->
+                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) ->
                           - height = 9.42477796076938mm
-                          - scale = (x=1, y=1)
+                          - scale = (x=100%, y=100%)
                           - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=1, scale_y=1, twist=0.10471975511966rad) ->
+                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) ->
                             Operation subtract() ->
                               Group ->
-                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
+                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
                                   - module = 1.5mm
                                   - outer_radius = 46.5mm
                                   - pitch_radius = 45mm
-                                  - pressure_angle = 0rad
+                                  - pressure_angle = 0°
                                   - teeth = 60
                                   - tooth_angle = 0.10471975511966rad
                                   - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0rad, teeth=60) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
                                 disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
                                   - center = (x=0mm, y=0mm)
                                   - radius = 39mm

@@ -14,9 +14,9 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(Part) std::geo3d::Sphere(radius=10mm) ->
-      - radius = 10mm
-      Primitive3D __builtin::geo3d::Sphere(radius=10mm) ->
+    Workpiece(Part) std::geo3d::Sphere(radius=1cm) ->
+      - radius = 1cm
+      Primitive3D __builtin::geo3d::Sphere(radius=1cm) ->
 
 Export of "../books/language/src/structure/.test/source_file_3D-out.stl" successful.
 -- Test Result --

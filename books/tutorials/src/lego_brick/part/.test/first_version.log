@@ -61,11 +61,11 @@
         Group ->
           Operation union() ->
             Group ->
-              base: Workpiece(Operation) std::ops::extrude(height=9.6mm, scale=(x=1, y=1), twist=0rad) ->
+              base: Workpiece(Operation) std::ops::extrude(height=9.6mm, scale=(x=100%, y=100%), twist=0°) ->
                 - height = 9.6mm
-                - scale = (x=1, y=1)
-                - twist = 0rad
-                Operation __builtin::ops::extrude(height=9.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                - scale = (x=100%, y=100%)
+                - twist = 0°
+                Operation __builtin::ops::extrude(height=9.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
                   Workpiece(Sketch) first_version::Base(height=31.8mm, width=15.8mm) ->
                     - height = 31.8mm
                     - width = 15.8mm
@@ -156,11 +156,11 @@
                 - y = 0mm
                 - z = 8.6mm
                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=8.6mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                  Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                     - height = 1mm
-                    - scale = (x=1, y=1)
-                    - twist = 0rad
-                    Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                    - scale = (x=100%, y=100%)
+                    - twist = 0°
+                    Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                       Workpiece(Sketch) std::geo2d::Rect(height=31.8mm, width=15.8mm) ->
                         - height = 31.8mm
                         - width = 15.8mm
@@ -172,11 +172,11 @@
             - y = 0mm
             - z = 9.6mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.6mm) ->
-              Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=1, y=1), twist=0rad) ->
+              Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) ->
                 - height = 1.7mm
-                - scale = (x=1, y=1)
-                - twist = 0rad
-                Operation __builtin::ops::extrude(height=1.7mm, scale_x=1, scale_y=1, twist=0rad) ->
+                - scale = (x=100%, y=100%)
+                - twist = 0°
+                Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) ->
                   Workpiece(Sketch) first_version::Knobs() ->
                     Operation __builtin::ops::center() ->
                       Workpiece(Sketch) std::geo2d::Circle(center=(x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm]), diameter=4.8mm) ->

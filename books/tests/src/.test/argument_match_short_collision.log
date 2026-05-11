@@ -20,7 +20,7 @@
  21 │ 
  22 │ S(w=10cm); // error: short form cannot be used here because of ambiguity
     · ────┬────
-    ·     ╰── Got: S( w = 100mm )
+    ·     ╰── Got: S( w = 10cm )
     ╰────
   help: Ambiguous initializations:
         	argument_match_short_collision::S(width: Length)

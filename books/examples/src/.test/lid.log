@@ -32,9 +32,9 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    l: Workpiece(Part) lid::Lid(height=20mm, inner_diameter=160mm, thickness=1.6mm) ->
+    l: Workpiece(Part) lid::Lid(height=20mm, inner_diameter=16cm, thickness=1.6mm) ->
       - height = 20mm
-      - inner_diameter = 160mm
+      - inner_diameter = 16cm
       - thickness = 1.6mm
       Operation subtract() ->
         Group ->
@@ -48,11 +48,11 @@
               - y = 0mm
               - z = -10mm
               Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
-                Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+                Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0°) ->
                   - height = 20mm
                   - scale = (x=1, y=1)
-                  - twist = 0rad
-                  Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+                  - twist = 0°
+                  Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0°) ->
                     Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=81.6mm) ->
                       - center = (x=0mm, y=0mm)
                       - radius = 81.6mm
@@ -63,7 +63,7 @@
             - y = 0mm
             - z = 1.6mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=1.6mm) ->
-              Workpiece(Part) std::geo3d::Cylinder(diameter=160mm, height=20mm) ->
+              Workpiece(Part) std::geo3d::Cylinder(diameter=16cm, height=20mm) ->
                 - height = 20mm
                 - offset = -10mm
                 - radius_bottom = 80mm
@@ -73,11 +73,11 @@
                   - y = 0mm
                   - z = -10mm
                   Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
-                    Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+                    Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0°) ->
                       - height = 20mm
                       - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+                      - twist = 0°
+                      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0°) ->
                         Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=80mm) ->
                           - center = (x=0mm, y=0mm)
                           - radius = 80mm

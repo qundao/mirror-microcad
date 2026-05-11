@@ -59,11 +59,11 @@
                       - y = 0mm
                       - z = -10mm
                       Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
-                        Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+                        Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=100%, y=100%), twist=0°) ->
                           - height = 20mm
-                          - scale = (x=1, y=1)
-                          - twist = 0rad
-                          Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+                          - scale = (x=100%, y=100%)
+                          - twist = 0°
+                          Operation __builtin::ops::extrude(height=20mm, scale_x=100%, scale_y=100%, twist=0°) ->
                             Workpiece(Sketch) std::geo2d::Rect(height=20mm, width=20mm) ->
                               - height = 20mm
                               - width = 20mm
@@ -77,7 +77,7 @@
                 Group ->
                   Operation union() ->
                     Group ->
-                      p: Workpiece(Operation) std::ops::rotate(x=0rad, y=0rad, z=-1.5707963267949rad) ->
+                      p: Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=-90°) ->
                         - matrix = Matrix3 [[6.123233995736766e-17, -1.0, 0.0], [1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, -1.0, 0.0], [1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
                           Multiplicity ->
@@ -93,11 +93,11 @@
                                     - y = 0mm
                                     - z = 9.5mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                                         - height = 1mm
-                                        - scale = (x=1, y=1)
-                                        - twist = 0rad
-                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                        - scale = (x=100%, y=100%)
+                                        - twist = 0°
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                           Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
                                             - distance = 0.5mm
                                             - thickness = 0.25mm
@@ -133,11 +133,11 @@
                                     - y = 0mm
                                     - z = 9.5mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                                         - height = 1mm
-                                        - scale = (x=1, y=1)
-                                        - twist = 0rad
-                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                        - scale = (x=100%, y=100%)
+                                        - twist = 0°
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                           Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
                                             - distance = 0.5mm
                                             - thickness = 0.25mm
@@ -161,7 +161,7 @@
                                                         - height = 20mm
                                                         - text = P
                                                         Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) ->
-                      t: Workpiece(Operation) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                      t: Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
                         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
                           Multiplicity ->
@@ -177,11 +177,11 @@
                                     - y = 0mm
                                     - z = 9.5mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                                         - height = 1mm
-                                        - scale = (x=1, y=1)
-                                        - twist = 0rad
-                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                        - scale = (x=100%, y=100%)
+                                        - twist = 0°
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                           Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
                                             - distance = 0.5mm
                                             - thickness = 0.25mm
@@ -217,11 +217,11 @@
                                     - y = 0mm
                                     - z = 9.5mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                                      Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                                         - height = 1mm
-                                        - scale = (x=1, y=1)
-                                        - twist = 0rad
-                                        Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                        - scale = (x=100%, y=100%)
+                                        - twist = 0°
+                                        Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                           Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
                                             - distance = 0.5mm
                                             - thickness = 0.25mm
@@ -258,11 +258,11 @@
                             - y = 0mm
                             - z = 9.5mm
                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                              Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                                 - height = 1mm
-                                - scale = (x=1, y=1)
-                                - twist = 0rad
-                                Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                - scale = (x=100%, y=100%)
+                                - twist = 0°
+                                Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                   Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
                                     - distance = 0.5mm
                                     - thickness = 0.25mm
@@ -298,11 +298,11 @@
                             - y = 0mm
                             - z = 9.5mm
                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.5mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                              Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                                 - height = 1mm
-                                - scale = (x=1, y=1)
-                                - twist = 0rad
-                                Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                - scale = (x=100%, y=100%)
+                                - twist = 0°
+                                Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                   Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) ->
                                     - distance = 0.5mm
                                     - thickness = 0.25mm

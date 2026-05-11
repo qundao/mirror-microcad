@@ -19,11 +19,11 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0rad) ->
+    Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=100%, y=100%), twist=0°) ->
       - height = 20mm
-      - scale = (x=1, y=1)
-      - twist = 0rad
-      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0rad) ->
+      - scale = (x=100%, y=100%)
+      - twist = 0°
+      Operation __builtin::ops::extrude(height=20mm, scale_x=100%, scale_y=100%, twist=0°) ->
         Operation subtract() ->
           Group ->
             Workpiece(Sketch) std::geo2d::Hexagon(radius=20mm) ->

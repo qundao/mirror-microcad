@@ -71,11 +71,11 @@
         Group ->
           Operation union() ->
             Group ->
-              base: Workpiece(Operation) std::ops::extrude(height=8.6mm, scale=(x=1, y=1), twist=0rad) ->
+              base: Workpiece(Operation) std::ops::extrude(height=8.6mm, scale=(x=100%, y=100%), twist=0°) ->
                 - height = 8.6mm
-                - scale = (x=1, y=1)
-                - twist = 0rad
-                Operation __builtin::ops::extrude(height=8.6mm, scale_x=1, scale_y=1, twist=0rad) ->
+                - scale = (x=100%, y=100%)
+                - twist = 0°
+                Operation __builtin::ops::extrude(height=8.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
                   Workpiece(Sketch) bricks_tutorial::Base(columns=4, height=15.8mm, rows=2, width=31.8mm) ->
                     - columns = 4
                     - height = 15.8mm
@@ -171,11 +171,11 @@
                 - y = 0mm
                 - z = 8.6mm
                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=8.6mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=1, y=1), twist=0rad) ->
+                  Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
                     - height = 1mm
-                    - scale = (x=1, y=1)
-                    - twist = 0rad
-                    Operation __builtin::ops::extrude(height=1mm, scale_x=1, scale_y=1, twist=0rad) ->
+                    - scale = (x=100%, y=100%)
+                    - twist = 0°
+                    Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
                       Workpiece(Sketch) std::geo2d::Rect(height=15.8mm, width=31.8mm) ->
                         - height = 15.8mm
                         - width = 31.8mm
@@ -187,11 +187,11 @@
             - y = 0mm
             - z = 9.6mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.6mm) ->
-              Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=1, y=1), twist=0rad) ->
+              Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) ->
                 - height = 1.7mm
-                - scale = (x=1, y=1)
-                - twist = 0rad
-                Operation __builtin::ops::extrude(height=1.7mm, scale_x=1, scale_y=1, twist=0rad) ->
+                - scale = (x=100%, y=100%)
+                - twist = 0°
+                Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) ->
                   Workpiece(Sketch) bricks_tutorial::Knobs(columns=4, rows=2) ->
                     - columns = 4
                     - rows = 2

@@ -50,11 +50,11 @@ Unexpected warning(s) which did occur in line(s): 12
   Group (root) ->
     Operation subtract() ->
       Group ->
-        r: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+        r: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) ->
           - height = 2mm
-          - scale = (x=1, y=1)
-          - twist = 0rad
-          Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+          - scale = (x=100%, y=100%)
+          - twist = 0°
+          Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) ->
             Workpiece(Sketch) std::geo2d::RoundedRect(radius=10mm, size=60mm) ->
               - height = 60mm
               - radius_bottom_left = 10mm
@@ -86,11 +86,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=9, y=9), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=9, y=9), twist=0°) ->
                         - height = 2mm
                         - scale = (x=9, y=9)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=9, scale_y=9, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=9, scale_y=9, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.125mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 0.125mm
@@ -108,11 +108,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=5, y=5), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=5, y=5), twist=0°) ->
                         - height = 2mm
                         - scale = (x=5, y=5)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=5, scale_y=5, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=5, scale_y=5, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.25mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 0.25mm
@@ -130,11 +130,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=3.66666666666667, y=3.66666666666667), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=3.66666666666667, y=3.66666666666667), twist=0°) ->
                         - height = 2mm
                         - scale = (x=3.66666666666667, y=3.66666666666667)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=3.66666666666667, scale_y=3.66666666666667, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=3.66666666666667, scale_y=3.66666666666667, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.375mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 0.375mm
@@ -152,11 +152,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=3, y=3), twist=0°) ->
                         - height = 2mm
                         - scale = (x=3, y=3)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=3, scale_y=3, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.5mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 0.5mm
@@ -174,11 +174,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2.6, y=2.6), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2.6, y=2.6), twist=0°) ->
                         - height = 2mm
                         - scale = (x=2.6, y=2.6)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.6, scale_y=2.6, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.6, scale_y=2.6, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.625mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 0.625mm
@@ -196,11 +196,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2.33333333333333, y=2.33333333333333), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2.33333333333333, y=2.33333333333333), twist=0°) ->
                         - height = 2mm
                         - scale = (x=2.33333333333333, y=2.33333333333333)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.33333333333333, scale_y=2.33333333333333, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.33333333333333, scale_y=2.33333333333333, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.75mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 0.75mm
@@ -218,11 +218,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2.14285714285714, y=2.14285714285714), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2.14285714285714, y=2.14285714285714), twist=0°) ->
                         - height = 2mm
                         - scale = (x=2.14285714285714, y=2.14285714285714)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.14285714285714, scale_y=2.14285714285714, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2.14285714285714, scale_y=2.14285714285714, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=0.875mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 0.875mm
@@ -240,11 +240,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2, y=2), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=2, y=2), twist=0°) ->
                         - height = 2mm
                         - scale = (x=2, y=2)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=2, scale_y=2, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=2, scale_y=2, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 1mm
@@ -262,11 +262,11 @@ Unexpected warning(s) which did occur in line(s): 12
                     - y = 0mm
                     - z = 0mm
                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=1.88888888888889, y=1.88888888888889), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=1.88888888888889, y=1.88888888888889), twist=0°) ->
                         - height = 2mm
                         - scale = (x=1.88888888888889, y=1.88888888888889)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=1.88888888888889, scale_y=1.88888888888889, twist=0rad) ->
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=1.88888888888889, scale_y=1.88888888888889, twist=0°) ->
                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.125mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 1.125mm

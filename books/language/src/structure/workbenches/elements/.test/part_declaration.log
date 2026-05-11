@@ -64,15 +64,15 @@
   Group (root) ->
     Operation subtract() ->
       Group ->
-        r: Workpiece(Sketch) part_declaration::Wheel(radius=20mm) ->
+        r: Workpiece(Sketch) part_declaration::Wheel(radius=2cm) ->
           - diameter = 40mm
-          - radius = 20mm
-          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
+          - radius = 2cm
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2cm) ->
             - center = (x=0mm, y=0mm)
-            - radius = 20mm
+            - radius = 2cm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-        d: Workpiece(Sketch) part_declaration::Wheel(diameter=20mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=2cm) ->
+        d: Workpiece(Sketch) part_declaration::Wheel(diameter=2cm) ->
           - diameter = 20mm
           - radius = 10mm
           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->

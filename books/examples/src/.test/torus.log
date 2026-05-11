@@ -20,9 +20,9 @@
       Workpiece(Part) std::geo3d::Torus(major_radius=10mm, minor_radius=3mm) ->
         - major_radius = 10mm
         - minor_radius = 3mm
-        Workpiece(Operation) std::ops::revolve(angle=6.28318530717959rad) ->
-          - angle = 6.28318530717959rad
-          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+        Workpiece(Operation) std::ops::revolve(angle=360°) ->
+          - angle = 360°
+          Operation __builtin::ops::revolve(angle=360°) ->
             Workpiece(Operation) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
               - x = 10mm
               - y = 0mm
@@ -36,9 +36,9 @@
       Workpiece(Part) std::geo3d::Torus(major_radius=20mm, minor_radius=3mm) ->
         - major_radius = 20mm
         - minor_radius = 3mm
-        Workpiece(Operation) std::ops::revolve(angle=6.28318530717959rad) ->
-          - angle = 6.28318530717959rad
-          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+        Workpiece(Operation) std::ops::revolve(angle=360°) ->
+          - angle = 360°
+          Operation __builtin::ops::revolve(angle=360°) ->
             Workpiece(Operation) std::ops::translate(x=20mm, y=0mm, z=0mm) ->
               - x = 20mm
               - y = 0mm
@@ -52,9 +52,9 @@
       Workpiece(Part) std::geo3d::Torus(major_radius=30mm, minor_radius=3mm) ->
         - major_radius = 30mm
         - minor_radius = 3mm
-        Workpiece(Operation) std::ops::revolve(angle=6.28318530717959rad) ->
-          - angle = 6.28318530717959rad
-          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+        Workpiece(Operation) std::ops::revolve(angle=360°) ->
+          - angle = 360°
+          Operation __builtin::ops::revolve(angle=360°) ->
             Workpiece(Operation) std::ops::translate(x=30mm, y=0mm, z=0mm) ->
               - x = 30mm
               - y = 0mm
@@ -68,9 +68,9 @@
       Workpiece(Part) std::geo3d::Torus(major_radius=40mm, minor_radius=3mm) ->
         - major_radius = 40mm
         - minor_radius = 3mm
-        Workpiece(Operation) std::ops::revolve(angle=6.28318530717959rad) ->
-          - angle = 6.28318530717959rad
-          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+        Workpiece(Operation) std::ops::revolve(angle=360°) ->
+          - angle = 360°
+          Operation __builtin::ops::revolve(angle=360°) ->
             Workpiece(Operation) std::ops::translate(x=40mm, y=0mm, z=0mm) ->
               - x = 40mm
               - y = 0mm
@@ -84,9 +84,9 @@
       Workpiece(Part) std::geo3d::Torus(major_radius=50mm, minor_radius=3mm) ->
         - major_radius = 50mm
         - minor_radius = 3mm
-        Workpiece(Operation) std::ops::revolve(angle=6.28318530717959rad) ->
-          - angle = 6.28318530717959rad
-          Operation __builtin::ops::revolve(angle=6.28318530717959rad) ->
+        Workpiece(Operation) std::ops::revolve(angle=360°) ->
+          - angle = 360°
+          Operation __builtin::ops::revolve(angle=360°) ->
             Workpiece(Operation) std::ops::translate(x=50mm, y=0mm, z=0mm) ->
               - x = 50mm
               - y = 0mm

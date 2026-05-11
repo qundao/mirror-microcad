@@ -88,11 +88,11 @@
                 Group ->
                   bearing: Operation subtract() ->
                     Group ->
-                      Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=1, y=1), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=100%, y=100%), twist=0°) ->
                         - height = 8mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=8mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        - scale = (x=100%, y=100%)
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=8mm, scale_x=100%, scale_y=100%, twist=0°) ->
                           Operation subtract() ->
                             Group ->
                               Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
@@ -110,7 +110,7 @@
                         - y = 0mm
                         - z = 5mm
                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=5mm) ->
-                          Workpiece(Operation) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                          Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
                             - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
                             Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
                               Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-10mm) ->
@@ -118,21 +118,21 @@
                                 - y = 0mm
                                 - z = -10mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
-                                  Workpiece(Operation) std::ops::extrude(height=10mm, scale=(x=1, y=1), twist=0rad) ->
+                                  Workpiece(Operation) std::ops::extrude(height=10mm, scale=(x=100%, y=100%), twist=0°) ->
                                     - height = 10mm
-                                    - scale = (x=1, y=1)
-                                    - twist = 0rad
-                                    Operation __builtin::ops::extrude(height=10mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                    - scale = (x=100%, y=100%)
+                                    - twist = 0°
+                                    Operation __builtin::ops::extrude(height=10mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                       Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
                                         - center = (x=0mm, y=0mm)
                                         - radius = 1mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                           Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                  Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) ->
                     - height = 2mm
-                    - scale = (x=1, y=1)
-                    - twist = 0rad
-                    Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                    - scale = (x=100%, y=100%)
+                    - twist = 0°
+                    Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) ->
                       Operation subtract() ->
                         Group ->
                           Operation subtract() ->
@@ -213,28 +213,28 @@
                             - radius = 10mm
                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                               Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
-              Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+              Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) ->
                 - height = 4mm
-                - scale = (x=1, y=1)
-                - twist = 0rad
-                Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
+                - scale = (x=100%, y=100%)
+                - twist = 0°
+                Operation __builtin::ops::extrude(height=4mm, scale_x=100%, scale_y=100%, twist=0°) ->
                   Operation subtract() ->
                     Group ->
-                      gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=80) ->
+                      gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=80) ->
                         - module = 1mm
                         - outer_radius = 41mm
                         - pitch_radius = 40mm
-                        - pressure_angle = 0rad
+                        - pressure_angle = 0°
                         - teeth = 80
                         - tooth_angle = 0.07853981633974rad
                         - tooth_distance = 3.14159265358979mm
-                        Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=80) ->
+                        Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=80) ->
                       inner: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=37mm) ->
                         - center = (x=0mm, y=0mm)
                         - radius = 37mm
                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                           Primitive2D __builtin::geo2d::Circle(radius=37mm) ->
-    Workpiece(Operation) std::ops::translate(angle=2.35619449019234rad, distance=61mm) ->
+    Workpiece(Operation) std::ops::translate(angle=135°, distance=61mm) ->
       - x = -43.13351365237939mm
       - y = 43.1335136523794mm
       - z = 0mm
@@ -254,11 +254,11 @@
                     Group ->
                       bearing: Operation subtract() ->
                         Group ->
-                          Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=1, y=1), twist=0rad) ->
+                          Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=100%, y=100%), twist=0°) ->
                             - height = 8mm
-                            - scale = (x=1, y=1)
-                            - twist = 0rad
-                            Operation __builtin::ops::extrude(height=8mm, scale_x=1, scale_y=1, twist=0rad) ->
+                            - scale = (x=100%, y=100%)
+                            - twist = 0°
+                            Operation __builtin::ops::extrude(height=8mm, scale_x=100%, scale_y=100%, twist=0°) ->
                               Operation subtract() ->
                                 Group ->
                                   Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) ->
@@ -276,7 +276,7 @@
                             - y = 0mm
                             - z = 5mm
                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=5mm) ->
-                              Workpiece(Operation) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                              Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
                                 - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
                                 Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
                                   Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-5mm) ->
@@ -284,21 +284,21 @@
                                     - y = 0mm
                                     - z = -5mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=-5mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=5mm, scale=(x=1, y=1), twist=0rad) ->
+                                      Workpiece(Operation) std::ops::extrude(height=5mm, scale=(x=100%, y=100%), twist=0°) ->
                                         - height = 5mm
-                                        - scale = (x=1, y=1)
-                                        - twist = 0rad
-                                        Operation __builtin::ops::extrude(height=5mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                        - scale = (x=100%, y=100%)
+                                        - twist = 0°
+                                        Operation __builtin::ops::extrude(height=5mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
                                             - center = (x=0mm, y=0mm)
                                             - radius = 1mm
                                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                               Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) ->
                         - height = 2mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        - scale = (x=100%, y=100%)
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) ->
                           Operation subtract() ->
                             Group ->
                               Operation subtract() ->
@@ -379,28 +379,28 @@
                                 - radius = 5mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                   Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+                  Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) ->
                     - height = 4mm
-                    - scale = (x=1, y=1)
-                    - twist = 0rad
-                    Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
+                    - scale = (x=100%, y=100%)
+                    - twist = 0°
+                    Operation __builtin::ops::extrude(height=4mm, scale_x=100%, scale_y=100%, twist=0°) ->
                       Operation subtract() ->
                         Group ->
-                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=40) ->
+                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=40) ->
                             - module = 1mm
                             - outer_radius = 21mm
                             - pitch_radius = 20mm
-                            - pressure_angle = 0rad
+                            - pressure_angle = 0°
                             - teeth = 40
                             - tooth_angle = 0.15707963267949rad
                             - tooth_distance = 3.14159265358979mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=40) ->
+                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=40) ->
                           inner: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=17mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 17mm
                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                               Primitive2D __builtin::geo2d::Circle(radius=17mm) ->
-    Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=51mm) ->
+    Workpiece(Operation) std::ops::translate(angle=45°, distance=51mm) ->
       - x = 36.06244584051393mm
       - y = 36.06244584051393mm
       - z = 0mm
@@ -420,11 +420,11 @@
                     Group ->
                       bearing: Operation subtract() ->
                         Group ->
-                          Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=1, y=1), twist=0rad) ->
+                          Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=100%, y=100%), twist=0°) ->
                             - height = 8mm
-                            - scale = (x=1, y=1)
-                            - twist = 0rad
-                            Operation __builtin::ops::extrude(height=8mm, scale_x=1, scale_y=1, twist=0rad) ->
+                            - scale = (x=100%, y=100%)
+                            - twist = 0°
+                            Operation __builtin::ops::extrude(height=8mm, scale_x=100%, scale_y=100%, twist=0°) ->
                               Operation subtract() ->
                                 Group ->
                                   Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.5mm) ->
@@ -442,7 +442,7 @@
                             - y = 0mm
                             - z = 5mm
                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=5mm) ->
-                              Workpiece(Operation) std::ops::rotate(x=1.5707963267949rad, y=0rad, z=0rad) ->
+                              Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
                                 - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
                                 Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
                                   Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-2.5mm) ->
@@ -450,21 +450,21 @@
                                     - y = 0mm
                                     - z = -2.5mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=-2.5mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=2.5mm, scale=(x=1, y=1), twist=0rad) ->
+                                      Workpiece(Operation) std::ops::extrude(height=2.5mm, scale=(x=100%, y=100%), twist=0°) ->
                                         - height = 2.5mm
-                                        - scale = (x=1, y=1)
-                                        - twist = 0rad
-                                        Operation __builtin::ops::extrude(height=2.5mm, scale_x=1, scale_y=1, twist=0rad) ->
+                                        - scale = (x=100%, y=100%)
+                                        - twist = 0°
+                                        Operation __builtin::ops::extrude(height=2.5mm, scale_x=100%, scale_y=100%, twist=0°) ->
                                           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1mm) ->
                                             - center = (x=0mm, y=0mm)
                                             - radius = 1mm
                                             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                               Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) ->
                         - height = 2mm
-                        - scale = (x=1, y=1)
-                        - twist = 0rad
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+                        - scale = (x=100%, y=100%)
+                        - twist = 0°
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) ->
                           Operation subtract() ->
                             Group ->
                               Operation subtract() ->
@@ -545,22 +545,22 @@
                                 - radius = 2.5mm
                                 Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
                                   Primitive2D __builtin::geo2d::Circle(radius=2.5mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+                  Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) ->
                     - height = 4mm
-                    - scale = (x=1, y=1)
-                    - twist = 0rad
-                    Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
+                    - scale = (x=100%, y=100%)
+                    - twist = 0°
+                    Operation __builtin::ops::extrude(height=4mm, scale_x=100%, scale_y=100%, twist=0°) ->
                       Operation subtract() ->
                         Group ->
-                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=20) ->
+                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=20) ->
                             - module = 1mm
                             - outer_radius = 11mm
                             - pitch_radius = 10mm
-                            - pressure_angle = 0rad
+                            - pressure_angle = 0°
                             - teeth = 20
                             - tooth_angle = 0.31415926535898rad
                             - tooth_distance = 3.14159265358979mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=20) ->
+                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=20) ->
                           inner: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=7mm) ->
                             - center = (x=0mm, y=0mm)
                             - radius = 7mm

@@ -27,7 +27,7 @@
   30:   std::print("inner: {t.inner}");
 
 -- Output --
-outer: 10mm
+outer: 1cm
 inner: 5mm
 
 -- No Errors --

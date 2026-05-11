@@ -78,11 +78,11 @@
               Group ->
                 Operation subtract() ->
                   Group ->
-                    Workpiece(Operation) std::ops::extrude(height=15mm, scale=(x=1, y=1), twist=0rad) ->
+                    Workpiece(Operation) std::ops::extrude(height=15mm, scale=(x=100%, y=100%), twist=0°) ->
                       - height = 15mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=15mm, scale_x=1, scale_y=1, twist=0rad) ->
+                      - scale = (x=100%, y=100%)
+                      - twist = 0°
+                      Operation __builtin::ops::extrude(height=15mm, scale_x=100%, scale_y=100%, twist=0°) ->
                         Workpiece(Sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) ->
                           - height = 23.5mm
                           - radius = 3mm
@@ -97,11 +97,11 @@
                             - x = -65mm
                             - y = -11.75mm
                             Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) ->
-                    Workpiece(Operation) std::ops::extrude(height=25mm, scale=(x=1, y=1), twist=0rad) ->
+                    Workpiece(Operation) std::ops::extrude(height=25mm, scale=(x=100%, y=100%), twist=0°) ->
                       - height = 25mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=25mm, scale_x=1, scale_y=1, twist=0rad) ->
+                      - scale = (x=100%, y=100%)
+                      - twist = 0°
+                      Operation __builtin::ops::extrude(height=25mm, scale_x=100%, scale_y=100%, twist=0°) ->
                         screws: Workpiece(Sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) ->
                           - center = (x=[-47mm, 47mm], y=0mm)
                           - radius = 3mm
@@ -121,11 +121,11 @@
                       Workpiece(Operation) std::ops::orient(v=(x=0, y=1, z=0)) ->
                         - v = (x=0, y=1, z=0)
                         Transform __builtin::ops::orient(x=0, y=1, z=0) ->
-                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) ->
+                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=100%, y=100%), twist=0°) ->
                             - height = 40mm
-                            - scale = (x=1, y=1)
-                            - twist = 0rad
-                            Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) ->
+                            - scale = (x=100%, y=100%)
+                            - twist = 0°
+                            Operation __builtin::ops::extrude(height=40mm, scale_x=100%, scale_y=100%, twist=0°) ->
                               Group ->
                                 Multiplicity ->
                                   Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
@@ -173,11 +173,11 @@
               Group ->
                 Operation subtract() ->
                   Group ->
-                    Workpiece(Operation) std::ops::extrude(height=55mm, scale=(x=1, y=1), twist=0rad) ->
+                    Workpiece(Operation) std::ops::extrude(height=55mm, scale=(x=100%, y=100%), twist=0°) ->
                       - height = 55mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=55mm, scale_x=1, scale_y=1, twist=0rad) ->
+                      - scale = (x=100%, y=100%)
+                      - twist = 0°
+                      Operation __builtin::ops::extrude(height=55mm, scale_x=100%, scale_y=100%, twist=0°) ->
                         Workpiece(Sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) ->
                           - height = 23.5mm
                           - radius = 3mm
@@ -192,11 +192,11 @@
                             - x = -65mm
                             - y = -11.75mm
                             Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) ->
-                    Workpiece(Operation) std::ops::extrude(height=65mm, scale=(x=1, y=1), twist=0rad) ->
+                    Workpiece(Operation) std::ops::extrude(height=65mm, scale=(x=100%, y=100%), twist=0°) ->
                       - height = 65mm
-                      - scale = (x=1, y=1)
-                      - twist = 0rad
-                      Operation __builtin::ops::extrude(height=65mm, scale_x=1, scale_y=1, twist=0rad) ->
+                      - scale = (x=100%, y=100%)
+                      - twist = 0°
+                      Operation __builtin::ops::extrude(height=65mm, scale_x=100%, scale_y=100%, twist=0°) ->
                         screws: Workpiece(Sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) ->
                           - center = (x=[-47mm, 47mm], y=0mm)
                           - radius = 3mm
@@ -216,11 +216,11 @@
                       Workpiece(Operation) std::ops::orient(v=(x=0, y=1, z=0)) ->
                         - v = (x=0, y=1, z=0)
                         Transform __builtin::ops::orient(x=0, y=1, z=0) ->
-                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=1, y=1), twist=0rad) ->
+                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=100%, y=100%), twist=0°) ->
                             - height = 40mm
-                            - scale = (x=1, y=1)
-                            - twist = 0rad
-                            Operation __builtin::ops::extrude(height=40mm, scale_x=1, scale_y=1, twist=0rad) ->
+                            - scale = (x=100%, y=100%)
+                            - twist = 0°
+                            Operation __builtin::ops::extrude(height=40mm, scale_x=100%, scale_y=100%, twist=0°) ->
                               Group ->
                                 Multiplicity ->
                                   Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->

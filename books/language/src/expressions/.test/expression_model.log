@@ -17,7 +17,7 @@
  70 │ // Using logical operators between models too
  71 │ std::debug::assert_eq([std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true]);
     ·                        ────────────┬───────────
-    ·                                    ╰── Got: Circle( 10mm )
+    ·                                    ╰── Got: Circle( 1cm )
     ╰────
   help: Ambiguous initializations:
         	std::geo2d::Circle(radius: Length, center = (x = 0mm, y = 0mm))

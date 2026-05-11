@@ -17,16 +17,16 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(Operation) std::ops::translate(x=10mm, y=0mm, z=0mm) ->
-      - x = 10mm
+    Workpiece(Operation) std::ops::translate(x=1cm, y=0mm, z=0mm) ->
+      - x = 1cm
       - y = 0mm
       - z = 0mm
-      Transform __builtin::ops::translate(x=10mm, y=0mm, z=0mm) ->
-        s: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=20mm) ->
+      Transform __builtin::ops::translate(x=1cm, y=0mm, z=0mm) ->
+        s: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2cm) ->
           - center = (x=0mm, y=0mm)
-          - radius = 20mm
+          - radius = 2cm
           Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-            Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
+            Primitive2D __builtin::geo2d::Circle(radius=2cm) ->
 
 Export of "../books/language/src/flow/calls/.test/call_model-out.svg" successful.
 -- Test Result --

@@ -25,7 +25,7 @@ Unexpected warning(s) which did occur in line(s): 38
 
 -- Model --
   Group (root) ->
-    Workpiece(Sketch) init_use::K(l=10mm) ->
+    Workpiece(Sketch) init_use::K(l=1cm) ->
 
 Export error: Render error: Nothing to render
 -- Test Result --

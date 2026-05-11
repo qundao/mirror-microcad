@@ -31,15 +31,15 @@ Unexpected warning(s) which did occur in line(s): 12
 
 -- Model --
   Group (root) ->
-    Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=100) ->
+    Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=100) ->
       - module = 1mm
       - outer_radius = 51mm
       - pitch_radius = 50mm
-      - pressure_angle = 0rad
+      - pressure_angle = 0°
       - teeth = 100
       - tooth_angle = 0.0628318530718rad
       - tooth_distance = 3.14159265358979mm
-      Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0rad, teeth=100) ->
+      Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1mm, pressure_angle=0°, teeth=100) ->
 
 Export of "../books/examples/src/.test/gears_gear_2d-out.svg" successful.
 -- Test Result --

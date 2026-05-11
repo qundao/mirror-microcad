@@ -39,11 +39,11 @@ Unexpected warning(s) which did occur in line(s): 48
 
 -- Model --
   Group (root) ->
-    Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=1, y=1), twist=0rad) ->
+    Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) ->
       - height = 2mm
-      - scale = (x=1, y=1)
-      - twist = 0rad
-      Operation __builtin::ops::extrude(height=2mm, scale_x=1, scale_y=1, twist=0rad) ->
+      - scale = (x=100%, y=100%)
+      - twist = 0°
+      Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) ->
         Workpiece(Sketch) text_text_plate::TextPlate(height=10mm, text=Hello µcad) ->
           - height = 10mm
           - text = Hello µcad

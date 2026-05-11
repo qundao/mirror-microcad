@@ -25,7 +25,7 @@
   59:   std::print("inner: {t.inner}"); // error
 
 -- Output --
-outer: 10mm
+outer: 1cm
 inner: <NO VALUE>
 
 -- Errors --

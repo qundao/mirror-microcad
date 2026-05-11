@@ -23,15 +23,15 @@
 -- No Errors --
 -- Model --
   Group (root) ->
-    Workpiece(Sketch) workbench_example::PunchedDisk(radius=10mm) ->
-      - radius = 10mm
+    Workpiece(Sketch) workbench_example::PunchedDisk(radius=1cm) ->
+      - radius = 1cm
       Operation subtract() ->
         Group ->
-          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1cm) ->
             - center = (x=0mm, y=0mm)
-            - radius = 10mm
+            - radius = 1cm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+              Primitive2D __builtin::geo2d::Circle(radius=1cm) ->
           Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) ->
             - center = (x=0mm, y=0mm)
             - radius = 5mm
