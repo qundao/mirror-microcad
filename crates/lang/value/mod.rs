@@ -142,6 +142,7 @@ impl PartialOrd for Value {
                 Value::Quantity(Quantity {
                     value,
                     quantity_type: QuantityType::Scalar,
+                    ..
                 }),
                 Value::Integer(rhs),
             ) => value.partial_cmp(&(*rhs as Scalar)),
@@ -437,6 +438,7 @@ impl TryFrom<&Value> for Scalar {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Scalar,
+                ..
             }) => Ok(*value),
             _ => Err(ValueError::CannotConvert(
                 value.to_string(),
@@ -455,6 +457,7 @@ impl TryFrom<Value> for Scalar {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Scalar,
+                ..
             }) => Ok(value),
             _ => Err(ValueError::CannotConvert(
                 value.to_string(),
@@ -472,6 +475,7 @@ impl TryFrom<&Value> for Angle {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Angle,
+                ..
             }) => Ok(cgmath::Rad(*value)),
             _ => Err(ValueError::CannotConvert(value.to_string(), "Angle".into())),
         }
@@ -486,6 +490,7 @@ impl TryFrom<&Value> for Length {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Length,
+                ..
             }) => Ok(Length(*value)),
             _ => Err(ValueError::CannotConvert(
                 value.to_string(),

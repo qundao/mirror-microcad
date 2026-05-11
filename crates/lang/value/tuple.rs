@@ -401,18 +401,22 @@ impl TryFrom<&Tuple> for Color {
                 Some(Value::Quantity(Quantity {
                     value: r,
                     quantity_type: QuantityType::Scalar,
+                    ..
                 })),
                 Some(Value::Quantity(Quantity {
                     value: g,
                     quantity_type: QuantityType::Scalar,
+                    ..
                 })),
                 Some(Value::Quantity(Quantity {
                     value: b,
                     quantity_type: QuantityType::Scalar,
+                    ..
                 })),
                 Value::Quantity(Quantity {
                     value: a,
                     quantity_type: QuantityType::Scalar,
+                    ..
                 }),
             ) => Ok(Color::new(*r as f32, *g as f32, *b as f32, a as f32)),
             _ => Err(ValueError::CannotConvertToColor(tuple.to_string())),
@@ -434,10 +438,12 @@ impl TryFrom<&Tuple> for Size2 {
                 Some(Value::Quantity(Quantity {
                     value: width,
                     quantity_type: QuantityType::Length,
+                    ..
                 })),
                 Some(Value::Quantity(Quantity {
                     value: height,
                     quantity_type: QuantityType::Length,
+                    ..
                 })),
             ) => Ok(Size2 {
                 width: *width,

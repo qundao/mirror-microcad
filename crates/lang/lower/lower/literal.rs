@@ -26,7 +26,12 @@ impl Lower for ir::Literal {
             ast::LiteralKind::Quantity(lit) => {
                 let unit = ir::Unit::lower(&lit.unit, context)?;
                 ir::Literal(Refer::new(
-                    Quantity::new(unit.normalize(lit.value), unit.quantity_type()).into(),
+                    Quantity {
+                        value: unit.normalize(lit.value),
+                        quantity_type: unit.quantity_type(),
+                        unit,
+                    }
+                    .into(),
                     context.src_ref(&lit.span),
                 ))
             }

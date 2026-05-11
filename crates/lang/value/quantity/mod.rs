@@ -6,7 +6,7 @@
 pub mod error;
 pub mod ops;
 
-use crate::ty::*;
+use crate::{lower::ir, ty::*};
 use microcad_core::*;
 
 pub use error::*;
@@ -14,12 +14,27 @@ pub use error::*;
 const OUTPUT_PRECISION: i32 = 14;
 
 /// A numeric value
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug)]
 pub struct Quantity {
     /// The numeric value of the quantity.
     pub value: Scalar,
     /// The quantity type with a base unit.
     pub quantity_type: QuantityType,
+    /// The original unit of the quantity,
+    pub unit: ir::Unit,
+}
+
+impl PartialEq for Quantity {
+    fn eq(&self, other: &Self) -> bool {
+        // 1. Ensure the types match first
+        if self.quantity_type != other.quantity_type {
+            return false;
+        }
+
+        // 2. Compare values within the allowed precision
+        let epsilon = 10.0_f64.powi(-OUTPUT_PRECISION);
+        (self.value - other.value).abs() < epsilon
+    }
 }
 
 impl Quantity {
@@ -27,7 +42,19 @@ impl Quantity {
     pub fn new(value: Scalar, quantity_type: QuantityType) -> Self {
         Self {
             value,
+            unit: quantity_type.base_unit(),
             quantity_type,
+        }
+    }
+    /// Transforms the internal value using a closure.
+    pub fn map<F>(self, f: F) -> Self
+    where
+        F: FnOnce(Scalar) -> Scalar,
+    {
+        Self {
+            value: f(self.value),
+            quantity_type: self.quantity_type,
+            unit: self.unit,
         }
     }
 
@@ -111,8 +138,8 @@ impl std::fmt::Display for Quantity {
         write!(
             f,
             "{}{}",
-            round::round(self.value, OUTPUT_PRECISION),
-            self.quantity_type.base_unit()
+            round::round(self.unit.denormalize(self.value), OUTPUT_PRECISION),
+            self.unit
         )
     }
 }
