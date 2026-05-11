@@ -127,7 +127,7 @@ impl Processor {
 
     /// Update (re-evaluate) a document.
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
-        self.context = match ir::SourceFile::load(
+        self.context = match ir::Source::load(
             url.to_file_path()
                 .map_err(|_| miette::miette!("Error converting {url} to file path."))?,
         ) {
@@ -169,7 +169,7 @@ impl Processor {
         let path = url
             .to_file_path()
             .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
-        self.context = match ir::SourceFile::load_from_str(None, path, doc) {
+        self.context = match ir::Source::load_from_str(None, path, doc) {
             Ok(source_file) => {
                 self.buffers
                     .insert(url.clone(), source_file.source.to_string());

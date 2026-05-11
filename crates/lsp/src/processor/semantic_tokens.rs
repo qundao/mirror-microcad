@@ -14,7 +14,7 @@ use tower_lsp::lsp_types::{SemanticToken, SemanticTokenModifier, SemanticTokenTy
 use crate::processor::src_ref_to_lsp_range;
 
 pub(crate) struct TokenContext {
-    source_file: Rc<ir::SourceFile>,
+    source_file: Rc<ir::Source>,
     last_line: u32,
     last_col: u32,
 }
@@ -24,7 +24,7 @@ impl TokenContext {
         let src_path = url
             .to_file_path()
             .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
-        let source_file = ir::SourceFile::load(src_path)
+        let source_file = ir::Source::load(src_path)
             .map_err(|e| miette::miette!("Error loading source file: {e}"))?;
         Ok(Self {
             source_file,
