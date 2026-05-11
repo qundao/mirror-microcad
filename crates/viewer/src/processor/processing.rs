@@ -4,7 +4,7 @@
 use crossbeam::channel::{Receiver, Sender};
 use microcad_core::RenderResolution;
 use microcad_lang::{
-    lower::ir::SourceFile,
+    lower::ir::Source,
     model::Model,
     render::{GeometryOutput, RenderContext, RenderWithContext},
 };
@@ -57,7 +57,7 @@ impl Processor {
             ProcessorRequest::ParseFile(path) => {
                 self.state_change(ProcessingState::Busy(0.0));
 
-                match SourceFile::load(&path) {
+                match Source::load(&path) {
                     Ok(source_file) => {
                         self.context.source_file = Some(source_file);
                         self.eval()?;
@@ -74,7 +74,7 @@ impl Processor {
             ProcessorRequest::ParseSource { path, name, source } => {
                 self.state_change(ProcessingState::Busy(0.0));
 
-                match SourceFile::load_from_str(
+                match Source::load_from_str(
                     name.as_deref(),
                     path.unwrap_or(std::path::PathBuf::from("<virtual>")),
                     &source,

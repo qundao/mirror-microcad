@@ -3,7 +3,7 @@
 
 //! The context of geometry processor.
 
-use microcad_lang::{lower::ir::SourceFile, model::Model, render::RenderCache};
+use microcad_lang::{lower::ir::Source, model::Model, render::RenderCache};
 use microcad_lang_base::RcMut;
 
 use crate::{config, processor::registry::InstanceRegistry};
@@ -39,7 +39,7 @@ pub struct ProcessorContext {
     pub(super) line_number: Option<u32>,
 
     /// The current source file being processed (if any).
-    pub(super) source_file: Option<std::rc::Rc<SourceFile>>,
+    pub(super) source_file: Option<std::rc::Rc<Source>>,
 
     /// Model resulted from an evaluation.
     pub(super) model: Option<Model>,
