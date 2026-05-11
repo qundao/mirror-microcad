@@ -7,7 +7,7 @@
 //!
 //! ```no_run
 //! use microcad_lang::{lower::ir, resolve::*};
-//! let source_file = ir::SourceFile::load("my.µcad").expect("parsing success");
+//! let source_file = ir::Source::load("my.µcad").expect("parsing success");
 //! let mut context = ResolveContext::create(
 //!     source_file,
 //!     &["./std/lib"],
