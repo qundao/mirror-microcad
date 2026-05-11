@@ -3,7 +3,7 @@
 
 use microcad_core::hash::HashSet;
 use microcad_lang::resolve::Sources;
-use microcad_lang::{eval::EvalContext, lower::ir::SourceFile, model::Model};
+use microcad_lang::{eval::EvalContext, lower::ir::Source, model::Model};
 use microcad_lang_base::{
     Capture, Diag, DiagRenderOptions, Diagnostic, FormatTree, Refer, SrcReferrer,
 };
@@ -48,7 +48,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
     )?;
 
     // load and handle µcad source file
-    let (source, errors) = SourceFile::load_from_str_with_recovery(
+    let (source, errors) = Source::load_from_str_with_recovery(
         Some(env.name()),
         env.source_path(),
         env.code(),
@@ -202,7 +202,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 }
 
 // evaluate the code including µcad std library
-fn create_context(source: &Rc<SourceFile>) -> EvalContext {
+fn create_context(source: &Rc<Source>) -> EvalContext {
     let mut context = EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),

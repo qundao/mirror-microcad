@@ -45,7 +45,7 @@ fn main() {
             path: "../books/std".into(),
         }
         .doc_gen(&{
-            let root = microcad_lang::lower::ir::SourceFile::load("../crates/std/lib/std/mod.µcad")
+            let root = microcad_lang::lower::ir::Source::load("../crates/std/lib/std/mod.µcad")
                 .expect("No error");
             let search_paths: Vec<std::path::PathBuf> = vec![];
 
