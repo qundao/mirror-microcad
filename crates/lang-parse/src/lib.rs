@@ -12,8 +12,6 @@
 pub mod ast;
 mod parser;
 
-mod source;
-
 /// Source tokens for µcad files
 pub mod tokens;
 
@@ -28,9 +26,32 @@ pub trait Parse: Sized {
     fn parse(context: &ParseContext) -> Result<Self, Diagnostics>;
 }
 
+impl Parse for ast::Source {
+    fn parse(context: &ParseContext) -> Result<Self, Diagnostics> {
+        match context {
+            ParseContext::Element(_) => panic!("Expected parse source context"),
+            ParseContext::Source {
+                url,
+                line_offset,
+                source,
+                ..
+            } => {
+                let ast = crate::parse(source.value())
+                    .map_err(|errors| errors.to_diagnostics(context))?;
+                let src_ref = context.src_ref(&ast.span);
+
+                Ok(Self {
+                    url: url.clone(),
+                    ast: microcad_lang_base::Refer::new(ast, src_ref),
+                    line_offset: *line_offset,
+                    source: source.clone().map(|s| s.to_string()),
+                })
+            }
+        }
+    }
+}
+
 /// API to parse directly from a string
 pub fn parse(source: &str) -> Result<ast::Program, ParseErrors> {
     parser::parse(&tokens::lex(source).collect::<Vec<_>>())
 }
-
-pub use source::Source;
