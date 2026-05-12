@@ -42,7 +42,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         env.code()
             .lines()
             .enumerate()
-            .map(|(n, line)| format!("{n:4}:   {line}", n = n as u32 + env.line_offset))
+            .map(|(n, line)| format!("{n:4}:   {line}", n = n as u32 + env.line_offset + 1))
             .collect::<Vec<_>>()
             .join("\n")
     )?;

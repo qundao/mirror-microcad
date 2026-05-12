@@ -60,7 +60,7 @@ impl std::fmt::Debug for TestEnv {
         if !self.params().is_empty() {
             writeln!(f, "           Params: {}", self.params())?;
         }
-        let line_offset = self.line_offset;
+        let line_offset = self.line_offset + 1;
         writeln!(
             f,
             "      Source file: {}:{line_offset}",
@@ -264,7 +264,10 @@ impl TestEnv {
                 None
             } else {
                 diff.sort();
-                let diff = diff.iter().map(|line| line.to_string()).collect::<Vec<_>>();
+                let diff = diff
+                    .iter()
+                    .map(|line| (**line + 1).to_string())
+                    .collect::<Vec<_>>();
                 let message = format!("{message}: {}\n", diff.join(", "));
                 Some(message)
             }

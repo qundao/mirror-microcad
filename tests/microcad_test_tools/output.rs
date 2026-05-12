@@ -107,7 +107,7 @@ impl TestModule {
                 mdbook.abs_md_file(&path),
                 &name,
                 &code_block.code,
-                (code_block.line_offset + 1) as u32,
+                code_block.line_offset as u32,
             );
 
             let mut current = &mut root;
