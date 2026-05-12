@@ -13,6 +13,7 @@ mod identifier;
 mod ord_map;
 mod output;
 mod rc;
+mod source;
 mod src_ref;
 mod tree_display;
 
@@ -64,11 +65,12 @@ pub use src_ref::{LineCol, LineIndex, Refer, Span, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
+pub use source::Source;
 
 /// A compatibility layer for using SourceFile with miette
 pub struct SourceLocInfo<'a> {
     /// The source text.
-    pub source: &'a str,
+    pub code: &'a str,
     /// Name of of file
     pub url: Url,
     /// Line offset (e.g. used when source comes from a markdown file).
@@ -79,7 +81,7 @@ impl SourceLocInfo<'static> {
     /// Create an invalid source file for when we can't load the source
     pub fn invalid() -> Self {
         SourceLocInfo {
-            source: "NO FILE",
+            code: "NO FILE",
             url: virtual_url("invalid"),
             line_offset: 0,
         }
@@ -119,7 +121,7 @@ impl SourceCode for SourceLocInfo<'_> {
         context_lines_after: usize,
     ) -> Result<Box<dyn SpanContents<'a> + 'a>, MietteError> {
         let inner_contents =
-            self.source
+            self.code
                 .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
             self.name(),

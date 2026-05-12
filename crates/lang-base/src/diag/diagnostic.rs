@@ -79,7 +79,7 @@ impl Diagnostic {
             false => {
                 let source = match source_by_hash.get_source_loc_info_by_hash(hash) {
                     Some(source) => SourceLocInfo {
-                        source: source.source,
+                        code: source.code,
                         url: source.url,
                         line_offset: source.line_offset - 1,
                     },
