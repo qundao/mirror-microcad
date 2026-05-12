@@ -204,11 +204,6 @@ impl TestEnv {
         self.out_file_path_stem().with_extension(ext)
     }
 
-    /// Return if test mode is todo.
-    pub fn todo(&self) -> bool {
-        matches!(self.mode(), "todo" | "todo_fail")
-    }
-
     /// Return if parameter `hires` is set.
     pub fn hires(&self) -> bool {
         self.params() == "hires"

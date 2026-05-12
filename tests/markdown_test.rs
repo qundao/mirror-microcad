@@ -75,8 +75,8 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
                     writeln!(log, "{}", &diag.to_pretty_string(&sources, &render_options))?;
                 }
-                match (env.has_error_markers(), env.todo()) {
-                    (true, _) => match env.report_wrong_errors(&error_lines, &HashSet::default()) {
+                match env.has_error_markers() {
+                    true => match env.report_wrong_errors(&error_lines, &HashSet::default()) {
                         Some(msg) => {
                             writeln!(log, "{msg}")?;
                             TestResult::FailWrong
@@ -105,7 +105,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 let test_failed = eval.is_err() || context.has_errors() || context.has_warnings();
                 let has_err_warn = err_warn.is_some();
 
-                if let (Err(err), false) = (&eval, env.todo()) {
+                if let Err(err) = &eval {
                     writeln!(log, "{err}")?;
                 }
 
@@ -121,8 +121,9 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 }
             }
         },
+        "todo" => TestResult::Todo,
         // test is expected to succeed?
-        "ok" | "todo" | "warn" => match errors {
+        "ok" | "warn" => match errors {
             // test awaited to succeed and parsing failed?
             Some(errors) => {
                 for err in errors {
@@ -132,9 +133,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     writeln!(log, "{}", diag.to_pretty_string(&sources, &render_options))?;
                 }
 
-                if env.todo() {
-                    TestResult::Todo
-                } else if env.has_error_markers() {
+                if env.has_error_markers() {
                     TestResult::FailWrong
                 } else {
                     TestResult::Fail
@@ -158,9 +157,9 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 
                 let test_failed = eval.is_err() || context.has_errors();
 
-                match (test_failed, env.todo()) {
+                match test_failed {
                     // 1. Success cases
-                    (false, false) => {
+                    false => {
                         if let Ok(model) = eval {
                             report_model(&env, log, model)?;
                         }
@@ -173,7 +172,6 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     }
 
                     // 2. Failure cases
-                    (_, true) => TestResult::Todo,
                     _ => {
                         if let Err(err) = eval {
                             writeln!(log, "{err}")?;
