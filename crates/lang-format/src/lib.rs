@@ -136,7 +136,11 @@ pub fn format_source(
     source: &ast::Source,
     config: &FormatConfig,
 ) -> Result<ast::Source, Diagnostics> {
-    let formatted = format(&source.ast, config);
-    let parse_context = ParseContext::new(&formatted);
+    let formatted = microcad_lang_base::Source::new(
+        source.url.clone(),
+        source.line_offset,
+        format(&source.ast, config),
+    );
+    let parse_context = ParseContext::from(&formatted);
     ast::Source::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))
 }
