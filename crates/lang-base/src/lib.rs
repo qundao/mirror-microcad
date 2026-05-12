@@ -47,6 +47,25 @@ pub trait ResourceLocation {
     fn is_local(&self) -> bool {
         self.url().scheme() == "file"
     }
+
+    /// Return the relative file path from current directory.
+    fn relative_path(&self) -> Option<std::path::PathBuf> {
+        self.to_file_path().map(|path| {
+            let current_dir = std::env::current_dir().expect("current dir");
+            if let Ok(path) = path.canonicalize() {
+                pathdiff::diff_paths(path, current_dir).unwrap_or_default()
+            } else {
+                path.to_path_buf()
+            }
+        })
+    }
+
+    /// The source name
+    fn source_name(&self) -> String {
+        self.relative_path()
+            .map(|s| s.to_string_lossy().to_string())
+            .unwrap_or(self.url().path().to_string())
+    }
 }
 
 /// List of valid µcad extensions.
@@ -88,25 +107,6 @@ impl SourceLocInfo<'static> {
     }
 }
 
-impl<'a> SourceLocInfo<'a> {
-    pub fn name(&self) -> String {
-        fn make_relative(path: impl AsRef<std::path::Path>) -> String {
-            let path = path.as_ref();
-            let current_dir = std::env::current_dir().expect("current dir");
-            if let Ok(path) = path.canonicalize() {
-                pathdiff::diff_paths(path, current_dir)
-                    .expect("related paths:\n  {path:?}\n  {current_dir:?}")
-            } else {
-                path.to_path_buf()
-            }
-            .to_string_lossy()
-            .to_string()
-        }
-
-        make_relative(self.url.to_file_path().unwrap_or_default())
-    }
-}
-
 impl<'a> ResourceLocation for SourceLocInfo<'a> {
     fn url(&self) -> &Url {
         &self.url
@@ -124,7 +124,7 @@ impl SourceCode for SourceLocInfo<'_> {
             self.code
                 .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
-            self.name(),
+            self.source_name(),
             inner_contents.data(),
             *inner_contents.span(),
             inner_contents.line() + self.line_offset as usize,
