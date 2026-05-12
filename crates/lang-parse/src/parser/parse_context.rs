@@ -18,7 +18,7 @@ pub enum ParseContext<'source> {
         /// A line offset (e.g. used when source is parsed from markdown code snippets).
         line_offset: u32,
         /// The source code to be parsed.
-        source: Hashed<&'source str>,
+        code: Hashed<&'source str>,
     },
 }
 
@@ -34,18 +34,18 @@ impl<'source> ParseContext<'source> {
             Self::Source {
                 line_index,
                 line_offset,
-                source,
+                code,
                 ..
             } => Self::Source {
                 url,
-                source,
+                code,
                 line_index,
                 line_offset,
             },
-            Self::Element(source) => Self::Source {
-                line_index: LineIndex::new(&source),
+            Self::Element(code) => Self::Source {
+                line_index: LineIndex::new(&code),
                 url,
-                source,
+                code,
                 line_offset: 0,
             },
         }
@@ -57,18 +57,18 @@ impl<'source> ParseContext<'source> {
             Self::Source {
                 url,
                 line_index,
-                source,
+                code: source,
                 ..
             } => Self::Source {
                 url,
-                source,
+                code: source,
                 line_index,
                 line_offset,
             },
             Self::Element(source) => Self::Source {
                 line_index: LineIndex::new(&source),
                 url: microcad_lang_base::virtual_url(&format!("source_{}", source.computed_hash())),
-                source,
+                code: source,
                 line_offset,
             },
         }
@@ -80,7 +80,7 @@ impl<'source> ParseContext<'source> {
             Self::Source {
                 line_index,
                 line_offset,
-                source,
+                code: source,
                 ..
             } => line_index
                 .src_ref(source.value(), span, source.computed_hash())
@@ -88,6 +88,17 @@ impl<'source> ParseContext<'source> {
             Self::Element(source) => {
                 SrcRef::new(span.clone(), Default::default(), source.computed_hash())
             }
+        }
+    }
+}
+
+impl<'source> From<&'source microcad_lang_base::Source> for ParseContext<'source> {
+    fn from(source: &'source microcad_lang_base::Source) -> Self {
+        ParseContext::Source {
+            url: source.url.clone(),
+            line_index: LineIndex::new(&source.code),
+            line_offset: source.line_offset,
+            code: Hashed::new(&source.code.value()),
         }
     }
 }

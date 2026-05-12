@@ -32,17 +32,17 @@ impl Parse for ast::Source {
             ParseContext::Source {
                 url,
                 line_offset,
-                source,
+                code,
                 ..
             } => {
-                let ast = crate::parse(source.value())?;
+                let ast = crate::parse(code.value())?;
                 let src_ref = context.src_ref(&ast.span);
 
                 Ok(Self {
                     url: url.clone(),
                     ast: microcad_lang_base::Refer::new(ast, src_ref),
                     line_offset: *line_offset,
-                    source: source.clone().map(|s| s.to_string()),
+                    code: code.clone().map(|s| s.to_string()),
                 })
             }
         }

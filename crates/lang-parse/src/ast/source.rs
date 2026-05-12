@@ -15,8 +15,8 @@ pub struct Source {
     pub url: Url,
     /// Line offset
     pub line_offset: u32,
-    /// The original source
-    pub source: Hashed<String>,
+    /// The original code
+    pub code: Hashed<String>,
     /// The µcad program
     pub ast: Refer<ast::Program>,
 }
@@ -32,9 +32,9 @@ impl GetSourceLocInfoByHash for Source {
         &'_ self,
         hash: microcad_lang_base::HashId,
     ) -> Option<microcad_lang_base::SourceLocInfo<'_>> {
-        if hash == self.source.computed_hash() {
+        if hash == self.code.computed_hash() {
             Some(SourceLocInfo {
-                source: &self.source,
+                code: &self.code,
                 url: self.url.clone(),
                 line_offset: self.line_offset,
             })
