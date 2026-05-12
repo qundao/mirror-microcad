@@ -103,7 +103,7 @@ impl<'a> SourceLocInfo<'a> {
             .to_string()
         }
 
-        make_relative(self.url.path())
+        make_relative(self.url.to_file_path().unwrap_or_default())
     }
 }
 
