@@ -146,22 +146,26 @@ impl TokenContext {
     }
 
     fn parse_literal(&mut self, lit: &ir::Literal) -> miette::Result<Vec<SemanticToken>> {
-        Ok(vec![match lit {
-            ir::Literal::Integer(int) => {
-                self.output_semantic_token(int.src_ref(), SemanticTokenType::NUMBER, &[])?
+        let src_ref = lit.src_ref();
+        use microcad_lang::ty::Type;
+
+        Ok(match lit.ty() {
+            Type::Integer => {
+                vec![self.output_semantic_token(src_ref, SemanticTokenType::NUMBER, &[])?]
             }
-            ir::Literal::Number(number) => {
-                self.output_semantic_token(
-                    number.src_ref(),
+            Type::Quantity(_) => {
+                vec![self.output_semantic_token(
+                    src_ref,
                     // SEMANTIC_LENGTH,
                     SemanticTokenType::NUMBER,
                     &[],
-                )?
+                )?]
             }
-            ir::Literal::Bool(bool) => {
-                self.output_semantic_token(bool.src_ref(), SemanticTokenType::KEYWORD, &[])?
+            Type::Bool => {
+                vec![self.output_semantic_token(src_ref, SemanticTokenType::KEYWORD, &[])?]
             }
-        }])
+            _ => vec![], // TODO support other values.
+        })
     }
 
     fn parse_expression(&mut self, expr: &ir::Expression) -> miette::Result<Vec<SemanticToken>> {
