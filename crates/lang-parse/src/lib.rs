@@ -15,7 +15,6 @@ mod parser;
 /// Source tokens for µcad files
 pub mod tokens;
 
-use microcad_lang_base::Diagnostics;
 pub use parser::{ParseContext, ParseError, ParseErrors, parsers};
 
 /// Parse trait.
@@ -23,11 +22,11 @@ pub trait Parse: Sized {
     /// Parse from a context.
     ///
     /// The context also contains the source string.
-    fn parse(context: &ParseContext) -> Result<Self, Diagnostics>;
+    fn parse(context: &ParseContext) -> Result<Self, ParseErrors>;
 }
 
 impl Parse for ast::Source {
-    fn parse(context: &ParseContext) -> Result<Self, Diagnostics> {
+    fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
         match context {
             ParseContext::Element(_) => panic!("Expected parse source context"),
             ParseContext::Source {
@@ -36,8 +35,7 @@ impl Parse for ast::Source {
                 source,
                 ..
             } => {
-                let ast = crate::parse(source.value())
-                    .map_err(|errors| errors.to_diagnostics(context))?;
+                let ast = crate::parse(source.value())?;
                 let src_ref = context.src_ref(&ast.span);
 
                 Ok(Self {

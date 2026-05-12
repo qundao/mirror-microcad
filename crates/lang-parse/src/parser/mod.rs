@@ -1527,7 +1527,7 @@ fn parser<'tokens>()
 }
 
 impl crate::Parse for ast::Literal {
-    fn parse(context: &ParseContext) -> Result<Self, microcad_lang_base::Diagnostics> {
+    fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
         fn literal<'tokens>()
         -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Extra<'tokens>>
         {
@@ -1541,7 +1541,7 @@ impl crate::Parse for ast::Literal {
                 literal()
                     .parse(crate::parser::input(&tokens))
                     .into_result()
-                    .map_err(|errors| ParseErrors::from(errors).to_diagnostics(context))
+                    .map_err(|errors| errors.into())
             }
             _ => panic!("Not possible"),
         }
