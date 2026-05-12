@@ -81,7 +81,7 @@ impl Diagnostic {
                     Some(source) => SourceLocInfo {
                         code: source.code,
                         url: source.url,
-                        line_offset: source.line_offset - 1,
+                        line_offset: source.line_offset,
                     },
                     None => SourceLocInfo::invalid(),
                 };
