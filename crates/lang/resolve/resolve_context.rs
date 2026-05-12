@@ -18,7 +18,7 @@ pub struct ResolveContext {
     /// Source file cache.
     pub(crate) sources: Sources,
     /// Diagnostic handler.
-    pub(crate) diag: DiagHandler,
+    pub diag: DiagHandler,
 }
 
 impl ResolveContext {
@@ -84,7 +84,7 @@ impl ResolveContext {
         Ok(())
     }
 
-    pub(super) fn resolve(&mut self) -> ResolveResult<()> {
+    fn resolve(&mut self) -> ResolveResult<()> {
         // resolve std as first
         if let Some(std) = self.root.get_child(&ir::Identifier::no_ref("std")) {
             std.resolve(self)?;
