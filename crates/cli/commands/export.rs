@@ -40,26 +40,26 @@ impl RunCommand for Export {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         let document = Document::from_file_path(&self.input)?;
 
-        match &document {
-            Document::Source(asset) => {
+        match document {
+            Document::Source(mut source) => {
                 let params = GetExportTargetParameters {
                     input_path: self.input.clone(),
                     output_path: self.output.clone(),
                     config: cli.config.export.clone(),
                 };
 
-                match asset
+                match source
                     .load_from_file()
-                    .and(asset.run_pipeline(&cli.config))
-                    .and(asset.render(&RenderParameters::new(self.resolution.clone())))
-                    .and(asset.get_export_targets(&params))
+                    .and(source.run_pipeline(&cli.config))
+                    .and(source.render(&RenderParameters::new(self.resolution.clone())))
+                    .and(source.get_export_targets(&params))
                 {
                     Ok(targets) => {
                         targets.export()?;
                     }
                     Err(_) => {
                         eprintln!("Error export documentation:");
-                        cli.print_diagnostics(&document);
+                        cli.print_diagnostics(&source);
                     }
                 }
                 Ok(())

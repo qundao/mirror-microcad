@@ -15,7 +15,7 @@ pub struct Format {
 
 impl RunCommand<()> for Format {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let document = Document::from_file_path(&self.input)?;
+        let mut document = Document::from_file_path(&self.input)?;
         use microcad_driver::commands::{Format, FormatParameters, LoadFromFile, Sync};
 
         if document

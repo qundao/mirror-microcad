@@ -34,7 +34,7 @@ impl RunCommand for Watch {
         let document = Document::from_file_path(&input)?;
         let render_cache = RcMut::new(RenderCache::new());
 
-        let document = match document {
+        let mut document = match document {
             Document::Source(item) => item,
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
@@ -61,7 +61,7 @@ impl RunCommand for Watch {
                     targets.export()?;
                 }
                 Err(_) => {
-                    cli.print_diagnostics(document.as_ref());
+                    cli.print_diagnostics(&document);
                 }
             }
 

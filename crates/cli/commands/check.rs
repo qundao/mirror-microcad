@@ -13,7 +13,7 @@ pub struct Check {
 impl RunCommand<()> for Check {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         use microcad_driver::commands::Check;
-        let document = Document::from_file_path(&self.input)?;
+        let mut document = Document::from_file_path(&self.input)?;
 
         match document.check(cli.config.as_ref()) {
             Ok(true) => {
