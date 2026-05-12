@@ -16,21 +16,24 @@ pub struct Format {
 impl RunCommand<()> for Format {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         let mut document = Document::from_file_path(&self.input)?;
-        use microcad_driver::commands::{Format, FormatParameters, LoadFromFile, Sync};
+        use microcad_driver::commands::{Format, FormatParameters, LoadFromFile, Pipeline, Sync};
+        let params = FormatParameters::default();
 
-        if document
+        match document
             .load_from_file()
-            .and_then(|_| {
-                let params = FormatParameters::default();
-                if document.format(&params)? {
-                    document.sync()
-                } else {
-                    Ok(())
-                }
-            })
-            .is_err()
+            .and_then(|_| document.parse())
+            .and_then(|_| document.format(&params))
         {
-            cli.print_diagnostics(&document);
+            Ok(true) => {
+                document.sync()?;
+                eprintln!("Formatted document.");
+            }
+            Ok(false) => {
+                eprintln!("Document has been already formatted.");
+            }
+            Err(_) => {
+                cli.print_diagnostics(&document);
+            }
         }
 
         Ok(())
