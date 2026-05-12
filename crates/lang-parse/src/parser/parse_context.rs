@@ -6,6 +6,7 @@
 use microcad_lang_base::{ComputedHash, Hashed, LineIndex, Span, SrcRef, Url};
 
 /// Context for parsing.
+#[derive(Debug)]
 pub enum ParseContext<'source> {
     /// Parse a single element from a string
     Element(Hashed<&'source str>),
@@ -94,7 +95,7 @@ impl<'source> ParseContext<'source> {
 
 impl<'source> From<&'source microcad_lang_base::Source> for ParseContext<'source> {
     fn from(source: &'source microcad_lang_base::Source) -> Self {
-        ParseContext::Source {
+        Self::Source {
             url: source.url.clone(),
             line_index: LineIndex::new(&source.code),
             line_offset: source.line_offset,
