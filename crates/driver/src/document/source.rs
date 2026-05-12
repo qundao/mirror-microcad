@@ -67,6 +67,20 @@ impl Source {
             model: None,
         }
     }
+
+    /// Internal helper to "capture" errors into the local diagnostics collection.
+    fn capture<T, E>(&self, result: std::result::Result<T, E>) -> Option<T>
+    where
+        E: Into<Diagnostics>,
+    {
+        match result {
+            Ok(val) => Some(val),
+            Err(err_rc) => {
+                self.diagnostics.replace(err_rc.into());
+                None
+            }
+        }
+    }
 }
 
 impl ResourceLocation for Source {
@@ -85,27 +99,31 @@ impl commands::Format for Source {
             ));
         }
 
-        if let Some(ast_source) = &mut self.ast_source {
-            let old_code = self.base_source.as_ref().unwrap();
-            let new_source = microcad_lang_format::format_source(&ast_source, &params)?;
-            let formatted = new_source.code.value() != old_code.code.value();
-            *ast_source = new_source;
-            // Reset state
+        if let Some(ast_source) = &self.ast_source {
+            let new_source =
+                self.capture(microcad_lang_format::format_source(&ast_source, &params));
+            self.ast_source = new_source;
             self.ir_source = None;
             self.resolve_context = None;
             self.eval_context = None;
             self.model = None;
+        }
+
+        if let Some(ast_source) = &self.ast_source {
+            let old_code = self.base_source.as_ref().unwrap();
+            let formatted = ast_source.code.value() != old_code.code.value();
+            // Reset state
             self.base_source = Some(base::Source {
                 url: self.url.clone(),
                 line_offset: ast_source.line_offset,
                 code: ast_source.code.clone(),
             });
-            Ok(formatted)
-        } else {
-            return Err(RcMut::new(
-                miette::miette!("You need to parse the source code first").into(),
-            ));
+            return Ok(formatted);
         }
+
+        Err(RcMut::new(
+            miette::miette!("You need to parse the source code first").into(),
+        ))
     }
 }
 
@@ -145,10 +163,10 @@ impl commands::Pipeline for document::Source {
     fn parse(&mut self) -> document::Result {
         match &self.base_source {
             Some(base_source) => {
-                let parse_context = ParseContext::from(base_source).with_url(self.url.clone());
-                self.ast_source = Some(
+                let parse_context = ParseContext::from(base_source);
+                self.ast_source = self.capture(
                     ast::Source::parse(&parse_context)
-                        .map_err(|err| err.to_diagnostics(&parse_context))?,
+                        .map_err(|err| err.to_diagnostics(&parse_context)),
                 );
                 self.ir_source = None;
                 self.resolve_context = None;
@@ -165,9 +183,7 @@ impl commands::Pipeline for document::Source {
     fn lower(&mut self) -> document::Result {
         match &self.ast_source {
             Some(ast_source) => {
-                self.ir_source = Some(
-                    ir::Source::from_source(&ast_source).map_err(|err| RcMut::new(err.into()))?,
-                );
+                self.ir_source = self.capture(ir::Source::from_source(&ast_source));
                 self.resolve_context = None;
                 self.eval_context = None;
                 self.model = None;
@@ -182,15 +198,13 @@ impl commands::Pipeline for document::Source {
     fn resolve(&mut self, config: &Config) -> document::Result {
         match &self.ir_source {
             Some(ir_source) => {
-                self.resolve_context = Some(
-                    ResolveContext::create(
-                        ir_source.clone(),
-                        &config.search_paths,
-                        Some(microcad_builtin::builtin_module()),
-                        DiagHandler::default(),
-                    )
-                    .map_err(|err| RcMut::new(err.into()))?,
-                );
+                self.resolve_context = self.capture(ResolveContext::create(
+                    ir_source.clone(),
+                    &config.search_paths,
+                    Some(microcad_builtin::builtin_module()),
+                    DiagHandler::default(),
+                ));
+
                 self.eval_context = None;
                 self.model = None;
                 Ok(())
@@ -212,17 +226,26 @@ impl commands::Pipeline for document::Source {
             }
         };
 
-        self.eval_context = Some(microcad_lang::eval::EvalContext::new(
+        let mut eval_context = microcad_lang::eval::EvalContext::new(
             resolve_context,
             microcad_lang_base::Stdout::new(),
             microcad_builtin::builtin_exporters(),
             microcad_builtin::builtin_importers(),
-        ));
+        );
 
-        match self.eval_context.as_mut().unwrap().eval() {
+        match eval_context.eval() {
             Ok(model) => {
-                self.model = model;
-                Ok(())
+                if eval_context.diag.error_count() > 0 {
+                    let diag = RcMut::new(eval_context.diag.diagnostics);
+                    self.diagnostics = diag.clone();
+                    self.model = None;
+                    self.eval_context = None;
+                    Err(diag)
+                } else {
+                    self.model = model;
+                    self.eval_context = Some(eval_context);
+                    Ok(())
+                }
             }
             Err(err) => {
                 panic!("Eval error {err}");
@@ -243,19 +266,15 @@ impl commands::Render for document::Source {
             }
         };
 
-        let mut render_context = RenderContext::new(
+        if let Some(mut render_context) = self.capture(RenderContext::new(
             &model,
             params.resolution.clone(),
             params.cache.clone(),
             None,
-        )
-        .expect("Error handling");
+        )) {
+            self.model = self.capture(model.render_with_context(&mut render_context));
+        }
 
-        self.model = Some(
-            model
-                .render_with_context(&mut render_context)
-                .expect("Error handling"),
-        );
         Ok(())
     }
 }
