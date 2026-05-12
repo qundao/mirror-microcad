@@ -75,15 +75,13 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
                     writeln!(log, "{}", &diag.to_pretty_string(&sources, &render_options))?;
                 }
-                match env.has_error_markers() {
-                    true => match env.report_wrong_errors(&error_lines, &HashSet::default()) {
-                        Some(msg) => {
-                            writeln!(log, "{msg}")?;
-                            TestResult::FailWrong
-                        }
-                        None => TestResult::FailOk,
-                    },
-                    _ => TestResult::FailOk,
+                if env.has_error_markers()
+                    && let Some(msg) = env.report_wrong_errors(&error_lines, &HashSet::default())
+                {
+                    writeln!(log, "{msg}")?;
+                    TestResult::FailWrong
+                } else {
+                    TestResult::FailOk
                 }
             }
             // test expected to fail succeeded at parsing?
