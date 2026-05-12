@@ -120,7 +120,10 @@ impl commands::Pipeline for document::Source {
         match &mut state.code {
             Some(code) => {
                 let parse_context = ParseContext::new(&code).with_url(self.url.clone());
-                state.ast_source = Some(ast::Source::parse(&parse_context)?);
+                state.ast_source = Some(
+                    ast::Source::parse(&parse_context)
+                        .map_err(|err| err.to_diagnostics(&parse_context))?,
+                );
                 state.ir_source = None;
                 state.resolve_context = None;
                 state.eval_context = None;
