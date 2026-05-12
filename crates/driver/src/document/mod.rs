@@ -6,7 +6,7 @@ mod markdown;
 mod mdbook;
 mod source;
 
-use std::{cell::RefCell, rc::Rc};
+use std::cell::RefCell;
 
 use derive_more::From;
 use microcad_builtin::Symbol;
@@ -46,12 +46,10 @@ impl<S: Default> Asset<S> {
 }
 
 pub trait TryFilePath: ResourceLocation {
-    fn try_file_path(&self) -> Result<std::path::PathBuf> {
+    fn try_file_path(&self) -> miette::Result<std::path::PathBuf> {
         match self.to_file_path() {
             Some(path) => Ok(path),
-            None => Err(RcMut::new(
-                miette::miette!("No local path: {}", self.url()).into(),
-            )),
+            None => Err(miette::miette!("No local path: {}", self.url())),
         }
     }
 }
@@ -155,6 +153,36 @@ impl commands::LoadFromFile for Document {
     }
 }
 
+impl commands::Pipeline for Document {
+    fn parse(&mut self) -> self::Result {
+        match self {
+            Document::Source(source) => source.parse(),
+            _ => unimplemented!(),
+        }
+    }
+
+    fn lower(&mut self) -> self::Result {
+        match self {
+            Document::Source(source) => source.lower(),
+            _ => unimplemented!(),
+        }
+    }
+
+    fn resolve(&mut self, config: &Config) -> self::Result {
+        match self {
+            Document::Source(source) => source.resolve(config),
+            _ => unimplemented!(),
+        }
+    }
+
+    fn eval(&mut self) -> self::Result {
+        match self {
+            Document::Source(source) => source.eval(),
+            _ => unimplemented!(),
+        }
+    }
+}
+
 impl commands::Format for Document {
     fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         match self {
@@ -167,7 +195,7 @@ impl commands::Format for Document {
 }
 
 impl commands::Sync for Document {
-    fn sync(&self) -> Result {
+    fn sync(&self) -> miette::Result<()> {
         match &self {
             Document::Source(source) => source.sync(),
             Document::Markdown(markdown) => markdown.sync(),

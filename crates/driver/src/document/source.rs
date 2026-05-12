@@ -12,7 +12,7 @@ use microcad_lang::{
 };
 use microcad_lang_base::{DiagHandler, DiagRenderOptions, Diagnostics, RcMut, ResourceLocation};
 use microcad_lang_parse::{Parse, ParseContext, ast};
-use miette::Diagnostic;
+use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 use url::Url;
 
@@ -60,6 +60,19 @@ impl Source {
             url,
             diagnostics: RcMut::new(Default::default()),
             base_source: None,
+            ast_source: None,
+            ir_source: None,
+            resolve_context: None,
+            eval_context: None,
+            model: None,
+        }
+    }
+
+    pub fn from_source(source: base::Source) -> Self {
+        Self {
+            url: source.url.clone(),
+            diagnostics: RcMut::new(Default::default()),
+            base_source: Some(source),
             ast_source: None,
             ir_source: None,
             resolve_context: None,
@@ -145,16 +158,13 @@ impl commands::LoadFromFile for document::Source {
 }
 
 impl commands::Sync for document::Source {
-    fn sync(&self) -> document::Result {
+    fn sync(&self) -> miette::Result<()> {
         match &self.base_source {
             Some(base_source) => {
                 std::fs::write(self.try_file_path()?, base_source.code.value().as_bytes())
-                    .expect("No error");
-                Ok(())
+                    .into_diagnostic()
             }
-            None => Err(RcMut::new(
-                SourceError::InvalidState(self.url.clone()).into(),
-            )),
+            None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
     }
 }

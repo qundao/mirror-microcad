@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{Diagnostics, RcMut};
-use miette::Diagnostic;
+use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
 use crate::{commands, document, document::TryFilePath};
@@ -28,7 +28,7 @@ impl commands::LoadFromFile for document::Markdown {
     fn load_from_file(&mut self) -> document::Result {
         let state = &mut *self.state.borrow_mut();
         state.markdown = Some(
-            Markdown::load(self.try_file_path()?)
+            Markdown::load(self.try_file_path().map_err(|err| RcMut::new(err.into()))?)
                 .map_err(|err| RcMut::new(MarkdownItemError::MarkdownError(err).into()))?,
         );
         Ok(())
@@ -71,16 +71,11 @@ impl commands::Format for document::Markdown {
 }
 
 impl commands::Sync for document::Markdown {
-    fn sync(&self) -> document::Result {
+    fn sync(&self) -> miette::Result<()> {
         let state = &*self.state.borrow();
         match &state.markdown {
-            Some(markdown) => {
-                markdown
-                    .save(self.try_file_path()?)
-                    .expect("Error handling");
-                Ok(())
-            }
-            None => panic!("Impl error handling"),
+            Some(markdown) => markdown.save(self.try_file_path()?).into_diagnostic(),
+            None => Err(MarkdownItemError::NotLoaded.into()),
         }
     }
 }

@@ -40,5 +40,5 @@ pub trait Check {
 
 /// Write document contents to file
 pub trait Sync {
-    fn sync(&self) -> document::Result;
+    fn sync(&self) -> miette::Result<()>;
 }

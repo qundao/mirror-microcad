@@ -5,7 +5,7 @@
 
 pub mod commands;
 mod config;
-mod document;
+pub mod document;
 mod session;
 mod watcher;
 

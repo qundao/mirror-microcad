@@ -3,7 +3,7 @@
 
 use microcad_lang_base::{Diagnostics, RcMut};
 use microcad_lang_markdown::{MdBook, MdBookError};
-use miette::Diagnostic;
+use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
 use crate::{commands, document, document::TryFilePath};
@@ -29,7 +29,7 @@ impl commands::LoadFromFile for document::MdBook {
     fn load_from_file(&mut self) -> document::Result {
         let state = &mut *self.state.borrow_mut();
         state.mdbook = Some(
-            MdBook::new(self.try_file_path()?)
+            MdBook::new(self.try_file_path().map_err(|err| RcMut::new(err.into()))?)
                 .map_err(|err| RcMut::new(MdBookUnitError::MdBook(err).into()))?,
         );
         Ok(())
@@ -75,14 +75,11 @@ impl commands::Format for document::MdBook {
 }
 
 impl commands::Sync for document::MdBook {
-    fn sync(&self) -> document::Result {
+    fn sync(&self) -> miette::Result<()> {
         let state = &*self.state.borrow();
         match &state.mdbook {
-            Some(mdbook) => {
-                mdbook.save_all().expect("No error");
-                Ok(())
-            }
-            None => Err(RcMut::new(MdBookUnitError::NotLoaded.into())),
+            Some(mdbook) => mdbook.save_all().into_diagnostic(),
+            None => Err(MdBookUnitError::NotLoaded.into()),
         }
     }
 }
