@@ -126,13 +126,17 @@ pub fn format(program: &ast::Program, config: &FormatConfig) -> String {
 /// High-level API to format a &str containing µcad source code.
 pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, Diagnostics> {
     let parse_context = ParseContext::new(source);
-    let source = ast::Source::parse(&parse_context)?;
+    let source =
+        ast::Source::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))?;
     Ok(format(&source.ast, config))
 }
 
 /// Format a [`ast::Source`]
-pub fn format_source(source: &ast::Source, config: &FormatConfig) -> Result<ast::Source, Diagnostics> {
+pub fn format_source(
+    source: &ast::Source,
+    config: &FormatConfig,
+) -> Result<ast::Source, Diagnostics> {
     let formatted = format(&source.ast, config);
     let parse_context = ParseContext::new(&formatted);
-    ast::Source::parse(&parse_context)
+    ast::Source::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))
 }
