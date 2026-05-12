@@ -34,7 +34,5 @@
   59:   // b not known here anymore
   60:   assert_invalid("b");
 
--- No Output --
--- No Errors --
 -- Test Result --
 TODO

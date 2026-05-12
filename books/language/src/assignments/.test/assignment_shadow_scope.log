@@ -13,22 +13,5 @@
   91:       std::debug::assert_eq([a, 10]);
   92:   }
 
--- No Output --
--- Errors --
-  × error: 90:5: Value a already in defined: 5
-    ╭─[../books/language/src/assignments/value.md:90:5]
- 88 │ a = 5;
-    · ┬
-    · ╰── Previously defined here
- 89 │ {
- 90 │     a = a * 2;
-    ·     ────┬────
-    ·         ╰── a is already defined
- 91 │     std::debug::assert_eq([a, 10]);
-    ╰────
-  help: Values in microcad are immutable
-
-Unexpected error(s) which did occur in line(s): 90
-
 -- Test Result --
 TODO

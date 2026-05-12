@@ -13,9 +13,5 @@
  132:   }
  133:   MySketch();
 
--- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 131
-
 -- Test Result --
 TODO

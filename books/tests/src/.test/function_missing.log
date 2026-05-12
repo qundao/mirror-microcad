@@ -17,27 +17,5 @@
   75:   assert_eq([ f(1), 2 ]);
   76:   assert_eq([ f(4), 3 ]);
 
--- No Output --
--- Errors --
-  × error: 75:11: Array elements have different types: [<NO TYPE>, Integer]
-    ╭─[../books/tests/src/function.md:75:11]
- 74 │ use std::debug::*;
- 75 │ assert_eq([ f(1), 2 ]);
-    ·           ─────┬─────
-    ·                ╰── Array elements have different types: [<NO TYPE>, Integer]
- 76 │ assert_eq([ f(4), 3 ]);
-    ╰────
-  × error: 75:11: Assertion failed: Invalid: <NO VALUE>
-    ╭─[../books/tests/src/function.md:75:11]
- 74 │ use std::debug::*;
- 75 │ assert_eq([ f(1), 2 ]);
-    ·           ─────┬─────
-    ·                ╰── Assertion failed: Invalid: <NO VALUE>
- 76 │ assert_eq([ f(4), 3 ]);
-    ╰────
-
-Expected error(s) which did not occur in line(s): 68
-Unexpected error(s) which did occur in line(s): 75
-
 -- Test Result --
 TODO

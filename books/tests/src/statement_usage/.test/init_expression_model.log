@@ -11,7 +11,5 @@
  111:     __builtin::geo2d::Circle(radius=l);
  112:   } } K(1cm);
 
--- No Output --
--- No Errors --
 -- Test Result --
 TODO

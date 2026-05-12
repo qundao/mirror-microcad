@@ -12,9 +12,5 @@
   68:   const MyValue = 1; // warning
   69:   const MY_VALUE = 1; // ok
 
--- No Output --
--- No Errors --
-Expected warning(s) which did not occur in line(s): 67, 68
-
 -- Test Result --
 TODO

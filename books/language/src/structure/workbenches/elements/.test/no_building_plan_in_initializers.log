@@ -19,9 +19,5 @@
  100:   }
  101:   Wheel(diameter = 1cm);
 
--- No Output --
--- No Errors --
-Expected error(s) which did not occur in line(s): 95
-
 -- Test Result --
 TODO
