@@ -295,10 +295,10 @@ impl std::ops::Mul for Value {
 /// Multiply a Unit with a value. Used for unit bundling: `[1,2,3]mm`.
 ///
 /// `[1,2,3]mm` is a shortcut for `[1,2,3] * 1mm`.
-impl std::ops::Mul<ir::Unit> for Value {
+impl std::ops::Mul<Unit> for Value {
     type Output = ValueResult;
 
-    fn mul(self, unit: ir::Unit) -> Self::Output {
+    fn mul(self, unit: Unit) -> Self::Output {
         match (self, unit.ty()) {
             (value, Type::Quantity(QuantityType::Scalar)) | (value, Type::Integer) => Ok(value),
             (Value::Integer(i), Type::Quantity(quantity_type)) => Ok(Value::Quantity(

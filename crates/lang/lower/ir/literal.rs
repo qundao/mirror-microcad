@@ -3,12 +3,7 @@
 
 //! µcad literal syntax elements
 
-mod number_literal;
-mod units;
-
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
-pub use number_literal::*;
-pub use units::*;
 
 use crate::{ty::*, value::Value};
 

@@ -6,7 +6,7 @@
 pub mod error;
 pub mod ops;
 
-use crate::{lower::ir, ty::*};
+use crate::ty::*;
 use microcad_core::*;
 
 pub use error::*;
@@ -21,7 +21,7 @@ pub struct Quantity {
     /// The quantity type with a base unit.
     pub quantity_type: QuantityType,
     /// The original unit of the quantity,
-    pub unit: ir::Unit,
+    pub unit: Unit,
 }
 
 impl PartialEq for Quantity {

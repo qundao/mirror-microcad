@@ -48,41 +48,6 @@ impl Lower for ir::Literal {
     }
 }
 
-impl Lower for ir::NumberLiteral {
-    type AstNode = ast::QuantityLiteral;
-
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
-        Ok(ir::NumberLiteral(
-            node.value,
-            ir::Unit::lower(&node.unit, context)?,
-            context.src_ref(&node.span),
-        ))
-    }
-}
-
-impl std::str::FromStr for ir::NumberLiteral {
-    type Err = LowerError;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        let num_bytes = s
-            .bytes()
-            .take_while(|&c| c == b'-' || c.is_ascii_digit() || c == b'.')
-            .count();
-        let value = s[0..num_bytes]
-            .parse()
-            .map_err(|e| LowerError::InvalidLiteral {
-                error: ast::LiteralErrorKind::Float(e),
-                src_ref: SrcRef::default(),
-            })?;
-        let unit = s.get(num_bytes..).map(ir::Unit::from_str).transpose()?;
-        Ok(ir::NumberLiteral(
-            value,
-            unit.unwrap_or_default(),
-            SrcRef::default(),
-        ))
-    }
-}
-
 impl Lower for ir::Unit {
     type AstNode = ast::Unit;
 

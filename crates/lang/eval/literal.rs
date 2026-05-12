@@ -3,12 +3,6 @@
 
 use crate::{eval::*, lower::ir};
 
-impl Eval for ir::NumberLiteral {
-    fn eval(&self, _: &mut EvalContext) -> EvalResult<Value> {
-        Ok(self.value())
-    }
-}
-
 impl Eval for ir::Literal {
     fn eval(&self, _: &mut EvalContext) -> EvalResult<Value> {
         Ok(self.value().clone())
