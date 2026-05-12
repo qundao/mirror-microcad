@@ -89,7 +89,7 @@ impl Source {
     /// Get a miette source adapter for the SourceFile
     pub fn source_loc_info<'a>(&'a self) -> SourceLocInfo<'a> {
         SourceLocInfo {
-            source: &self.source,
+            code: &self.source,
             url: self.url.clone(),
             line_offset: self.line_offset,
         }

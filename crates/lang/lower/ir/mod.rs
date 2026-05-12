@@ -3,7 +3,7 @@
 
 //! µcad intermediate representation (IR) elements.
 //!
-//! Every element in the µcad language are parsed into definitions in this module.
+//! Every AST element in the µcad language is parsed into an intermediate representation in this module.
 
 pub mod assignment;
 pub mod attribute;

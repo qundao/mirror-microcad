@@ -8,12 +8,11 @@ use microcad_lang_parse::ast;
 
 impl ir::Source {
     pub fn from_source(source: &ast::Source) -> Result<std::rc::Rc<Self>, LowerError> {
-        let context =
-            LowerContext::new(source.source.as_str()).with_line_offset(source.line_offset);
+        let context = LowerContext::new(source.code.as_str()).with_line_offset(source.line_offset);
         Ok(std::rc::Rc::new(Self {
             doc: None,
             statements: ir::StatementList::lower(&source.ast.statements, &context)?,
-            source: source.source.clone(),
+            source: source.code.clone(),
             name: ir::QualifiedName::default(),
             url: source.url.clone(),
             line_offset: source.line_offset,
