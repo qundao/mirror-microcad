@@ -10,5 +10,5 @@ pub type FormatParameters = microcad_lang_format::FormatConfig;
 
 /// Format a document.
 pub trait Format {
-    fn format(&self, params: &FormatParameters) -> document::Result<bool>;
+    fn format(&mut self, params: &FormatParameters) -> document::Result<bool>;
 }

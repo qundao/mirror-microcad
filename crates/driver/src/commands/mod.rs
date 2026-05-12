@@ -16,16 +16,16 @@ pub use print_diagnostics::*;
 pub use render::*;
 /// Load something from a file
 pub trait LoadFromFile {
-    fn load_from_file(&self) -> document::Result;
+    fn load_from_file(&mut self) -> document::Result;
 }
 
 pub trait Pipeline {
-    fn parse(&self) -> document::Result;
-    fn lower(&self) -> document::Result;
-    fn resolve(&self, config: &Config) -> document::Result;
-    fn eval(&self) -> document::Result;
+    fn parse(&mut self) -> document::Result;
+    fn lower(&mut self) -> document::Result;
+    fn resolve(&mut self, config: &Config) -> document::Result;
+    fn eval(&mut self) -> document::Result;
 
-    fn run_pipeline(&self, config: &Config) -> document::Result {
+    fn run_pipeline(&mut self, config: &Config) -> document::Result {
         self.parse()?;
         self.lower()?;
         self.resolve(config)?;
@@ -35,7 +35,7 @@ pub trait Pipeline {
 
 /// Check a document for errors.
 pub trait Check {
-    fn check(&self, config: &Config) -> document::Result<bool>;
+    fn check(&mut self, config: &Config) -> document::Result<bool>;
 }
 
 /// Write document contents to file

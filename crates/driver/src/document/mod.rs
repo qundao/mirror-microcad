@@ -13,6 +13,7 @@ use microcad_builtin::Symbol;
 use microcad_lang_base::{
     DiagRenderOptions, Diagnostics, MICROCAD_EXTENSIONS, RcMut, ResourceLocation,
 };
+pub use source::Source;
 use url::Url;
 
 use crate::{Config, commands};
@@ -35,14 +36,16 @@ pub trait GetAssetSymbol {
 
 impl<S: Default> Asset<S> {
     /// Create a new container
-    fn new(url: Url) -> Rc<Self> {
-        Rc::new(Self {
+    fn new(url: Url) -> Self {
+        Self {
             url,
             diagnostics: RcMut::new(Default::default()),
             state: Default::default(),
-        })
+        }
     }
+}
 
+pub trait TryFilePath: ResourceLocation {
     fn try_file_path(&self) -> Result<std::path::PathBuf> {
         match self.to_file_path() {
             Some(path) => Ok(path),
@@ -59,7 +62,8 @@ impl<S: Default> ResourceLocation for Asset<S> {
     }
 }
 
-pub type Source = Asset<source::State>;
+impl<S: Default> TryFilePath for Asset<S> {}
+
 pub type Markdown = Asset<markdown::State>;
 pub type MdBook = Asset<mdbook::State>;
 pub type Builtin = Asset<builtin::State>;
@@ -68,16 +72,16 @@ pub type Builtin = Asset<builtin::State>;
 #[derive(From)]
 pub enum Document {
     /// A single source file
-    Source(Rc<Source>),
+    Source(Source),
 
     /// A markdown file containing source code snippets
-    Markdown(Rc<Markdown>),
+    Markdown(Markdown),
 
     /// An `book.toml` of a markdown book
-    MdBook(Rc<MdBook>),
+    MdBook(MdBook),
 
     /// A builtin symbol
-    Builtin(Rc<Builtin>),
+    Builtin(Builtin),
 }
 
 impl Document {
@@ -141,8 +145,8 @@ impl ResourceLocation for Document {
 }
 
 impl commands::LoadFromFile for Document {
-    fn load_from_file(&self) -> Result {
-        match &self {
+    fn load_from_file(&mut self) -> Result {
+        match self {
             Document::Source(item) => item.load_from_file(),
             Document::Markdown(item) => item.load_from_file(),
             Document::MdBook(item) => item.load_from_file(),
@@ -152,8 +156,8 @@ impl commands::LoadFromFile for Document {
 }
 
 impl commands::Format for Document {
-    fn format(&self, params: &commands::FormatParameters) -> Result<bool> {
-        match &self {
+    fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
+        match self {
             Document::Source(item) => item.format(params),
             Document::Markdown(item) => item.format(params),
             Document::MdBook(item) => item.format(params),
@@ -174,9 +178,9 @@ impl commands::Sync for Document {
 }
 
 impl commands::Check for Document {
-    fn check(&self, config: &Config) -> Result<bool> {
-        match &self {
-            Document::Source(asset) => asset.check(config),
+    fn check(&mut self, config: &Config) -> Result<bool> {
+        match self {
+            Document::Source(source) => source.check(config),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
             Document::Builtin(_) => todo!(),

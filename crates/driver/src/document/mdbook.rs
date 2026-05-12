@@ -6,7 +6,7 @@ use microcad_lang_markdown::{MdBook, MdBookError};
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::{commands, document};
+use crate::{commands, document, document::TryFilePath};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum MdBookUnitError {
@@ -26,7 +26,7 @@ pub struct State {
 }
 
 impl commands::LoadFromFile for document::MdBook {
-    fn load_from_file(&self) -> document::Result {
+    fn load_from_file(&mut self) -> document::Result {
         let state = &mut *self.state.borrow_mut();
         state.mdbook = Some(
             MdBook::new(self.try_file_path()?)
@@ -37,7 +37,7 @@ impl commands::LoadFromFile for document::MdBook {
 }
 
 impl commands::Format for document::MdBook {
-    fn format(&self, params: &commands::FormatParameters) -> document::Result<bool> {
+    fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
         commands::LoadFromFile::load_from_file(self)?;
 
         let state = &mut *self.state.borrow_mut();

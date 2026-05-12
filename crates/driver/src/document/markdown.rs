@@ -5,7 +5,7 @@ use microcad_lang_base::{Diagnostics, RcMut};
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::{commands, document};
+use crate::{commands, document, document::TryFilePath};
 use microcad_lang_markdown::{Markdown, MarkdownError};
 
 #[derive(Error, Debug, Diagnostic)]
@@ -25,7 +25,7 @@ pub struct State {
 }
 
 impl commands::LoadFromFile for document::Markdown {
-    fn load_from_file(&self) -> document::Result {
+    fn load_from_file(&mut self) -> document::Result {
         let state = &mut *self.state.borrow_mut();
         state.markdown = Some(
             Markdown::load(self.try_file_path()?)
@@ -36,7 +36,7 @@ impl commands::LoadFromFile for document::Markdown {
 }
 
 impl commands::Format for document::Markdown {
-    fn format(&self, params: &commands::FormatParameters) -> document::Result<bool> {
+    fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
         let mut formatted = false;
         let config = params;
         let state = &mut *self.state.borrow_mut();

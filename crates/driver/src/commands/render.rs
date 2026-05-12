@@ -28,5 +28,5 @@ impl RenderParameters {
 }
 
 pub trait Render {
-    fn render(&self, params: &RenderParameters) -> document::Result;
+    fn render(&mut self, params: &RenderParameters) -> document::Result;
 }
