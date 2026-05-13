@@ -3,8 +3,6 @@
 
 //! µcad CLI export command
 
-use std::str::FromStr;
-
 use microcad_driver::Document;
 
 use crate::{Cli, commands::RunCommand};
@@ -26,46 +24,32 @@ pub struct Export {
     /// List all export target files.
     #[arg(short, long)]
     pub targets: bool,
-
-    /// Omit export.
-    #[arg(short, long)]
-    pub dry_run: bool,
 }
 
 impl RunCommand for Export {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::commands::{
-            Export as _, GetExportTargetParameters, Pipeline, Render, RenderParameters,
+        use microcad_driver::commands::{Compile, Export as _, ExportParameters};
+
+        let mut document = Document::from_file(&self.input)?;
+
+        let params = ExportParameters {
+            input_path: self.input.clone(),
+            output_path: self.output.clone(),
+            config: cli.config.export.clone(),
         };
 
-        let document = Document::from_file(&self.input)?;
-
-        match document {
-            Document::Source(mut source) => {
-                let params = GetExportTargetParameters {
-                    input_path: self.input.clone(),
-                    output_path: self.output.clone(),
-                    config: cli.config.export.clone(),
-                };
-
-                match source
-                    .run_pipeline(&cli.config)
-                    .and(source.render(&RenderParameters::from_str(&self.resolution)?))
-                    .and(source.get_export_targets(&params))
-                {
-                    Ok(targets) => {
-                        targets.export()?;
-                    }
-                    Err(_) => {
-                        eprintln!("Error export documentation:");
-                        cli.print_diagnostics(&source);
-                    }
-                }
-                Ok(())
+        match document
+            .compile(cli.compile_parameters(&self.resolution)?)
+            .and(document.get_export_targets(&params))
+        {
+            Ok(targets) => {
+                targets.export()?;
             }
-            Document::Markdown(_) => miette::bail!("Export for markdown is not implemented"),
-            Document::MdBook(_) => miette::bail!("Export for mdbook is not implemented"),
-            Document::Builtin(_) => miette::bail!("Export for builtin is not implemented"),
+            Err(_) => {
+                eprintln!("Error export documentation:");
+                cli.print_diagnostics(&document);
+            }
         }
+        Ok(())
     }
 }

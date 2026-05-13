@@ -24,33 +24,33 @@ pub struct Watch {
 /// Run this command for a CLI.
 impl RunCommand for Watch {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::commands::{
-            Export, GetExportTargetParameters, Pipeline, Render, RenderParameters,
-        };
-        use std::str::FromStr;
+        use microcad_driver::commands::{Compile, CompileParameters, Export, ExportParameters};
 
         let mut watcher = microcad_driver::Watcher::new()?;
         let input = cli.config.path_with_default_ext(&self.input);
         let render_cache = RcMut::new(RenderCache::new());
 
-        let render_params =
-            RenderParameters::from_str(&self.resolution)?.with_cache(render_cache.clone());
-        let export_params = GetExportTargetParameters {
+        let export_params = ExportParameters {
             input_path: self.input.clone(),
             output_path: self.output.clone(),
             config: cli.config.export.clone(),
+        };
+
+        let compile_params = cli.compile_parameters(&self.resolution)?;
+        let compile_params = CompileParameters {
+            resolve: compile_params.resolve,
+            render: compile_params.render.with_cache(render_cache.clone()),
         };
 
         // Recompile whenever something relevant happens.
         loop {
             let mut document = Document::from_file(&input)?;
             match document
-                .run_pipeline(&cli.config)
-                .and(document.render(&render_params))
+                .compile(compile_params.clone())
                 .and(document.export(&export_params))
             {
                 Ok(exported_files) => {
-                    eprintln!("{exported_files}");
+                    eprint!("{exported_files}");
                 }
                 Err(err) => {
                     eprintln!("{err}");

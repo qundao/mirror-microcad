@@ -3,6 +3,8 @@
 
 //! µcad CLI.
 
+use std::str::FromStr;
+
 use clap::Parser;
 
 use crate::commands::*;
@@ -40,6 +42,20 @@ impl Cli {
             cli.config = std::rc::Rc::new(microcad_driver::Config::load(config_path)?);
         }
         Ok(cli)
+    }
+
+    /// Generate compile parameters
+    pub fn compile_parameters(
+        &self,
+        resolution: &str,
+    ) -> miette::Result<microcad_driver::commands::CompileParameters> {
+        use microcad_driver::commands::compile::*;
+        Ok(CompileParameters {
+            resolve: ResolveParameters {
+                search_paths: self.config.search_paths.clone(),
+            },
+            render: RenderParameters::from_str(resolution)?,
+        })
     }
 
     /// Print diagnostics with colors and unicode.

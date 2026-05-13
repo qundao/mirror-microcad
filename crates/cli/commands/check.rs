@@ -1,26 +1,26 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_driver::Document;
-
 use crate::{Cli, commands::RunCommand};
 
+/// Check a µcad file for error but do not export anything.
 #[derive(clap::Parser)]
 pub struct Check {
+    /// Input µcad file.
     input: std::path::PathBuf,
 }
 
 impl RunCommand<()> for Check {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::commands::Check;
+        use microcad_driver::{Document, commands::Compile};
         let mut document = Document::from_file(&self.input)?;
 
-        match document.check(cli.config.as_ref()) {
-            Ok(true) => {
+        match document.compile(cli.compile_parameters("0.1mm")?) {
+            Ok(_) => {
                 eprintln!("File is ok.")
             }
-            Ok(false) | Err(_) => {
-                eprintln!("File has issues:");
+            Err(err) => {
+                eprintln!("File has issues:\n{err}");
                 cli.print_diagnostics(&document);
             }
         }
