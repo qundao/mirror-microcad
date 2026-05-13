@@ -5496,6 +5496,7 @@ dependencies = [
  "microcad-builtin",
  "microcad-core",
  "microcad-docgen",
+ "microcad-driver",
  "microcad-export",
  "microcad-lang",
  "microcad-lang-base",
