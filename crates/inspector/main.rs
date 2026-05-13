@@ -92,7 +92,7 @@ impl Inspector {
                 // resolve the file
                 let resolve_context = microcad_lang::resolve::ResolveContext::create(
                     source_file,
-                    &self.args.search_paths,
+                    self.args.search_paths.clone(),
                     Some(microcad_builtin::builtin_module()),
                     microcad_lang_base::DiagHandler::default(),
                 )?;
