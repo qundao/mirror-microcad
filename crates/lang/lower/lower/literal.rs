@@ -35,9 +35,10 @@ impl Lower for ir::Literal {
                     context.src_ref(&lit.span),
                 ))
             }
-            ast::LiteralKind::String(_) => {
-                unreachable!("string literal are handled else were");
-            }
+            ast::LiteralKind::String(lit) => ir::Literal(Refer::new(
+                lit.content.clone().into(),
+                context.src_ref(&lit.span),
+            )),
             ast::LiteralKind::Error(e) => {
                 return Err(LowerError::InvalidLiteral {
                     error: e.kind.clone(),
