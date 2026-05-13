@@ -9,7 +9,7 @@ pub struct DocGenParameters {
 }
 
 impl DocGenParameters {
-    fn generator(&self) -> miette::Result<Box<dyn microcad_docgen::DocGen>> {
+    fn generator(&self) -> document::Result<Box<dyn microcad_docgen::DocGen>> {
         let name = self.generator_id.clone().unwrap_or("md".to_string());
         use microcad_docgen::*;
         match name.as_str() {
@@ -24,17 +24,12 @@ impl DocGenParameters {
     }
 }
 
-pub trait DocGen: document::GetAssetSymbol {
+pub trait DocGen: document::GetSymbol {
     fn doc_gen(&self, params: &DocGenParameters) -> document::Result {
-        use microcad_lang_base::RcMut;
-
-        let generator = params
-            .generator()
-            .map_err(|err| RcMut::new(miette::miette!("{err}").into()))?;
-
+        let generator = params.generator()?;
         let symbol = self.get_symbol()?;
         generator
             .doc_gen(&symbol)
-            .map_err(|err| RcMut::new(miette::miette!("{err}").into()))
+            .map_err(|err| miette::miette!("{err}").into())
     }
 }

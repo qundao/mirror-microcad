@@ -2,26 +2,44 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_builtin::Symbol;
+use microcad_lang_base::{Diagnostics, RcMut, ResourceLocation, Url};
 
-use crate::{commands, document};
+use crate::{
+    commands,
+    document::{self, CaptureDiags},
+};
 
-#[derive(Default, Debug)]
-pub struct State {
-    symbol: Option<Symbol>,
+#[derive(Debug)]
+pub struct Builtin {
+    url: Url,
+    symbol: Symbol,
 }
 
-impl document::GetAssetSymbol for document::Builtin {
-    fn get_symbol(&self) -> document::Result<Symbol> {
-        let state = &mut *self.state.borrow_mut();
-        if let Some(symbol) = &state.symbol {
-            return Ok(symbol.clone());
+impl Builtin {
+    pub fn new() -> Self {
+        Self {
+            url: "builtin://__builtin".try_into().unwrap(),
+            symbol: microcad_builtin::__builtin(),
         }
-
-        let symbol = microcad_builtin::__builtin();
-        state.symbol = Some(symbol.clone());
-
-        Ok(symbol)
     }
 }
 
-impl commands::DocGen for document::Builtin {}
+impl CaptureDiags for Builtin {
+    fn diags(&self) -> RcMut<Diagnostics> {
+        Diagnostics::default().into()
+    }
+}
+
+impl document::GetSymbol for Builtin {
+    fn get_symbol(&self) -> document::Result<Symbol> {
+        Ok(self.symbol.clone())
+    }
+}
+
+impl ResourceLocation for Builtin {
+    fn url(&self) -> &url::Url {
+        &self.url
+    }
+}
+
+impl commands::DocGen for Builtin {}

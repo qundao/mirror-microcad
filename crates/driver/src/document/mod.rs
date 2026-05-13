@@ -6,47 +6,29 @@ mod markdown;
 mod mdbook;
 mod source;
 
-use std::cell::RefCell;
-
 use derive_more::From;
 use microcad_builtin::Symbol;
 use microcad_lang_base::{
     DiagRenderOptions, Diagnostics, MICROCAD_EXTENSIONS, RcMut, ResourceLocation,
 };
 pub use source::Source;
+
 use url::Url;
 
-use crate::{Config, commands};
+use crate::{
+    Config,
+    commands::{self, LoadFromFile},
+};
 
-pub type Result<T = ()> = std::result::Result<T, RcMut<Diagnostics>>;
+pub type Result<T = ()> = miette::Result<T>;
 
-/// A document asset with a state and diagnostics
-pub struct Asset<S: Default> {
-    /// Each asset must have a unique URL.
-    url: Url,
-    /// Each document item keeps its [Diagnostics]
-    diagnostics: RcMut<Diagnostics>,
-    /// Each document has a state.
-    state: RefCell<S>,
-}
 /// Return a symbol
-pub trait GetAssetSymbol {
+pub trait GetSymbol {
     fn get_symbol(&self) -> Result<Symbol>;
 }
 
-impl<S: Default> Asset<S> {
-    /// Create a new container
-    fn new(url: Url) -> Self {
-        Self {
-            url,
-            diagnostics: RcMut::new(Default::default()),
-            state: Default::default(),
-        }
-    }
-}
-
 pub trait TryFilePath: ResourceLocation {
-    fn try_file_path(&self) -> miette::Result<std::path::PathBuf> {
+    fn try_file_path(&self) -> Result<std::path::PathBuf> {
         match self.to_file_path() {
             Some(path) => Ok(path),
             None => Err(miette::miette!("No local path: {}", self.url())),
@@ -54,17 +36,27 @@ pub trait TryFilePath: ResourceLocation {
     }
 }
 
-impl<S: Default> ResourceLocation for Asset<S> {
-    fn url(&self) -> &Url {
-        &self.url
+pub trait CaptureDiags {
+    fn diags(&self) -> RcMut<Diagnostics>;
+
+    /// Internal helper to "capture" errors into the local diagnostics collection.
+    fn capture_diags<T, E>(&self, diags: std::result::Result<T, E>) -> Option<T>
+    where
+        E: Into<Diagnostics>,
+    {
+        match diags {
+            Ok(val) => Some(val),
+            Err(err_rc) => {
+                self.diags().replace(err_rc.into());
+                None
+            }
+        }
     }
 }
 
-impl<S: Default> TryFilePath for Asset<S> {}
-
-pub type Markdown = Asset<markdown::State>;
-pub type MdBook = Asset<mdbook::State>;
-pub type Builtin = Asset<builtin::State>;
+pub type Markdown = markdown::MarkdownDocument;
+pub type MdBook = mdbook::MdBookDocument;
+pub type Builtin = builtin::Builtin;
 
 /// A document containing µcad code.
 #[derive(From)]
@@ -89,7 +81,7 @@ impl Document {
     /// * `.µcad`/`.mcad`/`.ucad`: Create a source file
     /// * `.md`: Create a markdown
     /// * `book.toml`: Create an MdBook
-    pub fn new(url: Url) -> miette::Result<Self> {
+    pub fn new(url: Url) -> Result<Self> {
         let path = url.to_file_path().unwrap();
         let file_name = path.file_name().and_then(|os| os.to_str()).unwrap_or("");
         let extension = path.extension().and_then(|os| os.to_str()).unwrap_or("");
@@ -109,7 +101,8 @@ impl Document {
         }
     }
 
-    pub fn from_file_path(path: impl AsRef<std::path::Path>) -> miette::Result<Self> {
+    /// Load a document from file.
+    pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
         use miette::IntoDiagnostic;
         let absolute_path = std::fs::canonicalize(&path).into_diagnostic()?;
         let url = Url::from_file_path(&absolute_path).map_err(|_| {
@@ -118,15 +111,19 @@ impl Document {
                 path = path.as_ref().display()
             )
         })?;
-        Self::new(url)
+        let mut document = Self::new(url)?;
+        document.load_from_file()?;
+        Ok(document)
     }
+}
 
-    pub fn diagnostics(&self) -> RcMut<Diagnostics> {
+impl CaptureDiags for Document {
+    fn diags(&self) -> RcMut<Diagnostics> {
         match self {
-            Document::Source(i) => i.diagnostics.clone(),
-            Document::Markdown(i) => i.diagnostics.clone(),
-            Document::MdBook(i) => i.diagnostics.clone(),
-            Document::Builtin(i) => i.diagnostics.clone(),
+            Document::Source(i) => i.diags(),
+            Document::Markdown(i) => i.diags(),
+            Document::MdBook(i) => i.diags(),
+            Document::Builtin(i) => i.diags(),
         }
     }
 }
@@ -134,10 +131,10 @@ impl Document {
 impl ResourceLocation for Document {
     fn url(&self) -> &Url {
         match self {
-            Document::Source(u) => &u.url,
-            Document::Markdown(u) => &u.url,
-            Document::MdBook(u) => &u.url,
-            Document::Builtin(u) => &u.url,
+            Document::Source(u) => &u.url(),
+            Document::Markdown(u) => &u.url(),
+            Document::MdBook(u) => &u.url(),
+            Document::Builtin(u) => &u.url(),
         }
     }
 }
@@ -154,31 +151,54 @@ impl commands::LoadFromFile for Document {
 }
 
 impl commands::Pipeline for Document {
-    fn parse(&mut self) -> self::Result {
+    fn parse(&mut self) -> Result {
         match self {
             Document::Source(source) => source.parse(),
             _ => unimplemented!(),
         }
     }
 
-    fn lower(&mut self) -> self::Result {
+    fn lower(&mut self) -> Result {
         match self {
             Document::Source(source) => source.lower(),
             _ => unimplemented!(),
         }
     }
 
-    fn resolve(&mut self, config: &Config) -> self::Result {
+    fn resolve(&mut self, config: &Config) -> Result {
         match self {
             Document::Source(source) => source.resolve(config),
             _ => unimplemented!(),
         }
     }
 
-    fn eval(&mut self) -> self::Result {
+    fn eval(&mut self) -> Result {
         match self {
             Document::Source(source) => source.eval(),
             _ => unimplemented!(),
+        }
+    }
+}
+
+impl commands::Render for Document {
+    fn render(&mut self, params: &commands::RenderParameters) -> Result {
+        match self {
+            Document::Source(source) => source.render(params),
+            _ => unimplemented!(),
+        }
+    }
+}
+
+impl commands::Export for Document {
+    fn get_export_targets(
+        &self,
+        params: &commands::GetExportTargetParameters,
+    ) -> Result<commands::ExportTargets> {
+        match self {
+            Document::Source(source) => source.get_export_targets(params),
+            Document::Markdown(_) => todo!(),
+            Document::MdBook(_) => todo!(),
+            Document::Builtin(_) => todo!(),
         }
     }
 }
@@ -195,7 +215,7 @@ impl commands::Format for Document {
 }
 
 impl commands::Sync for Document {
-    fn sync(&self) -> miette::Result<()> {
+    fn sync(&self) -> Result {
         match &self {
             Document::Source(source) => source.sync(),
             Document::Markdown(markdown) => markdown.sync(),
@@ -216,7 +236,7 @@ impl commands::Check for Document {
     }
 }
 
-impl GetAssetSymbol for Document {
+impl GetSymbol for Document {
     fn get_symbol(&self) -> Result<Symbol> {
         match &self {
             Document::Source(asset) => asset.get_symbol(),
@@ -228,7 +248,7 @@ impl GetAssetSymbol for Document {
 }
 
 impl commands::DocGen for Document {
-    fn doc_gen(&self, params: &commands::DocGenParameters) -> self::Result {
+    fn doc_gen(&self, params: &commands::DocGenParameters) -> Result {
         match &self {
             Document::Source(asset) => asset.doc_gen(params),
             Document::Markdown(_) => todo!(),

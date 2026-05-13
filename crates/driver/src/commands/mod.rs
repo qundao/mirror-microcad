@@ -16,7 +16,7 @@ pub use print_diagnostics::*;
 pub use render::*;
 /// Load something from a file
 pub trait LoadFromFile {
-    fn load_from_file(&mut self) -> document::Result;
+    fn load_from_file(&mut self) -> miette::Result<()>;
 }
 
 pub trait Pipeline {

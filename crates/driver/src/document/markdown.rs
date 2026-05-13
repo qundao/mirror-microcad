@@ -1,11 +1,14 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, RcMut};
+use microcad_lang_base::{Diagnostics, RcMut, ResourceLocation, Url};
 use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
-use crate::{commands, document, document::TryFilePath};
+use crate::{
+    commands,
+    document::{self, CaptureDiags, TryFilePath},
+};
 use microcad_lang_markdown::{Markdown, MarkdownError};
 
 #[derive(Error, Debug, Diagnostic)]
@@ -19,18 +22,39 @@ pub enum MarkdownItemError {
     MarkdownError(#[from] MarkdownError),
 }
 
-#[derive(Default)]
-pub struct State {
+pub struct MarkdownDocument {
+    url: Url,
     markdown: Option<Markdown>,
+    diagnostics: RcMut<Diagnostics>,
+}
+
+impl MarkdownDocument {
+    pub fn new(url: Url) -> Self {
+        Self {
+            url,
+            markdown: None,
+            diagnostics: RcMut::new(Default::default()),
+        }
+    }
+}
+
+impl ResourceLocation for MarkdownDocument {
+    fn url(&self) -> &Url {
+        &self.url
+    }
+}
+
+impl TryFilePath for MarkdownDocument {}
+
+impl CaptureDiags for MarkdownDocument {
+    fn diags(&self) -> RcMut<Diagnostics> {
+        self.diagnostics.clone()
+    }
 }
 
 impl commands::LoadFromFile for document::Markdown {
-    fn load_from_file(&mut self) -> document::Result {
-        let state = &mut *self.state.borrow_mut();
-        state.markdown = Some(
-            Markdown::load(self.try_file_path().map_err(|err| RcMut::new(err.into()))?)
-                .map_err(|err| RcMut::new(MarkdownItemError::MarkdownError(err).into()))?,
-        );
+    fn load_from_file(&mut self) -> miette::Result<()> {
+        self.markdown = Some(Markdown::load(self.try_file_path()?).into_diagnostic()?);
         Ok(())
     }
 }
@@ -39,10 +63,9 @@ impl commands::Format for document::Markdown {
     fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
         let mut formatted = false;
         let config = params;
-        let state = &mut *self.state.borrow_mut();
         let mut diags = Diagnostics::default();
 
-        match &mut state.markdown {
+        match &mut self.markdown {
             Some(markdown) => {
                 markdown
                     .code_blocks_mut()
@@ -60,20 +83,20 @@ impl commands::Format for document::Markdown {
                     });
 
                 if diags.has_errors() {
-                    Err(RcMut::new(diags))
+                    self.diags().replace(diags);
+                    Err(miette::miette!("Error formatting markdown"))
                 } else {
                     Ok(formatted)
                 }
             }
-            None => Err(RcMut::new(MarkdownItemError::NotLoaded.into())),
+            None => Err(MarkdownItemError::NotLoaded.into()),
         }
     }
 }
 
 impl commands::Sync for document::Markdown {
     fn sync(&self) -> miette::Result<()> {
-        let state = &*self.state.borrow();
-        match &state.markdown {
+        match &self.markdown {
             Some(markdown) => markdown.save(self.try_file_path()?).into_diagnostic(),
             None => Err(MarkdownItemError::NotLoaded.into()),
         }

@@ -15,25 +15,59 @@ pub use microcad_lang::model::ExportCommand;
 
 pub struct ExportTargets(Vec<(Model, ExportCommand)>);
 
+#[derive(Debug)]
+pub struct ExportResult {
+    pub model: Model,
+    pub output_path: std::path::PathBuf,
+    pub value: Value,
+}
+
+impl std::fmt::Display for ExportResult {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let val_str = match &self.value {
+            Value::None => String::new(),
+            v => format!(" = {v}"),
+        };
+        write!(
+            f,
+            "{} @ {}{}",
+            self.model,
+            self.output_path.display(),
+            val_str
+        )
+    }
+}
+
+#[derive(Debug, derive_more::Deref)]
+pub struct ExportResults(Vec<ExportResult>);
+
+impl std::fmt::Display for ExportResults {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.iter().try_for_each(|r| writeln!(f, "{r}"))?;
+        if self.0.is_empty() {
+            writeln!(f, "Nothing to export")
+        } else {
+            writeln!(f, "\nExported {} file(s) successfully.", self.0.len())
+        }
+    }
+}
+
 impl ExportTargets {
-    pub fn export(&self) -> miette::Result<()> {
+    pub fn export(&self) -> miette::Result<ExportResults> {
+        let mut results = Vec::new();
         self.0
             .iter()
             .try_for_each(|(model, export)| -> miette::Result<()> {
                 let value = export.export(model)?;
-                if !matches!(value, Value::None) {
-                    log::info!("{value}");
-                };
+                results.push(ExportResult {
+                    model: model.clone(),
+                    output_path: export.filename.clone(),
+                    value,
+                });
                 Ok(())
             })?;
 
-        eprintln!("Exported {} file(s) successfully:", self.0.len());
-        self.0.iter().for_each(|(_, export)| {
-            let filename = export.filename.display();
-            eprintln!("\t{filename}");
-        });
-
-        Ok(())
+        Ok(ExportResults(results))
     }
 
     pub fn list(&self) -> miette::Result<()> {
@@ -136,9 +170,13 @@ impl GetExportTargetParameters {
     }
 }
 
-pub trait GetExportTargets {
+pub trait Export {
     fn get_export_targets(
         &self,
         params: &GetExportTargetParameters,
-    ) -> document::Result<ExportTargets>;
+    ) -> miette::Result<ExportTargets>;
+
+    fn export(&self, params: &GetExportTargetParameters) -> miette::Result<ExportResults> {
+        self.get_export_targets(params)?.export()
+    }
 }

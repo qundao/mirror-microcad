@@ -1,12 +1,15 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, RcMut};
+use microcad_lang_base::{Diagnostics, RcMut, ResourceLocation, Url};
 use microcad_lang_markdown::{MdBook, MdBookError};
 use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
-use crate::{commands, document, document::TryFilePath};
+use crate::{
+    commands,
+    document::{self, CaptureDiags, TryFilePath},
+};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum MdBookUnitError {
@@ -19,32 +22,50 @@ pub enum MdBookUnitError {
     MdBook(#[from] MdBookError),
 }
 
-/// State of a markdown book
-#[derive(Default)]
-pub struct State {
+/// A markdown book document
+pub struct MdBookDocument {
+    url: Url,
     mdbook: Option<MdBook>,
+    diags: RcMut<Diagnostics>,
+}
+
+impl MdBookDocument {
+    pub fn new(url: Url) -> Self {
+        Self {
+            url,
+            mdbook: None,
+            diags: RcMut::new(Default::default()),
+        }
+    }
+}
+
+impl ResourceLocation for MdBookDocument {
+    fn url(&self) -> &url::Url {
+        &self.url
+    }
+}
+
+impl TryFilePath for MdBookDocument {}
+
+impl CaptureDiags for MdBookDocument {
+    fn diags(&self) -> RcMut<Diagnostics> {
+        self.diags.clone()
+    }
 }
 
 impl commands::LoadFromFile for document::MdBook {
-    fn load_from_file(&mut self) -> document::Result {
-        let state = &mut *self.state.borrow_mut();
-        state.mdbook = Some(
-            MdBook::new(self.try_file_path().map_err(|err| RcMut::new(err.into()))?)
-                .map_err(|err| RcMut::new(MdBookUnitError::MdBook(err).into()))?,
-        );
+    fn load_from_file(&mut self) -> miette::Result<()> {
+        self.mdbook = Some(MdBook::new(self.try_file_path()?).into_diagnostic()?);
         Ok(())
     }
 }
 
 impl commands::Format for document::MdBook {
     fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
-        commands::LoadFromFile::load_from_file(self)?;
-
-        let state = &mut *self.state.borrow_mut();
         let mut formatted = false;
         let config = params;
 
-        match &mut state.mdbook {
+        match &mut self.mdbook {
             Some(mdbook) => {
                 let mut diags = Diagnostics::default();
 
@@ -64,20 +85,20 @@ impl commands::Format for document::MdBook {
                     });
 
                 if diags.has_errors() {
-                    Err(RcMut::new(diags))
+                    self.diags().replace(diags);
+                    Err(miette::miette!("Error formatting mdbook"))
                 } else {
                     Ok(formatted)
                 }
             }
-            None => Err(RcMut::new(MdBookUnitError::NotLoaded.into())),
+            None => Err(MdBookUnitError::NotLoaded.into()),
         }
     }
 }
 
 impl commands::Sync for document::MdBook {
     fn sync(&self) -> miette::Result<()> {
-        let state = &*self.state.borrow();
-        match &state.mdbook {
+        match &self.mdbook {
             Some(mdbook) => mdbook.save_all().into_diagnostic(),
             None => Err(MdBookUnitError::NotLoaded.into()),
         }

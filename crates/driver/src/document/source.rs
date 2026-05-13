@@ -17,9 +17,8 @@ use thiserror::Error;
 use url::Url;
 
 use crate::{
-    Config, base,
-    commands::{self, LoadFromFile},
-    document::{self, TryFilePath},
+    Config, base, commands,
+    document::{self, CaptureDiags, TryFilePath},
     ir,
 };
 
@@ -80,20 +79,6 @@ impl Source {
             model: None,
         }
     }
-
-    /// Internal helper to "capture" errors into the local diagnostics collection.
-    fn capture<T, E>(&self, result: std::result::Result<T, E>) -> Option<T>
-    where
-        E: Into<Diagnostics>,
-    {
-        match result {
-            Ok(val) => Some(val),
-            Err(err_rc) => {
-                self.diagnostics.replace(err_rc.into());
-                None
-            }
-        }
-    }
 }
 
 impl ResourceLocation for Source {
@@ -104,17 +89,21 @@ impl ResourceLocation for Source {
 
 impl TryFilePath for Source {}
 
+impl CaptureDiags for Source {
+    fn diags(&self) -> RcMut<Diagnostics> {
+        self.diagnostics.clone()
+    }
+}
+
 impl commands::Format for Source {
     fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
         if self.base_source.is_none() {
-            return Err(RcMut::new(
-                SourceError::InvalidState(self.url.clone()).into(),
-            ));
+            return Err(SourceError::InvalidState(self.url.clone()).into());
         }
 
         if let Some(ast_source) = &self.ast_source {
             let new_source =
-                self.capture(microcad_lang_format::format_source(&ast_source, &params));
+                self.capture_diags(microcad_lang_format::format_source(&ast_source, &params));
             self.ast_source = new_source;
             self.ir_source = None;
             self.resolve_context = None;
@@ -131,12 +120,12 @@ impl commands::Format for Source {
                 line_offset: ast_source.line_offset,
                 code: ast_source.code.clone(),
             });
-            return Ok(formatted);
+            Ok(formatted)
+        } else {
+            Err(miette::miette!(
+                "Source code has not been formatted successfully"
+            ))
         }
-
-        Err(RcMut::new(
-            miette::miette!("You need to parse the source code first").into(),
-        ))
     }
 }
 
@@ -145,20 +134,19 @@ impl commands::LoadFromFile for document::Source {
         let path = self
             .url
             .to_file_path()
-            .map_err(|_| RcMut::new(SourceError::NoFileUrl(self.url.clone()).into()))?;
+            .map_err(|_| SourceError::NoFileUrl(self.url.clone()))?;
 
         self.base_source = Some(base::Source::new(
             self.url.clone(),
             0,
-            std::fs::read_to_string(path)
-                .map_err(|err| RcMut::new(SourceError::IoError(err).into()))?,
+            std::fs::read_to_string(path).into_diagnostic()?,
         ));
         Ok(())
     }
 }
 
 impl commands::Sync for document::Source {
-    fn sync(&self) -> miette::Result<()> {
+    fn sync(&self) -> document::Result {
         match &self.base_source {
             Some(base_source) => {
                 std::fs::write(self.try_file_path()?, base_source.code.value().as_bytes())
@@ -174,9 +162,12 @@ impl commands::Pipeline for document::Source {
         match &self.base_source {
             Some(base_source) => {
                 let parse_context = ParseContext::from(base_source);
-                self.ast_source = self.capture(
-                    ast::Source::parse(&parse_context)
-                        .map_err(|err| err.to_diagnostics(&parse_context)),
+                self.ast_source = Some(
+                    self.capture_diags(
+                        ast::Source::parse(&parse_context)
+                            .map_err(|err| err.to_diagnostics(&parse_context)),
+                    )
+                    .ok_or_else(|| miette::miette!("Failed to parse"))?,
                 );
                 self.ir_source = None;
                 self.resolve_context = None;
@@ -184,44 +175,45 @@ impl commands::Pipeline for document::Source {
                 self.model = None;
                 Ok(())
             }
-            None => Err(RcMut::new(
-                SourceError::InvalidState(self.url.clone()).into(),
-            )),
+            None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
     }
 
     fn lower(&mut self) -> document::Result {
         match &self.ast_source {
             Some(ast_source) => {
-                self.ir_source = self.capture(ir::Source::from_source(&ast_source));
+                self.ir_source = Some(
+                    self.capture_diags(ir::Source::from_source(&ast_source))
+                        .ok_or_else(|| miette::miette!("Failed to parse"))?,
+                );
+
                 self.resolve_context = None;
                 self.eval_context = None;
                 self.model = None;
                 Ok(())
             }
-            None => Err(RcMut::new(
-                SourceError::InvalidState(self.url.clone()).into(),
-            )),
+            None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
     }
 
     fn resolve(&mut self, config: &Config) -> document::Result {
         match &self.ir_source {
             Some(ir_source) => {
-                self.resolve_context = self.capture(ResolveContext::create(
-                    ir_source.clone(),
-                    &config.search_paths,
-                    Some(microcad_builtin::builtin_module()),
-                    DiagHandler::default(),
-                ));
+                self.resolve_context = Some(
+                    self.capture_diags(ResolveContext::create(
+                        ir_source.clone(),
+                        &config.search_paths,
+                        Some(microcad_builtin::builtin_module()),
+                        DiagHandler::default(),
+                    ))
+                    .ok_or_else(|| miette::miette!("Failed to parse"))?,
+                );
 
                 self.eval_context = None;
                 self.model = None;
                 Ok(())
             }
-            None => Err(RcMut::new(
-                SourceError::InvalidState(self.url.clone()).into(),
-            )),
+            None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
     }
 
@@ -230,9 +222,7 @@ impl commands::Pipeline for document::Source {
         let resolve_context = match resolve_context {
             Some(resolve_context) => resolve_context,
             None => {
-                return Err(RcMut::new(
-                    SourceError::InvalidState(self.url.clone()).into(),
-                ));
+                return Err(SourceError::InvalidState(self.url.clone()).into());
             }
         };
 
@@ -250,7 +240,7 @@ impl commands::Pipeline for document::Source {
                     self.diagnostics = diag.clone();
                     self.model = None;
                     self.eval_context = None;
-                    Err(diag)
+                    Err(miette::miette!("Error during evaluation"))
                 } else {
                     self.model = model;
                     self.eval_context = Some(eval_context);
@@ -270,26 +260,24 @@ impl commands::Render for document::Source {
         let model = match model {
             Some(model) => model,
             None => {
-                return Err(RcMut::new(
-                    SourceError::InvalidState(self.url.clone()).into(),
-                ));
+                return Err(SourceError::InvalidState(self.url.clone()).into());
             }
         };
 
-        if let Some(mut render_context) = self.capture(RenderContext::new(
+        if let Some(mut render_context) = self.capture_diags(RenderContext::new(
             &model,
             params.resolution.clone(),
             params.cache.clone(),
             None,
         )) {
-            self.model = self.capture(model.render_with_context(&mut render_context));
+            self.model = self.capture_diags(model.render_with_context(&mut render_context));
         }
 
         Ok(())
     }
 }
 
-impl document::GetAssetSymbol for document::Source {
+impl document::GetSymbol for document::Source {
     fn get_symbol(&self) -> document::Result<Symbol> {
         if let Some(eval_context) = &self.eval_context {
             return Ok(eval_context.root.clone());
@@ -327,25 +315,21 @@ impl commands::PrintDiagnostics for document::Source {
     }
 }
 
-impl commands::GetExportTargets for document::Source {
+impl commands::Export for document::Source {
     fn get_export_targets(
         &self,
         params: &commands::GetExportTargetParameters,
     ) -> document::Result<commands::ExportTargets> {
         if let Some(model) = &self.model {
             let exporters = self.eval_context.as_ref().unwrap().exporters();
-            let default_exporter = params
-                .default_exporter(&model.deduce_output_type(), exporters)
-                .map_err(|err| RcMut::new(err.into()))?;
-            let default_command = params
-                .default_export_attribute_command(exporters, default_exporter)
-                .map_err(|err| RcMut::new(err.into()))?;
+            let default_exporter =
+                params.default_exporter(&model.deduce_output_type(), exporters)?;
+            let default_command =
+                params.default_export_attribute_command(exporters, default_exporter)?;
 
-            params
-                .targets(model, default_command)
-                .map_err(|err| RcMut::new(err.into()))
+            params.targets(model, default_command)
         } else {
-            panic!("Error")
+            Err(miette::miette!("No model to export"))
         }
     }
 }
@@ -353,7 +337,7 @@ impl commands::GetExportTargets for document::Source {
 impl commands::Check for document::Source {
     fn check(&mut self, config: &Config) -> document::Result<bool> {
         use crate::commands::Pipeline;
-        match self.load_from_file().and(self.run_pipeline(config)) {
+        match self.run_pipeline(config) {
             Ok(()) => Ok(true),
             Err(diag) => Err(diag),
         }
