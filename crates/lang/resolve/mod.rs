@@ -10,7 +10,7 @@
 //! let source_file = ir::Source::load("my.µcad").expect("parsing success");
 //! let mut context = ResolveContext::create(
 //!     source_file,
-//!     &["./std/lib"],
+//!     vec!["./std/lib".into()],
 //!     None,
 //!     microcad_lang_base::DiagHandler::default(),
 //! ).unwrap();
