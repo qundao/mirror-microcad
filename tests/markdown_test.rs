@@ -54,7 +54,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         env.code(),
         env.line_offset,
     );
-    let sources = Sources::load(source.clone(), &<Vec<&str>>::new()).expect("no externals to fail");
+    let sources = Sources::load(source.clone(), vec![]).expect("no externals to fail");
     let render_options = DiagRenderOptions {
         color: false,
         ..Default::default()
@@ -202,7 +202,7 @@ fn create_context(source: &Rc<Source>) -> EvalContext {
     let mut context = EvalContext::from_source(
         source.clone(),
         Some(microcad_builtin::builtin_module()),
-        &["../crates/std/lib", "../assets"],
+        vec!["../crates/std/lib".into(), "../assets".into()],
         Capture::new(),
         microcad_builtin::builtin_exporters(),
         microcad_builtin::builtin_importers(),
@@ -225,19 +225,19 @@ fn report_model(
     if let Some(model) = model {
         writeln!(log, "-- Model --\n{}", FormatTree(&model))?;
 
+        let resolution = if env.hires() {
+            RenderResolution::high()
+        } else {
+            RenderResolution::medium()
+        };
+
         let export = match model.deduce_output_type() {
             OutputType::Geometry2D => Some(Export {
                 filename: env.out_file("svg"),
-                resolution: RenderResolution::default(),
                 exporter: Rc::new(SvgExporter),
             }),
             OutputType::Geometry3D => Some(Export {
                 filename: env.out_file("stl"),
-                resolution: if env.hires() {
-                    RenderResolution::default()
-                } else {
-                    RenderResolution::coarse()
-                },
                 exporter: Rc::new(StlExporter),
             }),
             OutputType::NotDetermined => {
@@ -246,11 +246,28 @@ fn report_model(
             }
             _ => panic!("Invalid geometry output"),
         };
+
         match export {
-            Some(export) => match export.render_and_export(&model) {
-                Ok(_) => writeln!(log, "Export of {:?} successful.", export.filename),
-                Err(error) => writeln!(log, "Export error: {error}"),
-            },
+            Some(export) => {
+                use microcad_lang::render::{RenderCache, RenderContext, RenderWithContext};
+                let render_cache = microcad_driver::RcMut::new(RenderCache::default());
+                let Ok(mut render_context) =
+                    RenderContext::new(&model, resolution, Some(render_cache), None)
+                else {
+                    // This block runs ONLY on error
+                    let _ = writeln!(log, "Export error during context creation");
+                    return Ok(()); // Stop here and return Ok to the caller
+                };
+                // If we reach here, render_context is safely initialized and usable
+                let Ok(model) = model.render_with_context(&mut render_context) else {
+                    let _ = writeln!(log, "Export error: Nothing to render");
+                    return Ok(());
+                };
+                match export.export(&model) {
+                    Ok(_) => writeln!(log, "Export of {:?} successful.", export.filename),
+                    Err(err) => writeln!(log, "Export error: {err}"),
+                }
+            }
             None => writeln!(log, "Nothing will be exported."),
         }
     } else {
