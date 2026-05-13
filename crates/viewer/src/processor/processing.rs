@@ -125,7 +125,7 @@ impl Processor {
                 // resolve the file
                 let resolve_context = microcad_lang::resolve::ResolveContext::create(
                     source_file.clone(),
-                    &self.context.search_paths,
+                    self.context.search_paths.clone(),
                     Some(microcad_builtin::builtin_module()),
                     microcad_lang_base::DiagHandler::default(),
                 )?;
