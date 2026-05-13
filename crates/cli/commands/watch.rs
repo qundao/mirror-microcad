@@ -25,24 +25,16 @@ pub struct Watch {
 impl RunCommand for Watch {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         use microcad_driver::commands::{
-            GetExportTargetParameters, GetExportTargets, LoadFromFile, Pipeline, Render,
-            RenderParameters,
+            Export, GetExportTargetParameters, Pipeline, Render, RenderParameters,
         };
+        use std::str::FromStr;
 
         let mut watcher = microcad_driver::Watcher::new()?;
         let input = cli.config.path_with_default_ext(&self.input);
-        let document = Document::from_file_path(&input)?;
         let render_cache = RcMut::new(RenderCache::new());
 
-        let mut document = match document {
-            Document::Source(item) => item,
-            Document::Markdown(_) => todo!(),
-            Document::MdBook(_) => todo!(),
-            Document::Builtin(_) => todo!(),
-        };
-
         let render_params =
-            RenderParameters::new(self.resolution.clone()).with_cache(render_cache.clone());
+            RenderParameters::from_str(&self.resolution)?.with_cache(render_cache.clone());
         let export_params = GetExportTargetParameters {
             input_path: self.input.clone(),
             output_path: self.output.clone(),
@@ -51,16 +43,17 @@ impl RunCommand for Watch {
 
         // Recompile whenever something relevant happens.
         loop {
+            let mut document = Document::from_file(&input)?;
             match document
-                .load_from_file()
-                .and(document.run_pipeline(&cli.config))
+                .run_pipeline(&cli.config)
                 .and(document.render(&render_params))
-                .and(document.get_export_targets(&export_params))
+                .and(document.export(&export_params))
             {
-                Ok(targets) => {
-                    targets.export()?;
+                Ok(exported_files) => {
+                    eprintln!("{exported_files}");
                 }
-                Err(_) => {
+                Err(err) => {
+                    eprintln!("{err}");
                     cli.print_diagnostics(&document);
                 }
             }

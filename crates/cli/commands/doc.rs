@@ -26,7 +26,7 @@ pub struct Doc {
 
 impl RunCommand<()> for Doc {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let document = Document::from_file_path(&self.input)?;
+        let document = Document::from_file(&self.input)?;
         use microcad_driver::commands::{DocGen, DocGenParameters};
         let params = DocGenParameters {
             generator_id: self.generator.clone(),

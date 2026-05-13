@@ -3,13 +3,9 @@
 
 //! µcad CLI export command
 
-use microcad_driver::{
-    Document,
-    commands::{
-        GetExportTargetParameters, GetExportTargets, LoadFromFile, Pipeline, Render,
-        RenderParameters,
-    },
-};
+use std::str::FromStr;
+
+use microcad_driver::Document;
 
 use crate::{Cli, commands::RunCommand};
 
@@ -38,7 +34,11 @@ pub struct Export {
 
 impl RunCommand for Export {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let document = Document::from_file_path(&self.input)?;
+        use microcad_driver::commands::{
+            Export as _, GetExportTargetParameters, Pipeline, Render, RenderParameters,
+        };
+
+        let document = Document::from_file(&self.input)?;
 
         match document {
             Document::Source(mut source) => {
@@ -49,9 +49,8 @@ impl RunCommand for Export {
                 };
 
                 match source
-                    .load_from_file()
-                    .and(source.run_pipeline(&cli.config))
-                    .and(source.render(&RenderParameters::new(self.resolution.clone())))
+                    .run_pipeline(&cli.config)
+                    .and(source.render(&RenderParameters::from_str(&self.resolution)?))
                     .and(source.get_export_targets(&params))
                 {
                     Ok(targets) => {
