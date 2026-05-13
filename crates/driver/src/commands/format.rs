@@ -3,12 +3,12 @@
 
 //! Command to format a document.
 
-use crate::document;
+use crate::Result;
 
 /// Format parameters
 pub type FormatParameters = microcad_lang_format::FormatConfig;
 
 /// Format a document.
 pub trait Format {
-    fn format(&mut self, params: &FormatParameters) -> document::Result<bool>;
+    fn format(&mut self, params: &FormatParameters) -> Result<bool>;
 }

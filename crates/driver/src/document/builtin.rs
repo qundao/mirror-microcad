@@ -4,10 +4,7 @@
 use microcad_builtin::Symbol;
 use microcad_lang_base::{Diagnostics, RcMut, ResourceLocation, Url};
 
-use crate::{
-    commands,
-    document::{self, CaptureDiags},
-};
+use crate::{Result, commands, document};
 
 #[derive(Debug)]
 pub struct Builtin {
@@ -24,20 +21,20 @@ impl Builtin {
     }
 }
 
-impl CaptureDiags for Builtin {
+impl document::CaptureDiags for Builtin {
     fn diags(&self) -> RcMut<Diagnostics> {
         Diagnostics::default().into()
     }
 }
 
 impl document::GetSymbol for Builtin {
-    fn get_symbol(&self) -> document::Result<Symbol> {
+    fn get_symbol(&self) -> Result<Symbol> {
         Ok(self.symbol.clone())
     }
 }
 
 impl ResourceLocation for Builtin {
-    fn url(&self) -> &url::Url {
+    fn url(&self) -> &Url {
         &self.url
     }
 }

@@ -8,19 +8,13 @@ mod source;
 
 use derive_more::From;
 use microcad_builtin::Symbol;
+
 use microcad_lang_base::{
-    DiagRenderOptions, Diagnostics, MICROCAD_EXTENSIONS, RcMut, ResourceLocation,
+    DiagRenderOptions, Diagnostics, MICROCAD_EXTENSIONS, RcMut, ResourceLocation, Url,
 };
 pub use source::Source;
 
-use url::Url;
-
-use crate::{
-    Config,
-    commands::{self, LoadFromFile},
-};
-
-pub type Result<T = ()> = miette::Result<T>;
+use crate::{Result, commands};
 
 /// Return a symbol
 pub trait GetSymbol {
@@ -103,6 +97,7 @@ impl Document {
 
     /// Load a document from file.
     pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
+        use commands::LoadFromFile;
         use miette::IntoDiagnostic;
         let absolute_path = std::fs::canonicalize(&path).into_diagnostic()?;
         let url = Url::from_file_path(&absolute_path).map_err(|_| {
@@ -150,28 +145,34 @@ impl commands::LoadFromFile for Document {
     }
 }
 
-impl commands::Pipeline for Document {
+impl commands::compile::Parse for Document {
     fn parse(&mut self) -> Result {
         match self {
             Document::Source(source) => source.parse(),
             _ => unimplemented!(),
         }
     }
+}
 
+impl commands::compile::Lower for Document {
     fn lower(&mut self) -> Result {
         match self {
             Document::Source(source) => source.lower(),
             _ => unimplemented!(),
         }
     }
+}
 
-    fn resolve(&mut self, config: &Config) -> Result {
+impl commands::compile::Resolve for Document {
+    fn resolve(&mut self, parameters: impl Into<commands::compile::ResolveParameters>) -> Result {
         match self {
-            Document::Source(source) => source.resolve(config),
+            Document::Source(source) => source.resolve(parameters),
             _ => unimplemented!(),
         }
     }
+}
 
+impl commands::compile::Eval for Document {
     fn eval(&mut self) -> Result {
         match self {
             Document::Source(source) => source.eval(),
@@ -180,8 +181,8 @@ impl commands::Pipeline for Document {
     }
 }
 
-impl commands::Render for Document {
-    fn render(&mut self, params: &commands::RenderParameters) -> Result {
+impl commands::compile::Render for Document {
+    fn render(&mut self, params: impl Into<commands::compile::RenderParameters>) -> Result {
         match self {
             Document::Source(source) => source.render(params),
             _ => unimplemented!(),
@@ -189,10 +190,12 @@ impl commands::Render for Document {
     }
 }
 
+impl commands::Compile for Document {}
+
 impl commands::Export for Document {
     fn get_export_targets(
         &self,
-        params: &commands::GetExportTargetParameters,
+        params: &commands::ExportParameters,
     ) -> Result<commands::ExportTargets> {
         match self {
             Document::Source(source) => source.get_export_targets(params),
@@ -221,17 +224,6 @@ impl commands::Sync for Document {
             Document::Markdown(markdown) => markdown.sync(),
             Document::MdBook(mdbook) => mdbook.sync(),
             _ => unimplemented!(),
-        }
-    }
-}
-
-impl commands::Check for Document {
-    fn check(&mut self, config: &Config) -> Result<bool> {
-        match self {
-            Document::Source(source) => source.check(config),
-            Document::Markdown(_) => todo!(),
-            Document::MdBook(_) => todo!(),
-            Document::Builtin(_) => todo!(),
         }
     }
 }

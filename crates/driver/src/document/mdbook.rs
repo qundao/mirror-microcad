@@ -7,7 +7,7 @@ use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
 use crate::{
-    commands,
+    Result, commands,
     document::{self, CaptureDiags, TryFilePath},
 };
 
@@ -40,7 +40,7 @@ impl MdBookDocument {
 }
 
 impl ResourceLocation for MdBookDocument {
-    fn url(&self) -> &url::Url {
+    fn url(&self) -> &Url {
         &self.url
     }
 }
@@ -54,14 +54,14 @@ impl CaptureDiags for MdBookDocument {
 }
 
 impl commands::LoadFromFile for document::MdBook {
-    fn load_from_file(&mut self) -> miette::Result<()> {
+    fn load_from_file(&mut self) -> Result {
         self.mdbook = Some(MdBook::new(self.try_file_path()?).into_diagnostic()?);
         Ok(())
     }
 }
 
 impl commands::Format for document::MdBook {
-    fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
+    fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         let mut formatted = false;
         let config = params;
 
@@ -97,7 +97,7 @@ impl commands::Format for document::MdBook {
 }
 
 impl commands::Sync for document::MdBook {
-    fn sync(&self) -> miette::Result<()> {
+    fn sync(&self) -> Result {
         match &self.mdbook {
             Some(mdbook) => mdbook.save_all().into_diagnostic(),
             None => Err(MdBookUnitError::NotLoaded.into()),

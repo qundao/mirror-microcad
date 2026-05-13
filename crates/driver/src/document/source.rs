@@ -17,7 +17,7 @@ use thiserror::Error;
 use url::Url;
 
 use crate::{
-    Config, base, commands,
+    Result, base, commands,
     document::{self, CaptureDiags, TryFilePath},
     ir,
 };
@@ -96,7 +96,7 @@ impl CaptureDiags for Source {
 }
 
 impl commands::Format for Source {
-    fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
+    fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         if self.base_source.is_none() {
             return Err(SourceError::InvalidState(self.url.clone()).into());
         }
@@ -130,7 +130,7 @@ impl commands::Format for Source {
 }
 
 impl commands::LoadFromFile for document::Source {
-    fn load_from_file(&mut self) -> document::Result {
+    fn load_from_file(&mut self) -> Result {
         let path = self
             .url
             .to_file_path()
@@ -146,7 +146,7 @@ impl commands::LoadFromFile for document::Source {
 }
 
 impl commands::Sync for document::Source {
-    fn sync(&self) -> document::Result {
+    fn sync(&self) -> Result {
         match &self.base_source {
             Some(base_source) => {
                 std::fs::write(self.try_file_path()?, base_source.code.value().as_bytes())
@@ -157,8 +157,8 @@ impl commands::Sync for document::Source {
     }
 }
 
-impl commands::Pipeline for document::Source {
-    fn parse(&mut self) -> document::Result {
+impl commands::compile::Parse for document::Source {
+    fn parse(&mut self) -> Result {
         match &self.base_source {
             Some(base_source) => {
                 let parse_context = ParseContext::from(base_source);
@@ -178,8 +178,10 @@ impl commands::Pipeline for document::Source {
             None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
     }
+}
 
-    fn lower(&mut self) -> document::Result {
+impl commands::compile::Lower for document::Source {
+    fn lower(&mut self) -> Result {
         match &self.ast_source {
             Some(ast_source) => {
                 self.ir_source = Some(
@@ -195,14 +197,17 @@ impl commands::Pipeline for document::Source {
             None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
     }
+}
 
-    fn resolve(&mut self, config: &Config) -> document::Result {
+impl commands::compile::Resolve for document::Source {
+    fn resolve(&mut self, parameters: impl Into<commands::compile::ResolveParameters>) -> Result {
+        let parameters = parameters.into();
         match &self.ir_source {
             Some(ir_source) => {
                 self.resolve_context = Some(
                     self.capture_diags(ResolveContext::create(
                         ir_source.clone(),
-                        &config.search_paths,
+                        parameters.search_paths,
                         Some(microcad_builtin::builtin_module()),
                         DiagHandler::default(),
                     ))
@@ -216,8 +221,10 @@ impl commands::Pipeline for document::Source {
             None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
     }
+}
 
-    fn eval(&mut self) -> document::Result {
+impl commands::compile::Eval for document::Source {
+    fn eval(&mut self) -> Result {
         let resolve_context = std::mem::replace(&mut self.resolve_context, None);
         let resolve_context = match resolve_context {
             Some(resolve_context) => resolve_context,
@@ -254,9 +261,13 @@ impl commands::Pipeline for document::Source {
     }
 }
 
-impl commands::Render for document::Source {
-    fn render(&mut self, params: &commands::RenderParameters) -> document::Result {
+impl commands::compile::Render for document::Source {
+    fn render(
+        &mut self,
+        parameters: impl Into<commands::compile::RenderParameters>,
+    ) -> document::Result {
         let model = std::mem::replace(&mut self.model, None);
+        let parameters = parameters.into();
         let model = match model {
             Some(model) => model,
             None => {
@@ -266,8 +277,8 @@ impl commands::Render for document::Source {
 
         if let Some(mut render_context) = self.capture_diags(RenderContext::new(
             &model,
-            params.resolution.clone(),
-            params.cache.clone(),
+            parameters.resolution,
+            parameters.cache,
             None,
         )) {
             self.model = self.capture_diags(model.render_with_context(&mut render_context));
@@ -276,6 +287,8 @@ impl commands::Render for document::Source {
         Ok(())
     }
 }
+
+impl commands::Compile for document::Source {}
 
 impl document::GetSymbol for document::Source {
     fn get_symbol(&self) -> document::Result<Symbol> {
@@ -318,7 +331,7 @@ impl commands::PrintDiagnostics for document::Source {
 impl commands::Export for document::Source {
     fn get_export_targets(
         &self,
-        params: &commands::GetExportTargetParameters,
+        params: &commands::ExportParameters,
     ) -> document::Result<commands::ExportTargets> {
         if let Some(model) = &self.model {
             let exporters = self.eval_context.as_ref().unwrap().exporters();
@@ -330,16 +343,6 @@ impl commands::Export for document::Source {
             params.targets(model, default_command)
         } else {
             Err(miette::miette!("No model to export"))
-        }
-    }
-}
-
-impl commands::Check for document::Source {
-    fn check(&mut self, config: &Config) -> document::Result<bool> {
-        use crate::commands::Pipeline;
-        match self.run_pipeline(config) {
-            Ok(()) => Ok(true),
-            Err(diag) => Err(diag),
         }
     }
 }

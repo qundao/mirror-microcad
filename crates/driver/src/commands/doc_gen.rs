@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::document;
+use crate::{Result, document};
 
 pub struct DocGenParameters {
     pub generator_id: Option<String>,
@@ -9,7 +9,7 @@ pub struct DocGenParameters {
 }
 
 impl DocGenParameters {
-    fn generator(&self) -> document::Result<Box<dyn microcad_docgen::DocGen>> {
+    fn generator(&self) -> Result<Box<dyn microcad_docgen::DocGen>> {
         let name = self.generator_id.clone().unwrap_or("md".to_string());
         use microcad_docgen::*;
         match name.as_str() {
@@ -25,7 +25,7 @@ impl DocGenParameters {
 }
 
 pub trait DocGen: document::GetSymbol {
-    fn doc_gen(&self, params: &DocGenParameters) -> document::Result {
+    fn doc_gen(&self, params: &DocGenParameters) -> Result {
         let generator = params.generator()?;
         let symbol = self.get_symbol()?;
         generator

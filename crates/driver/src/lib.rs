@@ -1,4 +1,4 @@
-// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! µcad driver is a high-level API to be integrated in LSP, CLI or Viewer.
@@ -36,8 +36,11 @@ pub use document::Document;
 pub use session::Session;
 pub use watcher::Watcher;
 
+/// We use [`miette::Result`] throught-out this crate.
+pub type Result<T = ()> = miette::Result<T>;
+
 /// Parse a value from a string containing a literal.
-pub fn value_from_str(s: &str) -> document::Result<Value> {
+pub fn value_from_str(s: &str) -> Result<Value> {
     let parse_context = parse::ParseContext::new(s);
     use parse::Parse;
     ir::Literal::lower(

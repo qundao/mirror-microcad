@@ -6,7 +6,7 @@ use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
 use crate::{
-    commands,
+    Result, commands,
     document::{self, CaptureDiags, TryFilePath},
 };
 use microcad_lang_markdown::{Markdown, MarkdownError};
@@ -53,14 +53,14 @@ impl CaptureDiags for MarkdownDocument {
 }
 
 impl commands::LoadFromFile for document::Markdown {
-    fn load_from_file(&mut self) -> miette::Result<()> {
+    fn load_from_file(&mut self) -> Result {
         self.markdown = Some(Markdown::load(self.try_file_path()?).into_diagnostic()?);
         Ok(())
     }
 }
 
 impl commands::Format for document::Markdown {
-    fn format(&mut self, params: &commands::FormatParameters) -> document::Result<bool> {
+    fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         let mut formatted = false;
         let config = params;
         let mut diags = Diagnostics::default();
@@ -95,7 +95,7 @@ impl commands::Format for document::Markdown {
 }
 
 impl commands::Sync for document::Markdown {
-    fn sync(&self) -> miette::Result<()> {
+    fn sync(&self) -> Result {
         match &self.markdown {
             Some(markdown) => markdown.save(self.try_file_path()?).into_diagnostic(),
             None => Err(MarkdownItemError::NotLoaded.into()),

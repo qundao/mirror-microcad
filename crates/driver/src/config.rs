@@ -74,8 +74,6 @@ pub struct ExportConfig {
     pub sketch: String,
     /// Default part exporter.
     pub part: String,
-    /// Default render resolution when exported.
-    pub resolution: Option<String>,
 }
 
 impl Default for ExportConfig {
@@ -83,7 +81,6 @@ impl Default for ExportConfig {
         Self {
             sketch: "svg".into(),
             part: "stl".into(),
-            resolution: None,
         }
     }
 }
