@@ -65,7 +65,7 @@ impl EvalContext {
     pub fn from_source(
         root: std::rc::Rc<ir::Source>,
         builtin: Option<Symbol>,
-        search_paths: &[impl AsRef<std::path::Path>],
+        search_paths: Vec<std::path::PathBuf>,
         output: Box<dyn Output>,
         exporters: ExporterRegistry,
         importers: ImporterRegistry,

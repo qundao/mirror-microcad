@@ -44,7 +44,7 @@ impl Sources {
     /// Inserts the `root` file and loads all files from `search_paths`.
     pub fn load(
         root: Rc<ir::Source>,
-        search_paths: &[impl AsRef<std::path::Path>],
+        search_paths: Vec<std::path::PathBuf>,
     ) -> ResolveResult<Self> {
         let mut source_files = Vec::new();
         let mut by_name = HashMap::new();
@@ -57,7 +57,7 @@ impl Sources {
         source_files.push(root.clone());
 
         // load all external source files into cache
-        Externals::new(search_paths)?.iter().try_for_each(
+        Externals::new(&search_paths)?.iter().try_for_each(
             |(name, path)| -> Result<(), LowerErrorsWithSource> {
                 let (source_file, error) = ir::Source::load_with_name(path.clone(), name.clone());
                 let index = source_files.len();
@@ -81,9 +81,8 @@ impl Sources {
             search_paths: search_paths
                 .iter()
                 .map(|path| {
-                    path.as_ref()
-                        .canonicalize()
-                        .unwrap_or_else(|_| panic!("valid path: {}", path.as_ref().display()))
+                    path.canonicalize()
+                        .unwrap_or_else(|_| panic!("valid path: {}", path.display()))
                 })
                 .collect(),
         })

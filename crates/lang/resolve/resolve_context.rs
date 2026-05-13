@@ -25,7 +25,7 @@ impl ResolveContext {
     /// Load resolve and check a source file and referenced files.
     pub fn create(
         root: std::rc::Rc<ir::Source>,
-        search_paths: &[impl AsRef<std::path::Path>],
+        search_paths: Vec<std::path::PathBuf>,
         builtin: Option<Symbol>,
         diag: DiagHandler,
     ) -> ResolveResult<Self> {
