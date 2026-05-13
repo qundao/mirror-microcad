@@ -23,6 +23,7 @@ microcad-export = { workspace = true }
 microcad-lang = { workspace = true }
 microcad-lang-base = { workspace = true }
 microcad_test_tools = { path = "microcad_test_tools", version = "0" }
+microcad-driver = { workspace = true }
 
 [build-dependencies]
 microcad-builtin = { workspace = true }

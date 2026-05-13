@@ -47,12 +47,11 @@ fn main() {
         .doc_gen(&{
             let root = microcad_lang::lower::ir::Source::load("../crates/std/lib/std/mod.µcad")
                 .expect("No error");
-            let search_paths: Vec<std::path::PathBuf> = vec![];
 
             // Resolve std
             let context = microcad_lang::resolve::ResolveContext::create(
                 root,
-                &search_paths,
+                vec![],
                 Some(microcad_builtin::builtin_module()),
                 microcad_lang_base::DiagHandler::default(),
             )
