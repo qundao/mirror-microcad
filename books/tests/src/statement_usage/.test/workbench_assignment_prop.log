@@ -18,6 +18,6 @@
     Workpiece(Sketch) workbench_assignment_prop::K() ->
       - a = 1
 
-Export error: Render error: Nothing to render
+Export error: Nothing to render
 -- Test Result --
 OK

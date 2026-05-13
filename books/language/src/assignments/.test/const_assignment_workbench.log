@@ -29,6 +29,6 @@ Hello
     Workpiece(Sketch) const_assignment_workbench::MySketch() ->
       - text = Hello
 
-Export error: Render error: Nothing to render
+Export error: Nothing to render
 -- Test Result --
 OK

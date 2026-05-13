@@ -28,6 +28,6 @@ Unexpected warning(s) which did occur in line(s): 87
   Group (root) ->
     Workpiece(Sketch) init_assignment_var::K(l=1cm) ->
 
-Export error: Render error: Nothing to render
+Export error: Nothing to render
 -- Test Result --
 OK (BUT WARNINGS)

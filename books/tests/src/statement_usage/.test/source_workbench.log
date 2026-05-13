@@ -15,6 +15,6 @@
   Group (root) ->
     Workpiece(Sketch) source_workbench::F() ->
 
-Export error: Render error: Nothing to render
+Export error: Nothing to render
 -- Test Result --
 OK

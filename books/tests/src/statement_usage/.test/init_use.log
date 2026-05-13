@@ -27,6 +27,6 @@ Unexpected warning(s) which did occur in line(s): 38
   Group (root) ->
     Workpiece(Sketch) init_use::K(l=1cm) ->
 
-Export error: Render error: Nothing to render
+Export error: Nothing to render
 -- Test Result --
 OK (BUT WARNINGS)
