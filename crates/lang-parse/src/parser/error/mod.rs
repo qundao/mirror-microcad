@@ -35,8 +35,8 @@ impl ParseError {
 }
 
 /// Parse error collection.
-#[derive(Debug, derive_more::Deref)]
-pub struct ParseErrors(pub Vec<ParseError>);
+#[derive(Debug, Error, derive_more::Deref, miette::Diagnostic)]
+pub struct ParseErrors(#[related] pub Vec<ParseError>);
 
 impl ParseErrors {
     /// Convert parse errors to diagnostics
@@ -52,6 +52,12 @@ impl ParseErrors {
         }
 
         diag_list
+    }
+}
+
+impl std::fmt::Display for ParseErrors {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Found {} parse errors", self.0.len())
     }
 }
 
