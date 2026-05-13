@@ -137,7 +137,7 @@ impl Processor {
                 match eval::EvalContext::from_source(
                     source_file,
                     Some(microcad_builtin::builtin_module()),
-                    &self.workspace_settings.search_paths,
+                    self.workspace_settings.search_paths.clone(),
                     microcad_lang_base::Capture::new(),
                     microcad_builtin::builtin_exporters(),
                     microcad_builtin::builtin_importers(),
@@ -176,7 +176,7 @@ impl Processor {
                 match eval::EvalContext::from_source(
                     source_file,
                     Some(microcad_builtin::builtin_module()),
-                    &self.workspace_settings.search_paths,
+                    self.workspace_settings.search_paths.clone(),
                     microcad_lang_base::Capture::new(),
                     microcad_builtin::builtin_exporters(),
                     microcad_builtin::builtin_importers(),
