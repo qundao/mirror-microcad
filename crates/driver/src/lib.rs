@@ -41,9 +41,9 @@ pub fn value_from_str(s: &str) -> document::Result<Value> {
     let parse_context = parse::ParseContext::new(s);
     use parse::Parse;
     ir::Literal::lower(
-        &ast::Literal::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))?,
+        &ast::Literal::parse(&parse_context)?,
         &lower::LowerContext::new(s),
     )
-    .map_err(|err| RcMut::new(err.into()))
+    .map_err(|err| err.into())
     .map(|lit| lit.value().clone())
 }
