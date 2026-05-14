@@ -6,8 +6,7 @@
 #![allow(missing_docs)]
 
 use clap::Parser;
-
-use microcad_driver::*;
+use microcad_driver::prelude as mu;
 
 use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
@@ -39,7 +38,7 @@ pub enum ViewModelRequest {
     /// Set source code string.
     SetSourceCode {
         /// Source code to be displayed.
-        code: Hashed<String>,
+        code: mu::Hashed<String>,
     },
     /// Set the symbol tree items.
     SetSymbolTree(Vec<SymbolTreeModelItem>),
@@ -52,7 +51,7 @@ pub enum ViewModelRequest {
 struct Inspector {
     args: Args,
 
-    pub watcher: Watcher,
+    pub watcher: mu::Watcher,
 
     pub viewer_process: Arc<RwLock<Option<microcad_viewer_ipc::ViewerProcessInterface>>>,
 }
@@ -61,7 +60,7 @@ impl Inspector {
     pub fn new() -> miette::Result<Self> {
         Ok(Self {
             args: Args::parse(),
-            watcher: Watcher::new()?,
+            watcher: mu::Watcher::new()?,
             viewer_process: Arc::new(RwLock::new(None)),
         })
     }
@@ -87,11 +86,13 @@ impl Inspector {
 
                 let search_paths = search_paths.clone();
 
-                let mut document = document::Source::new(locate::to_url(&self.args.input)?);
+                let mut document = mu::document::Source::new(mu::locate::to_url(&self.args.input)?);
 
                 document.load_from_file().and_then(|_| {
                     tx.send(ViewModelRequest::SetSourceCode {
-                        code: Hashed::new(document.code().map(|code| code.to_string()).unwrap()),
+                        code: mu::Hashed::new(
+                            document.code().map(|code| code.to_string()).unwrap(),
+                        ),
                     })
                     .into_diagnostic()
                 })?;
@@ -99,7 +100,7 @@ impl Inspector {
                 document
                     .parse()
                     .and(document.lower())
-                    .and(document.resolve(commands::compile::ResolveParameters { search_paths }))
+                    .and(document.resolve(mu::ResolveParameters { search_paths }))
                     .and_then(|symbol| {
                         tx.send(ViewModelRequest::SetSymbolTree({
                             symbol
@@ -127,6 +128,7 @@ impl Inspector {
                 if let Ok(request) = rx.recv() {
                     weak.upgrade_in_event_loop(move |main_window| match request {
                         ViewModelRequest::SetSourceCode { code } => {
+                            use mu::traits::ComputedHash;
                             let items = to_slint::split_source_code(&code);
                             main_window.set_source_code_model(to_slint::model_rc_from_items(items));
 
