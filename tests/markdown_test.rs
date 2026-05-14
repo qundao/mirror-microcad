@@ -212,65 +212,60 @@ fn create_context(source: &Rc<Source>) -> EvalContext {
     context
 }
 
-fn report_model(
-    env: &TestEnv,
-    log: &mut dyn std::io::Write,
-    model: Option<Model>,
-) -> std::io::Result<()> {
+fn report_model(env: &TestEnv, log: &mut dyn std::io::Write, model: Model) -> std::io::Result<()> {
+    if model.has_no_output() {
+        return writeln!(log, "-- No Model --");
+    }
+
     use microcad_core::RenderResolution;
     use microcad_export::{stl::StlExporter, svg::SvgExporter};
     use microcad_lang::model::{ExportCommand as Export, OutputType};
 
-    // print model
-    if let Some(model) = model {
-        writeln!(log, "-- Model --\n{}", FormatTree(&model))?;
+    writeln!(log, "-- Model --\n{}", FormatTree(&model))?;
 
-        let resolution = if env.hires() {
-            RenderResolution::high()
-        } else {
-            RenderResolution::medium()
-        };
-
-        let export = match model.deduce_output_type() {
-            OutputType::Geometry2D => Some(Export {
-                filename: env.out_file("svg"),
-                exporter: Rc::new(SvgExporter),
-            }),
-            OutputType::Geometry3D => Some(Export {
-                filename: env.out_file("stl"),
-                exporter: Rc::new(StlExporter),
-            }),
-            OutputType::NotDetermined => {
-                writeln!(log, "Could not determine output type.")?;
-                None
-            }
-            _ => panic!("Invalid geometry output"),
-        };
-
-        match export {
-            Some(export) => {
-                use microcad_lang::render::{RenderCache, RenderContext, RenderWithContext};
-                let render_cache = microcad_driver::RcMut::new(RenderCache::default());
-                let Ok(mut render_context) =
-                    RenderContext::new(&model, resolution, Some(render_cache), None)
-                else {
-                    // This block runs ONLY on error
-                    let _ = writeln!(log, "Export error during context creation");
-                    return Ok(()); // Stop here and return Ok to the caller
-                };
-                // If we reach here, render_context is safely initialized and usable
-                let Ok(model) = model.render_with_context(&mut render_context) else {
-                    let _ = writeln!(log, "Export error: Nothing to render");
-                    return Ok(());
-                };
-                match export.export(&model) {
-                    Ok(_) => writeln!(log, "Export of {:?} successful.", export.filename),
-                    Err(err) => writeln!(log, "Export error: {err}"),
-                }
-            }
-            None => writeln!(log, "Nothing will be exported."),
-        }
+    let resolution = if env.hires() {
+        RenderResolution::high()
     } else {
-        writeln!(log, "-- No Model --")
+        RenderResolution::medium()
+    };
+
+    let export = match model.deduce_output_type() {
+        OutputType::Geometry2D => Some(Export {
+            filename: env.out_file("svg"),
+            exporter: Rc::new(SvgExporter),
+        }),
+        OutputType::Geometry3D => Some(Export {
+            filename: env.out_file("stl"),
+            exporter: Rc::new(StlExporter),
+        }),
+        OutputType::NotDetermined => {
+            writeln!(log, "Could not determine output type.")?;
+            None
+        }
+        _ => panic!("Invalid geometry output"),
+    };
+
+    match export {
+        Some(export) => {
+            use microcad_lang::render::{RenderCache, RenderContext, RenderWithContext};
+            let render_cache = microcad_driver::RcMut::new(RenderCache::default());
+            let Ok(mut render_context) =
+                RenderContext::new(&model, resolution, Some(render_cache), None)
+            else {
+                // This block runs ONLY on error
+                let _ = writeln!(log, "Export error during context creation");
+                return Ok(()); // Stop here and return Ok to the caller
+            };
+            // If we reach here, render_context is safely initialized and usable
+            let Ok(model) = model.render_with_context(&mut render_context) else {
+                let _ = writeln!(log, "Export error: Nothing to render");
+                return Ok(());
+            };
+            match export.export(&model) {
+                Ok(_) => writeln!(log, "Export of {:?} successful.", export.filename),
+                Err(err) => writeln!(log, "Export error: {err}"),
+            }
+        }
+        None => writeln!(log, "Nothing will be exported."),
     }
 }
