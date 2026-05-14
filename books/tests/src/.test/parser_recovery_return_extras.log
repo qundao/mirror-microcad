@@ -11,19 +11,17 @@
   57:   
   58:   a =; // error after a broken return statement
 
--- Parse Error --
+-- Errors --
   × error: 56:10: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[:56:10]
+    ╭─[../books/tests/src/parser_recovery.md:56:10]
  56 │ return 1 2;// error, unexpected tokens after return statement
     ·          ┬
     ·          ╰── unexpected integer literal
  57 │ 
     ╰────
-
--- Parse Error --
   × error: 58:4: Expected expression
-    ╭─[:58:4]
+    ╭─[../books/tests/src/parser_recovery.md:58:4]
  57 │ 
  58 │ a =; // error after a broken return statement
     ·    ┬

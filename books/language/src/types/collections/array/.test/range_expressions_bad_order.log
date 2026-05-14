@@ -10,7 +10,6 @@
   23:   [6..1]; // error
   24:   [2..-2]; // error
 
--- No Output --
 -- Errors --
   × error: 23:1: Bad range, first number (6) must be smaller than last (1)
     ╭─[../books/language/src/types/collections/array/range.md:23:1]

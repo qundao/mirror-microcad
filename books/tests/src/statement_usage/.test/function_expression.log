@@ -11,8 +11,5 @@
  103:     1 + 2;
  104:   } f();
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

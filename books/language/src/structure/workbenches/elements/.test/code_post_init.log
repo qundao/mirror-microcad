@@ -20,18 +20,16 @@
   33:   }
   34:   Wheel(radius = 1cm);
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Sketch) code_post_init::Wheel(radius=1cm, thickness=5mm) ->
+  Group (root) -> 2D (2076B281B9FE4B9B): MultiPolygon @0.25mm
+    Workpiece(Sketch) <NO ID>::Wheel(radius=1cm, thickness=5mm) -> 2D (2076B281B9FE4B9B): MultiPolygon @0.25mm
       - radius = 1cm
       - thickness = 5mm
-      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1cm) ->
+      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1cm) -> 2D (1360DEA91730CCC9): MultiPolygon @0.25mm
         - center = (x=0mm, y=0mm)
         - radius = 1cm
-        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-          Primitive2D __builtin::geo2d::Circle(radius=1cm) ->
+        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (333D599184A0DB8C): MultiPolygon @0.25mm
+          Primitive2D __builtin::geo2d::Circle(radius=1cm) -> 2D (C6D4C2F08B150FE2): Polygon @0.25mm
 
 Export of "../books/language/src/structure/workbenches/elements/.test/code_post_init-out.svg" successful.
 -- Test Result --

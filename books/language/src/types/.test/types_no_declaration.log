@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: types_no_declaration
-  Expected result: fail(no_format)
+  Expected result: ignore
       Source file: ../books/language/src/types/README.md:39
         Test path: ../books/language/src/types/.test
 

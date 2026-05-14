@@ -15,10 +15,5 @@
   18:   // call function with two parameters in arbitrary order
   19:   f(another = 2m, one = 1);
 
--- Output --
-1 2m
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -9,8 +9,5 @@
 
   33:   std::debug::assert_eq([[1mm, 2mm, 3mm], [1, 2, 3]mm]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

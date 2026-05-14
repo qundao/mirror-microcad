@@ -9,7 +9,6 @@
 
   24:   init() {} // error
 
--- No Output --
 -- Errors --
   × error: 24:1: Initializer is not allowed at source root
     ╭─[../books/tests/src/statement_usage/source.md:24:1]
@@ -19,6 +18,5 @@
     ╰────
   help: initializer is only allowed within workbench
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

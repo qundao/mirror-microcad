@@ -9,9 +9,9 @@
 
    6:   a = (1, 2, 3;
 
--- Parse Error --
+-- Errors --
   × error: 6:13: Unclosed tuple
-   ╭─[:6:5]
+   ╭─[../books/tests/src/unclosed_brackets.md:6:5]
  6 │ a = (1, 2, 3;
    ·     ┬       ▲
    ·     │       ╰── expected tuple to be closed by here with a ')'

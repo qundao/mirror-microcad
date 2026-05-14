@@ -11,13 +11,5 @@
   31:     init() { x = 1; }
   32:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(Sketch) workbench_init::K() ->
-      - x = 1
-
-Export error: Nothing to render
 -- Test Result --
 OK

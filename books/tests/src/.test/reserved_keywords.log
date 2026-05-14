@@ -33,100 +33,82 @@
   29:   
   30:   type A = Integer; // error
 
--- Parse Error --
+-- Errors --
   × error: 6:7: 'assembly' is a reserved keyword and can't be used as an identifier
-   ╭─[:6:7]
+   ╭─[../books/tests/src/reserved_keywords.md:6:7]
  6 │ const assembly = 1; // error
    ·       ────┬───
    ·           ╰── 'assembly' is a reserved keyword and can't be used as an identifier
  7 │ 
    ╰────
-
--- Parse Error --
   × error: 10:1: 'unit' is a reserved keyword and can't be used as an identifier
-    ╭─[:10:1]
+    ╭─[../books/tests/src/reserved_keywords.md:10:1]
   9 │ 
  10 │ unit = 1; // error
     · ──┬─
     ·   ╰── 'unit' is a reserved keyword and can't be used as an identifier
  11 │ 
     ╰────
-
--- Parse Error --
   × error: 12:4: 'match' is a reserved keyword and can't be used as an identifier
-    ╭─[:12:4]
+    ╭─[../books/tests/src/reserved_keywords.md:12:4]
  11 │ 
  12 │ fn match() { // error
     ·    ──┬──
     ·      ╰── 'match' is a reserved keyword and can't be used as an identifier
  13 │ 
     ╰────
-
--- Parse Error --
   × error: 16:9: 'enum' is a reserved keyword and can't be used as an identifier
-    ╭─[:16:9]
+    ╭─[../books/tests/src/reserved_keywords.md:16:9]
  15 │ 
  16 │ somefun(enum); // error
     ·         ──┬─
     ·           ╰── 'enum' is a reserved keyword and can't be used as an identifier
  17 │ 
     ╰────
-
--- Parse Error --
   × error: 18:8: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
   │ 'or', 'and', ':', '=' or semicolon
-    ╭─[:18:8]
+    ╭─[../books/tests/src/reserved_keywords.md:18:8]
  17 │ 
  18 │ struct asd { // error
     ·        ─┬─
     ·         ╰── unexpected identifier
  19 │ 
     ╰────
-
--- Parse Error --
   × error: 24:1: 'unit' is a reserved keyword and can't be used as an identifier
-    ╭─[:24:1]
+    ╭─[../books/tests/src/reserved_keywords.md:24:1]
  23 │ 
  24 │ unit foo; // error
     · ──┬─
     ·   ╰── 'unit' is a reserved keyword and can't be used as an identifier
  25 │ 
     ╰────
-
--- Parse Error --
   × error: 24:6: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
   │ 'or', 'and', ':', '=' or semicolon
-    ╭─[:24:6]
+    ╭─[../books/tests/src/reserved_keywords.md:24:6]
  23 │ 
  24 │ unit foo; // error
     ·      ─┬─
     ·       ╰── unexpected identifier
  25 │ 
     ╰────
-
--- Parse Error --
   × error: 28:5: 'material' is a reserved keyword and can't be used as an identifier
-    ╭─[:28:5]
+    ╭─[../books/tests/src/reserved_keywords.md:28:5]
  27 │ 
  28 │ a = material; // error
     ·     ────┬───
     ·         ╰── 'material' is a reserved keyword and can't be used as an identifier
  29 │ 
     ╰────
-
--- Parse Error --
   × error: 30:1: 'type' is a reserved keyword and can't be used as an identifier
-    ╭─[:30:1]
+    ╭─[../books/tests/src/reserved_keywords.md:30:1]
  29 │ 
  30 │ type A = Integer; // error
     · ──┬─
     ·   ╰── 'type' is a reserved keyword and can't be used as an identifier
     ╰────
-
--- Parse Error --
   × error: 30:6: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
   │ 'or', 'and', ':', '=' or semicolon
-    ╭─[:30:6]
+    ╭─[../books/tests/src/reserved_keywords.md:30:6]
  29 │ 
  30 │ type A = Integer; // error
     ·      ┬

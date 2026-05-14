@@ -18,15 +18,13 @@
   24:   // 3. Start code continues here.
   25:   Circle(radius = my_inner::RADIUS);
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) ->
+  Group (root) -> 2D (1360DEA91730CCC9): MultiPolygon @0.25mm
+    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) -> 2D (1360DEA91730CCC9): MultiPolygon @0.25mm
       - center = (x=0mm, y=0mm)
       - radius = 10mm
-      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-        Primitive2D __builtin::geo2d::Circle(radius=10mm) ->
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (333D599184A0DB8C): MultiPolygon @0.25mm
+        Primitive2D __builtin::geo2d::Circle(radius=10mm) -> 2D (C6D4C2F08B150FE2): Polygon @0.25mm
 
 Export of "../books/language/src/flow/.test/start-out.svg" successful.
 -- Test Result --

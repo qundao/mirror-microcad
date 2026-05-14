@@ -72,164 +72,151 @@
   68:   
   69:   FootPad();
 
--- No Output --
--- Errors --
-  ⚠ warning: 11:5: Unused global symbol std::math::*.
-    ╭─[../books/examples/src/footpad.md:11:5]
- 10 │ use std::geo2d::*;
- 11 │ use std::math::*;
-    ·     ──────┬─────
-    ·           ╰── Unused global symbol std::math::*.
- 12 │ 
-    ╰────
-
-Unexpected warning(s) which did occur in line(s): 11
-
 -- Model --
-  Group (root) ->
-    Workpiece(Part) footpad::FootPad(base=(x=155mm, y=101mm, z=18mm), center_hole=(d_inner=42mm, d_outer=55mm), corner_hole=(d_lower=14mm, d_upper=22mm), corner_radius=15mm, height=45mm, slot=(x=8mm, y=13mm)) ->
+  Group (root) -> 3D (D4ADD166F7F57AA8): Manifold @0.25mm
+    Workpiece(Part) <NO ID>::FootPad(base=(x=155mm, y=101mm, z=18mm), center_hole=(d_inner=42mm, d_outer=55mm), corner_hole=(d_lower=14mm, d_upper=22mm), corner_radius=15mm, height=45mm, slot=(x=8mm, y=13mm)) -> 3D (D4ADD166F7F57AA8): Manifold @0.25mm
       - base = (x=155mm, y=101mm, z=18mm)
       - center_hole = (d_inner=42mm, d_outer=55mm)
       - corner_hole = (d_lower=14mm, d_upper=22mm)
       - corner_radius = 15mm
       - height = 45mm
       - slot = (x=8mm, y=13mm)
-      Operation subtract() ->
-        Group ->
-          Operation union() ->
-            Group ->
-              Operation union() ->
-                Group ->
-                  base_lower: Workpiece(Operation) std::ops::extrude(height=12mm, scale=(x=100%, y=100%), twist=0°) ->
+      Operation subtract() -> 3D (D4A59C8BFE6FCAF4): Manifold @0.25mm
+        Group -> 3D (E80B0E1F1DDBA815):  @0.25mm
+          Operation union() -> 3D (34152DF916D06F6D): Manifold @0.25mm
+            Group -> 3D (942498DBEFA03DCF):  @0.25mm
+              Operation union() -> 3D (190D12B3DAABBCB6): Manifold @0.25mm
+                Group -> 3D (49D1812E335E981E):  @0.25mm
+                  base_lower: Workpiece(Operation) std::ops::extrude(height=12mm, scale=(x=100%, y=100%), twist=0°) -> 3D (E3437301A1C3529A): Mesh @0.25mm
                     - height = 12mm
                     - scale = (x=100%, y=100%)
                     - twist = 0°
-                    Operation __builtin::ops::extrude(height=12mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                      Operation __builtin::ops::hull() ->
-                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm]), radius=15mm) ->
+                    Operation __builtin::ops::extrude(height=12mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (60074EB0877F2C5C): Mesh @0.25mm
+                      Operation __builtin::ops::hull() -> 2D (109F6BD47675FD91): Polygon @0.25mm
+                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm]), radius=15mm) -> 2D (C83D1F256A78C122): Collection @0.25mm
                           - center = (x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm])
                           - radius = 15mm
-                          Multiplicity ->
-                            Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                            Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                            Transform __builtin::ops::translate(x=-62.5mm, y=35.5mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                            Transform __builtin::ops::translate(x=62.5mm, y=35.5mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                  base_upper: Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=10mm) ->
+                          Multiplicity -> 2D (CD4A9D5E900B08FD): Collection @0.25mm
+                            Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) -> 2D (1464C703917D5B72): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                            Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) -> 2D (40F4C47FAB2B7058): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                            Transform __builtin::ops::translate(x=-62.5mm, y=35.5mm, z=0mm) -> 2D (D0D1E08CC6D50BC4): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                            Transform __builtin::ops::translate(x=62.5mm, y=35.5mm, z=0mm) -> 2D (48843742783281BE): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                  base_upper: Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (D3A32EC1117CFB31): Mesh @0.25mm
                     - x = 0mm
                     - y = 0mm
                     - z = 10mm
-                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=10mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=100%, y=100%), twist=0°) ->
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (D5A74753D676D3DC): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::extrude(height=8mm, scale=(x=100%, y=100%), twist=0°) -> 3D (926F492C1C4FAE64): Mesh @0.25mm
                         - height = 8mm
                         - scale = (x=100%, y=100%)
                         - twist = 0°
-                        Operation __builtin::ops::extrude(height=8mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                          Group ->
-                            Operation union() ->
-                              Group ->
-                                Operation __builtin::ops::hull() ->
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=-62.5mm, y=-35.5mm), radius=15mm) ->
+                        Operation __builtin::ops::extrude(height=8mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (672C0C749192CD50): Mesh @0.25mm
+                          Group -> 2D (5B6A11BFCD4EC1E2): MultiPolygon @0.25mm
+                            Operation union() -> 2D (5B6A11BFCD4EC1E2): MultiPolygon @0.25mm
+                              Group -> 2D (7DF9B169A5E1F129):  @0.25mm
+                                Operation __builtin::ops::hull() -> 2D (967E712FC6BD252E): Polygon @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=-62.5mm, y=-35.5mm), radius=15mm) -> 2D (BF1789E80AD5A22B): MultiPolygon @0.25mm
                                     - center = (x=-62.5mm, y=-35.5mm)
                                     - radius = 15mm
-                                    Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) ->
-                                      Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Operation __builtin::ops::hull() ->
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=62.5mm, y=-35.5mm), radius=15mm) ->
+                                    Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) -> 2D (1464C703917D5B72): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                                Operation __builtin::ops::hull() -> 2D (4FCB2AE021C05B4E): Polygon @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=62.5mm, y=-35.5mm), radius=15mm) -> 2D (7864439865D8D84B): MultiPolygon @0.25mm
                                     - center = (x=62.5mm, y=-35.5mm)
                                     - radius = 15mm
-                                    Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) ->
-                                      Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-              center: Operation __builtin::ops::subtract() ->
-                Group ->
-                  Workpiece(Operation) std::ops::extrude(height=45mm, scale=(x=100%, y=100%), twist=0°) ->
+                                    Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) -> 2D (40F4C47FAB2B7058): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+              center: Operation __builtin::ops::subtract() -> 3D (B441936DD700A178): Manifold @0.25mm
+                Group -> 3D (6904899AB0A90AA3):  @0.25mm
+                  Workpiece(Operation) std::ops::extrude(height=45mm, scale=(x=100%, y=100%), twist=0°) -> 3D (F801D3451C90632): Mesh @0.25mm
                     - height = 45mm
                     - scale = (x=100%, y=100%)
                     - twist = 0°
-                    Operation __builtin::ops::extrude(height=45mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                      Operation subtract() ->
-                        Group ->
-                          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=55mm) ->
+                    Operation __builtin::ops::extrude(height=45mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (9053B87E60D4A111): Mesh @0.25mm
+                      Operation subtract() -> 2D (69667D9AB5FECAEC): MultiPolygon @0.25mm
+                        Group -> 2D (FD39FA615634E1E6):  @0.25mm
+                          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=55mm) -> 2D (497E9113AA14E17D): MultiPolygon @0.25mm
                             - center = (x=0mm, y=0mm)
                             - radius = 27.5mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=27.5mm) ->
-                          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=42mm) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (44333356A4B9714C): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=27.5mm) -> 2D (D7CA9CB5AB2DA5A2): Polygon @0.25mm
+                          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=42mm) -> 2D (3AC175A64FD45E67): MultiPolygon @0.25mm
                             - center = (x=0mm, y=0mm)
                             - radius = 21mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=21mm) ->
-                  Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=32mm) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (EC6A92811E555366): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=21mm) -> 2D (8001FBE020C987BD): Polygon @0.25mm
+                  Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=32mm) -> 3D (C27A91CBE287AA37): Mesh @0.25mm
                     - x = 0mm
                     - y = 0mm
                     - z = 32mm
-                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=32mm) ->
-                      Workpiece(Operation) std::ops::extrude(height=13mm, scale=(x=100%, y=100%), twist=0°) ->
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=32mm) -> 3D (61BE6E3C7A173A42): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::extrude(height=13mm, scale=(x=100%, y=100%), twist=0°) -> 3D (423038C923151B33): Mesh @0.25mm
                         - height = 13mm
                         - scale = (x=100%, y=100%)
                         - twist = 0°
-                        Operation __builtin::ops::extrude(height=13mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                          Workpiece(Sketch) std::geo2d::Rect(height=8mm, width=55mm) ->
+                        Operation __builtin::ops::extrude(height=13mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (8843999EEFF08E30): Mesh @0.25mm
+                          Workpiece(Sketch) std::geo2d::Rect(height=8mm, width=55mm) -> 2D (4830A75EA108369C): Rect @0.25mm
                             - height = 8mm
                             - width = 55mm
                             - x = -27.5mm
                             - y = -4mm
-                            Primitive2D __builtin::geo2d::Rect(height=8mm, width=55mm, x=-27.5mm, y=-4mm) ->
-          holes: Operation __builtin::ops::union() ->
-            Group ->
-              Workpiece(Operation) std::ops::extrude(height=10mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Primitive2D __builtin::geo2d::Rect(height=8mm, width=55mm, x=-27.5mm, y=-4mm) -> 2D (F8CF4DABF1FCB651): Rect @0.25mm
+          holes: Operation __builtin::ops::union() -> 3D (C7134550BA9C4CD6): Manifold @0.25mm
+            Group -> 3D (13CDF113D05503C4):  @0.25mm
+              Workpiece(Operation) std::ops::extrude(height=10mm, scale=(x=100%, y=100%), twist=0°) -> 3D (14D97BB30FBE74C8): Mesh @0.25mm
                 - height = 10mm
                 - scale = (x=100%, y=100%)
                 - twist = 0°
-                Operation __builtin::ops::extrude(height=10mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                  Workpiece(Sketch) std::geo2d::Circle(center=(x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm]), diameter=14mm) ->
+                Operation __builtin::ops::extrude(height=10mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (E36D327CD61201A0): Mesh @0.25mm
+                  Workpiece(Sketch) std::geo2d::Circle(center=(x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm]), diameter=14mm) -> 2D (5DE82328B05EED32): Collection @0.25mm
                     - center = (x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm])
                     - radius = 7mm
-                    Multiplicity ->
-                      Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=7mm) ->
-                      Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=7mm) ->
-                      Transform __builtin::ops::translate(x=-62.5mm, y=35.5mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=7mm) ->
-                      Transform __builtin::ops::translate(x=62.5mm, y=35.5mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=7mm) ->
-              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=10mm) ->
+                    Multiplicity -> 2D (403B8408D1788FE8): Collection @0.25mm
+                      Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) -> 2D (F9D797D6E09415E6): MultiPolygon @0.25mm
+                        Primitive2D __builtin::geo2d::Circle(radius=7mm) -> 2D (DA6A06719B8E7980): Polygon @0.25mm
+                      Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) -> 2D (26679552FA422ACD): MultiPolygon @0.25mm
+                        Primitive2D __builtin::geo2d::Circle(radius=7mm) -> 2D (DA6A06719B8E7980): Polygon @0.25mm
+                      Transform __builtin::ops::translate(x=-62.5mm, y=35.5mm, z=0mm) -> 2D (B644B16015EBC639): MultiPolygon @0.25mm
+                        Primitive2D __builtin::geo2d::Circle(radius=7mm) -> 2D (DA6A06719B8E7980): Polygon @0.25mm
+                      Transform __builtin::ops::translate(x=62.5mm, y=35.5mm, z=0mm) -> 2D (2DF70815CB493C33): MultiPolygon @0.25mm
+                        Primitive2D __builtin::geo2d::Circle(radius=7mm) -> 2D (DA6A06719B8E7980): Polygon @0.25mm
+              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (B706B5958FE26807): Mesh @0.25mm
                 - x = 0mm
                 - y = 0mm
                 - z = 10mm
-                Transform __builtin::ops::translate(x=0mm, y=0mm, z=10mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=36mm, scale=(x=100%, y=100%), twist=0°) ->
+                Transform __builtin::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (92A5FC7D81A38D22): Mesh @0.25mm
+                  Workpiece(Operation) std::ops::extrude(height=36mm, scale=(x=100%, y=100%), twist=0°) -> 3D (864B1F212A4E2F4F): Mesh @0.25mm
                     - height = 36mm
                     - scale = (x=100%, y=100%)
                     - twist = 0°
-                    Operation __builtin::ops::extrude(height=36mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                      Workpiece(Sketch) std::geo2d::Circle(center=(x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm]), diameter=22mm) ->
+                    Operation __builtin::ops::extrude(height=36mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ABCA7EEEEAFC00AF): Mesh @0.25mm
+                      Workpiece(Sketch) std::geo2d::Circle(center=(x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm]), diameter=22mm) -> 2D (BD162B8EA48CE05A): Collection @0.25mm
                         - center = (x=[-62.5mm, 62.5mm], y=[-35.5mm, 35.5mm])
                         - radius = 11mm
-                        Multiplicity ->
-                          Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=11mm) ->
-                          Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=11mm) ->
-                          Transform __builtin::ops::translate(x=-62.5mm, y=35.5mm, z=0mm) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=11mm) ->
-                          Transform __builtin::ops::translate(x=62.5mm, y=35.5mm, z=0mm) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=11mm) ->
-              Workpiece(Operation) std::ops::extrude(height=45mm, scale=(x=100%, y=100%), twist=0°) ->
+                        Multiplicity -> 2D (F1FD8952D0FC3983): Collection @0.25mm
+                          Transform __builtin::ops::translate(x=-62.5mm, y=-35.5mm, z=0mm) -> 2D (AA21FF1762D6CEFA): MultiPolygon @0.25mm
+                            Primitive2D __builtin::geo2d::Circle(radius=11mm) -> 2D (8AB46DB219D13294): Polygon @0.25mm
+                          Transform __builtin::ops::translate(x=62.5mm, y=-35.5mm, z=0mm) -> 2D (D6B1FC937884E3E0): MultiPolygon @0.25mm
+                            Primitive2D __builtin::geo2d::Circle(radius=11mm) -> 2D (8AB46DB219D13294): Polygon @0.25mm
+                          Transform __builtin::ops::translate(x=-62.5mm, y=35.5mm, z=0mm) -> 2D (668F18A0942E7F4D): MultiPolygon @0.25mm
+                            Primitive2D __builtin::geo2d::Circle(radius=11mm) -> 2D (8AB46DB219D13294): Polygon @0.25mm
+                          Transform __builtin::ops::translate(x=62.5mm, y=35.5mm, z=0mm) -> 2D (DE416F56498BF546): MultiPolygon @0.25mm
+                            Primitive2D __builtin::geo2d::Circle(radius=11mm) -> 2D (8AB46DB219D13294): Polygon @0.25mm
+              Workpiece(Operation) std::ops::extrude(height=45mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C46C1CE7FA5793E2): Mesh @0.25mm
                 - height = 45mm
                 - scale = (x=100%, y=100%)
                 - twist = 0°
-                Operation __builtin::ops::extrude(height=45mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=42mm) ->
+                Operation __builtin::ops::extrude(height=45mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (5BAA527FCA44D2FC): Mesh @0.25mm
+                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=42mm) -> 2D (3AC175A64FD45E67): MultiPolygon @0.25mm
                     - center = (x=0mm, y=0mm)
                     - radius = 21mm
-                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                      Primitive2D __builtin::geo2d::Circle(radius=21mm) ->
+                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (EC6A92811E555366): MultiPolygon @0.25mm
+                      Primitive2D __builtin::geo2d::Circle(radius=21mm) -> 2D (8001FBE020C987BD): Polygon @0.25mm
 
 Export of "../books/examples/src/.test/footpad-out.stl" successful.
 -- Test Result --
-OK (BUT WARNINGS)
+OK

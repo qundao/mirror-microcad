@@ -11,10 +11,10 @@
   46:   
   47:   Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
 
--- Parse Error --
+-- Errors --
   × error: 47:22: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and', semicolon or end of input
-    ╭─[:47:22]
+    ╭─[../books/tests/src/semicolon.md:47:22]
  46 │ 
  47 │ Circle(radius = 2mm) { Circle(radius = 1mm); } // parse_error: sketch with body
     ·                      ┬

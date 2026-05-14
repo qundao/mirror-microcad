@@ -11,8 +11,5 @@
   12:   
   13:   std::debug::assert_eq([v, 20mm]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

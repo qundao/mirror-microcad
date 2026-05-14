@@ -22,7 +22,6 @@
  165:   }
  166:   Wheel(radius = 1cm);
 
--- No Output --
 -- Errors --
   × error: 159:5: Code between initializers is not allowed
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:159:5]
@@ -42,6 +41,5 @@
  161 │             radius = height / 2;
      ╰────
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

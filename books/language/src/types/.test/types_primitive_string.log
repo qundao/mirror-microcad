@@ -13,10 +13,5 @@
   47:   // logging
   48:   std::print(text);
 
--- Output --
-Hello µcad!
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

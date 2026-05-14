@@ -11,12 +11,5 @@
  111:     1 + 2;
  112:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(Sketch) workbench_expression::K() ->
-
-Export error: Nothing to render
 -- Test Result --
 OK

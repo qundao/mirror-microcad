@@ -27,7 +27,6 @@
   94:   PunchedDisk(diameter = 1cm);
   95:   PunchedDisk(d = 1cm);
 
--- No Output --
 -- Errors --
   × error: 81:9: Property assignment is not allowed within initializer
     ╭─[../books/language/src/structure/functions/workbench_functions.md:81:9]
@@ -42,6 +41,5 @@
     ╰────
   help: property assignment is only allowed within workbench
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

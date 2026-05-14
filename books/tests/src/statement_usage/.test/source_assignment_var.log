@@ -9,17 +9,5 @@
 
   66:   a = 1;
 
--- No Output --
--- Errors --
-  ⚠ warning: 66:1: Unused local a.
-    ╭─[../books/tests/src/statement_usage/source.md:66:1]
- 66 │ a = 1;
-    · ┬
-    · ╰── Unused local a.
-    ╰────
-
-Unexpected warning(s) which did occur in line(s): 66
-
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

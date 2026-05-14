@@ -11,7 +11,6 @@
   71:     const B = 1; // error
   72:   } f();
 
--- No Output --
 -- Errors --
   × error: 71:3: Constant assignment is not allowed within function
     ╭─[../books/tests/src/statement_usage/function.md:71:3]
@@ -25,6 +24,5 @@
     ╰────
   help: constant assignment is only allowed within source file, module or workbench
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

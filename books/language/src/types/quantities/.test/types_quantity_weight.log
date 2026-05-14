@@ -13,19 +13,5 @@
  152:   
  153:   std::debug::assert_eq([gram, kilogram]);
 
--- No Output --
--- Errors --
-  ⚠ warning: 151:1: Unused local pound.
-     ╭─[../books/language/src/types/quantities/types.md:151:1]
- 150 │ kilogram = 1.0kg;
- 151 │ pound = 2.204623lb;
-     · ──┬──
-     ·   ╰── Unused local pound.
- 152 │ 
-     ╰────
-
-Unexpected warning(s) which did occur in line(s): 151
-
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

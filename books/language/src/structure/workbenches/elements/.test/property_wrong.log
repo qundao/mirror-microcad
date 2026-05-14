@@ -24,10 +24,6 @@
   58:   // but you cannot access `inner` anymore
   59:   std::print("inner: {t.inner}"); // error
 
--- Output --
-outer: 1cm
-inner: <NO VALUE>
-
 -- Errors --
   × error: 59:21: Property not found: inner
     ╭─[../books/language/src/structure/workbenches/elements/properties.md:59:21]

@@ -19,5 +19,24 @@
  100:   }
  101:   Wheel(diameter = 1cm);
 
+-- Model --
+  Group (root) -> 2D (F0EFEB9F4B1300A8): MultiPolygon @0.25mm
+    Workpiece(Sketch) <NO ID>::Wheel(diameter=1cm, thickness=5mm) -> 2D (F0EFEB9F4B1300A8): MultiPolygon @0.25mm
+      - radius = 5mm
+      - thickness = 5mm
+      Operation subtract() -> 2D (328B44AB3025F600): MultiPolygon @0.25mm
+        Group -> 2D (C65EC171D05C0CFA):  @0.25mm
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=10mm) -> 2D (1360DEA91730CCC9): MultiPolygon @0.25mm
+            - center = (x=0mm, y=0mm)
+            - radius = 10mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (333D599184A0DB8C): MultiPolygon @0.25mm
+              Primitive2D __builtin::geo2d::Circle(radius=10mm) -> 2D (C6D4C2F08B150FE2): Polygon @0.25mm
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) -> 2D (61CB8A420F4DFF8F): MultiPolygon @0.25mm
+            - center = (x=0mm, y=0mm)
+            - radius = 5mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (E7A1C53FF3FFAC8B): MultiPolygon @0.25mm
+              Primitive2D __builtin::geo2d::Circle(radius=5mm) -> 2D (7B392E9EF673E0E2): Polygon @0.25mm
+
+Export of "../books/language/src/structure/workbenches/elements/.test/no_building_plan_in_initializers-out.svg" successful.
 -- Test Result --
 TODO

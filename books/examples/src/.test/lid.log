@@ -28,61 +28,59 @@
   24:   
   25:   l; // Instantiate the lid.
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    l: Workpiece(Part) lid::Lid(height=20mm, inner_diameter=16cm, thickness=1.6mm) ->
+  Group (root) -> 3D (B995A2C4D9F0079D): Manifold @0.25mm
+    l: Workpiece(Part) <NO ID>::Lid(height=20mm, inner_diameter=16cm, thickness=1.6mm) -> 3D (B995A2C4D9F0079D): Manifold @0.25mm
       - height = 20mm
       - inner_diameter = 16cm
       - thickness = 1.6mm
-      Operation subtract() ->
-        Group ->
-          outer: Workpiece(Part) std::geo3d::Cylinder(diameter=163.2mm, height=20mm) ->
+      Operation subtract() -> 3D (31697293A5FC871E): Manifold @0.25mm
+        Group -> 3D (6390824C44AB63AE):  @0.25mm
+          outer: Workpiece(Part) std::geo3d::Cylinder(diameter=163.2mm, height=20mm) -> 3D (7498C32077B7BD57): Mesh @0.25mm
             - height = 20mm
             - offset = -10mm
             - radius_bottom = 81.6mm
             - radius_top = 81.6mm
-            Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+            Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-10mm) -> 3D (DC03646175CAAC16): Mesh @0.25mm
               - x = 0mm
               - y = 0mm
               - z = -10mm
-              Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
-                Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0°) ->
+              Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) -> 3D (FDB19855146ADAB8): Mesh @0.25mm
+                Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0°) -> 3D (867E93AF088545ED): Mesh @0.25mm
                   - height = 20mm
                   - scale = (x=1, y=1)
                   - twist = 0°
-                  Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0°) ->
-                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=81.6mm) ->
+                  Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0°) -> 3D (537ECFBDA12402C3): Mesh @0.25mm
+                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=81.6mm) -> 2D (E427A11E1E0043BF): MultiPolygon @0.25mm
                       - center = (x=0mm, y=0mm)
                       - radius = 81.6mm
-                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=81.6mm) ->
-          inner: Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=1.6mm) ->
+                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (FEE04D0618A4B288): MultiPolygon @0.25mm
+                        Primitive2D __builtin::geo2d::Circle(radius=81.6mm) -> 2D (9277B6651F18E6DF): Polygon @0.25mm
+          inner: Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=1.6mm) -> 3D (5C590B6D712E02DC): Mesh @0.25mm
             - x = 0mm
             - y = 0mm
             - z = 1.6mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=1.6mm) ->
-              Workpiece(Part) std::geo3d::Cylinder(diameter=16cm, height=20mm) ->
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=1.6mm) -> 3D (A2457E81A8B85122): Mesh @0.25mm
+              Workpiece(Part) std::geo3d::Cylinder(diameter=16cm, height=20mm) -> 3D (DEFD615673E80793): Mesh @0.25mm
                 - height = 20mm
                 - offset = -10mm
                 - radius_bottom = 80mm
                 - radius_top = 80mm
-                Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-10mm) ->
+                Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-10mm) -> 3D (743A5F56A4D80372): Mesh @0.25mm
                   - x = 0mm
                   - y = 0mm
                   - z = -10mm
-                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) ->
-                    Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0°) ->
+                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=-10mm) -> 3D (95E8934A47783214): Mesh @0.25mm
+                    Workpiece(Operation) std::ops::extrude(height=20mm, scale=(x=1, y=1), twist=0°) -> 3D (1EB58EA43B929D49): Mesh @0.25mm
                       - height = 20mm
                       - scale = (x=1, y=1)
                       - twist = 0°
-                      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0°) ->
-                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=80mm) ->
+                      Operation __builtin::ops::extrude(height=20mm, scale_x=1, scale_y=1, twist=0°) -> 3D (EBB5CAB2D0315A1E): Mesh @0.25mm
+                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=80mm) -> 2D (7C5E9C134D0D9B1B): MultiPolygon @0.25mm
                           - center = (x=0mm, y=0mm)
                           - radius = 80mm
-                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                            Primitive2D __builtin::geo2d::Circle(radius=80mm) ->
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A8E9D64B11750E50): MultiPolygon @0.25mm
+                            Primitive2D __builtin::geo2d::Circle(radius=80mm) -> 2D (3C813FAA17E942A7): Polygon @0.25mm
 
 Export of "../books/examples/src/.test/lid-out.stl" successful.
 -- Test Result --

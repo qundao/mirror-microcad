@@ -14,8 +14,5 @@
   45:   
   46:   std::debug::assert_eq([millimeters, centimeters, meters, inches]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

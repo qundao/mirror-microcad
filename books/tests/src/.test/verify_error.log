@@ -9,7 +9,6 @@
 
   30:   std::log::error("this should not have happened"); // error
 
--- No Output --
 -- Errors --
   × error: 30:17: Builtin error: this should not have happened
     ╭─[../books/tests/src/debug.md:30:17]

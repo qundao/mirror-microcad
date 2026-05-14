@@ -13,30 +13,26 @@
   29:   
   30:   a =; // error after a function with no name
 
--- Parse Error --
+-- Errors --
   × error: 26:7: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[:26:7]
+    ╭─[../books/tests/src/parser_recovery.md:26:7]
  26 │ fn () { // error, no name
     ·       ┬
     ·       ╰── unexpected {
  27 │   1=; // error inside an if statement with missing params
     ╰────
-
--- Parse Error --
   × error: 27:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
   │ 'or', 'and' or semicolon
-    ╭─[:27:4]
+    ╭─[../books/tests/src/parser_recovery.md:27:4]
  26 │ fn () { // error, no name
  27 │   1=; // error inside an if statement with missing params
     ·    ┬
     ·    ╰── unexpected =
  28 │ }
     ╰────
-
--- Parse Error --
   × error: 30:4: Expected expression
-    ╭─[:30:4]
+    ╭─[../books/tests/src/parser_recovery.md:30:4]
  29 │ 
  30 │ a =; // error after a function with no name
     ·    ┬

@@ -11,12 +11,10 @@
  119:     __builtin::geo2d::Circle(radius=1mm);
  120:   } K();
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Sketch) workbench_expression_model::K() ->
-      Primitive2D __builtin::geo2d::Circle(radius=1mm) ->
+  Group (root) -> 2D (813738F24B4FE4C2): Polygon @0.25mm
+    Workpiece(Sketch) <NO ID>::K() -> 2D (813738F24B4FE4C2): Polygon @0.25mm
+      Primitive2D __builtin::geo2d::Circle(radius=1mm) -> 2D (869B53525EB8CB42): Polygon @0.25mm
 
 Export of "../books/tests/src/statement_usage/.test/workbench_expression_model-out.svg" successful.
 -- Test Result --

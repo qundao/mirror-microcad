@@ -93,19 +93,5 @@
  101:   assert_invalid("module::pub_sub_module::PrivateWorkbench");
  102:   assert_eq([module::function(), 0]);
 
--- No Output --
--- Errors --
-  ⚠ warning: 39:16: Unused global symbol PrivateWorkbench.
-    ╭─[../books/tests/src/value_declarations.md:39:16]
- 38 │         // private workbench
- 39 │         sketch PrivateWorkbench() {}
-    ·                ────────┬───────
-    ·                        ╰── Unused global symbol PrivateWorkbench.
- 40 │ 
-    ╰────
-
-Unexpected warning(s) which did occur in line(s): 39
-
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

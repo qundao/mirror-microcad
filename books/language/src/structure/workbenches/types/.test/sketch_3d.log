@@ -14,7 +14,6 @@
   36:   
   37:   MySketch(1cm);
 
--- No Output --
 -- Errors --
   × error: 34:5: The Sketch workbench produced a 3D output, but expected a 2D output.
     ╭─[../books/language/src/structure/workbenches/types/sketches.md:34:5]

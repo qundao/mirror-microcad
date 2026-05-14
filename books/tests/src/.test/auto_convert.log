@@ -35,7 +35,6 @@
   31:   h(1.0);     // error
   32:   h([1.0]);   // error
 
--- No Output --
 -- Errors --
   × error: 9:3: Arguments match by identifier but have incompatible types: x: String != Scalar
     ╭─[../books/tests/src/auto_convert.md:9:3]

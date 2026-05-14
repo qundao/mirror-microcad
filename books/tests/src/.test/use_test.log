@@ -46,10 +46,5 @@
   42:   
   43:   assert_valid("MyPart");
 
--- Output --
-Hello
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

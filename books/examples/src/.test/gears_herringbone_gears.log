@@ -53,148 +53,146 @@
  148:       );
  149:   
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Operation) std::ops::reflect(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+  Group (root) -> 3D (A90943C4B9B3072F): Collection @0.25mm
+    Workpiece(Operation) std::ops::reflect(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) -> 3D (3803F99F36D18C3D): Collection @0.25mm
       - n = (x=1, y=0, z=0)
       - x = 0mm
       - y = 0mm
       - z = 0mm
-      Operation __builtin::ops::reflect(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
-        gear1: Workpiece(Part) gears_herringbone_gears::Gear(teeth=90) ->
+      Operation __builtin::ops::reflect(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) -> 3D (78F6D35D63277103): Collection @0.25mm
+        gear1: Workpiece(Part) <NO ID>::Gear(teeth=90) -> 3D (B61184DF8D6CF5E6): Manifold @0.25mm
           - module = 1.5mm
           - outer_radius = 69mm
           - pitch_radius = 67.5mm
           - teeth = 90
           - tooth_angle = 0.06981317007977rad
           - tooth_distance = 4.71238898038469mm
-          Operation union() ->
-            Group ->
-              web: Operation __builtin::ops::center() ->
-                Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
+          Operation union() -> 3D (21D5D6D6FA7515F6): Manifold @0.25mm
+            Group -> 3D (4908BF33114C69FC):  @0.25mm
+              web: Operation __builtin::ops::center() -> 3D (99FBFFE343E0BC8C): Mesh @0.25mm
+                Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3525F21D76174F03): Mesh @0.25mm
                   - height = 14.13716694115407mm
                   - scale = (x=100%, y=100%)
                   - twist = 0°
-                  Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                    Group ->
-                      Operation subtract() ->
-                        Group ->
-                          Operation subtract() ->
-                            Group ->
-                              disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) ->
+                  Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (5A7D5D415F5CF2AB): Mesh @0.25mm
+                    Group -> 2D (BD7F404A6429EA48): MultiPolygon @0.25mm
+                      Operation subtract() -> 2D (BD7F404A6429EA48): MultiPolygon @0.25mm
+                        Group -> 2D (4B8461AE852F04C6):  @0.25mm
+                          Operation subtract() -> 2D (36E069DCAC991EA4): MultiPolygon @0.25mm
+                            Group -> 2D (F93605F2CED1D8D2):  @0.25mm
+                              disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) -> 2D (479B4C76F8CB43A): MultiPolygon @0.25mm
                                 - center = (x=0mm, y=0mm)
                                 - radius = 61.5mm
-                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                  Primitive2D __builtin::geo2d::Circle(radius=61.5mm) ->
-                              holes: Multiplicity ->
-                                Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (22DE894D61EC926D): MultiPolygon @0.25mm
+                                  Primitive2D __builtin::geo2d::Circle(radius=61.5mm) -> 2D (B675F2AC6460C6C3): Polygon @0.25mm
+                              holes: Multiplicity -> 2D (988AA2E3434D6E39): Collection @0.25mm
+                                Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 2D (92AA8D858B5E578E): MultiPolygon @0.25mm
                                   - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) ->
+                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 2D (16ED7C5626B41D0C): MultiPolygon @0.25mm
+                                    Operation subtract() -> 2D (285546C66D79EB0C): MultiPolygon @0.25mm
+                                      Group -> 2D (E5A6324A8D8F620D):  @0.25mm
+                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) -> 2D (26BE3F4F5BBC8781): MultiPolygon @0.25mm
                                           - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
+                                          Operation __builtin::ops::buffer(distance=7.38mm) -> 2D (ADB3634F576F0F1): MultiPolygon @0.25mm
+                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) -> 2D (FDE3A6B7236F6B71): MultiPolygon @0.25mm
                                               - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
+                                              Operation __builtin::ops::buffer(distance=-9.225mm) -> 2D (14DD1CAD93B19E06): MultiPolygon @0.25mm
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) -> 2D (71639B8083108D5D): Polygon @0.25mm
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) -> 2D (4CCEA257820841A1): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25mm
                                           - center = (x=0mm, y=0mm)
                                           - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25mm
+                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                                Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) -> 2D (F2493B5CAE194E3): MultiPolygon @0.25mm
                                   - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) ->
+                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) -> 2D (1558F0E475DB1084): MultiPolygon @0.25000000000000006mm
+                                    Operation subtract() -> 2D (285546C66D79EB0C): MultiPolygon @0.25000000000000006mm
+                                      Group -> 2D (E5A6324A8D8F620D):  @0.25mm
+                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) -> 2D (26BE3F4F5BBC8781): MultiPolygon @0.25mm
                                           - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
+                                          Operation __builtin::ops::buffer(distance=7.38mm) -> 2D (ADB3634F576F0F1): MultiPolygon @0.25mm
+                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) -> 2D (FDE3A6B7236F6B71): MultiPolygon @0.25mm
                                               - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
+                                              Operation __builtin::ops::buffer(distance=-9.225mm) -> 2D (14DD1CAD93B19E06): MultiPolygon @0.25mm
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) -> 2D (71639B8083108D5D): Polygon @0.25mm
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) -> 2D (4CCEA257820841A1): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25mm
                                           - center = (x=0mm, y=0mm)
                                           - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25mm
+                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                                Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) -> 2D (1E59E4F8B484EBD5): MultiPolygon @0.25mm
                                   - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) ->
+                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) -> 2D (5D58FBD4B805CF30): MultiPolygon @0.25mm
+                                    Operation subtract() -> 2D (285546C66D79EB0C): MultiPolygon @0.25mm
+                                      Group -> 2D (E5A6324A8D8F620D):  @0.25mm
+                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) -> 2D (26BE3F4F5BBC8781): MultiPolygon @0.25mm
                                           - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
+                                          Operation __builtin::ops::buffer(distance=7.38mm) -> 2D (ADB3634F576F0F1): MultiPolygon @0.25mm
+                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) -> 2D (FDE3A6B7236F6B71): MultiPolygon @0.25mm
                                               - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
+                                              Operation __builtin::ops::buffer(distance=-9.225mm) -> 2D (14DD1CAD93B19E06): MultiPolygon @0.25mm
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) -> 2D (71639B8083108D5D): Polygon @0.25mm
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) -> 2D (4CCEA257820841A1): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25mm
                                           - center = (x=0mm, y=0mm)
                                           - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25mm
+                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                                Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) -> 2D (B98A4E03FEC1201A): MultiPolygon @0.25mm
                                   - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) ->
+                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) -> 2D (2A9049D61B596B0F): MultiPolygon @0.25mm
+                                    Operation subtract() -> 2D (285546C66D79EB0C): MultiPolygon @0.25mm
+                                      Group -> 2D (E5A6324A8D8F620D):  @0.25mm
+                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) -> 2D (26BE3F4F5BBC8781): MultiPolygon @0.25mm
                                           - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
+                                          Operation __builtin::ops::buffer(distance=7.38mm) -> 2D (ADB3634F576F0F1): MultiPolygon @0.25mm
+                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) -> 2D (FDE3A6B7236F6B71): MultiPolygon @0.25mm
                                               - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
+                                              Operation __builtin::ops::buffer(distance=-9.225mm) -> 2D (14DD1CAD93B19E06): MultiPolygon @0.25mm
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) -> 2D (71639B8083108D5D): Polygon @0.25mm
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) -> 2D (4CCEA257820841A1): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25mm
                                           - center = (x=0mm, y=0mm)
                                           - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25mm
+                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                                Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) -> 2D (F19B5B2425DB696A): MultiPolygon @0.25mm
                                   - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                    Operation subtract() ->
-                                      Group ->
-                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) ->
+                                  Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) -> 2D (C9C36CDF21F0159D): MultiPolygon @0.25mm
+                                    Operation subtract() -> 2D (285546C66D79EB0C): MultiPolygon @0.25mm
+                                      Group -> 2D (E5A6324A8D8F620D):  @0.25mm
+                                        sector: Workpiece(Operation) std::ops::buffer(distance=7.38mm) -> 2D (26BE3F4F5BBC8781): MultiPolygon @0.25mm
                                           - distance = 7.38mm
-                                          Operation __builtin::ops::buffer(distance=7.38mm) ->
-                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) ->
+                                          Operation __builtin::ops::buffer(distance=7.38mm) -> 2D (ADB3634F576F0F1): MultiPolygon @0.25mm
+                                            Workpiece(Operation) std::ops::buffer(distance=-9.225mm) -> 2D (FDE3A6B7236F6B71): MultiPolygon @0.25mm
                                               - distance = -9.225mm
-                                              Operation __builtin::ops::buffer(distance=-9.225mm) ->
-                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) ->
+                                              Operation __builtin::ops::buffer(distance=-9.225mm) -> 2D (14DD1CAD93B19E06): MultiPolygon @0.25mm
+                                                Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=61.5mm) -> 2D (71639B8083108D5D): Polygon @0.25mm
                                                   - end = 0.62831853071796rad
                                                   - radius = 61.5mm
                                                   - start = -0.62831853071796rad
-                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                  Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=61.5mm, start=-0.62831853071796rad) -> 2D (4CCEA257820841A1): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25mm
                                           - center = (x=0mm, y=0mm)
                                           - radius = 15mm
-                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                          hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
+                                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25mm
+                                            Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25mm
+                          hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (45BCFDDFB9827078): Polygon @0.25mm
                             - module = 2.5mm
                             - outer_radius = 11.25mm
                             - pitch_radius = 8.75mm
@@ -202,21 +200,21 @@
                             - teeth = 7
                             - tooth_angle = 0.89759790102566rad
                             - tooth_distance = 7.85398163397448mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
-              rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
+                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (A4F1011A476D4237): Polygon @0.25mm
+              rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) -> 3D (7D787674D007276D): Collection @0.25mm
                 - n = (x=-0, y=-0, z=-1)
                 - x = 0mm
                 - y = 0mm
                 - z = 0mm
-                Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                  Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.06981317007977rad) ->
+                Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) -> 3D (8332BF943F617B77): Collection @0.25mm
+                  Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.06981317007977rad) -> 3D (E3685851692C0AA8): Mesh @0.25mm
                     - height = 9.42477796076938mm
                     - scale = (x=100%, y=100%)
                     - twist = 0.06981317007977rad
-                    Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.06981317007977rad) ->
-                      Operation subtract() ->
-                        Group ->
-                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=90) ->
+                    Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.06981317007977rad) -> 3D (D91F23771A7392AF): Mesh @0.25mm
+                      Operation subtract() -> 2D (B6B072BDBE2A8AEB): MultiPolygon @0.25mm
+                        Group -> 2D (26F7EAF3DC406FCA):  @0.25mm
+                          gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=90) -> 2D (516248ED3131A019): Polygon @0.25mm
                             - module = 1.5mm
                             - outer_radius = 69mm
                             - pitch_radius = 67.5mm
@@ -224,153 +222,153 @@
                             - teeth = 90
                             - tooth_angle = 0.06981317007977rad
                             - tooth_distance = 4.71238898038469mm
-                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=90) ->
-                          disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) ->
+                            Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=90) -> 2D (E9A2E7A3CF84C121): Polygon @0.25mm
+                          disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=61.5mm) -> 2D (479B4C76F8CB43A): MultiPolygon @0.25mm
                             - center = (x=0mm, y=0mm)
                             - radius = 61.5mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=61.5mm) ->
-    Multiplicity ->
-      Workpiece(Operation) std::ops::translate(angle=2.0943951023932rad, distance=114mm) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (22DE894D61EC926D): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=61.5mm) -> 2D (B675F2AC6460C6C3): Polygon @0.25mm
+    Multiplicity -> 3D (46212284C61BD1BC): Collection @0.25mm
+      Workpiece(Operation) std::ops::translate(angle=2.0943951023932rad, distance=114mm) -> 3D (5BA7FCF59C4DFCAF): Mesh @0.25mm
         - x = -56.99999999999997mm
         - y = 98.726896031426mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=-56.99999999999997mm, y=98.726896031426mm, z=0mm) ->
-          Workpiece(Operation) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) ->
+        Transform __builtin::ops::translate(x=-56.99999999999997mm, y=98.726896031426mm, z=0mm) -> 3D (9AB005B0B1F93C5): Mesh @0.25mm
+          Workpiece(Operation) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) -> 3D (2E52AAD1CE878C21): Mesh @0.25mm
             - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
-            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) ->
-              gear2: Workpiece(Part) gears_herringbone_gears::Gear(teeth=60) ->
+            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C8F09CE19FDF1020): Mesh @0.25000000000000006mm
+              gear2: Workpiece(Part) <NO ID>::Gear(teeth=60) -> 3D (52DC266DFA4ECDFC): Manifold @0.25000000000000006mm
                 - module = 1.5mm
                 - outer_radius = 46.5mm
                 - pitch_radius = 45mm
                 - teeth = 60
                 - tooth_angle = 0.10471975511966rad
                 - tooth_distance = 4.71238898038469mm
-                Operation union() ->
-                  Group ->
-                    web: Operation __builtin::ops::center() ->
-                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
+                Operation union() -> 3D (6DD89A2D3D64E132): Manifold @0.25000000000000006mm
+                  Group -> 3D (950B8289543C3538):  @0.25000000000000006mm
+                    web: Operation __builtin::ops::center() -> 3D (AA0F3D11DB0963A7): Mesh @0.25000000000000006mm
+                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) -> 3D (45392F4C0D3FF61E): Mesh @0.25000000000000006mm
                         - height = 14.13716694115407mm
                         - scale = (x=100%, y=100%)
                         - twist = 0°
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                          Group ->
-                            Operation subtract() ->
-                              Group ->
-                                Operation subtract() ->
-                                  Group ->
-                                    disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
+                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (6A909A6FF68599C6): Mesh @0.25000000000000006mm
+                          Group -> 2D (CD927D78FF529163): MultiPolygon @0.25000000000000006mm
+                            Operation subtract() -> 2D (CD927D78FF529163): MultiPolygon @0.25000000000000006mm
+                              Group -> 2D (5B979EDD1C57ABE1):  @0.25000000000000006mm
+                                Operation subtract() -> 2D (AAEC0C4F0561BC10): MultiPolygon @0.25000000000000006mm
+                                  Group -> 2D (6D41A865279A763F):  @0.25000000000000006mm
+                                    disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) -> 2D (7469D4CD72894ECD): MultiPolygon @0.25000000000000006mm
                                       - center = (x=0mm, y=0mm)
                                       - radius = 39mm
-                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-                                    holes: Multiplicity ->
-                                      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1E39D4709DE0433): MultiPolygon @0.25000000000000006mm
+                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) -> 2D (957B06A60C523889): Polygon @0.25000000000000006mm
+                                    holes: Multiplicity -> 2D (4CEC741D34E6DE1E): Collection @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 2D (50CA463BCD26FD2F): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 2D (D50D350C687CC2AC): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) -> 2D (CD444C6C0CAA3A83): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) -> 2D (D378A99ABBA3B624): MultiPolygon @0.2500000000000001mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.2500000000000001mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) -> 2D (DC799DAEFA4D9175): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) -> 2D (1B78B48AFDCE74D1): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) -> 2D (77AA06BA4089C5BB): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) -> 2D (E8B0028C5D2210AF): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) -> 2D (AFBB13DA6BA40F0B): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) -> 2D (87E3259567B8BB3E): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (45BCFDDFB9827078): Polygon @0.25000000000000006mm
                                   - module = 2.5mm
                                   - outer_radius = 11.25mm
                                   - pitch_radius = 8.75mm
@@ -378,21 +376,21 @@
                                   - teeth = 7
                                   - tooth_angle = 0.89759790102566rad
                                   - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
-                    rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (A4F1011A476D4237): Polygon @0.25000000000000006mm
+                    rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) -> 3D (3E7A8503DFFDECDA): Collection @0.25000000000000006mm
                       - n = (x=-0, y=-0, z=-1)
                       - x = 0mm
                       - y = 0mm
                       - z = 0mm
-                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) ->
+                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) -> 3D (4434CE234B5840E4): Collection @0.25000000000000006mm
+                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) -> 3D (A46A66E07522D015): Mesh @0.25000000000000006mm
                           - height = 9.42477796076938mm
                           - scale = (x=100%, y=100%)
                           - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) ->
-                            Operation subtract() ->
-                              Group ->
-                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
+                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) -> 3D (8758281ECD4632C9): Mesh @0.25000000000000006mm
+                            Operation subtract() -> 2D (34A3EABA2B85F05A): MultiPolygon @0.25000000000000006mm
+                              Group -> 2D (A4EB62F0499BD538):  @0.25000000000000006mm
+                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) -> 2D (B6716F2FB833FD0B): Polygon @0.25000000000000006mm
                                   - module = 1.5mm
                                   - outer_radius = 46.5mm
                                   - pitch_radius = 45mm
@@ -400,152 +398,152 @@
                                   - teeth = 60
                                   - tooth_angle = 0.10471975511966rad
                                   - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
-                                disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) -> 2D (429772D88882155D): Polygon @0.25000000000000006mm
+                                disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) -> 2D (7469D4CD72894ECD): MultiPolygon @0.25000000000000006mm
                                   - center = (x=0mm, y=0mm)
                                   - radius = 39mm
-                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-      Workpiece(Operation) std::ops::translate(angle=4.18879020478639rad, distance=114mm) ->
+                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1E39D4709DE0433): MultiPolygon @0.25000000000000006mm
+                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) -> 2D (957B06A60C523889): Polygon @0.25000000000000006mm
+      Workpiece(Operation) std::ops::translate(angle=4.18879020478639rad, distance=114mm) -> 3D (BCFAFEC942A75D7C): Mesh @0.25mm
         - x = -57.00000000000005mm
         - y = -98.72689603142598mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=-57.00000000000005mm, y=-98.72689603142598mm, z=0mm) ->
-          Workpiece(Operation) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) ->
+        Transform __builtin::ops::translate(x=-57.00000000000005mm, y=-98.72689603142598mm, z=0mm) -> 3D (5933E8481764F575): Mesh @0.25mm
+          Workpiece(Operation) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) -> 3D (2E52AAD1CE878C21): Mesh @0.25mm
             - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
-            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) ->
-              gear2: Workpiece(Part) gears_herringbone_gears::Gear(teeth=60) ->
+            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C8F09CE19FDF1020): Mesh @0.25000000000000006mm
+              gear2: Workpiece(Part) <NO ID>::Gear(teeth=60) -> 3D (52DC266DFA4ECDFC): Manifold @0.25000000000000006mm
                 - module = 1.5mm
                 - outer_radius = 46.5mm
                 - pitch_radius = 45mm
                 - teeth = 60
                 - tooth_angle = 0.10471975511966rad
                 - tooth_distance = 4.71238898038469mm
-                Operation union() ->
-                  Group ->
-                    web: Operation __builtin::ops::center() ->
-                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
+                Operation union() -> 3D (6DD89A2D3D64E132): Manifold @0.25000000000000006mm
+                  Group -> 3D (950B8289543C3538):  @0.25000000000000006mm
+                    web: Operation __builtin::ops::center() -> 3D (AA0F3D11DB0963A7): Mesh @0.25000000000000006mm
+                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) -> 3D (45392F4C0D3FF61E): Mesh @0.25000000000000006mm
                         - height = 14.13716694115407mm
                         - scale = (x=100%, y=100%)
                         - twist = 0°
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                          Group ->
-                            Operation subtract() ->
-                              Group ->
-                                Operation subtract() ->
-                                  Group ->
-                                    disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
+                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (6A909A6FF68599C6): Mesh @0.25000000000000006mm
+                          Group -> 2D (CD927D78FF529163): MultiPolygon @0.25000000000000006mm
+                            Operation subtract() -> 2D (CD927D78FF529163): MultiPolygon @0.25000000000000006mm
+                              Group -> 2D (5B979EDD1C57ABE1):  @0.25000000000000006mm
+                                Operation subtract() -> 2D (AAEC0C4F0561BC10): MultiPolygon @0.25000000000000006mm
+                                  Group -> 2D (6D41A865279A763F):  @0.25000000000000006mm
+                                    disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) -> 2D (7469D4CD72894ECD): MultiPolygon @0.25000000000000006mm
                                       - center = (x=0mm, y=0mm)
                                       - radius = 39mm
-                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-                                    holes: Multiplicity ->
-                                      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1E39D4709DE0433): MultiPolygon @0.25000000000000006mm
+                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) -> 2D (957B06A60C523889): Polygon @0.25000000000000006mm
+                                    holes: Multiplicity -> 2D (4CEC741D34E6DE1E): Collection @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 2D (50CA463BCD26FD2F): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 2D (D50D350C687CC2AC): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) -> 2D (CD444C6C0CAA3A83): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) -> 2D (D378A99ABBA3B624): MultiPolygon @0.2500000000000001mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.2500000000000001mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) -> 2D (DC799DAEFA4D9175): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) -> 2D (1B78B48AFDCE74D1): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) -> 2D (77AA06BA4089C5BB): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) -> 2D (E8B0028C5D2210AF): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) -> 2D (AFBB13DA6BA40F0B): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) -> 2D (87E3259567B8BB3E): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (45BCFDDFB9827078): Polygon @0.25000000000000006mm
                                   - module = 2.5mm
                                   - outer_radius = 11.25mm
                                   - pitch_radius = 8.75mm
@@ -553,21 +551,21 @@
                                   - teeth = 7
                                   - tooth_angle = 0.89759790102566rad
                                   - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
-                    rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (A4F1011A476D4237): Polygon @0.25000000000000006mm
+                    rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) -> 3D (3E7A8503DFFDECDA): Collection @0.25000000000000006mm
                       - n = (x=-0, y=-0, z=-1)
                       - x = 0mm
                       - y = 0mm
                       - z = 0mm
-                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) ->
+                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) -> 3D (4434CE234B5840E4): Collection @0.25000000000000006mm
+                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) -> 3D (A46A66E07522D015): Mesh @0.25000000000000006mm
                           - height = 9.42477796076938mm
                           - scale = (x=100%, y=100%)
                           - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) ->
-                            Operation subtract() ->
-                              Group ->
-                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
+                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) -> 3D (8758281ECD4632C9): Mesh @0.25000000000000006mm
+                            Operation subtract() -> 2D (34A3EABA2B85F05A): MultiPolygon @0.25000000000000006mm
+                              Group -> 2D (A4EB62F0499BD538):  @0.25000000000000006mm
+                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) -> 2D (B6716F2FB833FD0B): Polygon @0.25000000000000006mm
                                   - module = 1.5mm
                                   - outer_radius = 46.5mm
                                   - pitch_radius = 45mm
@@ -575,152 +573,152 @@
                                   - teeth = 60
                                   - tooth_angle = 0.10471975511966rad
                                   - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
-                                disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) -> 2D (429772D88882155D): Polygon @0.25000000000000006mm
+                                disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) -> 2D (7469D4CD72894ECD): MultiPolygon @0.25000000000000006mm
                                   - center = (x=0mm, y=0mm)
                                   - radius = 39mm
-                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-      Workpiece(Operation) std::ops::translate(angle=6.28318530717959rad, distance=114mm) ->
+                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1E39D4709DE0433): MultiPolygon @0.25000000000000006mm
+                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) -> 2D (957B06A60C523889): Polygon @0.25000000000000006mm
+      Workpiece(Operation) std::ops::translate(angle=6.28318530717959rad, distance=114mm) -> 3D (F1535EE8FF5CBD61): Mesh @0.25mm
         - x = 114mm
         - y = -0.00000000000003mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=114mm, y=-0.00000000000003mm, z=0mm) ->
-          Workpiece(Operation) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) ->
+        Transform __builtin::ops::translate(x=114mm, y=-0.00000000000003mm, z=0mm) -> 3D (58F726EEBA354332): Mesh @0.25mm
+          Workpiece(Operation) std::ops::rotate(angle=0.05235987755983rad, axis=(x=0, y=0, z=1)) -> 3D (2E52AAD1CE878C21): Mesh @0.25mm
             - matrix = Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]
-            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) ->
-              gear2: Workpiece(Part) gears_herringbone_gears::Gear(teeth=60) ->
+            Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9986295347545738, 0.05233595624294383, 0.0], [-0.05233595624294383, 0.9986295347545738, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C8F09CE19FDF1020): Mesh @0.25000000000000006mm
+              gear2: Workpiece(Part) <NO ID>::Gear(teeth=60) -> 3D (52DC266DFA4ECDFC): Manifold @0.25000000000000006mm
                 - module = 1.5mm
                 - outer_radius = 46.5mm
                 - pitch_radius = 45mm
                 - teeth = 60
                 - tooth_angle = 0.10471975511966rad
                 - tooth_distance = 4.71238898038469mm
-                Operation union() ->
-                  Group ->
-                    web: Operation __builtin::ops::center() ->
-                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) ->
+                Operation union() -> 3D (6DD89A2D3D64E132): Manifold @0.25000000000000006mm
+                  Group -> 3D (950B8289543C3538):  @0.25000000000000006mm
+                    web: Operation __builtin::ops::center() -> 3D (AA0F3D11DB0963A7): Mesh @0.25000000000000006mm
+                      Workpiece(Operation) std::ops::extrude(height=14.13716694115407mm, scale=(x=100%, y=100%), twist=0°) -> 3D (45392F4C0D3FF61E): Mesh @0.25000000000000006mm
                         - height = 14.13716694115407mm
                         - scale = (x=100%, y=100%)
                         - twist = 0°
-                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                          Group ->
-                            Operation subtract() ->
-                              Group ->
-                                Operation subtract() ->
-                                  Group ->
-                                    disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
+                        Operation __builtin::ops::extrude(height=14.13716694115407mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (6A909A6FF68599C6): Mesh @0.25000000000000006mm
+                          Group -> 2D (CD927D78FF529163): MultiPolygon @0.25000000000000006mm
+                            Operation subtract() -> 2D (CD927D78FF529163): MultiPolygon @0.25000000000000006mm
+                              Group -> 2D (5B979EDD1C57ABE1):  @0.25000000000000006mm
+                                Operation subtract() -> 2D (AAEC0C4F0561BC10): MultiPolygon @0.25000000000000006mm
+                                  Group -> 2D (6D41A865279A763F):  @0.25000000000000006mm
+                                    disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) -> 2D (7469D4CD72894ECD): MultiPolygon @0.25000000000000006mm
                                       - center = (x=0mm, y=0mm)
                                       - radius = 39mm
-                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
-                                    holes: Multiplicity ->
-                                      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1E39D4709DE0433): MultiPolygon @0.25000000000000006mm
+                                        Primitive2D __builtin::geo2d::Circle(radius=39mm) -> 2D (957B06A60C523889): Polygon @0.25000000000000006mm
+                                    holes: Multiplicity -> 2D (4CEC741D34E6DE1E): Collection @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 2D (50CA463BCD26FD2F): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 2D (D50D350C687CC2AC): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=1.25663706143592rad, axis=(x=0, y=0, z=1)) -> 2D (CD444C6C0CAA3A83): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494745, 0.9510565162951535, 0.0], [-0.9510565162951535, 0.30901699437494745, 0.0], [0.0, 0.0, 1.0]]) -> 2D (D378A99ABBA3B624): MultiPolygon @0.2500000000000001mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.2500000000000001mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=2.51327412287183rad, axis=(x=0, y=0, z=1)) -> 2D (DC799DAEFA4D9175): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749473, 0.5877852522924732, 0.0], [-0.5877852522924732, -0.8090169943749473, 0.0], [0.0, 0.0, 1.0]]) -> 2D (1B78B48AFDCE74D1): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=3.76991118430775rad, axis=(x=0, y=0, z=1)) -> 2D (77AA06BA4089C5BB): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.8090169943749476, -0.587785252292473, 0.0], [0.587785252292473, -0.8090169943749476, 0.0], [0.0, 0.0, 0.9999999999999999]]) -> 2D (E8B0028C5D2210AF): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                      Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                      Workpiece(Operation) std::ops::rotate(angle=5.02654824574367rad, axis=(x=0, y=0, z=1)) -> 2D (AFBB13DA6BA40F0B): MultiPolygon @0.25000000000000006mm
                                         - matrix = Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]
-                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) ->
-                                          Operation subtract() ->
-                                            Group ->
-                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) ->
+                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.30901699437494723, -0.9510565162951536, 0.0], [0.9510565162951536, 0.30901699437494723, 0.0], [0.0, 0.0, 1.0]]) -> 2D (87E3259567B8BB3E): MultiPolygon @0.25000000000000006mm
+                                          Operation subtract() -> 2D (E674FF7CB34290AC): MultiPolygon @0.25000000000000006mm
+                                            Group -> 2D (A3C5EB00D35807AE):  @0.25000000000000006mm
+                                              sector: Workpiece(Operation) std::ops::buffer(distance=4.68mm) -> 2D (20D09EC0ECF05A4A): MultiPolygon @0.25000000000000006mm
                                                 - distance = 4.68mm
-                                                Operation __builtin::ops::buffer(distance=4.68mm) ->
-                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) ->
+                                                Operation __builtin::ops::buffer(distance=4.68mm) -> 2D (8F286A20867FDC11): MultiPolygon @0.25000000000000006mm
+                                                  Workpiece(Operation) std::ops::buffer(distance=-5.85mm) -> 2D (C41FEB207FE54428): MultiPolygon @0.25000000000000006mm
                                                     - distance = -5.85mm
-                                                    Operation __builtin::ops::buffer(distance=-5.85mm) ->
-                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) ->
+                                                    Operation __builtin::ops::buffer(distance=-5.85mm) -> 2D (4998BBDECE6EDAF6): MultiPolygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Sector(angle=1.25663706143592rad, offset=0°, radius=39mm) -> 2D (B2ECA1381E0EEF09): Polygon @0.25000000000000006mm
                                                         - end = 0.62831853071796rad
                                                         - radius = 39mm
                                                         - start = -0.62831853071796rad
-                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) ->
-                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) ->
+                                                        Primitive2D __builtin::geo2d::Sector(end=0.62831853071796rad, radius=39mm, start=-0.62831853071796rad) -> 2D (9191764C83552D7C): Polygon @0.25000000000000006mm
+                                              Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=15mm) -> 2D (7EB7BCEE97609D5E): MultiPolygon @0.25000000000000006mm
                                                 - center = (x=0mm, y=0mm)
                                                 - radius = 15mm
-                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) ->
-                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
+                                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (615FCC3F46038AB5): MultiPolygon @0.25000000000000006mm
+                                                  Primitive2D __builtin::geo2d::Circle(radius=15mm) -> 2D (F4F7359E4877BF0B): Polygon @0.25000000000000006mm
+                                hub: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (45BCFDDFB9827078): Polygon @0.25000000000000006mm
                                   - module = 2.5mm
                                   - outer_radius = 11.25mm
                                   - pitch_radius = 8.75mm
@@ -728,21 +726,21 @@
                                   - teeth = 7
                                   - tooth_angle = 0.89759790102566rad
                                   - tooth_distance = 7.85398163397448mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) ->
-                    rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=2.5mm, pressure_angle=0°, teeth=7) -> 2D (A4F1011A476D4237): Polygon @0.25000000000000006mm
+                    rim: Workpiece(Operation) std::ops::mirror(n=(x=-0, y=-0, z=-1), x=0mm, y=0mm, z=0mm) -> 3D (3E7A8503DFFDECDA): Collection @0.25000000000000006mm
                       - n = (x=-0, y=-0, z=-1)
                       - x = 0mm
                       - y = 0mm
                       - z = 0mm
-                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) ->
-                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) ->
+                      Operation __builtin::ops::mirror(nx=-0, ny=-0, nz=-1, x=0mm, y=0mm, z=0mm) -> 3D (4434CE234B5840E4): Collection @0.25000000000000006mm
+                        Workpiece(Operation) std::ops::extrude(height=9.42477796076938mm, scale=(x=100%, y=100%), twist=0.10471975511966rad) -> 3D (A46A66E07522D015): Mesh @0.25000000000000006mm
                           - height = 9.42477796076938mm
                           - scale = (x=100%, y=100%)
                           - twist = 0.10471975511966rad
-                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) ->
-                            Operation subtract() ->
-                              Group ->
-                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
+                          Operation __builtin::ops::extrude(height=9.42477796076938mm, scale_x=100%, scale_y=100%, twist=0.10471975511966rad) -> 3D (8758281ECD4632C9): Mesh @0.25000000000000006mm
+                            Operation subtract() -> 2D (34A3EABA2B85F05A): MultiPolygon @0.25000000000000006mm
+                              Group -> 2D (A4EB62F0499BD538):  @0.25000000000000006mm
+                                gear_profile: Workpiece(Sketch) std::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) -> 2D (B6716F2FB833FD0B): Polygon @0.25000000000000006mm
                                   - module = 1.5mm
                                   - outer_radius = 46.5mm
                                   - pitch_radius = 45mm
@@ -750,12 +748,12 @@
                                   - teeth = 60
                                   - tooth_angle = 0.10471975511966rad
                                   - tooth_distance = 4.71238898038469mm
-                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) ->
-                                disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) ->
+                                  Primitive2D __builtin::geo2d::InvoluteGearProfile(module=1.5mm, pressure_angle=0°, teeth=60) -> 2D (429772D88882155D): Polygon @0.25000000000000006mm
+                                disc: Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=39mm) -> 2D (7469D4CD72894ECD): MultiPolygon @0.25000000000000006mm
                                   - center = (x=0mm, y=0mm)
                                   - radius = 39mm
-                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) ->
+                                  Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1E39D4709DE0433): MultiPolygon @0.25000000000000006mm
+                                    Primitive2D __builtin::geo2d::Circle(radius=39mm) -> 2D (957B06A60C523889): Polygon @0.25000000000000006mm
 
 Export of "../books/examples/src/.test/gears_herringbone_gears-out.stl" successful.
 -- Test Result --

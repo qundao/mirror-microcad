@@ -11,27 +11,23 @@
   89:   
   90:   a =; // error after a broken use statement
 
--- Parse Error --
+-- Errors --
   × error: 88:8: Expected identifier or '*'
-    ╭─[:88:8]
+    ╭─[../books/tests/src/parser_recovery.md:88:8]
  88 │ use a:: as 1; // error, name
     ·        ┬
     ·        ╰── unexpected whitespace
  89 │ 
     ╰────
-
--- Parse Error --
   × error: 88:12: Expected identifier
-    ╭─[:88:12]
+    ╭─[../books/tests/src/parser_recovery.md:88:12]
  88 │ use a:: as 1; // error, name
     ·            ┬
     ·            ╰── unexpected integer literal
  89 │ 
     ╰────
-
--- Parse Error --
   × error: 90:4: Expected expression
-    ╭─[:90:4]
+    ╭─[../books/tests/src/parser_recovery.md:90:4]
  89 │ 
  90 │ a =; // error after a broken use statement
     ·    ┬

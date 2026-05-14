@@ -57,37 +57,35 @@
   53:   #[export = "upper.stl"]
   54:   Upper().translate(y = -50mm);
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Operation) std::ops::translate(x=0mm, y=50mm, z=0mm) ->
+  Group (root) -> 3D (E72B6C2AED44D3B0): Collection @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=50mm, z=0mm) -> 3D (9A50F431A250E763): Mesh @0.25mm
       - x = 0mm
       - y = 50mm
       - z = 0mm
       #[export = "lower.stl" with exporter `stl`]
-      Transform __builtin::ops::translate(x=0mm, y=50mm, z=0mm) ->
-        Workpiece(Part) bike_pack_mount::Lower() ->
-          Workpiece(Part) bike_pack_mount::Mount(height=15mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) ->
+      Transform __builtin::ops::translate(x=0mm, y=50mm, z=0mm) -> 3D (60A8AC5E10ED32D5): Mesh @0.25mm
+        Workpiece(Part) <NO ID>::Lower() -> 3D (9B1D8E2532BA82E9): Manifold @0.25mm
+          Workpiece(Part) <NO ID>::Mount(height=15mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) -> 3D (2310EC775145F75B): Manifold @0.25mm
             - height = 15mm
             - rack_rail_diameter = 10.5mm
             - rack_rail_distance = 100mm
             - screw_distance = 94mm
             - screw_hole_diameter = 6mm
-            Operation subtract() ->
-              Group ->
-                Operation subtract() ->
-                  Group ->
-                    Workpiece(Operation) std::ops::extrude(height=15mm, scale=(x=100%, y=100%), twist=0°) ->
+            Operation subtract() -> 3D (998CBC56BB3E84CC): Manifold @0.25mm
+              Group -> 3D (EF1088D3597FE0F6):  @0.25mm
+                Operation subtract() -> 3D (9F0F1B923A3F9218): Manifold @0.25mm
+                  Group -> 3D (C6BF22845B90957F):  @0.25mm
+                    Workpiece(Operation) std::ops::extrude(height=15mm, scale=(x=100%, y=100%), twist=0°) -> 3D (55D8338B94E6EA3E): Mesh @0.25mm
                       - height = 15mm
                       - scale = (x=100%, y=100%)
                       - twist = 0°
-                      Operation __builtin::ops::extrude(height=15mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                        Workpiece(Sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) ->
+                      Operation __builtin::ops::extrude(height=15mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (1ADE6DDDC866076C): Mesh @0.25mm
+                        Workpiece(Sketch) <NO ID>::Base(height=23.5mm, radius=3mm, width=130mm) -> 2D (2B391D64FF26F8C7): Polygon @0.25mm
                           - height = 23.5mm
                           - radius = 3mm
                           - width = 130mm
-                          Workpiece(Sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) ->
+                          Workpiece(Sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) -> 2D (B7FBE480816C196F): Polygon @0.25mm
                             - height = 23.5mm
                             - radius_bottom_left = 3mm
                             - radius_bottom_right = 3mm
@@ -96,93 +94,93 @@
                             - width = 130mm
                             - x = -65mm
                             - y = -11.75mm
-                            Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) ->
-                    Workpiece(Operation) std::ops::extrude(height=25mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) -> 2D (40961667E93ABCC2): Polygon @0.25mm
+                    Workpiece(Operation) std::ops::extrude(height=25mm, scale=(x=100%, y=100%), twist=0°) -> 3D (92785FB45521934): Mesh @0.25mm
                       - height = 25mm
                       - scale = (x=100%, y=100%)
                       - twist = 0°
-                      Operation __builtin::ops::extrude(height=25mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                        screws: Workpiece(Sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) ->
+                      Operation __builtin::ops::extrude(height=25mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (295AD6E9E46F4E5A): Mesh @0.25mm
+                        screws: Workpiece(Sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) -> 2D (28D19CE76F679E55): Collection @0.25mm
                           - center = (x=[-47mm, 47mm], y=0mm)
                           - radius = 3mm
-                          Multiplicity ->
-                            Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                            Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                Workpiece(Part) bike_pack_mount::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) ->
+                          Multiplicity -> 2D (E22491B942E54FA9): Collection @0.25mm
+                            Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) -> 2D (E7D06DBA27F05FC8): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=3mm) -> 2D (BB21041D62FF95AE): Polygon @0.25mm
+                            Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) -> 2D (231F3ACA421D4134): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=3mm) -> 2D (BB21041D62FF95AE): Polygon @0.25mm
+                Workpiece(Part) <NO ID>::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) -> 3D (C6BB3D3903B298BE): Mesh @0.25mm
                   - rack_rail_diameter = 10.5mm
                   - rack_rail_distance = 100mm
-                  Workpiece(Operation) std::ops::translate(x=0mm, y=-15mm, z=0mm) ->
+                  Workpiece(Operation) std::ops::translate(x=0mm, y=-15mm, z=0mm) -> 3D (1EA7F1AEB88092A9): Mesh @0.25mm
                     - x = 0mm
                     - y = -15mm
                     - z = 0mm
-                    Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::orient(v=(x=0, y=1, z=0)) ->
+                    Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) -> 3D (6533BB79F3682BEF): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::orient(v=(x=0, y=1, z=0)) -> 3D (3751DD9D4C4CBA07): Mesh @0.25mm
                         - v = (x=0, y=1, z=0)
-                        Transform __builtin::ops::orient(x=0, y=1, z=0) ->
-                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=100%, y=100%), twist=0°) ->
+                        Transform __builtin::ops::orient(x=0, y=1, z=0) -> 3D (F78C45EC1A2AE048): Mesh @0.25mm
+                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=100%, y=100%), twist=0°) -> 3D (140BD47C627DD560): Mesh @0.25mm
                             - height = 40mm
                             - scale = (x=100%, y=100%)
                             - twist = 0°
-                            Operation __builtin::ops::extrude(height=40mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                              Group ->
-                                Multiplicity ->
-                                  Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
+                            Operation __builtin::ops::extrude(height=40mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (7FCAFFA4E205603): Mesh @0.25mm
+                              Group -> 2D (9A378CB5F96F8605): Collection @0.25mm
+                                Multiplicity -> 2D (9A378CB5F96F8605): Collection @0.25mm
+                                  Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (8F0468A4DDAB67B2): MultiPolygon @0.25mm
                                     - x = -55.25mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
+                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (BCF095478FFD5D62): MultiPolygon @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (AE562C27ADEF8091): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (F656559DE3E16810): Collection @0.25mm
                                           - center = (x=[-0.5mm, 0.5mm], y=0mm)
                                           - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                  Workpiece(Operation) std::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
+                                          Multiplicity -> 2D (A2E1B832618DF2F3): Collection @0.25mm
+                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
+                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
+                                  Workpiece(Operation) std::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (B7B1DDD051BFD8B7): MultiPolygon @0.25mm
                                     - x = 55.25mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
+                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (C3DB1D295FD8C644): MultiPolygon @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (AE562C27ADEF8091): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (F656559DE3E16810): Collection @0.25mm
                                           - center = (x=[-0.5mm, 0.5mm], y=0mm)
                                           - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-    Workpiece(Operation) std::ops::translate(x=0mm, y=-50mm, z=0mm) ->
+                                          Multiplicity -> 2D (A2E1B832618DF2F3): Collection @0.25mm
+                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
+                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=-50mm, z=0mm) -> 3D (6D943EB14DDB39C9): Mesh @0.25mm
       - x = 0mm
       - y = -50mm
       - z = 0mm
       #[export = "upper.stl" with exporter `stl`]
-      Transform __builtin::ops::translate(x=0mm, y=-50mm, z=0mm) ->
-        Workpiece(Part) bike_pack_mount::Upper() ->
-          Workpiece(Part) bike_pack_mount::Mount(height=55mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) ->
+      Transform __builtin::ops::translate(x=0mm, y=-50mm, z=0mm) -> 3D (E795A450FBF57EC5): Mesh @0.25mm
+        Workpiece(Part) <NO ID>::Upper() -> 3D (4B1CA3DB5B7BD932): Manifold @0.25mm
+          Workpiece(Part) <NO ID>::Mount(height=55mm, rack_rail_diameter=10.5mm, rack_rail_distance=100mm, screw_distance=94mm, screw_hole_diameter=6mm) -> 3D (EB5806BA363CEC1B): Manifold @0.25mm
             - height = 55mm
             - rack_rail_diameter = 10.5mm
             - rack_rail_distance = 100mm
             - screw_distance = 94mm
             - screw_hole_diameter = 6mm
-            Operation subtract() ->
-              Group ->
-                Operation subtract() ->
-                  Group ->
-                    Workpiece(Operation) std::ops::extrude(height=55mm, scale=(x=100%, y=100%), twist=0°) ->
+            Operation subtract() -> 3D (C7146B70056DEF34): Manifold @0.25mm
+              Group -> 3D (1C9837ECA7AF4B5F):  @0.25mm
+                Operation subtract() -> 3D (8FFAC185F530D6EF): Manifold @0.25mm
+                  Group -> 3D (B7AAC8781681DA56):  @0.25mm
+                    Workpiece(Operation) std::ops::extrude(height=55mm, scale=(x=100%, y=100%), twist=0°) -> 3D (97FB69FC0FE85792): Mesh @0.25mm
                       - height = 55mm
                       - scale = (x=100%, y=100%)
                       - twist = 0°
-                      Operation __builtin::ops::extrude(height=55mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                        Workpiece(Sketch) bike_pack_mount::Base(height=23.5mm, radius=3mm, width=130mm) ->
+                      Operation __builtin::ops::extrude(height=55mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (1C489181F34448A3): Mesh @0.25mm
+                        Workpiece(Sketch) <NO ID>::Base(height=23.5mm, radius=3mm, width=130mm) -> 2D (2B391D64FF26F8C7): Polygon @0.25mm
                           - height = 23.5mm
                           - radius = 3mm
                           - width = 130mm
-                          Workpiece(Sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) ->
+                          Workpiece(Sketch) std::geo2d::RoundedRect(height=23.5mm, radius=3mm, width=130mm) -> 2D (B7FBE480816C196F): Polygon @0.25mm
                             - height = 23.5mm
                             - radius_bottom_left = 3mm
                             - radius_bottom_right = 3mm
@@ -191,66 +189,66 @@
                             - width = 130mm
                             - x = -65mm
                             - y = -11.75mm
-                            Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) ->
-                    Workpiece(Operation) std::ops::extrude(height=65mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Primitive2D __builtin::geo2d::RoundedRect(height=23.5mm, radius_bottom_left=3mm, radius_bottom_right=3mm, radius_top_left=3mm, radius_top_right=3mm, width=130mm, x=-65mm, y=-11.75mm) -> 2D (40961667E93ABCC2): Polygon @0.25mm
+                    Workpiece(Operation) std::ops::extrude(height=65mm, scale=(x=100%, y=100%), twist=0°) -> 3D (6E9380ED899E9F38): Mesh @0.25mm
                       - height = 65mm
                       - scale = (x=100%, y=100%)
                       - twist = 0°
-                      Operation __builtin::ops::extrude(height=65mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                        screws: Workpiece(Sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) ->
+                      Operation __builtin::ops::extrude(height=65mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (CD4A95B4B1615C7E): Mesh @0.25mm
+                        screws: Workpiece(Sketch) std::geo2d::Circle(center=(x=[-47mm, 47mm], y=0mm), diameter=6mm) -> 2D (28D19CE76F679E55): Collection @0.25mm
                           - center = (x=[-47mm, 47mm], y=0mm)
                           - radius = 3mm
-                          Multiplicity ->
-                            Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                            Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) ->
-                              Primitive2D __builtin::geo2d::Circle(radius=3mm) ->
-                Workpiece(Part) bike_pack_mount::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) ->
+                          Multiplicity -> 2D (E22491B942E54FA9): Collection @0.25mm
+                            Transform __builtin::ops::translate(x=-47mm, y=0mm, z=0mm) -> 2D (E7D06DBA27F05FC8): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=3mm) -> 2D (BB21041D62FF95AE): Polygon @0.25mm
+                            Transform __builtin::ops::translate(x=47mm, y=0mm, z=0mm) -> 2D (231F3ACA421D4134): MultiPolygon @0.25mm
+                              Primitive2D __builtin::geo2d::Circle(radius=3mm) -> 2D (BB21041D62FF95AE): Polygon @0.25mm
+                Workpiece(Part) <NO ID>::RackRails(rack_rail_diameter=10.5mm, rack_rail_distance=100mm) -> 3D (C6BB3D3903B298BE): Mesh @0.25mm
                   - rack_rail_diameter = 10.5mm
                   - rack_rail_distance = 100mm
-                  Workpiece(Operation) std::ops::translate(x=0mm, y=-15mm, z=0mm) ->
+                  Workpiece(Operation) std::ops::translate(x=0mm, y=-15mm, z=0mm) -> 3D (1EA7F1AEB88092A9): Mesh @0.25mm
                     - x = 0mm
                     - y = -15mm
                     - z = 0mm
-                    Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) ->
-                      Workpiece(Operation) std::ops::orient(v=(x=0, y=1, z=0)) ->
+                    Transform __builtin::ops::translate(x=0mm, y=-15mm, z=0mm) -> 3D (6533BB79F3682BEF): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::orient(v=(x=0, y=1, z=0)) -> 3D (3751DD9D4C4CBA07): Mesh @0.25mm
                         - v = (x=0, y=1, z=0)
-                        Transform __builtin::ops::orient(x=0, y=1, z=0) ->
-                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=100%, y=100%), twist=0°) ->
+                        Transform __builtin::ops::orient(x=0, y=1, z=0) -> 3D (F78C45EC1A2AE048): Mesh @0.25mm
+                          Workpiece(Operation) std::ops::extrude(height=40mm, scale=(x=100%, y=100%), twist=0°) -> 3D (140BD47C627DD560): Mesh @0.25mm
                             - height = 40mm
                             - scale = (x=100%, y=100%)
                             - twist = 0°
-                            Operation __builtin::ops::extrude(height=40mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                              Group ->
-                                Multiplicity ->
-                                  Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
+                            Operation __builtin::ops::extrude(height=40mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (7FCAFFA4E205603): Mesh @0.25mm
+                              Group -> 2D (9A378CB5F96F8605):  @0.25mm
+                                Multiplicity -> 2D (9A378CB5F96F8605):  @0.25mm
+                                  Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (8F0468A4DDAB67B2):  @0.25mm
                                     - x = -55.25mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
+                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (BCF095478FFD5D62):  @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (AE562C27ADEF8091):  @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (F656559DE3E16810):  @0.25mm
                                           - center = (x=[-0.5mm, 0.5mm], y=0mm)
                                           - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                  Workpiece(Operation) std::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
+                                          Multiplicity -> 2D (A2E1B832618DF2F3):  @0.25mm
+                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97):  @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
+                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D):  @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
+                                  Workpiece(Operation) std::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (B7B1DDD051BFD8B7):  @0.25mm
                                     - x = 55.25mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) ->
+                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (C3DB1D295FD8C644):  @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (AE562C27ADEF8091):  @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (F656559DE3E16810):  @0.25mm
                                           - center = (x=[-0.5mm, 0.5mm], y=0mm)
                                           - radius = 5.25mm
-                                          Multiplicity ->
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) ->
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) ->
+                                          Multiplicity -> 2D (A2E1B832618DF2F3):  @0.25mm
+                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97):  @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
+                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D):  @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
 
 Export of "../books/examples/src/.test/bike_pack_mount-out.stl" successful.
 -- Test Result --

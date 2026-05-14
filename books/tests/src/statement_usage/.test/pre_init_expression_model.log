@@ -11,7 +11,6 @@
  111:     __builtin::geo2d::Circle(radius=1mm); // error
  112:   init(l:Length) {} }
 
--- No Output --
 -- Errors --
   × error: 111:3: Statement not allowed prior initializers
      ╭─[../books/tests/src/statement_usage/pre-init.md:111:3]
@@ -26,6 +25,5 @@
      ·   ╰── Before this initializer
      ╰────
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

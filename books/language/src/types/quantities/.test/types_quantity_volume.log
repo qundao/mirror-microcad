@@ -15,8 +15,5 @@
  104:   
  105:   std::debug::assert(volume == 24mm³);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -81,1063 +81,1061 @@
   77:   board_height = 1mm;
   78:   Rect(TILE_SIZE * 8).extrude(board_height).translate(z = -board_height);
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Multiplicity ->
-      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+  Group (root) -> 3D (5495F9455FF3DA78): Collection @0.25mm
+    Multiplicity -> 3D (96C8589769BBA718): Collection @0.25mm
+      Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 3D (8E019C24A3016AE9): Mesh @0.25mm
         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-          Workpiece(Operation) std::ops::translate(x=0mm, y=174mm, z=0mm) ->
+        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (BED2FB7ADCC363C3): Mesh @0.25mm
+          Workpiece(Operation) std::ops::translate(x=0mm, y=174mm, z=0mm) -> 3D (9E996CE3E509D5CC): Mesh @0.25mm
             - x = 0mm
             - y = 174mm
             - z = 0mm
-            Transform __builtin::ops::translate(x=0mm, y=174mm, z=0mm) ->
-              Workpiece(Operation) std::ops::distribute_grid(cell_size=5.8cm, columns=8, rows=2) ->
+            Transform __builtin::ops::translate(x=0mm, y=174mm, z=0mm) -> 3D (B476691B915A3DAF): Mesh @0.25mm
+              Workpiece(Operation) std::ops::distribute_grid(cell_size=5.8cm, columns=8, rows=2) -> 3D (E9382C317CBC585F): Collection @0.25mm
                 - columns = 8
                 - height = 116mm
                 - rows = 2
                 - width = 464mm
                 - x = -232mm
                 - y = -58mm
-                Operation __builtin::ops::distribute_grid(columns=8, height=116mm, rows=2, width=464mm, x=-232mm, y=-58mm) ->
-                  Group ->
-                    Workpiece(Part) chess::Rook() ->
-                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                Operation __builtin::ops::distribute_grid(columns=8, height=116mm, rows=2, width=464mm, x=-232mm, y=-58mm) -> 3D (FF1E0F392DE04F0E): Collection @0.25mm
+                  Group -> 3D (7D5A9B7F6D53CB36):  @0.25mm
+                    Workpiece(Part) <NO ID>::Rook() -> 3D (9140F62D6A511A7B):  @0.25mm
+                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90): Mesh @0.25mm
                         - size_x = 40.6mm
                         - size_y = 40.6mm
                         - size_z = 40.6mm
-                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                           - x = 0mm
                           - y = 0mm
                           - z = -20.3mm
-                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8): Rect @0.25mm
                                   - height = 40.6mm
                                   - width = 40.6mm
                                   - x = -20.3mm
                                   - y = -20.3mm
-                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Workpiece(Part) chess::Knight() ->
-                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Knight() -> 3D (FD915677981BE59D):  @0.25mm
+                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (FCB03FFA91B9C31D): Collection @0.25mm
                         - direction = (x=0, y=0, z=1)
                         - spacing = 0mm
-                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                          Multiplicity ->
-                            Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (AAF7D446CD023187): Collection @0.25mm
+                          Multiplicity -> 3D (9D98CA5924471FFC):  @0.25mm
+                            Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 3D (6D75D59633CF761C):  @0.25mm
                               - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                Group ->
-                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (F1B8C466CF253B99): Mesh @0.25mm
+                                Group -> 3D (3208ED715EB099A): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A): Mesh @0.25mm
                                     - height = 20.3mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Operation subtract() ->
-                                        Group ->
-                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC): Mesh @0.25mm
+                                      Operation subtract() -> 2D (F5B35CBCC083913): MultiPolygon @0.25mm
+                                        Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                             - height = 40.6mm
                                             - width = 40.6mm
                                             - x = -20.3mm
                                             - y = -20.3mm
-                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B): MultiPolygon @0.25mm
                                             - x = 20.3mm
                                             - y = 20.3mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29): MultiPolygon @0.25mm
+                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                                 - height = 40.6mm
                                                 - width = 40.6mm
                                                 - x = -20.3mm
                                                 - y = -20.3mm
-                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                            Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                            Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) -> 3D (9EFC52E0D8C2C6DB):  @0.25mm
                               - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                              Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
-                                Group ->
-                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (674FB384A15CB587): Mesh @0.25mm
+                                Group -> 3D (3208ED715EB099A): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A): Mesh @0.25mm
                                     - height = 20.3mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Operation subtract() ->
-                                        Group ->
-                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC): Mesh @0.25mm
+                                      Operation subtract() -> 2D (F5B35CBCC083913): MultiPolygon @0.25mm
+                                        Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                             - height = 40.6mm
                                             - width = 40.6mm
                                             - x = -20.3mm
                                             - y = -20.3mm
-                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B): MultiPolygon @0.25mm
                                             - x = 20.3mm
                                             - y = 20.3mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29): MultiPolygon @0.25mm
+                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                                 - height = 40.6mm
                                                 - width = 40.6mm
                                                 - x = -20.3mm
                                                 - y = -20.3mm
-                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Workpiece(Part) chess::Bishop() ->
-                      Operation __builtin::ops::center() ->
-                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Bishop() -> 3D (264A78DB2BF491C):  @0.25mm
+                      Operation __builtin::ops::center() -> 3D (F4914DB008872C32): Mesh @0.25mm
+                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) -> 3D (7CA062886C878B38): Mesh @0.25mm
                           - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
-                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) -> 3D (4468FC7993A8AB59): Mesh @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (264255E13E1D77D4): Mesh @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Operation __builtin::ops::union() ->
-                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (58414F522B4AAF61): Mesh @0.25mm
+                                Operation __builtin::ops::union() -> 2D (48828308FE324411): MultiPolygon @0.25mm
+                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) -> 2D (7548AB5797C5CC9B): Collection @0.25mm
                                     - n = (x=1, y=0, z=0)
                                     - x = 0mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Multiplicity ->
-                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) -> 2D (2562D39EC608C539): Collection @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (A6FB1086E68A9ED7): Polygon @0.25mm
+                                        Multiplicity -> 2D (B965258749371D55): Collection @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) -> 2D (F4E9104FEC3BA3EB): MultiPolygon @0.25mm
                                             - x = 14.35426765808692mm
                                             - y = 14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) -> 2D (838108236C27A26D): MultiPolygon @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270): Rect @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB): Rect @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) -> 2D (B8712E26626BD46A): MultiPolygon @0.25mm
                                             - x = -14.35426765808692mm
                                             - y = -14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) -> 2D (ECE2E92A482C74B5): MultiPolygon @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270): Rect @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                    Workpiece(Part) chess::Queen() ->
-                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Queen() -> 3D (A4B5F204F18C9E9A):  @0.25mm
+                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (5AD7A238BE20C65F): Collection @0.25mm
                         - direction = (x=0, y=0, z=1)
                         - spacing = 0mm
-                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                          Group ->
-                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (2444DED6C914DAD1): Collection @0.25mm
+                          Group -> 3D (7A57133B41AF967F):  @0.25mm
+                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90):  @0.25mm
                               - size_x = 40.6mm
                               - size_y = 40.6mm
                               - size_z = 40.6mm
-                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                                 - x = 0mm
                                 - y = 0mm
                                 - z = -20.3mm
-                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                                     - height = 40.6mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8):  @0.25mm
                                         - height = 40.6mm
                                         - width = 40.6mm
                                         - x = -20.3mm
                                         - y = -20.3mm
-                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                            Workpiece(Part) std::geo3d::Sphere(diameter=28.70853531617383mm) ->
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                            Workpiece(Part) std::geo3d::Sphere(diameter=28.70853531617383mm) -> 3D (E60E781212042B32):  @0.25mm
                               - radius = 14.35426765808692mm
-                              Primitive3D __builtin::geo3d::Sphere(radius=14.35426765808692mm) ->
-                    Workpiece(Part) chess::King() ->
-                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                              Primitive3D __builtin::geo3d::Sphere(radius=14.35426765808692mm) -> 3D (BE5D571D26716621): Manifold @0.25mm
+                    Workpiece(Part) <NO ID>::King() -> 3D (8FE3619ECDF4CC19):  @0.25mm
+                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (72F45AB8A675F817): Collection @0.25mm
                         - direction = (x=0, y=0, z=1)
                         - spacing = 0mm
-                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                          Group ->
-                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (92E5D557C30850C9): Collection @0.25mm
+                          Group -> 3D (CD9E5D66D96EEFB9):  @0.25mm
+                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90):  @0.25mm
                               - size_x = 40.6mm
                               - size_y = 40.6mm
                               - size_z = 40.6mm
-                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                                 - x = 0mm
                                 - y = 0mm
                                 - z = -20.3mm
-                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                                     - height = 40.6mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8):  @0.25mm
                                         - height = 40.6mm
                                         - width = 40.6mm
                                         - x = -20.3mm
                                         - y = -20.3mm
-                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                            Workpiece(Operation) std::ops::rotate(angle=45°, axis=(x=0, y=0, z=1)) ->
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                            Workpiece(Operation) std::ops::rotate(angle=45°, axis=(x=0, y=0, z=1)) -> 3D (8D9C088D699A32CB):  @0.25mm
                               - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
-                              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
-                                Workpiece(Part) std::geo3d::Cube(size=28.70853531617383mm) ->
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) -> 3D (19596D1B6EEDCF67): Mesh @0.25mm
+                                Workpiece(Part) std::geo3d::Cube(size=28.70853531617383mm) -> 3D (FE9EFADD9D9EBA1B): Mesh @0.25mm
                                   - size_x = 28.70853531617383mm
                                   - size_y = 28.70853531617383mm
                                   - size_z = 28.70853531617383mm
-                                  Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
+                                  Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) -> 3D (E17C28B5E462594C): Mesh @0.25mm
                                     - x = 0mm
                                     - y = 0mm
                                     - z = -14.35426765808692mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=28.70853531617383mm, scale=(x=100%, y=100%), twist=0°) ->
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) -> 3D (8C532D95B542DC3): Mesh @0.25mm
+                                      Workpiece(Operation) std::ops::extrude(height=28.70853531617383mm, scale=(x=100%, y=100%), twist=0°) -> 3D (A7A6166B013D19F0): Mesh @0.25mm
                                         - height = 28.70853531617383mm
                                         - scale = (x=100%, y=100%)
                                         - twist = 0°
-                                        Operation __builtin::ops::extrude(height=28.70853531617383mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                          Workpiece(Sketch) std::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm) ->
+                                        Operation __builtin::ops::extrude(height=28.70853531617383mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (707EB1C111992BB7): Mesh @0.25mm
+                                          Workpiece(Sketch) std::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm) -> 2D (D44487727147B97D): Rect @0.25mm
                                             - height = 28.70853531617383mm
                                             - width = 28.70853531617383mm
                                             - x = -14.35426765808692mm
                                             - y = -14.35426765808692mm
-                                            Primitive2D __builtin::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm, x=-14.35426765808692mm, y=-14.35426765808692mm) ->
-                    Workpiece(Part) chess::Bishop() ->
-                      Operation __builtin::ops::center() ->
-                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
+                                            Primitive2D __builtin::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm, x=-14.35426765808692mm, y=-14.35426765808692mm) -> 2D (B96CB49E8B06123B): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Bishop() -> 3D (264A78DB2BF491C):  @0.25mm
+                      Operation __builtin::ops::center() -> 3D (F4914DB008872C32): Mesh @0.25mm
+                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) -> 3D (7CA062886C878B38):  @0.25mm
                           - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
-                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) -> 3D (4468FC7993A8AB59):  @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (264255E13E1D77D4):  @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Operation __builtin::ops::union() ->
-                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (58414F522B4AAF61):  @0.25mm
+                                Operation __builtin::ops::union() -> 2D (48828308FE324411):  @0.25mm
+                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) -> 2D (7548AB5797C5CC9B):  @0.25mm
                                     - n = (x=1, y=0, z=0)
                                     - x = 0mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Multiplicity ->
-                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) -> 2D (2562D39EC608C539):  @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (A6FB1086E68A9ED7):  @0.25mm
+                                        Multiplicity -> 2D (B965258749371D55):  @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) -> 2D (F4E9104FEC3BA3EB):  @0.25mm
                                             - x = 14.35426765808692mm
                                             - y = 14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) -> 2D (838108236C27A26D):  @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270):  @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB):  @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) -> 2D (B8712E26626BD46A):  @0.25mm
                                             - x = -14.35426765808692mm
                                             - y = -14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) -> 2D (ECE2E92A482C74B5):  @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270):  @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                    Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB):  @0.25mm
+                    Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (314685EDBDA7BADB):  @0.25mm
                       - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
-                        Workpiece(Operation) std::ops::rotate(x=180°, y=0°, z=0°) ->
+                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C3E91AF22537E2E7): Mesh @0.25mm
+                        Workpiece(Operation) std::ops::rotate(x=180°, y=0°, z=0°) -> 3D (27E5364A28A76088): Mesh @0.25mm
                           - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]
-                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]) ->
-                            Workpiece(Part) chess::Knight() ->
-                              Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]) -> 3D (57D5B8F918820C8D): Mesh @0.25mm
+                            Workpiece(Part) <NO ID>::Knight() -> 3D (FD915677981BE59D): Collection @0.25mm
+                              Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (FCB03FFA91B9C31D): Collection @0.25mm
                                 - direction = (x=0, y=0, z=1)
                                 - spacing = 0mm
-                                Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                                  Multiplicity ->
-                                    Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (AAF7D446CD023187): Collection @0.25mm
+                                  Multiplicity -> 3D (9D98CA5924471FFC):  @0.25mm
+                                    Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 3D (6D75D59633CF761C):  @0.25mm
                                       - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                        Group ->
-                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (F1B8C466CF253B99):  @0.25mm
+                                        Group -> 3D (3208ED715EB099A):  @0.25mm
+                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A):  @0.25mm
                                             - height = 20.3mm
                                             - scale = (x=100%, y=100%)
                                             - twist = 0°
-                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                              Operation subtract() ->
-                                                Group ->
-                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC):  @0.25mm
+                                              Operation subtract() -> 2D (F5B35CBCC083913):  @0.25mm
+                                                Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                     - height = 40.6mm
                                                     - width = 40.6mm
                                                     - x = -20.3mm
                                                     - y = -20.3mm
-                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B):  @0.25mm
                                                     - x = 20.3mm
                                                     - y = 20.3mm
                                                     - z = 0mm
-                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29):  @0.25mm
+                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                         - height = 40.6mm
                                                         - width = 40.6mm
                                                         - x = -20.3mm
                                                         - y = -20.3mm
-                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                    Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                                    Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) -> 3D (9EFC52E0D8C2C6DB):  @0.25mm
                                       - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
-                                        Group ->
-                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (674FB384A15CB587):  @0.25mm
+                                        Group -> 3D (3208ED715EB099A):  @0.25mm
+                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A):  @0.25mm
                                             - height = 20.3mm
                                             - scale = (x=100%, y=100%)
                                             - twist = 0°
-                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                              Operation subtract() ->
-                                                Group ->
-                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC):  @0.25mm
+                                              Operation subtract() -> 2D (F5B35CBCC083913):  @0.25mm
+                                                Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                     - height = 40.6mm
                                                     - width = 40.6mm
                                                     - x = -20.3mm
                                                     - y = -20.3mm
-                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B):  @0.25mm
                                                     - x = 20.3mm
                                                     - y = 20.3mm
                                                     - z = 0mm
-                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29):  @0.25mm
+                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                         - height = 40.6mm
                                                         - width = 40.6mm
                                                         - x = -20.3mm
                                                         - y = -20.3mm
-                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Workpiece(Part) chess::Rook() ->
-                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                    Workpiece(Part) <NO ID>::Rook() -> 3D (9140F62D6A511A7B):  @0.25mm
+                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90): Mesh @0.25mm
                         - size_x = 40.6mm
                         - size_y = 40.6mm
                         - size_z = 40.6mm
-                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                           - x = 0mm
                           - y = 0mm
                           - z = -20.3mm
-                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8):  @0.25mm
                                   - height = 40.6mm
                                   - width = 40.6mm
                                   - x = -20.3mm
                                   - y = -20.3mm
-                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Multiplicity ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                    Multiplicity -> 3D (61EEB9EBFE16E2AB):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62): Rect @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095): Rect @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-      Workpiece(Operation) std::ops::rotate(angle=3.14159265358979rad, axis=(x=0, y=0, z=1)) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+      Workpiece(Operation) std::ops::rotate(angle=3.14159265358979rad, axis=(x=0, y=0, z=1)) -> 3D (7A853F2AFD5230A): Mesh @0.25mm
         - matrix = Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]
-        Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-          Workpiece(Operation) std::ops::translate(x=0mm, y=174mm, z=0mm) ->
+        Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (9404E9DF0FBE8B82): Mesh @0.25mm
+          Workpiece(Operation) std::ops::translate(x=0mm, y=174mm, z=0mm) -> 3D (9E996CE3E509D5CC): Mesh @0.25mm
             - x = 0mm
             - y = 174mm
             - z = 0mm
-            Transform __builtin::ops::translate(x=0mm, y=174mm, z=0mm) ->
-              Workpiece(Operation) std::ops::distribute_grid(cell_size=5.8cm, columns=8, rows=2) ->
+            Transform __builtin::ops::translate(x=0mm, y=174mm, z=0mm) -> 3D (B476691B915A3DAF): Mesh @0.25mm
+              Workpiece(Operation) std::ops::distribute_grid(cell_size=5.8cm, columns=8, rows=2) -> 3D (E9382C317CBC585F): Collection @0.25mm
                 - columns = 8
                 - height = 116mm
                 - rows = 2
                 - width = 464mm
                 - x = -232mm
                 - y = -58mm
-                Operation __builtin::ops::distribute_grid(columns=8, height=116mm, rows=2, width=464mm, x=-232mm, y=-58mm) ->
-                  Group ->
-                    Workpiece(Part) chess::Rook() ->
-                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                Operation __builtin::ops::distribute_grid(columns=8, height=116mm, rows=2, width=464mm, x=-232mm, y=-58mm) -> 3D (FF1E0F392DE04F0E): Collection @0.25mm
+                  Group -> 3D (7D5A9B7F6D53CB36):  @0.25mm
+                    Workpiece(Part) <NO ID>::Rook() -> 3D (9140F62D6A511A7B):  @0.25mm
+                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90): Mesh @0.25mm
                         - size_x = 40.6mm
                         - size_y = 40.6mm
                         - size_z = 40.6mm
-                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                           - x = 0mm
                           - y = 0mm
                           - z = -20.3mm
-                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8): Rect @0.25mm
                                   - height = 40.6mm
                                   - width = 40.6mm
                                   - x = -20.3mm
                                   - y = -20.3mm
-                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Workpiece(Part) chess::Knight() ->
-                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Knight() -> 3D (FD915677981BE59D):  @0.25mm
+                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (FCB03FFA91B9C31D): Collection @0.25mm
                         - direction = (x=0, y=0, z=1)
                         - spacing = 0mm
-                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                          Multiplicity ->
-                            Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (AAF7D446CD023187): Collection @0.25mm
+                          Multiplicity -> 3D (9D98CA5924471FFC):  @0.25mm
+                            Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 3D (6D75D59633CF761C):  @0.25mm
                               - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                Group ->
-                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (F1B8C466CF253B99): Mesh @0.25mm
+                                Group -> 3D (3208ED715EB099A): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A): Mesh @0.25mm
                                     - height = 20.3mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Operation subtract() ->
-                                        Group ->
-                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC): Mesh @0.25mm
+                                      Operation subtract() -> 2D (F5B35CBCC083913): MultiPolygon @0.25mm
+                                        Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                             - height = 40.6mm
                                             - width = 40.6mm
                                             - x = -20.3mm
                                             - y = -20.3mm
-                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B): MultiPolygon @0.25mm
                                             - x = 20.3mm
                                             - y = 20.3mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29): MultiPolygon @0.25mm
+                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                                 - height = 40.6mm
                                                 - width = 40.6mm
                                                 - x = -20.3mm
                                                 - y = -20.3mm
-                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                            Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                            Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) -> 3D (9EFC52E0D8C2C6DB):  @0.25mm
                               - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                              Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
-                                Group ->
-                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (674FB384A15CB587): Mesh @0.25mm
+                                Group -> 3D (3208ED715EB099A): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A): Mesh @0.25mm
                                     - height = 20.3mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Operation subtract() ->
-                                        Group ->
-                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC): Mesh @0.25mm
+                                      Operation subtract() -> 2D (F5B35CBCC083913): MultiPolygon @0.25mm
+                                        Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                          r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                             - height = 40.6mm
                                             - width = 40.6mm
                                             - x = -20.3mm
                                             - y = -20.3mm
-                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                            Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                                          Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B): MultiPolygon @0.25mm
                                             - x = 20.3mm
                                             - y = 20.3mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29): MultiPolygon @0.25mm
+                                              r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7): Rect @0.25mm
                                                 - height = 40.6mm
                                                 - width = 40.6mm
                                                 - x = -20.3mm
                                                 - y = -20.3mm
-                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Workpiece(Part) chess::Bishop() ->
-                      Operation __builtin::ops::center() ->
-                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Bishop() -> 3D (264A78DB2BF491C):  @0.25mm
+                      Operation __builtin::ops::center() -> 3D (F4914DB008872C32): Mesh @0.25mm
+                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) -> 3D (7CA062886C878B38): Mesh @0.25mm
                           - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
-                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) -> 3D (4468FC7993A8AB59): Mesh @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (264255E13E1D77D4): Mesh @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Operation __builtin::ops::union() ->
-                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (58414F522B4AAF61): Mesh @0.25mm
+                                Operation __builtin::ops::union() -> 2D (48828308FE324411): MultiPolygon @0.25mm
+                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) -> 2D (7548AB5797C5CC9B): Collection @0.25mm
                                     - n = (x=1, y=0, z=0)
                                     - x = 0mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Multiplicity ->
-                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) -> 2D (2562D39EC608C539): Collection @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (A6FB1086E68A9ED7): Polygon @0.25mm
+                                        Multiplicity -> 2D (B965258749371D55): Collection @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) -> 2D (F4E9104FEC3BA3EB): MultiPolygon @0.25mm
                                             - x = 14.35426765808692mm
                                             - y = 14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) -> 2D (838108236C27A26D): MultiPolygon @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270): Rect @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB): Rect @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) -> 2D (B8712E26626BD46A): MultiPolygon @0.25mm
                                             - x = -14.35426765808692mm
                                             - y = -14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) -> 2D (ECE2E92A482C74B5): MultiPolygon @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270): Rect @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                    Workpiece(Part) chess::Queen() ->
-                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Queen() -> 3D (A4B5F204F18C9E9A):  @0.25mm
+                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (5AD7A238BE20C65F): Collection @0.25mm
                         - direction = (x=0, y=0, z=1)
                         - spacing = 0mm
-                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                          Group ->
-                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (2444DED6C914DAD1): Collection @0.25mm
+                          Group -> 3D (7A57133B41AF967F):  @0.25mm
+                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90):  @0.25mm
                               - size_x = 40.6mm
                               - size_y = 40.6mm
                               - size_z = 40.6mm
-                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                                 - x = 0mm
                                 - y = 0mm
                                 - z = -20.3mm
-                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                                     - height = 40.6mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8):  @0.25mm
                                         - height = 40.6mm
                                         - width = 40.6mm
                                         - x = -20.3mm
                                         - y = -20.3mm
-                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                            Workpiece(Part) std::geo3d::Sphere(diameter=28.70853531617383mm) ->
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                            Workpiece(Part) std::geo3d::Sphere(diameter=28.70853531617383mm) -> 3D (E60E781212042B32):  @0.25mm
                               - radius = 14.35426765808692mm
-                              Primitive3D __builtin::geo3d::Sphere(radius=14.35426765808692mm) ->
-                    Workpiece(Part) chess::King() ->
-                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                              Primitive3D __builtin::geo3d::Sphere(radius=14.35426765808692mm) -> 3D (BE5D571D26716621): Manifold @0.25mm
+                    Workpiece(Part) <NO ID>::King() -> 3D (8FE3619ECDF4CC19):  @0.25mm
+                      Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (72F45AB8A675F817): Collection @0.25mm
                         - direction = (x=0, y=0, z=1)
                         - spacing = 0mm
-                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                          Group ->
-                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                        Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (92E5D557C30850C9): Collection @0.25mm
+                          Group -> 3D (CD9E5D66D96EEFB9):  @0.25mm
+                            Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90):  @0.25mm
                               - size_x = 40.6mm
                               - size_y = 40.6mm
                               - size_z = 40.6mm
-                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                              Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                                 - x = 0mm
                                 - y = 0mm
                                 - z = -20.3mm
-                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                                Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                                  Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                                     - height = 40.6mm
                                     - scale = (x=100%, y=100%)
                                     - twist = 0°
-                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                                    Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8):  @0.25mm
                                         - height = 40.6mm
                                         - width = 40.6mm
                                         - x = -20.3mm
                                         - y = -20.3mm
-                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                            Workpiece(Operation) std::ops::rotate(angle=45°, axis=(x=0, y=0, z=1)) ->
+                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                            Workpiece(Operation) std::ops::rotate(angle=45°, axis=(x=0, y=0, z=1)) -> 3D (8D9C088D699A32CB):  @0.25mm
                               - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
-                              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
-                                Workpiece(Part) std::geo3d::Cube(size=28.70853531617383mm) ->
+                              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) -> 3D (19596D1B6EEDCF67): Mesh @0.25mm
+                                Workpiece(Part) std::geo3d::Cube(size=28.70853531617383mm) -> 3D (FE9EFADD9D9EBA1B): Mesh @0.25mm
                                   - size_x = 28.70853531617383mm
                                   - size_y = 28.70853531617383mm
                                   - size_z = 28.70853531617383mm
-                                  Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
+                                  Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) -> 3D (E17C28B5E462594C): Mesh @0.25mm
                                     - x = 0mm
                                     - y = 0mm
                                     - z = -14.35426765808692mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) ->
-                                      Workpiece(Operation) std::ops::extrude(height=28.70853531617383mm, scale=(x=100%, y=100%), twist=0°) ->
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=-14.35426765808692mm) -> 3D (8C532D95B542DC3): Mesh @0.25mm
+                                      Workpiece(Operation) std::ops::extrude(height=28.70853531617383mm, scale=(x=100%, y=100%), twist=0°) -> 3D (A7A6166B013D19F0): Mesh @0.25mm
                                         - height = 28.70853531617383mm
                                         - scale = (x=100%, y=100%)
                                         - twist = 0°
-                                        Operation __builtin::ops::extrude(height=28.70853531617383mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                          Workpiece(Sketch) std::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm) ->
+                                        Operation __builtin::ops::extrude(height=28.70853531617383mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (707EB1C111992BB7): Mesh @0.25mm
+                                          Workpiece(Sketch) std::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm) -> 2D (D44487727147B97D): Rect @0.25mm
                                             - height = 28.70853531617383mm
                                             - width = 28.70853531617383mm
                                             - x = -14.35426765808692mm
                                             - y = -14.35426765808692mm
-                                            Primitive2D __builtin::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm, x=-14.35426765808692mm, y=-14.35426765808692mm) ->
-                    Workpiece(Part) chess::Bishop() ->
-                      Operation __builtin::ops::center() ->
-                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) ->
+                                            Primitive2D __builtin::geo2d::Rect(height=28.70853531617383mm, width=28.70853531617383mm, x=-14.35426765808692mm, y=-14.35426765808692mm) -> 2D (B96CB49E8B06123B): Rect @0.25mm
+                    Workpiece(Part) <NO ID>::Bishop() -> 3D (264A78DB2BF491C):  @0.25mm
+                      Operation __builtin::ops::center() -> 3D (F4914DB008872C32): Mesh @0.25mm
+                        Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) -> 3D (7CA062886C878B38):  @0.25mm
                           - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
-                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) -> 3D (4468FC7993A8AB59):  @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (264255E13E1D77D4):  @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Operation __builtin::ops::union() ->
-                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (58414F522B4AAF61):  @0.25mm
+                                Operation __builtin::ops::union() -> 2D (48828308FE324411):  @0.25mm
+                                  Workpiece(Operation) std::ops::mirror(n=(x=1, y=0, z=0), x=0mm, y=0mm, z=0mm) -> 2D (7548AB5797C5CC9B):  @0.25mm
                                     - n = (x=1, y=0, z=0)
                                     - x = 0mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) ->
-                                      Operation __builtin::ops::hull() ->
-                                        Multiplicity ->
-                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) ->
+                                    Operation __builtin::ops::mirror(nx=1, ny=0, nz=0, x=0mm, y=0mm, z=0mm) -> 2D (2562D39EC608C539):  @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (A6FB1086E68A9ED7):  @0.25mm
+                                        Multiplicity -> 2D (B965258749371D55):  @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=0.78539816339745rad, distance=20.3mm) -> 2D (F4E9104FEC3BA3EB):  @0.25mm
                                             - x = 14.35426765808692mm
                                             - y = 14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=14.35426765808692mm, y=14.35426765808692mm, z=0mm) -> 2D (838108236C27A26D):  @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270):  @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB):  @0.25mm
+                                          Workpiece(Operation) std::ops::translate(angle=-2.35619449019234rad, distance=20.3mm) -> 2D (B8712E26626BD46A):  @0.25mm
                                             - x = -14.35426765808692mm
                                             - y = -14.35426765808692mm
                                             - z = 0mm
-                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) ->
-                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) ->
+                                            Transform __builtin::ops::translate(x=-14.35426765808692mm, y=-14.35426765808692mm, z=0mm) -> 2D (ECE2E92A482C74B5):  @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Rect(size=12.18mm) -> 2D (366C2C0945F06270):  @0.25mm
                                                 - height = 12.18mm
                                                 - width = 12.18mm
                                                 - x = -6.09mm
                                                 - y = -6.09mm
-                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) ->
-                    Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) ->
+                                                Primitive2D __builtin::geo2d::Rect(height=12.18mm, width=12.18mm, x=-6.09mm, y=-6.09mm) -> 2D (F062B20CAB34DBB):  @0.25mm
+                    Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (314685EDBDA7BADB):  @0.25mm
                       - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
-                        Workpiece(Operation) std::ops::rotate(x=180°, y=0°, z=0°) ->
+                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C3E91AF22537E2E7): Mesh @0.25mm
+                        Workpiece(Operation) std::ops::rotate(x=180°, y=0°, z=0°) -> 3D (27E5364A28A76088): Mesh @0.25mm
                           - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]
-                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]) ->
-                            Workpiece(Part) chess::Knight() ->
-                              Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) ->
+                          Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, -1.0, 1.2246467991473532e-16], [0.0, -1.2246467991473532e-16, -1.0]]) -> 3D (57D5B8F918820C8D): Mesh @0.25mm
+                            Workpiece(Part) <NO ID>::Knight() -> 3D (FD915677981BE59D): Collection @0.25mm
+                              Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (FCB03FFA91B9C31D): Collection @0.25mm
                                 - direction = (x=0, y=0, z=1)
                                 - spacing = 0mm
-                                Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) ->
-                                  Multiplicity ->
-                                    Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) ->
+                                Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (AAF7D446CD023187): Collection @0.25mm
+                                  Multiplicity -> 3D (9D98CA5924471FFC):  @0.25mm
+                                    Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 3D (6D75D59633CF761C):  @0.25mm
                                       - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) ->
-                                        Group ->
-                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (F1B8C466CF253B99):  @0.25mm
+                                        Group -> 3D (3208ED715EB099A):  @0.25mm
+                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A):  @0.25mm
                                             - height = 20.3mm
                                             - scale = (x=100%, y=100%)
                                             - twist = 0°
-                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                              Operation subtract() ->
-                                                Group ->
-                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC):  @0.25mm
+                                              Operation subtract() -> 2D (F5B35CBCC083913):  @0.25mm
+                                                Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                     - height = 40.6mm
                                                     - width = 40.6mm
                                                     - x = -20.3mm
                                                     - y = -20.3mm
-                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B):  @0.25mm
                                                     - x = 20.3mm
                                                     - y = 20.3mm
                                                     - z = 0mm
-                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29):  @0.25mm
+                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                         - height = 40.6mm
                                                         - width = 40.6mm
                                                         - x = -20.3mm
                                                         - y = -20.3mm
-                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                    Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) ->
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                                    Workpiece(Operation) std::ops::rotate(angle=1.5707963267949rad, axis=(x=0, y=0, z=1)) -> 3D (9EFC52E0D8C2C6DB):  @0.25mm
                                       - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) ->
-                                        Group ->
-                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) ->
+                                      Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (674FB384A15CB587):  @0.25mm
+                                        Group -> 3D (3208ED715EB099A):  @0.25mm
+                                          Workpiece(Operation) std::ops::extrude(height=20.3mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3208ED715EB099A):  @0.25mm
                                             - height = 20.3mm
                                             - scale = (x=100%, y=100%)
                                             - twist = 0°
-                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                              Operation subtract() ->
-                                                Group ->
-                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                            Operation __builtin::ops::extrude(height=20.3mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA6246E18294EC):  @0.25mm
+                                              Operation subtract() -> 2D (F5B35CBCC083913):  @0.25mm
+                                                Group -> 2D (A32EB2926C3E500D):  @0.25mm
+                                                  r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                     - height = 40.6mm
                                                     - width = 40.6mm
                                                     - x = -20.3mm
                                                     - y = -20.3mm
-                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
+                                                    Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                                                  Workpiece(Operation) std::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (BC1FC9974D5CE60B):  @0.25mm
                                                     - x = 20.3mm
                                                     - y = 20.3mm
                                                     - z = 0mm
-                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) ->
-                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) ->
+                                                    Transform __builtin::ops::translate(x=20.3mm, y=20.3mm, z=0mm) -> 2D (1F1EBF4D57F5CF29):  @0.25mm
+                                                      r: Workpiece(Sketch) std::geo2d::Rect(size=40.6mm) -> 2D (BE3CBD9D21EE93B7):  @0.25mm
                                                         - height = 40.6mm
                                                         - width = 40.6mm
                                                         - x = -20.3mm
                                                         - y = -20.3mm
-                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Workpiece(Part) chess::Rook() ->
-                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) ->
+                                                        Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                    Workpiece(Part) <NO ID>::Rook() -> 3D (9140F62D6A511A7B):  @0.25mm
+                      Workpiece(Part) std::geo3d::Cube(size=40.6mm) -> 3D (4DE94390B3B43C90): Mesh @0.25mm
                         - size_x = 40.6mm
                         - size_y = 40.6mm
                         - size_z = 40.6mm
-                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
+                        Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (6901F26AB4F5F6F7): Mesh @0.25mm
                           - x = 0mm
                           - y = 0mm
                           - z = -20.3mm
-                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) ->
-                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) ->
+                          Transform __builtin::ops::translate(x=0mm, y=0mm, z=-20.3mm) -> 3D (24C34F28ACFE9B95): Mesh @0.25mm
+                            Workpiece(Operation) std::ops::extrude(height=40.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C2C918C70A3DEE08): Mesh @0.25mm
                               - height = 40.6mm
                               - scale = (x=100%, y=100%)
                               - twist = 0°
-                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) ->
+                              Operation __builtin::ops::extrude(height=40.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (249FE8BFE5685856): Mesh @0.25mm
+                                Workpiece(Sketch) std::geo2d::Rect(height=40.6mm, width=40.6mm) -> 2D (A392D81CB52E6A8):  @0.25mm
                                   - height = 40.6mm
                                   - width = 40.6mm
                                   - x = -20.3mm
                                   - y = -20.3mm
-                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) ->
-                    Multiplicity ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                  Primitive2D __builtin::geo2d::Rect(height=40.6mm, width=40.6mm, x=-20.3mm, y=-20.3mm) -> 2D (DDF9C779847182B1):  @0.25mm
+                    Multiplicity -> 3D (61EEB9EBFE16E2AB):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62): Rect @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095): Rect @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-                      Workpiece(Part) chess::Pawn() ->
-                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+                      Workpiece(Part) <NO ID>::Pawn() -> 3D (79819E5CD9DE2820):  @0.25mm
+                        Workpiece(Part) std::geo3d::Cube(size=32.48000000000001mm) -> 3D (D519261F22E08879): Mesh @0.25mm
                           - size_x = 32.48000000000001mm
                           - size_y = 32.48000000000001mm
                           - size_z = 32.48000000000001mm
-                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
+                          Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (B1086B7298CA417C): Mesh @0.25mm
                             - x = 0mm
                             - y = 0mm
                             - z = -16.24mm
-                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) ->
-                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) ->
+                            Transform __builtin::ops::translate(x=0mm, y=0mm, z=-16.24mm) -> 3D (F40F4845AE9F8B5): Mesh @0.25mm
+                              Workpiece(Operation) std::ops::extrude(height=32.48000000000001mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1C7D45480B1670F1): Mesh @0.25mm
                                 - height = 32.48000000000001mm
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
-                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) ->
-                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) ->
+                                Operation __builtin::ops::extrude(height=32.48000000000001mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (B183F4EA569959A0): Mesh @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm) -> 2D (6D35DE303D8AFF62):  @0.25mm
                                     - height = 32.48000000000001mm
                                     - width = 32.48000000000001mm
                                     - x = -16.24mm
                                     - y = -16.24mm
-                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) ->
-    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-1mm) ->
+                                    Primitive2D __builtin::geo2d::Rect(height=32.48000000000001mm, width=32.48000000000001mm, x=-16.24mm, y=-16.24mm) -> 2D (A4FDD587E0494095):  @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=-1mm) -> 3D (9A597D96B51000F1): Mesh @0.25mm
       - x = 0mm
       - y = 0mm
       - z = -1mm
-      Transform __builtin::ops::translate(x=0mm, y=0mm, z=-1mm) ->
-        Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) ->
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=-1mm) -> 3D (B03AA5A2B546CA71): Mesh @0.25mm
+        Workpiece(Operation) std::ops::extrude(height=1mm, scale=(x=100%, y=100%), twist=0°) -> 3D (E7A3365BA707F15E): Mesh @0.25mm
           - height = 1mm
           - scale = (x=100%, y=100%)
           - twist = 0°
-          Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) ->
-            Workpiece(Sketch) std::geo2d::Rect(size=464mm) ->
+          Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (83FDFDBCA772D18A): Mesh @0.25mm
+            Workpiece(Sketch) std::geo2d::Rect(size=464mm) -> 2D (C9D9988CEE2ED70E): Rect @0.25mm
               - height = 464mm
               - width = 464mm
               - x = -232mm
               - y = -232mm
-              Primitive2D __builtin::geo2d::Rect(height=464mm, width=464mm, x=-232mm, y=-232mm) ->
+              Primitive2D __builtin::geo2d::Rect(height=464mm, width=464mm, x=-232mm, y=-232mm) -> 2D (EFEE0EBC077AE1E7): Rect @0.25mm
 
 Export of "../books/examples/src/.test/chess-out.stl" successful.
 -- Test Result --

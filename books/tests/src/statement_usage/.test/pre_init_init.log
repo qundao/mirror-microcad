@@ -11,13 +11,5 @@
   31:     init() { x=1; }
   32:   init(l:Length) {} } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(Sketch) pre_init_init::K() ->
-      - x = 1
-
-Export error: Nothing to render
 -- Test Result --
 OK

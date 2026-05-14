@@ -17,7 +17,6 @@
   43:   
   44:   PunchedDisk(1cm);
 
--- No Output --
 -- Errors --
   × error: 39:12: Function is not allowed within workbench
     ╭─[../books/language/src/structure/functions/workbench_functions.md:39:9]
@@ -33,6 +32,5 @@
     ╰────
   help: function is only allowed within source file, module or workbench
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

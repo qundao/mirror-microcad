@@ -24,8 +24,5 @@
   48:   assert_eq([5 == 6, false]); // Equal
   49:   assert_eq([5 != 6, true]); // Not equal
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -20,15 +20,5 @@
   53:   
   54:   MySketch();
 
--- Output --
-Hello
-
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(Sketch) const_assignment_workbench::MySketch() ->
-      - text = Hello
-
-Export error: Nothing to render
 -- Test Result --
 OK

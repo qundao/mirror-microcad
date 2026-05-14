@@ -10,9 +10,9 @@
   18:   a = {
   19:       1 + 2;
 
--- Parse Error --
+-- Errors --
   × error: 19:11: Unclosed code block
-    ╭─[:18:5]
+    ╭─[../books/tests/src/unclosed_brackets.md:18:5]
  18 │ a = {
     ·     ┬
     ·     ╰── code block opened here

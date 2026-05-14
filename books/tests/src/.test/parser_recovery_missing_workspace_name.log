@@ -13,30 +13,26 @@
   39:   
   40:   a =; // error after a workspace with no name
 
--- Parse Error --
+-- Errors --
   × error: 36:11: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[:36:11]
+    ╭─[../books/tests/src/parser_recovery.md:36:11]
  36 │ sketch () { // error, no name
     ·           ┬
     ·           ╰── unexpected {
  37 │   1=; // error inside an if statement with missing params
     ╰────
-
--- Parse Error --
   × error: 37:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
   │ 'or', 'and' or semicolon
-    ╭─[:37:4]
+    ╭─[../books/tests/src/parser_recovery.md:37:4]
  36 │ sketch () { // error, no name
  37 │   1=; // error inside an if statement with missing params
     ·    ┬
     ·    ╰── unexpected =
  38 │ }
     ╰────
-
--- Parse Error --
   × error: 40:4: Expected expression
-    ╭─[:40:4]
+    ╭─[../books/tests/src/parser_recovery.md:40:4]
  39 │ 
  40 │ a =; // error after a workspace with no name
     ·    ┬

@@ -10,13 +10,11 @@
   47:   // simply draw a sphere
   48:   std::geo3d::Sphere(radius = 1cm);
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Part) std::geo3d::Sphere(radius=1cm) ->
+  Group (root) -> 3D (47A913587C15E6FC): Manifold @0.25mm
+    Workpiece(Part) std::geo3d::Sphere(radius=1cm) -> 3D (47A913587C15E6FC): Manifold @0.25mm
       - radius = 1cm
-      Primitive3D __builtin::geo3d::Sphere(radius=1cm) ->
+      Primitive3D __builtin::geo3d::Sphere(radius=1cm) -> 3D (20C642FA26007FE1): Manifold @0.25mm
 
 Export of "../books/language/src/structure/.test/source_file_3D-out.stl" successful.
 -- Test Result --

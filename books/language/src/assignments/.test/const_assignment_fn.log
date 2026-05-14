@@ -20,7 +20,6 @@
  153:   }
  154:   MySketch();
 
--- No Output --
 -- Errors --
   × error: 144:5: Constant assignment is not allowed within function
      ╭─[../books/language/src/assignments/const.md:144:5]
@@ -46,6 +45,5 @@
      ╰────
   help: constant assignment is only allowed within source file, module or workbench
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

@@ -10,17 +10,10 @@
    6:   use std::geo2d::*;
    7:   use std::ops::*;
    8:   
-   9:   Rect(w = 10mm, w = 10mm); // error: same parameter name
+   9:   Rect(w = 10mm, w = 10mm);
 
--- Parse Error --
-  × error: 9:16: Duplicate argument: w
-   ╭─[:9:16]
- 8 │ 
- 9 │ Rect(w = 10mm, w = 10mm); // error: same parameter name
-   ·      ┬         ┬
-   ·      │         ╰── Duplicate argument
-   ·      ╰── Previous declaration
-   ╰────
+-- Errors --
+error: Duplicate argument: w
 
 -- Test Result --
 FAILS AS EXPECTED

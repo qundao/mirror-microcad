@@ -12,8 +12,5 @@
   22:   
   23:   std::debug::assert_eq([c#color, (r = 1.0, g = 1.0, b = 1.0, a = 1.0)]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

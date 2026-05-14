@@ -14,7 +14,6 @@
   54:   
   55:   MySketch();
 
--- No Output --
 -- Errors --
   × error: 51:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/model.md:51:5]
@@ -30,6 +29,5 @@
  53 │ }
     ╰────
 
-Evaluation aborted because of prior resolve errors!
 -- Test Result --
 FAILS AS EXPECTED

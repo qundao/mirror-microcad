@@ -13,8 +13,5 @@
   14:   }
   15:   std::debug::assert_eq([MySketch(5cm).diameter, 10cm])
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

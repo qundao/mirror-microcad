@@ -11,7 +11,6 @@
  103:     l + 2; // error
  104:   } } K(1cm);
 
--- No Output --
 -- Errors --
   × error: 103:3: Quantity error: Invalid operation: `1cm` + `2` (try `2` + `1cm`)
   ╰─▶ Invalid operation: `1cm` + `2` (try `2` + `1cm`)

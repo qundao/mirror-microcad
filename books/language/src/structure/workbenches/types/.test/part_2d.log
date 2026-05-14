@@ -13,7 +13,6 @@
   31:   
   32:   MyPart(1cm);
 
--- No Output --
 -- Errors --
   × error: 29:5: The Part workbench produced a 2D output, but expected a 3D output.
     ╭─[../books/language/src/structure/workbenches/types/parts.md:29:5]

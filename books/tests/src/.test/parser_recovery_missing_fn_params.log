@@ -13,29 +13,25 @@
   19:   
   20:   a =; // error after an if statement with missing params
 
--- Parse Error --
+-- Errors --
   × error: 16:8: Expected '('
-    ╭─[:16:8]
+    ╭─[../books/tests/src/parser_recovery.md:16:8]
  16 │ fn bar { // error, no params
     ·        ┬
     ·        ╰── unexpected {
  17 │   1=; // error inside an if statement with missing params
     ╰────
-
--- Parse Error --
   × error: 17:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
   │ 'or', 'and' or semicolon
-    ╭─[:17:4]
+    ╭─[../books/tests/src/parser_recovery.md:17:4]
  16 │ fn bar { // error, no params
  17 │   1=; // error inside an if statement with missing params
     ·    ┬
     ·    ╰── unexpected =
  18 │ }
     ╰────
-
--- Parse Error --
   × error: 20:4: Expected expression
-    ╭─[:20:4]
+    ╭─[../books/tests/src/parser_recovery.md:20:4]
  19 │ 
  20 │ a =; // error after an if statement with missing params
     ·    ┬

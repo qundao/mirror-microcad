@@ -11,18 +11,16 @@
   65:   
   66:   a =; // error after a broken use statement
 
--- Parse Error --
+-- Errors --
   × error: 64:8: Expected identifier or '*'
-    ╭─[:64:8]
+    ╭─[../books/tests/src/parser_recovery.md:64:8]
  64 │ use a::1; // error, non-identifier in use name
     ·        ┬
     ·        ╰── unexpected integer literal
  65 │ 
     ╰────
-
--- Parse Error --
   × error: 66:4: Expected expression
-    ╭─[:66:4]
+    ╭─[../books/tests/src/parser_recovery.md:66:4]
  65 │ 
  66 │ a =; // error after a broken use statement
     ·    ┬

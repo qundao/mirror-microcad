@@ -20,7 +20,6 @@
  123:   // Use initializer
  124:   Wheel(radius = 1cm);
 
--- No Output --
 -- Errors --
   × error: 118:9: Value radius already in defined: 1cm
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:118:9]

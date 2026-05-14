@@ -13,7 +13,6 @@
   21:   
   22:   S(w=10cm); // error: short form cannot be used here because of ambiguity
 
--- No Output --
 -- Errors --
   × error: 22:3: Workbench S has ambiguous initialization for those arguments
     ╭─[../books/tests/src/argument_match.md:22:1]
@@ -23,8 +22,8 @@
     ·     ╰── Got: S( w = 10cm )
     ╰────
   help: Ambiguous initializations:
-        	argument_match_short_collision::S(width: Length)
-        	argument_match_short_collision::S::init(what: Length)
+        	<NO ID>::S(width: Length)
+        	<NO ID>::S::init(what: Length)
 
 -- Test Result --
 FAILS AS EXPECTED

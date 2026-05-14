@@ -15,37 +15,5 @@
  124:   // `d` does not need a name because `b` has one
  125:   f(b = 2cm, 1, 3cm);
 
--- No Output --
--- Errors --
-  ⚠ warning: 119:6: Unused local a.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:119:6]
- 119 │ fn f(a: Scalar, b: Length, c = 2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
-     ·      ┬
-     ·      ╰── Unused local a.
- 120 │ 
-     ╰────
-  ⚠ warning: 119:17: Unused local b.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:119:17]
- 119 │ fn f(a: Scalar, b: Length, c = 2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
-     ·                 ┬
-     ·                 ╰── Unused local b.
- 120 │ 
-     ╰────
-  ⚠ warning: 119:28: Unused local c.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:119:28]
- 119 │ fn f(a: Scalar, b: Length, c = 2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
-     ·                            ┬
-     ·                            ╰── Unused local c.
- 120 │ 
-     ╰────
-  ⚠ warning: 119:37: Unused local d.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:119:37]
- 119 │ fn f(a: Scalar, b: Length, c = 2cm, d: Length) -> Volume {} // warning: unused a,b,c,d
-     ·                                     ┬
-     ·                                     ╰── Unused local d.
- 120 │ 
-     ╰────
-
--- No Model --
 -- Test Result --
 OK

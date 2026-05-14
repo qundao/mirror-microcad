@@ -11,18 +11,16 @@
   81:   
   82:   a =; // error after a broken use statement
 
--- Parse Error --
+-- Errors --
   × error: 80:13: Expected identifier
-    ╭─[:80:13]
+    ╭─[../books/tests/src/parser_recovery.md:80:13]
  80 │ use a::b as 1; // error, invalid as name
     ·             ┬
     ·             ╰── unexpected integer literal
  81 │ 
     ╰────
-
--- Parse Error --
   × error: 82:4: Expected expression
-    ╭─[:82:4]
+    ╭─[../books/tests/src/parser_recovery.md:82:4]
  81 │ 
  82 │ a =; // error after a broken use statement
     ·    ┬

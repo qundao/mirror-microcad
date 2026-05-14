@@ -9,8 +9,5 @@
 
   12:   std::debug::assert_eq([ std::array::len([1,2,3]), 3 ]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -11,10 +11,5 @@
   18:   
   19:   print("Hello, µcad builtin library!");
 
--- Output --
-Hello, µcad builtin library!
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK
