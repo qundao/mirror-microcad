@@ -6,6 +6,7 @@
 pub mod commands;
 mod config;
 pub mod document;
+pub mod locate;
 mod session;
 mod watcher;
 
@@ -15,7 +16,7 @@ use microcad_lang::value::Value;
 pub use microcad_lang_parse::ast;
 
 pub mod base {
-    pub use microcad_lang_base::Source;
+    pub use microcad_lang_base::{MICROCAD_EXTENSIONS, Source, Url};
 }
 
 pub mod parse {
