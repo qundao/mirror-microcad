@@ -57,7 +57,7 @@ impl ModelInner {
         self.children.iter()
     }
 
-    /// Return if ,model has no children.
+    /// Return if true model has no children.
     pub fn is_empty(&self) -> bool {
         self.children.is_empty()
     }
