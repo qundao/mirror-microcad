@@ -13,9 +13,11 @@ pub struct Format {
 
 impl RunCommand<()> for Format {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::commands::{Format, FormatParameters, Sync, compile::Parse};
-        let mut document = microcad_driver::Document::open(&self.input)?;
-        let params = FormatParameters::default();
+        use microcad_driver::prelude as mu;
+        use mu::traits::{Format, Sync, compile::Parse};
+
+        let mut document = mu::Document::open(&self.input)?;
+        let params = mu::FormatParameters::default();
 
         match document.parse().and(document.format(&params)) {
             Ok(true) => {

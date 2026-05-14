@@ -3,8 +3,6 @@
 
 //! µcad CLI watch command
 
-use microcad_driver::{Document, RcMut, RenderCache};
-
 use crate::*;
 
 #[derive(clap::Parser)]
@@ -24,26 +22,27 @@ pub struct Watch {
 /// Run this command for a CLI.
 impl RunCommand for Watch {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::commands::{Compile, CompileParameters, Export, ExportParameters};
+        use microcad_driver::prelude as mu;
+        use mu::traits::*;
 
-        let mut watcher = microcad_driver::Watcher::new()?;
-        let render_cache = RcMut::new(RenderCache::new());
+        let mut watcher = mu::Watcher::new()?;
+        let render_cache = mu::RcMut::new(mu::RenderCache::new());
 
-        let export_params = ExportParameters {
+        let export_params = mu::ExportParameters {
             input_path: std::path::PathBuf::from(&self.input),
             output_path: self.output.clone(),
             config: cli.config.export.clone(),
         };
 
         let compile_params = cli.compile_parameters(&self.resolution)?;
-        let compile_params = CompileParameters {
+        let compile_params = mu::CompileParameters {
             resolve: compile_params.resolve,
             render: compile_params.render.with_cache(render_cache.clone()),
         };
 
         // Recompile whenever something relevant happens.
         loop {
-            let mut document = Document::open(&self.input)?;
+            let mut document = mu::Document::open(&self.input)?;
             match document
                 .compile(compile_params.clone())
                 .and(document.export(&export_params))

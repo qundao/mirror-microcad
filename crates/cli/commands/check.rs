@@ -12,8 +12,10 @@ pub struct Check {
 
 impl RunCommand<()> for Check {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::{Document, commands::Compile};
-        let mut document = Document::open(&self.input)?;
+        use microcad_driver::prelude as mu;
+        use mu::traits::*;
+
+        let mut document = mu::Document::open(&self.input)?;
 
         match document.compile(cli.compile_parameters("0.1mm")?) {
             Ok(_) => {

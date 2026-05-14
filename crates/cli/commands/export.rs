@@ -26,12 +26,12 @@ pub struct Export {
 
 impl RunCommand for Export {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::Document;
-        use microcad_driver::commands::{Compile, Export as _, ExportParameters};
+        use microcad_driver::prelude as mu;
+        use mu::traits::*;
 
-        let mut document = Document::open(&self.input)?;
+        let mut document = mu::Document::open(&self.input)?;
 
-        let params = ExportParameters {
+        let params = mu::ExportParameters {
             input_path: std::path::PathBuf::from(&self.input),
             output_path: self.output.clone(),
             config: cli.config.export.clone(),

@@ -24,12 +24,14 @@ pub struct Doc {
 
 impl RunCommand<()> for Doc {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let mut document = microcad_driver::Document::open(&self.input)?;
-        use microcad_driver::commands::{DocGen, DocGenParameters, compile::ResolveParameters};
-        let params = DocGenParameters {
+        use microcad_driver::prelude as mu;
+        use mu::traits::*;
+
+        let mut document = mu::Document::open(&self.input)?;
+        let params = mu::DocGenParameters {
             generator_id: self.generator.clone(),
             output_path: self.output.clone(),
-            resolve_parameters: ResolveParameters::default(),
+            resolve_parameters: mu::ResolveParameters::default(),
         };
 
         match document.doc_gen(params) {
