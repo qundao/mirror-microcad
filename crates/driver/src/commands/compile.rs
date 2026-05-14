@@ -56,6 +56,10 @@ impl RenderParameters {
             progress_tx: self.progress_tx,
         }
     }
+
+    pub fn with_empty_cache(self) -> Self {
+        self.with_cache(RcMut::new(RenderCache::default()))
+    }
 }
 
 impl From<RenderResolution> for RenderParameters {
