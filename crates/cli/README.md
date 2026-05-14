@@ -56,32 +56,6 @@ Start the microcad CLI by typing `microcad` into your console.
 microcad
 ```
 
-This will give you an overview of the available functionality:
-
-```plain
-µcad Command Line Interface
-
-Usage: microcad [OPTIONS] <COMMAND>
-
-Commands:
-  parse        Parse a µcad file
-  resolve      Parse and resolve a µcad file
-  eval         Parse and evaluate a µcad file
-  export       Parse and evaluate and export a µcad file
-  create       Create a new source file with µcad extension
-  watch        Watch a µcad file
-  install      Install µcad standard library
-  completions  Print shell completions
-  help         Print this message or the help of the given subcommand(s)
-
-Options:
-  -T, --time                  Display processing time
-  -C, --config <CONFIG_PATH>  Load config from file
-  -v...                       Verbosity level (use -v, -vv, or -vvv)
-  -h, --help                  Print help
-  -V, --version               Print version
-```
-
 You're now ready to use µcad!
 
 ## Command line usage
@@ -107,7 +81,7 @@ microcad doc -g mdbook __builtin --output books/builtin
 ### Generate mdbook for µcad standard library
 
 ```sh
-microcad doc -g mdbook 'crates/std/lib/std/mod.µcad' --no-std --output books/std`
+microcad doc -g mdbook 'crates/std/lib/std/mod.µcad' --output books/std`
 ```
 
 ## Resources
