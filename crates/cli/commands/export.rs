@@ -3,14 +3,12 @@
 
 //! µcad CLI export command
 
-use microcad_driver::Document;
-
 use crate::{Cli, commands::RunCommand};
 
 /// Parse and evaluate and export a µcad file.
 #[derive(clap::Parser)]
 pub struct Export {
-    pub input: std::path::PathBuf,
+    pub input: String,
 
     /// Output file (e.g. an SVG or STL).
     pub output: Option<std::path::PathBuf>,
@@ -23,17 +21,18 @@ pub struct Export {
 
     /// List all export target files.
     #[arg(short, long)]
-    pub targets: bool,
+    pub dry_run: bool,
 }
 
 impl RunCommand for Export {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
+        use microcad_driver::Document;
         use microcad_driver::commands::{Compile, Export as _, ExportParameters};
 
-        let mut document = Document::from_file(&self.input)?;
+        let mut document = Document::open(&self.input)?;
 
         let params = ExportParameters {
-            input_path: self.input.clone(),
+            input_path: std::path::PathBuf::from(&self.input),
             output_path: self.output.clone(),
             config: cli.config.export.clone(),
         };
@@ -43,10 +42,21 @@ impl RunCommand for Export {
             .and(document.get_export_targets(&params))
         {
             Ok(targets) => {
-                targets.export()?;
+                if self.dry_run {
+                    eprintln!("{targets}");
+                } else {
+                    match targets.export() {
+                        Ok(exported_files) => {
+                            eprint!("{exported_files}");
+                        }
+                        Err(err) => {
+                            eprintln!("{err}");
+                            cli.print_diagnostics(&document);
+                        }
+                    }
+                }
             }
             Err(_) => {
-                eprintln!("Error export documentation:");
                 cli.print_diagnostics(&document);
             }
         }

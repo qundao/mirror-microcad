@@ -154,49 +154,6 @@ fn is_mod_file(p: impl AsRef<std::path::Path>) -> bool {
             .is_some_and(|s| s == "mod")
 }
 
-/// Retrieve actual path of µcad file, even if this path does not have an extension or is a folder.
-///
-/// It is agnostic about file extension and will always return the file with the extension that actually exists.
-/// If the path is a directory, it will be checked if the directory contains a `mod` file with µcad extension.
-///
-/// - my/library/my_design.µcad -> my/library/my_design.µcad
-/// - my/library/my_design -> my/library/my_design.µcad # In case the extension of the existing file is `.µcad`.
-/// - my/library/my_design -> my/library/my_design.mcad # In case the extension of the existing file is `.mcad`.
-/// - my/library/my_design -> my/library/my_design.ucad # In case the extension of the existing file is `.ucad`.
-/// - my/library/my_design -> my/library/my_design/mod.µcad # `my_design` is directory and a module.
-pub fn microcad_file_path(
-    path: impl AsRef<std::path::Path>,
-) -> Result<std::path::PathBuf, Box<dyn std::error::Error>> {
-    let path = path.as_ref();
-
-    // If the path already has a supported extension, check if it exists.
-    if is_microcad_file(path) {
-        return Ok(path.to_path_buf());
-    }
-
-    // If not, try all supported extensions.
-    for ext in MICROCAD_EXTENSIONS {
-        let mut with_ext = path.to_path_buf();
-        with_ext.set_extension(ext);
-        if with_ext.exists() {
-            return Ok(with_ext);
-        }
-    }
-
-    // If the path is a directory, look for a `mod` file with any supported extension.
-    if path.is_dir() {
-        for ext in MICROCAD_EXTENSIONS {
-            let mut mod_path = path.to_path_buf();
-            mod_path.push(format!("mod.{ext}"));
-            if mod_path.exists() {
-                return Ok(mod_path);
-            }
-        }
-    }
-
-    Err(format!("No µcad file found at: {}", path.display()).into())
-}
-
 /// Find a module file by path and id.
 ///
 /// Module files might be on of the following:

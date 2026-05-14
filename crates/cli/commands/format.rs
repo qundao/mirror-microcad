@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_driver::Document;
+use microcad_driver::{Document, locate};
 
 use crate::{Cli, commands::RunCommand};
 
@@ -10,13 +10,13 @@ use crate::{Cli, commands::RunCommand};
 
 pub struct Format {
     /// Input µcad file.
-    pub input: std::path::PathBuf,
+    pub input: String,
 }
 
 impl RunCommand<()> for Format {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         use microcad_driver::commands::{Format, FormatParameters, Sync, compile::Parse};
-        let mut document = Document::from_file(&self.input)?;
+        let mut document = Document::open(&self.input)?;
         let params = FormatParameters::default();
 
         match document.parse().and(document.format(&params)) {

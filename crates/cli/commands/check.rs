@@ -7,20 +7,20 @@ use crate::{Cli, commands::RunCommand};
 #[derive(clap::Parser)]
 pub struct Check {
     /// Input µcad file.
-    input: std::path::PathBuf,
+    input: String,
 }
 
 impl RunCommand<()> for Check {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         use microcad_driver::{Document, commands::Compile};
-        let mut document = Document::from_file(&self.input)?;
+        let mut document = Document::open(&self.input)?;
 
         match document.compile(cli.compile_parameters("0.1mm")?) {
             Ok(_) => {
-                eprintln!("File is ok.")
+                eprintln!("✅ File is valid: {}", self.input);
             }
             Err(err) => {
-                eprintln!("File has issues:\n{err}");
+                eprintln!("⚠️ File has issues:\n{err}");
                 cli.print_diagnostics(&document);
             }
         }

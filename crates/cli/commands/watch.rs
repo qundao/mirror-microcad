@@ -9,7 +9,7 @@ use crate::*;
 
 #[derive(clap::Parser)]
 pub struct Watch {
-    pub input: std::path::PathBuf,
+    pub input: String,
 
     /// Output file (e.g. an SVG or STL).
     pub output: Option<std::path::PathBuf>,
@@ -27,11 +27,10 @@ impl RunCommand for Watch {
         use microcad_driver::commands::{Compile, CompileParameters, Export, ExportParameters};
 
         let mut watcher = microcad_driver::Watcher::new()?;
-        let input = cli.config.path_with_default_ext(&self.input);
         let render_cache = RcMut::new(RenderCache::new());
 
         let export_params = ExportParameters {
-            input_path: self.input.clone(),
+            input_path: std::path::PathBuf::from(&self.input),
             output_path: self.output.clone(),
             config: cli.config.export.clone(),
         };
@@ -44,7 +43,7 @@ impl RunCommand for Watch {
 
         // Recompile whenever something relevant happens.
         loop {
-            let mut document = Document::from_file(&input)?;
+            let mut document = Document::open(&self.input)?;
             match document
                 .compile(compile_params.clone())
                 .and(document.export(&export_params))
@@ -59,7 +58,7 @@ impl RunCommand for Watch {
             }
 
             // Watch all dependencies of the most recent compilation.
-            watcher.update(vec![input.clone()])?;
+            watcher.update(vec![self.input.clone().into()])?;
 
             // Remove unused cache items.
             {
