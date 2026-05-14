@@ -7,9 +7,7 @@
 
 use clap::Parser;
 
-use microcad_driver::Watcher;
-use microcad_lang::lower::ir;
-use microcad_lang_base::{Hashed, Refer, SrcRef};
+use microcad_driver::*;
 
 use crossbeam::channel::Sender;
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
@@ -28,7 +26,7 @@ mod to_slint;
 #[derive(Parser)]
 struct Args {
     /// Input µcad file.
-    pub input: std::path::PathBuf,
+    pub input: String,
 
     /// Paths to search for files.
     #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append, default_value = "./crates/std/lib", global = true)]
@@ -80,51 +78,44 @@ impl Inspector {
         // Run file watcher thread.
         std::thread::spawn(move || -> miette::Result<()> {
             loop {
+                use microcad_driver::commands::LoadFromFile;
+                use microcad_driver::commands::compile::{Eval, Lower, Parse, Resolve};
+
+                use crate::to_slint::ItemsFromTree;
                 // Watch all dependencies of the most recent compilation.
-                self.watcher.update(vec![self.args.input.clone()])?;
+                self.watcher.update(vec![self.args.input.clone().into()])?;
 
-                let source_file = ir::Source::load(&self.args.input)?;
-                tx.send(ViewModelRequest::SetSourceCode {
-                    code: source_file.source.clone(),
-                })
-                .expect("No error");
+                let search_paths = search_paths.clone();
 
-                // resolve the file
-                let resolve_context = microcad_lang::resolve::ResolveContext::create(
-                    source_file,
-                    self.args.search_paths.clone(),
-                    Some(microcad_builtin::builtin_module()),
-                    microcad_lang_base::DiagHandler::default(),
-                )?;
+                let mut document = document::Source::new(locate::to_url(&self.args.input)?);
 
-                tx.send(ViewModelRequest::SetSymbolTree({
-                    let mut items = Vec::new();
+                document.load_from_file().and_then(|_| {
+                    tx.send(ViewModelRequest::SetSourceCode {
+                        code: Hashed::new(document.code().map(|code| code.to_string()).unwrap()),
+                    })
+                    .into_diagnostic()
+                })?;
 
-                    resolve_context.root.iter().for_each(|symbol| {
-                        use crate::to_slint::ItemsFromTree;
-                        items.append(&mut SymbolTreeModelItem::items_from_tree(&symbol))
-                    });
-                    items
-                }))
-                .into_diagnostic()?;
+                document
+                    .parse()
+                    .and(document.lower())
+                    .and(document.resolve(commands::compile::ResolveParameters { search_paths }))
+                    .and_then(|symbol| {
+                        tx.send(ViewModelRequest::SetSymbolTree({
+                            symbol
+                                .iter()
+                                .flat_map(|s| SymbolTreeModelItem::items_from_tree(&s))
+                                .collect()
+                        }))
+                        .into_diagnostic()
+                    })?;
 
-                let mut eval_context = microcad_lang::eval::EvalContext::new(
-                    resolve_context,
-                    microcad_lang_base::Stdout::new(),
-                    microcad_builtin::builtin_exporters(),
-                    microcad_builtin::builtin_importers(),
-                );
-
-                if let Some(model) = eval_context
-                    .eval()
-                    .map_err(|err| miette::miette!("Eval error: {err}"))?
-                {
-                    use crate::to_slint::ItemsFromTree;
+                document.eval().and_then(|model| {
                     tx.send(ViewModelRequest::SetModelTree(
                         ModelTreeModelItem::items_from_tree(&model),
                     ))
-                    .into_diagnostic()?;
-                }
+                    .into_diagnostic()
+                })?;
 
                 // Wait until anything relevant happens.
                 self.watcher.wait()?;
@@ -136,7 +127,6 @@ impl Inspector {
                 if let Ok(request) = rx.recv() {
                     weak.upgrade_in_event_loop(move |main_window| match request {
                         ViewModelRequest::SetSourceCode { code } => {
-                            use microcad_lang_base::ComputedHash;
                             let items = to_slint::split_source_code(&code);
                             main_window.set_source_code_model(to_slint::model_rc_from_items(items));
 
@@ -167,7 +157,7 @@ impl Inspector {
         main_window.on_button_launch_viewer_clicked(move || {
             match viewer_process.write() {
                 Ok(mut process) => {
-                    *process = Some(ViewerProcessInterface::run(&search_paths, false));
+                    *process = Some(ViewerProcessInterface::run(&self.args.search_paths, false));
                     log::warn!("Already running!");
                 }
                 Err(err) => log::error!("{err}"),
@@ -190,7 +180,7 @@ impl Inspector {
                         log::info!("Viewer request");
                         process
                             .send_request(ViewerRequest::ShowSourceCode {
-                                path: Some(input.clone()),
+                                path: Some(std::path::PathBuf::from(&input)),
                                 name: None,
                                 code,
                             })

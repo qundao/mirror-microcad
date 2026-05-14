@@ -29,12 +29,7 @@ serde_derive = "1.0"
 toml = "1.1.2"
 slint = "1.13"
 
-microcad-lang = { workspace = true }
-microcad-lang-base = { workspace = true }
-microcad-core = { workspace = true }
 microcad-driver = { workspace = true }
-microcad-builtin = { workspace = true }
-microcad-export = { workspace = true }
 microcad-viewer-ipc = { workspace = true }
 
 

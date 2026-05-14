@@ -5,13 +5,6 @@
 
 use crate::*;
 
-use microcad_builtin::Symbol;
-use microcad_lang::{
-    lower::ir,
-    model::{Creator, Element, Model},
-    symbol::SymbolInfo,
-};
-use microcad_lang_base::SrcReferrer;
 use slint::ToSharedString;
 
 pub trait ItemsFromTree<T, D = usize>: Sized
@@ -74,7 +67,6 @@ impl From<SymbolInfo> for VM_SymbolInfo {
 
 impl From<Option<&Creator>> for VM_Creator {
     fn from(creator: Option<&Creator>) -> Self {
-        use microcad_lang::symbol::Info;
         match creator {
             Some(creator) => Self {
                 symbol: creator.symbol.info().into(),
@@ -102,8 +94,6 @@ impl ItemsFromTree<Model> for ModelTreeModelItem {
 
 impl ItemsFromTree<Symbol> for SymbolTreeModelItem {
     fn _from_tree(symbol: &Symbol, items: &mut Vec<Self>, depth: usize) {
-        use microcad_lang_base::SrcReferrer;
-
         items.push(Self {
             depth: depth as i32,
             name: symbol.full_name().to_string().into(),
