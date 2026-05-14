@@ -8,6 +8,7 @@ use std::str::FromStr;
 use clap::Parser;
 
 use crate::commands::*;
+use microcad_driver::prelude as mu;
 
 /// µcad cli
 #[derive(Parser)]
@@ -31,7 +32,7 @@ pub struct Cli {
 
     /// The loaded or default CLI config.
     #[clap(skip)]
-    pub config: std::rc::Rc<microcad_driver::Config>,
+    pub config: std::rc::Rc<mu::Config>,
 }
 
 impl Cli {
@@ -40,10 +41,10 @@ impl Cli {
         let mut cli = Self::parse();
 
         #[cfg(not(debug_assertions))]
-        microcad_driver::install_std()?;
+        mu::install_std()?;
 
         if let Some(config_path) = &cli.config_path {
-            cli.config = std::rc::Rc::new(microcad_driver::Config::load(config_path)?);
+            cli.config = std::rc::Rc::new(mu::Config::load(config_path)?);
         }
         Ok(cli)
     }
@@ -63,10 +64,10 @@ impl Cli {
     }
 
     /// Print diagnostics with colors and unicode.
-    pub fn print_diagnostics(&self, diag: &impl microcad_driver::commands::PrintDiagnostics) {
+    pub fn print_diagnostics(&self, diag: &impl mu::traits::PrintDiagnostics) {
         eprintln!(
             "{}",
-            diag.diagnostics_string(&microcad_driver::commands::PrintDiagnosticsParameters {
+            diag.diagnostics_string(&mu::PrintDiagnosticsParameters {
                 color: true,
                 unicode: true
             })
