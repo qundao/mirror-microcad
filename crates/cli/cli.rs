@@ -58,7 +58,7 @@ impl Cli {
             resolve: ResolveParameters {
                 search_paths: self.config.search_paths.clone(),
             },
-            render: RenderParameters::from_str(resolution)?,
+            render: RenderParameters::from_str(resolution)?.with_empty_cache(),
         })
     }
 
