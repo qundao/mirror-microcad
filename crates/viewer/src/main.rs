@@ -17,6 +17,8 @@ use bevy::{
 use clap::Parser;
 use miette::IntoDiagnostic;
 
+use microcad_driver::prelude as mu;
+
 /// µcad cli
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -112,7 +114,7 @@ fn main() {
     if config.search_paths.is_empty() {
         config
             .search_paths
-            .append(&mut microcad_builtin::dirs::default_search_paths())
+            .append(&mut mu::builtin::dirs::default_search_paths())
     }
 
     use microcad_viewer::plugin::MicrocadPluginInput;

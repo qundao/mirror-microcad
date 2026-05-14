@@ -14,7 +14,8 @@ use bevy::{
     render::camera::{Camera, Projection},
     window::Window,
 };
-use microcad_core::Length;
+
+use microcad_driver::prelude as mu;
 
 use crate::{
     ViewModel, material,
@@ -26,7 +27,7 @@ use crate::{
 #[derive(Event)]
 pub enum ViewerEvent {
     /// The ground radius has changed.
-    ChangeGroundRadius(Length),
+    ChangeGroundRadius(mu::core::Length),
     /// All models have been selected.
     SelectAll,
     /// Clear the selection.

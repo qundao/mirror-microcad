@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crossbeam::channel::{Receiver, Sender};
-use microcad_driver::Hashed;
-use microcad_lang::{model::Model, render::GeometryOutput};
+use microcad_driver::prelude as mu;
 
 use crate::{
     processor::{
@@ -102,19 +101,17 @@ impl Processor {
                 Ok(vec![])
             }
             ProcessorRequest::ParseFile(path) => {
-                self.compile(microcad_driver::document::Source::from_file(path)?)
+                self.compile(mu::document::Source::from_file(path)?)
             }
             ProcessorRequest::ParseSource {
                 path,
                 name: _name,
                 source,
-            } => self.compile(microcad_driver::document::Source::from_source(
-                microcad_lang_base::Source {
-                    url: microcad_driver::locate::to_url(path.as_ref().unwrap().to_str().unwrap())?,
-                    line_offset: 0,
-                    code: Hashed::new(source),
-                },
-            )),
+            } => self.compile(mu::document::Source::from_source(mu::base::Source {
+                url: mu::locate::to_url(path.as_ref().unwrap().to_str().unwrap())?,
+                line_offset: 0,
+                code: mu::Hashed::new(source),
+            })),
             ProcessorRequest::Export { .. } => todo!(),
             ProcessorRequest::SetLineNumber(line_number) => {
                 self.state_change(ProcessingState::Busy(0.0));
@@ -127,7 +124,7 @@ impl Processor {
     }
 
     /// Update the model instances and generate processor responses.
-    fn respond(&mut self, model: Model) -> miette::Result<Vec<ProcessorResponse>> {
+    fn respond(&mut self, model: mu::Model) -> miette::Result<Vec<ProcessorResponse>> {
         let mut responses = Vec::new();
         responses.push(ProcessorResponse::RemoveModelInstances(
             self.context.instance_registry.fetch_model_uuids(),
@@ -151,13 +148,11 @@ impl Processor {
     }
 
     /// Generate mesh geometry output for model.
-    fn generate_responses(&mut self, model: &Model, responses: &mut Vec<ProcessorResponse>) {
-        use microcad_lang::model::Element::*;
+    fn generate_responses(&mut self, model: &mu::Model, responses: &mut Vec<ProcessorResponse>) {
+        use mu::Element::*;
         match model.render_output_type() {
-            microcad_lang::model::OutputType::Geometry2D
-            | microcad_lang::model::OutputType::Geometry3D => {}
-            microcad_lang::model::OutputType::NotDetermined
-            | microcad_lang::model::OutputType::InvalidMixed => return,
+            mu::OutputType::Geometry2D | mu::OutputType::Geometry3D => {}
+            mu::OutputType::NotDetermined | mu::OutputType::InvalidMixed => return,
         }
 
         let model_ = model.borrow();
@@ -176,10 +171,10 @@ impl Processor {
                     .contains_geometry_output(&uuid)
                 {
                     let mesh = match &output.geometry {
-                        Some(GeometryOutput::Geometry2D(geometry)) => {
+                        Some(mu::GeometryOutput::Geometry2D(geometry)) => {
                             Some(geometry.inner.to_bevy_mesh_default())
                         }
-                        Some(GeometryOutput::Geometry3D(geometry)) => {
+                        Some(mu::GeometryOutput::Geometry3D(geometry)) => {
                             Some(geometry.inner.to_bevy_mesh(30.0))
                         }
                         None => None,

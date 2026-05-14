@@ -5,6 +5,8 @@
 
 use super::*;
 
+use microcad_driver::prelude as mu;
+
 /// Convert a microcad type into a Bevy with optional custom parameters.
 pub trait ToBevyMesh {
     /// A custom parameter type to pass to the function.
@@ -19,7 +21,7 @@ pub trait ToBevyMesh {
     }
 }
 
-impl ToBevyMesh for microcad_core::LineString {
+impl ToBevyMesh for mu::core::LineString {
     type Parameters = f32;
 
     fn to_bevy_mesh(&self, z: f32) -> Mesh {
@@ -37,7 +39,7 @@ impl ToBevyMesh for microcad_core::LineString {
     }
 }
 
-impl ToBevyMesh for microcad_core::MultiLineString {
+impl ToBevyMesh for mu::core::MultiLineString {
     type Parameters = f32;
 
     fn to_bevy_mesh(&self, z: Self::Parameters) -> Mesh {
@@ -71,7 +73,7 @@ struct Triangulation {
 
 impl Triangulation {
     /// Triangulate a single polygon.
-    fn from_polygon(polygon: &Polygon, z: f32, index_offset: usize) -> Self {
+    fn from_polygon(polygon: &mu::core::Polygon, z: f32, index_offset: usize) -> Self {
         use geo::TriangulateEarcut;
         let triangulation = polygon.earcut_triangles_raw();
         Self {
@@ -89,7 +91,7 @@ impl Triangulation {
     }
 
     /// Triangulate a multi-polygon.
-    fn from_multi_polygon(multi_polygon: &MultiPolygon, z: f32) -> Self {
+    fn from_multi_polygon(multi_polygon: &mu::core::MultiPolygon, z: f32) -> Self {
         let mut triangulation = Self::default();
         for polygon in &multi_polygon.0 {
             let mut t = Self::from_polygon(polygon, z, triangulation.positions.len());
@@ -112,7 +114,7 @@ impl Triangulation {
     }
 }
 
-impl ToBevyMesh for microcad_core::Polygon {
+impl ToBevyMesh for mu::core::Polygon {
     type Parameters = f32;
 
     fn to_bevy_mesh(&self, z: Self::Parameters) -> Mesh {
@@ -120,7 +122,7 @@ impl ToBevyMesh for microcad_core::Polygon {
     }
 }
 
-impl ToBevyMesh for microcad_core::MultiPolygon {
+impl ToBevyMesh for mu::core::MultiPolygon {
     type Parameters = f32;
 
     fn to_bevy_mesh(&self, z: Self::Parameters) -> Mesh {
@@ -128,14 +130,15 @@ impl ToBevyMesh for microcad_core::MultiPolygon {
     }
 }
 
-impl ToBevyMesh for microcad_core::Geometry2D {
+impl ToBevyMesh for mu::core::Geometry2D {
     type Parameters = f32;
     fn to_bevy_mesh(&self, z: Self::Parameters) -> Mesh {
+        use mu::core::Geometry2D;
         match self {
             Geometry2D::LineString(line_string) => line_string.to_bevy_mesh(z),
             Geometry2D::MultiLineString(multi_line_string) => multi_line_string.to_bevy_mesh(z),
             Geometry2D::Line(line) => {
-                LineString::new(vec![line.0.into(), line.1.into()]).to_bevy_mesh(z)
+                mu::core::LineString::new(vec![line.0.into(), line.1.into()]).to_bevy_mesh(z)
             }
             Geometry2D::Polygon(polygon) => polygon.to_bevy_mesh(z),
             Geometry2D::Rect(rect) => rect.to_polygon().to_bevy_mesh(z),
@@ -147,7 +150,7 @@ impl ToBevyMesh for microcad_core::Geometry2D {
 
 /// Converts a TriangleMesh into a Bevy Mesh with smooth normals (within angle threshold),
 /// and sharp edges where the angle between adjacent faces exceeds the threshold.
-impl ToBevyMesh for microcad_core::TriangleMesh {
+impl ToBevyMesh for mu::core::TriangleMesh {
     type Parameters = f32;
 
     fn to_bevy_mesh(&self, threshold_degrees: Self::Parameters) -> Mesh {
@@ -156,7 +159,7 @@ impl ToBevyMesh for microcad_core::TriangleMesh {
 
         let mut face_normals = Vec::with_capacity(self.triangle_indices.len());
         let mut vertex_to_faces: Vec<Vec<usize>> = vec![vec![]; self.positions.len()];
-        for (face_idx, Triangle(i0, i1, i2)) in self.triangle_indices.iter().enumerate() {
+        for (face_idx, mu::core::Triangle(i0, i1, i2)) in self.triangle_indices.iter().enumerate() {
             let a = self.positions[*i0 as usize];
             let b = self.positions[*i1 as usize];
             let c = self.positions[*i2 as usize];
@@ -189,7 +192,7 @@ impl ToBevyMesh for microcad_core::TriangleMesh {
         let mut new_normals = Vec::new();
         let mut new_indices = Vec::new();
 
-        for (face_idx, Triangle(i0, i1, i2)) in self.triangle_indices.iter().enumerate() {
+        for (face_idx, mu::core::Triangle(i0, i1, i2)) in self.triangle_indices.iter().enumerate() {
             for &orig_idx in [i0, i1, i2] {
                 let pos = self.positions[orig_idx as usize];
 
@@ -233,17 +236,18 @@ impl ToBevyMesh for microcad_core::TriangleMesh {
 }
 
 /// Create a bevy mesh from a 3D geometry.
-impl ToBevyMesh for Geometry3D {
+impl ToBevyMesh for mu::core::Geometry3D {
     type Parameters = f32;
 
     fn to_bevy_mesh(&self, threshold_angle: Self::Parameters) -> Mesh {
+        use mu::core::Geometry3D;
         match self {
             Geometry3D::Mesh(triangle_mesh) => triangle_mesh.to_bevy_mesh(threshold_angle),
             Geometry3D::Manifold(manifold) => {
-                TriangleMesh::from(manifold.to_mesh()).to_bevy_mesh(threshold_angle)
+                mu::core::TriangleMesh::from(manifold.to_mesh()).to_bevy_mesh(threshold_angle)
             }
             Geometry3D::Collection(collection) => {
-                let mesh: TriangleMesh = collection.into();
+                let mesh: mu::core::TriangleMesh = collection.into();
                 mesh.to_bevy_mesh(threshold_angle)
             }
         }
@@ -251,7 +255,7 @@ impl ToBevyMesh for Geometry3D {
 }
 
 /// Create mesh from a [`Bounds2D`].
-impl ToBevyMesh for Bounds2D {
+impl ToBevyMesh for mu::core::Bounds2D {
     type Parameters = ();
 
     fn to_bevy_mesh(&self, _: Self::Parameters) -> Mesh {
@@ -281,7 +285,7 @@ impl ToBevyMesh for Bounds2D {
 }
 
 /// Create mesh from a [`Bounds3D`].
-impl ToBevyMesh for Bounds3D {
+impl ToBevyMesh for mu::core::Bounds3D {
     type Parameters = ();
 
     fn to_bevy_mesh(&self, _: Self::Parameters) -> Mesh {

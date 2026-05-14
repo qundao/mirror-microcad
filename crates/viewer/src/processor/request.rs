@@ -5,6 +5,8 @@
 
 use crate::Config;
 
+use microcad_driver::prelude as mu;
+
 /// A processor request.
 ///
 /// Commands that can be passed to the [`Processor`].
@@ -31,7 +33,7 @@ pub enum ProcessorRequest {
     /// Evaluate source file into a model to be rendered.
     Eval,
     /// Render the geometry. This message should be sent when the source code has been modified.
-    Render(Option<microcad_core::RenderResolution>),
+    Render(Option<mu::core::RenderResolution>),
     /// Export the geometry to a file.
     Export {
         /// File name.

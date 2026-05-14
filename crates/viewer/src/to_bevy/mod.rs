@@ -12,7 +12,8 @@ use bevy::{
     render::mesh::{Indices, Mesh},
     transform::components::Transform,
 };
-use microcad_core::*;
+
+pub use microcad_driver::prelude as mu;
 
 /// A trait to convert a µcad type into a bevy type.
 pub trait ToBevy<T> {
@@ -21,19 +22,19 @@ pub trait ToBevy<T> {
 }
 
 /// Convert a µcad color into a bevy color.
-impl ToBevy<bevy::prelude::Color> for microcad_core::Color {
+impl ToBevy<bevy::prelude::Color> for mu::core::Color {
     fn to_bevy(self) -> bevy::prelude::Color {
         bevy::prelude::Color::srgba(self.r, self.g, self.b, self.a)
     }
 }
 
-impl ToBevy<bevy::prelude::Vec3> for microcad_core::Color {
+impl ToBevy<bevy::prelude::Vec3> for mu::core::Color {
     fn to_bevy(self) -> bevy::prelude::Vec3 {
         bevy::prelude::Vec3::new(self.r, self.g, self.b)
     }
 }
 
-impl ToBevy<bevy::prelude::Mat4> for microcad_core::Mat4 {
+impl ToBevy<bevy::prelude::Mat4> for mu::core::Mat4 {
     fn to_bevy(self) -> bevy::prelude::Mat4 {
         use cgmath::Matrix;
 
@@ -60,7 +61,7 @@ impl ToBevy<bevy::prelude::Mat4> for microcad_core::Mat4 {
     }
 }
 
-impl ToBevy<bevy::prelude::Transform> for microcad_core::Mat4 {
+impl ToBevy<bevy::prelude::Transform> for mu::core::Mat4 {
     fn to_bevy(self) -> bevy::prelude::Transform {
         Transform::from_matrix(self.to_bevy())
     }

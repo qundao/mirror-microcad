@@ -50,13 +50,8 @@ thiserror = "2.0"
 url = "2.5.7"
 wkt = "0.14"
 
-microcad-lang = { workspace = true }
-microcad-lang-base = { workspace = true }
-microcad-core = { workspace = true }
-microcad-builtin = { workspace = true }
 microcad-driver = { workspace = true }
 microcad-viewer-ipc = { workspace = true }
-once_cell = "1.21.3"
 
 [lints.rust]
 missing_docs = "warn"
