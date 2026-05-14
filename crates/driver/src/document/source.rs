@@ -79,6 +79,10 @@ impl Source {
             model: None,
         }
     }
+
+    pub fn code(&self) -> Option<&str> {
+        self.base_source.as_ref().map(|s| s.code.value().as_str())
+    }
 }
 
 impl ResourceLocation for Source {
