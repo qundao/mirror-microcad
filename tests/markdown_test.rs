@@ -1,6 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_driver::commands::PrintDiagnostics;
+use microcad_driver::commands::compile::{Lower, Parse};
 use microcad_driver::*;
 
 use microcad_lang::resolve::Sources;
@@ -56,34 +58,31 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         env.source.line_offset,
     );
     let sources = Sources::load(source.clone(), vec![]).expect("no externals to fail");
-    let render_options = DiagRenderOptions {
+    let diag_render_options = DiagRenderOptions {
         color: false,
         ..Default::default()
     };
-    /*
-        let mut url = Url::from_file_path(env.source_path()).expect(" A valid file path");
-        url.set_fragment(Some(env.name()));
 
-        let mut source = document::Source::from_source(env.source);
+    let mut base_source = document::Source::from_source(env.source.clone());
 
-        source.compile(parameters);
-    */
+    use microcad_driver::commands::Compile;
+    base_source.parse().and(base_source.lower());
 
     let result = match env.mode() {
         // test is expected to fail?
         TestMode::Fail => match errors {
             // test expected to fail failed at parsing?
             Some(errors) => {
-                let mut error_lines = HashSet::default();
-                for err in errors {
-                    if let Some(line) = err.src_ref().line() {
-                        error_lines.insert(line);
-                    }
-                    writeln!(log, "-- Parse Error --")?;
-                    let src_ref = err.src_ref();
-                    let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
-                    writeln!(log, "{}", &diag.to_pretty_string(&sources, &render_options))?;
-                }
+                let diag = base_source.diagnostics.borrow();
+                let error_lines = diag.error_lines();
+                writeln!(log, "-- Parse Error --")?;
+
+                writeln!(
+                    log,
+                    "{}",
+                    base_source.diagnostics_string(&diag_render_options)
+                )?;
+
                 if env.has_error_markers()
                     && let Some(msg) = env.report_wrong_errors(&error_lines, &HashSet::default())
                 {
@@ -137,7 +136,11 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     writeln!(log, "-- Parse Error --")?;
                     let src_ref = err.src_ref();
                     let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
-                    writeln!(log, "{}", diag.to_pretty_string(&sources, &render_options))?;
+                    writeln!(
+                        log,
+                        "{}",
+                        diag.to_pretty_string(&sources, &diag_render_options)
+                    )?;
                 }
 
                 if env.has_error_markers() {
