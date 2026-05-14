@@ -54,11 +54,13 @@ pub use crate::{Report, Result, report};
 pub use crate::commands;
 pub use crate::document;
 
+pub use crate::install_std;
 pub use crate::locate;
 
 pub use crate::commands::{
     CompileParameters, DocGen, DocGenParameters, Export, ExportCommand, ExportParameters, Format,
-    FormatParameters, Sync, compile::Parse, compile::RenderParameters, compile::ResolveParameters,
+    FormatParameters, PrintDiagnosticsParameters, Sync, compile::Parse, compile::RenderParameters,
+    compile::ResolveParameters,
 };
 
 pub mod traits {
