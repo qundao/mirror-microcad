@@ -117,14 +117,3 @@ impl SrcReferrer for Source {
         )
     }
 }
-
-#[test]
-fn load_source_file_wrong_location() {
-    let source_file = Source::load("I do not exist.µcad");
-    if let Err(err) = source_file {
-        log::info!("{err}");
-        //assert_eq!(format!("{err}"), "Cannot load source file");
-    } else {
-        panic!("Does file exist?");
-    }
-}

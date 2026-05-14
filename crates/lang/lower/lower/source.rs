@@ -82,18 +82,6 @@ impl ir::Source {
         }
     }
 
-    /// Create `SourceFile` from string, returning the empty `SourceFile` on error
-    /// The hash of the result will be of `crate::from_str!()`.
-    pub fn load_from_str_with_recovery(
-        name: Option<&str>,
-        path: impl AsRef<std::path::Path>,
-        source_str: &str,
-        line_offset: u32,
-    ) -> (std::rc::Rc<Self>, Option<Vec<LowerError>>) {
-        let (source, error) = Self::load_inner(name, path, source_str, line_offset);
-        (std::rc::Rc::new(source), error.map(|err| err.errors))
-    }
-
     fn load_inner(
         name: Option<&str>,
         path: impl AsRef<std::path::Path>,

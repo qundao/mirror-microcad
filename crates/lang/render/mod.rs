@@ -26,6 +26,8 @@ use crate::{
     model::*,
 };
 
+pub use microcad_core::RenderResolution;
+
 /// An error that occurred during rendering.
 #[derive(Debug, Error, Diagnostic)]
 pub enum RenderError {
