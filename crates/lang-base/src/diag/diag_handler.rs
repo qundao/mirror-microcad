@@ -65,40 +65,22 @@ impl DiagHandler {
 
     /// Return overall number of occurred errors.
     pub fn warning_count(&self) -> u32 {
-        self.diagnostics.warning_count
+        self.diagnostics.warning_count()
     }
 
     /// Return overall number of occurred errors.
     pub fn error_count(&self) -> u32 {
-        self.diagnostics.error_count
+        self.diagnostics.error_count()
     }
 
     /// return lines with errors
     pub fn error_lines(&self) -> HashSet<u32> {
-        self.diagnostics
-            .iter()
-            .filter_map(|d| {
-                if d.level() == Level::Error {
-                    d.src_ref().line()
-                } else {
-                    None
-                }
-            })
-            .collect()
+        self.diagnostics.error_lines()
     }
 
     /// return lines with warnings
     pub fn warning_lines(&self) -> HashSet<u32> {
-        self.diagnostics
-            .iter()
-            .filter_map(|d| {
-                if d.level() == Level::Warning {
-                    d.src_ref().line()
-                } else {
-                    None
-                }
-            })
-            .collect()
+        self.diagnostics.warning_lines()
     }
 
     /// Clear all errors and warnings

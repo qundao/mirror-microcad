@@ -9,9 +9,9 @@ use crate::{GetSourceLocInfoByHash, diag::*};
 #[derive(Debug, Default)]
 pub struct Diagnostics {
     /// The number of overall errors in the evaluation process.
-    pub error_count: u32,
+    error_count: u32,
     /// The number of overall warnings in the evaluation process.
-    pub warning_count: u32,
+    warning_count: u32,
     /// The list of diagnostics
     diagnostics: Vec<Diagnostic>,
 }
@@ -19,6 +19,10 @@ pub struct Diagnostics {
 impl Diagnostics {
     pub fn has_errors(&self) -> bool {
         self.error_count > 0
+    }
+
+    pub fn has_warnings(&self) -> bool {
+        self.warning_count > 0
     }
 
     pub fn iter(&'_ self) -> Iter<'_, Diagnostic> {
@@ -49,6 +53,42 @@ impl Diagnostics {
         self.error_count += other.error_count;
         self.warning_count += other.warning_count;
         self.diagnostics.append(&mut other.diagnostics);
+    }
+
+    /// Return overall number of occurred errors.
+    pub fn warning_count(&self) -> u32 {
+        self.warning_count
+    }
+
+    /// Return overall number of occurred errors.
+    pub fn error_count(&self) -> u32 {
+        self.error_count
+    }
+
+    /// return lines with errors
+    pub fn error_lines(&self) -> HashSet<u32> {
+        self.iter()
+            .filter_map(|d| {
+                if d.level() == Level::Error {
+                    d.src_ref().line()
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
+
+    /// return lines with warnings
+    pub fn warning_lines(&self) -> HashSet<u32> {
+        self.iter()
+            .filter_map(|d| {
+                if d.level() == Level::Warning {
+                    d.src_ref().line()
+                } else {
+                    None
+                }
+            })
+            .collect()
     }
 }
 
