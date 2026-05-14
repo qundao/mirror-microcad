@@ -17,7 +17,9 @@ use microcad_lang::value::Value;
 pub use microcad_lang_parse::ast;
 
 pub mod base {
-    pub use microcad_lang_base::{MICROCAD_EXTENSIONS, ResourceLocation, Source, Url};
+    pub use microcad_lang_base::{
+        DiagRenderOptions, FormatTree, MICROCAD_EXTENSIONS, ResourceLocation, Source, Url,
+    };
 }
 
 pub mod parse {
@@ -29,8 +31,14 @@ pub mod lower {
     pub use microcad_lang::lower::LowerContext;
 }
 
+pub mod export {
+    pub use microcad_export::*;
+}
+
 pub use microcad_lang::model::Model;
-pub use microcad_lang::render::{RenderCache, RenderContext};
+pub use microcad_lang::model::OutputType;
+
+pub use microcad_lang::render::{RenderCache, RenderContext, RenderResolution};
 pub use microcad_lang_base::{HashId, HashSet, Hashed, RcMut, Url};
 
 pub use config::Config;
