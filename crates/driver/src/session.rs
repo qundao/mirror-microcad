@@ -19,20 +19,9 @@ impl Session {
     pub fn new(config: Config) -> Self {
         Self {
             documents: HashMap::default(),
-            render_cache: None,
+            render_cache: Some(RcMut::new(RenderCache::new())),
             config,
         }
-    }
-
-    pub fn with_render_cache(mut self) -> Self {
-        self.render_cache = Some(RcMut::new(RenderCache::new()));
-        self
-    }
-
-    pub fn install_std(&self) {
-        #[cfg(not(debug_assertions))]
-        microcad_std::StdLib::new(microcad_std::StdLib::default_path())
-            .map_err(|err| miette::miette!("Could not load standard library: {err}"))?;
     }
 
     pub fn add_document(&mut self, _url: Url) -> &mut Document {

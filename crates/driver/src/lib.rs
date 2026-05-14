@@ -52,3 +52,10 @@ pub fn value_from_str(s: &str) -> Result<Value> {
     .map_err(|err| err.into())
     .map(|lit| lit.value().clone())
 }
+
+/// Install standard library (if it is not installed already).
+pub fn install_std() -> Result {
+    microcad_std::StdLib::new(microcad_std::StdLib::default_path())
+        .map_err(|err| miette::miette!("Could not load standard library: {err}"))
+        .map(|_| ())
+}
