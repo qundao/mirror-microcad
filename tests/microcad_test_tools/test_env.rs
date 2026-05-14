@@ -13,10 +13,57 @@ use crate::output::TestOutput;
 pub struct TestEnv {
     orig_name: String,
     name: String,
-    mode: String,
+    mode: TestMode,
     params: Option<String>,
     /// Source to be tested
     pub source: base::Source,
+}
+
+/// The test mode
+#[derive(Default)]
+pub enum TestMode {
+    /// ok: Expected no errors
+    #[default]
+    Ok,
+    /// fail: This test is expected to fail with errors
+    Fail,
+    /// todo: This test is to be implemented
+    Todo,
+    /// ignore: Ignore this test
+    Ignore,
+    /// warn: Expected warnings
+    Warn,
+}
+
+impl std::str::FromStr for TestMode {
+    type Err = Report;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        match s {
+            "fail" => Ok(Self::Fail),
+            "todo" => Ok(Self::Todo),
+            "ignore" => Ok(Self::Ignore),
+            "ok" => Ok(Self::Ok),
+            "warn" => Ok(Self::Warn),
+            _ => Err(report("Invalid test mode")),
+        }
+    }
+}
+
+impl std::fmt::Display for TestMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                TestMode::Ok => "ok",
+                TestMode::Fail => "fail",
+                TestMode::Todo => "todo",
+                TestMode::Ignore => "ignore",
+                TestMode::Warn => "warn",
+            }
+        )
+    }
 }
 
 /// Markdown test result
@@ -33,7 +80,7 @@ pub enum TestResult {
     Fail,
     /// Fails with wrong errors
     FailWrong,
-    /// s ok but was meant to fail
+    /// Is ok but was meant to fail
     OkFail,
     /// Work in progress
     Todo,
@@ -83,6 +130,7 @@ impl TestEnv {
         code: &str,
         line_offset: u32,
     ) -> Self {
+        use std::str::FromStr;
         let orig_name = name.to_string();
         // split name into `name` and optional `mode`
         let (name, mode) = if let Some((name, mode)) = name.split_once('#') {
@@ -107,7 +155,7 @@ impl TestEnv {
         Self {
             orig_name,
             name: name.to_string(),
-            mode: mode.unwrap_or("ok").to_string(),
+            mode: TestMode::from_str(mode.unwrap_or("ok")).unwrap_or_default(),
             params: params.map(|p| p.to_string()),
             source: base::Source {
                 url,
@@ -175,7 +223,7 @@ impl TestEnv {
     }
 
     /// Return test mode (ok, fail, todo, etc.).
-    pub fn mode(&self) -> &str {
+    pub fn mode(&self) -> &TestMode {
         &self.mode
     }
 

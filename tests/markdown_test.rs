@@ -71,7 +71,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 
     let result = match env.mode() {
         // test is expected to fail?
-        "fail" => match errors {
+        TestMode::Fail => match errors {
             // test expected to fail failed at parsing?
             Some(errors) => {
                 let mut error_lines = HashSet::default();
@@ -128,9 +128,9 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 }
             }
         },
-        "todo" => TestResult::Todo,
+        TestMode::Todo => TestResult::Todo,
         // test is expected to succeed?
-        "ok" | "warn" => match errors {
+        TestMode::Ok | TestMode::Warn => match errors {
             // test awaited to succeed and parsing failed?
             Some(errors) => {
                 for err in errors {
@@ -172,7 +172,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                         }
 
                         match (err_warn.is_some(), env.mode()) {
-                            (true, "warn") => TestResult::OkWrong,
+                            (true, TestMode::Warn) => TestResult::OkWrong,
                             (true, _) => TestResult::OkWarn,
                             (false, _) => TestResult::Ok,
                         }
@@ -188,10 +188,9 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 }
             }
         },
-        "fail(no_format)" => {
-            return Ok(()); // HOTFIX
+        TestMode::Ignore => {
+            return Ok(());
         }
-        _ => unreachable!(),
     };
 
     writeln!(log, "{}", env.result(&result))?;
