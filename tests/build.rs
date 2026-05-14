@@ -3,7 +3,6 @@
 
 //! µcad markdown test
 
-use microcad_lang_base::Identifier;
 use miette::{IntoDiagnostic, miette};
 
 /// markdown test main
@@ -26,42 +25,6 @@ fn main() {
         if check_failed {
             panic!("copyrights changed - please run: COPYRIGHT_UPDATE=1 cargo test")
         }
-    }
-
-    use microcad_docgen::{DocGen, MdBook};
-
-    // Generate builtin mdbook
-    {
-        MdBook {
-            path: "../books/builtin".into(),
-        }
-        .doc_gen(&microcad_builtin::builtin_module())
-        .expect("No error");
-    }
-
-    // Generate std mdbook
-    {
-        MdBook {
-            path: "../books/std".into(),
-        }
-        .doc_gen(&{
-            let root = microcad_lang::lower::ir::Source::load("../crates/std/lib/std/mod.µcad")
-                .expect("No error");
-
-            // Resolve std
-            let context = microcad_lang::resolve::ResolveContext::create(
-                root,
-                vec![],
-                Some(microcad_builtin::builtin_module()),
-                microcad_lang_base::DiagHandler::default(),
-            )
-            .expect("No error");
-            context
-                .root
-                .get_child(&Identifier::no_ref("mod")) // FIXME: This should be named "std"
-                .expect("std file")
-        })
-        .expect("No error");
     }
 
     // update test banners in markdown books
