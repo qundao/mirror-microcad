@@ -89,7 +89,7 @@ impl EvalContext {
     }
 
     /// Evaluate context into a value.
-    pub fn eval(&mut self) -> EvalResult<Option<Model>> {
+    pub fn eval(&mut self) -> EvalResult<Model> {
         if self.diag.error_count() > 0 {
             log::error!("Aborting evaluation because of prior resolve errors!");
             return Err(EvalError::ResolveFailed.into());
@@ -118,12 +118,8 @@ impl EvalContext {
             self.warning(&src_ref, EvalError::UnusedGlobalSymbol(id))
         })?;
 
-        if model.has_no_output() {
-            // TODO Check if we can simply return Some(model) even if there is no output.
-            Ok(None)
-        } else {
-            Ok(Some(model))
-        }
+       
+       Ok(model)
     }
 
     /// Run the closure `f` within the given `stack_frame`.
