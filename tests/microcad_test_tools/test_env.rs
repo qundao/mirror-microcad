@@ -5,19 +5,18 @@
 
 use std::path::PathBuf;
 
+use microcad_driver::{base::ResourceLocation, *};
+
 use crate::output::TestOutput;
-use rustc_hash::FxHashSet as HashSet;
 
 /// Markdown test environment
 pub struct TestEnv {
     orig_name: String,
     name: String,
-    path: PathBuf,
     mode: String,
     params: Option<String>,
-    code: String,
-    /// Line offset
-    pub line_offset: u32,
+    /// Source to be tested
+    pub source: base::Source,
 }
 
 /// Markdown test result
@@ -42,13 +41,14 @@ pub enum TestResult {
 
 impl std::fmt::Display for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use base::ResourceLocation;
         write!(
             f,
             r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {line_offset:?})"#,
-            path = self.path,
+            path = self.source.to_file_path().unwrap(),
             orig_name = self.orig_name,
-            code = self.code,
-            line_offset = self.line_offset
+            code = self.source.code.value(),
+            line_offset = self.source.line_offset
         )
     }
 }
@@ -60,7 +60,7 @@ impl std::fmt::Debug for TestEnv {
         if !self.params().is_empty() {
             writeln!(f, "           Params: {}", self.params())?;
         }
-        let line_offset = self.line_offset + 1;
+        let line_offset = self.source.line_offset + 1;
         writeln!(
             f,
             "      Source file: {}:{line_offset}",
@@ -101,14 +101,19 @@ impl TestEnv {
             (name, None)
         };
 
+        let url = Url::from_file_path(path.as_ref().canonicalize().expect("Existing file"))
+            .expect("A valid file URL");
+
         Self {
             orig_name,
             name: name.to_string(),
-            path: path.as_ref().to_path_buf(),
             mode: mode.unwrap_or("ok").to_string(),
             params: params.map(|p| p.to_string()),
-            code: code.into(),
-            line_offset,
+            source: base::Source {
+                url,
+                line_offset,
+                code: Hashed::new(code.to_string()),
+            },
         }
     }
 
@@ -129,7 +134,7 @@ impl TestEnv {
     pub fn output(&self) -> TestOutput {
         let mut output = TestOutput::new(
             self.name().into(),
-            self.path.clone(),
+            self.source_path(),
             self.banner_file(),
             self.out_file_path_stem(),
             self.log_file(),
@@ -137,13 +142,13 @@ impl TestEnv {
         );
 
         let head = "// file: ";
-        if let Some(first_line) = self.code.lines().find(|line| line.starts_with(head)) {
+        if let Some(first_line) = self.source.code.lines().find(|line| line.starts_with(head)) {
             if first_line.starts_with(head) {
                 use std::io::Write;
                 let (_, filename) = first_line.split_at(head.len());
                 let filename = self.test_path().join(filename);
                 let mut file = std::fs::File::create(filename.clone()).expect("cannot create file");
-                file.write_all(self.code.as_bytes())
+                file.write_all(self.source.code.as_bytes())
                     .expect("cannot write file");
                 output.add_output(filename);
             }
@@ -161,7 +166,7 @@ impl TestEnv {
 
     /// Return test source code.
     pub fn code(&self) -> &str {
-        &self.code
+        &self.source.code.value()
     }
 
     /// Return test parameters.
@@ -176,12 +181,16 @@ impl TestEnv {
 
     /// Return path where to store any test output.
     pub fn source_path(&self) -> PathBuf {
-        self.path.clone()
+        pathdiff::diff_paths(
+            self.source.to_file_path().expect("A valid file path"),
+            std::env::current_dir().expect("Current dir"),
+        )
+        .unwrap()
     }
 
     /// Return path where to store any test output.
     pub fn test_path(&self) -> PathBuf {
-        self.path.parent().unwrap().join(".test")
+        self.source_path().parent().unwrap().join(".test")
     }
 
     /// Return test banner filename as path.
@@ -230,8 +239,15 @@ impl TestEnv {
 
     /// Return if code includes error or warning marker comments
     pub fn has_error_markers(&self) -> bool {
-        self.code.lines().any(|line| line.contains("// error"))
-            || self.code.lines().any(|line| line.contains("// warning"))
+        self.source
+            .code
+            .lines()
+            .any(|line| line.contains("// error"))
+            || self
+                .source
+                .code
+                .lines()
+                .any(|line| line.contains("// warning"))
     }
 
     /// Report wrong errors into log file.
@@ -268,8 +284,8 @@ impl TestEnv {
             }
         }
 
-        let lines_with_error = lines_with(self.code(), "// error", self.line_offset);
-        let lines_with_warning = lines_with(self.code(), "// warning", self.line_offset);
+        let lines_with_error = lines_with(self.code(), "// error", self.source.line_offset);
+        let lines_with_warning = lines_with(self.code(), "// warning", self.source.line_offset);
         let mut s = String::new();
 
         let expected_errors = diff(

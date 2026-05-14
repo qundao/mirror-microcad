@@ -1,7 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_core::hash::HashSet;
+use microcad_driver::*;
+
 use microcad_lang::resolve::Sources;
 use microcad_lang::{eval::EvalContext, lower::ir::Source, model::Model};
 use microcad_lang_base::{
@@ -42,7 +43,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         env.code()
             .lines()
             .enumerate()
-            .map(|(n, line)| format!("{n:4}:   {line}", n = n as u32 + env.line_offset + 1))
+            .map(|(n, line)| format!("{n:4}:   {line}", n = n as u32 + env.source.line_offset + 1))
             .collect::<Vec<_>>()
             .join("\n")
     )?;
@@ -52,13 +53,21 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         Some(env.name()),
         env.source_path(),
         env.code(),
-        env.line_offset,
+        env.source.line_offset,
     );
     let sources = Sources::load(source.clone(), vec![]).expect("no externals to fail");
     let render_options = DiagRenderOptions {
         color: false,
         ..Default::default()
     };
+    /*
+        let mut url = Url::from_file_path(env.source_path()).expect(" A valid file path");
+        url.set_fragment(Some(env.name()));
+
+        let mut source = document::Source::from_source(env.source);
+
+        source.compile(parameters);
+    */
 
     let result = match env.mode() {
         // test is expected to fail?
