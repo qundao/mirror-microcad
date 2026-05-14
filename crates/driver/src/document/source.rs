@@ -3,25 +3,16 @@
 
 use std::rc::Rc;
 
-use microcad_builtin::Symbol;
-use microcad_lang::{
-    eval::EvalContext,
-    model::Model,
-    render::{RenderContext, RenderWithContext},
-    resolve::ResolveContext,
-};
-use microcad_lang_base::{DiagHandler, DiagRenderOptions, Diagnostics, RcMut, ResourceLocation};
-use microcad_lang_parse::{Parse, ParseContext, ast};
+use crate::Result;
+use crate::prelude::*;
+
+use document::{CaptureDiags, TryFilePath, commands::LoadFromFile};
+
+use microcad_lang::{eval::EvalContext, resolve::ResolveContext};
+use microcad_lang_base::{DiagHandler, DiagRenderOptions, Diagnostics, ResourceLocation};
+use microcad_lang_parse::Parse;
 use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
-use url::Url;
-
-use crate::{
-    Result, base,
-    commands::{self, LoadFromFile},
-    document::{self, CaptureDiags, TryFilePath},
-    ir,
-};
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum SourceError {
@@ -174,7 +165,7 @@ impl commands::compile::Parse for document::Source {
     fn parse(&mut self) -> Result {
         match &self.base_source {
             Some(base_source) => {
-                let parse_context = ParseContext::from(base_source);
+                let parse_context = parse::ParseContext::from(base_source);
                 self.ast_source = Some(
                     self.capture_diags(
                         ast::Source::parse(&parse_context)
@@ -310,6 +301,7 @@ impl commands::compile::Render for document::Source {
             parameters.cache,
             None,
         )) {
+            use crate::prelude::RenderWithContext;
             self.model = self.capture_diags(model.render_with_context(&mut render_context));
         }
 

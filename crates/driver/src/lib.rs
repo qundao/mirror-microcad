@@ -7,45 +7,11 @@ pub mod commands;
 mod config;
 pub mod document;
 pub mod locate;
+pub mod prelude;
 mod session;
 mod watcher;
 
-use microcad_lang::lower::Lower;
-pub use microcad_lang::symbol::{Info, Symbol, SymbolInfo};
 use microcad_lang::value::Value;
-
-pub use microcad_lang_parse::ast;
-
-pub mod base {
-    pub use microcad_lang_base::{
-        DiagRenderOptions, FormatTree, MICROCAD_EXTENSIONS, ResourceLocation, Source, Url,
-    };
-}
-
-pub mod parse {
-    pub use microcad_lang_parse::{Parse, ParseContext};
-}
-
-pub use microcad_lang::lower::ir;
-pub mod lower {
-    pub use microcad_lang::lower::LowerContext;
-}
-
-pub mod export {
-    pub use microcad_export::*;
-}
-
-pub use microcad_lang::model::{Creator, Element, Model, OutputType};
-
-pub use microcad_lang::render::{RenderCache, RenderContext, RenderResolution};
-pub use microcad_lang_base::{
-    ComputedHash, HashId, HashSet, Hashed, RcMut, Refer, SrcRef, SrcReferrer, Url,
-};
-
-pub use config::Config;
-pub use document::Document;
-pub use session::Session;
-pub use watcher::Watcher;
 
 /// We use [`miette::Result`] throught-out this crate.
 pub type Result<T = ()> = miette::Result<T>;
@@ -58,13 +24,17 @@ pub fn report(s: &str) -> Report {
     miette::miette!("{s}")
 }
 
+pub use config::Config;
+
 /// Parse a value from a string containing a literal.
 pub fn value_from_str(s: &str) -> Result<Value> {
-    let parse_context = parse::ParseContext::new(s);
-    use parse::Parse;
-    ir::Literal::lower(
-        &ast::Literal::parse(&parse_context)?,
-        &lower::LowerContext::new(s),
+    use mu::traits::*;
+    use prelude as mu;
+
+    let parse_context = prelude::parse::ParseContext::new(s);
+    mu::ir::Literal::lower(
+        &mu::ast::Literal::parse(&parse_context)?,
+        &mu::lower::LowerContext::new(s),
     )
     .map_err(|err| err.into())
     .map(|lit| lit.value().clone())

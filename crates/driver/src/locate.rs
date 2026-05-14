@@ -3,7 +3,10 @@
 
 //! Function to locate microcad documents.
 
-use crate::{Result, base::*};
+use crate::Result;
+use crate::prelude::*;
+
+use base::MICROCAD_EXTENSIONS;
 
 /// Return `true` if given path has a valid microcad extension
 pub fn is_microcad_file(path: impl AsRef<std::path::Path>) -> bool {

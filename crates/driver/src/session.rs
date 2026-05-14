@@ -1,10 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang::render::RenderCache;
 use microcad_lang_base::HashMap;
 
-use crate::{Config, Document, RcMut, Url};
+use crate::prelude::*;
 
 #[derive(Default)]
 pub struct Session {

@@ -1,11 +1,8 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Model, Result, Symbol};
-
-use microcad_core::RenderResolution;
-use microcad_lang::render::{ProgressTx, RenderCache};
-use microcad_lang_base::RcMut;
+use crate::Result;
+use crate::prelude::*;
 
 /// Parse a document from source.
 pub trait Parse {

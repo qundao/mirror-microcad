@@ -7,12 +7,12 @@ mod mdbook;
 mod source;
 
 use derive_more::From;
-use microcad_builtin::Symbol;
 
 use microcad_lang_base::{DiagRenderOptions, Diagnostics, RcMut, ResourceLocation, Url};
 pub use source::Source;
 
-use crate::{Model, Result, commands};
+use crate::Result;
+use crate::prelude::*;
 
 /// Return the symbol for document
 pub trait GetSymbol {
