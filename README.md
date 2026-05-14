@@ -85,11 +85,11 @@ cargo install microcad
 After installing, you can run a basic example by typing:
 
 ```sh
-microcad eval ./examples/bricks/brick
+microcad check ./examples/bricks/brick
 ```
 
-This will *evaluate* the input file and will output the model tree.
-The *evaluate* command will not export the output geometry.
+This will *check* the input file and will output the model tree.
+The *check* command will not export the output geometry.
 
 To generate an STL model file use the `export` command with an additional output file name:
 
