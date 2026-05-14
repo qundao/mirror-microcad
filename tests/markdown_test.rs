@@ -1,17 +1,13 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_driver::commands::PrintDiagnostics;
-use microcad_driver::commands::compile::{Lower, Parse};
+use microcad_core::RenderResolution;
+use microcad_driver::commands::compile::{RenderParameters, ResolveParameters};
+use microcad_driver::commands::{CompileParameters, PrintDiagnostics};
 use microcad_driver::*;
 
-use microcad_lang::resolve::Sources;
-use microcad_lang::{eval::EvalContext, lower::ir::Source, model::Model};
-use microcad_lang_base::{
-    Capture, Diag, DiagRenderOptions, Diagnostic, FormatTree, Refer, SrcReferrer,
-};
+use microcad_lang_base::{DiagRenderOptions, FormatTree};
 use microcad_test_tools::test_env::*;
-use miette::Report;
 use std::rc::Rc;
 
 #[allow(dead_code)]
@@ -50,38 +46,37 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
             .join("\n")
     )?;
 
-    // load and handle µcad source file
-    let (source, errors) = Source::load_from_str_with_recovery(
-        Some(env.name()),
-        env.source_path(),
-        env.code(),
-        env.source.line_offset,
-    );
-    let sources = Sources::load(source.clone(), vec![]).expect("no externals to fail");
     let diag_render_options = DiagRenderOptions {
         color: false,
         ..Default::default()
     };
 
-    let mut base_source = document::Source::from_source(env.source.clone());
+    let mut source = document::Source::from_source(env.source.clone());
 
     use microcad_driver::commands::Compile;
-    base_source.parse().and(base_source.lower());
+
+    let resolution = if env.hires() {
+        RenderResolution::high()
+    } else {
+        RenderResolution::medium()
+    };
+
+    let model = source.compile(CompileParameters {
+        resolve: ResolveParameters {
+            search_paths: vec!["../crates/std/lib".into(), "../assets".into()],
+        },
+        render: RenderParameters::from(resolution).with_empty_cache(),
+    });
+    let diag = source.diagnostics.borrow();
+    let error_lines = diag.error_lines();
+    let warning_lines = diag.warning_lines();
 
     let result = match env.mode() {
         // test is expected to fail?
-        TestMode::Fail => match errors {
-            // test expected to fail failed at parsing?
-            Some(errors) => {
-                let diag = base_source.diagnostics.borrow();
-                let error_lines = diag.error_lines();
-                writeln!(log, "-- Parse Error --")?;
-
-                writeln!(
-                    log,
-                    "{}",
-                    base_source.diagnostics_string(&diag_render_options)
-                )?;
+        TestMode::Fail => {
+            if diag.has_errors() {
+                writeln!(log, "-- Errors --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
 
                 if env.has_error_markers()
                     && let Some(msg) = env.report_wrong_errors(&error_lines, &HashSet::default())
@@ -91,110 +86,39 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 } else {
                     TestResult::FailOk
                 }
+            } else {
+                TestResult::OkFail
             }
-            // test expected to fail succeeded at parsing?
-            None => {
-                // evaluate the code including µcad std library
-                let mut context = create_context(&source);
-                let eval = context.eval();
+        }
 
-                writeln!(log, "{}", env.report_output(context.output()))?;
-                writeln!(log, "{}", env.report_errors(context.diagnosis()))?;
-
-                let err_warn =
-                    env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
-                if let Some(msg) = &err_warn {
-                    writeln!(log, "{msg}")?;
-                }
-                let _ = fs::remove_file(env.banner_file());
-
-                let test_failed = eval.is_err() || context.has_errors() || context.has_warnings();
-                let has_err_warn = err_warn.is_some();
-
-                if let Err(err) = &eval {
-                    writeln!(log, "{err}")?;
-                }
-
-                match test_failed {
-                    true => {
-                        if has_err_warn {
-                            TestResult::FailWrong
-                        } else {
-                            TestResult::FailOk
-                        }
-                    }
-                    false => TestResult::OkFail,
-                }
-            }
-        },
         TestMode::Todo => TestResult::Todo,
-        // test is expected to succeed?
-        TestMode::Ok | TestMode::Warn => match errors {
-            // test awaited to succeed and parsing failed?
-            Some(errors) => {
-                for err in errors {
-                    writeln!(log, "-- Parse Error --")?;
-                    let src_ref = err.src_ref();
-                    let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
-                    writeln!(
-                        log,
-                        "{}",
-                        diag.to_pretty_string(&sources, &diag_render_options)
-                    )?;
-                }
+        TestMode::Warn => {
+            if diag.has_warnings() {
+                writeln!(log, "-- Warnings --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
 
-                if env.has_error_markers() {
-                    TestResult::FailWrong
-                } else {
-                    TestResult::Fail
-                }
-            }
-            // test awaited to succeed and parsing succeeds?
-            None => {
-                // evaluate the code including µcad std library
-                let mut context = create_context(&source);
-                let eval = context.eval();
-
-                writeln!(log, "{}", env.report_output(context.output()))?;
-                writeln!(log, "{}", env.report_errors(context.diagnosis()))?;
-                let err_warn =
-                    env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
-                if let Some(msg) = &err_warn {
+                if env.has_error_markers()
+                    && let Some(msg) = env.report_wrong_errors(&error_lines, &warning_lines)
+                {
                     writeln!(log, "{msg}")?;
+                    TestResult::OkWarn
+                } else {
+                    TestResult::OkWarn
                 }
-
-                let _ = fs::remove_file(env.banner_file());
-
-                let test_failed = eval.is_err() || context.has_errors();
-
-                match test_failed {
-                    // 1. Success cases
-                    false => {
-                        if let Ok(model) = eval {
-                            report_model(&env, log, model)?;
-                        }
-
-                        match (err_warn.is_some(), env.mode()) {
-                            (true, TestMode::Warn) => TestResult::OkWrong,
-                            (true, _) => TestResult::OkWarn,
-                            (false, _) => TestResult::Ok,
-                        }
-                    }
-
-                    // 2. Failure cases
-                    _ => {
-                        if let Err(err) = eval {
-                            writeln!(log, "{err}")?;
-                        }
-                        TestResult::Fail
-                    }
-                }
+            } else {
+                TestResult::OkFail
             }
-        },
+        }
+        // test is expected to succeed?
+        TestMode::Ok => TestResult::Ok,
         TestMode::Ignore => {
             return Ok(());
         }
     };
+
+    if let Ok(model) = model {
+        report_model(&env, log, model)?;
+    }
 
     writeln!(log, "{}", env.result(&result))?;
 
@@ -208,37 +132,15 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
     }
 }
 
-// evaluate the code including µcad std library
-fn create_context(source: &Rc<Source>) -> EvalContext {
-    let mut context = EvalContext::from_source(
-        source.clone(),
-        Some(microcad_builtin::builtin_module()),
-        vec!["../crates/std/lib".into(), "../assets".into()],
-        Capture::new(),
-        microcad_builtin::builtin_exporters(),
-        microcad_builtin::builtin_importers(),
-    )
-    .expect("resolve error");
-    context.diag.render_options.color = false;
-    context
-}
-
 fn report_model(env: &TestEnv, log: &mut dyn std::io::Write, model: Model) -> std::io::Result<()> {
     if model.has_no_output() {
         return writeln!(log, "-- No Model --");
     }
 
-    use microcad_core::RenderResolution;
     use microcad_export::{stl::StlExporter, svg::SvgExporter};
     use microcad_lang::model::{ExportCommand as Export, OutputType};
 
     writeln!(log, "-- Model --\n{}", FormatTree(&model))?;
-
-    let resolution = if env.hires() {
-        RenderResolution::high()
-    } else {
-        RenderResolution::medium()
-    };
 
     let export = match model.deduce_output_type() {
         OutputType::Geometry2D => Some(Export {
@@ -257,26 +159,10 @@ fn report_model(env: &TestEnv, log: &mut dyn std::io::Write, model: Model) -> st
     };
 
     match export {
-        Some(export) => {
-            use microcad_lang::render::{RenderCache, RenderContext, RenderWithContext};
-            let render_cache = microcad_driver::RcMut::new(RenderCache::default());
-            let Ok(mut render_context) =
-                RenderContext::new(&model, resolution, Some(render_cache), None)
-            else {
-                // This block runs ONLY on error
-                let _ = writeln!(log, "Export error during context creation");
-                return Ok(()); // Stop here and return Ok to the caller
-            };
-            // If we reach here, render_context is safely initialized and usable
-            let Ok(model) = model.render_with_context(&mut render_context) else {
-                let _ = writeln!(log, "Export error: Nothing to render");
-                return Ok(());
-            };
-            match export.export(&model) {
-                Ok(_) => writeln!(log, "Export of {:?} successful.", export.filename),
-                Err(err) => writeln!(log, "Export error: {err}"),
-            }
-        }
+        Some(export) => match export.export(&model) {
+            Ok(_) => writeln!(log, "Export of {:?} successful.", export.filename),
+            Err(err) => writeln!(log, "Export error: {err}"),
+        },
         None => writeln!(log, "Nothing will be exported."),
     }
 }
