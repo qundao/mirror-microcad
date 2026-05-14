@@ -61,8 +61,10 @@ pub fn resolved_path(path: impl AsRef<std::path::Path>) -> Result<std::path::Pat
 }
 
 /// Convert an input (e.g. from command line) into a valid and unique URL to be used for any source.
-pub fn to_url(input: &str) -> Result<Url> {
+pub fn to_url(input: impl AsRef<str>) -> Result<Url> {
     use miette::IntoDiagnostic;
+
+    let input = input.as_ref();
 
     // 1. Handle the special __builtin case
     if input == "__builtin" {

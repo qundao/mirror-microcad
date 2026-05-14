@@ -17,7 +17,8 @@ use thiserror::Error;
 use url::Url;
 
 use crate::{
-    Result, base, commands,
+    Result, base,
+    commands::{self, LoadFromFile},
     document::{self, CaptureDiags, TryFilePath},
     ir,
 };
@@ -78,6 +79,14 @@ impl Source {
             eval_context: None,
             model: None,
         }
+    }
+
+    pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
+        let mut s = Self::new(crate::locate::to_url(
+            path.as_ref().as_os_str().to_str().unwrap(),
+        )?);
+        s.load_from_file()?;
+        Ok(s)
     }
 
     pub fn code(&self) -> Option<&str> {
