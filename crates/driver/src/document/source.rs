@@ -265,7 +265,7 @@ impl commands::compile::Render for document::Source {
     fn render(
         &mut self,
         parameters: impl Into<commands::compile::RenderParameters>,
-    ) -> document::Result {
+    ) -> document::Result<Model> {
         let model = std::mem::replace(&mut self.model, None);
         let parameters = parameters.into();
         let model = match model {
@@ -284,7 +284,11 @@ impl commands::compile::Render for document::Source {
             self.model = self.capture_diags(model.render_with_context(&mut render_context));
         }
 
-        Ok(())
+        if let Some(model) = &self.model {
+            Ok(model.clone())
+        } else {
+            Err(miette::miette!("No model to render"))
+        }
     }
 }
 

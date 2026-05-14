@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Result;
+use crate::{Model, Result};
 
 use microcad_core::RenderResolution;
 use microcad_lang::render::{ProgressTx, RenderCache};
@@ -92,7 +92,7 @@ impl std::str::FromStr for RenderParameters {
 
 /// Render a model.
 pub trait Render {
-    fn render(&mut self, params: impl Into<RenderParameters>) -> Result;
+    fn render(&mut self, params: impl Into<RenderParameters>) -> Result<Model>;
 }
 
 /// Compile parameters
@@ -107,7 +107,7 @@ pub struct CompileParameters {
 /// Trait for compilation toolchain.
 pub trait Compile: Parse + Lower + Resolve + Eval + Render {
     /// Compile a document.
-    fn compile(&mut self, parameters: impl Into<CompileParameters>) -> Result {
+    fn compile(&mut self, parameters: impl Into<CompileParameters>) -> Result<Model> {
         let parameters = parameters.into();
         self.parse()?;
         self.lower()?;

@@ -9,12 +9,10 @@ mod source;
 use derive_more::From;
 use microcad_builtin::Symbol;
 
-use microcad_lang_base::{
-    DiagRenderOptions, Diagnostics, MICROCAD_EXTENSIONS, RcMut, ResourceLocation, Url,
-};
+use microcad_lang_base::{DiagRenderOptions, Diagnostics, RcMut, ResourceLocation, Url};
 pub use source::Source;
 
-use crate::{Result, commands};
+use crate::{Model, Result, commands};
 
 /// Return a symbol
 pub trait GetSymbol {
@@ -76,23 +74,31 @@ impl Document {
     /// * `.md`: Create a markdown
     /// * `book.toml`: Create an MdBook
     pub fn new(url: Url) -> Result<Self> {
-        let path = url.to_file_path().unwrap();
-        let file_name = path.file_name().and_then(|os| os.to_str()).unwrap_or("");
-        let extension = path.extension().and_then(|os| os.to_str()).unwrap_or("");
-
-        match file_name {
-            "book.toml" => Ok(MdBook::new(url).into()),
-            _ => match extension {
-                "md" => Ok(Markdown::new(url).into()),
-                extension => {
-                    if MICROCAD_EXTENSIONS.contains(&extension) {
-                        Ok(Source::new(url).into())
-                    } else {
-                        Err(miette::miette!("Invalid document type: {extension}"))
-                    }
-                }
-            },
+        let path = url.path();
+        if path.ends_with("/book.toml") {
+            Ok(MdBook::new(url).into())
+        } else if path.ends_with(".md") {
+            Ok(Markdown::new(url).into())
+        } else if url.scheme() == "builtin" {
+            Ok(Builtin::new().into())
+        } else if url.scheme() == "file" {
+            Ok(Source::new(url).into())
+        } else {
+            Err(miette::miette!("Invalid document type: {}", url.path()))
         }
+    }
+
+    /// Load a document from a url.
+    pub fn load(url: Url) -> Result<Self> {
+        use commands::LoadFromFile;
+        let mut document = Self::new(url)?;
+        document.load_from_file()?;
+        Ok(document)
+    }
+
+    /// Open a document from a location str.
+    pub fn open(location: impl AsRef<str>) -> Result<Self> {
+        Self::load(crate::locate::to_url(location.as_ref())?)
     }
 
     /// Load a document from file.
@@ -182,7 +188,7 @@ impl commands::compile::Eval for Document {
 }
 
 impl commands::compile::Render for Document {
-    fn render(&mut self, params: impl Into<commands::compile::RenderParameters>) -> Result {
+    fn render(&mut self, params: impl Into<commands::compile::RenderParameters>) -> Result<Model> {
         match self {
             Document::Source(source) => source.render(params),
             _ => unimplemented!(),

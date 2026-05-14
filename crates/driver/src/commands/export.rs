@@ -15,6 +15,14 @@ pub use microcad_lang::model::ExportCommand;
 
 pub struct ExportTargets(Vec<(Model, ExportCommand)>);
 
+impl std::fmt::Display for ExportTargets {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0
+            .iter()
+            .try_for_each(|(model, export)| writeln!(f, "{model} => {}", export.filename.display()))
+    }
+}
+
 #[derive(Debug)]
 pub struct ExportResult {
     pub model: Model,
