@@ -1,12 +1,10 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_core::RenderResolution;
 use microcad_driver::commands::compile::{RenderParameters, ResolveParameters};
-use microcad_driver::commands::{CompileParameters, PrintDiagnostics};
+use microcad_driver::commands::{CompileParameters, ExportCommand, PrintDiagnostics};
 use microcad_driver::*;
 
-use microcad_lang_base::{DiagRenderOptions, FormatTree};
 use microcad_test_tools::test_env::*;
 use std::rc::Rc;
 
@@ -46,7 +44,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
             .join("\n")
     )?;
 
-    let diag_render_options = DiagRenderOptions {
+    let diag_render_options = base::DiagRenderOptions {
         color: false,
         ..Default::default()
     };
@@ -137,17 +135,16 @@ fn report_model(env: &TestEnv, log: &mut dyn std::io::Write, model: Model) -> st
         return writeln!(log, "-- No Model --");
     }
 
-    use microcad_export::{stl::StlExporter, svg::SvgExporter};
-    use microcad_lang::model::{ExportCommand as Export, OutputType};
+    use microcad_driver::export::{stl::StlExporter, svg::SvgExporter};
 
-    writeln!(log, "-- Model --\n{}", FormatTree(&model))?;
+    writeln!(log, "-- Model --\n{}", base::FormatTree(&model))?;
 
     let export = match model.deduce_output_type() {
-        OutputType::Geometry2D => Some(Export {
+        OutputType::Geometry2D => Some(ExportCommand {
             filename: env.out_file("svg"),
             exporter: Rc::new(SvgExporter),
         }),
-        OutputType::Geometry3D => Some(Export {
+        OutputType::Geometry3D => Some(ExportCommand {
             filename: env.out_file("stl"),
             exporter: Rc::new(StlExporter),
         }),

@@ -3,8 +3,8 @@
 
 //! µcad markdown test
 
-use anyhow::anyhow;
 use microcad_lang_base::Identifier;
+use miette::{IntoDiagnostic, miette};
 
 /// markdown test main
 fn main() {
@@ -79,8 +79,8 @@ fn main() {
     update_book("examples").expect("test generation failed");
 }
 
-fn check_copyright(check_only: bool) -> anyhow::Result<bool> {
-    Ok(update_copyright::update_copyrights(
+fn check_copyright(check_only: bool) -> miette::Result<bool> {
+    update_copyright::update_copyrights(
         "../",
         &[
             ("#", &["toml"]),
@@ -92,17 +92,18 @@ fn check_copyright(check_only: bool) -> anyhow::Result<bool> {
             "../crates/cli/examples/*.µcad",
         ],
         check_only,
-    )?)
+    )
+    .into_diagnostic()
 }
 
-fn update_book(name: &str) -> anyhow::Result<()> {
+fn update_book(name: &str) -> miette::Result<()> {
     match microcad_markdown_test::generate(
         format!("../books/{name}"),
         format!("md_test_book_{name}.rs"),
         format!("../books/{name}/src/test_list.md"),
     ) {
         Ok(_) => Ok(()),
-        Err(err) => Err(anyhow!(
+        Err(err) => Err(miette!(
             "error generating rust test code from markdown book '{name}': {err}"
         )),
     }
