@@ -5,15 +5,13 @@
 
 use crate::{Cli, commands::RunCommand};
 
-use microcad_driver::Document;
-
 /// Generate documentation from code.
 #[derive(clap::Parser)]
 pub struct Doc {
     /// Input file or library name.
     ///
     /// Build documentation for an external library (only `__builtin` and `std` are possible).
-    input: std::path::PathBuf,
+    input: String,
 
     /// Generator (md (default), mdbook).
     #[arg(short = 'g', long = "generator")]
@@ -26,17 +24,18 @@ pub struct Doc {
 
 impl RunCommand<()> for Doc {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let document = Document::from_file(&self.input)?;
-        use microcad_driver::commands::{DocGen, DocGenParameters};
+        let mut document = microcad_driver::Document::open(&self.input)?;
+        use microcad_driver::commands::{DocGen, DocGenParameters, compile::ResolveParameters};
         let params = DocGenParameters {
             generator_id: self.generator.clone(),
             output_path: self.output.clone(),
+            resolve_parameters: ResolveParameters::default(),
         };
 
-        match document.doc_gen(&params) {
+        match document.doc_gen(params) {
             Ok(_) => {}
-            Err(_) => {
-                eprintln!("Error generating documentation:");
+            Err(err) => {
+                eprintln!("Error generating documentation:\n{err}");
                 cli.print_diagnostics(&document);
             }
         }
