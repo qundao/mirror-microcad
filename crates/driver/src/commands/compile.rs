@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Model, Result};
+use crate::{Model, Result, Symbol};
 
 use microcad_core::RenderResolution;
 use microcad_lang::render::{ProgressTx, RenderCache};
@@ -33,12 +33,12 @@ impl Default for ResolveParameters {
 
 /// Resolve the IR into a symbol tree.
 pub trait Resolve {
-    fn resolve(&mut self, params: impl Into<ResolveParameters>) -> Result;
+    fn resolve(&mut self, params: impl Into<ResolveParameters>) -> Result<Symbol>;
 }
 
 /// Resolve the IR into a symbol tree.
 pub trait Eval {
-    fn eval(&mut self) -> Result;
+    fn eval(&mut self) -> Result<Model>;
 }
 
 #[derive(Default, Clone)]

@@ -14,9 +14,12 @@ pub use source::Source;
 
 use crate::{Model, Result, commands};
 
-/// Return a symbol
+/// Return the symbol for document
 pub trait GetSymbol {
-    fn get_symbol(&self) -> Result<Symbol>;
+    fn get_symbol(
+        &mut self,
+        parameters: impl Into<commands::compile::ResolveParameters>,
+    ) -> Result<Symbol>;
 }
 
 pub trait TryFilePath: ResourceLocation {
@@ -146,7 +149,7 @@ impl commands::LoadFromFile for Document {
             Document::Source(item) => item.load_from_file(),
             Document::Markdown(item) => item.load_from_file(),
             Document::MdBook(item) => item.load_from_file(),
-            _ => unimplemented!(),
+            Document::Builtin(_) => Ok(()), // Builtin is already loaded.
         }
     }
 }
@@ -170,7 +173,10 @@ impl commands::compile::Lower for Document {
 }
 
 impl commands::compile::Resolve for Document {
-    fn resolve(&mut self, parameters: impl Into<commands::compile::ResolveParameters>) -> Result {
+    fn resolve(
+        &mut self,
+        parameters: impl Into<commands::compile::ResolveParameters>,
+    ) -> Result<Symbol> {
         match self {
             Document::Source(source) => source.resolve(parameters),
             _ => unimplemented!(),
@@ -179,7 +185,7 @@ impl commands::compile::Resolve for Document {
 }
 
 impl commands::compile::Eval for Document {
-    fn eval(&mut self) -> Result {
+    fn eval(&mut self) -> Result<Model> {
         match self {
             Document::Source(source) => source.eval(),
             _ => unimplemented!(),
@@ -235,19 +241,22 @@ impl commands::Sync for Document {
 }
 
 impl GetSymbol for Document {
-    fn get_symbol(&self) -> Result<Symbol> {
-        match &self {
-            Document::Source(asset) => asset.get_symbol(),
+    fn get_symbol(
+        &mut self,
+        params: impl Into<commands::compile::ResolveParameters>,
+    ) -> Result<Symbol> {
+        match self {
+            Document::Source(asset) => asset.get_symbol(params),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
-            Document::Builtin(asset) => asset.get_symbol(),
+            Document::Builtin(asset) => asset.get_symbol(params),
         }
     }
 }
 
 impl commands::DocGen for Document {
-    fn doc_gen(&self, params: &commands::DocGenParameters) -> Result {
-        match &self {
+    fn doc_gen(&mut self, params: impl Into<commands::DocGenParameters>) -> Result {
+        match self {
             Document::Source(asset) => asset.doc_gen(params),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),

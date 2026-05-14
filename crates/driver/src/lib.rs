@@ -11,6 +11,7 @@ mod session;
 mod watcher;
 
 use microcad_lang::lower::Lower;
+pub use microcad_lang::symbol::Symbol;
 use microcad_lang::value::Value;
 
 pub use microcad_lang_parse::ast;

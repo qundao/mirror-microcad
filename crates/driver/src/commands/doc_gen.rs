@@ -1,11 +1,12 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Result, document};
+use crate::{Result, commands::compile::ResolveParameters, document};
 
 pub struct DocGenParameters {
     pub generator_id: Option<String>,
     pub output_path: Option<std::path::PathBuf>,
+    pub resolve_parameters: ResolveParameters,
 }
 
 impl DocGenParameters {
@@ -25,9 +26,10 @@ impl DocGenParameters {
 }
 
 pub trait DocGen: document::GetSymbol {
-    fn doc_gen(&self, params: &DocGenParameters) -> Result {
-        let generator = params.generator()?;
-        let symbol = self.get_symbol()?;
+    fn doc_gen(&mut self, params: impl Into<DocGenParameters>) -> Result {
+        let p = params.into();
+        let generator = p.generator()?;
+        let symbol = self.get_symbol(p.resolve_parameters)?;
         generator
             .doc_gen(&symbol)
             .map_err(|err| miette::miette!("{err}").into())

@@ -200,7 +200,10 @@ impl commands::compile::Lower for document::Source {
 }
 
 impl commands::compile::Resolve for document::Source {
-    fn resolve(&mut self, parameters: impl Into<commands::compile::ResolveParameters>) -> Result {
+    fn resolve(
+        &mut self,
+        parameters: impl Into<commands::compile::ResolveParameters>,
+    ) -> Result<Symbol> {
         let parameters = parameters.into();
         match &self.ir_source {
             Some(ir_source) => {
@@ -216,7 +219,7 @@ impl commands::compile::Resolve for document::Source {
 
                 self.eval_context = None;
                 self.model = None;
-                Ok(())
+                Ok(self.resolve_context.as_ref().unwrap().root.clone())
             }
             None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
@@ -224,7 +227,7 @@ impl commands::compile::Resolve for document::Source {
 }
 
 impl commands::compile::Eval for document::Source {
-    fn eval(&mut self) -> Result {
+    fn eval(&mut self) -> Result<Model> {
         let resolve_context = std::mem::replace(&mut self.resolve_context, None);
         let resolve_context = match resolve_context {
             Some(resolve_context) => resolve_context,
@@ -249,9 +252,9 @@ impl commands::compile::Eval for document::Source {
                     self.eval_context = None;
                     Err(miette::miette!("Error during evaluation"))
                 } else {
-                    self.model = model;
+                    self.model = Some(model.clone());
                     self.eval_context = Some(eval_context);
-                    Ok(())
+                    Ok(model)
                 }
             }
             Err(err) => {
@@ -295,16 +298,14 @@ impl commands::compile::Render for document::Source {
 impl commands::Compile for document::Source {}
 
 impl document::GetSymbol for document::Source {
-    fn get_symbol(&self) -> document::Result<Symbol> {
-        if let Some(eval_context) = &self.eval_context {
-            return Ok(eval_context.root.clone());
-        }
-
-        if let Some(resolve_context) = &self.resolve_context {
-            return Ok(resolve_context.root.clone());
-        }
-
-        panic!("Missing error handling")
+    fn get_symbol(
+        &mut self,
+        parameters: impl Into<commands::compile::ResolveParameters>,
+    ) -> document::Result<Symbol> {
+        use crate::commands::compile::{Lower, Parse, Resolve};
+        self.parse()?;
+        self.lower()?;
+        self.resolve(parameters)
     }
 }
 

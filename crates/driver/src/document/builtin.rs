@@ -28,7 +28,7 @@ impl document::CaptureDiags for Builtin {
 }
 
 impl document::GetSymbol for Builtin {
-    fn get_symbol(&self) -> Result<Symbol> {
+    fn get_symbol(&mut self, _: impl Into<commands::compile::ResolveParameters>) -> Result<Symbol> {
         Ok(self.symbol.clone())
     }
 }
