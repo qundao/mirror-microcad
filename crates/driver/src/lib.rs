@@ -11,7 +11,7 @@ mod session;
 mod watcher;
 
 use microcad_lang::lower::Lower;
-pub use microcad_lang::symbol::Symbol;
+pub use microcad_lang::symbol::{Info, Symbol, SymbolInfo};
 use microcad_lang::value::Value;
 
 pub use microcad_lang_parse::ast;
@@ -35,11 +35,12 @@ pub mod export {
     pub use microcad_export::*;
 }
 
-pub use microcad_lang::model::Model;
-pub use microcad_lang::model::OutputType;
+pub use microcad_lang::model::{Creator, Element, Model, OutputType};
 
 pub use microcad_lang::render::{RenderCache, RenderContext, RenderResolution};
-pub use microcad_lang_base::{HashId, HashSet, Hashed, RcMut, Url};
+pub use microcad_lang_base::{
+    ComputedHash, HashId, HashSet, Hashed, RcMut, Refer, SrcRef, SrcReferrer, Url,
+};
 
 pub use config::Config;
 pub use document::Document;
