@@ -17,7 +17,7 @@ use microcad_lang::value::Value;
 pub use microcad_lang_parse::ast;
 
 pub mod base {
-    pub use microcad_lang_base::{MICROCAD_EXTENSIONS, Source, Url};
+    pub use microcad_lang_base::{MICROCAD_EXTENSIONS, ResourceLocation, Source, Url};
 }
 
 pub mod parse {
@@ -31,7 +31,7 @@ pub mod lower {
 
 pub use microcad_lang::model::Model;
 pub use microcad_lang::render::{RenderCache, RenderContext};
-pub use microcad_lang_base::{RcMut, Url};
+pub use microcad_lang_base::{HashId, HashSet, Hashed, RcMut, Url};
 
 pub use config::Config;
 pub use document::Document;
@@ -40,6 +40,14 @@ pub use watcher::Watcher;
 
 /// We use [`miette::Result`] throught-out this crate.
 pub type Result<T = ()> = miette::Result<T>;
+
+/// Expose miette report.
+pub use miette::Report;
+
+/// Wrapper for miette macro
+pub fn report(s: &str) -> Report {
+    miette::miette!("{s}")
+}
 
 /// Parse a value from a string containing a literal.
 pub fn value_from_str(s: &str) -> Result<Value> {
