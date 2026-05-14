@@ -2,13 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crossbeam::channel::{Receiver, Sender};
-use microcad_core::RenderResolution;
-use microcad_lang::{
-    lower::ir::Source,
-    model::Model,
-    render::{GeometryOutput, RenderContext, RenderWithContext},
-};
-use microcad_lang_base::Diag;
+use microcad_driver::Hashed;
+use microcad_lang::{model::Model, render::GeometryOutput};
 
 use crate::{
     processor::{
@@ -41,6 +36,58 @@ impl Processor {
             .expect("No error")
     }
 
+    pub(crate) fn compile(
+        &mut self,
+        mut document: microcad_driver::document::Source,
+    ) -> miette::Result<Vec<ProcessorResponse>> {
+        use microcad_driver::commands::{Compile, *};
+
+        self.state_change(ProcessingState::Busy(0.0));
+
+        let (tx, rx) = std::sync::mpsc::channel();
+        let sender = self.response_sender.clone();
+        std::thread::spawn(move || {
+            while let Ok(progress) = rx.recv() {
+                sender
+                    .send(ProcessorResponse::StateChanged(ProcessingState::Busy(
+                        progress,
+                    )))
+                    .expect("No error");
+            }
+        });
+
+        let compiler_params = CompileParameters {
+            resolve: compile::ResolveParameters {
+                search_paths: self.context.search_paths.clone(),
+            },
+            render: compile::RenderParameters {
+                resolution: self.context.resolution.clone(),
+                cache: Some(self.context.render_cache.clone()),
+                progress_tx: Some(tx),
+            },
+        };
+
+        let responses = match document.compile(compiler_params) {
+            Ok(model) => self.respond(model),
+            Err(err) => {
+                log::error!("{err}");
+                self.state_change(ProcessingState::Error);
+                Ok(vec![])
+            }
+        }?;
+
+        self.context.document = Some(document);
+
+        // Remove unused cache items.
+        {
+            log::info!("Render cache");
+            let mut cache = self.context.render_cache.borrow_mut();
+            cache.garbage_collection();
+        }
+
+        Ok(responses)
+    }
+
     /// Handle processor request.
     pub(crate) fn handle_request(
         &mut self,
@@ -55,184 +102,52 @@ impl Processor {
                 Ok(vec![])
             }
             ProcessorRequest::ParseFile(path) => {
-                self.state_change(ProcessingState::Busy(0.0));
-
-                match Source::load(&path) {
-                    Ok(source_file) => {
-                        self.context.source_file = Some(source_file);
-                        self.eval()?;
-                        self.render(None)?;
-                        self.respond()
-                    }
-                    Err(err) => {
-                        log::error!("{err}");
-                        self.state_change(ProcessingState::Error);
-                        Ok(vec![])
-                    }
-                }
+                self.compile(microcad_driver::document::Source::from_file(path)?)
             }
-            ProcessorRequest::ParseSource { path, name, source } => {
-                self.state_change(ProcessingState::Busy(0.0));
-
-                match Source::load_from_str(
-                    name.as_deref(),
-                    path.unwrap_or(std::path::PathBuf::from("<virtual>")),
-                    &source,
-                ) {
-                    Ok(source_file) => {
-                        self.context.source_file = Some(source_file);
-                        self.eval()?;
-                        self.render(None)?;
-                        self.respond()
-                    }
-                    Err(errors) => {
-                        for err in errors {
-                            log::error!("{err}");
-                        }
-                        self.state_change(ProcessingState::Error);
-                        Ok(vec![])
-                    }
-                }
-            }
-            ProcessorRequest::Eval => {
-                self.state_change(ProcessingState::Busy(0.0));
-                self.eval()?;
-                self.render(None)?;
-                self.respond()
-            }
-            ProcessorRequest::Render(resolution) => {
-                self.state_change(ProcessingState::Busy(0.0));
-                self.render(resolution)?;
-                self.respond()
-            }
+            ProcessorRequest::ParseSource {
+                path,
+                name: _name,
+                source,
+            } => self.compile(microcad_driver::document::Source::from_source(
+                microcad_lang_base::Source {
+                    url: microcad_driver::locate::to_url(path.as_ref().unwrap().to_str().unwrap())?,
+                    line_offset: 0,
+                    code: Hashed::new(source),
+                },
+            )),
             ProcessorRequest::Export { .. } => todo!(),
             ProcessorRequest::SetLineNumber(line_number) => {
                 self.state_change(ProcessingState::Busy(0.0));
                 self.context.line_number = line_number;
-                self.respond()
+                Ok(vec![])
+                //self.respond()
             }
-        }
-    }
-
-    /// We can render if the processor is initialized and we have evaluated some source into a model.
-    pub(crate) fn can_render(&self) -> bool {
-        self.context.initialized && self.context.model.is_some()
-    }
-
-    pub(crate) fn eval(&mut self) -> miette::Result<()> {
-        match &self.context.source_file {
-            Some(source_file) => {
-                // resolve the file
-                let resolve_context = microcad_lang::resolve::ResolveContext::create(
-                    source_file.clone(),
-                    self.context.search_paths.clone(),
-                    Some(microcad_builtin::builtin_module()),
-                    microcad_lang_base::DiagHandler::default(),
-                )?;
-
-                let mut eval_context = microcad_lang::eval::EvalContext::new(
-                    resolve_context,
-                    microcad_lang_base::Stdout::new(),
-                    microcad_builtin::builtin_exporters(),
-                    microcad_builtin::builtin_importers(),
-                );
-
-                match eval_context.eval() {
-                    Ok(model) => {
-                        self.context.model = model;
-                        if eval_context.has_errors() {
-                            self.state_change(ProcessingState::Error);
-                            return Err(miette::miette!("Eval error"));
-                        }
-                    }
-                    Err(err) => {
-                        log::error!("Eval error {err}");
-                        self.state_change(ProcessingState::Error);
-                        return Err(err.into());
-                    }
-                }
-
-                Ok(())
-            }
-            None => {
-                self.state_change(ProcessingState::Error);
-                Err(miette::miette!("No source code to evaluate."))
-            }
-        }
-    }
-
-    /// Render geometry from model.
-    fn render(&mut self, resolution: Option<RenderResolution>) -> miette::Result<()> {
-        if self.can_render() {
-            let resolution = match resolution {
-                Some(resolution) => resolution,
-                None => self.context.resolution.clone(),
-            };
-            let model = self.context.model.as_ref().expect("Model");
-            let (tx, rx) = std::sync::mpsc::channel();
-
-            let mut render_context = RenderContext::new(
-                model,
-                resolution.clone(),
-                Some(self.context.render_cache.clone()),
-                Some(tx),
-            )?;
-
-            let sender = self.response_sender.clone();
-            std::thread::spawn(move || {
-                while let Ok(progress) = rx.recv() {
-                    sender
-                        .send(ProcessorResponse::StateChanged(ProcessingState::Busy(
-                            progress,
-                        )))
-                        .expect("No error");
-                }
-            });
-
-            let _: Model = model.render_with_context(&mut render_context)?;
-
-            // Remove unused cache items.
-            {
-                log::info!("Render cache");
-                let mut cache = self.context.render_cache.borrow_mut();
-                cache.garbage_collection();
-            }
-
-            self.context.resolution = resolution;
-            Ok(())
-        } else {
-            self.state_change(ProcessingState::Error);
-
-            Err(miette::miette!("Could not render model."))
+            _ => unreachable!(),
         }
     }
 
     /// Update the model instances and generate processor responses.
-    fn respond(&mut self) -> miette::Result<Vec<ProcessorResponse>> {
-        if let Some(model) = self.context.model.clone() {
-            let mut responses = Vec::new();
-            responses.push(ProcessorResponse::RemoveModelInstances(
-                self.context.instance_registry.fetch_model_uuids(),
-            ));
+    fn respond(&mut self, model: Model) -> miette::Result<Vec<ProcessorResponse>> {
+        let mut responses = Vec::new();
+        responses.push(ProcessorResponse::RemoveModelInstances(
+            self.context.instance_registry.fetch_model_uuids(),
+        ));
 
-            self.context.instance_registry.clear_model_uuids();
-            self.generate_responses(&model, &mut responses);
-            log::info!("{} responses", responses.len());
+        self.context.instance_registry.clear_model_uuids();
+        self.generate_responses(&model, &mut responses);
+        log::info!("{} responses", responses.len());
 
-            responses.push(ProcessorResponse::UpdateMaterials(
-                self.context.instance_registry.fetch_model_uuids(),
-            ));
+        responses.push(ProcessorResponse::UpdateMaterials(
+            self.context.instance_registry.fetch_model_uuids(),
+        ));
 
-            responses.push(ProcessorResponse::SpawnModelInstances(
-                self.context.instance_registry.fetch_model_uuids(),
-            ));
+        responses.push(ProcessorResponse::SpawnModelInstances(
+            self.context.instance_registry.fetch_model_uuids(),
+        ));
 
-            self.state_change(ProcessingState::Idle);
+        self.state_change(ProcessingState::Idle);
 
-            Ok(responses)
-        } else {
-            Err(miette::miette!("No model to draw."))
-        }
+        Ok(responses)
     }
 
     /// Generate mesh geometry output for model.
