@@ -186,7 +186,7 @@ impl commands::compile::Lower for document::Source {
             Some(ast_source) => {
                 self.ir_source = Some(
                     self.capture_diags(ir::Source::from_source(&ast_source))
-                        .ok_or_else(|| miette::miette!("Failed to parse"))?,
+                        .ok_or_else(|| miette::miette!("Failed to lower"))?,
                 );
 
                 self.resolve_context = None;
@@ -207,19 +207,26 @@ impl commands::compile::Resolve for document::Source {
         let parameters = parameters.into();
         match &self.ir_source {
             Some(ir_source) => {
-                self.resolve_context = Some(
-                    self.capture_diags(ResolveContext::create(
-                        ir_source.clone(),
-                        parameters.search_paths,
-                        Some(microcad_builtin::builtin_module()),
-                        DiagHandler::default(),
-                    ))
-                    .ok_or_else(|| miette::miette!("Failed to parse"))?,
-                );
-
                 self.eval_context = None;
                 self.model = None;
-                Ok(self.resolve_context.as_ref().unwrap().root.clone())
+
+                if let Ok(resolve_context) = ResolveContext::create(
+                    ir_source.clone(),
+                    parameters.search_paths,
+                    Some(microcad_builtin::builtin_module()),
+                    DiagHandler::default(),
+                ) {
+                    if resolve_context.diag.error_count() > 0 {
+                        self.diagnostics = RcMut::new(resolve_context.diag.diagnostics);
+                        self.resolve_context = None;
+                        Err(miette::miette!("Failed to resolve"))
+                    } else {
+                        self.resolve_context = Some(resolve_context);
+                        Ok(self.resolve_context.as_ref().unwrap().root.clone())
+                    }
+                } else {
+                    Err(miette::miette!("Failed to resolve"))
+                }
             }
             None => Err(SourceError::InvalidState(self.url.clone()).into()),
         }
@@ -228,6 +235,10 @@ impl commands::compile::Resolve for document::Source {
 
 impl commands::compile::Eval for document::Source {
     fn eval(&mut self) -> Result<Model> {
+        if self.resolve_context.is_none() {
+            return Err(SourceError::InvalidState(self.url.clone()).into());
+        }
+
         let resolve_context = std::mem::replace(&mut self.resolve_context, None);
         let resolve_context = match resolve_context {
             Some(resolve_context) => resolve_context,
@@ -257,9 +268,7 @@ impl commands::compile::Eval for document::Source {
                     Ok(model)
                 }
             }
-            Err(err) => {
-                panic!("Eval error {err}");
-            }
+            Err(err) => Err(miette::miette!("{err}")),
         }
     }
 }
@@ -269,6 +278,10 @@ impl commands::compile::Render for document::Source {
         &mut self,
         parameters: impl Into<commands::compile::RenderParameters>,
     ) -> document::Result<Model> {
+        if self.model.is_none() {
+            return Err(SourceError::InvalidState(self.url.clone()).into());
+        }
+
         let model = std::mem::replace(&mut self.model, None);
         let parameters = parameters.into();
         let model = match model {
