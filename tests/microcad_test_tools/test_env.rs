@@ -5,7 +5,7 @@
 
 use std::path::PathBuf;
 
-use microcad_driver::{base::ResourceLocation, *};
+use microcad_driver::prelude as mu;
 
 use crate::output::TestOutput;
 
@@ -16,7 +16,7 @@ pub struct TestEnv {
     mode: TestMode,
     params: Option<String>,
     /// Source to be tested
-    pub source: base::Source,
+    pub source: mu::base::Source,
 }
 
 /// The test mode
@@ -36,7 +36,7 @@ pub enum TestMode {
 }
 
 impl std::str::FromStr for TestMode {
-    type Err = Report;
+    type Err = mu::Report;
 
     fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
         match s {
@@ -45,7 +45,7 @@ impl std::str::FromStr for TestMode {
             "ignore" => Ok(Self::Ignore),
             "ok" => Ok(Self::Ok),
             "warn" => Ok(Self::Warn),
-            _ => Err(report("Invalid test mode")),
+            _ => Err(mu::report("Invalid test mode")),
         }
     }
 }
@@ -88,7 +88,7 @@ pub enum TestResult {
 
 impl std::fmt::Display for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        use base::ResourceLocation;
+        use mu::base::ResourceLocation;
         write!(
             f,
             r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {line_offset:?})"#,
@@ -149,7 +149,7 @@ impl TestEnv {
             (name, None)
         };
 
-        let url = Url::from_file_path(path.as_ref().canonicalize().expect("Existing file"))
+        let url = mu::Url::from_file_path(path.as_ref().canonicalize().expect("Existing file"))
             .expect("A valid file URL");
 
         Self {
@@ -157,10 +157,10 @@ impl TestEnv {
             name: name.to_string(),
             mode: TestMode::from_str(mode.unwrap_or("ok")).unwrap_or_default(),
             params: params.map(|p| p.to_string()),
-            source: base::Source {
+            source: mu::base::Source {
                 url,
                 line_offset,
-                code: Hashed::new(code.to_string()),
+                code: mu::Hashed::new(code.to_string()),
             },
         }
     }
@@ -229,6 +229,7 @@ impl TestEnv {
 
     /// Return path where to store any test output.
     pub fn source_path(&self) -> PathBuf {
+        use mu::traits::ResourceLocation;
         pathdiff::diff_paths(
             self.source.to_file_path().expect("A valid file path"),
             std::env::current_dir().expect("Current dir"),
@@ -301,10 +302,10 @@ impl TestEnv {
     /// Report wrong errors into log file.
     pub fn report_wrong_errors(
         &self,
-        error_lines: &HashSet<u32>,
-        warning_lines: &HashSet<u32>,
+        error_lines: &mu::HashSet<u32>,
+        warning_lines: &mu::HashSet<u32>,
     ) -> Option<String> {
-        fn lines_with(code: &str, marker: &str, offset: u32) -> HashSet<u32> {
+        fn lines_with(code: &str, marker: &str, offset: u32) -> mu::HashSet<u32> {
             code.lines()
                 .enumerate()
                 .filter_map(|line| {
@@ -317,7 +318,11 @@ impl TestEnv {
                 .collect()
         }
 
-        fn diff(left: &HashSet<u32>, right: &HashSet<u32>, message: &str) -> Option<String> {
+        fn diff(
+            left: &mu::HashSet<u32>,
+            right: &mu::HashSet<u32>,
+            message: &str,
+        ) -> Option<String> {
             let mut diff = left.difference(right).collect::<Vec<_>>();
             if diff.is_empty() {
                 None

@@ -1,15 +1,15 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_driver::commands::compile::{RenderParameters, ResolveParameters};
-use microcad_driver::commands::{CompileParameters, ExportCommand, PrintDiagnostics};
-use microcad_driver::*;
+use microcad_driver::prelude as mu;
 
 use microcad_test_tools::test_env::*;
 use std::rc::Rc;
 
 #[allow(dead_code)]
 pub fn run_test(env: TestEnv) -> std::io::Result<()> {
+    use mu::traits::*;
+
     use std::fs;
     env_logger::try_init().ok();
 
@@ -44,26 +44,26 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
             .join("\n")
     )?;
 
-    let diag_render_options = base::DiagRenderOptions {
+    let diag_render_options = mu::base::DiagRenderOptions {
         color: false,
         ..Default::default()
     };
 
-    let mut source = document::Source::from_source(env.source.clone());
+    let mut source = mu::document::Source::from_source(env.source.clone());
 
     use microcad_driver::commands::Compile;
 
     let resolution = if env.hires() {
-        RenderResolution::high()
+        mu::RenderResolution::high()
     } else {
-        RenderResolution::medium()
+        mu::RenderResolution::medium()
     };
 
-    let model = source.compile(CompileParameters {
-        resolve: ResolveParameters {
+    let model = source.compile(mu::CompileParameters {
+        resolve: mu::ResolveParameters {
             search_paths: vec!["../crates/std/lib".into(), "../assets".into()],
         },
-        render: RenderParameters::from(resolution).with_empty_cache(),
+        render: mu::RenderParameters::from(resolution).with_empty_cache(),
     });
     let diag = source.diagnostics.borrow();
     let error_lines = diag.error_lines();
@@ -77,7 +77,8 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
 
                 if env.has_error_markers()
-                    && let Some(msg) = env.report_wrong_errors(&error_lines, &HashSet::default())
+                    && let Some(msg) =
+                        env.report_wrong_errors(&error_lines, &mu::HashSet::default())
                 {
                     writeln!(log, "{msg}")?;
                     TestResult::FailWrong
@@ -130,25 +131,30 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
     }
 }
 
-fn report_model(env: &TestEnv, log: &mut dyn std::io::Write, model: Model) -> std::io::Result<()> {
+fn report_model(
+    env: &TestEnv,
+    log: &mut dyn std::io::Write,
+    model: mu::Model,
+) -> std::io::Result<()> {
     if model.has_no_output() {
         return writeln!(log, "-- No Model --");
     }
 
-    use microcad_driver::export::{stl::StlExporter, svg::SvgExporter};
+    use mu::export::{stl::StlExporter, svg::SvgExporter};
 
-    writeln!(log, "-- Model --\n{}", base::FormatTree(&model))?;
+    writeln!(log, "-- Model --\n{}", mu::base::FormatTree(&model))?;
 
+    use mu::OutputType::*;
     let export = match model.deduce_output_type() {
-        OutputType::Geometry2D => Some(ExportCommand {
+        Geometry2D => Some(mu::ExportCommand {
             filename: env.out_file("svg"),
             exporter: Rc::new(SvgExporter),
         }),
-        OutputType::Geometry3D => Some(ExportCommand {
+        Geometry3D => Some(mu::ExportCommand {
             filename: env.out_file("stl"),
             exporter: Rc::new(StlExporter),
         }),
-        OutputType::NotDetermined => {
+        NotDetermined => {
             writeln!(log, "Could not determine output type.")?;
             None
         }
