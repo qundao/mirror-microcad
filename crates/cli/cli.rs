@@ -38,6 +38,10 @@ impl Cli {
     /// Create a new CLI.
     pub fn new() -> miette::Result<Self> {
         let mut cli = Self::parse();
+
+        #[cfg(not(debug_assertions))]
+        microcad_driver::install_std()?;
+
         if let Some(config_path) = &cli.config_path {
             cli.config = std::rc::Rc::new(microcad_driver::Config::load(config_path)?);
         }
