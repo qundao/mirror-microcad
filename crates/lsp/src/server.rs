@@ -289,8 +289,6 @@ impl LanguageServer for Backend {
     }
 
     async fn formatting(&self, params: DocumentFormattingParams) -> Result<Option<Vec<TextEdit>>> {
-        let _ = params;
-        log::error!("Got a textDocument/formatting request, but it is not implemented");
         let url = &params.text_document.uri;
         self.send_lsp(ProcessorRequest::FormatDocument(url.clone()));
 
@@ -298,7 +296,7 @@ impl LanguageServer for Backend {
         if let Ok(ProcessorResponse::UpdatedDocumentCode { url, code }) =
             self.processor.recv_response()
         {
-            log::info!("Formatted code received {url}");
+            log::error!("Formatted code received {url}");
             Ok(Some(vec![TextEdit {
                 range: Range {
                     start: Position {

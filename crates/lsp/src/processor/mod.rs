@@ -196,7 +196,7 @@ impl Processor {
         match self.documents.get_mut(url) {
             Some(document) => match document.format(&mu::FormatParameters::default()) {
                 Ok(true) => {
-                    Self::compile_document(document)?;
+                    Self::compile_document(document).and(document.sync())?;
                     Ok(vec![ProcessorResponse::UpdatedDocumentCode {
                         url: url.clone(),
                         code: document
