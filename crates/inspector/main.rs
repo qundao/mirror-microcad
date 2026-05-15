@@ -78,8 +78,7 @@ impl Inspector {
         // Run file watcher thread.
         std::thread::spawn(move || -> miette::Result<()> {
             loop {
-                use microcad_driver::commands::LoadFromFile;
-                use microcad_driver::commands::compile::{Eval, Lower, Parse, Resolve};
+                use mu::traits::*;
 
                 use crate::to_slint::ItemsFromTree;
                 // Watch all dependencies of the most recent compilation.
@@ -92,7 +91,7 @@ impl Inspector {
                 document.load_from_file().and_then(|_| {
                     tx.send(ViewModelRequest::SetSourceCode {
                         code: mu::Hashed::new(
-                            document.code().map(|code| code.to_string()).unwrap(),
+                            document.get_code().map(|code| code.to_string()).unwrap(),
                         ),
                     })
                     .into_diagnostic()
