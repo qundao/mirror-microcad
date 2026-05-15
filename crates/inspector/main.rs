@@ -20,6 +20,7 @@ use crate::to_slint::hash_to_shared_string;
 
 slint::include_modules!();
 
+mod symbol_info;
 mod to_slint;
 
 #[derive(Parser)]

@@ -7,6 +7,8 @@ use crate::*;
 
 use slint::ToSharedString;
 
+use crate::symbol_info::{Info, SymbolInfo};
+
 use mu::traits::*;
 
 pub trait ItemsFromTree<T, D = usize>: Sized
@@ -56,8 +58,8 @@ impl From<&mu::ir::DocBlock> for VM_DocBlock {
     }
 }
 
-impl From<mu::SymbolInfo> for VM_SymbolInfo {
-    fn from(info: mu::SymbolInfo) -> Self {
+impl From<SymbolInfo> for VM_SymbolInfo {
+    fn from(info: SymbolInfo) -> Self {
         Self {
             id: info.id.into(),
             kind: info.kind.into(),
