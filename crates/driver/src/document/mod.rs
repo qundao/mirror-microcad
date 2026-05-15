@@ -31,6 +31,10 @@ pub trait TryFilePath: ResourceLocation {
     }
 }
 
+pub trait GetCode {
+    fn get_code(&self) -> Option<&str>;
+}
+
 pub trait CaptureDiags {
     fn diags(&self) -> RcMut<Diagnostics>;
 

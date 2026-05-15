@@ -59,6 +59,14 @@ impl Source {
         }
     }
 
+    /// Load a document from a url.
+    pub fn load(url: Url) -> Result<Self> {
+        use commands::LoadFromFile;
+        let mut document = Self::new(url);
+        document.load_from_file()?;
+        Ok(document)
+    }
+
     pub fn from_source(source: base::Source) -> Self {
         Self {
             url: source.url.clone(),
@@ -79,8 +87,10 @@ impl Source {
         s.load_from_file()?;
         Ok(s)
     }
+}
 
-    pub fn code(&self) -> Option<&str> {
+impl document::GetCode for Source {
+    fn get_code(&self) -> Option<&str> {
         self.base_source.as_ref().map(|s| s.code.value().as_str())
     }
 }

@@ -28,7 +28,8 @@ pub use config::Config;
 
 /// Parse a value from a string containing a literal.
 pub fn value_from_str(s: &str) -> Result<Value> {
-    use mu::traits::*;
+    use mu::lower::Lower;
+    use mu::parse::Parse;
     use prelude as mu;
 
     let parse_context = prelude::parse::ParseContext::new(s);
