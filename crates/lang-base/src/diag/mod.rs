@@ -44,23 +44,21 @@ pub trait PushDiag {
 
     /// Push new trace message.
     fn trace(&mut self, src: &impl SrcReferrer, message: String) {
-        self.push_diag(Diagnostic::Trace(Refer::new(
-            Report::msg(message),
-            src.src_ref(),
-        )))
+        self.push_diag(Diagnostic::Trace(
+            Refer::new(Report::msg(message), src.src_ref()).into(),
+        ))
         .expect("could not push diagnostic trace message");
     }
     /// Push new informative message.
     fn info(&mut self, src: &impl SrcReferrer, message: String) {
-        self.push_diag(Diagnostic::Info(Refer::new(
-            Report::msg(message),
-            src.src_ref(),
-        )))
+        self.push_diag(Diagnostic::Info(
+            Refer::new(Report::msg(message), src.src_ref()).into(),
+        ))
         .expect("could not push diagnostic info message");
     }
     /// Push new warning.
     fn warning(&mut self, src: &impl SrcReferrer, err: impl Into<Report>) -> DiagResult<()> {
-        let err = Diagnostic::Warning(Refer::new(err.into(), src.src_ref()));
+        let err = Diagnostic::Warning(Refer::new(err.into(), src.src_ref()).into());
         if cfg!(feature = "ansi-color") {
             log::warn!("{}", color_print::cformat!("<y,s>{err}</>"));
         } else {
@@ -70,7 +68,7 @@ pub trait PushDiag {
     }
     /// Push new error.
     fn error(&mut self, src: &impl SrcReferrer, err: impl Into<Report>) -> DiagResult<()> {
-        let err = Diagnostic::Error(Refer::new(err.into(), src.src_ref()));
+        let err = Diagnostic::Error(Refer::new(err.into(), src.src_ref()).into());
         if cfg!(feature = "ansi-color") {
             log::error!("{}", color_print::cformat!("<r,s>{err}</>"));
         } else {
