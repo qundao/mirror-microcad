@@ -5,7 +5,6 @@
 
 mod iterators;
 mod symbol_definition;
-mod symbol_info;
 mod symbol_inner;
 mod symbol_map;
 mod symbols;
@@ -15,7 +14,6 @@ use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 pub use iterators::*;
 pub use symbol_definition::*;
-pub use symbol_info::*;
 pub(crate) use symbol_map::*;
 pub(crate) use symbols::*;
 
@@ -631,12 +629,6 @@ impl std::fmt::Display for Symbol {
 impl std::fmt::Debug for Symbol {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.tree_print(f, TreeState::new_debug(0))
-    }
-}
-
-impl Info for Symbol {
-    fn info(&self) -> SymbolInfo {
-        self.with_def(|def| def.info())
     }
 }
 

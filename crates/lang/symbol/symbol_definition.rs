@@ -10,11 +10,10 @@ use crate::{
     lower::{
         Identifiable,
         ir::{
-            Assignment, FunctionDefinition, ModuleDefinition, QualifiedName, Source,
-            Visibility, WorkbenchDefinition,
+            Assignment, FunctionDefinition, ModuleDefinition, QualifiedName, Source, Visibility,
+            WorkbenchDefinition,
         },
     },
-    symbol::{Info, SymbolInfo},
     value::*,
 };
 
@@ -156,28 +155,6 @@ impl std::fmt::Debug for SymbolDef {
             Self::UseAll(.., name) => write!(f, "({kind}) => {name:?}"),
             #[cfg(test)]
             Self::Tester(id) => write!(f, "({kind}) => {id:?}"),
-        }
-    }
-}
-
-impl Info for SymbolDef {
-    fn info(&self) -> SymbolInfo {
-        match self {
-            Self::Root => unreachable!(),
-            Self::SourceFile(sf) => sf.into(),
-            Self::Module(md) => md.into(),
-            Self::Workbench(wd) => wd.into(),
-            Self::Function(fd) => fd.into(),
-            Self::Builtin(bi) => bi.into(),
-            Self::Assignment(a) => a.into(),
-
-            Self::Value(id, ..) => SymbolInfo::new_local(id),
-
-            Self::Alias(..) => unimplemented!(),
-            Self::UseAll(..) => unimplemented!(),
-
-            #[cfg(test)]
-            Self::Tester(_) => unreachable!(),
         }
     }
 }
