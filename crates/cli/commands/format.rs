@@ -14,7 +14,7 @@ pub struct Format {
 impl RunCommand<()> for Format {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
         use microcad_driver::prelude as mu;
-        use mu::traits::{Format, Sync, compile::Parse};
+        use mu::traits::{Format, Parse, Sync};
 
         let mut document = mu::Document::open(&self.input)?;
         let params = mu::FormatParameters::default();
