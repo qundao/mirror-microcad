@@ -47,8 +47,10 @@ impl ParseErrors {
         for err in self.0 {
             let span = err.span.clone();
             diag_list
-                .push_diag(D::Error(Refer::new(err.into(), context.src_ref(&span))))
-                .expect("Diag list should return no error");
+                .push_diag(D::Error(
+                    Refer::<miette::Report>::new(err.into(), context.src_ref(&span)).into(),
+                ))
+                .expect("Diag list must return no error");
         }
 
         diag_list
