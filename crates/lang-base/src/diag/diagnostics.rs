@@ -6,7 +6,7 @@ use std::slice::Iter;
 use crate::{GetSourceLocInfoByHash, diag::*};
 
 /// µcad source diagnostics.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Diagnostics {
     /// The number of overall errors in the evaluation process.
     error_count: u32,
@@ -100,7 +100,9 @@ where
         Self {
             error_count: 1,
             warning_count: 0,
-            diagnostics: vec![Diagnostic::Error(Refer::none(report.into()))],
+            diagnostics: vec![Diagnostic::Error(std::rc::Rc::new(Refer::none(
+                report.into(),
+            )))],
         }
     }
 }

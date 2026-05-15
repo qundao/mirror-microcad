@@ -5,16 +5,19 @@ use crate::{GetSourceLocInfoByHash, SourceLocInfo};
 use crate::{diag::*, src_ref::*};
 use miette::SourceCode;
 
+type RcReport = std::rc::Rc<Refer<Report>>;
+
 /// Diagnostic message with source code reference attached.
+#[derive(Clone)]
 pub enum Diagnostic {
     /// Trace message.
-    Trace(Refer<Report>),
+    Trace(RcReport),
     /// Informative message.
-    Info(Refer<Report>),
+    Info(RcReport),
     /// Warning.
-    Warning(Refer<Report>),
+    Warning(RcReport),
     /// Error.
-    Error(Refer<Report>),
+    Error(RcReport),
 }
 
 impl Diagnostic {
@@ -43,7 +46,7 @@ impl Diagnostic {
             Diagnostic::Trace(r)
             | Diagnostic::Info(r)
             | Diagnostic::Warning(r)
-            | Diagnostic::Error(r) => &r.value,
+            | Diagnostic::Error(r) => &r.as_ref().value,
         }
     }
 
