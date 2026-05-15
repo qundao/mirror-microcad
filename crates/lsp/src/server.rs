@@ -7,6 +7,8 @@ mod processor;
 
 use std::{path::PathBuf, sync::OnceLock};
 
+use microcad_driver::prelude as mu;
+
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
     Client, LanguageServer, LspService, Server, async_trait,
@@ -126,7 +128,7 @@ impl LanguageServer for Backend {
             Ok(path) => {
                 log::info!("Did change {path:?}");
                 if let Some(last) = params.content_changes.last() {
-                    self.send_lsp(ProcessorRequest::UpdateDocumentStr(uri, last.text.clone()));
+                    self.send_lsp(ProcessorRequest::UpdateDocumentCode(uri, last.text.clone()));
                 }
             }
             Err(()) => log::error!("Cannot parse URI: {uri}"),
@@ -293,7 +295,7 @@ impl LanguageServer for Backend {
         self.send_lsp(ProcessorRequest::FormatDocument(url.clone()));
 
         // Wait for response
-        if let Ok(ProcessorResponse::FormattedDocument { url, code }) =
+        if let Ok(ProcessorResponse::UpdatedDocumentCode { url, code }) =
             self.processor.recv_response()
         {
             log::info!("Formatted code received {url}");
@@ -319,7 +321,7 @@ impl LanguageServer for Backend {
 use clap::Parser;
 
 use crate::processor::{
-    ProcessorRequest, ProcessorResponse, WorkspaceSettings,
+    ProcessorRequest, ProcessorResponse,
     semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
 };
 
@@ -332,45 +334,6 @@ struct Args {
 
     #[arg(long)]
     stdio: bool,
-
-    /// Paths to search for files.
-    ///
-    /// By default, `./lib` (if it exists) and `~/.microcad/lib` are used.
-    #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append)]
-    pub search_paths: Vec<std::path::PathBuf>,
-}
-
-impl Args {
-    /// Returns microcad's config dir, even if it does not exist.
-    ///
-    /// On Linux, the config dir is located in `~/.config/microcad`.
-    pub fn config_dir() -> Option<std::path::PathBuf> {
-        dirs::config_dir().map(|dir| dir.join("microcad"))
-    }
-
-    /// Returns global root dir, even if it does not exist.
-    ///
-    /// On Linux, the root dir is located in `~/.config/microcad/lib`.
-    pub fn global_root_dir() -> Option<std::path::PathBuf> {
-        Self::config_dir().map(|dir| dir.join("lib"))
-    }
-
-    /// `./lib` (if exists) and `~/.config/microcad/lib` (if exists).
-    pub fn default_search_paths() -> Vec<std::path::PathBuf> {
-        let local_dir = std::path::PathBuf::from("./lib");
-        let mut search_paths = Vec::new();
-
-        if let Some(global_root_dir) = Self::global_root_dir() {
-            if global_root_dir.exists() {
-                search_paths.push(global_root_dir);
-            }
-        }
-        if local_dir.exists() {
-            search_paths.push(local_dir);
-        }
-
-        search_paths
-    }
 }
 
 #[tokio::main]
@@ -392,21 +355,14 @@ async fn main() {
         tracing::subscriber::set_global_default(subscriber).expect("init log failed");
     */
 
-    // add default paths if no search paths are given.
-    let mut search_paths = args.search_paths.clone();
-
-    if search_paths.is_empty() {
-        search_paths.append(&mut Args::default_search_paths())
-    };
+    let config = mu::Config::default();
 
     log::info!("Starting LSP server");
 
-    let processor = processor::ProcessorInterface::run(WorkspaceSettings {
-        search_paths: search_paths.clone(),
-    });
+    let processor = processor::ProcessorInterface::run();
 
     let (service, socket) =
-        LspService::build(|client| Backend::new(client, processor, search_paths))
+        LspService::build(|client| Backend::new(client, processor, config.search_paths))
             .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
             .finish();
     log::info!("LSP service has been created");
