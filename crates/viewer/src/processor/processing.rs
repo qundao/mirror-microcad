@@ -37,7 +37,7 @@ impl Processor {
 
     pub(crate) fn compile(
         &mut self,
-        mut document: microcad_driver::document::Source,
+        mut document: mu::document::Source,
     ) -> miette::Result<Vec<ProcessorResponse>> {
         use microcad_driver::commands::{Compile, *};
 
@@ -69,6 +69,14 @@ impl Processor {
         let responses = match document.compile(compiler_params) {
             Ok(model) => self.respond(model),
             Err(err) => {
+                eprintln!(
+                    "{}",
+                    document.diagnostics_string(&mu::base::DiagRenderOptions {
+                        color: true,
+                        ..Default::default()
+                    }),
+                );
+
                 log::error!("{err}");
                 self.state_change(ProcessingState::Error);
                 Ok(vec![])
