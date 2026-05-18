@@ -5,11 +5,13 @@ mod builtin;
 mod markdown;
 mod mdbook;
 mod source;
+mod stdin;
 
 use derive_more::From;
 
 use microcad_lang_base::{DiagRenderOptions, Diagnostics, ResourceLocation, Url};
 pub use source::Source;
+pub use stdin::Stdin;
 
 use crate::Result;
 use crate::prelude::*;
