@@ -39,7 +39,7 @@ impl RunCommand for Export {
 
         match document
             .compile(cli.compile_parameters(&self.resolution)?)
-            .and(document.get_export_targets(&params))
+            .and(document.get_export_targets(params))
         {
             Ok(targets) => {
                 if self.dry_run {

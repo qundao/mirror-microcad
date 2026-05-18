@@ -28,12 +28,6 @@ impl RunCommand for Watch {
         let mut watcher = mu::Watcher::new()?;
         let render_cache = mu::RcMut::new(mu::RenderCache::new());
 
-        let export_params = mu::ExportParameters {
-            input_path: std::path::PathBuf::from(&self.input),
-            output_path: self.output.clone(),
-            config: cli.config.export.clone(),
-        };
-
         let compile_params = cli.compile_parameters(&self.resolution)?;
         let compile_params = mu::CompileParameters {
             resolve: compile_params.resolve,
@@ -42,10 +36,15 @@ impl RunCommand for Watch {
 
         // Recompile whenever something relevant happens.
         loop {
+            let export_params = mu::ExportParameters {
+                input_path: std::path::PathBuf::from(&self.input),
+                output_path: self.output.clone(),
+                config: cli.config.export.clone(),
+            };
             let mut document = mu::Document::open(&self.input)?;
             match document
                 .compile(compile_params.clone())
-                .and(document.export(&export_params))
+                .and(document.export(export_params))
             {
                 Ok(exported_files) => {
                     eprint!("{exported_files}");
