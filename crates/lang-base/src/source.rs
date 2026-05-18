@@ -40,7 +40,7 @@ impl GetSourceLocInfoByHash for Source {
     }
 }
 
-impl<'a> ResourceLocation for Source {
+impl ResourceLocation for Source {
     fn url(&self) -> &Url {
         &self.url
     }
