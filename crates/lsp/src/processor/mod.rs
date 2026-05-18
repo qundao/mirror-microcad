@@ -278,7 +278,7 @@ impl ProcessorInterface {
                     && let Ok(responses) = processor.handle_request(request)
                 {
                     for response in responses {
-                        processor.response_sender.send(response).expect("No error");
+                        processor.response_sender.send(response).ok();
                     }
                 }
             }

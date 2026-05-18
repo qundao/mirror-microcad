@@ -31,6 +31,7 @@ struct Backend {
     client: Client,
     processor: processor::ProcessorInterface,
     viewer: OnceLock<ViewerProcessInterface>,
+    use_viewer: bool,
     search_paths: Vec<PathBuf>,
 }
 
@@ -44,6 +45,7 @@ impl Backend {
             client,
             processor,
             viewer: OnceLock::new(),
+            use_viewer: false,
             search_paths,
         }
     }
@@ -54,10 +56,14 @@ impl Backend {
         }
     }
     fn send_viewer(&self, req: ViewerRequest) -> miette::Result<()> {
-        self.viewer
-            .get_or_init(|| ViewerProcessInterface::run(&self.search_paths, true))
-            .send_request(req)
-            .inspect_err(|err| log::error!("Cannot send request to viewer: {err}"))
+        if self.use_viewer {
+            self.viewer
+                .get_or_init(|| ViewerProcessInterface::run(&self.search_paths, true))
+                .send_request(req)
+                .inspect_err(|err| log::error!("Cannot send request to viewer: {err}"))
+        } else {
+            Ok(())
+        }
     }
 
     async fn on_active_file_changed(&self, params: serde_json::Value) {
@@ -117,63 +123,38 @@ impl LanguageServer for Backend {
     }
 
     async fn shutdown(&self) -> Result<()> {
-        log::info!("shutdown");
+        //log::info!("shutdown");
         let _ = self.send_viewer(ViewerRequest::Exit);
         Ok(())
     }
 
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did change {path:?}");
-                if let Some(last) = params.content_changes.last() {
-                    self.send_lsp(ProcessorRequest::UpdateDocumentCode(uri, last.text.clone()));
-                }
-            }
-            Err(()) => log::error!("Cannot parse URI: {uri}"),
+        if let Some(last) = params.content_changes.last() {
+            self.send_lsp(ProcessorRequest::UpdateDocumentCode(uri, last.text.clone()));
         }
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did open: {path:?}");
-                self.send_lsp(ProcessorRequest::AddDocument(uri.clone()));
-                match uri.to_file_path() {
-                    Ok(path) => {
-                        log::info!("New active document: {:?}", path);
-                        let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
-                    }
-                    Err(()) => log::error!("Cannot parse URI: {uri}"),
-                }
-            }
-            Err(_) => log::error!("Cannot parse URI: {uri}"),
-        }
+
+        self.send_lsp(ProcessorRequest::AddDocument(uri.clone()));
     }
 
     async fn did_save(&self, params: DidSaveTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did save: {path:?}");
-                self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
-                let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
-            }
-            Err(_) => log::error!("Cannot parse URI: {uri}"),
-        }
+
+        /*self.client
+            .log_message(MessageType::INFO, format!("did save: {uri:?}!"))
+            .await;
+        */
+        self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
+        //let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
     }
 
     async fn did_close(&self, params: DidCloseTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did close: {path:?}");
-                self.send_lsp(ProcessorRequest::RemoveDocument(uri))
-            }
-            Err(_) => log::error!("Cannot parse URI: {uri}"),
-        }
+        self.send_lsp(ProcessorRequest::RemoveDocument(uri))
     }
 
     async fn diagnostic(
@@ -291,7 +272,9 @@ impl LanguageServer for Backend {
     async fn formatting(&self, params: DocumentFormattingParams) -> Result<Option<Vec<TextEdit>>> {
         let url = &params.text_document.uri;
         self.send_lsp(ProcessorRequest::FormatDocument(url.clone()));
-
+        self.client
+            .log_message(MessageType::INFO, format!("Formatting received: {url}"))
+            .await;
         // Wait for response
         if let Ok(ProcessorResponse::UpdatedDocumentCode { url, code }) =
             self.processor.recv_response()
@@ -305,7 +288,7 @@ impl LanguageServer for Backend {
                     },
                     end: Position {
                         line: u32::MAX,
-                        character: u32::MAX,
+                        character: 0,
                     },
                 },
                 new_text: code,
@@ -347,11 +330,10 @@ async fn main() {
     } else {
         env_logger::init()
     }
-    /*    // construct a subscriber that prints formatted traces to stdout
-        let subscriber = tracing_subscriber::FmtSubscriber::new();
-        // use that subscriber to process traces emitted after this point
-        tracing::subscriber::set_global_default(subscriber).expect("init log failed");
-    */
+    // construct a subscriber that prints formatted traces to stdout
+    let subscriber = tracing_subscriber::FmtSubscriber::new();
+    // use that subscriber to process traces emitted after this point
+    tracing::subscriber::set_global_default(subscriber).expect("init log failed");
 
     let config = mu::Config::default();
 

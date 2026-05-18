@@ -232,7 +232,7 @@ impl TokenContext {
         } else {
             char
         };
-        dbg!(line, char, length, &token_type, delta_line, delta_start);
+        //dbg!(line, char, length, &token_type, delta_line, delta_start);
         self.last_line = line;
         self.last_col = char;
         Ok(SemanticToken {
