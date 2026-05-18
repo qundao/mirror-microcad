@@ -15,6 +15,7 @@ mod parser;
 /// Source tokens for µcad files
 pub mod tokens;
 
+use microcad_lang_base::virtual_url;
 pub use parser::{ParseContext, ParseError, ParseErrors, parsers};
 
 /// Parse trait.
@@ -28,7 +29,17 @@ pub trait Parse: Sized {
 impl Parse for ast::Source {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
         match context {
-            ParseContext::Element(_) => panic!("Expected parse source context"),
+            ParseContext::Element(code) => {
+                let ast = crate::parse(code)?;
+                let src_ref = context.src_ref(&ast.span);
+
+                Ok(Self {
+                    url: virtual_url("virtual"),
+                    ast: microcad_lang_base::Refer::new(ast, src_ref),
+                    line_offset: 0,
+                    code: code.clone().map(|s| s.to_string()),
+                })
+            }
             ParseContext::Source {
                 url,
                 line_offset,
