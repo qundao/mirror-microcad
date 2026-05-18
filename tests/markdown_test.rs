@@ -65,7 +65,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         },
         render: mu::RenderParameters::from(resolution).with_empty_cache(),
     });
-    let diag = source.diagnostics.borrow();
+    let diag = source.diags();
     let error_lines = diag.error_lines();
     let warning_lines = diag.warning_lines();
 
