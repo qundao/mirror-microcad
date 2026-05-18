@@ -1,9 +1,12 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::rc::Rc;
+use std::{path::PathBuf, rc::Rc};
 
-use crate::{Result, config};
+use crate::{
+    Result,
+    config::{self, ExportConfig},
+};
 
 use microcad_builtin::{Exporter, ExporterRegistry};
 use microcad_lang::{
@@ -169,10 +172,20 @@ impl ExportParameters {
     }
 }
 
-pub trait Export {
-    fn get_export_targets(&self, params: &ExportParameters) -> Result<ExportTargets>;
+impl From<&'static str> for ExportParameters {
+    fn from(value: &'static str) -> Self {
+        Self {
+            input_path: PathBuf::from(value),
+            output_path: Some(PathBuf::from(value)),
+            config: ExportConfig::default(),
+        }
+    }
+}
 
-    fn export(&self, params: &ExportParameters) -> Result<ExportResults> {
+pub trait Export {
+    fn get_export_targets(&self, params: impl Into<ExportParameters>) -> Result<ExportTargets>;
+
+    fn export(&self, params: impl Into<ExportParameters>) -> Result<ExportResults> {
         self.get_export_targets(params)?.export()
     }
 }

@@ -211,7 +211,7 @@ impl commands::Compile for Document {}
 impl commands::Export for Document {
     fn get_export_targets(
         &self,
-        params: &commands::ExportParameters,
+        params: impl Into<commands::ExportParameters>,
     ) -> Result<commands::ExportTargets> {
         match self {
             Document::Source(source) => source.get_export_targets(params),

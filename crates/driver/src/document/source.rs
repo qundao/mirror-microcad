@@ -364,8 +364,9 @@ impl commands::PrintDiagnostics for document::Source {
 impl commands::Export for document::Source {
     fn get_export_targets(
         &self,
-        params: &commands::ExportParameters,
+        params: impl Into<commands::ExportParameters>,
     ) -> document::Result<commands::ExportTargets> {
+        let params = params.into();
         if let Some(model) = &self.model {
             let exporters = self.eval_context.as_ref().unwrap().exporters();
             let default_exporter =
