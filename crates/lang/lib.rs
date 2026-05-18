@@ -19,7 +19,6 @@ pub mod doc;
 pub mod eval;
 pub mod lower;
 pub mod model;
-pub mod parser;
 pub mod render;
 pub mod resolve;
 pub mod symbol;
