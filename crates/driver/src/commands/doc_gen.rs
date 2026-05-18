@@ -32,6 +32,6 @@ pub trait DocGen: document::GetSymbol {
         let symbol = self.get_symbol(p.resolve_parameters)?;
         generator
             .doc_gen(&symbol)
-            .map_err(|err| miette::miette!("{err}").into())
+            .map_err(|err| miette::miette!("{err}"))
     }
 }

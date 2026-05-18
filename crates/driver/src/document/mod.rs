@@ -63,7 +63,7 @@ pub type Builtin = builtin::Builtin;
 #[derive(From)]
 pub enum Document {
     /// A single source file
-    Source(Source),
+    Source(Box<Source>),
 
     /// A markdown file containing source code snippets
     Markdown(Markdown),
@@ -91,7 +91,7 @@ impl Document {
         } else if url.scheme() == "builtin" {
             Ok(Builtin::new().into())
         } else if url.scheme() == "file" {
-            Ok(Source::new(url).into())
+            Ok(Box::new(Source::new(url)).into())
         } else {
             Err(miette::miette!("Invalid document type: {}", url.path()))
         }
@@ -150,10 +150,10 @@ impl CaptureDiags for Document {
 impl ResourceLocation for Document {
     fn url(&self) -> &Url {
         match self {
-            Document::Source(u) => &u.url(),
-            Document::Markdown(u) => &u.url(),
-            Document::MdBook(u) => &u.url(),
-            Document::Builtin(u) => &u.url(),
+            Document::Source(u) => u.url(),
+            Document::Markdown(u) => u.url(),
+            Document::MdBook(u) => u.url(),
+            Document::Builtin(u) => u.url(),
         }
     }
 }

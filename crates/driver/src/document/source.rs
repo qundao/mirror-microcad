@@ -114,7 +114,7 @@ impl commands::Format for Source {
 
         if let Some(ast_source) = &self.ast_source {
             let new_source =
-                self.capture_diags(microcad_lang_format::format_source(&ast_source, &params));
+                self.capture_diags(microcad_lang_format::format_source(ast_source, params));
             self.ast_source = new_source;
             self.ir_source = None;
             self.resolve_context = None;
@@ -196,7 +196,7 @@ impl commands::compile::Lower for document::Source {
         match &self.ast_source {
             Some(ast_source) => {
                 self.ir_source = Some(
-                    self.capture_diags(ir::Source::from_source(&ast_source))
+                    self.capture_diags(ir::Source::from_source(ast_source))
                         .ok_or_else(|| miette::miette!("Failed to lower"))?,
                 );
 
@@ -252,7 +252,7 @@ impl commands::compile::Eval for document::Source {
             return Err(SourceError::InvalidState(self.url.clone()).into());
         }
 
-        let resolve_context = std::mem::replace(&mut self.resolve_context, None);
+        let resolve_context = self.resolve_context.take();
         let resolve_context = match resolve_context {
             Some(resolve_context) => resolve_context,
             None => {
@@ -296,7 +296,7 @@ impl commands::compile::Render for document::Source {
             return Err(SourceError::InvalidState(self.url.clone()).into());
         }
 
-        let model = std::mem::replace(&mut self.model, None);
+        let model = self.model.take();
         let parameters = parameters.into();
         let model = match model {
             Some(model) => model,

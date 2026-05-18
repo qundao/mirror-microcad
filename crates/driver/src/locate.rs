@@ -71,7 +71,7 @@ pub fn to_url(input: impl AsRef<str>) -> Result<Url> {
 
     // 1. Handle the special __builtin case
     if input == "__builtin" {
-        return Ok(Url::parse("builtin:///builtin").into_diagnostic()?);
+        return Url::parse("builtin:///builtin").into_diagnostic();
     }
 
     // Try to parse as a formal URL (e.g., https://, file://, mcad://)
